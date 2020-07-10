@@ -7874,6 +7874,33 @@ function sumatotaldetallefactura($cod_factura){
     }  
     return implode("\n *", $valor);
   }
+  function obtenerCodUOSolFac($cod_solicitudfacturacion,$auxiliar){
+    $dbh = new Conexion();
+    $sql="SELECT $auxiliar from solicitudes_facturacion where codigo=$cod_solicitudfacturacion";  
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();    
+    $result = $stmt->fetch();    
+    $cod_libretabancariadetalle = $result[$auxiliar];
+    return $cod_libretabancariadetalle;
+  }
+
+  function obtenerLibretaBancariaFacturaVenta($codigo){
+    $dbh = new Conexion();
+    $stmtVerif = $dbh->prepare("SELECT cod_libretabancariadetalle FROM facturas_venta where codigo=$codigo");
+    $stmtVerif->execute();
+    $resultVerif = $stmtVerif->fetch();    
+    $cod_libretabancariadetalle = $resultVerif['cod_libretabancariadetalle'];
+    return $cod_libretabancariadetalle;
+  }
+  function obtenerGlosaLibretaBancariaDetalle($codigo){
+    $dbh = new Conexion();
+    $stmtVerif = $dbh->prepare("SELECT informacion_complementaria from libretas_bancariasdetalle where codigo=$codigo");
+    $stmtVerif->execute();
+    $resultVerif = $stmtVerif->fetch();    
+    $informacion_complementaria = $resultVerif['informacion_complementaria'];
+    return $informacion_complementaria; 
+  }
+
 ?>
 
 

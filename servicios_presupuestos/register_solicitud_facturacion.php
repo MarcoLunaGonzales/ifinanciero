@@ -366,7 +366,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 </table>
 
                                 <input type="hidden" id="modal_numeroservicio" name="modal_numeroservicio" value="<?=$iii?>">                    
-                                <input type="hidden" id="modal_totalmontos" name="modal_totalmontos">
+                                <input type="hidden" id="modal_totalmontos" name="modal_totalmontos" value="0">
                                 <!-- <script>activarInputMontoFilaServicio2();</script>   -->
                                 <input type="hidden" id="comprobante_auxiliar" name="comprobante_auxiliar">
                                 <!-- <div class="row">

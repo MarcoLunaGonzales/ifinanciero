@@ -27,12 +27,12 @@ if(isset($_GET['s'])){
   // $sqlFilter1 = str_replace("IdOficina", "p.cod_unidadorganizacional", $_GET['s']);
   // $sqlFilter2 = "and ".str_replace("IdArea", "p.cod_area", $sqlFilter1);
   $arraySql=explode("IdArea",$s);
-  $codigoArea=0;
+  $codigoArea='0';  
   if(isset($arraySql[1])){
     $codigoArea=trim($arraySql[1]);
-  }
-  if($codigoArea==null || $codigoArea=='' || $codigoArea==0){
-    $sqlAreas="and sf.cod_area=0";
+  }  
+  if($codigoArea=='0'){    
+    $sqlAreas="and sf.cod_area=0";    
   }else{
     $sqlAreas="and sf.cod_area ".$codigoArea;  
   } 

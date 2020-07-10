@@ -14644,8 +14644,8 @@ function modal_rechazarFactura(datos){
   document.getElementById("direccion").value=d[3];  //link destino
   document.getElementById("codigo_factura").value=d[4];  //codigo factura
   document.getElementById("codigo_comprobante").value=d[5];  //codigo factura
-  $("#campo_nro_fact").html("<small>Nro.<br>Factua</small>");
-  $("#campo_rs_fact").html("<small>Razón<br>Social</small>");    
+  // $("#campo_nro_fact").html("<small>Nro.<br>Factua</small>");
+  // $("#campo_rs_fact").html("<small>Razón<br>Social</small>");    
 }
 function modalDevolverSolicitud_regional(datos){    
   var d=datos.split('###');  

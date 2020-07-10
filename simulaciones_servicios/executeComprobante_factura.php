@@ -40,14 +40,10 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 		$stmtDetalleSol->bindColumn('cantidad', $cantidad);	 
 		$stmtDetalleSol->bindColumn('precio', $precio_unitario);			
 		$stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);
-		if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
-          $concepto_contabilizacion="";
-        }else{
-          $concepto_contabilizacion=$codigo_alterno." - ";
-        }		
+		$concepto_contabilizacion="";
 		while ($row_det = $stmtDetalleSol->fetch()){
 			$precio=$precio_unitario*$cantidad;
-			$concepto_contabilizacion.=$descripcion_alterna." / ".$nombreComprobante." - F ".$nro_factura." / ".$razon_social."&#010;";
+			$concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_factura." / ".$razon_social."&#010;";
 			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."&#010;";
 		}
 		$codComprobante=obtenerCodigoComprobante();
@@ -174,7 +170,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
             $cantidad=$valor['cantidad'];
             $precio_natural=$precioUnitario;
             $precio_x=$cantidad*$precioUnitario;
-            $concepto_contabilizacion.=$detalle." / ".$nombreComprobante." - F ".$nro_factura." / ".$razon_social."<br>\n";
+            $concepto_contabilizacion.=$detalle." / F ".$nro_factura." / ".$razon_social."<br>\n";
 			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio_x)."<br>\n";
         }
 		$codComprobante=obtenerCodigoComprobante();

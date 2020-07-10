@@ -38,8 +38,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
   <div class="content">
     <div class="container-fluid">
       <div style="overflow-y:scroll;">
-          <div class="row">
-              <div class="col-md-12">
+          <!-- <div class="row">
+              <div class="col-md-12"> -->
                 <div class="card">
                   <div class="card-header card-header-warning card-header-icon">
                     <div class="card-icon">
@@ -68,6 +68,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <?php
                           $index=1;
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                            $stmtFActuras = $dbh->prepare("SELECT nro_factura from facturas_venta where cod_solicitudfacturacion=$cod_solicitudfacturacion");
+                            $stmtFActuras->execute(); 
+                            $stmtFActuras->bindColumn('nro_factura', $nro_factura);                             
+                            $cadenaFacturas="";
+                            while ($row = $stmtFActuras->fetch()) {
+                              $cadenaFacturas.="F ".$nro_factura.", ";
+                            }
+                            $cadenaFacturas=trim($cadenaFacturas,", ");//todas las facturas del la solicitud
+
                             $importe=sumatotaldetallefactura($codigo_factura);
                             $correosEnviados=obtenerCorreosEnviadosFactura($codigo_factura);
                             if($correosEnviados!=""){
@@ -127,8 +136,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                     </div>
                                   </div>
                                   <?php
-                                   $datos_devolucion=$cod_solicitudfacturacion."###".$nro_factura."###".$razon_social."###".$urllistFacturasServicios."###".$codigo_factura."###".$cod_comprobante;
+                                   $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigo_factura."###".$cod_comprobante;
                                   ?>
+                                  
                                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
                                     <i class="material-icons" title="Anular Factura">delete</i>
                                   </button>
@@ -151,8 +161,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                     <a href='<?=$urlListFacturasGeneradasManuales;?>' class="btn btn-info float-right"><i class="material-icons">list</i>Facturas Manuales</a>
                   </div>   
                 </div>                
-              </div>
-          </div>  
+              <!-- </div>
+          </div>   -->
       </div>
     </div>
   </div>
@@ -164,7 +174,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Rechazar Solicitud</h4>
+        <h2 class="modal-title" id="myModalLabel"><b>Anular Factura<b></h2>
       </div>
       <div class="modal-body">        
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
@@ -173,20 +183,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
         <input type="hidden" name="direccion" id="direccion" value="0">
         <input type="hidden" name="codigo_factura" id="codigo_factura" value="0">
         <input type="hidden" name="codigo_comprobante" id="codigo_comprobante" value="0">
-        
-        <input type="hidden" name="q" value="0" id="q"/>
-        <input type="hidden" name="s" value="0" id="s"/>
-        <input type="hidden" name="v" value="0" id="v"/>
-        <input type="hidden" name="u" value="0" id="u"/>
+
         <div class="row">
-          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_nro_fact"><small>Nro.<br>Solicitud.</small></span></label>
-          <div class="col-sm-2">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_nro_fact"><b><small>Nro(s)<br>Factura(s)</small></b></span></label>
+          <div class="col-sm-3">
             <div class="form-group" >
               <input type="text" class="form-control" name="nro_solicitud" id="nro_solicitud" readonly="true" style="background-color:#e2d2e0">              
             </div>
           </div>
-          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_rs_fact"><small >Código<br>Servicio</small></span></label>
-          <div class="col-sm-8">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_rs_fact"><b><small>Razón<br>Social</small></b></span></label>
+          <div class="col-sm-7">
             <div class="form-group" >              
               <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
             </div>
@@ -204,8 +210,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
         </div>        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="rechazarSolicitud" name="rechazarSolicitud" data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
+        <button type="button" class="btn btn-success" id="anular_factura_devolucion" name="anular_factura_devolucion" data-dismiss="modal">Por Devolución</button>
+        <button type="button" class="btn btn-warning" id="anular_factura" name="anular_factura" data-dismiss="modal">Normal</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>
     </div>
   </div>
@@ -322,7 +329,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
       }else{
         correo_destino=$('#correo_destino').val();        
       } 
-      
       // asunto=$('#asunto').val();
       // mensaje=$('#mensaje').val();
       asunto=null;
@@ -334,8 +340,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
         EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje);  
       }
     });
-    $('#rechazarSolicitud').click(function(){
-      var q=0;var s=0;var u=0;var v=0;
+    $('#anular_factura').click(function(){      
       var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
       var estado=document.getElementById("estado").value;
       var admin=document.getElementById("admin").value;
@@ -347,7 +352,22 @@ $globalAdmin=$_SESSION["globalAdmin"];
       if(observaciones==null || observaciones==0 || observaciones=='' || observaciones==' '){
         Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
       }else{        
-        registrarRechazoFactura(cod_solicitudfacturacion,observaciones,estado,admin,direccion,codigo_factura,codigo_comprobante,estado_factura);
+        registrarRechazoFactura(cod_solicitudfacturacion,observaciones,estado,admin,direccion,codigo_factura,codigo_comprobante,1);
+      }      
+    }); 
+    $('#anular_factura_devolucion').click(function(){      
+      var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
+      var estado=document.getElementById("estado").value;
+      var admin=document.getElementById("admin").value;
+      var direccion=document.getElementById("direccion").value;
+      var observaciones=$('#observaciones').val();
+      var codigo_factura=$('#codigo_factura').val();
+      var codigo_comprobante=$('#codigo_comprobante').val();
+      var estado_factura=2;
+      if(observaciones==null || observaciones==0 || observaciones=='' || observaciones==' '){
+        Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
+      }else{        
+        registrarRechazoFactura(cod_solicitudfacturacion,observaciones,estado,admin,direccion,codigo_factura,codigo_comprobante,2);
       }      
     }); 
 
