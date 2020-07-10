@@ -5698,8 +5698,8 @@ function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $
 
 
 function obtenerCodigoServicioPorPropuestaTCPTCS($idPropuesta){
-   $dbh = new ConexionIBNORCA();
-   $stmt = $dbh->prepare("select IFNULL(se.Codigo,'SERVICIO SIN CODIGO')as codigo  from simulaciones_servicios  s, servicios se where s.idServicio=se.IdServicio and s.codigo=$idPropuesta");
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("select IFNULL(se.Codigo,'SERVICIO SIN CODIGO')as codigo  from simulaciones_servicios  s, ibnorca.servicios se where s.idServicio=se.IdServicio and s.codigo=$idPropuesta");
    $stmt->execute();
    $valor="SERVICIO SIN CODIGO";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
