@@ -113,7 +113,7 @@ $stmtb->bindColumn('nombre', $nombre);
                             <?php                  
                               // $cont_facturas=contarFacturasLibretaBancaria($codigo);
                               // if($cont_facturas>0){
-                                $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura=1 order by codigo desc";
+                                $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=1 order by codigo desc";
                                 $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                                 $stmtDetalleX->execute();
                                 $stmtDetalleX->bindColumn('codigo', $codigo_factura);
@@ -169,13 +169,13 @@ $stmtb->bindColumn('nombre', $nombre);
                                 <i class="material-icons">add_circle_outline</i>
                               </a>
                               <?php 
-                               if($estadoFila!=1){
+                               //if($estadoFila!=1){
                                 ?>
                                   <a href="#" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalle;?>&codigo=<?=$codigo;?>&c=<?=$codigoLibreta?>')">
                                     <i class="material-icons"><?=$iconDelete;?></i>
                                   </a>
                                 <?php
-                               } 
+                               //} 
                               ?>
                               
                               <?php

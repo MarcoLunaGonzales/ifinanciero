@@ -38,13 +38,10 @@ tfoot input {
     $html='<tbody>';
 
 // Preparamos
-    /*
     $sqlDetalle="(SELECT * FROM (SELECT ce.*,(SELECT fecha_factura from facturas_venta where codigo=ce.cod_factura) as fecha_fac,(SELECT sum(importe) from facturas_venta where cod_libretabancariadetalle=ce.codigo) as monto_fac
 FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.codigo in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and  ce.cod_estadoreferencial=1 $sqlFiltro order by ce.codigo) lbd where lbd.fecha_fac BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59')
  UNION (SELECT ce.*,(SELECT fecha_factura from facturas_venta where codigo=ce.cod_factura) as fecha_fac,(SELECT sum(importe) from facturas_venta where cod_libretabancariadetalle=ce.codigo) as monto_fac
-FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.codigo in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and  ce.cod_estadoreferencial=1 $sqlFiltro order by ce.codigo)";*/
-$sqlDetalle="SELECT ce.*,(SELECT fecha_factura from facturas_venta where codigo=ce.cod_factura and cod_estadofactura!=2 $sqlFiltro2) as fecha_fac,(SELECT sum(importe) from facturas_venta where cod_libretabancariadetalle=ce.codigo and cod_estadofactura!=2 $sqlFiltro2) as monto_fac
-FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.codigo in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and ce.cod_estadoreferencial=1 $sqlFiltro order by ce.codigo";
+FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.codigo in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and  ce.cod_estadoreferencial=1 $sqlFiltro order by ce.codigo)";
 $stmt = $dbh->prepare($sqlDetalle);
 //echo $sqlDetalle;
 // Ejecutamos
@@ -72,19 +69,6 @@ $stmt->bindColumn('monto_fac', $montoFac);
                          }else{
                            $totalMonto+=$monto;
                            $entro=1;
-                         }
-
-
-                         if($filtro==1||$filtro==2){
-                          $cant=obtenerCantidadFacturasLibretaBancariaDetalle($codigo,$sqlFiltro2);
-                          if($cant>0){
-                            $entro=1;
-                          }else{
-                            $entro=0;
-                            if($filtro==2){
-                              $entro=1; //deposito a facturar
-                            }  
-                          }
                          }
                          if($entro==1){
 ?>
@@ -115,7 +99,7 @@ $stmt->bindColumn('monto_fac', $montoFac);
                             <td class="text-right font-weight-bold"><?=$facturaMonto?></td> 
                            <?php                          
                           }else{
-                           $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 $sqlFiltro2 order by codigo desc";                                   
+                           $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 order by codigo desc";                                   
                            $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                            $stmtDetalleX->execute();
                            $stmtDetalleX->bindColumn('fecha_factura', $fechaDetalle);

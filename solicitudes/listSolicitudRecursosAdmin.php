@@ -3,7 +3,7 @@ require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
@@ -23,13 +23,14 @@ if(isset($_GET['q'])){
   <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
 <?php
 }else{
-  $item_3=0;
+
+  $item_3=obtenerIdRolDeIbnorca($globalUser);
   $s=0;
   $u=0;
   $sqlAreas="";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso=4) $sqlAreas order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (4,3)) $sqlAreas order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -95,7 +96,7 @@ $item_1=2708;
                               $nEst=60;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
                             break;
                             case 5:
-                              $nEst=100;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
+                              $nEst=100;$barEstado="progress-bar-primary";$btnEstado="btn-primary";
                             break;
                             case 6:
                               $nEst=50;$barEstado="progress-bar-default";$btnEstado="btn-default";
@@ -152,7 +153,7 @@ $item_1=2708;
                               }
                             }
 
-                                   if($codComprobante!=0&&$codEstado==3){
+                                   if($codComprobante!=0&&$codEstado==5){
                                    ?>
                                    <div class="btn-group dropdown">
                                      <button type="button" class="btn btn-primary dropdown-toggle" title="COMPROBANTE - DEVENGADO" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -205,9 +206,20 @@ $item_1=2708;
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a>--><?php 
                                 }else{
+                                  if($codEstado==3){
+                                    ?>
+                                    <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
+                                   </a>
+                                   <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>')" href='#'  class="dropdown-item">
+                                      <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
+                                    </a>
+                                    <?php
+                                  }else{
                                   ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
-                                 </a><?php
+                                 </a><?php  
+                                  }
                                 ?><!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-dark">reply</i> Deshacer Cambios
                                  </a>-->
@@ -227,24 +239,23 @@ $item_1=2708;
                                  <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0" class="dropdown-item">
                                     <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
                                  </a>
-
-                                 <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
-                                 </a>
-                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
-                                 </a>
-                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
-                                    <i class="material-icons text-dark">report</i> Rechazar Solicitud
-                                 </a>
-                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="dropdown-item">
-                                    <i class="material-icons text-danger">clear</i> Anular Solicitud
-                                 </a>--><?php 
-                                }else{
-                                ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
-                                    <i class="material-icons text-warning">dns</i> Cambiar Estado
-                                 </a>
                                  <?php 
+                                }else{
+                                  if($codEstado==3){
+                                    ?>
+                                    <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0" class="dropdown-item">
+                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
+                                   </a>
+                                   <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>')" href='#'  class="dropdown-item">
+                                      <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
+                                    </a>
+                                    <?php
+                                  }else{
+                                  ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
+                                    <i class="material-icons text-warning">dns</i> Cambiar Estado
+                                 </a><?php  
+                                  }
+
                                 }
                                 
                               }
@@ -315,7 +326,7 @@ $item_1=2708;
 <!--    end small modal -->
 
 <?php
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso=2 or sr.cod_estadosolicitudrecurso=5 or sr.cod_estadosolicitudrecurso=3) $sqlAreas order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (2,5)) $sqlAreas order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -386,7 +397,7 @@ $item_1=2708;
                               $nEst=60;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
                             break;
                             case 5:
-                              $nEst=100;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
+                              $nEst=100;$barEstado="progress-bar-primary";$btnEstado="btn-primary";
                             break;
                             case 6:
                               $nEst=50;$barEstado="progress-bar-default";$btnEstado="btn-default";
@@ -428,7 +439,7 @@ $item_1=2708;
                             </a>
                             <?php 
                             
-                                   if($codComprobante!=0&&$codEstado==3){
+                                   if($codComprobante!=0&&$codEstado==5){
                                    ?>
                                    <div class="btn-group dropdown">
                                      <button type="button" class="btn btn-primary dropdown-toggle" title="COMPROBANTE - DEVENGADO" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -481,9 +492,7 @@ $item_1=2708;
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a>--><?php 
                                 }else{
-                                  ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
-                                    <i class="material-icons text-warning">dns</i> Cambiar Estado
-                                 </a>
+                                  ?>
                                  
                                  <?php
                                 ?><!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>" class="dropdown-item">
@@ -519,9 +528,7 @@ $item_1=2708;
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a>--><?php 
                                 }else{
-                                ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
-                                    <i class="material-icons text-warning">dns</i> Cambiar Estado
-                                 </a>
+                                ?>
                                  <?php 
                                 }
                                 
