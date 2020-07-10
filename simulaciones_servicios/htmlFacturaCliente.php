@@ -182,7 +182,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
             $html.='<table class="table">'.
               '<tr class="bold table-title text-left">'.
                   '<td  class="td-border-none text-right" width="12%"><b>Señor(es):</b></td>'.
-                  '<td  class="td-border-none" ><b>'.strtoupper($nombre_cliente).'</b></td>'.
+                  '<td  class="td-border-none" ><b>'.mb_strtoupper($nombre_cliente).'</b></td>'.
                   '<td  class="td-border-none" width="18%"><b>NIT/CI:</b>&nbsp;'.$nit.'</td>'.
                 '</tr>'.
             '</table>';
@@ -210,7 +210,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 							$html.=formatNumberDec($row["cantidad"]);
 							$html.='</td> 
 							<td valign="top" colspan="2" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
-							$html.=strtoupper($row["descripcion_alterna"]);
+							$html.=mb_strtoupper($row["descripcion_alterna"]);
 							$html.='</td>                   
 							<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
 							$precio=$row["precio"];

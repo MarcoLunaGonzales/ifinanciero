@@ -77,7 +77,7 @@ $contadorRegistros=0;
                                   <tbody>                                
                                     <?php 
                                     $iii=1;
-                                    $queryPr="SELECT *,DATE_FORMAT(Fecha,'%d/%m/%Y')as Fecha_x from ibnorca.ventanormas where (idSolicitudfactura=0 or idSolicitudfactura is null) order by Fecha desc limit 20";
+                                    $queryPr="SELECT *,DATE_FORMAT(Fecha,'%d/%m/%Y')as Fecha_x from ibnorca.ventanormas where (idSolicitudfactura=0 or idSolicitudfactura is null) order by Fecha desc limit 50";
                                     // echo $queryPr;
                                     $stmt = $dbh->prepare($queryPr);
                                     $stmt->execute();                                        

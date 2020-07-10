@@ -169,13 +169,13 @@ $stmtb->bindColumn('nombre', $nombre);
                                 <i class="material-icons">add_circle_outline</i>
                               </a>
                               <?php 
-                               if($estadoFila!=1){
+                               //if($estadoFila!=1){
                                 ?>
                                   <a href="#" rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalle;?>&codigo=<?=$codigo;?>&c=<?=$codigoLibreta?>')">
                                     <i class="material-icons"><?=$iconDelete;?></i>
                                   </a>
                                 <?php
-                               } 
+                               //} 
                               ?>
                               
                               <?php

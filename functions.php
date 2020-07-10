@@ -5698,8 +5698,8 @@ function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $
 
 
 function obtenerCodigoServicioPorPropuestaTCPTCS($idPropuesta){
-   $dbh = new ConexionIBNORCA();
-   $stmt = $dbh->prepare("select IFNULL(se.Codigo,'SERVICIO SIN CODIGO')as codigo  from simulaciones_servicios  s, servicios se where s.idServicio=se.IdServicio and s.codigo=$idPropuesta");
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("select IFNULL(se.Codigo,'SERVICIO SIN CODIGO')as codigo  from simulaciones_servicios  s, ibnorca.servicios se where s.idServicio=se.IdServicio and s.codigo=$idPropuesta");
    $stmt->execute();
    $valor="SERVICIO SIN CODIGO";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -7874,6 +7874,32 @@ function sumatotaldetallefactura($cod_factura){
     }  
     return implode("\n *", $valor);
   }
+  function obtenerCodUOSolFac($cod_solicitudfacturacion,$auxiliar){
+    $dbh = new Conexion();
+    $sql="SELECT $auxiliar from solicitudes_facturacion where codigo=$cod_solicitudfacturacion";  
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();    
+    $result = $stmt->fetch();    
+    $cod_libretabancariadetalle = $result[$auxiliar];
+    return $cod_libretabancariadetalle;
+  }
+
+  function obtenerLibretaBancariaFacturaVenta($codigo){
+    $dbh = new Conexion();
+    $stmtVerif = $dbh->prepare("SELECT cod_libretabancariadetalle FROM facturas_venta where codigo=$codigo");
+    $stmtVerif->execute();
+    $resultVerif = $stmtVerif->fetch();    
+    $cod_libretabancariadetalle = $resultVerif['cod_libretabancariadetalle'];
+    return $cod_libretabancariadetalle;
+  }
+  function obtenerGlosaLibretaBancariaDetalle($codigo){
+    $dbh = new Conexion();
+    $stmtVerif = $dbh->prepare("SELECT informacion_complementaria from libretas_bancariasdetalle where codigo=$codigo");
+    $stmtVerif->execute();
+    $resultVerif = $stmtVerif->fetch();    
+    $informacion_complementaria = $resultVerif['informacion_complementaria'];
+    return $informacion_complementaria; 
+  }
   function obtenerIdRolDeIbnorca($codigo){
     $dbh = new Conexion();
     $stmt = $dbh->prepare("SELECT IdRol FROM ibnorca.personarol WHERE IdPersona = '$codigo' and pordefecto=1 and ibnorca.PersonaRol(IdPersona)>4");
@@ -7886,13 +7912,13 @@ function sumatotaldetallefactura($cod_factura){
   }
 
   function obtenerCantidadFacturasLibretaBancariaDetalle($codigo,$sqlFiltro2){
-  $dbh = new Conexion();
-  $stmtVerif = $dbh->prepare("SELECT count(*) as cantidad FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 $sqlFiltro2 order by codigo desc");
-  $stmtVerif->execute();
-  $resultVerif = $stmtVerif->fetch();    
-  $valor = $resultVerif['cantidad'];
-  return $valor;
-}
+    $dbh = new Conexion();
+    $stmtVerif = $dbh->prepare("SELECT count(*) as cantidad FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 $sqlFiltro2 order by codigo desc");
+    $stmtVerif->execute();
+    $resultVerif = $stmtVerif->fetch();    
+    $valor = $resultVerif['cantidad'];
+    return $valor;
+  }
 ?>
 
 
