@@ -52,7 +52,7 @@ if(isset($_GET['v'])){
                                        <select class="selectpicker form-control form-control-sm" name="area_solicitud" id="area_solicitud" data-style="btn btn-primary">
                                      <?php
                                                              
-                                           $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+                                           $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 union SELECT codigo, nombre, abreviatura FROM areas where codigo in (826,871) order by 2");
                                          $stmt->execute();
                                          $cont=0;
                                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
