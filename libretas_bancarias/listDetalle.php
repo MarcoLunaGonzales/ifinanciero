@@ -15,7 +15,7 @@ $dbh = new Conexion();
 
 // Preparamos
 $stmt = $dbh->prepare("SELECT ce.*
-FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.codigo");
+FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.codigo desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -113,7 +113,7 @@ $stmtb->bindColumn('nombre', $nombre);
                             <?php                  
                               // $cont_facturas=contarFacturasLibretaBancaria($codigo);
                               // if($cont_facturas>0){
-                                $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=1 order by codigo desc";
+                                $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 order by codigo desc";
                                 $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                                 $stmtDetalleX->execute();
                                 $stmtDetalleX->bindColumn('codigo', $codigo_factura);

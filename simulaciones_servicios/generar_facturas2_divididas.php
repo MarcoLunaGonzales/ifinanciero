@@ -1,5 +1,5 @@
 <?php
-	function generar_factura($codigo,$string_cod_Det,$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$variable_controlador){
+	function generar_factura($codigo,$string_cod_Det,$cod_tipopago,$cod_sucursal,$cod_libreta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador){
 
 
 		// echo $cod_unidadorganizacional."-".$cod_area."-".$cod_tipoobjeto."-".$cod_cliente."-".$razon_social."-".$cod_dosificacionfactura."-".$cod_personal;
@@ -97,6 +97,12 @@
                         $stmtDelte = $dbh->prepare("DELETE from facturas_venta where codigo=$cod_facturaVenta");
                         $stmtDelte->execute();
                         $estado_ibnorca++;
+                         $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
+                        $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
+                        $flagSuccess=$stmtDeleteCopmprobante->execute();
+                        $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
+                        $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
+                        $flagSuccess=$stmtDeleteComprobanteDet->execute();
                         break;
                     }
                 }elseif($tipo_solicitud==7){//pago grupal
@@ -120,6 +126,12 @@
                         $estado_ibnorca++;
                         $stmtDelte = $dbh->prepare("DELETE from facturas_venta where codigo=$cod_facturaVenta");
                         $stmtDelte->execute();
+                        $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
+                        $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
+                        $flagSuccess=$stmtDeleteCopmprobante->execute();
+                        $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
+                        $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
+                        $flagSuccess=$stmtDeleteComprobanteDet->execute();
                         $estado_ibnorca++;
                         break;
                     }

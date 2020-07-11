@@ -13962,6 +13962,7 @@ function guardarNuevoBeneficiario(){
     data: parametros,
     success:  function (resp) {       
       $(".mensaje").html(resp);
+      $(".mensaje").html("");
       Swal.fire('Correcto!','Se actualizaron los datos del Beneficiario!','success');
       $("#modalNuevoCuentaBeneficiario").modal("hide");
     }
@@ -14349,12 +14350,13 @@ function ajaxBuscarComprobanteCajaChica(){
   var mes_comprobante=document.getElementById("mes_comprobante").value;
   var tipo_comprobante=document.getElementById("tipo_comprobante").value;
   var nro_comprobante=document.getElementById("nro_comprobante").value;
+  var unidad=document.getElementById("unidad").value;
   if(mes_comprobante!=null && tipo_comprobante!=null){
     var contenedor;
     // var codigo_UO=combo.value;
     contenedor = document.getElementById('contenedor_detalle_comprobante');
     ajax=nuevoAjax();
-    ajax.open('GET', 'caja_chica/ajax_buscarComprobanteCajaChica.php?mes='+mes_comprobante+'&tipo='+tipo_comprobante+'&nro='+nro_comprobante,true);
+    ajax.open('GET', 'caja_chica/ajax_buscarComprobanteCajaChica.php?mes='+mes_comprobante+'&tipo='+tipo_comprobante+'&nro='+nro_comprobante+'&unidad='+unidad,true);
     ajax.onreadystatechange=function() {
       if (ajax.readyState==4) {
         contenedor.innerHTML = ajax.responseText;

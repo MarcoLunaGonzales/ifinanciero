@@ -68,14 +68,24 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <?php
                           $index=1;
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                            $stmtFActuras = $dbh->prepare("SELECT nro_factura from facturas_venta where cod_solicitudfacturacion=$cod_solicitudfacturacion");
-                            $stmtFActuras->execute(); 
-                            $stmtFActuras->bindColumn('nro_factura', $nro_factura);                             
-                            $cadenaFacturas="";
-                            while ($row = $stmtFActuras->fetch()) {
-                              $cadenaFacturas.="F ".$nro_factura.", ";
+                            if($cod_solicitudfacturacion!=-100){
+                              $stmtFActuras = $dbh->prepare("SELECT codigo,nro_factura from facturas_venta where cod_solicitudfacturacion=$cod_solicitudfacturacion");
+                              $stmtFActuras->execute(); 
+                              $stmtFActuras->bindColumn('codigo', $codigo_x);
+                              $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
+                              $cadenaFacturas="";
+                              $codigos_facturas="";
+                              while ($row = $stmtFActuras->fetch()) {
+                                $cadenaFacturas.="F ".$nro_factura_x.", ";
+                                $codigos_facturas.=$codigo_x.",";
+                              }
+                              $cadenaFacturas=trim($cadenaFacturas,", ");//todas las facturas del la solicitud
+                              $codigos_facturas=trim($codigos_facturas,", ");//todas las facturas del la solicitud
+                            }else{
+                              $cadenaFacturas='F '.$nro_factura;
+                              $codigos_facturas=$codigo_factura;
                             }
-                            $cadenaFacturas=trim($cadenaFacturas,", ");//todas las facturas del la solicitud
+                            
 
                             $importe=sumatotaldetallefactura($codigo_factura);
                             $correosEnviados=obtenerCorreosEnviadosFactura($codigo_factura);
@@ -136,7 +146,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                     </div>
                                   </div>
                                   <?php
-                                   $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigo_factura."###".$cod_comprobante;
+                                   $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante;
                                   ?>
                                   
                                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
@@ -210,8 +220,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
         </div>        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="anular_factura_devolucion" name="anular_factura_devolucion" data-dismiss="modal">Por Devolución</button>
-        <button type="button" class="btn btn-warning" id="anular_factura" name="anular_factura" data-dismiss="modal">Normal</button>
+        <button type="button" class="btn btn-success" id="anular_factura_devolucion" name="anular_factura_devolucion" data-dismiss="modal">Registrar Como Anticipo</button>
+        <button type="button" class="btn btn-warning" id="anular_factura" name="anular_factura" data-dismiss="modal">Transacción No Válida</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>
     </div>
