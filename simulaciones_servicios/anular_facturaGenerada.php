@@ -61,7 +61,7 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 	}
 	
 	$concepto_contabilizacion="Anulación de ".$cadenaFacturas."/ RS: ".$rs_factura.", Nit: ".$nit_factura."&#010;";	
-	$concepto_contabilizacion.=$glosa_libreta;
+	$concepto_contabilizacion.=" Detalle: ".$glosa_libreta;
 	$codComprobante=obtenerCodigoComprobante();
 	//insertamos cabecera
 	$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser,$globalUser);	
@@ -108,13 +108,13 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 		while ($row = $stmtdetalleCom->fetch()) {						
 			$cod_comprobante_detalle=$cod_comprobante_detalle;			
 		}
-		
+
 		if($flagSuccessDet){
 			$sql="UPDATE facturas_venta set cod_estadofactura='2' where codigo in ($codigos_facturas_x)";	
 			$stmt = $dbh->prepare($sql);
 			$flagSuccess=$stmt->execute();
 			//insertamos la el estado de cuenta
-			$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta_pasivo,$monto_tipopago_total,$cod_proveedor,'$fechaActual',$cuenta_axiliar,'1','$concepto_contabilizacion')";
+			$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta_pasivo,$monto_tipopago_total,$cod_proveedor,'$fechaActual','0',$cuenta_axiliar,'1','$concepto_contabilizacion')";
 			// echo $sqlEstadoCuenta;
 			$stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
 			$flagSuccess=$stmtEstadoCuenta->execute();			
