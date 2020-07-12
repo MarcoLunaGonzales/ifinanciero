@@ -39,9 +39,9 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
-              "fechaFactura"=>'2020-07-09', // fecha de la factura
-              "nitciCliente"=>4868422016, //nit o ci de cliente
-              "razonSocial"=>'Luna', //razon social
+              "fechaFactura"=>'2020-07-11', // fecha de la factura
+              "nitciCliente"=>'B00596460', //nit o ci de cliente
+              "razonSocial"=>'Sullcamani', //razon social
               "importeTotal"=>70, //importe total
               "tipoPago"=>5, // array con el detalle    
               "codLibretaDetalle"=>5338, // array con el detalle
