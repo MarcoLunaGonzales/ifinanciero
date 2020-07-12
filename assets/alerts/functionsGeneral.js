@@ -15085,8 +15085,6 @@ function ajax_listado_libreta_bancaria_filtrar(){
   }
   ajax.send(null);
 }
-
-
 function seleccionar_libretaBancaria(cod_libreta){
   var indice=document.getElementById("indice").value;
   var datos=document.getElementById("datos").value;
@@ -15132,11 +15130,83 @@ function seleccionar_libretaBancaria(cod_libreta){
   
   // alert(direccion);
   // alert("ok"+cod_libreta_Det);  
-
 }
-
 function activardetalleLibreta(j){  
   $(".libretaDetalles_"+j).toggle();
+}
+
+function abrirEstadoCuenta(datos,direccion,indice){
+  // iniciarCargaAjax();
+  var d=datos.split('/');
+  var cod_solicitudfacturacion=d[0];
+  var saldo=d[2];
+  var razon_social=d[5];
+  document.getElementById("cod_solicitudfacturacion_ec").value=cod_solicitudfacturacion;
+  document.getElementById("direccion_ec").value=direccion;
+  document.getElementById("indice_ec").value=indice;//comprobamos si es para factura nomra o manual
+  document.getElementById("datos_ec").value=datos;
+  $("#modal_estadocuenta").modal("show");          
+  // var table =$("#libreta_bancaria_reporte_modal");
+  // table.fixedHeader.enable();
+  var contenedor = document.getElementById('contenedor_cabecera_estados_cuenta');    
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal_estadoscuenta.php?saldo='+saldo+'&razon_social='+razon_social,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+      ajax_contenedor_tabla_estados_cuenta(saldo);
+      // detectarCargaAjax();      
+    }
+  }
+  ajax.send(null);
+}
+function ajax_contenedor_tabla_estados_cuenta(saldo){
+  document.getElementById("saldo_ec").value=saldo;
+  var contenedor = document.getElementById('contenedor_tabla_estados_cuenta');
+  var parametros={"saldo":saldo,"tipo_listado":0};
+  $.ajax({
+    type: "GET",
+    dataType: 'html',
+    url: "simulaciones_servicios/ajax_listado_estados_cuenta.php",
+    data: parametros,
+    beforeSend: function () {
+    $("#texto_ajax_titulo").html("Listando los Estados de Cuenta..."); 
+      iniciarCargaAjax();
+    },
+    success:function (resp) {
+      detectarCargaAjax();
+       $("#texto_ajax_titulo").html("Procesando Datos");
+      contenedor.innerHTML = resp;
+      $('.selectpicker').selectpicker(["refresh"]);
+      cargar_dataTable_ajax('estados_cuenta_reporte_modal');
+      cargar_filtro_datatable_ajax('modal_estadocuenta');
+    }
+  });
+}
+function seleccionar_estado_cuenta_sol_fac(cod_estadocuenta){
+  var indice=document.getElementById("indice_ec").value;
+  var datos=document.getElementById("datos_ec").value;
+  var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion_ec").value;
+  var direccion=document.getElementById("direccion_ec").value;
+  if(indice==1){//factura normal
+    $("#modal_estadocuenta").modal("hide");
+    alerts.showSwal('warning-message-and-confirmation-generar-factura',direccion+'?codigo='+cod_solicitudfacturacion+'&cod_estadocuenta='+cod_estadocuenta);
+  }else{    
+      if(indice==3){
+        $("#modal_estadocuenta").modal("hide");
+        $("#modalFacturaManual").modal("show");  
+          var d=datos.split('/');
+          document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
+          document.getElementById("cod_libreta_manual").value=cod_libreta;
+          document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
+          document.getElementById("nit_cliente").value=d[4];
+          document.getElementById("razon_social").value=d[5];
+      }    
+  }
+  
+  // alert(direccion);
+  // alert("ok"+cod_libreta_Det);  
 }
 function abrirArchivosAdjuntos(datos){
   var d=datos.split('/');
