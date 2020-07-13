@@ -22,7 +22,7 @@
 	    $stmtMontoTotal = $dbh->prepare($sqlMontoTotal);
 	    $stmtMontoTotal->execute();
 	    $resultMontoTotal = $stmtMontoTotal->fetch();   
-	    $monto_total= $resultMontoTotal['monto'];//total para el comprobante comprobante
+	    $monto_total= $resultMontoTotal['monto'];//total para el comprobante comprobante que ya esta aplicado el descuetno
 	    $totalFinalRedondeado=round($monto_total,0);
 	    $nro_correlativo = nro_correlativo_facturas($cod_sucursal);//el que introduciremos
         $cod_tipopago_deposito=obtenerValorConfiguracion(55);//tipo de pago deposito en cuenta
@@ -141,7 +141,7 @@
                         }
                     }
                     if($estado_ibnorca==0){//sin errores en el servicio web
-                        $precio_x=$precio_x+$descuento_bob_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario
+                        $precio_x=$precio_x+$descuento_bob_x/$cantidad_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario y tambien el descuetno unitario, ya que se registro el descuento total * cantidad
                         $descripcion_alterna_x=$row['descripcion_alterna'];            
                         $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
                         values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0)");
