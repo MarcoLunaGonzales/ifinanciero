@@ -62,24 +62,56 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 			while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {
 				$descripcion=$concepto_contabilizacion;
 				$monto_tipopago_total+=$monto_tipopago;
+				$cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
+				$cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
+				$cod_tipopago_anticipo=obtenerValorConfiguracion(64);
+
 				switch ($cod_estado) {
 					case 0://cuenta normal						
 						$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
 						break;
 					case 1://cuenta de libreta bancaria
-						$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+						if($cod_tipopago==$cod_tipopago_deposito_cuenta){
+							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+						}else{
+							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+						}
 						break;						
 					case 2://cuenta de tarjeta de credito
-						$cod_cuenta_tarjetacredito=obtenerValorConfiguracion(60);
-						$porcentaje_cuenta_transitoria=obtenerValorConfiguracion(61);
-						$porcentaje_xyz=100-$porcentaje_cuenta_transitoria;
-						$monto_tipopago_1=$monto_tipopago*$porcentaje_xyz/100;
-						$monto_tipopago_2=$monto_tipopago*$porcentaje_cuenta_transitoria/100;
+						if($cod_tipopago==$cod_tipopago_tarjetas){
+							$cod_cuenta_tarjetacredito=obtenerValorConfiguracion(60);
+							$porcentaje_cuenta_transitoria=obtenerValorConfiguracion(61);
+							$porcentaje_xyz=100-$porcentaje_cuenta_transitoria;
+							$monto_tipopago_1=$monto_tipopago*$porcentaje_xyz/100;
+							$monto_tipopago_2=$monto_tipopago*$porcentaje_cuenta_transitoria/100;
 
-						$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
-						
-						$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle);
-					break;						
+							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
+							
+							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle);
+						}else{
+							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+						}
+					break;
+					case 3://tipo de pago anticipo en cod_cuenta_libreta viene el codigo de estado de cuenta
+						if($cod_tipopago==$cod_tipopago_anticipo){
+							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+							$stmtdetalleCom = $dbh->prepare("SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante and orden=$ordenDetalle");
+							//en este caso insertamos la contra cuenta del estado de cuenta, para ello necesitamos el codigo del comprobnate detalle
+							$stmtdetalleCom->execute();			
+							$stmtdetalleCom->bindColumn('codigo', $cod_comprobante_detalle);
+							while ($row = $stmtdetalleCom->fetch()) {						
+								$cod_comprobante_detalle=$cod_comprobante_detalle;			
+							}
+							$cuenta_axiliar=obtenerValorConfiguracion(63);//cod cuenta auxiliar por defecto para la anulacion de facturas		
+							$cod_proveedor=obtenerCodigoProveedorCuentaAux($cuenta_axiliar);	
+							$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta,$monto_tipopago_total,$cod_proveedor,'$fechaActual','$cod_cuenta_libreta',$cuenta_axiliar,'1','$concepto_contabilizacion')";
+							// echo $sqlEstadoCuenta;
+				            $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
+				            $flagSuccess=$stmtEstadoCuenta->execute(); 
+						}else{
+							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+						}
+					break;
 				}					
 				
 	            $ordenDetalle++;
@@ -133,7 +165,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 			// header('Location: ../comprobantes/imp.php?comp='.$codComprobante.'&mon=1');
 		}
 	} catch(PDOException $ex){
-	    return "";
+	    return "0";
 	}	
 }
 function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$cod_estado,$cod_cuenta_libreta,$normas){

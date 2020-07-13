@@ -189,7 +189,14 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                         if($flagSuccess){                            
                             return "0###".$cod_facturaVenta;
                         }
-                    }    
+                    }else{
+                        $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
+                        $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
+                        $flagSuccess=$stmtDeleteCopmprobante->execute();
+                        $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
+                        $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
+                        $flagSuccess=$stmtDeleteComprobanteDet->execute();
+                    }
                 }
                 
             }
