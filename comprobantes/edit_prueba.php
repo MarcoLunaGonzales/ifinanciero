@@ -397,6 +397,9 @@ $stmt->execute();
                                <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-fab btn-sm">
                       		        <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
 		                        </a>
+		                        <a title="Cargar Plantilla (shift+p)"  href="#" onclick="cargarPlantillas()" class="btn btn-warning btn-fab btn-sm">
+	                      		        <i class="material-icons">post_add</i>
+			                        </a>
 		                        <a  title="Guardar como Plantilla (shift+s)" href="#" onclick="modalPlantilla()"class="btn btn-danger btn-fab btn-sm">
                       		        <i class="material-icons">favorite</i>
 		                        </a>

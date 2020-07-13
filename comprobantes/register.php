@@ -40,6 +40,7 @@ $nombreCompletoUnidad=nameUnidad($globalUnidad);
 	var estado_cuentas=[];
 	var itemCuentas=[];
 	var itemCuentasAux=[];
+	var libretas_bancarias=[];
 </script>
 <?php
   $i=0;
@@ -77,6 +78,25 @@ $nombreCompletoUnidad=nameUnidad($globalUnidad);
 			 <script>configuraciones.push({codigo:<?=$codigoX?>,valor:<?=$valorX?>,descripcion:'<?=$descripcionX?>'});</script>
 		    <?php
 			 }
+
+            //LIBRETAS BANCARIAS
+			$lista=obtenerObtenerLibretaBancaria();
+            foreach ($lista->libretas as $v) {
+              $CodLibreta=$v->CodLibreta;
+              $Nombre=$v->Nombre;
+              $Banco=$v->Banco;
+              $nombreBan=nameBancos($v->CodBanco);
+              $cuentaId=$v->IdCuenta; 
+              if($nombreBan==""){
+                $nombreBan=$Banco." - ".$Nombre;
+              }else{
+                $nombreBan=$nombreBan." - ".$Nombre;  
+              }
+              ?>
+			 <script>libretas_bancarias.push({codigo:<?=$CodLibreta?>,cod_cuenta:<?=$cuentaId?>,nombre_libreta:'<?=$nombreBan?>'});</script>
+		    <?php
+            
+            }
 
             //ESTADO DE CUENTAS
 			$stmt = $dbh->prepare("SELECT * FROM configuracion_estadocuentas where cod_estadoreferencial=1");
@@ -545,3 +565,4 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 
 <!-- <script>$('.selectpicker').selectpicker("refresh");</script> -->
 <?php require_once 'modal.php';?>
+<?php require_once '../simulaciones_servicios/modal_facturacion.php';?>

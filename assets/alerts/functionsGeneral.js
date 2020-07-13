@@ -76,7 +76,7 @@ var numFilas=0;
 var cantidadItems=0;
 var filaActiva=0;
 function addCuentaContable(obj) {
-  if($("#add_boton").length){
+  if($("#add_boton").length>0){
     $("#add_boton").attr("disabled",true);
   }
   var glosa_det=$("#glosa").val();
@@ -112,7 +112,7 @@ function addCuentaContable(obj) {
           $("#divResultadoBusqueda").html("<div class='form-group col-sm-8'>Resultados de la Búsqueda</div>");
           $('.selectpicker').selectpicker("refresh");
           $('#myModal').modal('show');
-          if($("#add_boton").length){
+          if($("#add_boton").length>0){
             $("#add_boton").removeAttr("disabled");
           }
           return false;
@@ -337,6 +337,7 @@ function setBusquedaCuenta(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuent
   configuracionCentros(fila,inicio);
   configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux);
   facturacomprobante(fila);//icono de factura
+  configuracionLibretasBancarias(fila,codigoCuenta);
   $('#myModal').modal('hide');
   $(".selectpicker").selectpicker('refresh');
   $("#debe"+fila).focus();
@@ -403,6 +404,20 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
     }
   };
 }
+
+function configuracionLibretasBancarias(fila,codigoCuenta){
+  var contador=0;
+  for (var i = 0; i < libretas_bancarias.length; i++) {
+    if(libretas_bancarias[i].cod_cuenta==codigoCuenta){
+      $("#libretas_bancarias"+fila).removeClass("d-none");  
+      break;  
+    }else{
+      $("#libretas_bancarias"+fila).removeClass("d-none"); 
+      $("#libretas_bancarias"+fila).addClass("d-none");  
+    }
+  };
+}
+
 function facturacomprobante(fila){
   var cod_confi_iva=document.getElementById('cod_cuenta_configuracion_iva').value;  
   //alert(cod_confi_iva);
@@ -6814,6 +6829,11 @@ function agregarEstadoCuenta(){
   }
 }
 
+function verLibretasBancarias(fila,cuenta){
+  var codCuenta=$("#cuenta"+fila).val();
+  $("#modalListaLibretaBancaria").modal("show");  
+ // ajax_contenedor_tabla_libretaBancariaCompro();
+}
 function agregarEstadoCuentaCerrar(filaXXX,valor){
   //console.log("entro:"+fila+" "+valor);
   $("#mensaje_estadoscuenta").html("");
@@ -14972,12 +14992,13 @@ function abrirLibretaBancaria(datos,direccion,indice){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      
       $('.selectpicker').selectpicker(["refresh"]);
-      ajax_contenedor_tabla_libretaBancaria(saldo);
+      //ajax_contenedor_tabla_libretaBancaria(saldo);
       // detectarCargaAjax();      
     }
   }
   ajax.send(null);
 }
+
 function ajax_contenedor_tabla_libretaBancaria(saldo){
   document.getElementById("saldo_x").value=saldo;
   var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');
@@ -15003,13 +15024,24 @@ function ajax_contenedor_tabla_libretaBancaria(saldo){
 }
 
 function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
-  var saldo=$("#saldo_x").val();
+  
+  if($("#tipo_comprobante").length>0){
+    var saldo="";  
+    var url = "../simulaciones_servicios/ajax_listado_libreta_bancaria_comprobantes.php";
+  }else{
+   var saldo=$("#saldo_x").val();
+   var url = "simulaciones_servicios/ajax_listado_libreta_bancaria.php";
+   if($("#cantidad_filas_libretas").length>0){
+     $("#cantidad_filas_libretas").val(0);
+     $("#datos_libreta_bancaria_detalle").html("");
+   }
+  }  
   var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');
   var parametros={"saldo":saldo,"tipo_listado":0,"codigo_lib":idLib};
      $.ajax({
         type: "GET",
         dataType: 'html',
-        url: "simulaciones_servicios/ajax_listado_libreta_bancaria.php",
+        url: url,
         data: parametros,
         beforeSend: function () {
         $("#texto_ajax_titulo").html("Listando las libretas bancarias..."); 
@@ -15019,6 +15051,29 @@ function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
           detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
           contenedor.innerHTML = resp;      
+          $('.selectpicker').selectpicker(["refresh"]);
+          cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+          cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
+        }
+      });
+}
+
+function ajax_contenedor_tabla_libretaBancariaCompro(){
+  var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');
+  var parametros={"tipo_listado":0};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "../simulaciones_servicios/ajax_listado_libreta_bancaria_comprobantes.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Listando las libretas bancarias..."); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+          detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+          contenedor.innerHTML = "";      
           $('.selectpicker').selectpicker(["refresh"]);
           cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
           cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
@@ -15369,4 +15424,66 @@ function ponerDescripcionServicio(){
  var objeto = $('#objeto_servicio option:selected').text();
  var tipoServ = $('#tipo_servicio option:selected').text();
  $("#d_servicio").val(tipoServ+" - "+objeto);
+}
+
+function mostrar_listado_facturas(){
+  $("#modalListaLibretasBancariasDetalle").modal("show");
+}
+
+function listar_libretaBancaria(codLibretaDetalle,descripcion){
+  if(verificarLibretaCodigo(codLibretaDetalle)==true){
+  Swal.fire("A ocurrido un error!", "La libreta ya está seleccionada", "warning");
+  }else{
+   var n= $("#cantidad_filas_libretas").val();
+   n++;
+   $("#nfacturaslibretas").html(n);
+   $("#cantidad_filas_libretas").val(n);
+   agregarLibretaDetalleFactura(codLibretaDetalle,descripcion,n);
+  }
+}
+function agregarLibretaDetalleFactura(codLibretaDetalle,descripcion,n){
+  var descripcionList=[];
+  if(descripcion!=""){
+    descripcionList=descripcion.split("####");
+  }else{
+    descripcionList[0]="";descripcionList[1]="";descripcionList[2]="";descripcionList[3]="";
+  }
+   var html ='<tr id="fila_detalle_factura'+n+'">'+
+    '<td>'+descripcionList[0]+'<input id="cod_detalle_libreta_bancaria'+n+'" type="hidden" value="'+codLibretaDetalle+'"></td>'+
+    '<td>'+descripcionList[1]+'</td>'+
+    '<td>'+descripcionList[2]+'</td>'+
+    '<td>'+descripcionList[3]+'</td>'+
+    '<td><button title="Eliminar de la lista" class="btn btn-sm btn-danger btn-fab" onclick="eliminarLibretaDetalleFactura('+n+')"><i class="material-icons">delete</i></td>'+   
+   '</tr>';
+   $("#datos_libreta_bancaria_detalle").append(html);
+   $("#modalListaLibretasBancariasDetalle").modal("show");
+}
+
+function eliminarLibretaDetalleFactura(fila){
+  $("#fila_detalle_factura"+fila).remove();
+}
+
+function verificarLibretaCodigo(codigo){
+   var n = $("#cantidad_filas_libretas").val();
+   var existe=false;
+   for (var i = 1; i <= n; i++) {
+      if($("#cod_detalle_libreta_bancaria"+i).length>0){
+        if($("#cod_detalle_libreta_bancaria"+i).val()==codigo){
+         existe=true;
+        }
+      }
+   };
+   return existe;
+}
+
+function facturarLibretaBancaria(){
+  var codDetalle=[];
+  var index=0;
+  for (var i = 1; i <= $("#cantidad_filas_libretas").val(); i++) {
+      if($("#cod_detalle_libreta_bancaria"+i).length>0){
+         codDetalle[index]=$("#cod_detalle_libreta_bancaria"+i).val();
+         index++;
+      }
+   };
+  seleccionar_libretaBancaria(codDetalle.join(","));
 }

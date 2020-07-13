@@ -95,6 +95,7 @@ $glosaDet="";
     			     <input type="hidden" id="tipo_estadocuentas_casoespecial<?=$idFila?>" value="-100">
 
     			     <a title="Estado de Cuentas" id="estados_cuentas<?=$idFila?>" href="#" onclick="verEstadosCuentas(<?=$idFila;?>,0);" class="btn btn-sm btn-danger btn-fab d-none"><span class="material-icons text-dark">ballot</span><span id="nestado<?=$idFila?>" class="bg-warning"></span></a>	  
+    			     <a title="Libretas Bancarias" id="libretas_bancarias<?=$idFila?>" href="#" onclick="verLibretasBancarias(<?=$idFila;?>,0);" class="btn btn-sm btn-primary btn-fab d-none"><span class="material-icons text-dark">ballot</span></a>       
     			    </div>  
     			</div>
     		</div>
