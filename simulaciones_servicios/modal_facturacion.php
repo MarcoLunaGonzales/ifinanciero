@@ -448,9 +448,9 @@
               $Banco=$v->Banco;
               $nombreBan=nameBancos($v->CodBanco);
               if($nombreBan==""){
-                $nombreBan=$Banco." - ".$Nombre;
+                $nombreBan=$Nombre;
               }else{
-                $nombreBan=$nombreBan." - ".$Nombre;  
+                $nombreBan=$Nombre;  
               }
               ?><a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(<?=$CodLibreta?>)"><?=$nombreBan?></a><?php
             }
