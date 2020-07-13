@@ -430,6 +430,9 @@
         <button title="Listar todo" onclick="ajax_listado_libreta_bancaria_filtrar()" type="button" class="btn btn-warning btn-sm btn-fab float-right" >
           <i class="material-icons">list</i>
         </button>
+        <a title="Facturas" onclick="mostrar_listado_facturas()" class="btn btn-primary btn-sm btn-fab float-right" >
+          <i class="material-icons">F</i><span id="nfacturaslibretas" class="count bg-warning">0</span>
+        </a>
       </div>
       <div class="card-body">
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
@@ -438,6 +441,7 @@
         <input type="hidden" name="indice" id="indice" value="0">
         <input type="hidden" name="saldo_x" id="saldo_x" value="0">        
         <div class="row">
+
         <div class="btn-group">
           <a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(0)">Todas</a>
           <?php 
@@ -464,6 +468,46 @@
       <div class="modal-footer">
          <span style="color:  #e59866 ;"><i class="material-icons">check_box</i> Registros Contabilizados</span><br>
          <span style="color:  #85929e;"><i class="material-icons">check_box</i> Registros No Contabilizados</span><br>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal envio de facturas -->
+<div class="modal fade" id="modalListaLibretasBancariasDetalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" style="background-color:#e2e6e7">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Libretas Bancarias Detalle - Facturas</h4>
+      </div>
+      <div class="modal-body">
+         <table class="table table-condensed table-bordered small">
+          <thead>
+           <tr class="bg-primary text-white">
+             <td>FECHA</td>
+             <td>DESCRIPCION</td>
+             <td>MONTO</td>
+             <td>SALDO</td>
+             <td>QUITAR</td>
+           </tr>
+           </thead>
+           <tbody id="datos_libreta_bancaria_detalle">
+             
+           </tbody>
+           <!--<tfoot>
+             <tr class="font-weight-bold">
+             <td colspan="2">Total</td>
+             <td id="totales_monto_libreta">0</td>
+             <td id="totales_saldo_libreta">0</td>
+             <td></td>
+           </tr>
+           </tfoot>-->
+         </table>
+         <input type="hidden" id="cantidad_filas_libretas" value="0">
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-success" onclick="facturarLibretaBancaria()">FACTURAR</a>
       </div>
     </div>
   </div>

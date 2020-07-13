@@ -5,7 +5,7 @@ require_once '../functions.php';
 require_once '../styles.php';
 require_once '../layouts/librerias.php';
 $dbh = new Conexion();
-$saldo_solfac=$_GET['saldo'];
+//$saldo_solfac=$_GET['saldo'];
 $tipo_listado=$_GET['tipo_listado'];
 $listarLib=1;
 ?>
@@ -87,12 +87,8 @@ $listarLib=1;
               $saldo=$v_detalle->Saldo;
               if($CodEstado==0)$color_aux="background-color: #d6dbdf;";
               else $color_aux="background-color:#f6ddcc;";
-              
-              $datosEnviarModal="";
-              if($tipo_listado==1 || $saldo>0){//todo 
-              $datosEnviarModal=$Fecha."####".$Descripcion." ".$InformacionComplementaria."####".number_format($monto,2)."####".number_format($saldo,2); 
-                ?>
 
+              if($tipo_listado==1 || $saldo>0){//todo ?>
                 <tr style="<?=$color_aux?>">
                   <td class="libretaDetalles_<?=$j?> small" align="center"><?=$index;?></td>
                   <td class="libretaDetalles_<?=$j?> text-center small"><span style="padding:0px;border: 0px;"><?=$Fecha?><br><?=$Hora?></span></td>           
@@ -141,7 +137,7 @@ $listarLib=1;
                         if($saldo>=$saldo_solfac){
                           if($cont_facturas==0)$label="btn btn-fab btn-success btn-sm";
                           else $label="btn btn-fab btn-warning btn-sm";
-                          ?><a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="listar_libretaBancaria(<?=$CodLibretaDetalle?>,'<?=$datosEnviarModal?>')" class="<?=$label?>" title="Seleccionar Item"><i class="material-icons">done</i></a>
+                          ?><a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="<?=$label?>" title="Seleccionar Item"><i class="material-icons">done</i></a>
                             <?php
                         }?>
                       </td>
@@ -165,7 +161,7 @@ $listarLib=1;
                         if($monto>=$saldo_solfac){
                           if($cont_facturas==0)$label="btn btn-fab btn-success btn-sm";
                           else $label="btn btn-fab btn-warning btn-sm"; ?>
-                          <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="listar_libretaBancaria(<?=$CodLibretaDetalle?>,'<?=$datosEnviarModal?>')" class="<?=$label?>" title="Seleccionar Item"><i class="material-icons">done</i></a><?php
+                          <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_libretaBancaria(<?=$CodLibretaDetalle?>)" class="<?=$label?>" title="Seleccionar Item"><i class="material-icons">done</i></a><?php
                         }?>
                       </td><?php                          
                     }
