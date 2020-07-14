@@ -30,7 +30,7 @@ if(isset($_GET['q'])){
   $sqlAreas="";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (4)) $sqlAreas order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (3)) $sqlAreas order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -60,7 +60,7 @@ $item_1=2708;
                   <div class="card-icon">
                     <i class="material-icons">content_paste</i>
                   </div>
-                  <h4 class="card-title"><b>Gesti&oacute;n de <?=$moduleNamePlural?></b></h4>
+                  <h4 class="card-title"><b>Contabilización de <?=$moduleNamePlural?></b></h4>
                 </div>
                 <div class="card-body">
                     <table class="table table-condesed" id="tablePaginator">
@@ -326,7 +326,7 @@ $item_1=2708;
 <!--    end small modal -->
 
 <?php
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (2)) $sqlAreas order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (5)) $sqlAreas order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
