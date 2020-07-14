@@ -26,7 +26,7 @@ if(isset($_GET['q'])){
   <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
 <?php
 }else{
-  $item_3=0;
+  $item_3=obtenerIdRolDeIbnorca($globalUser);
   $sqlFilter="";
 }
 // Preparamos

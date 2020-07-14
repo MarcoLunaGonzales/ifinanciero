@@ -7906,7 +7906,7 @@ function sumatotaldetallefactura($cod_factura){
   }
   function obtenerIdRolDeIbnorca($codigo){
     $dbh = new Conexion();
-    $stmt = $dbh->prepare("SELECT IdRol FROM ibnorca.personarol WHERE IdPersona = '$codigo' and pordefecto=1 and ibnorca.PersonaRol(IdPersona)>4");
+    $stmt = $dbh->prepare("SELECT IdRol FROM ibnorca.personarol WHERE IdPersona = '$codigo' and pordefecto=1 "); //and ibnorca.PersonaRol(IdPersona)>4
     $stmt->execute();
     $valor=0;
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    

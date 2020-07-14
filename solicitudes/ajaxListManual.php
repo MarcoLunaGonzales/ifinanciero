@@ -36,11 +36,11 @@ if(isset($_GET['v'])){
                                     $abrevX=$row['abreviatura'];
                                     if($codigoX==$globalUnidad){
                                      ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                   }/*else{
-                                    if($v==0){
+                                   }else{
+                                    //if($v==0){
                                       ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
-                                    }      
-                                   }*/
+                                    //}      
+                                   }
                                        
                                       }
                                     ?>
@@ -61,11 +61,11 @@ if(isset($_GET['v'])){
                                            $abrevX=$row['abreviatura'];
                                            if($codigoX==$globalArea){
                                              ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
-                                           }/*else{
-                                            if($v==0){
+                                           }else{
+                                            //if($v==0){
                                               ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
-                                            }          
-                                           }*/
+                                            //}          
+                                           }
                                             
                                          } 
                                          ?>
