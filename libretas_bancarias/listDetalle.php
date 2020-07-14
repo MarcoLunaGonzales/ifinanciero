@@ -12,10 +12,17 @@ $nombreGestion=$_SESSION['globalNombreGestion'];
 $codGestionActiva=$_SESSION['globalGestion'];
 
 $dbh = new Conexion();
+//sacamos el saldo inicial p menor
+// $stmtSaldoInicial = $dbh->prepare("SELECT ce.monto
+// FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 limit 1");
+// $stmtSaldoInicial->execute();
+// $resultSaldoInicial=$stmtSaldoInicial->fetch();
+$saldo_inicial=0;
+
 
 // Preparamos
 $stmt = $dbh->prepare("SELECT ce.*
-FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.codigo desc");
+FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -99,7 +106,23 @@ $stmtb->bindColumn('nombre', $nombre);
                       <tbody>
                         <?php
                         $index=1;
-                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
+                        $fecha_temporal="2020-07-01 00:00:00";
+                        $sw_temporal=true;
+                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          //codigo temporal para cuadrar cierto monto  el saldo inicial es de la fecha 1/7/2020
+                          if($fecha>=$fecha_temporal && $sw_temporal){
+                            $sw_temporal=false;
+                            $saldo_inicial_temporal=157510.15;
+                            $saldo_inicial=$saldo_inicial_temporal;?>
+                            <tr style="background:#21618C; color:#fff;"><td></td><td></td><td></td><td></td><td></td><td></td><td><?=$saldo_inicial_temporal?></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+                          <?php }
+
+                          $saldo_inicial=$saldo_inicial+$monto;
+
+                          //==termina el codigom temporal
+
+                          ?>
                           <tr>
                             <td align="center"><?=$index;?></td>
                             <td class="text-center"><?=strftime('%d/%m/%Y',strtotime($fecha))?><br><?=strftime('%H:%M:%S',strtotime($fecha))?></td>
@@ -107,10 +130,12 @@ $stmtb->bindColumn('nombre', $nombre);
                             <td class="text-left"><?=$informacion_complementaria?></td>      
                             <td class="text-left"><?=$agencia?></td>
                             <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-                            <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
+                            <!-- <td class="text-right"><?=number_format($saldo,2,".",",")?></td> -->
+                            <td class="text-right"><?=number_format($saldo_inicial,2,".",",")?></td>                          
                             <td class="text-left"><?=$nro_documento?></td>
 
-                            <?php                  
+                            <?php
+                              
                               // $cont_facturas=contarFacturasLibretaBancaria($codigo);
                               // if($cont_facturas>0){
                                 $cadena_facturas=obtnerCadenaFacturas($codigo);

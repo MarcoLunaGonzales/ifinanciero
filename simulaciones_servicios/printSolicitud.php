@@ -60,19 +60,21 @@ $html.='<body>'.
           '}'.
         '</script>';
 $html.=  '<header class="header">'.        
-          '<table class="table">
-            <tr>
-              <td align="center" class="table-title"><b>'.obtenerValorConfiguracionFactura(1).'</b></td>
-              <td rowspan="3" width="5%"><img width="100px"  src="../assets/img/ibnorca2.jpg"></td>
-            </tr>
-            <tr>
-              <td align="center" class="table-title"><b>REGISTRO</b></td>
-            </tr>
-            <tr>
-              <td align="center" class="table-title"><b>SOLICITUD FACTURACIÓN</b></td>            
-            </tr>          
-          </table>'.
-          '<br>'.
+            '<table class="table">
+              <tr>
+                <td align="center" class="table-title"><b>'.obtenerValorConfiguracionFactura(1).'</b></td>
+                <td rowspan="3" width="5%"><img width="100px"  src="../assets/img/ibnorca2.jpg"></td>
+              </tr>
+              <tr>
+                <td align="center" class="table-title"><b>REGISTRO</b></td>
+              </tr>
+              <tr>
+                <td align="center" class="table-title"><b>SOLICITUD FACTURACIÓN</b></td>            
+              </tr>          
+            </table>'.
+          '</header>'.
+
+          
           '<table class="table">
             <tr>
               <td align="left" width="20%" class="td-color-celeste"><b>Ciudad Y Fecha: </b></td>
@@ -131,8 +133,7 @@ $html.=  '<header class="header">'.
             //     where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
 
             $sqlA="SELECT *,(select t.Codigo from cla_servicios t where t.idclaservicio=cod_claservicio) as Codigo_alterno  from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
-
-            $stmt2 = $dbh->prepare($sqlA);                                   
+            $stmt2 = $dbh->prepare($sqlA);                                
             $stmt2->execute();
             $index=1;
             $sumaTotal_bob=0;
@@ -140,13 +141,20 @@ $html.=  '<header class="header">'.
             while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
               if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7) $precio_unitario=$row2["precio"];
               else $precio_unitario=$row2["precio"];
-              
               if($usd>0)$precio_sus=($precio_unitario*$row2["cantidad"])/$usd;
               else $precio_sus=0;
               if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
                 $codigo_alterno_detalle=obtener_codigo_modulo_IBnorca($row2['cod_claservicio']);
               }else{
                 $codigo_alterno_detalle=$row2['Codigo_alterno'];
+              }
+
+              //tipos de pago
+              $sqlAreas="SELECT cod_tipopago,porcentaje from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion";
+              $stmtAreas = $dbh->prepare($sqlAreas);                                   
+              $stmtAreas->execute();
+              while ($rowTipoPago = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
+
               }
               
               $html.='<tr>
@@ -162,7 +170,6 @@ $html.=  '<header class="header">'.
               $index++;
               $sumaTotal_bob+=$precio_unitario*$row2["cantidad"];
               $sumaTotal_sus+=$precio_sus;
-
             }
             //total de detalles
             $html.='<tr>                
@@ -252,83 +259,90 @@ $html.=  '<header class="header">'.
           // $cod_tipopago=3;
           //efectivo
           
-
-          $personal_solicitante=namePersonal($cod_personal);
-          $fecha_solicitud=obtenerFechaCambioEstado(2709,$codigo_facturacion,2726);
-
+          $objeto_solfac=2709;
+          $personal_registro=namePersonal($cod_personal);
+          $fecha_registro=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2726);//estado registro
+          
           $cod_tipopago_cred=obtenerValorConfiguracion(48);
           
-          $userRevision=obtenerPersonaCambioEstado(2709,$codigo_facturacion,2727);  //en aprobacion          
-          if($userRevision==0){
-             $fecha_revision="Sin registro";    
-             $personal_revision="Sin registro";    
+          $userRevisado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2727);  //En revisado
+          if($userRevisado==0){
+             $fecha_revisado="Sin registro";    
+             $personal_revisado="Sin registro";    
           }else{
-             $personal_revision=namePersonal($userRevision);
-             $fecha_revision=obtenerFechaCambioEstado(2709,$codigo_facturacion,2727);
+             $personal_revisado=namePersonal($userRevisado);
+             $fecha_revisado=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2727);
           }
           
-          $userAprobado=obtenerPersonaCambioEstado(2709,$codigo_facturacion,2728);
+          $userAprobado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2728);
           if($userAprobado==0){
              $fecha_aprobacion="Sin registro";    
              $personal_aprobacion="Sin registro";    
           }else{
              $personal_aprobacion=namePersonal($userAprobado);
-             $fecha_aprobacion=obtenerFechaCambioEstado(2709,$codigo_facturacion,2728);
+             $fecha_aprobacion=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2728);
           }
-          $userprocesado=obtenerPersonaCambioEstado(2709,$codigo_facturacion,2729);//procesado        
+          $userprocesado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2729);//procesado        
           if($userprocesado==0){
              $personal_procesado="Sin registro";    
              $fecha_procesado="Sin registro";
           }else{
              $personal_procesado=namePersonal($userprocesado);    
-             $fecha_procesado=obtenerFechaCambioEstado(2709,$codigo_facturacion,2729);
+             $fecha_procesado=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2729);
+          }
+
+          $userRevision=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2729);//procesado        
+          if($userRevision==0){
+             $personal_revision="Sin registro";    
+             $fecha_revision="Sin registro";
+          }else{
+             $personal_revision=namePersonal($userRevision);    
+             $fecha_revision=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2729);
+          }
+
+          $userAnulado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2730);//procesado        
+          if($userAnulado==0){
+             $personal_anulado="Sin registro";    
+             $fecha_anulado="Sin registro";
+          }else{
+             $personal_anulado=namePersonal($userAnulado);    
+             $fecha_anulado=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2730);
           }
 
 
-            
-          $html.='
-          <table class="table">
-            <tr>
-                <td class=" text-center" height="80px"></td>
-                <td class=" text-center" height="80px"></td>
-                <td class=" text-center" height="80px"></td>
-                <td class=" text-center" height="80px"></td>
-            </tr>
-            <tr>
-                <td class=" text-center" width="25%">Solicitante: '.$personal_solicitante.'</td>
-                <td class=" text-center" width="25%">Revisión: '.$personal_revision.'</td>
-                <td class=" text-center" width="25%">Aprobación: '.$personal_aprobacion.'</td>
-                <td class=" text-center" width="25%">Procesado:' .$personal_procesado.'</td>
-            </tr>
-            <tr>
-                <td class=" text-left">Fecha: '.$fecha_solicitud.'</td>
-                <td class=" text-left">Fecha: '.$fecha_revision.'</td>
-                <td class=" text-left">Fecha: '.$fecha_aprobacion.'</td>
-                <td class=" text-left">Fecha: '.$fecha_procesado.'</td>
-            </tr>
-         </table>';
+          $html.='<table class="table">
+            <thead>
+              <tr>
+                <th>Estado</th>
+                <th>Personal</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>REGISTRADO:</td><td> '.$personal_registro.'</td><td>'.$fecha_registro.'</td>
+              </tr>            
+              <tr>
+                <td>REVISADO: </td><td>'.$personal_revisado.'</td><td>'.$fecha_revisado.'</td>
+              </tr>
+              <tr>
+                <td>EN REVISIÓN: </td><td>'.$personal_revision.'</td><td>'.$fecha_revision.'</td>
+              </tr>
+              <tr>
+                <td>APROBADO:</td><td>'.$personal_aprobacion.'</td><td>'.$fecha_aprobacion.'</td>
+              </tr>
+              <tr>
+                <td>FACTURADO: </td><td>'.$personal_procesado.'</td><td>'.$fecha_procesado.'</td>
+              </tr>
+              <tr>
+                <td>ANULADO: </td><td>'.$personal_anulado.'</td><td>'.$fecha_anulado.'</td>
+              </tr>
+            </tbody>
+          </table>';
+        
 
-
-            // $html.='<table style="width:100%">
-            //   <tr>
-            //     <td class="text-center"><p>_______________________________<br>Aprobado Por<br></p></td>
-            //     <td class="text-center"><p>_______________________________<br>Recepción<br>Nombre:</p></td>
-            //   </tr>              
-            // </table><br><br><br>';
-
-
-          '</header>';
-
-          $html.='<footer>
-
-          <table class="table">
-            <tr>
-              <td class="s4 text-left" width="25%">IBNORCA</td>
-              <td class="s4 text-left" width="25%">CÓDIGO</td>
-              <td class="s4 text-left" width="25%">V:</td>
-              <td class="s4 text-left" width="25%">Página 1 de 1</td>
-            </tr>
-          </table>
+          $html.='<footer>          
+          
 
 
           </footer>';

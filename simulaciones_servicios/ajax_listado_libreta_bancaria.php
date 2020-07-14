@@ -111,7 +111,6 @@ $listarLib=1;
                     if($cont_facturas>0){
                       $cadena_facturas=obtnerCadenaFacturas($CodLibretaDetalle);
                       $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 order by codigo desc";
-
                       // $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$CodLibretaDetalle and cod_estadofactura !=2 order by codigo desc";
                       $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                       $stmtDetalleX->execute();
