@@ -479,7 +479,7 @@
     <div class="modal-content" style="background-color:#e2e6e7">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Libretas Bancarias Detalle - Facturas</h4>
+        <h4 class="modal-title" id="myModalLabel">Relacionar Libreta Bancaria - Factura</h4>
       </div>
       <div class="modal-body">
          <table class="table table-condensed table-bordered small">
