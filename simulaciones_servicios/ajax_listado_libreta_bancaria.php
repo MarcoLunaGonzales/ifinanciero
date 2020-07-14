@@ -109,7 +109,10 @@ $listarLib=1;
                   <?php                  
                     $cont_facturas=contarFacturasLibretaBancaria($CodLibretaDetalle);
                     if($cont_facturas>0){
-                      $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$CodLibretaDetalle and cod_estadofactura !=2 order by codigo desc";
+                      $cadena_facturas=obtnerCadenaFacturas($CodLibretaDetalle);
+                      $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 order by codigo desc";
+
+                      // $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$CodLibretaDetalle and cod_estadofactura !=2 order by codigo desc";
                       $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                       $stmtDetalleX->execute();
                       $stmtDetalleX->bindColumn('fecha_factura', $fechaDetalle);

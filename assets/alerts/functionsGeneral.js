@@ -15471,7 +15471,7 @@ function limpiarDetalleSolicitud(){
           }
         });
 }
-function eliminarRelacionFactura(codigo){
+function eliminarRelacionFactura(codigo,codigo_libreta_detalle){
   var cod_libreta=document.getElementById("codigo_libreta").value;
   swal({
         title: '¿Estás Seguro?',
@@ -15487,7 +15487,7 @@ function eliminarRelacionFactura(codigo){
           if (result.value) {
             $.ajax({
               type:"POST",
-              data:"codigo="+codigo,
+              data:"codigo="+codigo+"&codigo_libdet="+codigo_libreta_detalle,
               url:"libretas_bancarias/saveDelete_relacion_factura.php",
               success:function(r){
                 if(r==1){

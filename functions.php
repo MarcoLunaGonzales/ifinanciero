@@ -7454,7 +7454,7 @@ function obtenerContraCuentaLibretaBancaria($cod_libreta){
 }
 function contarFacturasLibretaBancaria($codigo){
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura in (1,3,4)");
+  $stmt = $dbh->prepare("SELECT codigo From libretas_bancariasdetalle_facturas lbf, facturas_venta f where lbf.cod_facturaventa=f.codigo and f.cod_estadofactura!=2 and lbf.cod_libretabancariadetalle=$codigo");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -7917,11 +7917,54 @@ function sumatotaldetallefactura($cod_factura){
 
   function obtenerCantidadFacturasLibretaBancariaDetalle($codigo,$sqlFiltro2){
     $dbh = new Conexion();
-    $stmtVerif = $dbh->prepare("SELECT count(*) as cantidad FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 $sqlFiltro2 order by codigo desc");
+    $stmtVerif = $dbh->prepare("SELECT (SELECT f.codigo from facturas_venta f where f.codigo=lf.cod_facturaventa and f.cod_estadofactura!=2 $sqlFiltro2)as codigo From libretas_bancariasdetalle_facturas lf where lf.cod_libretabancariadetalle=$codigo");
     $stmtVerif->execute();
-    $resultVerif = $stmtVerif->fetch();    
-    $valor = $resultVerif['cantidad'];
-    return $valor;
+    $contador=0;
+    while ($row = $stmtVerif->fetch(PDO::FETCH_ASSOC)) {    
+        $valor=$row['codigo'];
+        if($valor!=null || $valor!=0 || $valor!=''){
+          $contador++;
+        }
+    }
+    return $contador;
+  }
+  function obtnerCadenaFacturas($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT ld.cod_facturaventa from libretas_bancariasdetalle_facturas  ld where ld.cod_libretabancariadetalle=$codigo";    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $cadena="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {      
+      $cadena.=$row['cod_facturaventa'].",";
+    }     
+    $cadena=trim($cadena,','); 
+
+    return($cadena);
+  }
+  function verificarCodFactura($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT ld.cod_facturaventa from libretas_bancariasdetalle_facturas  ld where ld.cod_libretabancariadetalle=$codigo";    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {      
+      $valor=1;
+    }         
+    return($valor);
+  }
+  function verificar_cod_libretadetalle($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT ld.cod_libretabancariadetalle from libretas_bancariasdetalle_facturas  ld where ld.cod_facturaventa=$codigo";    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {     
+      $cod_x=$row['cod_libretabancariadetalle'];
+      if($cod_x!=null || $cod_x!= '' || $cod_x!=0){
+        $valor=$cod_x;
+      }else $valor=0;
+    }         
+    return($valor);
   }
 
   function obtenerCodigoLibretaDetalleComprobante($codigo){
