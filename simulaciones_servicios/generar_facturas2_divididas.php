@@ -28,18 +28,9 @@
         $cod_tipopago_deposito=obtenerValorConfiguracion(55);//tipo de pago deposito en cuenta
         $cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
         $cod_tipopago_anticipo=obtenerValorConfiguracion(64);//tipo de pago anticipo
-        if($cod_tipopago==$cod_tipopago_deposito){//deposito en cuenta?
-	        if($cod_libreta>0){
-	            $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
-	            if($estado_libreta==0){
-	                $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);                                    
-	                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_cuenta);
-	            }elseif($estado_libreta==1){
-	                $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);                                    
-	                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_contracuenta);
-	            }else{                                    
-	                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);    
-	            }
+        if($cod_tipopago==$cod_tipopago_deposito){//deposito en cuenta?        
+            if($cod_libreta!=0){//si viene sin cod libreta no se toma en cuetna el deposito en cuenta
+                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_libreta);
 	        }else{
 	            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);
 	        }
@@ -71,16 +62,22 @@
                 $stmtNroFac->execute();
                 $resultNroFact = $stmtNroFac->fetch();    
                 $cod_facturaVenta = $resultNroFact['codigo'];
-                if($cod_libreta>0){
+                if($cod_libreta!=0){
+                    $array_libreta=explode(',',$cod_libreta);
+                    for($i=0;$i<sizeof($array_libreta);$i++){
+                        $cod_libreta_x= $array_libreta[$i];
+                        $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($cod_libreta_x,$cod_facturaVenta)";
+                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                        $stmtUpdateLibreta->execute();
+                    }
                     // $cod_libreta=$_GET["cod_libreta"];
                     //si es de tipo deposito en cuenta insertamos en libreta bancaria
-                    $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
-                    $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-                    $flagSuccess=$stmtUpdateLibreta->execute();
-
-                    $sqlUpdateFac="UPDATE facturas_venta SET cod_libretabancariadetalle=$cod_libreta where codigo=$cod_facturaVenta";
-                    $stmtUpdateFac = $dbh->prepare($sqlUpdateFac);
-                    $flagSuccessFac=$stmtUpdateFac->execute(); 
+                    // $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
+                    // $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                    // $flagSuccess=$stmtUpdateLibreta->execute();
+                    // $sqlUpdateFac="UPDATE facturas_venta SET cod_libretabancariadetalle=$cod_libreta where codigo=$cod_facturaVenta";
+                    // $stmtUpdateFac = $dbh->prepare($sqlUpdateFac);
+                    // $flagSuccessFac=$stmtUpdateFac->execute(); 
                 }           
                 //insertamos detalle
                 $stmt = $dbh->prepare("SELECT sf.* from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo and codigo in ($string_cod_Det)");

@@ -36,7 +36,7 @@ $cod_facturacion=$_GET['cod_facturacion'];
       <td class="text-right">
         <div class="div-center">
           <?php 
-          obtenerDirectoriosSol_solfac("../assets/archivos-respaldo/archivos_solicitudes_facturacion/SOLFAC-".$cod_facturacion);
+          obtenerDirectoriosSol_solfac("../assets/archivos-respaldo/archivos_solicitudes_facturacion/SOLFAC-".$cod_facturacion,$urlArchivo);
           ?>
         </div>
         <!-- <div class="btn-group">

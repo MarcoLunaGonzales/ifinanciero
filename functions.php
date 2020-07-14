@@ -1568,7 +1568,10 @@ function obtenerDirectoriosSol($ruta){
         echo "No tiene archivos adjuntos";
     }
 }
-function obtenerDirectoriosSol_solfac($ruta){
+function obtenerDirectoriosSol_solfac($ruta,$url_archivo){
+    $ruta2=$ruta."/";    
+    $nombre_archivo_array=explode($ruta2, $url_archivo);    
+    $nombre_archivo=$nombre_archivo_array[1];    
     // Se comprueba que realmente sea la ruta de un directorio
     if (is_dir($ruta)){
         // Abre un gestor de directorios para la ruta indicada
@@ -1579,16 +1582,17 @@ function obtenerDirectoriosSol_solfac($ruta){
         while (($archivo = readdir($gestor)) !== false)  {
                 
             $ruta_completa = $ruta . "/" . $archivo;
-
-            // Se muestran todos los archivos y carpetas excepto "." y ".."
-            if ($archivo != "." && $archivo != "..") {
-                // Si es un directorio se recorre recursivamente
-                if (is_dir($ruta_completa)) {
-                 
-                } else {
-                  echo "<div class='btn-group'><a class='btn btn-sm btn-info btn-block' href='ifinanciero/".$ruta_completa."' target='_blank'>" . $archivo . "</a><a class='btn btn-sm btn-default' href='ifinanciero/".$ruta_completa."' download='ifinanciero/".$archivo."'><i class='material-icons'>vertical_align_bottom</i></a></div>";
-                }
-            }
+            if($ruta_completa==$url_archivo){
+              // Se muestran todos los archivos y carpetas excepto "." y ".."
+              if ($archivo != "." && $archivo != "..") {
+                  // Si es un directorio se recorre recursivamente
+                  if (is_dir($ruta_completa)) {
+                   
+                  } else {
+                    echo "<div class='btn-group'><a class='btn btn-sm btn-info btn-block' href='ifinanciero/".$ruta_completa."' target='_blank'>" . $archivo . "</a><a class='btn btn-sm btn-default' href='ifinanciero/".$ruta_completa."' download='ifinanciero/".$archivo."'><i class='material-icons'>vertical_align_bottom</i></a></div>";
+                  }
+              }
+            }          
         }
         
         // Cierra el gestor de directorios
