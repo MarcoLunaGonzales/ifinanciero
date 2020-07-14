@@ -322,7 +322,10 @@ $stmt->bindColumn('idServicio', $idServicioX);
                  $codUrl="&sim=$codSimCosto&det=1";
                  $codUrl2="?sim=$codSimCosto&det=1";
                 }
-?>
+                if(isset($_GET["q"])){
+                  ?><a href="#" target="_blank" class="btn btn-warning float-right"><i class="material-icons">fullscreen</i> Ver Pantalla Completa</a><?php
+                }
+?>              
                 <a href="#" onclick="abrirModal('modalListSolEliminados');moverModal('modalListSolEliminados');" class="btn btn-danger float-right" style="background:rgb(37, 98, 83) !important; color:#E2AF0F;"><i class="material-icons"><?=$iconDelete;?></i> <small id="cantidad_eliminados"></small> Eliminados</a>
               </div>      
             </div>

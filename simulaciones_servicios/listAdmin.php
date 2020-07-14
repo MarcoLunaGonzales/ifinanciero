@@ -243,7 +243,7 @@ $item_1=2707;
               <div class="card-footer fixed-bottom">
                 <?php 
                 if(isset($_GET['q'])){
-                ?><a href="<?=$urlList2?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
+                ?><a href="<?=$urlList2?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><a href="#" target="_blank" class="btn btn-warning float-right"><i class="material-icons">fullscreen</i> Ver Pantalla Completa</a><?php
                 }else{
                  ?><a href="<?=$urlList2?>" class="btn btn-info"><i class="material-icons">refresh</i> Refrescar</a><?php
                 } 
