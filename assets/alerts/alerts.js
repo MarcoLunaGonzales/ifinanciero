@@ -250,6 +250,7 @@ alerts = {
         buttonsStyling: false
       }).then((result) => {
           if (result.value) {
+            iniciarCargaAjax();
             location.href=url; 
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
@@ -318,7 +319,7 @@ alerts = {
      else if (type == 'aprobar-solicitud-recurso') {
       swal({
         title: '¿Estás Seguro?',
-        text: "Se aprobara la Solicitud de Recursos y Se enviará a Administración",
+        text: "Se aprobará la Solicitud de Recursos y Se enviará a Administración (Contabilidad)",
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-warning',

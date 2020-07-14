@@ -36,11 +36,11 @@ if(isset($_GET['v'])){
                                     $abrevX=$row['abreviatura'];
                                     if($codigoX==$globalUnidad){
                                      ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                   }else{
-                                    //if($v==0){
+                                   }/*else{
+                                    if($v==0){
                                       ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
-                                    //}      
-                                   }
+                                    }      
+                                   }*/
                                        
                                       }
                                     ?>
@@ -52,7 +52,7 @@ if(isset($_GET['v'])){
                                        <select class="selectpicker form-control form-control-sm" name="area_solicitud" id="area_solicitud" data-style="btn btn-primary">
                                      <?php
                                                              
-                                           $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 union SELECT codigo, nombre, abreviatura FROM areas where codigo in (826,871) order by 2");
+                                           $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo where a.cod_estado=1 order by 2");
                                          $stmt->execute();
                                          $cont=0;
                                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -61,11 +61,11 @@ if(isset($_GET['v'])){
                                            $abrevX=$row['abreviatura'];
                                            if($codigoX==$globalArea){
                                              ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
-                                           }else{
-                                            //if($v==0){
+                                           }/*else{
+                                            if($v==0){
                                               ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
-                                            //}          
-                                           }
+                                            }          
+                                           }*/
                                             
                                          } 
                                          ?>

@@ -717,7 +717,8 @@
                         $stmtRetencion->execute();
                         $contRetencion=0;
                         while ($row = $stmtRetencion->fetch(PDO::FETCH_ASSOC)) {
-                           $nombreX=$row['abreviatura'];
+                           $abrevX=$row['abreviatura'];
+                           $nombreX=$row['nombre'];
                            $codigoX=$row['codigo'];
 ?>
                         <tr>
@@ -731,7 +732,7 @@
                             </label>
                           </div>
                           </td>
-                          <td class="text-left"><?=$nombreX;?></td>
+                          <td class="text-left"><?=$nombreX;?> - <?=$abrevX?></td>
                         </tr>
 
                       <?php
