@@ -39,6 +39,11 @@ $sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',m
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();	
 
+//
+$sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=0, cod_comprobantedetalle=0,cod_estado=0 where cod_comprobante=$codComprobante";
+$stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
+$stmtDetalleUpdate->execute(); 
+
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
     foreach($_FILES["archivos"]['tmp_name'] as $key => $tmp_name)
@@ -113,6 +118,13 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
       $stmtDetalle = $dbh->prepare($sqlDetalle);
       $flagSuccessDetalle=$stmtDetalle->execute();
+    }
+    
+    if($_POST["cod_detallelibreta".$i]!=0){
+      $codDetalleLibreta=$_POST["cod_detallelibreta".$i];
+      $sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=$codComprobante, cod_comprobantedetalle=$codComprobanteDetalle,cod_estado=1 where codigo=$codDetalleLibreta";
+      $stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
+      $stmtDetalleUpdate->execute();  
     }
 
     /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA CON LA VALIDACION DE TIPO(DEBE/HABER)*/

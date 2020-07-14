@@ -1,3 +1,43 @@
+<style>
+  #mayores_cuenta_reporte_modal_filter{
+         display: none !important;
+       }      
+</style>
+<!-- modal libreta bancaria -->
+<div class="modal fade modal-arriba" id="modalListaMayoresCuenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content card">
+      <div class="card-header card-header-primary card-header-text">
+        <div class="card-text">
+          <h4>Lista de Mayores <div id="monto_debe_total_modal"></div></h4>      
+        </div>
+        
+        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+        <a id="boton_libreta_detalle_facturas_comp" title="Facturas" onclick="mostrar_listado_comprobantes()" class="btn btn-primary btn-sm btn-fab float-right" >
+          <i class="material-icons">C</i><span id="ncomprobantesdetalles" class="count bg-warning">0</span>
+        </a>
+      </div>
+      <div class="card-body">
+        <input type="hidden" name="indice" id="indice" value="0">      
+        <div class="row">
+
+        <div class="btn-group">
+        </div>          
+            <div class="table-responsive" id="contenedor_tabla_mayores_cuenta">
+              
+            </div>          
+        </div>
+      </div>
+      <div class="modal-footer">
+         <span class="text-success"><i class="material-icons">check_box</i> Habilitado</span><br>
+         <span class="text-danger"><i class="material-icons">check_box</i> Deshabilitado</span><br>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- notice modal -->
 <div class="modal fade" id="modalEditFac" tabindex="-1" role="dialog" style="z-index:99999"aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice modal-xl">

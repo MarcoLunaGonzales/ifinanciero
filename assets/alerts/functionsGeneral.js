@@ -353,6 +353,7 @@ function setBusquedaCuentaEdit(codigoCuenta, numeroCuenta, nombreCuenta, codigoC
   document.getElementById('divCuentaDetalle'+fila).innerHTML='<span class=\"text-danger font-weight-bold\">['+numeroCuenta+']-'+nombreCuenta+' </span><br><span class=\"text-primary font-weight-bold small\">'+nombreCuentaAux+'</span>';
   configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux);
   facturacomprobante(fila);//icono de factura
+  configuracionLibretasBancarias(fila,codigoCuenta);
   $('#myModal').modal('hide');
   $(".selectpicker").selectpicker('refresh');
   $("#debe"+fila).focus();
@@ -527,7 +528,19 @@ function minusCuentaContable(idF){
        }
        $("#estados_cuentas"+nuevoId).attr("onclick","verEstadosCuentas('"+i+"',0)");
        $("#estados_cuentas"+nuevoId).attr("id","estados_cuentas"+i);
-       $("#nestado"+nuevoId).attr("id","nestado"+i);     
+       $("#nestado"+nuevoId).attr("id","nestado"+i);   
+
+       //libreta bancaria  
+       $("#libretas_bancarias"+nuevoId).attr("onclick","verLibretasBancarias('"+i+"')");
+       $("#libretas_bancarias"+nuevoId).attr("id","libretas_bancarias"+i);
+       $("#nestadolib"+nuevoId).attr("id","nestado"+i);
+       $("#cod_detallelibreta"+nuevoId).attr("name","cod_detallelibreta"+i); 
+       $("#cod_detallelibreta"+nuevoId).attr("id","cod_detallelibreta"+i);
+       $("#descripcion_detallelibreta"+nuevoId).attr("id","descripcion_detallelibreta"+i);
+
+       //mayores seleccion
+       $("#cerrar_detalles"+nuevoId).attr("onclick","verMayoresCierre('"+i+"')");
+       $("#cerrar_detalles"+nuevoId).attr("id","cerrar_detalles"+i);
       }
      } 
       itemFacturas.splice((idF-1), 1);
@@ -624,7 +637,7 @@ function obtenerImportesFacturaIva(index){
   };
   return total*(configuraciones[0].valor/100);
 }
-function saveFactura(){
+function saveFacturaNuevo(){
   var formAValidar = document.getElementById('form_facturas');
   if (formAValidar.checkValidity() === false) {
     event.preventDefault();
@@ -660,6 +673,64 @@ function saveFactura(){
     $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
     $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");
   }
+}
+function saveFactura(){
+  var index=$('#codCuenta').val();
+  var factura={
+    nit: $('#nit_fac').val(),
+    nroFac: $('#nro_fac').val(),
+    fechaFac: $('#fecha_fac').val(),
+    razonFac: $('#razon_fac').val(),
+    impFac: $('#imp_fac').val(),    
+    autFac: $('#aut_fac').val(),
+    conFac: $('#con_fac').val(),
+    exeFac: $('#exe_fac').val(),
+    iceFac: $('#ice_fac').val(),
+    tazaFac: $('#taza_fac').val(),
+    tipoFac: $('#tipo_fac').val()
+    }
+    
+  var monto_debe_total_comprobante = $("#totaldeb").val();
+  var monto_suma_factura=parseInt($('#imp_fac').val())+parseInt($('#ice_fac').val())+parseInt($('#exe_fac').val());
+  console.log("SUMAS FACTURAS: "+monto_suma_factura+" "+monto_debe_total_comprobante);
+  //if(monto_suma_factura != monto_debe_total_comprobante){
+    //alert("El monto registrado en las facturas difiere del total!");
+  //}else{
+    if($('#nit_fac').val()!=''){
+      if($('#nro_fac').val()!=''){
+        if($('#fecha_fac').val()!=''){        
+            if($('#imp_fac').val()!=''){
+              if($('#aut_fac').val()!=''){              
+                  if($('#razon_fac').val()!=''){
+                    itemFacturas[index-1].push(factura);
+                    limpiarFormFac();
+                    listarFact(index);
+                    //$("#debe"+index).val(anterior+importeIva);
+                    if($("#debe"+index).length){
+                     calcularTotalesComprobante();  
+                    } 
+                    $("#nfac"+index).html(itemFacturas[index-1].length);
+                    $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
+                    $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");                
+                  }else{
+                    alert('Campo "Razón Social" Vacío.');
+                  }
+              }else{
+                alert('Campo "Nro. Autorización" Vacío.');
+              }
+            }else{
+              alert('Campo "Importe" Vacío.');
+            }
+        }else{
+          alert('Campo "Fecha" Vacío.');
+        }  
+      }else{
+        alert('Campo "Nro. Factura" Vacío.');
+      }  
+    }else{
+      alert('Campo "NIT" Vacío.');
+    }
+ // }
 }
  function abrirFactura(index,nit,nro,fecha,razon,imp,exe,aut,con,ice,tipocompra,tazacero){
    var factura={
@@ -6829,10 +6900,14 @@ function agregarEstadoCuenta(){
   }
 }
 
-function verLibretasBancarias(fila,cuenta){
-  var codCuenta=$("#cuenta"+fila).val();
-  $("#modalListaLibretaBancaria").modal("show");  
- // ajax_contenedor_tabla_libretaBancariaCompro();
+function verLibretasBancarias(fila){
+  $("#indice").val(fila);
+  $("#modalListaLibretaBancaria").modal("show"); 
+  //ocultar elementos de modal en sol de facturacion
+  $("#boton_libreta_detalle_todo").addClass("d-none");
+  $("#modal_descripcion_pie").addClass("d-none");
+  $("#boton_libreta_detalle_facturas").addClass("d-none");
+  $("#contenedor_cabecera_libreta_bancaria").html("<label class='font-weight-bold'>"+$("#descripcion_detallelibreta"+fila).val()+"</label>");
 }
 function agregarEstadoCuentaCerrar(filaXXX,valor){
   //console.log("entro:"+fila+" "+valor);
@@ -15027,7 +15102,7 @@ function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
   
   if($("#tipo_comprobante").length>0){
     var saldo="";  
-    var url = "../simulaciones_servicios/ajax_listado_libreta_bancaria_comprobantes.php";
+    var url = "../simulaciones_servicios/ajax_listado_libreta_bancaria.php";
   }else{
    var saldo=$("#saldo_x").val();
    var url = "simulaciones_servicios/ajax_listado_libreta_bancaria.php";
@@ -15050,7 +15125,12 @@ function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
         success:  function (resp) {
           detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
-          contenedor.innerHTML = resp;      
+          contenedor.innerHTML = resp;   
+          if($("#tipo_comprobante").length>0){
+            $(".list-de-fac").addClass("d-none");
+          }else{
+            $(".list-de-com").addClass("d-none");
+          }   
           $('.selectpicker').selectpicker(["refresh"]);
           cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
           cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
@@ -15098,7 +15178,9 @@ function cargar_dataTable_ajax(tabla){
                   if ( that.search() !== this.value ) {
                       that
                           .search( this.value )
-                          .draw();
+                          .draw(); 
+                   ponerSumatoriaDeMayorCuenta();       
+                      
                   }
               });
           });
@@ -15486,4 +15568,88 @@ function facturarLibretaBancaria(){
       }
    };
   seleccionar_libretaBancaria(codDetalle.join(","));
+}
+
+function listar_comprobanteDetalle(codigo,descripcion){
+  var fila=$("#indice").val();
+  $("#cod_detallelibreta"+fila).val(codigo);
+  $("#descripcion_detallelibreta"+fila).val(descripcion.split("####")[0]+" - "+descripcion.split("####")[1]);
+  $("#nestadolib"+fila).addClass("estado");
+  $("#modalListaLibretaBancaria").modal("hide");
+}
+
+
+function verMayoresCierre(fila){
+ if($("#cuenta"+fila).val()==""){
+   $("#msgError").html("<p>Ingrese una cuenta</p>");
+   $('#modalAlert').modal('show');
+ }else{
+  $("#indice").val(fila);
+  var cuenta = $("#cuenta"+fila).val();
+  var contenedor = document.getElementById('contenedor_tabla_mayores_cuenta');
+  $("#modalListaMayoresCuenta").modal("show"); 
+    var parametros={
+      "moneda":1,
+      "fecha_desde":null,
+      "fecha_hasta":null,
+      "glosa_len":1,
+      "unidad_costo":null,
+      "area_costo":null,
+      "cuenta_especifica":cuenta,
+      "cuenta":null,
+      "unidad":null,
+      "gestion":null,
+      "entidad":null
+    };
+     $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "ajax_listar_mayores_cuenta.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Obteniendo el Mayor de la cuenta..."); 
+          iniciarCargaAjax();
+        },        
+        success:  function (resp) {
+          detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+          contenedor.innerHTML = resp;     
+          $('.selectpicker').selectpicker(["refresh"]);
+          cargar_dataTable_ajax('mayores_cuenta_reporte_modal');
+          cargar_filtro_datatable_ajax('modalListaMayoresCuenta');
+        }
+    });
+ }
+}
+
+
+function ponerSumatoriaDeMayorCuenta(){
+  var fila=$("#indice").val();
+  var suma=0;
+  var filas = $("#cantidad_mayor_modal").val();
+  for (var i = 1; i <=filas; i++) {
+    if($("#debe_mayor_ajax"+i).length>0&&!($("#fila_habilitada_mayor"+i).is("[disabled]"))){
+      suma+=parseFloat($("#debe_mayor_ajax"+i).val());   
+    }
+  };
+  $("#monto_debe_total_modal").html(redondeo(suma)+" Bs");
+  $("#debe"+fila).val(redondeo(suma));
+}
+
+var array_comprobantesdetalle=[];
+function listar_comprobanteDetalleMayor(codigo,index){
+ if($("#fila_habilitada_mayor"+index).is("[disabled]")){
+    $("#fila_habilitada_mayor"+index).removeAttr("disabled");
+    if($("#boton_habilitado_mayor"+index).hasClass("btn-danger")){
+      $("#boton_habilitado_mayor"+index).removeClass("btn-danger");
+      $("#boton_habilitado_mayor"+index).addClass("btn-success");
+    }        
+ }else{
+    $("#fila_habilitada_mayor"+index).attr("disabled",true); 
+    if($("#boton_habilitado_mayor"+index).hasClass("btn-success")){
+      $("#boton_habilitado_mayor"+index).removeClass("btn-success");
+      $("#boton_habilitado_mayor"+index).addClass("btn-danger");
+    }
+ }
+ ponerSumatoriaDeMayorCuenta(); 
 }

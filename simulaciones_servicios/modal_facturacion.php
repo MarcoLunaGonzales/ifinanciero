@@ -427,11 +427,11 @@
         <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
         </button>
-        <button title="Listar todo" onclick="ajax_listado_libreta_bancaria_filtrar()" type="button" class="btn btn-warning btn-sm btn-fab float-right" >
+        <button id="boton_libreta_detalle_todo" title="Listar todo" onclick="ajax_listado_libreta_bancaria_filtrar()" type="button" class="btn btn-warning btn-sm btn-fab float-right" >
           <i class="material-icons">list</i>
         </button>
-        <a title="Facturas" onclick="mostrar_listado_facturas()" class="btn btn-primary btn-sm btn-fab float-right" >
-          <i class="material-icons">F</i><span id="nfacturaslibretas" class="count bg-warning">0</span>
+        <a href="#" id="boton_libreta_detalle_facturas" title="Lista Libretas Detalle" onclick="mostrar_listado_facturas()" class="btn btn-primary btn-sm btn-fab float-right">
+          <i class="material-icons">L</i><span id="nfacturaslibretas" class="count bg-warning">0</span>
         </a>
       </div>
       <div class="card-body">
@@ -465,7 +465,7 @@
             </div>          
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" id="modal_descripcion_pie">
          <span style="color:  #e59866 ;"><i class="material-icons">check_box</i> Registros Contabilizados</span><br>
          <span style="color:  #85929e;"><i class="material-icons">check_box</i> Registros No Contabilizados</span><br>
       </div>

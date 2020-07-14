@@ -487,6 +487,9 @@
                           var cuentaAuxiliar=$("#cuenta_auxiliar"+(i+1)).val();  
                           var estadoCuentaSelect=$("#nestado"+(i+1)).hasClass("estado");
 
+                          var detalleLibretaSelect=$("#nestadolib"+(i+1)).hasClass("estado");
+                          var libretasBancarias=$("#libretas_bancarias"+(i+1)).hasClass("d-none");  
+
                           //VALIDAMOS CUANDO LA CUENTA TENGA EC LA CUENTA AUXILIAR SIEMPRE ESTE SELECCIONADA.
                           if(tipoEstadoCuenta>0 && cuentaAuxiliar==0){  
                             $('#msgError').html("La fila "+(i+1)+" debe estar asociada a una CUENTA AUXILIAR, ya que está configurada para llevar Estados de Cuenta.");
@@ -512,6 +515,11 @@
                                  return false;
                               }
                             }  
+                          }
+                          if(detalleLibretaSelect==false && libretasBancarias==false){
+                                $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un detalle de la Libreta Bancaria para Cerrar.");
+                                $('#modalAlert').modal('show');
+                                return false;
                           }
                           if( (tipoEstadoCuenta==2 && debeZ>0) ){
                             for (var f = 0; f < itemEstadosCuentas[i].length; f++) {

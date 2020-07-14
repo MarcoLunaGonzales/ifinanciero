@@ -855,13 +855,19 @@ if($menuModulo==0){
                 <li class="nav-item">
                   <a class="nav-link" style="background:rgba(37, 98, 83,0.6); color:#E2AF0F;font-weight:bold;"  href="?opcion=listSolicitudRecursosAdminReg">
                     <span class="sidebar-mini"> GSR </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n SR Regional</span>
+                    <span class="sidebar-normal"> Gesti&oacute;n SR</span>
                   </a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
                     <span class="sidebar-mini"> GSA </span>
                     <span class="sidebar-normal"> Gesti&oacute;n SR Administración</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdminConta">
+                    <span class="sidebar-mini"> CSR </span>
+                    <span class="sidebar-normal"> Contabilización SR</span>
                   </a>
                 </li>
                 <li class="nav-item ">

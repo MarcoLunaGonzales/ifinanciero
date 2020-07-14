@@ -155,6 +155,7 @@ $stmt->execute();
 	var configuracionCentro=[];
 	var configuraciones=[];
 	var estado_cuentas=[];
+	var libretas_bancarias=[];
 </script>
 <?php
 //configuraciones
@@ -169,7 +170,25 @@ $stmt->execute();
 			 <script>configuraciones.push({codigo:<?=$codigoX?>,valor:<?=$valorX?>,descripcion:'<?=$descripcionX?>'});</script>
 		    <?php
 			 }
-
+            
+             //LIBRETAS BANCARIAS
+			$lista=obtenerObtenerLibretaBancaria();
+            foreach ($lista->libretas as $v) {
+              $CodLibreta=$v->CodLibreta;
+              $Nombre=$v->Nombre;
+              $Banco=$v->Banco;
+              $nombreBan=nameBancos($v->CodBanco);
+              $cuentaId=$v->IdCuenta; 
+              if($nombreBan==""){
+                $nombreBan=$Banco." - ".$Nombre;
+              }else{
+                $nombreBan=$nombreBan." - ".$Nombre;  
+              }
+              ?>
+			 <script>libretas_bancarias.push({codigo:<?=$CodLibreta?>,cod_cuenta:<?=$cuentaId?>,nombre_libreta:'<?=$nombreBan?>'});</script>
+		    <?php
+            
+            }
             //ESTADO DE CUENTAS
 			$stmt = $dbh->prepare("SELECT * FROM configuracion_estadocuentas where cod_estadoreferencial=1");
 			$stmt->execute();
@@ -501,6 +520,13 @@ $stmt->execute();
 
 							//echo $unidadDet." ".$areaDet;
 
+							$codDetalleLibreta=obtenerCodigoLibretaDetalleComprobante($codDet);
+							$descripcionDetalleLibreta=obtenerDescripcionLibretaDetalleComprobante($codDet);
+							$estiloLibreta="";
+							if($codDetalleLibreta!=0){
+							 $estiloLibreta="estado";
+							}
+
 						 ?>
                          <div id="div<?=$idFila?>">               	         
                              <div class="col-md-12">
@@ -565,7 +591,15 @@ $stmt->execute();
     			                        </div>
     			                        <div class="col-sm-4">
     			                        	<div class="btn-group">
-    			                        	 <a title="Mayores" href="#" id="mayor<?=$idFila?>" onclick="mayorReporteComprobante(<?=$idFila?>)" class="btn btn-sm btn-info btn-fab"><span class="material-icons">list</span></a>	  	
+                                             <div class="btn-group dropdown">
+                    	                        <button type="button" class="btn btn-sm btn-info btn-fab dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="MAYORES">
+                    	                        <i class="material-icons">list</i>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                <a title="Mayores" href="#" id="mayor<?=$idFila?>" onclick="mayorReporteComprobante(<?=$idFila?>)" class="dropdown-item"><span class="material-icons text-info">list</span> Ver Reporte Mayor</a>	  		  
+                                                <a title="Cerrar Comprobante" id="cerrar_detalles<?=$idFila?>" href="#" onclick="verMayoresCierre(<?=$idFila;?>);" class="dropdown-item"><span class="material-icons text-danger">ballot</span> Cerrar Comprobantes</a>       
+                                                </div>
+                                            </div>     			                        		
     			                        	 <a title="Cambiar cuenta" href="#" id="cambiar_cuenta<?=$idFila?>" onclick="editarCuentaComprobante(<?=$idFila?>)" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">edit</span></a>	  
                         	             	<div class="btn-group dropdown">
 								              <button type="button" class="btn btn-sm btn-success btn-fab dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
@@ -586,6 +620,10 @@ $stmt->execute();
 						    			     <input type="hidden" id="tipo_estadocuentas_casoespecial<?=$idFila?>">
 						    			     
     			                             <a title="Estado de Cuentas" id="estados_cuentas<?=$idFila?>" href="#" onclick="verEstadosCuentas(<?=$idFila;?>,0);" class="btn btn-sm btn-danger btn-fab d-none"><span class="material-icons text-dark">ballot</span><span id="nestado<?=$idFila?>" class="bg-warning"></span></a>	  
+    			                              <!--LIBRETAS BANCARIAS DETALLE-->
+    			                              <a title="Libretas Bancarias" id="libretas_bancarias<?=$idFila?>" href="#" onclick="verLibretasBancarias(<?=$idFila;?>);" class="btn btn-sm btn-primary btn-fab d-none"><span class="material-icons text-dark">ballot</span><span id="nestadolib<?=$idFila?>" class="bg-warning <?=$estiloLibreta?>"></span></a>       
+    			                              <input type="hidden" id="cod_detallelibreta<?=$idFila?>" name="cod_detallelibreta<?=$idFila?>" value="<?=$codDetalleLibreta?>">
+    			                              <input type="hidden" id="descripcion_detallelibreta<?=$idFila?>" value="<?=$descripcionDetalleLibreta?>">
     			                            </div>  
     			                        </div>
     		                        </div>
@@ -834,6 +872,7 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 		$cont++;
 		}
 require_once 'modal.php';?>
+<?php require_once '../simulaciones_servicios/modal_facturacion.php';?>
  <script>
  $("#totaldeb_total").val(<?=$totaldebDet?>);
  $("#totalhab_total").val(<?=$totalhabDet?>);
