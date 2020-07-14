@@ -438,6 +438,7 @@ $contadorRegistros=0;
                                             $stmt->execute();
                                         }
                                         $modal_totalmontopre=0;$modal_totalmontopretotal=0;
+                                        $descuento_cliente=0;
                                         while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                             if($cod_facturacion==0){
                                                 $codigoPre=$rowPre['IdVentaNormas'];
@@ -460,7 +461,9 @@ $contadorRegistros=0;
                                                 $tipoPre=descripcionClaServicio($codCS);
                                                 $cantidadPre=$rowPre['cantidad'];
                                                 $montoPre=$rowPre['precio'];
-                                                $descuento_bob_cliente=0;                                                 
+                                                $descuento_bob_cliente=0;   
+                                                $descuento_porX=0;
+                                                $descuento_bobX=0;                                              
                                                 $banderaHab=1;                                                
                                                 $cod_anio=1;
                                                 $descripcion_alternaX=$rowPre['descripcion_alterna'];

@@ -1,0 +1,30 @@
+observaciones  libreta bancaria (david)
+- formato A - formto BISA
+- formato B - formto UNION
+- cargar el saldo en detalle de libreta bancaria, para verificar el  que esta en el banco (david)
+-add campos (canal, nro.ref, codigo) en libreta bancaria..(david)
+- copiar y pegar desde excel al subir archivos al libreta bancaria (david) no urgente....
+*reporte libreta bancaria (david) 
+	-filtro a cabecera de reporte libreta bancaria
+	filtrar por: facturado,los pendientes.
+	-ajustar los campos del reporte, muy amplios.
+	-sacar algunos campos inservibles. del reporte
+*-buscador (nombre, importe) en modal de libreta bancaria de facturacion.(isma)
+-del modal poner toda la libreta bancaria (lo mismo del reporte), los ya 
+(fecha,hora,informacion complementaria,monto,nroDocumento);(ok)(isma) 
+
+-codigo de curso - mod1 luego nombre  nobre regiter costos(ok)
+
+conciliacion bancaria..
+contabilizar cuando es deposito por identificar, matar la misma cuenta(ok)
+
+Estimado cliente, adjunto el envío de la factura Nro 44(isma).(ok)
+
+//descuento * monto.. para costos ()...???
+restringir archivo adjunto en deposito en cuenta.(isma)(ok)
+
+facturas todo la paz(isma)(ok)
+
+(header y footer estaticos)fijar lo titulo en el modal de libreta bancaria(isma)
+
+

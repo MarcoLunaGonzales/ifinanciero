@@ -22,24 +22,15 @@
 	    $stmtMontoTotal = $dbh->prepare($sqlMontoTotal);
 	    $stmtMontoTotal->execute();
 	    $resultMontoTotal = $stmtMontoTotal->fetch();   
-	    $monto_total= $resultMontoTotal['monto'];//total para el comprobante comprobante
+	    $monto_total= $resultMontoTotal['monto'];//total para el comprobante comprobante que ya esta aplicado el descuetno
 	    $totalFinalRedondeado=round($monto_total,0);
 	    $nro_correlativo = nro_correlativo_facturas($cod_sucursal);//el que introduciremos
         $cod_tipopago_deposito=obtenerValorConfiguracion(55);//tipo de pago deposito en cuenta
         $cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
         $cod_tipopago_anticipo=obtenerValorConfiguracion(64);//tipo de pago anticipo
-        if($cod_tipopago==$cod_tipopago_deposito){//deposito en cuenta?
-	        if($cod_libreta>0){
-	            $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
-	            if($estado_libreta==0){
-	                $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);                                    
-	                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_cuenta);
-	            }elseif($estado_libreta==1){
-	                $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);                                    
-	                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_contracuenta);
-	            }else{                                    
-	                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);    
-	            }
+        if($cod_tipopago==$cod_tipopago_deposito){//deposito en cuenta?        
+            if($cod_libreta!=0){//si viene sin cod libreta no se toma en cuetna el deposito en cuenta
+                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_libreta);
 	        }else{
 	            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);
 	        }
@@ -71,16 +62,22 @@
                 $stmtNroFac->execute();
                 $resultNroFact = $stmtNroFac->fetch();    
                 $cod_facturaVenta = $resultNroFact['codigo'];
-                if($cod_libreta>0){
+                if($cod_libreta!=0){
+                    $array_libreta=explode(',',$cod_libreta);
+                    for($i=0;$i<sizeof($array_libreta);$i++){
+                        $cod_libreta_x= $array_libreta[$i];
+                        $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($cod_libreta_x,$cod_facturaVenta)";
+                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                        $stmtUpdateLibreta->execute();
+                    }
                     // $cod_libreta=$_GET["cod_libreta"];
                     //si es de tipo deposito en cuenta insertamos en libreta bancaria
-                    $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
-                    $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-                    $flagSuccess=$stmtUpdateLibreta->execute();
-
-                    $sqlUpdateFac="UPDATE facturas_venta SET cod_libretabancariadetalle=$cod_libreta where codigo=$cod_facturaVenta";
-                    $stmtUpdateFac = $dbh->prepare($sqlUpdateFac);
-                    $flagSuccessFac=$stmtUpdateFac->execute(); 
+                    // $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
+                    // $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                    // $flagSuccess=$stmtUpdateLibreta->execute();
+                    // $sqlUpdateFac="UPDATE facturas_venta SET cod_libretabancariadetalle=$cod_libreta where codigo=$cod_facturaVenta";
+                    // $stmtUpdateFac = $dbh->prepare($sqlUpdateFac);
+                    // $flagSuccessFac=$stmtUpdateFac->execute(); 
                 }           
                 //insertamos detalle
                 $stmt = $dbh->prepare("SELECT sf.* from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo and codigo in ($string_cod_Det)");
@@ -141,7 +138,7 @@
                         }
                     }
                     if($estado_ibnorca==0){//sin errores en el servicio web
-                        $precio_x=$precio_x+$descuento_bob_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario
+                        $precio_x=$precio_x+$descuento_bob_x/$cantidad_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario y tambien el descuetno unitario, ya que se registro el descuento total * cantidad
                         $descripcion_alterna_x=$row['descripcion_alterna'];            
                         $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
                         values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0)");

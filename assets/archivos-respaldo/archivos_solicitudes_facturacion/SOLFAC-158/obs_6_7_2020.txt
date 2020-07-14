@@ -1,0 +1,26 @@
+query --OK
+solo copia cliente desde sol fac.. ok 
+boton de enviar no desaparecer..ok
+facturas. contabilizacion tarjeta de debito..ok
+contabilizacion no multiplica ocn cantidad--ok
+igual facturizar igual que la libreta al contabilizar con 0. de la tinenda-ok
+ valor 5 tipopago 4,  en la tienda...cuenta transitoria 1010201950--ok
+cuenta transitoria en una varibale de configuracion..ok
+sacar lista de comprobante de sol fac .. ok
+
+listado de facturas sale arriba el listado de facturas y envio--ok
+-envio de correo, quitar lo de soc fac, y solo enviar una vez...ok
+-aprobacion regional al credito, verse por area..ok
+anulacion de solicitudes--ok
+-gaurdar detalle, de quien guarda, quien procesa.(quien,fecha,hora)solicitado por, revisado por, procesado por..ok
+sacar la frima del pdf de sol fac, poner quien aprobo..etc..ok
+
+
+
+
+-verifiacar factura anulada en tcp y servicios..
+-las facturas.. partir en dos facturas cuando sean mas de cantidades..
+-editar objetos uniades
+-editar archivo adjunto
+--ver como salvar los servicios adicionales otra vez con 2-tcp tcs
+quitar pdf de capacitacion al anular

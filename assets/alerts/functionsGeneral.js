@@ -15227,31 +15227,31 @@ function seleccionar_libretaBancaria(cod_libreta){
   var datos=document.getElementById("datos").value;
   var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
   var direccion=document.getElementById("direccion").value;
-  if(indice==1){
+  if(indice==1){//generar factura normal
     $("#modalListaLibretaBancaria").modal("hide");
     alerts.showSwal('warning-message-and-confirmation-generar-factura',direccion+'?codigo='+cod_solicitudfacturacion+'&cod_libreta='+cod_libreta);
   }else{
     if(indice==2){
-      $("#modalListaLibretaBancaria").modal("hide");  
-      var d=datos.split('/');
-      var cod_solicitudfacturacion=d[0];
-      document.getElementById("cod_solicitudfacturacion_factpagos").value=cod_solicitudfacturacion;
-      document.getElementById("cod_libreta_pagos").value=cod_libreta;
-      var index=(parseFloat(d[3])-1);      
-      var contenedor = document.getElementById('contenedor_GenerarFactParcial_cabecera');    
-      ajax=nuevoAjax();
-      ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal_generarFactPar.php?cod_solicitud='+cod_solicitudfacturacion,true);
-      ajax.onreadystatechange=function() {
-        if (ajax.readyState==4) {
-          contenedor.innerHTML = ajax.responseText;      
-          $('.selectpicker').selectpicker(["refresh"]);
-          $("#modalGenerarFacturapagos").modal("show");  
-          tablaGeneral_GenerarFact_parcial(index);
-        }
-      }
-      ajax.send(null);
+      // $("#modalListaLibretaBancaria").modal("hide");  
+      // var d=datos.split('/');
+      // var cod_solicitudfacturacion=d[0];
+      // document.getElementById("cod_solicitudfacturacion_factpagos").value=cod_solicitudfacturacion;
+      // document.getElementById("cod_libreta_pagos").value=cod_libreta;
+      // var index=(parseFloat(d[3])-1);      
+      // var contenedor = document.getElementById('contenedor_GenerarFactParcial_cabecera');    
+      // ajax=nuevoAjax();
+      // ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal_generarFactPar.php?cod_solicitud='+cod_solicitudfacturacion,true);
+      // ajax.onreadystatechange=function() {
+      //   if (ajax.readyState==4) {
+      //     contenedor.innerHTML = ajax.responseText;      
+      //     $('.selectpicker').selectpicker(["refresh"]);
+      //     $("#modalGenerarFacturapagos").modal("show");  
+      //     tablaGeneral_GenerarFact_parcial(index);
+      //   }
+      // }
+      // ajax.send(null);
     }else{
-      if(indice==3){
+      if(indice==3){ //generar factura manual
         $("#modalListaLibretaBancaria").modal("hide");
         $("#modalFacturaManual").modal("show");  
           var d=datos.split('/');
