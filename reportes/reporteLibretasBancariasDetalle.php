@@ -115,7 +115,7 @@ $stmt->bindColumn('monto_fac', $montoFac);
                             <td class="text-right font-weight-bold"><?=$facturaMonto?></td> 
                            <?php                          
                           }else{
-                           $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 $sqlFiltro2 order by codigo desc";                                   
+                           $sqlDetalleX="SELECT * from facturas_venta where codigo in (select cod_facturaventa from libretas_bancariasdetalle_facturas where cod_libretabancariadetalle=$codigo) and cod_estadofactura!=2 $sqlFiltro2 order by codigo desc";                                   
                            $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                            $stmtDetalleX->execute();
                            $stmtDetalleX->bindColumn('fecha_factura', $fechaDetalle);

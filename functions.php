@@ -7919,6 +7919,27 @@ function sumatotaldetallefactura($cod_factura){
     $valor = $resultVerif['cantidad'];
     return $valor;
   }
+
+  function obtenerCodigoLibretaDetalleComprobante($codigo){
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT codigo FROM libretas_bancariasdetalle WHERE cod_comprobantedetalle = '$codigo'");
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+        $valor=$row['codigo'];
+    }  
+    return($valor);
+  }
+  function obtenerDescripcionLibretaDetalleComprobante($codigo){
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT fecha_hora,CONCAT(descripcion,' Info: ',informacion_complementaria) as descripcion FROM libretas_bancariasdetalle WHERE cod_comprobantedetalle = '$codigo'");
+    $stmt->execute();
+    $valor="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+        $valor=strftime('%d/%m/%Y',strtotime($row['fecha_hora']))." - ".$row['descripcion'];
+    }  
+    return($valor);
+  }
 ?>
 
 
