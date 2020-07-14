@@ -250,6 +250,7 @@ alerts = {
         buttonsStyling: false
       }).then((result) => {
           if (result.value) {
+            iniciarCargaAjax();
             location.href=url; 
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {

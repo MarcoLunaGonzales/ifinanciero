@@ -43,7 +43,7 @@ if($estado!=1){
         $fechaHoraActual=date("Y-m-d H:i:s");
         $idTipoObjeto=2707;
         $idObjeto=2718; //regristado
-        $obs="Adjudicada";
+        $obs="Ejecutada";
         if(!isset($_GET['u'])){
          actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);           
         }else{
