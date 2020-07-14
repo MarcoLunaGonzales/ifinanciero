@@ -35,6 +35,10 @@ if(isset($_GET['admin'])){
 	$urlList=$urlList2;
 }
 
+if(isset($_GET['reg'])){
+  $urlList=$urlList3;
+}
+
 $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as unidad,a.abreviatura as area 
         from solicitud_recursos p,unidades_organizacionales u, areas a,estados_solicitudrecursos e
   where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and e.codigo=p.cod_estadosolicitudrecurso and p.codigo='$codigo' order by codigo");

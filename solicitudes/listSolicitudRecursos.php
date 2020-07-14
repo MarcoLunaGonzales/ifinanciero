@@ -79,7 +79,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th>Estado</th>
-                          <th class="text-right">Actions</th>
+                          <th class="text-right" width="18%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -265,7 +265,9 @@ $stmt->bindColumn('idServicio', $idServicioX);
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
-                             
+                            <a title=" Ver Solicitud de Recursos" href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-success">
+                                    <i class="material-icons">preview</i>
+                            </a> 
                             <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
@@ -282,6 +284,9 @@ $stmt->bindColumn('idServicio', $idServicioX);
                               ?>
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
+                            </a>
+                            <a title=" Ver Solicitud de Recursos" href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="btn btn-success">
+                                    <i class="material-icons">preview</i>
                             </a>
                             <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>

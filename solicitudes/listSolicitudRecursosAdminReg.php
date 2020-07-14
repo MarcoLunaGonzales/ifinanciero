@@ -18,9 +18,9 @@ if(isset($_GET['q'])){
   }
   if(isset($_GET['s'])){
     $s=$_GET['s'];
-    $arraySql=explode("IdArea=",$s);
-    $codigoArea=trim($arraySql[1]);
-    $sqlAreas="and sr.cod_area=".$codigoArea;
+    //$arraySql=explode("IdArea=",$s);
+    //$codigoArea=trim($arraySql[1]);
+    //$sqlAreas="and sr.cod_area=".$codigoArea;
   }
 
 }else{
@@ -79,7 +79,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th>Estado</th>
-                          <th class="text-right" width="15%">Actions</th>
+                          <th class="text-right" width="18%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -231,7 +231,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                     <a title="Aprobar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" href='#'  class="btn btn-warning">
                                       <i class="material-icons">assignment_turned_in</i>
                                     </a>
-                                    <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
+                                    <a title="Devolver Solicitud Recurso" href='<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
                                       <i class="material-icons">reply</i>
                                     </a>
                                    <?php
@@ -240,7 +240,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                      <a title="Aprobar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=4&admin=0')" href='#'  class="btn btn-warning">
                                        <i class="material-icons">assignment_turned_in</i>
                                      </a>
-                                     <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0'  class="btn btn-danger">
+                                     <a title="Devolver Solicitud Recurso" href='<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0'  class="btn btn-danger">
                                        <i class="material-icons">reply</i>
                                      </a>
                                     <?php
@@ -265,10 +265,13 @@ $stmt->bindColumn('idServicio', $idServicioX);
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
-                             
+                             <a title=" Ver Solicitud de Recursos" href="<?=$urlVer;?>?cod=<?=$codigo;?>&reg=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-success">
+                                    <i class="material-icons">preview</i>
+                            </a>
                             <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&reg=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
+                            
                             <?php
                              if($codEstado==1){
                              ?>
@@ -283,9 +286,13 @@ $stmt->bindColumn('idServicio', $idServicioX);
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
+                            <a title=" Ver Solicitud de Recursos" href="<?=$urlVer;?>?cod=<?=$codigo;?>&reg=1" class="btn btn-success">
+                                    <i class="material-icons">preview</i>
+                            </a>
                             <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&reg=1'  class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
+                            
                             <?php
                              if($codEstado==1){
                              ?>
