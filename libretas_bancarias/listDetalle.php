@@ -388,7 +388,7 @@ $stmtb->bindColumn('nombre', $nombre);
             </thead>
             <tbody>
               <?php
-              $stmt = $dbh->prepare("SELECT codigo,fecha_factura,date_format(fecha_factura,'%d/%m/%Y') as fecha_x,razon_social,nit,nro_factura,importe,cod_libretabancariadetalle from facturas_venta order by codigo desc");
+              $stmt = $dbh->prepare("SELECT codigo,fecha_factura,date_format(fecha_factura,'%d/%m/%Y') as fecha_x,razon_social,nit,nro_factura,importe,cod_libretabancariadetalle from facturas_venta where cod_estadofactura!=2 order by codigo desc");
               $stmt->execute();
               $stmt->bindColumn('codigo', $codigo_x);
               $stmt->bindColumn('fecha_x', $fecha_factura_x);

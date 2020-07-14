@@ -7454,7 +7454,7 @@ function obtenerContraCuentaLibretaBancaria($cod_libreta){
 }
 function contarFacturasLibretaBancaria($codigo){
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura in (1,3,4)");
+  $stmt = $dbh->prepare("SELECT codigo From libretas_bancariasdetalle_facturas lbf, facturas_venta f where lbf.cod_facturaventa=f.codigo and f.cod_estadofactura!=2 and lbf.cod_libretabancariadetalle=$codigo");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
