@@ -8751,7 +8751,10 @@ function mostrarOtraCiudadServicio(){
 }
 function guardarDatosProveedor(){
   var nombre =$("#nombre_empresa").val();
-  var nit =$("#nit_empresa").val();
+  var nombre_p =$("#nombre_persona").val();
+  var paterno_p =$("#paterno_persona").val();
+  var materno_p =$("#materno_persona").val();
+  var identificacion =$("#identificacion").val();
   var pais =$("#pais_empresa").val();
   var estado =$("#departamento_empresa").val();
   var ciudad =$("#ciudad_empresa").val();
@@ -8762,10 +8765,26 @@ function guardarDatosProveedor(){
   var apellido_contacto =$("#apellido_contacto").val();
   var cargo_contacto =$("#cargo_contacto").val();
   var correo_contacto =$("#correo_contacto").val();
-
-   var ciudad_true=0;
+  var tipo_id = $("#tipo_id").val();
+  var tipo_id_otro = $("#tipo_id_otro").val();
+  var numero_celular = $("#numero_celular").val();
+  var ciudad_true=0;
   // validaciones de campos
-   if(nombre!=""&&nit!=""&&(pais>0)&&(estado>0)){ //&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!=""
+  if($("#tipo_empresa").val()=='E'){
+    if(nombre!=""&&identificacion!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&nombre_contacto!=""&&apellido_contacto!=""&&cargo_contacto!=""&&correo_contacto!="")
+      var sw=true;
+    else{
+      var sw=false;
+    }
+  }else{
+    if(nombre_p!=""&&paterno_p!=""&&materno_p!=""&&identificacion!=""&&(pais>0)&&(estado>0)&&direccion!=""&&telefono!=""&&correo!=""&&(tipo_id>0))
+      var sw=true;
+    else{
+      var sw=false;
+    }
+  }
+
+   if(sw){
      if(ciudad>0){
        ciudad_true=1;
      }else{
@@ -8784,7 +8803,7 @@ function guardarDatosProveedor(){
           Swal.fire("Informativo!", "Ingrese el nombre de la Ciudad", "warning");
         }else{
           //proceso de guardado de informacion
-           var parametros={"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nit":nit,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
+           var parametros={"numero_celular":numero_celular,"tipo_id_otro":tipo_id_otro,"tipo_id":tipo_id,"tipo":$("#tipo_empresa").val(),"nacional":$("#nacional_empresa").val(),"nombre":nombre,"nombre_p":nombre_p,"paterno_p":paterno_p,"materno_p":materno_p,"identificacion":identificacion,"pais":pais,"estado":estado,"ciudad":ciudad,"otra":otra,"direccion":direccion,"telefono":telefono,"correo":correo,"nombre_contacto":nombre_contacto,"apellido_contacto":apellido_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto};
             $.ajax({
                type: "GET",
                dataType: 'html',
@@ -8794,26 +8813,30 @@ function guardarDatosProveedor(){
                 $("#texto_ajax_titulo").html("Enviando datos al servidor..."); 
                   iniciarCargaAjax();
                 },
-               success:  function (resp) { 
+               success:  function (respuesta) {
+                  var resp = respuesta.split("####")[0];
                   detectarCargaAjax();
                   $("#texto_ajax_titulo").html("Procesando Datos"); 
                   if(resp.trim()=="1"){
-                   actualizarRegistroProveedor();
+                    Swal.fire("Correcto!",respuesta.split("####")[1], "success");
+                    $("#modalAgregarProveedor").modal("hide");
+                    actualizarRegistroProveedor();
                   }else{
-                    if(resp.trim()=="0"){
-                      Swal.fire("Error!", "Ocurrio un error de envio", "warning");  
+                    if(resp.trim()=="2"){
+                      Swal.fire("Informativo!",respuesta.split("####")[1], "warning");
+                      //actualizarRegistroProveedor();
                     }else{
-                      Swal.fire("Error!", "El proveedor ya existe", "warning");
-                    }     
+                      Swal.fire("Error!",respuesta.split("####")[1], "warning");
+                    }                    
                   }
                }
              });  
         }       
      }else{
-        Swal.fire("Informativo!", "Debe llenar los campos requeridos", "warning");
+        Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
      }
    }else{
-     Swal.fire("Informativo!", "Debe llenar los campos requeridos", "warning");
+     Swal.fire("Informativo!", "Todos los campos son requeridos", "warning");
    }
 }
 function cargarDatosRegistroProveedorCajaChica(cod_tcc,cod_cc,cod_dcc){
@@ -8847,6 +8870,7 @@ function ajaxTipoProveedorPersona(combo){
   var codigo=combo.value;
   contenedor = document.getElementById('div_nombre_proveedor');
   ajax=nuevoAjax();
+
   ajax.open('GET', 'solicitudes/ajax_nombre_proveedor.php?codigo='+codigo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
@@ -8857,11 +8881,42 @@ function ajaxTipoProveedorPersona(combo){
   }
   ajax.send(null)  
 }
+
+function ajaxTipoProveedorPersonaSol(combo){
+  var contenedor;
+  var codigo=combo.value;
+  contenedor = document.getElementById('div_nombre_proveedor');
+  ajax=nuevoAjax();
+  
+  ajax.open('GET', 'ajax_nombre_proveedor.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]); 
+      ajaxTipoProveedor_datos_addSol(codigo);
+    }
+  }
+  ajax.send(null)  
+}
+
 function ajaxTipoProveedor_datos_add(codigo){
   var contenedor;
   contenedor = document.getElementById('div_datos_add_proveedor');
   ajax=nuevoAjax();
   ajax.open('GET', 'solicitudes/ajax_datos_add_proveedor.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]); 
+    }
+  }
+  ajax.send(null)  
+}
+function ajaxTipoProveedor_datos_addSol(codigo){
+  var contenedor;
+  contenedor = document.getElementById('div_datos_add_proveedor');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'ajax_datos_add_proveedor.php?codigo='+codigo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
@@ -8990,7 +9045,8 @@ function guardarDatosProveedorCajaChica(){
                 $("#texto_ajax_titulo").html("Enviando datos al servidor..."); 
                   iniciarCargaAjax();
                 },
-               success:  function (resp) {
+               success:  function (respuesta) {
+                  var resp = respuesta.split("####")[0];
                   // actualizarRegistroProveedor();
                   // actualizarRegistroProveedorCajaChica(cod_tcc,cod_cc,cod_dcc);
                   detectarCargaAjax();
@@ -11417,7 +11473,8 @@ function guardarDatosProveedorActivosFijos(){
                 $("#texto_ajax_titulo").html("Enviando datos al servidor..."); 
                   iniciarCargaAjax();
                 },
-               success:  function (resp) {
+               success:  function (respuesta) {
+                var resp = respuesta.split("####")[0];
                   // actualizarRegistroProveedor();
                   // actualizarRegistroProveedorActivoFijo(cod_activo);
                   detectarCargaAjax();

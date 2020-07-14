@@ -22,10 +22,19 @@ if($_GET['ciudad']==""){
 	$ciudad=NULL;
 	$otra=$_GET['otra'];
 }
-if($_GET['identificacion']==""){
+
+if(isset($_GET['identificacion'])){
+  if($_GET['identificacion']==""){
 	$identificacion=NULL;
-}else{
+  }else{
 	$identificacion=(int)$_GET['identificacion'];
+  }
+}else{
+   if($_GET['nit']==""){
+	$identificacion=NULL;
+  }else{
+	$identificacion=(int)$_GET['nit'];
+  }	 
 }
 
   // Tipo P=Persona, E=Empresa
@@ -108,11 +117,10 @@ if($_GET['tipo']=='E'){
 						  );
 
 	}
-
 }		
 
 		$parametros=json_encode($parametros);
-		// abrimos la sesiรณn cURL
+		// abrimos la sesion cURL
 		$ch = curl_init();
 		//curl_setopt($ch, CURLOPT_URL,$direccion."registro/ws-registro-proveedor.php"); // OFFICIAL
 		curl_setopt($ch, CURLOPT_URL,$direccion."registro/ws-registro-proveedor.php"); // PRUEBA
@@ -129,18 +137,22 @@ if($_GET['tipo']=='E'){
 		// imprimir en formato JSON
 		// header('Content-type: application/json'); 	
 		// print_r($respuesta->existe); 	
-
-		if($respuesta->estado==true){
-			if($respuesta->existe==true){
+        
+		if($respuesta->estado=="1"||$respuesta->estado==1){
+		  if(isset($respuesta->existe)){
+			if($respuesta->existe=="1"||$respuesta->existe==1){
 				echo "2";
 			}else{
 				echo "1";		
-			}
-          
+			}	
+		  }else{
+		  	echo "1";
+		  }	
 		}else{
           echo "0";
 		}
-
+		echo "####".$respuesta->mensaje;
+		//print_r($respuesta); 
 		/*PARAMETROS PARA ASIGNAR ATRIBUTO PROVEEDOR
 
 		 		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 

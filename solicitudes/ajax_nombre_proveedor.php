@@ -10,7 +10,7 @@ $codigo = $_GET["codigo"];
 $listaCiudad= obtenerDepartamentoServicioIbrnorca(26);
 if($codigo=='E'){?><!-- empresa -->
 	<div class="row">
-		<label class="col-sm-3 col-form-label">Nombre *</label>
+		<label class="col-sm-3 col-form-label">Nombre <b class="text-danger">*</b></label>
 		<div class="col-sm-9">
 		    <div class="form-group" >
 		        <input type="text" class="form-control" name="nombre_empresa" id="nombre_empresa" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">  
@@ -18,7 +18,7 @@ if($codigo=='E'){?><!-- empresa -->
 		</div>
 	</div>
 	<div class="row">
-      	<label class="col-sm-3 col-form-label">NIT *</label>
+      	<label class="col-sm-3 col-form-label">NIT <b class="text-danger">*</b></label>
       	<div class="col-sm-9">
 	        <div class="form-group">
 	          <input class="form-control" type="number" name="identificacion" id="identificacion" required="true"/>
@@ -37,7 +37,7 @@ if($codigo=='E'){?><!-- empresa -->
 <?php }else{?><!-- persona -->
 	<input type="hidden" name="nombre_empresa" id="nombre_empresa">
 	<div class="row">
-		<label class="col-sm-3 col-form-label">Nombre *</label>
+		<label class="col-sm-3 col-form-label">Nombre <b class="text-danger">*</b></label>
 		<div class="col-sm-9">
 		    <div class="form-group" >
 		        <input type="text" class="form-control" name="nombre_persona" id="nombre_persona" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"> 
@@ -45,7 +45,7 @@ if($codigo=='E'){?><!-- empresa -->
 		</div>
 	</div>
 	<div class="row">
-		<label class="col-sm-3 col-form-label">Paterno *</label>
+		<label class="col-sm-3 col-form-label">Paterno <b class="text-danger">*</b></label>
 		<div class="col-sm-9">
 		    <div class="form-group" >
 		        <input type="text" class="form-control" name="paterno_persona" id="paterno_persona" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
@@ -53,7 +53,7 @@ if($codigo=='E'){?><!-- empresa -->
 		</div>
 	</div>
 	<div class="row">
-		<label class="col-sm-3 col-form-label">Materno *</label>
+		<label class="col-sm-3 col-form-label">Materno <b class="text-danger">*</b></label>
 		<div class="col-sm-9">
 		    <div class="form-group" >
 		        <input type="text" class="form-control" name="materno_persona" id="materno_persona" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
@@ -61,7 +61,7 @@ if($codigo=='E'){?><!-- empresa -->
 		</div>
 	</div>
 	<div class="row">
-		<label class="col-sm-3 col-form-label">Tipo ID *</label>
+		<label class="col-sm-3 col-form-label">Tipo ID <b class="text-danger">*</b></label>
 		<div class="col-sm-9">
 		    <div class="form-group" >
 		        <select class="selectpicker form-control form-control-sm" name="tipo_id" id="tipo_id" data-style="btn btn-info">
@@ -78,7 +78,7 @@ if($codigo=='E'){?><!-- empresa -->
 		</div>
 	</div>
 	<div class="row">
-      	<label class="col-sm-3 col-form-label">Identificación *</label>
+      	<label class="col-sm-3 col-form-label">Identificación <b class="text-danger">*</b></label>
       	<div class="col-sm-9">
 	        <div class="form-group">
 	          <input class="form-control" type="number" name="identificacion" id="identificacion" required="true"/>
@@ -94,7 +94,7 @@ if($codigo=='E'){?><!-- empresa -->
 		</div>
 	</div>
 	<div class="row">
-		<label class="col-sm-3 col-form-label">Lugar Emisión *</label>
+		<label class="col-sm-3 col-form-label">Lugar Emisión <b class="text-danger">*</b></label>
 		<div class="col-sm-9">
 		    <div class="form-group" >
 		        <select name="emision" id="emision" class="form-control form-control-sm selectpicker" data-style="btn btn-info" required="true">

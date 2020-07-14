@@ -7,7 +7,7 @@ require_once 'configModule.php';
 $codigo = $_GET["codigo"];
 if($codigo=='E'){?><!-- empresa -->	
     <div class="row">
-      <label class="col-sm-3 col-form-label">Correo *</label>
+      <label class="col-sm-3 col-form-label">Correo <b class="text-danger">*</b></label>
       <div class="col-sm-9">
         <div class="form-group">
           <input type="text" class="form-control" name="correo_empresa" id="correo_empresa" value="" required="true">
@@ -16,7 +16,7 @@ if($codigo=='E'){?><!-- empresa -->
     </div>
      <center><h4 class="fontweight-bold text-muted">Datos del contacto </h4></center>
     <div class="row">
-       <label class="col-sm-3 col-form-label">Nombre Contacto *</label>
+       <label class="col-sm-3 col-form-label">Nombre Contacto <b class="text-danger">*</b></label>
        <div class="col-sm-9">
         <div class="form-group">
           <input type="text" class="form-control" name="nombre_contacto" id="nombre_contacto" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
@@ -24,7 +24,7 @@ if($codigo=='E'){?><!-- empresa -->
        </div>
     </div>
     <div class="row">
-       <label class="col-sm-3 col-form-label">Apellido Contacto *</label>
+       <label class="col-sm-3 col-form-label">Apellido Contacto <b class="text-danger">*</b></label>
        <div class="col-sm-9">
         <div class="form-group">
           <input type="text" class="form-control" name="apellido_contacto" id="apellido_contacto" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
@@ -32,7 +32,7 @@ if($codigo=='E'){?><!-- empresa -->
        </div>
     </div>
     <div class="row">
-       <label class="col-sm-3 col-form-label">Cargo Contacto *</label>
+       <label class="col-sm-3 col-form-label">Cargo Contacto <b class="text-danger">*</b></label>
        <div class="col-sm-9">
         <div class="form-group">
           <input type="text" class="form-control" name="cargo_contacto" id="cargo_contacto" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
@@ -40,7 +40,7 @@ if($codigo=='E'){?><!-- empresa -->
        </div>
     </div>
     <div class="row">
-       <label class="col-sm-3 col-form-label">Correo Contacto *</label>
+       <label class="col-sm-3 col-form-label">Correo Contacto <b class="text-danger">*</b></label>
        <div class="col-sm-9">
         <div class="form-group">
           <input type="text" class="form-control" name="correo_contacto" id="correo_contacto" value="" required="true">
@@ -64,7 +64,7 @@ if($codigo=='E'){?><!-- empresa -->
       </div>
     </div>
 	<div class="row">
-      <label class="col-sm-3 col-form-label">Correo *</label>
+      <label class="col-sm-3 col-form-label">Correo <b class="text-danger">*</b></label>
       <div class="col-sm-9">
         <div class="form-group">
           <input type="text" class="form-control" name="correo_empresa" id="correo_empresa" value="" required="true">
