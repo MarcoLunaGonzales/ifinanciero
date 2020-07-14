@@ -508,6 +508,7 @@
       </div>
       <div class="modal-footer">
         <a href="#" class="btn btn-success" onclick="facturarLibretaBancaria()">FACTURAR</a>
+        <button type="button" class="btn btn-warning" data-dismiss="modal">Adicionar + </button>
       </div>
     </div>
   </div>
