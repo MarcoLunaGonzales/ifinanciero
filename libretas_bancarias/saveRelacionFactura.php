@@ -9,7 +9,7 @@ $dbh = new Conexion();
 $cod_factura=$_POST['cod_factura'];
 $cod_libretabancariadetalle=$_POST['cod_libretabancariadetalle'];
 // Prepare
-$stmt = $dbh->prepare("UPDATE facturas_venta set cod_libretabancariadetalle=$cod_libretabancariadetalle where codigo=$cod_factura");
+$stmt = $dbh->prepare("INSERT into libretas_bancariasdetalle_facturas (cod_libretabancariadetalle,cod_facturaventa) values($cod_libretabancariadetalle,$cod_facturaventa)");
 $flagSuccess=$stmt->execute();
 if($flagSuccess==true){
 	echo 1;

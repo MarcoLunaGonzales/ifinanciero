@@ -113,7 +113,9 @@ $stmtb->bindColumn('nombre', $nombre);
                             <?php                  
                               // $cont_facturas=contarFacturasLibretaBancaria($codigo);
                               // if($cont_facturas>0){
-                                $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 order by codigo desc";
+                                $cadena_facturas=obtnerCadenaFacturas($codigo);
+                                // $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 order by codigo desc";
+                                $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 order by codigo desc";
                                 $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                                 $stmtDetalleX->execute();
                                 $stmtDetalleX->bindColumn('codigo', $codigo_factura);
@@ -151,7 +153,7 @@ $stmtb->bindColumn('nombre', $nombre);
                                   <?php
                                   for ($i=0;$i<count($facturaCodigo);$i++){?>
                                     <div style='border-bottom:1px solid #26BD3D;'>
-                                      <a title="Eliminar relación de Factura" href="#" class="btn btn-danger btn-sm btn-round" style="padding: 0;font-size:8px;width:15px;height:15px;" onclick="eliminarRelacionFactura(<?=$facturaCodigo[$i]?>)"><i class="material-icons">remove</i></a>
+                                      <a title="Eliminar relación de Factura" href="#" class="btn btn-danger btn-sm btn-round" style="padding: 0;font-size:8px;width:15px;height:15px;" onclick="eliminarRelacionFactura(<?=$facturaCodigo[$i]?>,<?=$codigo?>)"><i class="material-icons">remove</i></a>
                                     </div>
                                   <?php }                                   
                                   ?>
@@ -394,11 +396,12 @@ $stmtb->bindColumn('nombre', $nombre);
               $stmt->bindColumn('nit', $nit_x);
               $stmt->bindColumn('nro_factura', $nro_factura_x);
               $stmt->bindColumn('importe', $importe_x);
-              $stmt->bindColumn('cod_libretabancariadetalle', $cod_libretabancariadetalle_x);
+              // $stmt->bindColumn('cod_libretabancariadetalle', $cod_libretabancariadetalle_x);
               $index=1;
               while ($rowTC = $stmt->fetch(PDO::FETCH_BOUND)) {
+                $cod_libretabancariadetalle_x=verificar_cod_libretadetalle($codigo_x);
                 $color_tr="";$label="btn btn-fab btn-success btn-sm";
-                if($cod_libretabancariadetalle_x){$color_tr="background-color:#f6ddcc;";$label="btn btn-fab btn-warning btn-sm";}
+                if($cod_libretabancariadetalle_x>0){$color_tr="background-color:#f6ddcc;";$label="btn btn-fab btn-warning btn-sm";}
                 ?>
                 <tr style="<?=$color_tr?>">
                   <td align="text-center small"><?=$index;?></td>
