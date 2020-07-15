@@ -15,8 +15,9 @@
     // recibimos la respuesta y la guardamos en una variable
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $remote_server_output = curl_exec ($ch);
+    $err = curl_error($ch);
     curl_close ($ch);
-
+    // imprimir en formato JSON  
     $respuesta=json_decode($remote_server_output);
     header('Content-type: application/json');   
     print_r($remote_server_output); 

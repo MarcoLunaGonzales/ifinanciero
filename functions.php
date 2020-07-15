@@ -6239,8 +6239,8 @@ function obtenerDistribucionCentroCostosAreaActivo($unidad){
    $dbh = new Conexion();
    $sql="";
    $sql="SELECT dd.*,u.nombre FROM distribucion_gastosarea_detalle dd join distribucion_gastosarea d on d.codigo=dd.cod_distribucionarea 
-join areas u on u.codigo=dd.cod_area  
-where estado=1 and d.cod_uo=$unidad";
+  join areas u on u.codigo=dd.cod_area  
+  where estado=1 and d.cod_uo=$unidad";  
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -8013,6 +8013,7 @@ function obtenerCodigoActividadProyecto($codigo){
   
   function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta){
 
+<<<<<<< HEAD
   $dbh = new Conexion();
   $queryTienda="";
   if($soloTienda==1){
@@ -8022,6 +8023,86 @@ function obtenerCodigoActividadProyecto($codigo){
    FROM facturas_venta f join unidades_organizacionales u on u.codigo=f.cod_unidadorganizacional join areas a on a.codigo=f.cod_area where f.cod_unidadorganizacional in ($unidades) and f.cod_area in ($areas) and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' $queryTienda");
    $stmt->execute();
    return($stmt);
+=======
+  function contador_facturas_cajachica($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT codigo from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo";    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {      
+      $valor++;
+    }         
+    return($valor);
+  }
+  function cadena_facturas_cajachica($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo";    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $cadena="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {      
+      $cadena.="F/".$row['nro_factura'].",";
+    }     
+    $cadena=trim($cadena,',');
+    return($cadena);
+  }
+  function importe_total_facturas($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT importe from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo union SELECT importe from detalle_cajachica_gastosdirectos where cod_cajachicadetalle=$codigo";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {      
+      $valor+=$row['importe'];
+    }         
+    return($valor);
+  }
+  function obtenerDistribucionCajachicaDetalle($codigo,$tipo){
+    $dbh = new Conexion();    
+    if($tipo==1){
+      $sql="SELECT u.nombre,d.porcentaje from distribucion_gastos_caja_chica d  join unidades_organizacionales u on u.codigo=d.oficina_area where d.cod_cajachica_detalle=$codigo and d.tipo_distribucion=$tipo";
+    }else{
+      $sql="SELECT u.nombre,d.porcentaje from distribucion_gastos_caja_chica d  join areas u on u.codigo=d.oficina_area where d.cod_cajachica_detalle=$codigo and d.tipo_distribucion=$tipo";
+    }
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return $stmt;
+  }
+
+  function ontener_porcentaje_distribucion_cajachica($codigo,$cod_uo_area,$tipo){
+    $dbh = new Conexion();        
+    $sql="SELECT d.porcentaje from distribucion_gastos_caja_chica d  where d.cod_cajachica_detalle=$codigo and d.tipo_distribucion=$tipo and d.oficina_area=$cod_uo_area";
+    // echo $sql; 
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=-1;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['porcentaje'];
+    }         
+    return($valor);
+  }
+  function verificamos_distribucion_cajachica($codigo){
+    $dbh = new Conexion();        
+    $sql="SELECT tipo_distribucion from distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo GROUP BY tipo_distribucion";    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor='0';
+    $cont=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $cont++;
+      $tipo_distribucion=$row['tipo_distribucion'];
+      if($tipo_distribucion==1){  
+        $valor="x OFICINA";
+      }else{
+        $valor="x AREA";
+      }
+    }         
+    if($cont>1){
+      $valor="x OFICINA y AREA";
+    }
+    return($valor);
+>>>>>>> e80d8ccd6979d33677d92ce281f794ae8e8b23a0
   }
 ?>
 

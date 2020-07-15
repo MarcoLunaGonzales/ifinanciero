@@ -77,6 +77,7 @@ $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
                             <td><small><b>Importe Débito <br>Fiscal G=E-F</b></small></td>
                             <td><small><b>Débito Fiscal<br> H=G*13%</b></small></td>
                             <td><small><b>Código Control</b></small></td>
+                            <td><small><b>Nro. Autorización</b></small></td>
 
                           </tr>                                
                         </thead>
@@ -98,6 +99,11 @@ $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
                               break;
                               case 2:
                                 $btnEstado='<span class="badge badge-danger">';
+                                $razon_social="ANULADO";
+                                $importe=0;
+                                $codigo_control=0;
+                                $nit=0;
+                                $fecha_factura=0;
                               break;
                               case 3:
                                 $btnEstado='<span class="badge badge-success">';
@@ -145,7 +151,8 @@ $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
                                 <td class="text-center small"><?=formatNumberDec($rebajas_sujetos_iva); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($importe_debito_fiscal); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($debito_fiscal); ?></td>
-                                <td class="text-center small"><?=$codigo_control?></td>                              
+                                <td class="text-center small"><?=$codigo_control?></td>
+                                <td class="text-center small"><?=$nro_autorizacion?></td>
                             </tr>
                           <?php $index++; } ?>
 
@@ -159,7 +166,8 @@ $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
                                 <td class="text-center small"><?=formatNumberDec($total_rebajas_sujetos_iva); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($total_importe_debito_fiscal); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($total_debito_fiscal); ?></td>
-                                <td class="text-center small"> - </td>                              
+                                <td class="text-center small"> - </td>
+                                <td class="text-center small"> - </td>
                             </tr>
                         </tbody>
                     </table>

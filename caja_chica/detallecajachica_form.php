@@ -34,9 +34,6 @@ while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
 //sacmos el valor de fechas hacia atrás
 $dias_atras=obtenerValorConfiguracion(31);
 $cod_proveedores=0;
-
-
-
 if ($codigo > 0){
     $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,cod_proveedores,cod_actividad_sw,
         (select c.nombre from plan_cuentas c where c.codigo=cod_cuenta) as nombre_cuenta,
@@ -60,16 +57,14 @@ if ($codigo > 0){
     $cod_uo= $result['cod_uo'];
     $cod_proveedores= $result['cod_proveedores'];
     $cod_actividad_sw= $result['cod_actividad_sw'];
-
-    $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;   
-
+    $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;
     // sacamos datos del comprobante
     $stmtComprobante = $dbh->prepare("SELECT cod_comprobantedetalle,cod_plancuenta,cod_cuentaaux from estados_cuenta where cod_cajachicadetalle=$cod_dcc order by codigo asc LIMIT 1");
     $stmtComprobante->execute();
     $resultComprobante = $stmtComprobante->fetch();
     $cod_comprobante =  $resultComprobante['cod_comprobantedetalle'];
     $cod_cuenta_compro=$resultComprobante['cod_plancuenta'];
-    $cod_cuenta_aux_compro=$resultComprobante['cod_cuentaaux'];   
+    $cod_cuenta_aux_compro=$resultComprobante['cod_cuentaaux']; 
 }else{
     //para el numero correlativo
     $stmtCC = $dbh->prepare("SELECT nro_documento,nro_recibo from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$cod_cc order by codigo desc limit 1");
@@ -104,45 +99,63 @@ if ($codigo > 0){
     $cod_actividad_sw=null;
 }
 $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
-//distribucion gastosarea
-$distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
-while ($rowOfi = $distribucionOfi->fetch(PDO::FETCH_ASSOC)) {
-  $codigoD=$rowOfi['codigo'];
-  $codDistD=$rowOfi['cod_distribucion_gastos'];
-  $codUnidadD=$rowOfi['cod_unidadorganizacional'];
-  $porcentajeD=$rowOfi['porcentaje'];
-  $nombreD=$rowOfi['nombre'];?>
-  <script>
-    var distri = {
-      codigo:<?=$codigoD?>,
-      cod_dis:<?=$codDistD?>,
-      unidad:<?=$codUnidadD?>,
-      nombre:'<?=$nombreD?>',
-      porcentaje:<?=$porcentajeD?>
+
+  //distribucion gastosarea
+  $distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+  while ($rowOfi = $distribucionOfi->fetch(PDO::FETCH_ASSOC)) {
+    $codigoD=$rowOfi['codigo'];
+    $codDistD=$rowOfi['cod_distribucion_gastos'];
+    $codUnidadD=$rowOfi['cod_unidadorganizacional'];    
+    $nombreD=$rowOfi['nombre'];
+    $porcentajeD=-1;
+    if($codigo>0){
+      $porcentajeD=ontener_porcentaje_distribucion_cajachica($codigo,$codUnidadD,1);      
     }
-    itemDistOficina.push(distri);
-  </script>  
-  <?php
-}
-$distribucionArea=obtenerDistribucionCentroCostosAreaActivo($globalUnidad); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
-while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
-$codigoD=$rowArea['codigo'];
-$codDistD=$rowArea['cod_distribucionarea'];
-$codAreaD=$rowArea['cod_area'];
-$porcentajeD=$rowArea['porcentaje'];
-$nombreD=$rowArea['nombre'];?>
-  <script>
-    var distri = {
-      codigo:<?=$codigoD?>,
-      cod_dis:<?=$codDistD?>,
-      area:<?=$codAreaD?>,
-      nombre:'<?=$nombreD?>',
-      porcentaje:<?=$porcentajeD?>
+    if($porcentajeD<0){
+      $porcentajeD=$rowOfi['porcentaje'];
     }
-    itemDistArea.push(distri);
-  </script>  
-  <?php
-}
+    ?>
+    <script>
+      var distri = {
+        codigo:<?=$codigoD?>,
+        cod_dis:<?=$codDistD?>,
+        unidad:<?=$codUnidadD?>,
+        nombre:'<?=$nombreD?>',
+        porcentaje:<?=$porcentajeD?>
+      }
+      itemDistOficina.push(distri);
+    </script>  
+    <?php
+  }
+  $distribucionArea=obtenerDistribucionCentroCostosAreaActivo($globalUnidad); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+  while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
+  $codigoD=$rowArea['codigo'];
+  $codDistD=$rowArea['cod_distribucionarea'];
+  $codAreaD=$rowArea['cod_area'];
+  $nombreD=$rowArea['nombre'];
+  $porcentajeD=$rowArea['porcentaje'];
+  $porcentajeD=-1;
+  if($codigo>0){
+    $porcentajeD=ontener_porcentaje_distribucion_cajachica($codigo,$codAreaD,2);    
+  }
+  if($porcentajeD<0){
+    $porcentajeD=$rowArea['porcentaje'];
+  }
+  ?>
+    <script>
+      var distri = {
+        codigo:<?=$codigoD?>,
+        cod_dis:<?=$codDistD?>,
+        area:<?=$codAreaD?>,
+        nombre:'<?=$nombreD?>',
+        porcentaje:<?=$porcentajeD?>
+      }
+      itemDistArea.push(distri);
+    </script>  
+    <?php
+  }  
+
+
 ?>
 
 <div class="content">
@@ -435,7 +448,19 @@ $nombreD=$rowArea['nombre'];?>
       </div>  
     </div>
   </div>
-
+<?php
+  if($codigo>0){
+    $tipo_distribucion=verificamos_distribucion_cajachica($codigo);
+    if($tipo_distribucion!='0'){?>
+      <script>
+        // $("#nueva_distribucion").val('<?=$tipo_distribucion?>');
+        $("#boton_titulodist").html('<?=$tipo_distribucion?>');
+        // $("#n_distribucion").val($("#nueva_distribucion").val());    
+        $("#distrib_icon").addClass("estado");
+      </script>
+    <?php }
+  }
+?>
 <script>
   //el numero de cuenta comporbamos si empieza con 2
   $( "#cuenta_auto" ).blur(function() {
