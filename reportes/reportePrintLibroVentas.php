@@ -13,7 +13,7 @@ $gestion = $_POST["gestiones"];
 $cod_mes_x = $_POST["cod_mes_x"];
 
 $nombre_gestion=nameGestion($gestion);
-$nombre_mes=nameMes($cod_mes_x);
+$nombre_mes=nombreMes($cod_mes_x);
 
 $stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion");
 $stmt2->execute();
@@ -136,7 +136,7 @@ $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
                                 <td class="text-center small"><?=$nro_factura ?></td>
                                 <td class="text-center small"><?=$btnEstado.$nombre_estado."</span>";?></td>
                                 <td class="text-center small"><?=$nit?></td>
-                                <td class="text-center small"><small><?=$razon_social?></small></td>
+                                <td class="text-left small"><small><?=mb_strtoupper($razon_social,'utf-8');?></small></td>
                                 <td class="text-center small"><?=formatNumberDec($importe); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($importe_no_iva); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($extento); ?></td>
