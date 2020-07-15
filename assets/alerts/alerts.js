@@ -88,8 +88,9 @@ alerts = {
         buttonsStyling: false
       }).then((result) => {
           if (result.value) {
-            // location.href=url; 
-            window.open(url,'_blank'); 
+            // location.href=url;           
+            window.open(url,'_blank');
+            location.reload();
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);

@@ -15352,6 +15352,8 @@ function seleccionar_libretaBancaria(cod_libreta){
   var direccion=document.getElementById("direccion").value;
   if(indice==1){//generar factura normal
     $("#modalListaLibretaBancaria").modal("hide");
+    $("#modalListaLibretasBancariasDetalle").modal("hide");
+    
     alerts.showSwal('warning-message-and-confirmation-generar-factura',direccion+'?codigo='+cod_solicitudfacturacion+'&cod_libreta='+cod_libreta);
   }else{
     if(indice==2){
@@ -15376,6 +15378,7 @@ function seleccionar_libretaBancaria(cod_libreta){
     }else{
       if(indice==3){ //generar factura manual
         $("#modalListaLibretaBancaria").modal("hide");
+        $("#modalListaLibretasBancariasDetalle").modal("hide");
         $("#modalFacturaManual").modal("show");  
           var d=datos.split('/');
           document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
@@ -15384,7 +15387,6 @@ function seleccionar_libretaBancaria(cod_libreta){
           document.getElementById("nit_cliente").value=d[4];
           document.getElementById("razon_social").value=d[5];
       }
-
     }
   }
   
