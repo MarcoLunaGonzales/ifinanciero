@@ -82,7 +82,10 @@ try{
 				echo "3#####";//no se encontró el comprobante
 			}else{
 
-				$cod_contra_cuenta=obtenerValorConfiguracion(28);
+				$cod_contra_cuenta=obtnercontracuentaUnidad($cod_uo_tcc);
+				if($cod_contra_cuenta==0){
+					$cod_contra_cuenta=obtenerValorConfiguracion(28);// LA PAZ
+				}
 				$centroCostosDN=obtenerValorConfiguracion(29);//DN 
 				// echo $numeroComprobante;
 				$sqlInsertCab="UPDATE comprobantes set glosa='$concepto_contabilizacion' where codigo='$codComprobante'";
@@ -138,6 +141,11 @@ try{
 			        $stmtFacturas->bindColumn('importe', $importe);
 			        while ($rowFac = $stmtFacturas->fetch()) 
 			        {
+			        	if($porcentaje_cuentaorigen>100){
+				        	$monto_recalculado=$importe*$porcentaje_cuentaorigen/100;
+				        }else{
+				        	$monto_recalculado=$importe;
+				        }
 			            //buscamos el tipo de retencion
 			            $stmtRetenciones = $dbh->prepare("SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica");
 			            $stmtRetenciones->execute();

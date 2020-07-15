@@ -88,9 +88,9 @@ $html.=  '<header class="header">'.
           '<table class="table">
             <tr>
               <td width="20%" height="8%" class="td-color-celeste"><b>Solicitante:</b></td>
-              <td width="10%" colspan="2" >'.$nombre_responsable.'</td>
-              <td width="3%" colspan="3" valign="top">Firma del solicitante:</td>
-            </tr>
+              <td  colspan="5" >'.$nombre_responsable.'</td>
+              
+            </tr> 
              <tr>
               <td class="td-color-celeste"><b>Cliente:</b></td>';
               $tipo_solicitud = $resultInfo['tipo_solicitud'];  
@@ -116,7 +116,7 @@ $html.=  '<header class="header">'.
           '<table class="table">
             <thead>
               <tr class="td-color-celeste">
-                <td rowspan="2" rowspan="2" width="5%" class="text-center"><b><b>N°</b></td>
+                <td rowspan="2" rowspan="2" width="3%" class="text-center"><b><b>N°</b></td>
                 <td rowspan="2" width="6%" class="text-center"><b>C.Costo</b></td>
                 <td rowspan="2" colspan="2" class="text-center"><b>Detalle</b></td>                
                 <td rowspan="2" width="5%" class="text-center"><b>Cantidad</b></td>
@@ -148,15 +148,6 @@ $html.=  '<header class="header">'.
               }else{
                 $codigo_alterno_detalle=$row2['Codigo_alterno'];
               }
-
-              //tipos de pago
-              $sqlAreas="SELECT cod_tipopago,porcentaje from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion";
-              $stmtAreas = $dbh->prepare($sqlAreas);                                   
-              $stmtAreas->execute();
-              while ($rowTipoPago = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
-
-              }
-              
               $html.='<tr>
                 <td  class="text-center"><b>'.$index.'</b></td>
                 <td  class="text-center">'.$abrev_area.'</td>
@@ -180,6 +171,21 @@ $html.=  '<header class="header">'.
             $html.='</tbody>
           </table>'.
           '<br>';
+
+          //distribucion de areas          
+          $sqlAreas="SELECT cod_area,porcentaje,monto from solicitudes_facturacion_areas where cod_solicitudfacturacion=$codigo_facturacion";
+          $stmtAreas = $dbh->prepare($sqlAreas);                                   
+          $stmtAreas->execute();
+          $html.='<table class="table" >
+                  <tr class="td-color-celeste"><td class="text-center"><b>Distribución de Gastos por Area</b></td></tr>';
+          while ($rowArea = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
+            $cod_area_x=$rowArea['cod_area'];
+            $porcentaje_x=$rowArea['porcentaje'];
+            $monto_x=$rowArea['monto'];
+            $abrev_area_X=trim(abrevArea($cod_area_x),'-');
+            $html.='<tr><td class="text-left"><b>'.$abrev_area_X.'('.$porcentaje_x.' %) - BOB '.formatNumberDec($monto_x).'</b></td></tr>';
+          }
+          $html.='</table><br>';
 
           //tipos de pago
           $sqlTipoPago="SELECT cod_tipopago,porcentaje from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion ";
@@ -246,6 +252,8 @@ $html.=  '<header class="header">'.
                 </tr>';
               }elseif($cod_tipopago==49){
                 $html.='<tr><td class="text-left"><b>DEPOSITO EN CUENTA('.$porcentaje.' %)</b></td></tr>';
+              }elseif($cod_tipopago==50){
+                $html.='<tr><td class="text-left"><b>ANTICIPO CLIENTE('.$porcentaje.' %)</b></td></tr>';
               }else{
                 $html.='<tr><td class="text-left">&nbsp</td></tr>';
               }    
