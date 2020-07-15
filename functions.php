@@ -7989,7 +7989,7 @@ function sumatotaldetallefactura($cod_factura){
   }
 
 
-  function obtenerCodigoActividadProyecto($codigo){
+function obtenerCodigoActividadProyecto($codigo){
   $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT cod_actividadproyecto from solicitud_recursosdetalle where codigo=$codigo");
    $stmt->execute();
@@ -7998,7 +7998,7 @@ function sumatotaldetallefactura($cod_factura){
       $valor=$row['cod_actividadproyecto'];
     }
    return($valor);
-}
+  }
 
   function obtnercontracuentaUnidad($codigo_uo){
     $dbh = new Conexion();
@@ -8010,7 +8010,19 @@ function sumatotaldetallefactura($cod_factura){
     }  
     return($valor);
   }
+  
+  function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta){
 
+  $dbh = new Conexion();
+  $queryTienda="";
+  if($soloTienda==1){
+   $queryTienda=" and f.cod_solicitudfacturacion=-100";
+  }
+   $stmt = $dbh->prepare("SELECT u.abreviatura as unidad,a.abreviatura as area,f.*,(SELECT SUM((cantidad*precio)-descuento_bob) as importe from facturas_ventadetalle where cod_facturaventa=f.codigo )as importe_real 
+   FROM facturas_venta f join unidades_organizacionales u on u.codigo=f.cod_unidadorganizacional join areas a on a.codigo=f.cod_area where f.cod_unidadorganizacional in ($unidades) and f.cod_area in ($areas) and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' $queryTienda");
+   $stmt->execute();
+   return($stmt);
+  }
 ?>
 
 
