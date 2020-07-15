@@ -6239,8 +6239,8 @@ function obtenerDistribucionCentroCostosAreaActivo($unidad){
    $dbh = new Conexion();
    $sql="";
    $sql="SELECT dd.*,u.nombre FROM distribucion_gastosarea_detalle dd join distribucion_gastosarea d on d.codigo=dd.cod_distribucionarea 
-join areas u on u.codigo=dd.cod_area  
-where estado=1 and d.cod_uo=$unidad";
+  join areas u on u.codigo=dd.cod_area  
+  where estado=1 and d.cod_uo=$unidad";  
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
@@ -8052,11 +8052,43 @@ function sumatotaldetallefactura($cod_factura){
     }else{
       $sql="SELECT u.nombre,d.porcentaje from distribucion_gastos_caja_chica d  join areas u on u.codigo=d.oficina_area where d.cod_cajachica_detalle=$codigo and d.tipo_distribucion=$tipo";
     }
-    
-    
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
+  }
+
+  function ontener_porcentaje_distribucion_cajachica($codigo,$cod_uo_area,$tipo){
+    $dbh = new Conexion();        
+    $sql="SELECT d.porcentaje from distribucion_gastos_caja_chica d  where d.cod_cajachica_detalle=$codigo and d.tipo_distribucion=$tipo and d.oficina_area=$cod_uo_area";
+    // echo $sql; 
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=-1;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['porcentaje'];
+    }         
+    return($valor);
+  }
+  function verificamos_distribucion_cajachica($codigo){
+    $dbh = new Conexion();        
+    $sql="SELECT tipo_distribucion from distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo GROUP BY tipo_distribucion";    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor='0';
+    $cont=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $cont++;
+      $tipo_distribucion=$row['tipo_distribucion'];
+      if($tipo_distribucion==1){  
+        $valor="x OFICINA";
+      }else{
+        $valor="x AREA";
+      }
+    }         
+    if($cont>1){
+      $valor="x OFICINA y AREA";
+    }
+    return($valor);
   }
 ?>
 

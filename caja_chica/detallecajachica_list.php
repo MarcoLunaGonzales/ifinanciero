@@ -142,8 +142,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                           <!-- <th><small>Monto Devolución</small></th> -->
                           <th><small>Detalle</small></th>
                           <th><small>OF/Area</small></th>
-                          
-                          <th></th>
+                          <th width="6%"></th>
                         </tr>
                       </thead>
                       <tbody>
