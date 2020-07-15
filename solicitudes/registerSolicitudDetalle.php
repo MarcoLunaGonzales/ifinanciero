@@ -138,6 +138,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 }
 
 ?>
+<input type="hidden" value="" id="proyecto_sis" name="proyecto_sis">
+
 <input type="hidden" value="-100" id="tipo_documento_otro" name="tipo_documento_otro">
              <div id="combo_tipodocumento" class="d-none">
                 <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="<?=$comboColor;?>" onChange="asignarTipoDocumento()">
@@ -379,21 +381,24 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               </div>
             </fieldset>  
             <div class="card-footer fixed-bottom">
-              <a id="buttonSubmitFalse" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning text-dark d-none">Guardar <span class="material-icons text-dark">warning</span></a>
-              <button id="buttonSubmit" type="submit" class="btn btn-success">Guardar</button>
+              <a id="buttonSubmitFalse" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning text-dark d-none"> <i class="material-icons">save</i> Guardar <span class="material-icons text-dark">warning</span></a>
+              <button id="buttonSubmit" type="submit" class="btn btn-success"> <i class="material-icons">save</i> Guardar</button>
               <?php 
                if(isset($_GET['q'])){
                 ?>
-                 <a href="../<?=$urlList;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="<?=$buttonCancel;?>">Volver</a> 
+                 <a href="../<?=$urlList;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="<?=$buttonCancel;?>"><i class="material-icons">keyboard_backspace</i> Volver</a> 
                 <?php
                }else{
                 ?>
-                 <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a> 
+                 <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>"><i class="material-icons">keyboard_backspace</i> Volver</a> 
                 <?php
                }
               ?>  
-               <a href="#" onclick="cargarDatosRegistroProveedor()" class="btn btn-warning float-right">Agregar Proveedor</a>
-               <a href="#" onclick="actualizarRegistroProveedor()" class="btn btn-success float-right">Actualizar Proveedores</a>
+               <a href="#" onclick="cargarDatosRegistroProveedor()" title="Agregar Proveedor" class="btn btn-warning float-right"><i class="material-icons">group_add</i></a>
+               <a href="#" onclick="actualizarRegistroProveedor()" title="Actualizar Lista Proveedores" class="btn btn-info float-right"><i class="material-icons">find_replace</i></a>
+               <a href="#" onclick="mostrarActividadesDeSolicitud()" title="Actividades Proyecto SIS" class="btn btn-primary float-right"><i class="material-icons">assignment</i><span id="nproyectos" class="count bg-danger">0</span> ACTIVIDADES</a>
+               <input type="hidden" id="cantidad_filas_proyecto" value="0"> 
+
                <div class="row col-sm-12">
                     <div class="col-sm-1">
                     </div>

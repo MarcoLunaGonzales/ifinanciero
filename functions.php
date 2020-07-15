@@ -7987,6 +7987,17 @@ function sumatotaldetallefactura($cod_factura){
     }  
     return($valor);
   }
+
+  function obtenerCodigoActividadProyecto($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_actividadproyecto from solicitud_recursosdetalle where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_actividadproyecto'];
+    }
+   return($valor);
+}
 ?>
 
 

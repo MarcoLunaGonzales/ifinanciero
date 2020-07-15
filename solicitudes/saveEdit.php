@@ -177,14 +177,16 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       $nro_cuenta_beneficiario=$_POST["cuenta_beneficiario".$i];
       $cod_cuentabancaria=$_POST["cod_cuentaBancaria".$i];
 
+      $cod_actividadproyecto=$_POST["cod_actividadproyecto".$i];
+
 
       $codComprobanteDetalle=obtenerCodigoSolicitudDetalle();
       $sqlDetalle="INSERT INTO solicitud_recursosdetalle (codigo,cod_solicitudrecurso,cod_plancuenta,cod_unidadorganizacional,cod_area,detalle,importe_presupuesto,
         importe,numero_factura,archivo,cod_proveedor,cod_detalleplantilla,cod_servicioauditor,cod_confretencion,cod_tipopagoproveedor,
-        nombre_beneficiario,apellido_beneficiario,nro_cuenta_beneficiario,cod_cuentabancaria) 
+        nombre_beneficiario,apellido_beneficiario,nro_cuenta_beneficiario,cod_cuentabancaria,cod_actividadproyecto) 
        VALUES ('$codComprobanteDetalle','$codSolicitud','$cod_plancuenta','$cod_unidadorganizacional','$cod_area','$detalle','$importe_presupuesto','$importe',
         '$numero_factura','$archivo','$cod_proveedor','$cod_detalleplantilla','$cod_servicioauditor','$cod_confretencion','$cod_tipopagoproveedor',
-        '$nombre_beneficiario','$apellido_beneficiario','$nro_cuenta_beneficiario','$cod_cuentabancaria') ";
+        '$nombre_beneficiario','$apellido_beneficiario','$nro_cuenta_beneficiario','$cod_cuentabancaria','$cod_actividadproyecto') ";
       $stmtDetalle = $dbh->prepare($sqlDetalle);
       $flagSuccessDetalle=$stmtDetalle->execute(); 
       echo $sqlDetalle; 
