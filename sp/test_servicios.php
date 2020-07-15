@@ -1,7 +1,7 @@
 <?php
   $sIde = "";
   $sKey = "";
-  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarComponentes","codigo_proyecto"=>0);
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarComponentes","codigo_proyecto"=>1);
   //Lista todos los componentes
   $parametros=json_encode($parametros);
     $ch = curl_init();
@@ -16,18 +16,18 @@
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $remote_server_output = curl_exec ($ch);
     curl_close ($ch);
-    
     // imprimir en formato JSON  
-    //print_r($remote_server_output);
+    
 	header('Content-type: application/json'); 	
-		print_r($remote_server_output); 			
+    //print_r ($remote_server_output);
+	//print_r json_decode($remote_server_output);			
 
-    // $obj= json_decode($remote_server_output);
-    // $detalle=$obj->lstComponentes;
-    // return $detalle;
-    // foreach ($detalle as $objDet){
-    //   echo $objDet->codigo."<br>";
-    // }
+     $obj= json_decode($remote_server_output);
+     echo $obj;
+    $detalle=$obj->lstComponentes;
+    foreach ($detalle as $objDet){
+      echo $objDet->nombre."<br>";
+    }
 
 
 ?>
