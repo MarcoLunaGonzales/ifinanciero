@@ -23,10 +23,8 @@ if(isset($_GET['q'])){
   <input type="hidden" name="id_servicioibnored_u" value="<?=$u?>" id="id_servicioibnored_u"/>
 <?php
 }else{
-  $item_3=obtenerIdRolDeIbnorca($globalUser);
-  if($item_3==0){
-    $item_3=79;
-  }
+  //$item_3=obtenerIdRolDeIbnorca($globalUser);
+  $item_3=79;
   $s=0;
   $u=0;
   $sqlAreas="";
