@@ -59,6 +59,11 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
   $sqlDel="DELETE FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codSolicitud";
   $stmtDel = $dbh->prepare($sqlDel);
   $stmtDel->execute();
+
+  //insertamos la distribucion
+  $sqlDel="DELETE FROM facturas_compra where cod_solicitudrecursodetalle in (select codigo from solicitud_recursosdetalle where cod_solicitudrecurso=$codSolicitud)";
+  $stmtDel = $dbh->prepare($sqlDel);
+  $stmtDel->execute();
   
   $valorDist=$_POST['n_distribucion'];
   if($valorDist!=0){
