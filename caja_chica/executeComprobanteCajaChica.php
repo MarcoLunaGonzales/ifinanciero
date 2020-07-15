@@ -80,7 +80,13 @@ try{
 			$concepto_contabilizacion="CONTABILIZACIÓN CAJA CHICA N° ".$numeroCC." DE ".$nombre_uo_tcc;
 
 			$codComprobante=obtenerCodigoComprobante();
-			$cod_contra_cuenta=obtenerValorConfiguracion(28);
+			
+			// $cod_contra_cuenta=obtenerValorConfiguracion(28);
+			$cod_contra_cuenta=obtnercontracuentaUnidad($cod_uo_tcc);
+			if($cod_contra_cuenta==0){
+				$cod_contra_cuenta=obtenerValorConfiguracion(28);// LA PAZ
+			}
+
 			$centroCostosDN=obtenerValorConfiguracion(29);//DN 
 			// echo $numeroComprobante;
 
@@ -133,6 +139,11 @@ try{
 		        $stmtFacturas->bindColumn('importe', $importe);
 		        while ($rowFac = $stmtFacturas->fetch()) 
 		        {
+		        	if($porcentaje_cuentaorigen>100){
+			        	$monto_recalculado=$importe*$porcentaje_cuentaorigen/100;
+			        }else{
+			        	$monto_recalculado=$importe;
+			        }
 		            //buscamos el tipo de retencion
 		            $stmtRetenciones = $dbh->prepare("SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica");
 		            $stmtRetenciones->execute();
@@ -142,6 +153,7 @@ try{
 		            while ($rowFac = $stmtRetenciones->fetch()) 
 		            {
 		            	$descripcion=$nombre_uo.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
+		                // $monto=$monto_recalculado*$porcentaje_retencion/100;
 		                $monto=$monto_recalculado*$porcentaje_retencion/100;
 		                if($cod_cuenta_retencion>0){
 		                    // $nro_cuenta_retencion=obtieneNumeroCuenta($cod_cuenta_retencion);

@@ -35,7 +35,7 @@ try{
   $persona_contacto = $resultInfo['persona_contacto'];  
   
   $nombre_unidad=nameUnidad($cod_unidadorganizacional);
-  $abrev_area=trim(abrevArea($cod_area),'-');
+  // $abrev_area=trim(abrevArea($cod_area),'-');
   $nombre_cliente=nameCliente($cod_cliente);
   $nombre_responsable=namePersonal($cod_personal);
   $tc=obtenerValorTipoCambio(2,strftime('%Y-%m-%d',strtotime($fecha_solicitudfactura)));
@@ -116,7 +116,7 @@ $html.=  '<header class="header">'.
           '<table class="table">
             <thead>
               <tr class="td-color-celeste">
-                <td rowspan="2" rowspan="2" width="5%" class="text-center"><b><b>N°</b></td>
+                <td rowspan="2" rowspan="2" width="3%" class="text-center"><b><b>N°</b></td>
                 <td rowspan="2" width="6%" class="text-center"><b>C.Costo</b></td>
                 <td rowspan="2" colspan="2" class="text-center"><b>Detalle</b></td>                
                 <td rowspan="2" width="5%" class="text-center"><b>Cantidad</b></td>
@@ -138,38 +138,40 @@ $html.=  '<header class="header">'.
             $index=1;
             $sumaTotal_bob=0;
             $sumaTotal_sus=0;
-            while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+            while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {            
               if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7) $precio_unitario=$row2["precio"];
               else $precio_unitario=$row2["precio"];
-              if($usd>0)$precio_sus=($precio_unitario*$row2["cantidad"])/$usd;
-              else $precio_sus=0;
               if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
                 $codigo_alterno_detalle=obtener_codigo_modulo_IBnorca($row2['cod_claservicio']);
               }else{
                 $codigo_alterno_detalle=$row2['Codigo_alterno'];
               }
-
-              //tipos de pago
-              $sqlAreas="SELECT cod_tipopago,porcentaje from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion";
+                
+              //prorateo de areas
+              $sqlAreas="SELECT cod_area,porcentaje,monto  from solicitudes_facturacion_areas where cod_solicitudfacturacion=$codigo_facturacion";
               $stmtAreas = $dbh->prepare($sqlAreas);                                   
               $stmtAreas->execute();
-              while ($rowTipoPago = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
-
+              while ($row_area = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
+                $porcentaje_area=$row_area["porcentaje"];
+                $cod_area_x=$row_area["cod_area"];
+                $precio_distribuido=$precio_unitario*$porcentaje_area/100;
+                $abrev_area=trim(abrevArea($cod_area_x),'-');
+                if($usd>0)$precio_sus=($precio_distribuido*$row2["cantidad"])/$usd;
+                else $precio_sus=0;
+                $html.='<tr>
+                  <td  class="text-center"><b>'.$index.'</b></td>
+                  <td  class="text-center">'.$abrev_area.'('.$porcentaje_area.'%)</td>
+                  <td  class="text-left" width="15%">'.$codigo_alterno_detalle.'</td>
+                  <td  class="text-left"><small>'.$row2["descripcion_alterna"].'</small></td>
+                  <td  class="text-right">'.formatNumberDec($row2["cantidad"]).'</td>
+                  <td  class="text-right">'.formatNumberDec($precio_distribuido).'</td>
+                  <td  class="text-right">'.formatNumberDec($precio_distribuido*$row2["cantidad"]).'</td>
+                  <td  class="text-right">'.formatNumberDec($precio_sus).'</td>
+                </tr>';
+                $index++;
+                $sumaTotal_bob+=$precio_distribuido*$row2["cantidad"];
+                $sumaTotal_sus+=$precio_sus;
               }
-              
-              $html.='<tr>
-                <td  class="text-center"><b>'.$index.'</b></td>
-                <td  class="text-center">'.$abrev_area.'</td>
-                <td  class="text-left" width="15%">'.$codigo_alterno_detalle.'</td>
-                <td  class="text-left"><small>'.$row2["descripcion_alterna"].'</small></td>
-                <td  class="text-right">'.formatNumberDec($row2["cantidad"]).'</td>
-                <td  class="text-right">'.formatNumberDec($precio_unitario).'</td>
-                <td  class="text-right">'.formatNumberDec($precio_unitario*$row2["cantidad"]).'</td>
-                <td  class="text-right">'.formatNumberDec($precio_sus).'</td>
-              </tr>';
-              $index++;
-              $sumaTotal_bob+=$precio_unitario*$row2["cantidad"];
-              $sumaTotal_sus+=$precio_sus;
             }
             //total de detalles
             $html.='<tr>                
@@ -246,6 +248,8 @@ $html.=  '<header class="header">'.
                 </tr>';
               }elseif($cod_tipopago==49){
                 $html.='<tr><td class="text-left"><b>DEPOSITO EN CUENTA('.$porcentaje.' %)</b></td></tr>';
+              }elseif($cod_tipopago==50){
+                $html.='<tr><td class="text-left"><b>ANTICIPO CLIENTE('.$porcentaje.' %)</b></td></tr>';
               }else{
                 $html.='<tr><td class="text-left">&nbsp</td></tr>';
               }    

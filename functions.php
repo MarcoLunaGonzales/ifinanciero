@@ -7987,6 +7987,16 @@ function sumatotaldetallefactura($cod_factura){
     }  
     return($valor);
   }
+  function obtnercontracuentaUnidad($codigo_uo){
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT cod_cuenta from  configuraciones_uo_cuenta where unidad=$codigo_uo");
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+      $valor=$row['cod_cuenta'];
+    }  
+    return($valor);
+  }
 ?>
 
 
