@@ -172,7 +172,12 @@ if(isset($_GET['cod'])){
         <?php
       }
       if(isset($_GET['admin'])){
-       ?><input type="hidden" name="control_admin" id="control_admin" value="0"><?php 
+        if($_GET['admin']==2){
+          ?><input type="hidden" name="control_admin" id="control_admin" value="1"><?php 
+        }else{
+          ?><input type="hidden" name="control_admin" id="control_admin" value="0"><?php 
+        }
+       
       }
       if(isset($_GET['reg'])){
        ?><input type="hidden" name="control_adminreg" id="control_adminreg" value="0"><?php  

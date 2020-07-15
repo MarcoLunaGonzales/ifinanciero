@@ -24,8 +24,8 @@ if(isset($_GET['q'])){
       $codigoArea=trim($arraySql[1]);
     }
     
-    if($codigoArea=='0'){    
-      $sqlAreas="and sr.cod_area=0";    
+    if($codigoArea=='0'){
+      $sqlAreas="and sr.cod_area=0";             
     }else{
       $sqlAreas="and sr.cod_area ".$codigoArea;  
     } 

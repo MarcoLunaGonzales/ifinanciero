@@ -5,7 +5,7 @@
  <option disabled selected value="">--SELECCIONE--</option>
 <?php
     foreach ($listaActividad as $listas) { ?>
-      <option value="<?=$listas->codigo?>" class="text-right"><?=substr($listas->nombre, 0, 85)?></option>
+      <option value="<?=$listas->codigo?>" class="text-right"><?=$listas->abreviatura?> - <?=substr($listas->nombre, 0, 85)?></option>
 
 <?php }?>
 

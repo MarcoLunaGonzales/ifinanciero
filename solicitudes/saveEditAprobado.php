@@ -203,7 +203,11 @@ if(!isset($_POST['control_admin'])){
  $urlList2=$urlList;
  if(isset($_POST['control_adminreg'])){
    $urlList2=$urlList3;
- } 
+ }
+}else{
+  if($_POST['control_admin']==1){
+    $urlList2=$urlList4;
+  }
 }   
 
   if(isset($_POST['usuario_ibnored'])){
