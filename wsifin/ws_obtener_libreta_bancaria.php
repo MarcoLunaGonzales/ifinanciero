@@ -104,7 +104,8 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $datosDetalle[$index]['DetalleFactura']=null;
            $datosDetalle[$index]['MontoFactura']=null;*/
            $saldoFactura=$rowLibDetalle['monto'];
-           if($rowLibDetalle['cod_factura']!=""){
+           //$saldoFactura=0;
+           //if($rowLibDetalle['cod_factura']!=""){
            //$sqlFacturaLibreta="SELECT * FROM facturas_venta where cod_libretabancariadetalle=".$rowLibDetalle['codigo'];
            $sqlFacturaLibreta="SELECT * from facturas_venta where codigo in (select cod_facturaventa from libretas_bancariasdetalle_facturas where cod_libretabancariadetalle=".$rowLibDetalle['codigo'].")";
            $stmtFacLibreta = $dbh->prepare($sqlFacturaLibreta);
@@ -128,10 +129,10 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
             $saldoFactura=$rowLibDetalle['monto']-$sumaImporte;
             $datosDetalle[$index]['Saldo']=$saldoFactura; 
             $datosDetalle[$index]['DetalleFacturas']=$datosDetalleFac;  
-           }else{
+           /*}else{
             $datosDetalle[$index]['Saldo']=$saldoFactura; 
             $datosDetalle[$index]['DetalleFacturas']=null;
-           }  
+           }*/  
            $index++;    
        }
      }

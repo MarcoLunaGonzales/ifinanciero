@@ -141,13 +141,13 @@ $item_1=2708;
                               if(isset($_GET['q'])){
                                 ?>
                                 <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-danger">
-                                       <i class="material-icons">refresh</i>
+                                       <i class="material-icons">keyboard_backspace</i>
                                 </a>
                                 <?php
                               }else{
                                 ?>
                                 <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1'  class="btn btn-danger">
-                                       <i class="material-icons">refresh</i>
+                                       <i class="material-icons">keyboard_backspace</i>
                                 </a>
                                 <?php
                               }

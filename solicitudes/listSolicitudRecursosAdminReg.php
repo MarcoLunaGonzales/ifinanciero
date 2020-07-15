@@ -27,18 +27,12 @@ if(isset($_GET['q'])){
       $codigoArea=trim($arraySql[1]);
     }
     
-    if($codigoArea=='0'){    
-      /*if($_GET['q']==53||$_GET['q']==7){
-          $sqlAreas="and sr.cod_area=13";
-      }else{
-          
-      }*/  
-      $sqlAreas="and sr.cod_area=0";
+    if($codigoArea=='0'){
+      $sqlAreas="and (sr.cod_area=0 or sr.cod_area=".obtenerValorConfiguracion(65).")";             
     }else{
-       $sqlAreas="and sr.cod_area ".$codigoArea;  
+      $sqlAreas="and (sr.cod_area ".$codigoArea." or sr.cod_area=".obtenerValorConfiguracion(65).")";  
     } 
   }
-
 }else{
   $sqlAreas="";
   $sqlServicio="";
@@ -70,7 +64,6 @@ $stmt->bindColumn('numero', $numeroSol);
 $stmt->bindColumn('idServicio', $idServicioX);
 
 ?>
-
 <div class="content">
   <div class="container-fluid">
         <div class="row">

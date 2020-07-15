@@ -551,7 +551,12 @@
 		if ($_GET['opcion']=='listPagoProveedoresLotes') {
 			require_once('obligaciones_pago/listaLotes.php');
 		}
-  
+        
+
+        if ($_GET['opcion']=='reporteVentasResumido') {
+			require_once('reportes/reportesVentaResumido.php');
+		}
+
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {
 			require_once('activosFijos/ubicacionesLista.php');
