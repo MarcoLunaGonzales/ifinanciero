@@ -275,8 +275,8 @@ $html.=  '<header class="header">'.
           
           $userRevisado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2727);  //En revisado
           if($userRevisado==0){
-             $fecha_revisado="Sin registro";    
-             $personal_revisado="Sin registro";    
+             $fecha_revisado="";    
+             $personal_revisado="";    
           }else{
              $personal_revisado=namePersonal($userRevisado);
              $fecha_revisado=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2727);
@@ -284,16 +284,16 @@ $html.=  '<header class="header">'.
           
           $userAprobado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2728);
           if($userAprobado==0){
-             $fecha_aprobacion="Sin registro";    
-             $personal_aprobacion="Sin registro";    
+             $fecha_aprobacion="";    
+             $personal_aprobacion="";    
           }else{
              $personal_aprobacion=namePersonal($userAprobado);
              $fecha_aprobacion=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2728);
           }
           $userprocesado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2729);//procesado        
           if($userprocesado==0){
-             $personal_procesado="Sin registro";    
-             $fecha_procesado="Sin registro";
+             $personal_procesado="";    
+             $fecha_procesado="";
           }else{
              $personal_procesado=namePersonal($userprocesado);    
              $fecha_procesado=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2729);
@@ -301,8 +301,8 @@ $html.=  '<header class="header">'.
 
           $userRevision=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2729);//procesado        
           if($userRevision==0){
-             $personal_revision="Sin registro";    
-             $fecha_revision="Sin registro";
+             $personal_revision="";    
+             $fecha_revision="";
           }else{
              $personal_revision=namePersonal($userRevision);    
              $fecha_revision=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2729);
@@ -310,8 +310,8 @@ $html.=  '<header class="header">'.
 
           $userAnulado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2730);//procesado        
           if($userAnulado==0){
-             $personal_anulado="Sin registro";    
-             $fecha_anulado="Sin registro";
+             $personal_anulado="";    
+             $fecha_anulado="";
           }else{
              $personal_anulado=namePersonal($userAnulado);    
              $fecha_anulado=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2730);
