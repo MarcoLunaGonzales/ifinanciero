@@ -106,7 +106,8 @@ try {//recibiendo datos
             //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
             require_once '../simulaciones_servicios/insertar_archivosadjuntos.php';
                     
-        }
+        }   
+            date_default_timezone_set('America/La_Paz');
             $fechaHoraActual=date("Y-m-d H:i:s");
             $idTipoObjeto=2709;
             $idObjeto=2726; //regristado

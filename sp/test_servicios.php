@@ -1,7 +1,7 @@
 <?php
   $sIde = "";
   $sKey = "";
-  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarComponentes","codigo_proyecto"=>0);
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarComponentes","codigo_proyecto"=>1);
   //Lista todos los componentes
   $parametros=json_encode($parametros);
     $ch = curl_init();

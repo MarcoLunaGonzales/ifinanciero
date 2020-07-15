@@ -23,6 +23,7 @@ $stmt = $dbh->prepare($sql);
 $flagSuccess=$stmt->execute();
 if($flagSuccess){
   //enviar propuestas para la actualizacion de ibnorca
+  date_default_timezone_set('America/La_Paz');
   $fechaHoraActual=date("Y-m-d H:i:s");
   $idTipoObjeto=2709;
   $idObjeto= 2730; //anulado

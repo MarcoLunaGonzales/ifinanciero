@@ -18,7 +18,9 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
+date_default_timezone_set('America/La_Paz');
 $fechaHoraActual=date("Y-m-d H:i:s");
+
 
 $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=$estado where codigo=$codigo";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
@@ -27,7 +29,7 @@ $flagSuccess=$stmtUpdate->execute();
 if($estado!=1){
 	//actualziar los estados del servidor ibnorca
 	if($estado==4){
-    //enviar propuestas para la actualizacion de ibnorca
+    //enviar propuestas para la actualizacion de ibnorca  
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2709;
     $idObjeto=2727; //regristado
