@@ -28,7 +28,12 @@ if(isset($_GET['q'])){
     }
     
     if($codigoArea=='0'){    
-       $sqlAreas="and sr.cod_area=0";    
+      /*if($_GET['q']==53||$_GET['q']==7){
+          $sqlAreas="and sr.cod_area=13";
+      }else{
+          
+      }*/  
+      $sqlAreas="and sr.cod_area=0";
     }else{
        $sqlAreas="and sr.cod_area ".$codigoArea;  
     } 

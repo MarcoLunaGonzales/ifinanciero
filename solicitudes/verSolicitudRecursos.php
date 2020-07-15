@@ -32,7 +32,11 @@ if(isset($_GET['cod'])){
 	$codigo=0;
 }
 if(isset($_GET['admin'])){
-	$urlList=$urlList2;
+  if($_GET['admin']==2){
+    $urlList=$urlList4;
+  }else{
+    $urlList=$urlList2;
+  }
 }
 
 if(isset($_GET['reg'])){

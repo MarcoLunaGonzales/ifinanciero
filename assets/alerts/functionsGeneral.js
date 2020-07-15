@@ -12266,6 +12266,11 @@ function cambiarEstadoObjetoSolAjax(){
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
            var respu=resp.split("####");
+           var urlAprob='listSolicitudRecursosAdmin';
+           if($("#modal_adminconta").length>0){
+            urlAprob='listSolicitudRecursosAdminConta';
+           }
+
            if(respu[1]=="none"){
              //no se creo el comprobante
              Swal.fire("Informativo!", "Una de las cuentas del detalle de la solicitud, no esta relacionada a su cuenta pasivo", "warning");
@@ -12275,9 +12280,9 @@ function cambiarEstadoObjetoSolAjax(){
               var r=$("#id_servicioibnored_rol").val();
               var s=$("#id_servicioibnored_s").val();
               var u=$("#id_servicioibnored_u").val();
-              alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin&q='+q+'&r='+r+'&s='+s+'&u='+u);   
+              alerts.showSwal('success-message','index.php?opcion='+urlAprob+'&q='+q+'&r='+r+'&s='+s+'&u='+u);   
             }else{
-              alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin');
+              alerts.showSwal('success-message','index.php?opcion='+urlAprob);
             }    
            }
         }
@@ -15818,7 +15823,7 @@ function cargarDatosActividadesEnTablaModal(){
   $("#contenedor_actividadesmodal").html("");
   for (var i = 0; i < array_act_proy.length; i++) {
     var fila=array_act_proy[i];
-    var selectHtml = '<select class="selectpicker form-control form-control-sm" name="actividades_detalle'+fila+'" id="actividades_detalle'+fila+'" data-style="btn btn-info">';
+    var selectHtml = '<select data-size="6" data-live-search="true" class="selectpicker form-control form-control-sm" name="actividades_detalle'+fila+'" id="actividades_detalle'+fila+'" data-style="btn btn-info">';
       selectHtml+=$("#actividades_detalle").html()+'</select>';
     if($("#cod_actividadproyecto"+fila).val()!=0){
       var rowHtml='<tr><td>'+fila+'</td><td>'+selectHtml+'</td><td><a href="#" class="btn btn-sm btn-warning"><small>ASOCIADO</small></a></td></tr>';
