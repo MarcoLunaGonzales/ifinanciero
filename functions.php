@@ -8013,7 +8013,6 @@ function obtenerCodigoActividadProyecto($codigo){
   
   function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta){
 
-<<<<<<< HEAD
   $dbh = new Conexion();
   $queryTienda="";
   if($soloTienda==1){
@@ -8023,7 +8022,9 @@ function obtenerCodigoActividadProyecto($codigo){
    FROM facturas_venta f join unidades_organizacionales u on u.codigo=f.cod_unidadorganizacional join areas a on a.codigo=f.cod_area where f.cod_unidadorganizacional in ($unidades) and f.cod_area in ($areas) and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' $queryTienda");
    $stmt->execute();
    return($stmt);
-=======
+
+ }
+ 
   function contador_facturas_cajachica($codigo){
     $dbh = new Conexion();
     $sql="SELECT codigo from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo";    
@@ -8102,8 +8103,8 @@ function obtenerCodigoActividadProyecto($codigo){
       $valor="x OFICINA y AREA";
     }
     return($valor);
->>>>>>> e80d8ccd6979d33677d92ce281f794ae8e8b23a0
-  }
+   }
+  
 ?>
 
 
