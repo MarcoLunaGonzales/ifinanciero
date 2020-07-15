@@ -12211,6 +12211,11 @@ function cambiarEstadoObjetoSolAjax(){
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
            var respu=resp.split("####");
+           var urlAprob='listSolicitudRecursosAdmin';
+           if($("#modal_adminconta").length>0){
+            urlAprob='listSolicitudRecursosAdminConta';
+           }
+
            if(respu[1]=="none"){
              //no se creo el comprobante
              Swal.fire("Informativo!", "Una de las cuentas del detalle de la solicitud, no esta relacionada a su cuenta pasivo", "warning");
@@ -12220,9 +12225,9 @@ function cambiarEstadoObjetoSolAjax(){
               var r=$("#id_servicioibnored_rol").val();
               var s=$("#id_servicioibnored_s").val();
               var u=$("#id_servicioibnored_u").val();
-              alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin&q='+q+'&r='+r+'&s='+s+'&u='+u);   
+              alerts.showSwal('success-message','index.php?opcion='+urlAprob+'&q='+q+'&r='+r+'&s='+s+'&u='+u);   
             }else{
-              alerts.showSwal('success-message','index.php?opcion=listSolicitudRecursosAdmin');
+              alerts.showSwal('success-message','index.php?opcion='+urlAprob);
             }    
            }
         }

@@ -402,6 +402,9 @@ if(isset($_GET['cod'])){
               <?php 
                if(isset($_GET['q'])){
                 if(isset($_GET['admin'])){
+                  if($_GET['admin']==2){
+                    $urlList2=$urlList4;
+                  }
                  ?>  
                   <a href="../<?=$urlList2;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>" class="<?=$buttonCancel;?>">Volver</a> 
                 <?php
@@ -420,6 +423,9 @@ if(isset($_GET['cod'])){
                 
                }else{
                 if(isset($_GET['admin'])){
+                  if($_GET['admin']==2){
+                    $urlList2=$urlList4;
+                  }
                  ?>
                     <a href="../<?=$urlList2;?>" class="<?=$buttonCancel;?>">Volver</a> 
                 <?php
