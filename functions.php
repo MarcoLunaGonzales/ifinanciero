@@ -8011,6 +8011,53 @@ function sumatotaldetallefactura($cod_factura){
     return($valor);
   }
 
+  function contador_facturas_cajachica($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT codigo from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo";    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {      
+      $valor++;
+    }         
+    return($valor);
+  }
+  function cadena_facturas_cajachica($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo";    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $cadena="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {      
+      $cadena.="F/".$row['nro_factura'].",";
+    }     
+    $cadena=trim($cadena,',');
+    return($cadena);
+  }
+  function importe_total_facturas($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT importe from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo union SELECT importe from detalle_cajachica_gastosdirectos where cod_cajachicadetalle=$codigo";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {      
+      $valor+=$row['importe'];
+    }         
+    return($valor);
+  }
+  function obtenerDistribucionCajachicaDetalle($codigo,$tipo){
+    $dbh = new Conexion();    
+    if($tipo==1){
+      $sql="SELECT u.nombre,d.porcentaje from distribucion_gastos_caja_chica d  join unidades_organizacionales u on u.codigo=d.oficina_area where d.cod_cajachica_detalle=$codigo and d.tipo_distribucion=$tipo";
+    }else{
+      $sql="SELECT u.nombre,d.porcentaje from distribucion_gastos_caja_chica d  join areas u on u.codigo=d.oficina_area where d.cod_cajachica_detalle=$codigo and d.tipo_distribucion=$tipo";
+    }
+    
+    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return $stmt;
+  }
 ?>
 
 

@@ -799,6 +799,36 @@ function listFacDCC(id,fecha,observaciones,monto,nro_dcc,codigo){
    listarFactDCC(id);
    abrirModalDCC('modalFac');
 }
+function listDistribuciones_cajachica(codigo){
+  // document.getElementById("cod_ccd_d").value=codigo;
+  // document.getElementById("cantidad_filas_ccd_d").value=id;
+  // document.getElementById("fecha_dcc_d").value=fecha;
+  // document.getElementById("observaciones_dcc_d").value=observaciones;
+  // document.getElementById("monto_dcc_d").value=monto;
+  // document.getElementById("nro_dcc_d").value=nro_dcc;
+  abrirModalDCC('modal_distribuciones');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/ajax_cajachica_distribuciones.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#contenedor_uo_distribucion");
+      contenedor.html(ajax.responseText);
+
+      ajax=nuevoAjax();
+      ajax.open('GET', 'caja_chica/ajax_cajachica_distribuciones_area.php?codigo='+codigo,true);
+      ajax.onreadystatechange=function() {
+        if (ajax.readyState==4) {
+          var contenedor=$("#contenedor_area_distribucion");
+          contenedor.html(ajax.responseText);      
+        }
+      }
+      ajax.send(null);
+    }
+  }
+  ajax.send(null);
+
+}
+
 function abrirModalDCC(id){
   $('#'+id).modal('show');
 }
@@ -891,6 +921,31 @@ function saveFacturaDCC(){
   }else{
     alert('Campo "NIT" Vacío.');
   }
+}
+function saveImporteDirectoDCC(){
+  var index=$('#codCuenta').val();
+  var factura={
+    nit: 0,
+    nroFac: 0,
+    fechaFac: 0,
+    razonFac: 'Importe Directo',
+    impFac: $('#importe_gasto').val(),    
+    autFac: 0,
+    conFac: 0,
+    exeFac: 0,
+    iceFac: 0,
+    tasaFac: 0  
+    }    
+    if($('#importe_gasto').val()!=''){
+      itemFacturasDCC[index-1].push(factura);
+      limpiarFormFacDCC();
+      listarFactDCC(index);                
+      $("#nfac"+index).html(itemFacturasDCC[index-1].length);
+      $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");$("#link113").removeClass("active");
+      $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");$("#nav_boton4").removeClass("active");                 
+    }else{
+      alert('El Campo "Importe del Gasto" no debe ir Vacío.');
+    }
 }
 
 function limpiarFormFacDCC(){

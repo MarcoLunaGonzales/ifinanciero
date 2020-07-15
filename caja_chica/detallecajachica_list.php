@@ -209,7 +209,9 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                 <script>var nfac=[];itemFacturasDCC.push(nfac);</script>
                               <?php
                                 if($globalAdmin==1){
-                                  $sqlDetalle="SELECT * FROM facturas_detalle_cajachica where cod_cajachicadetalle=$codigo_detalle_Cajachica";
+                                  $sqlDetalle="SELECT * FROM facturas_detalle_cajachica where cod_cajachicadetalle=$codigo_detalle_Cajachica
+                                  union 
+                                  SELECT * FROM detalle_cajachica_gastosdirectos where cod_cajachicadetalle=$codigo_detalle_Cajachica";
                                   // echo $sqlDetalle;
                                   $stmtFCCD = $dbh->prepare($sqlDetalle);
                                   $stmtFCCD->execute();
@@ -233,12 +235,16 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                   <i class="material-icons">featured_play_list</i>
                                 </a> -->
                                
-                                <a href='#' title="Facturas" id="boton_fac<?=$idFila;?>" class="btn btn-info btn-sm btn-fab" onclick="listFacDCC(<?=$idFila;?>,'<?=$fecha;?>','<?=$observaciones;?>',<?=$monto;?>,<?=$nro_documento;?>,<?=$codigo_detalle_Cajachica?>);">
+                                <a href='#' title="Facturas" id="boton_fac<?=$idFila;?>" class="btn btn-info" onclick="listFacDCC(<?=$idFila;?>,'<?=$fecha;?>','<?=$observaciones;?>',<?=$monto;?>,<?=$nro_documento;?>,<?=$codigo_detalle_Cajachica?>);">
                                   <i class="material-icons">featured_play_list</i>
                                   <span id="nfac<?=$idFila;?>" class="count bg-warning"></span>
                                 </a>
-                              
-                                
+                                <a href='#' title="Distribución de Gastos" class="btn btn-warning" onclick="listDistribuciones_cajachica(<?=$codigo_detalle_Cajachica?>);">
+                                  <i class="material-icons">list</i>                                  
+                                </a>
+                               <!--  <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="btn btn-warning">
+                                  <i class="material-icons">list</i>
+                                </a> -->
                                 <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                   <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
                                 </a>
@@ -276,7 +282,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
             </div>
           </div>  
         </div>
-    </div>
+    </div>    
 <!-- modal facturas -->
 <div class="modal fade" id="modalFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
@@ -293,14 +299,14 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                   </h4>
                   <div class="row" >
                       <label class="col-sm-1 col-form-label text-right"><b>Nro. Doc.</b></label>
-                      <div class="col-sm-2">
+                      <div class="col-sm-1">
                       <div class="form-group">
                           <input style="background-color:#ffffff;" class="form-control" name="nro_dcc" id="nro_dcc"  readonly="readonly"/>
                       </div>
                       </div>
 
                       <label class="col-sm-1 col-form-label text-right"><b>Detalle</b></label>
-                      <div class="col-sm-2">
+                      <div class="col-sm-3">
                       <div class="form-group">
                           <input style="background-color:#ffffff;" class="form-control" name="observaciones_dcc" id="observaciones_dcc"  readonly="readonly"/>
                       </div>
@@ -330,6 +336,11 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                         <li class="nav-item">
                           <a id="nav_boton2"class="nav-link" data-toggle="tab" href="#link111" role="tablist">
                             <span class="material-icons">add</span> Nuevo
+                          </a>
+                        </li>
+                        <li class="nav-item">
+                          <a id="nav_boton4"class="nav-link" data-toggle="tab" href="#link113" role="tablist">
+                            <span class="material-icons">add</span> Gasto Directo
                           </a>
                         </li>
                         <li class="nav-item">
@@ -456,6 +467,27 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                        </div>
                        <p>Los archivos cargados se adjuntaran a la lista de facturas existente</p>
                     </div>
+                    <div class="tab-pane" id="link113">
+                      <form name="form2">
+                        <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
+                        <div class="card" style="background: #e0e0e0">
+                          <div class="card-body">
+                            <div class="row">
+                             <label class="col-sm-2 col-form-label" style="color: #4a148c;">Importe Del Gasto</label>
+                             <div class="col-sm-3">
+                              <div class="form-group">
+                                <input class="form-control" type="text" name="importe_gasto" id="importe_gasto" required="true"/>
+                              </div>
+                              </div>                              
+                            </div>
+                          </div>
+                        </div>
+                      <div class="form-group float-right">
+                        <button type="button" class="btn btn-info btn-round" onclick="saveImporteDirectoDCC()">
+                        Guardar</button>
+                      </div>
+                         </form>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -469,3 +501,29 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
   </div>
 </div>
 
+<div class="modal fade" id="modal_distribuciones" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+      <div class="card-header card-header-success card-header-text">
+          <div class="card-text">
+            <h5>Distribución de Gastos <b id="titulo_distribucion"></b> </h5> 
+          </div>
+          <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+      </div>
+          <div class="card-body">
+            <div class="row col-sm-12">
+              <div class="col-sm-6" id="contenedor_uo_distribucion">
+                  
+              </div>
+              <div class="col-sm-6" id="contenedor_area_distribucion">
+              </div> 
+             </div>                     
+             <div class="form-group float-right">
+                <!-- <button type="button" class="btn btn-success btn-round" onclick="guardarDistribucionSolicitudRecurso()">Guardar</button> -->
+             </div>         
+          </div>
+    </div>
+  </div>
+</div>
