@@ -15763,7 +15763,7 @@ function cargarDatosActividadesEnTablaModal(){
   $("#contenedor_actividadesmodal").html("");
   for (var i = 0; i < array_act_proy.length; i++) {
     var fila=array_act_proy[i];
-    var selectHtml = '<select class="selectpicker form-control form-control-sm" name="actividades_detalle'+fila+'" id="actividades_detalle'+fila+'" data-style="btn btn-info">';
+    var selectHtml = '<select data-size="6" data-live-search="true" class="selectpicker form-control form-control-sm" name="actividades_detalle'+fila+'" id="actividades_detalle'+fila+'" data-style="btn btn-info">';
       selectHtml+=$("#actividades_detalle").html()+'</select>';
     if($("#cod_actividadproyecto"+fila).val()!=0){
       var rowHtml='<tr><td>'+fila+'</td><td>'+selectHtml+'</td><td><a href="#" class="btn btn-sm btn-warning"><small>ASOCIADO</small></a></td></tr>';

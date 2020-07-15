@@ -1,5 +1,5 @@
  <?php
- $listaActividad= obtenerActividadesServicioImonitoreo(3000); 
+ $listaActividad= obtenerActividadesServicioImonitoreo(1); 
 ?>
  <select class="selectpicker form-control form-control-sm d-none" name="actividades_detalle" id="actividades_detalle" data-style="btn btn-success">                                  
  <option disabled selected value="">--SELECCIONE--</option>
@@ -10,10 +10,10 @@
 <?php }?>
 
   <!--DATOS PARA PRUEBA-->
-  <option value="10" class="text-right">Actividad 1: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas iure libero laboriosam quibusdam, culpa, hic labor</option>
+  <!--<option value="10" class="text-right">Actividad 1: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas iure libero laboriosam quibusdam, culpa, hic labor</option>
   <option value="20" class="text-right">Actividad 2: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem placeat, labore amet nam non a quas e</option>
   <option value="30" class="text-right">Actividad 3: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure ab aut eos accusamus dolorum voluptates, dicta laudant</option>
-  <option value="40" class="text-right">Actividad 4: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia pariatur, reiciendis facere sit </option>
+  <option value="40" class="text-right">Actividad 4: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia pariatur, reiciendis facere sit </option>-->
 </select>
 
 <!-- notice modal -->

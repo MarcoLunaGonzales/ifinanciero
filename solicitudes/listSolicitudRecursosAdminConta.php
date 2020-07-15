@@ -197,7 +197,7 @@ $item_1=2708;
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
                                  <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
+                                    <i class="material-icons text-success">edit</i> Editar Solicitud
                                  </a>
                                  <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-dark">report</i> Rechazar Solicitud
@@ -209,7 +209,7 @@ $item_1=2708;
                                   if($codEstado==3){
                                     ?>
                                     <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
+                                    <i class="material-icons text-success">edit</i> Editar Solicitud
                                    </a>
                                    <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>')" href='#'  class="dropdown-item">
                                       <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
@@ -237,14 +237,14 @@ $item_1=2708;
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
                                  <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
+                                    <i class="material-icons text-success">edit</i> Editar Solicitud
                                  </a>
                                  <?php 
                                 }else{
                                   if($codEstado==3){
                                     ?>
                                     <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
+                                    <i class="material-icons text-success">edit</i> Editar Solicitud
                                    </a>
                                    <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>')" href='#'  class="dropdown-item">
                                       <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
@@ -483,7 +483,7 @@ $item_1=2708;
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
                                  <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
+                                    <i class="material-icons text-success">edit</i> Editar Solicitud
                                  </a>
                                  <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
                                     <i class="material-icons text-dark">report</i> Rechazar Solicitud
@@ -512,14 +512,14 @@ $item_1=2708;
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
                                  <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
+                                    <i class="material-icons text-success">edit</i> Editar Solicitud
                                  </a>
 
                                  <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> Aprobar Solicitud
+                                    <i class="material-icons text-success">edit</i> Aprobar Solicitud
                                  </a>
                                  <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0" class="dropdown-item">
-                                    <i class="material-icons text-success">offline_pin</i> Verificar Solicitud
+                                    <i class="material-icons text-success">edit</i> Editar Solicitud
                                  </a>
                                  <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
                                     <i class="material-icons text-dark">report</i> Rechazar Solicitud
