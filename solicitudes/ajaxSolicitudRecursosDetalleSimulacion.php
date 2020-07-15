@@ -40,7 +40,7 @@ if(isset($_GET["area"])){
     <div class="col-sm-1">
                                  <div class="form-group">
                                   <span style="position:absolute;left:-15px; font-size:20px;font-weight:600; color:#F1C40F;" id="fila_index<?=$idFila?>"><?=$idFila?></span>
-                                    <select class="selectpicker form-control form-control-sm" name="unidad_fila<?=$idFila;?>" id="unidad_fila<?=$idFila;?>" data-style="btn btn-primary">
+                                    <select class="selectpicker form-control form-control-sm" onchange="listarProyectosSisdeUnidades()" name="unidad_fila<?=$idFila;?>" id="unidad_fila<?=$idFila;?>" data-style="btn btn-primary">
                                       <?php
                                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
                                    $stmt->execute();
@@ -108,6 +108,8 @@ if(isset($_GET["area"])){
     <input type="hidden" id="cod_detalleplantilla<?=$idFila;?>" name="cod_detalleplantilla<?=$idFila;?>" value="">
     <input type="hidden" id="cod_servicioauditor<?=$idFila;?>" name="cod_servicioauditor<?=$idFila;?>" value="">    
        
+    <input type="hidden" id="cod_actividadproyecto<?=$idFila;?>" name="cod_actividadproyecto<?=$idFila;?>" value="0">
+    <input type="hidden" id="des_actividadproyecto<?=$idFila;?>" name="des_actividadproyecto<?=$idFila;?>" value="">       
         <div class="col-sm-2">
 		    <div class="form-group">
           		<label for="detalle_detalle<?=$idFila;?>" class="bmd-label-static">Detalle</label>
@@ -199,3 +201,5 @@ if(isset($_GET["area"])){
 </div>
 <div class="h-divider"></div>
 <!--<script>autocompletar("partida_cuenta"+<?=$idFila?>,"partida_cuenta_id"+<?=$idFila?>,array_cuenta);</script>-->
+
+<script>listarProyectosSisdeUnidades();</script>

@@ -1,3 +1,61 @@
+ <?php
+ $listaActividad= obtenerActividadesServicioImonitoreo(3000); 
+?>
+ <select class="selectpicker form-control form-control-sm d-none" name="actividades_detalle" id="actividades_detalle" data-style="btn btn-success">                                  
+ <option disabled selected value="">--SELECCIONE--</option>
+<?php
+    foreach ($listaActividad as $listas) { ?>
+      <option value="<?=$listas->codigo?>" class="text-right"><?=substr($listas->nombre, 0, 85)?></option>
+
+<?php }?>
+
+  <!--DATOS PARA PRUEBA
+  <option value="10" class="text-right">Actividad 1: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas iure libero laboriosam quibusdam, culpa, hic labor</option>
+  <option value="20" class="text-right">Actividad 2: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem placeat, labore amet nam non a quas e</option>
+  <option value="30" class="text-right">Actividad 3: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure ab aut eos accusamus dolorum voluptates, dicta laudant</option>
+  <option value="40" class="text-right">Actividad 4: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia pariatur, reiciendis facere sit </option>-->
+</select>
+
+<!-- notice modal -->
+<div class="modal fade" id="modalActividadesProyecto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+      <div class="card-header card-header-primary card-header-text">
+          <div class="card-text">
+            <h5>Lista Detalles con Actividades</h5> 
+          </div>
+          <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+      </div>
+          <div class="card-body">
+            <div class="col-sm-12">
+              <div class="row">                      
+                   <table class="table table-bordered table-condensed">
+                     <thead>
+                       <tr class="fondo-boton">
+                         <td width="8%">Nro Fila</td>
+                         <td width="70%">Actividad</td>
+                         <td>Estado</td>
+                       </tr>
+                     </thead>
+                     <tbody id="contenedor_actividadesmodal">
+                       
+                     </tbody>
+                   </table>
+                </div>
+               <div class="row">                        
+              </div>
+             </div>                     
+             <div class="form-group float-right">
+                <button type="button" class="btn btn-warning btn-round" onclick="guardarActividadFilasDetalle()">Asociar Actividades</button>
+             </div>
+             <p class="text-muted"><small>Las actividades están relacionadas al detalle de la solicitud.</small></p>             
+          </div>
+    </div>
+  </div>
+</div>
+<!-- end notice modal -->
 <!-- notice modal -->
 <div class="modal fade" id="modalNuevoCuentaBeneficiario" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">

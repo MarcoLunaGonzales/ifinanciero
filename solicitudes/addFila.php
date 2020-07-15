@@ -1,3 +1,7 @@
+<?php
+$cod_actividadproyecto=obtenerCodigoActividadProyecto($codDetalleX);
+$des_actividadproyecto="";
+?>
 <div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
   <input class="form-control" type="number"  onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',<?=$importeSolX?>);">
 </div>
@@ -7,7 +11,7 @@
                                <div class="col-sm-1">
                                  <div class="form-group">
                                   <span style="position:absolute;left:-25px; font-size:20px;font-weight:600; color:#F1C40F;" id="fila_index<?=$idFila?>"><?=$idFila?></span>
-                                    <select class="selectpicker form-control form-control-sm" name="unidad_fila<?=$idFila;?>" id="unidad_fila<?=$idFila;?>" data-style="btn btn-primary">
+                                    <select class="selectpicker form-control form-control-sm" onchange="listarProyectosSisdeUnidades()" name="unidad_fila<?=$idFila;?>" id="unidad_fila<?=$idFila;?>" data-style="btn btn-primary">
                                       <?php
                                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
                                    $stmt->execute();
@@ -78,11 +82,13 @@
                                <input type="hidden" id="area<?=$idFila;?>" name="area<?=$idFila;?>" value="<?=$areaSol?>">
                                <input type="hidden" id="cod_detalleplantilla<?=$idFila;?>" name="cod_detalleplantilla<?=$idFila;?>" value="<?=$cod_plantilladetalle?>">
                                <input type="hidden" id="cod_servicioauditor<?=$idFila;?>" name="cod_servicioauditor<?=$idFila;?>" value="<?=$cod_plantillauditor?>">    
-		
+                               <!--COD ACTIVIDADES-->
+		                           <input type="hidden" id="cod_actividadproyecto<?=$idFila;?>" name="cod_actividadproyecto<?=$idFila;?>" value="<?=$cod_actividadproyecto?>">
+                               <input type="hidden" id="des_actividadproyecto<?=$idFila;?>" name="des_actividadproyecto<?=$idFila;?>" value="<?=$des_actividadproyecto?>">    
       	                              <!--<div class="col-sm-4">
                                           
       	                              </div>-->
-                                      <div class="col-sm-2">
+                                  <div class="col-sm-2">
 		                                  <div class="form-group">
                                         		<label for="detalle_detalle<?=$idFila;?>" class="bmd-label-static">Detalle</label>
 		                              		<textarea rows="1" class="form-control" name="detalle_detalle<?=$idFila;?>" required id="detalle_detalle<?=$idFila;?>" value=""><?=$detalleX?></textarea>
@@ -207,3 +213,4 @@
                             $control=$rowFacturas['codigo_control'];
                             ?><script>abrirFactura(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>','<?=$iceFac?>','<?=$tipoFac?>','<?=$tasaFac?>');</script><?php
                         } ?>
+                       

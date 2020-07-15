@@ -438,8 +438,10 @@ if(isset($_GET['cod'])){
                }
               ?>
                
-               <a href="#" onclick="cargarDatosRegistroProveedor()" class="btn btn-warning float-right">Agregar Proveedor</a>
-               <a href="#" onclick="actualizarRegistroProveedor()" class="btn btn-success float-right">Actualizar Proveedores</a>
+               <a href="#" onclick="cargarDatosRegistroProveedor()" title="Agregar Proveedor" class="btn btn-warning float-right"><i class="material-icons">group_add</i></a>
+               <a href="#" onclick="actualizarRegistroProveedor()" title="Actualizar Lista Proveedores" class="btn btn-info float-right"><i class="material-icons">find_replace</i></a>
+               <a href="#" onclick="mostrarActividadesDeSolicitud()" title="Actividades Proyecto SIS" class="btn btn-primary float-right"><i class="material-icons">assignment</i><span id="nproyectos" class="count bg-danger">0</span> ACTIVIDADES</a>
+               <input type="hidden" id="cantidad_filas_proyecto" value="0">
                <div class="row col-sm-12">
                     <div class="col-sm-1">
                     </div>
@@ -593,4 +595,4 @@ if(isset($_GET['cod'])){
 <?php
 require_once 'modal.php';
 ?>
-<script>calcularTotalesSolicitud()</script> 
+<script>calcularTotalesSolicitud();listarProyectosSisdeUnidades();</script> 

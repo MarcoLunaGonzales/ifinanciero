@@ -7906,7 +7906,7 @@ function sumatotaldetallefactura($cod_factura){
   }
   function obtenerIdRolDeIbnorca($codigo){
     $dbh = new Conexion();
-    $stmt = $dbh->prepare("SELECT IdRol FROM ibnorca.personarol WHERE IdPersona = '$codigo' and pordefecto=1 and ibnorca.PersonaRol(IdPersona)>4");
+    $stmt = $dbh->prepare("SELECT IdRol FROM ibnorca.personarol WHERE IdPersona = '$codigo' and pordefecto=1 "); //and ibnorca.PersonaRol(IdPersona)>4
     $stmt->execute();
     $valor=0;
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
@@ -7987,6 +7987,19 @@ function sumatotaldetallefactura($cod_factura){
     }  
     return($valor);
   }
+
+
+  function obtenerCodigoActividadProyecto($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cod_actividadproyecto from solicitud_recursosdetalle where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_actividadproyecto'];
+    }
+   return($valor);
+}
+
   function obtnercontracuentaUnidad($codigo_uo){
     $dbh = new Conexion();
     $stmt = $dbh->prepare("SELECT cod_cuenta from  configuraciones_uo_cuenta where unidad=$codigo_uo");
@@ -7997,6 +8010,7 @@ function sumatotaldetallefactura($cod_factura){
     }  
     return($valor);
   }
+
 ?>
 
 

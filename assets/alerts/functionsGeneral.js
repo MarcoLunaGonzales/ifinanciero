@@ -4056,6 +4056,11 @@ function minusDetalleSolicitud(idF){
        $("#cantidad_archivosadjuntosdetalle"+nuevoId).attr("name","cantidad_archivosadjuntosdetalle"+i);
        $("#cantidad_archivosadjuntosdetalle"+nuevoId).attr("id","cantidad_archivosadjuntosdetalle"+i);
        $("#archivos_fila"+nuevoId).attr("id","archivos_fila"+i);
+
+       $("#cod_actividadproyecto"+nuevoId).attr("name","cod_actividadproyecto"+i);
+       $("#cod_actividadproyecto"+nuevoId).attr("id","cod_actividadproyecto"+i);
+       $("#des_actividadproyecto"+nuevoId).attr("name","des_actividadproyecto"+i);
+       $("#des_actividadproyecto"+nuevoId).attr("id","des_actividadproyecto"+i);
       }
      } 
      itemFacturas.splice((idF-1), 1);
@@ -4065,6 +4070,7 @@ function minusDetalleSolicitud(idF){
       filaActiva=numFilas;
       document.getElementById("cantidad_filas").value=numFilas;
       calcularTotalesSolicitud();  
+      listarProyectosSisdeUnidades();
 }
 
 var numArchivosDetalle=0;
@@ -15709,4 +15715,78 @@ function listar_comprobanteDetalleMayor(codigo,index){
     }
  }
  ponerSumatoriaDeMayorCuenta(); 
+}
+var array_act_proy=[];
+function verificarSiEsProyectosFinanciado(fila){
+  var tiene = 0;
+
+  var unidad=$("#unidad_fila"+fila).val();
+   var parametros={"unidad":unidad};
+     $.ajax({
+        async:false,
+        type: "POST",
+        dataType: 'html',
+        url: "ajax_verificar_proyecto_sis.php",
+        data: parametros,      
+        success:  function (resp) {
+           if(resp.trim()=="1"){
+            tiene=1;
+           }else{
+            tiene=0;
+           }
+        }
+    });
+  return tiene;
+}
+function listarProyectosSisdeUnidades(){
+  array_act_proy=[];
+  var n = $("#cantidad_filas").val();
+  var elementos=0;
+  for (var i = 1; i <=n; i++) {
+    if(verificarSiEsProyectosFinanciado(i)==1){
+     elementos++;
+     array_act_proy.push(i);
+    }else{
+      $("#cod_actividadproyecto"+i).val(0);
+      $("#des_actividadproyecto"+i).val("");
+    }
+  };
+  $("#cantidad_filas_proyecto").val(elementos);
+  $("#nproyectos").html(elementos)
+}
+
+function mostrarActividadesDeSolicitud(){
+  cargarDatosActividadesEnTablaModal();
+  $("#modalActividadesProyecto").modal("show");
+}
+function cargarDatosActividadesEnTablaModal(){
+  $("#contenedor_actividadesmodal").html("");
+  for (var i = 0; i < array_act_proy.length; i++) {
+    var fila=array_act_proy[i];
+    var selectHtml = '<select class="selectpicker form-control form-control-sm" name="actividades_detalle'+fila+'" id="actividades_detalle'+fila+'" data-style="btn btn-info">';
+      selectHtml+=$("#actividades_detalle").html()+'</select>';
+    if($("#cod_actividadproyecto"+fila).val()!=0){
+      var rowHtml='<tr><td>'+fila+'</td><td>'+selectHtml+'</td><td><a href="#" class="btn btn-sm btn-warning"><small>ASOCIADO</small></a></td></tr>';
+    }else{
+      var rowHtml='<tr><td>'+fila+'</td><td>'+selectHtml+'</td><td><a href="#" class="btn btn-sm btn-default"><small>PENDIENTE</small></a></td></tr>';
+    } 
+   $("#contenedor_actividadesmodal").append(rowHtml);  
+   $("#actividades_detalle"+fila).val($("#cod_actividadproyecto"+fila).val()); 
+  };
+  $('.selectpicker').selectpicker("refresh");
+}
+
+function guardarActividadFilasDetalle(){
+  listarProyectosSisdeUnidades();
+  for (var i = 0; i < array_act_proy.length; i++) {
+    var fila=array_act_proy[i];
+    if($("#actividades_detalle"+fila).val()>0){
+      $("#cod_actividadproyecto"+fila).val($("#actividades_detalle"+fila).val()); 
+      $("#des_actividadproyecto"+fila).val($('#actividades_detalle'+fila+' option:selected').text().toUpperCase()); 
+    }else{
+      $("#cod_actividadproyecto"+fila).val(0); 
+      $("#des_actividadproyecto"+fila).val("");
+    }  
+  };
+  $("#modalActividadesProyecto").modal("hide");
 }
