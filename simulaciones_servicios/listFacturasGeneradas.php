@@ -333,6 +333,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
       codigo_facturacion=document.getElementById("codigo_facturacion").value;
       cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
       nro_factura=document.getElementById("nro_factura").value;
+      razon_social=document.getElementById("razon_social").value;
+      
       correo_copia=$('#correo_copia').val();
       if(correo_copia!=""){
         correo_destino=$('#correo_destino').val()+","+correo_copia;        
@@ -347,7 +349,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
         // alert("Por Favor Agregue Un correo para el envío de la Factura!");
         Swal.fire("Informativo!", "Por Favor Agregue Un correo válido para el envío de la Factura!", "warning");
       }else{
-        EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje);  
+        EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social);  
       }
     });
     $('#anular_factura').click(function(){      

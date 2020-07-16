@@ -229,6 +229,7 @@
       <div class="modal-body">
         <input type="hidden" name="cod_solicitudfacturacion_factmanual" id="cod_solicitudfacturacion_factmanual" value="0">
         <input type="hidden" name="cod_libreta_manual" id="cod_libreta_manual" value="0" >
+        <input type="hidden" name="cod_estadocuenta_manual" id="cod_estadocuenta_manual" value="0" >
         <div class="row">
           <!-- <label class="col-sm-5 text-right col-form-label" style="color:#424242">Importe de Solicitud de Facturacón</label> -->
           <div class="col-sm-12">
@@ -614,7 +615,8 @@
         <input type="hidden" name="direccion_ec" id="direccion_ec" value="0">
         <input type="hidden" name="datos_ec" id="datos_ec" value="0">
         <input type="hidden" name="indice_ec" id="indice_ec" value="0">
-        <input type="hidden" name="saldo_ec" id="saldo_ec" value="0">        
+        <input type="hidden" name="saldo_ec" id="saldo_ec" value="0">
+        <input type="hidden" name="cod_libreta_ec" id="cod_libreta_ec" value="0">
         <div class="row">
           <div class="table-responsive" id="contenedor_tabla_estados_cuenta">
             
