@@ -937,6 +937,12 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> RPT </span>
                     <span class="sidebar-normal"> Reportes Planificacion TCP/TCS</span>
                   </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reporteVentasResumido">
+                    <span class="sidebar-mini"> RVR </span>
+                    <span class="sidebar-normal"> Reportes Ventas Resumido</span>
+                  </a>
                 </li>                
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listObligacionesPago">

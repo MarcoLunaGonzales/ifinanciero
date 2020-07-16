@@ -59,6 +59,11 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
   $sqlDel="DELETE FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codSolicitud";
   $stmtDel = $dbh->prepare($sqlDel);
   $stmtDel->execute();
+
+  //insertamos la distribucion
+  $sqlDel="DELETE FROM facturas_compra where cod_solicitudrecursodetalle in (select codigo from solicitud_recursosdetalle where cod_solicitudrecurso=$codSolicitud)";
+  $stmtDel = $dbh->prepare($sqlDel);
+  $stmtDel->execute();
   
   $valorDist=$_POST['n_distribucion'];
   if($valorDist!=0){
@@ -198,7 +203,11 @@ if(!isset($_POST['control_admin'])){
  $urlList2=$urlList;
  if(isset($_POST['control_adminreg'])){
    $urlList2=$urlList3;
- } 
+ }
+}else{
+  if($_POST['control_admin']==1){
+    $urlList2=$urlList4;
+  }
 }   
 
   if(isset($_POST['usuario_ibnored'])){

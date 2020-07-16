@@ -356,15 +356,15 @@ if(isset($_GET['q'])){
   $u=$_GET['u'];
   $v=$_GET['v'];
   if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList2.$urlc);	
+	showAlertSuccessError(true,"../".$urlList4.$urlc);	
    }else{
-	showAlertSuccessError(false,"../".$urlList2.$urlc);
+	showAlertSuccessError(false,"../".$urlList4.$urlc);
    }
 }else{
 	if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList2);	
+	showAlertSuccessError(true,"../".$urlList4);	
    }else{
-	showAlertSuccessError(false,"../".$urlList2);
+	showAlertSuccessError(false,"../".$urlList4);
    }
 }
 

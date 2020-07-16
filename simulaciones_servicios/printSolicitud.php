@@ -177,7 +177,7 @@ $html.=  '<header class="header">'.
           $stmtAreas = $dbh->prepare($sqlAreas);                                   
           $stmtAreas->execute();
           $html.='<table class="table" >
-                  <tr class="td-color-celeste"><td class="text-center"><b>Distribución de Gastos por Area</b></td></tr>';
+                  <tr class="td-color-celeste"><td class="text-center"><b>Distribución de Ingresos por Area</b></td></tr>';
           while ($rowArea = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
             $cod_area_x=$rowArea['cod_area'];
             $porcentaje_x=$rowArea['porcentaje'];

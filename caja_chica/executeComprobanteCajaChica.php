@@ -20,7 +20,7 @@ try{
     if($cod_tipocajachica==null || $cod_tipocajachica==0){//generamos si aun no se registro
     	//Verificamos si las retenciones de tipo credito fiscal iva tienen facturas
     	$cod_retencion=obtenerValorConfiguracion(53);
-		$stmtVerifRetencion = $dbh->prepare("SELECT cc.nro_documento,(select (sum(f.importe)+sum(f.exento)+sum(f.tasa_cero)+sum(f.ice)) from facturas_detalle_cajachica f where f.cod_cajachicadetalle=cc.codigo) as importe_factura, cc.monto from caja_chicadetalle cc where cc.cod_cajachica=$cod_cajachica and cc.cod_tipodoccajachica=$cod_retencion and cc.cod_estadoreferencial=1;");
+		$stmtVerifRetencion = $dbh->prepare("SELECT cc.nro_documento,(select (sum(f.importe)+sum(f.exento)+sum(f.tasa_cero)+sum(f.ice)) from facturas_detalle_cajachica f where f.cod_cajachicadetalle=cc.codigo)+(select sum(g.importe) from detalle_cajachica_gastosdirectos g where g.cod_cajachicadetalle=cc.codigo) as importe_factura, cc.monto from caja_chicadetalle cc where cc.cod_cajachica=$cod_cajachica and cc.cod_tipodoccajachica=$cod_retencion and cc.cod_estadoreferencial=1;");
 	    $stmtVerifRetencion->execute();
 	    $contadorRentencion=0;
 	    $stringRetenciones="";
@@ -131,20 +131,16 @@ try{
 		        	$monto_recalculado=$monto_dcc;
 		        }
 		        //Listamos los gastos que tengan factura y los contabilizamos
-		        $sw_facturas=0;//contador de facturas
-		        $stmtFacturas = $dbh->prepare("SELECT nro_factura,razon_social,importe from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo_ccdetalle");
-		        $stmtFacturas->execute();
-		        $stmtFacturas->bindColumn('nro_factura', $nro_factura);
-		        $stmtFacturas->bindColumn('razon_social', $razon_social);
-		        $stmtFacturas->bindColumn('importe', $importe);
-		        while ($rowFac = $stmtFacturas->fetch()) 
-		        {
+		        $sw_facturas=contador_facturas_cajachica($codigo_ccdetalle);//contador de facturas
+		        if($sw_facturas>0){
+		        	$cadena_facturas = cadena_facturas_cajachica($codigo_ccdetalle);
+		        	$importe_total_facturas = importe_total_facturas($codigo_ccdetalle);
 		        	if($porcentaje_cuentaorigen>100){
-			        	$monto_recalculado=$importe*$porcentaje_cuentaorigen/100;
+			        	$monto_recalculado=$importe_total_facturas*$porcentaje_cuentaorigen/100;
 			        }else{
-			        	$monto_recalculado=$importe;
+			        	$monto_recalculado=$importe_total_facturas;
 			        }
-		            //buscamos el tipo de retencion
+			         //buscamos el tipo de retencion
 		            $stmtRetenciones = $dbh->prepare("SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica");
 		            $stmtRetenciones->execute();
 		            $stmtRetenciones->bindColumn('cod_cuenta', $cod_cuenta_retencion);
@@ -152,7 +148,7 @@ try{
 		            $stmtRetenciones->bindColumn('debe_haber', $debe_haber);
 		            while ($rowFac = $stmtRetenciones->fetch()) 
 		            {
-		            	$descripcion=$nombre_uo.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
+		            	$descripcion=$nombre_uo." ".$cadena_facturas.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 		                // $monto=$monto_recalculado*$porcentaje_retencion/100;
 		                $monto=$monto_recalculado*$porcentaje_retencion/100;
 		                if($cod_cuenta_retencion>0){
@@ -169,14 +165,12 @@ try{
 					            $flagSuccessDet=$stmtInsertDet->execute();
 					            $ordenDetalle++;
 		                    }
-		                }else{             
-
+		                }else{
 		                	if($porcentaje_cuentaorigen>100){
 					        	$monto_restante=$monto_recalculado;
 					        }else{
 					        	$monto_restante=$monto_recalculado*$porcentaje_cuentaorigen/100;       
 					        }
-		                	
 					        //Desde aqui las distribuciones por area y/o oficina
 							$cont_tipo_distribucion=0;//verificará si se registró alguna distribucion
 							$stmtTipoDistri=$dbh->prepare("SELECT codigo from distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo_ccdetalle GROUP BY tipo_distribucion");
@@ -193,7 +187,7 @@ try{
 				                	$porcentaje=$rowTipoDistribucion['porcentaje'];
 				                	if($tipo==1){//oficina
 				                		$name_oficina_dis=abrevUnidad($oficina_area);
-				                		$descripcion_distribucion=$nombre_uo.'/'.$name_oficina_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
+				                		$descripcion_distribucion=$nombre_uo.'/'.$name_oficina_dis.' '.$cadena_facturas.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 			                            $monto_of=$monto_restante*$porcentaje/100;
 			                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 			                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$oficina_area','$cod_area','0','$monto_of','$descripcion_distribucion','$ordenDetalle')";
@@ -208,7 +202,7 @@ try{
 			                            }
 				                	}elseif($tipo==2){//area				                		
 				                		$name_area_dis=abrevArea($oficina_area);
-				                		$descripcion_distribucion=$nombre_area.'/'.$name_area_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
+				                		$descripcion_distribucion=$nombre_area.'/'.$name_area_dis.' '.$cadena_facturas.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 			                            $monto_of=$monto_restante*$porcentaje/100;
 			                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 			                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_uo','$oficina_area','0','$monto_of','$descripcion_distribucion','$ordenDetalle')";
@@ -235,7 +229,7 @@ try{
 				                	$porcentaje=$rowTipoDistribucion['porcentaje'];
 				                	if($tipo==1){//oficina
 				                		$name_oficina_dis=abrevUnidad($oficina_area);
-				                		$descripcion_distribucion=$nombre_uo.'/'.$name_oficina_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
+				                		$descripcion_distribucion=$nombre_uo.'/'.$name_oficina_dis.' '.$cadena_facturas.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 			                            
 			                            $monto_of=$monto_uo_distribuido*$porcentaje/100;
 			                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
@@ -251,7 +245,7 @@ try{
 			                            }
 				                	}elseif($tipo==2){//area				                		
 				                		$name_area_dis=abrevArea($oficina_area);
-				                		$descripcion_distribucion=$nombre_area.'/'.$name_area_dis.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
+				                		$descripcion_distribucion=$nombre_area.'/'.$name_area_dis.' '.$cadena_facturas.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 			                            $monto_of=$monto_area_distribuido*$porcentaje/100;
 			                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 			                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_uo','$oficina_area','0','$monto_of','$descripcion_distribucion','$ordenDetalle')";
@@ -280,7 +274,7 @@ try{
 			                        $stmtOficina->bindColumn('oficina', $oficinaFac);
 			                        while ($rowOf = $stmtOficina->fetch()) 
 			                        {                                    
-			                            $descripcion_of=$oficinaFac.'/'.$centroCostosDN.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
+			                            $descripcion_of=$oficinaFac.'/'.$centroCostosDN.' '.$cadena_facturas.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 			                            $monto_of=$monto_restante*$porcentaje/100;
 			                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 			                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_unidadorganizacional','$centroCostosDN','0','$monto_of','$descripcion_of','$ordenDetalle')";
@@ -295,7 +289,7 @@ try{
 			                            }                                     
 			                        }
 			                    }else{
-			                        $descripcion_of=$nombre_uo.'/'.$nombre_area.' F/'.$nro_factura.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;	
+			                        $descripcion_of=$nombre_uo.'/'.$nombre_area.' '.$cadena_facturas.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;	
 			                        if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 			                    		$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_uo','$cod_area','0','$monto_restante','$descripcion_of','$ordenDetalle')";
 							            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
@@ -309,7 +303,6 @@ try{
 			                        }       
 			                    }
 							}
-
 		                    // aqui la contra cuenta
 		                    $descripcion_contra_cuenta='CONTABILIZACIÓN CAJA CHICA. '.$personal.', '.$observaciones_dcc;
 		                    $monto_contracuenta=$monto_recalculado*$porcentaje_retencion/100;
@@ -327,8 +320,8 @@ try{
 		                }
 		                $sw_facturas++;//contador de facturas incrementa
 		            }
-		        }
-		        if($sw_facturas==0){//compra no tiene factura registrada                        
+
+		        }else{//compra no tiene factura registrada                        
 			        
 			        //buscamos el tipo de retencion
 			        $stmtRetenciones = $dbh->prepare("SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica");

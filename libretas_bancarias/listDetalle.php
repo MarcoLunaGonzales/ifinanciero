@@ -106,8 +106,15 @@ $stmtb->bindColumn('nombre', $nombre);
                       <tbody>
                         <?php
                         $index=1;
+                        //codigo temporal para cuadrar cierto monto  el saldo inicial es de la fecha 1/7/2020
                         $fecha_temporal="2020-07-01 00:00:00";
-                        $sw_temporal=true;
+                        if($codigoLibreta==4){
+                          $sw_temporal=true;  
+                        }else{
+                          $sw_temporal=false;
+                        }
+                        //termina codigo temporal
+                        
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           //codigo temporal para cuadrar cierto monto  el saldo inicial es de la fecha 1/7/2020
                           if($fecha>=$fecha_temporal && $sw_temporal){
