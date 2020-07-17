@@ -4116,6 +4116,9 @@ function minusDetalleSolicitud(idF){
        $("#cod_actividadproyecto"+nuevoId).attr("id","cod_actividadproyecto"+i);
        $("#des_actividadproyecto"+nuevoId).attr("name","des_actividadproyecto"+i);
        $("#des_actividadproyecto"+nuevoId).attr("id","des_actividadproyecto"+i);
+
+       $("#nret"+nuevoId).attr("id","nret"+i);
+
       }
      } 
      itemFacturas.splice((idF-1), 1);
@@ -4226,6 +4229,10 @@ function agregarRetencionSolicitud(){
      $("#cod_retencion"+fila).val(respuesta[0]);
      $("#retFila").val("");
      $('#modalRetencion').modal('hide');
+
+     if(!$("#nret"+fila).hasClass("estado")){
+       $("#nret"+fila).addClass("estado")
+     }
      $("#importe_label"+fila).html("<small>Importe-"+respuesta[1].substr(0,3)+".</small>");
   }else{
     $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");
@@ -13697,7 +13704,7 @@ function cargarDistribucionSol(valor){
   switch (valor){
     case 1:
     cargarTablaDistribucion(itemDistOficina,0);
-    $("#titulo_distribucion").html("x OFICINA");
+    $("#titulo_distribucion").html("x OF");
     break;
     case 2:
     cargarTablaDistribucion(0,itemDistArea);
@@ -13705,7 +13712,7 @@ function cargarDistribucionSol(valor){
     break;
     case 3:
     cargarTablaDistribucion(itemDistOficina,itemDistArea);
-    $("#titulo_distribucion").html("x OFICINA y x Area");
+    $("#titulo_distribucion").html("x OF y x AREA");
     break;
     case 0:
     quitarDistribucionSolicitud();
@@ -13827,7 +13834,7 @@ function quitarDistribucionSolicitud(){
   if($("#distrib_icon").hasClass("estado")){
     $("#distrib_icon").removeClass("estado");
    }
-  $("#boton_titulodist").html("Distribución"); 
+  $("#boton_titulodist").html(""); 
 }
 
 function agregarTipoPagoProveedorDetalle(fila){
@@ -14042,8 +14049,36 @@ $(document).on('change', '.archivo', function() {
   var filename = $(this).val().split('\\').pop();
   var idname = $(this).attr('id');
   mostrarArchivoCambios(filename,idname);
+ if($("#modalFile").length>0){
+   ponerConfirmacionDeArchivosSolRec();
+ }
 });
 
+function ponerConfirmacionDeArchivosSolRec(){
+  var contar=0;  
+  var num = parseInt($("#cantidad_archivosadjuntos").val()); 
+  for (var i = 1; i <=num; i++) {
+    if($("#documentos_cabecera"+i).val()!=""){
+       contar++;
+    }
+  };
+  if(contar>0){
+    if(!$("#narch").hasClass("estado")){
+      $("#narch").addClass("estado");  
+    }
+  }else{
+    if($("#narch").hasClass("estado")){
+      $("#narch").removeClass("estado");  
+    }
+    if($("#cantidad_archivosadjuntosexistentes").length>0){
+       if($("#cantidad_archivosadjuntosexistentes").val()>0){
+        if(!$("#narch").hasClass("estado")){
+          $("#narch").addClass("estado");  
+         }   
+       }
+    }   
+  }
+}
 function cambiarCuentaAuxiliarDetalle(cuentaPadre,tipo,com,cod,ant,nue){
   $("#tipo").val(tipo);
   $("#cod_comprobantedetalle").val(com);

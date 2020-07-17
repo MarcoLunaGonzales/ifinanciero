@@ -11,7 +11,7 @@ require_once('../assets/importar_excel/SpreadsheetReader.php');
 session_start();
 
 $dbh = new Conexion();
-$fechaActual=date("Y-m-d");
+$fechaActual=date("Y-m-d h:m:s");
 $cod_libretabancariaregistro=obtenerCodigoRegistroLibreta();
 $flagSuccess=false;
 $globalUser=$_SESSION["globalUser"];
