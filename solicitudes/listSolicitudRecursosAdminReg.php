@@ -21,7 +21,7 @@ if(isset($_GET['q'])){
     //$arraySql=explode("IdArea=",$s);
     //$codigoArea=trim($arraySql[1]);
     //$sqlAreas="and sr.cod_area=".$codigoArea;
-    $arraySql=explode("idArea",$s);
+    $arraySql=explode("IdArea",$s);
     $codigoArea='0';  
     if(isset($arraySql[1])){
       $codigoArea=trim($arraySql[1]);
