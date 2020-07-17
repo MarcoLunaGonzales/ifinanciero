@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../functions.php';
 require_once '../conexion.php';
 require_once '../styles.php';
 
@@ -98,9 +99,24 @@ if(isset($_GET["area"])){
               </div>   	
 			   </div>
          <div class="form-group col-sm-10">
-             <label for="partida_cuenta<?=$idFila;?>" class="bmd-label-floating">PARTIDA PRES. / Cuenta</label>
-             <input class="form-control" type="hidden" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>"/>     
-             <input class="form-control" type="text" autofocus name="partida_cuenta<?=$idFila;?>" id="partida_cuenta<?=$idFila;?>" required value=""> 
+             <select class="selectpicker form-control form-control-sm"  data-live-search="true" data-size="6" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>" required data-style="btn btn-warning">
+                    <option disabled selected value="">CUENTAS</option>
+                  <?php
+                  $cuentaLista=obtenerCuentasListaSolicitud(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+                while ($rowCuenta = $cuentaLista->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoX=$rowCuenta['codigo'];
+                  $numeroX=$rowCuenta['numero'];
+                  $nombreX=$rowCuenta['nombre'];
+                ?>
+                <option value="<?=$codigoX;?>">[<?=$numeroX?>] <?=$nombreX;?></option>  
+                <?php
+                  }
+                  ?>
+              </select>
+
+             <!--<label for="partida_cuenta<?=$idFila;?>" class="bmd-label-floating d-none">PARTIDA PRES. / Cuenta</label>-->
+             <!--<input class="form-control" type="hidden" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>"/>-->     
+             <input class="form-control" type="hidden" autofocus name="partida_cuenta<?=$idFila;?>" id="partida_cuenta<?=$idFila;?>" required value=""> 
            </div>
     </div>
     <input type="hidden" id="unidad<?=$idFila;?>" name="unidad<?=$idFila;?>" value="<?=$unidadSol?>">
@@ -112,19 +128,19 @@ if(isset($_GET["area"])){
     <input type="hidden" id="des_actividadproyecto<?=$idFila;?>" name="des_actividadproyecto<?=$idFila;?>" value="">       
         <div class="col-sm-2">
 		    <div class="form-group">
-          		<label for="detalle_detalle<?=$idFila;?>" class="bmd-label-static">Detalle</label>
-				<textarea rows="1" class="form-control" name="detalle_detalle<?=$idFila;?>" required id="detalle_detalle<?=$idFila;?>" value=""></textarea>
+          		<!--<label for="detalle_detalle<?=$idFila;?>" class="bmd-label-static">Detalle</label>-->
+				<textarea rows="3" class="form-control" name="detalle_detalle<?=$idFila;?>" required id="detalle_detalle<?=$idFila;?>" value=""></textarea>
 			</div>
 		</div>
     <div class="col-sm-1">
             <div class="form-group">
-               <label for="importe_presupuesto<?=$idFila;?>" class="bmd-label-floating">Imp Pres</label>      
+               <!--<label for="importe_presupuesto<?=$idFila;?>" class="bmd-label-floating">Imp Pres</label>      -->
                <input class="form-control" type="number" required name="importe_presupuesto<?=$idFila;?>" id="importe_presupuesto<?=$idFila;?>" step="0.001" value="0" readonly>  
       </div>
     </div>
 		<div class="col-sm-1">
             <div class="form-group">
-            	<label for="importe<?=$idFila;?>" class="bmd-label-floating" id="importe_label<?=$idFila;?>">Importe</label>     
+            	<label for="importe<?=$idFila;?>" class="bmd-label-floating d-none" id="importe_label<?=$idFila;?>">Importe</label>     
           		<input class="form-control" value="0" type="number" required name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" step="0.01" onChange="calcularTotalesSolicitud();" OnKeyUp="calcularTotalesSolicitud();">	
 			</div>
       	</div>
@@ -200,6 +216,6 @@ if(isset($_GET["area"])){
 	</div>
 </div>
 <div class="h-divider"></div>
-<!--<script>autocompletar("partida_cuenta"+<?=$idFila?>,"partida_cuenta_id"+<?=$idFila?>,array_cuenta);</script>-->
+<script>//autocompletar("partida_cuenta"+<?=$idFila?>,"partida_cuenta_id"+<?=$idFila?>,array_cuenta);</script>
 
 <script>listarProyectosSisdeUnidades();</script>

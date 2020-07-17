@@ -155,7 +155,7 @@ if(isset($_GET['cod'])){
 							<div class="form-group">
 						  		<label class="bmd-label-static">Alumnos FUERA IBNORCA</label>-->
 						  		<input class="form-control" type="hidden" name="alumnos_fuera" value="<?=$alumnosExternoX?>" id="alumnos_fuera"/>
-						  		
+						  	<input class="form-control" type="hidden" name="presupuestado_plan" value="<?=$precioPresupuestado?>" id="presupuestado_plan"/>	 
 							<!--</div>
 						</div>-->
 						<div class="col-sm-2 float-right">

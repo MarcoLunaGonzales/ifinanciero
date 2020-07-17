@@ -45,7 +45,7 @@ if(isset($_GET['cod_sim'])){
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso=6 $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (6,4,3,5) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -110,7 +110,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                               $btnEstado="btn-warning";
                             break;
                             case 5:
-                              $btnEstado="btn-warning";
+                              $btnEstado="btn-primary";
                             break;
                             case 6:
                               $btnEstado="btn-default";
@@ -195,37 +195,31 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                 <?php 
                             if(isset($_GET['q'])){
                               if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
-                                    <i class="material-icons text-danger">reply</i> Descartar Envío
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&reg=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
+                                    <i class="material-icons text-danger">reply</i> Descartar Autorización
                                  </a><?php 
                                  }else{
                                    ?>
-                                   <a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
+                                   <!--<a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
                                     <i class="material-icons text-success">attach_money</i> PAGOS
-                                   </a>
+                                   </a>-->
                                    <?php 
                                  }
                                  ?>
-                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
-                                    <i class="material-icons text-warning">bar_chart</i> Ver Solicitud
-                                 </a>
                              <?php
                             }else{
                                if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0" class="dropdown-item">
-                                    <i class="material-icons text-danger">reply</i> Descartar Envío
+                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&reg=0" class="dropdown-item">
+                                    <i class="material-icons text-danger">reply</i> Descartar Autorización
                                  </a><?php 
                                  }else{
                                    ?>
-                                   <a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>" class="dropdown-item">
+                                   <!--<a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>" class="dropdown-item">
                                     <i class="material-icons text-success">attach_money</i> PAGOS
-                                   </a>
+                                   </a>-->
                                    <?php 
                                  }
                                  ?>
-                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
-                                    <i class="material-icons text-warning">bar_chart</i> Ver Solicitud
-                                 </a>
                              <?php  
                             }    
                            ?>       
@@ -257,13 +251,13 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                 }else{
                                  if(isset($_GET['q'])){
                                    ?>
-                                    <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+                                    <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&reg=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
                                       <i class="material-icons">send</i>
                                     </a>
                                    <?php
                                   }else{
                                     ?>
-                                     <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0'  class="btn btn-default">
+                                     <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&reg=0'  class="btn btn-default">
                                        <i class="material-icons">send</i>
                                      </a>
                                     <?php

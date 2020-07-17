@@ -557,6 +557,10 @@
 			require_once('reportes/reportesVentaResumido.php');
 		}
 
+		if ($_GET['opcion']=='reporteIngresosPorFacturacion') {
+			require_once('reportes/reportesIngresoFacturacion.php');
+		}
+
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {
 			require_once('activosFijos/ubicacionesLista.php');

@@ -943,6 +943,12 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> RVR </span>
                     <span class="sidebar-normal"> Reportes Ventas Resumido</span>
                   </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reporteIngresosPorFacturacion">
+                    <span class="sidebar-mini"> RVR </span>
+                    <span class="sidebar-normal"> Reportes Ingresos por Facturación</span>
+                  </a>
                 </li>                
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listObligacionesPago">

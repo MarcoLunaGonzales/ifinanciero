@@ -19,6 +19,7 @@ if(isset($_GET['q'])){
 
     $sqlAreas="and p.cod_area=".$codigoArea;
   }
+  $globalUser=$q;
   // Preparamos
 $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc");
 }else{

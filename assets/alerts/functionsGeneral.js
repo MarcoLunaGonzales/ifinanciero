@@ -3979,7 +3979,7 @@ function addSolicitudDetalle(obj,tipo) {
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           divDetalle.html(ajax.responseText);
-          autocompletar("partida_cuenta"+filaActiva,"partida_cuenta_id"+filaActiva,array_cuenta);
+          //autocompletar("partida_cuenta"+filaActiva,"partida_cuenta_id"+filaActiva,array_cuenta);
           divDetalle.bootstrapMaterialDesign();
           $('.selectpicker').selectpicker("refresh");
           return false;
@@ -15850,3 +15850,23 @@ function guardarActividadFilasDetalle(){
   };
   $("#modalActividadesProyecto").modal("hide");
 }
+
+function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
+  type = ['', 'info', 'danger', 'success', 'warning', 'rose', 'primary'];
+  color = Math.floor((Math.random() * 6) + 1);
+  if (fondo=='random'){
+    fondo=type[color];
+  } 
+    $.notify({
+      icon: icono,
+      message: cabecera+'<hr><small>'+mensaje+'</small>'+'<hr><center>'+pie+'</center>'
+
+    }, {
+      type: fondo,
+      timer: tiempo,
+      placement: {
+        from: from,
+        align: align
+      }
+    });
+  }

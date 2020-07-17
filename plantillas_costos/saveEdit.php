@@ -27,7 +27,9 @@ $utilidadIbrnocaPlan=$_POST['utilidad_ibnorca'];
 $utilidadFueraPlan=$_POST['utilidad_fuera'];
 $alumnosLocalPlan=$_POST['alumnos_ibnorca'];
 $alumnosExternoPlan=$_POST['alumnos_fuera'];
-$sqlUpdate="UPDATE plantillas_costo SET  nombre='$nombrePlan',abreviatura='$abrevPlan',utilidad_minimalocal='$utilidadIbrnocaPlan',utilidad_minimaexterno='$utilidadFueraPlan',cantidad_alumnoslocal='$alumnosLocalPlan',cantidad_alumnosexterno='$alumnosExternoPlan' where codigo=$codPlantillaCosto";
+
+$precioPresupuestadoTabla=$_POST['presupuestado_plan'];
+$sqlUpdate="UPDATE plantillas_costo SET  nombre='$nombrePlan',abreviatura='$abrevPlan',utilidad_minimalocal='$utilidadIbrnocaPlan',utilidad_minimaexterno='$utilidadFueraPlan',cantidad_alumnoslocal='$alumnosLocalPlan',cantidad_alumnosexterno='$alumnosExternoPlan',ingreso_presupuestado='$precioPresupuestadoTabla' where codigo=$codPlantillaCosto";
 echo $sqlUpdate;
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
