@@ -21,7 +21,7 @@ if(isset($_GET['q'])){
     //$arraySql=explode("IdArea=",$s);
     //$codigoArea=trim($arraySql[1]);
     //$sqlAreas="and sr.cod_area=".$codigoArea;
-    $arraySql=explode("IdArea",$s);
+    $arraySql=explode("idArea",$s);
     $codigoArea='0';  
     if(isset($arraySql[1])){
       $codigoArea=trim($arraySql[1]);
@@ -31,7 +31,10 @@ if(isset($_GET['q'])){
       $sqlAreas="and (sr.cod_area=0 or sr.cod_area=".obtenerValorConfiguracion(65).")";             
     }else{
       $sqlAreas="and (sr.cod_area ".$codigoArea." or sr.cod_area=".obtenerValorConfiguracion(65).")";  
-    } 
+    }
+    //echo $s."<br>";
+    //echo var_dump($arraySql);
+    //echo $sqlAreas; 
   }
 }else{
   $sqlAreas="";

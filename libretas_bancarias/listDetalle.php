@@ -22,7 +22,7 @@ $saldo_inicial=0;
 
 // Preparamos
 $stmt = $dbh->prepare("SELECT ce.*
-FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1");
+FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.fecha_hora desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn

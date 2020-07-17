@@ -36,7 +36,7 @@ tfoot input {
       <?php
       $html='<tbody>';
       $sqlDetalle="SELECT ce.*
-      FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.codigo in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and ce.cod_estadoreferencial=1 order by ce.codigo";
+      FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.codigo in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and ce.cod_estadoreferencial=1 order by ce.fecha_hora";
       $stmt = $dbh->prepare($sqlDetalle);
       // echo $sqlDetalle;
       // Ejecutamos
