@@ -8,10 +8,10 @@ $des_actividadproyecto="";
  <div id="div<?=$idFila?>">               	         
                              <div class="col-md-12">
                              	<div class="row">
-                               <div class="col-sm-1">
-                                 <div class="form-group">
+                               <div class="col-sm-1 btn-group" style="padding-left:0 !important;padding-right:0 !important;">
+                                 <div class="form-group" style="width:100% !important;">
                                   <span style="position:absolute;left:-25px; font-size:20px;font-weight:600; color:#F1C40F;" id="fila_index<?=$idFila?>"><?=$idFila?></span>
-                                    <select class="selectpicker form-control form-control-sm" onchange="listarProyectosSisdeUnidades()" name="unidad_fila<?=$idFila;?>" id="unidad_fila<?=$idFila;?>" data-style="btn btn-primary">
+                                    <select class="selectpicker form-control form-control-sm col-sm-12" onchange="listarProyectosSisdeUnidades()" name="unidad_fila<?=$idFila;?>" id="unidad_fila<?=$idFila;?>" data-style="btn btn-primary">
                                       <?php
                                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
                                    $stmt->execute();
@@ -30,10 +30,9 @@ $des_actividadproyecto="";
                                     ?>
                                    </select>
                                    </div>
-                                 </div>
-                                 <div class="col-sm-1">
-                                       <div class="form-group">
-                                       <select class="selectpicker form-control form-control-sm" name="area_fila<?=$idFila;?>" id="area_fila<?=$idFila;?>" data-style="btn btn-primary">
+                                 
+                                       <div class="form-group" style="width:100% !important;">
+                                       <select class="selectpicker form-control form-control-sm col-sm-12" name="area_fila<?=$idFila;?>" id="area_fila<?=$idFila;?>" data-style="btn btn-rose">
                                                <!--<option value="" disabled selected>Area</option>-->
                                      <?php
                                                              
@@ -57,7 +56,7 @@ $des_actividadproyecto="";
                                       </div>
                                  </div>
 		                          <div class="row col-sm-3">
-                                    <div class="form-group col-sm-2">
+                                    <div class="form-group col-sm-2 d-none">
                                        <div class="row">
                                          <div class="col-sm-12">
           		                           <div class="form-check">
@@ -72,7 +71,7 @@ $des_actividadproyecto="";
                                            
                                         </div>   	
 			                               </div>
-                                     <div class="form-group col-sm-10">
+                                     <div class="form-group col-sm-12">
                                              <select class="selectpicker form-control form-control-sm"  data-live-search="true" data-size="6" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>" required data-style="btn btn-warning">
                                                   <option disabled selected value="">CUENTAS</option>
                                                 <?php
@@ -102,7 +101,7 @@ $des_actividadproyecto="";
       	                              <!--<div class="col-sm-4">
                                           
       	                              </div>-->
-                                  <div class="col-sm-2">
+                                  <div class="col-sm-3">
 		                                  <div class="form-group">
                                         		<!--<label for="detalle_detalle<?=$idFila;?>" class="bmd-label-static">Detalle</label>-->
 		                              		<textarea rows="3" class="form-control" name="detalle_detalle<?=$idFila;?>" required id="detalle_detalle<?=$idFila;?>" value=""><?=$detalleX?></textarea>
@@ -181,19 +180,24 @@ $des_actividadproyecto="";
                                        }else{
                                         $estadoBen="";
                                        }  
+                                       if($retencionX==0||$retencionX==""||$retencionX==null){
+                                         $estadoBen="";
+                                       }else{
+                                         $estadoRet="estado";
+                                       }
                                        ?>
                                        <a  title="Forma de Pago" href="#" class="btn btn-success btn-sm btn-fab" id="boton_formapago<?=$idFila;?>" onclick="agregarTipoPagoProveedorDetalle(<?=$idFila;?>)">
                                              <i class="material-icons">money</i><span id="nben<?=$idFila?>" class="bg-danger <?=$estadoBen?>"></span>
                                        </a>
 		                                 	<input type="hidden" name="cod_retencion<?=$idFila?>" id="cod_retencion<?=$idFila?>" value="<?=$retencionX?>"/>
 		                                 	<a href="#" title="Retenciones" id="boton_ret<?=$idFila;?>" onclick="listRetencion(<?=$idFila;?>);" class="btn btn-warning text-dark btn-sm btn-fab">
-                                              <i class="material-icons">ballot</i>
+                                              <i class="material-icons">ballot</i><span id="nret<?=$idFila?>" class="bg-danger <?=$estadoRet?>"></span>
                                             </a>
 		                                 	<a href="#" title="Facturas" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
                                               <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
                                             </a>
                                             <!--<span id="archivos_fila<?=$idFila?>" class="d-none"><input type="file" name="archivos<?=$idFila?>[]" id="archivos<?=$idFila?>" multiple="multiple"/></span>-->
-                                            <a href="#" title="Archivos" id="boton_archivos<?=$idFila;?>" onclick="addArchivos(<?=$idFila;?>);" class="btn btn-default btn-sm btn-fab">
+                                            <a href="#" title="Archivos" id="boton_archivos<?=$idFila;?>" onclick="addArchivos(<?=$idFila;?>);" class="btn btn-default btn-sm btn-fab d-none">
                                               <i class="material-icons"><?=$iconFile?></i><span id="narch<?=$idFila?>" class="bg-warning"></span>
                                             </a>
 		                               	  <a  title="Eliminar (alt + q)" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusDetalleSolicitud('<?=$idFila;?>');">

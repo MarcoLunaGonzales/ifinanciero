@@ -319,31 +319,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               <button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,3)"><i class="material-icons">add</i>
               </button>
               <div class="row col-sm-11 float-right">
-            <div class="col-sm-2">
-              <input type="hidden" name="n_distribucion" id="n_distribucion" value="0">
-              <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="0">
-              <div class="btn-group dropdown">
-                      <button type="button" class="btn btn-sm btn-success dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
-                      <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning"></span> <b id="boton_titulodist">Distribución</b>
-                        </button>
-                        <div class="dropdown-menu">   
-                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="dropdown-item">
-                          <i class="material-icons">bubble_chart</i> x Oficina
-                        </a>
-                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(2)" class="dropdown-item">
-                          <i class="material-icons">bubble_chart</i> x Área
-                        </a>
-                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
-                          <i class="material-icons">bubble_chart</i> x Oficina y x Área
-                        </a>
-                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(0)" class="dropdown-item">
-                          <i class="material-icons">bubble_chart</i> Nínguna
-                        </a>
-                        </div>
-                    </div>
-                <div id="array_distribucion"></div>    
-            </div>    
-            <div class="col-sm-3">
+               
+            <div class="col-sm-3 d-none">
                   <div class="form-group">
                     <select class="selectpicker form-control form-control-sm" data-live-search="true" data-size="6" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
                     <option disabled selected value="">Asignar - Proveedores</option>
@@ -377,10 +354,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             </div>
           </div>
            <div class="row">
-                <label class="col-sm-1 col-form-label" style="text-align: center;">Oficina</label>
-                <label class="col-sm-1 col-form-label" style="text-align: center;">Area</label>
+                <label class="col-sm-1 col-form-label" style="text-align: center;">Of / Area</label>
                 <label class="col-sm-3 col-form-label" style="text-align: center;">Cuenta Relacionada</label>                
-                <label class="col-sm-2 col-form-label" style="text-align: left;">Detalle / Glosa</label>
+                <label class="col-sm-3 col-form-label" style="text-align: left;">Detalle / Glosa</label>
                 <label class="col-sm-1 col-form-label" style="text-align: left; left:-25px !important;">Presupuestado</label>
                 <label class="col-sm-1 col-form-label" style="text-align: left;">Importe</label>
                 <label class="col-sm-2 col-form-label" style="text-align: left;">Proveedor</label>
@@ -409,9 +385,33 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               ?>  
                <a href="#" onclick="cargarDatosRegistroProveedor()" title="Agregar Proveedor" class="btn btn-warning float-right"><i class="material-icons">group_add</i></a>
                <a href="#" onclick="actualizarRegistroProveedor()" title="Actualizar Lista Proveedores" class="btn btn-info float-right"><i class="material-icons">find_replace</i></a>
-               <a href="#" onclick="mostrarActividadesDeSolicitud()" title="Actividades Proyecto SIS" class="btn btn-primary float-right"><i class="material-icons">assignment</i><span id="nproyectos" class="count bg-danger">0</span> ACTIVIDADES</a>
+               <!--DISTRIBUCION-->
                <input type="hidden" id="cantidad_filas_proyecto" value="0"> 
-
+                 <input type="hidden" name="n_distribucion" id="n_distribucion" value="0">
+                 <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="0">
+                  <div class="btn-group dropdown">
+                      <button type="button" class="btn btn-success dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
+                      <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning"></span> <b id="boton_titulodist"></b>
+                        </button>
+                        <div class="dropdown-menu">   
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Oficina
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(2)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Oficina y x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(0)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> Nínguna
+                        </a>
+                        </div>
+                    </div>
+                    <div id="array_distribucion"></div>
+                <!--FIN DISTRIBUCION-->    
+               <a href="#" onclick="mostrarActividadesDeSolicitud()" title="Actividades Proyecto SIS" class="btn btn-primary float-right"><i class="material-icons">assignment</i><span id="nproyectos" class="count bg-danger">0</span> ACTIVIDADES</a>
+                   
                <div class="row col-sm-12">
                     <div class="col-sm-1">
                     </div>
