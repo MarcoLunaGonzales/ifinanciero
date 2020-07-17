@@ -28,19 +28,28 @@
         $cod_tipopago_deposito=obtenerValorConfiguracion(55);//tipo de pago deposito en cuenta
         $cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
         $cod_tipopago_anticipo=obtenerValorConfiguracion(64);//tipo de pago anticipo
-        if($cod_tipopago==$cod_tipopago_deposito){//deposito en cuenta?        
-            if($cod_libreta!=0){//si viene sin cod libreta no se toma en cuetna el deposito en cuenta
-                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_libreta);
-	        }else{
-	            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);
-	        }
-	    }elseif($cod_tipopago==$cod_tipopago_tarjetas){
-	        $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,2,0);
-	    }elseif($cod_tipopago==$cod_tipopago_anticipo){
-            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,3,$cod_estadocuenta);
-        }else{	    	
-	        $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0);
-	    }
+        //verificamos si tiene estado de cuenta u otros
+        // $cont_tipospago=0
+        // if($cod_libreta!=0){
+        //     $cont_tipospago++;
+        // }if($cod_libreta!=0){
+        //     $cont_tipospago++;
+        // }
+        $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,$cod_libreta,$cod_estadocuenta);
+
+     //    if($cod_tipopago==$cod_tipopago_deposito){//deposito en cuenta?        
+     //        if($cod_libreta!=0){//si viene sin cod libreta no se toma en cuetna el deposito en cuenta
+     //            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,1,$cod_libreta,0);
+	    //     }else{
+	    //         $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0,0);
+	    //     }
+	    // }elseif($cod_tipopago==$cod_tipopago_tarjetas){
+	    //     $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,2,0,0);
+	    // }elseif($cod_tipopago==$cod_tipopago_anticipo){
+     //        $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,3,0,$cod_estadocuenta);
+     //    }else{	    	
+	    //     $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0,0);
+	    // }
 	    // echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fecha_actual:".$fecha_actual." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
         if($cod_comprobante!=0){
             $controlCode = new ControlCode();
@@ -98,7 +107,7 @@
                             $stmtDelte = $dbh->prepare("DELETE from facturas_venta where codigo=$cod_facturaVenta");
                             $stmtDelte->execute();
                             $estado_ibnorca++;
-                             $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
+                            $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
                             $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
                             $flagSuccess=$stmtDeleteCopmprobante->execute();
                             $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";

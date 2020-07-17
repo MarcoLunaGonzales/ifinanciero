@@ -178,13 +178,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
                $tipoSim=obtenerValorConfiguracion(13);
                $mesActual=date("m");
-               if($tipoSim==1){
-                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),12,$grupoArea,1,$row_cuentas['numero']);
+                $valorConfiguracionTCPTCS=obtenerValorConfiguracion(52);
+               if($valorConfiguracionTCPTCS!=1){
+                $monto=ejecutadoEgresosMes(0,$anio,12,$grupoArea,0,$row_cuentas['numero']);
                 //$monto=($monto/12);
                }else{
-                $monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mesActual,$grupoArea,0,$row_cuentas['numero']);
+                $monto=ejecutadoEgresosMes($grupoUnidad,$anio,$mesActual,$grupoArea,1,$row_cuentas['numero']);
+                //$monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mesActual,$grupoArea,0,$row_cuentas['numero']);
                }
-                
                 if($monto==null){$monto=0;}
                 $montoCal=$monto*($porcentPrecios/100);
                 $html.='<tr class="">'.

@@ -8024,7 +8024,7 @@ function obtenerCodigoActividadProyecto($codigo){
    return($stmt);
 
  }
- 
+
   function contador_facturas_cajachica($codigo){
     $dbh = new Conexion();
     $sql="SELECT codigo from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo";    

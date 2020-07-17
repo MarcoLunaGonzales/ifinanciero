@@ -93,6 +93,7 @@ $fechaHasta=$d."/".$m."/".$y;
 
 $dbh = new Conexion();
 echo "<script>var array_cuenta=[];</script>";
+
 $i=0;
   $cuentaLista=obtenerCuentasListaSolicitud(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
    while ($rowCuenta = $cuentaLista->fetch(PDO::FETCH_ASSOC)) {
@@ -105,7 +106,8 @@ $i=0;
        label:'[<?=trim($numeroX)?>] - <?=trim($nombreX)?>',
        value:'<?=$codigoX?>'};
        array_cuenta[<?=$i?>]=obtejoLista;
-    </script> 
+    </script>
+
     <?php
     $i=$i+1;
   }
@@ -374,9 +376,20 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 <a href="#" class="btn btn-sm btn-warning" onclick="filtrarSolicitudRecursosServiciosItems()">FILTRAR LA SOLICITUD</a>           
             </div>
           </div>
+           <div class="row">
+                <label class="col-sm-1 col-form-label" style="text-align: center;">Oficina</label>
+                <label class="col-sm-1 col-form-label" style="text-align: center;">Area</label>
+                <label class="col-sm-3 col-form-label" style="text-align: center;">Cuenta Relacionada</label>                
+                <label class="col-sm-2 col-form-label" style="text-align: left;">Detalle / Glosa</label>
+                <label class="col-sm-1 col-form-label" style="text-align: left; left:-25px !important;">Presupuestado</label>
+                <label class="col-sm-1 col-form-label" style="text-align: left;">Importe</label>
+                <label class="col-sm-2 col-form-label" style="text-align: left;">Proveedor</label>
+                <label class="col-sm-1 col-form-label" style="text-align: center;">Opciones</label>
+            </div>
               <div id="div">   
                  <div class="h-divider"></div>     
               </div>
+              
               <div id="fiel">
               </div>
             </fieldset>  
@@ -582,3 +595,8 @@ if(isset($_GET['sim'])){
 }
 
 ?>
+<script>
+  $(document).ready(function() {
+    notificacionMD('random','top','left',false,'add_alert','IFINANCIERO','Registre <b>Nuevos Detalles</b> a la Solicitud de Recursos presionando el botón con signo de más. <br><center><a href="#" onClick="addSolicitudDetalle(this,3)" class="btn btn-white btn-round btn-sm btn-fab"><i class="material-icons">add</i></a></center>','<img src="../assets/img/robot.gif" width="100px" height="100px">');
+   });
+   </script>

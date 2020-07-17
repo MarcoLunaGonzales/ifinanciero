@@ -3979,7 +3979,7 @@ function addSolicitudDetalle(obj,tipo) {
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           divDetalle.html(ajax.responseText);
-          autocompletar("partida_cuenta"+filaActiva,"partida_cuenta_id"+filaActiva,array_cuenta);
+          //autocompletar("partida_cuenta"+filaActiva,"partida_cuenta_id"+filaActiva,array_cuenta);
           divDetalle.bootstrapMaterialDesign();
           $('.selectpicker').selectpicker("refresh");
           return false;
@@ -11176,11 +11176,11 @@ function agregaformEnviarCorreo(datos){
 //   document.getElementById("razon_social_sf").value=d[4];
 // }
 
-function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje){
+function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social){
   iniciarCargaAjax();
   $.ajax({
     type:"POST",
-    data:"codigo_facturacion="+codigo_facturacion+"&nro_factura="+nro_factura+"&cod_solicitudfacturacion="+cod_solicitudfacturacion+"&correo_destino="+correo_destino+"&asunto="+asunto+"&mensaje="+mensaje,
+    data:"codigo_facturacion="+codigo_facturacion+"&nro_factura="+nro_factura+"&cod_solicitudfacturacion="+cod_solicitudfacturacion+"&correo_destino="+correo_destino+"&asunto="+asunto+"&mensaje="+mensaje+"&razon_social="+razon_social,
     url:"simulaciones_servicios/enviarCorreo.php",
     success:function(r){
       var resp = r.split('$$$');
@@ -14439,10 +14439,10 @@ function agregaDatosFactManual(datos){
   document.getElementById("nit_cliente").value=d[4];
   document.getElementById("razon_social").value=d[5];
 }
-function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social,cod_libreta_manual){
+function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social,cod_libreta_manual,cod_estadocuenta_manual){
   $.ajax({
     type:"POST",
-    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&fecha_factura="+fecha_factura+"&nit_cliente="+nit_cliente+"&razon_social="+razon_social+"&cod_libreta="+cod_libreta_manual,
+    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&fecha_factura="+fecha_factura+"&nit_cliente="+nit_cliente+"&razon_social="+razon_social+"&cod_libreta="+cod_libreta_manual+"&cod_estadocuenta="+cod_estadocuenta_manual,
     url:"simulaciones_servicios/generarFacturaManual.php",
     success:function(r){
       if(r==1){
@@ -15350,54 +15350,46 @@ function seleccionar_libretaBancaria(cod_libreta){
   var datos=document.getElementById("datos").value;
   var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
   var direccion=document.getElementById("direccion").value;
-  if(indice==1){//generar factura normal
-    $("#modalListaLibretaBancaria").modal("hide");
-    $("#modalListaLibretasBancariasDetalle").modal("hide");
-    
-    alerts.showSwal('warning-message-and-confirmation-generar-factura',direccion+'?codigo='+cod_solicitudfacturacion+'&cod_libreta='+cod_libreta);
-  }else{
-    if(indice==2){
-      // $("#modalListaLibretaBancaria").modal("hide");  
+  switch (indice){
+    case '1'://solo factura normal
+      $("#modalListaLibretaBancaria").modal("hide");
+      $("#modalListaLibretasBancariasDetalle").modal("hide");
+      alerts.showSwal('warning-message-and-confirmation-generar-factura',direccion+'?codigo='+cod_solicitudfacturacion+'&cod_libreta='+cod_libreta);
+    break;
+    case '3'://solo factura manual
+      $("#modalListaLibretaBancaria").modal("hide");
+      $("#modalListaLibretasBancariasDetalle").modal("hide");
+      $("#modalFacturaManual").modal("show");  
+      var d=datos.split('/');
+      document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
+      document.getElementById("cod_libreta_manual").value=cod_libreta;
+      document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
+      document.getElementById("nit_cliente").value=d[4];
+      document.getElementById("razon_social").value=d[5];
+    break;
+    case '4'://abrir estado de cuenta y facturar normal
+      $("#modalListaLibretaBancaria").modal("hide");
+      $("#modalListaLibretasBancariasDetalle").modal("hide");      
+      abrirEstadoCuenta(datos,direccion,4,cod_libreta);
+    break;
+    case '5'://abrir estado de cuenta y facturar manual
+      $("#modalListaLibretaBancaria").modal("hide");
+      $("#modalListaLibretasBancariasDetalle").modal("hide");
+      abrirEstadoCuenta(datos,direccion,5,cod_libreta);
+      // $("#modalFacturaManual").modal("show");  
       // var d=datos.split('/');
-      // var cod_solicitudfacturacion=d[0];
-      // document.getElementById("cod_solicitudfacturacion_factpagos").value=cod_solicitudfacturacion;
-      // document.getElementById("cod_libreta_pagos").value=cod_libreta;
-      // var index=(parseFloat(d[3])-1);      
-      // var contenedor = document.getElementById('contenedor_GenerarFactParcial_cabecera');    
-      // ajax=nuevoAjax();
-      // ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal_generarFactPar.php?cod_solicitud='+cod_solicitudfacturacion,true);
-      // ajax.onreadystatechange=function() {
-      //   if (ajax.readyState==4) {
-      //     contenedor.innerHTML = ajax.responseText;      
-      //     $('.selectpicker').selectpicker(["refresh"]);
-      //     $("#modalGenerarFacturapagos").modal("show");  
-      //     tablaGeneral_GenerarFact_parcial(index);
-      //   }
-      // }
-      // ajax.send(null);
-    }else{
-      if(indice==3){ //generar factura manual
-        $("#modalListaLibretaBancaria").modal("hide");
-        $("#modalListaLibretasBancariasDetalle").modal("hide");
-        $("#modalFacturaManual").modal("show");  
-          var d=datos.split('/');
-          document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
-          document.getElementById("cod_libreta_manual").value=cod_libreta;
-          document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
-          document.getElementById("nit_cliente").value=d[4];
-          document.getElementById("razon_social").value=d[5];
-      }
-    }
-  }
-  
-  // alert(direccion);
-  // alert("ok"+cod_libreta_Det);  
+      // document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
+      // document.getElementById("cod_libreta_manual").value=cod_libreta;
+      // document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
+      // document.getElementById("nit_cliente").value=d[4];
+      // document.getElementById("razon_social").value=d[5];
+    break;
+  } 
 }
 function activardetalleLibreta(j){  
   $(".libretaDetalles_"+j).toggle();
 }
-
-function abrirEstadoCuenta(datos,direccion,indice){
+function abrirEstadoCuenta(datos,direccion,indice,cod_libreta){
   // iniciarCargaAjax();
   var d=datos.split('/');
   var cod_solicitudfacturacion=d[0];
@@ -15407,9 +15399,8 @@ function abrirEstadoCuenta(datos,direccion,indice){
   document.getElementById("direccion_ec").value=direccion;
   document.getElementById("indice_ec").value=indice;//comprobamos si es para factura nomra o manual
   document.getElementById("datos_ec").value=datos;
-  $("#modal_estadocuenta").modal("show");          
-  // var table =$("#libreta_bancaria_reporte_modal");
-  // table.fixedHeader.enable();
+  document.getElementById("cod_libreta_ec").value=cod_libreta;
+  $("#modal_estadocuenta").modal("show");  
   var contenedor = document.getElementById('contenedor_cabecera_estados_cuenta');    
   ajax=nuevoAjax();
   ajax.open('GET', 'simulaciones_servicios/ajax_cabecera_modal_estadoscuenta.php?saldo='+saldo+'&razon_social='+razon_social,true);
@@ -15451,22 +15442,39 @@ function seleccionar_estado_cuenta_sol_fac(cod_estadocuenta){
   var datos=document.getElementById("datos_ec").value;
   var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion_ec").value;
   var direccion=document.getElementById("direccion_ec").value;
-  if(indice==1){//factura normal
-    $("#modal_estadocuenta").modal("hide");
-    alerts.showSwal('warning-message-and-confirmation-generar-factura',direccion+'?codigo='+cod_solicitudfacturacion+'&cod_estadocuenta='+cod_estadocuenta);
-  }else{    
-      if(indice==3){
-        $("#modal_estadocuenta").modal("hide");
-        $("#modalFacturaManual").modal("show");  
-          var d=datos.split('/');
-          document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
-          document.getElementById("cod_libreta_manual").value=cod_libreta;
-          document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
-          document.getElementById("nit_cliente").value=d[4];
-          document.getElementById("razon_social").value=d[5];
-      }    
-  }
-  
+  var cod_libreta_x=document.getElementById("cod_libreta_ec").value;
+   switch (indice){
+    case '1'://solo factura normal
+      $("#modal_estadocuenta").modal("hide");
+      alerts.showSwal('warning-message-and-confirmation-generar-factura',direccion+'?codigo='+cod_solicitudfacturacion+'&cod_estadocuenta='+cod_estadocuenta);
+    break;
+    case '3'://solo factura manual
+      $("#modal_estadocuenta").modal("hide");
+      $("#modalFacturaManual").modal("show");  
+      var d=datos.split('/');
+      document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
+      // document.getElementById("cod_libreta_manual").value=cod_estadocuenta;
+      document.getElementById("cod_estadocuenta_manual").value=cod_estadocuenta;
+      document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
+      document.getElementById("nit_cliente").value=d[4];
+      document.getElementById("razon_social").value=d[5];
+    break;
+    case '4'://solo factura normal con con libreta
+      $("#modal_estadocuenta").modal("hide");            
+      alerts.showSwal('warning-message-and-confirmation-generar-factura',direccion+'?codigo='+cod_solicitudfacturacion+'&cod_estadocuenta='+cod_estadocuenta+'&cod_libreta='+cod_libreta_x);
+    break;
+    case '5'://solo factura manual con cod libreta
+      $("#modal_estadocuenta").modal("hide");      
+      $("#modalFacturaManual").modal("show");  
+      var d=datos.split('/');
+      document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
+      document.getElementById("cod_libreta_manual").value=cod_libreta_x;
+      document.getElementById("cod_estadocuenta_manual").value=cod_estadocuenta;
+      document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
+      document.getElementById("nit_cliente").value=d[4];
+      document.getElementById("razon_social").value=d[5];
+    break;
+  }  
   // alert(direccion);
   // alert("ok"+cod_libreta_Det);  
 }
@@ -15702,8 +15710,6 @@ function listar_comprobanteDetalle(codigo,descripcion){
   $("#nestadolib"+fila).addClass("estado");
   $("#modalListaLibretaBancaria").modal("hide");
 }
-
-
 function verMayoresCierre(fila){
  if($("#cuenta"+fila).val()==""){
    $("#msgError").html("<p>Ingrese una cuenta</p>");
@@ -15852,3 +15858,23 @@ function guardarActividadFilasDetalle(){
   };
   $("#modalActividadesProyecto").modal("hide");
 }
+
+function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
+  type = ['', 'info', 'danger', 'success', 'warning', 'rose', 'primary'];
+  color = Math.floor((Math.random() * 6) + 1);
+  if (fondo=='random'){
+    fondo=type[color];
+  } 
+    $.notify({
+      icon: icono,
+      message: cabecera+'<hr><small>'+mensaje+'</small>'+'<hr><center>'+pie+'</center>'
+
+    }, {
+      type: fondo,
+      timer: tiempo,
+      placement: {
+        from: from,
+        align: align
+      }
+    });
+  }

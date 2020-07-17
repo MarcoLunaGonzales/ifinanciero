@@ -73,9 +73,23 @@ $des_actividadproyecto="";
                                         </div>   	
 			                               </div>
                                      <div class="form-group col-sm-10">
-                                            <label for="partida_cuenta<?=$idFila;?>" class="bmd-label-floating"><small><?=$nombrePartidaX?> / <?=$nombrePartidaDetalleX?></small></label>
-                                              <input class="form-control" type="hidden" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>" value="<?=$codCuentaX?>"/>        
-                                            <input class="form-control" type="text" name="partida_cuenta<?=$idFila;?>" id="partida_cuenta<?=$idFila;?>" value="[<?=$numeroCuentaX?>] - <?=$nombreCuentaX?>" <?=($tipoSolicitud!=4)?"readonly":"";?>> 
+                                             <select class="selectpicker form-control form-control-sm"  data-live-search="true" data-size="6" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>" required data-style="btn btn-warning">
+                                                  <option disabled selected value="">CUENTAS</option>
+                                                <?php
+                                                $cuentaLista=obtenerCuentasListaSolicitud(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+                                              while ($rowCuenta = $cuentaLista->fetch(PDO::FETCH_ASSOC)) {
+                                                $codigoX=$rowCuenta['codigo'];
+                                                $numeroX=$rowCuenta['numero'];
+                                                $nombreX=$rowCuenta['nombre'];
+                                              ?>
+                                              <option value="<?=$codigoX;?>" <?=($codigoX==$codCuentaX)?"selected":"";?> >[<?=$numeroX?>] <?=$nombreX;?></option>  
+                                              <?php
+                                                }
+                                                ?>
+                                            </select>
+                                            <!--<label for="partida_cuenta<?=$idFila;?>" class="bmd-label-floating"><small><?=$nombrePartidaX?> / <?=$nombrePartidaDetalleX?></small></label>
+                                              <input class="form-control" type="hidden" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>" value="<?=$codCuentaX?>"/>-->        
+                                            <input class="form-control" type="hidden" name="partida_cuenta<?=$idFila;?>" id="partida_cuenta<?=$idFila;?>" value="[<?=$numeroCuentaX?>] - <?=$nombreCuentaX?>" <?=($tipoSolicitud!=4)?"readonly":"";?>> 
                                           </div>
                                    </div>
                                <input type="hidden" id="unidad<?=$idFila;?>" name="unidad<?=$idFila;?>" value="<?=$unidadSol?>">
@@ -90,19 +104,19 @@ $des_actividadproyecto="";
       	                              </div>-->
                                   <div class="col-sm-2">
 		                                  <div class="form-group">
-                                        		<label for="detalle_detalle<?=$idFila;?>" class="bmd-label-static">Detalle</label>
-		                              		<textarea rows="1" class="form-control" name="detalle_detalle<?=$idFila;?>" required id="detalle_detalle<?=$idFila;?>" value=""><?=$detalleX?></textarea>
+                                        		<!--<label for="detalle_detalle<?=$idFila;?>" class="bmd-label-static">Detalle</label>-->
+		                              		<textarea rows="3" class="form-control" name="detalle_detalle<?=$idFila;?>" required id="detalle_detalle<?=$idFila;?>" value=""><?=$detalleX?></textarea>
 		                              	</div>
 		                              </div>
                                   <div class="col-sm-1">
                                           <div class="form-group">
-                                            <label for="importe_presupuesto<?=$idFila;?>" class="bmd-label-floating">Imp Pres</label>      
+                                            <!--<label for="importe_presupuesto<?=$idFila;?>" class="bmd-label-floating">Imp Pres</label>      -->
                                             <input class="form-control" type="number" name="importe_presupuesto<?=$idFila;?>" id="importe_presupuesto<?=$idFila;?>" value="<?=$importeX?>" step="0.001" required readonly>  
                                     </div>
                                   </div>
 		                              <div class="col-sm-1">
                                           <div class="form-group">
-                                          	<label for="importe<?=$idFila;?>" class="bmd-label-floating" id="importe_label<?=$idFila;?>"><?=$tituloImporte?></label>			
+                                          	<label for="importe<?=$idFila;?>" class="bmd-label-floating d-none" id="importe_label<?=$idFila;?>"><?=$tituloImporte?></label>
                                         		<input class="form-control" type="number" name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" value="<?=$importeSolX?>" step="0.001" onChange="calcularTotalesSolicitud();" OnKeyUp="calcularTotalesSolicitud();" required>	
 		                              	</div>
       	                          </div>
@@ -194,7 +208,7 @@ $des_actividadproyecto="";
                          </div>
                          <script>numFilas++;
                                cantidadItems++;
-                               autocompletar("partida_cuenta"+<?=$idFila;?>,"partida_cuenta_id"+<?=$idFila;?>,array_cuenta);
+                               //autocompletar("partida_cuenta"+<?=$idFila;?>,"partida_cuenta_id"+<?=$idFila;?>,array_cuenta);
                             </script>
              <?php  
                   $stmtFacturas = $dbh->prepare("SELECT * FROM facturas_compra where cod_solicitudrecursodetalle=$codDetalleX");

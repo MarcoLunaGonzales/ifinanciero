@@ -313,43 +313,56 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                             <?php                                                  
                                               $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
                                               $cod_tipopago_anticipo=obtenerValorConfiguracion(64);
-                                              $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_deposito_cuenta,$codigo_facturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de credito. devolvera 0 en caso de q no exista
+                                              $cont_de_tipos_pago=0;//cuando el contador sea 0 exite deposito y anticipo
+                                              $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_deposito_cuenta,$codigo_facturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista
                                               if($cod_tipopago_aux!=0){
+                                                $cont_de_tipos_pago++;
                                                 $cod_tipopago=$cod_tipopago_aux;
                                                 $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_deposito_cuenta,$codigo_facturacion);//
                                                 $datos_FacManual=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
+                                              }
+                                              // verifiacamos si pertenece a tipo de apgo anticipo
+                                              $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$codigo_facturacion);
+                                              if($cod_tipopago_aux!=0){
+                                                $cont_de_tipos_pago++;
+                                                $cod_tipopago=$cod_tipopago_aux;
+                                                $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_anticipo,$codigo_facturacion);//
+                                                $datos_FacManual=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
+                                              }
+                                              if($cont_de_tipos_pago==2){?>
+                                                <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','4')">
+                                                    <i class="material-icons text-success">receipt</i> Generar Factura
+                                                  </a>
+                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','5')">
+                                                    <i class="material-icons text-info">receipt</i>Generar Factura Manual
+                                                  </a><?php
                                               }else{
-                                                // verifiacamos si pertenece a tipo de apgo anticipo
-                                                $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$codigo_facturacion);
-                                                if($cod_tipopago_aux!=0){
-                                                  $cod_tipopago=$cod_tipopago_aux;
-                                                  $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_anticipo,$codigo_facturacion);//
-                                                  $datos_FacManual=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
-                                                }
-                                              }                                              
-                                              if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito en cuenta se activa la libreta bancaria?>
-                                                <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1')">
-                                                  <i class="material-icons text-success">receipt</i> Generar Factura
-                                                </a>
-                                                <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3')">
-                                                  <i class="material-icons text-info">receipt</i>Generar Factura Manual
-                                                </a><?php                                               
-                                              }elseif($cod_tipopago==$cod_tipopago_anticipo){ ?>
-                                                <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1')">
-                                                  <i class="material-icons text-success">receipt</i> Generar Factura
-                                                </a>
-                                                <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3')">
-                                                  <i class="material-icons text-info">receipt</i>Generar Factura Manual
-                                                </a>
-                                                <?php
-                                              }else{?>
-                                                <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
-                                                  <i class="material-icons text-success">receipt</i> Generar Factura
-                                                </a>                                                  
-                                                <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
-                                                  <i class="material-icons text-info">receipt</i> Generar Factura Manual
-                                                </button><?php 
-                                              } ?>
+                                                if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito se activa la libreta bancaria?>
+                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1')">
+                                                    <i class="material-icons text-success">receipt</i> Generar Factura
+                                                  </a>
+                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3')">
+                                                    <i class="material-icons text-info">receipt</i>Generar Factura Manual
+                                                  </a><?php                                               
+                                                }elseif($cod_tipopago==$cod_tipopago_anticipo){ ?>
+                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1','0')">
+                                                    <i class="material-icons text-success">receipt</i> Generar Factura
+                                                  </a>
+                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3','0')">
+                                                    <i class="material-icons text-info">receipt</i>Generar Factura Manual
+                                                  </a>
+                                                  <?php
+                                                }else{?>
+                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
+                                                    <i class="material-icons text-success">receipt</i> Generar Factura
+                                                  </a>                                                  
+                                                  <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
+                                                    <i class="material-icons text-info">receipt</i> Generar Factura Manual
+                                                  </button><?php 
+                                                }  
+                                              }
+
+                                               ?>
                                              <!--  <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                                 <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
                                               </a> -->
@@ -442,6 +455,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
     $('#guardarFacturaManual').click(function(){      
       var cod_solicitudfacturacion_factmanual=document.getElementById("cod_solicitudfacturacion_factmanual").value;
       var cod_libreta_manual=document.getElementById("cod_libreta_manual").value;
+      var cod_estadocuenta_manual=document.getElementById("cod_estadocuenta_manual").value;
 
       var nro_factura=$('#nro_factura').val();
       var nro_autorizacion=$('#nro_autorizacion').val();
@@ -463,7 +477,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
               if(razon_social==null || razon_social=='' || razon_social==' '){
                 Swal.fire("Informativo!", "Por favor introduzca la Razón Social", "warning");
               }else{
-                RegistrarFacturaManual(cod_solicitudfacturacion_factmanual,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social,cod_libreta_manual);
+                RegistrarFacturaManual(cod_solicitudfacturacion_factmanual,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social,cod_libreta_manual,cod_estadocuenta_manual);
               }          
             }          
           }          
