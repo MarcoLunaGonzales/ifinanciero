@@ -15,7 +15,7 @@ $codigo = $_GET["codigo"];//codigoactivofijo
 try{
     $stmt = $dbh->prepare("SELECT codigo,monto,fecha,observaciones,nro_recibo,cod_uo,cod_area from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$codigo 
 UNION
-SELECT codigo,monto,fecha,observaciones,0 as nro_recibo,0 as cod_uo,0 as cod_area from caja_chicareembolsos where cod_estadoreferencial=1 and cod_cajachica=$codigo ORDER BY fecha asc");
+SELECT codigo,monto,fecha,observaciones,0 as nro_recibo,0 as cod_uo,0 as cod_area from caja_chicareembolsos where cod_estadoreferencial=1 and cod_cajachica=$codigo");
     $stmt->execute();    
         //==================================================================================================================
     //datos caja chica

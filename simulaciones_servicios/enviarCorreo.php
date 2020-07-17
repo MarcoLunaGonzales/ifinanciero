@@ -7,13 +7,15 @@ $dbhB = new Conexion();
 $codigo_facturacion=$_POST['codigo_facturacion'];
 $cod_solicitudfacturacion=$_POST['cod_solicitudfacturacion'];
 $nro_factura=$_POST['nro_factura'];
+$razon_social=$_POST['razon_social'];
+
 $correo_destino=$_POST['correo_destino'];
 $listaCorreos=explode(",", $correo_destino);
 //$correo_destino=trim($correo_destino,',');
 
 $fechaActual=date("Y-m-d H:m:s");
 $asunto="Envio De Factura";
-$mensaje="Estimado Cliente,<br>\n<br>\n Adjunto la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
+$mensaje="Estimado Cliente ".$razon_social.",<br>\n<br>\n Adjunto la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
 // echo $correo_destino."<br>";
 // echo $asunto."<br>";
 // echo $mensaje."<br>";
@@ -23,7 +25,7 @@ if($correo_destino==''||$asunto==''||$mensaje==''){
 	echo "0$$$";
 }else{
 	//obtenemos el archivo ya generado en PDF
-	$nom="IBNORCA-".$codigo_facturacion."-".$nro_factura.".pdf";//nombre factura
+	$nom="IBNORCA-C".$codigo_facturacion."-F".$nro_factura.".pdf";//nombre factura
 	$dir="../simulaciones_servicios/facturas/";
 	$sw=0;
 	$d=opendir($dir.".");

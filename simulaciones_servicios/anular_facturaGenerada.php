@@ -109,10 +109,7 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 			$cod_comprobante_detalle=$cod_comprobante_detalle;			
 		}
 
-		if($flagSuccessDet){
-			$sql="UPDATE facturas_venta set cod_estadofactura='2' where codigo in ($codigos_facturas_x)";	
-			$stmt = $dbh->prepare($sql);
-			$flagSuccess=$stmt->execute();
+		if($flagSuccessDet){		
 			//insertamos la el estado de cuenta
 			$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta_pasivo,$monto_tipopago_total,$cod_proveedor,'$fechaActual','0',$cuenta_axiliar,'1','$concepto_contabilizacion')";
 			// echo $sqlEstadoCuenta;
@@ -131,6 +128,10 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 	$obs="Factura Anulada, transaccion no valida";
 }
 if($flagSuccess){
+	$sql="UPDATE facturas_venta set cod_estadofactura='2' where codigo in ($codigos_facturas_x)";	
+	$stmt = $dbh->prepare($sql);
+	
+	$flagSuccess=$stmt->execute();
 	if($cod_solicitudfacturacion!=-100){
 		//volvemos al estado de registro de la sol fac.
 		$sqlUpdate="UPDATE solicitudes_facturacion SET cod_estadosolicitudfacturacion=1,obs_devolucion='$observaciones' where codigo=$cod_solicitudfacturacion";
@@ -143,6 +144,7 @@ if($flagSuccess){
 		// $obs="Factura Anulada Normal";
 		actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_solicitudfacturacion,$fechaHoraActual,$obs);
 	}
+
 }
 if($flagSuccess)echo 1;
 else echo 2;
