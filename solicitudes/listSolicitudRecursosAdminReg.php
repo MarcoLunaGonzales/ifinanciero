@@ -31,7 +31,10 @@ if(isset($_GET['q'])){
       $sqlAreas="and (sr.cod_area=0 or sr.cod_area=".obtenerValorConfiguracion(65).")";             
     }else{
       $sqlAreas="and (sr.cod_area ".$codigoArea." or sr.cod_area=".obtenerValorConfiguracion(65).")";  
-    } 
+    }
+    //echo $s."<br>";
+    //echo var_dump($arraySql);
+    //echo $sqlAreas; 
   }
 }else{
   $sqlAreas="";
@@ -268,7 +271,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
-                             <a title=" Ver Solicitud de Recursos" href="<?=$urlVer;?>?cod=<?=$codigo;?>&reg=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-success">
+                             <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVer;?>?cod=<?=$codigo;?>&reg=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-success">
                                     <i class="material-icons">preview</i>
                             </a>
                             <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&reg=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-info">
@@ -289,7 +292,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
-                            <a title=" Ver Solicitud de Recursos" href="<?=$urlVer;?>?cod=<?=$codigo;?>&reg=1" class="btn btn-success">
+                            <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVer;?>?cod=<?=$codigo;?>&reg=1" class="btn btn-success">
                                     <i class="material-icons">preview</i>
                             </a>
                             <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&reg=1'  class="btn btn-info">

@@ -1,0 +1,18 @@
+OBSERVACIONES.
+======================
+1.- Codigo de Actividad en el detalle de la impresion SR.
+
+2.- Presupuesto por actividad en caso ser SIS - SR.
+
+3.- PRESUPUESTO SEC (CONTABILIDAD).
+
+4.- LISTADO EN LUGAR DE INPUT CUENTA SR DETALLE.*
+
+5.- REPORTE INGRESOS POR FACTURACION.
+
+6.- ESTADO PARA PROY SIS.
+
+5*8
+
+
+

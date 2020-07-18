@@ -301,7 +301,7 @@ if(isset($_GET['cod'])){
                }
              }
              ?>
-             <div class="col-sm-3">
+             <div class="col-sm-3 d-none">
                   <div class="form-group">
                     <select class="selectpicker form-control form-control-sm" data-live-search="true" data-size="6" name="proveedores" id="proveedores" data-style="<?=$comboColor;?>" onChange="cargarDatosCuenta()">
                     <option disabled selected value="">Proveedores</option>
@@ -348,36 +348,11 @@ if(isset($_GET['cod'])){
               ?>
                  
               <div class="float-right">
-                <div class="col-sm-2">
-              <input type="hidden" name="n_distribucion" id="n_distribucion" value="<?=$valorDistribucion?>">
-              <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="<?=$valorDistribucion?>">
-              <div class="btn-group dropdown">
-                      <button type="button" class="btn btn-sm btn-success dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
-                      <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning <?=$estadoDistribucion?>"></span> <b id="boton_titulodist"><?=$titDistribucion?></b>
-                        </button>
-                        <div class="dropdown-menu">   
-                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="dropdown-item">
-                          <i class="material-icons">bubble_chart</i> x Oficina
-                        </a>
-                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(2)" class="dropdown-item">
-                          <i class="material-icons">bubble_chart</i> x Área
-                        </a>
-                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
-                          <i class="material-icons">bubble_chart</i> x Oficina y x Área
-                        </a>
-                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(0)" class="dropdown-item">
-                          <i class="material-icons">bubble_chart</i> Nínguna
-                        </a>
-                        </div>
-                    </div>
-                    <div id="array_distribucion"></div>
-            </div> 
               </div>
               <div class="row">
-                <label class="col-sm-1 col-form-label" style="text-align: center;">Oficina</label>
-                <label class="col-sm-1 col-form-label" style="text-align: center;">Area</label>
+                <label class="col-sm-1 col-form-label" style="text-align: center;">Of / Area</label>
                 <label class="col-sm-3 col-form-label" style="text-align: center;">Cuenta Relacionada</label>                
-                <label class="col-sm-2 col-form-label" style="text-align: left;">Detalle / Glosa</label>
+                <label class="col-sm-3 col-form-label" style="text-align: left;">Detalle / Glosa</label>
                 <label class="col-sm-1 col-form-label" style="text-align: left; left:-25px !important;">Presupuestado</label>
                 <label class="col-sm-1 col-form-label" style="text-align: left;">Importe</label>
                 <label class="col-sm-2 col-form-label" style="text-align: left;">Proveedor</label>
@@ -461,6 +436,31 @@ if(isset($_GET['cod'])){
                
                <a href="#" onclick="cargarDatosRegistroProveedor()" title="Agregar Proveedor" class="btn btn-warning float-right"><i class="material-icons">group_add</i></a>
                <a href="#" onclick="actualizarRegistroProveedor()" title="Actualizar Lista Proveedores" class="btn btn-info float-right"><i class="material-icons">find_replace</i></a>
+               <!--DISTRIBUCION-->
+               <input type="hidden" id="cantidad_filas_proyecto" value="0"> 
+                 <input type="hidden" name="n_distribucion" id="n_distribucion" value="0">
+                 <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="0">
+                  <div class="btn-group dropdown">
+                      <button type="button" class="btn btn-success dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
+                      <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning"></span> <b id="boton_titulodist"></b>
+                        </button>
+                        <div class="dropdown-menu">   
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Oficina
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(2)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Oficina y x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(0)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> Nínguna
+                        </a>
+                        </div>
+                    </div>
+                    <div id="array_distribucion"></div>
+                <!--FIN DISTRIBUCION-->  
                <a href="#" onclick="mostrarActividadesDeSolicitud()" title="Actividades Proyecto SIS" class="btn btn-primary float-right"><i class="material-icons">assignment</i><span id="nproyectos" class="count bg-danger">0</span> ACTIVIDADES</a>
                <input type="hidden" id="cantidad_filas_proyecto" value="0">
                <div class="row col-sm-12">
@@ -583,13 +583,14 @@ if(isset($_GET['cod'])){
                      if($ObligatorioX==1){
                       $Obli='<i class="material-icons text-success">done</i> SI';
                      }
+
                   ?>
                   <tr>
                     <td class="text-left"><input type="hidden" name="codigo_archivoregistrado<?=$filaE?>" id="codigo_archivoregistrado<?=$filaE?>" value="<?=$codigoArchivoX;?>">Otros Documentos</td>
                     <td class="text-center"><?=$Obli?></td>
                     <td class="text-right">
                       <div class="btn-group">
-                        <a href="#" class="btn btn-button btn-sm">Registrado</a>  
+                        <a href="#" class="btn btn-button btn-sm" >Registrado</a>  
                         <a class="btn btn-button btn-danger btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
                       </div>     
                     </td>    
@@ -601,6 +602,7 @@ if(isset($_GET['cod'])){
                 </tbody>
               </table>
               <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntos" name="cantidad_archivosadjuntos">
+              <input type="hidden" value="<?=$filaE+$filaA?>" id="cantidad_archivosadjuntosexistentes" name="cantidad_archivosadjuntosexistentes">
             </div>
       </div>
       <div class="modal-footer">
@@ -616,4 +618,5 @@ if(isset($_GET['cod'])){
 <?php
 require_once 'modal.php';
 ?>
-<script>calcularTotalesSolicitud();listarProyectosSisdeUnidades();</script> 
+<script>calcularTotalesSolicitud();listarProyectosSisdeUnidades();ponerConfirmacionDeArchivosSolRec();</script> 
+

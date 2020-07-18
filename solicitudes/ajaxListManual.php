@@ -49,7 +49,7 @@ if(isset($_GET['v'])){
                                  </div>
                                  <div class="col-sm-6">
                                        <div class="form-group">
-                                       <select class="selectpicker form-control form-control-sm" name="area_solicitud" id="area_solicitud" data-style="btn btn-primary">
+                                       <select class="selectpicker form-control form-control-sm" name="area_solicitud" id="area_solicitud" data-style="btn btn-rose">
                                      <?php
                                                              
                                            $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo where a.cod_estado=1 order by 2");
