@@ -5703,9 +5703,9 @@ function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $
 
 function obtenerCodigoServicioPorPropuestaTCPTCS($idPropuesta){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("select IFNULL(se.Codigo,'SERVICIO SIN CODIGO')as codigo  from simulaciones_servicios  s, ibnorca.servicios se where s.idServicio=se.IdServicio and s.codigo=$idPropuesta");
+   $stmt = $dbh->prepare("select IFNULL(se.Codigo,' - ')as codigo  from simulaciones_servicios  s, ibnorca.servicios se where s.idServicio=se.IdServicio and s.codigo=$idPropuesta");
    $stmt->execute();
-   $valor="SERVICIO SIN CODIGO";
+   $valor="-";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor=$row['codigo'];
    }
@@ -7398,7 +7398,7 @@ function obtenerCodigoExternoCurso($codigo){
   $dbh = new ConexionIBNORCA();
   $stmt = $dbh->prepare("SELECT codigo_curso($codigo) as codigo");
   $stmt->execute();
-  $valor=0;
+  $valor=" - ";
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $valor=$row['codigo'];
   }
@@ -7793,8 +7793,8 @@ function sumatotaldetallefactura($cod_factura){
   $stmt->bindColumn('cantidad', $cantidad);
   $suma_total=0;
   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-    $precio=$precio-$descuento_bob;    
-    $suma_total+=$precio*$cantidad;
+    $precio=$precio*$cantidad-$descuento_bob;    
+    $suma_total+=$precio;
   }  
   return($suma_total);
 }
@@ -8103,8 +8103,30 @@ function obtenerCodigoActividadProyecto($codigo){
       $valor="x OFICINA y AREA";
     }
     return($valor);
-   }
-  
+  }
+  function obtenerNombreEstadoSolFac($cod_estado){
+    $dbh = new Conexion();        
+    $sql="SELECT nombre from estados_solicitudfacturacion where codigo=$cod_estado";    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor="-";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['nombre'];
+    }         
+    return($valor);
+  }
+  function obtenemosformaPagoSolfact($codigo){
+    $dbh = new Conexion();        
+    $sql="SELECT cod_tipopago from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo limit 1";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor="-";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['cod_tipopago'];
+    }         
+    return($valor);
+  }
+
 ?>
 
 

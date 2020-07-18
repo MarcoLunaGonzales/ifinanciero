@@ -11830,7 +11830,10 @@ function actualizarComboBoxAjax_clienteNormas(cod_cliente){
 
 function actualizarRegistroContacto(){
   var cod_cliente=$("#cod_cliente").val();
-  var parametros={"codigo":"none"};
+  if(cod_cliente==0 || cod_cliente==''|| cod_cliente==null){
+    Swal.fire("Error!", "Seleccione un cliente por favor.", "warning");
+  }else{
+    var parametros={"codigo":cod_cliente};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -11848,6 +11851,7 @@ function actualizarRegistroContacto(){
            actualizarComboBoxAjax_cliente(cod_cliente);
         }
     }); 
+  }
 }
 function actualizarRegistroSoloClientes(){
   var parametros={"codigo":"none"};
@@ -11870,7 +11874,10 @@ function actualizarRegistroSoloClientes(){
 }
 function actualizarRegistroContactoNormas(){
   var cod_cliente=$("#cod_cliente").val();
-  var parametros={"codigo":"none"};
+  if(cod_cliente==0 || cod_cliente==''|| cod_cliente==null){
+    Swal.fire("Error!", "Seleccione un cliente por favor.", "warning");
+  }else{
+    var parametros={"codigo":cod_cliente};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -11888,6 +11895,7 @@ function actualizarRegistroContactoNormas(){
            actualizarComboBoxAjax_clienteNormas(cod_cliente);
         }
     }); 
+  }
 }
 function actualizarRegistroClientes(){
   // var codigo = $("#cod_solicitud").val();
@@ -14901,8 +14909,12 @@ function modal_rechazarFactura(datos){
   document.getElementById("direccion").value=d[3];  //link destino
   document.getElementById("codigo_factura").value=d[4];  //codigo factura
   document.getElementById("codigo_comprobante").value=d[5];  //codigo factura
-  // $("#campo_nro_fact").html("<small>Nro.<br>Factua</small>");
-  // $("#campo_rs_fact").html("<small>Razón<br>Social</small>");    
+  var tipo_pago_credito=d[6];  //codigo factura  
+  if(tipo_pago_credito!=0){    
+    document.getElementById('boton_registrar_anticipo').style.display = 'none';   
+  }else{
+    document.getElementById('boton_registrar_anticipo').style.display = 'inline';
+  }  
 }
 function modalDevolverSolicitud_regional(datos){    
   var d=datos.split('###');  

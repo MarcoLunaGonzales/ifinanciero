@@ -40,7 +40,7 @@ try{
   $nombre_responsable=namePersonal($cod_personal);
   $tc=obtenerValorTipoCambio(2,strftime('%Y-%m-%d',strtotime($fecha_solicitudfactura)));
   $usd=$tc;
-  $codigo_servicio="$codigo_alterno";
+  $codigo_servicio=$codigo_alterno;
 
 $html = '';
 $html.='<html>'.
@@ -87,9 +87,8 @@ $html.=  '<header class="header">'.
           '<br>'.
           '<table class="table">
             <tr>
-              <td width="20%" height="8%" class="td-color-celeste"><b>Solicitante:</b></td>
+              <td width="20%" class="td-color-celeste"><b>Solicitante:</b></td>
               <td  colspan="5" >'.$nombre_responsable.'</td>
-              
             </tr> 
              <tr>
               <td class="td-color-celeste"><b>Cliente:</b></td>';
@@ -171,7 +170,22 @@ $html.=  '<header class="header">'.
             $html.='</tbody>
           </table>'.
           '<br>';
-
+          //distribucion de UO
+          $sqlUO="SELECT cod_area,cod_uo,porcentaje,monto from solicitudes_facturacion_areas_uo where cod_solicitudfacturacion=$codigo_facturacion";
+          $stmtUO = $dbh->prepare($sqlUO);                                   
+          $stmtUO->execute();
+          $html.='<table class="table" >
+                  <tr class="td-color-celeste"><td class="text-center"><b>Distribución de Ingresos por Unidad</b></td></tr>';
+          while ($rowUO = $stmtUO->fetch(PDO::FETCH_ASSOC)) {
+            $cod_area_xy=$rowUO['cod_area'];
+            $cod_uo_x=$rowUO['cod_uo'];
+            $porcentaje_xy=$rowUO['porcentaje'];
+            $monto_xy=$rowUO['monto'];
+            $abrev_area_xy=trim(abrevArea($cod_area_xy),'-');
+            $abrev_uo_xy=trim(abrevUnidad($cod_uo_x),'-');
+            $html.='<tr><td class="text-left"><b>'.$abrev_uo_xy.'('.$porcentaje_xy.' %) - BOB '.formatNumberDec($monto_xy).'</b></td></tr>';
+          }
+          $html.='</table><br>';
           //distribucion de areas          
           $sqlAreas="SELECT cod_area,porcentaje,monto from solicitudes_facturacion_areas where cod_solicitudfacturacion=$codigo_facturacion";
           $stmtAreas = $dbh->prepare($sqlAreas);                                   
@@ -186,7 +200,6 @@ $html.=  '<header class="header">'.
             $html.='<tr><td class="text-left"><b>'.$abrev_area_X.'('.$porcentaje_x.' %) - BOB '.formatNumberDec($monto_x).'</b></td></tr>';
           }
           $html.='</table><br>';
-
           //tipos de pago
           $sqlTipoPago="SELECT cod_tipopago,porcentaje from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_facturacion ";
           $stmtTipoPago = $dbh->prepare($sqlTipoPago);                                   
@@ -270,10 +283,11 @@ $html.=  '<header class="header">'.
           $objeto_solfac=2709;
           $personal_registro=namePersonal($cod_personal);
           $fecha_registro=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2726);//estado registro
-          
+
+          $nombreEstado_registro=obtenerNombreEstadoSolFac(1);
           $cod_tipopago_cred=obtenerValorConfiguracion(48);
-          
-          $userRevisado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2727);  //En revisado
+          $userRevisado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2727);  //En revisado        
+          $nombreEstado_revisado=obtenerNombreEstadoSolFac(4);
           if($userRevisado==0){
              $fecha_revisado="";    
              $personal_revisado="";    
@@ -281,8 +295,8 @@ $html.=  '<header class="header">'.
              $personal_revisado=namePersonal($userRevisado);
              $fecha_revisado=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2727);
           }
-          
           $userAprobado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2728);
+          $nombreEstado_aprobacion=obtenerNombreEstadoSolFac(3);
           if($userAprobado==0){
              $fecha_aprobacion="";    
              $personal_aprobacion="";    
@@ -291,6 +305,7 @@ $html.=  '<header class="header">'.
              $fecha_aprobacion=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2728);
           }
           $userprocesado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2729);//procesado        
+          $nombreEstado_procesado=obtenerNombreEstadoSolFac(5);
           if($userprocesado==0){
              $personal_procesado="";    
              $fecha_procesado="";
@@ -299,16 +314,18 @@ $html.=  '<header class="header">'.
              $fecha_procesado=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2729);
           }
 
-          $userRevision=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2729);//procesado        
+          $userRevision=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2823);//procesado        
+          $nombreEstado_revision=obtenerNombreEstadoSolFac(6);
           if($userRevision==0){
              $personal_revision="";    
              $fecha_revision="";
           }else{
              $personal_revision=namePersonal($userRevision);    
-             $fecha_revision=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2729);
+             $fecha_revision=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2823);
           }
 
           $userAnulado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2730);//procesado        
+          $nombreEstado_anulado=obtenerNombreEstadoSolFac(2);
           if($userAnulado==0){
              $personal_anulado="";    
              $fecha_anulado="";
@@ -326,24 +343,24 @@ $html.=  '<header class="header">'.
                 <th>Fecha</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody>';          
+              $html.='<tr>
+                <td>'.$nombreEstado_registro.': </td><td> '.$personal_registro.'</td><td>'.$fecha_registro.'</td>
+              </tr>
               <tr>
-                <td>REGISTRADO:</td><td> '.$personal_registro.'</td><td>'.$fecha_registro.'</td>
+                <td>'.$nombreEstado_revision.': </td><td>'.$personal_revision.'</td><td>'.$fecha_revision.'</td>
               </tr>            
               <tr>
-                <td>REVISADO: </td><td>'.$personal_revisado.'</td><td>'.$fecha_revisado.'</td>
+                <td>'.$nombreEstado_revisado.': </td><td>'.$personal_revisado.'</td><td>'.$fecha_revisado.'</td>
               </tr>
               <tr>
-                <td>EN REVISIÓN: </td><td>'.$personal_revision.'</td><td>'.$fecha_revision.'</td>
+                <td>'.$nombreEstado_aprobacion.': </td><td>'.$personal_aprobacion.'</td><td>'.$fecha_aprobacion.'</td>
               </tr>
               <tr>
-                <td>APROBADO:</td><td>'.$personal_aprobacion.'</td><td>'.$fecha_aprobacion.'</td>
+                <td>'.$nombreEstado_procesado.': </td><td>'.$personal_procesado.'</td><td>'.$fecha_procesado.'</td>
               </tr>
               <tr>
-                <td>FACTURADO: </td><td>'.$personal_procesado.'</td><td>'.$fecha_procesado.'</td>
-              </tr>
-              <tr>
-                <td>ANULADO: </td><td>'.$personal_anulado.'</td><td>'.$fecha_anulado.'</td>
+                <td>'.$nombreEstado_anulado.': </td><td>'.$personal_anulado.'</td><td>'.$fecha_anulado.'</td>
               </tr>
             </tbody>
           </table>';

@@ -4,8 +4,8 @@ $direccion='http://localhost/ifinanciero/wsifin/';
 $sIde = "facifin";
 $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 /*PARAMETROS PARA LA OBTENCION DE PDF FACTURA base 64*/	
-//	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerFacturaPDF","idFactura"=>38); 
-	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerFacturaArray","idFactura"=>38); 
+	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerFacturaPDF","idFactura"=>139); 
+	// $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerFacturaArray","idFactura"=>139); 
 
 		$parametros=json_encode($parametros);
 		$ch = curl_init();

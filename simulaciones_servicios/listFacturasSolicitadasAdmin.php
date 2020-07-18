@@ -51,8 +51,9 @@ if(isset($_GET['s'])){
 
 
   //datos registrado de la simulacion en curso
-
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion in (6) $sqlAreas order by codigo desc"); /*and sf.cod_estadosolicitudfacturacion!=5*/
+  $sqlX="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion in (6) $sqlAreas order by codigo desc";
+  // echo $sqlX;
+  $stmt = $dbh->prepare($sqlX); /*and sf.cod_estadosolicitudfacturacion!=5*/
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);

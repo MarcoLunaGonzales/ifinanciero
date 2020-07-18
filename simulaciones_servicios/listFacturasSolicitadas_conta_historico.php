@@ -149,17 +149,20 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                       if($cod_estadofactura==4){
                         $btnEstado="btn-warning";
                         $estado="FACTURA MANUAL";
-                        $cadenaFacturasM.="FM".$row_montos['nro_factura'].",";
+                        // $cadenaFacturasM.="FM".$row_montos['nro_factura'].",";
+                        $cadenaFacturas.="FM".$row_montos['nro_factura'].",";
+                        $cadenaCodFacturas.="0,";
                       }elseif($cod_estadofactura==2){
-                        $cadenaFacturas.="FA".$row_montos['nro_factura'].",";  
+                        $cadenaFacturas.="FA".$row_montos['nro_factura'].",";                        
+                        $cadenaCodFacturas.="0,";
                       }else{
-                        $cadenaFacturas.="F".$row_montos['nro_factura'].",";  
+                        $cadenaFacturas.="F".$row_montos['nro_factura'].",";                          
+                        $cadenaCodFacturas.=$row_montos['codigo'].",";
                       }
                       $importe_fact_x+=$row_montos['importe'];
-                      
-                      $cadenaCodFacturas.=$row_montos['codigo'].",";
                       $cont_facturas++;
-                    }  
+                    }
+                    // $cadenaFacturas.=$cadenaFacturasM;
                     //sacamos nombre de los detalles
                     $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
                     $stmtDetalleSol->execute();
@@ -246,7 +249,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                         // $estado="FACTURA PARCIAL";
                         $nro_fact_x=trim($cadenaFacturas,',');
                     }
-                    $cadenaFacturasM=trim($cadenaFacturasM,',');
+                    // $cadenaFacturasM=trim($cadenaFacturasM,',');
                     ?>
                   <tr>
                     <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
@@ -280,11 +283,15 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                               <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>Facturas</small></button>
                               <div class="dropdown-menu"><?php 
                                 $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
-                                $arrayFacturas = explode(",",trim($cadenaFacturas,','));                                        
-                                for ($i=0; $i < $cont_facturas; $i++) { $cod_factura_x= $arrayCodFacturas[$i];$nro_factura_x= $arrayFacturas[$i];?>
-                                  <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
-                                  <?php 
-
+                                $arrayFacturas = explode(",",trim($cadenaFacturas,','));
+                                for ($i=0; $i < $cont_facturas; $i++) { 
+                                  $cod_factura_x= $arrayCodFacturas[$i];
+                                  $nro_factura_x= $arrayFacturas[$i];
+                                  if($cod_factura_x!=0){?>
+                                    <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
+                                  <?php }else{?>
+                                    <a class="dropdown-item" type="button" href='#'><i class="material-icons text-success" title="Factura">list</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
+                                  <?php }
                                 }?>
                               </div>
                             </div> <?php 

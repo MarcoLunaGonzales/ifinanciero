@@ -12,7 +12,7 @@ $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
 try {
-    $codigo_alterno = 'SIN CODIGO';
+    $codigo_alterno = ' - ';
     $cod_simulacion = $_POST["cod_simulacion"];
     $cod_facturacion = $_POST["cod_facturacion"];    
     $cod_unidadorganizacional = $_POST["cod_uo"];

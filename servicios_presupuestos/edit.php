@@ -33,7 +33,7 @@ if($estado!=1){
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2709;
     $idObjeto=2727; //regristado
-    $obs="En Aprobacion Solicitud Facturación";
+    $obs="Solicitud Facturación En Aprobación ";
     if(isset($_GET['u'])){
        $u=$_GET['u'];
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
@@ -46,7 +46,7 @@ if($estado!=1){
       $fechaHoraActual=date("Y-m-d H:i:s");
       $idTipoObjeto=2709;
       $idObjeto=2823; //en revison
-      $obs="En Pre Aprobacion Solicitud";
+      $obs="Solicitud En Revisión";
       if(isset($_GET['u'])){
         $u=$_GET['u'];
         actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
@@ -99,11 +99,17 @@ if(isset($_GET['q'])){
   $s=$_GET['s'];
   $u=$_GET['u'];
   $v=$_GET['v'];
+  if($_GET['admin']==20){
+    $string_itranet="&q=".$q."&s=".$s."&u=".$u."&r=".$v;
+  }else{
+    $string_itranet="&q=".$q."&s=".$s."&u=".$u."&v=".$v;
+  }
   if($flagSuccess==true){
-	showAlertSuccessError(true,"../".$urlList2Sol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);	
-   }else{
-	showAlertSuccessError(false,"../".$urlList2Sol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
-   }
+   showAlertSuccessError(true,"../".$urlList2Sol.$string_itranet);
+  }else{
+   showAlertSuccessError(false,"../".$urlList2Sol.$string_itranet);
+  }
+  
 }else{
   if($estado==3){//enviado desde conta
     if($flagSuccess==true){
