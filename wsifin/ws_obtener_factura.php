@@ -1,9 +1,10 @@
 <?php
-// SERVICIO WEB PARA FACTURAS
 
-//estados
-require '../functions.php.php';
+error_reporting(0);
+require '../functions.php';
 require '../simulaciones_servicios/htmlFacturaCliente.php';
+
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $datos = json_decode(file_get_contents("php://input"), true); 
@@ -124,3 +125,5 @@ function obtenerDatosFactura($codigo){
  }
  return array($filaA,$datos);
 }
+
+?>

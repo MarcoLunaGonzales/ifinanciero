@@ -11,7 +11,7 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 
  		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 						  "accion"=>"VerificaIdentificacionEmpresa", 
-						  "identificacion"=>1028217025, //NIT de la empresa
+						  "identificacion"=>3440079, //NIT de la empresa
 						  );
 
 /*PARAMETROS PARA REGISTRAR UNA EMPRESA PROVEEDORA

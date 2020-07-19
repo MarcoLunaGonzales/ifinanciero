@@ -203,6 +203,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 						// 	'<td valign="top" height="8%" class="text-right"><h5 style="padding: 0px;margin: 0px;">'.formatNumberDec($importe).'</h5></td>';
 						// 	$suma_total+=$importe;
 						// }else{//imporesion detallada
+              			$contador_items=0;
 	               		while ($row = $stmtDesCli->fetch()) 
 						{
 							$html.='<tr>';

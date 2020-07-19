@@ -92,14 +92,14 @@ $parametros=array();
 						  );
 */
 
-/*PARAMETROS PARA ASIGNAR ATRIBUTO PROVEEDOR
+//PARAMETROS PARA ASIGNAR ATRIBUTO PROVEEDOR
 
  		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 						  "accion"=>"AsignarAtributoProveedor", 
-						  "IdCliente"=>36457, 
-						  "IdUsuario"=>1 // valor del id del usuario retornado en el login						  
+						  "IdCliente"=>219, 
+						  "IdUsuario"=>2 // valor del id del usuario retornado en el login						  
 						  );
-*/
+
 
 		$parametros=json_encode($parametros);
 		// abrimos la sesión cURL

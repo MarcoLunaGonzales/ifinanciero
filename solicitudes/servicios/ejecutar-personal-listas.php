@@ -25,7 +25,7 @@ $sKey = "c066ffc2a049cf11f9ee159496089a15";
 1622 	Consultor
 1623 	Empleado
 */
-	//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonaxAtributo", "IdAtributo"=>354); 
+	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonaxAtributo", "IdAtributo"=>354); 
 
 
 /*PARAMETROS PARA LA RECUPERACION Y OBTENCION DE DATOS DE PERSONA
@@ -33,7 +33,7 @@ $sKey = "c066ffc2a049cf11f9ee159496089a15";
 */
 
 /*PARAMETROS PARA LA OBTENCION DE LISTA DE PROVEEDORES*/
-	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarProveedor"); 
+	//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarProveedor"); 
 
 /*PARAMETROS PARA LA RECUPERACION Y OBTENCION DE DATOS DE PROVEEDOR
 	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"DatosProveedor", "IdCliente"=>123); 
