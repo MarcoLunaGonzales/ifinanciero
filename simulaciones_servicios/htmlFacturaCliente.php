@@ -205,7 +205,8 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 						// }else{//imporesion detallada
               	        $contador_items=0;
               	        // $cantidad_por_defecto=20;//cantidad de items por defecto
-              	        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defecto
+              	        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defect
+              	        // $cantidad_por_defecto=obtenerValorConiguracion(66);//cantidad de items por defectoo
 
 	               		while ($row = $stmtDesCli->fetch()) 
 						{
