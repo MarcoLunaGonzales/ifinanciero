@@ -203,7 +203,10 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 						// 	'<td valign="top" height="8%" class="text-right"><h5 style="padding: 0px;margin: 0px;">'.formatNumberDec($importe).'</h5></td>';
 						// 	$suma_total+=$importe;
 						// }else{//imporesion detallada
-              			$contador_items=0;
+              	        $contador_items=0;
+              	        // $cantidad_por_defecto=20;//cantidad de items por defecto
+              	        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defecto
+
 	               		while ($row = $stmtDesCli->fetch()) 
 						{
 							$html.='<tr>';
@@ -225,7 +228,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 							$html.='</tr>';
 							$contador_items++;
 						}
-						for($i=$contador_items;$i<10;$i++){
+						for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
 							// $html.='&nbsp;<br>';
 							$html.='<tr><td style="border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="border-bottom: hidden; border-top: hidden;"></td><td style="border-bottom: hidden; border-top: hidden;"></td></tr>';
 						}	

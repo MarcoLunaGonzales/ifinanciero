@@ -616,6 +616,32 @@ $descuento_cliente=0;
         </div>
     </div>
 </div>
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
+<div class="modal fade modal-arriba modal-primary" id="modalAgregarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons text-dark">ballot</i>
+                 </div>
+                  <h4 class="card-title">Contacto</h4>
+            </div>
+            <div class="card-body">
+                 <div id="datosProveedorNuevo">
+                   
+                 </div> 
+                <div class="form-group float-right">
+                        <button type="button" onclick="guardarDatoscontacto()" class="btn btn-info btn-round">Agregar</button>
+                </div>
+          </div>
+      </div>  
+    </div>
+</div>
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
 <script>
     $(document).ready(function() {

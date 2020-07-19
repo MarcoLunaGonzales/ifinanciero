@@ -311,6 +311,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                           </button>
                                           <div class="dropdown-menu">
                                             <?php                                                  
+                                              $cod_tipopago=obtenemosformaPagoSolfact($codigo_facturacion);//fomra pago
                                               $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
                                               $cod_tipopago_anticipo=obtenerValorConfiguracion(64);
                                               $cont_de_tipos_pago=0;//cuando el contador sea 0 exite deposito y anticipo
@@ -322,7 +323,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                 $datos_FacManual=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
                                               }
                                               // verifiacamos si pertenece a tipo de apgo anticipo
-                                              $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$codigo_facturacion);
+                                              $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$codigo_facturacion);                                              
                                               if($cod_tipopago_aux!=0){
                                                 $cont_de_tipos_pago++;
                                                 $cod_tipopago=$cod_tipopago_aux;
@@ -344,7 +345,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                   <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3')">
                                                     <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                   </a><?php                                               
-                                                }elseif($cod_tipopago==$cod_tipopago_anticipo){ ?>
+                                                }elseif($cod_tipopago==$cod_tipopago_anticipo){ echo $cod_tipopago."-".$cod_tipopago_anticipo?>
                                                   <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1','0')">
                                                     <i class="material-icons text-success">receipt</i> Generar Factura
                                                   </a>

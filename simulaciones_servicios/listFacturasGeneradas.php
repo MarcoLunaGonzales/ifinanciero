@@ -85,8 +85,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $cadenaFacturas='F '.$nro_factura;
                               $codigos_facturas=$codigo_factura;
                             }
-                            
-
                             $importe=sumatotaldetallefactura($codigo_factura);
                             $correosEnviados=obtenerCorreosEnviadosFactura($codigo_factura);
                             if($correosEnviados!=""){
@@ -113,6 +111,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 $label='btn-info';
                                 break;
                             }
+                            $cod_tipopago_anticipo=obtenerValorConfiguracion(48);//tipo pago credito
+                            $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$cod_solicitudfacturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista                            
                             $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
                             ?>
                           <tr>
@@ -146,7 +146,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                     </div>
                                   </div>
                                   <?php
-                                   $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante;
+                                   $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux;
                                   ?>
                                   
                                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
@@ -220,7 +220,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
         </div>        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="anular_factura_devolucion" name="anular_factura_devolucion" data-dismiss="modal">Registrar Como Anticipo</button>
+        <div id="boton_registrar_anticipo">
+          <button type="button" class="btn btn-success" id="anular_factura_devolucion" name="anular_factura_devolucion" data-dismiss="modal">Registrar Como Anticipo</button>  
+        </div>
+        
         <button type="button" class="btn btn-warning" id="anular_factura" name="anular_factura" data-dismiss="modal">Transacción No Válida</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>

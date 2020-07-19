@@ -158,14 +158,17 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               if($cod_estadofactura==4){
                                 $btnEstado="btn-warning";
                                 $estado="FACTURA MANUAL";
-                                $cadenaFacturasM.="FM".$row_montos['nro_factura'].",";
+                                // $cadenaFacturasM.="FM".$row_montos['nro_factura'].",";
+                                $cadenaFacturas.="FM".$row_montos['nro_factura'].",";
+                                $cadenaCodFacturas.="0,";
                               }elseif($cod_estadofactura==2){
                                 $cadenaFacturas.="FA".$row_montos['nro_factura'].",";  
+                                $cadenaCodFacturas.="0,";
                               }else{
                                 $cadenaFacturas.="F".$row_montos['nro_factura'].",";  
+                                $cadenaCodFacturas.=$row_montos['codigo'].",";
                               }
-                              $importe_fact_x+=$row_montos['importe'];
-                              $cadenaCodFacturas.=$row_montos['codigo'].",";
+                              $importe_fact_x+=$row_montos['importe'];                            
                               $cont_facturas++;
                             }                  
                             // echo $cont_facturas."<br>";
@@ -270,7 +273,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                 // $estado="FACTURA PARCIAL";
                                 $nro_fact_x=trim($cadenaFacturas,',');
                               }
-                              $cadenaFacturasM=trim($cadenaFacturasM,',');
+                              // $cadenaFacturasM=trim($cadenaFacturasM,',');
                               //datos para el envio de facturas
                               $cod_factura=verificamosFacturaDuplicada($codigo_facturacion);//codigo de factura
                               if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
@@ -318,11 +321,15 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                         <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small><small><small>Facturas</small></small></small></button>
                                         <div class="dropdown-menu"><?php 
                                           $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
-                                          $arrayFacturas = explode(" - ",trim($cadenaFacturas,' - '));
-                                          for ($i=0; $i < $cont_facturas; $i++) { $cod_factura_x= $arrayCodFacturas[$i];$nro_factura_x= $arrayFacturas[$i];?>
-                                            <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>                                        
-                                            <?php 
-
+                                          $arrayFacturas = explode(",",trim($cadenaFacturas,','));
+                                          for ($i=0; $i < $cont_facturas; $i++) { 
+                                            $cod_factura_x= $arrayCodFacturas[$i];
+                                            $nro_factura_x= $arrayFacturas[$i];
+                                            if($cod_factura_x!=0){?>
+                                              <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
+                                            <?php }else{?>
+                                              <a class="dropdown-item" type="button" href='#'><i class="material-icons text-success" title="Factura">list</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
+                                            <?php }                                           
                                           }?>
                                         </div>
                                       </div> <?php 

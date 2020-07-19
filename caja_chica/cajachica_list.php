@@ -134,16 +134,26 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                 <?php
                                 //si es mayo a cero, ya se genero el comprobante.
                                   if($cod_comprobante>0){?>                                    
-                                    <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1" target="_blank">
-                                      <i class="material-icons" title="Imprimir Comprobante" style="color:red; ">print</i>
-                                    </a> 
+                                    <div class="btn-group dropdown">
+                                      <button type="button" class="btn btn-ganger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:red;background-color:#FFFFFF;">
+                                         <i class="material-icons" title="Comprobante" >input</i>
+                                      </button>
+                                      <div class="dropdown-menu" style="background-color: #D8CEF6;">   
+                                        <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1" class="dropdown-item" type="button" target="_blank">
+                                          <i class="material-icons" title="Imprimir Comprobante" style="color:red; ">print</i> Imprimir comprobante
+                                        </a>
+                                        <button title="Generar Factura a Pagos" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalComprobanteCajaChica" onclick="agregaDatosComprCajaChica('<?=$datos_ComproCajaChica;?>')">
+                                        <i class="material-icons text-danger">input</i> Revertir en Comprobante Existente
+                                        </button>                                          
+                                      </div>
+                                    </div>
                                   <?php }else{ ?>
                                     <div class="btn-group dropdown">
                                       <button type="button" class="btn btn-ganger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:red;background-color:#FFFFFF;">
-                                         <i class="material-icons" title="Generar Comprobante" >input</i>
+                                         <i class="material-icons" title="Comprobante" >input</i>
                                       </button>
                                       <div class="dropdown-menu" style="background-color: #D8CEF6;">                                    
-                                        <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>')" target="_blank">
+                                        <button title="Generar Factura Manual" class="dropdown-item" type="button" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>')" target="_blank">
                                         <i class="material-icons text-danger">input</i> Generar en Comprobante Nuevo
                                         </button>
                                         <button title="Generar Factura a Pagos" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalComprobanteCajaChica" onclick="agregaDatosComprCajaChica('<?=$datos_ComproCajaChica;?>')">
