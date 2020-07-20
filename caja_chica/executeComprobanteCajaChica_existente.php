@@ -15,23 +15,27 @@ $mes_comprobante = $_POST["mes_comprobante"];//
 $cod_tipocomprobante = $_POST["tipo_comprobante"];//
 try{
 	//comprobamos si el comprobante ya se generó
-	$stmtVerifComprobante = $dbh->prepare("SELECT cod_comprobante from caja_chica where codigo=$cod_cajachica");
-    $stmtVerifComprobante->execute();
-    $resultVerifCompro = $stmtVerifComprobante->fetch();
-    $cod_tipocajachica = $resultVerifCompro['cod_comprobante'];  
-    if($cod_tipocajachica==null || $cod_tipocajachica==0){//generamos si aun no se registro
+	// $stmtVerifComprobante = $dbh->prepare("SELECT cod_comprobante from caja_chica where codigo=$cod_cajachica");
+ //    $stmtVerifComprobante->execute();
+ //    $resultVerifCompro = $stmtVerifComprobante->fetch();
+ //    $cod_tipocajachica = $resultVerifCompro['cod_comprobante'];  
+ //    if($cod_tipocajachica==null || $cod_tipocajachica==0){//generamos si aun no se registro
     	//Verificamos si las retenciones de tipo credito fiscal iva tienen facturas
     	$cod_retencion=obtenerValorConfiguracion(53);
-		$stmtVerifRetencion = $dbh->prepare("SELECT cc.nro_documento,(select (sum(f.importe)+sum(f.exento)+sum(f.tasa_cero)+sum(f.ice)) from facturas_detalle_cajachica f where f.cod_cajachicadetalle=cc.codigo)+(select sum(g.importe) from detalle_cajachica_gastosdirectos g where g.cod_cajachicadetalle=cc.codigo) as importe_factura, cc.monto from caja_chicadetalle cc where cc.cod_cajachica=$cod_cajachica and cc.cod_tipodoccajachica=$cod_retencion and cc.cod_estadoreferencial=1;");
+    	$sqlVerifRetencion="SELECT cc.nro_documento,(select (sum(f.importe)+sum(f.exento)+sum(f.tasa_cero)+sum(f.ice)) from facturas_detalle_cajachica f where f.cod_cajachicadetalle=cc.codigo) importe_factura,(select sum(g.importe) from detalle_cajachica_gastosdirectos g where g.cod_cajachicadetalle=cc.codigo) as importe_gasto_directo, cc.monto from caja_chicadetalle cc where cc.cod_cajachica=$cod_cajachica and cc.cod_tipodoccajachica=$cod_retencion and cc.cod_estadoreferencial=1;";
+    	// echo $sqlVerifRetencion;
+		$stmtVerifRetencion = $dbh->prepare($sqlVerifRetencion);
 	    $stmtVerifRetencion->execute();
 	    $contadorRentencion=0;
 	    $stringRetenciones="";
 	    while($rowVeriRetencion = $stmtVerifRetencion->fetch()) 
 	    {
 	    	$nro_documento=$rowVeriRetencion['nro_documento'];
-	    	$importe_factura_x=$rowVeriRetencion['importe_factura'];
-	    	$monto_x=$rowVeriRetencion['monto'];
+	    	$importe_gasto_directo_x=$rowVeriRetencion['importe_gasto_directo'];
+	    	if($importe_gasto_directo_x==null || $importe_gasto_directo_x=='')$importe_gasto_directo_x=0;
+	    	$importe_factura_x=$rowVeriRetencion['importe_factura']+$importe_gasto_directo_x;
 
+	    	$monto_x=$rowVeriRetencion['monto'];	    	
 	    	if($importe_factura_x!=$monto_x){
 	    		$contadorRentencion++;
 	    		$stringRetenciones.="Nro. Documento: ".$nro_documento."<br>";
@@ -553,9 +557,9 @@ try{
 				echo "1#####";
 			}
 		}
-	}else{
-		echo "2#####";//El COMPROBANTE ya fue generado. Actualice el Sistema Por favor!		
-	}
+	// }else{
+	// 	echo "2#####";//El COMPROBANTE ya fue generado. Actualice el Sistema Por favor!		
+	// }
 
 } catch(PDOException $ex){
     // echo "Un error ocurrio".$ex->getMessage();
