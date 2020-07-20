@@ -202,7 +202,10 @@ if($flagSuccess==true){
 if(!isset($_POST['control_admin'])){
  $urlList2=$urlList;
  if(isset($_POST['control_adminreg'])){
-   $urlList2=$urlList3;
+  $urlList2=$urlList3;
+  if($_POST['control_adminreg']==2){
+   $urlList2=$urlList5; 
+  }
  }
 }else{
   if($_POST['control_admin']==1){

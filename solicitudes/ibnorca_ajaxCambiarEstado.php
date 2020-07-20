@@ -28,7 +28,7 @@ $fechaHoraActual=date("Y-m-d H:i:s");
     //no crear el comprobante
     echo "####none";
   }else{
-    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$iEstado where codigo=$codigo";
+    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$iEstado,glosa_estado='' where codigo=$codigo";
     $stmtUpdate = $dbh->prepare($sqlUpdate);
     $flagSuccess=$stmtUpdate->execute();
     //enviar propuestas para la actualizacion de ibnorca

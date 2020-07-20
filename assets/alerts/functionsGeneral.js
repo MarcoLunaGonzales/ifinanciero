@@ -15974,3 +15974,19 @@ function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
       }
     });
   }
+
+  function devolverSolicitudRecurso(nro,codServ,url){
+    $("#nro_solicitud").val(nro);
+    $("#codigo_servicio").val(codServ);
+   $("#urlEnvioModal").val(url);
+   $("#modalDevolverSolicitudRecurso").modal("show");
+  }
+
+  function devolverSolicitudRecursoModal(){
+    if($("#observaciones_modal").val()==""){
+      Swal.fire("Informativo!", "Para devolver la solicitud debe ingresar una observación", "warning");
+    }else{
+     var obs = $("#observaciones_modal").val();
+     window.location.href=$("#urlEnvioModal").val()+"&obs="+obs;  
+    }
+  }

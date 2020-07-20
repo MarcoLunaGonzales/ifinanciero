@@ -19,7 +19,25 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $fechaHoraActual=date("Y-m-d H:i:s");
 
+
+if(obtenerUnidadSolicitanteRecursos($codigo)==3000){ //&&obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)
+  if(isset($_GET["reg"])){
+   if($estado==4&&$_GET['reg']==2){
+    $estado=7;
+   }   
+  }  
+}
+
+/*if($estado==4){
+  
+}*/
 $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado where codigo=$codigo";
+if(isset($_GET['obs'])){
+  $obs=$_GET['obs'];
+  $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado,glosa_estado='$obs' where codigo=$codigo";
+}
+
+
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
 
@@ -52,6 +70,20 @@ if($estado!=1){
      }else{
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
      }   
+   }else{
+    if($estado==7){
+     //enviar propuestas para la actualizacion de ibnorca
+     $fechaHoraActual=date("Y-m-d H:i:s");
+     $idTipoObjeto=2708;
+     $idObjeto=2822; //ESTADO PARA PROYECTO SIS
+     $obs="Enviado a Gestión SIS";
+     if(isset($_GET['u'])){
+       $u=$_GET['u'];
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+      }else{
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+      } 
+    }
    }   
   }
 	//fin de actulizar estados del servidor ibnorca
@@ -82,6 +114,10 @@ if(isset($_GET['admin'])){
   $urlc="&q=".$q."&s=".$s."&u=".$u."&v=".$v;
   if(isset($_GET['reg'])){
     $urlList2=$urlList3;
+    if($_GET['reg']==2){
+     $urlList2=$urlList5;
+    }
+    
   }
 }else{
   $urlc="&q=".$q."&s=".$s."&u=".$u;

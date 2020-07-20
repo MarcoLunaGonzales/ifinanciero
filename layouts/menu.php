@@ -859,6 +859,12 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link" style="background:rgba(116, 24, 153,0.6); color:#E2AF0F;font-weight:bold;"  href="?opcion=listSolicitudRecursosAdminSis">
+                    <span class="sidebar-mini"> GSIS </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n SR SIS</span>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
                     <span class="sidebar-mini"> GSA </span>
                     <span class="sidebar-normal"> Gesti&oacute;n SR Administración</span>

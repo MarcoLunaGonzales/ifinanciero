@@ -47,6 +47,7 @@ $stmt->bindColumn('cod_comprobante', $codComprobante);
 $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
 $stmt->bindColumn('numero', $numeroSol);
 $stmt->bindColumn('idServicio', $idServicio);
+$stmt->bindColumn('glosa_estado', $glosa_estadoX);
 
 $item_1=2708;
 ?>
@@ -74,6 +75,7 @@ $item_1=2708;
                           <th>Cuenta</th>
                           <th>Solicitante</th>
                           <th>Fecha</th>
+                          <th>Observaciones</th>
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -132,6 +134,7 @@ $item_1=2708;
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
+                          <td class="text-muted font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
                           <td class="td-actions text-right">
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
@@ -140,13 +143,13 @@ $item_1=2708;
                             if($codEstado==4){
                               if(isset($_GET['q'])){
                                 ?>
-                                <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-danger">
+                                <a title="Volver al Estado Registro" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>')" href='#'  class="btn btn-danger">
                                        <i class="material-icons">keyboard_backspace</i>
                                 </a>
                                 <?php
                               }else{
                                 ?>
-                                <a title="Volver al Estado Registro" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1'  class="btn btn-danger">
+                                <a title="Volver al Estado Registro" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1')" href='#'  class="btn btn-danger">
                                        <i class="material-icons">keyboard_backspace</i>
                                 </a>
                                 <?php
@@ -551,3 +554,47 @@ $item_1=2708;
   </div>
 </div>
 <!--    end small modal -->
+
+<!-- modal devolver solicitud -->
+<div class="modal fade" id="modalDevolverSolicitudRecurso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Rechazar Solicitud</h4>
+      </div>
+      <div class="modal-body">        
+        <input type="hidden" name="urlEnvioModal" id="urlEnvioModal" value="">
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_nro_fact"><small>Nro.<br>Solicitud.</small></span></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="nro_solicitud" id="nro_solicitud" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_rs_fact"><small >Código<br>Servicio</small></span></label>
+          <div class="col-sm-8">
+            <div class="form-group" >              
+              <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
+            </div>
+          </div>
+        </div>                
+        <div class="row">
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#f9edf7">
+            <div class="form-group" >              
+              <textarea type="text" name="observaciones_modal" id="observaciones_modal" class="form-control" required="true"></textarea>
+            </div>
+          </div>
+        </div>        
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-success" onclick="devolverSolicitudRecursoModal()">Aceptar</a>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal reenviar solicitud devuelto -->
