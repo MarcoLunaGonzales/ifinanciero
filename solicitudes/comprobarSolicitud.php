@@ -539,10 +539,12 @@ if(isset($_GET['cod'])){
                      $ObligatorioX=$rowArchivo['Obligatorio'];
                      $Obli='<i class="material-icons text-danger">clear</i> NO';
                      if($ObligatorioX==1){
-                      $Obli='<i class="material-icons text-success">done</i> SI';
+                      $Obli='<i class="material-icons text-success">done</i> SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
                      }
                      //2708 cabecera //27080 detalle
                      $verificarArchivo=verificarArchivoAdjuntoExistente(2708,$codigoSolicitud,0,$codigoX);
+                     //$nombreX=$verificarArchivo[1];
+                     $urlArchivo=$verificarArchivo[2];
                   ?>
                   <tr>
                     <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
@@ -560,7 +562,10 @@ if(isset($_GET['cod'])){
                        <?php
                       }else{
                         ?>
+                        <div class="btn-group">
                         <a href="#" class="btn btn-button btn-sm">Registrado</a>
+                        <a class="btn btn-button btn-danger btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
+                        </div> 
                         <?php
                       }
                     ?>  

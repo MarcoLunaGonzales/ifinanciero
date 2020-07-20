@@ -85,7 +85,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
-                          <th>Cliente</th>
+                          <!--<th>Cliente</th>-->
                           <th>Proveedor</th>
                           <th>Cuenta</th>
                           <th>Solicitante</th>
@@ -126,7 +126,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                            $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
                            $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
                           }
-                          $codigoServicio="SIN CODIGO";
+                          $codigoServicio="-";
                           $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
                           $stmt1=$dbh->prepare($sql);
                           $stmt1->execute();
@@ -142,7 +142,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <td><?=$unidad;?>- <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSolTitulo?></td>
                           <td><?=$codigoServicio;?></td>
-                          <td><?=$nombreCliente;?></td>
+                          <!--<td><?=$nombreCliente;?></td>-->
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
                           <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
@@ -385,7 +385,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
-                          <th>Cliente</th>
+                          <!--<th>Cliente</th>-->
                           <th>Proveedor</th>
                           <th>Cuenta</th>
                           <th>Solicitante</th>
@@ -426,7 +426,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                            $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
                            $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
                           }
-                          $codigoServicio="SIN CODIGO";
+                          $codigoServicio="-";
                           $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
                           $stmt1=$dbh->prepare($sql);
                           $stmt1->execute();
@@ -442,7 +442,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <td><?=$unidad;?> - <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSolTitulo;?></td>
                           <td><?=$codigoServicio;?></td>
-                          <td><?=$nombreCliente;?></td>
+                          <!--<td><?=$nombreCliente;?></td>-->
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
                           <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>

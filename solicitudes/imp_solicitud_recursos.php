@@ -72,14 +72,14 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
     $codMC=$moneda;
     $numeroC=$numeroX;
     $solicitante=namePersonal($codPersonalX);
-    $codigoServicio="SIN SERVICIO";
+    $codigoServicio="-";
             $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
             $stmt1=$dbh->prepare($sql);
             $stmt1->execute();
             while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
               $codigoServicio=$row1['codigo'];
               if($codigoServicio==""){
-                $codigoServicio="SIN CODIGO";
+                $codigoServicio="-";
               }
             }
     $observacionesC=$observacionesX;                

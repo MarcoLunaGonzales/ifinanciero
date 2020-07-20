@@ -244,7 +244,7 @@ $stmtb->bindColumn('nombre', $nombre);
                         </a>
                       </div>
                   </div>
-                
+                  <button class="btn btn-info" onClick="#">Historial</button>
               </div>
               
               <?php

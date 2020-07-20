@@ -563,6 +563,8 @@
             .appendTo('#formRegComp');
         }
     });
+
+
     $("#formRegDet").submit(function(e) {
       var mensaje="";
       if($("#cantidad_filas").val()==0){
@@ -589,6 +591,8 @@
         }
       }     
     });
+
+
     $("#formDetTcp").submit(function(e) {
       var mensaje="";
       if($("#cantidad_filas").val()==0){
@@ -630,6 +634,7 @@
           }
         })
     });
+
     $("#formSolDet").submit(function(e) {
       var mensaje="";
       /*if($("#cantidad_filas").val()==0){
@@ -641,7 +646,7 @@
         mensaje+="<p></p>";
         Swal.fire("Informativo!", "Debe registrar al menos un detalle", "warning");
         return false;
-      }else{
+      }else{  //    primer else
         var cont=0;
         for (var i = 0; i < $("#cantidad_filas").val(); i++) {
            if(parseInt($('#cod_retencion'+(i+1)).val())==parseInt($('#cod_configuracioniva').val())){
@@ -654,10 +659,10 @@
         if(cont!=0){
            Swal.fire("Informativo!", "La Retencion IVA debe tener al menos una factura registrada", "warning"); 
            return false;
-        }else{
+        }else{  //2do else
           var cont2=0;
           for (var i = 0; i < $("#cantidad_filas").val(); i++) {
-           if($('#partida_cuenta_id'+(i+1)).val()==""){
+           if(!($('#partida_cuenta_id'+(i+1)).val()>0)){
               cont2++; 
               break;    
            }                  
@@ -665,13 +670,46 @@
           if(cont2!=0){
            Swal.fire("Informativo!", "Hay filas que no estan relacionadas a una cuenta!", "warning"); 
            return false;
-          }else{
+          }else{  //3er else
+            var contAct=0;
+            for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+             
+             if($('#unidad_fila'+(i+1)).val()==3000){
+              if($('#cod_actividadproyecto'+(i+1)).val()==0||$('#cod_actividadproyecto'+(i+1)).val()==""){ //no estan relacionados a una actividad
+                 contAct++; 
+                 break;
+              }       
+             }                  
+            }
+           if(contAct!=0){
+             Swal.fire("Informativo!", "Hay filas que no estan relacionadas a una actividad - PROYECTO SIS!", "warning"); 
+             return false;
+           }else{   //4to else
+            //verificar archivos obligatorios
+             var contArchOblig=0;
+           for (var i = 0; i < $("#cantidad_archivosadjuntos").val(); i++) {
+            if($('#obligatorio_file'+(i+1)).length>0){
+              if($('#obligatorio_file'+(i+1)).val()==1){
+                if($('#documentos_cabecera'+(i+1)).length>0){
+                  if($('#documentos_cabecera'+(i+1)).val()==""){
+                     contArchOblig++; 
+                     break;
+                  }
+                }    
+               }
+             }                  
+            }
+           if(contArchOblig!=0){
+             Swal.fire("Informativo!", "Debe cargar los archivos obligatorios", "warning"); 
+             return false;
+           }else{       //quinto else
                //para poner la retencion iva si tiene al menos una factura..
            for (var i = 0; i < $("#cantidad_filas").val(); i++) {
              if(itemFacturas[i].length!=0){
               $('#cod_retencion'+(i+1)).val($('#cod_configuracioniva').val()); 
              }                       
            }
+
            $('<input />').attr('type', 'hidden')
             .attr('name', 'facturas')
             .attr('value', JSON.stringify(itemFacturas))
@@ -696,10 +734,11 @@
             .attr('value', JSON.stringify(itemDocumentosDetalle))
             .appendTo('#formSolDet');
 
-          }       
+          } 
+         }      
         }
       }  
-
+     }
       //}    
     });
    document.getElementById('qrquincho').addEventListener('change', readSingleFile, false);
@@ -707,6 +746,7 @@
    document.getElementById('archivosDetalle').addEventListener('change', archivosPreviewDetalle, false);
   });
   </script>
+
  <script>
     $(document).ready(function() {
       // initialise Datetimepicker and Sliders 
