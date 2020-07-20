@@ -69,7 +69,7 @@ $item_1=2708;
                           <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
-                          <th>Cliente</th>
+                          <!--<th>Cliente</th>-->
                           <th>Proveedor</th>
                           <th>Cuenta</th>
                           <th>Solicitante</th>
@@ -109,7 +109,7 @@ $item_1=2708;
                            $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
                            $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
                           }
-                          $codigoServicio="SIN CODIGO";
+                          $codigoServicio="-";
                           $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicio";
                           $stmt1=$dbh->prepare($sql);
                           $stmt1->execute();
@@ -125,7 +125,7 @@ $item_1=2708;
                           <td><?=$unidad;?>- <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSolTitulo;?></td>
                           <td><?=$codigoServicio;?></td>
-                          <td><?=$nombreCliente;?></td>
+                          <!--<td><?=$nombreCliente;?></td>-->
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
                           <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
@@ -326,7 +326,7 @@ $item_1=2708;
 <!--    end small modal -->
 
 <?php
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (2)) $sqlAreas order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (2,3)) $sqlAreas order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -370,7 +370,7 @@ $item_1=2708;
                           <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
-                          <th>Cliente</th>
+                          <!--<th>Cliente</th>-->
                           <th>Proveedor</th>
                           <th>Cuenta</th>
                           <th>Solicitante</th>
@@ -410,7 +410,7 @@ $item_1=2708;
                            $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
                            $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
                           }
-                          $codigoServicio="SIN CODIGO";
+                          $codigoServicio="-";
                           $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicio";
                           $stmt1=$dbh->prepare($sql);
                           $stmt1->execute();
@@ -426,7 +426,7 @@ $item_1=2708;
                           <td><?=$unidad;?> - <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSolTitulo;?></td>
                           <td><?=$codigoServicio;?></td>
-                          <td><?=$nombreCliente;?></td>
+                          <!--<td><?=$nombreCliente;?></td>-->
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
                           <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>

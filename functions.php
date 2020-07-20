@@ -1556,7 +1556,11 @@ function obtenerDirectoriosSol($ruta){
                 if (is_dir($ruta_completa)) {
                  
                 } else {
-                  echo "<div class='btn-group'><a class='btn btn-sm btn-info btn-block' href='".$ruta_completa."' target='_blank'>" . $archivo . "</a><a class='btn btn-sm btn-default' href='".$ruta_completa."' download='".$archivo."'><i class='material-icons'>vertical_align_bottom</i></a><a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol(\"".$ruta_completa."\",\"".$archivo."\"); return false;'><i class='material-icons'>remove_red_eye</i></a></div>";
+                  $archivoNombre=$archivo;
+                  if(strlen($archivo)>15){
+                    $archivoNombre=substr($archivo,0,15)."..."; 
+                  }
+                  echo "<div class='btn-group'><a class='btn btn-sm btn-info btn-block' href='".$ruta_completa."' target='_blank'>" . $archivoNombre . "</a><a class='btn btn-sm btn-default' href='".$ruta_completa."' download='".$archivo."'><i class='material-icons'>vertical_align_bottom</i></a><a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol(\"".$ruta_completa."\",\"".$archivo."\"); return false;'><i class='material-icons'>remove_red_eye</i></a></div>";
                 }
             }
         }
@@ -5716,7 +5720,7 @@ function obtenerCodigoServicioPorIdServicio($idServicio){
    $dbh = new ConexionIBNORCA();
    $stmt = $dbh->prepare("SELECT codigo FROM servicios where idServicio=$idServicio");
    $stmt->execute();
-   $valor="SIN SERVICIO";
+   $valor="-";
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor=$row['codigo'];
    }
@@ -7044,10 +7048,10 @@ function verificar_codComprobante_cajaChica($codigo_cobt,$codigo_detalle){
 function verificarArchivoAdjuntoExistente($tipo,$padre,$objeto,$codArchivo){
   $sqlObjeto="";
   if($objeto>0){
-    $sqlObjeto="and cod_objeto=$objeto";
+    $sqlObjeto="and cod_padre=$objeto";
   }
    $dbh = new Conexion();
-   $sql="SELECT * FROM archivos_adjuntos WHERE cod_tipoarchivo=$codArchivo and cod_tipopadre=$tipo and cod_padre=$padre $sqlObjeto";
+   $sql="SELECT * FROM archivos_adjuntos WHERE cod_tipoarchivo=$codArchivo and cod_tipopadre=$tipo and cod_objeto=$padre $sqlObjeto";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    $valor=0;$descripcion="";$url="";
