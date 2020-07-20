@@ -6510,8 +6510,9 @@ function nameTipoPago($codigo){
 }
 
 function comprobarCuentasPasivasDeSolicitudRecursos($codigo){
+   $cuentaExclusiva=451; //CUENTA DE OTROS PAGOS
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT * from solicitud_recursoscuentas where cod_cuenta in (SELECT cod_plancuenta from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo) and (cod_cuentapasivo=0 or cod_cuentapasivo=null)");
+   $stmt = $dbh->prepare("SELECT * from solicitud_recursoscuentas where cod_cuenta in (SELECT cod_plancuenta from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo) and (cod_cuentapasivo=0 or cod_cuentapasivo=null) and cod_cuenta!=$cuentaExclusiva");
    $stmt->execute();
    $nombreX=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -6519,6 +6520,19 @@ function comprobarCuentasPasivasDeSolicitudRecursos($codigo){
    }
    return($nombreX);
 }
+
+function comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo){
+   $cuentaExclusiva=451; //CUENTA DE OTROS PAGOS
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT * from solicitud_recursoscuentas where cod_cuenta in (SELECT cod_plancuenta from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo) and cod_cuenta=$cuentaExclusiva");
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX++;
+   }
+   return($nombreX);
+}
+
 function obtenerTipoPagoSolicitudRecursoDetalle($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT * FROM solicitud_recursosdetalle where cod_solicitudrecurso=$codigo and cod_tipopagoproveedor!=1");

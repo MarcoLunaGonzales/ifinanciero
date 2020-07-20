@@ -120,6 +120,9 @@ $item_1=2708;
                        if(verificarMontoPresupuestadoSolicitadoSR($codigo)==1){
                         $numeroSolTitulo='<a href="#" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning btn-sm btn-round">'.$numeroSol.'</a>';
                        }
+
+
+                       $otrosPagosCuenta=comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo);
 ?>
                         <tr>
                           <td><?=$unidad;?>- <?=$area;?></td>
@@ -211,10 +214,20 @@ $item_1=2708;
                                     <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
                                     <i class="material-icons text-success">edit</i> Editar Solicitud
                                    </a>
+                                   <?php 
+                                  if($otrosPagosCuenta>0){
+                                    ?>
                                    <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>')" href='#'  class="dropdown-item">
                                       <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
                                     </a>
                                     <?php
+                                  }else{
+                                    ?>
+                                   <a title="Contabilizar Solicitud"  href='#'  class="dropdown-item">
+                                      <i class="material-icons text-warning">assignment_turned_in</i> Contabilización Manual Solicitud
+                                    </a>
+                                    <?php
+                                  }
                                   }else{
                                   ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
@@ -246,10 +259,20 @@ $item_1=2708;
                                     <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" class="dropdown-item">
                                     <i class="material-icons text-success">edit</i> Editar Solicitud
                                    </a>
+                                   <?php 
+                                  if($otrosPagosCuenta>0){
+                                    ?>
                                    <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>')" href='#'  class="dropdown-item">
                                       <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
                                     </a>
                                     <?php
+                                  }else{
+                                    ?>
+                                   <a title="Contabilizar Solicitud"  href='#'  class="dropdown-item">
+                                      <i class="material-icons text-warning">assignment_turned_in</i> Contabilización Manual Solicitud
+                                    </a>
+                                    <?php
+                                   }
                                   }else{
                                   ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
