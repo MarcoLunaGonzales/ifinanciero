@@ -124,7 +124,7 @@ try{
                         $array_codigo_detalle=obtenerCodigoDetalleSolFac($codigo);
                         // var_dump($array_codigo_detalle);
                         // $cantidad_por_defecto=20;//cantidad de items por defecto
-                        $cantidad_por_defecto=obtenerValorConiguracion(66);//cantidad de items por defecto
+                        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defecto
                         $cant_items_sfd=sizeof($array_codigo_detalle);
                         $nro_facturas = ceil($cant_items_sfd/$cantidad_por_defecto);
                         $contador_aux_items=0;//controla el final del array
