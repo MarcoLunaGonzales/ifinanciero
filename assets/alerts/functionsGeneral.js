@@ -14620,10 +14620,10 @@ function agregaDatosComprCajaChica(datos){
   document.getElementById("cod_tipocajachica").value=d[2];
   
 }
-function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_comprobante,mes_comprobante,tipo_comprobante){
+function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_comprobante,mes_comprobante,tipo_comprobante,gestion,unidad){
   $.ajax({
     type:"POST",
-    data:"cod_cajachica="+cod_cajachica+"&nro_comprobante="+nro_comprobante+"&mes_comprobante="+mes_comprobante+"&tipo_comprobante="+tipo_comprobante,
+    data:"cod_cajachica="+cod_cajachica+"&nro_comprobante="+nro_comprobante+"&mes_comprobante="+mes_comprobante+"&tipo_comprobante="+tipo_comprobante+"&gestion="+gestion+"&unidad="+unidad,
     url:"caja_chica/executeComprobanteCajaChica_existente.php",
     success:function(r){
       var respu=r.split('#####');
@@ -14658,12 +14658,13 @@ function ajaxBuscarComprobanteCajaChica(){
   var tipo_comprobante=document.getElementById("tipo_comprobante").value;
   var nro_comprobante=document.getElementById("nro_comprobante").value;
   var unidad=document.getElementById("unidad").value;
+  var gestion=document.getElementById("gestion").value;
   if(mes_comprobante!=null && tipo_comprobante!=null){
     var contenedor;
     // var codigo_UO=combo.value;
     contenedor = document.getElementById('contenedor_detalle_comprobante');
     ajax=nuevoAjax();
-    ajax.open('GET', 'caja_chica/ajax_buscarComprobanteCajaChica.php?mes='+mes_comprobante+'&tipo='+tipo_comprobante+'&nro='+nro_comprobante+'&unidad='+unidad,true);
+    ajax.open('GET', 'caja_chica/ajax_buscarComprobanteCajaChica.php?mes='+mes_comprobante+'&tipo='+tipo_comprobante+'&nro='+nro_comprobante+'&unidad='+unidad+'&gestion='+gestion,true);
     ajax.onreadystatechange=function() {
       if (ajax.readyState==4) {
         contenedor.innerHTML = ajax.responseText;

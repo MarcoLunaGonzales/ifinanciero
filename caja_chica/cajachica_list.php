@@ -208,6 +208,27 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
           </div>       
         </div>
         <div class="row">
+          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Gestión</label>
+          <div class="col-sm-6">
+            <div class="form-group">            
+              <select class="selectpicker form-control form-control-sm" name="gestion" id="gestion" data-style="<?=$comboColor;?>">
+                    <option disabled selected value="">Gestión</option>
+                  <?php
+                  $stmt = $dbh->prepare("SELECT nombre from gestiones where cod_estado=1 order by nombre desc");
+                $stmt->execute();
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoX=$row['nombre'];
+                  $nombreX=$row['nombre'];                  
+                ?>
+                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                <?php
+                  }
+                  ?>
+              </select>
+            </div>
+          </div>
+        </div>  
+        <div class="row">
           <label class="col-sm-4 text-right col-form-label" style="color:#424242">Mes del comprobante</label>
           <div class="col-sm-6">
             <div class="form-group">              
@@ -273,6 +294,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
             </div>
           </div>
         </div>  
+
         <div class="row">
           <label class="col-sm-4 text-right col-form-label" style="color:#424242">Número de Comprobante</label>
           <div class="col-sm-6">
@@ -302,17 +324,18 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
       nro_comprobante=$('#nro_comprobante').val();
       mes_comprobante=$('#mes_comprobante').val();
       tipo_comprobante=$('#tipo_comprobante').val();      
+      gestion=$('#gestion').val();
+      unidad=$('#unidad').val();  
       if(nro_comprobante==null || nro_comprobante<=0){
         Swal.fire("Informativo!", "Por favor introduzca el Número de Comprobante.", "warning");
       }else{
         if(mes_comprobante==null){
           Swal.fire("Informativo!", "Por favor introduzca el Mes Del Comprobante.", "warning");
         }else{
-          
             if(tipo_comprobante==null){
               Swal.fire("Informativo!", "Por favor introduzca el Tipo De Comprobante.", "warning");
             }else{              
-                RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_comprobante,mes_comprobante,tipo_comprobante);
+                RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_comprobante,mes_comprobante,tipo_comprobante,gestion,unidad);
             }          
         }
       }      

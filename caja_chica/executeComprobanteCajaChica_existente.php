@@ -13,6 +13,8 @@ $cod_cajachica = $_POST["cod_cajachica"];//
 $nro_comprobante = $_POST["nro_comprobante"];//
 $mes_comprobante = $_POST["mes_comprobante"];//
 $cod_tipocomprobante = $_POST["tipo_comprobante"];//
+$gestion_cpte = $_POST["gestion"];//
+$unidad_cpte = $_POST["unidad"];//
 try{
 	//comprobamos si el comprobante ya se generó
 	// $stmtVerifComprobante = $dbh->prepare("SELECT cod_comprobante from caja_chica where codigo=$cod_cajachica");
@@ -41,7 +43,7 @@ try{
 	    		$stringRetenciones.="Nro. Documento: ".$nro_documento."<br>";
 	    	}
 	    }
-	    
+
 	    if($contadorRentencion!=0){//faltan facturas en retenciones tipo cred fiscal iva
 	    	echo "4#####".$stringRetenciones;
 	    }else{//todo okey
@@ -82,7 +84,8 @@ try{
 			$numeroComprobante=$nro_comprobante;
 			$concepto_contabilizacion="CONTABILIZACIÓN CAJA CHICA N° ".$numeroCC." DE ".$nombre_uo_tcc;
 
-			$codComprobante=obtenerCodigoComprobanteExistente($cod_tipocomprobante,$nro_comprobante,$mes_comprobante);
+			$codComprobante=obtenerCodigoComprobanteExistente($cod_tipocomprobante,$nro_comprobante,$mes_comprobante,$unidad_cpte,$gestion_cpte);
+			
 			if($codComprobante==0){
 				echo "3#####";//no se encontró el comprobante
 			}else{
