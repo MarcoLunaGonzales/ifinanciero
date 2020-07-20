@@ -543,7 +543,7 @@ if(isset($_GET['cod'])){
                      }
                      //2708 cabecera //27080 detalle
                      $verificarArchivo=verificarArchivoAdjuntoExistente(2708,$codigoSolicitud,0,$codigoX);
-                     $nombreX=$verificarArchivo[1];
+                     //$nombreX=$verificarArchivo[1];
                      $urlArchivo=$verificarArchivo[2];
                   ?>
                   <tr>
