@@ -293,14 +293,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               <button title="Buscar (alt + s)" type="button" id="boton_solicitudbuscar" name="boton_solicitudbuscar" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalleSearch()"><i class="material-icons">search</i></button>
             </div>
             </div> 
-          <div class="row">
+          <!--<div class="row">
             <div class="col-sm-12">
                <div class="form-group">
-                  <label class="bmd-label-static">Observaciones</label>
-                  <textarea type="text" id="observaciones_solicitud" name="observaciones_solicitud" class="form-control"></textarea>
-                </div> 
+                  <label class="bmd-label-static">Observaciones</label>-->
+                  <input type="hidden" id="observaciones_solicitud" name="observaciones_solicitud" class="form-control">
+                <!--</div> 
             </div>
-          </div>          
+          </div>-->          
         </div>
       </div>
 
@@ -448,23 +448,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   </button>
                 </div>
       <div class="card-body">
-           <!--<div class="fileinput fileinput-new col-md-12" data-provides="fileinput">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="border" id="lista_archivos">Ningun archivo seleccionado</div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <span class="btn btn-info btn-info btn-file btn-sm">
-                      <span class="fileinput-new">Buscar</span>
-                      <span class="fileinput-exists">Cambiar</span>
-                      <input type="file" name="archivos[]" id="archivos" multiple="multiple"/>
-                   </span>
-                <a href="#" class="btn btn-danger btn-sm fileinput-exists" onclick="archivosPreview(1)" data-dismiss="fileinput"><i class="material-icons">clear</i> Quitar</a>
-              </div>
-            </div>
-           </div>-->
            <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE la Solicitud de Recurso</small></p>
             <div class="row col-sm-11 div-center">
               <table class="table table-warning table-bordered table-condensed">
@@ -488,7 +471,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                      $ObligatorioX=$rowArchivo['Obligatorio'];
                      $Obli='<i class="material-icons text-danger">clear</i> NO';
                      if($ObligatorioX==1){
-                      $Obli='<i class="material-icons text-success">done</i> SI';
+                      $Obli='<i class="material-icons text-success">done</i> SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
                      }
                   ?>
                   <tr>

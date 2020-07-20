@@ -69,7 +69,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
            <div class="row">
              <div class="col-sm-12">
 			  <div class="card">
-				<div class="card-header card-header-deafult card-header-text text-center">
+				<div class="card-header card-header-deafult card-header-text text-center card-header-primary">
 					<div class="card-text">
 					  <h4 class="card-title"><b>SOLICITUD RECURSOS</b></h4>
 					</div>
@@ -208,9 +208,9 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 					</div>	
 					<br><br><br>
 					<hr>
-					<div class="col-sm-12 text-info"><center><h4 id="titulo_vista_previa">VISTA PREVIA</h4></center></div>
+					<div class="col-sm-12 text-info font-weight-bold"><center><label id="titulo_vista_previa"><b>SELECCIONE UN ARCHIVO</b></label></center></div>
 					<div class="row col-sm-12">
-                      <iframe src="../vista_file.html"  id="vista_previa_frame" width="800" class="div-center" height="600" scrolling="yes" style="border:none; border: #8CF5E3 solid 3px;border-radius:10px;">
+                      <iframe src="../vista_file.html"  id="vista_previa_frame" width="800" class="div-center" height="600" scrolling="yes" style="border:none; border: #741899 solid 9px;border-radius:10px;">
                       	No hay vista disponible
                       </iframe>
 					</div>	

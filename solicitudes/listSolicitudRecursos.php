@@ -81,7 +81,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
-                          <th>Cliente</th>
+                          <!--<th>Cliente</th>-->
                           <th>Proveedor</th>
                           <th>Cuenta</th>
                           <th>Solicitante</th>
@@ -122,7 +122,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                            $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
                            $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
                           }
-                          $codigoServicio="SIN CODIGO";
+                          $codigoServicio="-";
                           $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
                           $stmt1=$dbh->prepare($sql);
                           $stmt1->execute();
@@ -138,7 +138,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <td><?=$unidad;?>- <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSolTitulo?></td>
                           <td><?=$codigoServicio;?></td>
-                          <td><?=$nombreCliente;?></td>
+                          <!--<td><?=$nombreCliente;?></td>-->
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
                           <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
@@ -347,7 +347,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 <?php
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=2 $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' sr.cod_estadosolicitudrecurso=1 order by sr.numero desc");
+  where sr.cod_estadoreferencial=2 $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -389,7 +389,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
-                          <th>Cliente</th>
+                          <!--<th>Cliente</th>-->
                           <th>Proveedor</th>
                           <th>Cuenta</th>
                           <th>Solicitante</th>
@@ -430,7 +430,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                            $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
                            $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
                           }
-                          $codigoServicio="SIN CODIGO";
+                          $codigoServicio="-";
                           $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
                           $stmt1=$dbh->prepare($sql);
                           $stmt1->execute();
@@ -446,7 +446,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <td><?=$unidad;?> - <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSolTitulo;?></td>
                           <td><?=$codigoServicio;?></td>
-                          <td><?=$nombreCliente;?></td>
+                          <!--<td><?=$nombreCliente;?></td>-->
                           <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
                           <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
