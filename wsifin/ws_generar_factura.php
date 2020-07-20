@@ -128,7 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $sw_cod_libreta=true;
                             }
                         }
-                        if($sw_cod_libreta){                            
+                        if($sw_cod_libreta){
+                            $nitciCliente=(int)$nitciCliente;
                             $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas);//llamamos a la funcion                 
                             $rspArray = explode("###", $rspString);
                             $rsp=$rspArray[0];
