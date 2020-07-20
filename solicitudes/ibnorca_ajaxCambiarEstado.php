@@ -21,8 +21,6 @@ $estado=$_GET["estado"];
 
 $iEstado=obtenerEstadoIfinancieroSolicitudes($estado);
 $fechaHoraActual=date("Y-m-d H:i:s");
-
-
 //////////////////////////////fin cambio estado//////////////////////////777
 
  if($estado=3){
