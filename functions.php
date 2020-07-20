@@ -8130,7 +8130,24 @@ function obtenerCodigoActividadProyecto($codigo){
     }         
     return($valor);
   }
-
+function obtenerDatosDistribucionSolicitudFacturacion($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT sf.codigo,sf.cod_unidadorganizacional,sf.cod_area,
+(SELECT porcentaje FROM solicitudes_facturacion_areas where cod_solicitudfacturacion=sf.codigo and cod_area=sf.cod_area) as porcentaje_area_origen,
+(SELECT group_concat( distinct CONCAT (cod_area,'P',porcentaje)) FROM solicitudes_facturacion_areas where cod_solicitudfacturacion=sf.codigo group by cod_solicitudfacturacion) as areas_distribuidas,
+(SELECT group_concat( distinct CONCAT (a.abreviatura,':',ROUND((SELECT SUM((sd.cantidad*sd.precio)-sd.descuento_bob) as importe_solicitado from solicitudes_facturaciondetalle sd where sd.cod_solicitudfacturacion=sf.codigo)*(sa.porcentaje/100),2),' Bs. (',sa.porcentaje,' %)')) FROM solicitudes_facturacion_areas sa join areas a on a.codigo=sa.cod_area where sa.cod_solicitudfacturacion=sf.codigo group by sa.cod_solicitudfacturacion) as areas_distribuidas_texto
+ from solicitudes_facturacion sf  where sf.codigo=$codigo");
+   $stmt->execute();
+   $datos[0]="";$datos[1]="";$datos[2]="";$datos[3]="";$datos[4]="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $datos[0]=$row['cod_unidadorganizacional'];
+      $datos[1]=$row['cod_area'];
+      $datos[2]=$row['porcentaje_area_origen'];
+      $datos[3]=$row['areas_distribuidas'];
+      $datos[4]=$row['areas_distribuidas_texto'];
+   }
+   return($datos);
+}
 ?>
 
 
