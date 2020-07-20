@@ -23,11 +23,11 @@ foreach ($unidad as $valor ) {
     $stringUnidades.=" ".abrevUnidad($valor)." ";
 }
 
-$stmt2 = $dbh->prepare("SELECT f.fecha,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c where f.cod_comprobantedetalle=c.codigo and c.cod_unidadorganizacional in ($stringUnidadesX) ORDER BY fecha asc");
+$stmt2 = $dbh->prepare("SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c where f.cod_comprobantedetalle=c.codigo and c.cod_unidadorganizacional in ($stringUnidadesX) and f.fecha BETWEEN '$desde' and '$hasta' ORDER BY fecha asc");
 // Ejecutamos                        
 $stmt2->execute();
 //resultado
-$stmt2->bindColumn('fecha', $fecha);
+$stmt2->bindColumn('fecha_x', $fecha);
 $stmt2->bindColumn('nit', $nit);
 $stmt2->bindColumn('razon_social', $razon_social);
 $stmt2->bindColumn('nro_factura', $nro_factura);

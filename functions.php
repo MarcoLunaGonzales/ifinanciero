@@ -291,7 +291,7 @@ function obtenerCodigoComprobante(){
 }
 function obtenerCodigoComprobanteExistente($cod_tipocomprobante,$nro_comprobante,$mes_comprobante,$unidad_cpte,$gestion_cpte){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT codigo from comprobantes where cod_tipocomprobante=$cod_tipocomprobante and numero=$nro_comprobante and MONTH(fecha)=$mes_comprobante and cod_unidadorganizacional=$unidad and cod_gestion=$gestion");
+   $stmt = $dbh->prepare("SELECT codigo from comprobantes where cod_tipocomprobante=$cod_tipocomprobante and numero=$nro_comprobante and MONTH(fecha)=$mes_comprobante and cod_unidadorganizacional=$unidad_cpte and cod_gestion=$gestion_cpte");
    $stmt->execute();
    $codigoComprobante=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -8172,6 +8172,38 @@ function obtenerDatosDistribucionSolicitudFacturacion($codigo){
       $datos[4]=$row['areas_distribuidas_texto'];
    }
    return($datos);
+}
+function insertar_facturas_compra($codComprobante,$ordenDetalle,$codigo_ccdetalle){
+  $ordenDetalle--;
+  //sacamos el codigo del detalle de comprobante insertado
+  $dbh = new Conexion();
+  $sqlDetCpte="SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante and orden=$ordenDetalle";
+  $stmtDetCpte = $dbh->prepare($sqlDetCpte);
+  $stmtDetCpte->execute();
+  $valor=0;
+  while ($row = $stmtDetCpte->fetch(PDO::FETCH_ASSOC)) {      
+    $codigoDetalle=$row['codigo'];
+  }         
+  //listamos todas las factuas de la caja chica detalle
+  $dbh = new Conexion();
+  $sql="SELECT nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo_ccdetalle";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();    
+  $stmt->bindColumn('nit', $nit);
+  $stmt->bindColumn('nro_factura', $nro_factura);
+  $stmt->bindColumn('fecha', $fecha);
+  $stmt->bindColumn('razon_social', $razon_social);
+  $stmt->bindColumn('importe', $importe);
+  $stmt->bindColumn('exento', $exento);
+  $stmt->bindColumn('nro_autorizacion', $nro_autorizacion);
+  $stmt->bindColumn('codigo_control', $codigo_control);
+  $stmt->bindColumn('ice', $ice);
+  $stmt->bindColumn('tasa_cero', $tasa_cero);
+  while ($rowCajachica = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $sqlInsertDet="INSERT into facturas_compra(cod_comprobantedetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero) values('$codigoDetalle','$nit','$nro_factura','$fecha','$razon_social','$importe','$exento','$nro_autorizacion','$codigo_control','$ice','$tasa_cero')";
+    $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+    $flagSuccessDet=$stmtInsertDet->execute();
+  }  
 }
 ?>
 
