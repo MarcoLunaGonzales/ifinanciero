@@ -205,7 +205,8 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 						// }else{//imporesion detallada
               	        $contador_items=0;
               	        // $cantidad_por_defecto=20;//cantidad de items por defecto
-              	        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defecto
+              	        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defect
+              	        // $cantidad_por_defecto=obtenerValorConiguracion(66);//cantidad de items por defectoo
 
 	               		while ($row = $stmtDesCli->fetch()) 
 						{
@@ -230,7 +231,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 						}
 						for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
 							// $html.='&nbsp;<br>';
-							$html.='<tr><td style="border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="border-bottom: hidden; border-top: hidden;"></td><td style="border-bottom: hidden; border-top: hidden;"></td></tr>';
+							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td></tr>';
 						}	
                				
        //         				$contador_items=0;
