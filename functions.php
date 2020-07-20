@@ -289,9 +289,9 @@ function obtenerCodigoComprobante(){
    }
    return($codigoComprobante);
 }
-function obtenerCodigoComprobanteExistente($cod_tipocomprobante,$nro_comprobante,$mes_comprobante){
+function obtenerCodigoComprobanteExistente($cod_tipocomprobante,$nro_comprobante,$mes_comprobante,$unidad_cpte,$gestion_cpte){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT codigo from comprobantes where cod_tipocomprobante=$cod_tipocomprobante and numero=$nro_comprobante and MONTH(fecha)=$mes_comprobante");
+   $stmt = $dbh->prepare("SELECT codigo from comprobantes where cod_tipocomprobante=$cod_tipocomprobante and numero=$nro_comprobante and MONTH(fecha)=$mes_comprobante and cod_unidadorganizacional=$unidad and cod_gestion=$gestion");
    $stmt->execute();
    $codigoComprobante=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
