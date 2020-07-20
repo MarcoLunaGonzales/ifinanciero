@@ -41,6 +41,9 @@ if(isset($_GET['admin'])){
 
 if(isset($_GET['reg'])){
   $urlList=$urlList3;
+  if($_GET['reg']==2){
+    $urlList=$urlList5;  
+  }
 }
 
 $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as unidad,a.abreviatura as area 
@@ -157,7 +160,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 									<th class="text-right">Presupuestado</th>
 									<th class="text-right">Importe</th>			
 									<th>Proveedor</th>
-									<th>Archivos Adjuntos</th>
+									<!--<th>Archivos Adjuntos</th>-->
 								</tr>
 							</thead>
 							<tbody>
@@ -191,7 +194,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                                     <td class="text-right"><?=number_format($importeX, 2, '.', ',')?></td>
                                     <td class="text-right"><?=number_format($importeSolX, 2, '.', ',')?></td>
                                     <td><?=$proveedorX?></td>
-                                    <td><?=obtenerDirectoriosSol("../assets/archivos-respaldo/archivos_solicitudes/SOL-".$codigo."/DET-".$index);?></td>
+                                    <!--<td><?=obtenerDirectoriosSol("../assets/archivos-respaldo/archivos_solicitudes/SOL-".$codigo."/DET-".$index);?></td>-->
                                 </tr><?php
                               $index++;
                              }
@@ -200,7 +203,6 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                         	  	    <td colspan="5" class="text-left">Total</td>
                                     <td class="text-right"><?=number_format($totalImportePres, 2, '.', ',')?></td>
                                     <td class="text-right"><?=number_format($totalImporte, 2, '.', ',')?></td>
-                                    <td></td>
                                     <td></td>
                         	  </tr>
 							</tbody>

@@ -441,6 +441,12 @@
         if ($_GET['opcion']=='listSolicitudRecursosAdminConta') {
 			require_once('solicitudes/listSolicitudRecursosAdminConta.php');
 		}
+
+		if ($_GET['opcion']=='listSolicitudRecursosAdminSis') {
+			require_once('solicitudes/listSolicitudRecursosAdminSis.php');
+		}
+
+		
 		
 
 		//ESTADOS DE CUENTAS

@@ -48,7 +48,7 @@ if(isset($_GET['cod_sim'])){
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (6,4,3,5) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (7,6,4,3,5) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -65,6 +65,7 @@ $stmt->bindColumn('cod_comprobante', $codComprobante);
 $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
 $stmt->bindColumn('numero', $numeroSol);
 $stmt->bindColumn('idServicio', $idServicioX);
+$stmt->bindColumn('glosa_estado', $glosa_estadoX);
 
 ?>
 <div class="content">
@@ -91,6 +92,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th>Estado</th>
+                          <th>Observaciones</th>
                           <th class="text-right" width="18%">Actions</th>
                         </tr>
                       </thead>
@@ -156,6 +158,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                </div>
                              </div>-->
                           </td> 
+                          <td class="text-warning font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
                           <td class="td-actions text-right">
                             <?php
                               if($codEstado==4||$codEstado==3||$codEstado==5){
@@ -234,20 +237,36 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                   //para el envio a administracion
                                   if(isset($_GET['q'])){
                                    ?>
-                                    <a title="Aprobar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" href='#'  class="btn btn-warning">
+                                    <a title="Autorizar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" href='#'  class="btn btn-warning">
                                       <i class="material-icons">assignment_turned_in</i>
                                     </a>
-                                    <a title="Devolver Solicitud Recurso" href='<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-danger">
+                                    <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" title="Devolver Solicitud Recurso" href='#'  class="btn btn-danger">
                                       <i class="material-icons">reply</i>
                                     </a>
                                    <?php
                                   }else{
                                     ?>
-                                     <a title="Aprobar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=4&admin=0')" href='#'  class="btn btn-warning">
+                                     <a title="Autorizar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=4&admin=0')" href='#'  class="btn btn-warning">
                                        <i class="material-icons">assignment_turned_in</i>
                                      </a>
-                                     <a title="Devolver Solicitud Recurso" href='<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0'  class="btn btn-danger">
+                                     <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0')" title="Devolver Solicitud Recurso" href='#'  class="btn btn-danger">
                                        <i class="material-icons">reply</i>
+                                     </a>
+                                    <?php
+                                  }
+                                }else{
+                                  if($codEstado==7){
+                                  //para el envio a administracion
+                                  if(isset($_GET['q'])){
+                                   ?>
+                                    <a title="Enviado a SIS"  href='#'  class="btn btn-primary">
+                                      <i class="material-icons">assignment_turned_in</i>
+                                    </a>
+                                   <?php
+                                  }else{
+                                    ?>
+                                     <a title="Enviado a SIS" href='#'  class="btn btn-primary">
+                                       <i class="material-icons">assignment_turned_in</i>
                                      </a>
                                     <?php
                                   }
@@ -264,7 +283,8 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                        <i class="material-icons">send</i>
                                      </a>
                                     <?php
-                                  }                                   
+                                  } 
+                                  }                                  
                                 }
                             if(isset($_GET['q'])){
                               ?>
@@ -274,11 +294,14 @@ $stmt->bindColumn('idServicio', $idServicioX);
                              <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVer;?>?cod=<?=$codigo;?>&reg=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-success">
                                     <i class="material-icons">preview</i>
                             </a>
-                            <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&reg=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-info">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
-                            
                             <?php
+                             if($codEstado!=7){
+                               ?>
+                             <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&reg=1&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-info">
+                               <i class="material-icons"><?=$iconEdit;?></i>
+                             </a>
+                            <?php
+                             }  
                              if($codEstado==1){
                              ?>
                             <button title="Eliminar solicitud"  class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')">
@@ -295,11 +318,15 @@ $stmt->bindColumn('idServicio', $idServicioX);
                             <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVer;?>?cod=<?=$codigo;?>&reg=1" class="btn btn-success">
                                     <i class="material-icons">preview</i>
                             </a>
-                            <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&reg=1'  class="btn btn-info">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
-                            
                             <?php
+                             if($codEstado!=7){
+                               ?>
+                             <a title="Editar solicitud - detalle" href='<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&reg=1'  class="btn btn-info">
+                              <i class="material-icons"><?=$iconEdit;?></i>
+                            </a> 
+                            <?php
+                             }  
+                            
                              if($codEstado==1){
                              ?>
                             <button title="Eliminar solicitud"  class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
@@ -487,3 +514,48 @@ $stmt->bindColumn('idServicio', $idServicioX);
   </div>
 </div>
 <!--    end small modal -->
+
+
+<!-- modal devolver solicitud -->
+<div class="modal fade" id="modalDevolverSolicitudRecurso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Rechazar Solicitud</h4>
+      </div>
+      <div class="modal-body">        
+        <input type="hidden" name="urlEnvioModal" id="urlEnvioModal" value="">
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_nro_fact"><small>Nro.<br>Solicitud.</small></span></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="nro_solicitud" id="nro_solicitud" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_rs_fact"><small >Código<br>Servicio</small></span></label>
+          <div class="col-sm-8">
+            <div class="form-group" >              
+              <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
+            </div>
+          </div>
+        </div>                
+        <div class="row">
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#f9edf7">
+            <div class="form-group" >              
+              <textarea type="text" name="observaciones_modal" id="observaciones_modal" class="form-control" required="true"></textarea>
+            </div>
+          </div>
+        </div>        
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-success" onclick="devolverSolicitudRecursoModal()">Aceptar</a>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal reenviar solicitud devuelto -->

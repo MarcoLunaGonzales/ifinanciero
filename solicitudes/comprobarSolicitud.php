@@ -180,7 +180,12 @@ if(isset($_GET['cod'])){
        
       }
       if(isset($_GET['reg'])){
-       ?><input type="hidden" name="control_adminreg" id="control_adminreg" value="0"><?php  
+        if($_GET['reg']==2){
+          ?><input type="hidden" name="control_adminreg" id="control_adminreg" value="2"><?php  
+        }else{
+          ?><input type="hidden" name="control_adminreg" id="control_adminreg" value="0"><?php  
+        }
+       
       }
       ?>
       <div class="card">
@@ -400,9 +405,16 @@ if(isset($_GET['cod'])){
                 <?php
                 }else{
                   if(isset($_GET['reg'])){
-                    ?>  
+                    if($_GET['reg']==2){
+                      ?>  
+                    <a href="../<?=$urlList5;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="<?=$buttonCancel;?>">Volver</a> 
+                   <?php
+                    }else{
+                      ?>  
                     <a href="../<?=$urlList3;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="<?=$buttonCancel;?>">Volver</a> 
                    <?php
+                    }
+                    
                   }else{
                     ?>  
                     <a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="<?=$buttonCancel;?>">Volver</a> 
@@ -421,9 +433,16 @@ if(isset($_GET['cod'])){
                 <?php
                 }else{
                   if(isset($_GET['reg'])){
-                   ?>
+                    if($_GET['reg']==2){
+                      ?>
+                     <a href="../<?=$urlList5;?>" class="<?=$buttonCancel;?>">Volver</a> 
+                  <?php
+                    }else{
+                      ?>
                      <a href="../<?=$urlList3;?>" class="<?=$buttonCancel;?>">Volver</a> 
                   <?php
+                    }
+                   
                   }else{
                    ?>
                      <a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a> 
