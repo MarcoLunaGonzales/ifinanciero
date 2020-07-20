@@ -320,7 +320,7 @@ alerts = {
      else if (type == 'aprobar-solicitud-recurso') {
       swal({
         title: '¿Estás Seguro?',
-        text: "Se aprobará la Solicitud de Recursos y Se enviará a Administración (Contabilidad)",
+        text: "Se autorizará la Solicitud de Recursos y Se enviará a Administración (Contabilidad)",
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-warning',
