@@ -133,7 +133,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                     <i class="material-icons" title="Enviar Correo">email</i>
                                   </button>
                                   <?php
-                                } if($cod_estadofactura!=2){?>  
+                                } if($cod_estadofactura!=4){?>  
 
                                   <div class="btn-group dropdown">
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
