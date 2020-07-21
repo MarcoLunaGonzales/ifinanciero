@@ -927,7 +927,7 @@ function saveImporteDirectoDCC(){
   var factura={
     nit: 0,
     nroFac: 0,
-    fechaFac: 0,
+    fechaFac: '0',
     razonFac: 'Importe Directo',
     impFac: $('#importe_gasto').val(),    
     autFac: 0,
