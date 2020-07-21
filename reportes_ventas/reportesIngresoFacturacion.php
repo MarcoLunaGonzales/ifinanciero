@@ -1,9 +1,10 @@
 <?php
 require_once 'conexion.php';
-require_once 'comprobantes/configModule.php';
+require_once 'configModule.php';
 require_once 'styles.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
+
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUnidad=$_SESSION["globalUnidad"];
 
@@ -174,7 +175,7 @@ $i=0;
 			                  <div class="form-group">
       	             	          <div class="form-check">
                                     <label class="form-check-label">
-                                      <input class="form-check-input" type="checkbox" id="solo_tienda" name="solo_tienda[]" checked value="1">
+                                      <input class="form-check-input" type="checkbox" id="solo_tienda" name="solo_tienda[]" value="1">
                                       <span class="form-check-sign">
                                         <span class="check"></span>
                                       </span>

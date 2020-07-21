@@ -21,6 +21,8 @@
            '</thead>'.
            '<tbody>';
 
+    $valorIVA=100-(obtenerValorConfiguracion(1));
+    
     $listaDetalle=obtenerListaVentasResumido($unidadCostoArray,$areaCostoArray,$solo_tienda,$desde,$hasta);
     $totalImporte=0;
     while ($rowComp = $listaDetalle->fetch(PDO::FETCH_ASSOC)) {
@@ -44,6 +46,9 @@
         $porcentajeArea=$rowComp['porcentaje'];
 
         $importe_realX=$importe_realX*($porcentajeArea/100);
+        //APLICAMOS EL IVA
+        $importe_realX=$importe_realX*($valorIVA/100);
+
         $totalImporte+=$importe_realX;
         //$datosSolicitados=obtenerDatosDistribucionSolicitudFacturacion($rowComp['cod_solicitudfacturacion']);
         
