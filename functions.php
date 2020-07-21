@@ -3844,7 +3844,7 @@ function descargarPDFFacturasCopiaCliente($nom,$html,$codFactura){
     $estado=obtener_estado_facturas($codFactura);
   if($estado==2){ //facturas anuladas MARCA DE AGUA ANULADO
     //marca de agua
-    $canvas2 = $mydompdf->get_canvas(); 
+    $canvas2 = $dompdf->get_canvas(); 
     $w = $canvas2->get_width(); 
     $h = $canvas2->get_height(); 
     $font = Font_Metrics::get_font("times"); 
@@ -6519,7 +6519,7 @@ function eliminar_acentos($cadena){
     $estado=obtener_estado_facturas($codFactura);
   if($estado==2){ //facturas anuladas MARCA DE AGUA ANULADO
     //marca de agua
-    $canvas2 = $mydompdf->get_canvas(); 
+    $canvas2 = $dompdf->get_canvas(); 
     $w = $canvas2->get_width(); 
     $h = $canvas2->get_height(); 
     $font = Font_Metrics::get_font("times"); 
