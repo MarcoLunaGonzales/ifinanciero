@@ -2451,6 +2451,14 @@ function obtenerCuentasListaSolicitud(){
    $stmt->execute();
    return $stmt;
 }
+function obtenerCorreosListaPersonal(){
+ $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT p.codigo,p.email_empresa from personal p where p.email_empresa!='' order by p.email_empresa";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
 function contarSolicitudDetalle($codigo){
    $dbh = new Conexion();
    $sql="";
@@ -3785,6 +3793,22 @@ function descargarPDFFacturas($nom,$html){
   $mydompdf->load_html($html);
   $mydompdf->set_paper("A4", "portrait");
   $mydompdf->render();
+/*
+  //marca de agua
+  $canvas2 = $mydompdf->get_canvas(); 
+  $w = $canvas2->get_width(); 
+  $h = $canvas2->get_height(); 
+  $font = Font_Metrics::get_font("times"); 
+  $text = "ANULADO"; 
+  $txtHeight = -100; 
+  $textWidth = 250; 
+  $canvas2->set_opacity(.2); 
+  $x = (($w-$textWidth)/2); 
+  $y = (($h-$txtHeight)/2); 
+  $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+  //fin marca agua
+ */
+
   $canvas = $mydompdf->get_canvas();
   $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));   
   $mydompdf->set_base_path('assets/libraries/plantillaPDFFactura.css');

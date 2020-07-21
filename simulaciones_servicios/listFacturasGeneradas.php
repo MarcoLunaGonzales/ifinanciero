@@ -249,6 +249,25 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
         ?>
 
+<?php
+echo "<script>var array_correos=[];</script>";
+
+$i=0;
+  $correoLista=obtenerCorreosListaPersonal(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+   while ($rowCorreo = $correoLista->fetch(PDO::FETCH_ASSOC)) {
+    $codigoX=$rowCorreo['codigo'];
+    $correoX=strtolower($rowCorreo['email_empresa']);
+    ?>
+    <script>
+     var obtejoLista={
+       label:'<?=$correoX?>',
+       value:'<?=$codigoX?>'};
+       array_correos[<?=$i?>]=obtejoLista;
+    </script>
+    <?php
+    $i=$i+1;
+  }
+  ?>
         <div class="row">
           <label class="col-sm-1 col-form-label" style="color:#000000"><small>Nro. Factura</small></label>
           <div class="col-sm-2">
@@ -309,6 +328,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
           <div class="col-sm-12" style="background-color:#FFFFFF">
             <div class="form-group" >
               <input type="text" value="<?=$correos?>" name="correo_copia" id="correo_copia" class="form-control tagsinput" data-role="tagsinput" data-color="info" required="true" >  
+              <input type="hidden" id="correo_autocompleteids">  
             </div>
           </div>
         </div> 
@@ -332,6 +352,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 <script type="text/javascript">
   $(document).ready(function(){
+    $(".bootstrap-tagsinput input").attr("id","tag_inputcorreo");
+    autocompletar("tag_inputcorreo","correo_autocompleteids",array_correos);
+
     $('#EnviarCorreo').click(function(){    
       codigo_facturacion=document.getElementById("codigo_facturacion").value;
       cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
