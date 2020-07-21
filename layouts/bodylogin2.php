@@ -516,7 +516,7 @@
                               }
                             }  
                           }
-                          if(detalleLibretaSelect==false && libretasBancarias==false){
+                          if(detalleLibretaSelect==false && libretasBancarias==false && $("#tipo_comprobante").val()!=4){
                                 $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un detalle de la Libreta Bancaria para Cerrar.");
                                 $('#modalAlert').modal('show');
                                 return false;
