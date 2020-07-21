@@ -197,12 +197,14 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                      $segPres=$datosSeg->presupuesto;
                      $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
                   }
+                  $codActividadX=$rowDetalles["cod_actividadproyecto"]; 
+                  $tituloActividad=obtenerCodigoActividadesServicioImonitoreo($codActividadX);   
                                 ?>
                                 <tr>
                                     <td><?=$index?></td>
                                 	<td class="font-weight-bold"><?=$numeroCuentaX?></td>
                                     <td class="text-left"><?=$nombreCuentaX?></td>
-                                    <td><?=$detalleX?></td>
+                                    <td><?=$detalleX?> <?=$tituloActividad?></td>
                                     <td><?=$tituloImporte?></td>
                                     <td class="text-right"><?=number_format($importeX, 2, '.', ',')?></td>
                                     <td class="text-center" style="background:#6CE2F0;"><?=number_format($segPres, 0, '.', ',')?></td>

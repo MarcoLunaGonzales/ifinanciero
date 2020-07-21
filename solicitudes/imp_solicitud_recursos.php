@@ -181,6 +181,7 @@ $tituloImporte="";
             $importeSolX=$row["importe"];
             $proveedorX=nameProveedor($row["cod_proveedor"]);
             $retencionX=$row["cod_confretencion"];
+
             $totalImportePres+=$importeX;
             $totalImporte+=$importeSolX;
 
@@ -211,6 +212,15 @@ $tituloImporte="";
               
             $datosBen[$index-1]=trim($row["nombre_beneficiario"])." ".trim($row["apellido_beneficiario"]);
             $datosTipo[$index-1]=nameTipoPago($row["cod_tipopagoproveedor"]);
+
+            $codActividadX=$row["cod_actividadproyecto"];
+            $tituloActividad=obtenerCodigoActividadesServicioImonitoreo($codActividadX);   
+            if(trim($datosServicio)=="-"){
+              $datosServicio="";  
+            }else{
+              $datosServicio="- ".$datosServicio;
+            }
+            
         ?>
         <tr>
             <td class="s3 text-center" width="4%"><?=$index?></td>
@@ -218,7 +228,7 @@ $tituloImporte="";
             <td class="s3 text-center"><?=number_format($porcentSegPres, 0, '.', '')?></td>
             <td class="s3 text-center" width="8%"><?=$nombreArea?></td>
             <td class="s3 text-center" width="8%"><?=$numeroFac?></td>
-            <td class="s3 text-left" width="40%"><?="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." F/".$numeroFac." - ".$datosServicio." ".$nombreCliente?></td>
+            <td class="s3 text-left" width="40%"><?="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." F/".$numeroFac." ".$datosServicio." ".$nombreCliente." ".$tituloActividad?></td>
             <td class="s3 text-right"><?=number_format($montoImporte, 2, '.', ',')?></td>
             <td class="s3 text-right"><?=number_format($montoImporteRes, 2, '.', ',')?></td>
             <td class="s3 text-right"><?=$tituloImporte?></td>
