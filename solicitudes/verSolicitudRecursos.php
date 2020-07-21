@@ -85,6 +85,8 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                                 $solicitante=namePersonal($codPersonalX);
                                 $fechaSolicitud=strftime('%d/%m/%Y',strtotime($fechaX));
                                 $codigoServicio=obtenerCodigoServicioPorIdServicio($idServicioX);
+                                $anioSol=strftime('%Y',strtotime($fechaX));
+                                $mesSol=strftime('%m',strtotime($fechaX));
                                 ?>
 
                         
@@ -136,7 +138,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 
                   } ?>
                     </div>
-                    <div class="col-sm-12"><center><h3>ARCHIVOS ADJUNTOS DE LA CABECERA</h3></center></div>
+                    <div class="col-sm-12"><center><h3>ARCHIVOS ADJUNTOS</h3></center></div>
 					<div class="row col-sm-12">
                         
 						<div class="div-center">
@@ -158,7 +160,9 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 									<th>Detalle</th>
 									<th>Retenci&oacute;n</th>
 									<th class="text-right">Presupuestado</th>
-									<th class="text-right">Importe</th>			
+                  <th class="text-right bg-info text-white">Seguimiento Presupuestal</th>
+                  <th class="text-right bg-info text-white">%</th>
+									<th class="text-right text-white" style="background:#741C89;">Importe</th>			
 									<th>Proveedor</th>
 									<!--<th>Archivos Adjuntos</th>-->
 								</tr>
@@ -166,7 +170,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 							<tbody>
 							<?php 
 							$solicitudDetalle=obtenerSolicitudRecursosDetalle($codigo);
-							$index=1;$totalImportePres=0;$totalImporte=0;
+							$index=1;$totalImportePres=0;$totalImporte=0;$segPres=0;$porcentSegPres=0;
                              while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
                              	$codCuentaX=$rowDetalles['cod_plancuenta'];
                              	$detalleX=$rowDetalles["detalle"];
@@ -183,7 +187,16 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 							    }
 							    $numeroCuentaX=trim($rowDetalles['numero']);
 							    $nombreCuentaX=trim($rowDetalles['nombre']);
+                  
+                  $codAreaXX=$rowDetalles['cod_area'];
+                  $codOficinaXX=$rowDetalles['cod_unidadorganizacional'];
 
+                  $datosSeg=obtenerPresupuestoEjecucionDelServicio($codOficinaXX,$codAreaXX,$anioSol,(int)$mesSol,$numeroCuentaX);
+            
+                  if($datosSeg->presupuesto!=null||$datosSeg->presupuesto!=0){
+                     $segPres=$datosSeg->presupuesto;
+                     $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
+                  }
                                 ?>
                                 <tr>
                                     <td><?=$index?></td>
@@ -192,7 +205,9 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                                     <td><?=$detalleX?></td>
                                     <td><?=$tituloImporte?></td>
                                     <td class="text-right"><?=number_format($importeX, 2, '.', ',')?></td>
-                                    <td class="text-right"><?=number_format($importeSolX, 2, '.', ',')?></td>
+                                    <td class="text-center" style="background:#6CE2F0;"><?=number_format($segPres, 0, '.', ',')?></td>
+                                    <td class="text-center" style="background:#6CE2F0;"><?=number_format($porcentSegPres, 0, '.', '')?> %</td>
+                                    <td class="text-right" style="background:#C100F1;"><?=number_format($importeSolX, 2, '.', ',')?></td>
                                     <td><?=$proveedorX?></td>
                                     <!--<td><?=obtenerDirectoriosSol("../assets/archivos-respaldo/archivos_solicitudes/SOL-".$codigo."/DET-".$index);?></td>-->
                                 </tr><?php
@@ -200,7 +215,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                              }
                         	?>
                         	  <tr class="font-weight-bold bg-white text-dark">
-                        	  	    <td colspan="5" class="text-left">Total</td>
+                        	  	    <td colspan="7" class="text-left">Total</td>
                                     <td class="text-right"><?=number_format($totalImportePres, 2, '.', ',')?></td>
                                     <td class="text-right"><?=number_format($totalImporte, 2, '.', ',')?></td>
                                     <td></td>

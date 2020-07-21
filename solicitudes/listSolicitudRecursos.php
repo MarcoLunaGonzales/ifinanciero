@@ -243,13 +243,13 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                 }else{
                                  if(isset($_GET['q'])){
                                    ?>
-                                    <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+                                    <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
                                       <i class="material-icons">send</i>
                                     </a>
                                    <?php
                                   }else{
                                     ?>
-                                     <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0'  class="btn btn-default">
+                                     <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0'  class="btn btn-default">
                                        <i class="material-icons">send</i>
                                      </a>
                                     <?php
@@ -694,13 +694,13 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                 }else{
                                  /*if(isset($_GET['q'])){
                                    ?>
-                                    <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+                                    <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
                                       <i class="material-icons">send</i>
                                     </a>
                                    <?php
                                   }else{
                                     ?>
-                                     <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0'  class="btn btn-default">
+                                     <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0'  class="btn btn-default">
                                        <i class="material-icons">send</i>
                                      </a>
                                     <?php

@@ -22,7 +22,7 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 
 if(obtenerUnidadSolicitanteRecursos($codigo)==3000){ //&&obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)
   if(isset($_GET["reg"])){
-   if($estado==4&&$_GET['reg']==2){
+   if($estado==4&&$_GET['reg']!=2){
     $estado=7;
    }   
   }  
