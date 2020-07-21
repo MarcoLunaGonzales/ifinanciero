@@ -8028,20 +8028,6 @@ function obtenerCodigoActividadProyecto($codigo){
     }  
     return($valor);
   }
-  
-  function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta){
-
-  $dbh = new Conexion();
-  $queryTienda="";
-  if($soloTienda==1){
-   $queryTienda=" and f.cod_solicitudfacturacion=-100";
-  }
-   $stmt = $dbh->prepare("SELECT u.abreviatura as unidad,a.abreviatura as area,f.*,(SELECT SUM((cantidad*precio)-descuento_bob) as importe from facturas_ventadetalle where cod_facturaventa=f.codigo )as importe_real 
-   FROM facturas_venta f join unidades_organizacionales u on u.codigo=f.cod_unidadorganizacional join areas a on a.codigo=f.cod_area where f.cod_unidadorganizacional in ($unidades) and f.cod_area in ($areas) and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' $queryTienda");
-   $stmt->execute();
-   return($stmt);
-
- }
 
   function contador_facturas_cajachica($codigo){
     $dbh = new Conexion();
@@ -8155,6 +8141,7 @@ function obtenerCodigoActividadProyecto($codigo){
     }         
     return($valor);
   }
+
 function obtenerDatosDistribucionSolicitudFacturacion($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT sf.codigo,sf.cod_unidadorganizacional,sf.cod_area,
@@ -8173,6 +8160,7 @@ function obtenerDatosDistribucionSolicitudFacturacion($codigo){
    }
    return($datos);
 }
+
 function insertar_facturas_compra($codComprobante,$ordenDetalle,$codigo_ccdetalle){
   $ordenDetalle--;
   //sacamos el codigo del detalle de comprobante insertado
