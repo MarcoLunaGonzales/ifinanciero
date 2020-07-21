@@ -927,7 +927,7 @@ function saveImporteDirectoDCC(){
   var factura={
     nit: 0,
     nroFac: 0,
-    fechaFac: 0,
+    fechaFac: '0',
     razonFac: 'Importe Directo',
     impFac: $('#importe_gasto').val(),    
     autFac: 0,
@@ -14621,11 +14621,13 @@ function agregaDatosComprCajaChica(datos){
   
 }
 function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_comprobante,mes_comprobante,tipo_comprobante,gestion,unidad){
+  iniciarCargaAjax();
   $.ajax({
     type:"POST",
     data:"cod_cajachica="+cod_cajachica+"&nro_comprobante="+nro_comprobante+"&mes_comprobante="+mes_comprobante+"&tipo_comprobante="+tipo_comprobante+"&gestion="+gestion+"&unidad="+unidad,
     url:"caja_chica/executeComprobanteCajaChica_existente.php",
     success:function(r){
+      detectarCargaAjax();
       var respu=r.split('#####');
       var estado=respu[0];
       var stringRetenciones=respu[1];      

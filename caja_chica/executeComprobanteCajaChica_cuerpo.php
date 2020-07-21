@@ -76,6 +76,8 @@
 			            $flagSuccessDet=$stmtInsertDet->execute();
 			            $ordenDetalle++;
                     }
+                    //insertamos las facturas a factuas_compra para el libro de compras
+                    insertar_facturas_compra($codComprobante,$ordenDetalle,$codigo_ccdetalle);
                 }else{             
                 	if($porcentaje_cuentaorigen>100){
 			        	$monto_restante=$monto_recalculado+$importe_total_gastos;

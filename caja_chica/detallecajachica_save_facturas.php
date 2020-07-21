@@ -34,11 +34,6 @@ $flagSuccess=false;
 for($j=0;$j<$nF;$j++){
 	  $nit=trim($facturas[$cantidad_filas_ccd-1][$j]->nit);
 	  $nroFac=trim($facturas[$cantidad_filas_ccd-1][$j]->nroFac);
-	  
-	  $fecha=trim($facturas[$cantidad_filas_ccd-1][$j]->fechaFac);
-	  $porciones = explode("/", $fecha);
-	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
-	  
 	  $razonFac=trim($facturas[$cantidad_filas_ccd-1][$j]->razonFac);
 	  $impFac=trim($facturas[$cantidad_filas_ccd-1][$j]->impFac);	  
 	  $autFac=trim($facturas[$cantidad_filas_ccd-1][$j]->autFac);
@@ -57,12 +52,21 @@ for($j=0;$j<$nF;$j++){
   // echo "exeFac:".$exeFac."<br>";
   // echo "autFac:".$autFac."<br>";
   // echo "conFac:".$conFac."<br>";
-  if($nit!=0 || $nroFac!=0){//si es  0, es un gasto directo
-    $sqlDetalle2="INSERT INTO facturas_detalle_cajachica (cod_cajachicadetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero) VALUES ('$cod_ccd', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tasaFac')";
+  if($nit=='0' && $nroFac=='0'){//si es  0, es un gasto directo    
+    $sqlDetalle2="INSERT INTO detalle_cajachica_gastosdirectos(cod_cajachicadetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero) VALUES ('$cod_ccd', '0', '0', '0', '$razonFac', '$impFac', '0', '0', '0','0','0')";
     $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
     $flagSuccessDetalle2=$stmtDetalle2->execute();
   }else{
-    $sqlDetalle2="INSERT INTO detalle_cajachica_gastosdirectos(cod_cajachicadetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero) VALUES ('$cod_ccd', '0', '0', '0', '$razonFac', '$impFac', '0', '0', '0','0','0')";
+    $fecha=trim($facturas[$cantidad_filas_ccd-1][$j]->fechaFac);    
+    echo $fecha;
+    $porciones = explode("/", $fecha);
+    if(isset($porciones[2])){
+      $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+    }else{
+      $fechaFac=$fecha;
+    }
+    
+    $sqlDetalle2="INSERT INTO facturas_detalle_cajachica (cod_cajachicadetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero) VALUES ('$cod_ccd', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tasaFac')";
     $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
     $flagSuccessDetalle2=$stmtDetalle2->execute();
   }

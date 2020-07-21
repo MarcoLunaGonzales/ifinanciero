@@ -96,9 +96,19 @@ try{
 				$centroCostosDN=obtenerValorConfiguracion(29);//DN 
 				// echo $numeroComprobante;
 				$sqlInsertCab="UPDATE comprobantes set glosa='$concepto_contabilizacion' where codigo='$codComprobante'";
-
 				$stmtInsertCab = $dbh->prepare($sqlInsertCab);
 				$flagSuccess=$stmtInsertCab->execute();
+				//necesitamos el codigo del comprobante detalle para borrar las facturas registradas en facturas_Compra
+				$stmtCmptDet = $dbh->prepare("SELECT codigo FROM comprobantes_detalle where cod_comprobante=$codComprobante");
+			    $stmtCmptDet->execute();			  
+			    $stmtCmptDet->bindColumn('codigo', $codigo_detalecpte);
+			    while ($row = $stmtCmptDet->fetch()) 
+			    {
+			    	//BORRAMOS LAS FACTURAS INSERTADAS SI LA HUBIERA
+					$sqlDeleteDetalleFactComp="DELETE FROM facturas_compra where cod_comprobantedetalle=$codigo_detalecpte";
+					$stmtDeleteDetalleFactComp = $dbh->prepare($sqlDeleteDetalleFactComp);
+					$stmtDeleteDetalleFactComp->execute();
+			    }
 				//borramos el detalle del comprobante
 				$sqlDeleteDetalle="DELETE FROM comprobantes_detalle where cod_comprobante=$codComprobante";
 				$stmtDeleteDetalle = $dbh->prepare($sqlDeleteDetalle);
