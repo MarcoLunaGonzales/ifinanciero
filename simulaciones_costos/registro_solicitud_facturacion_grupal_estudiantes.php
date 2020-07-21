@@ -37,15 +37,15 @@ if(isset($_GET['cod_sw'])){//para la parte de editar
     $cod_facturacion=0; 
     //recibimos datos 
     $array_ci= array();
-    $array_curso= array();
+    $array_curso= array();    
     for ($i=1;$i<=$total_items-1;$i++){
         if($_POST["CiAlumno_a".$i]!=''){
             $ci_alumno=$_POST["CiAlumno_a".$i];
-            $id_curso=$_POST["IdCurso_a".$i];
+            $id_curso=$_POST["IdCurso_a".$i];            
             $array_ci[$i-1]=$ci_alumno;
             $array_curso[$i-1]=$id_curso;
-        }
-    }
+        }    
+    }    
     $stringCi=implode(",", $array_ci);
     $stringCi=trim($stringCi,',');
     $stringCurso=implode(",", $array_curso);
@@ -87,7 +87,7 @@ if ($cod_facturacion > 0){
     }
     $fecha_registro =date('Y-m-d');
     $fecha_solicitudfactura=$fecha_registro;
-    $cod_tipoobjeto=213;//por defecto}
+    $cod_tipoobjeto=212;//por defecto}
     $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
     $cod_tipopago = null;    
     $razon_social = null;
@@ -95,11 +95,12 @@ if ($cod_facturacion > 0){
     $observaciones = null;
     $observaciones_2 = null;
     $persona_contacto=null;
-    $Codigo_alterno=null;
     $dias_credito=obtenerValorConfiguracion(58);
+    
+    $Codigo_alterno=obtenerCodigoExternoCurso($id_curso);
 }
 // $Nombre = $resultSimu['Nombre'];
-// $Codigo_alterno=obtenerCodigoExternoCurso($IdCurso);
+
 
 // $Nombre = "curso";
 
@@ -143,7 +144,7 @@ $contadorRegistros=0;
                         <div class="card-text">
                           <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación</h4>
                         </div>
-                        <h4 class="card-title" align="center"><b>Nombre Curso : Grupal</b></h4>
+                        <h4 class="card-title" align="center"><b>Nombre Curso : Grupal / <?=$Codigo_alterno?></b></h4>
                     </div>
                     <div class="card-body ">    
                         <div class="row">

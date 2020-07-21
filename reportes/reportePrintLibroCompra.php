@@ -70,10 +70,10 @@ $razon_social=$result['razon_social'];
                   <div class="table-responsive">
                         <table id="libro_diario_rep" class="table table-bordered table-condensed" style="width:100%">
                             <thead>
-                              <tr>
+                              <!-- <tr>
                                   <th colspan="6" class="text-left"><small><b> Razón Social : <?=$razon_social?><br>Sucursal : <?=$sucursal?></b></small></th>   
                                   <th colspan="6" class="text-left"><small><b> Nit : <?=$nit?><br>Dirección : <?=$direccion?></b></small></th>   
-                              </tr>                                         
+                              </tr>                                          -->
                               <tr>
                                   <th><small><b>-</b></small></th>   
                                   <th><small><b>Fecha</b></small></th>                                
@@ -117,10 +117,10 @@ $razon_social=$result['razon_social'];
                                 <tr>
                                   <td class="text-center small"><?=$index;?></td>
                                   <td class="text-center small"><?=$fecha;?></td>
-                                  <td class="text-center small"><?=$nit;?></td>
+                                  <td class="text-right small"><?=$nit;?></td>
                                   <td class="text-left small"><?=$razon_social;?></td>
-                                  <td class="text-center small"><?=$nro_factura;?></td>
-                                  <td class="text-center small"><?=$nro_autorizacion;?></td>
+                                  <td class="text-right small"><?=$nro_factura;?></td>
+                                  <td class="text-right small"><?=$nro_autorizacion;?></td>
                                   <td class="text-left small"><?=$codigo_control;?></td>
                                   <td class="text-right small"><?=formatNumberDec($importe);?></td>
                                   <td class="text-right small"><?=formatNumberDec($ice);?></td>
@@ -132,6 +132,12 @@ $razon_social=$result['razon_social'];
                               }?>
                               <tr>
                                   <td class="text-center small" colspan="7"><b>SubTotal:</b></td>
+                                  <td class="d-none"></td>
+                                  <td class="d-none"></td>
+                                  <td class="d-none"></td>
+                                  <td class="d-none"></td>
+                                  <td class="d-none"></td>
+                                  <td class="d-none"></td>
                                   
                                   <td class="text-right small"><?=formatNumberDec($total_importe);?></td>
                                   <td class="text-right small"><?=formatNumberDec($total_ice);?></td>
