@@ -7,7 +7,7 @@ require_once '../functionsGeneral.php';
 
 
 $dbh = new Conexion();
-$stmt = $dbh->prepare("SELECT cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,razon_social,nit,nro_factura,cod_estadofactura from facturas_venta"); /*and sf.cod_estadosolicitudfacturacion!=5*/
+$stmt = $dbh->prepare("SELECT cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,razon_social,nit,nro_factura,cod_estadofactura,observaciones from facturas_venta"); /*and sf.cod_estadosolicitudfacturacion!=5*/
 $stmt->execute();
 $stmt->bindColumn('cod_solicitudfacturacion', $codigo_facturacion);
 $stmt->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
@@ -16,6 +16,7 @@ $stmt->bindColumn('fecha_factura', $fecha_factura);
 $stmt->bindColumn('razon_social', $razon_social);
 $stmt->bindColumn('nit', $nit);
 $stmt->bindColumn('nro_factura', $nro_factura);
+$stmt->bindColumn('observaciones', $observaciones);
 $stmt->bindColumn('cod_estadofactura', $cod_estadofactura);
 
 ?>
@@ -40,6 +41,7 @@ $stmt->bindColumn('cod_estadofactura', $cod_estadofactura);
                             <th><small>Razón Social</small></th>
                             <th><small>Nit</small></th>
                             <th><small>Facturado Por</small></th>
+                            <th><small>Detalle</small></th>
                             <th><small>Estado</small></th>
                           </tr>
                         </thead>
@@ -75,6 +77,7 @@ $stmt->bindColumn('cod_estadofactura', $cod_estadofactura);
                            <td><small><?=$razon_social;?></small></td>
                            <td><small><?=$nit;?></small></td>
                            <td><small><?=$personal_procesado;?></small></td>
+                           <td><small><?=$observaciones;?></small></td>
                            <td><small><?=$estado;?></small></td>
                           </tr>
                           <?php

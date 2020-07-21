@@ -8217,6 +8217,19 @@ function insertar_facturas_compra($codComprobante,$ordenDetalle,$codigo_ccdetall
     $flagSuccessDet=$stmtInsertDet->execute();
   }  
 }
+
+function obtener_estado_facturas($codigo){
+  $dbh = new Conexion();        
+  $sql="SELECT cod_estadofactura from facturas_venta where codigo=$codigo";    
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $cod_estado="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $cod_estado=$row['cod_estadofactura'];
+  }         
+  $nombre_estado=obtener_nombreestado_factura($cod_estado);
+  return($nombre_estado);
+}
 ?>
 
 
