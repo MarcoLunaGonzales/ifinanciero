@@ -3783,7 +3783,7 @@ function descargarPDFCajaChica($nom,$html){
   $mydompdf->set_base_path('assets/libraries/plantillaPDFCajaChica.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 }
-function descargarPDFFacturas($nom,$html){
+function descargarPDFFacturas($nom,$html,$codFactura){
   //aumentamos la memoria  
   ini_set("memory_limit", "128M");
   // Cargamos DOMPDF
@@ -3793,21 +3793,23 @@ function descargarPDFFacturas($nom,$html){
   $mydompdf->load_html($html);
   $mydompdf->set_paper("A4", "portrait");
   $mydompdf->render();
-/*
-  //marca de agua
-  $canvas2 = $mydompdf->get_canvas(); 
-  $w = $canvas2->get_width(); 
-  $h = $canvas2->get_height(); 
-  $font = Font_Metrics::get_font("times"); 
-  $text = "ANULADO"; 
-  $txtHeight = -100; 
-  $textWidth = 250; 
-  $canvas2->set_opacity(.2); 
-  $x = (($w-$textWidth)/2); 
-  $y = (($h-$txtHeight)/2); 
-  $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+  
+  $estado=obtener_estado_facturas($codFactura);
+  if($estado==2){ //facturas anuladas MARCA DE AGUA ANULADO
+    //marca de agua
+    $canvas2 = $mydompdf->get_canvas(); 
+    $w = $canvas2->get_width(); 
+    $h = $canvas2->get_height(); 
+    $font = Font_Metrics::get_font("times"); 
+    $text = "ANULADO"; 
+    $txtHeight = -100; 
+    $textWidth = 250; 
+    $canvas2->set_opacity(.2); 
+    $x = (($w-$textWidth)/2); 
+    $y = (($h-$txtHeight)/2); 
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
- */
+  } 
 
   $canvas = $mydompdf->get_canvas();
   $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));   
@@ -3817,7 +3819,7 @@ function descargarPDFFacturas($nom,$html){
   // $pdf = $mydompdf->output();
   // file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
 }
-function descargarPDFFacturasCopiaCliente($nom,$html){
+function descargarPDFFacturasCopiaCliente($nom,$html,$codFactura){
   //aumentamos la memoria  
   ini_set("memory_limit", "128M");
   // Cargamos DOMPDF
@@ -3838,6 +3840,23 @@ function descargarPDFFacturasCopiaCliente($nom,$html){
     $dompdf->set_paper("A4", "portrait");
     $dompdf->load_html($html);    
     $dompdf->render();
+
+    $estado=obtener_estado_facturas($codFactura);
+  if($estado==2){ //facturas anuladas MARCA DE AGUA ANULADO
+    //marca de agua
+    $canvas2 = $mydompdf->get_canvas(); 
+    $w = $canvas2->get_width(); 
+    $h = $canvas2->get_height(); 
+    $font = Font_Metrics::get_font("times"); 
+    $text = "ANULADO"; 
+    $txtHeight = -100; 
+    $textWidth = 250; 
+    $canvas2->set_opacity(.2); 
+    $x = (($w-$textWidth)/2); 
+    $y = (($h-$txtHeight)/2); 
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+  //fin marca agua
+   } 
     $pdf = $dompdf->output();
     file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
 }
@@ -6488,7 +6507,7 @@ function eliminar_acentos($cadena){
     return $cadena;
   }
 
-  function datosPDFFacturasVenta($html){
+  function datosPDFFacturasVenta($html,$codFactura){
   //aumentamos la memoria  
   ini_set("memory_limit", "128M");
   require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
@@ -6496,6 +6515,24 @@ function eliminar_acentos($cadena){
     $dompdf->set_paper("letter", "portrait");
     $dompdf->load_html($html);    
     $dompdf->render();
+
+    $estado=obtener_estado_facturas($codFactura);
+  if($estado==2){ //facturas anuladas MARCA DE AGUA ANULADO
+    //marca de agua
+    $canvas2 = $mydompdf->get_canvas(); 
+    $w = $canvas2->get_width(); 
+    $h = $canvas2->get_height(); 
+    $font = Font_Metrics::get_font("times"); 
+    $text = "ANULADO"; 
+    $txtHeight = -100; 
+    $textWidth = 250; 
+    $canvas2->set_opacity(.2); 
+    $x = (($w-$textWidth)/2); 
+    $y = (($h-$txtHeight)/2); 
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+  //fin marca agua
+   } 
+
     $pdf = $dompdf->output();
     return array('archivo' => $pdf,'base64'=>base64_encode($pdf));
 }
@@ -8229,6 +8266,7 @@ function obtener_estado_facturas($codigo){
   }         
   return($cod_estado);
 }
+
 ?>
 
 

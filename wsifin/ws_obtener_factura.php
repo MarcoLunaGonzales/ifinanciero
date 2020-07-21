@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     "totalComponentes"=>0);
                 }else{
                     $estado=1;
-                    $factura = datosPDFFacturasVenta($html); 
+                    $factura = datosPDFFacturasVenta($html,$codFactura); 
                     $resultado=array(
                             "estado"=>$estado,
                             "mensaje"=>"Factura Obtenida Correctamente", 
