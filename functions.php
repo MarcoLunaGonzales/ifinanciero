@@ -3793,7 +3793,7 @@ function descargarPDFFacturas($nom,$html){
   $mydompdf->load_html($html);
   $mydompdf->set_paper("A4", "portrait");
   $mydompdf->render();
-/*
+
   //marca de agua
   $canvas2 = $mydompdf->get_canvas(); 
   $w = $canvas2->get_width(); 
@@ -3807,7 +3807,6 @@ function descargarPDFFacturas($nom,$html){
   $y = (($h-$txtHeight)/2); 
   $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
- */
 
   $canvas = $mydompdf->get_canvas();
   $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));   
@@ -8230,6 +8229,7 @@ function obtener_estado_facturas($codigo){
   $nombre_estado=obtener_nombreestado_factura($cod_estado);
   return($nombre_estado);
 }
+
 ?>
 
 
