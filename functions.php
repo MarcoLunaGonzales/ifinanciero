@@ -8226,8 +8226,7 @@ function obtener_estado_facturas($codigo){
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $cod_estado=$row['cod_estadofactura'];
   }         
-  $nombre_estado=obtener_nombreestado_factura($cod_estado);
-  return($nombre_estado);
+  return($cod_estado);
 }
 
 ?>
