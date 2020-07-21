@@ -9,6 +9,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
+
+
 // Preparamos
 if(isset($_GET['q'])){
   $q=$_GET['q'];
