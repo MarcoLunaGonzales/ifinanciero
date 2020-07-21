@@ -77,7 +77,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                   <div class="card-icon" style="background:rgb(116, 24, 153) !important;">
                     <i class="material-icons">content_paste</i>
                   </div>
-                  <h4 class="card-title"><b><?=$moduleNamePlural?> - Aprobación SIS</b></h4>
+                  <h4 class="card-title"><b><?=$moduleNamePlural?> - Aprobación de Proyectos</b></h4>
                 </div>
                 <div class="card-body">
                     <table class="table table-condesed" id="tablePaginator">
@@ -260,13 +260,13 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                 }else{
                                  if(isset($_GET['q'])){
                                    ?>
-                                    <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&reg=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+                                    <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&reg=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
                                       <i class="material-icons">send</i>
                                     </a>
                                    <?php
                                   }else{
                                     ?>
-                                     <a title="Pre Envio - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&reg=0'  class="btn btn-default">
+                                     <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&reg=0'  class="btn btn-default">
                                        <i class="material-icons">send</i>
                                      </a>
                                     <?php
