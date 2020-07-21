@@ -6,6 +6,7 @@ require_once '../conexion.php';
 require_once '../styles.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
+require_once '../functionsReportes.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
 
 $dbh = new Conexion();
@@ -72,7 +73,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                     <img class="" width="40" height="40" src="../assets/img/logoibnorca.png">
                   </div>
                    <!--<div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div>-->
-                   <h4 class="card-title text-center">Reporte Ingreso por Facturación</h4>
+                   <h4 class="card-title text-center">Reporte de Ingresos por Facturación</h4>
                 </div>
                 <?php
                 include "reporteIngresoFacturacionDetalle.php";  
