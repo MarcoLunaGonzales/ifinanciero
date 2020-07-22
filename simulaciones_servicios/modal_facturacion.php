@@ -440,7 +440,7 @@
         <input type="hidden" name="direccion" id="direccion" value="0">
         <input type="hidden" name="datos" id="datos" value="0">
         <input type="hidden" name="indice" id="indice" value="0">
-        <input type="hidden" name="saldo_x" id="saldo_x" value="0">        
+        <input type="hidden" name="saldo_x" id="saldo_x" value="0">
         <div class="row">
 
         <div class="btn-group">
@@ -622,5 +622,12 @@
          <span style="color:  #85929e;"><i class="material-icons">check_box</i> Registros No Contabilizados</span><br> -->
       </div>
     </div>
+  </div>
+</div>
+
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
