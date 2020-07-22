@@ -24,6 +24,7 @@
     $ordenDetalle=1;//<--
     while ($rowCajaChicaDet = $stmtCajaChicaDet->fetch()) 
     {
+
     	//el porcentaje origen de tipo de retencion
         $stmtRetencionOrigen = $dbh->prepare("SELECT porcentaje_cuentaorigen from configuracion_retenciones where codigo=$cod_retencioncajachica");
         $stmtRetencionOrigen->execute();
@@ -278,13 +279,11 @@
 				            $flagSuccessDet=$stmtInsertDet->execute();
 				            $ordenDetalle++;
 	                    }else{//haber=2
-	                    	
 				            $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_plancuenta','0','$cod_uo','$cod_area','$monto_restante','0','$descripcionIT','$ordenDetalle')";
 				            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
 				            $flagSuccessDet=$stmtInsertDet->execute();
 				            $ordenDetalle++;
 	                    }
-	                    
 	                    //sacamos el codigo del comprobante detalle 
 	                    $stmtEstadoCuenta = $dbh->prepare("SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante order by codigo desc LIMIT 1");
 		                $stmtEstadoCuenta->execute();
@@ -293,7 +292,9 @@
 		                //actualizamos el campo comporbante del estado_cuentas 
 		                $stmtUpdateEstadoCuenta = $dbh->prepare("UPDATE estados_cuenta set cod_comprobantedetalle=$cod_compro_det where cod_cajachicadetalle=$codigo_ccdetalle");
 		                $stmtUpdateEstadoCuenta->execute();
-
+		                //actualizamos el cod_comprobante a pagos_proveedores
+		                $stmtUpdatepagosProveedores = $dbh->prepare("UPDATE pagos_proveedores set cod_comprobante=$codComprobante where cod_cajachicadetalle=$codigo_ccdetalle");
+		                $stmtUpdatepagosProveedores->execute();
 	                }else{		                	
                     	if($porcentaje_cuentaorigen>100){
 				        	$monto_restante=$monto_recalculado;

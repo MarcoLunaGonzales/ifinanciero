@@ -81,15 +81,38 @@ try {
         if($flagSuccess){//registramos rendiciones
             $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
             $stmtReembolso->execute();
-            $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) 
-            values ($codigo,$numero,$cod_retencion,$monto,$monto_rendicion,'$cod_personal','$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
+            $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) values ($codigo,$numero,$cod_retencion,$monto,$monto_rendicion,'$cod_personal','$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
             $flagSuccess=$stmtrendiciones->execute();
             //insertamos estado_de_cuentas y comprobantes
             if($cod_comprobante>0){                
-                $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)  
-                    values ('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobante','$cuenta_auxiliar1','$codigo')");
+                $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)values('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobante','$cuenta_auxiliar1','$codigo')");
                 $flagSuccess=$stmtContraCuenta->execute();
-                // } 
+                if($flagSuccess){
+                    $codigo_sr=0;
+                    $sqlDetalleX="SELECT codigo,cod_solicitudrecurso,cod_solicitudrecursodetalle,cod_proveedor,cod_tipopagoproveedor from solicitud_recursosdetalle where cod_estadocuenta=$cod_comprobante";                      
+                    $stmtDetalleX = $dbh->prepare($sqlDetalleX);
+                    $stmtDetalleX->execute();                    
+                    $stmtDetalleX->bindColumn('codigo', $codigo_sr);
+                    $stmtDetalleX->bindColumn('cod_solicitudrecurso', $cod_solicitudrecurso_sr);
+                    $stmtDetalleX->bindColumn('cod_solicitudrecursodetalle', $cod_solicitudrecursodetalle_sr);
+                    $stmtDetalleX->bindColumn('cod_proveedor', $cod_proveedor_sr);
+                    $stmtDetalleX->bindColumn('cod_tipopagoproveedor', $cod_tipopagoproveedor_sr);
+                    while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)){ 
+
+                    }
+                    if($codigo_sr>0){
+                        $cod_pagoproveedor=obtenerCodigoPagoProveedor();
+                        $sqlInsert="INSERT INTO pagos_proveedores (codigo, fecha,observaciones,cod_comprobante,cod_estadopago,cod_ebisa,cod_cajachicadetalle) 
+                        VALUES ('".$cod_pagoproveedor."','".$fecha."','".$observaciones."','0',1,0,'$codigo')";
+                        $stmtInsert = $dbh->prepare($sqlInsert);
+                        $stmtInsert->execute();
+                        $cod_pagoproveedordetalle=obtenerCodigoPagoProveedorDetalle();
+                        $sqlInsert2="INSERT INTO pagos_proveedoresdetalle (codigo,cod_pagoproveedor,cod_proveedor,cod_solicitudrecursos,cod_solicitudrecursosdetalle,cod_tipopagoproveedor,monto,observaciones,fecha) 
+                         VALUES ('".$cod_pagoproveedordetalle."','".$cod_pagoproveedor."','".$cod_proveedor_sr."','".$cod_solicitudrecurso_sr."','".$codigo_sr."','".$cod_tipopagoproveedor_sr."','".$monto."','".$observaciones."','".$fecha."')";
+                        $stmtInsert2 = $dbh->prepare($sqlInsert2);
+                        $flagSuccess=$stmtInsert2->execute();
+                    }
+                }                
             }
             //Proceso de la distribucion
             $sqlDel="DELETE FROM distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo";

@@ -336,6 +336,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                     }
                                   }else{// generar facturas                                        
                                     if($codEstado==1){
+                                      $cod_tipopago=obtenemosformaPagoSolfact($codigo_facturacion);//fomra pago
                                       $cod_tipopago_cred=obtenerValorConfiguracion(48);
                                       // echo $cod_tipopago_cred; 
                                       $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_cred,$codigo_facturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de credito. devolvera 0 en caso de q no exista
@@ -351,6 +352,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                            </a>
                                             <?php 
                                           }else{
+
                                             $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###6###0###".$urlEdit2Sol."###".$obs_devolucion;?>
                                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
                                               <i class="material-icons" title="Enviar a Regional(En Revisión)">send</i>
@@ -383,7 +385,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                             $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###4###0###".$urlEdit2Sol."###".$obs_devolucion;?>
                                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
                                               <i class="material-icons" title="Enviar a contabilidad(Revisado)">send</i>
-                                            </button><?php
+                                            </button><?php 
                                           }
                                         }else{
                                           if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
