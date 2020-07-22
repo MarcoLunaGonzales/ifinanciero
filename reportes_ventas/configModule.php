@@ -1,6 +1,9 @@
 <?php
 
-$urlReporteIngresoFacturacion="reportes_ventas/reporteIngresoFacturacion.php";
+$urlReporteIngresoFacturacion="reporteIngresoFacturacion.php";
+
+$urlReporteResumido="rptOpIngresoFacturacion.php";
+
 
 ?>
 

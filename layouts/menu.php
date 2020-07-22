@@ -559,6 +559,18 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Depositos No Facturados</span>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
+                    <span class="sidebar-mini"> GSA </span>
+                    <span class="sidebar-normal"> Gesti&oacute;n SR Aprobación</span>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdminConta">
+                    <span class="sidebar-mini"> PSR </span>
+                    <span class="sidebar-normal"> Procesar Solitudes Recursos</span>
+                  </a>
+                </li>
                 <!--li class="nav-item ">
                   <a class="nav-link" href="?opcion=ListaRendiciones">
                     <span class="sidebar-mini"> MR </span>
@@ -631,6 +643,12 @@ if($menuModulo==0){
                   <a class="nav-link" href="?opcion=reportesLibretasBancarias">
                     <span class="sidebar-mini"> LB </span>
                     <span class="sidebar-normal"> Libretas Bancarias</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="reportes_ventas/index.php" target="_blank">
+                    <span class="sidebar-mini"> RV </span>
+                    <span class="sidebar-normal"> Reportes Ventas</span>
                   </a>
                 </li>                         
               </ul>
@@ -862,18 +880,6 @@ if($menuModulo==0){
                   <a class="nav-link" style="background:rgba(116, 24, 153,0.6); color:#E2AF0F;font-weight:bold;"  href="?opcion=listSolicitudRecursosAdminSis">
                     <span class="sidebar-mini"> GSIS </span>
                     <span class="sidebar-normal"> Gesti&oacute;n SR SIS</span>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdmin">
-                    <span class="sidebar-mini"> GSA </span>
-                    <span class="sidebar-normal"> Gesti&oacute;n SR Administración</span>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdminConta">
-                    <span class="sidebar-mini"> CSR </span>
-                    <span class="sidebar-normal"> Contabilización SR</span>
                   </a>
                 </li>
                 <li class="nav-item ">

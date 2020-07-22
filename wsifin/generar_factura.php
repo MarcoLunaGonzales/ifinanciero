@@ -45,8 +45,12 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
         date_default_timezone_set('America/La_Paz');
 
         $cod_solicitudfacturacion = -100;//desde la tienda usamos el -100
-        $cod_uo_solicitud = 5;
-        $cod_area_solicitud = 13;
+        $cod_uo_solicitud = 5;        
+        if($normas==0){
+            $cod_area_solicitud = 13;//capacitacion
+        }else{
+            $cod_area_solicitud = 12;//normas
+        }
         if($pasarelaId==1){
             $cod_tipoobjeto = 1933;
         }else{
