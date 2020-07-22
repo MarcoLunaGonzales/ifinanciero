@@ -7554,13 +7554,13 @@ function editarDatosPlantilla(){
 
   if($("#modal_productos").length){ 
      $("#modal_productos").val($("#productos_sim").val());
-     $("#modal_productos").tagsinput('removeAll');
-     $("#modal_productos").tagsinput('add', $("#productos_sim").val());
+     //$("#modal_productos").tagsinput('removeAll');
+     //$("#modal_productos").tagsinput('add', $("#productos_sim").val());
   }
   if($("#modal_sitios").length){ 
      $("#modal_sitios").val($("#sitios_sim").val());
-     $("#modal_sitios").tagsinput('removeAll');
-     $("#modal_sitios").tagsinput('add', $("#sitios_sim").val());
+     //$("#modal_sitios").tagsinput('removeAll');
+     //$("#modal_sitios").tagsinput('add', $("#sitios_sim").val());
   }
    //mostrar sitios y o productos
    listarAtributo();

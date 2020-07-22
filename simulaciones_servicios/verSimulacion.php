@@ -6,7 +6,8 @@ require_once '../styles.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
-
+$sinEdicionModal=true;
+?><input type="hidden" value="" id="sinEdicionModal"><?php
 setlocale(LC_TIME, "Spanish");
 
 $dbh = new Conexion();
@@ -631,6 +632,9 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                           <a href="#" onclick="listarCostosVariblesPeriodo(<?=$anioGeneral?>)" class="btn btn-sm btn-info">
                                            <i class="material-icons">list</i> CV
                           </a> 
+                          <a href="#" onclick="editarDatosPlantilla()" class="btn btn-success btn-sm">
+                             <i class="material-icons" title="Ver Datos Complementarios">list</i> DC
+                          </a>
            <!--<a href="#" title="Listar Detalle Costo Fijo" onclick="listarCostosFijos()" class="btn btn-sm btn-info"><i class="material-icons">list</i> CF</a>-->
           <br>
           <div class="row">
