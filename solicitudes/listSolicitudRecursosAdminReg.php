@@ -68,6 +68,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 $stmt->bindColumn('glosa_estado', $glosa_estadoX);
 
 ?>
+
 <div class="content">
   <div class="container-fluid">
         <div class="row">

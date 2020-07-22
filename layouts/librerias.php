@@ -248,7 +248,10 @@
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
-            "ordering": false
+            "ordering": false/*,
+             'scrollY': '70vh', 
+             'scrollCollapse': false,
+             "scrollX": false*/
         } );
         $('#tablePaginator100').DataTable( {
             "pageLength": 100,

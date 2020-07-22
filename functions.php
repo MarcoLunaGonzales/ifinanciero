@@ -2012,6 +2012,19 @@ function porcentRetencion($codigo){
    }
    return($nombreX);
 }
+
+function porcentRetencionSolicitud($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT SUM(porcentaje) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=:codigo and cod_cuenta!=0");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['porcentaje'];
+   }
+   return($nombreX);
+}
+
 function debeHaberRetencionDetalle($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT debe_haber FROM configuracion_retencionesdetalle where codigo=:codigo");

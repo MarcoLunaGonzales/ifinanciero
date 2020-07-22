@@ -20,6 +20,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $fechaHoraActual=date("Y-m-d H:i:s");
 
 
+if($estado==10||$estado==11){
+  $urlList2=$urlList4;
+  $estado=$estado-10;
+  $sqlUpdate="UPDATE solicitud_recursos SET  revisado_contabilidad=$estado where codigo=$codigo";
+  $stmtUpdate = $dbh->prepare($sqlUpdate);
+  $flagSuccess=$stmtUpdate->execute();
+}else{
+
 if(obtenerUnidadSolicitanteRecursos($codigo)==3000){ //&&obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)
   if(isset($_GET["reg"])){
    if($estado==4&&$_GET['reg']!=2){
@@ -75,7 +83,7 @@ if($estado!=1){
      //enviar propuestas para la actualizacion de ibnorca
      $fechaHoraActual=date("Y-m-d H:i:s");
      $idTipoObjeto=2708;
-     $idObjeto=2822; //ESTADO PARA PROYECTO SIS
+     $idObjeto=3107; //ESTADO PARA PROYECTO SIS
      $obs="Enviado a Gestión SIS";
      if(isset($_GET['u'])){
        $u=$_GET['u'];
@@ -87,7 +95,7 @@ if($estado!=1){
    }   
   }
 	//fin de actulizar estados del servidor ibnorca
-}else{
+ }else{
 	//enviar propuestas para la actualizacion de ibnorca
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2708;
@@ -100,7 +108,10 @@ if($estado!=1){
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
      }
     
-}
+ }
+
+} //else Estado Contabilidad
+
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
