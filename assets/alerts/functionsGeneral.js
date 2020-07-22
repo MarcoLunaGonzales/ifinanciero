@@ -7554,13 +7554,13 @@ function editarDatosPlantilla(){
 
   if($("#modal_productos").length){ 
      $("#modal_productos").val($("#productos_sim").val());
-     $("#modal_productos").tagsinput('removeAll');
-     $("#modal_productos").tagsinput('add', $("#productos_sim").val());
+     //$("#modal_productos").tagsinput('removeAll');
+     //$("#modal_productos").tagsinput('add', $("#productos_sim").val());
   }
   if($("#modal_sitios").length){ 
      $("#modal_sitios").val($("#sitios_sim").val());
-     $("#modal_sitios").tagsinput('removeAll');
-     $("#modal_sitios").tagsinput('add', $("#sitios_sim").val());
+     //$("#modal_sitios").tagsinput('removeAll');
+     //$("#modal_sitios").tagsinput('add', $("#sitios_sim").val());
   }
    //mostrar sitios y o productos
    listarAtributo();
@@ -15276,6 +15276,7 @@ function abrirLibretaBancaria(datos,direccion,indice){
   document.getElementById("direccion").value=direccion;
   document.getElementById("indice").value=indice;
   document.getElementById("datos").value=datos;
+  document.getElementById("saldo_x").value=saldo;
   $("#modalListaLibretaBancaria").modal("show");          
   // var table =$("#libreta_bancaria_reporte_modal");
   // table.fixedHeader.enable();
@@ -15748,8 +15749,15 @@ function listar_libretaBancaria(codLibretaDetalle,descripcion){
   }else{
    var n= $("#cantidad_filas_libretas").val();
    n++;
-   $("#nfacturaslibretas").html(n);
    $("#cantidad_filas_libretas").val(n);
+   //ponemos cantidad de libretas seleccionadas
+  var contador_libretas=1;
+  for (var i = 1; i <= $("#cantidad_filas_libretas").val(); i++) {
+    if($("#cod_detalle_libreta_bancaria"+i).length>0){
+      contador_libretas=contador_libretas+1;    
+    }
+  };
+  $("#nfacturaslibretas").html(contador_libretas);
    agregarLibretaDetalleFactura(codLibretaDetalle,descripcion,n);
   }
 }
@@ -15758,11 +15766,12 @@ function agregarLibretaDetalleFactura(codLibretaDetalle,descripcion,n){
   if(descripcion!=""){
     descripcionList=descripcion.split("####");
   }else{
-    descripcionList[0]="";descripcionList[1]="";descripcionList[2]="";descripcionList[3]="";
+    descripcionList[0]="";descripcionList[1]="";descripcionList[2]="";descripcionList[3]="";descripcionList[4]="";
   }
+  var saldo_libreta_total=descripcionList[4];
    var html ='<tr id="fila_detalle_factura'+n+'">'+
     '<td>'+descripcionList[0]+'<input id="cod_detalle_libreta_bancaria'+n+'" type="hidden" value="'+codLibretaDetalle+'"></td>'+
-    '<td>'+descripcionList[1]+'</td>'+
+    '<td>'+descripcionList[1]+'<input id="saldo_libreta_ban'+n+'" type="hidden" value="'+saldo_libreta_total+'"></td>'+
     '<td>'+descripcionList[2]+'</td>'+
     '<td>'+descripcionList[3]+'</td>'+
     '<td><button title="Eliminar de la lista" class="btn btn-sm btn-danger btn-fab" onclick="eliminarLibretaDetalleFactura('+n+')"><i class="material-icons">delete</i></td>'+   
@@ -15791,13 +15800,21 @@ function verificarLibretaCodigo(codigo){
 function facturarLibretaBancaria(){
   var codDetalle=[];
   var index=0;
+  var monto_factura=document.getElementById("saldo_x").value;
+  var saldo_libreta_x=0
   for (var i = 1; i <= $("#cantidad_filas_libretas").val(); i++) {
       if($("#cod_detalle_libreta_bancaria"+i).length>0){
          codDetalle[index]=$("#cod_detalle_libreta_bancaria"+i).val();
+         saldo_libreta_x=saldo_libreta_x+parseFloat($("#saldo_libreta_ban"+i).val());
          index++;
       }
-   };
-  seleccionar_libretaBancaria(codDetalle.join(","));
+  };
+  // alert(saldo_libreta_x+"-"+monto_factura);
+  if(saldo_libreta_x>monto_factura){
+    Swal.fire("Informativo", "La suma de montos de la libreta, es mayor al de la factura.", "warning");
+  }else{
+    seleccionar_libretaBancaria(codDetalle.join(","));
+  }
 }
 
 function listar_comprobanteDetalle(codigo,descripcion){

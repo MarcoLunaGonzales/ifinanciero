@@ -519,7 +519,13 @@
     <div class="modal-content card">
                <div class="card-header card-header-info card-header-text">
                   <div class="card-text">
-                    <h4>Editar Propuesta</h4>
+                   <?php
+                  if(isset($sinEdicionModal)){
+                    ?><h4>Datos Complementarios</h4><?php
+                  }else{
+                    ?><h4>Editar Propuesta</h4><?php
+                  }  
+                   ?> 
                   </div>
                   <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
                     <i class="material-icons">close</i>
@@ -556,7 +562,7 @@
                        <label class="col-sm-2 col-form-label">Productos <!--<small class="text-muted">(<?=count($cantidadProductos)?>)</small>--></label>
                        <div class="col-sm-8">
                         <div class="form-group" style="border-bottom: 1px solid #CACFD2">
-                          <input type="hidden" value="" class="form-control tagsinput" name="modal_productos" id="modal_productos" data-role="tagsinput" data-color="warning">
+                          <input type="hidden" value="" class="form-control" name="modal_productos" id="modal_productos">
                           <div id="productos_div" class=""></div>
                           <div id="divResultadoListaAtributosProd">
                             <div class="">
@@ -566,8 +572,13 @@
                         </div>
                         </div>
                         <div class="col-sm-2">
+                          <?php
+                          if(!isset($sinEdicionModal)){
+                                        ?>
                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+
                             </button>
+                            <?php } ?>
                         </div>
                       </div>
                          <?php
@@ -580,6 +591,9 @@
                        <!--<label class="col-sm-2 col-form-label">Sitios <small class="text-muted">(<?=count($cantidadSitios)?>)</small></label>-->
                        <div class="col-sm-12">
                           <div class="btn-group  float-right">
+                            <?php
+                              if(!isset($sinEdicionModal)){
+                                        ?>
                             <button title="Agregar Sitio" type="button" name="add" class="btn btn-sm btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
                               <button title="Agregar Auditor" type="button" class="btn btn-sm btn-default btn-round dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -603,11 +617,11 @@
                                   <?php
                                 } ?>
                                </div>
-                           
+                              <?php } ?>
                         </div>
                         <div class="" style="border-bottom: 1px solid #CACFD2">
                           <div id="productos_div" class="d-none"></div>
-                          <input type="hidden" value="" class="form-control tagsinput" name="modal_sitios" id="modal_sitios" data-role="tagsinput" data-color="warning">                          
+                          <input type="hidden" value="" class="" name="modal_sitios" id="modal_sitios">                          
                           <div id="divResultadoListaAtributos">
                             <div class="">
                               <center><h4><b>SIN REGISTROS</b></h4></center>
@@ -636,7 +650,7 @@
                        <label class="col-sm-2 col-form-label">Descripción del Servicio</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <input type="text" class="form-control" name="modal_des_serv" id="modal_des_serv" value="<?=$descripcionServSimulacionXX?>">                          
+                          <input type="text" class="form-control" <?=(isset($sinEdicionModal))?"readonly":"";?> name="modal_des_serv" id="modal_des_serv" value="<?=$descripcionServSimulacionXX?>">                          
                         </div>
                         </div>
                       </div> 
@@ -647,7 +661,7 @@
                        <label class="col-sm-2 col-form-label">Alcance</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <textarea class="form-control" name="modal_alcance" id="modal_alcance"><?=$alcanceSimulacionXX?></textarea>                          
+                          <textarea class="form-control" <?=(isset($sinEdicionModal))?"readonly":"";?> name="modal_alcance" id="modal_alcance"><?=$alcanceSimulacionXX?></textarea>                          
                         </div>
                         </div>
                       </div>
@@ -702,7 +716,9 @@
                                   </tr>
                               </thead>
                               <tbody id="modal_body_tabla_servicios<?=$an?>">
-                                <tr class="bg-plomo">
+                                <?php
+                                if(!isset($sinEdicionModal)){
+                                  ?><tr class="bg-plomo">
                                   <td>N</td>
                                   <td>
                                     <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio<?=$an?>SSS0" id="anio<?=$an?>SSS0">
@@ -802,7 +818,10 @@
                                        </a>
                                      </div>
                                   </td>
-                                </tr>
+                                </tr><?php
+                                }  
+                                 ?>
+                                
                                 <?php 
                                 $iii=1;
                                $queryPr="SELECT s.*,t.Descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_claservicio=t.IdClaServicio order by t.nro_orden";
@@ -878,10 +897,10 @@
                                      </td>
                                      <td class="text-left"><i class="material-icons text-warning"><?=$iconServ?></i><input type="hidden" id="precio_fijo<?=$an?>SSS<?=$iii?>" value="<?=$iconServ?>"> <?=$tipoPre?></td>
                                      <td class="text-right">
-                                       <input type="text" <?=$estiloFilaTextoSol?> id="descripcion_servicios<?=$an?>SSS<?=$iii?>" name="descripcion_servicios<?=$an?>SSS<?=$iii?>" class="form-control text-info text-right" value="<?=$tipoPreEdit?>">
+                                       <input type="text" <?=$estiloFilaTextoSol?> <?=(isset($sinEdicionModal))?"readonly":"";?> id="descripcion_servicios<?=$an?>SSS<?=$iii?>" name="descripcion_servicios<?=$an?>SSS<?=$iii?>" class="form-control text-info text-right" value="<?=$tipoPreEdit?>">
                                      </td>
                                      <td class="text-right">
-                                       <input type="number" <?=$estiloFilaTextoSol?> min="1" id="cantidad_servicios<?=$an?>SSS<?=$iii?>" name="cantidad_servicios<?=$an?>SSS<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,2)" value="<?=$cantidadEPre?>">
+                                       <input type="number" <?=$estiloFilaTextoSol?> <?=(isset($sinEdicionModal))?"readonly":"";?> min="1" id="cantidad_servicios<?=$an?>SSS<?=$iii?>" name="cantidad_servicios<?=$an?>SSS<?=$iii?>" class="form-control text-info text-right" onchange="calcularTotalFilaServicio(<?=$an?>,2)" onkeyUp="calcularTotalFilaServicio(<?=$an?>,2)" value="<?=$cantidadEPre?>">
                                      </td>
                                      <td>
                                       <select <?=$estiloFilaTextoSol?> class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="unidad_servicios<?=$an?>SSS<?=$iii?>" id="unidad_servicios<?=$an?>SSS<?=$iii?>" onchange="calcularTotalFilaServicio(<?=$an?>,2)">
@@ -919,12 +938,17 @@
                                        <input type="<?=$claseDeshabilitadoOFF?>" id="modal_montoservtotalUSDOFF<?=$an?>SSS<?=$iii?>" name="modal_montoservtotalUSDOFF<?=$an?>SSS<?=$iii?>" readonly class="form-control text-info text-right" value="0" step="0.01">
                                      </td>
                                      <td id="solicitado_item<?=$an?>SSS<?=$iii?>">
+                                      <?php
+                                      if(!isset($sinEdicionModal)){
+                                        ?>
                                        <div class="togglebutton">
                                                <label>
                                                  <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkserv<?=$an?>SSS<?=$iii?>" onchange="activarInputMontoFilaServicio(<?=$an?>,'<?=$iii?>')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>
+                                       <?php
+                                      } ?>
                                      </td>
                                      <?php 
                                      if($verificarFacturadoServicio>0){  //servicio facturado
@@ -993,10 +1017,14 @@
                          </div>
                       </div>
                       <hr>
-                       
-                      <div class="form-group float-right">
+                      <?php 
+                      if(!isset($sinEdicionModal)){
+                       ?>
+                       <div class="form-group float-right">
                         <button type="button" id="boton_guardarplan" class="btn btn-default" onclick="guardarDatosPlantillaServicio(this.id)">Guardar</button>
-                      </div> 
+                      </div>
+                       <?php
+                      }?>     
                 <p class="text-muted"><small>USD: Dolar, BOB: Bolivianos, EA: Equipo Auditor, <i class="material-icons text-danger small">not_interested</i> : Item Registrado en SF</small></p> 
                 </div>
       </div>  

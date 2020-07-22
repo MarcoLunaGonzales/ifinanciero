@@ -30,7 +30,7 @@ if(isset($_GET['q'])){
   $sqlAreas="";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (3)) $sqlAreas order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (3)) $sqlAreas order by sr.revisado_contabilidad,sr.fecha desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -48,6 +48,7 @@ $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
 $stmt->bindColumn('numero', $numeroSol);
 $stmt->bindColumn('idServicio', $idServicio);
 $stmt->bindColumn('glosa_estado', $glosa_estadoX);
+$stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
 
 $item_1=2708;
 ?>
@@ -76,7 +77,7 @@ $item_1=2708;
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th>Observaciones</th>
-                          <th class="text-right">Actions</th>
+                          <th class="text-right" width="25%">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -143,6 +144,36 @@ $item_1=2708;
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
                             <?php 
+                            if($estadoContabilidadX==1){
+                              if(isset($_GET['q'])){
+                                ?>
+                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-rose" style="background:#661E1B">
+                                       <i class="material-icons">check_box</i><!--check_box-->
+                                </a>
+                                <?php
+                              }else{
+                                ?>
+                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10'  class="btn btn-rose" style="background:#661E1B">
+                                       <i class="material-icons">check_box</i><!--check_box-->
+                                </a>
+                                <?php
+                              }
+                            }else{
+                              if(isset($_GET['q'])){
+                                ?>
+                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-default">
+                                       <i class="material-icons">check_box_outline_blank</i>
+                                </a>
+                                <?php
+                              }else{
+                                ?>
+                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11'  class="btn btn-default">
+                                       <i class="material-icons">check_box_outline_blank</i>
+                                </a>
+                                <?php
+                              }
+                            }
+                            
                             if($codEstado==4){
                               if(isset($_GET['q'])){
                                 ?>
@@ -218,7 +249,7 @@ $item_1=2708;
                                     <i class="material-icons text-success">edit</i> Editar Solicitud
                                    </a>
                                    <?php 
-                                  if($otrosPagosCuenta>0){
+                                  if($otrosPagosCuenta==0){
                                     ?>
                                    <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>')" href='#'  class="dropdown-item">
                                       <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
@@ -263,7 +294,7 @@ $item_1=2708;
                                     <i class="material-icons text-success">edit</i> Editar Solicitud
                                    </a>
                                    <?php 
-                                  if($otrosPagosCuenta>0){
+                                  if($otrosPagosCuenta==0){
                                     ?>
                                    <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>')" href='#'  class="dropdown-item">
                                       <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud

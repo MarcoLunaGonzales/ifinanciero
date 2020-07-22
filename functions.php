@@ -2012,6 +2012,19 @@ function porcentRetencion($codigo){
    }
    return($nombreX);
 }
+
+function porcentRetencionSolicitud($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT SUM(porcentaje) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=:codigo and cod_cuenta!=0");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['porcentaje'];
+   }
+   return($nombreX);
+}
+
 function debeHaberRetencionDetalle($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT debe_haber FROM configuracion_retencionesdetalle where codigo=:codigo");
@@ -4668,6 +4681,36 @@ function obtenerActividadesServicioImonitoreo($codigo_proyecto){
     // foreach ($detalle as $objDet){
     //   echo $objDet->codigo."<br>";
     // }
+  }
+
+  function obtenerCodigoActividadesServicioImonitoreo($cod_actividad){
+  $sIde = "";
+  $sKey = "";
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"DatosActividadProyecto","codigo"=>$cod_actividad);
+  //Lista todos los componentes
+  $parametros=json_encode($parametros);
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición    
+    //curl_setopt($ch, CURLOPT_URL,"http://localhost/imonitoreo/componentesSIS/compartir_servicio.php");//prueba
+    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/ifinanciero/wsifin/ws_actividadesproyectos.php");//prueba    
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    
+    // imprimir en formato JSON  
+    //print_r($remote_server_output);
+    $obj= json_decode($remote_server_output);
+    $detalle=$obj->lstComponentes;
+    $abreviatura="";
+    foreach ($detalle as $listas) { 
+     $abreviatura="Actividad: ".$listas->abreviatura;
+    }
+    return $abreviatura;
   }
 
   function obtenerDetalleSolicitudSimulacionCuentaPlantillaServicioFiltro($codigo,$codigoPlan,$anio,$item_detalle,$codigo_detalle){

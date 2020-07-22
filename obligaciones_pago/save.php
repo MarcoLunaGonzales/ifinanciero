@@ -69,6 +69,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 	}
 }
 
+
 if($contadorCheque==$contadorChequeFilas){
   //creacion del comprobante de pago
     $codComprobante=obtenerCodigoComprobante();

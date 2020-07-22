@@ -12,10 +12,10 @@ $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
 try {//recibiendo datos    
-    // $codigo_alterno = $_POST["Codigo_alterno"];
+    $codigo_alterno = $_POST["Codigo_alterno"];
     // $cod_simulacion = $_POST["IdCurso"];
     // $ci_estudiante = $_POST["ci_estudiante"];
-    $codigo_alterno = 0;
+    // $codigo_alterno = 0;
     $cod_simulacion = 0;
     $ci_estudiante = 0;
 
@@ -33,10 +33,10 @@ try {//recibiendo datos
     $razon_social = $_POST["razon_social"];    
     $nit = $_POST["nit"];
     $observaciones = $_POST["observaciones"];    
-    $observaciones_2 = $_POST["observaciones_2"];    
-    $persona_contacto = 0;
+    $observaciones_2 = $_POST["observaciones_2"];        
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];
+    $persona_contacto = $_POST["persona_contacto"];
 
     if(isset($_POST['q'])){
         $cod_personal=$_POST['q'];
