@@ -1,9 +1,14 @@
 <?php
-require_once 'conexion.php';
+
+session_start();
+
+require_once '../layouts/bodylogin2.php';
+require_once '../conexion.php';
 require_once 'configModule.php';
-require_once 'styles.php';
-require_once 'functions.php';
-require_once 'functionsGeneral.php';
+require_once '../styles.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
+
 
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUnidad=$_SESSION["globalUnidad"];
@@ -47,7 +52,7 @@ $i=0;
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Ingresos por Facturación</h4>
+                  <h4 class="card-title">Reporte Ingresos por Factura y Área</h4>
                 </div>
                 <form class="" action="<?=$urlReporteIngresoFacturacion?>" target="_blank" method="POST">
                 <div class="card-body">
