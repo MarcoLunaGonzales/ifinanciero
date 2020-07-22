@@ -103,7 +103,7 @@ try {
                     if($codigo_sr>0){
                         $cod_pagoproveedor=obtenerCodigoPagoProveedor();
                         $sqlInsert="INSERT INTO pagos_proveedores (codigo, fecha,observaciones,cod_comprobante,cod_estadopago,cod_ebisa,cod_cajachicadetalle) 
-                        VALUES ('".$cod_pagoproveedor."','".$fecha."','".$observaciones."','0',1,0,'$codigo')";
+                        VALUES ('".$cod_pagoproveedor."','".$fecha."','".$observaciones."','0',3,0,'$codigo')";
                         $stmtInsert = $dbh->prepare($sqlInsert);
                         $stmtInsert->execute();
                         $cod_pagoproveedordetalle=obtenerCodigoPagoProveedorDetalle();
