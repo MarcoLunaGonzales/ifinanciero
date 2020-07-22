@@ -564,7 +564,7 @@
 		}
 
 		if ($_GET['opcion']=='reporteIngresosPorFacturacion') {
-			require_once('reportes_ventas/reportesIngresoFacturacion.php');
+			require_once('reportes_ventas/rptOpIngresoFacturacion.php');
 		}
 
 		//******************************ACTIVOS FIJOS***********************************************************

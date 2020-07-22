@@ -47,7 +47,7 @@ $i=0;
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Ingreso por Facturación</h4>
+                  <h4 class="card-title">Reporte Ingresos por Facturación</h4>
                 </div>
                 <form class="" action="<?=$urlReporteIngresoFacturacion?>" target="_blank" method="POST">
                 <div class="card-body">
@@ -167,6 +167,25 @@ $i=0;
 			              </div>
 				      </div>
                   </div><!--div row-->
+
+					<div class="row">
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                 <label class="col-sm-4 col-form-label">Incluir Personal</label>
+				                 <div class="col-sm-8">
+				                	<div class="form-group">
+		                               <select class="selectpicker form-control form-control-sm" name="personal" id="personal" data-style="<?=$comboColor;?>" required>				  	   
+					                       <option value="0">Sin Personal</option>
+					                       <option value="1">Personal que Proceso la Factura</option>
+					                       <option value="2">Personal que Solicitó la Factura</option>
+				                        </select>
+				                    </div>
+				                  </div>
+				              </div>
+					      </div>
+	                </div><!--div row-->
+
+
                   <div class="row">
       	             <div class="col-sm-6">
       	             	<div class="row">

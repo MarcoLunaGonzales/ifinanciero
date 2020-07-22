@@ -39,6 +39,8 @@ $unidadCosto=$_POST['unidad_costo'];
 $areaCosto=$_POST['area_costo'];
 
 $gestion= $_POST["gestion"];
+$filtroPersonal= $_POST["personal"];
+
 
 //PONEMOS LAS VARIABLES PARA CUANDO LLAMEMOS AL REPORTE DESDE LOS MAYORES
 if($gestion==null){
