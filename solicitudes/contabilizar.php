@@ -134,11 +134,11 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
         $inicioNumero=$numeroCuenta[0];
         $unidadarea=obtenerUnidadAreaCentrosdeCostos($inicioNumero);               ////////////////////////unidad y area para el detalle
         if($unidadarea[0]==0){
-            $unidadDetalle=$unidadSol;
-            $area=$areaSol;
+            $unidadDetalle=$rowNuevo['cod_unidadorganizacional'];
+            $area=$rowNuevo['cod_area'];
         }else{
-            $unidadDetalle=$unidadarea[0];
-            $area=$unidadarea[1];
+            $unidadDetalle=$rowNuevo['cod_unidadorganizacional'];
+            $area=$rowNuevo['cod_area'];
         }
         
         $debe=$rowNuevo['monto'];
@@ -207,11 +207,11 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
              $inicioNumeroRet=$n_cuenta[0];
              $unidadareaRet=obtenerUnidadAreaCentrosdeCostos($inicioNumeroRet);////////////////////////unidad y area para el detalle
              if($unidadareaRet[0]==0){
-                   $unidadDetalleRet=$unidadSol;
-                   $areaRet=$areaSol;
+                   $unidadDetalleRet=$unidadDetalle;
+                   $areaRet=$area;
              }else{
-                  $unidadDetalleRet=$unidadareaRet[0];
-                   $areaRet=$unidadareaRet[1];
+                  $unidadDetalleRet=$unidadDetalle;
+                   $areaRet=$area;
              }
     
              $retenciones[$j]['cuenta']=$cuentaRetencion;
@@ -289,11 +289,11 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
           $inicioNumeroProv=$numeroCuentaProv[0];
           $unidadareaProv=obtenerUnidadAreaCentrosdeCostos($inicioNumeroProv);
           if($unidadareaProv[0]==0){
-              $unidadDetalleProv=$unidadSol;
-              $areaProv=$areaSol;
+              $unidadDetalleProv=$unidadDetalle;
+              $areaProv=$area;
           }else{
-              $unidadDetalleProv=$unidadareaProv[0];
-              $areaProv=$unidadareaProv[1];
+              $unidadDetalleProv=$unidadDetalle;
+              $areaProv=$area;
           }
 
             $debeProv=0;
