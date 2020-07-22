@@ -27,4 +27,4 @@ if($lista->totalLista>0){
  }
 }
 
- print_r($lista);
+ //print_r($lista);

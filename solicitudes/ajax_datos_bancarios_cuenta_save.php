@@ -15,7 +15,7 @@ $codigo=$_GET['codigo'];
 $banco=$_GET['banco'];
 $cuenta=$_GET['cuenta'];
 $nombre=$_GET['nombre'];
-$apellido=$_GET['apellido'];
+$apellido="‎      ‏‏‎";//$_GET['apellido']
 
 $direccion=obtenerValorConfiguracion(42);
 //insertar cambios en el servicio web CUENTAS BANCARIAS

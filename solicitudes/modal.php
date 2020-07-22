@@ -83,7 +83,7 @@
                 <label class="col-sm-2 col-form-label" style="color: #4a148c;">Banco</label>
                 <div class="col-sm-4">
                   <div class="form-group">
-                     <select class="selectpicker form-control form-control-sm" name="nuevo_banco" id="nuevo_banco" data-style="btn btn-primary">                                  
+                     <select class="selectpicker form-control form-control-sm" name="nuevo_banco" id="nuevo_banco" data-live-search="true" data-size="6"data-style="btn btn-primary">                                  
                         <?php 
                          $stmt3 = $dbh->prepare("SELECT * from bancos where cod_estadoreferencial=1");
                          $stmt3->execute();
@@ -105,18 +105,18 @@
                 </div>                          
               </div>
                <div class="row">                      
-                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Nombre Beneficiario</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Nombre Completo Beneficiario</label>
+                    <div class="col-sm-10">
                       <div class="form-group">  
                            <input class="form-control" type="text" name="nuevo_nombre_beneficiario" id="nuevo_nombre_beneficiario" required="true">                                                                                                                       
                        </div>
                     </div>
-                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Apellido Beneficiario</label>
+                    <!--<label class="col-sm-2 col-form-label" style="color: #4a148c;">Apellido Beneficiario</label>
                     <div class="col-sm-4">
-                      <div class="form-group">  
-                           <input class="form-control" type="text" name="nuevo_apellido_beneficiario" id="nuevo_apellido_beneficiario" required="true">                                                                                                                       
-                       </div>
-                    </div>
+                      <div class="form-group">  -->
+                           <input class="form-control" type="hidden" name="nuevo_apellido_beneficiario" id="nuevo_apellido_beneficiario" required="true">                                                                                                                       
+                       <!--</div>
+                    </div>-->
                 </div>
                 <div class="mensaje"></div>
              </div>                     
@@ -187,19 +187,19 @@
                 </div>                          
               </div>
                <div class="row">                      
-                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Nombre Beneficiario (<b class="text-danger">*</b>)</label>
-                    <div class="col-sm-4">
+                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Nombre Completo Beneficiario (<b class="text-danger">*</b>)</label>
+                    <div class="col-sm-10">
                       <div class="form-group">  
                            <input class="form-control" type="text" name="nombre_beneficiario" id="nombre_beneficiario" required="true">                                                                                                                       
                        </div>
                     </div>
                     <div class="col-sm-1"></div>
-                    <label class="col-sm-2 col-form-label" style="color: #4a148c;">Apellido Beneficiario (<b class="text-danger">*</b>)</label>
+                    <!--<label class="col-sm-2 col-form-label" style="color: #4a148c;">Apellido Beneficiario (<b class="text-danger">*</b>)</label>
                     <div class="col-sm-3">
-                      <div class="form-group">  
-                           <input class="form-control" type="text" name="apellido_beneficiario" id="apellido_beneficiario" required="true">                                                                                                                       
-                       </div>
-                    </div>
+                      <div class="form-group"> --> 
+                           <input class="form-control" type="hidden" name="apellido_beneficiario" id="apellido_beneficiario" required="true">                                                                                                                       
+                       <!--</div>
+                    </div>-->
                 </div>
                 <div class="mensaje"></div>
              </div>                     

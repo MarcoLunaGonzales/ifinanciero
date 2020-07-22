@@ -220,7 +220,7 @@ $item_1=2708;
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
-                              <div class="dropdown-menu">
+                              <div class="dropdown-menu menu-fixed-sm-table">
                                 <?php
                               if(isset($_GET['q'])){
                                 ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
