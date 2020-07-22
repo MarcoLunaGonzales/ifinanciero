@@ -293,7 +293,7 @@
 		                $stmtUpdateEstadoCuenta = $dbh->prepare("UPDATE estados_cuenta set cod_comprobantedetalle=$cod_compro_det where cod_cajachicadetalle=$codigo_ccdetalle");
 		                $stmtUpdateEstadoCuenta->execute();
 		                //actualizamos el cod_comprobante a pagos_proveedores
-		                $stmtUpdatepagosProveedores = $dbh->prepare("UPDATE pagos_proveedores set cod_comprobante=$codComprobante where cod_cajachicadetalle=$codigo_ccdetalle");
+		                $stmtUpdatepagosProveedores = $dbh->prepare("UPDATE pagos_proveedores set cod_estadopago=5,cod_comprobante=$codComprobante where cod_cajachicadetalle=$codigo_ccdetalle");
 		                $stmtUpdatepagosProveedores->execute();
 	                }else{		                	
                     	if($porcentaje_cuentaorigen>100){
