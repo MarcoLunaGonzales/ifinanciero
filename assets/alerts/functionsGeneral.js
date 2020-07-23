@@ -387,8 +387,9 @@ function configuracionCentros(fila,inicio){
 
 function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
   var contador=0;
+  var cuentaIvaDiferido=$("#codigo_iva_direfido").val();
   for (var i = 0; i < estado_cuentas.length; i++) {
-    if(estado_cuentas[i].cod_cuenta==codigoCuenta){ //&&codigoCuentaAux==0
+    if(estado_cuentas[i].cod_cuenta==codigoCuenta&&codigoCuenta!=cuentaIvaDiferido){ //&&codigoCuentaAux==0
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
       $("#tipo_proveedorcliente"+fila).val(estado_cuentas[i].tipo_estado_cuenta);
@@ -9237,7 +9238,7 @@ function actualizarRegistroProveedor(){
         success:  function (resp) {
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos"); 
-           actualizarCombosProveedores();
+           //actualizarCombosProveedores();
            //alerts.showSwal('success-message','registerSolicitud.php?cod='+codigo);
         }
     });  
@@ -9850,6 +9851,7 @@ function AgregarSeviciosFacturacion2_servicios(obj) {
     $("#add_boton").attr("disabled",true);
   }
   var IdTipo=document.getElementById("IdTipo").value;
+  var cod_area=document.getElementById("cod_area").value;
   // alert(IdTipo);
       numFilas++;
       cantidadItems++;
@@ -9866,7 +9868,7 @@ function AgregarSeviciosFacturacion2_servicios(obj) {
       divDetalle=$("#div"+numFilas);
       //document.getElementById('nro_cuenta').focus();
       ajax=nuevoAjax();
-      ajax.open("GET","servicios_presupuestos/ajax_addserviciosfacturacion.php?idFila="+numFilas+"&IdTipo="+IdTipo,true);
+      ajax.open("GET","servicios_presupuestos/ajax_addserviciosfacturacion.php?idFila="+numFilas+"&IdTipo="+IdTipo+"&cod_area="+cod_area,true);
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           divDetalle.html(ajax.responseText);
@@ -13912,7 +13914,7 @@ function agregarTipoPagoProveedorDetalle(fila){
            $("#tipo_pagoproveedor").val($("#cod_tipopago"+fila).val());
            $("#texto_ajax_titulo").html("Procesando Datos");   
            if(!($("#nben"+fila).hasClass("estado"))){
-              $("#nombre_beneficiario").val('');
+              $("#nombre_beneficiario").val($("#proveedor"+fila+" option:selected").text().toUpperCase());
               $("#apellido_beneficiario").val('');
               $("#cuenta_beneficiario").val('');
               $("#tipo_pagoproveedor").val('');
@@ -13933,11 +13935,11 @@ function agregarTipoPagoProveedorDetalle(fila){
 }
 function guardarFormaPagoSolicitud(){
   var fila = $("#fila_pago").val();
-  if($("#tipo_pagoproveedor").val()>0&&$("#nombre_beneficiario").val()!=""&&$("#apellido_beneficiario").val()!=""){
+  if($("#tipo_pagoproveedor").val()>0&&$("#nombre_beneficiario").val()){ //!=""&&$("#apellido_beneficiario").val()!=""
   $("#cod_cuentaBancaria"+fila).val($("#cuenta_bancaria").val());
   $("#cod_tipopago"+fila).val($("#tipo_pagoproveedor").val());
   $("#nombre_beneficiario"+fila).val($("#nombre_beneficiario").val());
-  $("#apellido_beneficiario"+fila).val($("#apellido_beneficiario").val());
+  $("#apellido_beneficiario"+fila).val("");
   $("#cuenta_beneficiario"+fila).val($("#cuenta_beneficiario").val());
    if(!($("#nben"+fila).hasClass("estado"))){
     $("#nben"+fila).addClass("estado");
@@ -13946,7 +13948,6 @@ function guardarFormaPagoSolicitud(){
   }else{
    Swal.fire("Informativo!", "Debe llenar los campos requeridos!", "warning"); 
   }
-  
 }
 
 function quitarFormaPagoProveedor(fila){
@@ -14259,7 +14260,7 @@ function guardarNuevoBeneficiario(){
   var cuenta = $("#nuevo_cuenta_beneficiario").val();
   var nombre = $("#nuevo_nombre_beneficiario").val();
   var apellido = $("#nuevo_apellido_beneficiario").val();
-  if(cuenta==""||nombre==""||apellido==""){
+  if(cuenta==""||nombre==""){
     Swal.fire('Informativo!','No se admiten campos vacíos!','warning');
   }else{
    var parametros={"codigo":proveedor,"banco":banco,"cuenta":cuenta,"nombre":nombre,"apellido":apellido};
@@ -14918,20 +14919,23 @@ function guardarNuevaCuentaAuxi(){
 
 
 function botonBuscarComprobante_caja_chica(){
-  var valor_uo=$("#OficinaBusqueda").val();
-  var valor_tipo=$("#tipoBusqueda").val();
-  var valor_fi=$("#fechaBusquedaInicio").val();
-  var valor_ff=$("#fechaBusquedaFin").val();
-  var valor_glosa=$("#glosaBusqueda").val();
-  var valor_nro_compr=$("#nro_comprobante").val();
-  var valor_nro_cuenta=$("#cuenta_auto_id").val();
+  // var valor_uo=$("#OficinaBusqueda").val();
+  // var valor_tipo=$("#tipoBusqueda").val();
+  // var valor_fi=$("#fechaBusquedaInicio").val();
+  // var valor_ff=$("#fechaBusquedaFin").val();
+  // var valor_glosa=$("#glosaBusqueda").val();
+  // var valor_nro_compr=$("#nro_comprobante").val();
+  // var valor_nro_cuenta=$("#cuenta_auto_id").val();
+  iniciarCargaAjax();  
   contenedor_p = document.getElementById('contenedor_lista_comprobantes');
   ajax=nuevoAjax();
-  ajax.open('GET', 'caja_chica/ajaxListaComprobantesModal.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa+'&comprobante='+valor_nro_compr+'&cuenta='+valor_nro_cuenta,true);
+  // ajax.open('GET', 'caja_chica/ajaxListaComprobantesModal.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa+'&comprobante='+valor_nro_compr+'&cuenta='+valor_nro_cuenta,true);
+  ajax.open('GET', 'caja_chica/ajaxListaComprobantesModal.php',true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor_p.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
+      detectarCargaAjax();
       // $("#modalBuscador").modal("hide");
       $("#modal_lista_comprobantes").modal("show");
       

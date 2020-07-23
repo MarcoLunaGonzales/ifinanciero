@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }elseif(!check($fechaFactura) || $fechaFactura!=$fechaFactura_actual){
                         $estado=3;
                         $mensaje = "Fecha incorrecta o no actual";
-                    }elseif($nitciCliente==null || $nitciCliente<0 || !is_numeric($nitciCliente)){
+                    }elseif($nitciCliente==null || $nitciCliente<0 || !is_numeric($nitciCliente) ||strlen($nitciCliente)>10){
                         $estado=4;
                         $mensaje = "Nit incorrecto";
                     }elseif($razonSocial==null || $razonSocial=='' || $razonSocial==' '){
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }elseif($tipoPago==null || $tipoPago=='' || $tipoPago==' '){
                         $estado=16;
                         $mensaje = "Tipo de Pago no encontrado";
-                    }elseif(($CodLibretaDetalle==null || $CodLibretaDetalle=='' || $CodLibretaDetalle==' ')&&$CodLibretaDetalle!=0){
+                    }elseif(($CodLibretaDetalle==null || $CodLibretaDetalle=='' || $CodLibretaDetalle==' ')&&$CodLibretaDetalle!='0'){
                         $estado=17;
                         $mensaje = "CodLibretaDetalle no encontrado.";
                     }elseif($items==null || $cont_items<=0){
@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         //mostrará el error de los items 
                     }else{
                         if($tipoPago==5 || $tipoPago==6){
-                            if($CodLibretaDetalle==0){
+                            if($CodLibretaDetalle=='0'){
                                 $estado=17;
                                 $mensaje = "CodLibretaDetalle no encontrado.";
                                 $sw_cod_libreta=false;
@@ -128,8 +128,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $sw_cod_libreta=true;
                             }
                         }
-                        if($sw_cod_libreta){
-                            $nitciCliente=(int)$nitciCliente;
+                        if($sw_cod_libreta){                            
+                            // $nitciCliente_X=(int)$nitciCliente;
+                            $nitciCliente =$nitciCliente;
+                            $findme   = '0';
+                            while (strpos($nitciCliente, $findme)==0){
+                                $nitciCliente=substr ($nitciCliente,1);
+                            }
                             $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas);//llamamos a la funcion                 
                             $rspArray = explode("###", $rspString);
                             $rsp=$rspArray[0];
@@ -167,7 +172,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mensaje="Error en las credenciales sKey y sIde";
     }
     if(isset($cod_factura)){
-        $mensaje.=" IdFactura".$cod_factura;
+        $mensaje.=" IdFactura: ".$cod_factura;
     }
     InsertlogFacturas_salida($estado,$mensaje,$json);
     if($estado=='0'){$resultado=array("estado"=>$estado,"mensaje"=>$mensaje,"IdFactura"=>$cod_factura);}

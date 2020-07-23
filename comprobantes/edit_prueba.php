@@ -311,7 +311,7 @@ $stmt->execute();
 		    <?php
 			 }
 		    ?>
-		
+		    <input type="hidden" name="codigo_iva_direfido" id="codigo_iva_direfido" value="<?=obtenerValorConfiguracion(67)?>">
 			<input type="hidden" name="cod_cuenta_configuracion_iva" id="cod_cuenta_configuracion_iva" value="<?=$cod_cuenta_configuracion_iva;?>">
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
 			<input type="hidden" name="codigo_comprobante" id="codigo_comprobante" value="<?=$globalCode;?>">

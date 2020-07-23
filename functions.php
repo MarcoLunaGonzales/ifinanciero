@@ -411,6 +411,19 @@ function nameProveedor($codigo){
    }
    return($nombreX);
 }
+
+function existeProveedor($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT codigo FROM af_proveedores where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX++;
+   }
+   return($nombreX);
+}
+
 function nameEntidad($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT abreviatura FROM entidades where codigo=:codigo");
@@ -8309,6 +8322,7 @@ function obtener_estado_facturas($codigo){
   }         
   return($cod_estado);
 }
+
 
 ?>
 

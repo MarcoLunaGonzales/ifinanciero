@@ -8,7 +8,6 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 $codigo=$_GET["cod"];
-$estado=$_GET["estado"];
 session_start();
 
 $globalUser=$_SESSION["globalUser"];
@@ -61,7 +60,6 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
       $codProveedor=$codProveedor;
       $codSimulacionServicio=$codSimulacionServicio;
       $numeroSol=$numeroSol;
-
       if($codSimulacion!=0){
         $nombreCliente="";
         $nombreSimulacion=nameSimulacion($codSimulacion);
@@ -115,6 +113,9 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
         $flagSuccess=$stmtDel->execute();
     $i=0;$codProveedor=0;$sumaDevengado=0;$nombresProveedor="";$nombreProveedor="";
     while ($rowNuevo = $nuevosDetalles->fetch(PDO::FETCH_ASSOC)) {
+        $cuenta=$rowNuevo['cod_plancuenta'];
+        $cuentaAuxiliar=0;
+
         $i++;
         
         if($codProveedor!=$rowNuevo['cod_proveedor']){
@@ -128,8 +129,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
          $codProveedor=$rowNuevo['cod_proveedor'];
         }
         
-        $cuenta=$rowNuevo['cod_plancuenta'];
-        $cuentaAuxiliar=0;
+        
         $numeroCuenta=trim(obtieneNumeroCuenta($cuenta));
         $inicioNumero=$numeroCuenta[0];
         $unidadarea=obtenerUnidadAreaCentrosdeCostos($inicioNumero);               ////////////////////////unidad y area para el detalle
@@ -284,6 +284,15 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
        //proveedor devengado
           $i++;
           $cuentaProv=obtenerCuentaPasivaSolicitudesRecursos($cuenta);
+          $nomProveedor=nameProveedor($codProveedor);
+          //crear cuenta auxiliar si no existe 
+          if(obtenerCodigoCuentaAuxiliarProveedorCliente(1,$codProveedor)==0){
+            $codEstado="1";
+            $stmtInsertAux = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente) 
+            VALUES ('$nomProveedor', $codEstado,$cuentaProv, 1, $codProveedor)");
+            $stmtInsertAux->execute();
+          }
+
           $cuentaAuxiliarProv=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$codProveedor);
           $numeroCuentaProv=trim(obtieneNumeroCuenta($cuentaProv));
           $inicioNumeroProv=$numeroCuentaProv[0];
@@ -295,6 +304,8 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
               $unidadDetalleProv=$unidadDetalle;
               $areaProv=$area;
           }
+
+           
 
             $debeProv=0;
             $haberProv=$sumaDevengado;
