@@ -15762,10 +15762,10 @@ function listar_libretaBancaria(codLibretaDetalle,descripcion){
   var contador_libretas=1;
   for (var i = 1; i <= $("#cantidad_filas_libretas").val(); i++) {
     if($("#cod_detalle_libreta_bancaria"+i).length>0){
-      contador_libretas=contador_libretas+1;    
+      contador_libretas=contador_libretas+1;
     }
   };
-  $("#nfacturaslibretas").html(contador_libretas);
+  $("#nfacturaslibretas").html(contador_libretas);  
    agregarLibretaDetalleFactura(codLibretaDetalle,descripcion,n);
   }
 }
@@ -15777,15 +15777,27 @@ function agregarLibretaDetalleFactura(codLibretaDetalle,descripcion,n){
     descripcionList[0]="";descripcionList[1]="";descripcionList[2]="";descripcionList[3]="";descripcionList[4]="";
   }
   var saldo_libreta_total=descripcionList[4];
-   var html ='<tr id="fila_detalle_factura'+n+'">'+
+  var html ='<tr id="fila_detalle_factura'+n+'">'+
     '<td>'+descripcionList[0]+'<input id="cod_detalle_libreta_bancaria'+n+'" type="hidden" value="'+codLibretaDetalle+'"></td>'+
-    '<td>'+descripcionList[1]+'<input id="saldo_libreta_ban'+n+'" type="hidden" value="'+saldo_libreta_total+'"></td>'+
+    '<td><small>'+descripcionList[1]+'</small><input id="saldo_libreta_ban'+n+'" type="hidden" value="'+saldo_libreta_total+'"></td>'+
     '<td>'+descripcionList[2]+'</td>'+
     '<td>'+descripcionList[3]+'</td>'+
     '<td><button title="Eliminar de la lista" class="btn btn-sm btn-danger btn-fab" onclick="eliminarLibretaDetalleFactura('+n+')"><i class="material-icons">delete</i></td>'+   
    '</tr>';
-   $("#datos_libreta_bancaria_detalle").append(html);
-   $("#modalListaLibretasBancariasDetalle").modal("show");
+   //ponemos el total
+  $("#datos_libreta_bancaria_detalle").append(html);
+  poner_total_libreta_modal();
+  $("#modalListaLibretasBancariasDetalle").modal("show");
+}
+function poner_total_libreta_modal(){
+  var n = $("#cantidad_filas_libretas").val();        
+  var saldo_libreta_x=0
+  for (var i = 1; i <= $("#cantidad_filas_libretas").val(); i++) {
+      if($("#cod_detalle_libreta_bancaria"+i).length>0){         
+         saldo_libreta_x=saldo_libreta_x+parseFloat($("#saldo_libreta_ban"+i).val());         
+      }
+  };
+  $("#total_saldo_lib").val(number_format(saldo_libreta_x,2));
 }
 
 function eliminarLibretaDetalleFactura(fila){
