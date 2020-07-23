@@ -149,17 +149,17 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
         function valida(f) {
           var ok = true;
           
-            if(f.elements["monto_inicio"].value == 0)
-            {    
-                var msg = "El Monto de 'Inicio' no debe ser menor a '0'...\n";
-                ok = false;
-            }else{
+            // if(f.elements["monto_inicio"].value == 0)
+            // {    
+            //     var msg = "El Monto de 'Inicio' no debe ser menor a '0'...\n";
+            //     ok = false;
+            // }else{
                 if(f.elements["observaciones"].value == null)
                 {    
                     var msg = "El Campo 'Detalle' no debe ir vacío...\n";
                     ok = false;
                 }    
-            }            
+            // }            
             if(ok == false)
                 alert(msg);
             return ok;

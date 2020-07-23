@@ -21,7 +21,7 @@ $mesGestion=$_SESSION['globalMes'];
 $globalUnidad=$_SESSION["globalUnidad"];
 // $globalArea=$_SESSION["globalArea"];
 $cod_uo=$globalUnidad;
-$tipo=3;
+$tipo="3,2";
 $fechaI='';
 $fechaF='';
 $glosa='';
@@ -63,7 +63,8 @@ $cuenta=16;
     	<th colspan="8">Detalle</th>
     </tr> 
   	<tr style="background-color:#E3CEF6;">
-      <td align="text-center small" width="4%">	#</td>                          
+      <td align="text-center small" width="4%">	#</td>   
+      <td align="text-center small" width="4%"> Fecha</td>   
       <td class="text-center small" width="5%">Centro<br>Costos</td>
       <td class="text-center small" width="5%">Cuenta</td>
       <td class="text-center small" width="20%">Nombre cuenta</td>
@@ -126,7 +127,8 @@ $cuenta=16;
     			}
     			?>
     			<tr>
-    				<td align="text-center small"><?=$index?></td>                          
+    				<td align="text-center small"><?=$index?></td>
+            <td class="text-center small"><?=strftime('%d/%m/%Y',strtotime($fechaComprobante));?></td>
     				<td class="text-center small"><?=$nombre_uo?>/<?=$nombre_area?></td>
     				<td class="text-right small"><?=$numero_cuenta;?></td>
     				<td class="text-left small"><?=$nombre_cuenta;?></td>								
