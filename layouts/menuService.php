@@ -99,12 +99,16 @@ foreach ($detalle as $objDet){
     $actividadSubMenu=$objDetN2->actividad;
     $paginaSubMenu=$objDetN2->pagina;
     $iconoSubMenu=$objDetN2->icono;
+    $txtNuevaVentana="";
+    if($paginaSubMenu=="reportes_ventas/index.php"){
+      $txtNuevaVentana="target='_blank'";
+    }
     if($padre==$id && $moduloWS==$nombreModuloMenu){
       //echo $idSubMenu." ".$padre." ".$actividadSubMenu." ".$paginaSubMenu."<br>";
       ?>
 
                 <li class="nav-item ">
-                  <a class="nav-link" href="<?=$paginaSubMenu;?>">
+                  <a class="nav-link" href="<?=$paginaSubMenu;?>" <?=$txtNuevaVentana;?>>
                     <span class="sidebar-mini"> <?=$iconoSubMenu;?> </span>
                     <span class="sidebar-normal"> <?=$actividadSubMenu; ?> </span>
                   </a>
