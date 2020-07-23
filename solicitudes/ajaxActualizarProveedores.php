@@ -190,13 +190,9 @@ foreach ($detalle as $objDet){
 	$nombre=$primer_nombre." ".$paterno." ".$materno." (Personal Interno)";
     if(existeProveedor($codigo)==0){
     	$sql="INSERT INTO af_proveedores (codigo,cod_empresa,nombre,nit,created_by,modified_by,direccion,telefono,email,personacontacto,email_personacontacto,cod_estado)
-        VALUES ('$codigo','0','$nombre','$identificacion','$idUsuario','$idUsuario','$direccion','$telefono','$email','0','0','1')";
+        VALUES ('$codigo','1','$nombre','$identificacion','$idUsuario','$idUsuario','$direccion','$telefono','$email','0','0','1')";
        $stmt = $dbh->prepare($sql);
        $stmt->execute();
-    }else{
-    	$sql="UPDATE af_proveedores SET nombre='$nombre' where codigo = $codigo";
-        $stmt = $dbh->prepare($sql);
-        $stmt->execute();
     }
      $contador++;
 }

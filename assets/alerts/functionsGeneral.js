@@ -9238,7 +9238,7 @@ function actualizarRegistroProveedor(){
         success:  function (resp) {
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos"); 
-           actualizarCombosProveedores();
+           //actualizarCombosProveedores();
            //alerts.showSwal('success-message','registerSolicitud.php?cod='+codigo);
         }
     });  
