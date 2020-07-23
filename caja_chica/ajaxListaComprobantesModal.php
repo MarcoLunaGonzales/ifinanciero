@@ -62,11 +62,11 @@ $cuenta=obtenerValorConfiguracionCajachicaCuenta($globalUnidad);
 		
 	</tr> -->
 	<tr class="btn-dark">
-    	<th colspan="8">Detalle</th>
+    	<th colspan="9">Detalle</th>
     </tr> 
   	<tr style="background-color:#E3CEF6;">
       <td align="text-center small" width="4%">	#</td>   
-      <td align="text-center small" width="4%"> Fecha</td>   
+      <td align="text-center small" width="4%">Fecha</td>   
       <td class="text-center small" width="5%">Centro<br>Costos</td>
       <td class="text-center small" width="5%">Cuenta</td>
       <td class="text-center small" width="20%">Nombre cuenta</td>

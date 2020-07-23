@@ -15,17 +15,17 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $idFila=$_GET['idFila'];
 $IdTipo=$_GET['IdTipo'];
 $cod_area=$_GET['cod_area'];
-
+// echo $cod_area;
 $codigoAdministrativos=obtenerValorConfiguracion(46);
 if($cod_area==39){
-              $codigoAreaServ=108;
-          }else{
-              if($cod_area==38){
-                $codigoAreaServ=109;
-              }else{
-                $codigoAreaServ=0;
-              }
-          }
+    $codigoAreaServ=108;
+}else{
+    if($cod_area==38){
+      $codigoAreaServ=109;
+    }else{
+      $codigoAreaServ=0;
+    }
+}
 
 ?>
 <div id="comp_row" class="col-md-12">
@@ -43,7 +43,7 @@ if($cod_area==39){
                 //   UNION 
                 //   Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2=$codigoAdministrativos";
                 $stmt3 = $dbh->prepare($sql);//IdTipo=$IdTipo and
-                echo $sql; 
+                // echo $sql; 
                 $stmt3->execute();
                 while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                   $codigoServX=$rowServ['IdClaServicio'];
