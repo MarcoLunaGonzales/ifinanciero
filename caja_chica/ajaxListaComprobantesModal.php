@@ -26,7 +26,9 @@ $fechaI='';
 $fechaF='';
 $glosa='';
 $comprobante='';
-$cuenta=16;
+// $cuenta=16;
+$cuenta=obtenerValorConfiguracionCajachicaCuenta($globalUnidad);
+
 // $codigos_cuenta_cajaschica=obtenerValorConfiguracion(54);
 // $codigos_cuenta_cajaschica=obtenerValorConfiguracion(54);
 

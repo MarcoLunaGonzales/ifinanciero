@@ -8323,6 +8323,17 @@ function obtener_estado_facturas($codigo){
   return($cod_estado);
 }
 
+function obtenerValorConfiguracionCajachicaCuenta($codigo){
+  $dbh = new Conexion();        
+  $sql="SELECT cod_cuenta from configuraciones_cuentas_cajachica where cod_unidad=$codigo";    
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['cod_cuenta'];
+  }         
+  return($valor);
+}
 
 ?>
 
