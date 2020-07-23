@@ -9850,6 +9850,7 @@ function AgregarSeviciosFacturacion2_servicios(obj) {
     $("#add_boton").attr("disabled",true);
   }
   var IdTipo=document.getElementById("IdTipo").value;
+  var cod_area=document.getElementById("cod_area").value;
   // alert(IdTipo);
       numFilas++;
       cantidadItems++;
@@ -9866,7 +9867,7 @@ function AgregarSeviciosFacturacion2_servicios(obj) {
       divDetalle=$("#div"+numFilas);
       //document.getElementById('nro_cuenta').focus();
       ajax=nuevoAjax();
-      ajax.open("GET","servicios_presupuestos/ajax_addserviciosfacturacion.php?idFila="+numFilas+"&IdTipo="+IdTipo,true);
+      ajax.open("GET","servicios_presupuestos/ajax_addserviciosfacturacion.php?idFila="+numFilas+"&IdTipo="+IdTipo+"&cod_area="+cod_area,true);
       ajax.onreadystatechange=function(){
         if (ajax.readyState==4) {
           divDetalle.html(ajax.responseText);
@@ -14918,20 +14919,23 @@ function guardarNuevaCuentaAuxi(){
 
 
 function botonBuscarComprobante_caja_chica(){
-  var valor_uo=$("#OficinaBusqueda").val();
-  var valor_tipo=$("#tipoBusqueda").val();
-  var valor_fi=$("#fechaBusquedaInicio").val();
-  var valor_ff=$("#fechaBusquedaFin").val();
-  var valor_glosa=$("#glosaBusqueda").val();
-  var valor_nro_compr=$("#nro_comprobante").val();
-  var valor_nro_cuenta=$("#cuenta_auto_id").val();
+  // var valor_uo=$("#OficinaBusqueda").val();
+  // var valor_tipo=$("#tipoBusqueda").val();
+  // var valor_fi=$("#fechaBusquedaInicio").val();
+  // var valor_ff=$("#fechaBusquedaFin").val();
+  // var valor_glosa=$("#glosaBusqueda").val();
+  // var valor_nro_compr=$("#nro_comprobante").val();
+  // var valor_nro_cuenta=$("#cuenta_auto_id").val();
+  iniciarCargaAjax();  
   contenedor_p = document.getElementById('contenedor_lista_comprobantes');
   ajax=nuevoAjax();
-  ajax.open('GET', 'caja_chica/ajaxListaComprobantesModal.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa+'&comprobante='+valor_nro_compr+'&cuenta='+valor_nro_cuenta,true);
+  // ajax.open('GET', 'caja_chica/ajaxListaComprobantesModal.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa+'&comprobante='+valor_nro_compr+'&cuenta='+valor_nro_cuenta,true);
+  ajax.open('GET', 'caja_chica/ajaxListaComprobantesModal.php',true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor_p.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
+      detectarCargaAjax();
       // $("#modalBuscador").modal("hide");
       $("#modal_lista_comprobantes").modal("show");
       

@@ -231,7 +231,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 $sw2="";
                                                 $monto_servicio=verificar_pago_servicios_tcp_solfac($IdServicio,$codCS);
                                                 $monto_servicio=number_format($monto_servicio,2,".","");
-                                                if($monto_servicio!=0){
+                                                if($monto_servicio!=0 && $monto_servicio!='' && $monto_servicio!=null){
                                                     $saldo=$monto_pagar*$cantidadPre-$monto_servicio;
                                                     $monto_total_pagado=$monto_servicio;    
                                                     if($monto_servicio==$montoPre){

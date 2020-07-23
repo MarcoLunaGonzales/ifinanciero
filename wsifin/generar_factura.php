@@ -100,34 +100,36 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
             if($nro_correlativo==0){                
                 return "11###";//No tiene registrado La dosificación para la facturación
 
-            }else{            
-                if($tipoPago==4){//aso payme
-                    $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,2,0,$normas);
-                }else{
-                    if($CodLibretaDetalle>0){
-                        $cod_libreta=$CodLibretaDetalle;
-                        $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
-                        if($estado_libreta==0){
-                            $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);
-                            //generamos el comprobante estado_libreta 1 es que va con cod_cuenta para matar o 0 será el por defecto
-                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_cuenta,$normas);                            
-                        }elseif($estado_libreta==1){
-                            $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);
-                            //generamos el comprobante
-                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_contracuenta,$normas);
-                        }else{
-                            //generamos el comprobante
-                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0,$normas);    
-                        }
-                    }else{
-                        //generamos el comprobante
-                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0,$normas);
-                    }
-                }
+            }else{
+                // $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,$tipoPago,$CodLibretaDetalle,$normas);
 
-                if($cod_comprobante==null || $cod_comprobante==''){
-                    return "12###";
-                }else{
+                // if($tipoPago==4){//aso payme
+                //     $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,2,0,$normas);
+                // }else{
+                //     if($CodLibretaDetalle>0){
+                //         $cod_libreta=$CodLibretaDetalle;
+                //         $estado_libreta=obtenerEstadoLibretaBancaria($cod_libreta);
+                //         if($estado_libreta==0){
+                //             $cod_cuenta=obtenerCuentaLibretaBancaria($cod_libreta);
+                //             //generamos el comprobante estado_libreta 1 es que va con cod_cuenta para matar o 0 será el por defecto
+                //             $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_cuenta,$normas);                            
+                //         }elseif($estado_libreta==1){
+                //             $cod_contracuenta=obtenerContraCuentaLibretaBancaria($cod_libreta);
+                //             //generamos el comprobante
+                //             $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,1,$cod_contracuenta,$normas);
+                //         }else{
+                //             //generamos el comprobante
+                //             $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0,$normas);    
+                //         }
+                //     }else{
+                //         //generamos el comprobante
+                //         $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,0,0,$normas);
+                //     }
+                // }
+
+                // if($cod_comprobante==null || $cod_comprobante==''){
+                //     return "12###";
+                // }else{
                     // $cod_comprobante=0;
                     //echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fechaFactura:".$fechaFactura." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
                     $controlCode = new ControlCode();
@@ -140,7 +142,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                     );
                     //echo "cod:".$code;
                     $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
-                      values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud','$fechaFactura_x','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','$cod_comprobante')";
+                      values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud','$fechaFactura_x','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0')";
                       // echo $sql;
                     $stmtInsertSoliFact = $dbh->prepare($sql);
                     $flagSuccess=$stmtInsertSoliFact->execute();
@@ -168,13 +170,13 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             if($number_of_rows==0 || $number_of_rows==''){
                                 $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo=$cod_facturaVenta";
                                 $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
-                                $flagSuccess=$stmtDeleteCAbeceraFactura->execute();
-                                $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
-                                $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
-                                $flagSuccess=$stmtDeleteCopmprobante->execute();
-                                $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
-                                $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
-                                $flagSuccess=$stmtDeleteComprobanteDet->execute();
+                                $stmtDeleteCAbeceraFactura->execute();
+                                // $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
+                                // $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
+                                // $flagSuccess=$stmtDeleteCopmprobante->execute();
+                                // $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
+                                // $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
+                                // $flagSuccess=$stmtDeleteComprobanteDet->execute();
                                 return "17###";
                             }
                         }
@@ -188,20 +190,28 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             $cod_claservicio_x=$pagoCursoId;
                             $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
                              values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle',0,$suscripcionId)");
-                             $flagSuccess=$stmtInsertSoliFactDet->execute();                         
+                            $flagSuccess=$stmtInsertSoliFactDet->execute();                         
                         }
-                        if($flagSuccess){                            
-                            return "0###".$cod_facturaVenta;
+                        if($flagSuccess){
+                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,$tipoPago,$CodLibretaDetalle,$normas);
+                            if($cod_comprobante==null || $cod_comprobante==''){
+                                return "12###";
+                            }else{
+                                $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where cod_factura=$cod_facturaVenta";
+                                $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                                return "0###".$cod_facturaVenta;    
+                            }
+                            
                         }
                     }else{
-                        $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
-                        $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
-                        $flagSuccess=$stmtDeleteCopmprobante->execute();
-                        $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
-                        $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
-                        $flagSuccess=$stmtDeleteComprobanteDet->execute();
+                        // $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
+                        // $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
+                        // $flagSuccess=$stmtDeleteCopmprobante->execute();
+                        // $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
+                        // $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
+                        // $flagSuccess=$stmtDeleteComprobanteDet->execute();
                     }
-                }
+                
                 
             }
         }    

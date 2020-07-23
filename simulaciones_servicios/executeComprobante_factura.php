@@ -164,7 +164,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$nro_factura,$co
 	    return "0";
 	}	
 }
-function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$cod_estado,$cod_cuenta_libreta,$normas){
+function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$tipoPago,$cod_libretas_X,$normas){
 	
 	// session_start();
 	try{
@@ -201,37 +201,74 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
             $concepto_contabilizacion.=$detalle." / F ".$nro_factura." / ".$razon_social."<br>\n";
 			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio_x)."<br>\n";
         }
-		$codComprobante=obtenerCodigoComprobante();
-		// echo $numeroComprobante;
-		// informacion solicitudd en curso
+		$codComprobante=obtenerCodigoComprobante();		
 		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);		
 		$ordenDetalle=1;//<--
 		if($flagSuccess){	
-			$cod_tipopago=obtenerValorConfiguracion(55);
+			$cod_tipopago=obtenerValorConfiguracion(55);//deposito  en cuenta
 			$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago);
 			$descripcion=$concepto_contabilizacion;	
-			switch ($cod_estado) {
-				case 0://cuenta normal
-					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);					
-					break;
-				case 1://cuenta de libreta bancaria					
-					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);					
-				break;
-				case 2://cuenta de tarjeta de credito
-					$cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
-					$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago_tarjetas);
+			if($tipoPago==4){//caso payme
+				$cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
+				$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago_tarjetas);
+				$cod_cuenta_tarjetacredito=obtenerValorConfiguracion(60);
+				$porcentaje_cuenta_transitoria=obtenerValorConfiguracion(61);
+				$porcentaje_xyz=100-$porcentaje_cuenta_transitoria;
+				$monto_tipopago_1=$monto_total*$porcentaje_xyz/100;
+				$monto_tipopago_2=$monto_total*$porcentaje_cuenta_transitoria/100;
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle);
+			}else{
+				if($cod_libretas_X!='0'){
+					$cod_libretas_X=trim($cod_libretas_X,",");
+					$sqlTipopago="SELECT codigo,cod_estado from libretas_bancariasdetalle where codigo in ($cod_libretas_X) GROUP BY cod_estado";
+					$stmtDetalleTipoPago = $dbh->prepare($sqlTipopago);
+					$stmtDetalleTipoPago->execute();							
+					$stmtDetalleTipoPago->bindColumn('codigo', $codigo_libreta_det);
+					$stmtDetalleTipoPago->bindColumn('cod_estado', $estado_libreta);  
+					// $monto_tipopago_total=0;
+					while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {
+						if($estado_libreta==0){//cueenta de libreta
+			                $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
+			                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+			            }elseif($estado_libreta==1){//contra cuenta de libreta
+			                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
+							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+			            }
+					}
+				}else{
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);
+				}
 					
-					$cod_cuenta_tarjetacredito=obtenerValorConfiguracion(60);
-					$porcentaje_cuenta_transitoria=obtenerValorConfiguracion(61);
-					$porcentaje_xyz=100-$porcentaje_cuenta_transitoria;
-					$monto_tipopago_1=$monto_total*$porcentaje_xyz/100;
-					$monto_tipopago_2=$monto_total*$porcentaje_cuenta_transitoria/100;
-
-					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
-					
-					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle);
-				break;	
 			}
+
+			
+
+
+
+			// switch ($cod_estado) {
+			// 	case 0://cuenta normal
+			// 		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);					
+			// 		break;
+			// 	case 1://cuenta de libreta bancaria					
+			// 		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libreta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);					
+			// 	break;
+			// 	case 2://cuenta de tarjeta de credito
+			// 		$cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
+			// 		$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago_tarjetas);
+					
+			// 		$cod_cuenta_tarjetacredito=obtenerValorConfiguracion(60);
+			// 		$porcentaje_cuenta_transitoria=obtenerValorConfiguracion(61);
+			// 		$porcentaje_xyz=100-$porcentaje_cuenta_transitoria;
+			// 		$monto_tipopago_1=$monto_total*$porcentaje_xyz/100;
+			// 		$monto_tipopago_2=$monto_total*$porcentaje_cuenta_transitoria/100;
+
+			// 		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
+					
+			// 		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle);
+			// 	break;	
+			// }
+
             $ordenDetalle++;			
 			//para IT gasto
 			$cod_cuenta_it_gasto=obtenerValorConfiguracion(49);
