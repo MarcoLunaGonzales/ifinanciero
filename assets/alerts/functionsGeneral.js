@@ -14925,12 +14925,12 @@ function botonBuscarComprobante_caja_chica(){
   // var valor_ff=$("#fechaBusquedaFin").val();
   // var valor_glosa=$("#glosaBusqueda").val();
   // var valor_nro_compr=$("#nro_comprobante").val();
-  // var valor_nro_cuenta=$("#cuenta_auto_id").val();
+  var cod_tcc=$("#cod_tcc").val();
   iniciarCargaAjax();  
   contenedor_p = document.getElementById('contenedor_lista_comprobantes');
   ajax=nuevoAjax();
   // ajax.open('GET', 'caja_chica/ajaxListaComprobantesModal.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa+'&comprobante='+valor_nro_compr+'&cuenta='+valor_nro_cuenta,true);
-  ajax.open('GET', 'caja_chica/ajaxListaComprobantesModal.php',true);
+  ajax.open('GET', 'caja_chica/ajaxListaComprobantesModal.php?cod_tcc='+cod_tcc,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor_p.innerHTML = ajax.responseText;
@@ -14943,12 +14943,16 @@ function botonBuscarComprobante_caja_chica(){
   }
   ajax.send(null);
 }
-function SeleccionarComprobante_cajachica_reembolso(cod_comprobante,cod_comprobantedetalle,glosa_x,monto_x,nombre_comprobante){
+function SeleccionarComprobante_cajachica_reembolso(cod_comprobante,cod_comprobantedetalle,glosa_x,monto_x,nombre_comprobante,fecha_x){
   // alert("ok");
   $("#monto").val(monto_x);
   $("#observaciones").val(glosa_x+", enlazado al comprobante ("+nombre_comprobante+")");
   $("#cod_comprobante").val(cod_comprobante);
   $("#cod_comprobante_detalle").val(cod_comprobantedetalle);
+  var d = new Date( fecha_x );
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  d = d.toJSON().slice(0,10);
+  $("#fecha").val(d);
   $("#modalBuscador").modal("hide");
   $("#modal_lista_comprobantes").modal("hide");
 }
@@ -15814,8 +15818,8 @@ function facturarLibretaBancaria(){
       }
   };
   // alert(saldo_libreta_x+"-"+monto_factura);
-  if(saldo_libreta_x>monto_factura){
-    Swal.fire("Informativo", "La suma de montos de la libreta, es mayor al de la factura.", "warning");
+  if(saldo_libreta_x<monto_factura){
+    Swal.fire("Informativo", "La Suma del Monto de las Libretas es menor al de la factura (Monto Total Libreta:"+numberFormat(saldo_libreta_x,2)+").", "warning");
   }else{
     seleccionar_libretaBancaria(codDetalle.join(","));
   }
@@ -16012,3 +16016,41 @@ function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
      window.location.href=$("#urlEnvioModal").val()+"&obs="+obs;  
     }
   }
+  function agregarDatosCuentaCajaChica(datos){
+    var d=datos.split('/');
+    document.getElementById("cod_tipocajachica").value=d[0];
+    document.getElementById("tipo_caja_chica").value=d[1];
+    // document.getElementById("cod_cuenta").value=d[2];  
+    //agregamos la cuenta si lo tuviese
+    var cod_cuenta=d[2];
+    var contenedor;  
+    contenedor = document.getElementById('div_cuenta_contable_cajachica');
+    ajax=nuevoAjax();
+    ajax.open('GET', 'simulaciones_servicios/ajax_cuenta_contable.php?cod_cuenta='+cod_cuenta,true);
+    // ajax.open('GET', 'caja_chica/ajax_cuenta_contable_cajachica.php?cod_cuenta='+cod_cuenta,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;
+        $('.selectpicker').selectpicker(["refresh"]);
+      }
+    }
+    ajax.send(null) 
+  }
+  function registrarCuentaAsociadaCajaChica(cod_tipocajachica,cod_cuenta){
+  $.ajax({
+    type:"POST",
+    data:"cod_tipocajachica="+cod_tipocajachica+"&cod_cuenta="+cod_cuenta,
+    url:"caja_chica/cuenta_contable_cajachica_save.php",
+    success:function(r){
+      if(r==1){
+        alerts.showSwal('success-message','index.php?opcion=ListaTipoCajaChica');
+      }else{
+        if(r==2){
+          Swal.fire("Informativo!", "Seleccione un Cuenta Por favor", "warning");
+        }else{
+          alerts.showSwal('error-message','index.php?opcion=ListaTipoCajaChica');
+        }
+      } 
+    }
+  });
+}

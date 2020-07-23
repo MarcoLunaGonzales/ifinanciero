@@ -8334,7 +8334,17 @@ function obtenerValorConfiguracionCajachicaCuenta($codigo){
   }         
   return($valor);
 }
-
+function obtenerCodigoCuentaCajaChica($codigo){
+  $dbh = new Conexion();        
+  $sql="SELECT cod_cuenta from configuraciones_cuentas_cajachica where cod_tipo_cajachica=$codigo";    
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['cod_cuenta'];
+  }         
+  return($valor);
+}
 ?>
 
 

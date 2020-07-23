@@ -87,7 +87,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 <label class="col-sm-1 col-form-label">Fecha</label>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <input class="form-control" name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha?>" required="true" value="<?=$fecha?>" />
+                        <input class="form-control" name="fecha" id="fecha" type="date" required="true" value="<?=$fecha?>" />
                         </select>
                     </div>
                 </div>

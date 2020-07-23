@@ -27,8 +27,10 @@ $fechaF='';
 $glosa='';
 $comprobante='';
 // $cuenta=16;
-$cuenta=obtenerValorConfiguracionCajachicaCuenta($globalUnidad);
+// $cuenta=obtenerValorConfiguracionCajachicaCuenta($globalUnidad);
 
+$cod_tcc=$_GET['cod_tcc'];
+$cuenta=obtenerCodigoCuentaCajaChica($cod_tcc);
 // $codigos_cuenta_cajaschica=obtenerValorConfiguracion(54);
 // $codigos_cuenta_cajaschica=obtenerValorConfiguracion(54);
 
@@ -83,7 +85,7 @@ $cuenta=obtenerValorConfiguracionCajachicaCuenta($globalUnidad);
       from comprobantes c, estados_comprobantes ec, comprobantes_detalle cd where c.cod_estadocomprobante=ec.codigo and cd.cod_comprobante=c.codigo and c.cod_estadocomprobante!=2 and cod_gestion=$globalGestion";  
       // $sql.=" and cd.cod_cuenta in ($codigos_cuenta_cajaschica)";
       if($cod_uo!=""){
-        $sql.=" and c.cod_unidadorganizacional in ($cod_uo)";
+        // $sql.=" and c.cod_unidadorganizacional in ($cod_uo)";
       }
       if($tipo!=""){
         $sql.=" and c.cod_tipocomprobante in ($tipo)";  
@@ -135,14 +137,14 @@ $cuenta=obtenerValorConfiguracionCajachicaCuenta($globalUnidad);
     				<td class="text-right small"><?=$numero_cuenta;?></td>
     				<td class="text-left small"><?=$nombre_cuenta;?></td>								
     				<td class="text-left small"><?=$glosa_detalle;?></td>	
-    				<td class="text-right small"><?=$debe;?></td>
+    				<td class="text-right small"><?=number_format($debe, 2, '.', ',');?></td>
     				<td class="text-right small"><?=$haber;?></td>				
     				<td class="td-actions text-right">
               <?php 
               $verificar=verificar_codComprobante_cajaChica($codigo_cobt,$codigo_detalle);
               $nombreComprobante=nombreComprobante($codigo_cobt);
               if(!$verificar){?>
-        				<button rel="tooltip" class="<?=$buttonEdit;?>" onclick="SeleccionarComprobante_cajachica_reembolso('<?=$codigo_cobt?>','<?=$codigo_detalle?>','<?=$glosa_detalle;?>','<?=$monto?>','<?=$nombreComprobante?>')">SELECCIONAR          
+        				<button rel="tooltip" class="<?=$buttonEdit;?>" onclick="SeleccionarComprobante_cajachica_reembolso('<?=$codigo_cobt?>','<?=$codigo_detalle?>','<?=$glosa_detalle;?>','<?=$monto?>','<?=$nombreComprobante?>','<?=$fechaComprobante?>')">SELECCIONAR          
         				</button><?php 
               }else{ ?>
                 <small><small><span class="badge badge-danger">Registrado</span></small></small>
