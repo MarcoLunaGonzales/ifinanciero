@@ -193,7 +193,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
-                              <div class="dropdown-menu">
+                              <div class="dropdown-menu menu-fixed-sm-table">
                                 <?php 
                             if(isset($_GET['q'])){
                               if($codEstado==4){

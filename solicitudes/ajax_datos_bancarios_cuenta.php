@@ -20,8 +20,8 @@ $listas=$lista->datos;
     $cuenta=$listas->NroCuenta;
     ?>
     <script>
-     $("#nombre_beneficiario").val('<?=$nombre?>');
-     $("#apellido_beneficiario").val('<?=$apellido?>');
+     $("#nombre_beneficiario").val('<?=$nombre?> <?=$apellido?>');
+     //$("#apellido_beneficiario").val('');
      $("#cuenta_beneficiario").val('<?=$cuenta?>');
     </script>
     <?php

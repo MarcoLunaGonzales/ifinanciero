@@ -1,3 +1,7 @@
+.menu-fixed-sm-table {
+    top:27px !important;
+}
+
 .bootstrap-tagsinput input{
     width:250px !important;
     background: #e2d2e0;
