@@ -50,6 +50,8 @@ tfoot input {
       $stmt->bindColumn('nro_documento', $nro_documento);
       $stmt->bindColumn('fecha_hora', $fecha);
       $stmt->bindColumn('monto', $monto);
+      $stmt->bindColumn('cod_comprobante', $codComprobante);
+      $stmt->bindColumn('cod_comprobantedetalle', $codComprobanteDetalle);
       // $stmt->bindColumn('cod_factura', $codFactura);
       // $stmt->bindColumn('monto_fac', $montoFac);
       $index=1;$totalMonto=0;$totalMontoFac=0;
@@ -113,6 +115,17 @@ tfoot input {
                 $facturaDetalle="";
                 $facturaMonto="";
                 $totalMontoFac+=0;
+                if(!($codComprobante==""||$codComprobante==0)){
+                  $datosDetalle=obtenerDatosComprobanteDetalle($codComprobanteDetalle);
+                  $facturaFecha="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
+                  $facturaNumero="<b class='text-success'>COMP: ".nombreComprobante($codComprobante)."</b>";
+                  $facturaNit="<b class='text-success'>".$codComprobanteDetalle."</b>";
+                  $facturaRazonSocial="<b class='text-success'>".$datosDetalle[0]."</b>";
+                  $facturaDetalle="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
+                  $facturaMonto="<b class='text-success'>".$datosDetalle[1]."</b>";
+                  $totalMontoFac+=0;
+                }
+                
                ?>
                 <td class="text-right font-weight-bold"><?=$facturaFecha?></td>
                 <td class="text-right font-weight-bold"><?=$facturaNumero?></td>

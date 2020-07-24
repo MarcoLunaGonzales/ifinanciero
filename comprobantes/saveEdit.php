@@ -152,17 +152,19 @@ for ($i=1;$i<=$cantidadFilas;$i++){
    	  $nit=$facturas[$i-1][$j]->nit;
    	  $nroFac=$facturas[$i-1][$j]->nroFac;
    	  
-   	  $fecha=$facturas[$i-1][$j]->fechaFac;
-   	  $porciones = explode("/", $fecha);
-   	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+   	  $fechaFac=$facturas[$i-1][$j]->fechaFac;
    	  
    	  $razonFac=$facturas[$i-1][$j]->razonFac;
-   	  $impFac=$facturas[$i-1][$j]->impFac;
-   	  $exeFac=$facturas[$i-1][$j]->exeFac;
-   	  $autFac=$facturas[$i-1][$j]->autFac;
-   	  $conFac=$facturas[$i-1][$j]->conFac;
+      $impFac=$facturas[$i-1][$j]->impFac;            
+      $autFac=$facturas[$i-1][$j]->autFac;
+      $conFac=$facturas[$i-1][$j]->conFac;
+            
+      $exeFac=$facturas[$i-1][$j]->exeFac;
+      $tipoFac=$facturas[$i-1][$j]->tipoFac;
+      $tazaFac=$facturas[$i-1][$j]->tazaFac;
+      $iceFac=$facturas[$i-1][$j]->iceFac;
 
-      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac')";
+      $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tazaFac','$tipoFac')";
       $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
       $flagSuccessDetalle2=$stmtDetalle2->execute();
     }
