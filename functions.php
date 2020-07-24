@@ -8407,6 +8407,18 @@ function obtenerStringCodigoFacturas($codigo){
   $cadenaFacturas=trim($cadenaFacturas,", ");//
   return $cadenaFacturas;
 }
+function obtenerTotalFacturasLibreta($codigo){
+  $dbh = new Conexion(); 
+  $stmtFActuras = $dbh->prepare("SELECT * from libretas_bancariasdetalle_facturas where cod_libretabancariadetalle =$codigo");
+  $stmtFActuras->execute(); 
+  $stmtFActuras->bindColumn('cod_facturaventa', $cod_facturaventa);  
+  $total_facturas=0;  
+  while ($row = $stmtFActuras->fetch()) {
+    $monto_factura=sumatotaldetallefactura($cod_facturaventa);
+    $total_facturas=$total_facturas+$monto_factura;
+  }  
+  return $total_facturas;
+}
 ?>
 
 
