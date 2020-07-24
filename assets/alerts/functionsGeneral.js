@@ -534,7 +534,7 @@ function minusCuentaContable(idF){
        //libreta bancaria  
        $("#libretas_bancarias"+nuevoId).attr("onclick","verLibretasBancarias('"+i+"')");
        $("#libretas_bancarias"+nuevoId).attr("id","libretas_bancarias"+i);
-       $("#nestadolib"+nuevoId).attr("id","nestado"+i);
+       $("#nestadolib"+nuevoId).attr("id","nestadolib"+i); //
        $("#cod_detallelibreta"+nuevoId).attr("name","cod_detallelibreta"+i); 
        $("#cod_detallelibreta"+nuevoId).attr("id","cod_detallelibreta"+i);
        $("#descripcion_detallelibreta"+nuevoId).attr("id","descripcion_detallelibreta"+i);
@@ -747,7 +747,7 @@ function saveFactura(){
     tazaFac: tazacero,
     tipoFac: tipocompra
     }
-    itemFacturas[index-1]=[];
+    //itemFacturas[index-1]=[];
     itemFacturas[index-1].push(factura);
     //listarFact(index);
     $("#nfac"+(index)).html(itemFacturas[index-1].length);
