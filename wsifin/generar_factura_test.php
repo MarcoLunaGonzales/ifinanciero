@@ -221,8 +221,9 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                                     $stmtDeleteDetalleFactura->execute();
                                     return "18###";
                                 }else{
-                                    $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where cod_factura=$cod_facturaVenta";
+                                    $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where codigo=$cod_facturaVenta";
                                     $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                                    $stmtUpdateLibreta->execute();
                                     return "0###".$cod_facturaVenta;    
                                 }
                             }

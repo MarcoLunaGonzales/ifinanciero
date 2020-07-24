@@ -151,22 +151,32 @@ try{
                         if($codigo_error==0){
                             $stringFacturas=obtenerStringFacturas($codigo);
                             $stringFacturasCod=obtenerStringCodigoFacturas($codigo);
-                            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$stringFacturas,$stringFacturasCod,$cod_libreta,$cod_estadocuenta);
-
-                            $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
-                            $stmtUpdate = $dbh->prepare($sqlUpdate);
-                            $flagSuccess=$stmtUpdate->execute(); 
-                            //enviar propuestas para la actualizacion de ibnorca
-                            $fechaHoraActual=date("Y-m-d H:i:s");
-                            $idTipoObjeto=2709;
-                            $idObjeto=2729; //facturado
-                            $obs="Solicitud Facturada";                                    
-                            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
-                            header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
-                        }elseif($codigo_error==-1){
-                            ?>
-                            <script>Swal.fire("Error!","La Suma del Monto de las Libretas es menor al de la factura.", "error");
-                            </script> <?php   
+                            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$stringFacturas,$stringFacturasCod,$cod_libreta,$cod_estadocuenta);                            
+                            if($cod_comprobante==null || $cod_comprobante==''){
+                                $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo in ($stringFacturasCod)";
+                                $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
+                                $stmtDeleteCAbeceraFactura->execute();
+                                $sqldeleteDetalleFactura="DELETE from facturas_ventadetalle where cod_facturaventa in ($stringFacturasCod)";
+                                $stmtDeleteDetalleFactura = $dbh->prepare($sqldeleteDetalleFactura);
+                                $stmtDeleteDetalleFactura->execute();
+                                ?>
+                                <script>Swal.fire("Error!","Hubo un error Al generar el comprobante.", "error");
+                                </script> <?php
+                            }else{
+                                $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where codigo in ($stringFacturasCod)";                                
+                                $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                                $stmtUpdateLibreta->execute();
+                                $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
+                                $stmtUpdate = $dbh->prepare($sqlUpdate);
+                                $flagSuccess=$stmtUpdate->execute(); 
+                                //enviar propuestas para la actualizacion de ibnorca
+                                $fechaHoraActual=date("Y-m-d H:i:s");
+                                $idTipoObjeto=2709;
+                                $idObjeto=2729; //facturado
+                                $obs="Solicitud Facturada";                                    
+                                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+                                header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+                            }                            
                         }else{?>
                             <script>Swal.fire("Error!","Hubo un error durante el proceso de generar la factura.", "error");
                             </script> <?php

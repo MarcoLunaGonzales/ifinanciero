@@ -273,23 +273,66 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 			}else{
 				if($cod_libretas_X!='0'){
 					$cod_libretas_X=trim($cod_libretas_X,",");
-					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_libretas_X) order by  fecha_hora asc";
+					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_libretas_X) order by  monto desc";
 					$stmtDetalleTipoPago = $dbh->prepare($sqlTipopago);
 					$stmtDetalleTipoPago->execute();							
 					$stmtDetalleTipoPago->bindColumn('codigo', $codigo_libreta_det);
 					$stmtDetalleTipoPago->bindColumn('cod_estado', $estado_libreta);  
-					$stmtDetalleTipoPago->bindColumn('monto', $monto_libreta);  					
+					$stmtDetalleTipoPago->bindColumn('monto', $monto_libreta);
 					$monto_libreta_total=0;
-					while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {
-						$monto_libreta_total+=$monto_libreta;
-						if($estado_libreta==0){//cueenta de libreta
-			                $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
-			                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
-			            }elseif($estado_libreta==1){//contra cuenta de libreta
-			                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
-							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
-			            }
+					$array_libreta_save="";
+					$sw_controlador=0;//contrala la entradas
+					while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {					
+						if($sw_controlador==0){
+							$monto_libreta_total+=$monto_libreta;
+							if($monto_total>=$monto_libreta_total){
+								// $array_libreta_save.=$codigo_libreta_det.",";
+								if($estado_libreta==0){//cueenta de libreta
+					                $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
+					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
+					            }elseif($estado_libreta==1){//contra cuenta de libreta
+					                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
+									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
+					            }
+					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$stringFacturasCod)";
+		                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+		                        $stmtUpdateLibreta->execute();
+							}else{
+								// $array_libreta_save.=$codigo_libreta_det.",";
+								$saldo_libreta=$monto_libreta_total-$monto_libreta;//volvemos al monto anterior
+								$monto_libreta_saldo=$monto_total-$saldo_libreta;
+								if($estado_libreta==0){//cueenta de libreta								
+					                $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
+					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle);
+					            }elseif($estado_libreta==1){//contra cuenta de libreta
+					                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
+									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle);
+					            }
+					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$stringFacturasCod)";
+		                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+		                        $stmtUpdateLibreta->execute();
+					            $sw_controlador=1;
+							}
+						}
 					}
+					// $cod_libretas_X=trim($cod_libretas_X,",");
+					// $sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_libretas_X) order by  fecha_hora asc";
+					// $stmtDetalleTipoPago = $dbh->prepare($sqlTipopago);
+					// $stmtDetalleTipoPago->execute();							
+					// $stmtDetalleTipoPago->bindColumn('codigo', $codigo_libreta_det);
+					// $stmtDetalleTipoPago->bindColumn('cod_estado', $estado_libreta);  
+					// $stmtDetalleTipoPago->bindColumn('monto', $monto_libreta);  					
+					// $monto_libreta_total=0;
+					// while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {
+					// 	$monto_libreta_total+=$monto_libreta;
+					// 	if($estado_libreta==0){//cueenta de libreta
+			  //               $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
+			  //               $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
+			  //           }elseif($estado_libreta==1){//contra cuenta de libreta
+			  //               $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
+					// 		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
+			  //           }
+					// }
 					if($monto_libreta_total<$monto_total){					
 						$sqldeletecomprobante="DELETE from comprobantes where codigo=$codComprobante";
                         $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
