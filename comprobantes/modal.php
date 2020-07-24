@@ -77,7 +77,7 @@
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="fecha_fac" class="bmd-label-floating" style="color: #4a148c;">Fecha</label>      -->
-                                <input type="text" class="form-control datepicker" name="fecha_fac_edit" id="fecha_fac_edit" value="<?=$fechaActualModal?>">
+                                <input type="date" class="form-control" name="fecha_fac_edit" id="fecha_fac_edit" value="<?=$fechaActualModal?>">
                               </div>
                             </div>
                           </div>

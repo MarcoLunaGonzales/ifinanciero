@@ -153,9 +153,10 @@ for ($i=1;$i<=$cantidadFilas;$i++){
    	  $nroFac=$facturas[$i-1][$j]->nroFac;
    	  
    	  $fecha=$facturas[$i-1][$j]->fechaFac;
-   	  $porciones = explode("/", $fecha);
-   	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
-   	  
+   	  //$porciones = explode("/", $fecha);
+   	  //$fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+   	  $fechaFac=$fecha;
+
    	  $razonFac=$facturas[$i-1][$j]->razonFac;
    	  $impFac=$facturas[$i-1][$j]->impFac;
    	  $exeFac=$facturas[$i-1][$j]->exeFac;
