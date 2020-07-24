@@ -16066,3 +16066,23 @@ function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
     }
   });
 }
+
+function botonBuscar_facturas(){
+  var razon_social_f=$("#razon_social_f").val();
+  var detalle_f=$("#detalle_f").val();
+  var fechaBusquedaInicio=$("#fechaBusquedaInicio").val();
+  var fechaBusquedaFin=$("#fechaBusquedaFin").val();
+  var nit_f=$("#nit_f").val();
+  var nro_f=$("#nro_f").val();
+  // var valor_glosa=$("#glosaBusqueda").val();
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_facturas.php?razon_social_f='+razon_social_f+'&detalle_f='+detalle_f+'&fechaI='+fechaBusquedaInicio+'&fechaF='+fechaBusquedaFin+'&nit_f='+nit_f+'&nro_f='+nro_f,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_facturas_generadas");
+      contenedor.html(ajax.responseText);
+      $("#modalBuscadorFacturas").modal("hide");
+    }
+  }
+  ajax.send(null)
+}
