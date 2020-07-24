@@ -80,23 +80,25 @@ $nombreCompletoUnidad=nameUnidad($globalUnidad);
 			 }
 
             //LIBRETAS BANCARIAS
-			$lista=obtenerObtenerLibretaBancaria();
-            foreach ($lista->libretas as $v) {
-              $CodLibreta=$v->CodLibreta;
-              $Nombre=$v->Nombre;
-              $Banco=$v->Banco;
-              $nombreBan=nameBancos($v->CodBanco);
-              $cuentaId=$v->IdCuenta; 
-              if($nombreBan==""){
-                $nombreBan=$Banco." - ".$Nombre;
-              }else{
-                $nombreBan=$nombreBan." - ".$Nombre;  
-              }
-              ?>
-			 <script>libretas_bancarias.push({codigo:<?=$CodLibreta?>,cod_cuenta:<?=$cuentaId?>,nombre_libreta:'<?=$nombreBan?>'});</script>
+             $stmt = $dbh->prepare("SELECT p.nombre as banco,dc.* FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo WHERE dc.cod_estadoreferencial=1");
+			$stmt->execute();
+			$i=0;
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				$codigoX=$row['codigo'];
+				$bancoX=$row['banco'];
+				$cod_banco=$row['cod_banco'];
+				$cod_cuenta=$row['cod_cuenta'];
+				$nombreX=$row['nombre'];
+				$nombreBan=nameBancos($cod_banco);
+                if($nombreBan==""){
+                  $nombreBan=$Banco." - ".$nombreX;
+                }else{
+                  $nombreBan=$nombreBan." - ".$nombreX;  
+                }
+			?>
+			 <script>libretas_bancarias.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$cod_cuenta?>,nombre_libreta:'<?=$nombreBan?>'});</script>
 		    <?php
-            
-            }
+			 }
 
             //ESTADO DE CUENTAS
 			$stmt = $dbh->prepare("SELECT * FROM configuracion_estadocuentas where cod_estadoreferencial=1");

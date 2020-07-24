@@ -18,7 +18,9 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $fechaHoraActual=date("Y-m-d H:i:s");
-
+if(isset($_GET["conta"])){
+  $urlList2=$urlList4;
+}
 
 if($estado==10||$estado==11){
   $urlList2=$urlList4;

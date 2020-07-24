@@ -568,6 +568,18 @@ function nameUnidad($codigo){
    return($nombreX);
 }
 
+function namePersonalCompleto($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT CONCAT_WS(' ',primer_nombre,materno,paterno)as nombre FROM personal where codigo=:codigo");
+   $stmt->bindParam(':codigo',$codigo);
+   $stmt->execute();
+   $nombreX="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nombreX=$row['nombre'];
+   }
+   return($nombreX);
+}
+
 function namePersonal($codigo){
    $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT CONCAT_WS(' ',paterno,materno,primer_nombre)as nombre FROM personal where codigo=:codigo");
@@ -3781,6 +3793,22 @@ function descargarPDFSolicitudesRecursos($nom,$html){
   $mydompdf->set_base_path('assets/libraries/plantillaPDFSolicitudesRecursos.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 }
+
+function descargarPDFOfertaPropuesta($nom,$html){
+  //aumentamos la memoria  
+  ini_set("memory_limit", "128M");
+  // Cargamos DOMPDF
+  require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+  $mydompdf = new DOMPDF();
+  ob_clean();
+  $mydompdf->load_html($html);
+  $mydompdf->render();
+  $canvas = $mydompdf->get_canvas();
+  $canvas->page_text(490, 753, "PÁGINA {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("helvetica","bold"),7, array(255,255,255)); 
+  $mydompdf->set_base_path('assets/libraries/plantillaPDFOfertaPropuesta.css');
+  $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+}
+
 function descargarPDF1($nom,$html){
   //aumentamos la memoria  
   ini_set("memory_limit", "128M");
@@ -4907,17 +4935,15 @@ function obtenerDetalleSolicitudParaComprobante($codigo){
   return $stmt;
 }
 
-function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante){
+function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante,$codMes){
   $dbh = new Conexion();
-  $mesActivo=1;
+  $mesActivo=$codMes;
 
-  $sql1="SELECT m.*,g.nombre from meses_trabajo m join gestiones g on m.cod_gestion=g.codigo where cod_gestion='$codGestion' and cod_estadomesestrabajo=3";
+  $sql1="SELECT g.nombre from gestiones g where cod_gestion='$codGestion'";
   $stmt1 = $dbh->prepare($sql1);
   $stmt1->execute();
   $anio=$_SESSION["globalNombreGestion"];
-  $mes=date('m');
   while ($row1= $stmt1->fetch(PDO::FETCH_ASSOC)) {
-    $mesActivo=$row1['cod_mes'];
     $anio=$row1['nombre'];
   }
 
@@ -4925,7 +4951,7 @@ function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante){
   $fechaFin=date('Y-m-d',strtotime($fechaInicio.'+1 month'));
   $fechaFin=date('Y-m-d',strtotime($fechaFin.'-1 day'));
 
-  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$tipoComprobante' and c.cod_unidadorganizacional=$unidad and c.fecha between '$fechaInicio 00:00:00' and '$fechaFin 23:59:59'";
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$tipoComprobante' and c.cod_unidadorganizacional=$unidad and c.fecha between '$fechaInicio 00:00:00' and '$fechaFin 23:59:59' and c.cod_estadocomprobante<>2";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
@@ -8323,6 +8349,14 @@ function obtener_estado_facturas($codigo){
   return($cod_estado);
 }
 
+function ordinalSuffix( $n ){
+  $ends = array('','er','do','er','to','to','to','mo','vo','no','mo');
+    if ((($n % 100) >= 11) && (($n%100) <= 13))
+        return $n. 'mo';
+    else
+        return $n. $ends[$n % 10];
+}
+
 function obtenerValorConfiguracionCajachicaCuenta($codigo){
   $dbh = new Conexion();        
   $sql="SELECT cod_cuenta from configuraciones_cuentas_cajachica where cod_unidad=$codigo";    
@@ -8345,6 +8379,7 @@ function obtenerCodigoCuentaCajaChica($codigo){
   }         
   return($valor);
 }
+
 ?>
 
 

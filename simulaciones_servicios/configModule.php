@@ -84,4 +84,6 @@ $urlSolicitudfacturaAreas="index.php?opcion=listFacturasServiciosAreas";
 
 $urlAnular_SoliciutdFacturacion="simulaciones_servicios/anular_SoliciutdFacturacion.php";
 
+$urlImpOferta="simulaciones_servicios/imp_oferta.php";
+
 ?>

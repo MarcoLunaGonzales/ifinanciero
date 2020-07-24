@@ -245,7 +245,7 @@ $stmt->bindColumn('estado_registro', $estadoRegistroX);
                                   } 
                                 }else{
                                 ?>
-                                 <a href="#" class="btn btn-danger" title="Ver en PDF">
+                                 <a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="btn btn-danger"  target="_blank" title="Ver Oferta en PDF">
                                     <i class="material-icons text-dark">picture_as_pdf</i>
                                  </a> 
                                 <a href="solicitudes/registerSolicitudDetalle.php?sim=<?=$codigo?>&det=2" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
