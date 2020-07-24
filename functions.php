@@ -8379,7 +8379,34 @@ function obtenerCodigoCuentaCajaChica($codigo){
   }         
   return($valor);
 }
-
+function obtenerStringFacturas($codigo){
+  $dbh = new Conexion(); 
+  $stmtFActuras = $dbh->prepare("SELECT nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtFActuras->execute(); 
+  // $stmtFActuras->bindColumn('codigo', $codigo_x);
+  $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
+  $cadenaFacturas="";  
+  while ($row = $stmtFActuras->fetch()) {
+    $cadenaFacturas.="F ".$nro_factura_x.", ";
+    // $codigos_facturas.=$codigo_x.",";
+  }
+  $cadenaFacturas=trim($cadenaFacturas,", ");//
+  return $cadenaFacturas;
+}
+function obtenerStringCodigoFacturas($codigo){
+  $dbh = new Conexion(); 
+  $stmtFActuras = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtFActuras->execute(); 
+  $stmtFActuras->bindColumn('codigo', $codigo_x);
+  // $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
+  $cadenaFacturas="";  
+  while ($row = $stmtFActuras->fetch()) {
+    // $cadenaFacturas.="F ".$nro_factura_x.", ";
+    $cadenaFacturas.=$codigo_x.",";
+  }
+  $cadenaFacturas=trim($cadenaFacturas,", ");//
+  return $cadenaFacturas;
+}
 ?>
 
 
