@@ -76,7 +76,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                    <h4 class="card-title text-center">Reporte de Ingresos Área</h4>
                 </div>
                 <?php
-                include "reporteIngresoFacturacionDetalle.php";  
+                include "reporteIngresoFacturacionDetalleArea.php";  
                  ?>
               </div>
             </div>

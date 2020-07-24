@@ -6,7 +6,7 @@
   <div class="table-responsive">
     <?php
 
-    $html='<table class="table table-bordered table-condensed" id="libro_mayor_rep">'.
+    $html='<table class="table table-bordered table-condensed" id="libro_mayor_rep" width="50%" align="center">'.
             '<thead >'.
             '<tr class="text-center" style="background:#40A3A8;color:#ffffff;">'.
               '<th width="5%">Area</th>'.
@@ -20,64 +20,32 @@
     $listaDetalle=obtenerListaVentasArea($unidadCostoArray,$areaCostoArray,$desde,$hasta);
     $totalImporte=0;
     while ($rowComp = $listaDetalle->fetch(PDO::FETCH_ASSOC)) {
-        $codigoX=$rowComp['codigo'];
-        
-        $unidadX=$rowComp['uo'];
+        $codAreaX=$rowComp['cod_area'];
         $areaX=$rowComp['area'];
-        $razon_socialX=$rowComp['razon_social'];
-        $razon_socialX=mb_strtoupper($razon_socialX);
-        $codSolicitudFacturacion=$rowComp['cod_solicitudfacturacion'];
-        
-        $origenFacturaX="";
-        if($codSolicitudFacturacion==-100){
-          $origenFacturaX.='<label class="text-primary">Tienda</label>';
-        }
-
-        $nitX=$rowComp['nit'];
         $importe_realX=$rowComp['importe_real'];
-        $fecha_fac=$rowComp['fecha_factura'];
-        $nroFactura=$rowComp['nro_factura'];
-        $porcentajeArea=$rowComp['porcentaje'];
-
-        $personalFacturador=$rowComp['facturador'];
-        $personalSolicitante=$rowComp['solicitante'];
-
-        $importe_realX=$importe_realX*($porcentajeArea/100);
-        //APLICAMOS EL IVA
-        $importe_realX=$importe_realX*($valorIVA/100);
-
         $totalImporte+=$importe_realX;
-
-        $txtPorcentaje="";
-        if($porcentajeArea==100){
-          $txtPorcentaje="text-right text-success small";
-        }else{
-          $txtPorcentaje="text-right text-danger font-weight-bold";
-        }
-
-        $personalReporte="";
-        if($filtroPersonal==1){
-          $personalReporte=$personalFacturador;
-        }elseif($filtroPersonal==2){
-          $personalReporte=$personalSolicitante;
-        }
-        
         $html.='<tr>'.
-                      '<td class="text-left font-weight-bold">'.$unidadX.' </td>'.
                       '<td class="text-left font-weight-bold">'.$areaX.'</td>'.
-                      '<td class="text-right">'.strftime('%d/%m/%Y',strtotime($fecha_fac)).' </td>'.
-                      '<td class="text-right">'.$nroFactura.' </td>'.
-                      '<td class="text-right">'.$nitX.' </td>'.
-                      '<td class="text-left">'.$razon_socialX.'</td>'.
-                      '<td class="text-left" style="'.$txtEstiloPersonal.'">'.$personalReporte.'</td>'.
-                      '<td class="text-left">'.$origenFacturaX.'</td>'.
-                      '<td class="'.$txtPorcentaje.'">'.$porcentajeArea.'%</td>'.
                       '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
                   '</tr>';
-    }
+
+        $longitudUnidades = count($unidadCosto);
+        for($i=0; $i<$longitudUnidades; $i++){
+          $unidadDetAbrevY=abrevUnidad($unidadCosto[$i]);
+          $listaDetalleUnidades=obtenerListaVentasArea($unidadCosto[$i],$codAreaX,$desde,$hasta);
+          while ($rowCompUnidades = $listaDetalleUnidades->fetch(PDO::FETCH_ASSOC)) {
+            $importe_realY=$rowCompUnidades['importe_real'];
+            if($importe_realY>0){
+              $html.='<tr">'.
+                    '<td class="text-center">'.$unidadDetAbrevY.'</td>'.  
+                    '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
+                '</tr>';              
+            }        
+          }
+        }
+    }    
         $html.='<tr class="bg-secondary text-white">'.
-                    '<td colspan="8" class="text-center">Importe Total</td>'.
-                    '<td class="text-right font-weight-bold small" style="'.$txtEstiloPersonal.'"></td>'.      
+                    '<td colspan="1" class="text-center">Importe Total</td>'.  
                     '<td class="text-right font-weight-bold small">'.formatNumberDec($totalImporte).'</td>'.      
                 '</tr>';
 
