@@ -16013,9 +16013,10 @@ function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
     });
   }
 
-  function devolverSolicitudRecurso(nro,codServ,url){
+  function devolverSolicitudRecurso(nro,codServ,url,prov){
     $("#nro_solicitud").val(nro);
     $("#codigo_servicio").val(codServ);
+    $("#proveedor_nombre").val(prov);
    $("#urlEnvioModal").val(url);
    $("#modalDevolverSolicitudRecurso").modal("show");
   }
