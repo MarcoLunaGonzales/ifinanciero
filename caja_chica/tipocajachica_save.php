@@ -16,6 +16,7 @@ try {
     $cod_uo = $_POST["cod_uo"];
     $cod_area = $_POST["cod_area"];
     $cod_personal = $_POST["cod_personal"];
+    $cod_cuenta = $_POST["cod_cuenta"];
     $cod_estadoreferencial =   1;    
     $created_by = 1;//$_POST["created_by"];
     $modified_by = 1;//$_POST["modified_by"];
@@ -27,6 +28,18 @@ try {
         values ('$nombre',$cod_uo,$cod_area,$cod_estadoreferencial,$cod_personal)");
         $flagSuccess=$stmt->execute();
         $tabla_id = $dbh->lastInsertId();
+        if($flagSuccess){
+            $codigo_cajachica=0;
+            $queryArea = "SELECT codigo FROM  tipos_caja_chica WHERE nombre like '%$nombre%' and cod_uo='$cod_uo' and cod_area='$cod_area' and cod_estadoreferencial=$cod_estadoreferencial and cod_personal=$cod_personal";
+            $statementArea = $dbh->query($queryArea);
+            while ($row = $statementArea->fetch()){ 
+                $codigo_cajachica=$row['codigo'];
+            }
+            if($codigo_cajachica!=0){
+                $stmt = $dbh->prepare("INSERT into configuraciones_cuentas_cajachica(cod_cuenta,cod_unidad,cod_tipo_cajachica) values($cod_cuenta,$cod_uo,$codigo_cajachica)");
+                $flagSuccess=$stmt->execute();
+            }
+        }
         showAlertSuccessError($flagSuccess,$urlListTiposCajaChica);
 
         //$stmt->debugDumpParams();
@@ -34,7 +47,14 @@ try {
 
         $stmt = $dbh->prepare("UPDATE tipos_caja_chica set nombre='$nombre',cod_uo=$cod_uo,cod_area=$cod_area,cod_personal=$cod_personal
          where codigo = $codigo");      
-        $flagSuccess=$stmt->execute();        
+        $flagSuccess=$stmt->execute();      
+        if($flagSuccess){
+             $queryArea = "DELETE from configuraciones_cuentas_cajachica where cod_tipo_cajachica=$codigo";
+            $statementArea = $dbh->query($queryArea);
+            $flagSuccess=$statementArea->execute();            
+            $stmt = $dbh->prepare("INSERT into configuraciones_cuentas_cajachica(cod_cuenta,cod_unidad,cod_tipo_cajachica) values($cod_cuenta,$cod_uo,$codigo)");
+            $flagSuccess=$stmt->execute();            
+        }  
         showAlertSuccessError($flagSuccess,$urlListTiposCajaChica);
 
     }//si es insert o update
@@ -44,3 +64,4 @@ try {
         echo "Un error ocurrio".$ex->getMessage();
     }
 ?>
+

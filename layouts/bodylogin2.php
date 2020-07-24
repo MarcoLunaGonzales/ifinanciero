@@ -423,10 +423,12 @@
                       } 
                       var cod_confi_iva=document.getElementById('cod_cuenta_configuracion_iva').value;
                      
+                      //VALIDA LAS FACTURAS EN EL HABER PARA QUE NO SE REGISTREN
                       if($('#cuenta'+(i+1)).val()==cod_confi_iva){//para facturas
                         contcuentaIva++;
                         debeIVA=parseFloat($("#debe"+(i+1)).val());
                         haberIVA=parseFloat($("#haber"+(i+1)).val());
+                        console.log("haberIVA: "+haberIVA);
                         if(haberIVA>0){
                           banderaDebeHaberIVA=1;
                         }
@@ -516,6 +518,7 @@
                               }
                             }  
                           }
+                          //LA LIBRETA DEBE ESTAR RELACIONADA A LA CUENTA DE LA LIBRETA BANCARIA 
                           if(detalleLibretaSelect==false && libretasBancarias==false && $("#tipo_comprobante").val()!=4){
                                 $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un detalle de la Libreta Bancaria para Cerrar.");
                                 $('#modalAlert').modal('show');

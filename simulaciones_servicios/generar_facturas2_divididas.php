@@ -51,7 +51,7 @@
 	    //     $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0,0);
 	    // }
 	    // echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fecha_actual:".$fecha_actual." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
-        if($cod_comprobante!=0){
+        if($cod_comprobante!=0 && $cod_comprobante!=-1){
             $controlCode = new ControlCode();
             $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
             $nro_correlativo,//Numero de factura
@@ -163,7 +163,11 @@
                 return "1";
             }
         }else{
-            return "1";
+            if($cod_comprobante==0){
+                return "1";    
+            }else{
+                return "-1";
+            }
         }
 	}
 	

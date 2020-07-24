@@ -496,6 +496,14 @@
            <tbody id="datos_libreta_bancaria_detalle">
              
            </tbody>
+           <tfoot >
+            <tr style="background-color:#768c9c; color: #FFFFFF">
+              <td>-</td>
+              <td colspan="2">TOTAL SALDO</td>              
+              <td><input style="background-color:#768c9c; color: #FFFFFF" type="text" name="total_saldo_lib" id="total_saldo_lib" value="0" readonly="true"></td>
+              <td>-</td>
+            </tr>
+           </tfoot>
            <!--<tfoot>
              <tr class="font-weight-bold">
              <td colspan="2">Total</td>

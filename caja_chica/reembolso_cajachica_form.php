@@ -69,8 +69,8 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
               <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar Nuevo"; else echo "Editar";?>  Reembolso</h4>              
             </div>
             <h4 align="right">              
-              <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador">
-                <i class="material-icons" title="Buscar Comprobante">search</i>
+              <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" onclick="botonBuscarComprobante_caja_chica()">
+                <i class="material-icons" title="Seleccionar Comprobante">search</i>
               </button>                      
             </h4>
           </div>
@@ -87,7 +87,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 <label class="col-sm-1 col-form-label">Fecha</label>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <input class="form-control" name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha?>" required="true" value="<?=$fecha?>" />
+                        <input class="form-control" name="fecha" id="fecha" type="date" required="true" value="<?=$fecha?>" />
                         </select>
                     </div>
                 </div>
@@ -121,85 +121,10 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   
   </div>
 </div>
-<!-- Modal busqueda de comprobantes-->
-<div class="modal fade" id="modalBuscador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Buscador de Comprobantes</h4>
-      </div>
-      <div class="modal-body ">
-        <div class="row">
-            <label class="col-sm-3 col-form-label text-center">Oficina</label> 
-            <label class="col-sm-6 col-form-label text-center">Fechas</label>                  
-            <label class="col-sm-3 col-form-label text-center">Tipo</label>                                
-        </div> 
-        <div class="row">
-          <div class="form-group col-sm-3">
-    <!--         <select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required> -->
-
-            <select  name="OficinaBusqueda[]" id="OficinaBusqueda" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple> 
-              <option value="0"></option>
-              <?php while ($rowUO = $stmtUO->fetch(PDO::FETCH_BOUND)) { ?>
-                <option <?=($globalUnidad==$codigo_uo)?"selected":"";?> value="<?=$codigo_uo;?>"> <?=$nombreUnidad_x;?></option>                
-              <?php }?>              
-            </select>
-          </div>
-          <div class="form-group col-sm-3">
-            <input class="form-control input-sm" type="date" name="fechaBusquedaInicio" id="fechaBusquedaInicio" value="<?=$globalGestion?>-01-01" min="<?=$globalGestion?>-01-01" max="<?=$globalGestion?>-12-31">
-          </div>
-          <div class="form-group col-sm-3">
-            <input class="form-control input-sm" type="date" name="fechaBusquedaFin" id="fechaBusquedaFin" value="<?=$globalGestion?>-12-31" min="<?=$globalGestion?>-01-01" max="<?=$globalGestion?>-12-31"  >
-          </div>
-          <div class="form-group col-sm-3">            
-            <select name="tipoBusqueda[]" id="tipoBusqueda" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple> 
-              <option value="0"></option>
-              <?php while ($rowTC = $stmtTipoComprobante->fetch(PDO::FETCH_BOUND)) { ?>
-                <option value="<?=$codigo_tipo_co;?>"> <?=$nombre_tipo_comprobante;?></option>
-              <?php }?>
-            </select>
-            
-          </div>              
-        </div> 
-        <div class="row">          
-          <label class="col-sm-2 col-form-label text-center">#Cbte</label>
-          <label class="col-sm-5 col-form-label text-center">Cuenta</label>
-          <label class="col-sm-5 col-form-label text-center">Glosa</label>
-        </div> 
-        <div class="row">          
-          <div class="form-group col-sm-2">
-            <input class="form-control input-sm" type="number" name="nro_comprobante" id="nro_comprobante"  >
-          </div>           
-          <div class="form-group col-sm-5">
-            <!-- <input class="form-control input-sm" type="number" name="nro_cuenta" id="nro_cuenta"  > -->            
-                    <!-- <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" placeholder="[numero] y nombre de cuenta" required />
-                    <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" required/> -->
-            <?php                    
-              //plan de cuentas
-              $query_cuentas = "SELECT codigo,numero,nombre from plan_cuentas where cod_estadoreferencial=1 and nivel=5";
-              $statementCuentas = $dbh->query($query_cuentas);
-              ?>
-              <select name="cuenta_auto_id" id="cuenta_auto_id" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true">
-                <option value=""></option>
-                <?php while ($row = $statementCuentas->fetch()){ ?>
-                    <option value="<?=$row["codigo"];?>"><?=$row["numero"];?> - <?=$row["nombre"];?></option>
-                <?php } ?>
-              </select>
-
-          </div>           
-          <div class="form-group col-sm-5">
-            <input class="form-control input-sm" type="text" name="glosaBusqueda" id="glosaBusqueda"  >
-          </div>           
-        </div> 
-
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="botonBuscarComprobante" name="botonBuscarComprobante" onclick="botonBuscarComprobante_caja_chica()">Buscar</button>
-        <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button> -->
-      </div>
-    </div>
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
 <!-- lista de comprobantes -->

@@ -14,9 +14,34 @@ $stmtX->execute();
 $globalAdmin=$_SESSION["globalAdmin"];
 $idFila=$_GET['idFila'];
 $IdTipo=$_GET['IdTipo'];
-
+$cod_area=$_GET['cod_area'];
+// echo $cod_area;
 $codigoAdministrativos=obtenerValorConfiguracion(46);
+switch ($cod_area) {
+  case '39':    
+  $codigoAreaServ=108;
+  break;
+  case '38':   
+  $codigoAreaServ=109; 
+  break;
+  case '11':    //oi
+  $codigoAreaServ=107;
+  break;
+  default:
+    $codigoAreaServ=0;
+    break;
+}
+// if($cod_area==39){
+//     $codigoAreaServ=108;
+// }else{
+//     if($cod_area==38){
+//       $codigoAreaServ=109;
+//     }elseif($cod_area==38){
 
+//     }else{
+//       $codigoAreaServ=0;
+//     }
+// }
 
 ?>
 <div id="comp_row" class="col-md-12">
@@ -27,11 +52,14 @@ $codigoAdministrativos=obtenerValorConfiguracion(46);
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php 
-                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where IdTipo=$IdTipo and vigente=1
-                  UNION 
+              $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where vigente=1 and codigo_n1=$codigoAreaServ
+                UNION 
                   Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2=$codigoAdministrativos";
-                $stmt3 = $dbh->prepare($sql);
-                echo $sql; 
+                // $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where  vigente=1
+                //   UNION 
+                //   Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2=$codigoAdministrativos";
+                $stmt3 = $dbh->prepare($sql);//IdTipo=$IdTipo and
+                // echo $sql; 
                 $stmt3->execute();
                 while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                   $codigoServX=$rowServ['IdClaServicio'];
