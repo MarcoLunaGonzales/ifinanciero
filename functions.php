@@ -2518,7 +2518,7 @@ function contarSolicitudDetalle($codigo){
 
 function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacional, $gestion, $mes){
   $dbh = new Conexion(); 
-  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$cod_tipocomprobante' and c.cod_unidadorganizacional='$unidad_organizacional' and YEAR(c.fecha)='$gestion' and MONTH(c.fecha)='$mes'";
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$cod_tipocomprobante' and c.cod_unidadorganizacional='$unidad_organizacional' and YEAR(c.fecha)='$gestion' and MONTH(c.fecha)='$mes' and c.cod_estadocomprobante<>2";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
@@ -2531,7 +2531,7 @@ function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacio
 
 function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   $dbh = new Conexion(); 
-  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00'";
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00' and c.cod_estadocomprobante<>2";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
