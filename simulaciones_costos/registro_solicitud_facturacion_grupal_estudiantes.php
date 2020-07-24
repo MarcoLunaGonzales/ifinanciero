@@ -502,8 +502,8 @@ $contadorRegistros=0;
                                                 //para la parte de editar
                                                 $sw="";
                                                 if($cod_facturacion>0){
-
-                                                    $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd, solicitudes_facturacion_grupal sfg where sf.codigo=sfg.cod_solicitudfacturacion and  sf.codigo=sfd.cod_solicitudfacturacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and sfg.cod_curso=$IdCurso and tipo_solicitud in (2,7)";
+                                                    //$sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd, solicitudes_facturacion_grupal sfg where sf.codigo=sfg.cod_solicitudfacturacion and  sf.codigo=sfd.cod_solicitudfacturacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and sfg.cod_curso=$IdCurso and tipo_solicitud in (2,7)";
+                                                    $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and sfd.cod_curso=$IdCurso and sf.tipo_solicitud in (2,7) and sfd.ci_estudiante=$ci_estudiante";
                                                     // echo $sqlControlador;
                                                     $stmtControlado = $dbh->prepare($sqlControlador);
                                                    $stmtControlado->execute();                                                   
@@ -630,6 +630,7 @@ $contadorRegistros=0;
                                                 <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$Costo?>">
 
                                                 <input type="hidden" id="cod_curso_x<?=$iii?>" name="cod_curso_x<?=$iii?>" value="<?=$IdCurso?>">
+                                                <input type="hidden" id="ci_estudiante<?=$iii?>" name="ci_estudiante<?=$iii?>" value="<?=$ci_estudiante?>">
 
                                                 <!-- aqui se captura los servicios activados -->
                                                 <input type="hidden" id="cod_serv_tiposerv_a<?=$iii?>" name="cod_serv_tiposerv_a<?=$iii?>">
@@ -735,7 +736,7 @@ $contadorRegistros=0;
                                 if(isset($_GET['q'])){?>
                                 <a href='../<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$u?>&s=<?=$s?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
                                 <?php }else{?>
-                                    <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
+                                    <a href='../<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> IR A SF</a>                    
                                 <?php }                         
                             }
                             
@@ -801,20 +802,20 @@ $contadorRegistros=0;
 <script type="text/javascript">
     function valida(f) {
         var ok = true;
-        var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-        if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
-        {    
+        var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";    
+        if(f.elements["modal_totalmontoserv_costo_a"].value == 0 || f.elements["modal_totalmontoserv_costo_a"].value < 0 || f.elements["modal_totalmontoserv_costo_a"].value == '')
+        {  
             ok = false;
         }
-        if(f.elements["monto_total"].value>0)
-        {    
-            ok = true;
-        }
+        // if(f.elements["monto_total"].value>0)
+        // {    
+        //     ok = true;
+        // }    
         var cod_tipopago=f.elements["cod_tipopago"].value;
         var cod_defecto_deposito_cuenta=$("#cod_defecto_deposito_cuenta").val();
         if(cod_tipopago==cod_defecto_deposito_cuenta){
             if(f.elements["cantidad_archivosadjuntos"].value==0){
-                 var msg = "Por favor agregue Archivo Adjunto.";        
+                var msg = "Por favor agregue Archivo Adjunto.";        
                 ok = false;
             }
         }

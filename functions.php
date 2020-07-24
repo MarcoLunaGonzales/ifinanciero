@@ -7568,7 +7568,7 @@ function obtenerCodigoExternoCurso($codigo){
 
 function obtenermontoestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT SUM(sfd.precio) as precio from solicitudes_facturacion_grupal sfg, solicitudes_facturaciondetalle sfd, solicitudes_facturacion sf where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estadosolicitudfacturacion<>5 and sfg.cod_solicitudfacturacion=sfd.cod_solicitudfacturacion and sfg.cod_curso=$IdCurso and sfg.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion!=2");
+  $stmt = $dbh->prepare("SELECT SUM(sfd.precio) as precio from solicitudes_facturaciondetalle sfd, solicitudes_facturacion sf where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estadosolicitudfacturacion<>5 and sfd.cod_curso=$IdCurso and sfd.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion!=2");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -7578,7 +7578,7 @@ function obtenermontoestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
 }
 function obtenerDescripcionestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT sfd.descripcion_alterna from solicitudes_facturacion_grupal sfg, solicitudes_facturaciondetalle sfd where sfg.cod_solicitudfacturacion=sfd.cod_solicitudfacturacion and sfg.cod_curso=$IdCurso and sfg.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS");
+  $stmt = $dbh->prepare("SELECT sfd.descripcion_alterna from solicitudes_facturaciondetalle sfd where sfd.cod_curso=$IdCurso and sfd.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -8379,7 +8379,34 @@ function obtenerCodigoCuentaCajaChica($codigo){
   }         
   return($valor);
 }
-
+function obtenerStringFacturas($codigo){
+  $dbh = new Conexion(); 
+  $stmtFActuras = $dbh->prepare("SELECT nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtFActuras->execute(); 
+  // $stmtFActuras->bindColumn('codigo', $codigo_x);
+  $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
+  $cadenaFacturas="";  
+  while ($row = $stmtFActuras->fetch()) {
+    $cadenaFacturas.="F ".$nro_factura_x.", ";
+    // $codigos_facturas.=$codigo_x.",";
+  }
+  $cadenaFacturas=trim($cadenaFacturas,", ");//
+  return $cadenaFacturas;
+}
+function obtenerStringCodigoFacturas($codigo){
+  $dbh = new Conexion(); 
+  $stmtFActuras = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtFActuras->execute(); 
+  $stmtFActuras->bindColumn('codigo', $codigo_x);
+  // $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
+  $cadenaFacturas="";  
+  while ($row = $stmtFActuras->fetch()) {
+    // $cadenaFacturas.="F ".$nro_factura_x.", ";
+    $cadenaFacturas.=$codigo_x.",";
+  }
+  $cadenaFacturas=trim($cadenaFacturas,", ");//
+  return $cadenaFacturas;
+}
 ?>
 
 
