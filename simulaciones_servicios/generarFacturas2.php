@@ -212,8 +212,12 @@ try{
                             $obs="Solicitud Facturada";                                    
                             actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
                             header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+                        }elseif($codigo_error==-1){
+                            ?>
+                            <script>Swal.fire("Error!","La Suma del Monto de las Libretas es menor al de la factura.", "error");
+                            </script> <?php   
                         }else{?>
-                            <script>//Swal.fire("Error!","Hubo un error durante el proceso de generar la factura.", "error");
+                            <script>Swal.fire("Error!","Hubo un error durante el proceso de generar la factura.", "error");
                             </script> <?php
                         }
                     }

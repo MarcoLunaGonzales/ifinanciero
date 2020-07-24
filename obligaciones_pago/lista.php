@@ -27,6 +27,7 @@ $stmt->bindColumn('cod_comprobante', $codComprobante);
 $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cod_estadopago', $codEstado);
 $stmt->bindColumn('cod_ebisa', $cod_ebisa);
+$stmt->bindColumn('cod_cajachicadetalle', $cod_cajachicadetalle);
 
 ?>
 <div class="cargar-ajax d-none">
@@ -94,6 +95,8 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                               $btnEstado="btn-info";
                             break;
                           }
+
+
 ?>
                         <tr>
                           <td><?=$datosArray[0]?></td>
@@ -193,11 +196,13 @@ $stmt->bindColumn('cod_ebisa', $cod_ebisa);
                                     </a><?php 
                                   }else{
                                     if($codEstado==3){
+                                      if(!($cod_cajachicadetalle==""||$cod_cajachicadetalle==0)){
                                         ?>
                                        <a href="#" onclick="alerts.showSwal('warning-message-crear-comprobante','<?=$urlGenerarComprobante?>?cod=<?=$codigo?>')" class="dropdown-item">
                                        <i class="material-icons text-success">attach_money</i> Generar Comprobante
                                       </a>
-                                        <?php
+                                        <?php   
+                                      }
                                     }else{
                                       if($codEstado==4){
                                         ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">

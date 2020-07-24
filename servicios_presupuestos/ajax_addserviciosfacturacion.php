@@ -17,15 +17,31 @@ $IdTipo=$_GET['IdTipo'];
 $cod_area=$_GET['cod_area'];
 // echo $cod_area;
 $codigoAdministrativos=obtenerValorConfiguracion(46);
-if($cod_area==39){
-    $codigoAreaServ=108;
-}else{
-    if($cod_area==38){
-      $codigoAreaServ=109;
-    }else{
-      $codigoAreaServ=0;
-    }
+switch ($cod_area) {
+  case '39':    
+  $codigoAreaServ=108;
+  break;
+  case '38':   
+  $codigoAreaServ=109; 
+  break;
+  case '11':    //oi
+  $codigoAreaServ=107;
+  break;
+  default:
+    $codigoAreaServ=0;
+    break;
 }
+// if($cod_area==39){
+//     $codigoAreaServ=108;
+// }else{
+//     if($cod_area==38){
+//       $codigoAreaServ=109;
+//     }elseif($cod_area==38){
+
+//     }else{
+//       $codigoAreaServ=0;
+//     }
+// }
 
 ?>
 <div id="comp_row" class="col-md-12">
@@ -36,7 +52,7 @@ if($cod_area==39){
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php 
-              $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ
+              $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where vigente=1 and codigo_n1=$codigoAreaServ
                 UNION 
                   Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2=$codigoAdministrativos";
                 // $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where  vigente=1
