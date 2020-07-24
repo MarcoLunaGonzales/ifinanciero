@@ -1,6 +1,7 @@
 <?php
 require_once 'conexion.php';
 require_once 'conexion_externa.php';
+require_once 'functions.php';
 
 date_default_timezone_set('America/La_Paz');
 
@@ -28,6 +29,24 @@ function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta){
     return($stmt);
 }
 
+
+function obtenerListaVentasArea($unidades,$areas,$desde,$hasta){
+
+    $dbh = new Conexion();
+
+    $valorIVA=100-(obtenerValorConfiguracion(1));
+
+    $sql="SELECT  
+    (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area,  
+    SUM(((cantidad*precio)-descuento_bob)*da.porcentaje))as importe_real
+      FROM facturas_venta f, facturas_venta_distribucion da 
+    WHERE da.cod_factura=f.codigo and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas)
+    order by area";
+    //echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return($stmt);
+}
 
 
 

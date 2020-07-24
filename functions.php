@@ -4907,17 +4907,15 @@ function obtenerDetalleSolicitudParaComprobante($codigo){
   return $stmt;
 }
 
-function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante){
+function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante,$codMes){
   $dbh = new Conexion();
-  $mesActivo=1;
+  $mesActivo=$codMes;
 
-  $sql1="SELECT m.*,g.nombre from meses_trabajo m join gestiones g on m.cod_gestion=g.codigo where cod_gestion='$codGestion' and cod_estadomesestrabajo=3";
+  $sql1="SELECT g.nombre from gestiones g where cod_gestion='$codGestion'";
   $stmt1 = $dbh->prepare($sql1);
   $stmt1->execute();
   $anio=$_SESSION["globalNombreGestion"];
-  $mes=date('m');
   while ($row1= $stmt1->fetch(PDO::FETCH_ASSOC)) {
-    $mesActivo=$row1['cod_mes'];
     $anio=$row1['nombre'];
   }
 
@@ -4925,7 +4923,7 @@ function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante){
   $fechaFin=date('Y-m-d',strtotime($fechaInicio.'+1 month'));
   $fechaFin=date('Y-m-d',strtotime($fechaFin.'-1 day'));
 
-  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$tipoComprobante' and c.cod_unidadorganizacional=$unidad and c.fecha between '$fechaInicio 00:00:00' and '$fechaFin 23:59:59'";
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$tipoComprobante' and c.cod_unidadorganizacional=$unidad and c.fecha between '$fechaInicio 00:00:00' and '$fechaFin 23:59:59' and c.cod_estadocomprobante<>2";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
