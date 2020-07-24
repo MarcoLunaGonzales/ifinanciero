@@ -36,8 +36,13 @@ try {//recibiendo datos
     $observaciones_2 = $_POST["observaciones_2"];        
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];
-    $persona_contacto = $_POST["persona_contacto"];
 
+    
+    if(isset($_POST['persona_contacto'])){
+        $persona_contacto = $_POST["persona_contacto"];
+    }else{
+        $persona_contacto = 0;
+    }
     if(isset($_POST['q'])){
         $cod_personal=$_POST['q'];
     }
@@ -60,19 +65,19 @@ try {//recibiendo datos
             while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                   $cod_facturacion=$rowPre['codigo'];
             }
-            //insertamos la cadena de estudiantes
-            $IdCurso = $_POST["IdCurso"];
-            $ci_estudiante = $_POST["ci_estudiante"];
-            $array_idcurso = explode(',',$IdCurso);
-            $array_ci_estudiante = explode(',',$ci_estudiante);
-            $lan_ci=sizeof($array_idcurso);//filas si lo hubiese
-            for($p=0;$p<$lan_ci;$p++){
-                $id_curso_x=$array_idcurso[$p];
-                $ci_estudiante_x=$array_ci_estudiante[$p];
-                $stmtGrupal = $dbh->prepare("INSERT INTO solicitudes_facturacion_grupal(cod_solicitudfacturacion,cod_curso,ci_estudiante) 
-                    values ($cod_facturacion,$id_curso_x,$ci_estudiante_x)");
-                $stmtGrupal->execute();
-            }
+            // //insertamos la cadena de estudiantes
+            // $IdCurso = $_POST["IdCurso"];
+            // $ci_estudiante = $_POST["ci_estudiante"];
+            // $array_idcurso = explode(',',$IdCurso);
+            // $array_ci_estudiante = explode(',',$ci_estudiante);
+            // $lan_ci=sizeof($array_idcurso);//filas si lo hubiese
+            // for($p=0;$p<$lan_ci;$p++){
+            //     $id_curso_x=$array_idcurso[$p];
+            //     $ci_estudiante_x=$array_ci_estudiante[$p];
+            //     $stmtGrupal = $dbh->prepare("INSERT INTO solicitudes_facturacion_grupal(cod_solicitudfacturacion,cod_curso,ci_estudiante) 
+            //         values ($cod_facturacion,$id_curso_x,$ci_estudiante_x)");
+            //     $stmtGrupal->execute();
+            // }
             for ($i=1;$i<=$modal_numeroservicio-1;$i++){
                 $servicioInsert="";
                 $CantidadInsert="";
@@ -82,11 +87,12 @@ try {//recibiendo datos
                 if(isset($_POST["servicio".$i])){
                     $servicioInsert=$_POST["servicio_a".$i];
                     $CantidadInsert=$_POST["cantidad_a".$i];
-                    $importeInsert=$_POST["modal_importe".$i];                
+                    $importeInsert=$_POST["modal_importe".$i];
                     $DescricpionInsert=$_POST["descripcion_alterna".$i];
                     $descuento_por_Insert=$_POST["descuento_por".$i];
                     $descuento_bob_Insert=$_POST["descuento_bob".$i];
                     $cod_curso_x=$_POST["cod_curso_x".$i];
+                    $ci_estudiante=$_POST["ci_estudiante".$i];
                     $importe_a_pagar_Insert=$_POST["importe_a_pagar".$i];
                     // $monto_pagado=$_POST["modal_importe_pagado_dos_a".$i];
                 }
@@ -95,8 +101,8 @@ try {//recibiendo datos
                     // echo " cantida:".$CantidadInsert."<br>";
                     // echo " importe:".$importeInsert."<br>";
                     // echo " Descricpion:".$DescricpionInsert."<br>";
-                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,cod_curso) 
-                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,$cod_curso_x)");
+                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,cod_curso,ci_estudiante) 
+                    values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,$cod_curso_x,$ci_estudiante)");
                     $flagSuccess=$stmt->execute();                    
                 }
             }            
@@ -171,6 +177,7 @@ try {//recibiendo datos
                     $descuento_por_Insert=$_POST["descuento_por".$i];
                     $descuento_bob_Insert=$_POST["descuento_bob".$i];
                     $cod_curso_x=$_POST["cod_curso_x".$i];
+                    $ci_estudiante=$_POST["ci_estudiante".$i];
                     $importe_a_pagar_Insert=$_POST["importe_a_pagar".$i];
                     // $monto_pagado=$_POST["modal_importe_pagado_dos_a".$i];
                 }
@@ -178,21 +185,10 @@ try {//recibiendo datos
                     // echo " servicio:".$servicioInsert."<br>";
                     // echo " cantida:".$CantidadInsert."<br>";
                     // echo " importe:".$importeInsert."<br>";
-                    // echo " Descricpion:".$DescricpionInsert."<br>";
-                    // $datos=resgistrar_pago_curso($ci_estudiante,$cod_simulacion,$servicioInsert,$importe_a_pagar_Insert,$cod_facturacion);
-                    // $estado_x=$datos["estado"];
-                    // $mensaje_x=$datos["mensaje"];
-                    // if($estado_x){//registro correcto webservice
-                        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,cod_curso) 
-                        values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,$cod_curso_x)");
-                        $flagSuccess=$stmt->execute();                        
-                    // }else{
-                    //     $stmtDelte = $dbh->prepare("DELETE from solicitudes_facturacion where codigo=$cod_facturacion");
-                    //     $stmtDelte->execute();
-                    //     $estado_ibnorca++;
-                    //     break;
-                    // }
-                    //insertamos en el ibnorca
+                    // echo " Descricpion:".$DescricpionInsert."<br>";                    
+                    $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,cod_curso,ci_estudiante) 
+                        values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,$cod_curso_x,$ci_estudiante)");
+                    $flagSuccess=$stmt->execute();                    
                 }
             }
             

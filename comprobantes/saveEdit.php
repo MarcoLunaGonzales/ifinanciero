@@ -153,7 +153,6 @@ for ($i=1;$i<=$cantidadFilas;$i++){
    	  $nroFac=$facturas[$i-1][$j]->nroFac;
    	  
    	  $fechaFac=$facturas[$i-1][$j]->fechaFac;
-   	  
    	  $razonFac=$facturas[$i-1][$j]->razonFac;
       $impFac=$facturas[$i-1][$j]->impFac;            
       $autFac=$facturas[$i-1][$j]->autFac;

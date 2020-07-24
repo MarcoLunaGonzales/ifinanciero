@@ -148,74 +148,35 @@ try{
                                 break;
                             }
                         }
-                        // switch ($nro_facturas) {
-                        //     case 1:
-                        //         $cadena_cod_facdet_1='';
-                        //         for($j=0;$j<$cant_items_sfd;$j++){
-                        //             $cadena_cod_facdet_1.=$array_codigo_detalle[$j].",";                                    
-                        //         }
-                        //         $variable_controlador=1;//indica la vez que entra a la funcion
-                        //         $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
-                        //     break;
-                        //     case 2:
-                        //         $cadena_cod_facdet_1='';
-                        //         for($i=0;$i<20;$i++){
-                        //             $cadena_cod_facdet_1.=$array_codigo_detalle[$i].",";
-                        //         }
-                        //         $variable_controlador=1;//indica la vez que entra a la funcion
-                        //         $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
-                        //         $cadena_cod_facdet_2="";
-                        //         for($j=$i;$j<$cant_items_sfd;$j++){
-                        //             $cadena_cod_facdet_2.=$array_codigo_detalle[$j].",";
-                        //         }
-                        //         if($codigo_error==0){
-                        //             $variable_controlador=2;//indica la vez que entra a la funcion
-                        //             $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_2,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
-                        //         }
-                        //     break;
-                        //     case 3:
-                        //         $cadena_cod_facdet_1='';
-                        //         for($i=0;$i<20;$i++){
-                        //             $cadena_cod_facdet_1.=$array_codigo_detalle[$i].",";                                    
-                        //         }
-                        //         $variable_controlador=1;//indica la vez que entra a la funcion
-                        //         $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
-
-                        //         $cadena_cod_facdet_2="";
-                        //         for($j=$i;$j<40;$j++){
-                        //             $cadena_cod_facdet_2.=$array_codigo_detalle[$j].",";
-                        //         }
-                        //         if($codigo_error==0){
-                        //             $variable_controlador=2;//indica la vez que entra a la funcion
-                        //             $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_2,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
-                        //         }
-                        //         $cadena_cod_facdet_3="";
-                        //         for($k=$j;$k<$cant_items_sfd;$k++){
-                        //             $cadena_cod_facdet_3.=$array_codigo_detalle[$k].",";
-                        //         }
-                        //         if($codigo_error==0){
-                        //             $variable_controlador=3;//indica la vez que entra a la funcion
-                        //             $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_3,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
-                        //         }
-
-                        //     break;
-                        // }
-
-                        if($codigo_error==0){                            
-                            $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
-                            $stmtUpdate = $dbh->prepare($sqlUpdate);
-                            $flagSuccess=$stmtUpdate->execute(); 
-                            //enviar propuestas para la actualizacion de ibnorca
-                            $fechaHoraActual=date("Y-m-d H:i:s");
-                            $idTipoObjeto=2709;
-                            $idObjeto=2729; //facturado
-                            $obs="Solicitud Facturada";                                    
-                            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
-                            header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
-                        }elseif($codigo_error==-1){
-                            ?>
-                            <script>Swal.fire("Error!","La Suma del Monto de las Libretas es menor al de la factura.", "error");
-                            </script> <?php   
+                        if($codigo_error==0){
+                            $stringFacturas=obtenerStringFacturas($codigo);
+                            $stringFacturasCod=obtenerStringCodigoFacturas($codigo);
+                            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$stringFacturas,$stringFacturasCod,$cod_libreta,$cod_estadocuenta);                            
+                            if($cod_comprobante==null || $cod_comprobante==''){
+                                $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo in ($stringFacturasCod)";
+                                $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
+                                $stmtDeleteCAbeceraFactura->execute();
+                                $sqldeleteDetalleFactura="DELETE from facturas_ventadetalle where cod_facturaventa in ($stringFacturasCod)";
+                                $stmtDeleteDetalleFactura = $dbh->prepare($sqldeleteDetalleFactura);
+                                $stmtDeleteDetalleFactura->execute();
+                                ?>
+                                <script>Swal.fire("Error!","Hubo un error Al generar el comprobante.", "error");
+                                </script> <?php
+                            }else{
+                                $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where codigo in ($stringFacturasCod)";                                
+                                $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                                $stmtUpdateLibreta->execute();
+                                $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
+                                $stmtUpdate = $dbh->prepare($sqlUpdate);
+                                $flagSuccess=$stmtUpdate->execute(); 
+                                //enviar propuestas para la actualizacion de ibnorca
+                                $fechaHoraActual=date("Y-m-d H:i:s");
+                                $idTipoObjeto=2709;
+                                $idObjeto=2729; //facturado
+                                $obs="Solicitud Facturada";                                    
+                                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+                                header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+                            }                            
                         }else{?>
                             <script>Swal.fire("Error!","Hubo un error durante el proceso de generar la factura.", "error");
                             </script> <?php

@@ -124,7 +124,8 @@ try{
                 }else{
                     $cod_estadocuenta=0;
                 }
-                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_factura,$cod_libreta,$cod_estadocuenta);
+                $cadena_factura="F ".$nro_factura;                
+                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$cadena_factura,$nro_factura,$cod_libreta,$cod_estadocuenta);
                 if($cod_comprobante!=0){
                     $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
                     values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH',null,'$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_factura','$nroAutorizacion',null,'$monto_total','$observaciones','4',$cod_comprobante)";
@@ -133,19 +134,19 @@ try{
                     $flagSuccess=$stmtInsertSoliFact->execute();
                     if($flagSuccess){
                         //obtenemos el registro del ultimo insert
-                        $stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$codigo order by codigo desc LIMIT 1");
-                        $stmtNroFac->execute();
-                        $resultNroFact = $stmtNroFac->fetch();    
-                        $cod_facturaVenta = $resultNroFact['codigo'];
-                        if($cod_libreta!=0){
-                            $array_libreta=explode(',',$cod_libreta);
-                            for($i=0;$i<sizeof($array_libreta);$i++){
-                                $cod_libreta_x= $array_libreta[$i];
-                                $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($cod_libreta_x,$cod_facturaVenta)";
-                                $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-                                $stmtUpdateLibreta->execute();
-                            }                            
-                        } 
+                        // $stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$codigo order by codigo desc LIMIT 1");
+                        // $stmtNroFac->execute();
+                        // $resultNroFact = $stmtNroFac->fetch();    
+                        // $cod_facturaVenta = $resultNroFact['codigo'];
+                        // if($cod_libreta!=0){
+                        //     $array_libreta=explode(',',$cod_libreta);
+                        //     for($i=0;$i<sizeof($array_libreta);$i++){
+                        //         $cod_libreta_x= $array_libreta[$i];
+                        //         $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($cod_libreta_x,$cod_facturaVenta)";
+                        //         $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                        //         $stmtUpdateLibreta->execute();
+                        //     }                            
+                        // } 
                         
                         $stmt = $dbh->prepare("SELECT sf.* from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
                         $stmt->execute();                    

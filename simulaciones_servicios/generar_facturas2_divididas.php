@@ -35,7 +35,7 @@
         // }if($cod_libreta!=0){
         //     $cont_tipospago++;
         // }
-        $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,$cod_libreta,$cod_estadocuenta);
+        // $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,$cod_libreta,$cod_estadocuenta);
 
      //    if($cod_tipopago==$cod_tipopago_deposito){//deposito en cuenta?        
      //        if($cod_libreta!=0){//si viene sin cod libreta no se toma en cuetna el deposito en cuenta
@@ -51,7 +51,7 @@
 	    //     $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$nro_correlativo,0,0,0);
 	    // }
 	    // echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fecha_actual:".$fecha_actual." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
-        if($cod_comprobante!=0 && $cod_comprobante!=-1){
+        // if($cod_comprobante!=0 && $cod_comprobante!=-1){
             $controlCode = new ControlCode();
             $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
             $nro_correlativo,//Numero de factura
@@ -61,7 +61,7 @@
             $llaveDosificacion//Llave de dosificación
             );
             $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
-            values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','$cod_comprobante')";
+            values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH','$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0')";
             // echo $sql;
             $stmtInsertSoliFact = $dbh->prepare($sql);
             $flagSuccess=$stmtInsertSoliFact->execute();
@@ -72,13 +72,13 @@
                 $resultNroFact = $stmtNroFac->fetch();    
                 $cod_facturaVenta = $resultNroFact['codigo'];
                 if($cod_libreta!=0){
-                    $array_libreta=explode(',',$cod_libreta);
-                    for($i=0;$i<sizeof($array_libreta);$i++){
-                        $cod_libreta_x= $array_libreta[$i];
-                        $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($cod_libreta_x,$cod_facturaVenta)";
-                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-                        $stmtUpdateLibreta->execute();
-                    }
+                    // $array_libreta=explode(',',$cod_libreta);
+                    // for($i=0;$i<sizeof($array_libreta);$i++){
+                    //     $cod_libreta_x= $array_libreta[$i];
+                    //     $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($cod_libreta_x,$cod_facturaVenta)";
+                    //     $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                    //     $stmtUpdateLibreta->execute();
+                    // }
                     // $cod_libreta=$_GET["cod_libreta"];
                     //si es de tipo deposito en cuenta insertamos en libreta bancaria
                     // $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
@@ -92,12 +92,14 @@
                 $stmt = $dbh->prepare("SELECT sf.* from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo and codigo in ($string_cod_Det)");
                 $stmt->execute();
                 while ($row = $stmt->fetch()) 
-                {                 
+                {   
                     $cod_claservicio_x=$row['cod_claservicio'];
                     $cantidad_x=$row['cantidad'];
                     $precio_x=$row['precio'];
                     $descuento_bob_x=$row['descuento_bob'];
-                    $cod_curso_x=$row['cod_curso'];
+                    $cod_curso_x=$row['cod_curso'];//solo se guarda este campo cuando es grupal
+                    $ci_estudiante_x=$row['ci_estudiante'];//solo se guarda este campo cuando es grupal
+
                     if($tipo_solicitud==2){// la solicitud pertence capacitacion estudiantes
                         $datos=resgistrar_pago_curso($cod_cliente,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$codigo);
                         $estado_x=$datos["estado"];
@@ -107,41 +109,28 @@
                             $stmtDelte = $dbh->prepare("DELETE from facturas_venta where codigo=$cod_facturaVenta");
                             $stmtDelte->execute();
                             $estado_ibnorca++;
-                            $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
-                            $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
-                            $flagSuccess=$stmtDeleteCopmprobante->execute();
-                            $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
-                            $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
-                            $flagSuccess=$stmtDeleteComprobanteDet->execute();
+                            // $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
+                            // $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
+                            // $flagSuccess=$stmtDeleteCopmprobante->execute();
+                            // $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
+                            // $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
+                            // $flagSuccess=$stmtDeleteComprobanteDet->execute();
                             break;
                         }
-                    }elseif($tipo_solicitud==7){//pago grupal
-                        //sacamos el lisgtadl de estudantes
-                        $sqlGrupal="SELECT cod_curso,ci_estudiante from solicitudes_facturacion_grupal where cod_solicitudfacturacion=$codigo and cod_curso=$cod_curso_x limit 1";
-                        // echo $sqlGrupal;
-                        $stmtGrupal = $dbh->prepare($sqlGrupal);
-                        $stmtGrupal->execute();
-                        while ($rowGrupal = $stmtGrupal->fetch()) 
-                        {
-                            $cod_curso_x=$rowGrupal['cod_curso'];
-                            $ci_estudiante_x=$rowGrupal['ci_estudiante'];
-                            $datos=resgistrar_pago_curso($ci_estudiante_x,$cod_curso_x,$cod_claservicio_x,$precio_x,$codigo);
-                            $estado_x=$datos["estado"];
-                            $mensaje_x=$datos["mensaje"];
-                            if(!$estado_x){//registro correcto webservice
-                                break;
-                            }
-                        }
+                    }elseif($tipo_solicitud==7){//pago grupal                     
+                        $datos=resgistrar_pago_curso($ci_estudiante_x,$cod_curso_x,$cod_claservicio_x,$precio_x,$codigo);
+                        $estado_x=$datos["estado"];
+                        $mensaje_x=$datos["mensaje"];                        
                         if(!$estado_x){//registro correcto webservice
                             $estado_ibnorca++;
                             $stmtDelte = $dbh->prepare("DELETE from facturas_venta where codigo=$cod_facturaVenta");
                             $stmtDelte->execute();
-                            $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
-                            $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
-                            $flagSuccess=$stmtDeleteCopmprobante->execute();
-                            $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
-                            $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
-                            $flagSuccess=$stmtDeleteComprobanteDet->execute();
+                            // $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
+                            // $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
+                            // $flagSuccess=$stmtDeleteCopmprobante->execute();
+                            // $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";
+                            // $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
+                            // $flagSuccess=$stmtDeleteComprobanteDet->execute();
                             $estado_ibnorca++;
                             break;
                         }
@@ -162,13 +151,13 @@
             }else{
                 return "1";
             }
-        }else{
-            if($cod_comprobante==0){
-                return "1";    
-            }else{
-                return "-1";
-            }
-        }
+        // }else{
+        //     if($cod_comprobante==0){
+        //         return "1";    
+        //     }else{
+        //         return "-1";
+        //     }
+        // }
 	}
 	
 

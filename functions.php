@@ -2518,7 +2518,7 @@ function contarSolicitudDetalle($codigo){
 
 function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacional, $gestion, $mes){
   $dbh = new Conexion(); 
-  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$cod_tipocomprobante' and c.cod_unidadorganizacional='$unidad_organizacional' and YEAR(c.fecha)='$gestion' and MONTH(c.fecha)='$mes'";
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$cod_tipocomprobante' and c.cod_unidadorganizacional='$unidad_organizacional' and YEAR(c.fecha)='$gestion' and MONTH(c.fecha)='$mes' and c.cod_estadocomprobante<>2";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
@@ -2531,7 +2531,7 @@ function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacio
 
 function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   $dbh = new Conexion(); 
-  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00'";
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00' and c.cod_estadocomprobante<>2";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
@@ -4935,17 +4935,15 @@ function obtenerDetalleSolicitudParaComprobante($codigo){
   return $stmt;
 }
 
-function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante){
+function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante,$codMes){
   $dbh = new Conexion();
-  $mesActivo=1;
+  $mesActivo=$codMes;
 
-  $sql1="SELECT m.*,g.nombre from meses_trabajo m join gestiones g on m.cod_gestion=g.codigo where cod_gestion='$codGestion' and cod_estadomesestrabajo=3";
+  $sql1="SELECT g.nombre from gestiones g where cod_gestion='$codGestion'";
   $stmt1 = $dbh->prepare($sql1);
   $stmt1->execute();
   $anio=$_SESSION["globalNombreGestion"];
-  $mes=date('m');
   while ($row1= $stmt1->fetch(PDO::FETCH_ASSOC)) {
-    $mesActivo=$row1['cod_mes'];
     $anio=$row1['nombre'];
   }
 
@@ -4953,7 +4951,7 @@ function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante){
   $fechaFin=date('Y-m-d',strtotime($fechaInicio.'+1 month'));
   $fechaFin=date('Y-m-d',strtotime($fechaFin.'-1 day'));
 
-  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$tipoComprobante' and c.cod_unidadorganizacional=$unidad and c.fecha between '$fechaInicio 00:00:00' and '$fechaFin 23:59:59'";
+  $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$tipoComprobante' and c.cod_unidadorganizacional=$unidad and c.fecha between '$fechaInicio 00:00:00' and '$fechaFin 23:59:59' and c.cod_estadocomprobante<>2";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
@@ -7570,7 +7568,7 @@ function obtenerCodigoExternoCurso($codigo){
 
 function obtenermontoestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT SUM(sfd.precio) as precio from solicitudes_facturacion_grupal sfg, solicitudes_facturaciondetalle sfd, solicitudes_facturacion sf where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estadosolicitudfacturacion<>5 and sfg.cod_solicitudfacturacion=sfd.cod_solicitudfacturacion and sfg.cod_curso=$IdCurso and sfg.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion!=2");
+  $stmt = $dbh->prepare("SELECT SUM(sfd.precio) as precio from solicitudes_facturaciondetalle sfd, solicitudes_facturacion sf where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estadosolicitudfacturacion<>5 and sfd.cod_curso=$IdCurso and sfd.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion!=2");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -7580,7 +7578,7 @@ function obtenermontoestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
 }
 function obtenerDescripcionestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT sfd.descripcion_alterna from solicitudes_facturacion_grupal sfg, solicitudes_facturaciondetalle sfd where sfg.cod_solicitudfacturacion=sfd.cod_solicitudfacturacion and sfg.cod_curso=$IdCurso and sfg.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS");
+  $stmt = $dbh->prepare("SELECT sfd.descripcion_alterna from solicitudes_facturaciondetalle sfd where sfd.cod_curso=$IdCurso and sfd.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -8402,6 +8400,47 @@ function obtenerDatosComprobanteDetalle($codigo){
       $valor=array($row['glosa'],$row['monto'],$row['nombre'],$row['numero'],$row['nombre_auxiliar']);
    }
    return($valor);
+}
+
+function obtenerStringFacturas($codigo){
+  $dbh = new Conexion(); 
+  $stmtFActuras = $dbh->prepare("SELECT nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtFActuras->execute(); 
+  // $stmtFActuras->bindColumn('codigo', $codigo_x);
+  $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
+  $cadenaFacturas="";  
+  while ($row = $stmtFActuras->fetch()) {
+    $cadenaFacturas.="F ".$nro_factura_x.", ";
+    // $codigos_facturas.=$codigo_x.",";
+  }
+  $cadenaFacturas=trim($cadenaFacturas,", ");//
+  return $cadenaFacturas;
+}
+function obtenerStringCodigoFacturas($codigo){
+  $dbh = new Conexion(); 
+  $stmtFActuras = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtFActuras->execute(); 
+  $stmtFActuras->bindColumn('codigo', $codigo_x);
+  // $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
+  $cadenaFacturas="";  
+  while ($row = $stmtFActuras->fetch()) {
+    // $cadenaFacturas.="F ".$nro_factura_x.", ";
+    $cadenaFacturas.=$codigo_x.",";
+  }
+  $cadenaFacturas=trim($cadenaFacturas,", ");//
+  return $cadenaFacturas;
+}
+function obtenerTotalFacturasLibreta($codigo){
+  $dbh = new Conexion(); 
+  $stmtFActuras = $dbh->prepare("SELECT * from libretas_bancariasdetalle_facturas where cod_libretabancariadetalle =$codigo");
+  $stmtFActuras->execute(); 
+  $stmtFActuras->bindColumn('cod_facturaventa', $cod_facturaventa);  
+  $total_facturas=0;  
+  while ($row = $stmtFActuras->fetch()) {
+    $monto_factura=sumatotaldetallefactura($cod_facturaventa);
+    $total_facturas=$total_facturas+$monto_factura;
+  }  
+  return $total_facturas;
 }
 
 ?>
