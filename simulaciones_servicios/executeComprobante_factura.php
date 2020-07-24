@@ -259,10 +259,10 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 						$monto_libreta_total+=$monto_libreta;
 						if($estado_libreta==0){//cueenta de libreta
 			                $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
-			                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$$monto_libreta,0,$descripcion,$ordenDetalle);
+			                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
 			            }elseif($estado_libreta==1){//contra cuenta de libreta
 			                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
-							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$$monto_libreta,0,$descripcion,$ordenDetalle);
+							$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
 			            }
 					}
 					if($monto_libreta_total<$monto_total){					

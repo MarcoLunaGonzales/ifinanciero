@@ -7542,7 +7542,7 @@ function obtenerCodigoExternoCurso($codigo){
 
 function obtenermontoestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT SUM(sfd.precio) as precio from solicitudes_facturacion_grupal sfg, solicitudes_facturaciondetalle sfd, solicitudes_facturacion sf where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estadosolicitudfacturacion<>5 and sfg.cod_solicitudfacturacion=sfd.cod_solicitudfacturacion and sfg.cod_curso=$IdCurso and sfg.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion!=2");
+  $stmt = $dbh->prepare("SELECT SUM(sfd.precio) as precio from solicitudes_facturaciondetalle sfd, solicitudes_facturacion sf where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estadosolicitudfacturacion<>5 and sfd.cod_curso=$IdCurso and sfd.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion!=2");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -7552,7 +7552,7 @@ function obtenermontoestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
 }
 function obtenerDescripcionestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
   $dbh = new Conexion();
-  $stmt = $dbh->prepare("SELECT sfd.descripcion_alterna from solicitudes_facturacion_grupal sfg, solicitudes_facturaciondetalle sfd where sfg.cod_solicitudfacturacion=sfd.cod_solicitudfacturacion and sfg.cod_curso=$IdCurso and sfg.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS");
+  $stmt = $dbh->prepare("SELECT sfd.descripcion_alterna from solicitudes_facturaciondetalle sfd where sfd.cod_curso=$IdCurso and sfd.ci_estudiante=$ci_estudiante and sfd.cod_claservicio=$codCS");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

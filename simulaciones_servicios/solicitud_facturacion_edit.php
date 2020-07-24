@@ -25,7 +25,7 @@ $cod_cliente = $resutCanitdad['cod_cliente'];
 //para capacitacion grupal
 
 if($tipo_solicitud==7){  
-  $stmtGrupal = $dbh->prepare("SELECT sfg.cod_curso,sfg.ci_estudiante from solicitudes_facturacion_grupal sfg, solicitudes_facturacion sf where sf.codigo=sfg.cod_solicitudfacturacion and sf.codigo=$codigo_facturacion");
+  $stmtGrupal = $dbh->prepare("SELECT sfg.cod_curso,sfg.ci_estudiante from solicitudes_facturaciondetalle sfg, solicitudes_facturacion sf where sf.codigo=sfg.cod_solicitudfacturacion and sf.codigo=$codigo_facturacion GROUP BY sfg.ci_estudiante,sfg.cod_curso");
   $stmtGrupal->execute();
   $string_ci="";
   $string_curso="";
@@ -70,8 +70,8 @@ if(isset($_GET['q'])){
       location = "<?=$urlregistro_solicitud_facturacion_sec_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=<?=$IdCurso;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5&q=<?=$q?>&r=<?=$v?>&s=<?=$s?>&u=<?=$u?>"
     </script><?php
   }elseif($tipo_solicitud==7){//solicitud capacitacion estudiantes grupal
-    $IdCurso=$cod_simulacion_servicio;
-    $idEmpresa=$cod_cliente;
+    // $IdCurso=$cod_simulacion_servicio;
+    // $idEmpresa=$cod_cliente;
     ?>  
     <script type="text/javascript">
       location = "<?=$urlregistro_solicitud_facturacion_grupal_est?>?codigo_ci=<?=$string_ci?>&cod_simulacion=0&IdCurso=<?=$string_curso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5&q=<?=$q?>&r=<?=$v?>&s=<?=$s?>&u=<?=$u?>"
@@ -111,8 +111,8 @@ if(isset($_GET['q'])){
       location = "<?=$urlregistro_solicitud_facturacion_sec_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=<?=$IdCurso;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5"
     </script><?php
   }elseif($tipo_solicitud==7){//solicitud capacitacion estudiantes grupal
-    $IdCurso=$cod_simulacion_servicio;
-    $idEmpresa=$cod_cliente;
+    // $IdCurso=$cod_simulacion_servicio;
+    // $idEmpresa=$cod_cliente;
     ?>  
     <script type="text/javascript">
       location = "<?=$urlregistro_solicitud_facturacion_grupal_est?>?codigo_ci=<?=$string_ci?>&cod_simulacion=0&IdCurso=<?=$string_curso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5"

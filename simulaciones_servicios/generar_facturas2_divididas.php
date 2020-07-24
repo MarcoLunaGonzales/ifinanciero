@@ -92,12 +92,14 @@
                 $stmt = $dbh->prepare("SELECT sf.* from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo and codigo in ($string_cod_Det)");
                 $stmt->execute();
                 while ($row = $stmt->fetch()) 
-                {                 
+                {   
                     $cod_claservicio_x=$row['cod_claservicio'];
                     $cantidad_x=$row['cantidad'];
                     $precio_x=$row['precio'];
                     $descuento_bob_x=$row['descuento_bob'];
-                    $cod_curso_x=$row['cod_curso'];
+                    $cod_curso_x=$row['cod_curso'];//solo se guarda este campo cuando es grupal
+                    $ci_estudiante_x=$row['ci_estudiante'];//solo se guarda este campo cuando es grupal
+
                     if($tipo_solicitud==2){// la solicitud pertence capacitacion estudiantes
                         $datos=resgistrar_pago_curso($cod_cliente,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$codigo);
                         $estado_x=$datos["estado"];
@@ -115,23 +117,10 @@
                             $flagSuccess=$stmtDeleteComprobanteDet->execute();
                             break;
                         }
-                    }elseif($tipo_solicitud==7){//pago grupal
-                        //sacamos el lisgtadl de estudantes
-                        $sqlGrupal="SELECT cod_curso,ci_estudiante from solicitudes_facturacion_grupal where cod_solicitudfacturacion=$codigo and cod_curso=$cod_curso_x limit 1";
-                        // echo $sqlGrupal;
-                        $stmtGrupal = $dbh->prepare($sqlGrupal);
-                        $stmtGrupal->execute();
-                        while ($rowGrupal = $stmtGrupal->fetch()) 
-                        {
-                            $cod_curso_x=$rowGrupal['cod_curso'];
-                            $ci_estudiante_x=$rowGrupal['ci_estudiante'];
-                            $datos=resgistrar_pago_curso($ci_estudiante_x,$cod_curso_x,$cod_claservicio_x,$precio_x,$codigo);
-                            $estado_x=$datos["estado"];
-                            $mensaje_x=$datos["mensaje"];
-                            if(!$estado_x){//registro correcto webservice
-                                break;
-                            }
-                        }
+                    }elseif($tipo_solicitud==7){//pago grupal                     
+                        $datos=resgistrar_pago_curso($ci_estudiante_x,$cod_curso_x,$cod_claservicio_x,$precio_x,$codigo);
+                        $estado_x=$datos["estado"];
+                        $mensaje_x=$datos["mensaje"];                        
                         if(!$estado_x){//registro correcto webservice
                             $estado_ibnorca++;
                             $stmtDelte = $dbh->prepare("DELETE from facturas_venta where codigo=$cod_facturaVenta");
