@@ -120,9 +120,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
          	  $nit=$facturas[$i-1][$j]->nit;
          	  $nroFac=$facturas[$i-1][$j]->nroFac;
          	  
-         	  $fecha=$facturas[$i-1][$j]->fechaFac;
-         	  $porciones = explode("/", $fecha);
-         	  $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+         	  $fechaFac=$facturas[$i-1][$j]->fechaFac;
 
             $razonFac=$facturas[$i-1][$j]->razonFac;
             $impFac=$facturas[$i-1][$j]->impFac;            

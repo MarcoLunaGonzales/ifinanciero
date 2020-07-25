@@ -122,13 +122,14 @@ $item_1=2708;
                        if(verificarMontoPresupuestadoSolicitadoSR($codigo)==1){
                         $numeroSolTitulo='<a href="#" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning btn-sm btn-round">'.$numeroSol.'</a>';
                        }
+                       $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);
 ?>
                         <tr>
                           <td><?=$unidad;?>- <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSolTitulo;?></td>
                           <td><?=$codigoServicio;?></td>
                           <!--<td><?=$nombreCliente;?></td>-->
-                          <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
+                          <td><small><?=$nombreProveedor?></small></td>
                           <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
@@ -143,13 +144,13 @@ $item_1=2708;
                             if($codEstado==4){
                               if(isset($_GET['q'])){
                                 ?>
-                                <a title="Volver al Estado Registro" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>')" href='#'  class="btn btn-danger">
+                                <a title="Volver al Estado Registro" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>','<?=$nombreProveedor?>')" href='#'  class="btn btn-danger">
                                        <i class="material-icons">keyboard_backspace</i>
                                 </a>
                                 <?php
                               }else{
                                 ?>
-                                <a title="Volver al Estado Registro" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1')" href='#'  class="btn btn-danger">
+                                <a title="Volver al Estado Registro" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1','<?=$nombreProveedor?>')" href='#'  class="btn btn-danger">
                                        <i class="material-icons">keyboard_backspace</i>
                                 </a>
                                 <?php
@@ -578,7 +579,15 @@ $item_1=2708;
               <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
             </div>
           </div>
-        </div>                
+        </div> 
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_proveedor"><small>Proveedor</small></span></label>
+          <div class="col-sm-11">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="proveedor_nombre" id="proveedor_nombre" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+        </div>               
         <div class="row">
           <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
         </div>
