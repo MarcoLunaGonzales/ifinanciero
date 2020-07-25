@@ -8443,6 +8443,18 @@ function obtenerTotalFacturasLibreta($codigo){
   return $total_facturas;
 }
 
+function verificarLibretaDetalle($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT * FROM (select ld.cod_libretabancaria,ld.codigo,ld.cod_comprobantedetalle,(select count(*) from libretas_bancariasdetalle_facturas where cod_libretabancariadetalle=ld.codigo) as facturas from libretas_bancariasdetalle ld) vd
+   where (vd.cod_comprobantedetalle>0 or vd.facturas>0) and vd.codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor++;
+   }
+   return($valor);
+}
+
 ?>
 
 

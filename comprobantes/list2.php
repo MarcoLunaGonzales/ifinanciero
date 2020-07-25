@@ -152,6 +152,10 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           $btnEstado="btn-warning";$estadoIcon="thumb_up";
                         break;
                       }
+                      $tamanioGlosa=obtenerValorConfiguracion(72); 
+                      if($glosaComprobante>$tamanioGlosa){
+                         $glosaComprobante=substr($glosaComprobante, 0, $tamanioGlosa);
+                      }
                     ?>
                     <tr>
                       

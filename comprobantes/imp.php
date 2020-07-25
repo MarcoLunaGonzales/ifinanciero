@@ -43,8 +43,12 @@ $stmt->bindColumn('cod_unidadorganizacional', $codigoUO);
 $nameEntidad="";
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
     $fechaC=$fechaComprobante;
+    
+    $tamanioGlosa=obtenerValorConfiguracion(72); 
+    if($glosaComprobante>$tamanioGlosa){
+       $glosaComprobante=substr($glosaComprobante, 0, $tamanioGlosa);
+    }
     $glosaC=$glosaComprobante;
-    $glosaC=substr($glosaC, 0, 200);
     $unidadC=$nombreUnidad;
     $codUC=$codigoUnidad;
     $monedaC=$nombreMoneda;
@@ -148,6 +152,11 @@ $html.=  '<header class="header">'.
            '<tbody>';
             $index=1;
             while ($row = $data->fetch(PDO::FETCH_ASSOC)) {
+              $tamanioGlosa=obtenerValorConfiguracion(72); 
+              if($row['glosa']>$tamanioGlosa){
+                 $row['glosa']=substr($row['glosa'], 0, $tamanioGlosa);
+              }
+
               // print_r($row['nombre']);
              $html.='<tr>'.
                       '<td>'.$row['numero'].'<br>'.$row['unidadAbrev'].'<br>'.$row['abreviatura'].'</td>'.

@@ -83,6 +83,11 @@ $stmt->bindColumn('cod_estado', $codigoEstado);
                               $btnEstado="btn-warning";$estadoIcon="thumb_up";$values=1;
                             break;
                           }
+
+                          $tamanioGlosa=obtenerValorConfiguracion(72); 
+                          if($glosaComprobante>$tamanioGlosa){
+                            $glosaComprobante=substr($glosaComprobante, 0, $tamanioGlosa);
+                          }
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>

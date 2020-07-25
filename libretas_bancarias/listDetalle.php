@@ -37,6 +37,8 @@ $stmt->bindColumn('monto', $monto);
 $stmt->bindColumn('saldo', $saldo);
 $stmt->bindColumn('cod_estado', $estadoFila);
 $stmt->bindColumn('nro_referencia', $nro_referencia);
+$stmt->bindColumn('cod_comprobante', $codComprobante);
+$stmt->bindColumn('cod_comprobantedetalle', $codComprobanteDetalle);
 
 
 //Mostrar tipo bono
@@ -79,10 +81,70 @@ $stmtb->bindColumn('nombre', $nombre);
                   <?php
                   }
                   ?>
+                   
+                   <script>
+                   $(document).ready(function() {
+                      var table = $('#tablePaginatorLibretas').DataTable( {
+                          "pageLength": 100,
+                          "language": {
+                              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                          },
+                          fixedHeader: {
+                            header: true,
+                            footer: true
+                          },
+                          "ordering": false
+                      } );
+                      $('#min').on('change keyup', function() {
+                          table.draw();
+                      });
+                      $('#max').on('change keyup', function() {
+                          table.draw();
+                      }); 
+                  });
+                   $.fn.dataTable.ext.search.push(
+                     function(oSettings, aData, iDataIndex) {
+                         var dateIni = $('#min').val();
+                         var dateFin = $('#max').val();
+                         var indexCol = 1;
+                         dateIni = dateIni.replace(/-/g, "");
+                         dateFin= dateFin.replace(/-/g, "");
+                         var dateCol = aData[indexCol].replace(/-/g, "");
+                         if (dateIni === "" && dateFin === "")
+                         {
+                             return true;
+                         }
+                         if(dateIni === "")
+                         {
+                             return dateCol <= dateFin;
+                         }
+                         if(dateFin === "")
+                         {
+                             return dateCol >= dateIni;
+                         }
+                          return dateCol >= dateIni && dateCol <= dateFin;
+                      }
+                  );
+                   </script>
                 </div>
                 <div class="card-body">
+                  <div class="row">
+                     <div class="input-group mb-3">
+                       <div class="input-group-prepend">
+                         <span class="input-group-text text-muted" id="basic-addon1"><small>Buscar Fecha Desde</small></span>
+                       </div>
+                       <input type="text" class="form-control" id="min" name="min" placeholder="dd/mm/aaaa" aria-label="dd/mm/aaaa" style="background-color:#E3CEF6;text-align: left;" aria-describedby="basic-addon1">
+                     </div>
+                     <div class="input-group mb-3">
+                       <div class="input-group-prepend">
+                         <span class="input-group-text text-muted" id="basic-addon1"><small>Hasta</small></span>
+                       </div>
+                       <input type="text" class="form-control" id="max" name="max" placeholder="dd/mm/aaaa" aria-label="dd/mm/aaaa" style="background-color:#E3CEF6;text-align: left;" aria-describedby="basic-addon1">
+                     </div>
+                  </div>
+                  <hr>
                   <div class="table-responsive">
-                    <table id="tablePaginator100" class="table table-condensed small">
+                    <table id="tablePaginatorLibretas" class="table table-condensed small">
                       <thead>
                         <tr style="background:#21618C; color:#fff;">
                           <td class="text-center">#</td>
@@ -174,7 +236,19 @@ $stmtb->bindColumn('nombre', $nombre);
                                   $facturaDetalle[$filaFac]=$obsDetalle;
                                   $facturaMonto[$filaFac]=number_format($impDetalle,2,".",",");
                                   $filaFac++;
-                                }?>
+                                }
+                                if(!($codComprobante==""||$codComprobante==0)){
+                                  $datosDetalle=obtenerDatosComprobanteDetalle($codComprobanteDetalle);
+
+                                  $facturaFecha[$filaFac]="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
+                                  $facturaNumero[$filaFac]="<b class='text-success'>COMP: ".nombreComprobante($codComprobante)."</b>";
+                                  $facturaNit[$filaFac]="<b class='text-success'>".$codComprobanteDetalle."</b>";
+                                  $facturaRazonSocial[$filaFac]="<b class='text-success'>".$datosDetalle[0]."</b>";
+                                  $facturaDetalle[$filaFac]="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
+                                  $facturaMonto[$filaFac]="<b class='text-success'>".$datosDetalle[1]."</b>";
+                                  $facturaRazonSocial[$filaFac].="<br>".$facturaDetalle[$filaFac];
+                                }
+                                ?>
                                 <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaFecha)?></small></td>
                                 <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNumero)?></small></td>
                                 <td class="text-right" style="vertical-align: top;"><small><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNit)?></small></td>
@@ -244,6 +318,7 @@ $stmtb->bindColumn('nombre', $nombre);
                         </a>
                       </div>
                   </div>
+                  
                   <!--<button class="btn btn-info" onClick="#">Historial</button>-->
               </div>
               
