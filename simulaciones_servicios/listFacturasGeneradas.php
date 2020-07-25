@@ -120,11 +120,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <td><?=$nro_factura;?></td>
                             <!-- <td><?=$sucursal;?></td> -->
                             <td><?=$fecha_factura?><br><?=$hora_factura?></td>
-                            <td class="text-left"><small><?=strtoupper($razon_social);?></small></td>
+                            <td class="text-left"><small><?=mb_strtoupper($razon_social);?></small></td>
                             <td class="text-right"><?=$nit;?></td>
                             <td class="text-right"><?=formatNumberDec($importe);?></td>
-                            <td><small><?=strtoupper($observaciones);?></small></td>                            
-                            <td style="color: #ff0000;"><?=strtoupper($observaciones_solfac)?></td>
+                            <td><small><?=mb_strtoupper($observaciones);?></small></td>                            
+                            <td style="color: #ff0000;"><?=mb_strtoupper($observaciones_solfac)?></td>
                             <td class="td-actions text-right">
                               <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br>
                               <?php                                
