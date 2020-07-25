@@ -29,7 +29,7 @@ if(isset($_GET['q'])){
 <?php
 
 //datos registrado de la simulacion en curso
-$sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_personal=$globalUser order by codigo desc";
+$sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_personal=$globalUser order by codigo desc limit 50";
   $stmt = $dbh->prepare($sqlDatos);
 
   $stmt->execute();
@@ -55,11 +55,17 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
   $stmt->bindColumn('obs_devolucion', $obs_devolucion);
   $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
 
-
-  // $fecha_actual_cH=date('Y-m-d H:i:s');
-  
-  // $fecha_actual=date($fecha_actual_cH, strtotime("Y-m-d")); // gives 201101
-  // echo $fecha_actual;
+  // para la busqueda
+  $stmtUO = $dbh->prepare("SELECT cod_unidadorganizacional,(select u.nombre from unidades_organizacionales u where u.codigo =cod_unidadorganizacional)as nombre, (select u.abreviatura from unidades_organizacionales u where u.codigo =cod_unidadorganizacional)as abreviatura FROM solicitudes_facturacion  GROUP BY nombre");
+  $stmtUO->execute();
+  $stmtUO->bindColumn('cod_unidadorganizacional', $codigo_uo_b);
+  $stmtUO->bindColumn('nombre', $nombre_uo_b);
+  $stmtUO->bindColumn('abreviatura', $abreviatura_uo_b);
+  $stmtCliente = $dbh->prepare("
+  SELECT cod_cliente,(SELECT c.nombre from  clientes c where c.codigo=cod_cliente) as nombre from solicitudes_facturacion GROUP BY nombre");
+  $stmtCliente->execute();
+  $stmtCliente->bindColumn('cod_cliente', $codigo_cli_b);
+  $stmtCliente->bindColumn('nombre', $nombre_cli_b);
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -71,6 +77,15 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                       <i class="material-icons">polymer</i>
                     </div>
                     <h4 class="card-title"><b>Solicitudes de Facturación</b></h4>                    
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="form-group" align="right">
+                        <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador_solicitudes">
+                          <i class="material-icons" title="Buscador Avanzado">search</i>
+                        </button>                               
+                      </div>
+                    </div>
                   </div>
                   <div class="card-body">
                       <table class="table" id="tablePaginator">
@@ -90,7 +105,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <th class="text-right"><small>Actions</small></th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="data_solicitudes_facturacion">
                         <?php
                           $index=1;
                           $codigo_fact_x=0;
@@ -304,7 +319,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
                             <td class="td-actions text-right">                              
                               <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
-                              <?php                              
+                              <?php        
+                              $obs_devolucion = preg_replace("[\n|\r|\n\r]", " ", $obs_devolucion);                     
                                 if($cod_estado_factura_x!=4){
                                   // echo $codigo_fact_x."-";
                                   if($codigo_fact_x>0 && $cod_estado_factura_x!=2 && $cod_estado_factura_x!=5){//print facturas
@@ -351,8 +367,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                              <i class="material-icons">send</i>
                                            </a>
                                             <?php 
-                                          }else{
-
+                                          }else{                                            
+                                            
                                             $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###6###0###".$urlEdit2Sol."###".$obs_devolucion;?>
                                             <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
                                               <i class="material-icons" title="Enviar a Regional(En Revisión)">send</i>
@@ -477,6 +493,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
   </div>
 
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
+<?php  require_once 'simulaciones_servicios/modal_facturacion_2.php';?>
 <?php  require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
 <!-- para modal -->
 <script type="text/javascript">

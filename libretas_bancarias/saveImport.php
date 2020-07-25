@@ -50,7 +50,6 @@ $sqlInserts=[];
         $validacionFila=1;
            foreach ($Reader as $Row){ 
              if ($filaArchivo>0){
-
             	if($index==0){
             		// Prepare
                 	$sqlRegistro="INSERT INTO libretas_bancariasregistro (codigo,fecha,cod_personal,observaciones,cod_estadoreferencial) 

@@ -16,12 +16,17 @@ if(isset($_SESSION['logueado'])){
       where p.codigo='$q'";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
+  $stmt->execute();
+  $stmt->bindColumn('codigo', $codigo);
+  $stmt->bindColumn('nombre', $nombre);
   $stmt->bindColumn('cod_area', $codArea);
   $stmt->bindColumn('cod_unidadorganizacional', $codUnidad);
+  $stmt->bindColumn('perfil', $perfil);
   while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
   $nombreUnidad=abrevUnidad($codUnidad);
   $nombreArea=abrevArea($codArea);
-
+  $_SESSION['globalUser']=$codigo;
+  $_SESSION['globalNameUser']=$nombre; 
   $_SESSION['globalUnidad']=$codUnidad;
   $_SESSION['globalNombreUnidad']=$nombreUnidad;
 

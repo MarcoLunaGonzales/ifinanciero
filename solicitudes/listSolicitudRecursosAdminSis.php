@@ -142,13 +142,14 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                        if(verificarMontoPresupuestadoSolicitadoSR($codigo)==1){
                         $numeroSolTitulo='<a href="#" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning btn-sm btn-round">'.$numeroSol.'</a>';
                        }    
+                       $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);
 ?>
                         <tr>
                           <td><?=$unidad;?>- <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSolTitulo?></td>
                           <td><?=$codigoServicio;?></td>
                           <!--<td><?=$nombreCliente;?></td>-->
-                          <td><small><?=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo)?></small></td>
+                          <td><small><?=$nombreProveedor?></small></td>
                           <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
@@ -243,7 +244,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                     <a title="Aprobar Solicitud Recurso SIS" onclick="alerts.showSwal('aprobar-solicitud-recurso-sis','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=2&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" href='#'  class="btn btn-primary">
                                       <i class="material-icons">assignment_turned_in</i>
                                     </a>
-                                    <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=2&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" title="Devolver Solicitud Recurso" href='#'  class="btn btn-danger">
+                                    <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=2&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>','<?=$nombreProveedor?>')" title="Devolver Solicitud Recurso" href='#'  class="btn btn-danger">
                                       <i class="material-icons">reply</i>
                                     </a>
                                    <?php
@@ -252,7 +253,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                      <a title="Aprobar Solicitud Recurso SIS" onclick="alerts.showSwal('aprobar-solicitud-recurso-sis','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=2&estado=4&admin=0')" href='#'  class="btn btn-primary">
                                        <i class="material-icons">assignment_turned_in</i>
                                      </a>
-                                     <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=2&estado=1&admin=0')" title="Devolver Solicitud Recurso" href='#'  class="btn btn-danger">
+                                     <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=2&estado=1&admin=0','<?=$nombreProveedor?>')" title="Devolver Solicitud Recurso" href='#'  class="btn btn-danger">
                                        <i class="material-icons">reply</i>
                                      </a>
                                     <?php
@@ -518,7 +519,15 @@ $stmt->bindColumn('idServicio', $idServicioX);
               <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
             </div>
           </div>
-        </div>                
+        </div> 
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_proveedor"><small>Proveedor</small></span></label>
+          <div class="col-sm-11">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="proveedor_nombre" id="proveedor_nombre" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+        </div>               
         <div class="row">
           <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
         </div>

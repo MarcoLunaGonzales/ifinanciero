@@ -596,7 +596,6 @@
   </div>
 </div>
 
-
 <div class="modal fade modal-arriba" id="modal_estadocuenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content card">

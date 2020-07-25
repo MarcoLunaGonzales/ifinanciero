@@ -384,8 +384,13 @@ alerts = {
           location.href=url2[0];
       });
     }
-
-
+ 
+    else if(type == 'error-borrar-libreta-detalle'){
+      swal("Errores encontrados!", "No se puede borrar el detalle de la libreta porque tiene asociada facturas y/o comprobantes", "error")
+          .then((value) => {
+          location.href=url;
+      });
+    }
 
   },
 

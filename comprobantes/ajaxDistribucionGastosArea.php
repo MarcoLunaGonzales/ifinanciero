@@ -191,6 +191,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                <input type="hidden" id="tipo_proveedorcliente<?=$idFila?>" value="-100">
                <input type="hidden" id="proveedorcliente<?=$idFila?>" value="-100">
                <a title="Estado de Cuentas" id="estados_cuentas<?=$idFila?>" href="#" onclick="verEstadosCuentas(<?=$idFila;?>,0);" class="btn btn-sm btn-danger btn-fab d-none"><span class="material-icons text-dark">ballot</span><span id="nestado<?=$idFila?>" class="bg-warning"></span></a>    
+               <!--LIBRETAS BANCARIAS DETALLE-->
+               <a title="Libretas Bancarias" id="libretas_bancarias<?=$idFila?>" href="#" onclick="verLibretasBancarias(<?=$idFila;?>);" class="btn btn-sm btn-primary btn-fab d-none"><span class="material-icons text-dark">ballot</span><span id="nestadolib<?=$idFila?>" class="bg-warning"></span></a>       
+               <input type="hidden" id="cod_detallelibreta<?=$idFila?>" name="cod_detallelibreta<?=$idFila?>" value="0">
+               <input type="hidden" id="descripcion_detallelibreta<?=$idFila?>" value="">
           </div>  
         </div>
       </div>

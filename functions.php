@@ -7193,7 +7193,7 @@ function obtenerFechaSimulacionCosto($codigo){
 function verificar_codComprobante_cajaChica($codigo_cobt,$codigo_detalle){
   $dbh = new Conexion();  
   $sw=false;
-  $sql="SELECT codigo from caja_chicareembolsos where cod_comprobante=$codigo_cobt and cod_comprobante_detalle=$codigo_detalle";
+  $sql="SELECT codigo from caja_chicareembolsos where cod_comprobante=$codigo_cobt and cod_comprobante_detalle=$codigo_detalle and cod_estadoreferencial=1";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -8379,6 +8379,29 @@ function obtenerCodigoCuentaCajaChica($codigo){
   }         
   return($valor);
 }
+
+function obtenerFechaComprobante($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT fecha FROM comprobantes where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['fecha'];
+   }
+   return($valor);
+}
+
+function obtenerDatosComprobanteDetalle($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT cd.glosa,cd.debe,cd.haber,(cd.debe+cd.haber) as monto,cd.cod_area,cd.cod_unidadorganizacional,p.nombre,p.numero,(SELECT nombre FROM cuentas_auxiliares where codigo=cd.cod_cuentaauxiliar) as nombre_auxiliar from comprobantes_detalle cd join plan_cuentas p on p.codigo=cd.cod_cuenta where cd.codigo=$codigo");
+   $stmt->execute();
+   $valor=array('','','','','');
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=array($row['glosa'],$row['monto'],$row['nombre'],$row['numero'],$row['nombre_auxiliar']);
+   }
+   return($valor);
+}
+
 function obtenerStringFacturas($codigo){
   $dbh = new Conexion(); 
   $stmtFActuras = $dbh->prepare("SELECT nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo");
@@ -8419,6 +8442,19 @@ function obtenerTotalFacturasLibreta($codigo){
   }  
   return $total_facturas;
 }
+
+function verificarLibretaDetalle($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT * FROM (select ld.cod_libretabancaria,ld.codigo,ld.cod_comprobantedetalle,(select count(*) from libretas_bancariasdetalle_facturas where cod_libretabancariadetalle=ld.codigo) as facturas from libretas_bancariasdetalle ld) vd
+   where (vd.cod_comprobantedetalle>0 or vd.facturas>0) and vd.codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor++;
+   }
+   return($valor);
+}
+
 ?>
 
 

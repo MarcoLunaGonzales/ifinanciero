@@ -15,6 +15,11 @@ function showAlertSuccessError($bandera, $url){
       </script>";
    }
 }
+function showAlertSuccessErrorLibretaDetalle($url){
+      echo "<script>
+         alerts.showSwal('error-borrar-libreta-detalle','$url');
+      </script>";
+}
 function showAlertSuccessErrorPagosCapacitacion($bandera, $url){   
    if ($bandera==false){
       echo "<script>

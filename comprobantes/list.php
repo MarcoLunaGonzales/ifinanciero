@@ -60,6 +60,7 @@ from comprobantes c where c.cod_estadocomprobante!=2 GROUP BY tipo_comprobante o
 $stmtTipoComprobante->execute();
 $stmtTipoComprobante->bindColumn('tipo_comprobante', $nombre_tipo_comprobante);
 $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
+
 ?>
 
 <div class="content">
@@ -123,6 +124,10 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                             case 3:
                               $btnEstado="btn-warning";$estadoIcon="thumb_up";
                             break;
+                          }
+                          $tamanioGlosa=obtenerValorConfiguracion(72); 
+                          if($glosaComprobante>$tamanioGlosa){
+                            $glosaComprobante=substr($glosaComprobante, 0, $tamanioGlosa);
                           }
                         ?>
                         <tr>

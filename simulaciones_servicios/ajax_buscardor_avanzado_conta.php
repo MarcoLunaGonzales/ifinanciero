@@ -23,11 +23,8 @@ $cod_uo=$_GET['cod_uo'];
 $cliente=$_GET['cliente'];
 $fechaI=$_GET['fechaI'];
 $fechaF=$_GET['fechaF'];
-// $glosa=$_GET['glosa'];
-
-// $unidadOrgString=implode(",", $cod_uo);
-
-
+$razon_social_b=$_GET['razon_social'];
+$nro_s=$_GET['nro_s'];
 
 $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion=5 ";  
 
@@ -38,14 +35,22 @@ if($cliente!=""){
   $sql.=" and sf.cod_cliente in ($cliente)";  
 }
 if($fechaI!="" && $fechaF!=""){
-  $sql.=" and fecha_solicitudfactura_x BETWEEN '$fechaI' and '$fechaF'"; 
+  $sql.=" and sf.fecha_solicitudfactura BETWEEN '$fechaI' and '$fechaF'"; 
+}
+if($razon_social_b!=""){
+  $sql.=" and sf.razon_social like '%$razon_social_b%'";  
+}
+if($nro_s!=""){
+  $sql.=" and sf.nro_correlativo = $nro_s";  
 }
 
-$sql.=" order by codigo;";
+
+$sql.=" order by sf.codigo;";
 
 //echo $sql;
 $stmt = $dbh->prepare($sql);
- $stmt->execute();
+ 
+  $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
   $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
   $stmt->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
@@ -59,38 +64,23 @@ $stmt = $dbh->prepare($sql);
   $stmt->bindColumn('razon_social', $razon_social);
   $stmt->bindColumn('nit', $nit);
   $stmt->bindColumn('observaciones', $observaciones);
+  $stmt->bindColumn('observaciones_2', $observaciones_2);
   $stmt->bindColumn('cod_estadosolicitudfacturacion', $codEstado);
   $stmt->bindColumn('estado', $estado);
   $stmt->bindColumn('nro_correlativo', $nro_correlativo);
   $stmt->bindColumn('persona_contacto', $persona_contacto);
   $stmt->bindColumn('codigo_alterno', $codigo_alterno);
+  $stmt->bindColumn('obs_devolucion', $obs_devolucion);
   $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
 
 ?>
-<table class="table" id="tablePaginator">
-  <thead>
-    <tr>
-      <th class="text-center">#</th>                          
-      <th>Oficina</th>
-      <th>Area</th>
-      <th>nro<br>Sol.</th>
-      <th>Codigo<br>Servicio</th>                            
-      <th>Fecha<br>Registro</th>
-      <th>Fecha<br>a Facturar</th>
-      <th style="color:#cc4545;">#Fact</th>                            
-      <th>Importe<br>(BOB)</th>  
-      <th>Persona<br>Contacto</th>  
-      <th>Razón Social</th>                      
-      <th width="5%">Estado</th>
-      <th class="text-right">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-  <?php
-    $index=1;
-    $codigo_fact_x=0;
-    $cont= array();
-    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+<?php                          
+  $index=1;
+  $codigo_fact_x=0;
+  $cont= array();
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $observaciones_string=obtener_string_observaciones($obs_devolucion,$observaciones,$observaciones_2);
+    $datos_otros=$codigo_facturacion."/0/0/0/".$nit."/".$razon_social;//dato 
     switch ($codEstado) {
       case 1:
         $btnEstado="btn-default";
@@ -111,121 +101,166 @@ $stmt = $dbh->prepare($sql);
         $btnEstado="btn-default";
       break;
     }
-      //verificamos si ya tiene factura generada y esta activa                           
-      $stmtFact = $dbh->prepare("SELECT codigo,nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura=1");
-      $stmtFact->execute();
-      $resultSimu = $stmtFact->fetch();
-      $codigo_fact_x = $resultSimu['codigo'];
-      $nro_fact_x = $resultSimu['nro_factura'];
-      if ($nro_fact_x==null)$nro_fact_x="-";
-      $cod_area_simulacion=$cod_area;
-      $nombre_simulacion='OTROS';
-      if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
-        //obtenemos datos de la simulacion TCP
-        $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-        from simulaciones_servicios sc,plantillas_servicios ps
-        where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-        $stmtSimu = $dbh->prepare($sql);
-        $stmtSimu->execute();
-        $resultSimu = $stmtSimu->fetch();
-        $nombre_simulacion = $resultSimu['nombre'];
-        $cod_area_simulacion = $resultSimu['cod_area'];
-      }elseif($tipo_solicitud==2){//  pertence capacitacion
-        $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-        from simulaciones_costos sc,plantillas_servicios ps
-        where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
-        $stmtSimuCostos = $dbh->prepare($sqlCostos);
-        $stmtSimuCostos->execute();
-        $resultSimu = $stmtSimuCostos->fetch();
-        $nombre_simulacion = $resultSimu['nombre'];
-        $cod_area_simulacion = $resultSimu['cod_area'];
-      }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
-        $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
-        $stmtSimuCostos = $dbh->prepare($sqlCostos);
-        $stmtSimuCostos->execute();
-        $resultSimu = $stmtSimuCostos->fetch();
-        $nombre_simulacion = $resultSimu['Descripcion'];
-        $cod_area_simulacion = $resultSimu['IdArea'];
+    //verificamos si ya tiene factura generada y esta activa                           
+    $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe,cod_comprobante from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion order by codigo desc limit 1");
+    $stmtFact->execute();
+    $resultSimu = $stmtFact->fetch();
+    $codigo_fact_x = $resultSimu['codigo'];
+    $nro_fact_x = $resultSimu['nro_factura'];
+    $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
+    $nit_x = $resultSimu['nit'];
+    $razon_social_x = $resultSimu['razon_social'];
+    $nro_autorizacion_x = $resultSimu['nro_autorizacion'];
+    $importe_x = $resultSimu['importe'];
+    $cod_comprobante_x = $resultSimu['cod_comprobante'];
+    if ($nro_fact_x==null)$nro_fact_x="-";
+    else $nro_fact_x="F".$nro_fact_x;
+    if($cod_estado_factura_x==4){
+      $btnEstado="btn-warning";
+      $estado="FACTURA MANUAL";
+      $cliente_x=nameCliente($cod_cliente);                              
+      $datos_FacManual=$cliente_x."/".$razon_social_x."/".$nit_x."/".$nro_fact_x."/".$nro_autorizacion_x."/".$importe_x;
+    }
+    //sacamos monto total de la factura para ver si es de tipo factura por pagos
+    $sqlMontos="SELECT codigo,importe,nro_factura,cod_estadofactura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion ORDER BY codigo desc";
+    // echo $sqlMontos;
+    $stmtFactMontoTotal = $dbh->prepare($sqlMontos);
+    $stmtFactMontoTotal->execute();
+    $importe_fact_x=0;$cont_facturas=0;$cadenaFacturas="";$cadenaFacturasM="";$cadenaCodFacturas="";
+    while ($row_montos = $stmtFactMontoTotal->fetch()){
+      $cod_estadofactura=$row_montos['cod_estadofactura'];
+      if($cod_estadofactura==4){
+        $btnEstado="btn-warning";
+        $estado="FACTURA MANUAL";
+        // $cadenaFacturasM.="FM".$row_montos['nro_factura'].",";
+        $cadenaFacturas.="FM".$row_montos['nro_factura'].",";
+        $cadenaCodFacturas.="0,";
+      }elseif($cod_estadofactura==2){
+        $cadenaFacturas.="FA".$row_montos['nro_factura'].",";                        
+        $cadenaCodFacturas.="0,";
+      }else{
+        $cadenaFacturas.="F".$row_montos['nro_factura'].",";                          
+        $cadenaCodFacturas.=$row_montos['codigo'].",";
       }
+      $importe_fact_x+=$row_montos['importe'];
+      $cont_facturas++;
+    }
+    // $cadenaFacturas.=$cadenaFacturasM;
+    //sacamos nombre de los detalles
+    $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
+    $stmtDetalleSol->execute();
+    $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
+    $stmtDetalleSol->bindColumn('precio', $precio_unitario);     
+    $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);
+    if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
+      $concepto_contabilizacion="";
+    }else{
+      $concepto_contabilizacion=$codigo_alterno." - ";  
+    }
+    while ($row_det = $stmtDetalleSol->fetch()){
+      $precio=$precio_unitario*$cantidad;
+      $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
+      $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
+    }
+    $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
+    
+    // --------
+    $responsable=namePersonal($cod_personal);//nombre del personal
+    // $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);//
+    $string_formaspago=obtnerFormasPago($codigo_facturacion);
+    $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
+    $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
 
-      $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
-
-      // --------
-      $responsable=namePersonal($cod_personal);//nombre del personal
-      $nombre_contacto=nameContacto($persona_contacto);//nombre del personal
-      $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
-      $nombre_uo=nameUnidad($cod_unidadorganizacional);//nombre de la oficina
-
-      //los registros de la factura
-      $dbh1 = new Conexion();
-      $sqlA="SELECT sf.*,t.descripcion as nombre_serv from solicitudes_facturaciondetalle sf,cla_servicios t 
-          where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
-      $stmt2 = $dbh1->prepare($sqlA);                                   
-      $stmt2->execute(); 
-      $nc=0;
-      $sumaTotalMonto=0;
-      $sumaTotalDescuento_por=0;
-      $sumaTotalDescuento_bob=0;
-
-      while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-        // $dato = new stdClass();//obejto
-        $codFila=(int)$row2['codigo'];
-        $cod_claservicioX=trim($row2['nombre_serv']);
-        $cantidadX=trim($row2['cantidad']);
-        $precioX=trim($row2['precio'])+trim($row2['descuento_bob']);
-        $descuento_porX=trim($row2['descuento_por']);
-        $descuento_bobX=trim($row2['descuento_bob']);                             
-        $descripcion_alternaX=trim($row2['descripcion_alterna']);
-        // $dato->codigo=($nc+1);
-        // $dato->cod_facturacion=$codFila;
-        // $dato->serviciox=$cod_claservicioX;
-        // $dato->cantidadX=$cantidadX;
-        // $dato->precioX=$precioX;
-        // $dato->descuento_porX=$descuento_porX;
-        // $dato->descuento_bobX=$descuento_bobX;
-        // $dato->descripcion_alternaX=$descripcion_alternaX;
-        // $datos[$index-1][$nc]=$dato;                           
-        $nc++;
-        $sumaTotalMonto+=$precioX;
-        $sumaTotalDescuento_por+=$descuento_porX;
-        $sumaTotalDescuento_bob+=$descuento_bobX;
-      }
-      $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
-      // $cont[$index-1]=$nc;
-      // $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
-
-      ?>
+    //los registros de la factura
+    $dbh1 = new Conexion();
+    $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
+    $stmt2 = $dbh1->prepare($sqlA);                                   
+    $stmt2->execute(); 
+    $nc=0;
+    $sumaTotalMonto=0;
+    $sumaTotalDescuento_por=0;
+    $sumaTotalDescuento_bob=0;
+    while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+      // $dato = new stdClass();//obejto
+      $codFila=(int)$row2['codigo'];
+      $cod_claservicioX=trim($row2['nombre_serv']);
+      $cantidadX=trim($row2['cantidad']);
+      // $precioX=trim($row2['precio'])+trim($row2['descuento_bob']);
+      $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);                              
+      $descuento_porX=trim($row2['descuento_por']);
+      $descuento_bobX=trim($row2['descuento_bob']);                             
+      $descripcion_alternaX=trim($row2['descripcion_alterna']);
+      $nc++;
+      $sumaTotalMonto+=$precioX;
+      $sumaTotalDescuento_por+=$descuento_porX;
+      $sumaTotalDescuento_bob+=$descuento_bobX;
+    }
+    $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
+    if($cont_facturas>1){                              
+        // $estado="FACTURA PARCIAL";
+        $nro_fact_x=trim($cadenaFacturas,',');
+    }
+    // $cadenaFacturasM=trim($cadenaFacturasM,',');
+    ?>
     <tr>
-      <td align="center"><?=$index;?></td>
-      <td><?=$nombre_uo;?></td>
-      <td><?=$nombre_area;?></td>
-      <td class="text-right"><?=$nro_correlativo;?></td>
-      <td><?=$codigo_alterno?></td>
-      <!-- <td><?=$responsable;?></td> -->
-      <td><?=$fecha_registro;?></td>
-      <td><?=$fecha_solicitudfactura;?></td>                            
-      <td style="color:#cc4545;"><?=$nro_fact_x;?></td>                             
-      <td class="text-right"><?=formatNumberDec($sumaTotalImporte) ;?></td>
-      <td class="text-left"><?=$nombre_contacto;?></td>
-      <td><?=$razon_social;?></td>
-      <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button></td>
-      <!-- <td><?=$nit;?></td> -->
-
-      <td class="td-actions text-right">
+      <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
+      <td class="text-right"><small><?=$nro_correlativo;?></small></td>
+      <td><small><?=$responsable;?></small></td>
+      <td><small><?=$codigo_alterno?></small></td>
+      <td><small><?=$fecha_registro;?></small></td>
+      <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
+      <td><small><small><?=$razon_social;?></small></small></td>
+      <td><small><small><?=$concepto_contabilizacion?></small></small></td>
+      <td>
+        <?php if($cod_estado_factura_x==3){
+            $estadofactura=obtener_nombreestado_factura($cod_estadofactura);?>
+            <span class="badge badge-dark"><small><?=$estadofactura?></small></span><?php
+        }else{?><small><?=$observaciones_string;?></small><?php 
+        }?>
+      </td>
+      <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
+      <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
+      <td class="td-actions text-right"><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
         <?php
           if($globalAdmin==1){ //
-            if($codigo_fact_x>0){//print facturas
+            if($codigo_fact_x>0 && $cont_facturas<2 && ($cod_estado_factura_x!=2)){//print facturas
               ?>
-              <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>                                    
+              <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
+              <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
+                <i class="material-icons" title="Imprimir Comprobante">print</i>
               <?php 
-            }                           
+            }elseif($cont_facturas>1){?>
+              <div class="btn-group dropdown">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>Facturas</small></button>
+                <div class="dropdown-menu"><?php 
+                  $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
+                  $arrayFacturas = explode(",",trim($cadenaFacturas,','));
+                  for ($i=0; $i < $cont_facturas; $i++) { 
+                    $cod_factura_x= $arrayCodFacturas[$i];
+                    $nro_factura_x= $arrayFacturas[$i];
+                    if($cod_factura_x!=0){?>
+                      <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
+                    <?php }else{?>
+                      <a class="dropdown-item" type="button" href='#'><i class="material-icons text-success" title="Factura">list</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
+                    <?php }
+                  }?>
+                </div>
+              </div> <?php 
+            }elseif($cod_estado_factura_x==4){//factura manual ?>
+              <button title="Detalles Factura Manual" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
+                <i class="material-icons">list</i>
+              </button> <?php 
+            }?>
+              <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
+                <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
+          <?php
           }
         ?>
       </td>
     </tr>
     <?php
-        $index++;
-      }
-    ?>
-  </tbody>
-</table>
+      $index++;
+  }
+?>
+
+ 
