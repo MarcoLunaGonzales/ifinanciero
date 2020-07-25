@@ -53,6 +53,7 @@
 	$urlDeleteReembolsoCajaChica="index.php?opcion=deleteReembolsoCajaChica";
 
 	$urlImp="comprobantes/imp.php";
+	$urlSolicitudRecursos="solicitudes/verSolicitudRecursos.php";
 
 
 

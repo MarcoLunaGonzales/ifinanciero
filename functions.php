@@ -7193,7 +7193,7 @@ function obtenerFechaSimulacionCosto($codigo){
 function verificar_codComprobante_cajaChica($codigo_cobt,$codigo_detalle){
   $dbh = new Conexion();  
   $sw=false;
-  $sql="SELECT codigo from caja_chicareembolsos where cod_comprobante=$codigo_cobt and cod_comprobante_detalle=$codigo_detalle";
+  $sql="SELECT codigo from caja_chicareembolsos where cod_comprobante=$codigo_cobt and cod_comprobante_detalle=$codigo_detalle and cod_estadoreferencial=1";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
