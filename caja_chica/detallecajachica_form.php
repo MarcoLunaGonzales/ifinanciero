@@ -85,7 +85,8 @@ if ($codigo > 0){
     $cod_retencion = null;
     $nro_documento = $numero_caja_chica_aux+1;
     $nro_recibo=$numero_recibo_aux+1;
-    $cod_personal = null;    
+    
+    $cod_personal=$_SESSION["globalUser"];  
     $observaciones = null;    
     $monto = 0;    
     $cod_estado = 1;    
@@ -395,14 +396,23 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
             </div>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Detalle</label>
-                <div class="col-sm-7">
+                <div class="col-sm-8">
                 <div class="form-group">
                     <input class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$observaciones;?>" required/>
-
                     <!-- <input class="form-control" type="text" name="observaciones" id="observaciones" required="true" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
                 </div>
                 </div>
-            </div>              
+            </div> 
+            <!-- para solicitud de recursos -->             
+            <div class="row">              
+              <div class="col-sm-12">
+                <div class="form-group">                        
+                  <div id="div_contenedor_sol_recursos" align="center">                    
+                    
+                  </div>
+                </div>
+              </div>              
+            </div>
   			  </div>
   			  <div class="card-footer ml-auto mr-auto">
   				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>

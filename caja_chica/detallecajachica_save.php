@@ -88,8 +88,14 @@ try {
                 $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)values('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobante','$cuenta_auxiliar1','$codigo')");
                 $flagSuccess=$stmtContraCuenta->execute();
                 if($flagSuccess){
+                    //busacmos el codigo de estado de cuenta
+                    $sqlEstadoCuenta="SELECT e.codigo From estados_cuenta e where e.cod_comprobantedetalle=$codigo_comprobante limit 1"; 
+                    $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
+                    $stmtEstadoCuenta->execute();                    
+                    $resultado=$stmtEstadoCuenta->fetch();
+                    $codigo_estadoCuenta=$resultado['codigo'];
                     $codigo_sr=0;
-                    $sqlDetalleX="SELECT codigo,cod_solicitudrecurso,cod_solicitudrecursodetalle,cod_proveedor,cod_tipopagoproveedor from solicitud_recursosdetalle where cod_estadocuenta=$cod_comprobante";                      
+                    $sqlDetalleX="SELECT codigo,cod_solicitudrecurso,cod_solicitudrecursodetalle,cod_proveedor,cod_tipopagoproveedor from solicitud_recursosdetalle where cod_estadocuenta=$codigo_estadoCuenta";
                     $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                     $stmtDetalleX->execute();                    
                     $stmtDetalleX->bindColumn('codigo', $codigo_sr);

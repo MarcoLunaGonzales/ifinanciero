@@ -123,8 +123,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                   $stmtIBNO->bindColumn('FechaInscripcion_x', $FechaInscripcion);
                   while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
                     $codigo_curso=obtenerCodigoExternoCurso($IdCurso);
-
-
+                    $descuento=trim($descuento,'%');
                     $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
                     $importe_curso=   $Costo*$descuento/100;//importe curso con desuento
                     $importe_curso= $Costo-$importe_curso;//importe curso con desuento       

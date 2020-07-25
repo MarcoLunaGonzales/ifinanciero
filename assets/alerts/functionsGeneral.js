@@ -2889,7 +2889,7 @@ function calcularDatosPlantilla(){
         url: "ajaxCalcularDatosPlantilla.php",
         data: parametros,
         beforeSend: function () { 
-         $("#mensaje_process").html("<center><p class='text-muted'>Cálculando espere porfavor...</p></center>"); 
+         $("#mensaje_process").html("<center><p class='text-muted'>Cálculando espere por favor...</p></center>"); 
          $("#calcular").attr("disabled","disabled");
         },
         success:  function (resp) {
@@ -9802,48 +9802,52 @@ function AgregarSeviciosFacturacion2(obj) {
 }
 
 function AgregarSeviciosFacturacion_soli_manual(obj) {
-  if($("#add_boton").length){
-    $("#add_boton").attr("disabled",true);
-  }
-      numFilas++;
-      cantidadItems++;
-      
-      filaActiva=numFilas;
-      document.getElementById("cantidad_filas").value=numFilas;
-      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
-      fi = document.getElementById('fiel');
-      contenedor = document.createElement('div');
-      contenedor.id = 'div'+numFilas;  
-      fi.type="style";
-      fi.appendChild(contenedor);
-      var divDetalle;
-      divDetalle=$("#div"+numFilas);
-      //document.getElementById('nro_cuenta').focus();
-      ajax=nuevoAjax();
-      ajax.open("GET","simulaciones_servicios/ajax_addserviciosfacturacion_manual.php?idFila="+numFilas,true);
-      ajax.onreadystatechange=function(){
-        if (ajax.readyState==4) {
-          divDetalle.html(ajax.responseText);
-          divDetalle.bootstrapMaterialDesign();   
-          // $('#codigo_rendicionA').val("");
-          // $('#cod_tipo_documentoA').val("");//
-          $('#modal_editservicio').val("");
-          $('#cantidad_servicios').val("");
-          $('#modal_montoserv').val("");
+  var cod_area=document.getElementById("cod_area").value;
+  if(cod_area==null || cod_area==''){
+    Swal.fire("Informativo!", "Seleccione el área por favor.", "warning");
+  }else{
+    if($("#add_boton").length){
+      $("#add_boton").attr("disabled",true);
+    }
+    numFilas++;
+    cantidadItems++;
+    filaActiva=numFilas;
+    document.getElementById("cantidad_filas").value=numFilas;
+    console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+    fi = document.getElementById('fiel');
+    contenedor = document.createElement('div');
+    contenedor.id = 'div'+numFilas;  
+    fi.type="style";
+    fi.appendChild(contenedor);
+    var divDetalle;
+    divDetalle=$("#div"+numFilas);
+    //document.getElementById('nro_cuenta').focus();
+    ajax=nuevoAjax();
+    ajax.open("GET","simulaciones_servicios/ajax_addserviciosfacturacion_manual.php?idFila="+numFilas+"&cod_area="+cod_area,true);
+    ajax.onreadystatechange=function(){
+      if (ajax.readyState==4) {
+        divDetalle.html(ajax.responseText);
+        divDetalle.bootstrapMaterialDesign();   
+        // $('#codigo_rendicionA').val("");
+        // $('#cod_tipo_documentoA').val("");//
+        $('#modal_editservicio').val("");
+        $('#cantidad_servicios').val("");
+        $('#modal_montoserv').val("");
 
-          $('.selectpicker').selectpicker("refresh");
-          // $('#modalAgregarDR').modal('show');
-          // if(numFilas!=1){
-          //   //alert((numFilas-1)+"-"+$("#monto_A"+(numFilas-1)).val());
-          //   sumartotalprueba2(numFilas-1);
-          // }        
-          if($("#add_boton").length){
-            $("#add_boton").removeAttr("disabled");
-          }
-          return false;
-       }
-      }   
-      ajax.send(null);
+        $('.selectpicker').selectpicker("refresh");
+        // $('#modalAgregarDR').modal('show');
+        // if(numFilas!=1){
+        //   //alert((numFilas-1)+"-"+$("#monto_A"+(numFilas-1)).val());
+        //   sumartotalprueba2(numFilas-1);
+        // }        
+        if($("#add_boton").length){
+          $("#add_boton").removeAttr("disabled");
+        }
+        return false;
+     }
+    }   
+    ajax.send(null);
+  }
 }
 
 function AgregarSeviciosFacturacion2_servicios(obj) {
@@ -10679,20 +10683,36 @@ function ajaxCajaCPersonalArea_cuentapasiva(codigo_comprobante,cod_proveedor){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);    
-      ajaxCajaCProveedor_cuentapasiva(cod_proveedor);//ponemos proveedor en el fromulario  
+      ajaxCajaCProveedor_cuentapasiva(codigo_comprobante,cod_proveedor);//ponemos proveedor en el fromulario  
     }
   }
   ajax.send(null)  
 }
 
 
-function ajaxCajaCProveedor_cuentapasiva(codigo_proveedor){
+function ajaxCajaCProveedor_cuentapasiva(codigo_comprobante,codigo_proveedor){
   var contenedor_p;
   // alert(codigo_proveedor);
-
   contenedor_p = document.getElementById('div_contenedor_proveedor');
   ajax=nuevoAjax();
   ajax.open('GET', 'caja_chica/proveedorAjax_cuentaPasiva.php?codigo_proveedor='+codigo_proveedor,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor_p.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);  
+      ajax_boton_sol_recursos_cajachica(codigo_comprobante);
+      // $("#modalEstadosCuentas").modal("hide");//cerramos modal  
+    }
+  }
+  ajax.send(null)  
+}
+
+function ajax_boton_sol_recursos_cajachica(codigo_comprobante){
+  var contenedor_p;
+  // alert(codigo_proveedor);
+  contenedor_p = document.getElementById('div_contenedor_sol_recursos');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/ajax_vistraprevia_solrecursos.php?codigo_comprobante='+codigo_comprobante,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor_p.innerHTML = ajax.responseText;
@@ -10702,6 +10722,7 @@ function ajaxCajaCProveedor_cuentapasiva(codigo_proveedor){
   }
   ajax.send(null)  
 }
+
 
 function ajaxTipoProveedorCliente(tipo){
   var contenedor_p;
@@ -12936,11 +12957,11 @@ function botonBuscarSolicitudes_conta(){
   var valor_cliente=$("#cliente").val();
   var valor_fi=$("#fechaBusquedaInicio").val();
   var valor_ff=$("#fechaBusquedaFin").val();
-  // var valor_glosa=$("#glosaBusqueda").val();
-  
+  var valor_rs=$("#razon_social_b").val();
+  var valor_nro=$("#nro_solicitud_b").val();
   
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_conta.php?cod_uo='+valor_uo+'&cliente='+valor_cliente+'&fechaI='+valor_fi+'&fechaF='+valor_ff,true);
+  ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_conta.php?cod_uo='+valor_uo+'&cliente='+valor_cliente+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&razon_social='+valor_rs+'&nro_s='+valor_nro,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_solicitudes_facturacion");
@@ -16082,6 +16103,24 @@ function botonBuscar_facturas(){
       var contenedor=$("#data_facturas_generadas");
       contenedor.html(ajax.responseText);
       $("#modalBuscadorFacturas").modal("hide");
+    }
+  }
+  ajax.send(null)
+}
+function botonBuscarSolicitudes_gral(){
+  var valor_uo=$("#OficinaBusqueda").val();
+  var valor_cliente=$("#cliente").val();
+  var valor_fi=$("#fechaBusquedaInicio").val();
+  var valor_ff=$("#fechaBusquedaFin").val();
+  var valor_rs=$("#razon_social_b").val();
+  var valor_nro=$("#nro_solicitud_b").val();
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_solicitudes.php?cod_uo='+valor_uo+'&cliente='+valor_cliente+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&razon_social='+valor_rs+'&nro_s='+valor_nro,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_solicitudes_facturacion");
+      contenedor.html(ajax.responseText);
+      $("#modalBuscador_solicitudes").modal("hide");
     }
   }
   ajax.send(null)

@@ -178,33 +178,33 @@
 		                }
 					}elseif($cont_tipo_distribucion==0){//distribucion normal
 						$cod_uo_config=obtenerValorConfiguracion(15);
-	                    if($cod_uo==$cod_uo_config){
-	                        //desde aqui repartimos la contabilizacion a las oficinas si es DN
-	                        $stmtOficina = $dbh->prepare("SELECT dgd.cod_unidadorganizacional,dgd.porcentaje,
-	                           (SELECT uo.abreviatura FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as oficina
-	                        from distribucion_gastosporcentaje_detalle dgd,distribucion_gastosporcentaje dg
-	                        where dgd.cod_distribucion_gastos=dg.codigo and dg.estado=1 and porcentaje>0");
-	                        $stmtOficina->execute();
-	                        $stmtOficina->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
-	                        $stmtOficina->bindColumn('porcentaje', $porcentaje);
-	                        $stmtOficina->bindColumn('oficina', $oficinaFac);
-	                        while ($rowOf = $stmtOficina->fetch()) 
-	                        {                                    
-	                            $descripcion_of=$oficinaFac.'/'.$centroCostosDN.' '.$cadena_facturas.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
-	                            $monto_of=$monto_restante*$porcentaje/100;
-	                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
-	                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_unidadorganizacional','$centroCostosDN','0','$monto_of','$descripcion_of','$ordenDetalle')";
-						            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-						            $flagSuccessDet=$stmtInsertDet->execute();
-						            $ordenDetalle++;
-	                            }else{
-	                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_unidadorganizacional','$centroCostosDN','$monto_of','0','$descripcion_of','$ordenDetalle')";
-						            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-						            $flagSuccessDet=$stmtInsertDet->execute();
-						            $ordenDetalle++;
-	                            }                                     
-	                        }
-	                    }else{
+	                 //    if($cod_uo==$cod_uo_config){
+	                 //        //desde aqui repartimos la contabilizacion a las oficinas si es DN
+	                 //        $stmtOficina = $dbh->prepare("SELECT dgd.cod_unidadorganizacional,dgd.porcentaje,
+	                 //           (SELECT uo.abreviatura FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as oficina
+	                 //        from distribucion_gastosporcentaje_detalle dgd,distribucion_gastosporcentaje dg
+	                 //        where dgd.cod_distribucion_gastos=dg.codigo and dg.estado=1 and porcentaje>0");
+	                 //        $stmtOficina->execute();
+	                 //        $stmtOficina->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
+	                 //        $stmtOficina->bindColumn('porcentaje', $porcentaje);
+	                 //        $stmtOficina->bindColumn('oficina', $oficinaFac);
+	                 //        while ($rowOf = $stmtOficina->fetch()) 
+	                 //        {                                    
+	                 //            $descripcion_of=$oficinaFac.'/'.$centroCostosDN.' '.$cadena_facturas.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
+	                 //            $monto_of=$monto_restante*$porcentaje/100;
+	                 //            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
+	                 //            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_unidadorganizacional','$centroCostosDN','0','$monto_of','$descripcion_of','$ordenDetalle')";
+						            // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+						            // $flagSuccessDet=$stmtInsertDet->execute();
+						            // $ordenDetalle++;
+	                 //            }else{
+	                 //            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_unidadorganizacional','$centroCostosDN','$monto_of','0','$descripcion_of','$ordenDetalle')";
+						            // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+						            // $flagSuccessDet=$stmtInsertDet->execute();
+						            // $ordenDetalle++;
+	                 //            }                                     
+	                 //        }
+	                 //    }else{
 	                        $descripcion_of=$nombre_uo.'/'.$nombre_area.' '.$cadena_facturas.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;	
 	                        if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 	                    		$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_uo','$cod_area','0','$monto_restante','$descripcion_of','$ordenDetalle')";
@@ -217,7 +217,7 @@
 					            $flagSuccessDet=$stmtInsertDet->execute();
 					            $ordenDetalle++;
 	                        }       
-	                    }
+	                    // }
 					}
                     // aqui la contra cuenta
                     $descripcion_contra_cuenta='CONTABILIZACIÓN CAJA CHICA. '.$personal.', '.$observaciones_dcc;
@@ -395,34 +395,34 @@
 			                }
 						}elseif($cont_tipo_distribucion==0){//distribucion normal
 							$cod_uo_config=obtenerValorConfiguracion(15);
-		                    if($cod_uo==$cod_uo_config){
-		                        //desde aqui repartimos la contabilizacion a las oficinas 
-		                        $stmtOficina = $dbh->prepare("SELECT dgd.cod_unidadorganizacional,dgd.porcentaje,
-		                           (SELECT uo.abreviatura FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as oficina
-		                        from distribucion_gastosporcentaje_detalle dgd,distribucion_gastosporcentaje dg
-		                        where dgd.cod_distribucion_gastos=dg.codigo and dg.estado=1 and porcentaje>0");
-		                        $stmtOficina->execute();
-		                        $stmtOficina->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
-		                        $stmtOficina->bindColumn('porcentaje', $porcentaje);
-		                        $stmtOficina->bindColumn('oficina', $oficinaFac);
-		                        while ($rowOf = $stmtOficina->fetch()) 
-		                        {                                                                            
-		                            $descripcion_of=$oficinaFac.'/'.$nombre_uo.' SF (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
-		                            $monto_of=$monto_restante*$porcentaje/100;
+		                 //    if($cod_uo==$cod_uo_config){
+		                 //        //desde aqui repartimos la contabilizacion a las oficinas 
+		                 //        $stmtOficina = $dbh->prepare("SELECT dgd.cod_unidadorganizacional,dgd.porcentaje,
+		                 //           (SELECT uo.abreviatura FROM unidades_organizacionales uo WHERE uo.codigo=dgd.cod_unidadorganizacional) as oficina
+		                 //        from distribucion_gastosporcentaje_detalle dgd,distribucion_gastosporcentaje dg
+		                 //        where dgd.cod_distribucion_gastos=dg.codigo and dg.estado=1 and porcentaje>0");
+		                 //        $stmtOficina->execute();
+		                 //        $stmtOficina->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
+		                 //        $stmtOficina->bindColumn('porcentaje', $porcentaje);
+		                 //        $stmtOficina->bindColumn('oficina', $oficinaFac);
+		                 //        while ($rowOf = $stmtOficina->fetch()) 
+		                 //        {                                                                            
+		                 //            $descripcion_of=$oficinaFac.'/'.$nombre_uo.' SF (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
+		                 //            $monto_of=$monto_restante*$porcentaje/100;
 
-		                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
-		                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_unidadorganizacional','$centroCostosDN','0','$monto_of','$descripcion_of','$ordenDetalle')";
-							            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-							            $flagSuccessDet=$stmtInsertDet->execute();
-							            $ordenDetalle++;
-		                            }else{
-		                                $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_unidadorganizacional','$centroCostosDN','$monto_of','0','$descripcion_of','$ordenDetalle')";
-							            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-							            $flagSuccessDet=$stmtInsertDet->execute();
-							            $ordenDetalle++;                               
-		                            }
-		                        }
-		                    }else{
+		                 //            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
+		                 //            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_unidadorganizacional','$centroCostosDN','0','$monto_of','$descripcion_of','$ordenDetalle')";
+							            // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+							            // $flagSuccessDet=$stmtInsertDet->execute();
+							            // $ordenDetalle++;
+		                 //            }else{
+		                 //                $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_unidadorganizacional','$centroCostosDN','$monto_of','0','$descripcion_of','$ordenDetalle')";
+							            // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+							            // $flagSuccessDet=$stmtInsertDet->execute();
+							            // $ordenDetalle++;                               
+		                 //            }
+		                 //        }
+		                 //    }else{
 		                        $descripcion_of=$nombre_uo.'/'.$nombre_area.' SF (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
 		                        if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
 		                        	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$cod_uo','$cod_area','0','$monto_restante','$descripcion_of','$ordenDetalle')";
@@ -435,7 +435,7 @@
 						            $flagSuccessDet=$stmtInsertDet->execute();
 						            $ordenDetalle++;
 		                        }
-		                    }
+		                    // }
 						}				                    
 	                }
 	                //contra cuenta
