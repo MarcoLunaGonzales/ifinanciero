@@ -197,7 +197,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                         <?php
                           if($sw_aux && $estado!="Pagado<br>total"){
                             if(isset($_GET['q'])){ ?>
-                              <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;padding: 3px; font-size:10px;width:23px;height:23px;">
+                              <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>&u=<?=$u?>&s=<?=$s?>' rel="tooltip" class="btn" style="background-color: #0489B1;padding: 3px; font-size:10px;width:23px;height:23px;">
                                 <i class="material-icons" title="Solicitar Facturación">receipt</i>
                               </a><?php 
                             }else{ ?>
@@ -206,7 +206,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                               </a><?php 
                             }
                             if($codigo_facturacion>0){?>
-                              <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a> <?php 
+                              <!-- <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a> --> <?php 
                             }
                           }
 

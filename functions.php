@@ -8485,6 +8485,19 @@ function obtenerSumaTotal_solicitudFacturacion($codigo){
   $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
   return($sumaTotalImporte);
 }
+function importe_total_cajachica($cod_cajachica){
+  $dbh = new Conexion();
+  $sql="SELECT SUM(c.monto)-IFNULL((select SUM(r.monto) from caja_chicareembolsos r where r.cod_cajachica=$cod_cajachica and r.cod_estadoreferencial=1),0) as monto_total from caja_chicadetalle c where c.cod_cajachica=$cod_cajachica and c.cod_estadoreferencial=1";
+  $stmtCaja = $dbh->prepare($sql);
+  $stmtCaja->execute();
+  $resultCaja = $stmtCaja->fetch();
+  // $monto_anterior = $resultCaja['monto_total'];
+  if($resultCaja['monto_total']!=null || $resultCaja['monto_total']!='')
+    $monto_anterior_x=$resultCaja['monto_total'];
+  else $monto_anterior_x=0;                        
+  // $monto_anterior=$monto_inicio_anterior-$monto_anterior_x;
+  return $monto_anterior_x;
+}
 
 ?>
 

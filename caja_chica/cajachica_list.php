@@ -74,13 +74,14 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                           $datos_ComproCajaChica=$cod_cajachica."/".$observaciones."/".$codigo_tipo_caja_Chica;  
-                            $sql_rendicion="SELECT SUM(c.monto)-IFNULL((select SUM(r.monto) from caja_chicareembolsos r where r.cod_cajachica=$cod_cajachica and r.cod_estadoreferencial=1),0) as monto_total from caja_chicadetalle c where c.cod_cajachica=$cod_cajachica and c.cod_estadoreferencial=1";
-                            $stmtSaldo = $dbh->prepare($sql_rendicion);
-                            $stmtSaldo->execute();
-                            $resultSaldo=$stmtSaldo->fetch();
-                            if($resultSaldo['monto_total']!=null || $resultSaldo['monto_total']!='')
-                              $monto_total=$resultSaldo['monto_total'];
-                            else $monto_total=0;                        
+                            // $sql_rendicion="SELECT SUM(c.monto)-IFNULL((select SUM(r.monto) from caja_chicareembolsos r where r.cod_cajachica=$cod_cajachica and r.cod_estadoreferencial=1),0) as monto_total from caja_chicadetalle c where c.cod_cajachica=$cod_cajachica and c.cod_estadoreferencial=1";
+                            // $stmtSaldo = $dbh->prepare($sql_rendicion);
+                            // $stmtSaldo->execute();
+                            // $resultSaldo=$stmtSaldo->fetch();
+                            // if($resultSaldo['monto_total']!=null || $resultSaldo['monto_total']!='')
+                            //   $monto_total=$resultSaldo['monto_total'];
+                            // else $monto_total=0;      
+                            $monto_total=importe_total_cajachica($cod_cajachica);      
                             $monto_saldo=$monto_inicio-$monto_total;
 
                              if($cod_estado==1)
@@ -102,8 +103,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                               <!-- href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>' -->
                               <td class="td-actions text-right">
                                 <?php
-                                if($globalAdmin==1 and $cod_estado==1){
-                              ?>
+                                if($globalAdmin==1 and $cod_estado==1){ ?>
                               <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="btn" style="vertical-align: middle;padding: 0;font-size:18px;width:30px;height:30px;background-color:#013ADF;">
                                   <i class="material-icons" title="Agregar Detalle">playlist_add</i>
                               </a>
@@ -119,7 +119,6 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                               <?php
                                 if($globalAdmin==1 and $cod_estado==1){
                               ?>
-                                
                                 <a href='<?=$urlFormCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                   <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
                                 </a>
