@@ -47,8 +47,8 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
       <th class="text-left">FechaEC</th>
       <th class="text-left">Proveedor/Cliente</th>
       <th class="text-left">Glosa</th>
-      <th class="text-right">D&eacute;bito</th>
-      <th class="text-right">Cr&eacute;dito</th>
+      <th class="text-right">Debe</th>
+      <th class="text-right">Haber</th>
       <th class="text-right">Saldo</th>
       <th class="text-left">*</th>
     </tr>
@@ -126,8 +126,9 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
         <td class="text-left small"><?=$fechaX;?></td>
         <td class="text-left small"><?=$proveedorX?></td>
         <td class="text-left small"><?=$glosaMostrar;?></td>
-        <td class="text-right small"><?=formatNumberDec($montoX);?></td>
+        
         <td class="text-right small"><?=formatNumberDec($montoContra)?></td>        
+        <td class="text-right small"><?=formatNumberDec($montoX);?></td>
         <td class="text-right small font-weight-bold"><?=formatNumberDec($saldoIndividual);?></td>
         <td>
           <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
@@ -167,8 +168,8 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
       <th class="text-left">FechaEC</th>
       <th class="text-left">Proveedor/Cliente</th>
       <th class="text-left">Glosa</th>
-      <th class="text-right">D&eacute;bito</th>
-      <th class="text-right">Cr&eacute;dito</th>
+      <th class="text-right">Debe</th>
+      <th class="text-right">Haber</th>
       <th class="text-right">Saldo</th>
       <th class="text-left">*</th>
     </tr>
