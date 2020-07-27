@@ -119,9 +119,9 @@ tfoot input {
                   $datosDetalle=obtenerDatosComprobanteDetalle($codComprobanteDetalle);
                   $facturaFecha="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
                   $facturaNumero="<b class='text-success'>".nombreComprobante($codComprobante)."</b>";
-                  $facturaNit="<b class='text-success'>".$codComprobanteDetalle."</b>";
-                  $facturaRazonSocial="<b class='text-success'>".$datosDetalle[0]."</b>";
-                  $facturaDetalle="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
+                  $facturaNit="<b class='text-success'>-</b>";
+                  $facturaDetalle="<b class='text-success'>".$datosDetalle[0]."</b>";
+                  $facturaRazonSocial="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
                   $facturaMonto="<b class='text-success'>".$datosDetalle[1]."</b>";
                   $totalMontoFac+=0;
                 }

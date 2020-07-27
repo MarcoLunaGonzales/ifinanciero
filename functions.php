@@ -7211,13 +7211,14 @@ function verificarArchivoAdjuntoExistente($tipo,$padre,$objeto,$codArchivo){
    $sql="SELECT * FROM archivos_adjuntos WHERE cod_tipoarchivo=$codArchivo and cod_tipopadre=$tipo and cod_objeto=$padre $sqlObjeto";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
-   $valor=0;$descripcion="";$url="";
+   $valor=0;$descripcion="";$url="";$codigo=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor++;
       $descripcion=$row['descripcion'];
       $url=$row['direccion_archivo'];
+      $codigo=$row['codigo'];
   }
-  return array($valor,$descripcion,$url);
+  return array($valor,$descripcion,$url,$codigo);
 }
 function obtenerCodCuentaTipoPago($codigo){  
   $dbh = new Conexion();
