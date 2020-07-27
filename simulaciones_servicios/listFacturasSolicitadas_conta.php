@@ -345,7 +345,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                   <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3')">
                                                     <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                   </a><?php                                               
-                                                }elseif($cod_tipopago==$cod_tipopago_anticipo){ echo $cod_tipopago."-".$cod_tipopago_anticipo?>
+                                                }elseif($cod_tipopago==$cod_tipopago_anticipo){ //echo $cod_tipopago."-".$cod_tipopago_anticipo
+                                                ?>
                                                   <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1','0')">
                                                     <i class="material-icons text-success">receipt</i> Generar Factura
                                                   </a>

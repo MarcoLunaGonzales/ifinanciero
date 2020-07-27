@@ -15,7 +15,6 @@ $cod_solicitudfacturacion=$_POST['cod_solicitudfacturacion'];
 $estado_factura=$_POST['estado_factura'];//1 normal, 2 devolucion
 session_start();
 $globalUser=$_SESSION["globalUser"];
-$globalUser=$_SESSION["globalUser"];
 $stmtFActuras = $dbh->prepare("SELECT codigo,nro_factura,nit,razon_social,cod_comprobante,cod_unidadorganizacional,cod_area from facturas_venta where codigo in ($codigos_facturas_x)");
 $stmtFActuras->execute();	
 $stmtFActuras->bindColumn('codigo', $codigo_factura);  	
@@ -50,8 +49,8 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 	$cod_libretabancaria=obtenerLibretaBancariaFacturaVenta($codigo_factura);//devuelve cadena de codigos de libreta detalle
 	$glosa_libreta=obtenerGlosaLibretaBancariaDetalle($cod_libretabancaria);//la informacion complemetaria de la libreta
 	$tipoComprobante=3;//traspaso
-	// $numeroComprobante=obtenerCorrelativoComprobante2($tipoComprobante);	
-	// $numeroComprobante=numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante,$codMes);
+	$numeroComprobante=obtenerCorrelativoComprobante2($tipoComprobante);	
+	// numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante,$codMes);
 	if($cod_solicitudfacturacion!=-100){
 		$sql="cod_unidadorganizacional";
 		$cod_uo_solicitud = obtenerCodUOSolFac($cod_solicitudfacturacion,$sql); 
