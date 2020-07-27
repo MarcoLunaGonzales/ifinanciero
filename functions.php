@@ -4939,7 +4939,7 @@ function numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante,$codM
   $dbh = new Conexion();
   $mesActivo=$codMes;
 
-  $sql1="SELECT g.nombre from gestiones g where cod_gestion='$codGestion'";
+  $sql1="SELECT g.nombre from gestiones g where codigo='$codGestion'";
   $stmt1 = $dbh->prepare($sql1);
   $stmt1->execute();
   $anio=$_SESSION["globalNombreGestion"];
