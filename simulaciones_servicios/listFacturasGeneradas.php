@@ -7,7 +7,6 @@ $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 
 
-
   //datos registrado de la simulacion en curso
   $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal
  from facturas_venta f where cod_estadofactura in (1,2,3) order by  f.fecha_factura desc limit 50");
@@ -152,19 +151,15 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                     <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
                                     <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>
                                   </div>
-                                </div>
-                                <?php
-                                 $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux;
-                                ?>
-                                
+                                </div>                                
+                                <?php                               
+                              }
+                              $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux;
+                              if($cod_estadofactura!=4 && $cod_estadofactura!=2){?>
                                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
                                   <i class="material-icons" title="Anular Factura">delete</i>
                                 </button>
-                                <!-- <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation-anular-factura','<?=$urlAnularFactura;?>&codigo=<?=$codigo_factura;?>&cod_solicitudfacturacion=<?=$cod_solicitudfacturacion?>&cod_comprobante=<?=$cod_comprobante?>')">
-                                <i class="material-icons" title="Anular Factura">delete</i>
-                                </button> -->
-                                <?php 
-                              } ?>
+                              <?php } ?>
                           </td>
                           
                         </tr>
