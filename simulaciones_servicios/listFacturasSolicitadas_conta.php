@@ -303,8 +303,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 <td class="td-actions text-right">
                                   <button class="btn <?=$btnEstado?> btn-sm btn-link" style="padding:0;"><small><?=$estado;?></small></button><br>
                                   <?php
-                                    if($globalAdmin==1){ //                                      
-                                      if($codEstado==3 ){ ?>                                          
+                                    if($globalAdmin==1){
+                                      if($codEstado==3){ ?>                                          
                                         <div class="btn-group dropdown">
                                           <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                              <small><?=$estado;?></small>
@@ -345,7 +345,8 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                   <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3')">
                                                     <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                   </a><?php                                               
-                                                }elseif($cod_tipopago==$cod_tipopago_anticipo){ echo $cod_tipopago."-".$cod_tipopago_anticipo?>
+                                                }elseif($cod_tipopago==$cod_tipopago_anticipo){ //echo $cod_tipopago."-".$cod_tipopago_anticipo
+                                                ?>
                                                   <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1','0')">
                                                     <i class="material-icons text-success">receipt</i> Generar Factura
                                                   </a>
@@ -370,42 +371,18 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                           </div>
                                         </div>                           
                                         <?php 
-                                      }else{
-                                        if($codEstado==6 || $codEstado==4){
-                                          // $cod_tipopago_cred=obtenerValorConfiguracion(48);
-                                          // echo $cod_tipopago_cred; 
-                                          // if($cod_tipopago!=$cod_tipopago_cred){//si es distino a credito cambia de flujo
-                                              ?>
-                                               <a title="Aceptar Solicitud" href='#'  class="btn btn-default" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=3&admin=0')">
-                                                 <i class="material-icons">send</i>
-                                               </a>
-                                               <?php
-                                               $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###10###".$urlEdit2Sol."###";
-                                               ?>
-                                               <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
-                                                <i class="material-icons" title="Devolver Solicitud Facturación">settings_backup_restore</i>
-                                              </button>
-                                              <?php                                          
-                                          // }else{
-                                              ?>
-                                               <!-- <a title="Enviar Solicitud" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0'  class="btn btn-default">
-                                                 <i class="material-icons">send</i>
-                                               </a> -->
-                                              <?php                                          
-                                          // }
-                                          
-                                            ?> 
+                                      }
 
-                                            
-                                            <!-- <a title="Volver al Estado Registro" href='<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=1&admin=10'  class="btn btn-danger">
-                                               <i class="material-icons">settings_backup_restore</i>
-                                            </a> -->
-
-                                            <?php                                          
-                                        }
-                                        ?>                                          
-                                        <?php
-                                      }?> 
+                                      if($codEstado==6 || $codEstado==4){?>
+                                        <a title="Aceptar Solicitud" href='#'  class="btn btn-default" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=3&admin=0')">
+                                         <i class="material-icons">send</i>
+                                        </a><?php                                        
+                                      }
+                                      $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###10###".$urlEdit2Sol."###"; 
+                                      ?>
+                                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
+                                          <i class="material-icons" title="Devolver Solicitud de Facturación">settings_backup_restore</i>
+                                      </button>
                                       <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
                                       <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_FacManual;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
                                     <?php }

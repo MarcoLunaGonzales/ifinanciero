@@ -106,37 +106,37 @@ foreach ($listaPersona->contactos as $listas) {
 	}
 }
 	// contactos clientes
-$lista=obtenerListaContactosEmpresaDelServicio($codigo_cliente);		
-foreach ($lista->contactos as $listas) {		
-	if($contador_contactos==0){
-		$sql="DELETE FROM clientes_contactos where cod_cliente=$codigo_cliente";
-        $stmtDelteCont = $dbh->prepare($sql);
-        $stmtDelteCont->execute(); 
-	}
-	$vigencia=$listas->Vigencia;
-	if($vigencia==1){
-		$codigo=$listas->IdContacto;	
-		$cod_cliente=$listas->IdCliente;
-		if(isset($listas->NombreContacto))$nombre=$listas->NombreContacto;
-		else $nombre='';
-		if(isset($listas->PaternoContacto))$paterno=$listas->PaternoContacto;
-		else $paterno='';
-		if(isset($listas->MaternoContacto))$materno=$listas->MaternoContacto;
-		else $materno='';
-		if(isset($listas->CargoContacto))$cargo=$listas->CargoContacto;
-		else $cargo='';
-		if(isset($listas->FonoContacto))$telefono=$listas->FonoContacto;
-		else $telefono='';
-		if(isset($listas->Identificacion))$identificacion=$listas->Identificacion;
-		else $identificacion='';
-		if(isset($listas->Correo))$correo=$listas->Correo;
-		else $correo='';
+// $lista=obtenerListaContactosEmpresaDelServicio($codigo_cliente);		
+// foreach ($lista->contactos as $listas) {		
+// 	if($contador_contactos==0){
+// 		$sql="DELETE FROM clientes_contactos where cod_cliente=$codigo_cliente";
+//         $stmtDelteCont = $dbh->prepare($sql);
+//         $stmtDelteCont->execute(); 
+// 	}
+// 	$vigencia=$listas->Vigencia;
+// 	if($vigencia==1){
+// 		$codigo=$listas->IdContacto;	
+// 		$cod_cliente=$listas->IdCliente;
+// 		if(isset($listas->NombreContacto))$nombre=$listas->NombreContacto;
+// 		else $nombre='';
+// 		if(isset($listas->PaternoContacto))$paterno=$listas->PaternoContacto;
+// 		else $paterno='';
+// 		if(isset($listas->MaternoContacto))$materno=$listas->MaternoContacto;
+// 		else $materno='';
+// 		if(isset($listas->CargoContacto))$cargo=$listas->CargoContacto;
+// 		else $cargo='';
+// 		if(isset($listas->FonoContacto))$telefono=$listas->FonoContacto;
+// 		else $telefono='';
+// 		if(isset($listas->Identificacion))$identificacion=$listas->Identificacion;
+// 		else $identificacion='';
+// 		if(isset($listas->Correo))$correo=$listas->Correo;
+// 		else $correo='';
 
-		$sql="INSERT INTO clientes_contactos(codigo,cod_cliente,nombre,paterno,materno,cargo,telefono,identificacion,correo,cod_estadoreferencial)
-	        VALUES ('$codigo','$cod_cliente','$nombre','$paterno','$materno','$cargo','$telefono','$identificacion','$correo','$vigencia')";
-	     $stmtInsertContactos = $dbh->prepare($sql);
-	     $stmtInsertContactos->execute();  
-	     $contador_contactos++;
-	}
-}
+// 		$sql="INSERT INTO clientes_contactos(codigo,cod_cliente,nombre,paterno,materno,cargo,telefono,identificacion,correo,cod_estadoreferencial)
+// 	        VALUES ('$codigo','$cod_cliente','$nombre','$paterno','$materno','$cargo','$telefono','$identificacion','$correo','$vigencia')";
+// 	     $stmtInsertContactos = $dbh->prepare($sql);
+// 	     $stmtInsertContactos->execute();  
+// 	     $contador_contactos++;
+// 	}
+// }
 ?>

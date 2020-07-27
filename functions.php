@@ -3861,7 +3861,7 @@ function descargarPDFFacturas($nom,$html,$codFactura){
     $canvas2->set_opacity(.2); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
   } 
 
@@ -3908,7 +3908,7 @@ function descargarPDFFacturasCopiaCliente($nom,$html,$codFactura){
     $canvas2->set_opacity(.2); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
    } 
     $pdf = $dompdf->output();
@@ -6611,7 +6611,7 @@ function eliminar_acentos($cadena){
     $canvas2->set_opacity(.2); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
    } 
 
@@ -8051,19 +8051,29 @@ function sumatotaldetallefactura($cod_factura){
 
   function obtenerLibretaBancariaFacturaVenta($codigo){
     $dbh = new Conexion();
-    $stmtVerif = $dbh->prepare("SELECT cod_libretabancariadetalle FROM facturas_venta where codigo=$codigo");
+    $sql="SELECT cod_libretabancariadetalle from libretas_bancariasdetalle_facturas where cod_facturaventa in ($codigo) group by cod_libretabancariadetalle";
+    // $sql="SELECT cod_libretabancariadetalle FROM facturas_venta where codigo=$codigo";
+    $stmtVerif = $dbh->prepare($sql);
     $stmtVerif->execute();
-    $resultVerif = $stmtVerif->fetch();    
-    $cod_libretabancariadetalle = $resultVerif['cod_libretabancariadetalle'];
-    return $cod_libretabancariadetalle;
+    $codigos_libreta="";
+    while ($row = $stmtVerif->fetch(PDO::FETCH_BOUND)) {
+      $cod_libreta=$row['cod_libretabancariadetalle'];
+      $codigos_libreta.=$cod_libreta.",";
+    }
+    $codigos_libreta=trim($codigos_libreta,",");
+    return $codigos_libreta;
   }
   function obtenerGlosaLibretaBancariaDetalle($codigo){
     $dbh = new Conexion();
-    $stmtVerif = $dbh->prepare("SELECT informacion_complementaria from libretas_bancariasdetalle where codigo=$codigo");
+    $stmtVerif = $dbh->prepare("SELECT informacion_complementaria from libretas_bancariasdetalle where codigo in ($codigo)");
     $stmtVerif->execute();
-    $resultVerif = $stmtVerif->fetch();    
-    $informacion_complementaria = $resultVerif['informacion_complementaria'];
-    return $informacion_complementaria; 
+    $informacion="";
+    while ($row = $stmtVerif->fetch(PDO::FETCH_BOUND)) {
+      $valor=$row['informacion_complementaria'];
+      $informacion.=$valor.", ";
+    }
+    $informacion=trim($informacion,", ");
+    return $informacion; 
   }
   function obtenerIdRolDeIbnorca($codigo){
     $dbh = new Conexion();
@@ -8453,6 +8463,27 @@ function verificarLibretaDetalle($codigo){
       $valor++;
    }
    return($valor);
+}
+function obtenerSumaTotal_solicitudFacturacion($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT sf.cantidad,sf.precio,sf.descuento_bob,sf.descuento_por from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
+  $stmt->execute();
+  $valor=0;
+  $sumaTotalMonto=0;
+  $sumaTotalDescuento_por=0;
+  $sumaTotalDescuento_bob=0;
+  while ($row2 = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $cantidadX=trim($row2['cantidad']);
+    $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
+    $descuento_porX=trim($row2['descuento_por']);
+    $descuento_bobX=trim($row2['descuento_bob']);
+
+    $sumaTotalMonto+=$precioX;
+    $sumaTotalDescuento_por+=$descuento_porX;
+    $sumaTotalDescuento_bob+=$descuento_bobX;
+  }
+  $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
+  return($sumaTotalImporte);
 }
 
 ?>
