@@ -15,6 +15,7 @@ $cod_solicitudfacturacion=$_POST['cod_solicitudfacturacion'];
 $estado_factura=$_POST['estado_factura'];//1 normal, 2 devolucion
 session_start();
 $globalUser=$_SESSION["globalUser"];
+$globalUser=$_SESSION["globalUser"];
 $stmtFActuras = $dbh->prepare("SELECT codigo,nro_factura,nit,razon_social,cod_comprobante,cod_unidadorganizacional,cod_area from facturas_venta where codigo in ($codigos_facturas_x)");
 $stmtFActuras->execute();	
 $stmtFActuras->bindColumn('codigo', $codigo_factura);  	
@@ -23,7 +24,7 @@ $stmtFActuras->bindColumn('nit', $nit_factura);
 $stmtFActuras->bindColumn('razon_social', $rs_factura); 
 $stmtFActuras->bindColumn('cod_comprobante', $cod_comprobante); 
 $stmtFActuras->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional); 
-$stmtFActuras->bindColumn('cod_area', $cod_area); 
+$stmtFActuras->bindColumn('cod_area', $cod_area);
 // $stmtFActuras->bindColumn('cod_solicitudfacturacion', $cod_solicitudfacturacion); 
 $cadenaFacturas="";
 while ($row = $stmtFActuras->fetch()) {
@@ -46,10 +47,11 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 	$codMoneda=1;
 	$codEstadoComprobante=1;
 	$fechaActual=date("Y-m-d H:i:s");		
-	$cod_libretabancaria=obtenerLibretaBancariaFacturaVenta($codigo_factura);
-	$glosa_libreta=obtenerGlosaLibretaBancariaDetalle($cod_libretabancaria);
+	$cod_libretabancaria=obtenerLibretaBancariaFacturaVenta($codigo_factura);//devuelve cadena de codigos de libreta detalle
+	$glosa_libreta=obtenerGlosaLibretaBancariaDetalle($cod_libretabancaria);//la informacion complemetaria de la libreta
 	$tipoComprobante=3;//traspaso
-	$numeroComprobante=obtenerCorrelativoComprobante2($tipoComprobante);	
+	// $numeroComprobante=obtenerCorrelativoComprobante2($tipoComprobante);	
+	// $numeroComprobante=numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante,$codMes);
 	if($cod_solicitudfacturacion!=-100){
 		$sql="cod_unidadorganizacional";
 		$cod_uo_solicitud = obtenerCodUOSolFac($cod_solicitudfacturacion,$sql); 

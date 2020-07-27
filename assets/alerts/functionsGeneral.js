@@ -14907,7 +14907,7 @@ function guardarNuevaCuentaAuxi(){
       if(tipo==null || tipo=='' || tipo==0){
         Swal.fire("Informativo!", "Por favor, Seleccione un tipo de cuenta!", "warning");
       }else{
-        if(proveedor==null || proveedor=='' || proveedor==0){
+        if(proveedor==null || proveedor==''){
             Swal.fire("Informativo!", "Por favor, Seleccione un proveedor o Cliente!", "warning");
         }else{
           $.ajax({
