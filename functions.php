@@ -3861,7 +3861,7 @@ function descargarPDFFacturas($nom,$html,$codFactura){
     $canvas2->set_opacity(.2); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
   } 
 
@@ -3908,7 +3908,7 @@ function descargarPDFFacturasCopiaCliente($nom,$html,$codFactura){
     $canvas2->set_opacity(.2); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
    } 
     $pdf = $dompdf->output();
@@ -6611,7 +6611,7 @@ function eliminar_acentos($cadena){
     $canvas2->set_opacity(.2); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(0, 0, 0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
    } 
 
