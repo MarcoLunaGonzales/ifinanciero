@@ -98,14 +98,14 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 		}	
 		$ordenDetalle=1;//
 		$descripcion=$concepto_contabilizacion;	
-		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_tipopago_total,$descripcion,$ordenDetalle);
+		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_total,0,$descripcion,$ordenDetalle);
 		$ordenDetalle++;
 		if($flagSuccessDet){
 			$descripcion=$concepto_contabilizacion;
 			$cod_cuenta=obtenerValorConfiguracion(62);//cod defecto para la anulacion de facturas
 			$cuenta_axiliar=obtenerValorConfiguracion(63);//cod cuenta auxiliar por defecto para la anulacion de facturas		
 			$cod_proveedor=obtenerCodigoProveedorCuentaAux($cuenta_axiliar);	
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,$cuenta_axiliar,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_total,0,$descripcion,$ordenDetalle);	
+			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,$cuenta_axiliar,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_tipopago_total,$descripcion,$ordenDetalle);	
 		}
 		//buscamos el cod_Detalle_comprobante
 		$cod_comprobante_detalle=0;

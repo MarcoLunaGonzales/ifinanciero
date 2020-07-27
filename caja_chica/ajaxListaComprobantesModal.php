@@ -140,7 +140,7 @@ $cuenta=obtenerCodigoCuentaCajaChica($cod_tcc);
     				<td class="text-right small"><?=number_format($debe, 2, '.', ',');?></td>
     				<td class="text-right small"><?=$haber;?></td>				
     				<td class="td-actions text-right">
-              <?php 
+              <?php               
               $verificar=verificar_codComprobante_cajaChica($codigo_cobt,$codigo_detalle);
               $nombreComprobante=nombreComprobante($codigo_cobt);
               if(!$verificar){?>
