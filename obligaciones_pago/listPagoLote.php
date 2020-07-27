@@ -132,8 +132,8 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
         </div>
     </div>
 
-<div class="fixed-plugin" style="background:rgba(33, 97, 140,0.6);"><!-- #21618C  -->
-  <a href="#" onclick="cargarLotesPago()" class="text-white"><i class="material-icons" style="font-size:40px;">view_comfy</i></a>
+<div class="fixed-plugin" style="background:rgba(227, 155, 3,1);"><!-- #21618C  -->
+  <a href="#" title="Agregar Proveedores" onclick="cargarLotesPago()" class="text-white"><i class="material-icons" style="font-size:40px;">add</i></a>
 </div>
 
 <!-- small modal -->
