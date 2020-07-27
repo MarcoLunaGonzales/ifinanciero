@@ -102,6 +102,16 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         $tipo=$_POST['codigo_archivo'.$ar];
         $descripcion=$_POST['nombre_archivo'.$ar];
         $tipoPadre=2708;
+        $datosArchivo=verificarExisteArchivoSolicitud($tipo,$descripcion,$tipoPadre,$codSolicitud);
+        $codigoArchivo=$datosArchivo[0];
+        $linkArchivo=$datosArchivo[1];
+        if($codigoArchivo!=0){
+          $sqlDel="DELETE FROM archivos_adjuntos where codigo='$codigoArchivo'";
+          $stmtDel = $dbh->prepare($sqlDel);
+          $stmtDel->execute();
+          //borrar de la carpeta
+          unlink($linkArchivo);
+        }
         $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
         VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
         $stmtInsert = $dbh->prepare($sqlInsert);

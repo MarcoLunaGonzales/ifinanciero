@@ -1,4 +1,0 @@
-"nro_orden" cla_servicios
-"estado" cla_servicios
-
-"descripcion" simulaciones_servicios_auditores
