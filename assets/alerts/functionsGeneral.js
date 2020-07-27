@@ -14039,6 +14039,13 @@ function quitarArchivoSistemaAdjunto(fila,codigo,tipo){
           if (result.value) {
             if(tipo==1){
               quitarElementoAdjunto(fila);
+            }else{
+              $("#existe_div_archivo_cabecera"+fila).remove();
+              $("#existe_archivo_cabecera"+fila).remove();
+              $("#label_documentos_cabecera"+fila).removeClass("btn-success");
+              $("#label_documentos_cabecera"+fila).removeClass("btn-fab");
+              $("#label_documentos_cabecera"+fila).addClass("btn-warning");
+              $("#label_documentos_cabecera"+fila).html('<i class="material-icons">publish</i> Subir Archivo');
             }
             quitarArchivoAdjuntoRecursos(codigo);           
             return(true);

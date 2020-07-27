@@ -241,10 +241,10 @@ $stmtb->bindColumn('nombre', $nombre);
                                   $datosDetalle=obtenerDatosComprobanteDetalle($codComprobanteDetalle);
 
                                   $facturaFecha[$filaFac]="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
-                                  $facturaNumero[$filaFac]="<b class='text-success'>COMP: ".nombreComprobante($codComprobante)."</b>";
-                                  $facturaNit[$filaFac]="<b class='text-success'>".$codComprobanteDetalle."</b>";
-                                  $facturaRazonSocial[$filaFac]="<b class='text-success'>".$datosDetalle[0]."</b>";
-                                  $facturaDetalle[$filaFac]="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
+                                  $facturaNumero[$filaFac]="<b class='text-success'>".nombreComprobante($codComprobante)."</b>";
+                                  $facturaNit[$filaFac]="<b class='text-success'>-</b>";
+                                  $facturaDetalle[$filaFac]="<b class='text-success'>".$datosDetalle[0]."</b>";
+                                  $facturaRazonSocial[$filaFac]="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
                                   $facturaMonto[$filaFac]="<b class='text-success'>".$datosDetalle[1]."</b>";
                                   $facturaRazonSocial[$filaFac].="<br>".$facturaDetalle[$filaFac];
                                 }
