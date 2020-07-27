@@ -6,7 +6,8 @@ require_once 'functions.php';
 require_once 'functionsGeneral.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
-$globalAdmin=$_SESSION["globalAdmin"];
+$globalUnidad=$_SESSION["globalUnidad"];
+$globalArea=$_SESSION["globalArea"];
 $globalUser=$_SESSION["globalUser"];
 
 $fechaActual=date("m/d/Y");
@@ -18,24 +19,6 @@ $fechaHasta=$y."-".$m."-".$d;
 
 $fechaDesde2=$y."-01-01";
 $fechaHasta2=$y."-12-31";
-
-$dbh = new Conexion();
-$stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.nivel from plan_cuentas p order by p.numero");
-$stmt->execute();
-$i=0;
-  echo "<script>var array_cuenta=[];</script>";
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-	 $codigoX=$row['codigo'];
-	 $numeroX=$row['numero'];
-	 $nombreX=$row['nombre'];
-	 $nivelX=$row['nivel'];
-	 $nombreCuenta=formateaPlanCuenta($numeroX." ".$nombreX,$nivelX);
-	 $arrayNuevo[$i][0]=$codigoX;
-	 $arrayNuevo[$i][1]=$numeroX;
-	 $arrayNuevo[$i][2]=$nombreCuenta;
-	 $arrayNuevo[$i][3]=$nivelX;
-		$i++;
-	}
 ?>
 
 <div class="content">
@@ -47,9 +30,9 @@ $i=0;
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Solicitud Facturació</h4>
+                  <h4 class="card-title">Reporte Solicitud Facturación</h4>
                 </div>
-                <form class="" action="<?=$urlReporteCompras?>" target="_blank" method="POST">
+                <form class="" action="<?=$urlReporte_print_solicitud_facturacion?>" target="_blank" method="POST">
                 <div class="card-body">
                   	<div class="row">
 		                <label class="col-sm-2 col-form-label">Unidad</label>
@@ -64,6 +47,24 @@ $i=0;
 								    <?php 
 								    while ($row = $stmt->fetch()){ ?>
 								      	<option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>" <?=($row["codigo"]==$globalUnidad)?"selected":""?> ><?=$row["abreviatura"];?></option><?php 
+								 	} ?>
+								</select>		                		
+		                     </div>
+		                </div>				             
+                  	</div><!--div row-->
+                  	<div class="row">
+		                <label class="col-sm-2 col-form-label">Area</label>
+		                <div class="col-sm-8">
+		                	<div class="form-group">		                		
+	                			<?php
+								$sqlUO="SELECT a.codigo, a.nombre,a.abreviatura from areas a order by 2";
+								$stmt = $dbh->prepare($sqlUO);
+								$stmt->execute();
+								?>
+								<select class="selectpicker form-control form-control-sm" name="areas[]" id="areas" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+								    <?php 
+								    while ($row = $stmt->fetch()){ ?>
+								      	<option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>" <?=($row["codigo"]==$globalArea)?"selected":""?> ><?=$row["abreviatura"];?></option><?php 
 								 	} ?>
 								</select>		                		
 		                     </div>
@@ -100,7 +101,7 @@ $i=0;
 								$stmtPersonal = $dbh->prepare($sql);
 								$stmtPersonal->execute();
 								?>
-								<select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+								<select class="selectpicker form-control form-control-sm" name="personal[]" id="personal" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
 								    <?php 
 								    while ($rowPersonal = $stmtPersonal->fetch()){ ?>
 								      	<option value="<?=$rowPersonal["cod_personal"];?>"  <?=($rowPersonal["cod_personal"]==$globalUser)?"selected":""?> ><?=$rowPersonal["nombre_personal"];?></option><?php 
@@ -118,7 +119,7 @@ $i=0;
 								$stmtEstado = $dbh->prepare($sql);
 								$stmtEstado->execute();
 								?>
-								<select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+								<select class="selectpicker form-control form-control-sm" name="estado[]" id="estado" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
 								    <?php 
 								    while ($rowEstado = $stmtEstado->fetch()){ ?>
 								      	<option value="<?=$rowEstado["cod_estadosolicitudfacturacion"];?>" ><?=$rowEstado["nombre_estado"];?></option><?php 

@@ -519,11 +519,11 @@
                             }  
                           }
                           //LA LIBRETA DEBE ESTAR RELACIONADA A LA CUENTA DE LA LIBRETA BANCARIA 
-                          if(detalleLibretaSelect==false && libretasBancarias==false && $("#tipo_comprobante").val()!=4){
+                          /*if(detalleLibretaSelect==false && libretasBancarias==false && $("#tipo_comprobante").val()!=4){
                                 $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un detalle de la Libreta Bancaria para Cerrar.");
                                 $('#modalAlert').modal('show');
                                 return false;
-                          }
+                          }*/
                           if( (tipoEstadoCuenta==2 && debeZ>0) ){
                             for (var f = 0; f < itemEstadosCuentas[i].length; f++) {
                               if(itemEstadosCuentas[i][f].monto!=debeZ){
@@ -1009,6 +1009,95 @@
                 text:      '<i class="material-icons">print</i>',
                 titleAttr: 'Imprimir',
                 title: 'Reporte Libro Diario',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            }
+          ]
+        });
+        var table_diario=$('#reporte_solicitud_facturacion').DataTable({
+          "paging":   false,
+            "info":     false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "order": false,
+            "searching": false,
+            fixedHeader: {
+              header: true,
+              footer: true
+            },
+            dom: 'Bfrtip',
+            buttons:[
+            {
+                extend: 'copy',
+                text:      '<i class="material-icons">file_copy</i>',
+                titleAttr: 'Copiar',
+                title: 'Reporte Solicitud Facturación',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'csv',
+                text:      '<i class="material-icons">list_alt</i>',
+                titleAttr: 'CSV',
+                title: 'Reporte Solicitud Facturación',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'excel',
+                text:      '<i class="material-icons">assessment</i>',
+                titleAttr: 'Excel',
+                title: 'Reporte Solicitud Facturación',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'pdf',
+                text:      '<i class="material-icons">picture_as_pdf</i>',
+                titleAttr: 'Pdf',
+                title: 'Reporte Solicitud Facturación',
+                //messageTop:'Reporte Solicitud Facturación',
+                exportOptions: {
+                        columns: ':visible'
+                },
+              customize: function ( doc) {
+                   doc['footer']=(function(page, pages) { return {
+                         columns: ['IBNORCA - REPORTES',{alignment: 'right',text: [{ 
+                              text: page.toString(), italics: true 
+                             },' de ',
+                             { text: pages.toString(), italics: true }]
+                          }],
+                         margin: [10, 5]
+                        }
+                   });
+                doc.content.splice( 1, 0, {
+                    margin: [ 0, -80, 0, 12 ],
+                    alignment: 'left',
+                    image: imageLogo,
+                    width:50,
+                    height:50, 
+                } );
+                doc.content.splice( 1, 0, {
+                    margin: [ 100, 0, 0, 12 ],
+                    text: [{
+                      text: 'Unidad: '+unidad_reporte_diario+' \n Fecha: '+fecha_reporte_diario+' \n Tipo: '+tipo_reporte_diario,
+                      bold: true,
+                      fontSize: 9,
+                      alignment: 'right'
+                   }]        
+                } );
+              }
+            },
+            {
+                extend: 'print',
+                text:      '<i class="material-icons">print</i>',
+                titleAttr: 'Imprimir',
+                title: 'Reporte Solicitud Facturación',
                 exportOptions: {
                     columns: ':visible'
                 }

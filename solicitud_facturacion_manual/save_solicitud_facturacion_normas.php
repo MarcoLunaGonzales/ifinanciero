@@ -26,7 +26,12 @@ try {
     $nit = $_POST["nit"];
     $observaciones = $_POST["observaciones"];
     $observaciones_2 = $_POST["observaciones_2"];
-    $persona_contacto = $_POST["persona_contacto"];
+    if(isset($_POST["persona_contacto"])){
+        $persona_contacto = $_POST["persona_contacto"];    
+    }else{
+        $persona_contacto = 0;
+    }
+    
     
 
     $modal_totalmontos = $_POST["modal_totalmontos"];
