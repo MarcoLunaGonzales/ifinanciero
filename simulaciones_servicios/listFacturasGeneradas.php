@@ -10,7 +10,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
   //datos registrado de la simulacion en curso
   $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal
- from facturas_venta f where cod_estadofactura in (1,2,3) order by  f.fecha_factura desc limit 0, 50");
+ from facturas_venta f where cod_estadofactura in (1,2,3) order by  f.fecha_factura desc limit 50");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_factura);
   $stmt->bindColumn('cod_sucursal', $cod_sucursal);
@@ -57,7 +57,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                     </div>
                   </div>
                   <div class="card-body">
-                    <table class="table" id="tablePaginator">
+                    <table class="table" id="tablePaginator50NoFinder">
                       <thead>
                         <tr>
                           <!-- <th class="text-center"></th> -->
@@ -87,30 +87,6 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $cadenaFacturas.="F ".$nro_factura_x.", ";
                               $codigos_facturas.=$codigo_x.",";
                             }
-                            $cod_tipopago_anticipo=obtenerValorConfiguracion(48);//tipo pago credito
-                            $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$cod_solicitudfacturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista                            
-                            $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
-                            ?>
-                          <tr>
-                            <!-- <td align="center"><?=$index;?></td> -->
-                            <td><?=$nro_factura;?></td>
-                            <!-- <td><?=$sucursal;?></td> -->
-                            <td><?=$fecha_factura?><br><?=$hora_factura?></td>
-                            <td class="text-left"><small><?=mb_strtoupper($razon_social);?></small></td>
-                            <td class="text-right"><?=$nit;?></td>
-                            <td class="text-right"><?=formatNumberDec($importe);?></td>
-                            <td><small><?=mb_strtoupper($observaciones);?></small></td>                            
-                            <td style="color: #ff0000;"><?=mb_strtoupper($observaciones_solfac)?></td>
-                            <td class="td-actions text-right">
-                              <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br>
-                              <?php                                
-                                if(($cod_estadofactura==1)){?>
-                                  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
-                                    <i class="material-icons" title="Enviar Correo">email</i>
-                                  </button>
-                                  <?php
-                                } if($cod_estadofactura!=4){
-
                             $cadenaFacturas=trim($cadenaFacturas,", ");//todas las facturas del la solicitud
                             $codigos_facturas=trim($codigos_facturas,", ");//todas las facturas del la solicitud
                           }else{
@@ -166,6 +142,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 </button>
                                 <?php
                               } if($cod_estadofactura!=4){?>  
+
                                 <div class="btn-group dropdown">
                                   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                      <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>

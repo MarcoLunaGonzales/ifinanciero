@@ -253,6 +253,16 @@
              'scrollCollapse': false,
              "scrollX": false*/
         } );
+        $('#tablePaginator50NoFinder').DataTable( {
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            fixedHeader: {
+              header: true
+            },
+            "ordering": false,
+            "searching":false
+        } );
         $('#tablePaginator100').DataTable( {
             "pageLength": 100,
             "language": {
