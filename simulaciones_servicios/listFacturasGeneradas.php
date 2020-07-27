@@ -57,7 +57,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                     </div>
                   </div>
                   <div class="card-body">
-                    <table class="table" id="tablePaginator">
+                    <table class="table" id="tablePaginator50NoFinder">
                       <thead>
                         <tr>
                           <!-- <th class="text-center"></th> -->

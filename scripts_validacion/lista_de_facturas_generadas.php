@@ -33,7 +33,7 @@ $stmt->bindColumn('cod_estadofactura', $cod_estadofactura);
             
                   </div>
                   <div class="card-body">
-                      <table class="table" id="tablePaginator">
+                      <table class="table">
                         <thead>
                           <tr>                            
                             <th><small>Nro Fac.</small></th>
