@@ -15430,7 +15430,7 @@ function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
   }else{
    var saldo=$("#saldo_x").val();
    var url = "simulaciones_servicios/ajax_listado_libreta_bancaria.php";
-   var parametros={"saldo":saldo,"tipo_listado":0,"codigo_lib":idLib};
+   var parametros={"saldo":saldo,"tipo_listado":1,"codigo_lib":idLib};
    if($("#cantidad_filas_libretas").length>0){
      $("#cantidad_filas_libretas").val(0);
      $("#datos_libreta_bancaria_detalle").html("");
@@ -15541,6 +15541,7 @@ function ajax_listado_libreta_bancaria_filtrar(){
       $('.selectpicker').selectpicker(["refresh"]);
       cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
       cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
+      $('.list-de-com').addClass("d-none");
     }
   }
   ajax.send(null);

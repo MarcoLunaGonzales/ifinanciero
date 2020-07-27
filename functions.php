@@ -8526,6 +8526,40 @@ function obtenerLinkDirectoArchivoAdjunto($codigo){
    }
    return $direccion; 
 }
+
+function obtenerMontoTotalLibretaBancariaDetalle($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT sum(fv.importe) as monto_factura from facturas_venta fv join libretas_bancariasdetalle_facturas lf on lf.cod_facturaventa=fv.codigo where lf.cod_libretabancariadetalle=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row["monto_factura"];
+   }
+   return $valor; 
+}
+
+function obtenerSaldoLibretaBancariaDetalle($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT ld.* from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo where lf.cod_facturaventa = (SELECT cod_facturaventa from libretas_bancariasdetalle_facturas where cod_libretabancariadetalle=$codigo) order by fecha_hora;";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $montoFactura=obtenerMontoTotalLibretaBancariaDetalle($codigo);
+  $saldo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      if($montoFactura>=$row['monto']){
+        $saldo=0;
+        $montoFactura=$montoFactura-$row['monto'];
+      }else{
+        $saldo=$row['monto']-$montoFactura;
+        $montoFactura=0;
+      }
+      if($row["codigo"]==$codigo){
+       break;
+      }
+   }
+   return $saldo; 
+}
 ?>
 
 

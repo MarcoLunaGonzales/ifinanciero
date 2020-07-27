@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 function obtenerDatosLibreta($codigo){
   require_once __DIR__.'/../conexion.php';
+  require_once __DIR__.'/../functions.php';
   $dbh = new Conexion();
   $sqlX="SET NAMES 'utf8'";
   $stmtX = $dbh->prepare($sqlX);
@@ -113,6 +114,7 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $sumaImporte=0;
            $datosDetalleFac=[];
            $indexAux=0;
+           $existeFactura=0;
            while ($rowFacLib = $stmtFacLibreta->fetch(PDO::FETCH_ASSOC)) {
               if($rowFacLib['cod_estadofactura']!=2){
                $datosFacturas=obtenerDatosFacturaVenta($rowFacLib['codigo']);
@@ -122,11 +124,14 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
                $datosDetalleFac[$indexAux]['RSFactura']=$datosFacturas[3];
                $datosDetalleFac[$indexAux]['DetalleFactura']=$datosFacturas[4];
                $datosDetalleFac[$indexAux]['MontoFactura']=number_format($datosFacturas[5],2,".","");
+                          
                $sumaImporte+=$datosFacturas[5];
                $indexAux++;
               } 
             }
-            $saldoFactura=$rowLibDetalle['monto']-$sumaImporte;
+            //calcular Saldo
+            $saldoFactura=obtenerSaldoLibretaBancariaDetalle($rowLibDetalle['codigo']);      
+            
             $datosDetalle[$index]['Saldo']=$saldoFactura; 
             $datosDetalle[$index]['DetalleFacturas']=$datosDetalleFac;  
            /*}else{
