@@ -12820,9 +12820,11 @@ function botonBuscarEstudiantesCapacitacion(){
   var valor_fecha_inscripcion=$("#fecha_inscripcion").val(); 
   var q=$("#q").val();   
   var r=$("#r").val();   
+  var u=$("#r").val();   
+  var s=$("#r").val();   
   var url='index.php?opcion=listFacturasServicios_costos_estudiantes&ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente+'&fecha='+valor_fecha_inscripcion+'&nombre_curso='+valor_nombre_curso;
   if(q!=0){    
-    location.href=url+'&q='+q+'&r='+r;     
+    location.href=url+'&q='+q+'&r='+r+'&u='+u+'&s='+s;
   }else{    
     location.href=url;     
   }
@@ -12861,10 +12863,12 @@ function botonBuscarEmpresasCapacitacion(){
   var valor_glosa=$("#glosa").val();   
   var q=$("#q").val();   
   var r=$("#r").val(); 
+  var u=$("#r").val(); 
+  var s=$("#r").val(); 
 
   var url='index.php?opcion=listFacturasServicios_costos_empresas&cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa;
    if(q!=0){    
-    location.href=url+'&q='+q+'&r='+r;     
+    location.href=url+'&q='+q+'&r='+r+'&u='+u+'&s='+s;     
   }else{    
     location.href=url;     
   }

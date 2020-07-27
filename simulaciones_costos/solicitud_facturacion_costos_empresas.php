@@ -8,9 +8,14 @@ $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  $r=$_GET['r'];  
-  $s=$_GET['s'];
+  $r=$_GET['r'];   
+  $u=$r;
+  $s=$r;
+}
+if(isset($_GET['u']))
+{
   $u=$_GET['u'];
+  $s=$_GET['s'];
 }
 // $sql="SELECT nombre,cod_area,cod_uo from simulaciones_costos where codigo=$codigo_simulacion";
 // $stmtSimu = $dbh->prepare($sql);
