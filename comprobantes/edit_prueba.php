@@ -627,6 +627,7 @@ $stmt->execute();
     			                              <a title="Libretas Bancarias" id="libretas_bancarias<?=$idFila?>" href="#" onclick="verLibretasBancarias(<?=$idFila;?>);" class="btn btn-sm btn-primary btn-fab d-none"><span class="material-icons text-dark">ballot</span><span id="nestadolib<?=$idFila?>" class="bg-warning <?=$estiloLibreta?>"></span></a>       
     			                              <input type="hidden" id="cod_detallelibreta<?=$idFila?>" name="cod_detallelibreta<?=$idFila?>" value="<?=$codDetalleLibreta?>">
     			                              <input type="hidden" id="descripcion_detallelibreta<?=$idFila?>" value="<?=$descripcionDetalleLibreta?>">
+    			                              <input type="hidden" id="tipo_libretabancaria<?=$idFila?>" value="">
     			                            </div>  
     			                        </div>
     		                        </div>

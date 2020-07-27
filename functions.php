@@ -8499,6 +8499,32 @@ function importe_total_cajachica($cod_cajachica){
   return $monto_anterior_x;
 }
 
+function verificarExisteArchivoSolicitud($tipo,$descripcion,$tipoPadre,$codSolicitud){
+  $dbh = new Conexion();
+  $sql="SELECT codigo,direccion_archivo FROM archivos_adjuntos 
+    where cod_tipoarchivo=$tipo and descripcion='$descripcion' and cod_tipopadre=$tipoPadre and cod_padre=0 and cod_objeto=$codSolicitud";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $codigo=0;$direccion="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row["codigo"];
+      $direccion=$row["direccion_archivo"];
+   }
+   return array($codigo,$direccion); 
+}
+
+function obtenerLinkDirectoArchivoAdjunto($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT direccion_archivo FROM archivos_adjuntos 
+    where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $direccion="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $direccion=$row["direccion_archivo"];
+   }
+   return $direccion; 
+}
 ?>
 
 

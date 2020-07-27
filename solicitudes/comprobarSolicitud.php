@@ -581,6 +581,14 @@ if(isset($_GET['cod'])){
                        <?php
                       }else{
                         ?>
+                        <small id="existe_archivo_cabecera<?=$filaA?>"></small>
+
+                        <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
+                        <span class="input-archivo">
+                          <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
+                        </span>
+                        <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-success btn-sm"><i class="material-icons">publish</i> Cambiar Archivo
+                        </label>
                         <div class="btn-group">
                         <a href="#" class="btn btn-button btn-sm">Registrado</a>
                         <a class="btn btn-button btn-danger btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
@@ -598,6 +606,7 @@ if(isset($_GET['cod'])){
                   $filaE=0;
                   while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
                      $filaE++;
+                     $filaA++;
                      $codigoArchivoX=$rowArchivo['codigo'];
                      $codigoX=$rowArchivo['cod_tipoarchivo'];
                      $nombreX=$rowArchivo['descripcion'];
@@ -609,10 +618,18 @@ if(isset($_GET['cod'])){
                      }
 
                   ?>
-                  <tr>
-                    <td class="text-left"><input type="hidden" name="codigo_archivoregistrado<?=$filaE?>" id="codigo_archivoregistrado<?=$filaE?>" value="<?=$codigoArchivoX;?>">Otros Documentos</td>
+                  <tr id="fila_archivo<?=$filaA?>">
+                    <td class="text-left"><input type="hidden" name="codigo_archivoregistrado<?=$filaE?>" id="codigo_archivoregistrado<?=$filaE?>" value="<?=$codigoArchivoX;?>">Otros Documentos <a href="#" title="Quitar" class="btn btn-default btn-round btn-sm btn-fab float-right" onClick="quitarArchivoSistemaAdjunto(<?=$filaA?>,<?=$codigoArchivoX;?>,1)"><i class="material-icons">delete_outline</i></a></td>
                     <td class="text-center"><?=$Obli?></td>
                     <td class="text-right">
+                      <small id="existe_archivo_cabecera<?=$filaA?>"></small>
+
+                        <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
+                        <span class="input-archivo">
+                          <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
+                        </span>
+                        <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-success btn-sm"><i class="material-icons">publish</i> Cambiar Archivo
+                        </label>
                       <div class="btn-group">
                         <a href="#" class="btn btn-button btn-sm" >Registrado</a>  
                         <a class="btn btn-button btn-danger btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
@@ -626,7 +643,7 @@ if(isset($_GET['cod'])){
                 </tbody>
               </table>
               <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntos" name="cantidad_archivosadjuntos">
-              <input type="hidden" value="<?=$filaE+$filaA?>" id="cantidad_archivosadjuntosexistentes" name="cantidad_archivosadjuntosexistentes">
+              <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntosexistentes" name="cantidad_archivosadjuntosexistentes">
             </div>
       </div>
       <div class="modal-footer">
