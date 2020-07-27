@@ -68,7 +68,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
         $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
       }
 }
-
+$cod_unidadX=5; //crear comprobante devengado en LA PAZ
   //crear el comprobante
     $codComprobante=obtenerCodigoComprobante();
 
@@ -259,17 +259,19 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
               $haberRet=$retenciones[$j]['haber'];
               $glosaX=$retenciones[$j]['glosa'];
               $ii=$retenciones[$j]['numero']; 
-
-              if($retenciones[$j]['debe_haber']==1){
-                $totalRetencion+=(float)$debeRet;
-              }else{
-                $totalRetencion+=(float)$haberRet;
-              }   
-              $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-              $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-              VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaRetencion', '$cuentaAuxiliar', '$unidadDetalleRet', '$areaRet', '$debeRet', '$haberRet', '$glosaX', '$ii')";
-              $stmtDetalle = $dbh->prepare($sqlDetalle);
-              $flagSuccessDetalle=$stmtDetalle->execute();
+              
+              if($cuentaRetencion!=0){ //validar cuenta 0
+               if($retenciones[$j]['debe_haber']==1){
+                 $totalRetencion+=(float)$debeRet;
+               }else{
+                 $totalRetencion+=(float)$haberRet;
+               }   
+               $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+               $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+               VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaRetencion', '$cuentaAuxiliar', '$unidadDetalleRet', '$areaRet', '$debeRet', '$haberRet', '$glosaX', '$ii')";
+               $stmtDetalle = $dbh->prepare($sqlDetalle);
+               $flagSuccessDetalle=$stmtDetalle->execute();
+              }
 
               //$sumaDevengado+=$totalRetencion;   
               }
