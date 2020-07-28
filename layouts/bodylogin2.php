@@ -406,7 +406,7 @@
                     envio=1;
                   }else{
                     for (var i = 0; i < numFilas; i++) {
-                      if($("#debe"+(i+1)).val()==""&&$("#haber"+(i+1)).val()==""){
+                      if(($("#debe"+(i+1)).val()==""&&$("#haber"+(i+1)).val()=="")||$("#debe"+(i+1)).val()==0&&$("#haber"+(i+1)).val()==0){
                         mensaje+="<p>Todas las filas deben tener al menos un DEBE ó un HABER.</p>";
                         $('#msgError').html(mensaje);
                         $('#modalAlert').modal('show');
@@ -694,7 +694,7 @@
             if($('#obligatorio_file'+(i+1)).length>0){
               if($('#obligatorio_file'+(i+1)).val()==1){
                 if($('#documentos_cabecera'+(i+1)).length>0){
-                  if($('#documentos_cabecera'+(i+1)).val()==""){
+                  if($('#documentos_cabecera'+(i+1)).val()==""&&!($("#existe_archivo_cabecera"+(i+1)).length>0)){
                      contArchOblig++; 
                      break;
                   }

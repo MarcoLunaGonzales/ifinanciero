@@ -73,13 +73,13 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 					// // $monto_tipopago_total=0;
 					// while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {								
 					// 	if($estado_libreta==0){//cueenta de libreta
-			  //               $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
-			  //               $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
-			  //           }elseif($estado_libreta==1){//contra cuenta de libreta
-			  //               $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
-					// 		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);					                
-			  //           }
-					// }
+				  //               $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
+				  //               $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+				  //           }elseif($estado_libreta==1){//contra cuenta de libreta
+				  //               $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
+						// 		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);					                
+				  //           }
+						// }
 					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_libretas_X) order by  monto desc";
 					$stmtDetalleTipoPago = $dbh->prepare($sqlTipopago);
 					$stmtDetalleTipoPago->execute();							
@@ -134,6 +134,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
 					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle);
 				}elseif($cod_tipopago==$cod_tipopago_anticipo && $cod_estado_cuenta_x!=0){//tipo de pago anticipo en $cod_estado_cuenta_x viene el codigo de estado de cuenta
+					$cod_compte_origen=obtenerCod_comprobanteDetalleorigen($cod_estado_cuenta_x);
 					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
 					$stmtdetalleCom = $dbh->prepare("SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante and orden=$ordenDetalle");
 					//en este caso insertamos la contra cuenta del estado de cuenta, para ello necesitamos el codigo del comprobnate detalle
@@ -144,7 +145,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 					}
 					$cuenta_axiliar=obtenerValorConfiguracion(63);//cod cuenta auxiliar por defecto para la anulacion de facturas		
 					$cod_proveedor=obtenerCodigoProveedorCuentaAux($cuenta_axiliar);	
-					$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta,$monto_tipopago_total,$cod_proveedor,'$fechaActual','$cod_estado_cuenta_x',$cuenta_axiliar,'1','$concepto_contabilizacion')";
+					$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta,$monto_tipopago_total,$cod_proveedor,'$fechaActual','$cod_compte_origen',$cuenta_axiliar,'1','$concepto_contabilizacion')";
 					// echo $sqlEstadoCuenta;
 		            $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
 		            $flagSuccess=$stmtEstadoCuenta->execute(); 

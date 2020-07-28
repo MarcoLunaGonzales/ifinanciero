@@ -42,14 +42,20 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
            
     } else {
         //para el numero correlativo y el monto anterior
-        $stmtCC = $dbh->prepare("SELECT numero,monto_reembolso from caja_chica where cod_estadoreferencial=1 and cod_tipocajachica=$cod_tcc order by codigo desc LIMIT 1");
+        $sql="SELECT numero,codigo,monto_inicio from caja_chica where cod_estadoreferencial=1 and cod_tipocajachica=$cod_tcc order by codigo desc LIMIT 1";
+        $stmtCC = $dbh->prepare($sql);
+        // echo $sql;
         $stmtCC->execute();
         $resultCC = $stmtCC->fetch();
         $numero_caja_chica_aux = $resultCC['numero'];
-        $monto_anterior = $resultCC['monto_reembolso'];//sacamos el monto anterior de caja chica
+        $monto_inicio_anterior = $resultCC['monto_inicio'];
+        $cod_cajachica = $resultCC['codigo'];//sacamos el monto anterior de caja chica
         if($numero_caja_chica_aux==null){
             $numero_caja_chica_aux=0;
         }
+        //sacamos saldo
+        $monto_anterior_x=importe_total_cajachica($cod_cajachica);
+        $monto_anterior=$monto_inicio_anterior-$monto_anterior_x;
         //$codigo=$codigo_caja_chica_aux+1;
         $cod_tipocajachica = 0;
         $fecha = "";

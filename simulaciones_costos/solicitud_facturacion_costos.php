@@ -16,11 +16,15 @@ $cod_area = $resultSimu['cod_area'];
 $cod_uo = $resultSimu['cod_uo'];
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  $r=$_GET['r'];  
+  $r=$_GET['r'];
+  $u=$r;
+  $s=$r;
+}
+if(isset($_GET['u']))
+{
   $u=$_GET['u'];
   $s=$_GET['s'];
 }
-
 
 ?>
 <div class="content">

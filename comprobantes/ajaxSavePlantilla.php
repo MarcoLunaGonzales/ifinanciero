@@ -22,7 +22,7 @@ $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
-$data = obtenerComprobante($_GET['codigo']);
+$data = obtenerComprobante($_POST['codigo']);
 // bindColumn
 $data->bindColumn('codigo', $codigo);
 $data->bindColumn('cod_gestion', $gestion);
@@ -32,10 +32,10 @@ $data->bindColumn('cod_tipocomprobante', $tipoComprobante);
 $data->bindColumn('numero', $nroCorrelativo);
 $data->bindColumn('glosa', $glosaComprobante);
 
-if(isset($_GET['codigo'])){
+if(isset($_POST['codigo'])){
 	$globalCode=obtenerComprobantePlantilla();
-  $cantidadFilas=$_GET["cantidad_filas"];
-  $detalles= json_decode($_GET['det']);
+  $cantidadFilas=$_POST["cantidad_filas"];
+  $detalles= json_decode($_POST['det']);
 }else{
 	$globalCode=0;
   $cantidadFilas=0;
@@ -48,8 +48,8 @@ if(isset($_GET['codigo'])){
     $nombre_archivo=$carpeta."/comprobantes_detalle_json.json";
 
 //guardar cabevera
-$json[0][0]->tipo_comprobante=$_GET['tipo'];
-$json[0][0]->glosa=$_GET['glosa'];
+$json[0][0]->tipo_comprobante=$_POST['tipo'];
+$json[0][0]->glosa=$_POST['glosa'];
 //guardar las ediciones
 for ($i=0;$i<cantidadF($detalles);$i++){
   $cuenta=$detalles[$i]->cuenta;
@@ -85,7 +85,7 @@ for ($i=0;$i<cantidadF($detalles);$i++){
         if($re= fwrite($fh, $jsonencoded)){
             echo "Se ha ejecutado correctamente";
             $dbh = new Conexion();
-            $sqlInsert="INSERT INTO plantillas_comprobante ( cod_unidadorganizacional, titulo, descripcion, archivo_json, cod_personal) VALUES ( '$globalUnidad','".$_GET['titulo']."', '".$_GET['des']."', '$jsonencoded', '$globalUser')";
+            $sqlInsert="INSERT INTO plantillas_comprobante ( cod_unidadorganizacional, titulo, descripcion, archivo_json, cod_personal) VALUES ( '$globalUnidad','".$_POST['titulo']."', '".$_POST['des']."', '$jsonencoded', '$globalUser')";
             $stmtInsert = $dbh->prepare($sqlInsert);
             $stmtInsert->execute();
         }else{

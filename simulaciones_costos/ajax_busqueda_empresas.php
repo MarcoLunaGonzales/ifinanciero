@@ -125,7 +125,7 @@ $sql.=" order by pc.IdCurso desc";
                                 <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a><?php 
                               }
                               if(isset($_GET['q'])){ ?>
-                                <a href='<?=$urlregistro_solicitud_facturacion_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=0&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>' rel="tooltip" class="btn" style="background-color: #0489B1;">
+                                <a href='<?=$urlregistro_solicitud_facturacion_empresas?>&codigo=<?=$idEmpresa?>&cod_simulacion=0&IdCurso=<?=$IdCurso;?>&cod_facturacion=0&q=<?=$q?>&r=<?=$r?>&u=<?=$u?>&s=<?=$s?>' rel="tooltip" class="btn" style="background-color: #0489B1;">
                                   <i class="material-icons" title="Solicitar Facturación">receipt</i>
                                 </a><?php 
                               }else{ ?>

@@ -7193,7 +7193,7 @@ function obtenerFechaSimulacionCosto($codigo){
 function verificar_codComprobante_cajaChica($codigo_cobt,$codigo_detalle){
   $dbh = new Conexion();  
   $sw=false;
-  $sql="SELECT codigo from caja_chicareembolsos where cod_comprobante=$codigo_cobt and cod_comprobante_detalle=$codigo_detalle and cod_estadoreferencial=1";
+  $sql="SELECT c.codigo from caja_chicareembolsos c,caja_chica cc where c.cod_cajachica=cc.codigo and c.cod_estadoreferencial=1 and cc.cod_estadoreferencial=1 c.cod_comprobante=$codigo_cobt and c.cod_comprobante_detalle=$codigo_detalle";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -7211,13 +7211,14 @@ function verificarArchivoAdjuntoExistente($tipo,$padre,$objeto,$codArchivo){
    $sql="SELECT * FROM archivos_adjuntos WHERE cod_tipoarchivo=$codArchivo and cod_tipopadre=$tipo and cod_objeto=$padre $sqlObjeto";
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
-   $valor=0;$descripcion="";$url="";
+   $valor=0;$descripcion="";$url="";$codigo=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor++;
       $descripcion=$row['descripcion'];
       $url=$row['direccion_archivo'];
+      $codigo=$row['codigo'];
   }
-  return array($valor,$descripcion,$url);
+  return array($valor,$descripcion,$url,$codigo);
 }
 function obtenerCodCuentaTipoPago($codigo){  
   $dbh = new Conexion();
@@ -8485,7 +8486,105 @@ function obtenerSumaTotal_solicitudFacturacion($codigo){
   $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
   return($sumaTotalImporte);
 }
+function importe_total_cajachica($cod_cajachica){
+  $dbh = new Conexion();
+  $sql="SELECT SUM(c.monto)-IFNULL((select SUM(r.monto) from caja_chicareembolsos r where r.cod_cajachica=$cod_cajachica and r.cod_estadoreferencial=1),0) as monto_total from caja_chicadetalle c where c.cod_cajachica=$cod_cajachica and c.cod_estadoreferencial=1";
+  $stmtCaja = $dbh->prepare($sql);
+  $stmtCaja->execute();
+  $resultCaja = $stmtCaja->fetch();
+  // $monto_anterior = $resultCaja['monto_total'];
+  if($resultCaja['monto_total']!=null || $resultCaja['monto_total']!='')
+    $monto_anterior_x=$resultCaja['monto_total'];
+  else $monto_anterior_x=0;                        
+  // $monto_anterior=$monto_inicio_anterior-$monto_anterior_x;
+  return $monto_anterior_x;
+}
 
+function verificarExisteArchivoSolicitud($tipo,$descripcion,$tipoPadre,$codSolicitud){
+  $dbh = new Conexion();
+  $sql="SELECT codigo,direccion_archivo FROM archivos_adjuntos 
+    where cod_tipoarchivo=$tipo and descripcion='$descripcion' and cod_tipopadre=$tipoPadre and cod_padre=0 and cod_objeto=$codSolicitud";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $codigo=0;$direccion="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row["codigo"];
+      $direccion=$row["direccion_archivo"];
+   }
+   return array($codigo,$direccion); 
+}
+
+function obtenerLinkDirectoArchivoAdjunto($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT direccion_archivo FROM archivos_adjuntos 
+    where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $direccion="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $direccion=$row["direccion_archivo"];
+   }
+   return $direccion; 
+}
+
+function obtenerLinkDirectoArchivoAdjunto_sf($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT direccion_archivo FROM archivos_adjuntos_solicitud_facturacion 
+    where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $direccion="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $direccion=$row["direccion_archivo"];
+   }
+   return $direccion; 
+}
+
+function obtenerCod_comprobanteDetalleorigen($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT cod_comprobantedetalle from estados_cuenta where codigo=$codigo";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row["cod_comprobantedetalle"];
+  }
+  return $valor; 
+}
+
+function obtenerMontoTotalLibretaBancariaDetalle($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT sum(fv.importe) as monto_factura from facturas_venta fv join libretas_bancariasdetalle_facturas lf on lf.cod_facturaventa=fv.codigo where lf.cod_libretabancariadetalle=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row["monto_factura"];
+   }
+   return $valor; 
+}
+
+function obtenerSaldoLibretaBancariaDetalle($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT ld.* from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo where lf.cod_facturaventa = (SELECT cod_facturaventa from libretas_bancariasdetalle_facturas where cod_libretabancariadetalle=$codigo) order by fecha_hora;";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $montoFactura=obtenerMontoTotalLibretaBancariaDetalle($codigo);
+  $saldo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      if($montoFactura>=$row['monto']){
+        $saldo=0;
+        $montoFactura=$montoFactura-$row['monto'];
+      }else{
+        $saldo=$row['monto']-$montoFactura;
+        $montoFactura=0;
+      }
+      if($row["codigo"]==$codigo){
+       break;
+      }
+   }
+   return $saldo; 
+}
 ?>
 
 

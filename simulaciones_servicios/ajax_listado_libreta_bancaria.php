@@ -7,6 +7,10 @@ require_once '../layouts/librerias.php';
 $dbh = new Conexion();
 
 $saldo_solfac=0; //desde comprobantes
+$tipoCuentaLib=0;
+if(isset($_GET['tipo_cuentalibreta'])){
+  $tipoCuentaLib=$_GET['tipo_cuentalibreta'];
+}
 if(isset($_GET['saldo'])){
   $saldo_solfac=$_GET['saldo'];
 }
@@ -89,6 +93,8 @@ $listarLib=1;
               $monto=$v_detalle->monto;
               $CodEstado=$v_detalle->CodEstado;
               $saldo=$v_detalle->Saldo;
+              $codComprobante=$v_detalle->CodComprobante;
+              $codComprobanteDetalle=$v_detalle->CodComprobanteDetalle;
               if($CodEstado==0)$color_aux="background-color: #d6dbdf;";
               else $color_aux="background-color:#f6ddcc;";
               
@@ -150,10 +156,16 @@ $listarLib=1;
                           else $label="btn btn-fab btn-warning btn-sm";
                           ?><a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="listar_libretaBancaria(<?=$CodLibretaDetalle?>,'<?=$datosEnviarModal?>')" class="<?=$label?> list-de-fac" title="Seleccionar Item"><i class="material-icons">done</i></a>
                           <?php 
-                          if($CodEstado==0){
+                          if($CodEstado==0&&$tipoCuentaLib==1){
                             ?>
                           <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="listar_comprobanteDetalle(<?=$CodLibretaDetalle?>,'<?=$datosEnviarModal?>')" class="btn btn-fab btn-danger btn-sm list-de-com" title="Seleccionar Item"><i class="material-icons">done</i></a>
                             <?php
+                          }else{
+                            if($CodEstado==1&&$tipoCuentaLib==2){
+                              ?>
+                            <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="listar_comprobanteDetalle(<?=$CodLibretaDetalle?>,'<?=$datosEnviarModal?>')" class="btn btn-fab btn-danger btn-sm list-de-com" title="Seleccionar Item"><i class="material-icons">done</i></a>
+                            <?php
+                            }  
                           }  
                         //}?>
                       </td>
@@ -166,6 +178,15 @@ $listarLib=1;
                       $rsDetalle_x="";
                       $obsDetalle_x="";
                       $impDetalle_x="";
+                      if(!($codComprobante==""||$codComprobante==0)){
+                        $datosDetalle=obtenerDatosComprobanteDetalle($codComprobanteDetalle);
+                        $fechaDetalle_x="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
+                        $nroDetalle_x="<b class='text-success'>".nombreComprobante($codComprobante)."</b>";
+                        $nitDetalle_x="<b class='text-success'>-</b>";
+                        $obsDetalle_x="<b class='text-success'>".$datosDetalle[0]."</b>";
+                        $rsDetalle_x=$obsDetalle_x." <b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
+                        $impDetalle_x="<b class='text-success'>".$datosDetalle[1]."</b>";
+                      }
                       ?>
                       <td style="" class="libretaDetalles_<?=$j?> text-center small"><?=$fechaDetalle_x?></td>
                       <td style=" " class="libretaDetalles_<?=$j?> text-right small"><?=$nroDetalle_x?></td>            
@@ -179,10 +200,16 @@ $listarLib=1;
                           else $label="btn btn-fab btn-warning btn-sm"; ?>
                           <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="listar_libretaBancaria(<?=$CodLibretaDetalle?>,'<?=$datosEnviarModal?>')" class="<?=$label?> list-de-fac" title="Seleccionar Item"><i class="material-icons">done</i></a>
                           <?php 
-                          if($CodEstado==0){
+                          if($CodEstado==0&&$tipoCuentaLib==1){
                             ?>
                           <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="listar_comprobanteDetalle(<?=$CodLibretaDetalle?>,'<?=$datosEnviarModal?>')" class="btn btn-fab btn-danger btn-sm list-de-com" title="Seleccionar Item"><i class="material-icons">done</i></a>
                             <?php
+                          }else{
+                            if($CodEstado==1&&$tipoCuentaLib==2){
+                              ?>
+                            <a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="listar_comprobanteDetalle(<?=$CodLibretaDetalle?>,'<?=$datosEnviarModal?>')" class="btn btn-fab btn-danger btn-sm list-de-com" title="Seleccionar Item"><i class="material-icons">done</i></a>
+                            <?php
+                            }  
                           } 
                         //}?>
                       </td><?php                          

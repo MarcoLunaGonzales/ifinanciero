@@ -412,12 +412,26 @@ function configuracionLibretasBancarias(fila,codigoCuenta){
   for (var i = 0; i < libretas_bancarias.length; i++) {
     if(libretas_bancarias[i].cod_cuenta==codigoCuenta){
       $("#libretas_bancarias"+fila).removeClass("d-none");  
+      $("#tipo_libretabancaria"+fila).val(1);  
+      contador++;
       break;  
     }else{
       $("#libretas_bancarias"+fila).removeClass("d-none"); 
       $("#libretas_bancarias"+fila).addClass("d-none");  
     }
   };
+  if(contador==0){
+     for (var i = 0; i < libretas_bancarias.length; i++) {
+      if(libretas_bancarias[i].cod_contracuenta==codigoCuenta){
+        $("#libretas_bancarias"+fila).removeClass("d-none");
+        $("#tipo_libretabancaria"+fila).val(2);  
+        break;  
+      }else{
+        $("#libretas_bancarias"+fila).removeClass("d-none"); 
+        $("#libretas_bancarias"+fila).addClass("d-none");  
+      }
+     };
+  }
 }
 
 function facturacomprobante(fila){
@@ -538,7 +552,7 @@ function minusCuentaContable(idF){
        $("#cod_detallelibreta"+nuevoId).attr("name","cod_detallelibreta"+i); 
        $("#cod_detallelibreta"+nuevoId).attr("id","cod_detallelibreta"+i);
        $("#descripcion_detallelibreta"+nuevoId).attr("id","descripcion_detallelibreta"+i);
-
+       $("#tipo_libretabancaria"+nuevoId).attr("id","tipo_libretabancaria"+i);
        //mayores seleccion
        $("#cerrar_detalles"+nuevoId).attr("onclick","verMayoresCierre('"+i+"')");
        $("#cerrar_detalles"+nuevoId).attr("id","cerrar_detalles"+i);
@@ -1226,20 +1240,22 @@ function guardarPlantilla(){
       });
       //alert(JSON.stringify(detalle));
     }
-
-    ajax=nuevoAjax();
-      ajax.open("GET","ajaxSavePlantilla.php?codigo="+cod+"&titulo="+titulo+"&tipo="+tipo+"&glosa="+glosa+"&des="+descrip+"&cantidad_filas="+num+"&det="+JSON.stringify(detalle),true);
-      ajax.onreadystatechange=function(){
-        if (ajax.readyState==4) {
-          $("#mensaje").html("<p class='text-success'>Registro satisfactorio</p>");
-          $("#titulo").val("");
-          $("#descrip_plan").val("");
-          $('#modalPlantilla').modal('hide');
-          Swal.fire("Correcto!", "Se Guardó la Plantilla!", "success");
+   var parametros={"codigo":cod,"titulo":titulo,"tipo":tipo,"glosa":glosa,"des":descrip,"cantidad_filas":num,"det":JSON.stringify(detalle)}; 
+    $.ajax({
+    url: "ajaxSavePlantilla.php",
+    dataType: "html",
+    data: parametros,
+    type: "POST",
+    proccessData: false, // this is true by default
+    success: function(resp){
+      $("#mensaje").html("<p class='text-success'>Registro satisfactorio</p>");
+      $("#titulo").val("");
+      $("#descrip_plan").val("");
+      $('#modalPlantilla').modal('hide');
+      Swal.fire("Correcto!", resp, "success");
           //window.location="../index.php?opcion=listComprobantes";
-        }
-      }
-      ajax.send(null);
+    }
+   });
   }else{
     $("#mensaje").html("<p class='text-danger'>Debe ingresar un titulo a la plantilla</p>");
   }     
@@ -6972,6 +6988,7 @@ function agregarEstadoCuenta(){
 
 function verLibretasBancarias(fila){
   $("#indice").val(fila);
+  $("#datos").val($("#tipo_libretabancaria"+fila).val());
   $("#modalListaLibretaBancaria").modal("show"); 
   //ocultar elementos de modal en sol de facturacion
   $("#boton_libreta_detalle_todo").addClass("d-none");
@@ -12803,9 +12820,11 @@ function botonBuscarEstudiantesCapacitacion(){
   var valor_fecha_inscripcion=$("#fecha_inscripcion").val(); 
   var q=$("#q").val();   
   var r=$("#r").val();   
+  var u=$("#r").val();   
+  var s=$("#r").val();   
   var url='index.php?opcion=listFacturasServicios_costos_estudiantes&ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente+'&fecha='+valor_fecha_inscripcion+'&nombre_curso='+valor_nombre_curso;
   if(q!=0){    
-    location.href=url+'&q='+q+'&r='+r;     
+    location.href=url+'&q='+q+'&r='+r+'&u='+u+'&s='+s;
   }else{    
     location.href=url;     
   }
@@ -12844,10 +12863,12 @@ function botonBuscarEmpresasCapacitacion(){
   var valor_glosa=$("#glosa").val();   
   var q=$("#q").val();   
   var r=$("#r").val(); 
+  var u=$("#r").val(); 
+  var s=$("#r").val(); 
 
   var url='index.php?opcion=listFacturasServicios_costos_empresas&cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa;
    if(q!=0){    
-    location.href=url+'&q='+q+'&r='+r;     
+    location.href=url+'&q='+q+'&r='+r+'&u='+u+'&s='+s;     
   }else{    
     location.href=url;     
   }
@@ -14003,6 +14024,109 @@ function quitarElementoAdjunto(fila){
   $("#fila_archivo"+fila).remove();
 }
 
+function quitarArchivoSistemaAdjunto(fila,codigo,tipo){
+  Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Se borrará el Archivo Adjunto de la base de datos!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            if(tipo==1){
+              quitarElementoAdjunto(fila);
+            }else{
+              $("#existe_div_archivo_cabecera"+fila).remove();
+              $("#existe_archivo_cabecera"+fila).remove();
+              $("#label_documentos_cabecera"+fila).removeClass("btn-success");
+              $("#label_documentos_cabecera"+fila).removeClass("btn-fab");
+              $("#label_documentos_cabecera"+fila).addClass("btn-warning");
+              $("#label_documentos_cabecera"+fila).html('<i class="material-icons">publish</i> Subir Archivo');
+            }
+            quitarArchivoAdjuntoRecursos(codigo);           
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+}
+function quitarArchivoSistemaAdjunto_solfac(fila,codigo,tipo){
+  Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Se borrará el Archivo Adjunto de la base de datos!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            if(tipo==1){
+              quitarElementoAdjunto(fila);
+            }else{
+              // $("#existe_div_archivo_cabecera"+fila).remove();
+              $("#existe_archivo_cabecera"+fila).remove();
+              $("#label_documentos_cabecera"+fila).removeClass("btn-success");
+              $("#label_documentos_cabecera"+fila).removeClass("btn-fab");
+              $("#label_documentos_cabecera"+fila).addClass("btn-warning");
+              $("#label_documentos_cabecera"+fila).html('<i class="material-icons">publish</i> Subir Archivo');
+            }
+            quitarArchivoAdjuntoSolicitud_facturacion(codigo);           
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+}
+
+function quitarArchivoAdjuntoRecursos(codigo){
+  var parametros={"codigo":codigo};
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxSaveDeleteAdjuntoDocumento.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Removiendo Documento..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");   
+           $("#cambioCodigoAuxiliar").modal("hide");         
+        }
+      });
+}
+function quitarArchivoAdjuntoSolicitud_facturacion(codigo){
+  var tipo = $("#tipo_aux").val();
+  if(tipo==2){
+    var url_aux= "../simulaciones_servicios/ajaxSaveDeleteAdjuntoDocumentos_sf.php";
+  }else{
+    var url_aux= "simulaciones_servicios/ajaxSaveDeleteAdjuntoDocumentos_sf.php";
+  }
+  var parametros={"codigo":codigo};
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: url_aux,
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Removiendo Documento..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");   
+           $("#cambioCodigoAuxiliar").modal("hide");         
+        }
+      });
+}
 function agregarFilaArchivosAdjuntosDetalle(){
   var codigo = $("#tipo_documento_otro").val();
   var num = parseInt($("#cantidad_archivosadjuntosdetalle").val());
@@ -15351,20 +15475,21 @@ function ajax_contenedor_tabla_libretaBancaria(saldo){
 }
 
 function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
-  
+  var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');
   if($("#tipo_comprobante").length>0){
+    var tipo =$("#datos").val();
     var saldo="";  
     var url = "../simulaciones_servicios/ajax_listado_libreta_bancaria.php";
+    var parametros={"saldo":saldo,"tipo_listado":0,"codigo_lib":idLib,"tipo_cuentalibreta":tipo};
   }else{
    var saldo=$("#saldo_x").val();
    var url = "simulaciones_servicios/ajax_listado_libreta_bancaria.php";
+   var parametros={"saldo":saldo,"tipo_listado":1,"codigo_lib":idLib};
    if($("#cantidad_filas_libretas").length>0){
      $("#cantidad_filas_libretas").val(0);
      $("#datos_libreta_bancaria_detalle").html("");
    }
   }  
-  var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');
-  var parametros={"saldo":saldo,"tipo_listado":0,"codigo_lib":idLib};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -15470,6 +15595,7 @@ function ajax_listado_libreta_bancaria_filtrar(){
       $('.selectpicker').selectpicker(["refresh"]);
       cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
       cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
+      $('.list-de-com').addClass("d-none");
     }
   }
   ajax.send(null);
@@ -15864,7 +15990,10 @@ function listar_comprobanteDetalle(codigo,descripcion){
   var fila=$("#indice").val();
   $("#cod_detallelibreta"+fila).val(codigo);
   $("#descripcion_detallelibreta"+fila).val(descripcion.split("####")[0]+" - "+descripcion.split("####")[1]);
-  $("#nestadolib"+fila).addClass("estado");
+  //validacion si ha esta RELACIONADO
+  if(!($("#nestadolib"+fila).hasClass("estado"))){
+    $("#nestadolib"+fila).addClass("estado");
+  } 
   $("#modalListaLibretaBancaria").modal("hide");
 }
 function verMayoresCierre(fila){

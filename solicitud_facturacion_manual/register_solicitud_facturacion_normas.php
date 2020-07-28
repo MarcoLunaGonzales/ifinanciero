@@ -115,6 +115,7 @@ $contadorRegistros=0;
                 <input type="hidden" name="cod_facturacion" id="cod_facturacion" value="<?=$cod_facturacion;?>"/>
                 <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
                 <input type="hidden" name="tipo_solicitud" id="tipo_solicitud" value="1">
+                <input type="hidden" name="tipo_aux" id="tipo_aux" value="2"><!-- //nos indica de donde va para editar adjuntos -->
 
                 <div class="card">
                   <div class="card-header <?=$colorCard;?> card-header-text">
