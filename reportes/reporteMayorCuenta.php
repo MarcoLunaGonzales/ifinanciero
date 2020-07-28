@@ -71,7 +71,7 @@
           where c.cod_gestion=$NombreGestion and p.codigo=$cuenta and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) and c.cod_unidadorganizacional in ($unidadArray) order by c.fecha";
       }
 
-      //echo $query1;
+      echo $query1;
 
       $stmt = $dbh->prepare($query1);
       // Ejecutamos
