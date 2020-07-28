@@ -85,6 +85,8 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
         $validacion=1;
         
        if($validacion==1){
+          $codComprobanteDetalle=$rowLibDetalle['cod_comprobantedetalle'];
+          $codComprobante=$rowLibDetalle['cod_comprobante'];
            $datosDetalle[$index]['CodLibretaDetalle']=$rowLibDetalle['codigo'];
            $datosDetalle[$index]['Descripcion']=$rowLibDetalle['descripcion'];
            $datosDetalle[$index]['InformacionComplementaria']=$rowLibDetalle['informacion_complementaria'];
@@ -97,7 +99,8 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $datosDetalle[$index]['FechaHoraCompleta']=$datosDetalle[$index]['Fecha']." ".$datosDetalle[$index]['Hora'];
            $datosDetalle[$index]['monto']=$rowLibDetalle['monto'];
            $datosDetalle[$index]['CodEstado']=$rowLibDetalle['cod_estado'];
-           
+           $datosDetalle[$index]['CodComprobante']=$codComprobante;
+           $datosDetalle[$index]['CodComprobanteDetalle']=$codComprobanteDetalle;
            /*$datosDetalle[$index]['FechaFactura']=null;
            $datosDetalle[$index]['NumeroFactura']=null;
            $datosDetalle[$index]['NitFactura']=null;
@@ -133,6 +136,16 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
             if($existeFactura>0){
               //calcular Saldo
               $saldoFactura=obtenerSaldoLibretaBancariaDetalle($rowLibDetalle['codigo']);      
+             }else{
+               if(!($codComprobante==""||$codComprobante==0)){
+                  $datosDetalleCompro=obtenerDatosComprobanteDetalle($codComprobanteDetalle);
+                  $datosDetalleFac[$indexAux]['FechaFactura']=strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)));
+                  $datosDetalleFac[$indexAux]['NumeroFactura']=nombreComprobante($codComprobante);
+                  $datosDetalleFac[$indexAux]['NitFactura']="-";
+                  $datosDetalleFac[$indexAux]['DetalleFactura']=$datosDetalleCompro[0];
+                  $datosDetalleFac[$indexAux]['RSFactura']=$datosDetalleCompro[2]." [".$datosDetalleCompro[3]."] - ".$datosDetalleCompro[4];
+                  $datosDetalleFac[$indexAux]['MontoFactura']=$datosDetalleCompro[1];
+                }
              }
             
             $datosDetalle[$index]['Saldo']=$saldoFactura; 

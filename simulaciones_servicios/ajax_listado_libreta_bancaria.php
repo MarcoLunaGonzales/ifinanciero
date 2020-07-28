@@ -93,6 +93,8 @@ $listarLib=1;
               $monto=$v_detalle->monto;
               $CodEstado=$v_detalle->CodEstado;
               $saldo=$v_detalle->Saldo;
+              $codComprobante=$v_detalle->CodComprobante;
+              $codComprobanteDetalle=$v_detalle->CodComprobanteDetalle;
               if($CodEstado==0)$color_aux="background-color: #d6dbdf;";
               else $color_aux="background-color:#f6ddcc;";
               
@@ -176,6 +178,15 @@ $listarLib=1;
                       $rsDetalle_x="";
                       $obsDetalle_x="";
                       $impDetalle_x="";
+                      if(!($codComprobante==""||$codComprobante==0)){
+                        $datosDetalle=obtenerDatosComprobanteDetalle($codComprobanteDetalle);
+                        $fechaDetalle_x="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
+                        $nroDetalle_x="<b class='text-success'>".nombreComprobante($codComprobante)."</b>";
+                        $nitDetalle_x="<b class='text-success'>-</b>";
+                        $obsDetalle_x="<b class='text-success'>".$datosDetalle[0]."</b>";
+                        $rsDetalle_x=$obsDetalle_x." <b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
+                        $impDetalle_x="<b class='text-success'>".$datosDetalle[1]."</b>";
+                      }
                       ?>
                       <td style="" class="libretaDetalles_<?=$j?> text-center small"><?=$fechaDetalle_x?></td>
                       <td style=" " class="libretaDetalles_<?=$j?> text-right small"><?=$nroDetalle_x?></td>            
