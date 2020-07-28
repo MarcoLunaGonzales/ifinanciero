@@ -75,23 +75,23 @@ $globalAdmin=$_SESSION["globalAdmin"];
                       <?php
                         $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          if($cod_solicitudfacturacion!=-100){
-                            $stmtFActuras = $dbh->prepare("SELECT codigo,nro_factura from facturas_venta where cod_solicitudfacturacion=$cod_solicitudfacturacion");
-                            $stmtFActuras->execute(); 
-                            $stmtFActuras->bindColumn('codigo', $codigo_x);
-                            $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
-                            $cadenaFacturas="";
-                            $codigos_facturas="";
-                            while ($row = $stmtFActuras->fetch()) {
-                              $cadenaFacturas.="F ".$nro_factura_x.", ";
-                              $codigos_facturas.=$codigo_x.",";
-                            }
-                            $cadenaFacturas=trim($cadenaFacturas,", ");//todas las facturas del la solicitud
-                            $codigos_facturas=trim($codigos_facturas,", ");//todas las facturas del la solicitud
-                          }else{
+                          // if($cod_solicitudfacturacion!=-100){
+                          //   $stmtFActuras = $dbh->prepare("SELECT codigo,nro_factura from facturas_venta where cod_solicitudfacturacion=$cod_solicitudfacturacion");
+                          //   $stmtFActuras->execute(); 
+                          //   $stmtFActuras->bindColumn('codigo', $codigo_x);
+                          //   $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
+                          //   $cadenaFacturas="";
+                          //   $codigos_facturas="";
+                          //   while ($row = $stmtFActuras->fetch()) {
+                          //     $cadenaFacturas.="F ".$nro_factura_x.", ";
+                          //     $codigos_facturas.=$codigo_x.",";
+                          //   }
+                          //   $cadenaFacturas=trim($cadenaFacturas,", ");//todas las facturas del la solicitud
+                          //   $codigos_facturas=trim($codigos_facturas,", ");//todas las facturas del la solicitud
+                          // }else{
                             $cadenaFacturas='F '.$nro_factura;
                             $codigos_facturas=$codigo_factura;
-                          }
+                          // }
                           $importe=sumatotaldetallefactura($codigo_factura);
                           $correosEnviados=obtenerCorreosEnviadosFactura($codigo_factura);
                           if($correosEnviados!=""){

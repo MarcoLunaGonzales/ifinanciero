@@ -52,7 +52,8 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 		$ordenDetalle=1;//<--
 		if($flagSuccess){
 			//listado del detalle tipo pago
-			$stmtDetalleTipoPago = $dbh->prepare("SELECT t.*,(select p.cod_cuenta from tipos_pago_contabilizacion p where p.cod_tipopago=t.cod_tipopago)as cod_cuenta from solicitudes_facturacion_tipospago t where t.cod_solicitudfacturacion=$cod_solicitudfacturacion order by t.monto desc");
+			$sql="SELECT t.*,(select p.cod_cuenta from tipos_pago_contabilizacion p where p.cod_tipopago=t.cod_tipopago)as cod_cuenta from solicitudes_facturacion_tipospago t where t.cod_solicitudfacturacion=$cod_solicitudfacturacion order by t.monto desc";			
+			$stmtDetalleTipoPago = $dbh->prepare($sql);
 			$stmtDetalleTipoPago->execute();
 			$stmtDetalleTipoPago->bindColumn('cod_tipopago', $cod_tipopago);	 
 			$stmtDetalleTipoPago->bindColumn('porcentaje', $porcentaje);	
@@ -80,7 +81,8 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 						// 		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);					                
 				  //           }
 						// }
-					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_libretas_X) order by  monto desc";
+					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_libretas_X)";
+					// echo $sqlTipopago;
 					$stmtDetalleTipoPago = $dbh->prepare($sqlTipopago);
 					$stmtDetalleTipoPago->execute();							
 					$stmtDetalleTipoPago->bindColumn('codigo', $codigo_libreta_det);
@@ -89,9 +91,18 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 					$monto_libreta_total=0;
 					$array_libreta_save="";
 					$sw_controlador=0;//contrala la entradas
+
+					// echo $cod_libretas_X."--";
 					while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {		
-						$monto_facturas=obtenerTotalFacturasLibreta($codigo_libreta_det);
-						$monto_libreta=$monto_libreta-$monto_facturas;
+						// $monto_facturas=obtenerTotalFacturasLibreta($codigo_libreta_det);
+						$monto_libreta_x=obtenerSaldoLibretaBancariaDetalle($codigo_libreta_det);
+						if($monto_libreta_x==0){
+							$monto_libreta=$monto_libreta;
+						}else{
+							$monto_libreta=$monto_libreta_x;
+						}
+						// echo $monto_libreta."-";
+						// $monto_libreta=$monto_libreta-$monto_facturas;
 						if($sw_controlador==0){
 							$monto_libreta_total+=$monto_libreta;
 							if($monto_tipopago>=$monto_libreta_total){
@@ -102,8 +113,8 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 					            }elseif($estado_libreta==1){//contra cuenta de libreta
 					                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
 									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
-					            }
-					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$stringFacturasCod)";
+					            }					            
+					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$stringFacturasCod)";					            
 		                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
 		                        $stmtUpdateLibreta->execute();
 							}else{
@@ -154,7 +165,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 				}
 	            $ordenDetalle++;
 			}			
-			//para IT gasto
+			//para IT gasto		
 			$cod_cuenta_it_gasto=obtenerValorConfiguracion(49);
 			$porcentaje_it_gasto=obtenerValorConfiguracion(2);
 			$monto_it_gasto=$porcentaje_it_gasto*$monto_tipopago_total/100;
