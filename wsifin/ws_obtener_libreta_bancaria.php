@@ -85,6 +85,8 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
         $validacion=1;
         
        if($validacion==1){
+          $codComprobanteDetalle=$rowLibDetalle['cod_comprobantedetalle'];
+          $codComprobante=$rowLibDetalle['cod_comprobante'];
            $datosDetalle[$index]['CodLibretaDetalle']=$rowLibDetalle['codigo'];
            $datosDetalle[$index]['Descripcion']=$rowLibDetalle['descripcion'];
            $datosDetalle[$index]['InformacionComplementaria']=$rowLibDetalle['informacion_complementaria'];
@@ -97,14 +99,15 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $datosDetalle[$index]['FechaHoraCompleta']=$datosDetalle[$index]['Fecha']." ".$datosDetalle[$index]['Hora'];
            $datosDetalle[$index]['monto']=$rowLibDetalle['monto'];
            $datosDetalle[$index]['CodEstado']=$rowLibDetalle['cod_estado'];
-           
+           $datosDetalle[$index]['CodComprobante']=$codComprobante;
+           $datosDetalle[$index]['CodComprobanteDetalle']=$codComprobanteDetalle;
            /*$datosDetalle[$index]['FechaFactura']=null;
            $datosDetalle[$index]['NumeroFactura']=null;
            $datosDetalle[$index]['NitFactura']=null;
            $datosDetalle[$index]['RSFactura']=null;
            $datosDetalle[$index]['DetalleFactura']=null;
            $datosDetalle[$index]['MontoFactura']=null;*/
-           $saldoFactura=$rowLibDetalle['monto'];
+           
            //$saldoFactura=0;
            //if($rowLibDetalle['cod_factura']!=""){
            //$sqlFacturaLibreta="SELECT * FROM facturas_venta where cod_libretabancariadetalle=".$rowLibDetalle['codigo'];
@@ -124,13 +127,26 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
                $datosDetalleFac[$indexAux]['RSFactura']=$datosFacturas[3];
                $datosDetalleFac[$indexAux]['DetalleFactura']=$datosFacturas[4];
                $datosDetalleFac[$indexAux]['MontoFactura']=number_format($datosFacturas[5],2,".","");
-                          
+               $existeFactura++;           
                $sumaImporte+=$datosFacturas[5];
                $indexAux++;
               } 
             }
-            //calcular Saldo
-            $saldoFactura=obtenerSaldoLibretaBancariaDetalle($rowLibDetalle['codigo']);      
+            $saldoFactura=$rowLibDetalle['monto'];
+            if($existeFactura>0){
+              //calcular Saldo
+              $saldoFactura=obtenerSaldoLibretaBancariaDetalle($rowLibDetalle['codigo']);      
+             }else{
+               if(!($codComprobante==""||$codComprobante==0)){
+                  $datosDetalleCompro=obtenerDatosComprobanteDetalle($codComprobanteDetalle);
+                  $datosDetalleFac[$indexAux]['FechaFactura']=strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)));
+                  $datosDetalleFac[$indexAux]['NumeroFactura']=nombreComprobante($codComprobante);
+                  $datosDetalleFac[$indexAux]['NitFactura']="-";
+                  $datosDetalleFac[$indexAux]['DetalleFactura']=$datosDetalleCompro[0];
+                  $datosDetalleFac[$indexAux]['RSFactura']=$datosDetalleCompro[2]." [".$datosDetalleCompro[3]."] - ".$datosDetalleCompro[4];
+                  $datosDetalleFac[$indexAux]['MontoFactura']=$datosDetalleCompro[1];
+                }
+             }
             
             $datosDetalle[$index]['Saldo']=$saldoFactura; 
             $datosDetalle[$index]['DetalleFacturas']=$datosDetalleFac;  
@@ -147,17 +163,3 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
  }
  return array($filaA,$datosMega);
 }
-
-function obtenerDatosFacturaVenta($codigo){
-  $dbh = new Conexion();
-  $stmtVerif = $dbh->prepare("SELECT * FROM facturas_venta where codigo=$codigo");
-  $stmtVerif->execute();
-  $resultVerif = $stmtVerif->fetch();    
-  $fecha = $resultVerif['fecha_factura'];
-  $numero = $resultVerif['nro_factura'];
-  $nit = $resultVerif['nit'];
-  $razon_social = $resultVerif['razon_social'];
-  $detalle = $resultVerif['observaciones'];
-  $monto = $resultVerif['importe'];
-  return array($fecha,$numero,$nit,$razon_social,$detalle,$monto);
-  }

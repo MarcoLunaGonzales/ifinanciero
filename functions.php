@@ -8554,7 +8554,9 @@ function obtenerCod_comprobanteDetalleorigen($codigo){
 
 function obtenerMontoTotalLibretaBancariaDetalle($codigo){
   $dbh = new Conexion();
-  $sql="SELECT sum(fv.importe) as monto_factura from facturas_venta fv join libretas_bancariasdetalle_facturas lf on lf.cod_facturaventa=fv.codigo where lf.cod_libretabancariadetalle=$codigo";
+  $sql="SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as monto_factura from facturas_venta fv, facturas_ventadetalle fd, libretas_bancariasdetalle_facturas lf  
+    where lf.cod_facturaventa=fv.codigo and fv.codigo=fd.cod_facturaventa and fv.cod_estadofactura<>2 and lf.cod_libretabancariadetalle=$codigo";
+   //echo $sql;
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    $valor=0;
@@ -8566,10 +8568,13 @@ function obtenerMontoTotalLibretaBancariaDetalle($codigo){
 
 function obtenerSaldoLibretaBancariaDetalle($codigo){
   $dbh = new Conexion();
-  $sql="SELECT ld.* from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo where lf.cod_facturaventa = (SELECT cod_facturaventa from libretas_bancariasdetalle_facturas where cod_libretabancariadetalle=$codigo) order by fecha_hora;";
+  $sql="SELECT ld.* from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo where lf.cod_facturaventa = (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta f  where lbdf.cod_libretabancariadetalle='$codigo' 
+    and f.codigo=lbdf.cod_facturaventa and f.cod_estadofactura<>2) order by fecha_hora";
+  //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   $montoFactura=obtenerMontoTotalLibretaBancariaDetalle($codigo);
+  //echo $montoFactura;
   $saldo=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       if($montoFactura>=$row['monto']){

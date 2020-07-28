@@ -1252,7 +1252,7 @@ function guardarPlantilla(){
       $("#titulo").val("");
       $("#descrip_plan").val("");
       $('#modalPlantilla').modal('hide');
-      Swal.fire("Correcto!", "Registro satisfactorio", "success");
+      Swal.fire("Correcto!", resp, "success");
           //window.location="../index.php?opcion=listComprobantes";
     }
    });
