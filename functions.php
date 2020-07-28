@@ -8526,6 +8526,18 @@ function obtenerLinkDirectoArchivoAdjunto($codigo){
    }
    return $direccion; 
 }
+
+function obtenerCod_comprobanteDetalleorigen($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT cod_comprobantedetalle from estados_cuenta where codigo=$codigo";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row["cod_comprobantedetalle"];
+  }
+  return $valor; 
+}
 ?>
 
 
