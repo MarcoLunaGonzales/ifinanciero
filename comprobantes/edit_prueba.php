@@ -171,7 +171,7 @@ $stmt->execute();
 		    <?php
 			 }
             
-             //LIBRETAS BANCARIAS
+             //LIBRETAS BANCARIAS DETALLE CARGAR
              $stmt = $dbh->prepare("SELECT p.nombre as banco,dc.* FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo WHERE dc.cod_estadoreferencial=1");
 			$stmt->execute();
 			$i=0;
