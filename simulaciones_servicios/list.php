@@ -218,7 +218,11 @@ $stmt->bindColumn('estado_registro', $estadoRegistroX);
                              if($codEstado==5){
                                $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
                                if(isset($_GET['q'])){
-                                  ?><a href="solicitudes/registerSolicitudDetalle.php?sim=<?=$codigo?>&det=2&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
+                                  ?>
+                                  <a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="btn btn-danger"  target="_blank" title="Ver Oferta en PDF">
+                                    <i class="material-icons text-dark">picture_as_pdf</i>
+                                 </a>
+                                  <a href="solicitudes/registerSolicitudDetalle.php?sim=<?=$codigo?>&det=2&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
                                  </a>
                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('solicitudes/imp.php?sol=<?=$anteriorCod;?>&mon=1')" class="btn btn-primary">
