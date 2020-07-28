@@ -14054,6 +14054,36 @@ function quitarArchivoSistemaAdjunto(fila,codigo,tipo){
           }
         });
 }
+function quitarArchivoSistemaAdjunto_solfac(fila,codigo,tipo){
+  Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Se borrará el Archivo Adjunto de la base de datos!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            if(tipo==1){
+              quitarElementoAdjunto(fila);
+            }else{
+              // $("#existe_div_archivo_cabecera"+fila).remove();
+              $("#existe_archivo_cabecera"+fila).remove();
+              $("#label_documentos_cabecera"+fila).removeClass("btn-success");
+              $("#label_documentos_cabecera"+fila).removeClass("btn-fab");
+              $("#label_documentos_cabecera"+fila).addClass("btn-warning");
+              $("#label_documentos_cabecera"+fila).html('<i class="material-icons">publish</i> Subir Archivo');
+            }
+            quitarArchivoAdjuntoSolicitud_facturacion(codigo);           
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+}
 
 function quitarArchivoAdjuntoRecursos(codigo){
   var parametros={"codigo":codigo};
@@ -14061,6 +14091,30 @@ function quitarArchivoAdjuntoRecursos(codigo){
         type: "GET",
         dataType: 'html',
         url: "ajaxSaveDeleteAdjuntoDocumento.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Removiendo Documento..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");   
+           $("#cambioCodigoAuxiliar").modal("hide");         
+        }
+      });
+}
+function quitarArchivoAdjuntoSolicitud_facturacion(codigo){
+  var tipo = $("#tipo_aux").val();
+  if(tipo==2){
+    var url_aux= "../simulaciones_servicios/ajaxSaveDeleteAdjuntoDocumentos_sf.php";
+  }else{
+    var url_aux= "simulaciones_servicios/ajaxSaveDeleteAdjuntoDocumentos_sf.php";
+  }
+  var parametros={"codigo":codigo};
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: url_aux,
         data: parametros,
         beforeSend: function () {
         $("#texto_ajax_titulo").html("Removiendo Documento..."); 

@@ -8526,6 +8526,18 @@ function obtenerLinkDirectoArchivoAdjunto($codigo){
    }
    return $direccion; 
 }
+function obtenerLinkDirectoArchivoAdjunto_sf($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT direccion_archivo FROM archivos_adjuntos_solicitud_facturacion 
+    where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $direccion="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $direccion=$row["direccion_archivo"];
+   }
+   return $direccion; 
+}
 
 function obtenerCod_comprobanteDetalleorigen($codigo){
   $dbh = new Conexion();
