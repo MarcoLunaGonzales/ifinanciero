@@ -8527,6 +8527,31 @@ function obtenerLinkDirectoArchivoAdjunto($codigo){
    return $direccion; 
 }
 
+function obtenerLinkDirectoArchivoAdjunto_sf($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT direccion_archivo FROM archivos_adjuntos_solicitud_facturacion 
+    where codigo=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $direccion="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $direccion=$row["direccion_archivo"];
+   }
+   return $direccion; 
+}
+
+function obtenerCod_comprobanteDetalleorigen($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT cod_comprobantedetalle from estados_cuenta where codigo=$codigo";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row["cod_comprobantedetalle"];
+  }
+  return $valor; 
+}
+
 function obtenerMontoTotalLibretaBancariaDetalle($codigo){
   $dbh = new Conexion();
   $sql="SELECT sum(fv.importe) as monto_factura from facturas_venta fv join libretas_bancariasdetalle_facturas lf on lf.cod_facturaventa=fv.codigo where lf.cod_libretabancariadetalle=$codigo";
