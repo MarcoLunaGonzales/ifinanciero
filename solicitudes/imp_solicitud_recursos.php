@@ -181,6 +181,7 @@ $tituloImporte="";
             $importeSolX=$row["importe"];
             $proveedorX=nameProveedor($row["cod_proveedor"]);
             $retencionX=$row["cod_confretencion"];
+            $codCuentaBancariaX=$row["cod_cuentabancaria"];
 
             
 
@@ -192,10 +193,11 @@ $tituloImporte="";
             if($retencionX!=0){
               $tituloImporte=abrevRetencion($retencionX);
               $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
-              $montoImporte=$importeSolX*($porcentajeRetencion/100);
-
+              $montoImporte=$importeSolX*($porcentajeRetencion/100);  
               $montoImporteRes=$importeSolX-$montoImporte;     
-
+              if(!($retencionX==3||$retencionX==4||$retencionX==5||$retencionX==7||$retencionX==1||$retencionX==9)){ //validacion del descuento por retencion
+                $montoImporte=$importeSolX;
+              }
             }else{
              $tituloImporte="Ninguno";
              $montoImporte=$importeSolX;
@@ -211,8 +213,12 @@ $tituloImporte="";
                $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
             }
 
-              
-            $datosBen[$index-1]=trim($row["nombre_beneficiario"])." ".trim($row["apellido_beneficiario"])." ".trim($row["nro_cuenta_beneficiario"]);
+            $datosBen[$index-1]=trim($row["nombre_beneficiario"])." ".trim($row["apellido_beneficiario"]);
+            
+            if($row["cod_tipopagoproveedor"]==2){ //transferencia
+              $datosBen[$index-1].=" / Nro. Cuenta:"." ".trim($row["nro_cuenta_beneficiario"]).", ".obtenerBancoBeneficiarioSolicitudRecursos($codCuentaBancariaX,$row["cod_proveedor"]);
+            }
+
             $datosTipo[$index-1]=nameTipoPago($row["cod_tipopagoproveedor"]);
 
             $codActividadX=$row["cod_actividadproyecto"];
@@ -234,7 +240,7 @@ $tituloImporte="";
             <td class="s3 text-center"><?=number_format($porcentSegPres, 0, '.', '')?></td>
             <td class="s3 text-center" width="8%"><?=$nombreArea?></td>
             <td class="s3 text-center" width="8%"><?=$numeroFac?></td>
-            <td class="s3 text-left" width="40%"><?="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." F/".$numeroFac." ".$datosServicio." ".$nombreCliente." ".$tituloActividad?></td>
+            <td class="s3 text-left" width="40%"><?="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$tituloActividad?></td> <!-- F/".$numeroFac."-->
             <td class="s3 text-right"><?=number_format($importeSolX, 2, '.', ',')?></td>
             <td class="s3 text-right"><?=number_format($montoImporteRes, 2, '.', ',')?></td>
             <td class="s3 text-right"><?=$tituloImporte?></td>

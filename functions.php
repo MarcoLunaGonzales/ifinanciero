@@ -6428,6 +6428,7 @@ function obtenerListaCuentaBancoProveedorWS($codClienteProv){
     curl_close ($ch);  
     return json_decode($remote_server_output);     
 }
+
 function obtenerDatosCuentaBancoProveedorWS($codClienteProv,$cuenta){
   $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
   $sIde = "ifinanciero"; 
@@ -7428,6 +7429,34 @@ function obtener_dato_dosificacion($cod_dosificacion){
 
 function obtenerObtenerLibretaBancaria(){
   $codigo=0;
+  //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
+  // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
+  $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+  $sIde = "libBan";
+  $sKey = "89i6u32v7xda12jf96jgi30lh";
+  //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>$codigo); 
+  $parametros=json_encode($parametros);
+  // abrimos la sesión cURL
+  $ch = curl_init();
+  // definimos la URL a la que hacemos la petición
+  curl_setopt($ch, CURLOPT_URL,$direccion."ws_obtener_libreta_bancaria.php"); 
+  // indicamos el tipo de petición: POST
+  curl_setopt($ch, CURLOPT_POST, TRUE);
+  // definimos cada uno de los parámetros
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+  // recibimos la respuesta y la guardamos en una variable
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $remote_server_output = curl_exec ($ch);
+  // cerramos la sesión cURL
+  curl_close ($ch);
+  return json_decode($remote_server_output);
+  // imprimir en formato JSON
+  // header('Content-type: application/json');   
+  // print_r($remote_server_output);
+}
+
+function obtenerObtenerLibretaBancariaIndividual($codigo){
   //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
   // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
   $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
@@ -8552,10 +8581,10 @@ function obtenerCod_comprobanteDetalleorigen($codigo){
   return $valor; 
 }
 
-function obtenerMontoTotalLibretaBancariaDetalle($codigo){
+function obtenerMontoTotalLibretaBancariaDetalle($codigo,$codigoAux){
   $dbh = new Conexion();
   $sql="SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as monto_factura from facturas_venta fv, facturas_ventadetalle fd, libretas_bancariasdetalle_facturas lf  
-    where lf.cod_facturaventa=fv.codigo and fv.codigo=fd.cod_facturaventa and fv.cod_estadofactura<>2 and lf.cod_libretabancariadetalle=$codigo";
+    where lf.cod_facturaventa=fv.codigo and fv.codigo=fd.cod_facturaventa and fv.cod_estadofactura<>2 and lf.cod_libretabancariadetalle=$codigo and lf.cod_libretabancariadetalle!=$codigoAux";
    //echo $sql;
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
@@ -8566,17 +8595,21 @@ function obtenerMontoTotalLibretaBancariaDetalle($codigo){
    return $valor; 
 }
 
-function obtenerSaldoLibretaBancariaDetalle($codigo){
+function obtenerSaldoLibretaBancariaDetalle($codigo,$codigoAux){
   $dbh = new Conexion();
-  $sql="SELECT ld.* from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo where lf.cod_facturaventa = (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta f  where lbdf.cod_libretabancariadetalle='$codigo' 
-    and f.codigo=lbdf.cod_facturaventa and f.cod_estadofactura<>2) order by fecha_hora";
+  $sql="SELECT ld.*,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
+  where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta f  where lbdf.cod_libretabancariadetalle='$codigo' 
+    and f.codigo=lbdf.cod_facturaventa and f.cod_estadofactura<>2) and ld.codigo!=$codigoAux order by fecha_hora";
   //echo $sql;
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
-  $montoFactura=obtenerMontoTotalLibretaBancariaDetalle($codigo);
+  $montoFactura=obtenerMontoTotalLibretaBancariaDetalle($codigo,$codigoAux);
   //echo $montoFactura;
   $saldo=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if($row["codigo"]!=$codigo){
+     $saldo=obtenerSaldoLibretaBancariaDetalle($row['codigo'],$codigo);
+    } 
       if($montoFactura>=$row['monto']){
         $saldo=0;
         $montoFactura=$montoFactura-$row['monto'];
@@ -8590,6 +8623,17 @@ function obtenerSaldoLibretaBancariaDetalle($codigo){
    }
    return $saldo; 
 }
+
+function obtenerBancoBeneficiarioSolicitudRecursos($codCuentaBanco,$codigo){
+$bancos=obtenerDatosCuentaBancoProveedorWS($codigo,$codCuentaBanco);
+$nomBanco="";$codBanco=0;
+if($bancos->datos!=false){
+  $codBanco=$bancos->datos->IdCliente;
+  $nomBanco=$bancos->datos->Banco;
+ }
+ return $nomBanco;
+} 
+
 ?>
 
 
