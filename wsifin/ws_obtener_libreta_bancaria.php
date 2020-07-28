@@ -104,7 +104,7 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
            $datosDetalle[$index]['RSFactura']=null;
            $datosDetalle[$index]['DetalleFactura']=null;
            $datosDetalle[$index]['MontoFactura']=null;*/
-           $saldoFactura=$rowLibDetalle['monto'];
+           
            //$saldoFactura=0;
            //if($rowLibDetalle['cod_factura']!=""){
            //$sqlFacturaLibreta="SELECT * FROM facturas_venta where cod_libretabancariadetalle=".$rowLibDetalle['codigo'];
@@ -124,13 +124,16 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
                $datosDetalleFac[$indexAux]['RSFactura']=$datosFacturas[3];
                $datosDetalleFac[$indexAux]['DetalleFactura']=$datosFacturas[4];
                $datosDetalleFac[$indexAux]['MontoFactura']=number_format($datosFacturas[5],2,".","");
-                          
+               $existeFactura++;           
                $sumaImporte+=$datosFacturas[5];
                $indexAux++;
               } 
             }
-            //calcular Saldo
-            $saldoFactura=obtenerSaldoLibretaBancariaDetalle($rowLibDetalle['codigo']);      
+            $saldoFactura=$rowLibDetalle['monto'];
+            if($existeFactura>0){
+              //calcular Saldo
+              $saldoFactura=obtenerSaldoLibretaBancariaDetalle($rowLibDetalle['codigo']);      
+             }
             
             $datosDetalle[$index]['Saldo']=$saldoFactura; 
             $datosDetalle[$index]['DetalleFacturas']=$datosDetalleFac;  
@@ -147,17 +150,3 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
  }
  return array($filaA,$datosMega);
 }
-
-function obtenerDatosFacturaVenta($codigo){
-  $dbh = new Conexion();
-  $stmtVerif = $dbh->prepare("SELECT * FROM facturas_venta where codigo=$codigo");
-  $stmtVerif->execute();
-  $resultVerif = $stmtVerif->fetch();    
-  $fecha = $resultVerif['fecha_factura'];
-  $numero = $resultVerif['nro_factura'];
-  $nit = $resultVerif['nit'];
-  $razon_social = $resultVerif['razon_social'];
-  $detalle = $resultVerif['observaciones'];
-  $monto = $resultVerif['importe'];
-  return array($fecha,$numero,$nit,$razon_social,$detalle,$monto);
-  }

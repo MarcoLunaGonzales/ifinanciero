@@ -180,6 +180,7 @@ $stmt->execute();
 				$bancoX=$row['banco'];
 				$cod_banco=$row['cod_banco'];
 				$cod_cuenta=$row['cod_cuenta'];
+				$cod_contracuenta=$row['cod_contracuenta'];
 				$nombreX=$row['nombre'];
 				$nombreBan=nameBancos($cod_banco);
                 if($nombreBan==""){
@@ -188,7 +189,7 @@ $stmt->execute();
                   $nombreBan=$nombreBan." - ".$nombreX;  
                 }
 			?>
-			 <script>libretas_bancarias.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$cod_cuenta?>,nombre_libreta:'<?=$nombreBan?>'});</script>
+			 <script>libretas_bancarias.push({codigo:<?=$codigoX?>,cod_cuenta:<?=$cod_cuenta?>,cod_contracuenta:<?=$cod_contracuenta?>,nombre_libreta:'<?=$nombreBan?>'});</script>
 		    <?php
 			 }
 
