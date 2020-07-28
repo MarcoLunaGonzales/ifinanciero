@@ -393,8 +393,14 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 					$array_libreta_save="";
 					$sw_controlador=0;//contrala la entradas
 					while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {
-						$monto_facturas=obtenerTotalFacturasLibreta($codigo_libreta_det);
-						$monto_libreta=$monto_libreta-$monto_facturas;
+						// $monto_facturas=obtenerTotalFacturasLibreta($codigo_libreta_det);
+						// $monto_libreta=$monto_libreta-$monto_facturas;
+						$monto_libreta_x=obtenerSaldoLibretaBancariaDetalle($codigo_libreta_det);
+						if($monto_libreta_x==0){
+							$monto_libreta=$monto_libreta;
+						}else{
+							$monto_libreta=$monto_libreta_x;
+						}
 						if($sw_controlador==0){
 							$monto_libreta_total+=$monto_libreta;
 							if($monto_total>=$monto_libreta_total){
