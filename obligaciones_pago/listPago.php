@@ -119,9 +119,9 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                } 
                              </script>       
                                 <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
-                                  <a href="#" onclick="cambiarComboProveedor('<?=$codigoSel?>####<?=$nombreSelX?>');" id="modulo<?=$fila?>" class="after-loop-item card border-0  shadow-lg">
+                                  <a href="#<?=str_replace(' ', '_',$nombreSelX)?>" onclick="cambiarComboProveedor('<?=$codigoSel?>####<?=$nombreSelX?>');" id="modulo<?=$fila?>" class="after-loop-item card border-0  shadow-lg">
                                      <div class="card-body d-flex align-items-end flex-column text-right">
-                                        <h5><small><?=$nombreSelX?></small></h5>
+                                        <h5><small><?=strtoupper($nombreSelX)?></small></h5>
                                         <p class="w-75 text-small"><small>Bs. <?=number_format($saldoX,2,".",",")?></small></p>
                                         <i class="material-icons">person</i>
                                      </div>
