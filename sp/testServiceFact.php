@@ -8,10 +8,17 @@ $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 
 
 $Objeto_detalle4 = new stdClass();
+<<<<<<< HEAD
 $Objeto_detalle4->suscripcionId = 7825;
 $Objeto_detalle4->pagoCursoId = "0";
 $Objeto_detalle4->detalle = "NB 680:2016";
 $Objeto_detalle4->precioUnitario = "70";
+=======
+$Objeto_detalle4->suscripcionId = 7981;
+$Objeto_detalle4->pagoCursoId = "0";
+$Objeto_detalle4->detalle = "NB 106:2000";
+$Objeto_detalle4->precioUnitario = "70.00";
+>>>>>>> 476a7acfa7822d3fb4d15970a0104ce4f74d47a9
 $Objeto_detalle4->cantidad = 1;
 
 $Array= array($Objeto_detalle4);
@@ -20,21 +27,31 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
+<<<<<<< HEAD
               "fechaFactura"=>'2020-07-29', // fecha de la factura
               "nitciCliente"=>'1020149020', //nit o ci de cliente
               "razonSocial"=>'Rosaicela Marzana Tapeosi', //razon social
               "importeTotal"=>"400", //importe total
               "tipoPago"=>5, // array con el detalle    
               "codLibretaDetalle"=>'3855', // array con el detalle
+=======
+              "fechaFactura"=>'2020-07-28', // fecha de la factura
+              "nitciCliente"=>'1020149020', //nit o ci de cliente
+              "razonSocial"=>'Rosaicela Marzana Tapeosi', //razon social
+              "importeTotal"=>"70", //importe total
+              "tipoPago"=>4, // array con el detalle    
+              "codLibretaDetalle"=>'0', // array con el detalle
+>>>>>>> 476a7acfa7822d3fb4d15970a0104ce4f74d47a9
 
               "items"=>$Array // array con el detalle    
               );
 $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+// $direccion="200.105.199.164:8008/ifinanciero/wsifin/";
     $parametros=json_encode($parametros);
     // abrimos la sesiรณn cURL
     $ch = curl_init();
     
-    curl_setopt($ch, CURLOPT_URL,$direccion."ws_generar_factura_test.php");
+    curl_setopt($ch, CURLOPT_URL,$direccion."ws_generar_factura.php");
     // indicamos el tipo de peticiรณn: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);
     // definimos cada uno de los parรกmetros

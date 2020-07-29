@@ -320,7 +320,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                 $cont_de_tipos_pago++;
                                                 $cod_tipopago=$cod_tipopago_aux;
                                                 $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_deposito_cuenta,$codigo_facturacion);//
-                                                $datos_FacManual=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
+                                                $datos_FacManual_de=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
                                               }
                                               // verifiacamos si pertenece a tipo de apgo anticipo
                                               $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$codigo_facturacion);                                              
@@ -328,29 +328,31 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                 $cont_de_tipos_pago++;
                                                 $cod_tipopago=$cod_tipopago_aux;
                                                 $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_anticipo,$codigo_facturacion);//
-                                                $datos_FacManual=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
+                                                $datos_FacManual_anticipo=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
+
+                                                $datos_FacManual_de.="/".$saldo_dc;//adicionamos el saldo de la libreta
                                               }
                                               if($cont_de_tipos_pago==2){?>
-                                                <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','4')">
+                                                <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','4')">
                                                     <i class="material-icons text-success">receipt</i> Generar Factura
                                                   </a>
-                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','5')">
+                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','5')">
                                                     <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                   </a><?php
                                               }else{
                                                 if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito se activa la libreta bancaria?>
-                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1')">
+                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','1')">
                                                     <i class="material-icons text-success">receipt</i> Generar Factura
                                                   </a>
-                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3')">
+                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','3')">
                                                     <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                   </a><?php                                               
                                                 }elseif($cod_tipopago==$cod_tipopago_anticipo){ //echo $cod_tipopago."-".$cod_tipopago_anticipo
                                                 ?>
-                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','1','0')">
+                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual_anticipo;?>','<?=$urlGenerarFacturas2;?>','1','0')">
                                                     <i class="material-icons text-success">receipt</i> Generar Factura
                                                   </a>
-                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual;?>','<?=$urlGenerarFacturas2;?>','3','0')">
+                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual_anticipo;?>','<?=$urlGenerarFacturas2;?>','3','0')">
                                                     <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                   </a>
                                                   <?php
