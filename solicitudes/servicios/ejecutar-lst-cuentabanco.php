@@ -10,17 +10,17 @@ $parametros=array();
 
  		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 						"accion"=>"ListaCuentaBancoxCliente",
-						"IdCliente" => 36241, //Id del Proveedor o Cliente
+						"IdCliente" => 41395, //Id del Proveedor o Cliente
 						); 
 	
 					
 //PARAMETROS PARA RECUPERAR LOS DATOS DE UNA CUENTA BANCARIA DE UN PROVEEDOR O CLIENTE 
 
- 		/*$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+ 		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 						"accion"=>"DatosCuentaBanco",
-						"IdCuentaBanco" => 2, //Id del registro de cuenta bancaria
-						"IdCliente" => 5 //Id del Proveedor o Cliente
-						);*/
+						"IdCuentaBanco" => 38, //Id del registro de cuenta bancaria
+						"IdCliente" => 41395 //Id del Proveedor o Cliente
+						);
 
 
 

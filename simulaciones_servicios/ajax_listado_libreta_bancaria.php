@@ -18,7 +18,11 @@ $tipo_listado=$_GET['tipo_listado'];
 $listarLib=1;
 ?>
 <?php  
-  $lista=obtenerObtenerLibretaBancaria();  
+$codLibretaBan=0;
+if(isset($_GET['codigo_lib'])){
+  $codLibretaBan=$_GET['codigo_lib'];
+}
+  $lista=obtenerObtenerLibretaBancariaIndividual($codLibretaBan);  
 ?>
 <style>
   tfoot input {
@@ -52,17 +56,7 @@ $listarLib=1;
             $Banco=$v->Banco;
             $detalle=$v->detalle;
             $index=1;
-            if(isset($_GET['codigo_lib'])){
-              if($v->CodLibreta==$_GET['codigo_lib']){
-                $listarLib=1;
-              }else{
-                if($_GET['codigo_lib']==0){
-                 $listarLib=1;
-                }else{
-                  $listarLib=0; 
-                }
-              }
-             }
+            
              if($listarLib==1){
             ?>            
             <tr>
