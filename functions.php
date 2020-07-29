@@ -7416,6 +7416,17 @@ function verificamosFacturaGenerada($codigo){
   }
   return $valor;  
 }
+function obtenerSolicitudFactura($codigo){
+  $dbh = new Conexion();
+  $stmtVerif = $dbh->prepare("SELECT cod_solicitudfacturacion from facturas_venta  where codigo=$codigo");
+  $stmtVerif->execute();
+  $valor=0;
+  while ($row = $stmtVerif->fetch())    
+  {
+    $valor=$row['cod_solicitudfacturacion'];      
+  }
+  return $valor;  
+}
 
 
 function obtener_dato_dosificacion($cod_dosificacion){

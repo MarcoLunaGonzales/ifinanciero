@@ -15666,7 +15666,7 @@ function ajax_listado_libreta_bancaria_filtrar(){
 }
 function seleccionar_libretaBancaria(cod_libreta){
   var indice=document.getElementById("indice").value;
-  var datos=document.getElementById("datos").value;
+  var datos=document.getElementById("datos").value; 
   var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
   var direccion=document.getElementById("direccion").value;
   switch (indice){
@@ -15714,6 +15714,9 @@ function abrirEstadoCuenta(datos,direccion,indice,cod_libreta){
   var cod_solicitudfacturacion=d[0];
   var saldo=d[2];
   var razon_social=d[5];
+  if(indice==4 || indice==5){
+    var saldo=d[6];
+  }
   document.getElementById("cod_solicitudfacturacion_ec").value=cod_solicitudfacturacion;
   document.getElementById("direccion_ec").value=direccion;
   document.getElementById("indice_ec").value=indice;//comprobamos si es para factura nomra o manual
