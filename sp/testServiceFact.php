@@ -5,32 +5,13 @@ require_once '../functions.php';
 
 $sIde = "facifin";
 $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
-// $Objeto_detalle = new stdClass();
-// $Objeto_detalle->suscripcionId = 0;
-// $Objeto_detalle->pagoCursoId = 123;
-// $Objeto_detalle->detalle = "Alimentos en Grano";
-// $Objeto_detalle->precioUnitario = 162;
-// $Objeto_detalle->cantidad = 1;
 
-// $Objeto_detalle2 = new stdClass();
-// $Objeto_detalle2->suscripcionId = 815;
-// $Objeto_detalle2->pagoCursoId = 0;
-// $Objeto_detalle2->detalle = "NB/ISO 10075-3:2006";
-// $Objeto_detalle2->precioUnitario = 101.00;
-// $Objeto_detalle2->cantidad = 1;
-
-// $Objeto_detalle3 = new stdClass();
-// $Objeto_detalle3->suscripcionId = 815;
-// $Objeto_detalle3->pagoCursoId = 0;
-// $Objeto_detalle3->detalle = "NB/ISO 22000:2018";
-// $Objeto_detalle3->precioUnitario = 214.00;
-// $Objeto_detalle3->cantidad = 1;
 
 $Objeto_detalle4 = new stdClass();
-$Objeto_detalle4->suscripcionId = 7664;
+$Objeto_detalle4->suscripcionId = 7825;
 $Objeto_detalle4->pagoCursoId = "0";
-$Objeto_detalle4->detalle = "venta de norma tienda";
-$Objeto_detalle4->precioUnitario = "200";
+$Objeto_detalle4->detalle = "NB 680:2016";
+$Objeto_detalle4->precioUnitario = "70";
 $Objeto_detalle4->cantidad = 1;
 
 $Array= array($Objeto_detalle4);
@@ -39,12 +20,12 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
-              "fechaFactura"=>'2020-07-24', // fecha de la factura
-              "nitciCliente"=>'5789813', //nit o ci de cliente
-              "razonSocial"=>'Sullcamani', //razon social
-              "importeTotal"=>"200", //importe total
-              "tipoPago"=>6, // array con el detalle    
-              "codLibretaDetalle"=>'5354,5355', // array con el detalle
+              "fechaFactura"=>'2020-07-29', // fecha de la factura
+              "nitciCliente"=>'1020149020', //nit o ci de cliente
+              "razonSocial"=>'Rosaicela Marzana Tapeosi', //razon social
+              "importeTotal"=>"400", //importe total
+              "tipoPago"=>5, // array con el detalle    
+              "codLibretaDetalle"=>'3855', // array con el detalle
 
               "items"=>$Array // array con el detalle    
               );
