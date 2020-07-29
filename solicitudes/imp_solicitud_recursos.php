@@ -193,11 +193,11 @@ $tituloImporte="";
             if($retencionX!=0){
               $tituloImporte=abrevRetencion($retencionX);
               $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
-              $montoImporte=$importeSolX*($porcentajeRetencion/100);  
-              $montoImporteRes=$importeSolX-$montoImporte;     
+              $montoImporte=$importeSolX*($porcentajeRetencion/100);       
               if(!($retencionX==3||$retencionX==4||$retencionX==5||$retencionX==7||$retencionX==1||$retencionX==9)){ //validacion del descuento por retencion
                 $montoImporte=$importeSolX;
               }
+              $montoImporteRes=$importeSolX-$montoImporte;
             }else{
              $tituloImporte="Ninguno";
              $montoImporte=$importeSolX;

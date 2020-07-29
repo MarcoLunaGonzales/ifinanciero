@@ -135,7 +135,7 @@ FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  c
             $saldoFactura=$rowLibDetalle['monto'];
             if($existeFactura>0){
               //calcular Saldo
-              $saldoFactura=obtenerSaldoLibretaBancariaDetalle($rowLibDetalle['codigo'],0);      
+              $saldoFactura=obtenerSaldoLibretaBancariaDetalle($rowLibDetalle['codigo']);      
              }else{
                if(!($codComprobante==""||$codComprobante==0)){
                   $datosDetalleCompro=obtenerDatosComprobanteDetalle($codComprobanteDetalle);
