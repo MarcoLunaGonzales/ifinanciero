@@ -5,6 +5,7 @@ require_once __DIR__.'/../conexion.php';
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
 require_once 'htmlFacturaCliente.php';
+require_once 'htmlFacturaCliente2.php';
 
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
@@ -70,6 +71,18 @@ try{
     }
   }elseif($admin==3){
     $htmlConta1=generarHTMLFacCliente($codigo,$auxiliar,5);
+    $array_html2=explode('@@@@@@', $htmlConta1);
+    $html2=$array_html2[0];
+    descargarPDFFacturas("IBNORCA-C".$cod_factura."-F".$nro_factura,$html2,$codigo_factura);
+    if($html2!='ERROR'){
+      $cod_factura=$array_html2[1];
+      $nro_factura=$array_html2[2];    
+    }else{
+      echo "hubo un error al generar la factura";
+    }
+
+  }elseif($admin==4){
+    $htmlConta1=generarHTMLFacCliente2($codigo,$auxiliar,6);
     $array_html2=explode('@@@@@@', $htmlConta1);
     $html2=$array_html2[0];
     descargarPDFFacturas("IBNORCA-C".$cod_factura."-F".$nro_factura,$html2,$codigo_factura);

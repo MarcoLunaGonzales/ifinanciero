@@ -99,12 +99,6 @@ $listarLib=1;
               else $color_aux="background-color:#f6ddcc;";
               
               $datosEnviarModal="";
-              $saldo_x=obtenerSaldoLibretaBancariaDetalle($CodLibretaDetalle);
-              if($saldo_x==0){
-                $saldo=$monto;
-              }else{
-                $saldo=$saldo_x;
-              }
               if($tipo_listado==1 || $saldo>0){//todo 
               $datosEnviarModal=$Fecha."####".$Descripcion." ".$InformacionComplementaria."####".number_format($monto,2)."####".number_format($saldo,2)."####".$saldo; 
                 ?>
