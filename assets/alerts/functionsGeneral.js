@@ -10377,12 +10377,38 @@ function cargarDatosProveedorPagos(){
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
            $("#data_pagosproveedores").html(resp);
+           //cargar_dataTable_ajax_grande('libreta_bancaria_reporte_modal');
+           //cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
+           $('#tablePaginatorHeaderFooter').DataTable({
+                "paging":   false,
+                  "info":     false,
+                  "language": {
+                      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                  },
+                  "order": false,
+                  "searching": true,
+                  fixedHeader: {
+                    header: true,
+                    footer: true
+                  },
+                  dom: 'Bfrtip',
+                  buttons:[                 
+                ]
+              });
+
            $('.selectpicker').selectpicker("refresh");
            //$("#nombre_ben").val($("#nombre_proveedor").val());
         }
       });
 }
-
+function cambiarComboProveedor(valor){
+  $('#proveedor').val(valor);
+  $('.selectpicker').selectpicker("refresh");
+  $("#cabecera_pago").removeClass("d-none");
+  $("#boton_pagar").removeClass("d-none");
+  $("#boton_volver").removeClass("d-none");
+  cargarDatosProveedorPagos();
+}
 function mostrarDatosChequeDetalle(fila){
   var tipo =$("#tipo_pago"+fila).val();
   if(tipo==1){
@@ -15573,6 +15599,44 @@ function cargar_dataTable_ajax(tabla){
       "paging":   false,
       "info":     false,          
       "scrollY":        "400px",
+      "scrollCollapse": true
+  });
+}
+function cargar_dataTable_ajax_grande(tabla){
+  // Setup - add a text input to each footer cell
+  $('#'+tabla+' tfoot th').each( function () {
+      var title = $(this).text();
+      $(this).html( '<input type="text" placeholder="'+title+'" />' );
+  } );
+
+  // DataTable
+  var table = $('#'+tabla+'').DataTable({
+      initComplete: function () {
+          // Apply the search
+          this.api().columns().every( function () {
+              var that = this;
+              $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                  if ( that.search() !== this.value ) {
+                      that
+                          .search( this.value )
+                          .draw(); 
+                   ponerSumatoriaDeMayorCuenta();       
+                      
+                  }
+              });
+          });
+      },
+      "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+      },
+      fixedHeader: {
+            header: true,
+            footer: true
+      },
+      "order": false,
+      "paging":   false,
+      "info":     false,          
+      "scrollY":        "900px",
       "scrollCollapse": true
   });
 }
