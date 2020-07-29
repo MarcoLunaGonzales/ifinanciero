@@ -18,7 +18,11 @@ $tipo_listado=$_GET['tipo_listado'];
 $listarLib=1;
 ?>
 <?php  
-  $lista=obtenerObtenerLibretaBancaria();  
+$codLibretaBan=0;
+if(isset($_GET['codigo_lib'])){
+  $codLibretaBan=$_GET['codigo_lib'];
+}
+  $lista=obtenerObtenerLibretaBancariaIndividual($codLibretaBan);  
 ?>
 <style>
   tfoot input {
@@ -52,17 +56,7 @@ $listarLib=1;
             $Banco=$v->Banco;
             $detalle=$v->detalle;
             $index=1;
-            if(isset($_GET['codigo_lib'])){
-              if($v->CodLibreta==$_GET['codigo_lib']){
-                $listarLib=1;
-              }else{
-                if($_GET['codigo_lib']==0){
-                 $listarLib=1;
-                }else{
-                  $listarLib=0; 
-                }
-              }
-             }
+            
              if($listarLib==1){
             ?>            
             <tr>
@@ -99,12 +93,6 @@ $listarLib=1;
               else $color_aux="background-color:#f6ddcc;";
               
               $datosEnviarModal="";
-              $saldo_x=obtenerSaldoLibretaBancariaDetalle($CodLibretaDetalle);
-              if($saldo_x==0){
-                $saldo=$monto;
-              }else{
-                $saldo=$saldo_x;
-              }
               if($tipo_listado==1 || $saldo>0){//todo 
               $datosEnviarModal=$Fecha."####".$Descripcion." ".$InformacionComplementaria."####".number_format($monto,2)."####".number_format($saldo,2)."####".$saldo; 
                 ?>

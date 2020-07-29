@@ -187,7 +187,8 @@ $stmtb->bindColumn('nombre', $nombre);
 
                           <?php }
 
-                          $saldo_inicial=$saldo_inicial+$monto;
+                          //$saldo_inicial=$saldo_inicial+$monto;
+                            $saldo_inicial=obtenerSaldoLibretaBancariaDetalle($codigo);
 
                           //==termina el codigom temporal
 
