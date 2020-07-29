@@ -23,6 +23,7 @@ tfoot input {
           <!--<td>Información C.</td>-->
           <td>Sucursal</td>
           <td>Monto</td>
+          <td>Saldo</td>
           <td width="10%">Nro Doc / Nro Ref</td>
           <!--<td width="10%"><a href="#" id="minus_tabla_lib" title="Abrir/Cerrar Facturas" class="text-white float-right"><i class="material-icons">switch_left</i></a>Estado</td>-->
           <td class="bg-success">Fecha</td>
@@ -31,6 +32,7 @@ tfoot input {
           <td class="bg-success">Razon Social</td>
           <td width="10%" class="bg-success">Detalle</td>
           <td class="bg-success">Monto</td>
+          
         </tr>
       </thead> 
       <?php
@@ -96,6 +98,7 @@ tfoot input {
               }  
             }
           }
+          $saldo=obtenerSaldoLibretaBancariaDetalle($codigo);
           if($entro==1){?>
             <tr>
               <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
@@ -105,6 +108,7 @@ tfoot input {
               </td>      
               <td class="text-left"><?=$agencia?></td>
               <td class="text-right"><?=number_format($monto,2,".",",")?></td>
+              <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
               <td class="text-right"><?=$nro_documento?></td>
               <?php 
               if($codFactura==""||$codFactura==0){
@@ -178,7 +182,7 @@ tfoot input {
         }
       }?>
       <tr class="font-weight-bold" style="background:#21618C; color:#fff;">
-        <td align="center" colspan="4" class="csp">Totales</td>
+        <td align="center" colspan="5" class="csp">Totales</td>
         <td class="text-right"><?=number_format($totalMonto,2,".",",")?></td>
         <td class="text-left"></td>
         <td class="text-left"></td>
@@ -198,6 +202,7 @@ tfoot input {
           <th>Descripcion</th>
           <th>Sucursal</th>
           <th>Monto</th>
+          <th>Saldo</th>
           <th>Nro Documento</th>
           <th class="bg-success">Fecha</th>
           <th class="bg-success">Numero</th>
