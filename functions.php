@@ -3804,7 +3804,7 @@ function descargarPDFOfertaPropuesta($nom,$html){
   $mydompdf->load_html($html);
   $mydompdf->render();
   $canvas = $mydompdf->get_canvas();
-  $canvas->page_text(490, 753, "PÁGINA {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("helvetica","bold"),7, array(255,255,255)); 
+  $canvas->page_text(490, 753, "PÁGINA {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("helvetica","bold"),7, array(0,0,0,0.4)); 
   $mydompdf->set_base_path('assets/libraries/plantillaPDFOfertaPropuesta.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 }
@@ -3858,10 +3858,10 @@ function descargarPDFFacturas($nom,$html,$codFactura){
     $text = "ANULADO"; 
     $txtHeight = -100; 
     $textWidth = 250; 
-    $canvas2->set_opacity(.2); 
+    $canvas2->set_opacity(.5); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(100,0,0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
   } 
 
@@ -3905,10 +3905,10 @@ function descargarPDFFacturasCopiaCliente($nom,$html,$codFactura){
     $text = "ANULADO"; 
     $txtHeight = -100; 
     $textWidth = 250; 
-    $canvas2->set_opacity(.2); 
+    $canvas2->set_opacity(.5); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(100,0,0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
    } 
     $pdf = $dompdf->output();
@@ -6609,10 +6609,10 @@ function eliminar_acentos($cadena){
     $text = "ANULADO"; 
     $txtHeight = -100; 
     $textWidth = 250; 
-    $canvas2->set_opacity(.2); 
+    $canvas2->set_opacity(.5); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(100,0,0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
    } 
 
@@ -8692,6 +8692,67 @@ function obtenerSaldoPorPagarProveedor($codigo){
       $valor=$row["saldo"];
    }
    return $valor; 
+}
+function obtenerValorOferta($codOferta,$codigo,$default){
+  $dbh = new Conexion();
+  $sql="SELECT descripcion FROM ofertas_complementos where cod_oferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1";
+  if($default==0){
+    $sql="SELECT descripcion FROM simulaciones_servicios_ofertas_complementos where cod_simulacionoferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1";
+  }
+   //echo $sql;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row["descripcion"];
+   }
+   return $valor; 
+}
+
+function obtenerOfertaActiva($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT codigo FROM simulaciones_servicios_ofertas where cod_simulacionservicio=$codigo and activo=1 and cod_estadoreferencial=1";
+   //echo $sql;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row["codigo"];
+   }
+   return $valor; 
+}
+
+function obtenerTituloEdicionOferta($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT nombre FROM simulaciones_servicios_ofertas where cod_simulacionservicio=$codigo and activo=1 and cod_estadoreferencial=1";
+   //echo $sql;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor="PRIMERA EDICIÓN";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row["nombre"];
+   }
+   return $valor; 
+}
+function obtenerCodigoSimulacionServicioOferta(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from simulaciones_servicios_ofertas c");
+   $stmt->execute();
+   $codigo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+   }
+   return($codigo);
+}
+function obtenerCodigoSimulacionServicioOfertaDetalle(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from simulaciones_servicios_ofertas_complementos c");
+   $stmt->execute();
+   $codigo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+   }
+   return($codigo);
 }
 ?>
 

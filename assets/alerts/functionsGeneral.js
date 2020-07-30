@@ -8978,7 +8978,7 @@ function guardarDatosProveedor(){
                   }else{
                     if(resp.trim()=="2"){
                       Swal.fire("Informativo!",respuesta.split("####")[1], "warning");
-                      //actualizarRegistroProveedor();
+                      actualizarRegistroProveedor();
                     }else{
                       Swal.fire("Error!",respuesta.split("####")[1], "warning");
                     }                    
@@ -9322,7 +9322,7 @@ function actualizarRegistroProveedor(){
         success:  function (resp) {
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos"); 
-           //actualizarCombosProveedores();
+           actualizarCombosProveedores();
            //alerts.showSwal('success-message','registerSolicitud.php?cod='+codigo);
         }
     });  
@@ -9342,9 +9342,9 @@ function actualizarCombosProveedores(){
         success:  function (resp) {
            detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
-           if($("#proveedores").length>0){
+           /*if($("#proveedores").length>0){
              $("#proveedores").html(resp);
-           }  
+           } */ 
            if($("#cantidad_filas").length>0){
              var filas = $("#cantidad_filas").val();
              for (var i = 1; i <= filas; i++) {

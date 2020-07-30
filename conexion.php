@@ -6,9 +6,7 @@ class Conexion extends PDO {
   private $nombre_de_base = 'ibnfinanciero100';
   private $usuario = 'root';
   private $contrasena = '';
-  
   private $port = '3306';
-
 
 
 public function __construct() {
