@@ -253,6 +253,7 @@ function GenerarComprobanteExistente($codigo_factura){
 						$sw_controlador=0;//contrala la entradas
 						while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {						
 							$monto_libreta_x=obtenerSaldoLibretaBancariaDetalle($codigo_libreta_det);
+							
 							if($monto_libreta_x==0){
 								$monto_libreta=$monto_libreta;
 							}else{
