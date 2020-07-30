@@ -1,5 +1,5 @@
-@page { margin-top: 95px; margin-left: 70px; margin-right: 70px; margin-bottom: 55px;}
-header { position: fixed; top: -58px; left: 0px; right: 0px; height: 70px;}
+@page { margin-top: 115px; margin-left: 70px; margin-right: 70px; margin-bottom: 55px;}
+header { position: fixed; top: -78px; left: 50px; right: 0px; height: 70px;}
 footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }
 
 
@@ -8,8 +8,17 @@ body{
 }
 .saltopagina{page-break-after:always;}
 
-#header_titulo_texto{text-align: center; font-size: 16px; font-weight: bold;}
-
+#header_titulo_texto{text-align: center; font-size: 16px; width:80%;}
+.imagen-logo-der{
+  position: absolute;
+  padding-left: 20px;
+  padding-top: -25px;
+  left: 550px;
+  top: 20px;
+  width:70px;
+  height:70px;
+  opacity: 0.5;
+}
 .titulo_texto_inf{text-align: center; font-size: 15px;padding-top: 20px;font-weight: bold;}
 
 
@@ -103,7 +112,7 @@ body{
 }
 
 .bg-danger{
-  background: #D53F39;
+  background: #CF1505;
 }
 .bg-plomo{
   background: #41565B;
@@ -147,6 +156,9 @@ body{
 }
 .pl-10{
   padding-left:80px;
+}
+.pl-20{
+  padding-left:240px;
 }
 
 .pr-2{

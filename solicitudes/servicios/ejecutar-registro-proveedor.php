@@ -11,7 +11,7 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 
  		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 						  "accion"=>"VerificaIdentificacionEmpresa", 
-						  "identificacion"=>3440079, //NIT de la empresa
+						  "identificacion"=>6298608011, //NIT de la empresa
 						  );
 
 /*PARAMETROS PARA REGISTRAR UNA EMPRESA PROVEEDORA
@@ -40,7 +40,7 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 		// abrimos la sesión cURL
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
-		curl_setopt($ch, CURLOPT_URL,$direccion."registro/ws-registro-proveedor.php"); // OFFICIAL
+		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/registro/ws-registro-proveedor.php"); // OFFICIAL
 		// curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/registro/ws-registro-proveedor.php"); // PRUEBA
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
