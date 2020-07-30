@@ -27,13 +27,14 @@ try{
 	    $contadorRentencion=0;
 	    $stringRetenciones="";
 	    while($rowVeriRetencion = $stmtVerifRetencion->fetch()) 
-	    {
+	    {		    
 	    	$nro_documento=$rowVeriRetencion['nro_documento'];
-	    	$importe_gasto_directo_x=$rowVeriRetencion['importe_gasto_directo'];
+	    	$importe_gasto_directo_x=$rowVeriRetencion['importe_gasto_directo'];	    
 	    	if($importe_gasto_directo_x==null || $importe_gasto_directo_x=='')$importe_gasto_directo_x=0;
 	    	$importe_factura_x=$rowVeriRetencion['importe_factura']+$importe_gasto_directo_x;
 
-	    	$monto_x=$rowVeriRetencion['monto'];	    	
+	    	$monto_x=$rowVeriRetencion['monto'];
+	    	$importe_factura_x=round($importe_factura_x, 2);
 	    	if($importe_factura_x!=$monto_x){
 	    		$contadorRentencion++;
 	    		$stringRetenciones.="Nro. Documento: ".$nro_documento."<br>";

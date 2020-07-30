@@ -65,7 +65,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
         </div>
         <div class="card-body">
           <!-- <div id="data_solicitudes_facturacion"> -->
-            <table class="table" id="tablePaginator">
+            <table class="table" id="tablePaginator50NoFinder">
               <thead>
                 <tr>
                   <th><small>Of - Area</small></th>

@@ -31,9 +31,6 @@ try {
     }else{
         $persona_contacto = 0;
     }
-    
-    
-
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];
     if(isset($_POST["cod_tipoobjeto"])){
@@ -49,7 +46,6 @@ try {
     else $dias_credito = '';
     if ($cod_facturacion == 0){//insertamos    
         $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
-
         $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud,dias_credito) 
         values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo','$persona_contacto',1,'$codigo_alterno',5,'$dias_credito')");//5 tipo solicitud de normas
         $flagSuccess=$stmt->execute();

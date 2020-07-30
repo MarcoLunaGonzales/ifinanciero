@@ -81,8 +81,8 @@ try{
       echo "hubo un error al generar la factura";
     }
 
-  }elseif($admin==4){
-    $htmlConta1=generarHTMLFacCliente2($codigo,$auxiliar,6);
+  }elseif($admin==5){
+    $htmlConta1=generarHTMLFacCliente2($codigo,$auxiliar,8);
     $array_html2=explode('@@@@@@', $htmlConta1);
     $html2=$array_html2[0];
     descargarPDFFacturas("IBNORCA-C".$cod_factura."-F".$nro_factura,$html2,$codigo_factura);

@@ -106,7 +106,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 <label class="col-sm-2 col-form-label">Detalle</label>
                 <div class="col-sm-9">
                 <div class="form-group">
-                  <textarea class="form-control" name="observaciones" id="observaciones" required onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$observaciones;?>"></textarea>
+                  <textarea class="form-control" name="observaciones" id="observaciones" required onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$observaciones;?></textarea>
                 </div>
                 </div>
             </div>              
@@ -118,7 +118,6 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
         </div>
       </form>
     </div>
-  
   </div>
 </div>
 <div class="cargar-ajax d-none">

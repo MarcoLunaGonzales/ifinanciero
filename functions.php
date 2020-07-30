@@ -7192,15 +7192,17 @@ function obtenerFechaSimulacionCosto($codigo){
   return $valor;
 }
 function verificar_codComprobante_cajaChica($codigo_cobt,$codigo_detalle){
-  $dbh = new Conexion();  
-  $sw=false;
-  $sql="SELECT c.codigo from caja_chicareembolsos c,caja_chica cc where c.cod_cajachica=cc.codigo and c.cod_estadoreferencial=1 and cc.cod_estadoreferencial=1 c.cod_comprobante=$codigo_cobt and c.cod_comprobante_detalle=$codigo_detalle";
+  $dbh = new Conexion();
+  $sql="SELECT c.codigo from caja_chicareembolsos c,caja_chica cc where c.cod_cajachica=cc.codigo and c.cod_estadoreferencial=1 and cc.cod_estadoreferencial=1 and c.cod_comprobante=$codigo_cobt and c.cod_comprobante_detalle=$codigo_detalle";  
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $sw=true;
+  $stmt->bindColumn('codigo', $codigo_detalle);  
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    // $valor=$row['cod_cuenta'];          
+    $valor=1;
   }
-  return $sw;
+  return $valor;
 }
 
 function verificarArchivoAdjuntoExistente($tipo,$padre,$objeto,$codArchivo){
@@ -8249,6 +8251,8 @@ function obtenerCodigoActividadProyecto($codigo){
   function importe_total_facturas($codigo){
     $dbh = new Conexion();
     $sql="SELECT importe from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo";
+    // $sql="SELECT sum(f.importe)+sum(f.exento)+sum(f.tasa_cero)+sum(f.ice) as importe from facturas_detalle_cajachica f where f.cod_cajachicadetalle=$codigo";
+
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $valor=0;
@@ -8259,7 +8263,9 @@ function obtenerCodigoActividadProyecto($codigo){
   }
   function importe_total_gastos_directos($codigo){
     $dbh = new Conexion();
-    $sql=" SELECT importe from detalle_cajachica_gastosdirectos where cod_cajachicadetalle=$codigo";
+    $sql=" SELECT importe from detalle_cajachica_gastosdirectos where cod_cajachicadetalle=$codigo
+      UNION 
+      SELECT sum(f.exento)+sum(f.tasa_cero)+sum(f.ice) as importe from facturas_detalle_cajachica f where f.cod_cajachicadetalle=$codigo";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $valor=0;
@@ -8455,7 +8461,7 @@ function obtenerDatosComprobanteDetalle($codigo){
 
 function obtenerStringFacturas($codigo){
   $dbh = new Conexion(); 
-  $stmtFActuras = $dbh->prepare("SELECT nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtFActuras = $dbh->prepare("SELECT nro_factura from facturas_venta where cod_estadofactura!=2 and cod_solicitudfacturacion=$codigo");
   $stmtFActuras->execute(); 
   // $stmtFActuras->bindColumn('codigo', $codigo_x);
   $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
@@ -8469,7 +8475,7 @@ function obtenerStringFacturas($codigo){
 }
 function obtenerStringCodigoFacturas($codigo){
   $dbh = new Conexion(); 
-  $stmtFActuras = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtFActuras = $dbh->prepare("SELECT codigo from facturas_venta where cod_estadofactura!=2 and cod_solicitudfacturacion=$codigo");
   $stmtFActuras->execute(); 
   $stmtFActuras->bindColumn('codigo', $codigo_x);
   // $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
