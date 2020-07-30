@@ -32,6 +32,7 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
     $fecha_inicio_cc = $resultInfo['fecha'];
     $fecha_cierre_cc = $resultInfo['fecha_cierre'];
     $cod_uo_x=$resultInfo['cod_uo'];
+    // $cod_tipodoccajachica_x=$resultInfo['cod_tipodoccajachica'];
     $nombre_uo_x=nameUnidad($cod_uo_x);
     // $contenido='CAJA CHICA N° '.$numero_cc." De Fecha: ".$fecha_inicio_cc." a ".$fecha_cierre_cc;
     $contenido='CAJA CHICA N° '.$numero_cc; 
@@ -54,10 +55,10 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
               <table  class="table table-bordered table-condensed" >
                 <thead>
                   <tr class="bold table-title text-center">
-                    <td colspan="8"><small><?=$nombre_tcc?></td>
+                    <td colspan="11"><small><?=$nombre_tcc?></td>
                   </tr>
                   <tr class="bold table-title text-center">
-                    <td colspan="8"><small><?=$contenido?></td>
+                    <td colspan="11"><small><?=$contenido?></td>
                   </tr>
                   <tr class="bold table-title text-center">
                     <td width="3%"><small>Fecha</small></td> 
@@ -65,9 +66,12 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                     <td width="40%"><small>Descripción</small></td>
                     <td width="4%"><small>N° Recibo</small></td>
                     <td width="5%"><small>Factura</small></td>                    
+                    <td width="5%"><small>Retención</small></td>
+                    <td width="5%"><small>% Mayor</small></td>
                     <td width="5%"><small>Ingreso</small></td>                    
                     <td width="5%"><small>Egreso</small></td>
                     <td width="5%"><small>Saldo</small></td>
+                    <td width="5%"><small>Importe <br>+ retención</small></td>
                   </tr>
                 </thead>
                 <tbody><?php
@@ -79,13 +83,17 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                       <td class="text-center small"><b>ASIGNACION DE FONDO</b></td>
                       <td class="text-center small"></td>
                       <td class="text-center small"></td>
+                      <td class="text-center small"></td>
+                      <td class="text-center small"></td>
                       <td class="text-center small"><?=formatNumberDec($monto_inicio_cc)?></td>
                       <td class="text-center small"></td>
                       <td class="text-right small"><b><?=formatNumberDec($monto_inicio_cc)?></b></td>
+                      <td class="text-right small"><b></b></td>
                   </tr><?php
                   $ingresos='';
                   $total_ingresos=$monto_inicio_cc;
                   $total_egresos=0;
+                  $total_retencion=0;
                   while ($row = $stmt->fetch()) 
                   {
                     $sw_rembolso=false;//indicamos que es un reembolso
@@ -96,7 +104,14 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                     $nombre_uo=abrevUnidad($row['cod_uo']);
                     $nombre_area=abrevArea($row['cod_area']);
                     $nro_recibo=$row['nro_recibo'];
-                    $tipo_retencion=$row['cod_tipodoccajachica'];
+                                        
+                    $tipo_retencion=abrevRetencion($row['cod_tipodoccajachica']);
+                    $porcentaje_retencion=porcentRetencion($row['cod_tipodoccajachica']);
+                    if($porcentaje_retencion>100)
+                      $porcentaje_retencion=$porcentaje_retencion-100;
+                    else $porcentaje_retencion=0;
+                    $importe_retencion=$row['monto']+($row['monto']*$porcentaje_retencion/100);
+                    $total_retencion=$total_retencion+$importe_retencion;
                     //nro factura
                     if(!$sw_rembolso){
                       $stmtFactura = $dbh->prepare("SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_cajachicadetalle");
@@ -118,6 +133,7 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                       $saldo_inicial=$saldo_inicial+$row['monto'];                
                       $nro_recibo='';
                     }
+
                     ?>
                     <tr>                      
                       <td class="text-center small"><?=$row['fecha']?></td>
@@ -127,9 +143,11 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                       <?php }else{?>
                         <td class="text-left small"></td>
                       <?php }?>
-                      <td class="text-left small"><?=$row['observaciones']?></td>
+                      <td class="text-left small"><small><?=$row['observaciones']?></small></td>
                       <td class="text-center small"><?=$nro_recibo?></td>
                       <td class="text-center small"><?=$nro_factura?></td>
+                      <td class="text-center small"><?=$tipo_retencion?></td>
+                      <td class="text-center small"><?=$porcentaje_retencion?></td>
                       <?php if(!$sw_rembolso){ ?>
                         <td class="text-right small"><?=$ingresos?>.</td>
                         <td class="text-right small"><?=formatNumberDec($row['monto'])?></td>
@@ -138,6 +156,7 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                         <td class="text-right small"></td>
                       <?php }?>
                       <td class="text-right small"><?=formatNumberDec($saldo_inicial)?></td>
+                      <td class="text-right small"><?=formatNumberDec($importe_retencion)?></td>
                     </tr>
                   <?php } ?>
                   <tr>                      
@@ -146,9 +165,12 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                     <td class="text-left small"></td>
                     <td class="text-center small"></td>
                     <td class="text-center small"></td>
+                    <td class="text-center small"></td>
                     <td class="text-right small"></td>
                     <td class="text-right small"></td>
-                    <td class="text-right small"><?php formatNumberDec($saldo_inicial)?></td>
+                    <td class="text-right small"></td>
+                    <td class="text-right small"><?= formatNumberDec($saldo_inicial)?></td>
+                    <td class="text-right small"><?= formatNumberDec($total_retencion)?></td>
                   </tr>
                 </tbody>
               </table>
@@ -160,8 +182,10 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                     <td width="40%" class="text-left small"><b>SUBTOTALES</b></td>
                     <td width="4%"></td>
                     <td width="5%"></td>                    
+                    <td width="5%"></td>                    
                     <td width="5%" class="text-right small"><?=formatNumberDec($total_ingresos)?></td>
                     <td width="5%" class="text-right small"><?=formatNumberDec($total_egresos)?></td>
+                    <td width="5%"></td>
                     <td width="5%"></td>
                   </tr>
                   <tr>
@@ -171,7 +195,9 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                     <td ></td>
                     <td ></td>                    
                     <td ></td>
+                    <td ></td>
                     <td class="text-right small"><b><?=formatNumberDec($total_egresos)?></b></td>
+                    <td ></td>
                     <td ></td>
                   </tr>
                   <tr>
@@ -181,7 +207,9 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                     <td ></td>
                     <td ></td>                    
                     <td ></td>
+                    <td ></td>
                     <td  class="text-right small"><b><?=formatNumberDec($saldo_inicial)?></b></td>
+                    <td ></td>
                     <td ></td>
                   </tr>
                  </tbody>

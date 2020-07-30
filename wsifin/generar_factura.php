@@ -192,7 +192,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             $flagSuccess=$stmtInsertSoliFactDet->execute();                         
                         }
                         if($flagSuccess){
-                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,$tipoPago,$CodLibretaDetalle,$normas);
+                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,$tipoPago,$CodLibretaDetalle,$normas,$cod_facturaVenta);
                             if($cod_comprobante==null || $cod_comprobante==''){
                                 $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo=$cod_facturaVenta";
                                 $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);

@@ -229,16 +229,16 @@ function GenerarComprobanteExistente($codigo_factura){
 			}else{
 				// echo $monto_total."---";
 				$ordenDetalle=1;//<--		
-				$cod_tipopago=obtenerValorConfiguracion(55);//deposito en cuenta
-				$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago);
-				$descripcion=$concepto_contabilizacion;
-				if($cod_tipopago=49){
+				$cod_tipopago_x=obtenerValorConfiguracion(55);//deposito en cuenta
+				$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago_x);
+				$descripcion=$concepto_contabilizacion;				
+				if($cod_tipoPago==220){
 					$tipoPago=4;
 				}else{
 					$tipoPago=5;
 				}
 				$sw=0;			
-				if($tipoPago==4){//caso payme				
+				if($tipoPago!=4){//caso payme				
 					if($cod_cuenta_libreta!='0'){					
 						$cod_cuenta_libreta=trim($cod_cuenta_libreta,",");
 						$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_cuenta_libreta) order by  monto desc";

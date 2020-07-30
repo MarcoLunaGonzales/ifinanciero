@@ -41,15 +41,15 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
               "fechaFactura"=>'2020-07-30', // fecha de la factura
               "nitciCliente"=>'8860067', //nit o ci de cliente
-              "razonSocial"=>'orge Gutiu00e9rrez 26', //razon social
+              "razonSocial"=>'Ismael Sullcamani', //razon social
               "importeTotal"=>"70", //importe total
               "tipoPago"=>6, // array con el detalle    
-              "codLibretaDetalle"=>'6514', // array con el detalle
+              "codLibretaDetalle"=>'4239', // array con el detalle
 
               "items"=>$Array // array con el detalle    
               );
-// $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
-$direccion="200.105.199.164:8008/ifinanciero/wsifin/";
+$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+// $direccion="200.105.199.164:8008/ifinanciero/wsifin/";
     $parametros=json_encode($parametros);
     // abrimos la sesiรณn cURL
     $ch = curl_init();

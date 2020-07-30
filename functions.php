@@ -8754,6 +8754,7 @@ function obtenerCodigoSimulacionServicioOfertaDetalle(){
    }
    return($codigo);
 }
+
 ?>
 
 
