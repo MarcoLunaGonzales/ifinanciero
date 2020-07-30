@@ -83,17 +83,17 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 						// }
 					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_libretas_X)";
 					// echo $sqlTipopago;
-					$stmtDetalleTipoPago = $dbh->prepare($sqlTipopago);
-					$stmtDetalleTipoPago->execute();							
-					$stmtDetalleTipoPago->bindColumn('codigo', $codigo_libreta_det);
-					$stmtDetalleTipoPago->bindColumn('cod_estado', $estado_libreta);  
-					$stmtDetalleTipoPago->bindColumn('monto', $monto_libreta);
+					$stmtLibreta = $dbh->prepare($sqlTipopago);
+					$stmtLibreta->execute();							
+					$stmtLibreta->bindColumn('codigo', $codigo_libreta_det);
+					$stmtLibreta->bindColumn('cod_estado', $estado_libreta);  
+					$stmtLibreta->bindColumn('monto', $monto_libreta);
 					$monto_libreta_total=0;
 					$array_libreta_save="";
 					$sw_controlador=0;//contrala la entradas
 
 					// echo $cod_libretas_X."--";
-					while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {		
+					while ($row_libreta = $stmtLibreta->fetch()) {		
 						// $monto_facturas=obtenerTotalFacturasLibreta($codigo_libreta_det);
 						$monto_libreta_x=obtenerSaldoLibretaBancariaDetalle($codigo_libreta_det);
 						if($monto_libreta_x==0){
@@ -157,7 +157,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 					}
 					$cuenta_axiliar=obtenerValorConfiguracion(63);//cod cuenta auxiliar por defecto para la anulacion de facturas		
 					$cod_proveedor=obtenerCodigoProveedorCuentaAux($cuenta_axiliar);	
-					$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta,$monto_tipopago_total,$cod_proveedor,'$fechaActual','$cod_compte_origen',$cuenta_axiliar,'1','$concepto_contabilizacion')";
+					$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta,$monto_tipopago,$cod_proveedor,'$fechaActual','$cod_compte_origen',$cuenta_axiliar,'1','$concepto_contabilizacion')";
 					// echo $sqlEstadoCuenta;
 		            $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
 		            $flagSuccess=$stmtEstadoCuenta->execute(); 
@@ -264,19 +264,20 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 			$cod_tipopago=obtenerValorConfiguracion(55);
 			$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago);
 			$descripcion=$concepto_contabilizacion;	
+			$sw=0;
 			if($tipoPago==4){//caso payme
 				if($cod_cuenta_libreta!='0'){
 					$cod_cuenta_libreta=trim($cod_cuenta_libreta,",");
-					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in (cod_cuenta_libreta) order by  monto desc";
-					$stmtDetalleTipoPago = $dbh->prepare($sqlTipopago);
-					$stmtDetalleTipoPago->execute();							
-					$stmtDetalleTipoPago->bindColumn('codigo', $codigo_libreta_det);
-					$stmtDetalleTipoPago->bindColumn('cod_estado', $estado_libreta);  
-					$stmtDetalleTipoPago->bindColumn('monto', $monto_libreta);
+					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_cuenta_libreta) order by  monto desc";
+					$stmtLibreta = $dbh->prepare($sqlTipopago);
+					$stmtLibreta->execute();							
+					$stmtLibreta->bindColumn('codigo', $codigo_libreta_det);
+					$stmtLibreta->bindColumn('cod_estado', $estado_libreta);  
+					$stmtLibreta->bindColumn('monto', $monto_libreta);
 					$monto_libreta_total=0;
 					$array_libreta_save="";
 					$sw_controlador=0;//contrala la entradas
-					while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {						
+					while ($row_libreta = $stmtLibreta->fetch()) {						
 						$monto_libreta_x=obtenerSaldoLibretaBancariaDetalle($codigo_libreta_det);
 						if($monto_libreta_x==0){
 							$monto_libreta=$monto_libreta;
@@ -316,6 +317,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 						}
 					}				
 					if($monto_libreta_total<$monto_total){					
+						$sw=1;
 						$sqldeletecomprobante="DELETE from comprobantes where codigo=$codComprobante";
                         $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
                         $flagSuccess=$stmtDeleteCopmprobante->execute();
@@ -342,37 +344,43 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
 				$ordenDetalle++;
 				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle);
-			}			
-            $ordenDetalle++;			
-			//para IT gasto
-			$cod_cuenta_it_gasto=obtenerValorConfiguracion(49);
-			$porcentaje_it_gasto=obtenerValorConfiguracion(2);
-			$monto_it_gasto=$porcentaje_it_gasto*$monto_total/100;
-			$descripcion_it_gasto=$concepto_contabilizacion;
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_gasto,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_it_gasto,0,$descripcion_it_gasto,$ordenDetalle);			
-	        $ordenDetalle++;
-	        //para IVA
-			$cod_cuenta_debito_iva=obtenerValorConfiguracion(50);
-			$porcentaje_debito_iva=obtenerValorConfiguracion(1);
-			$monto_debito_iva=$porcentaje_debito_iva*$monto_total/100;
-			$descripcion_debito_iva=$concepto_contabilizacion;
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_debito_iva,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_debito_iva,$descripcion_debito_iva,$ordenDetalle);			
-	        $ordenDetalle++;
-	        //para IT pasivo
-			$cod_cuenta_it_pasivo=obtenerValorConfiguracion(51);
-			$porcentaje_it_pasivo=obtenerValorConfiguracion(2);
-			$monto_it_pasivo=$porcentaje_it_pasivo*$monto_total/100;
-			$descripcion_it_pasivo=$concepto_contabilizacion;
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_it_pasivo,$descripcion_it_pasivo,$ordenDetalle);			
-	        $ordenDetalle++;	       
-	        //ingresos por capacitacion	  
-	        $porcentaje_pasivo=100-$porcentaje_debito_iva;
-			$monto_areas_format=$monto_total*$porcentaje_pasivo/100;
-			$descripcion=$concepto_contabilizacion;
-			$cod_cuenta_areas=obtenerCodCuentaArea($cod_area_solicitud);
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_areas_format,$descripcion,$ordenDetalle);
-            $ordenDetalle++;				
-			return $codComprobante;
+			}
+			
+			if($sw==0){
+				$ordenDetalle++;			
+				//para IT gasto
+				$cod_cuenta_it_gasto=obtenerValorConfiguracion(49);
+				$porcentaje_it_gasto=obtenerValorConfiguracion(2);
+				$monto_it_gasto=$porcentaje_it_gasto*$monto_total/100;
+				$descripcion_it_gasto=$concepto_contabilizacion;
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_gasto,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_it_gasto,0,$descripcion_it_gasto,$ordenDetalle);			
+		        $ordenDetalle++;
+		        //para IVA
+				$cod_cuenta_debito_iva=obtenerValorConfiguracion(50);
+				$porcentaje_debito_iva=obtenerValorConfiguracion(1);
+				$monto_debito_iva=$porcentaje_debito_iva*$monto_total/100;
+				$descripcion_debito_iva=$concepto_contabilizacion;
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_debito_iva,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_debito_iva,$descripcion_debito_iva,$ordenDetalle);			
+		        $ordenDetalle++;
+		        //para IT pasivo
+				$cod_cuenta_it_pasivo=obtenerValorConfiguracion(51);
+				$porcentaje_it_pasivo=obtenerValorConfiguracion(2);
+				$monto_it_pasivo=$porcentaje_it_pasivo*$monto_total/100;
+				$descripcion_it_pasivo=$concepto_contabilizacion;
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_it_pasivo,$descripcion_it_pasivo,$ordenDetalle);			
+		        $ordenDetalle++;	       
+		        //ingresos por capacitacion	  
+		        $porcentaje_pasivo=100-$porcentaje_debito_iva;
+				$monto_areas_format=$monto_total*$porcentaje_pasivo/100;
+				$descripcion=$concepto_contabilizacion;
+				$cod_cuenta_areas=obtenerCodCuentaArea($cod_area_solicitud);
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_areas_format,$descripcion,$ordenDetalle);
+	            $ordenDetalle++;				
+				return $codComprobante;	
+			}else{
+				return "-1";//error en montos
+			}
+            
 			// header('Location: ../comprobantes/imp.php?comp='.$codComprobante.'&mon=1');
 		}else{
 			return "";
@@ -428,6 +436,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 			$cod_tipopago=obtenerValorConfiguracion(55);//deposito  en cuenta
 			$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago);
 			$descripcion=$concepto_contabilizacion;	
+			$sw=0;
 			if($tipoPago==4){//caso payme
 				$cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
 				$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago_tarjetas);
@@ -443,15 +452,15 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 				if($cod_libretas_X!='0'){
 					$cod_libretas_X=trim($cod_libretas_X,",");
 					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_libretas_X) order by  monto desc";
-					$stmtDetalleTipoPago = $dbh->prepare($sqlTipopago);
-					$stmtDetalleTipoPago->execute();							
-					$stmtDetalleTipoPago->bindColumn('codigo', $codigo_libreta_det);
-					$stmtDetalleTipoPago->bindColumn('cod_estado', $estado_libreta);  
-					$stmtDetalleTipoPago->bindColumn('monto', $monto_libreta);
+					$stmtLibreta = $dbh->prepare($sqlTipopago);
+					$stmtLibreta->execute();							
+					$stmtLibreta->bindColumn('codigo', $codigo_libreta_det);
+					$stmtLibreta->bindColumn('cod_estado', $estado_libreta);  
+					$stmtLibreta->bindColumn('monto', $monto_libreta);
 					$monto_libreta_total=0;
 					$array_libreta_save="";
 					$sw_controlador=0;//contrala la entradas
-					while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {
+					while ($row_libreta = $stmtLibreta->fetch()) {
 						// $monto_facturas=obtenerTotalFacturasLibreta($codigo_libreta_det);
 						// $monto_libreta=$monto_libreta-$monto_facturas;
 						$monto_libreta_x=obtenerSaldoLibretaBancariaDetalle($codigo_libreta_det);
@@ -510,7 +519,8 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 					// 		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
 			  //           }
 					// }
-					if($monto_libreta_total<$monto_total){					
+					if($monto_libreta_total<$monto_total){	
+						$sw=1;				
 						$sqldeletecomprobante="DELETE from comprobantes where codigo=$codComprobante";
                         $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
                         $flagSuccess=$stmtDeleteCopmprobante->execute();
@@ -524,36 +534,40 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);
 				}
 			}
-            $ordenDetalle++;			
-			//para IT gasto
-			$cod_cuenta_it_gasto=obtenerValorConfiguracion(49);
-			$porcentaje_it_gasto=obtenerValorConfiguracion(2);
-			$monto_it_gasto=$porcentaje_it_gasto*$monto_total/100;
-			$descripcion_it_gasto=$concepto_contabilizacion;
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_gasto,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_it_gasto,0,$descripcion_it_gasto,$ordenDetalle);			
-	        $ordenDetalle++;
-	        //para IVA
-			$cod_cuenta_debito_iva=obtenerValorConfiguracion(50);
-			$porcentaje_debito_iva=obtenerValorConfiguracion(1);
-			$monto_debito_iva=$porcentaje_debito_iva*$monto_total/100;
-			$descripcion_debito_iva=$concepto_contabilizacion;
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_debito_iva,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_debito_iva,$descripcion_debito_iva,$ordenDetalle);			
-	        $ordenDetalle++;
-	        //para IT pasivo
-			$cod_cuenta_it_pasivo=obtenerValorConfiguracion(51);
-			$porcentaje_it_pasivo=obtenerValorConfiguracion(2);
-			$monto_it_pasivo=$porcentaje_it_pasivo*$monto_total/100;
-			$descripcion_it_pasivo=$concepto_contabilizacion;
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_it_pasivo,$descripcion_it_pasivo,$ordenDetalle);			
-	        $ordenDetalle++;	       
-	        //ingresos por capacitacion	  
-	        $porcentaje_pasivo=100-$porcentaje_debito_iva;
-			$monto_areas_format=$monto_total*$porcentaje_pasivo/100;
-			$descripcion=$concepto_contabilizacion;
-			$cod_cuenta_areas=obtenerCodCuentaArea($cod_area_solicitud);
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_areas_format,$descripcion,$ordenDetalle);
-            $ordenDetalle++;				
-			return $codComprobante;
+			if($sw==0){			
+	            $ordenDetalle++;			
+				//para IT gasto
+				$cod_cuenta_it_gasto=obtenerValorConfiguracion(49);
+				$porcentaje_it_gasto=obtenerValorConfiguracion(2);
+				$monto_it_gasto=$porcentaje_it_gasto*$monto_total/100;
+				$descripcion_it_gasto=$concepto_contabilizacion;
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_gasto,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_it_gasto,0,$descripcion_it_gasto,$ordenDetalle);			
+		        $ordenDetalle++;
+		        //para IVA
+				$cod_cuenta_debito_iva=obtenerValorConfiguracion(50);
+				$porcentaje_debito_iva=obtenerValorConfiguracion(1);
+				$monto_debito_iva=$porcentaje_debito_iva*$monto_total/100;
+				$descripcion_debito_iva=$concepto_contabilizacion;
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_debito_iva,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_debito_iva,$descripcion_debito_iva,$ordenDetalle);			
+		        $ordenDetalle++;
+		        //para IT pasivo
+				$cod_cuenta_it_pasivo=obtenerValorConfiguracion(51);
+				$porcentaje_it_pasivo=obtenerValorConfiguracion(2);
+				$monto_it_pasivo=$porcentaje_it_pasivo*$monto_total/100;
+				$descripcion_it_pasivo=$concepto_contabilizacion;
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_it_pasivo,$descripcion_it_pasivo,$ordenDetalle);			
+		        $ordenDetalle++;	       
+		        //ingresos por capacitacion	  
+		        $porcentaje_pasivo=100-$porcentaje_debito_iva;
+				$monto_areas_format=$monto_total*$porcentaje_pasivo/100;
+				$descripcion=$concepto_contabilizacion;
+				$cod_cuenta_areas=obtenerCodCuentaArea($cod_area_solicitud);
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_areas_format,$descripcion,$ordenDetalle);
+	            $ordenDetalle++;				
+				return $codComprobante;
+			}else{
+				return "-1";//error en montos
+			}
 			// header('Location: ../comprobantes/imp.php?comp='.$codComprobante.'&mon=1');
 		}else{
 			return "";

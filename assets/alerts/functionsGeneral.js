@@ -638,7 +638,7 @@ function listarFact(id){
      row.append($('<td>').addClass('').text(itemFacturas[id-1][i].iceFac));    
      row.append($('<td>').addClass('').text(itemFacturas[id-1][i].tipoFac));
      row.append($('<td>').addClass('').text(itemFacturas[id-1][i].tazaFac));
-
+ 
      row.append($('<td>').addClass('').html('<div class="btn-group"><button class="btn btn-success btn-sm btn-fab" onclick="editFac('+id+','+i+');"><i class="material-icons">edit</i></button><button class="btn btn-danger btn-sm btn-fab" onclick="removeFac('+id+','+i+');"><i class="material-icons">remove_circle</i></button></div>'));
      table.append(row);
    }
@@ -847,45 +847,112 @@ function listDistribuciones_cajachica(codigo){
 function abrirModalDCC(id){
   $('#'+id).modal('show');
 }
-function listarFactDCC(id){
+function listarFactDCC(id){ 
   // alert("entre");
   var div=$('<div>').addClass('table-responsive');
   var table = $('<table>').addClass('table table-condensed');
   var titulos = $('<tr>').addClass('');
-     titulos.append($('<th>').addClass('').text('#'));
-     titulos.append($('<th>').addClass('').text('NIT'));
-     titulos.append($('<th>').addClass('').text('FACTURA'));
-     titulos.append($('<th>').addClass('').text('FECHA'));
-     titulos.append($('<th>').addClass('').text('RAZON SOCIAL'));
-     titulos.append($('<th>').addClass('').text('IMPORTE'));
-     //titulos.append($('<th>').addClass('').text('EXCENTOS'));
-     titulos.append($('<th>').addClass('').text('AUTORIZACION'));
-     titulos.append($('<th>').addClass('').text('CONTROL'));
-     titulos.append($('<th>').addClass('').text('EXENTOS'));
-     titulos.append($('<th>').addClass('').text('ICE'));     
-     titulos.append($('<th>').addClass('').text('TASA'));
-     titulos.append($('<th>').addClass('').text('OPCION'));
-     table.append(titulos);
+  titulos.append($('<th>').addClass('').text('#'));
+  titulos.append($('<th>').addClass('').text('NIT'));
+  titulos.append($('<th>').addClass('').text('FACTURA'));
+  titulos.append($('<th>').addClass('').text('FECHA'));
+  titulos.append($('<th>').addClass('').text('RAZON SOCIAL'));
+  titulos.append($('<th>').addClass('').text('IMPORTE'));
+  //titulos.append($('<th>').addClass('').text('EXCENTOS'));
+  titulos.append($('<th>').addClass('').text('AUTORIZACION'));
+  titulos.append($('<th>').addClass('').text('CONTROL'));
+  titulos.append($('<th>').addClass('').text('EXENTOS'));
+  titulos.append($('<th>').addClass('').text('ICE'));     
+  titulos.append($('<th>').addClass('').text('TASA'));
+  titulos.append($('<th width="3%">').addClass('').text('OPCION'));
+  table.append(titulos);
    // console.log(itemFacturasDCC);
-   for (var i = 0; i < itemFacturasDCC[id-1].length; i++) {
-     var row = $('<tr>').addClass('');
-     row.append($('<td>').addClass('').text(i+1));
-     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].nit));
-     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].nroFac));
-     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].fechaFac));
-     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].razonFac));
-     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].impFac));
-     //row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].exeFac));
-     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].autFac));
-     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].conFac));
-     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].exeFac));
-     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].iceFac));         
-     row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].tasaFac));
-     row.append($('<td>').addClass('').html('<button class="btn btn-danger btn-link" onclick="removeFacDCC('+id+','+i+');"><i class="material-icons">remove_circle</i></button>'));
-     table.append(row);
-   }
-   div.append(table);
-   $('#divResultadoListaFac').html(div);
+  for (var i = 0; i < itemFacturasDCC[id-1].length; i++) {
+    var row = $('<tr>').addClass('');
+    row.append($('<td>').addClass('').text(i+1));
+    row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].nit));
+    row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].nroFac));
+    row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].fechaFac));
+    row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].razonFac));
+    row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].impFac));
+    //row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].exeFac));
+    row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].autFac));
+    row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].conFac));
+    row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].exeFac));
+    row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].iceFac));         
+    row.append($('<td>').addClass('').text(itemFacturasDCC[id-1][i].tasaFac));
+    var nit_x=itemFacturasDCC[id-1][i].nit;
+    var nro_fac_x=itemFacturasDCC[id-1][i].nroFac;    
+    if(nit_x==0 && nro_fac_x==0){//es un gasto directo
+      row.append($('<td>').addClass('').html('<button class="btn btn-danger btn-sm btn-link" onclick="removeFacDCC('+id+','+i+');"><i class="material-icons">remove_circle</i></button></div>'));
+    }else{//facturanormal
+      row.append($('<td>').addClass('').html('<a type="botton" class="btn btn-success btn-sm btn-link" onclick="editFac_cajachica('+id+','+i+');"><i class="material-icons">edit</i></a>'+
+      '<button class="btn btn-danger btn-sm btn-link" onclick="removeFacDCC('+id+','+i+');"><i class="material-icons">remove_circle</i></button>'));
+    }    
+    table.append(row);
+  }
+  div.append(table);
+  $('#divResultadoListaFac').html(div);
+}
+function editFac_cajachica(fila,i){
+  $("#fila_fac").val(fila);
+  $("#indice_fac").val(i);
+  $("#nit_fac_edit").val(itemFacturasDCC[fila-1][i].nit);
+  $("#nro_fac_edit").val(itemFacturasDCC[fila-1][i].nroFac);
+  $("#fecha_fac_edit").val(itemFacturasDCC[fila-1][i].fechaFac);
+  $("#imp_fac_edit").val(itemFacturasDCC[fila-1][i].impFac);
+  $("#exe_fac_edit").val(itemFacturasDCC[fila-1][i].exeFac);
+  $("#ice_fac_edit").val(itemFacturasDCC[fila-1][i].iceFac);
+  $("#taza_fac_edit").val(itemFacturasDCC[fila-1][i].tasaFac);
+  $("#aut_fac_edit").val(itemFacturasDCC[fila-1][i].autFac);
+  $("#con_fac_edit").val(itemFacturasDCC[fila-1][i].conFac);
+  $("#tipo_fac_edit").val(itemFacturasDCC[fila-1][i].tipoFac);
+  $("#razon_fac_edit").val(itemFacturasDCC[fila-1][i].razonFac);
+  $('.selectpicker').selectpicker("refresh");
+  $("#modalEditFac").modal("show");
+}
+function saveFacturaEdit_cajachica(){
+  if($('#nit_fac_edit').val()!=''){
+      if($('#nro_fac_edit').val()!=''){
+        if($('#fecha_fac_edit').val()!=''){        
+            if($('#imp_fac_edit').val()!=''){
+              if($('#aut_fac_edit').val()!=''){              
+                  if($('#razon_fac_edit').val()!=''){
+                    var fila = $("#fila_fac").val();
+                    var i = $("#indice_fac").val();
+                    itemFacturasDCC[fila-1][i].nit=$("#nit_fac_edit").val();
+                    itemFacturasDCC[fila-1][i].nroFac=$("#nro_fac_edit").val();
+                    itemFacturasDCC[fila-1][i].fechaFac=$("#fecha_fac_edit").val();
+                    itemFacturasDCC[fila-1][i].impFac=$("#imp_fac_edit").val();
+                    itemFacturasDCC[fila-1][i].exeFac=$("#exe_fac_edit").val();
+                    itemFacturasDCC[fila-1][i].iceFac=$("#ice_fac_edit").val();
+                    itemFacturasDCC[fila-1][i].tasaFac=$("#taza_fac_edit").val();
+                    itemFacturasDCC[fila-1][i].autFac=$("#aut_fac_edit").val();
+                    itemFacturasDCC[fila-1][i].conFac=$("#con_fac_edit").val();
+                    itemFacturasDCC[fila-1][i].tipoFac=$("#tipo_fac_edit").val();
+                    itemFacturasDCC[fila-1][i].razonFac=$("#razon_fac_edit").val();
+                    $("#modalEditFac").modal("hide");                    
+                    listarFactDCC(fila);                
+                    $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
+                    $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");               
+                  }else{
+                    alertaModal('Campo "Razón Social" Vacío.','bg-primary','text-white');
+                  }
+              }else{
+                alertaModal('Campo "Nro. Autorización" Vacío.','bg-primary','text-white');
+              }
+            }else{
+              alertaModal('Campo "Importe" Vacío.','bg-primary','text-white');
+            }
+        }else{
+          alertaModal('Campo "Fecha" Vacío.','bg-primary','text-white');
+        }  
+      }else{
+        alertaModal('Campo "Nro. Factura" Vacío.','bg-primary','text-white');
+      }  
+    }else{
+      alertaModal('Campo "NIT" Vacío.','bg-primary','text-white');
+    }                 
 }
 function saveFacturaDCC(){
   var index=$('#codCuenta').val();

@@ -38,6 +38,7 @@ try{
 	    	$importe_factura_x=$rowVeriRetencion['importe_factura']+$importe_gasto_directo_x;
 
 	    	$monto_x=$rowVeriRetencion['monto'];	    	
+	    	$importe_factura_x=round($importe_factura_x, 2);
 	    	if($importe_factura_x!=$monto_x){
 	    		$contadorRentencion++;
 	    		$stringRetenciones.="Nro. Documento: ".$nro_documento."<br>";

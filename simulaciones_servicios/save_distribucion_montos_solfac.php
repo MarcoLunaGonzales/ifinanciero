@@ -8,18 +8,28 @@ if(isset($_POST['tiposPago_facturacion'])){
     $tiposPago_facturacion= json_decode($_POST['tiposPago_facturacion']);
     $nF=cantidadF($tiposPago_facturacion[0]);
     if($nF>0){
+        $tipo_pago_mayor=0;//varibale que alamcenara el tipo de pago en la solictud
+        $monto_bob_mayor=0;
+
         $sw_auxiliar_tp=1;
         for($j=0;$j<$nF;$j++){
             $codigo_tipopago=$tiposPago_facturacion[0][$j]->codigo_tipopago;
             $monto_porcentaje=$tiposPago_facturacion[0][$j]->monto_porcentaje;
             $monto_bob=$tiposPago_facturacion[0][$j]->monto_bob;                                
+            if($monto_bob_mayor<$monto_bob){
+                $monto_bob_mayor=$monto_bob;
+                $tipo_pago_mayor=$codigo_tipopago;
+            }
             // echo "codigo_tipopago:".$codigo_tipopago."<br>";
             // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
-            // echo "monto_bob:".$monto_bob."<br>";          
+            // echo "monto_bob:".$monto_bob."<br>";                      
             $sqlTiposPago="INSERT INTO solicitudes_facturacion_tipospago(cod_solicitudfacturacion, cod_tipopago, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_tipopago','$monto_porcentaje','$monto_bob')";
             $stmtTiposPago = $dbh->prepare($sqlTiposPago);
             $stmtTiposPago->execute();
         }
+        $stmtUpdateFormaPago = $dbh->prepare("UPDATE solicitudes_facturacion set cod_tipopago='$tipo_pago_mayor'
+        where codigo = $cod_facturacion");      
+        $stmtUpdateFormaPago->execute();
     }
 }
 if($sw_auxiliar_tp==0){//cuando no haya objeto tipo de pago

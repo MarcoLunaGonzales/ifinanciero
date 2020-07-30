@@ -11,9 +11,9 @@ $dbh = new Conexion();
 session_start();
 
 //$cuentasX=$_POST["cuentas"];
-// $cuentasX=json_decode($_POST["cuentas2"]);
+$cuentasX=json_decode($_POST["cuentas2"]);
 
-$cuentasX=$_POST["cuentas"];
+// $cuentasX=$_POST["cuentas"];
 // $codPartida=$_POST["cod_partida"];
 
 $stmtDel = $dbh->prepare("DELETE FROM plan_cuentas_cajachica ");
@@ -21,10 +21,12 @@ $stmtDel->execute();
 $flagSuccessDetail=true;
 
 
-for ($i=0;$i<count($cuentasX);$i++){ 	    
-	 echo $cuentasX[$i]."<br>";
+for ($i=0;$i<count($cuentasX);$i++){
+	$numero_x=$cuentasX[$i]->numero;
+	$cod_cuenta=buscarCuentaAnterior($numero_x);
+	 // echo $cod_cuenta."<br>";
 	$stmt = $dbh->prepare("INSERT INTO plan_cuentas_cajachica(cod_cuenta) VALUES (:cod_cuenta)");
-	$stmt->bindParam(':cod_cuenta', $cuentasX[$i]);
+	$stmt->bindParam(':cod_cuenta', $cod_cuenta);
 	$flagSuccess2=$stmt->execute();
 	if($flagSuccess2==false){
 		$flagSuccessDetail=false;

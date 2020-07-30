@@ -437,7 +437,7 @@
             .appendTo('#form_partidaspresupuestarias');     
       });
       $("#form_partidaspresupuestariasCC").submit(function(e) {
-          var datos=alertDatosTabla();
+          var datos=cuentas_tabla;
           $('<input />').attr('type', 'hidden')
             .attr('name', 'cuentas2')
             .attr('value', JSON.stringify(datos))

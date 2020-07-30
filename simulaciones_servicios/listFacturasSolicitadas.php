@@ -88,7 +88,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                     </div>
                   </div>
                   <div class="card-body">
-                      <table class="table" id="tablePaginator">
+                      <table class="table" id="tablePaginator50NoFinder">
                         <thead>
                           <tr>
                             <th><small>Of - Area</small></th>
@@ -321,7 +321,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <td class="td-actions text-right">                              
                               <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
                               <?php        
-                              $obs_devolucion = preg_replace("[\n|\r|\n\r]", " ", $obs_devolucion);                     
+                              $obs_devolucion = preg_replace("[\n|\r|\n\r]", ", ", $obs_devolucion);                     
                                 if($cod_estado_factura_x!=4){
                                   // echo $codigo_fact_x."-";
                                   if($codigo_fact_x>0 && $cod_estado_factura_x!=2 && $cod_estado_factura_x!=5){//print facturas

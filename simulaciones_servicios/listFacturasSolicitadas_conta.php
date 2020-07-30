@@ -201,24 +201,24 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             $sumaTotalDescuento_por=0;
                             $sumaTotalDescuento_bob=0;
                             while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                              $dato = new stdClass();//obejto
-                              $codFila=(int)$row2['codigo'];
-                              $cod_claservicioX=trim($row2['nombre_serv']);
+                              // $dato = new stdClass();//obejto
+                              // $codFila=(int)$row2['codigo'];
+                              // $cod_claservicioX=trim($row2['nombre_serv']);
                               $cantidadX=trim($row2['cantidad']);                              
                               // $precioX=(trim($row2['precio'])*$cantidadX);
                               $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
                               $descuento_porX=trim($row2['descuento_por']);
                               $descuento_bobX=trim($row2['descuento_bob']);                             
-                              $descripcion_alternaX=trim($row2['descripcion_alterna']);
-                              $dato->codigo=($nc+1);
-                              $dato->cod_facturacion=$codFila;
-                              $dato->serviciox=$cod_claservicioX;
-                              $dato->cantidadX=$cantidadX;
-                              $dato->precioX=$precioX;
-                              $dato->descuento_porX=$descuento_porX;
-                              $dato->descuento_bobX=$descuento_bobX;
-                              $dato->descripcion_alternaX=$descripcion_alternaX;
-                              $datos[$index-1][$nc]=$dato;                           
+                              // $descripcion_alternaX=trim($row2['descripcion_alterna']);
+                              // $dato->codigo=($nc+1);
+                              // $dato->cod_facturacion=$codFila;
+                              // $dato->serviciox=$cod_claservicioX;
+                              // $dato->cantidadX=$cantidadX;
+                              // $dato->precioX=$precioX;
+                              // $dato->descuento_porX=$descuento_porX;
+                              // $dato->descuento_bobX=$descuento_bobX;
+                              // $dato->descripcion_alternaX=$descripcion_alternaX;
+                              // $datos[$index-1][$nc]=$dato;                           
                               $nc++;
                               $sumaTotalMonto+=$precioX;
                               $sumaTotalDescuento_por+=$descuento_porX;
@@ -229,43 +229,43 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             // $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
                             // if($importe_fact_x!=$sumaTotalImporte && $cod_estado_factura_x!=4){ //para los items de la factura a pagos
                               ?>
-                              <script>var nfac=[];itemGenerar_factura_parcial.push(nfac);</script>
+                              <!-- <script>var nfac=[];itemGenerar_factura_parcial.push(nfac);</script> -->
                               <?php
-                                $queryParciales = "SELECT codigo,cantidad,descuento_bob,precio,cod_claservicio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
-                                $statementParciales = $dbh->query($queryParciales);
-                                $nc_parciales=0;
-                                while ($row = $statementParciales->fetch()){ 
-                                  $cod_claservicio=$row['cod_claservicio'];
-                                  //busacmos el monto ya pagado;
+                                // $queryParciales = "SELECT codigo,cantidad,descuento_bob,precio,cod_claservicio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
+                                // $statementParciales = $dbh->query($queryParciales);
+                                // $nc_parciales=0;
+                                // while ($row = $statementParciales->fetch()){ 
+                                //   $cod_claservicio=$row['cod_claservicio'];
+                                //   //busacmos el monto ya pagado;
 
-                                  $cadenaCodFacturas_x=trim($cadenaCodFacturas,',');
-                                  $sqlMontoFact="SELECT sum(precio) as precio_x from facturas_ventadetalle where cod_facturaventa in ($cadenaCodFacturas_x) and cod_claservicio=$cod_claservicio";
-                                  // echo $sqlMontoFact;
-                                  $stmtFactMontoFacturado = $dbh->prepare($sqlMontoFact);
-                                  $stmtFactMontoFacturado->execute();
-                                  $resultMontoFAC = $stmtFactMontoFacturado->fetch();
-                                  $importe_facturato = $resultMontoFAC['precio_x'];
-                                  // echo "importe:".$importe_facturato;
-                                  // echo $importe_facturato;
-                                  //objeto dato donde guarda tipos de pago
-                                  $dato_parcial = new stdClass();//obejto
-                                  $codFila=(int)$cod_claservicio;                                  
-                                  $cantidad_x=trim($row['cantidad']);
-                                  $precio_x=trim($row['precio']);
-                                  $descuento_x=trim($row['descuento_bob']);
-                                  $descripcion_x=trim($row['descripcion_alterna']);
-                                  $dato_parcial->codigo=($nc_parciales+1);
-                                  $dato_parcial->cod_claservicio=$codFila;
-                                  $dato_parcial->preciox=$precio_x;
-                                  $dato_parcial->cantidadxx=$cantidad_x;
-                                  $dato_parcial->descuentox=$descuento_x;
-                                  if($importe_fact_x!=0)$dato_parcial->importe_anterior_x=$importe_facturato;
-                                  else $dato_parcial->importe_anterior_x=0;
-                                  $dato_parcial->descripcionx=$descripcion_x;                
-                                  $dato_parciales[$index-1][$nc_parciales]=$dato_parcial;                           
-                                  $nc_parciales++;
-                                } 
-                                $cont_pagosParciales[$index-1]=$nc_parciales;
+                                //   // $cadenaCodFacturas_x=trim($cadenaCodFacturas,',');
+                                //   // $sqlMontoFact="SELECT sum(precio) as precio_x from facturas_ventadetalle where cod_facturaventa in ($cadenaCodFacturas_x) and cod_claservicio=$cod_claservicio";
+                                //   // // echo $sqlMontoFact;
+                                //   // $stmtFactMontoFacturado = $dbh->prepare($sqlMontoFact);
+                                //   // $stmtFactMontoFacturado->execute();
+                                //   // $resultMontoFAC = $stmtFactMontoFacturado->fetch();
+                                //   // $importe_facturato = $resultMontoFAC['precio_x'];
+                                //   // // echo "importe:".$importe_facturato;
+                                //   // // echo $importe_facturato;
+                                //   // //objeto dato donde guarda tipos de pago
+                                //   // $dato_parcial = new stdClass();//obejto
+                                //   // $codFila=(int)$cod_claservicio;                                  
+                                //   // $cantidad_x=trim($row['cantidad']);
+                                //   // $precio_x=trim($row['precio']);
+                                //   // $descuento_x=trim($row['descuento_bob']);
+                                //   // $descripcion_x=trim($row['descripcion_alterna']);
+                                //   // $dato_parcial->codigo=($nc_parciales+1);
+                                //   // $dato_parcial->cod_claservicio=$codFila;
+                                //   // $dato_parcial->preciox=$precio_x;
+                                //   // $dato_parcial->cantidadxx=$cantidad_x;
+                                //   // $dato_parcial->descuentox=$descuento_x;
+                                //   // if($importe_fact_x!=0)$dato_parcial->importe_anterior_x=$importe_facturato;
+                                //   // else $dato_parcial->importe_anterior_x=0;
+                                //   // $dato_parcial->descripcionx=$descripcion_x;                
+                                //   // $dato_parciales[$index-1][$nc_parciales]=$dato_parcial;                           
+                                //   // $nc_parciales++;
+                                // } 
+                                // $cont_pagosParciales[$index-1]=$nc_parciales;
                               $saldo=0;
 
                               $saldo=$sumaTotalImporte-$importe_fact_x;
@@ -413,7 +413,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   </div>
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
 <?php  require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
-<?php 
+<!-- <?php 
   $lan=sizeof($cont);
   error_reporting(0);
   for ($i=0; $i < $lan; $i++) {
@@ -427,7 +427,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
           }
       ?><script>detalle_tabla_general.push(detalle_fac);</script><?php                    
   }
-?>
+?> -->
 
 <!-- para la factura manual -->
 <script type="text/javascript">
@@ -514,26 +514,26 @@ $globalAdmin=$_SESSION["globalAdmin"];
 </script>
 <!-- objeto tipo de pago -->
 <?php 
-    $lan_parciales=sizeof($cont_pagosParciales);//filas si lo hubiese         
+    //$lan_parciales=sizeof($cont_pagosParciales);//filas si lo hubiese         
     // echo "cont:".$lan_parciales;
     // var_dump($dato_parciales[2]);
-    for ($i=0; $i < $lan_parciales; $i++) {
+    //for ($i=0; $i < $lan_parciales; $i++) {
       // echo "i:".$i."<br>";
       ?>
       <script>var detalle_pagoparcial=[];</script>
       <?php      
-        for ($j=0; $j < $cont_pagosParciales[$i]; $j++) {
+        //for ($j=0; $j < $cont_pagosParciales[$i]; $j++) {
 
-             if($cont_pagosParciales[$i]>0){?>
+            // if($cont_pagosParciales[$i]>0){?>
                 <script>
-                    detalle_pagoparcial.push({codigo:<?=$dato_parciales[$i][$j]->codigo?>,codigox:<?=$dato_parciales[$i][$j]->cod_claservicio?>,preciox:'<?=$dato_parciales[$i][$j]->preciox?>',cantidadxx:'<?=$dato_parciales[$i][$j]->cantidadxx?>',descuentox:'<?=$dato_parciales[$i][$j]->descuentox?>',importe_anterior_x:'<?=$dato_parciales[$i][$j]->importe_anterior_x?>',descripcionx:'<?=$dato_parciales[$i][$j]->descripcionx?>'});
+              //      detalle_pagoparcial.push({codigo:<?=$dato_parciales[$i][$j]->codigo?>,codigox:<?=$dato_parciales[$i][$j]->cod_claservicio?>,preciox:'<?=$dato_parciales[$i][$j]->preciox?>',cantidadxx:'<?=$dato_parciales[$i][$j]->cantidadxx?>',descuentox:'<?=$dato_parciales[$i][$j]->descuentox?>',importe_anterior_x:'<?=$dato_parciales[$i][$j]->importe_anterior_x?>',descripcionx:'<?=$dato_parciales[$i][$j]->descripcionx?>'});
                     // console.log(detalle_pagoparcial);
                 </script>
 
               <?php
-              }          
-            }
-        ?><script>itemGenerar_factura_parcial_aux.push(detalle_pagoparcial);
+            //   }          
+            // }
+        ?><script>//itemGenerar_factura_parcial_aux.push(detalle_pagoparcial);
         </script><?php                    
-    }
+    // }
 ?>
