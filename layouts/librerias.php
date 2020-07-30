@@ -428,6 +428,23 @@
           }
         }     
       });
+       $('#tablePaginatorHeaderFooter').DataTable({
+                "paging":   false,
+                  "info":     false,
+                  "language": {
+                      "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                  },
+                  "order": false,
+                  "searching": false,
+                  fixedHeader: {
+                    header: true,
+                    footer: true
+                  },
+                  dom: 'Bfrtip',
+                  buttons:[                 
+                ]
+              });
+
 
       $("#form_partidaspresupuestarias").submit(function(e) {
           var datos=alertDatosTabla();

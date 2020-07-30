@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(-1);
 require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
 require_once '../functions.php';
@@ -32,18 +32,24 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 
 $fechaHoraSistema=date("Y-m-d H:i:s");
 
-
+$SQLDATOSINSTERT=[];
 $codComprobante=$_POST['codigo_comprobante'];
+
+// 
+$sqlCommit="SET AUTOCOMMIT=0;";
+$stmtCommit = $dbh->prepare($sqlCommit);
+$stmtCommit->execute();
+
+
 $sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraSistema', modified_by='$globalUser' where codigo=$codComprobante";
 //echo $sqlUpdate;
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();	
-
-//
+array_push($SQLDATOSINSTERT,$flagSuccess);
 $sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=0, cod_comprobantedetalle=0,cod_estado=0 where cod_comprobante=$codComprobante";
 $stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
-$stmtDetalleUpdate->execute(); 
-
+$flagsuccess=$stmtDetalleUpdate->execute(); 
+array_push($SQLDATOSINSTERT,$flagsuccess);
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
     foreach($_FILES["archivos"]['tmp_name'] as $key => $tmp_name)
@@ -79,17 +85,20 @@ $stmtDetalleUpdate->execute();
       $sqlDeleteEstado="";
       $sqlDeleteEstado="DELETE from estados_cuenta where cod_comprobantedetalle='$codigo'";
       $stmtDelEstado = $dbh->prepare($sqlDeleteEstado);
-      $stmtDelEstado->execute();
+      $flagsuccess=$stmtDelEstado->execute();
+      array_push($SQLDATOSINSTERT,$flagsuccess);
       $sqlDeleteFactura="";
       $sqlDeleteFactura="DELETE from facturas_compra where cod_comprobantedetalle='$codigo'";
       $stmtDelFactura = $dbh->prepare($sqlDeleteFactura);
-      $stmtDelFactura->execute();
+      $flagsuccess=$stmtDelFactura->execute();
+      array_push($SQLDATOSINSTERT,$flagsuccess);
     }
     if(!isset($_POST['incompleto'])){
       $sqlDelete="";
       $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
       $stmtDel = $dbh->prepare($sqlDelete);
       $flagSuccess=$stmtDel->execute();
+      array_push($SQLDATOSINSTERT,$flagsuccess);
     }
        //BORRAMOS LA TABLA
 		/**/
@@ -111,20 +120,24 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       $codComprobanteDetalle=$codigoDetalle;
       $sqlDetalle="UPDATE comprobantes_detalle SET cod_comprobante=$codComprobante , cod_cuenta= '$cuenta', cod_cuentaauxiliar= '$cuentaAuxiliar', cod_unidadorganizacional= '$unidadDetalle', cod_area= '$area', debe= '$debe', haber= '$haber', glosa= '$glosaDetalle', orden ='$i'  where codigo='$codComprobanteDetalle' ";
 		  $stmtDetalle = $dbh->prepare($sqlDetalle);
-		  $flagSuccessDetalle=$stmtDetalle->execute();	
+		  $flagSuccessDetalle=$stmtDetalle->execute();
+      array_push($SQLDATOSINSTERT,$flagSuccessDetalle);	
     }else{
-      $codigoDetalle=obtenerCodigoComprobanteDetalle();
+      $codigoDetalle=obtenerCodigoComprobanteDetalle()+($i-1);
       $codComprobanteDetalle=$codigoDetalle;
       $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
       $stmtDetalle = $dbh->prepare($sqlDetalle);
       $flagSuccessDetalle=$stmtDetalle->execute();
+      array_push($SQLDATOSINSTERT,$flagSuccessDetalle);
     }
     
     if($_POST["cod_detallelibreta".$i]!=0){
       $codDetalleLibreta=$_POST["cod_detallelibreta".$i];
       $sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=$codComprobante, cod_comprobantedetalle=$codComprobanteDetalle,cod_estado=1 where codigo=$codDetalleLibreta";
       $stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
-      $stmtDetalleUpdate->execute();  
+      $flagDetalleUpdate=$stmtDetalleUpdate->execute();
+
+      array_push($SQLDATOSINSTERT,$flagDetalleUpdate);  
     }
 
     /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA CON LA VALIDACION DE TIPO(DEBE/HABER)*/
@@ -144,7 +157,8 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       }
       $sqlInsertEC="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) VALUES ('$codComprobanteDetalle', '$cuenta', '$montoEC', '$codProveedorCliente', '$fechaHoraActual2','0','$cuentaAuxiliar','$glosaDetalle')";
       $stmtInsertEC = $dbh->prepare($sqlInsertEC);
-      $flagSuccessInsertEC=$stmtInsertEC->execute();      
+      $flagSuccessInsertEC=$stmtInsertEC->execute();
+      array_push($SQLDATOSINSTERT,$flagSuccessInsertEC);      
     }
     //Fin insertar estado de cuentas acumular.
     $nF=cantidadF($facturas[$i-1]);
@@ -166,6 +180,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tazaFac','$tipoFac')";
       $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
       $flagSuccessDetalle2=$stmtDetalle2->execute();
+      array_push($SQLDATOSINSTERT,$flagSuccessDetalle2); 
     }
     
      //itemEstadosCuenta
@@ -182,6 +197,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
           $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fechaHoraActual2','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
           $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
           $flagSuccessDetalle3=$stmtDetalle3->execute();
+          array_push($SQLDATOSINSTERT,$flagSuccessDetalle3); 
       }
     }//FIN DE ESTADOS DE CUENTA
 	}
@@ -190,6 +206,22 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 window.opener.location.reload();
 window.close();
 </script>";*/
+$errorInsertar=0;
+for ($flag=0; $flag < count($SQLDATOSINSTERT); $flag++) { 
+    if($SQLDATOSINSTERT[$flag]==false){
+     $errorInsertar++;
+     echo $flag;
+     break;
+    }
+} 
+if($errorInsertar!=0){
+  $sqlRolBack="ROLLBACK;";
+  $stmtRolBack = $dbh->prepare($sqlRolBack);
+  $stmtRolBack->execute();
+}
+$sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
+$stmtCommit = $dbh->prepare($sqlCommit);
+$stmtCommit->execute();
 
 if($flagSuccessDetalle==true){
 	showAlertSuccessError(true,"../".$urlList);	

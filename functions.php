@@ -8675,8 +8675,20 @@ if($bancos->datos!=false){
   $nomBanco=$bancos->datos->Banco;
  }
  return $nomBanco;
-} 
+}
 
+function obtenerSaldoPorPagarProveedor($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT IFNULL(sum(sd.importe),0)-((SELECT IFNULL(sum(monto),0) as monto from pagos_proveedoresdetalle where cod_solicitudrecursosdetalle=sd.codigo)) as saldo from solicitud_recursosdetalle sd join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso where sd.cod_proveedor=$codigo and s.cod_estadosolicitudrecurso=3 and s.cod_estadoreferencial=1";
+   //echo $sql;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row["saldo"];
+   }
+   return $valor; 
+}
 ?>
 
 
