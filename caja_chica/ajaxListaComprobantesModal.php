@@ -120,6 +120,8 @@ $cuenta=obtenerCodigoCuentaCajaChica($cod_tcc);
     		$stmtDetalle->bindColumn('glosa', $glosa_detalle);
     		$stmtDetalle->bindColumn('cod_cuenta', $cod_cuenta);
     		while ($row = $stmtDetalle->fetch(PDO::FETCH_BOUND)) {
+          $glosa_detalle = preg_replace("[\n|\r|\n\r]", ", ", $glosa_detalle);
+          $glosa_detalle=trim($glosa_detalle);
     			$nombre_uo=abrevUnidad($cod_unidadorganizacional);
     			$nombre_area=abrevArea($cod_area);
     			$nombre_cuenta=nameCuenta($cod_cuenta);
@@ -141,9 +143,10 @@ $cuenta=obtenerCodigoCuentaCajaChica($cod_tcc);
     				<td class="text-right small"><?=$haber;?></td>				
     				<td class="td-actions text-right">
               <?php               
-              $verificar=verificar_codComprobante_cajaChica($codigo_cobt,$codigo_detalle);
+              $verificar=verificar_codComprobante_cajaChica($codigo_cobt,$codigo_detalle);              
+              // echo $verificar;
               $nombreComprobante=nombreComprobante($codigo_cobt);
-              if(!$verificar){?>
+              if($verificar==0){?>
         				<button rel="tooltip" class="<?=$buttonEdit;?>" onclick="SeleccionarComprobante_cajachica_reembolso('<?=$codigo_cobt?>','<?=$codigo_detalle?>','<?=$glosa_detalle;?>','<?=$monto?>','<?=$nombreComprobante?>','<?=$fechaComprobante?>')">SELECCIONAR          
         				</button><?php 
               }else{ ?>

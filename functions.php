@@ -7192,15 +7192,17 @@ function obtenerFechaSimulacionCosto($codigo){
   return $valor;
 }
 function verificar_codComprobante_cajaChica($codigo_cobt,$codigo_detalle){
-  $dbh = new Conexion();  
-  $sw=false;
-  $sql="SELECT c.codigo from caja_chicareembolsos c,caja_chica cc where c.cod_cajachica=cc.codigo and c.cod_estadoreferencial=1 and cc.cod_estadoreferencial=1 c.cod_comprobante=$codigo_cobt and c.cod_comprobante_detalle=$codigo_detalle";
+  $dbh = new Conexion();
+  $sql="SELECT c.codigo from caja_chicareembolsos c,caja_chica cc where c.cod_cajachica=cc.codigo and c.cod_estadoreferencial=1 and cc.cod_estadoreferencial=1 and c.cod_comprobante=$codigo_cobt and c.cod_comprobante_detalle=$codigo_detalle";  
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $sw=true;
+  $stmt->bindColumn('codigo', $codigo_detalle);  
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    // $valor=$row['cod_cuenta'];          
+    $valor=1;
   }
-  return $sw;
+  return $valor;
 }
 
 function verificarArchivoAdjuntoExistente($tipo,$padre,$objeto,$codArchivo){
@@ -8455,7 +8457,7 @@ function obtenerDatosComprobanteDetalle($codigo){
 
 function obtenerStringFacturas($codigo){
   $dbh = new Conexion(); 
-  $stmtFActuras = $dbh->prepare("SELECT nro_factura from facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtFActuras = $dbh->prepare("SELECT nro_factura from facturas_venta where cod_estadofactura!=2 and cod_solicitudfacturacion=$codigo");
   $stmtFActuras->execute(); 
   // $stmtFActuras->bindColumn('codigo', $codigo_x);
   $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
@@ -8469,7 +8471,7 @@ function obtenerStringFacturas($codigo){
 }
 function obtenerStringCodigoFacturas($codigo){
   $dbh = new Conexion(); 
-  $stmtFActuras = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$codigo");
+  $stmtFActuras = $dbh->prepare("SELECT codigo from facturas_venta where cod_estadofactura!=2 and cod_solicitudfacturacion=$codigo");
   $stmtFActuras->execute(); 
   $stmtFActuras->bindColumn('codigo', $codigo_x);
   // $stmtFActuras->bindColumn('nro_factura', $nro_factura_x);
@@ -8673,8 +8675,20 @@ if($bancos->datos!=false){
   $nomBanco=$bancos->datos->Banco;
  }
  return $nomBanco;
-} 
+}
 
+function obtenerSaldoPorPagarProveedor($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT IFNULL(sum(sd.importe),0)-((SELECT IFNULL(sum(monto),0) as monto from pagos_proveedoresdetalle where cod_solicitudrecursosdetalle=sd.codigo)) as saldo from solicitud_recursosdetalle sd join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso where sd.cod_proveedor=$codigo and s.cod_estadosolicitudrecurso=3 and s.cod_estadoreferencial=1";
+   //echo $sql;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row["saldo"];
+   }
+   return $valor; 
+}
 ?>
 
 

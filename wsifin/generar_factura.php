@@ -195,10 +195,19 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                         if($flagSuccess){
                             $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,$tipoPago,$CodLibretaDetalle,$normas);
                             if($cod_comprobante==null || $cod_comprobante==''){
+                                $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo=$cod_facturaVenta";
+                                $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
+                                $stmtDeleteCAbeceraFactura->execute();
+                                $sqlDet="DELETE from facturas_ventadetalle where cod_facturaventa=$cod_facturaVenta";
+                                $stmtDelDet = $dbh->prepare($sqlDet);
+                                $stmtDelDet->execute();
                                 return "12###";
+
                             }else{
-                                $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where cod_factura=$cod_facturaVenta";
+                                $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where codigo=$cod_facturaVenta";
+                                // echo $sqlUpdateLibreta;
                                 $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                                $stmtUpdateLibreta->execute();
                                 return "0###".$cod_facturaVenta;    
                             }
                             

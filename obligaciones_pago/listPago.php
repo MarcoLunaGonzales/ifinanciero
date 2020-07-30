@@ -56,7 +56,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                 </div>
                 <form id="form-pagos" action="<?=$urlSave?>" method="post">
                 <div class="card-body">
-                  <div class="row">
+                  <div class="row d-none" id="cabecera_pago">
                     <table class="table table-condensed table-warning">
                       <tr>
                         <td class="text-right font-weight-bold">Proveedor</td>
@@ -71,7 +71,10 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                      while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                       $codigoSel=$rowSel['codigo'];
                                       $nombreSelX=$rowSel['nombre'];
-                                      ?><option value="<?=$codigoSel;?>####<?=$nombreSelX?>"><?=$nombreSelX?></option><?php 
+                                      $saldoX=obtenerSaldoPorPagarProveedor($codigoSel);
+                                      if($saldoX>0){
+                                         ?><option value="<?=$codigoSel;?>####<?=$nombreSelX?>"><?=$nombreSelX?></option><?php   
+                                      }  
                                      }
                                     ?>
                                   </select>
@@ -95,7 +98,46 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                     </table>
                   </div>
                   <div class="row col-sm-12" id="data_pagosproveedores">
-                  	   <center><p>Tabla Vac&iacute;a</p></center>
+                  	   <section class="after-loop">
+                          <div class="container">
+                             <div class="row">
+                              <?php 
+                             $fila=0;
+                             $stmt3 = $dbh->prepare("SELECT DISTINCT p.codigo,p.nombre FROM solicitud_recursosdetalle s join af_proveedores p on s.cod_proveedor=p.codigo order by p.nombre");
+                             $stmt3->execute();
+                             while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                               $codigoSel=$rowSel['codigo'];
+                               $nombreSelX=$rowSel['nombre'];
+                               $saldoX=obtenerSaldoPorPagarProveedor($codigoSel);
+                               if($saldoX>0){
+                                ?><script>
+                               var fondo="random";
+                               var type = ['', 'card-snippets', 'card-themes', 'card-templates', 'card-guides'];
+                               var color = Math.floor((Math.random() * 4) + 1);
+                               if (fondo=='random'){
+                                 fondo=type[color];
+                               } 
+                             </script>       
+                                <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
+                                  <a href="#<?=str_replace(' ', '_',$nombreSelX)?>" onclick="cambiarComboProveedor('<?=$codigoSel?>####<?=$nombreSelX?>');" id="modulo<?=$fila?>" class="after-loop-item card border-0  shadow-lg">
+                                     <div class="card-body d-flex align-items-end flex-column text-right">
+                                        <h5><small><?=strtoupper($nombreSelX)?></small></h5>
+                                        <p class="w-75 text-small"><small>Bs. <?=number_format($saldoX,2,".",",")?></small></p>
+                                        <i class="material-icons">person</i>
+                                     </div>
+                                  </a>
+                                </div>
+                                <script>$("#modulo"+<?=$fila?>).addClass(fondo);</script> <?php 
+                                $fila++;
+                               }
+                             
+                             }
+                                  
+                              ?>
+                                  
+                              </div>
+                           </div>
+                         </section>
                   </div>
                 </div>
               </div>
@@ -103,8 +145,8 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
               //if($globalAdmin==1){
               ?>
               <div class="card-footer fixed-bottom">
-                <button type="submit" class="btn btn-white" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">attach_money</i> PAGAR</button>
-                
+                <button type="submit" id="boton_pagar" class="btn btn-white d-none" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">attach_money</i> PAGAR</button>
+                <a href="#" onclick="javascript:location.reload(true);" id="boton_volver" class="btn btn-danger d-none"> VOLVER</a>
               </div>
               
               </form>  
