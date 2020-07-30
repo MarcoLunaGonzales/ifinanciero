@@ -38,7 +38,7 @@ function GenerarComprobanteExistente($codigo_factura){
             $stmtDelete->execute();
 
 		    $codigo_alterno = '';	    			
-			$sqlDetalle="SELECT cantidad,precio,descripcion_alterna from facturas_ventadetalle where cod_facturaventa=$codigo_factura";
+			$sqlDetalle="SELECT cantidad,precio,descripcion_alterna from facturas_ventadetalle where cod_facturaventa=$codigo_x";
 			$stmtDetalle = $dbh->prepare($sqlDetalle);
 			$stmtDetalle->execute();							
 			$stmtDetalle->bindColumn('cantidad', $cantidad);
@@ -269,9 +269,9 @@ function GenerarComprobanteExistente($codigo_factura){
 						                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
 										$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
 						            }
-						            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$cod_facturaventa)";
-			                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-			                        $stmtUpdateLibreta->execute();
+						            // $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$cod_facturaventa)";
+			               //          $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+			               //          $stmtUpdateLibreta->execute();
 								}else{
 									// $array_libreta_save.=$codigo_libreta_det.",";
 									$saldo_libreta=$monto_libreta_total-$monto_libreta;//volvemos al monto anterior
@@ -283,24 +283,24 @@ function GenerarComprobanteExistente($codigo_factura){
 						                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
 										$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle);
 						            }
-						            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$cod_facturaventa)";
-			                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-			                        $stmtUpdateLibreta->execute();
+						            // $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$cod_facturaventa)";
+			               //          $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+			               //          $stmtUpdateLibreta->execute();
 						            $sw_controlador=1;
 								}
 							}
 						}	
-						echo $monto_libreta_total."-".$monto_total;
-						if($monto_libreta_total<$monto_total){
-							$sw=1;
-							$sqldeletecomprobante="DELETE from comprobantes where codigo=$codComprobante";
-	                        $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
-	                        $flagSuccess=$stmtDeleteCopmprobante->execute();
-	                        $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$codComprobante";
-	                        $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
-	                        $flagSuccess=$stmtDeleteComprobanteDet->execute();
+						// echo $monto_libreta_total."-".$monto_total;
+						// if($monto_libreta_total<$monto_total){
+							// $sw=1;
+							// $sqldeletecomprobante="DELETE from comprobantes where codigo=$codComprobante";
+	      //                   $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
+	      //                   $flagSuccess=$stmtDeleteCopmprobante->execute();
+	      //                   $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$codComprobante";
+	      //                   $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
+	      //                   $flagSuccess=$stmtDeleteComprobanteDet->execute();
 	                        
-						}
+						// }
 
 					}else{
 						$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);

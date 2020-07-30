@@ -23,7 +23,7 @@ foreach ($unidad as $valor ) {
     $stringUnidades.=" ".abrevUnidad($valor)." ";
 }
 
-$stmt2 = $dbh->prepare("SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c where f.cod_comprobantedetalle=c.codigo and c.cod_unidadorganizacional in ($stringUnidadesX) and f.fecha BETWEEN '$desde' and '$hasta' ORDER BY fecha asc");
+$stmt2 = $dbh->prepare("SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c, comprobantes cc where cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_unidadorganizacional in ($stringUnidadesX) and f.fecha BETWEEN '$desde' and '$hasta' ORDER BY fecha asc");
 // Ejecutamos                        
 $stmt2->execute();
 //resultado
@@ -99,7 +99,8 @@ $razon_social=$result['razon_social'];
                               $total_iva_obtenido=0;
                               while ($row = $stmt2->fetch()) { 
                                 $index++;
-                                $importe_sujeto_iva=$importe-$ice-$exento;
+                                // $importe_sujeto_iva=$importe-$ice-$exento;
+                                $importe_sujeto_iva=$importe;
                                 $iva_obtenido=$importe_sujeto_iva*13/100;
                                 $caracter=substr($codigo_control, -1);
                                 if($caracter=='-'){
@@ -113,6 +114,7 @@ $razon_social=$result['razon_social'];
                                 $total_importe_sujeto_iva+=$importe_sujeto_iva;
                                 $total_iva_obtenido+=$iva_obtenido;
 
+                                $sumadeimporte=$importe+$ice+$exento;
                                 ?>
                                 <tr>
                                   <td class="text-center small"><?=$index;?></td>
@@ -122,7 +124,7 @@ $razon_social=$result['razon_social'];
                                   <td class="text-right small"><?=$nro_factura;?></td>
                                   <td class="text-right small"><?=$nro_autorizacion;?></td>
                                   <td class="text-left small"><?=$codigo_control;?></td>
-                                  <td class="text-right small"><?=formatNumberDec($importe);?></td>
+                                  <td class="text-right small"><?=formatNumberDec($sumadeimporte);?></td>
                                   <td class="text-right small"><?=formatNumberDec($ice);?></td>
                                   <td class="text-right small"><?=formatNumberDec($exento);?></td>
                                   <td class="text-right small"><?=formatNumberDec($importe_sujeto_iva);?></td>
