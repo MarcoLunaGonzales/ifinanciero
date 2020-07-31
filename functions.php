@@ -5817,7 +5817,7 @@ function obtenerServiciosClaServicioTipo($id,$valor){
    return $stmt;
 }
 
-function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $anioTrabajo, $mesTrabajo){
+function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $anioTrabajo, $mesTrabajo,$codigoComp){
   $dbh = new Conexion();   
 
   $fechaDefaultMin=$anioTrabajo."-".$mesTrabajo."-01";
@@ -5828,7 +5828,7 @@ function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $
   $numeroMenor=$nroCorrelativo-1;
   $numeroMayor=$nroCorrelativo+1;
 
-  $sql="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$UO' and YEAR(fecha)='$anioTrabajo' and MONTH(fecha)='$mesTrabajo' and numero='$numeroMenor'";
+  $sql="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$UO' and YEAR(fecha)='$anioTrabajo' and MONTH(fecha)='$mesTrabajo' and numero='$numeroMenor' and cod_estadocomprobante<>2 and codigo!=$codigoComp";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   $fechaMenor="";
@@ -5839,7 +5839,7 @@ function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $
     $fechaMenor=$fechaDefaultMin;  
   }
 
-  $sql="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$UO' and YEAR(fecha)='$anioTrabajo' and MONTH(fecha)='$mesTrabajo' and numero='$numeroMayor'";
+  $sql="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$UO' and YEAR(fecha)='$anioTrabajo' and MONTH(fecha)='$mesTrabajo' and numero='$numeroMayor' and cod_estadocomprobante<>2 and codigo!=$codigoComp";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   $fechaMayor="";

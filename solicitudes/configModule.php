@@ -35,4 +35,7 @@ $urlCambiarPasivo="index.php?opcion=cambiarPasivoCuentaSol";
 $urlSavePasivo="solicitudes/savePasivo.php";
 
 $urlConta="solicitudes/contabilizar.php";
+
+$urlRegisterCompro="comprobantes/register.php";
+
 ?>

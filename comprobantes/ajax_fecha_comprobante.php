@@ -8,7 +8,7 @@ session_start();
 
 $tipoComprobante=$_GET["tipo_comprobante"];
 $fecha=$_GET["fecha"];
-
+$codigo=$_GET["codigo"];
 $globalGestion=$_SESSION["globalGestion"];
 $anio=nameGestion($globalGestion);
 
@@ -17,7 +17,7 @@ $globalMes=$_SESSION["globalMes"];
 
 
 $db = new Conexion();
-$sqlUO="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$globalUnidad' and YEAR(fecha)='$anio' and MONTH(fecha)='$globalMes'";
+$sqlUO="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$globalUnidad' and YEAR(fecha)='$anio' and MONTH(fecha)='$globalMes' and cod_estadocomprobante<>2 and codigo!=$codigo";
 
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();

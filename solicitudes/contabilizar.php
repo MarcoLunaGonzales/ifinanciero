@@ -12,6 +12,7 @@ session_start();
 
 $globalUser=$_SESSION["globalUser"];
 $globalGestion=$_SESSION["globalGestion"];
+$globalMes=$_SESSION['globalMes'];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
@@ -74,7 +75,7 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
 
     $codGestion=date("Y");
     $tipoComprobante=3;
-    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3);
+    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3,$globalMes);
     
     $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 

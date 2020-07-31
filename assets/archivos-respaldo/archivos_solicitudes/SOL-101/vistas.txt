@@ -1,0 +1,23 @@
+CREATE OR REPLACE VIEW v_lista_solicitud_recursos
+AS 
+SELECT sr.codigo,sr.idServicio,
+(SELECT nombre from af_proveedores where codigo =(SELECT cod_proveedor from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo limit 1)) as beneficiario,
+sr.fecha,e.nombre as estado,sr.cod_unidadorganizacional,u.abreviatura as unidad,
+sr.cod_area,a.abreviatura as area,
+sr.cod_personal,CONCAT(' ',p.primer_nombre,p.otros_nombres,p.paterno,p.materno) as personal,
+(SELECT GROUP_CONCAT(' ',r.abreviatura) from configuracion_retenciones r join solicitud_recursosdetalle de on de.cod_confretencion=r.codigo where de.cod_solicitudrecurso=sr.codigo group by de.cod_solicitudrecurso) as retencion 
+from solicitud_recursos sr join estados_solicitudrecursos e on e.codigo=sr.cod_estadosolicitudrecurso
+join unidades_organizacionales u on u.codigo=sr.cod_unidadorganizacional 
+join areas a on a.codigo=sr.cod_area
+join personal p on p.codigo=sr.cod_personal;
+
+
+CREATE OR REPLACE VIEW v_lista_solicitud_recursosdetalle
+AS 
+select sd.codigo,sd.cod_solicitudrecurso,sd.cod_plancuenta,p.nombre as cuenta,(SELECT GROUP_CONCAT(f.nro_factura,' ') from facturas_compra f where f.cod_solicitudrecursodetalle=sd.codigo group by sd.codigo) as factura,sd.detalle,sd.importe as monto from solicitud_recursosdetalle sd join plan_cuentas p on p.codigo=sd.cod_plancuenta
+
+
+CREATE VIEW v_solicitud_facturacion AS SELECT f.codigo as codigo_solicitud,f.cod_simulacion_servicio as codigo_servicio,f.nro_correlativo,(select CONCAT(x.primer_nombre,' ',x.paterno,' ',x.materno) from personal x where x.codigo=f.cod_personal) as encargado,f.razon_social,f.fecha_registro,(select t.nombre from tipos_pago t where t.codigo=f.cod_tipopago)as forma_pago,f.observaciones,(select e.nombre from estados_solicitudfacturacion e where e.codigo=f.cod_estadosolicitudfacturacion)as estado From solicitudes_facturacion f where f.tipo_solicitud in (1,3,4) 
+	
+	
+	CREATE VIEW v_solicitud_facturacion_detalle as SELECT d.codigo,d.cod_solicitudfacturacion,d.descripcion_alterna,d.cantidad,d.precio,(d.cantidad*d.precio) as total from solicitudes_facturaciondetalle d, solicitudes_facturacion f where d.cod_solicitudfacturacion=f.codigo and f.tipo_solicitud in (1,3,4) 
