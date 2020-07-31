@@ -30,7 +30,7 @@ $fechaHoraActual=$_POST["fecha"];
 //$fechaHoraActual=$porcionesFecha[2]."-".$porcionesFecha[1]."-".$porcionesFecha[0];
 $fechaHoraSistema=date("Y-m-d H:i:s");
 
-$nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$codUnidad,$tipoComprobante,$globalMes);
+$nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$_SESSION['globalUnidad'],$tipoComprobante,$globalMes);
 
 $codComprobante=obtenerCodigoComprobante();
 $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by) VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraSistema', '$globalUser')";

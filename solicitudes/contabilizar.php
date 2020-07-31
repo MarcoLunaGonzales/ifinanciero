@@ -186,7 +186,7 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
              if($porcentajeCuentaX>100){
                $importe=($porcentajeCuentaX/100)*$importeOriginal;
              }else{
-               $importeOriginal2=($porcentajeCuentaX/100)*$importeOriginal;
+               $importeOriginal2=($porcentajeCuentaX/100)*$importeOriginal2;
                $importe=$importeOriginal;
              }
              $montoRetencion=($porcentajeX/100)*$importe;
@@ -232,7 +232,7 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
 
             if($porcentajeCuentaX<=100){
               $debe=$importeOriginal2;
-              $sumaDevengado=$importeOriginal; 
+              $sumaDevengado=$importeOriginal2; 
               $debe=number_format($debe, 2, '.', ''); 
             }else{
               $debe=$importe;
