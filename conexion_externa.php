@@ -5,7 +5,7 @@ class ConexionIBNORCA extends PDO {
   private $nombre_de_base = 'ibnorca';
   private $usuario = 'root';
   private $contrasena = '';
-  private $port = '3306';//private $port = '3308';   
+  private $port = '3306';   
 
 
 

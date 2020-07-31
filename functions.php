@@ -8791,6 +8791,7 @@ function obtenerCodigoSimulacionServicioOfertaDetalle(){
    }
    return($codigo);
 }
+
 ?>
 
 

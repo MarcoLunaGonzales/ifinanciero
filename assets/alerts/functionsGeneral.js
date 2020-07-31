@@ -16410,3 +16410,18 @@ function botonBuscarSolicitudes_gral(){
   }
   ajax.send(null)
 }
+
+function ajax_cajachica_intancia(combo){
+  var contenedor = document.getElementById('div_caja_chica');
+  var cod_instancia=combo.value;
+  // console.log(tipoComprobante);
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reporte_cahachica_ajax.php?codigo='+cod_instancia,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null)
+}
