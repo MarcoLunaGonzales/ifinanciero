@@ -123,6 +123,7 @@ if(isset($_GET["area"])){
     <input type="hidden" id="cod_servicioauditor<?=$idFila;?>" name="cod_servicioauditor<?=$idFila;?>" value="">    
        
     <input type="hidden" id="cod_actividadproyecto<?=$idFila;?>" name="cod_actividadproyecto<?=$idFila;?>" value="0">
+    <input type="text" id="cod_accproyecto<?=$idFila;?>" name="cod_accproyecto<?=$idFila;?>" value="0">
     <input type="hidden" id="des_actividadproyecto<?=$idFila;?>" name="des_actividadproyecto<?=$idFila;?>" value="">       
         <div class="col-sm-3">
 		    <div class="form-group">

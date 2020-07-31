@@ -4201,6 +4201,9 @@ function minusDetalleSolicitud(idF){
        $("#cod_actividadproyecto"+nuevoId).attr("id","cod_actividadproyecto"+i);
        $("#des_actividadproyecto"+nuevoId).attr("name","des_actividadproyecto"+i);
        $("#des_actividadproyecto"+nuevoId).attr("id","des_actividadproyecto"+i);
+       
+        $("#cod_accproyecto"+nuevoId).attr("name","cod_accproyecto"+i);
+        $("#cod_accproyecto"+nuevoId).attr("id","cod_accproyecto"+i);
 
        $("#nret"+nuevoId).attr("id","nret"+i);
 
@@ -16236,6 +16239,7 @@ function listarProyectosSisdeUnidades(){
      array_act_proy.push(i);
     }else{
       $("#cod_actividadproyecto"+i).val(0);
+      $("#cod_accproyecto"+i).val(0);
       $("#des_actividadproyecto"+i).val("");
     }
   };
@@ -16251,15 +16255,23 @@ function cargarDatosActividadesEnTablaModal(){
   $("#contenedor_actividadesmodal").html("");
   for (var i = 0; i < array_act_proy.length; i++) {
     var fila=array_act_proy[i];
-    var selectHtml = '<select data-size="6" data-live-search="true" class="selectpicker form-control form-control-sm" name="actividades_detalle'+fila+'" id="actividades_detalle'+fila+'" data-style="btn btn-info">';
+    var selectHtml = '<select data-size="6" data-live-search="true" class="selectpicker form-control form-control-sm col-sm-6" name="actividades_detalle'+fila+'" id="actividades_detalle'+fila+'" data-style="btn btn-info">';
+    var selectHtmlACC = '<select data-size="6" data-live-search="true" class="selectpicker form-control form-control-sm col-sm-6" name="acc_detalle'+fila+'" id="acc_detalle'+fila+'" data-style="btn btn-default">';
       selectHtml+=$("#actividades_detalle").html()+'</select>';
+      selectHtmlACC+=$("#acc_detalle").html()+'</select>';
     if($("#cod_actividadproyecto"+fila).val()!=0){
+      var rowHtml='<tr><td>'+fila+'</td><td><div class="row col-sm-12">'+selectHtml+''+selectHtmlACC+'</div></td><td><a href="#" class="btn btn-sm btn-warning"><small>ASOCIADO</small></a></td></tr>';
+    }else{
+      var rowHtml='<tr><td>'+fila+'</td><td><div class="row col-sm-12">'+selectHtml+''+selectHtmlACC+'</div></td><td><a href="#" class="btn btn-sm btn-default"><small>PENDIENTE</small></a></td></tr>';
+    }
+    /*if($("#cod_actividadproyecto"+fila).val()!=0){
       var rowHtml='<tr><td>'+fila+'</td><td>'+selectHtml+'</td><td><a href="#" class="btn btn-sm btn-warning"><small>ASOCIADO</small></a></td></tr>';
     }else{
       var rowHtml='<tr><td>'+fila+'</td><td>'+selectHtml+'</td><td><a href="#" class="btn btn-sm btn-default"><small>PENDIENTE</small></a></td></tr>';
-    } 
+    }*/ 
    $("#contenedor_actividadesmodal").append(rowHtml);  
-   $("#actividades_detalle"+fila).val($("#cod_actividadproyecto"+fila).val()); 
+   $("#actividades_detalle"+fila).val($("#cod_actividadproyecto"+fila).val());
+   $("#acc_detalle"+fila).val($("#cod_accproyecto"+fila).val()); 
   };
   $('.selectpicker').selectpicker("refresh");
 }
@@ -16274,7 +16286,14 @@ function guardarActividadFilasDetalle(){
     }else{
       $("#cod_actividadproyecto"+fila).val(0); 
       $("#des_actividadproyecto"+fila).val("");
-    }  
+    } 
+
+    if($("#acc_detalle"+fila).val()>0){
+      $("#cod_accproyecto"+fila).val($("#acc_detalle"+fila).val()); 
+    }else{
+      $("#cod_accproyecto"+fila).val(0); 
+    } 
+
   };
   $("#modalActividadesProyecto").modal("hide");
 }

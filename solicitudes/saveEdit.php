@@ -22,7 +22,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 if(isset($_POST['numero'])){
     $observaciones=$_POST['observaciones_solicitud'];
+    //numero correlativo de la solicitud
+    $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from solicitud_recursos c";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
     $numero=$_POST['numero'];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $numero=$row['codigo'];
+    }  
     $tipoSol=$_POST['tipo_solicitud'];
   if($tipoSol!=2){
     $codProv=0;
@@ -178,18 +185,18 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       $cod_cuentabancaria=$_POST["cod_cuentaBancaria".$i];
 
       $cod_actividadproyecto=$_POST["cod_actividadproyecto".$i];
+      $cod_accproyecto=$_POST["cod_accproyecto".$i];
 
 
       $codComprobanteDetalle=obtenerCodigoSolicitudDetalle();
       $sqlDetalle="INSERT INTO solicitud_recursosdetalle (codigo,cod_solicitudrecurso,cod_plancuenta,cod_unidadorganizacional,cod_area,detalle,importe_presupuesto,
         importe,numero_factura,archivo,cod_proveedor,cod_detalleplantilla,cod_servicioauditor,cod_confretencion,cod_tipopagoproveedor,
-        nombre_beneficiario,apellido_beneficiario,nro_cuenta_beneficiario,cod_cuentabancaria,cod_actividadproyecto) 
+        nombre_beneficiario,apellido_beneficiario,nro_cuenta_beneficiario,cod_cuentabancaria,cod_actividadproyecto,acc_num) 
        VALUES ('$codComprobanteDetalle','$codSolicitud','$cod_plancuenta','$cod_unidadorganizacional','$cod_area','$detalle','$importe_presupuesto','$importe',
         '$numero_factura','$archivo','$cod_proveedor','$cod_detalleplantilla','$cod_servicioauditor','$cod_confretencion','$cod_tipopagoproveedor',
-        '$nombre_beneficiario','$apellido_beneficiario','$nro_cuenta_beneficiario','$cod_cuentabancaria','$cod_actividadproyecto') ";
+        '$nombre_beneficiario','$apellido_beneficiario','$nro_cuenta_beneficiario','$cod_cuentabancaria','$cod_actividadproyecto','$cod_accproyecto') ";
       $stmtDetalle = $dbh->prepare($sqlDetalle);
       $flagSuccessDetalle=$stmtDetalle->execute(); 
-      echo $sqlDetalle; 
 
        $nF=cantidadF($facturas[$i-1]);
     for($j=0;$j<$nF;$j++){
