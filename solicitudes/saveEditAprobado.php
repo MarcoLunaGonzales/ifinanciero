@@ -200,7 +200,7 @@ $cab[14]="apellido_beneficiario";
 $cab[15]="nro_cuenta_beneficiario";
 $cab[16]="cod_cuentabancaria";
 $cab[17]="cod_actividadproyecto";
-$cab[18]="cod_accproyecto";
+$cab[18]="acc_num";
 $solDet=contarSolicitudDetalle($codSolicitud);
 $solDet->bindColumn('total', $contador);
 while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {
