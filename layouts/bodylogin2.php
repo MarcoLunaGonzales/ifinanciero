@@ -370,6 +370,7 @@
       var debeIVA=0;
       var haberIVA=0;
       var banderaDebeHaberIVA=0;
+      numFilas=$("#cantidad_filas").val();
       if(numFilas==0){
         mensaje+="<p>Debe tener registrado al menos una cuenta en detalle</p>";
       }
@@ -395,9 +396,11 @@
               }else{
                   var cont=0; var contcuenta=0;var contcuentaIva=0;
                   for (var i = 0; i < numFilas; i++) {
-                    if($('select[name=area'+(i+1)+']').val()==null||$('select[name=unidad'+(i+1)+']').val()==null){
-                      cont++;
-                    }                  
+                    if($('select[name=area'+(i+1)+']').length>0&&$('select[name=unidad'+(i+1)+']').length>0){
+                     if($('select[name=area'+(i+1)+']').val()==null||$('select[name=unidad'+(i+1)+']').val()==null){
+                        cont++;
+                     }                  
+                    }
                   }
                   if(cont!=0){
                     mensaje+="<p>Debe seleccionar la Unidad y el Area</p>";
@@ -405,7 +408,8 @@
                     $('#modalAlert').modal('show');
                     envio=1;
                   }else{
-                    for (var i = 0; i < numFilas; i++) {
+                   for (var i = 0; i < numFilas; i++) {
+                    if($("#debe"+(i+1)).length>0&&$("#haber"+(i+1)).length>0){                                         
                       if(($("#debe"+(i+1)).val()==""&&$("#haber"+(i+1)).val()=="")||$("#debe"+(i+1)).val()==0&&$("#haber"+(i+1)).val()==0){
                         mensaje+="<p>Todas las filas deben tener al menos un DEBE ó un HABER.</p>";
                         $('#msgError').html(mensaje);
@@ -433,6 +437,7 @@
                           banderaDebeHaberIVA=1;
                         }
                       }           
+                     }
                     }
                     console.log("numero de ivas: "+contcuentaIva+" "+debeIVA+" "+haberIVA+" banderaIVADH: "+banderaDebeHaberIVA);
 

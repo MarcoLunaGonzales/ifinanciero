@@ -1,0 +1,20 @@
+oficina
+area
+
+
+-archivos adjuntos
+
+6298608011
+
+
+
+select * from af_proveedores where nit like '6298608011';
+
+
+6559.
+
+
+
+---
+
+Tamanio Completo listas de SR.

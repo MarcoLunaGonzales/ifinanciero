@@ -293,9 +293,10 @@ function ajaxCorrelativo(combo){
 }
 function ajax_fechaComprobante(tipo){
   var contenedor = document.getElementById('div_fecha_comprobante');
+  var codigo = $('#codigo_comprobante').val();
   var fecha = $('#fecha').val();
   ajax=nuevoAjax();
-  ajax.open('GET', 'ajax_fecha_comprobante.php?tipo_comprobante='+tipo+'&fecha='+fecha,true);
+  ajax.open('GET', 'ajax_fecha_comprobante.php?tipo_comprobante='+tipo+'&fecha='+fecha+'&codigo='+codigo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      

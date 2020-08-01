@@ -12,6 +12,7 @@ session_start();
 
 $globalUser=$_SESSION["globalUser"];
 $globalGestion=$_SESSION["globalGestion"];
+$globalMes=$_SESSION['globalMes'];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
@@ -74,7 +75,7 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
 
     $codGestion=date("Y");
     $tipoComprobante=3;
-    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3);
+    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3,$globalMes);
     
     $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
@@ -185,7 +186,7 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
              if($porcentajeCuentaX>100){
                $importe=($porcentajeCuentaX/100)*$importeOriginal;
              }else{
-               $importeOriginal2=($porcentajeCuentaX/100)*$importeOriginal;
+               $importeOriginal2=($porcentajeCuentaX/100)*$importeOriginal2;
                $importe=$importeOriginal;
              }
              $montoRetencion=($porcentajeX/100)*$importe;
@@ -231,7 +232,7 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
 
             if($porcentajeCuentaX<=100){
               $debe=$importeOriginal2;
-              $sumaDevengado=$importeOriginal; 
+              $sumaDevengado=$importeOriginal2; 
               $debe=number_format($debe, 2, '.', ''); 
             }else{
               $debe=$importe;
