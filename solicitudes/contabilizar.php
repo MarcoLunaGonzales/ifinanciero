@@ -101,9 +101,14 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
     //"".." F/".$numeroFac." ".$proveedorX." ".$detalleX
     $IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
     $codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicio);
+    $datosServicio="";
+    if(obtenerServiciosTipoObjetoNombre($codObjeto)!=""){
+      $datosServicio.=obtenerServiciosTipoObjetoNombre($codObjeto);  
+    }
 
-    $datosServicio=obtenerServiciosTipoObjetoNombre($codObjeto)." - ".obtenerServiciosClaServicioTipoNombre($IdTipo);
-
+    if(obtenerServiciosClaServicioTipoNombre($IdTipo)!=""){
+      $datosServicio.=obtenerServiciosClaServicioTipoNombre($IdTipo);  
+    }
 
     $glosa="Beneficiario: ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosServicio."  F/".$facturaCabecera." ".$nombreCliente." SR ".$numeroSol;
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codigo);
@@ -167,7 +172,12 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
         /*if($facturaNueva==){
           $detalleFac="F/";
         }*/
-        $glosaDetalle="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ".$datosServicio." ".$glosa;
+        $tituloFactura="";
+        if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
+          $tituloFactura="F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ";
+        }
+
+        $glosaDetalle="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
         $codSolicitudDetalle=$rowNuevo['codigo'];
         $codSolicitudDetalleOrigen=$rowNuevo['codigo'];
         if($rowNuevo['cod_confretencion']==0){
@@ -363,7 +373,11 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
 
             $debeProv=0;
             $haberProv=$sumaDevengado;
-            $glosaDetalleProv="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ".$datosServicio." ".$glosa;
+            $tituloFactura="";
+            if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
+              $tituloFactura="F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ";
+            }
+            $glosaDetalleProv="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
         
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
             $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
