@@ -36,7 +36,7 @@ $flagSuccess=$stmtUpdate->execute();
      }
 
     //  CREAR EL COMPROBANTE DEBENGADOç
-
+$glosaDetalleGeneral="";
   // Preparamos
 $stmtSolicitud = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.codigo=$codigo");
 // Ejecutamos
@@ -109,6 +109,7 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codigo);
     $unidadSol=$cod_unidadX;
     $areaSol=$cod_areaX;
+   // $glosaDetalleGeneral=$glosa;
 
     $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
     VALUES ('$codComprobante', '1', '$cod_unidadX', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
@@ -168,6 +169,7 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
         }*/
         $glosaDetalle="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ".$datosServicio." ".$glosa;
         $codSolicitudDetalle=$rowNuevo['codigo'];
+        $codSolicitudDetalleOrigen=$rowNuevo['codigo'];
         if($rowNuevo['cod_confretencion']==0){
           if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
             //detalle comprobante SIN RETENCION ///////////////////////////////////////////////////////////////
@@ -206,7 +208,7 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
              $porcentajeCuentaX=$rowRet['porcentaje_cuentaorigen'];
              
              if($porcentajeCuentaX>100){
-               $importe=($porcentajeCuentaX/100)*$importeRetencion;
+               $importe=$importeRetencion;
              }else{
                //$importeOriginal2=($porcentajeCuentaX/100)*$importeOriginal2;
                $importe=$importeOriginal;
@@ -318,7 +320,7 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
                $stmtDetalle = $dbh->prepare($sqlDetalle);
                $flagSuccessDetalle=$stmtDetalle->execute();
 
-               $sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where codigo =(select codigo from facturas_compra where cod_solicitudrecursodetalle = $codSolicitudDetalle)";
+               $sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen";
                $stmtFacturas = $dbh->prepare($sqlActualizarFaturas);
                $stmtFacturas->execute();
 
@@ -331,7 +333,6 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
       //}
         $totalRetencion=0;
       } //fin else *********************************** SI TIENE RETENCION ****************************************************+    
-        
 
        //ASOCIAR PASIVO A DETALLE CUENTA
        //proveedor devengado
@@ -384,15 +385,19 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
               $stmtUpdateSolicitudRecursoDetalle->execute();
 
              //echo $sqlUpdateSolicitudRecursoDetalle."";
+              $glosaDetalleGeneral.=" ".$glosaDetalleProv;
+              
 
     }  
+    $sqlUpdate="UPDATE comprobantes SET glosa='$glosaDetalleGeneral' WHERE codigo=$codComprobante";
+    $stmtUpdate = $dbh->prepare($sqlUpdate);
+    $stmtUpdate->execute();
 
         if($sumaDevengado!=0){
         
          }    
         
     //fin de crear comprobante
-
 
 if(isset($_GET['q'])){
   $q=$_GET['q'];

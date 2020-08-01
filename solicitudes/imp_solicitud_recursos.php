@@ -194,7 +194,7 @@ $tituloImporte="";
               $tituloImporte=abrevRetencion($retencionX);
               $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
               $montoImporte=$importeSolX*($porcentajeRetencion/100);       
-              if(!($retencionX==3||$retencionX==4||$retencionX==5||$retencionX==7||$retencionX==1||$retencionX==9)){ //validacion del descuento por retencion
+              if(($retencionX==8)){ //validacion del descuento por retencion
                 $montoImporte=$importeSolX;
               }
               $montoImporteRes=$importeSolX-$montoImporte;
@@ -216,7 +216,7 @@ $tituloImporte="";
             $datosBen[$index-1]=trim($row["nombre_beneficiario"])." ".trim($row["apellido_beneficiario"]);
             
             if($row["cod_tipopagoproveedor"]==2){ //transferencia
-              $datosBen[$index-1].=" / Nro. Cuenta:"." ".trim($row["nro_cuenta_beneficiario"]).", ".obtenerBancoBeneficiarioSolicitudRecursos($codCuentaBancariaX,$row["cod_proveedor"]);
+              $datosBen[$index-1].=" / ".obtenerBancoBeneficiarioSolicitudRecursos($codCuentaBancariaX,$row["cod_proveedor"]).", Nro. Cuenta:"." ".trim($row["nro_cuenta_beneficiario"])."";
             }
 
             $datosTipo[$index-1]=nameTipoPago($row["cod_tipopagoproveedor"]);
