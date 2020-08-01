@@ -4,7 +4,7 @@ $cod_accproyecto=obtenerCodigoAccProyecto($codDetalleX);
 $des_actividadproyecto="";
 ?>
 <div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
-  <input class="form-control" type="number"  onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',<?=$importeSolX?>);">
+  <input class="form-control" type="number" name="nit_fac" id="nit_fac" onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',<?=$importeSolX?>);">
 </div>
  <div id="div<?=$idFila?>">               	         
                              <div class="col-md-12">
@@ -183,7 +183,7 @@ $des_actividadproyecto="";
                                         $estadoBen="";
                                        }  
                                        if($retencionX==0||$retencionX==""||$retencionX==null){
-                                         $estadoBen="";
+                                         $estadoRet="";
                                        }else{
                                          $estadoRet="estado";
                                        }

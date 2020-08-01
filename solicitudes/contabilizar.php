@@ -72,14 +72,31 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
 $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA PAZ
   //crear el comprobante
     $codComprobante=obtenerCodigoComprobante();
+    
+    $anioActual=date("Y");
+    $mesActual=date("m");
+    $diaActual=date("d");
+    $codMesActiva=$_SESSION['globalMes']; 
+    $month = $globalNombreGestion."-".$codMesActiva;
+    $aux = date('Y-m-d', strtotime("{$month} + 1 month"));
+    $diaUltimo = date('d', strtotime("{$aux} - 1 day"));
+    if((int)$globalNombreGestion<(int)$anioActual){
+      $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
+    }else{
+      if((int)$mesActual==(int)$codMesActiva){
+          $fechaHoraActual=date("Y-m-d");
+      }else{
+        $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
+      } 
+    }
 
-    $codGestion=date("Y");
+
     $tipoComprobante=3;
     $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3,$globalMes);
     
     $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
-    $fechaHoraActual=date("Y-m-d H:i:s");
+    
     //glosa detalle
     //"".." F/".$numeroFac." ".$proveedorX." ".$detalleX
     $IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
@@ -94,7 +111,7 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
     $areaSol=$cod_areaX;
 
     $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
-    VALUES ('$codComprobante', '1', '$cod_unidadX', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
+    VALUES ('$codComprobante', '1', '$cod_unidadX', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
     //echo $sqlInsert;
     $stmtInsert = $dbh->prepare($sqlInsert);
     $flagSuccessComprobante=$stmtInsert->execute();
@@ -114,6 +131,8 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
         $flagSuccess=$stmtDel->execute();
     $i=0;$codProveedor=0;$sumaDevengado=0;$nombresProveedor="";$nombreProveedor="";
     while ($rowNuevo = $nuevosDetalles->fetch(PDO::FETCH_ASSOC)) {
+        
+
         $cuenta=$rowNuevo['cod_plancuenta'];
         $cuentaAuxiliar=0;
 
@@ -298,6 +317,11 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
                VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaRetencion', '$cuentaAuxiliar', '$unidadDetalleRet', '$areaRet', '$debeRet', '$haberRet', '$glosaX', '$ii')";
                $stmtDetalle = $dbh->prepare($sqlDetalle);
                $flagSuccessDetalle=$stmtDetalle->execute();
+
+               $sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where codigo =(select codigo from facturas_compra where cod_solicitudrecursodetalle = $codSolicitudDetalle)";
+               $stmtFacturas = $dbh->prepare($sqlActualizarFaturas);
+               $stmtFacturas->execute();
+
               }
 
               //$sumaDevengado+=$totalRetencion;   

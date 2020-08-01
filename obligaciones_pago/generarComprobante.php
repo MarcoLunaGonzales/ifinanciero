@@ -14,22 +14,37 @@ $globalGestion=$_SESSION["globalGestion"];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$globalMes=$_SESSION['globalMes'];
 $fecha_pago=date("Y-m-d");
 
 //creacion del comprobante de pago
     $codComprobante=obtenerCodigoComprobante();
-    $codGestion=date("Y");
+    $anioActual=date("Y");
+    $mesActual=date("m");
+    $diaActual=date("d");
+    $codMesActiva=$_SESSION['globalMes']; 
+    $month = $globalNombreGestion."-".$codMesActiva;
+    $aux = date('Y-m-d', strtotime("{$month} + 1 month"));
+    $diaUltimo = date('d', strtotime("{$aux} - 1 day"));
+    if((int)$globalNombreGestion<(int)$anioActual){
+      $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
+    }else{
+      if((int)$mesActual==(int)$codMesActiva){
+          $fechaHoraActual=date("Y-m-d");
+      }else{
+        $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
+      } 
+    }
+    
     $tipoComprobante=2;
-    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,3);
-    $fechaHoraActual=date("Y-m-d H:i:s");
+    $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$globalUnidad,2,$globalMes);
     $glosa="PAGOS  ";
     $userSolicitud=$globalUser;
     $unidadSol=$globalUnidad;
     $areaSol=$globalArea;
 
     $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
-    VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
+    VALUES ('$codComprobante', '1', '$globalUnidad', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
     $stmtInsert = $dbh->prepare($sqlInsert);
     $flagSuccessComprobante=$stmtInsert->execute();
     

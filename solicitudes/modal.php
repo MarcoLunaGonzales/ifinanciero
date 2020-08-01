@@ -307,7 +307,7 @@
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="fecha_fac" class="bmd-label-floating" style="color: #4a148c;">Fecha</label>      -->
-                                <input type="text" class="form-control datepicker" name="fecha_fac_edit" id="fecha_fac_edit" value="<?=$fechaActualModal?>">
+                                <input type="date" class="form-control" name="fecha_fac_edit" id="fecha_fac_edit" value="<?=$fechaActualModal?>">
                               </div>
                             </div>
                           </div>
@@ -599,7 +599,7 @@
                        </div>
                     </div>
                     <div class="tab-pane" id="link111" style="background: #e0e0e0">
-                      <form name="form2">
+                      <form name="form_facturas" id="form_facturas">
                         <input class="form-control" type="hidden" name="codCuenta" id="codCuenta"/>
                         <div style="padding: 20px;">
                           <div class="row">                      
@@ -607,27 +607,25 @@
                             <div class="col-sm-3">
                               <div class="form-group">  
                                 <div id="divNitFacturaDetalle">
-                                  <input class="form-control" type="number" name="nit_fac" id="nit_fac" required="true">                        
+                                  <input class="form-control" type="text" name="nit_fac" id="nit_fac" required="true">
+                                  <div class="invalid-feedback"><?=$valorNoValido;?></div>                        
+                                </div>
+                                <div id="divNit2FacturaDetalle">                                  
                                 </div>                                
-                                <div id="divNit2FacturaDetalle">
-                                  
-                                </div>                                
-                                  
                               </div>
-
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Nro. Factura</label>
                             <div class="col-sm-3">
                               <div class="form-group" id="divNroFacFacturaDetalle">
-                                  <!-- <label for="number" class="bmd-label-floating" style="color: #4a148c;">Nro. Factura</label>      -->
                                   <input class="form-control" type="number" name="nro_fac" id="nro_fac" required="true"/>
+                                  <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Fecha</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <!-- <label for="fecha_fac" class="bmd-label-floating" style="color: #4a148c;">Fecha</label>      -->
-                                <input type="text" class="form-control datepicker" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>">
+                                <input type="date" class="form-control" name="fecha_fac" id="fecha_fac" value="<?=$fechaActualModal?>" required="true">
+                                <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
                             </div>
                           </div>
@@ -635,21 +633,22 @@
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Importe</label>
                             <div class="col-sm-3">
                               <div class="form-group" id="divImporteFacturaDetalle">
-                                <input class="form-control" type="number" name="imp_fac" id="imp_fac" required="true"/>
+                                <input class="form-control" type="number" step="0.01" name="imp_fac" id="imp_fac" required="true"/>
+                                <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Exento</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <!-- <label for="exe_fac" class="bmd-label-floating" style="color: #4a148c;">Extento</label>      -->
-                                <input class="form-control" type="text" name="exe_fac" id="exe_fac" required="true" value="0" />
+                                <input class="form-control" type="number" step="0.01" name="exe_fac" id="exe_fac" required="true" value="0" />
+                                <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">ICE</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <!-- <label for="ice_fac" class="bmd-label-floating" style="color: #4a148c;">ICE</label>      -->
-                                <input class="form-control" type="text" name="ice_fac" id="ice_fac" required="true" value="0" />
+                                <input class="form-control" type="number" step="0.01" name="ice_fac" id="ice_fac" required="true" value="0" />
+                                <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
                              </div>
                           </div>                                                                  
@@ -659,21 +658,22 @@
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="taza_fac" class="bmd-label-floating" style="color: #4a148c;">Taza Cero</label>      -->
-                                <input class="form-control" type="text" name="taza_fac" id="taza_fac" required="true" value="0" />
+                                <input class="form-control" type="number" step="0.01" name="taza_fac" id="taza_fac" required="true" value="0" />
+                                <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Autorizaci&oacute;n</label>
                             <div class="col-sm-3">
                               <div class="form-group" id="divNroAutoFacturaDetalle">
-                                <!-- <label for="aut_fac" class="bmd-label-floating" style="color: #4a148c;">Nro. Autorizaci&oacute;n</label>      -->
                                 <input class="form-control" type="text" name="aut_fac" id="aut_fac" required="true"/>
+                                <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Cod. Control</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <!-- <label for="con_fac" class="bmd-label-floating" style="color: #4a148c;">Cod. Control</label>      -->
                                 <input class="form-control" type="text" name="con_fac" id="con_fac" required="true"/>
+                                <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
                              </div>
                           </div> 
@@ -697,8 +697,8 @@
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Razón Social</label>
                             <div class="col-sm-8">
                               <div class="form-group" id="divRazonFacturaDetalle">                                
-                                <input type="text" class="form-control" name="razon_fac" id="razon_fac">
-                                
+                                <input type="text" class="form-control" name="razon_fac" id="razon_fac" required="true">
+                                <div class="invalid-feedback"><?=$valorNoValido;?></div>
                               </div>
                             </div>   
                         </div>
