@@ -167,13 +167,15 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
 
             $codigoRet=$rowNuevo['cod_confretencion'];
             $importeOriginal=$rowNuevo['monto'];
+            $importeRetencion=(porcentRetencion($codigoRet)/100)*$importeOriginal;
+            $importePasivoFila=$importeRetencion;
             $ii=$i;
           // retencion de costos
             $nom_cuenta_auxiliar="";
             $importeOriginal2=0;
             $totalRetencion=0;
             //obtener datos de retenciones
-            $stmtRetenciones = $dbh->prepare("SELECT cd.*,c.porcentaje_cuentaorigen from configuracion_retenciones c join configuracion_retencionesdetalle cd on cd.cod_configuracionretenciones=c.codigo where cd.cod_configuracionretenciones=$codigoRet order by cd.codigo");
+            $stmtRetenciones = $dbh->prepare("SELECT cd.*,c.porcentaje_cuentaorigen from configuracion_retenciones c join configuracion_retencionesdetalle cd on cd.cod_configuracionretenciones=c.codigo where cd.cod_configuracionretenciones=$codigoRet and cd.cod_cuenta!=0 order by cd.codigo");
             $stmtRetenciones->execute();
             $j=0;
             while ($rowRet = $stmtRetenciones->fetch(PDO::FETCH_ASSOC)) {
@@ -183,23 +185,31 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
              $debehaberX=$rowRet['debe_haber'];
 
              $porcentajeCuentaX=$rowRet['porcentaje_cuentaorigen'];
+             
              if($porcentajeCuentaX>100){
-               $importe=($porcentajeCuentaX/100)*$importeOriginal;
+               $importe=($porcentajeCuentaX/100)*$importeRetencion;
              }else{
-               $importeOriginal2=($porcentajeCuentaX/100)*$importeOriginal2;
+               //$importeOriginal2=($porcentajeCuentaX/100)*$importeOriginal2;
                $importe=$importeOriginal;
              }
-             $montoRetencion=($porcentajeX/100)*$importe;
+             
 
-             $montoRetencion=number_format($montoRetencion, 2, '.', '');   
+             $montoRetencion=($porcentajeX/100)*$importe;
+             
+
+
+            
 
              if($debehaberX==1){
+                $importePasivoFila=$importePasivoFila+$montoRetencion;
                 $debeRet=$montoRetencion;
                 $haberRet=0;    
               }else{
+                $importePasivoFila=$importePasivoFila-$montoRetencion;
                 $debeRet=0;
                 $haberRet=$montoRetencion;
               }
+             $montoRetencion=number_format($montoRetencion, 2, '.', '');   
              $importe=number_format($importe, 2, '.', '');
              $cuentaRetencion=$rowRet['cod_cuenta'];  
              $cuentaAuxiliar=0;
@@ -227,16 +237,32 @@ $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA 
           }
 
          $i=$ii;     
-      
-            $haber=0;
+            
+            if($porcentajeCuentaX>100){
+               $importeOriginalSinRetencion+=$montoRetencion;
+               $importeOriginalSinRetencion+=$montoRetencion;
+             }else{
+               if($porcentajeCuentaX==100){
+                 $importeOriginalSinRetencion+=0;
+               }else{
+                 $importeOriginalSinRetencion-=$montoRetencion;
+               }
+             }
 
+            
+            //formula solicitud de recursos
+
+            $haber=0;
+            $debe=$importeRetencion;
+            $sumaDevengado=$importePasivoFila;  
             if($porcentajeCuentaX<=100){
-              $debe=$importeOriginal2;
-              $sumaDevengado=$importeOriginal2; 
+              //$debe=$importeOriginal2;
+              //$sumaDevengado=$importeOriginal2;
+              // 
               $debe=number_format($debe, 2, '.', ''); 
             }else{
-              $debe=$importe;
-              $sumaDevengado=$importeOriginal; 
+              //$debe=$importe;
+              //$sumaDevengado=$importeOriginal; 
               $debe=number_format($debe, 2, '.', ''); 
             }
            if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){

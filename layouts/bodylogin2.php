@@ -500,7 +500,7 @@
                           var d = new Date();
                           var mesActual = 7;//d.getMonth()+1;
                           var anioActual = 2020;//d.getFullYear();
-
+                        if($("#debe"+(i+1)).length>0){
                           //VALIDAMOS CUANDO LA CUENTA TENGA EC LA CUENTA AUXILIAR SIEMPRE ESTE SELECCIONADA.
                           if(tipoEstadoCuenta>0 && cuentaAuxiliar==0){  
                             $('#msgError').html("La fila "+(i+1)+" debe estar asociada a una CUENTA AUXILIAR, ya que está configurada para llevar Estados de Cuenta.");
@@ -542,7 +542,7 @@
                               }
                             }  
                           }
-
+                         }//fin if si existe
                         }
                         if(contEstadoDebito==1){
                           envio=1;

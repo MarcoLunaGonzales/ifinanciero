@@ -96,7 +96,7 @@ $parametros=array();
 
  		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 						  "accion"=>"AsignarAtributoProveedor", 
-						  "IdCliente"=>219, 
+						  "IdCliente"=>242, 
 						  "IdUsuario"=>2 // valor del id del usuario retornado en el login						  
 						  );
 
@@ -106,7 +106,7 @@ $parametros=array();
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
 		//curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/registro/ws-registro-proveedor.php"); // OFFICIAL
-		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/registro/ws-registro-proveedor.php"); // PRUEBA
+		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/registro/ws-registro-proveedor.php"); // PRUEBA
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// definimos cada uno de los parámetros
