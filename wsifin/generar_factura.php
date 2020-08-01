@@ -41,9 +41,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
 
     //$globalUser=$_SESSION["globalUser"];
     //RECIBIMOS LAS VARIABLES    
-    try{
-        date_default_timezone_set('America/La_Paz');
-
+    try{    
         $cod_solicitudfacturacion = -100;//desde la tienda usamos el -100
         $cod_uo_solicitud = 5;        
         if($normas==0){
@@ -73,6 +71,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
         $observaciones = 'Tienda virtual - RS: '.$razonSocial;
         $nombre_cliente = $razonSocial;                
         $fechaFactura=$fechaFactura;
+        date_default_timezone_set('America/La_Paz');
         $fecha_actual=date('Y-m-d');
         $fechaFactura_x=date('Y-m-d H:i:s');
         // $fechaFactura_xy=date('Y-m-d');            
@@ -193,7 +192,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             $flagSuccess=$stmtInsertSoliFactDet->execute();                         
                         }
                         if($flagSuccess){
-                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,$tipoPago,$CodLibretaDetalle,$normas);
+                            $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,$tipoPago,$CodLibretaDetalle,$normas,$cod_facturaVenta);
                             if($cod_comprobante==null || $cod_comprobante==''){
                                 $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo=$cod_facturaVenta";
                                 $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);

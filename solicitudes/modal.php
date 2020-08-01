@@ -1,19 +1,22 @@
  <?php
  $listaActividad= obtenerActividadesServicioImonitoreo(1); 
+ $listaAcc= obtenerAccServicioImonitoreo(1); 
 ?>
  <select class="selectpicker form-control form-control-sm d-none" name="actividades_detalle" id="actividades_detalle" data-style="btn btn-success">                                  
- <option disabled selected value="">--SELECCIONE--</option>
+ <option disabled selected value="">--SELECCIONE ACTIVIDAD--</option>
 <?php
     foreach ($listaActividad as $listas) { ?>
       <option value="<?=$listas->codigo?>" class="text-right"><?=$listas->abreviatura?> - <?=substr($listas->nombre, 0, 85)?></option>
 
 <?php }?>
+</select>
+ <select class="selectpicker form-control form-control-sm d-none" name="acc_detalle" id="acc_detalle" data-style="btn btn-success">                                  
+ <option disabled selected value="">--SELECCIONE ACC--</option>
+<?php
+    foreach ($listaAcc as $listasacc) { ?>
+      <option value="<?=$listasacc->codigo?>" class="text-right"><?=$listasacc->abreviatura?> - <?=substr($listasacc->nombre, 0, 85)?></option>
 
-  <!--DATOS PARA PRUEBA-->
-  <!--<option value="10" class="text-right">Actividad 1: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quas iure libero laboriosam quibusdam, culpa, hic labor</option>
-  <option value="20" class="text-right">Actividad 2: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem placeat, labore amet nam non a quas e</option>
-  <option value="30" class="text-right">Actividad 3: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure ab aut eos accusamus dolorum voluptates, dicta laudant</option>
-  <option value="40" class="text-right">Actividad 4: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia pariatur, reiciendis facere sit </option>-->
+<?php }?>
 </select>
 
 <!-- notice modal -->

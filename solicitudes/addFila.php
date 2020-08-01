@@ -1,5 +1,6 @@
 <?php
 $cod_actividadproyecto=obtenerCodigoActividadProyecto($codDetalleX);
+$cod_accproyecto=obtenerCodigoAccProyecto($codDetalleX);
 $des_actividadproyecto="";
 ?>
 <div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
@@ -97,6 +98,7 @@ $des_actividadproyecto="";
                                <input type="hidden" id="cod_servicioauditor<?=$idFila;?>" name="cod_servicioauditor<?=$idFila;?>" value="<?=$cod_plantillauditor?>">    
                                <!--COD ACTIVIDADES-->
 		                           <input type="hidden" id="cod_actividadproyecto<?=$idFila;?>" name="cod_actividadproyecto<?=$idFila;?>" value="<?=$cod_actividadproyecto?>">
+                               <input type="hidden" id="cod_accproyecto<?=$idFila;?>" name="cod_accproyecto<?=$idFila;?>" value="<?=$cod_accproyecto?>">
                                <input type="hidden" id="des_actividadproyecto<?=$idFila;?>" name="des_actividadproyecto<?=$idFila;?>" value="<?=$des_actividadproyecto?>">    
       	                              <!--<div class="col-sm-4">
                                           

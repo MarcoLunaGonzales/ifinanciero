@@ -8,7 +8,6 @@ class Conexion extends PDO {
   private $contrasena = '';
   private $port = '3308';
 
-
 public function __construct() {
       //Sobreescribo el método constructor de la clase PDO.
       try{

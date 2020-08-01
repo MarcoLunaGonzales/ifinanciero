@@ -3804,7 +3804,7 @@ function descargarPDFOfertaPropuesta($nom,$html){
   $mydompdf->load_html($html);
   $mydompdf->render();
   $canvas = $mydompdf->get_canvas();
-  $canvas->page_text(490, 753, "PÁGINA {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("helvetica","bold"),7, array(255,255,255)); 
+  $canvas->page_text(490, 753, "PÁGINA {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("helvetica","bold"),7, array(0,0,0,0.4)); 
   $mydompdf->set_base_path('assets/libraries/plantillaPDFOfertaPropuesta.css');
   $mydompdf->stream($nom.".pdf", array("Attachment" => false));
 }
@@ -3858,10 +3858,10 @@ function descargarPDFFacturas($nom,$html,$codFactura){
     $text = "ANULADO"; 
     $txtHeight = -100; 
     $textWidth = 250; 
-    $canvas2->set_opacity(.2); 
+    $canvas2->set_opacity(.5); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(100,0,0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
   } 
 
@@ -3905,10 +3905,10 @@ function descargarPDFFacturasCopiaCliente($nom,$html,$codFactura){
     $text = "ANULADO"; 
     $txtHeight = -100; 
     $textWidth = 250; 
-    $canvas2->set_opacity(.2); 
+    $canvas2->set_opacity(.5); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(100,0,0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
    } 
     $pdf = $dompdf->output();
@@ -4722,6 +4722,32 @@ function obtenerActividadesServicioImonitoreo($codigo_proyecto){
     // foreach ($detalle as $objDet){
     //   echo $objDet->codigo."<br>";
     // }
+  }
+
+  function obtenerAccServicioImonitoreo($codigo_proyecto){
+  $sIde = "";
+  $sKey = "";
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarAccNum","codigo_proyecto"=>$codigo_proyecto);
+  //Lista todos los componentes
+  $parametros=json_encode($parametros);
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición    
+    //curl_setopt($ch, CURLOPT_URL,"http://localhost/imonitoreo/componentesSIS/compartir_servicio.php");//prueba
+    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/ifinanciero/wsifin/ws_accnum_proyectos.php");//prueba    
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    
+    // imprimir en formato JSON  
+    //print_r($remote_server_output);
+    $obj= json_decode($remote_server_output);
+    $detalle=$obj->lstComponentes;
+    return $detalle;
   }
 
   function obtenerCodigoActividadesServicioImonitoreo($cod_actividad){
@@ -5792,7 +5818,7 @@ function obtenerServiciosClaServicioTipo($id,$valor){
    return $stmt;
 }
 
-function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $anioTrabajo, $mesTrabajo){
+function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $anioTrabajo, $mesTrabajo,$codigoComp){
   $dbh = new Conexion();   
 
   $fechaDefaultMin=$anioTrabajo."-".$mesTrabajo."-01";
@@ -5803,7 +5829,7 @@ function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $
   $numeroMenor=$nroCorrelativo-1;
   $numeroMayor=$nroCorrelativo+1;
 
-  $sql="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$UO' and YEAR(fecha)='$anioTrabajo' and MONTH(fecha)='$mesTrabajo' and numero='$numeroMenor'";
+  $sql="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$UO' and YEAR(fecha)='$anioTrabajo' and MONTH(fecha)='$mesTrabajo' and numero='$numeroMenor' and cod_estadocomprobante<>2 and codigo!=$codigoComp";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   $fechaMenor="";
@@ -5814,7 +5840,7 @@ function buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $UO, $
     $fechaMenor=$fechaDefaultMin;  
   }
 
-  $sql="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$UO' and YEAR(fecha)='$anioTrabajo' and MONTH(fecha)='$mesTrabajo' and numero='$numeroMayor'";
+  $sql="SELECT max(fecha)as fecha from comprobantes where cod_tipocomprobante=$tipoComprobante and cod_unidadorganizacional='$UO' and YEAR(fecha)='$anioTrabajo' and MONTH(fecha)='$mesTrabajo' and numero='$numeroMayor' and cod_estadocomprobante<>2 and codigo!=$codigoComp";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   $fechaMayor="";
@@ -6610,10 +6636,10 @@ function eliminar_acentos($cadena){
     $text = "ANULADO"; 
     $txtHeight = -100; 
     $textWidth = 250; 
-    $canvas2->set_opacity(.2); 
+    $canvas2->set_opacity(.5); 
     $x = (($w-$textWidth)/2); 
     $y = (($h-$txtHeight)/2); 
-    $canvas2->text($x, $y, $text, $font, 100, $color = array(167, 14, 14), $word_space = 0.0, $char_space = 0.0, $angle = -45);
+    $canvas2->text($x, $y, $text, $font, 100, $color = array(100,0,0), $word_space = 0.0, $char_space = 0.0, $angle = -45);
   //fin marca agua
    } 
 
@@ -8215,6 +8241,17 @@ function obtenerCodigoActividadProyecto($codigo){
    return($valor);
   }
 
+  function obtenerCodigoAccProyecto($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT acc_num from solicitud_recursosdetalle where codigo=$codigo");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['acc_num'];
+    }
+   return($valor);
+  }
+
   function obtnercontracuentaUnidad($codigo_uo){
     $dbh = new Conexion();
     $stmt = $dbh->prepare("SELECT cod_cuenta from  configuraciones_uo_cuenta where unidad=$codigo_uo");
@@ -8694,6 +8731,69 @@ function obtenerSaldoPorPagarProveedor($codigo){
    }
    return $valor; 
 }
+function obtenerValorOferta($codOferta,$codigo,$default){
+  $dbh = new Conexion();
+  $sql="SELECT descripcion FROM ofertas_complementos where cod_oferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1";
+  if($default==0){
+    $sql="SELECT descripcion FROM simulaciones_servicios_ofertas_complementos where cod_simulacionoferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1";
+  }
+   //echo $sql;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row["descripcion"];
+   }
+   return $valor; 
+}
+
+function obtenerOfertaActiva($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT codigo FROM simulaciones_servicios_ofertas where cod_simulacionservicio=$codigo and activo=1 and cod_estadoreferencial=1";
+   //echo $sql;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row["codigo"];
+   }
+   return $valor; 
+}
+
+function obtenerTituloEdicionOferta($codigo){
+  $dbh = new Conexion();
+  $sql="SELECT nombre FROM simulaciones_servicios_ofertas where cod_simulacionservicio=$codigo and activo=1 and cod_estadoreferencial=1";
+   //echo $sql;
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor="PRIMERA EDICIÓN";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row["nombre"];
+   }
+   return $valor; 
+}
+function obtenerCodigoSimulacionServicioOferta(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from simulaciones_servicios_ofertas c");
+   $stmt->execute();
+   $codigo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+   }
+   return($codigo);
+}
+function obtenerCodigoSimulacionServicioOfertaDetalle(){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from simulaciones_servicios_ofertas_complementos c");
+   $stmt->execute();
+   $codigo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigo=$row['codigo'];
+   }
+   return($codigo);
+}
+
+
 ?>
 
 

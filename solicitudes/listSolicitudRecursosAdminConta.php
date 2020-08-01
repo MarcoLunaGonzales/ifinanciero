@@ -257,7 +257,7 @@ $item_1=2708;
                                     <?php
                                   }else{
                                     ?>
-                                   <a title="Contabilizar Solicitud"  href='#'  class="dropdown-item">
+                                   <a title="Contabilizar Solicitud"  href="#" onclick="javascript:window.open('<?=$urlRegisterCompro;?>')"  class="dropdown-item">
                                       <i class="material-icons text-warning">assignment_turned_in</i> Contabilización Manual Solicitud
                                     </a>
                                     <?php
@@ -305,7 +305,7 @@ $item_1=2708;
                                     <?php
                                   }else{
                                     ?>
-                                   <a title="Contabilizar Solicitud"  href='#'  class="dropdown-item">
+                                   <a title="Contabilizar Solicitud"  href="#" onclick="javascript:window.open('<?=$urlRegisterCompro;?>')"  class="dropdown-item">
                                       <i class="material-icons text-warning">assignment_turned_in</i> Contabilización Manual Solicitud
                                     </a>
                                     <?php

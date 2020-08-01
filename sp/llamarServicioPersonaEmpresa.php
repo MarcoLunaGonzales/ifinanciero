@@ -6,14 +6,14 @@ $sIde = "ifinanciero";
 $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 $parametros=array();
 
-/*PARAMETROS PARA VERIFICAR PERSONA O EMPRESA PROVEEDORA
+//PARAMETROS PARA VERIFICAR PERSONA O EMPRESA PROVEEDORA
 
  		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 						  "accion"=>"VerificaIdentificacionPersonaEmpresa", 
-						  "identificacion"=>1023053020, //NIT de la empresa o Identificacion de Persona
+						  "identificacion"=>6298608011, //NIT de la empresa o Identificacion de Persona
 						  "tipoCliente"=>"E" // P= persona, E = empresa
 						  );
-*/
+//
 /*PARAMETROS PARA REGISTRAR UNA EMPRESA PROVEEDORA
 
  		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
@@ -96,7 +96,7 @@ $parametros=array();
 
  		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 						  "accion"=>"AsignarAtributoProveedor", 
-						  "IdCliente"=>17534, 
+						  "IdCliente"=>31895, 
 						  "IdUsuario"=>89 // valor del id del usuario retornado en el login						  
 						  );
 

@@ -8,6 +8,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 	$dbh = new Conexion();
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 	set_time_limit(3000);
+	date_default_timezone_set('America/La_Paz');
 	// session_start();
 	try{
 		$cod_uo_unico=5;
@@ -28,6 +29,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 		$codAnio=$_SESSION["globalNombreGestion"];
 		$codMoneda=1;
 		$codEstadoComprobante=1;
+
 		$fechaActual=date("Y-m-d H:i:s");		
 		$tipoComprobante=4;//facturas
 		$nombreTipoComprobante=abrevTipoComprobante($tipoComprobante);
@@ -218,8 +220,10 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 	    return "0";
 	}	
 }
-function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$tipoPago,$cod_cuenta_libreta,$normas){
-	
+function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$tipoPago,$cod_cuenta_libreta,$normas,$cod_facturaventa){
+	require_once __DIR__.'/../conexion.php';
+	$dbh = new Conexion();
+	date_default_timezone_set('America/La_Paz');
 	// session_start();
 	try{
 	    $cod_uo_solicitud = 5;
@@ -265,7 +269,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 			$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago);
 			$descripcion=$concepto_contabilizacion;	
 			$sw=0;
-			if($tipoPago==4){//caso payme
+			if($tipoPago!=4){//caso payme
 				if($cod_cuenta_libreta!='0'){
 					$cod_cuenta_libreta=trim($cod_cuenta_libreta,",");
 					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_cuenta_libreta) order by  monto desc";
@@ -296,6 +300,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
 					            }
 					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$cod_facturaventa)";
+					            // echo $sqlUpdateLibreta;
 		                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
 		                        $stmtUpdateLibreta->execute();
 							}else{
@@ -310,6 +315,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle);
 					            }
 					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$cod_facturaventa)";
+					            // echo $sqlUpdateLibreta;
 		                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
 		                        $stmtUpdateLibreta->execute();
 					            $sw_controlador=1;
@@ -394,6 +400,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 	require_once '../functions.php';	
 	require_once __DIR__.'/../functionsGeneral.php';
 	$dbh = new Conexion();
+	date_default_timezone_set('America/La_Paz');
 	// session_start();
 	try{
 	    $cod_uo_solicitud = 5;
@@ -437,7 +444,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 			$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago);
 			$descripcion=$concepto_contabilizacion;	
 			$sw=0;
-			if($tipoPago==4){//caso payme
+			if($tipoPago==4){//caso payme tarjetas
 				$cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
 				$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago_tarjetas);
 				$cod_cuenta_tarjetacredito=obtenerValorConfiguracion(60);
