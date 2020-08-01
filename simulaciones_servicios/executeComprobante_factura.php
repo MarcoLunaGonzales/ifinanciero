@@ -8,6 +8,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 	$dbh = new Conexion();
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 	set_time_limit(3000);
+	date_default_timezone_set('America/La_Paz');
 	// session_start();
 	try{
 		$cod_uo_unico=5;
@@ -28,6 +29,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 		$codAnio=$_SESSION["globalNombreGestion"];
 		$codMoneda=1;
 		$codEstadoComprobante=1;
+
 		$fechaActual=date("Y-m-d H:i:s");		
 		$tipoComprobante=4;//facturas
 		$nombreTipoComprobante=abrevTipoComprobante($tipoComprobante);
@@ -221,6 +223,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$tipoPago,$cod_cuenta_libreta,$normas,$cod_facturaventa){
 	require_once __DIR__.'/../conexion.php';
 	$dbh = new Conexion();
+	date_default_timezone_set('America/La_Paz');
 	// session_start();
 	try{
 	    $cod_uo_solicitud = 5;
@@ -397,6 +400,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 	require_once '../functions.php';	
 	require_once __DIR__.'/../functionsGeneral.php';
 	$dbh = new Conexion();
+	date_default_timezone_set('America/La_Paz');
 	// session_start();
 	try{
 	    $cod_uo_solicitud = 5;

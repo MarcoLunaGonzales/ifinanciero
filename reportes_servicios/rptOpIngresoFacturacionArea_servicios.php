@@ -54,7 +54,7 @@ $i=0;
                   </div>
                   <h4 class="card-title">Reporte Ingresos por Área</h4>
                 </div>
-                <form class="" action="<?=$urlReporteIngresoFacturacionArea?>" target="_blank" method="POST">
+                <form class="" action="<?=$urlReporteIngresoFacturacion_servicio?>" target="_blank" method="POST">
                 <div class="card-body">
                   	<div class="row">
 	                  	<div class="col-sm-6">
@@ -150,19 +150,19 @@ $i=0;
       	             </div>
                   	<div class="col-sm-6">
                   		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Area</label>
+			                 <label class="col-sm-4 col-form-label">Servicio</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
-	                              <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
+	                              <select class="selectpicker form-control form-control-sm" name="servicios[]" id="servicios" data-style="select-with-transition" multiple data-actions-box="true" required>
 			  	                     <?php
-			  	                     $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+			  	                     $stmt = $dbh->prepare("SELECT IdClaServicio,Codigo,descripcion_n2 from cla_servicios GROUP BY IdTipo ORDER BY descripcion_n2");
 				                     $stmt->execute();
 				                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				                     	$codigoX=$row['codigo'];
-				                     	$nombreX=$row['nombre'];
-				                     	$abrevX=$row['abreviatura'];
+				                     	$codigoX=$row['IdClaServicio'];
+				                     	$nombreX=$row['descripcion_n2'];
+				                     	$abrevX=$row['Codigo'];
 				                     ?>
-				                     <option value="<?=$codigoX;?>" selected><?=$abrevX;?></option>	
+				                     <option value="<?=$codigoX;?>" selected><small><?=$nombreX?> (<?=$abrevX;?>)</small></option>	
 				                       <?php
 			  	                       }
 			  	                       ?>
