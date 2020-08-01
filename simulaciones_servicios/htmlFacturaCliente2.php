@@ -123,7 +123,7 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 		}
 		
 		$html = '';
-		if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==4 || $tipo_admin==5  || $tipo_admin==8 ){
+		if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==6 || $tipo_admin==4 || $tipo_admin==5 || $tipo_admin==9  || $tipo_admin==8 ){
 			$html.='<html>'.
 			            '<head>'.
 			                '<!-- CSS Files -->'.
@@ -179,7 +179,7 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 		                    </table>
 		                    <br>
 		                    <small><span><b>';
-		                    if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==4){
+		                    if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==6 || $tipo_admin==4 || $tipo_admin==8){
 		                    	$html.='ORIGINAL: CLIENTE<br><br>';
 		                    }else{
 		                    	$html.='COPIA: CONTABILIDAD<br><br>';
@@ -322,8 +322,8 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 	            <tr align="center"><td>&quot;'.obtenerValorConfiguracionFactura(7).'&quot;<br>&quot;'.$leyenda.'&quot;</td></tr>
 	        </table>';
 		$html.='</div>';
-		$html.='<hr>';//temporal
-        if($tipo_admin==1 || $tipo_admin==3 || $tipo_admin==4 || $tipo_admin==5 || $tipo_admin==8){
+		// $html.='<hr>';//temporal
+        if($tipo_admin==1 || $tipo_admin==3 || $tipo_admin==7 || $tipo_admin==4 || $tipo_admin==5 || $tipo_admin==9 || $tipo_admin==8){
         	// $html.='</header>';
 			$html.='</body>'.
 			      '</html>';   

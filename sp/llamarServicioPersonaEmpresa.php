@@ -94,11 +94,11 @@ $parametros=array();
 
 //PARAMETROS PARA ASIGNAR ATRIBUTO PROVEEDOR
 
- 		/*$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+ 		$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 						  "accion"=>"AsignarAtributoProveedor", 
-						  "IdCliente"=>17534, 
+						  "IdCliente"=>31895, 
 						  "IdUsuario"=>89 // valor del id del usuario retornado en el login						  
-						  );*/
+						  );
 
 
 		$parametros=json_encode($parametros);
