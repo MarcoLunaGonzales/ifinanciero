@@ -153,12 +153,12 @@ $i=0;
 			                 <label class="col-sm-4 col-form-label">Servicio</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
-	                              <select class="selectpicker form-control form-control-sm" name="servicios[]" id="servicios" data-style="select-with-transition" multiple data-actions-box="true" required>
+	                              <select class="selectpicker form-control form-control-sm" name="servicios[]" id="servicios" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
 			  	                     <?php
-			  	                     $stmt = $dbh->prepare("SELECT IdClaServicio,Codigo,descripcion_n2 from cla_servicios GROUP BY IdTipo ORDER BY descripcion_n2");
+			  	                     $stmt = $dbh->prepare("SELECT IdTipo,Codigo,descripcion_n2 from cla_servicios GROUP BY IdTipo ORDER BY descripcion_n2");
 				                     $stmt->execute();
 				                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				                     	$codigoX=$row['IdClaServicio'];
+				                     	$codigoX=$row['IdTipo'];
 				                     	$nombreX=$row['descripcion_n2'];
 				                     	$abrevX=$row['Codigo'];
 				                     ?>

@@ -46,5 +46,26 @@ function obtenerListaVentasArea($unidades,$areas,$desde,$hasta){
 }
 
 
+// function obtenerListaVentasA_servicios($unidades,$desde,$hasta){
+
+//     $dbh = new Conexion();
+//     $sql="SELECT sf.codigo from facturas_venta f, solicitudes_facturacion sf where f.cod_solicitudfacturacion=sf.codigo and f.cod_estadofactura<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) and sf.tipo_solicitud in (1,3,4,5)";
+//     //echo $sql;
+//     $stmt = $dbh->prepare($sql);
+//     $stmt->execute();
+//     return($stmt);
+// }
+function obtenerListaVentasA_servicios($unidades,$servicios,$desde,$hasta){
+    $dbh = new Conexion();
+    $sql="SELECT cs.IdTipo,cs.Codigo,cs.descripcion_n2,SUM((s.cantidad*s.precio)-s.descuento_bob)as importe_real 
+    From facturas_venta f,facturas_ventadetalle s, cla_servicios cs 
+    where f.codigo=s.cod_facturaventa and s.cod_claservicio=cs.IdClaServicio and cs.Idtipo in ($servicios) and f.cod_estadofactura<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) and f.cod_area in (11,12,38,39,40) GROUP BY cs.Idtipo";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return($stmt);
+}
+
+
 
  ?>

@@ -39,17 +39,15 @@ $unidadCosto=$_POST['unidad_costo'];
 $servicios=$_POST['servicios'];
 
 $gestion= $_POST["gestion"];
-
 //PONEMOS LAS VARIABLES PARA CUANDO LLAMEMOS AL REPORTE DESDE LOS MAYORES
-if($gestion==null){
-  $gestion=$globalGestion;
-  $unidadCosto=explode(",",obtenerUnidadesReport(0));
-  $servicios=explode(",",obtenerAreasReport(0));
-}
+// if($gestion==null){
+//   $gestion=$globalGestion;
+//   $unidadCosto=explode(",",obtenerUnidadesReport(0));
+//   // $servicios=explode(",",obtenerAreasReport(0));
+// }
 $NombreGestion = nameGestion($gestion);
 $unidadCostoArray=implode(",", $unidadCosto);
 $serviciosArray=implode(",", $servicios);
-
 // if(isset($_POST['solo_tienda'])){
 //  $solo_tienda=1; 
 // }else{
