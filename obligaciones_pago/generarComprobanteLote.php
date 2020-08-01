@@ -15,6 +15,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalMes=$_SESSION['globalMes'];
+$globalNombreGestion=$_SESSION["globalNombreGestion"];
 $fecha_pago=date("Y-m-d");
 
 //creacion del comprobante de pago

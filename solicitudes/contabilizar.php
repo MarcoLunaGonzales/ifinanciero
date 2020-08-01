@@ -16,7 +16,7 @@ $globalMes=$_SESSION['globalMes'];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$globalNombreGestion=$_SESSION["globalNombreGestion"];
 $fechaHoraActual=date("Y-m-d H:i:s");
 
 $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=5 where codigo=$codigo";
