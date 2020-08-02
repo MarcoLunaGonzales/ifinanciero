@@ -1,0 +1,4 @@
+- beneficiario cargar EFECTIVO.
+- dropdown-menu listas solicitud recursos.
+- Numero correlativo en comprobantes.
+- cod_cajachicadetalle !="";

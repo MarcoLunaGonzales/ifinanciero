@@ -1135,23 +1135,22 @@ function obtenerPlantilla($codigo){
           $valFac[$h][0]=$fact[$i][$h]->nit;
           $valFac[$h][1]=$fact[$i][$h]->nroFac;
 
-          $fecha=$fact[$i][$h]->fechaFac;
+          /*$fechaFac=; EL CAMPO YA NO ES DATEPICKER
           $porciones = explode("/", $fecha);
-          $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+          $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];*/
 
-          $valFac[$h][2]=$fechaFac;
+          $valFac[$h][2]=$fact[$i][$h]->fechaFac;
           $valFac[$h][3]=$fact[$i][$h]->razonFac;
           $valFac[$h][4]=$fact[$i][$h]->impFac;
           $valFac[$h][5]=$fact[$i][$h]->exeFac;
           $valFac[$h][6]=$fact[$i][$h]->autFac;
           $valFac[$h][7]=$fact[$i][$h]->conFac;
-          $valFac[$h][8]=$fact[$i][$h]->exeFac;
-          $valFac[$h][9]=$fact[$i][$h]->iceFac;
-          $valFac[$h][10]=$fact[$i][$h]->tazaFac;
-          $valFac[$h][11]=$fact[$i][$h]->tipoFac;
+          $valFac[$h][8]=$fact[$i][$h]->iceFac;
+          $valFac[$h][9]=$fact[$i][$h]->tazaFac;
+          $valFac[$h][10]=$fact[$i][$h]->tipoFac;
         }
         if(cantidadF($fact[$i])>0){
-         $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
+         $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";$cabeceraFac[8]="ice";$cabeceraFac[9]="tasa_cero";$cabeceraFac[10]="tipo_compra";
          if($title=="cod_solicitudrecurso"){
             $sql = obtenerFacturasSoli($codigo); 
             editarComprobanteDetalle($codigo,'cod_solicitudrecursodetalle',contarFacturasSoli($codigo),cantidadF($fact[$i]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
@@ -1194,31 +1193,29 @@ function obtenerPlantilla($codigo){
           $valFac[$h][0]=$fact[$j][$h]->nit;
           $valFac[$h][1]=$fact[$j][$h]->nroFac;
 
-          $fecha=$fact[$j][$h]->fechaFac;
+          /*$fecha=;
           $porciones = explode("/", $fecha);
-          $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];
+          $fechaFac=$porciones[2]."-".$porciones[1]."-".$porciones[0];*/
 
-          $valFac[$h][2]=$fechaFac;
+          $valFac[$h][2]=$fact[$j][$h]->fechaFac;
           $valFac[$h][3]=$fact[$j][$h]->razonFac;
           $valFac[$h][4]=$fact[$j][$h]->impFac;
           $valFac[$h][5]=$fact[$j][$h]->exeFac;
           $valFac[$h][6]=$fact[$j][$h]->autFac;
           $valFac[$h][7]=$fact[$j][$h]->conFac;
-          $valFac[$h][8]=$fact[$j][$h]->exeFac;
-          $valFac[$h][9]=$fact[$j][$h]->iceFac;
-          $valFac[$h][10]=$fact[$j][$h]->tazaFac;
-          $valFac[$h][11]=$fact[$j][$h]->tipoFac;
+          $valFac[$h][8]=$fact[$j][$h]->iceFac;
+          $valFac[$h][9]=$fact[$j][$h]->tazaFac;
+          $valFac[$h][10]=$fact[$j][$h]->tipoFac;
         }
         if(cantidadF($fact[$j])>0){
-        $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";
+        $cabeceraFac[0]="nit";$cabeceraFac[1]="nro_factura";$cabeceraFac[2]="fecha";$cabeceraFac[3]="razon_social";$cabeceraFac[4]="importe";$cabeceraFac[5]="exento";$cabeceraFac[6]="nro_autorizacion";$cabeceraFac[7]="codigo_control";$cabeceraFac[8]="ice";$cabeceraFac[9]="tasa_cero";$cabeceraFac[10]="tipo_compra";
           if($title=="cod_solicitudrecurso"){
            $sql = obtenerFacturasSoli($codComprobanteDetalle); 
            editarComprobanteDetalle($codComprobanteDetalle,'cod_solicitudrecursodetalle',contarFacturasSoli($codComprobanteDetalle),cantidadF($fact[$j]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
           }else{
            $sql = obtenerFacturasCompro($codComprobanteDetalle); 
            editarComprobanteDetalle($codComprobanteDetalle,'cod_comprobantedetalle',contarFacturasCompra($codComprobanteDetalle),cantidadF($fact[$j]),$sql,'facturas_compra',$cabeceraFac,$valFac,null);
-          }    
-          
+          }      
          }
         }
         $crud2 = $dbh->prepare($query2);

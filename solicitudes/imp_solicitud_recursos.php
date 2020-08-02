@@ -104,7 +104,7 @@ $tituloImporte="";
 
 ?>
 <!-- formato cabeza fija para pdf-->
-<html><head>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="../assets/libraries/plantillaPDFSolicitudesRecursos.css" rel="stylesheet" />
    </head><body>
 <!-- fin formato cabeza fija para pdf--> 
@@ -194,7 +194,7 @@ $tituloImporte="";
               $tituloImporte=abrevRetencion($retencionX);
               $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
               $montoImporte=$importeSolX*($porcentajeRetencion/100);       
-              if(!($retencionX==3||$retencionX==4||$retencionX==5||$retencionX==7||$retencionX==1||$retencionX==9)){ //validacion del descuento por retencion
+              if(($retencionX==8)){ //validacion del descuento por retencion
                 $montoImporte=$importeSolX;
               }
               $montoImporteRes=$importeSolX-$montoImporte;
@@ -212,11 +212,14 @@ $tituloImporte="";
                $segPres=$datosSeg->presupuesto;
                $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
             }
-
-            $datosBen[$index-1]=trim($row["nombre_beneficiario"])." ".trim($row["apellido_beneficiario"]);
+            $datosBen[$index-1]=trim($row["nombre_beneficiario"]);
+            if($row["apellido_beneficiario"]==""){
+              $datosBen[$index-1]=trim($row["nombre_beneficiario"])." ".trim($row["apellido_beneficiario"]);
+            }
+            $datosBen[$index-1] = preg_replace('/[\x00-\x1F\x7F-\xFF]/', '', $datosBen[$index-1]);
             
             if($row["cod_tipopagoproveedor"]==2){ //transferencia
-              $datosBen[$index-1].=" / Nro. Cuenta:"." ".trim($row["nro_cuenta_beneficiario"]).", ".obtenerBancoBeneficiarioSolicitudRecursos($codCuentaBancariaX,$row["cod_proveedor"]);
+              $datosBen[$index-1].=" / ".obtenerBancoBeneficiarioSolicitudRecursos($codCuentaBancariaX,$row["cod_proveedor"]).", Nro. Cuenta:"." ".trim($row["nro_cuenta_beneficiario"])."";
             }
 
             $datosTipo[$index-1]=nameTipoPago($row["cod_tipopagoproveedor"]);

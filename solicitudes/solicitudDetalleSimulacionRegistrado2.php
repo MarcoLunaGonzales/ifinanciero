@@ -11,6 +11,7 @@
 						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;$listaDetalles=[];
 					?><div id="detalles_solicitud"><?php
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
+							$cod_plantillauditor="";
 							//$cod_plantilladetalle=$row['codigo_detalle'];
 							/*$codigo_fila=explode("###",$row['codigo_detalle']);
 							if($codigo_fila[1]=="DET-SIM"){

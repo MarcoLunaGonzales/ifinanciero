@@ -11,6 +11,7 @@
 							             
                        $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigo);
                        while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+                        $cod_plantillauditor="";
                           $tituloImporte="Importe";
                           $codCuentaX=$rowDetalles['cod_plancuenta'];
                           $codigoDetX=$rowDetalles["codigo"];

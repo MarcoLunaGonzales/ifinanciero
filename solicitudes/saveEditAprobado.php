@@ -64,6 +64,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
   $sqlDel="DELETE FROM facturas_compra where cod_solicitudrecursodetalle in (select codigo from solicitud_recursosdetalle where cod_solicitudrecurso=$codSolicitud)";
   $stmtDel = $dbh->prepare($sqlDel);
   $stmtDel->execute();
+
   
   $valorDist=$_POST['n_distribucion'];
   if($valorDist!=0){
@@ -127,7 +128,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
 //guardar las ediciones
     $fila=0;
 for ($i=1;$i<=$cantidadFilas;$i++){	
-    if(isset($_POST["habilitar".$i])){      
+  if(isset($_POST["partida_cuenta_id".$i])){      
     $data[$fila][0]=$_POST["partida_cuenta_id".$i];
     $data[$fila][1]=$_POST["unidad_fila".$i]; 
     $data[$fila][2]=$_POST["area_fila".$i];  
@@ -148,6 +149,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     $data[$fila][17]=$_POST["cod_actividadproyecto".$i];
     $data[$fila][18]=$_POST["cod_accproyecto".$i];
     //$dataInsert  
+    echo $data[$fila][11];
     $fila++;
       $nArchivosDetalle=$_POST["cantidad_archivosadjuntosdetalle".$i];
     for ($ar=1; $ar <= $nArchivosDetalle ; $ar++) { 
@@ -209,6 +211,7 @@ while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {
 
 $stmt1 = obtenerSolicitudesDet($codSolicitud);
 editarComprobanteDetalle($codSolicitud,'cod_solicitudrecurso',$cont1,$fila,$stmt1,'solicitud_recursosdetalle',$cab,$data,$facturas);
+
 if($flagSuccess==true){
 
 if(!isset($_POST['control_admin'])){
