@@ -197,6 +197,9 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             $cantidad=$valor['cantidad'];
                             $precio_x=$precioUnitario;
                             $cod_claservicio_x=$pagoCursoId;
+                            if($normas!=0){
+                                $cod_claservicio_x=488;
+                            }
                             $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
                              values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle',0,$suscripcionId)");
                             $flagSuccess=$stmtInsertSoliFactDet->execute();                         

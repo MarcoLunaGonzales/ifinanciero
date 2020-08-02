@@ -9,8 +9,8 @@
     $html='<table class="table table-bordered table-condensed" id="libro_mayor_rep" width="80%" align="center">'.
             '<thead >'.
             '<tr class="text-center" style="background:#40A3A8;color:#ffffff;">'.
-            '<th width="20%">Codigo/th>'.
-              '<th width="20%">Area</th>'.
+            '<th width="20%">Codigo</th>'.
+              '<th width="20%">Servicio</th>'.
               '<th width="10%">Importe Neto</th>'.
             '</tr>'.
            '</thead>'.

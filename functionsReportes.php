@@ -65,7 +65,78 @@ function obtenerListaVentasA_servicios($unidades,$servicios,$desde,$hasta){
     $stmt->execute();
     return($stmt);
 }
+function obtenerListaVentas_libretas($desde,$hasta){
+    $dbh = new Conexion();
+    $sql="SELECT lbf.* from facturas_venta f,libretas_bancariasdetalle_facturas lbf where f.codigo=lbf.cod_facturaventa and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' GROUP BY lbf.cod_libretabancariadetalle order by f.nro_factura";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return($stmt);
+}
+function obtenerDatosLibreta_factura($codigo,$detalle){
+    $dbh = new Conexion();
+    $sql="SELECT $detalle from libretas_bancariasdetalle where codigo=$codigo";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    // echo $sql;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {        
+        $valor=$row[$detalle];        
+    }
+    // $saldo=obtenerSaldoLibretaBancariaDetalle($codigo);
+    // $valor.="#####".$saldo;
+    return($valor);
+}
+function obtenerFacturasLibreta($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT f.nro_factura from libretas_bancariasdetalle_facturas l, facturas_venta f where l.cod_facturaventa=f.codigo and l.cod_libretabancariadetalle=$codigo and f.cod_estadofactura<>2 group by f.nro_factura";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor.="F ".$row['nro_factura'].",";
+    }    
+    $valor=trim($valor,",");
+    return($valor);
+}
+function obtener_facturas_libreta($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT f.codigo from libretas_bancariasdetalle_facturas l, facturas_venta f where l.cod_facturaventa=f.codigo and l.cod_libretabancariadetalle=$codigo and f.cod_estadofactura<>2";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {                
+        $valor.=$row['codigo'].",";        
+    }    
+    $valor=trim($valor,',');    
+    return($valor);
+}
+function sumatotaldetallefactura_libretas($codigo){
+    $cod_facturas=obtener_facturas_libreta($codigo);
+    $dbh = new Conexion();
+    $sql="SELECT sum((f.precio*f.cantidad)-f.descuento_bob) as importe from facturas_ventadetalle f where cod_facturaventa in ($cod_facturas)";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {        
+        $valor=$row['importe'];
+    }        
+    return($valor);
+ }   
+ function obtener_saldo_total_facturas($desde,$hasta){
+    $dbh = new Conexion();
+    $sql="SELECT f.codigo from facturas_venta f,libretas_bancariasdetalle_facturas lbf where f.codigo=lbf.cod_facturaventa and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 GROUP BY lbf.cod_facturaventa";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {        
+        $codigo=$row['codigo'];
+        $monto_factura=sumatotaldetallefactura($codigo);
+        $valor=$valor+$monto_factura;
+    }        
+    return($valor);
 
-
-
+ }
  ?>
