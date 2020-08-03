@@ -171,6 +171,8 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                   if($codEstado==3){
                                    ?><a href="#" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')" class="dropdown-item">
                                     <i class="material-icons text-success">emoji_events</i> EJECUTAR
+                                 </a><a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&edit=1' class="dropdown-item">
+                                    <i class="material-icons text-success"><?=$iconEdit;?></i> Editar Propuesta
                                  </a><?php
                                   }else{
                                    ?>
@@ -197,7 +199,10 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                    if($codEstado==3){
                                    ?><a href="#" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0')" class="dropdown-item">
                                       <i class="material-icons text-success">emoji_events</i> EJECUTAR
-                                   </a><?php
+                                   </a>
+                                   <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&edit=1' class="dropdown-item">
+                                    <i class="material-icons text-success"><?=$iconEdit;?></i> Editar Propuesta
+                                 </a><?php
                                    }else{
                                     ?>
                                    <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="dropdown-item">

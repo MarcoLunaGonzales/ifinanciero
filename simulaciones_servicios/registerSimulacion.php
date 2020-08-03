@@ -932,19 +932,23 @@ for ($an=0; $an<=$anioGeneral; $an++) {
 				  	<div class="card-footer fixed-bottom">
             <?php 
             if(!(isset($_GET['q']))){
+            if(!isset($_GET['edit'])){
               if($pUtilidadLocal>0){
               ?><a onclick="guardarServicioSimulacion()" class="btn btn-warning text-white"><i class="material-icons">send</i> Enviar Propuesta UT <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php    
               }else{
                 ?><a href="#" title="No se puede enviar Propuesta" class="btn btn-danger text-white"><i class="material-icons">warning</i> UTILIDAD NETA <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php
               }
+            }
              ?>   
             <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
             }else{
+             if(!isset($_GET['edit'])){
               if($pUtilidadLocal>0){
               ?><a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta UT <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php    
               }else{
                 ?><a href="#" title="No se puede enviar Propuesta" class="btn btn-danger text-white"><i class="material-icons">warning</i> UTILIDAD NETA <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php
               }
+            }
             ?>
             <a href="../<?=$urlList;?>&q=<?=$idServicioX?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a><?php
             }
