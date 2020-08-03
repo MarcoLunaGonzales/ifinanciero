@@ -4320,10 +4320,16 @@ function agregarRetencionSolicitud(){
      $("#cod_retencion"+fila).val(respuesta[0]);
      $("#retFila").val("");
      $('#modalRetencion').modal('hide');
-
-     if(!$("#nret"+fila).hasClass("estado")){
+     if(parseInt(respuesta[0])==0){
+       if($("#nret"+fila).hasClass("estado")){
+       $("#nret"+fila).removeClass("estado")
+       }
+     }else{
+      if(!$("#nret"+fila).hasClass("estado")){
        $("#nret"+fila).addClass("estado")
+      }
      }
+     
      $("#importe_label"+fila).html("<small>Importe-"+respuesta[1].substr(0,3)+".</small>");
   }else{
     $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");

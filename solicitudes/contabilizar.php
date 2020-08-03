@@ -138,7 +138,10 @@ if($cod_unidadX!=3000){
         $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
         $stmtDel = $dbh->prepare($sqlDelete);
         $flagSuccess=$stmtDel->execute();
-    $i=0;$codProveedor=0;$sumaDevengado=0;$nombresProveedor="";$nombreProveedor="";
+    $i=0;$codProveedor=0;$sumaDevengado=0;$nombresProveedor="";$nombreProveedor="";$sumaRetencionDiferido=0;
+    $sumaProveedorPasivo=0;
+
+    $numeroRetencionFactura=numeroDeRetencionesIVA($codigo);
     while ($rowNuevo = $nuevosDetalles->fetch(PDO::FETCH_ASSOC)) {
         
 
@@ -229,9 +232,10 @@ if($cod_unidadX!=3000){
              
 
              $montoRetencion=($porcentajeX/100)*$importe;
+             if($numeroRetencionFactura==1){
+               $sumaRetencionDiferido+=$montoRetencion; 
+             }
              
-
-
             
 
              if($debehaberX==1){
@@ -243,8 +247,8 @@ if($cod_unidadX!=3000){
                 $debeRet=0;
                 $haberRet=$montoRetencion;
               }
-             $montoRetencion=number_format($montoRetencion, 2, '.', '');   
-             $importe=number_format($importe, 2, '.', '');
+             $montoRetencion=number_format(($montoRetencion), 2, '.', '');   
+             $importe=number_format(($importe), 2, '.', '');
              $cuentaRetencion=$rowRet['cod_cuenta'];  
              $cuentaAuxiliar=0;
              $n_cuenta=trim(obtieneNumeroCuenta($cuentaRetencion));
@@ -293,11 +297,11 @@ if($cod_unidadX!=3000){
               //$debe=$importeOriginal2;
               //$sumaDevengado=$importeOriginal2;
               // 
-              $debe=number_format($debe, 2, '.', ''); 
+              $debe=number_format(($debe), 2, '.', ''); 
             }else{
               //$debe=$importe;
               //$sumaDevengado=$importeOriginal; 
-              $debe=number_format($debe, 2, '.', ''); 
+              $debe=number_format(($debe), 2, '.', ''); 
             }
            if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
              //detalle comprobante CON RETENCION //////////////////////////////////////////////////////////////7
@@ -327,16 +331,18 @@ if($cod_unidadX!=3000){
                }else{
                  $totalRetencion+=(float)$haberRet;
                }   
-               $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-               $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+              
+              if($numeroRetencionFactura!=1){ //poner UNA SOLA RETENCION
+                 $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+                 $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
                VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaRetencion', '$cuentaAuxiliar', '$unidadDetalleRet', '$areaRet', '$debeRet', '$haberRet', '$glosaX', '$ii')";
-               $stmtDetalle = $dbh->prepare($sqlDetalle);
-               $flagSuccessDetalle=$stmtDetalle->execute();
+                 $stmtDetalle = $dbh->prepare($sqlDetalle);
+                 $flagSuccessDetalle=$stmtDetalle->execute();
 
-               $sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen";
-               $stmtFacturas = $dbh->prepare($sqlActualizarFaturas);
-               $stmtFacturas->execute();
-
+                 $sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen";
+                 $stmtFacturas = $dbh->prepare($sqlActualizarFaturas);
+                 $stmtFacturas->execute();
+               }
               }
 
               //$sumaDevengado+=$totalRetencion;   
@@ -376,12 +382,13 @@ if($cod_unidadX!=3000){
 
             $debeProv=0;
             $haberProv=$sumaDevengado;
+            $sumaProveedorPasivo+=$sumaDevengado;
             $tituloFactura="";
             if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
               $tituloFactura="F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ";
             }
             $glosaDetalleProv="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
-        
+            if($numeroRetencionFactura!=1){ //poner UNA SOLA RETENCION
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
             $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
             VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaDetalleProv', '$i')";
@@ -401,11 +408,52 @@ if($cod_unidadX!=3000){
               $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
               $stmtUpdateSolicitudRecursoDetalle->execute();
 
-             //echo $sqlUpdateSolicitudRecursoDetalle."";
-              $glosaDetalleGeneral.=" ".$glosaDetalleProv;
+             //echo $sqlUpdateSolicitudRecursoDetalle.""; 
+
+            }
+             $glosaDetalleGeneral.=" ".$glosaDetalleProv;
               
 
-    }  
+    }
+ if($numeroRetencionFactura==1){
+         $debeRet=$sumaRetencionDiferido;
+         $haberRet=0;
+                 $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+                 $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+               VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaRetencion', '$cuentaAuxiliar', '$unidadDetalleRet', '$areaRet', '$debeRet', '$haberRet', '$glosaX', '$ii')";
+                 $stmtDetalle = $dbh->prepare($sqlDetalle);
+                 $flagSuccessDetalle=$stmtDetalle->execute();
+
+                 $sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen";
+                 $stmtFacturas = $dbh->prepare($sqlActualizarFaturas);
+                 $stmtFacturas->execute();
+
+          $haberProv=$sumaProveedorPasivo;
+          $debeProv=0;
+           $tituloFactura="";
+            if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
+              $tituloFactura="F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ";
+            }
+            $glosaDetalleProv="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
+            $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+            $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+            VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaDetalleProv', '$i')";
+            $stmtDetalle = $dbh->prepare($sqlDetalle);
+            $flagSuccessDetalle=$stmtDetalle->execute();
+            print_r($sqlDetalle); 
+            $codProveedorEstado=$codProveedor;
+              //estado de cuentas devengado
+              $codEstadoCuenta=obtenerCodigoEstadosCuenta();
+              $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) 
+              VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '0', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv')";
+              $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
+              $stmtDetalleEstadoCuenta->execute();             
+             //echo $sqlDetalleEstadoCuenta."";
+              //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
+              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_proveedor=$codProveedorEstado,cod_estadocuenta=$codEstadoCuenta,glosa_comprobantedetalle='$glosaDetalleProv' where codigo=$codSolicitudDetalle";
+              $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
+              $stmtUpdateSolicitudRecursoDetalle->execute();
+}
     $sqlUpdate="UPDATE comprobantes SET glosa='$glosaDetalleGeneral' WHERE codigo=$codComprobante";
     $stmtUpdate = $dbh->prepare($sqlUpdate);
     $stmtUpdate->execute();
