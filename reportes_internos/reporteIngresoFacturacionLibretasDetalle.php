@@ -1,6 +1,6 @@
 
 <div class="card-body">
-  <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
+  <!-- <h6 class="card-title">Periodo: <?=$periodoTitle?></h6> -->
   <!-- <h6 class="card-title">Areas: <?=$areaAbrev;?></h6> -->
   <!-- <h6 class="card-title">Oficinas:<?=$unidadAbrev?></h6> -->
   <div class="table-responsive">
@@ -29,19 +29,21 @@
     $totalLibreta=0;
     $totalSaldo=0;
     $totalFactura=0;
-    $listaDetalleLibretas=obtenerListaVentas_libretas($desde,$hasta);
+    // $listaDetalleLibretas=obtenerListaVentas_libretas($desde,$hasta);
+    $listaDetalleLibretas=obtenerListaVentas_libretas();
     $totalImporte=0;
     while ($rowComp = $listaDetalleLibretas->fetch(PDO::FETCH_ASSOC)) {
-        $cod_libretabancariadetalle=$rowComp['cod_libretabancariadetalle'];
+        $cod_libretabancariadetalle=$rowComp['codigo'];
+        $monto_libreta=$rowComp['monto'];
+        $descripcion_libreta=$rowComp['informacion_complementaria'];
         // $cod_facturaventa=$rowComp['cod_facturaventa'];
         $array_facturas=obtenerFacturasLibreta($cod_libretabancariadetalle);
         $monto_factura=sumatotaldetallefactura_libretas($cod_libretabancariadetalle);
         // echo $monto_factura."";
-        if($monto_factura>0){
-          // echo $datos_libreta;        
-          $monto_libreta=obtenerDatosLibreta_factura($cod_libretabancariadetalle,"monto");
-          $descripcion_libreta=obtenerDatosLibreta_factura($cod_libretabancariadetalle,"informacion_complementaria");
-          $saldo_libreta=obtenerSaldoLibretaBancariaDetalle($cod_libretabancariadetalle);
+        // if($monto_factura>0){
+          // echo $datos_libreta;                  
+        $saldo_libreta=obtenerSaldoLibretaBancariaDetalle($cod_libretabancariadetalle);
+        if($saldo_libreta==0 and $monto_factura==0){$saldo_libreta=$monto_libreta;}
           // $nro_factura=obtenerNroFactura($cod_facturaventa);
           // $monto_factura=sumatotaldetallefactura($cod_facturaventa);                
           $totalLibreta+=$monto_libreta;
@@ -55,9 +57,10 @@
                         '<td class="text-left font-weight-bold">'.$array_facturas.'</td>'.
                         '<td class="text-right font-weight-bold">'.formatNumberDec($monto_factura).' </td>'.     
                     '</tr>';
-        }
+        // }
     }    
-    $totalFactura=obtener_saldo_total_facturas($desde,$hasta);
+    // $totalFactura=obtener_saldo_total_facturas($desde,$hasta);
+    $totalFactura=obtener_saldo_total_facturas();
         $html.='<tr class="bg-secondary text-white">'.
                     '<td class="text-left font-weight-bold">-</td>'.
                       '<td class="text-left font-weight-bold">Total Libreta</td>'.

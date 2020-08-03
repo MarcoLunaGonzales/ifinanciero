@@ -76,9 +76,31 @@ $i=0;
 				  	                         ?>
 				                        </select>
 				                    </div>
-				                  </div>
-				              </div>
-					      </div>
+				                </div>
+				            </div>
+					    </div>
+					     <div class="col-sm-6">
+	                  		<div class="row">
+				                <label class="col-sm-4 col-form-label">Forma de Pago</label>
+				                <div class="col-sm-8">
+				                	<div class="form-group">
+		                               <select class="selectpicker form-control form-control-sm" name="forma_pago[]" id="forma_pago" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true" required>				  	   
+				  	                        <?php
+				  	                        $stmtFormasPago = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_pago where cod_estadoreferencial=1 order by nombre");
+					                         $stmtFormasPago->execute();
+					                          while ($row = $stmtFormasPago->fetch(PDO::FETCH_ASSOC)) {
+					                          	$codigoX=$row['codigo'];
+					                          	$nombreX=$row['nombre'];
+					                          ?>
+					                       <option value="<?=$codigoX;?>"><?=$nombreX?></option>	
+					                         <?php
+				  	                         }
+				  	                         ?>
+				                        </select>
+				                    </div>
+				                </div>
+			                </div>
+			            </div>
 	                </div><!--div row-->
 
 	                <div class="row">
@@ -213,7 +235,7 @@ $i=0;
                 </div><!--card body-->
                 <div class="card-footer ">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
+				   <a href="../reportes_ventas/" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
                </form> 
               </div>	  
