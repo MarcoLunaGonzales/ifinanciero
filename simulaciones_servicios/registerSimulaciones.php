@@ -129,6 +129,7 @@ $dbh = new Conexion();
                         </div>
                        </div>
                       </div><!--row-->   
+                       
                   <div class="row">
                        <label class="col-sm-2 col-form-label">Plantilla de Servicios :</label>
                        <div class="col-sm-7">
@@ -150,6 +151,33 @@ $dbh = new Conexion();
                               </div>
                         </div>
                       </div>
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Oficina de Servicio</label>
+                       <div class="col-sm-2">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control"  name="oficina_servicio" id="oficina_servicio" data-style="btn btn-warning"  required>
+                                <!--<option disabled selected="selected" value="">Cliente</option>-->
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  //$tipoX=$row['tipo'];
+                                  $abrevX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$abrevX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
                       <div class="" id="lista_precios">
                       </div>
                       

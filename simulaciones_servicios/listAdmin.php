@@ -52,6 +52,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 $stmt->bindColumn('cod_unidadorganizacional', $codUnidadX);
 $stmt->bindColumn('cod_area', $codAreaX);
 $stmt->bindColumn('descripcion_servicio', $alcanceX);
+$stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
 
 
 //datos para servidor ibnorca

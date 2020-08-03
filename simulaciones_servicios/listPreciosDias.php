@@ -25,12 +25,13 @@ if(isset($_GET["codigo"])){
  $query="SELECT * FROM plantillas_servicios where codigo=$codigo";
  $stmt = $dbh->prepare($query);
  $stmt->execute();
- $dias=1;$utilidad=1;
+ $dias=1;$utilidad=1;$unidadOrganizacional=0;
  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
    $dias=$row['dias_auditoria'];
    $utilidad=$row['utilidad_minima'];
    $anios=$row['anios'];
    $areaX=$row['cod_area'];
+   $unidadOrganizacional=$row['cod_unidadorganizacional'];
  }
  //CARGAR DIAS PORDEFECTO DE LA TABLA DE CONFIGURACION
  $dias=obtenerValorConfiguracion(40);
@@ -89,5 +90,6 @@ if(isset($_GET["codigo"])){
             }
             ?>       
          <script>$("#nombre").val(<?=$codSimServ?>);</script>                      
+         <script>$("#oficina_servicio").val(<?=$unidadOrganizacional?>);</script>                      
 <?php   
 }     

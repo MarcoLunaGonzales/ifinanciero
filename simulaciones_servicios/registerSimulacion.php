@@ -88,6 +88,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('id_tiposervicio', $idTipoServicioX);
             $stmt1->bindColumn('alcance_propuesta', $alcanceSimulacionX);
             $stmt1->bindColumn('descripcion_servicio', $descripcionServSimulacionX);
+            $stmt1->bindColumn('cod_unidadorganizacional', $oficinaGlobalX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -101,6 +102,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt->bindColumn('cod_area', $codAreaX);
             $stmt->bindColumn('area', $areaX);
             $stmt->bindColumn('unidad', $unidadX);
+            
+            $oficinaGlobalX=$oficinaGlobalX;
+            
            $anioGeneral=$anioX;
            $nombreSimulacion=$nombreX;
            $porcentajeFijoSim=$porcentajeFijoX;
@@ -388,6 +392,9 @@ for ($an=0; $an<=$anioGeneral; $an++) {
 				<div class="card-body ">
                      <div class="row">
 					<?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+            if(!($oficinaGlobalX==""||$oficinaGlobalX==0)){
+              $unidadX=abrevUnidad($oficinaGlobalX);
+            }
                if($codAreaX==39){
                 $inicioAnio=1;
                 }else{

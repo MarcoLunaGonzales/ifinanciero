@@ -58,6 +58,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 $stmt->bindColumn('cod_unidadorganizacional', $codUnidadX);
 $stmt->bindColumn('cod_area', $codAreaX);
 $stmt->bindColumn('estado_registro', $estadoRegistroX);
+$stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
 ?>
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
