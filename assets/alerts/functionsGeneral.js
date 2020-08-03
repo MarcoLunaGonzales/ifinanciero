@@ -557,6 +557,8 @@ function minusCuentaContable(idF){
        //mayores seleccion
        $("#cerrar_detalles"+nuevoId).attr("onclick","verMayoresCierre('"+i+"')");
        $("#cerrar_detalles"+nuevoId).attr("id","cerrar_detalles"+i);
+       $("#numero_fila"+nuevoId).attr("id","numero_fila"+i);
+       $("#numero_fila"+i).html(i);
       }
      } 
       itemFacturas.splice((idF-1), 1);

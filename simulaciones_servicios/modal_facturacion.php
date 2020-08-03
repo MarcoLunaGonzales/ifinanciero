@@ -446,7 +446,28 @@
         <div class="btn-group">
           <a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(0)">Todas</a>
           <?php 
-            $lista=obtenerObtenerLibretaBancaria();
+           //LIBRETAS BANCARIAS DETALLE CARGAR
+             $stmt = $dbh->prepare("SELECT p.nombre as banco,dc.* FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo WHERE dc.cod_estadoreferencial=1");
+             $stmt->execute();
+             $i=0;
+             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $codigoX=$row['codigo'];
+                $bancoX=$row['banco'];
+                $cod_banco=$row['cod_banco'];
+                $cod_cuenta=$row['cod_cuenta'];
+                $cod_contracuenta=$row['cod_contracuenta'];
+                $nombreX=$row['nombre'];
+                $nombreBan=nameBancos($cod_banco);
+                if($nombreBan==""){
+                  $nombreBan=$Banco." - ".$nombreX;
+                }else{
+                  $nombreBan=$nombreBan." - ".$nombreX;  
+                }
+            ?>
+            ?><a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(<?=$codigoX?>)"><?=$nombreBan?></a><?php
+    
+             }
+            /*$lista=obtenerObtenerLibretaBancaria();
             foreach ($lista->libretas as $v) {
               $CodLibreta=$v->CodLibreta;
               $Nombre=$v->Nombre;
@@ -457,8 +478,8 @@
               }else{
                 $nombreBan=$Nombre;  
               }
-              ?><a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(<?=$CodLibreta?>)"><?=$nombreBan?></a><?php
-            }
+              
+            }*/
           ?>
         </div>          
             <div class="table-responsive" id="contenedor_tabla_libreta_bancaria">

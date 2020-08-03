@@ -69,7 +69,10 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
         $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
       }
 }
-$cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA PAZ
+if($cod_unidadX!=3000){
+  $cod_unidadX=obtenerValorConfiguracion(73); //crear comprobante devengado en LA PAZ  
+}
+
   //crear el comprobante
     $codComprobante=obtenerCodigoComprobante();
     
