@@ -773,6 +773,19 @@
                      </tr>
                    </thead>
                    <tbody>
+                    <tr>
+                          <td align="center" width="20%">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="radio" id="retencion0" name="retenciones" <?=($contRetencion==0)?"checked":"";?> value="0@NINGUNA">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            </label>
+                          </div>
+                          </td>
+                          <td class="text-left">NINGUNA</td>
+                        </tr>
                      <?php 
                         $stmtRetencion = $dbh->prepare("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order BY nombre");
                         $stmtRetencion->execute();
@@ -786,7 +799,7 @@
                           <td align="center" width="20%">
                           <div class="form-check">
                             <label class="form-check-label">
-                              <input class="form-check-input" type="radio" id="retencion<?=$codigoX?>" name="retenciones" <?=($contRetencion==0)?"checked":"";?> value="<?=$codigoX?>@<?=$nombreX?>">
+                              <input class="form-check-input" type="radio" id="retencion<?=$codigoX?>" name="retenciones" value="<?=$codigoX?>@<?=$nombreX?>">
                               <span class="form-check-sign">
                                 <span class="check"></span>
                               </span>

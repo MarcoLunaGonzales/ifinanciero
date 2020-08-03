@@ -557,6 +557,8 @@ function minusCuentaContable(idF){
        //mayores seleccion
        $("#cerrar_detalles"+nuevoId).attr("onclick","verMayoresCierre('"+i+"')");
        $("#cerrar_detalles"+nuevoId).attr("id","cerrar_detalles"+i);
+       $("#numero_fila"+nuevoId).attr("id","numero_fila"+i);
+       $("#numero_fila"+i).html(i);
       }
      } 
       itemFacturas.splice((idF-1), 1);
@@ -3070,6 +3072,7 @@ function guardarSimulacionServicio(){
   var norma=$("#norma").val();
   var local_extranjero=$("#local_extranjero").val();
   var utilidad=$("#utilidad_minima").val();
+  var oficina_servicio=$("#oficina_servicio").val();
   var anios=$("#anios").val();
   var plantilla_servicio=$("#plantilla_servicio").val();
   var alcance="";
@@ -3091,7 +3094,7 @@ function guardarSimulacionServicio(){
     var normas_tiposerviciotext=$("#normas_tiposerviciotext").val();
     alcance=$("#alcance").val();
     var des_serv=$("#d_servicio").val();
-     var parametros={"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
+     var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -3143,7 +3146,7 @@ function guardarSimulacionServicio(){
       var iaf_secundario=$("#iaf_secundario").val();
       objeto=0;
       var des_serv=$("#d_servicio_p").val();
-     var parametros={"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
+     var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -4318,10 +4321,16 @@ function agregarRetencionSolicitud(){
      $("#cod_retencion"+fila).val(respuesta[0]);
      $("#retFila").val("");
      $('#modalRetencion').modal('hide');
-
-     if(!$("#nret"+fila).hasClass("estado")){
+     if(parseInt(respuesta[0])==0){
+       if($("#nret"+fila).hasClass("estado")){
+       $("#nret"+fila).removeClass("estado")
+       }
+     }else{
+      if(!$("#nret"+fila).hasClass("estado")){
        $("#nret"+fila).addClass("estado")
+      }
      }
+     
      $("#importe_label"+fila).html("<small>Importe-"+respuesta[1].substr(0,3)+".</small>");
   }else{
     $("#mensaje_retencion").html("<p class='text-danger'>Debe seleccionar al menos una retención</p>");

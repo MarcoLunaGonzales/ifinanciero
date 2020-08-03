@@ -194,7 +194,7 @@ $tituloImporte="";
               $tituloImporte=abrevRetencion($retencionX);
               $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
               $montoImporte=$importeSolX*($porcentajeRetencion/100);       
-              if(($retencionX==8)){ //validacion del descuento por retencion
+              if(($retencionX==8)||($retencionX==10)){ //validacion del descuento por retencion
                 $montoImporte=$importeSolX;
               }
               $montoImporteRes=$importeSolX-$montoImporte;

@@ -8790,6 +8790,17 @@ function obtenerCodigoSimulacionServicioOfertaDetalle(){
    return($codigo);
 }
 
+function numeroDeRetencionesIVA($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT COUNT(*) as cantidad,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo and (cod_confretencion=8 or cod_confretencion=10)");
+   $stmt->execute();
+   $numero=0;$retencion=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $numero=$row['cantidad'];
+      $retencion=$row['cod_confretencion'];
+   }
+   return array($numero,$retencion);
+}
 
 ?>
 
