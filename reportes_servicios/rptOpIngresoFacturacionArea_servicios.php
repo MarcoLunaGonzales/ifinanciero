@@ -52,7 +52,7 @@ $i=0;
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Ingresos por Área</h4>
+                  <h4 class="card-title">Reporte Ingresos por Servicios</h4>
                 </div>
                 <form class="" action="<?=$urlReporteIngresoFacturacion_servicio?>" target="_blank" method="POST">
                 <div class="card-body">
