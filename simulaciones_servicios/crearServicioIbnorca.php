@@ -25,7 +25,11 @@ $flagSuccess=false;
 $simulacion=obtenerDatosCompletosPorSimulacionServicios($codigo);
 while ($row = $simulacion->fetch(PDO::FETCH_ASSOC)) {
 	$IdArea=$row['cod_area'];
-    $IdOficina=$row['cod_unidadorganizacional'];
+
+    $IdOficina=$row['unidad_serv'];
+    if($IdOficina==0||$IdOficina==""){
+       $IdOficina=$row['cod_unidadorganizacional'];
+    }
     //$IdOficina=$globalUnidad;
     $IdTipo=$row['id_tiposervicio'];
     $IdCliente=$row['cod_cliente'];

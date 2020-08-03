@@ -463,7 +463,6 @@
                 }else{
                   $nombreBan=$nombreBan." - ".$nombreX;  
                 }
-            ?>
             ?><a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(<?=$codigoX?>)"><?=$nombreBan?></a><?php
     
              }
