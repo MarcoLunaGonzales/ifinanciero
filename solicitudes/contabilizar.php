@@ -141,7 +141,9 @@ if($cod_unidadX!=3000){
     $i=0;$codProveedor=0;$sumaDevengado=0;$nombresProveedor="";$nombreProveedor="";$sumaRetencionDiferido=0;
     $sumaProveedorPasivo=0;
 
-    $numeroRetencionFactura=numeroDeRetencionesIVA($codigo);
+    $numeroRetencionFactura=numeroDeRetencionesIVA($codigo)[0];
+    $codRetencionGlobal=numeroDeRetencionesIVA($codigo)[1];
+    $porcentajeRetencionGlobal=porcentRetencion($codRetencionGlobal);
     while ($rowNuevo = $nuevosDetalles->fetch(PDO::FETCH_ASSOC)) {
         
 
@@ -174,6 +176,7 @@ if($cod_unidadX!=3000){
         }
         
         $debe=$rowNuevo['monto'];
+        $sumaProveedorPasivo+=$debe;
         $haber=0;
         /*if($facturaNueva==){
           $detalleFac="F/";
@@ -186,6 +189,12 @@ if($cod_unidadX!=3000){
         $glosaDetalle="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
         $codSolicitudDetalle=$rowNuevo['codigo'];
         $codSolicitudDetalleOrigen=$rowNuevo['codigo'];
+
+        if($numeroRetencionFactura==1){
+          $sumaRetencionDiferido+=($debe-(($porcentajeRetencionGlobal/100)*$debe));
+          $debe=($porcentajeRetencionGlobal/100)*$debe;          
+        }
+
         if($rowNuevo['cod_confretencion']==0){
           if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
             //detalle comprobante SIN RETENCION ///////////////////////////////////////////////////////////////
@@ -205,6 +214,7 @@ if($cod_unidadX!=3000){
             $codigoRet=$rowNuevo['cod_confretencion'];
             $importeOriginal=$rowNuevo['monto'];
             $importeRetencion=(porcentRetencion($codigoRet)/100)*$importeOriginal;
+            
             $importePasivoFila=$importeRetencion;
             $ii=$i;
           // retencion de costos
@@ -232,9 +242,7 @@ if($cod_unidadX!=3000){
              
 
              $montoRetencion=($porcentajeX/100)*$importe;
-             if($numeroRetencionFactura==1){
-               $sumaRetencionDiferido+=$montoRetencion; 
-             }
+             
              
             
 
@@ -292,6 +300,7 @@ if($cod_unidadX!=3000){
 
             $haber=0;
             $debe=$importeRetencion;
+
             $sumaDevengado=$importePasivoFila;  
             if($porcentajeCuentaX<=100){
               //$debe=$importeOriginal2;
@@ -382,7 +391,7 @@ if($cod_unidadX!=3000){
 
             $debeProv=0;
             $haberProv=$sumaDevengado;
-            $sumaProveedorPasivo+=$sumaDevengado;
+            
             $tituloFactura="";
             if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
               $tituloFactura="F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ";
@@ -411,7 +420,8 @@ if($cod_unidadX!=3000){
              //echo $sqlUpdateSolicitudRecursoDetalle.""; 
 
             }
-             $glosaDetalleGeneral.=" ".$glosaDetalleProv;
+
+             $glosaDetalleGeneral=" ".$glosaDetalleProv;
               
 
     }
@@ -428,7 +438,7 @@ if($cod_unidadX!=3000){
                  $stmtFacturas = $dbh->prepare($sqlActualizarFaturas);
                  $stmtFacturas->execute();
 
-          $haberProv=$sumaProveedorPasivo;
+          $haberProv=number_format($sumaProveedorPasivo,2,'.','');
           $debeProv=0;
            $tituloFactura="";
             if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
