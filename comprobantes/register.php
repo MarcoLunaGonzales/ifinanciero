@@ -206,6 +206,10 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 			<input type="hidden" name="codigo_iva_direfido" id="codigo_iva_direfido" value="<?=obtenerValorConfiguracion(67)?>">
 			<input type="hidden" name="cod_cuenta_configuracion_iva" id="cod_cuenta_configuracion_iva" value="<?=$cod_cuenta_configuracion_iva;?>">
 			<input type="hidden" name="cod_sis_configuracion" id="cod_sis_configuracion" value="<?=$cod_sis_configuracion;?>">
+
+			<input type="hidden" name="global_gestion" id="global_gestion" value="<?=$globalNombreGestion;?>">
+			<input type="hidden" name="global_mes" id="global_mes" value="<?=$globalMesActivo;?>">
+			
 			<div class="card" id="cabecera_scroll">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text">

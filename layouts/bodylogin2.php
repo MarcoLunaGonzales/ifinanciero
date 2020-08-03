@@ -498,8 +498,9 @@
                           var libretasBancarias=$("#libretas_bancarias"+(i+1)).hasClass("d-none"); 
                           var fechaComprobante=$("#fecha").val().split("-"); 
                           var d = new Date();
-                          var mesActual = 7;//d.getMonth()+1;
-                          var anioActual = 2020;//d.getFullYear();
+                          var mesActual = parseInt($("#global_mes").val());//d.getMonth()+1;
+                          var anioActual = parseInt($("#global_gestion").val());//d.getFullYear();
+                          
                         if($("#debe"+(i+1)).length>0){
                           //VALIDAMOS CUANDO LA CUENTA TENGA EC LA CUENTA AUXILIAR SIEMPRE ESTE SELECCIONADA.
                           if(tipoEstadoCuenta>0 && cuentaAuxiliar==0){  

@@ -321,6 +321,9 @@ $stmt->execute();
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
 			<input type="hidden" name="codigo_comprobante" id="codigo_comprobante" value="<?=$globalCode;?>">
 
+			<input type="hidden" name="global_gestion" id="global_gestion" value="<?=$globalNombreGestion;?>">
+			<input type="hidden" name="global_mes" id="global_mes" value="<?=$globalMesActivo;?>">
+
 			<div class="card" id="cabecera_scroll">
 				<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text">
