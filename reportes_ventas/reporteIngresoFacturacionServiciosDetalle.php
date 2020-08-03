@@ -53,12 +53,49 @@
             }        
           }
         }
-    }    
-        $html.='<tr class="bg-secondary text-white">'.
+    } 
+    //para los cursos
+    $listaDetalle_cursos=obtenerListaVentas_cursos($unidadCostoArray,0,$desde,$hasta);
+    // $totalImporte=0;
+    while ($rowComp = $listaDetalle_cursos->fetch(PDO::FETCH_ASSOC)) {        
+        
+        $IdtipoX=$rowComp['IdCurso'];
+        $codigo_alterno=obtenerCodigoExternoCurso($IdtipoX);
+        $descripcion_n2=$rowComp['Nombre'];
+        $importe_realX=$rowComp['importe_real'];
+        $tipo_cursoX=$rowComp['tipo_curso'];
+        if($tipo_curso==0) $string_curso="Curso ( ";
+        else $string_curso="Curso Grupal ( "; 
+
+        $totalImporte+=$importe_realX;
+        $html.='<tr>'.
+                      '<td class="text-left font-weight-bold">'.$string_curso.$codigo_alterno.')</td>'.
+                      '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
+                      '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
+                  '</tr>';
+
+        $longitudUnidades = count($unidadCosto);
+        for($i=0; $i<$longitudUnidades; $i++){
+          $unidadDetAbrevYX=abrevUnidad($unidadCosto[$i]);
+          $listaDetalleCursos_4=obtenerListaVentas_cursos($unidadCosto[$i],$IdtipoX,$desde,$hasta);
+          while ($rowCompUnidades = $listaDetalleCursos_4->fetch(PDO::FETCH_ASSOC)) {
+            $importe_realY=$rowCompUnidades['importe_real'];
+            if($importe_realY>0){
+              $html.='<tr">'.
                     '<td class="text-center">-</td>'.  
-                    '<td colspan="1" class="text-center">Importe Total</td>'.  
-                    '<td class="text-right font-weight-bold small">'.formatNumberDec($totalImporte).'</td>'.      
-                '</tr>';
+                    '<td class="text-center">'.$unidadDetAbrevYX.'</td>'.  
+                    '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
+                '</tr>';              
+            }        
+          }
+        }
+    } 
+
+    $html.='<tr class="bg-secondary text-white">'.
+                '<td class="text-center">-</td>'.  
+                '<td colspan="1" class="text-center">Importe Total</td>'.  
+                '<td class="text-right font-weight-bold small">'.formatNumberDec($totalImporte).'</td>'.      
+            '</tr>';
 
     $html.=    '</tbody></table>';
 

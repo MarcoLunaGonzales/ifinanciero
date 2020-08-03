@@ -198,7 +198,7 @@ $i=0;
                 </div><!--card body-->
                 <div class="card-footer ">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
+				  <a href="../reportes_ventas/" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
                </form> 
               </div>	  

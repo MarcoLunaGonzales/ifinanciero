@@ -65,6 +65,20 @@ function obtenerListaVentasA_servicios($unidades,$servicios,$desde,$hasta){
     $stmt->execute();
     return($stmt);
 }
+function obtenerListaVentas_cursos($unidades,$IdtipoX,$desde,$hasta){
+    if($IdtipoX==0) $sql_aux="";
+    else $sql_aux="and ps.IdCurso in ($IdtipoX)";
+    $dbh = new Conexion();
+    $sql="SELECT ps.IdCurso,ps.Nombre,SUM((s.cantidad*s.precio)-s.descuento_bob)as importe_real,0 as tipo_curso From facturas_venta f,facturas_ventadetalle s, solicitudes_facturacion sf, ibnorca.programas_cursos ps where f.codigo=s.cod_facturaventa and f.cod_solicitudfacturacion=sf.codigo and sf.cod_simulacion_servicio=ps.IdCurso and sf.tipo_solicitud in (2,6)  and sf.cod_estadosolicitudfacturacion<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) $sql_aux GROUP BY ps.IdCurso
+    UNION
+    SELECT ps.IdCurso,ps.Nombre, SUM(sfd.cantidad*sfd.precio)as importe_real,1 as tipo_curso from solicitudes_facturacion sf, solicitudes_facturaciondetalle sfd, ibnorca.programas_cursos ps 
+    WHERE sf.codigo=sfd.cod_solicitudfacturacion and sfd.cod_curso=ps.IdCurso and sf.cod_estadosolicitudfacturacion= 5 and sf.tipo_solicitud=7 $sql_aux GROUP BY sfd.cod_curso
+    ";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return($stmt);
+}
 function obtenerListaVentas_libretas(){
     $dbh = new Conexion();
     //$sql="SELECT lbf.* from facturas_venta f,libretas_bancariasdetalle_facturas lbf where f.codigo=lbf.cod_facturaventa and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' GROUP BY lbf.cod_libretabancariadetalle order by f.nro_factura";
