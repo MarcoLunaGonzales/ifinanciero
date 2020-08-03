@@ -318,7 +318,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           </div>
           <div class="card-body">
             <fieldset style="width:100%;border:0;">
-              <button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,3)"><i class="material-icons">add</i>
+              <button id="add_boton" title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,3)"><i class="material-icons">add</i>
               </button>
               <div class="row col-sm-11 float-right">
                

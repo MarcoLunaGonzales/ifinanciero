@@ -344,10 +344,10 @@ if(isset($_GET['cod'])){
              <fieldset id="fiel" style="width:100%;border:0;">
               <?php 
               if($tipoSolicitud==1||$tipoSolicitud==3||$tipoSolicitud==4||$tipoSolicitud==2){
-              ?><button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,<?=$tipoSolicitud?>)"><i class="material-icons">add</i>
+              ?><button title="Agregar (alt + n)" id="add_boton" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,<?=$tipoSolicitud?>)"><i class="material-icons">add</i>
                   </button><?php
               }else{
-              ?><button title="Agregar (alt + n)" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,<?=$tipoSolicitud?>)"><i class="material-icons">add</i>
+              ?><button title="Agregar (alt + n)" id="add_boton" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="addSolicitudDetalle(this,<?=$tipoSolicitud?>)"><i class="material-icons">add</i>
                   </button><?php
               } 
               ?>
