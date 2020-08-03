@@ -67,12 +67,21 @@ function obtenerListaVentasA_servicios($unidades,$servicios,$desde,$hasta){
 }
 function obtenerListaVentas_cursos($unidades,$IdtipoX,$desde,$hasta){
     if($IdtipoX==0) $sql_aux="";
-    else $sql_aux="and ps.IdCurso in ($IdtipoX)";
+    else $sql_aux="and sf.cod_simulacion_servicio in ($IdtipoX)";
     $dbh = new Conexion();
-    $sql="SELECT ps.IdCurso,ps.Nombre,SUM((s.cantidad*s.precio)-s.descuento_bob)as importe_real,0 as tipo_curso From facturas_venta f,facturas_ventadetalle s, solicitudes_facturacion sf, ibnorca.programas_cursos ps where f.codigo=s.cod_facturaventa and f.cod_solicitudfacturacion=sf.codigo and sf.cod_simulacion_servicio=ps.IdCurso and sf.tipo_solicitud in (2,6)  and sf.cod_estadosolicitudfacturacion<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) $sql_aux GROUP BY ps.IdCurso
-    UNION
-    SELECT ps.IdCurso,ps.Nombre, SUM(sfd.cantidad*sfd.precio)as importe_real,1 as tipo_curso from solicitudes_facturacion sf, solicitudes_facturaciondetalle sfd, ibnorca.programas_cursos ps 
-    WHERE sf.codigo=sfd.cod_solicitudfacturacion and sfd.cod_curso=ps.IdCurso and sf.cod_estadosolicitudfacturacion= 5 and sf.tipo_solicitud=7 $sql_aux GROUP BY sfd.cod_curso
+    $sql="SELECT sf.cod_simulacion_servicio, SUM((s.cantidad*s.precio)-s.descuento_bob)as importe_real From facturas_venta f,facturas_ventadetalle s, solicitudes_facturacion sf where f.codigo=s.cod_facturaventa and f.cod_solicitudfacturacion=sf.codigo and sf.tipo_solicitud in (2,6)  and f.cod_estadofactura<>2 and  sf.cod_estadosolicitudfacturacion<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) $sql_aux GROUP BY sf.cod_simulacion_servicio";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return($stmt);
+}
+function obtenerListaVentas_cursos_grupal($unidades,$IdtipoX,$desde,$hasta){
+    if($IdtipoX==0) $sql_aux="";
+    else $sql_aux="and sfd.cod_curso in ($IdtipoX)";
+    $dbh = new Conexion();
+    $sql="SELECT sfd.cod_curso, SUM(sfd.cantidad*sfd.precio)as importe_real
+    from facturas_venta f, solicitudes_facturacion sf, solicitudes_facturaciondetalle sfd
+    WHERE f.cod_solicitudfacturacion=sf.codigo and sf.codigo=sfd.cod_solicitudfacturacion and sf.tipo_solicitud=7 and f.cod_estadofactura<>2 and  sf.cod_estadosolicitudfacturacion<>2 BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) $sql_aux GROUP BY sfd.cod_curso
     ";
     // echo $sql;
     $stmt = $dbh->prepare($sql);
@@ -142,4 +151,14 @@ function sumatotaldetallefactura_libretas($codigo){
     return($valor);
 
  }
+ function obtenerNombreCurso($codigo){
+  $dbhIBNO = new ConexionIBNORCA();
+  //datos del estudiante y el curso que se encuentra
+  $sqlIBNORCA="SELECT pc.Nombre from programas_cursos pc where pc.IdCurso=$codigo";  
+  $stmtIbno = $dbhIBNO->prepare($sqlIBNORCA);
+  $stmtIbno->execute();
+  $resultSimu = $stmtIbno->fetch();
+  $valor = $resultSimu['Nombre'];
+  return($valor);
+}
  ?>

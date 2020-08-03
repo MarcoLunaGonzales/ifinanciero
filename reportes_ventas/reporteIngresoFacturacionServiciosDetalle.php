@@ -16,13 +16,7 @@
            '</thead>'.
            '<tbody>';
 
-    // $valorIVA=100-(obtenerValorConfiguracion(1));  
-    // $listaDetalle=obtenerListaVentasA_servicios($unidadCostoArray,$desde,$hasta);
-    // $codigos_sf="";
-    // while ($rowComp = $listaDetalle->fetch(PDO::FETCH_ASSOC)) {
-    //   $codigos_sf.=$rowComp['codigo'].",";
-    // }
-    // $codigos_sf=trim($codigos_sf,",");
+ 
 
     $listaDetalleUnidades=obtenerListaVentasA_servicios($unidadCostoArray,$serviciosArray,$desde,$hasta);
     $totalImporte=0;
@@ -59,13 +53,12 @@
     // $totalImporte=0;
     while ($rowComp = $listaDetalle_cursos->fetch(PDO::FETCH_ASSOC)) {        
         
-        $IdtipoX=$rowComp['IdCurso'];
+        $IdtipoX=$rowComp['cod_simulacion_servicio'];
         $codigo_alterno=obtenerCodigoExternoCurso($IdtipoX);
-        $descripcion_n2=$rowComp['Nombre'];
+        $descripcion_n2=obtenerNombreCurso($IdtipoX);
         $importe_realX=$rowComp['importe_real'];
-        $tipo_cursoX=$rowComp['tipo_curso'];
-        if($tipo_curso==0) $string_curso="Curso ( ";
-        else $string_curso="Curso Grupal ( "; 
+        // $tipo_cursoX=$rowComp['tipo_curso'];
+        $string_curso="Curso ( ";        
 
         $totalImporte+=$importe_realX;
         $html.='<tr>'.
@@ -78,6 +71,41 @@
         for($i=0; $i<$longitudUnidades; $i++){
           $unidadDetAbrevYX=abrevUnidad($unidadCosto[$i]);
           $listaDetalleCursos_4=obtenerListaVentas_cursos($unidadCosto[$i],$IdtipoX,$desde,$hasta);
+          while ($rowCompUnidades = $listaDetalleCursos_4->fetch(PDO::FETCH_ASSOC)) {
+            $importe_realY=$rowCompUnidades['importe_real'];
+            if($importe_realY>0){
+              $html.='<tr">'.
+                    '<td class="text-center">-</td>'.  
+                    '<td class="text-center">'.$unidadDetAbrevYX.'</td>'.  
+                    '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
+                '</tr>';              
+            }        
+          }
+        }
+    }
+    //para los cursos grupales
+    $listaDetalle_cursos_grupal=obtenerListaVentas_cursos_grupal($unidadCostoArray,0,$desde,$hasta);
+    // $totalImporte=0;
+    while ($rowComp = $listaDetalle_cursos_grupal->fetch(PDO::FETCH_ASSOC)) {        
+        
+        $IdtipoX=$rowComp['cod_curso'];
+        $codigo_alterno=obtenerCodigoExternoCurso($IdtipoX);
+        $descripcion_n2=obtenerNombreCurso($IdtipoX);
+        $importe_realX=$rowComp['importe_real'];
+        // $tipo_cursoX=$rowComp['tipo_curso'];        
+         $string_curso="Curso Grupal ( "; 
+
+        $totalImporte+=$importe_realX;
+        $html.='<tr>'.
+                      '<td class="text-left font-weight-bold">'.$string_curso.$codigo_alterno.')</td>'.
+                      '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
+                      '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
+                  '</tr>';
+
+        $longitudUnidades = count($unidadCosto);
+        for($i=0; $i<$longitudUnidades; $i++){
+          $unidadDetAbrevYX=abrevUnidad($unidadCosto[$i]);
+          $listaDetalleCursos_4=obtenerListaVentas_cursos_grupal($unidadCosto[$i],$IdtipoX,$desde,$hasta);
           while ($rowCompUnidades = $listaDetalleCursos_4->fetch(PDO::FETCH_ASSOC)) {
             $importe_realY=$rowCompUnidades['importe_real'];
             if($importe_realY>0){
