@@ -34,20 +34,13 @@
         $totalImporte+=$importe_realX;
         $html.='<tr>'.
                       '<td class="text-left font-weight-bold">'.$codigo_alterno.'</td>'.
-                      '<td class="text-left font-weight-bold">'.$descripcion_n2.'</td>'.
+                      '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
                       '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
                   '</tr>';
 
         $longitudUnidades = count($unidadCosto);
         for($i=0; $i<$longitudUnidades; $i++){
           $unidadDetAbrevY=abrevUnidad($unidadCosto[$i]);
-
-          // $listaDetalle=obtenerListaVentasA_servicios($unidadCostoArray,$desde,$hasta);
-          // $codigos_sf="";
-          // while ($rowComp = $listaDetalle->fetch(PDO::FETCH_ASSOC)) {
-          //   $codigos_sf.=$rowComp['codigo'].",";
-          // }
-          // $codigos_sf=trim($codigos_sf,",");
           $listaDetalleUnidades4=obtenerListaVentasA_servicios($unidadCosto[$i],$IdtipoX,$desde,$hasta);
           while ($rowCompUnidades = $listaDetalleUnidades4->fetch(PDO::FETCH_ASSOC)) {
             $importe_realY=$rowCompUnidades['importe_real'];

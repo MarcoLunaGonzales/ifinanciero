@@ -34,6 +34,11 @@ $dbh = new Conexion();
 								<a href="<?=$urlReporteResumidoArea;?>" class="btn btn-primary"> Ingresos por Área</a>
 							</div>
 				  		</div>
+				  		<div class="col-sm-4">
+							<div class="form-group">
+								<a href="<?=$urlReporteResumidoArea_servicios;?>" class="btn btn-warning"> Ingresos por Servicios</a>
+							</div>
+				  		</div>
 					</div>
 			  	</div>
 			</div>

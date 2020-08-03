@@ -31,8 +31,6 @@ while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
     </script><?php
   $i=$i+1;  
 }
-//sacmos el valor de fechas hacia atrás
-$dias_atras=obtenerValorConfiguracion(31);
 $cod_proveedores=0;
 if ($codigo > 0){
     $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,cod_proveedores,cod_actividad_sw,
@@ -44,7 +42,9 @@ if ($codigo > 0){
     $stmt->execute();
     $result = $stmt->fetch();
     $cod_cuenta = $result['cod_cuenta'];
-    $fecha = $result['fecha'];
+    $fecha = $result['fecha'];    
+    $fecha2= date("Y-m-t", strtotime($fecha)); 
+
     $cod_retencion = $result['cod_tipodoccajachica'];    
     $nro_documento = $result['nro_documento'];    
     $cod_personal = $result['cod_personal'];    
@@ -78,10 +78,11 @@ if ($codigo > 0){
     }
     $codigo=0;
     // $cod_cuenta = 0;
-    $cod_uo=0;
-    $cod_area=0;
+    $cod_uo=$_SESSION["globalUnidad"];
+    $cod_area=$_SESSION["globalArea"];
     
     $fecha = date('Y-m-d');
+    $fecha2=$fecha;//rango maximo de fecha
     $cod_retencion = null;
     $nro_documento = $numero_caja_chica_aux+1;
     $nro_recibo=$numero_recibo_aux+1;
@@ -99,6 +100,8 @@ if ($codigo > 0){
     $cod_cuenta=0;
     $cod_actividad_sw=null;
 }
+//sacmos el valor de fechas hacia atrás
+$dias_atras=obtenerValorConfiguracion(31);
 $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
 
   //distribucion gastosarea
@@ -210,7 +213,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 <div class="col-sm-4">
                     <div class="form-group">
                         
-                        <input class="form-control" name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha?>" required="true" value="<?=$fecha?>" />
+                        <input class="form-control" name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha2?>" required="true" value="<?=$fecha?>" />
                     </div>
                 </div>
             </div><!-- monto y fecha -->
@@ -312,7 +315,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 <div class="form-group">
                     <div id="div_contenedor_area">                                        
                         <?php
-                        if($codigo>0){
+                        
                             $sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas,(select a.abreviatura from areas a where a.codigo=cod_area)as abrev_area from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
                             $stmt = $dbh->prepare($sqlUO);
                             $stmt->execute();
@@ -326,11 +329,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                                     } 
                                 ?>
                              </select>
-                       <?php }else{?>
-
-                        <input type="hidden" name="cod_area" id="cod_area" value="0">                                        
-                        <?php }
-                             ?>
+                       
                     </div>
                 </div>
               </div>

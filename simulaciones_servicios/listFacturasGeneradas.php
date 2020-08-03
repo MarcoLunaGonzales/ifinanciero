@@ -5,6 +5,7 @@ require_once 'styles.php';
 
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
+$globalPersonal=$_SESSION["globalUser"];
 
 
   //datos registrado de la simulacion en curso
@@ -20,6 +21,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt->bindColumn('fecha_limite_emision', $fecha_limite_emision);
   $stmt->bindColumn('cod_tipopago', $cod_tipopago);
   $stmt->bindColumn('cod_cliente', $cod_cliente);
+  $stmt->bindColumn('cod_personal', $cod_personal);
   $stmt->bindColumn('razon_social', $razon_social);
   $stmt->bindColumn('nit', $nit);
   $stmt->bindColumn('cod_dosificacionfactura', $cod_dosificacionfactura);
@@ -61,7 +63,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <tr>
                           <!-- <th class="text-center"></th> -->
                           <th width="6%">#Fac</th>
-                          <!-- <th>Sucursal</th> -->
+                          <th width="10%">Personal</th>
                           <th width="8%">Fecha<br>Factura</th>
                           <th width="25%">Razón Social</th>
                           <th width="9%">Nit</th>
@@ -75,6 +77,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
                       <?php
                         $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $nombre_personal=namePersonalCompleto($cod_personal);
+                          if($cod_personal==0){
+                            $nombre_personal="Tienda Virtual";
+                          }
+                          // echo $cod_personal;
                           // if($cod_solicitudfacturacion!=-100){
                           //   $stmtFActuras = $dbh->prepare("SELECT codigo,nro_factura from facturas_venta where cod_solicitudfacturacion=$cod_solicitudfacturacion");
                           //   $stmtFActuras->execute(); 
@@ -125,9 +132,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                         <tr>
                           <!-- <td align="center"><?=$index;?></td> -->
                           <td><?=$nro_factura;?></td>
-                          <!-- <td><?=$sucursal;?></td> -->
+                          <td><?=$nombre_personal;?></td>
                           <td><?=$fecha_factura?><br><?=$hora_factura?></td>
-                          <td class="text-left"><small><?=strtoupper($razon_social);?></small></td>
+                          <td class="text-left"><small><?=mb_strtoupper($razon_social);?></small></td>
                           <td class="text-right"><?=$nit;?></td>
                           <td class="text-right"><?=formatNumberDec($importe);?></td>
                           <td><small><?=strtoupper($observaciones);?></small></td>                            
@@ -228,6 +235,26 @@ $globalAdmin=$_SESSION["globalAdmin"];
           </div>              
           <div class="form-group col-sm-2">            
             <input class="form-control input-sm" type="text" name="nro_f" id="nro_f">
+          </div>
+        </div> 
+        <div class="row">                   
+          <label class="col-sm-3 col-form-label text-center">Personal</label> 
+          <div class="form-group col-sm-8">            
+            <?php
+              $sqlUO="SELECT cod_personal from facturas_venta where cod_estadofactura<>2 and cod_personal<>0 GROUP BY cod_personal";
+              $stmt = $dbh->prepare($sqlUO);
+              $stmt->execute();
+              ?>
+                <select class="selectpicker form-control form-control-sm" name="personal_p[]" id="personal_p" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+                  <option value="0">Tienda Virtual</option>
+                <?php 
+                  while ($row = $stmt->fetch()){ 
+                    $cod_personal=$row["cod_personal"];
+                    $nombre_personal=namePersonalCompleto($cod_personal);
+                    ?>
+                    <option value="<?=$cod_personal?>" <?=($row["cod_personal"]==$globalPersonal)?"selected":""?> ><?=$nombre_personal?></option><?php 
+                  } ?>
+                </select>     
           </div>
         </div> 
       </div>

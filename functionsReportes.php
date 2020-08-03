@@ -5,7 +5,7 @@ require_once 'functions.php';
 
 date_default_timezone_set('America/La_Paz');
 
-function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta){
+function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta,$formas_pago){
 
     $dbh = new Conexion();
     $queryTienda="";
@@ -19,27 +19,27 @@ function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta){
     (SELECT SUM((cantidad*precio)-descuento_bob) as importe from facturas_ventadetalle where cod_facturaventa=f.codigo )as importe_real, f.nro_factura, 
     (SELECT concat(p.paterno,' ',p.primer_nombre) from personal p where p.codigo=f.cod_personal) as facturador, da.porcentaje, 
     (SELECT concat(p.paterno,' ',p.primer_nombre) from personal p, solicitudes_facturacion sf where p.codigo=sf.cod_personal and sf.codigo=f.cod_solicitudfacturacion) as solicitante
-      FROM facturas_venta f, facturas_venta_distribucion da 
-    WHERE da.cod_factura=f.codigo and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) 
+      FROM facturas_venta f, facturas_venta_distribucion da,solicitudes_facturacion_tipospago tp
+WHERE da.cod_factura=f.codigo and f.cod_solicitudfacturacion=tp.cod_solicitudfacturacion and tp.cod_tipopago in ($formas_pago) and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) 
     $queryTienda
     order by area, fecha_factura, nro_factura";
-    //echo $sql;
+    // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return($stmt);
 }
 
 
-function obtenerListaVentasArea($unidades,$areas,$desde,$hasta){
+function obtenerListaVentasArea($unidades,$areas,$desde,$hasta,$formas_pago){
 
     $dbh = new Conexion();
 
     $valorIVA=100-(obtenerValorConfiguracion(1));
 
-    $sql="SELECT da.cod_area, (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, SUM(((fd.cantidad*fd.precio)-fd.descuento_bob)*(da.porcentaje/100)*($valorIVA/100))as importe_real FROM facturas_venta f, facturas_ventadetalle fd, facturas_venta_distribucion da WHERE da.cod_factura=f.codigo and f.codigo=fd.cod_facturaventa and fd.cod_facturaventa=da.cod_factura
+    $sql="SELECT da.cod_area, (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, SUM(((fd.cantidad*fd.precio)-fd.descuento_bob)*(da.porcentaje/100)*($valorIVA/100))as importe_real FROM facturas_venta f, facturas_ventadetalle fd, facturas_venta_distribucion da,solicitudes_facturacion_tipospago tp WHERE da.cod_factura=f.codigo and f.codigo=fd.cod_facturaventa and fd.cod_facturaventa=da.cod_factura and f.cod_solicitudfacturacion=tp.cod_solicitudfacturacion and tp.cod_tipopago in ($formas_pago)
         and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) group by area order by area";
     
-    //echo $sql;
+    // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return($stmt);
@@ -65,28 +65,16 @@ function obtenerListaVentasA_servicios($unidades,$servicios,$desde,$hasta){
     $stmt->execute();
     return($stmt);
 }
-function obtenerListaVentas_libretas($desde,$hasta){
+function obtenerListaVentas_libretas(){
     $dbh = new Conexion();
-    $sql="SELECT lbf.* from facturas_venta f,libretas_bancariasdetalle_facturas lbf where f.codigo=lbf.cod_facturaventa and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' GROUP BY lbf.cod_libretabancariadetalle order by f.nro_factura";
+    //$sql="SELECT lbf.* from facturas_venta f,libretas_bancariasdetalle_facturas lbf where f.codigo=lbf.cod_facturaventa and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' GROUP BY lbf.cod_libretabancariadetalle order by f.nro_factura";
+    $sql="SELECT ld.codigo,ld.descripcion,ld.informacion_complementaria,ld.monto from libretas_bancariasdetalle ld where ld.cod_estadoreferencial=1";
     // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return($stmt);
 }
-function obtenerDatosLibreta_factura($codigo,$detalle){
-    $dbh = new Conexion();
-    $sql="SELECT $detalle from libretas_bancariasdetalle where codigo=$codigo";
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();
-    $valor=0;
-    // echo $sql;
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {        
-        $valor=$row[$detalle];        
-    }
-    // $saldo=obtenerSaldoLibretaBancariaDetalle($codigo);
-    // $valor.="#####".$saldo;
-    return($valor);
-}
+
 function obtenerFacturasLibreta($codigo){
     $dbh = new Conexion();
     $sql="SELECT f.nro_factura from libretas_bancariasdetalle_facturas l, facturas_venta f where l.cod_facturaventa=f.codigo and l.cod_libretabancariadetalle=$codigo and f.cod_estadofactura<>2 group by f.nro_factura";
@@ -125,9 +113,10 @@ function sumatotaldetallefactura_libretas($codigo){
     }        
     return($valor);
  }   
- function obtener_saldo_total_facturas($desde,$hasta){
+ function obtener_saldo_total_facturas(){
     $dbh = new Conexion();
-    $sql="SELECT f.codigo from facturas_venta f,libretas_bancariasdetalle_facturas lbf where f.codigo=lbf.cod_facturaventa and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 GROUP BY lbf.cod_facturaventa";
+    // $sql="SELECT f.codigo from facturas_venta f,libretas_bancariasdetalle_facturas lbf where f.codigo=lbf.cod_facturaventa and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 GROUP BY lbf.cod_facturaventa";
+    $sql="SELECT f.codigo from facturas_venta f,libretas_bancariasdetalle_facturas lbf where f.codigo=lbf.cod_facturaventa and f.cod_estadofactura<>2 GROUP BY lbf.cod_facturaventa";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $valor=0;

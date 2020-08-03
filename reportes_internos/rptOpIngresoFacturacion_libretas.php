@@ -10,8 +10,8 @@ require_once '../functions.php';
 require_once '../functionsGeneral.php';
 
 
-$globalAdmin=$_SESSION["globalAdmin"];
-$globalUnidad=$_SESSION["globalUnidad"];
+// $globalAdmin=$_SESSION["globalAdmin"];
+// $globalUnidad=$_SESSION["globalUnidad"];
 
 
 $fechaActual=date("m/d/Y");

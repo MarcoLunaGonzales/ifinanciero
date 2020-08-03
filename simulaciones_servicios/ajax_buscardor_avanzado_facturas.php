@@ -25,7 +25,7 @@ $fechaBusquedaInicio=$_GET['fechaI'];
 $fechaBusquedaFin=$_GET['fechaF'];
 $nit_f=$_GET['nit_f'];
 $nro_f=$_GET['nro_f'];
-
+$personal_p=$_GET['personal_p'];
 
 $sql="SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal
  from facturas_venta f where cod_estadofactura in (1,2,3)";
@@ -44,6 +44,9 @@ if($nit_f!="" ){
 if($nro_f!="" ){
   $sql.=" and f.nro_factura=$nro_f"; 
 }
+if($personal_p!=""){  
+  $sql.=" and f.cod_personal in ($personal_p)"; 
+}
 $sql.=" order by f.fecha_factura desc;";
 //echo $sql;
 $stmt = $dbh->prepare($sql);
@@ -57,6 +60,7 @@ $stmt->bindColumn('hora_factura_x', $hora_factura);
 $stmt->bindColumn('fecha_limite_emision', $fecha_limite_emision);
 $stmt->bindColumn('cod_tipopago', $cod_tipopago);
 $stmt->bindColumn('cod_cliente', $cod_cliente);
+$stmt->bindColumn('cod_personal', $cod_personal);
 $stmt->bindColumn('razon_social', $razon_social);
 $stmt->bindColumn('nit', $nit);
 $stmt->bindColumn('cod_dosificacionfactura', $cod_dosificacionfactura);
@@ -72,6 +76,10 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
 <?php
   $index=1;
   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    $nombre_personal=namePersonalCompleto($cod_personal);
+    if($cod_personal==0){
+      $nombre_personal="Tienda Virtual";
+    }
       if($cod_solicitudfacturacion!=-100){
         $stmtFActuras = $dbh->prepare("SELECT codigo,nro_factura from facturas_venta where cod_solicitudfacturacion=$cod_solicitudfacturacion");
         $stmtFActuras->execute(); 
@@ -122,7 +130,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
     <tr>
       <!-- <td align="center"><?=$index;?></td> -->
       <td><?=$nro_factura;?></td>
-      <!-- <td><?=$sucursal;?></td> -->
+      <td><?=$nombre_personal;?></td>
       <td><?=$fecha_factura?><br><?=$hora_factura?></td>
       <td class="text-left"><small><?=strtoupper($razon_social);?></small></td>
       <td class="text-right"><?=$nit;?></td>

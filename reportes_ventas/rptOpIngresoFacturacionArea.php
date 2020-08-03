@@ -59,8 +59,8 @@ $i=0;
                   	<div class="row">
 	                  	<div class="col-sm-6">
 	                  		<div class="row">
-				                 <label class="col-sm-4 col-form-label">Gestion</label>
-				                 <div class="col-sm-8">
+				                <label class="col-sm-4 col-form-label">Gestion</label>
+				                <div class="col-sm-8">
 				                	<div class="form-group">
 		                               <select class="selectpicker form-control form-control-sm" name="gestion" id="gestion" data-style="<?=$comboColor;?>" required onChange="AjaxGestionFechaDesde(this)">				  	   
 				  	                        <?php
@@ -76,9 +76,31 @@ $i=0;
 				  	                         ?>
 				                        </select>
 				                    </div>
-				                  </div>
+				                </div>
 				              </div>
-					      </div>
+					    </div>
+					    <div class="col-sm-6">
+	                  		<div class="row">
+					    		<label class="col-sm-4 col-form-label">Forma de Pago</label>
+				                <div class="col-sm-8">
+				                	<div class="form-group">
+		                               <select class="selectpicker form-control form-control-sm" name="forma_pago[]" id="forma_pago" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true" required>				  	   
+				  	                        <?php
+				  	                        $stmtFormasPago = $dbh->prepare("SELECT codigo,nombre,abreviatura from tipos_pago where cod_estadoreferencial=1 order by nombre");
+					                         $stmtFormasPago->execute();
+					                          while ($row = $stmtFormasPago->fetch(PDO::FETCH_ASSOC)) {
+					                          	$codigoX=$row['codigo'];
+					                          	$nombreX=$row['nombre'];
+					                          ?>
+					                       <option value="<?=$codigoX;?>"><?=$nombreX?></option>	
+					                         <?php
+				  	                         }
+				  	                         ?>
+				                        </select>
+				                    </div>
+				                </div>
+			                </div>
+			            </div>
 	                </div><!--div row-->
 
 	                <div class="row">
