@@ -4034,6 +4034,10 @@ function cargarDatosCuenta(){
 }
 
 function addSolicitudDetalle(obj,tipo) {
+  if($("#add_boton").length>0){
+    $("#add_boton").attr("disabled",true);
+  }
+
   var tipoSolicitud=$("#tipo_solicitud").val();
   if($("#cod_solicitud").length>0){
     tipoSolicitud=1;
@@ -4070,12 +4074,20 @@ function addSolicitudDetalle(obj,tipo) {
           divDetalle.html(ajax.responseText);
           //autocompletar("partida_cuenta"+filaActiva,"partida_cuenta_id"+filaActiva,array_cuenta);
           divDetalle.bootstrapMaterialDesign();
+          if($("#add_boton").length>0){
+            $("#add_boton").removeAttr("disabled");
+          }
+
           $('.selectpicker').selectpicker("refresh");
           return false;
        }
       }   
       ajax.send(null);
   }else{
+    if($("#add_boton").length>0){
+            $("#add_boton").removeAttr("disabled");
+          }
+          
     Swal.fire('Informativo!','Debe seleccionar un tipo de Solicitud!','warning');
     return false;
   }
