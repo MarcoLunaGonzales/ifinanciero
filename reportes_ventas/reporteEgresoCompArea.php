@@ -78,7 +78,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                     <img class="" width="40" height="40" src="../assets/img/logoibnorca.png">
                   </div>
                    <!--<div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div>-->
-                   <h4 class="card-title text-center">Reporte de Ingresos Área</h4>
+                   <h4 class="card-title text-center">Reporte de Egresos Área</h4>
                 </div>
                 <?php
                 include "reporteEgresoCompAreaDetalle.php";  
