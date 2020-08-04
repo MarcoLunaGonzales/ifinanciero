@@ -157,7 +157,7 @@ $i=0;
 			                	<div class="form-group">
 	                              <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
 			  	                     <?php
-			  	                     $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+			  	                     $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 order by 2");
 				                     $stmt->execute();
 				                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				                     	$codigoX=$row['codigo'];
@@ -174,21 +174,6 @@ $i=0;
 			              </div>
 				      </div>
                   </div><!--div row-->
-                  <div class="row">
-	                  	<div class="col-sm-6">
-	                  		<div class="row">
-				                 <label class="col-sm-4 col-form-label">Incluir Personal</label>
-				                 <div class="col-sm-8">
-				                	<div class="form-group">
-		                               <select class="selectpicker form-control form-control-sm" name="personal" id="personal" data-style="<?=$comboColor;?>" required>				  	   
-					                       <option value="0">Sin Personal</option>
-					                       <option value="1">Personal que Registró el Comprobante</option>
-				                        </select>
-				                    </div>
-				                  </div>
-				              </div>
-					      </div>
-	                </div><!--div row-->
 
                 </div><!--card body-->
                 <div class="card-footer ">

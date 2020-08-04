@@ -52,9 +52,9 @@ $i=0;
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Egresos por Área</h4>
+                  <h4 class="card-title">Reporte Egresos por Área y Cuenta</h4>
                 </div>
-                <form class="" action="<?=$urlReporteEgresoCompArea?>" target="_blank" method="POST">
+                <form class="" action="<?=$urlReporteEgresoCompAreaCuenta?>" target="_blank" method="POST">
                 	<input type="hidden" id="reporteEgreso" value="1">
                 <div class="card-body">
                   	<div class="row">
@@ -173,7 +173,31 @@ $i=0;
 			              </div>
 				      </div>
                   </div><!--div row-->
-
+                <div class="row">
+                	<div class="col-sm-6">
+                  		<div class="row">
+			                 <label class="col-sm-4 col-form-label">Cuenta</label>
+			                 <div class="col-sm-8">
+			                	<div class="form-group">
+	                              <select class="selectpicker form-control form-control-sm" name="cuenta_costo[]" id="cuenta_costo" data-style="select-with-transition" data-live-search="true" data-size="6" multiple data-actions-box="true" required>
+			  	                     <?php
+			  	                     $stmt = $dbh->prepare("SELECT codigo, nombre, numero FROM plan_cuentas where nivel=5 and numero like '5%' order by 3");
+				                     $stmt->execute();
+				                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				                     	$codigoX=$row['codigo'];
+				                     	$nombreX=$row['nombre'];
+				                     	$numeroX=$row['numero'];
+				                     ?>
+				                     <option value="<?=$codigoX;?>" selected>[<?=$numeroX;?>] <?=$nombreX?></option>	
+				                       <?php
+			  	                       }
+			  	                       ?>
+			                       </select>
+			                      </div>
+			                  </div>
+			              </div>
+				      </div>
+                  </div><!--div row-->
                 </div><!--card body-->
                 <div class="card-footer ">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
