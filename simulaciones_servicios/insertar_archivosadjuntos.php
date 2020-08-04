@@ -7,6 +7,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
     if(isset($_POST['codigo_archivo'.$ar])){
         if($_FILES['documentos_cabecera'.$ar]["name"]){
           $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
+          $filename = str_replace("%","",$filename);//quitamos el % del nombre;
           $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
           // echo $filename."--";
           $directorio = '../assets/archivos-respaldo/archivos_solicitudes_facturacion/SOLFAC-'.$cod_facturacion; //Declaramos una  variable con la ruta donde guardaremos los archivoss
