@@ -28,6 +28,7 @@ $anio=$_POST['anio'];
 $anio_fila=$_POST['anio_fila'];
 $iteracion=$_POST['iteracion'];
 $des_serv=$_POST['des_serv'];
+$oficina_servicio=$_POST['oficina_servicio'];
 if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
   $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=0 where cod_simulacionservicio=$codSimulacion";
   $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
@@ -36,11 +37,11 @@ if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
 
 if($_POST['tcs']==0){
   $tipo_atributo=1;
-  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
 }else{
   $tipo_atributo=2;
   $atributosDias= json_decode($_POST['sitios_dias']);
-  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos' where codigo=$codSimulacion";
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos' where codigo=$codSimulacion";
 }
 
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
