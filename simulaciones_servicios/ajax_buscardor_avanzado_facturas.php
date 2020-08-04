@@ -48,7 +48,7 @@ if($personal_p!=""){
   $sql.=" and f.cod_personal in ($personal_p)"; 
 }
 $sql.=" order by f.fecha_factura desc;";
-//echo $sql;
+// echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $stmt->bindColumn('codigo', $codigo_factura);

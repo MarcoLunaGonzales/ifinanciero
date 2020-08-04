@@ -252,7 +252,7 @@ $globalPersonal=$_SESSION["globalUser"];
                     $cod_personal=$row["cod_personal"];
                     $nombre_personal=namePersonalCompleto($cod_personal);
                     ?>
-                    <option value="<?=$cod_personal?>" <?=($row["cod_personal"]==$globalPersonal)?"selected":""?> ><?=$nombre_personal?></option><?php 
+                    <option value="<?=$cod_personal?>" ><?=$nombre_personal?></option><?php 
                   } ?>
                 </select>     
           </div>
