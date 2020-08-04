@@ -14,10 +14,11 @@ $dbh = new Conexion();
 <div class="content">
 	<div class="container-fluid">
 		<div class="col-md-12">
-			<div class="card">
-			  	<div class="card-header <?=$colorCard;?> card-header-text">
+            
+            <div class="card">
+			  	<div class="card-header card-header-default card-header-text">
 					<div class="card-text">
-				  		<h4 class="card-title">Reportes Ingresos</h4>
+				  		<h4 class="card-title">Reportes Egresos</h4>
 					</div>
 			  	</div>
 
@@ -25,20 +26,20 @@ $dbh = new Conexion();
 					<div class="row">
 				  		<div class="col-sm-4">
 							<div class="form-group">
-								<a href="<?=$urlReporteResumido;?>" class="btn btn-success"> Ingresos por Factura y Área</a>
+								<a href="<?=$urlReporteResumido;?>" class="btn btn-info"> Gasto detallado</a>
 							</div>
 				  		</div>
 
 				  		<div class="col-sm-4">
 							<div class="form-group">
-								<a href="<?=$urlReporteResumidoArea;?>" class="btn btn-primary"> Ingresos por Área</a>
+								<a href="<?=$urlReporteResumidoArea;?>" class="btn btn-defult"> Gastos por Área</a>
 							</div>
 				  		</div>
-				  		<div class="col-sm-4">
+				  		<!--<div class="col-sm-4">
 							<div class="form-group">
 								<a href="<?=$urlReporteResumidoArea_servicios;?>" class="btn btn-warning"> Ingresos por Servicios</a>
 							</div>
-				  		</div>
+				  		</div>-->
 					</div>
 			  	</div>
 			</div>

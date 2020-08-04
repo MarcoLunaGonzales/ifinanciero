@@ -4087,7 +4087,7 @@ function addSolicitudDetalle(obj,tipo) {
     if($("#add_boton").length>0){
             $("#add_boton").removeAttr("disabled");
           }
-          
+
     Swal.fire('Informativo!','Debe seleccionar un tipo de Solicitud!','warning');
     return false;
   }
@@ -11529,7 +11529,11 @@ function AjaxGestionFechaDesde(combo){
   var cod_gestion=combo.value;
   contenedor= document.getElementById('div_contenedor_fechaI');
   ajax=nuevoAjax();
-  ajax.open('GET', 'reportes/GestionDesdeAjax.php?cod_gestion='+cod_gestion,true);
+  if($("#reporteEgreso").length>0){
+    ajax.open('GET', '../reportes/GestionDesdeAjax.php?cod_gestion='+cod_gestion,true);
+  }else{
+    ajax.open('GET', 'reportes/GestionDesdeAjax.php?cod_gestion='+cod_gestion,true);
+  }
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
@@ -11538,6 +11542,27 @@ function AjaxGestionFechaDesde(combo){
   }
   ajax.send(null)  
 
+}
+function AjaxGestionFechaHasta(cod_gestion){
+  // var cod_uo=$("#cod_unidadorganizacional").val();  
+  // alert(cod_uo);
+
+  var contenedor; 
+  contenedor = document.getElementById('div_contenedor_fechaH');
+  ajax=nuevoAjax();
+  if($("#reporteEgreso").length>0){
+    ajax.open('GET', '../reportes/GestionhastaAjax.php?cod_gestion='+cod_gestion,true);
+  }else{
+    ajax.open('GET', 'reportes/GestionhastaAjax.php?cod_gestion='+cod_gestion,true);
+  }
+  
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+    }
+  }
+  ajax.send(null)
+  
 }
 function AjaxGestionFechaDesdeMes(combo){
   var contenedor;
@@ -11570,22 +11595,7 @@ function AjaxGestionFechaHastaMes(cod_gestion){
   ajax.send(null)
   
 }
-function AjaxGestionFechaHasta(cod_gestion){
-  // var cod_uo=$("#cod_unidadorganizacional").val();  
-  // alert(cod_uo);
 
-  var contenedor; 
-  contenedor = document.getElementById('div_contenedor_fechaH');
-  ajax=nuevoAjax();
-  ajax.open('GET', 'reportes/GestionhastaAjax.php?cod_gestion='+cod_gestion,true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;      
-    }
-  }
-  ajax.send(null)
-  
-}
 function AjaxGestionFechaDesdeBG(combo){
   var contenedor;
   var cod_gestion=combo.value;

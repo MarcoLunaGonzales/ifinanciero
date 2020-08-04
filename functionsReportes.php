@@ -128,4 +128,37 @@ function sumatotaldetallefactura_libretas($codigo){
     return($valor);
 
  }
+
+ function obtenerListaGastosResumido($unidades,$areas,$desde,$hasta){
+    $dbh = new Conexion();
+    $sql="SELECT cd.codigo,c.fecha,c.numero,c.cod_tipocomprobante,cd.cod_comprobante,cd.cod_unidadorganizacional,cd.cod_area,cd.cod_cuenta,cd.cod_cuentaauxiliar,cd.debe,cd.haber,(cd.debe-cd.haber) as monto,cd.glosa,u.abreviatura as unidad,a.abreviatura as area,p.nombre as cuenta,p.numero as numero_cuenta,(SELECT CONCAT(pe.primer_nombre,' ',pe.otros_nombres,' ',pe.paterno,' ',pe.materno) from personal pe where pe.codigo=c.created_by) as personal,
+(SELECT nombre from cuentas_auxiliares where codigo = cd.cod_cuentaauxiliar) as nombre_cliente_proveedor,
+(SELECT cod_tipoauxiliar from cuentas_auxiliares where codigo = cd.cod_cuentaauxiliar) as cliente_proveedor 
+FROM comprobantes_detalle cd
+join comprobantes c on c.codigo=cd.cod_comprobante
+join unidades_organizacionales u on u.codigo=cd.cod_unidadorganizacional
+join areas a on a.codigo=cd.cod_area
+join plan_cuentas p on p.codigo=cd.cod_cuenta
+where cd.cod_unidadorganizacional in ($unidades) and cd.cod_area in ($areas) and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and p.numero like '5%' order by c.fecha,c.numero,c.cod_tipocomprobante";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return($stmt);
+  }
+
+function obtenerListaGastosPorArea($unidades,$areas,$desde,$hasta){
+    $dbh = new Conexion();
+    $sql="SELECT da.cod_area, (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, 
+SUM(da.debe-da.haber)as monto_real 
+FROM comprobantes_detalle da 
+join comprobantes c on c.codigo=da.cod_comprobante
+join plan_cuentas p on p.codigo=da.cod_cuenta
+where da.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and p.numero like '5%' 
+group by area order by area";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return($stmt);
+  }
  ?>
+
