@@ -20,4 +20,8 @@ $urlReporteResumidoAreaEg="rptOpEgresoCompArea.php";
 $urlReporteEgresoComp="reporteEgresoComp.php";
 $urlReporteEgresoCompArea="reporteEgresoCompArea.php";
 
+$urlReporteResumidoAreaCuentaEg="rptOpEgresoCompAreaCuenta.php";
+$urlReporteEgresoCompAreaCuenta="reporteEgresoCompAreaCuenta.php";
+
+
 ?>

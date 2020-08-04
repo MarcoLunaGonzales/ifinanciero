@@ -55,20 +55,20 @@ $dbh = new Conexion();
 					<div class="row">
 				  		<div class="col-sm-4">
 							<div class="form-group">
-								<a href="<?=$urlReporteResumidoEg;?>" class="btn btn-info"> Gasto detallado</a>
+								<a href="<?=$urlReporteResumidoEg;?>" class="btn btn-info"> Egreso Detallado</a>
 							</div>
 				  		</div>
 
 				  		<div class="col-sm-4">
 							<div class="form-group">
-								<a href="<?=$urlReporteResumidoAreaEg;?>" class="btn btn-defult"> Gastos por Área</a>
+								<a href="<?=$urlReporteResumidoAreaEg;?>" class="btn btn-defult"> Egreso por Área</a>
 							</div>
 				  		</div>
-				  		<!--<div class="col-sm-4">
+				  		<div class="col-sm-4">
 							<div class="form-group">
-								<a href="<?=$urlReporteResumidoArea_servicios;?>" class="btn btn-warning"> Ingresos por Servicios</a>
+								<a href="<?=$urlReporteResumidoAreaCuentaEg;?>" class="btn btn-warning"> Egreso por Área y Cuenta</a>
 							</div>
-				  		</div>-->
+				  		</div>
 					</div>
 			  	</div>
 			</div>

@@ -508,6 +508,20 @@ function abrevArea($codigo){
    $cadenaAreas=substr($cadenaAreas, 1);
    return($cadenaAreas);
 }
+function nameCuentaArray($codigo){
+   $dbh = new Conexion();
+   $sql="SELECT nombre FROM plan_cuentas where codigo in ($codigo)";
+   $stmt = $dbh->prepare($sql);
+   //echo $sql;
+   $stmt->execute();
+   $cadenaCuentas="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $cadenaCuentas=$cadenaCuentas."-".$row['nombre'];
+   }
+   $cadenaCuentas=substr($cadenaCuentas, 1);
+   return($cadenaCuentas);
+}
+
 function abrevArea_solo($codigo){
    $dbh = new Conexion();
    $sql="SELECT abreviatura FROM areas where codigo in ($codigo)";
@@ -5266,6 +5280,8 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
     $sqlAreas="";
     $sqlUnidades="";
     $fechaFinalMod=explode("/", $fechaFinal);
+
+    $arrayUnidades=implode(",",$arrayUnidades);
     //formateando fecha
     if($fechaInicio=="none"){
       $fi=$fechaFinalMod[2]."-01-01";
@@ -5275,32 +5291,13 @@ function obtenerComprobantesDetCuenta($codigo,$cuenta){
     }
   
     $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
-    //$fi=$fechaFinalMod[2]."-01-01";
-    for ($i=0; $i < count($arrayAreas); $i++) {
-      if($i==0){
-        $sqlAreas.="and (";
-      }
-      if($i==(count($arrayAreas)-1)){
-        $sqlAreas.="d.cod_area='".$arrayAreas[$i]."')";
-      }else{
-        $sqlAreas.="d.cod_area='".$arrayAreas[$i]."' or ";
-      }  
-    }
-    //busqueda de unidades
-    for ($i=0; $i < count($arrayUnidades); $i++) {
-      if($i==0){
-        $sqlUnidades.="and (";
-      }
-      if($i==(count($arrayUnidades)-1)){
-        $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."')";
-       }else{
-        $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."' or ";
-       }  
-    }
     $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
            (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
             from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
-            where (c.fecha between '$fi 00:00:00' and '$fa 23:59:59') $sqlUnidades and c.cod_estadocomprobante<>'2' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+            join areas a on a.codigo=d.cod_area
+            join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
+            join plan_cuentas p on p.codigo=d.cod_cuenta
+            where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>'2' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
         on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
     //echo $sql;
     $stmt = $dbh->prepare($sql);

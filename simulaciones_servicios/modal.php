@@ -647,6 +647,36 @@
                         </div>
                       </div>
                       <div class="row">
+                       <label class="col-sm-2 col-form-label">Oficina Servicio</label>
+                       <div class="col-sm-5">
+                        <div class="form-group">
+                          <select class="selectpicker form-control form-control-sm"  name="oficina_servicio" id="oficina_servicio" data-style="btn btn-warning" required>
+                            <!--<option disabled selected="selected" value="">Cliente</option>-->
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $abrevX=$row['abreviatura'];
+                                  if($codigoX==$oficinaGlobalX){
+                                    ?>
+                                  <option value="<?=$codigoX;?>" selected><?=$abrevX;?></option> 
+                                  <?php
+                                  }else{
+                                    ?>
+                                  <option value="<?=$codigoX;?>"><?=$abrevX;?></option> 
+                                  <?php
+                                  }   
+                                }
+                              ?>
+                          </select>
+                      
+                        </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
                        <label class="col-sm-2 col-form-label">Descripción del Servicio</label>
                        <div class="col-sm-10">
                         <div class="form-group">

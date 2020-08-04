@@ -7959,11 +7959,12 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
         habilitado=0;
       }
       var alcance="";
+      var oficina_servicio=$("#oficina_servicio").val();
       if($("#modal_alcance").length>0){
         alcance=$("#modal_alcance").val();
       }
       var des_serv = $("#modal_des_serv").val();
-      var parametros = {"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
+      var parametros = {"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
       $.ajax({
         type:"POST",
         data:parametros,
