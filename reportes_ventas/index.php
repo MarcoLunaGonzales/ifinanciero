@@ -44,5 +44,33 @@ $dbh = new Conexion();
 			</div>
 
 		</div>
+		 <div class="card">
+			  	<div class="card-header card-header-default card-header-text">
+					<div class="card-text">
+				  		<h4 class="card-title">Reportes Egresos</h4>
+					</div>
+			  	</div>
+
+			  	<div class="card-body ">
+					<div class="row">
+				  		<div class="col-sm-4">
+							<div class="form-group">
+								<a href="<?=$urlReporteResumidoEg;?>" class="btn btn-info"> Gasto detallado</a>
+							</div>
+				  		</div>
+
+				  		<div class="col-sm-4">
+							<div class="form-group">
+								<a href="<?=$urlReporteResumidoAreaEg;?>" class="btn btn-defult"> Gastos por Área</a>
+							</div>
+				  		</div>
+				  		<!--<div class="col-sm-4">
+							<div class="form-group">
+								<a href="<?=$urlReporteResumidoArea_servicios;?>" class="btn btn-warning"> Ingresos por Servicios</a>
+							</div>
+				  		</div>-->
+					</div>
+			  	</div>
+			</div>
 	</div>
 </div>

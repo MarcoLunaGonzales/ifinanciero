@@ -13,5 +13,11 @@ $urlReporteResumidoArea_servicios="rptOpIngresoFacturacionArea_servicios.php";
 $urlReporteIngresoFacturacion_servicio="reporteIngresoFacturacionServicios.php";
 
 
-?>
 
+$urlReporteResumidoEg="rptOpEgresoComp.php";
+$urlReporteResumidoAreaEg="rptOpEgresoCompArea.php";
+
+$urlReporteEgresoComp="reporteEgresoComp.php";
+$urlReporteEgresoCompArea="reporteEgresoCompArea.php";
+
+?>

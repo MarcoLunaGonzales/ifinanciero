@@ -45,23 +45,23 @@ $i=0;
 
 <div class="content">
 	<div class="container-fluid">
-		<!-- <div style="overflow-y:scroll; ">			 		 -->
+		<!-- <div style="overflow-y:scroll; ">		 -->	 		
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Egresos por Área</h4>
+                  <h4 class="card-title">Reporte Egresos</h4>
                 </div>
-                <form class="" action="<?=$urlReporteEgresoCompArea?>" target="_blank" method="POST">
+                <form class="" action="<?=$urlReporteEgresoComp?>" target="_blank" method="POST">
                 	<input type="hidden" id="reporteEgreso" value="1">
                 <div class="card-body">
                   	<div class="row">
 	                  	<div class="col-sm-6">
 	                  		<div class="row">
-				                <label class="col-sm-4 col-form-label">Gestion</label>
-				                <div class="col-sm-8">
+				                 <label class="col-sm-4 col-form-label">Gestion</label>
+				                 <div class="col-sm-8">
 				                	<div class="form-group">
 		                               <select class="selectpicker form-control form-control-sm" name="gestion" id="gestion" data-style="<?=$comboColor;?>" required onChange="AjaxGestionFechaDesde(this)">				  	   
 				  	                        <?php
@@ -78,8 +78,9 @@ $i=0;
 				                        </select>
 				                    </div>
 				                </div>
-				              </div>
+				            </div>
 					    </div>
+
 	                </div><!--div row-->
 
 	                <div class="row">
@@ -173,11 +174,26 @@ $i=0;
 			              </div>
 				      </div>
                   </div><!--div row-->
+                  <div class="row">
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                 <label class="col-sm-4 col-form-label">Incluir Personal</label>
+				                 <div class="col-sm-8">
+				                	<div class="form-group">
+		                               <select class="selectpicker form-control form-control-sm" name="personal" id="personal" data-style="<?=$comboColor;?>" required>				  	   
+					                       <option value="0">Sin Personal</option>
+					                       <option value="1">Personal que Registró el Comprobante</option>
+				                        </select>
+				                    </div>
+				                  </div>
+				              </div>
+					      </div>
+	                </div><!--div row-->
 
                 </div><!--card body-->
                 <div class="card-footer ">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
+				   <a href="../reportes_ventas/" class="<?=$buttonCancel;?>"> Volver </a>
 			  </div>
                </form> 
               </div>	  
