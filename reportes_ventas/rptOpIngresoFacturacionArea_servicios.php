@@ -150,17 +150,17 @@ $i=0;
       	             </div>
                   	<div class="col-sm-6">
                   		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Servicio</label>
+			                 <label class="col-sm-4 col-form-label">Areas</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
-	                              <select class="selectpicker form-control form-control-sm" name="servicios[]" id="servicios" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+	                              <select class="selectpicker form-control form-control-sm" name="areas[]" id="areas" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
 			  	                     <?php
-			  	                     $stmt = $dbh->prepare("SELECT IdTipo,Codigo,descripcion_n2 from cla_servicios GROUP BY IdTipo ORDER BY descripcion_n2");
+			  	                     $stmt = $dbh->prepare("SELECT codigo,nombre,abreviatura from areas where cod_estado=1");
 				                     $stmt->execute();
 				                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				                     	$codigoX=$row['IdTipo'];
-				                     	$nombreX=$row['descripcion_n2'];
-				                     	$abrevX=$row['Codigo'];
+				                     	$codigoX=$row['codigo'];
+				                     	$nombreX=$row['nombre'];
+				                     	$abrevX=$row['abreviatura'];
 				                     ?>
 				                     <option value="<?=$codigoX;?>" selected><small><?=$nombreX?> (<?=$abrevX;?>)</small></option>	
 				                       <?php

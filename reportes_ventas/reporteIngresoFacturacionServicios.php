@@ -36,7 +36,7 @@ if($_POST["fecha_desde"]==""){
 }
 
 $unidadCosto=$_POST['unidad_costo'];
-$servicios=$_POST['servicios'];
+$areas=$_POST['areas'];
 
 $gestion= $_POST["gestion"];
 //PONEMOS LAS VARIABLES PARA CUANDO LLAMEMOS AL REPORTE DESDE LOS MAYORES
@@ -47,7 +47,7 @@ $gestion= $_POST["gestion"];
 // }
 $NombreGestion = nameGestion($gestion);
 $unidadCostoArray=implode(",", $unidadCosto);
-$serviciosArray=implode(",", $servicios);
+$areasArray=implode(",", $areas);
 // if(isset($_POST['solo_tienda'])){
 //  $solo_tienda=1; 
 // }else{
@@ -55,7 +55,7 @@ $serviciosArray=implode(",", $servicios);
 // }
 
 $unidadAbrev=abrevUnidad($unidadCostoArray);
-// $areaAbrev=abrevArea($serviciosArray);
+$areaAbrev=abrevArea($areasArray);
 
 $nombreCuentaTitle="";
 
