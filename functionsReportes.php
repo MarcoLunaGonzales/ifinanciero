@@ -12,7 +12,7 @@ function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta,$
     if($soloTienda==1){
       $queryTienda=" and f.cod_solicitudfacturacion=-100";
     }
-    $sql="SELECT f.codigo, f.cod_solicitudfacturacion, 
+    /*$sql="SELECT f.codigo, f.cod_solicitudfacturacion, 
     (SELECT uo.abreviatura from unidades_organizacionales uo where uo.codigo=f.cod_unidadorganizacional)uo, 
     (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, 
     f.fecha_factura, f.razon_social, f.nit, f.cod_personal, 
@@ -21,6 +21,17 @@ function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta,$
     (SELECT concat(p.paterno,' ',p.primer_nombre) from personal p, solicitudes_facturacion sf where p.codigo=sf.cod_personal and sf.codigo=f.cod_solicitudfacturacion) as solicitante
       FROM facturas_venta f, facturas_venta_distribucion da,solicitudes_facturacion_tipospago tp
 WHERE da.cod_factura=f.codigo and f.cod_solicitudfacturacion=tp.cod_solicitudfacturacion and tp.cod_tipopago in ($formas_pago) and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) 
+    $queryTienda
+    order by area, fecha_factura, nro_factura";*/
+    $sql="SELECT f.codigo, f.cod_solicitudfacturacion, 
+    (SELECT uo.abreviatura from unidades_organizacionales uo where uo.codigo=f.cod_unidadorganizacional)uo, 
+    (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, 
+    f.fecha_factura, f.razon_social, f.nit, f.cod_personal, 
+    (SELECT SUM((cantidad*precio)-descuento_bob) as importe from facturas_ventadetalle where cod_facturaventa=f.codigo )as importe_real, f.nro_factura, 
+    (SELECT concat(p.paterno,' ',p.primer_nombre) from personal p where p.codigo=f.cod_personal) as facturador, da.porcentaje, 
+    (SELECT concat(p.paterno,' ',p.primer_nombre) from personal p, solicitudes_facturacion sf where p.codigo=sf.cod_personal and sf.codigo=f.cod_solicitudfacturacion) as solicitante
+      FROM facturas_venta f, facturas_venta_distribucion da
+WHERE da.cod_factura=f.codigo  and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) 
     $queryTienda
     order by area, fecha_factura, nro_factura";
     // echo $sql;
@@ -36,8 +47,10 @@ function obtenerListaVentasArea($unidades,$areas,$desde,$hasta,$formas_pago){
 
     $valorIVA=100-(obtenerValorConfiguracion(1));
 
-    $sql="SELECT da.cod_area, (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, SUM(((fd.cantidad*fd.precio)-fd.descuento_bob)*(da.porcentaje/100)*($valorIVA/100))as importe_real FROM facturas_venta f, facturas_ventadetalle fd, facturas_venta_distribucion da,solicitudes_facturacion_tipospago tp WHERE da.cod_factura=f.codigo and f.codigo=fd.cod_facturaventa and fd.cod_facturaventa=da.cod_factura and f.cod_solicitudfacturacion=tp.cod_solicitudfacturacion and tp.cod_tipopago in ($formas_pago)
-        and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) group by area order by area";
+
+    /*$sql="SELECT da.cod_area, (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, SUM(((fd.cantidad*fd.precio)-fd.descuento_bob)*(da.porcentaje/100)*($valorIVA/100))as importe_real FROM facturas_venta f, facturas_ventadetalle fd, facturas_venta_distribucion da,solicitudes_facturacion_tipospago tp WHERE da.cod_factura=f.codigo and f.codigo=fd.cod_facturaventa and fd.cod_facturaventa=da.cod_factura and f.cod_solicitudfacturacion=tp.cod_solicitudfacturacion and tp.cod_tipopago in ($formas_pago)
+        and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) group by area order by area";*/
+    $sql="SELECT da.cod_area, (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, SUM(((fd.cantidad*fd.precio)-fd.descuento_bob)*(da.porcentaje/100)*($valorIVA/100))as importe_real FROM facturas_venta f, facturas_ventadetalle fd, facturas_venta_distribucion da WHERE da.cod_factura=f.codigo and f.codigo=fd.cod_facturaventa and fd.cod_facturaventa=da.cod_factura and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) group by area order by area";
     // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -77,9 +90,9 @@ function obtenerListaVentasA_servicios($unidades,$cod_area,$servicios,$desde,$ha
 }
 function obtenerListaVentas_cursos($unidades,$IdtipoX,$cod_area,$desde,$hasta){
     if($IdtipoX==0) $sql_aux="";
-    else $sql_aux="and sf.cod_simulacion_servicio in ($IdtipoX)";
+    else $sql_aux="";
     $dbh = new Conexion();
-    $sql="SELECT sf.cod_simulacion_servicio, SUM((s.cantidad*s.precio)-s.descuento_bob)as importe_real From facturas_venta f,facturas_ventadetalle s, solicitudes_facturacion sf where f.codigo=s.cod_facturaventa and f.cod_solicitudfacturacion=sf.codigo and sf.tipo_solicitud in (2,6)  and f.cod_estadofactura<>2 and  sf.cod_estadosolicitudfacturacion<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) $sql_aux and f.cod_area in ($cod_area) GROUP BY sf.cod_simulacion_servicio";
+    $sql="SELECT SUM((s.cantidad*s.precio)-s.descuento_bob)as importe_real From facturas_venta f,facturas_ventadetalle s where f.codigo=s.cod_facturaventa  and f.cod_estadofactura<>2  and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) $sql_aux and f.cod_area in ($cod_area) GROUP BY sf.cod_simulacion_servicio";
     // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -161,6 +174,40 @@ function sumatotaldetallefactura_libretas($codigo){
     return($valor);
 
  }
+
+
+ function obtenerListaGastosResumido($unidades,$areas,$desde,$hasta){
+    $dbh = new Conexion();
+    $sql="SELECT cd.codigo,c.fecha,c.numero,c.cod_tipocomprobante,cd.cod_comprobante,cd.cod_unidadorganizacional,cd.cod_area,cd.cod_cuenta,cd.cod_cuentaauxiliar,cd.debe,cd.haber,(cd.debe-cd.haber) as monto,cd.glosa,u.abreviatura as unidad,a.abreviatura as area,p.nombre as cuenta,p.numero as numero_cuenta,(SELECT CONCAT(pe.primer_nombre,' ',pe.otros_nombres,' ',pe.paterno,' ',pe.materno) from personal pe where pe.codigo=c.created_by) as personal,
+(SELECT nombre from cuentas_auxiliares where codigo = cd.cod_cuentaauxiliar) as nombre_cliente_proveedor,
+(SELECT cod_tipoauxiliar from cuentas_auxiliares where codigo = cd.cod_cuentaauxiliar) as cliente_proveedor 
+FROM comprobantes_detalle cd
+join comprobantes c on c.codigo=cd.cod_comprobante
+join unidades_organizacionales u on u.codigo=cd.cod_unidadorganizacional
+join areas a on a.codigo=cd.cod_area
+join plan_cuentas p on p.codigo=cd.cod_cuenta
+where cd.cod_unidadorganizacional in ($unidades) and cd.cod_area in ($areas) and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and p.numero like '5%' order by c.fecha,c.numero,c.cod_tipocomprobante";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return($stmt);
+  }
+
+function obtenerListaGastosPorArea($unidades,$areas,$desde,$hasta){
+    $dbh = new Conexion();
+    $sql="SELECT da.cod_area, (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, 
+SUM(da.debe-da.haber)as monto_real 
+FROM comprobantes_detalle da 
+join comprobantes c on c.codigo=da.cod_comprobante
+join plan_cuentas p on p.codigo=da.cod_cuenta
+where da.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and p.numero like '5%' 
+group by area order by area";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return($stmt);
+  }
+
  function obtenerNombreCurso($codigo){
   $dbhIBNO = new ConexionIBNORCA();
   //datos del estudiante y el curso que se encuentra
@@ -171,4 +218,6 @@ function sumatotaldetallefactura_libretas($codigo){
   $valor = $resultSimu['Nombre'];
   return($valor);
 }
+
  ?>
+
