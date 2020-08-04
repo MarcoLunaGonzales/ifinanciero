@@ -73,26 +73,19 @@ function obtenerListaVentasA_servicios($unidades,$cod_area,$servicios,$desde,$ha
     From facturas_venta f,facturas_ventadetalle s,facturas_venta_distribucion da, cla_servicios cs 
     where f.codigo=s.cod_facturaventa and da.cod_factura=f.codigo and s.cod_claservicio=cs.IdClaServicio $sql_aux and f.cod_estadofactura<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) and f.cod_area in ($cod_area) GROUP BY cs.Idtipo order by f.cod_area";
     // echo $sql;
-
-    //     if($servicios==0){ 
-    //     $sql_aux=" and f.cod_area in ($cod_area)"; }
-    // else $sql_aux="and sf.cod_simulacion_servicio in ($servicios)";
-
-    // $dbh = new Conexion();
-    // $valorIVA=100-(obtenerValorConfiguracion(1));
-    // $sql="SELECT f.cod_area,(SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area,cs.IdTipo,cs.Codigo,cs.descripcion_n2,SUM(((fd.cantidad*fd.precio)-fd.descuento_bob)*(da.porcentaje/100))as importe_real 
-    // From facturas_venta f,facturas_venta_distribucion da,facturas_ventadetalle fd, cla_servicios cs 
-    // where f.codigo=fd.cod_facturaventa and da.cod_factura=f.codigo and fd.cod_claservicio=cs.IdClaServicio $sql_aux and f.cod_estadofactura<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades)  GROUP BY cs.Idtipo order by area";
-
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return($stmt);
 }
 function obtenerListaVentas_cursos($unidades,$IdtipoX,$cod_area,$desde,$hasta){
     if($IdtipoX==0) $sql_aux="";
-    else $sql_aux="";
+    else $sql_aux=" and m.IdCurso in ($IdtipoX)";
     $dbh = new Conexion();
-    $sql="SELECT SUM((s.cantidad*s.precio)-s.descuento_bob)as importe_real From facturas_venta f,facturas_ventadetalle s where f.codigo=s.cod_facturaventa  and f.cod_estadofactura<>2  and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) $sql_aux and f.cod_area in ($cod_area) GROUP BY sf.cod_simulacion_servicio";
+    $sql="SELECT da.cod_area,(SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area,m.IdCurso,SUM(((fd.cantidad*fd.precio)-fd.descuento_bob)*(da.porcentaje/100))as importe_real 
+    FROM facturas_venta f,facturas_ventadetalle fd,facturas_venta_distribucion da,ibnorca.modulos m
+    WHERE f.codigo=fd.cod_facturaventa and da.cod_factura=f.codigo and fd.cod_claservicio=m.IdModulo and f.cod_estadofactura<>2  
+    and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) $sql_aux and f.cod_area in ($cod_area) 
+    GROUP BY m.IdCurso";
     // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();

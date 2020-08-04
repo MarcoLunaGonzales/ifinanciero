@@ -9,9 +9,9 @@
     $html='<table class="table table-bordered table-condensed" id="libro_mayor_rep" width="80%" align="center">'.
             '<thead >'.
             '<tr class="text-center" style="background:#40A3A8;color:#ffffff;">'.
-            '<th >Areas</th>'.
+            '<th width="10%">Areas</th>'.
             '<th width="20%">Codigo</th>'.
-              '<th width="20%">Servicio</th>'.
+              '<th >Servicio</th>'.
               '<th width="10%">Importe Neto</th>'.
             '</tr>'.
            '</thead>'.
@@ -59,8 +59,9 @@
     $listaDetalle_cursos=obtenerListaVentas_cursos($unidadCostoArray,0,$areasArray,$desde,$hasta);
     // $totalImporte=0;
     while ($rowComp = $listaDetalle_cursos->fetch(PDO::FETCH_ASSOC)) {        
-        
-        $IdtipoX=$rowComp['cod_simulacion_servicio'];
+        $codAreaX=$rowComp['cod_area'];
+        $nombreAreaX=$rowComp['area'];
+        $IdtipoX=$rowComp['IdCurso'];
         $codigo_alterno=obtenerCodigoExternoCurso($IdtipoX);
         $descripcion_n2=obtenerNombreCurso($IdtipoX);
         $importe_realX=$rowComp['importe_real'];
@@ -69,8 +70,8 @@
 
         $totalImporte+=$importe_realX;
         $html.='<tr>'.
+                      '<td class="text-left font-weight-bold">'.$nombreAreaX.'</td>'.
                       '<td class="text-left font-weight-bold">'.$string_curso.$codigo_alterno.')</td>'.
-                      '<td class="text-left font-weight-bold">Areas</td>'.
                       '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
                       '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
                   '</tr>';
