@@ -22,14 +22,14 @@
       if($valor!=13){
         $stringAreas_1.=$valor.",";
       }else{
-        $stringAreas_2.=$valor.",";
+        $stringAreas_2=$valor;
       }
     } 
     $stringAreas_1=trim($stringAreas_1,",");
-    $stringAreas_2=trim($stringAreas_2,",");
+    // $stringAreas_2=trim($stringAreas_2,",");
     $totalImporte=0;
     if($stringAreas_1!=""){
-      $listaDetalleUnidades=obtenerListaVentasA_servicios($unidadCostoArray,$areasArray,0,$desde,$hasta);
+      $listaDetalleUnidades=obtenerListaVentasA_servicios($unidadCostoArray,$stringAreas_1,0,$desde,$hasta);
       while ($rowComp = $listaDetalleUnidades->fetch(PDO::FETCH_ASSOC)) {
           $codigo_alterno=$rowComp['Codigo'];
           $IdtipoX=$rowComp['IdTipo'];
@@ -50,7 +50,7 @@
           $longitudUnidades = count($unidadCosto);
           for($i=0; $i<$longitudUnidades; $i++){
             $unidadDetAbrevY=abrevUnidad($unidadCosto[$i]);
-            $listaDetalleUnidades4=obtenerListaVentasA_servicios($unidadCosto[$i],$areasArray,$IdtipoX,$desde,$hasta);
+            $listaDetalleUnidades4=obtenerListaVentasA_servicios($unidadCosto[$i],$stringAreas_1,$IdtipoX,$desde,$hasta);
             while ($rowCompUnidades = $listaDetalleUnidades4->fetch(PDO::FETCH_ASSOC)) {
               $importe_realY=$rowCompUnidades['importe_real'];
               if($importe_realY>0){
@@ -69,7 +69,7 @@
     //para los cursos
     if($stringAreas_2!=""){
       //cursos de solicitudes 
-      $listaDetalle_cursos=obtenerListaVentas_cursos($unidadCostoArray,0,$areasArray,$desde,$hasta);
+      $listaDetalle_cursos=obtenerListaVentas_cursos($unidadCostoArray,0,$stringAreas_2,$desde,$hasta);
       // $totalImporte=0;
       while ($rowComp = $listaDetalle_cursos->fetch(PDO::FETCH_ASSOC)) {        
           $codAreaX=$rowComp['cod_area'];
@@ -92,7 +92,7 @@
           $longitudUnidades = count($unidadCosto);
           for($i=0; $i<$longitudUnidades; $i++){
             $unidadDetAbrevYX=abrevUnidad($unidadCosto[$i]);
-            $listaDetalleCursos_4=obtenerListaVentas_cursos($unidadCosto[$i],$IdtipoX,$areasArray,$desde,$hasta);
+            $listaDetalleCursos_4=obtenerListaVentas_cursos($unidadCosto[$i],$IdtipoX,$stringAreas_2,$desde,$hasta);
             while ($rowCompUnidades = $listaDetalleCursos_4->fetch(PDO::FETCH_ASSOC)) {
               $importe_realY=$rowCompUnidades['importe_real'];
               if($importe_realY>0){
@@ -107,7 +107,7 @@
           }
       }
       //para los cursos pagados desde la tienda
-      $listaDetalle_cursos_grupal=obtenerListaVentas_cursos_tienda($unidadCostoArray,0,$areasArray,$desde,$hasta);
+      $listaDetalle_cursos_grupal=obtenerListaVentas_cursos_tienda($unidadCostoArray,0,$stringAreas_2,$desde,$hasta);
       // $totalImporte=0;
       while ($rowComp = $listaDetalle_cursos_grupal->fetch(PDO::FETCH_ASSOC)) {        
       
@@ -132,7 +132,7 @@
           $longitudUnidades = count($unidadCosto);
           for($i=0; $i<$longitudUnidades; $i++){
             $unidadDetAbrevYX=abrevUnidad($unidadCosto[$i]);
-            $listaDetalleCursos_4=obtenerListaVentas_cursos_tienda($unidadCosto[$i],$IdtipoX,$areasArray,$desde,$hasta);
+            $listaDetalleCursos_4=obtenerListaVentas_cursos_tienda($unidadCosto[$i],$IdtipoX,$stringAreas_2,$desde,$hasta);
             while ($rowCompUnidades = $listaDetalleCursos_4->fetch(PDO::FETCH_ASSOC)) {
               $importe_realY=$rowCompUnidades['importe_real'];
               if($importe_realY>0){

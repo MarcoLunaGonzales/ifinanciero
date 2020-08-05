@@ -34,7 +34,7 @@ $stmt2->bindColumn('cod_dosificacionfactura', $cod_dosificacionfactura);
 $stmt2->bindColumn('nro_factura', $nro_factura);
 $stmt2->bindColumn('nro_autorizacion', $nro_autorizacion);
 $stmt2->bindColumn('codigo_control', $codigo_control);
-$stmt2->bindColumn('importe', $importe);
+// $stmt2->bindColumn('importe', $importe);
 $stmt2->bindColumn('observaciones', $observaciones);
 $stmt2->bindColumn('cod_estadofactura', $cod_estadofactura);
 $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
@@ -92,7 +92,8 @@ $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
                           $total_rebajas_sujetos_iva=0;
                           $total_importe_debito_fiscal=0;
                           $total_debito_fiscal=0;
-                          while ($row = $stmt2->fetch()) {                             
+                          while ($row = $stmt2->fetch()) {   
+                            $importe=sumatotaldetallefactura($codigo);
                             switch ($cod_estadofactura) {
                               case 1:
                                 $btnEstado='<span class="badge badge-success">';
