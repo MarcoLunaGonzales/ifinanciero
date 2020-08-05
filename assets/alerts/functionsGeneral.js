@@ -13927,6 +13927,8 @@ function verificaExistenciaCodigoUnidad(codigo,id){
 
 var itemDistOficina=[];
 var itemDistArea=[];
+var itemDistAreaGlobal=[];
+var itemDistOficinaGeneral=[];
 function cargarDistribucionSol(valor){
   $("#nueva_distribucion").val(valor);
   switch (valor){
@@ -13942,6 +13944,10 @@ function cargarDistribucionSol(valor){
     cargarTablaDistribucion(itemDistOficina,itemDistArea);
     $("#titulo_distribucion").html("x OF y x AREA");
     break;
+    case 4:
+    cargarTablaDistribucionGeneral(itemDistAreaGlobal,itemDistOficinaGeneral);
+    $("#titulo_distribucion_b").html("x AREA y OF");
+    break;
     case 0:
     quitarDistribucionSolicitud();
     break;
@@ -13953,6 +13959,11 @@ function cargarTablaDistribucion(array1,array2){
    listarArrayTabla(array1,'cuerpo_tabladistofi');
    listarArrayTabla(array2,'cuerpo_tabladistarea');
    $("#modalDistribucionSol").modal("show");
+}
+function cargarTablaDistribucionGeneral(array1,array2){
+  console.log(JSON.stringify(array1));
+   listarArrayTablaGeneral(array1,array2,'cuerpo_tabladistarea_general');
+   $("#modalDistribucionSolGeneral").modal("show");
 }
 function listarArrayTabla(array,cuerpo){
   $("#"+cuerpo).html('');
@@ -13971,6 +13982,52 @@ function listarArrayTabla(array,cuerpo){
      table.append(row);
    calcularTotalesSolicitudDistribucion();  
 }
+
+function listarArrayTablaGeneral(array,array2,cuerpo){
+  $("#"+cuerpo).html('');
+  var fondo1='bg-blanco2 text-dark';
+  var fondo2='bg-plomo';
+  var bgcolor='';
+  var table = $("#"+cuerpo);
+  var cantidad=0;
+    if(array.length>0){
+      var cantidad=array2.length/array.length;  
+    }
+
+  for (var i = 0; i < array.length; i++) {
+    if(i%2==0){
+      bgcolor=fondo1;
+    }else{
+      bgcolor=fondo2;
+    }
+    var filaOficina=0;
+     var row = $('<tr>').addClass(bgcolor);
+     row.append($('<td>').attr("rowspan",cantidad).addClass('').text(i+1));
+     row.append($('<td>').attr("rowspan",cantidad).addClass('font-weight-bold text-left').text(array[i].nombre));
+     row.append($('<td>').attr("rowspan",cantidad).addClass('').attr("style","font-size:20px;color:#ffffff;").html('<input type="number" onkeyup="calcularTotalesSolicitudDistribucionGeneral()" onkeydown="calcularTotalesSolicitudDistribucionGeneral()" step="0.01" class="form-control text-center" style="font-size:20px;color:#000000;" id="'+cuerpo+'_'+(i+1)+'" value="'+redondeo(array[i].porcentaje)+'">'));    
+     for (var h = 0; h < array2.length; h++) {
+      if(array2[h].cod_fila==array[i].fila){
+       if(filaOficina>0){
+        table.append(row);
+        var row = $('<tr>').addClass(bgcolor);
+       }      
+       row.append($('<td>').addClass('font-weight-bold text-left small').text(array2[h].nombre));
+       row.append($('<td>').addClass('').html('<input type="number" onkeyup="calcularTotalesSolicitudDistribucionGeneral()" onkeydown="calcularTotalesSolicitudDistribucionGeneral()" step="0.01" class="form-control text-right" id="'+cuerpo+'_'+(i+1)+'_'+(h+1)+'"  value="'+redondeo(array2[h].porcentaje)+'">'));    
+       filaOficina++;
+      }
+     }; 
+     table.append(row);
+   }   
+   var row = $('<tr>').addClass('bg-principal text-white');
+     row.append($('<td>').addClass('').text(""));
+     row.append($('<td>').addClass('text-left font-weight-bold').text("Total"));
+     row.append($('<td>').addClass('text-right font-weight-bold').text('0').attr("id","total_"+cuerpo));
+     row.append($('<td>').addClass('text-right font-weight-bold').text(''));
+     row.append($('<td>').addClass('text-right font-weight-bold').text(''));    
+     table.append(row);
+   calcularTotalesSolicitudDistribucionGeneral();  
+}
+
 function saveDistribucionSolicitudRecurso(){
   if(!($("#distrib_icon").hasClass("estado"))){
     $("#distrib_icon").addClass("estado");
@@ -13999,6 +14056,39 @@ function saveDistribucionSolicitudRecurso(){
   }
   $("#modalDistribucionSol").modal("hide");
   $("#boton_titulodist").html($("#titulo_distribucion").html());
+  $("#n_distribucion").val($("#nueva_distribucion").val());
+}
+
+
+function saveDistribucionSolicitudRecursoGeneral(){
+  if(!($("#distrib_icon").hasClass("estado"))){
+    $("#distrib_icon").addClass("estado");
+   }
+  for (var i = 0; i < itemDistAreaGlobal.length; i++) {  
+   if($("#cuerpo_tabladistarea_general_"+(i+1)).length>0){
+    if(($("#cuerpo_tabladistarea_general_"+(i+1)).val()==""||$("#cuerpo_tabladistarea_general_"+(i+1)).val()<0)){
+       var valor = 0;
+    }else{
+       var valor =$("#cuerpo_tabladistarea_general_"+(i+1)).val();
+    }
+    itemDistAreaGlobal[i].porcentaje=valor;
+     for (var h = 0; h < itemDistOficinaGeneral.length; h++) {  
+      if(itemDistOficinaGeneral[h].cod_fila==itemDistAreaGlobal[i].fila){
+       if($("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).length>0){
+        if(($("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).val()==""||$("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).val()<0)){
+           var valorb = 0;
+         }else{
+            var valorb =$("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).val();
+         }
+         itemDistOficinaGeneral[h].porcentaje=valorb;
+       }
+      }
+     }
+     //console.log(JSON.stringify(itemDistOficinaGeneral[i]));
+   }
+  }
+  $("#modalDistribucionSolGeneral").modal("hide");
+  $("#boton_titulodist").html($("#titulo_distribucion_b").html());
   $("#n_distribucion").val($("#nueva_distribucion").val());
 }
 
@@ -14033,6 +14123,36 @@ function guardarDistribucionSolicitudRecurso(){
   }
 }
 
+function guardarDistribucionSolicitudRecursoGeneral(){
+  var sumaOfi=0; var sumaArea=0;
+  
+  for (var i = 0; i < itemDistAreaGlobal.length; i++) {  
+   if($("#cuerpo_tabladistarea_general_"+(i+1)).length>0){
+    if(!($("#cuerpo_tabladistarea_general_"+(i+1)).val()==""||$("#cuerpo_tabladistarea_general_"+(i+1)).val()<0)){
+      sumaArea+=parseFloat($("#cuerpo_tabladistarea_general_"+(i+1)).val())
+    }
+     for (var h = 0; h < itemDistOficinaGeneral.length; h++) {  
+      if(itemDistOficinaGeneral[h].cod_fila==itemDistAreaGlobal[i].fila){
+       if($("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).length>0){
+        if(!($("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).val()==""||$("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).val()<0)){
+         sumaOfi+=parseFloat($("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).val())
+        }
+       }    
+      }
+     }
+   }
+  }
+    if(sumaArea!=100&&sumaArea!=0){
+      Swal.fire("Informativo!", "El porcentaje Total de Area debe ser 100 !", "warning");
+    }else{
+      //if(sumaOfi!=(itemDistAreaGlobal.length*100)){
+       // Swal.fire("Informativo!", "El porcentaje Total de las oficinas debe ser 100 !", "warning");  
+      //}else{
+       saveDistribucionSolicitudRecursoGeneral(); 
+      //}    
+    }    
+}
+
 function calcularTotalesSolicitudDistribucion(){
   var sumaOfi=0; var sumaArea=0;
   for (var i = 0; i < itemDistOficina.length; i++) {  
@@ -14054,6 +14174,19 @@ function calcularTotalesSolicitudDistribucion(){
  }
  if($("#total_cuerpo_tabladistarea").length>0){
    $("#total_cuerpo_tabladistarea").text(redondeo(sumaArea));
+ }
+}
+function calcularTotalesSolicitudDistribucionGeneral(){
+  var sumaArea=0;
+  for (var i = 0; i < itemDistAreaGlobal.length; i++) {  
+   if($("#cuerpo_tabladistarea_general_"+(i+1)).length>0){
+    if(!($("#cuerpo_tabladistarea_general_"+(i+1)).val()==""||$("#cuerpo_tabladistarea_general_"+(i+1)).val()<0)){
+      sumaArea+=parseFloat($("#cuerpo_tabladistarea_general_"+(i+1)).val())
+    }
+   }
+  }
+ if($("#total_cuerpo_tabladistarea_general").length>0){
+   $("#total_cuerpo_tabladistarea_general").text(redondeo(sumaArea));
  }
 }
 function quitarDistribucionSolicitud(){

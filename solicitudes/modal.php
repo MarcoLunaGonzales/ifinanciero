@@ -216,6 +216,61 @@
 <!-- end notice modal -->
 
 <!-- notice modal -->
+<div class="modal fade" id="modalDistribucionSolGeneral" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+      <div class="card-header card-header-success card-header-text">
+          <div class="card-text">
+            <h5>Distribución de Gastos <b id="titulo_distribucion_b"></b> </h5> 
+          </div>
+          <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+      </div>
+          <div class="card-body">
+            <div class="row col-sm-12">
+              <div class="col-sm-12">                                                              
+                  <table class="table table-condensed table-bordered">
+                    <thead>
+                      <tr class="bg-principal text-white">
+                        <th>#</th>
+                        <th width="45%">Areas</th>
+                        <th width="10%">%</th>
+                        <th class="bg-info" width="32%">Oficina</th>
+                        <th class="bg-info" width="10%">%</th>
+                      </tr>
+                    </thead>
+                    <tbody id="cuerpo_tabladistarea_general">
+                      
+                    </tbody>
+                  </table>
+              </div>
+              <!--<div class="col-sm-6">                                                              
+                  <table class="table table-condensed table-bordered">
+                    <thead>
+                      <tr class="bg-principal text-white">
+                        <th>#</th>
+                        <th>Area</th>
+                        <th width="10%">%</th>
+                      </tr>
+                    </thead>
+                    <tbody id="cuerpo_tabladistarea">
+                      
+                    </tbody>
+                  </table>
+              </div>--> 
+             </div>                     
+             <div class="form-group float-right">
+                <button type="button" class="btn btn-success btn-round" onclick="guardarDistribucionSolicitudRecursoGeneral()">Guardar</button>
+             </div>         
+          </div>
+    </div>
+  </div>
+</div>
+<!-- end notice modal -->
+
+
+<!-- notice modal -->
 <div class="modal fade" id="modalDistribucionSol" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content card">
@@ -230,9 +285,9 @@
           <div class="card-body">
             <div class="row col-sm-12">
               <div class="col-sm-6">                                                              
-                  <table class="table table-condensed table-bordered">
+                  <table class="table table-condensed table-bordered table-striped">
                     <thead>
-                      <tr class="bg-principal text-white">
+                      <tr class="bg-info text-white">
                         <th>#</th>
                         <th>Oficina</th>
                         <th width="10%">%</th>
@@ -777,7 +832,7 @@
                           <td align="center" width="20%">
                           <div class="form-check">
                             <label class="form-check-label">
-                              <input class="form-check-input" type="radio" id="retencion0" name="retenciones" <?=($contRetencion==0)?"checked":"";?> value="0@NINGUNA">
+                              <input class="form-check-input" type="radio" id="retencion0" name="retenciones" checked value="0@NINGUNA">
                               <span class="form-check-sign">
                                 <span class="check"></span>
                               </span>

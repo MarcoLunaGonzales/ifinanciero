@@ -57,18 +57,70 @@ $distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para toda
    }
 
 
+   $indexArea=0;
+     $stmtAreas = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+      $stmtAreas->execute();
+      while ($row = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
+       $codigoX=$row['codigo'];
+       $nombreX=$row['nombre'];
+       $abrevX=$row['abreviatura'];
+       $porcentajeA=obtenerPorcentajeDistribucionGastoSolicitudGeneral(0,2,$codigoX,$_GET['cod'],0);
+      ?>
+      <script>
+        var distri = {
+          fila:<?=$codigoX?>,
+          codigo:1,
+          cod_dis:2,
+          area:<?=$codigoX?>,
+          nombre:'<?=$nombreX?> - <?=$abrevX?>',
+          porcentaje:<?=$porcentajeA?>
+        }
+          itemDistAreaGlobal.push(distri);
+        
+      </script> 
+        <?php
+        $distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+        while ($rowOfi = $distribucionOfi->fetch(PDO::FETCH_ASSOC)) {
+          $codigoD=$rowOfi['codigo'];
+          $codDistD=$rowOfi['cod_distribucion_gastos'];
+          $codUnidadD=$rowOfi['cod_unidadorganizacional'];
+          $porcentajeD=$rowOfi['porcentaje'];
+          $nombreD=$rowOfi['nombre'];
+          $porcentajeD=obtenerPorcentajeDistribucionGastoSolicitudGeneral(0,1,$codUnidadD,$_GET['cod'],$codigoX);
+        ?>
+         <script>
+         var ofi = {
+              cod_fila:<?=$codigoX?>,
+              codigo:<?=$codigoD?>,
+              cod_dis:<?=$codDistD?>,
+              unidad:<?=$codUnidadD?>,
+              nombre:'<?=$nombreD?>',
+              porcentaje:<?=$porcentajeD?>
+         }
+        itemDistOficinaGeneral.push(ofi);
+         </script>  
+      <?php
+        }
+
+        $indexArea++;
+      }
+
    $valorDistribucion=obtenerSiDistribucionSolicitudRecurso($_GET['cod']);
    $estadoDistribucion="";
    $titDistribucion="Distribución";
    if($valorDistribucion!=0){
      $estadoDistribucion.=" estado";
      if($valorDistribucion==1){
-      $titDistribucion="x Oficina";
+      $titDistribucion="x Of";
      }else{
        if($valorDistribucion==2){
         $titDistribucion="x Área";
        }else{
-        $titDistribucion="x Oficina y x Área";
+        if($valorDistribucion==3){
+          $titDistribucion="x Of y x Área";  
+        }else{
+          $titDistribucion="x Área y x Of";
+        }
        }
      }
    }
@@ -457,11 +509,11 @@ if(isset($_GET['cod'])){
                <a href="#" onclick="actualizarRegistroProveedor()" title="Actualizar Lista Proveedores" class="btn btn-info float-right"><i class="material-icons">find_replace</i></a>
                <!--DISTRIBUCION-->
                <input type="hidden" id="cantidad_filas_proyecto" value="0"> 
-                 <input type="hidden" name="n_distribucion" id="n_distribucion" value="0">
-                 <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="0">
+                 <input type="hidden" name="n_distribucion" id="n_distribucion" value="<?=$valorDistribucion?>">
+                 <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="<?=$valorDistribucion?>">
                   <div class="btn-group dropdown">
                       <button type="button" class="btn btn-success dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
-                      <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning"></span> <b id="boton_titulodist"></b>
+                      <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning <?=$estadoDistribucion?>"></span> <b id="boton_titulodist"><?=$titDistribucion?></b>
                         </button>
                         <div class="dropdown-menu">   
                         <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="dropdown-item">
@@ -472,6 +524,9 @@ if(isset($_GET['cod'])){
                         </a>
                         <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
                           <i class="material-icons">bubble_chart</i> x Oficina y x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(4)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Área y Oficina
                         </a>
                         <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(0)" class="dropdown-item">
                           <i class="material-icons">bubble_chart</i> Nínguna

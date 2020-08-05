@@ -735,6 +735,15 @@
             .attr('name', 'd_areas')
             .attr('value', JSON.stringify(itemDistArea))
             .appendTo('#formSolDet');
+            
+            $('<input />').attr('type', 'hidden')
+            .attr('name', 'd_oficinas_global')
+            .attr('value', JSON.stringify(itemDistOficinaGeneral))
+            .appendTo('#formSolDet');
+           $('<input />').attr('type', 'hidden')
+            .attr('name', 'd_areas_global')
+            .attr('value', JSON.stringify(itemDistAreaGlobal))
+            .appendTo('#formSolDet');
 
             // documentos cabecera
             $('<input />').attr('type', 'hidden')

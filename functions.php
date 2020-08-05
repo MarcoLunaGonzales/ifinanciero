@@ -6405,13 +6405,28 @@ function obtenerPorcentajeDistribucionGastoSolicitud($antValor,$tipo,$of_area,$c
    }
    return($valor);
 }
+function obtenerPorcentajeDistribucionGastoSolicitudGeneral($antValor,$tipo,$of_area,$codigoSolicitud,$padre){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT porcentaje FROM distribucion_gastos_solicitud_recursos where tipo_distribucion=$tipo and oficina_area=$of_area and cod_solicitudrecurso=$codigoSolicitud and padre_oficina_area=$padre");
+   $stmt->execute();
+   $valor=$antValor;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['porcentaje'];
+   }
+   return($valor);
+}
 function obtenerSiDistribucionSolicitudRecurso($codigoSolicitud){
   $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT DISTINCT tipo_distribucion FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codigoSolicitud");
+   $stmt = $dbh->prepare("SELECT DISTINCT tipo_distribucion,padre_oficina_area FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codigoSolicitud");
    $stmt->execute();
    $valor=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor+=$row['tipo_distribucion']; //obtener el valor 1:oficina, 2:area, 3:ambos
+    if($row['padre_oficina_area']>0){
+       $valor=4;
+    }else{
+      $valor+=$row['tipo_distribucion'];
+    }
+       //obtener el valor 1:oficina, 2:area, 3:ambos
    }
    return($valor);
 }
@@ -6526,14 +6541,17 @@ function verificarListaDistribucionGastoSolicitudRecurso($codigoSolicitud){
 }
 function verificarHayAmbasDistribucionesSolicitudRecurso($codigoSolicitud){
   $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT DISTINCT tipo_distribucion FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codigoSolicitud");
+   $stmt = $dbh->prepare("SELECT DISTINCT tipo_distribucion,padre_oficina_area FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codigoSolicitud");
    $stmt->execute();
    $valor=0;$val2=0;$distribucion=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $valor=$row['tipo_distribucion'];
-      $val2++;
+    if($row['padre_oficina_area']>0){
+      $distribucion=4;
+    }else{
+      $distribucion+=$row['tipo_distribucion'];
+    }  
    }
-   switch ($val2) {
+   /*switch ($val2) {
      case 1:
      if($valor==1){
       $distribucion=1;
@@ -6547,7 +6565,7 @@ function verificarHayAmbasDistribucionesSolicitudRecurso($codigoSolicitud){
      default:
        $distribucion=0;
      break;
-   }
+   }*/
    return($distribucion);
 }
 function obtenerDistribucionGastoSolicitudRecurso($codigo,$tipo,$monto){
@@ -6558,6 +6576,16 @@ function obtenerDistribucionGastoSolicitudRecurso($codigo,$tipo,$monto){
    $stmt->execute();
    return $stmt;
 }
+
+function obtenerDistribucionGastoSolicitudRecursoGeneral($codigo,$tipo,$monto,$padre){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT codigo,oficina_area,porcentaje,(porcentaje/100)*$monto as monto_porcentaje,cod_solicitudrecurso from distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codigo and tipo_distribucion=$tipo and padre_oficina_area=$padre";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+}
+
 function costoVariablesHonorariosSimulacionServicio($sim,$anio){
   $dbh = new Conexion();
    $stmt = $dbh->prepare("SELECT sum(monto) as monto FROM simulaciones_servicios_auditores where cod_simulacionservicio=$sim and cod_anio=$anio and habilitado=1 and cantidad=1");
@@ -8798,7 +8826,26 @@ function numeroDeRetencionesIVA($codigo){
    }
    return array($numero,$retencion);
 }
-
+function obtenerMontoTotalFacturasSolicituRecurso($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT SUM(importe-exento-ice-tasa_cero) as monto FROM facturas_compra where cod_solicitudrecursodetalle=$codigo");
+   $stmt->execute();
+   $monto=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $monto=$row['monto'];
+   }
+   return($monto);
+}
+function obtenerMontoGastoTotalFacturasSolicituRecurso($codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT SUM(exento+ice+tasa_cero) as monto FROM facturas_compra where cod_solicitudrecursodetalle=$codigo");
+   $stmt->execute();
+   $monto=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $monto=$row['monto'];
+   }
+   return($monto);
+}
 ?>
 
 

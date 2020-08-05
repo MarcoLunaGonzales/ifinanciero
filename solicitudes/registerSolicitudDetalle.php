@@ -72,7 +72,40 @@ $distribucionArea=obtenerDistribucionCentroCostosAreaActivo($globalUnidad); //nu
       </script>  
       <?php
    }
-
+      $indexArea=0;
+     $stmtAreas = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+      $stmtAreas->execute();
+      while ($row = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
+       $codigoX=$row['codigo'];
+       $nombreX=$row['nombre'];
+       $abrevX=$row['abreviatura'];
+      ?>
+      <script>
+        var distri = {
+          fila:<?=$codigoX?>,
+          codigo:1,
+          cod_dis:2,
+          area:<?=$codigoX?>,
+          nombre:'<?=$nombreX?> - <?=$abrevX?>',
+          porcentaje:0
+        }
+        for (var i = 0; i < itemDistOficina.length; i++) {
+          var ofi = {
+          cod_fila:<?=$codigoX?>,
+          codigo:itemDistOficina[i].codigo,
+          cod_dis:itemDistOficina[i].cod_dis,
+          unidad:itemDistOficina[i].unidad,
+          nombre:itemDistOficina[i].nombre,
+          porcentaje:0
+          }
+          itemDistOficinaGeneral.push(ofi); 
+        }
+          itemDistAreaGlobal.push(distri);
+        
+      </script> 
+        <?php
+        $indexArea++;
+      }
 
 $contadorRegistros=0;
 
@@ -404,6 +437,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         </a>
                         <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
                           <i class="material-icons">bubble_chart</i> x Oficina y x Área
+                        </a>
+                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(4)" class="dropdown-item">
+                          <i class="material-icons">bubble_chart</i> x Área y Oficina
                         </a>
                         <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(0)" class="dropdown-item">
                           <i class="material-icons">bubble_chart</i> Nínguna

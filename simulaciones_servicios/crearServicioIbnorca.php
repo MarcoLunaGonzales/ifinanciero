@@ -46,7 +46,6 @@ while ($row = $simulacion->fetch(PDO::FETCH_ASSOC)) {
 	VALUES ('$idServicio','$IdArea','$IdOficina','$IdTipo','$IdCliente','$Descripcion','$IdUsuarioRegistro','$fecharegistro','$codigo')");
 // Bind
     $flagSuccess=$stmt->execute();
-
     //enviar propuestas para la actualizacion de ibnorca
   $fechaHoraActual=date("Y-m-d H:i:s");
   $idTipoObjeto=195;
@@ -66,9 +65,9 @@ while ($row = $simulacion->fetch(PDO::FETCH_ASSOC)) {
 }
 
 if(isset($_GET['q'])){
-  showAlertSuccessError($flagSuccess,$urlList."&q=".$_GET['q']."&s=".$_GET['s']."&u=".$_GET['u']);	
+  //showAlertSuccessError($flagSuccess,$urlList."&q=".$_GET['q']."&s=".$_GET['s']."&u=".$_GET['u']);	
 }else{
-  showAlertSuccessError($flagSuccess,$urlList);
+  //showAlertSuccessError($flagSuccess,$urlList);
 }
 
 
