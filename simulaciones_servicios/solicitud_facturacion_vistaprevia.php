@@ -147,9 +147,9 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 							<thead>
 								<tr class="text-dark bg-plomo">
                   <th>#</th>
-                  <th>Item</th>
-                  <th>Cant.</th>
-                  <th>Precio(BOB)</th>                  
+                  <th width="40%">Item</th>
+                  <th width="5%">Cant.</th>
+                  <th width="5%">Precio(BOB)</th>                  
                   <!-- <th>Desc(BOB)</th>
                   <th width="6%">Importe<br>(BOB)</th>
                   <th width="6%">Importe<br>Pagado</th> -->
@@ -212,60 +212,11 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                 </thead>
                 <tbody id="tabla_archivos">
                   <?php
-                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
-                  $stmtArchivo->execute();
+                  // $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
+                  // $stmtArchivo->execute();
                   $filaA=0;
-                  while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
-                     $filaA++;
-                     $codigoX=$rowArchivo['idClaDocumento'];
-                     $nombreX=$rowArchivo['Documento'];
-                     $ObligatorioX=$rowArchivo['Obligatorio'];
-                     $Obli='NO';
-                     if($ObligatorioX==1){
-                      $Obli='SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
-                     }
-                     //2708 cabecera //27080 detalle
-                     $verificarArchivo=verificarArchivoAdjuntoExistente(2708,$codigo,0,$codigoX);
-                     //$nombreX=$verificarArchivo[1];
-                     $urlArchivo=$verificarArchivo[2];
-                     $codigoArchivoX=$verificarArchivo[3];
-
-                  ?>
-                  <tr>
-                    <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
-                    <td class="text-center"><?=$Obli?></td>
-                    <td class="text-right">
-                      <?php
-                      if($verificarArchivo[0]==0){
-                       ?>
-                       No existe
-                       <?php
-                      }else{
-                        ?>
-                        <small id="existe_archivo_cabecera<?=$filaA?>"></small>
-
-                        <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
-                        <span class="input-archivo">
-                          <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
-                        </span>
-                        <div class="btn-group" id="existe_div_archivo_cabecera<?=$filaA?>">
-                          <div class='btn-group'>
-                            <a class='btn btn-sm btn-info btn-block' href='<?=$urlArchivo?>' target='_blank'><?=$nombreX?></a>
-                            <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' download='Descargar: Doc - IFINANCIERO (<?=$nombreX?>)'><i class='material-icons'>vertical_align_bottom</i></a>
-                            <a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivo?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
-                          </div>
-                        <!--<a href="#" class="btn btn-button btn-sm">Registrado</a>
-                        <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  -->
-                        </div> 
-                        <?php
-                      }
-                    ?>  
-                    </td>    
-                    <td><?=$nombreX;?></td>
-                  </tr> 
-                  <?php
-                   }
-                  $stmtArchivo = $dbh->prepare("SELECT * from archivos_adjuntos where cod_tipoarchivo=-100 and cod_tipopadre=2708 and cod_objeto=$codigo and cod_padre=0"); //2708 //2708 localhost
+                  
+                  $stmtArchivo = $dbh->prepare("SELECT * from archivos_adjuntos_solicitud_facturacion where cod_solicitud_facturacion=$codigo"); //2708 //2708 localhost
                   $stmtArchivo->execute();
                   $filaE=0;
                   while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
@@ -324,65 +275,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                       </iframe>
 					</div>	
 					<br>
-					<br>
-				  	<div class="card-footer fixed-bottom col-sm-12">
-						
-						<?php 
-            if(isset($_GET['v_cajachica'])){
-
-            }else{
-              if(isset($_GET['q'])){
-                   $q=$_GET['q'];
-                   $s=$_GET['s'];
-                   $u=$_GET['u'];
-                   
-                   if(isset($_GET['r'])){
-                      $r=$_GET['r'];
-                      ?><a href="../<?=$urlList;?>&q=<?=$q?>&r=<?=$r?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a><?php
-                    }else{
-                      $v=$_GET['v'];
-                      ?><a href="../<?=$urlList;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-danger">Volver</a><?php
-                    }
-                    if(isset($_GET['admin'])){
-                      if($codEstadoX==4){
-                        ?><!--<a href="../<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&q=<?=$q?>" class="btn btn-success">Verificar Solicitud</a>
-                        <a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="btn btn-danger">Anular Solicitud</a>
-                        <a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="btn btn-default">Rechazar Solicitud</a>--> 
-                       <?php
-                      }else{
-                        ?><!--<a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="btn btn-info">Deshacer Cambios</a>--><?php
-                      } 
-                    }
-              }else{
-                ?><a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
-                if(isset($_GET['admin'])){
-                      if($codEstadoX==4){
-                        ?><!--<a href="../<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>" class="btn btn-success">Verificar Solicitud</a>
-                        <a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="btn btn-danger">Anular Solicitud</a>
-                        <a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="btn btn-default">Rechazar Solicitud</a> -->
-                       <?php
-                      }else{
-                        ?><!--<a href="../<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="btn btn-info">Deshacer Cambios</a>--><?php
-                      } 
-                    }  
-              }  
-            }
-						?>
-						<div class="row col-sm-9 float-right">
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label class="bmd-label-static fondo-boton">Presupuestado</label>  
-                          <input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="<?=$totalImportePres?>" id="total_presupuestado" readonly="true"> 
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                          <label class="bmd-label-static fondo-boton">Solicitado</label> 
-                          <input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="<?=$totalImporte?>" id="total_solicitado" readonly="true"> 
-                        </div>
-                    </div>
-              </div>
-				  	</div>
+					<br>				  
 				 </div>
 			    </div><!--div end card-->			
                </div>
