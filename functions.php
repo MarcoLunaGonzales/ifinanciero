@@ -8847,7 +8847,6 @@ function obtenerMontoGastoTotalFacturasSolicituRecurso($codigo){
    }
    return($monto);
 }
-<<<<<<< HEAD
 
 function obtenerFacturasSolicitudDetalleArray($codigo){
   $dbh = new Conexion();
@@ -8861,7 +8860,7 @@ function obtenerFacturasSolicitudDetalleArray($codigo){
     $index++;
    }
    return($facturas); 
-=======
+}
 function obtenerSolicitudFacturacionDetalle($codigo){
    $dbh = new Conexion();
    $sql="";
@@ -8869,7 +8868,7 @@ function obtenerSolicitudFacturacionDetalle($codigo){
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
->>>>>>> 4924298e3589ca150f5761311f6bdc606e940161
+
 }
 ?>
 
