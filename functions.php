@@ -8838,7 +8838,7 @@ function obtenerMontoTotalFacturasSolicituRecurso($codigo){
 }
 function obtenerMontoGastoTotalFacturasSolicituRecurso($codigo){
    $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT SUM(exento+ice+tasa_cero) as monto FROM facturas_compra where cod_solicitudrecursodetalle=$codigo");
+   $stmt = $dbh->prepare("SELECT (SUM(exento+ice+tasa_cero)*0.13) as monto FROM facturas_compra where cod_solicitudrecursodetalle=$codigo");
    $stmt->execute();
    $monto=0;
    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
