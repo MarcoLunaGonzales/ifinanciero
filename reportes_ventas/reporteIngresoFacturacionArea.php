@@ -39,7 +39,7 @@ $unidadCosto=$_POST['unidad_costo'];
 $areaCosto=$_POST['area_costo'];
 
 $gestion= $_POST["gestion"];
-$formas_pago= $_POST["forma_pago"];
+// $formas_pago= $_POST["forma_pago"];
 
 //PONEMOS LAS VARIABLES PARA CUANDO LLAMEMOS AL REPORTE DESDE LOS MAYORES
 if($gestion==null){
@@ -50,19 +50,24 @@ if($gestion==null){
 $NombreGestion = nameGestion($gestion);
 $unidadCostoArray=implode(",", $unidadCosto);
 $areaCostoArray=implode(",", $areaCosto);
-$forma_pagoArray=implode(",", $formas_pago);
+// $forma_pagoArray=implode(",", $formas_pago);
 if(isset($_POST['solo_tienda'])){
  $solo_tienda=1; 
 }else{
   $solo_tienda=0;
 }
+if(isset($_POST['solo_credito'])){
+ $solo_credito=1;
+}else{
+  $solo_credito=0;
+}
 
 $unidadAbrev=abrevUnidad($unidadCostoArray);
 $areaAbrev=abrevArea($areaCostoArray);
-$formas_pago_titulo="";
-foreach ($formas_pago as $valor ) {    
-    $formas_pago_titulo.=nameTipoPagoSolFac($valor).", ";
-}
+// $formas_pago_titulo="";
+// foreach ($formas_pago as $valor ) {    
+//     $formas_pago_titulo.=nameTipoPagoSolFac($valor).", ";
+// }
 $nombreCuentaTitle="";
 
 $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));

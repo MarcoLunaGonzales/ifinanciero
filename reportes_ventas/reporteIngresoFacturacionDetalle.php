@@ -3,7 +3,7 @@
   <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
   <h6 class="card-title">Areas: <?=$areaAbrev;?></h6>
   <h6 class="card-title">Oficinas:<?=$unidadAbrev?></h6>
-  <h6 class="card-title">Formas Pago:<?=$formas_pago_titulo?></h6>  
+  <!-- <h6 class="card-title">Formas Pago:<?=$formas_pago_titulo?></h6>   -->
   <div class="table-responsive">
     <?php
     $txtEstiloPersonal="";
@@ -27,10 +27,10 @@
             '</tr>'.
            '</thead>'.
            '<tbody>';
-
+           // $forma_pagoArray="";
     $valorIVA=100-(obtenerValorConfiguracion(1));
     
-    $listaDetalle=obtenerListaVentasResumido($unidadCostoArray,$areaCostoArray,$solo_tienda,$desde,$hasta,$forma_pagoArray);
+    $listaDetalle=obtenerListaVentasResumido($unidadCostoArray,$areaCostoArray,$solo_tienda,$desde,$hasta,$solo_credito);
     $totalImporte=0;
     while ($rowComp = $listaDetalle->fetch(PDO::FETCH_ASSOC)) {
         $codigoX=$rowComp['codigo'];

@@ -2671,6 +2671,7 @@ function obtenerSolicitudRecursosDetalle($codigo){
    $stmt->execute();
    return $stmt;
 }
+
 function obtenerPartidasPlantillaCostos($codigo,$tipo){
   $dbh = new Conexion();
   $sql="";
@@ -8845,6 +8846,14 @@ function obtenerMontoGastoTotalFacturasSolicituRecurso($codigo){
       $monto=$row['monto'];
    }
    return($monto);
+}
+function obtenerSolicitudFacturacionDetalle($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT * From solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
 }
 ?>
 
