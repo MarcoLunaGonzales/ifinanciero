@@ -177,6 +177,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
           $tituloFactura="F/ ".implode($numerosFacturasDetalle,',')." - ";
         }
         $glosaDetalle="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
+        $glosaDetalleRetencion="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$datosServicio." ".$glosa;
         
 
         if($codProveedor!=$rowNuevo['cod_proveedor']){
@@ -306,7 +307,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
                  $retenciones[$j]['area']=$areaRet;
                  $retenciones[$j]['debe']=$debeRet;
                  $retenciones[$j]['haber']=$haberRet;
-                 $retenciones[$j]['glosa']=$glosaX." - ".$glosaDetalle. " F:".$facturasSolicitud[$fac][1];
+                 $retenciones[$j]['glosa']=$glosaX." - ".$glosaDetalleRetencion. " F:".$facturasSolicitud[$fac][1];
                  $retenciones[$j]['numero']=$ii; 
                  $retenciones[$j]['debe_haber']=$debehaberX;
                  //echo "CODIGO FACTURA: ".$facturasSolicitud[$fac][1];
