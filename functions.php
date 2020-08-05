@@ -2671,6 +2671,7 @@ function obtenerSolicitudRecursosDetalle($codigo){
    $stmt->execute();
    return $stmt;
 }
+
 function obtenerPartidasPlantillaCostos($codigo,$tipo){
   $dbh = new Conexion();
   $sql="";
@@ -8846,6 +8847,7 @@ function obtenerMontoGastoTotalFacturasSolicituRecurso($codigo){
    }
    return($monto);
 }
+<<<<<<< HEAD
 
 function obtenerFacturasSolicitudDetalleArray($codigo){
   $dbh = new Conexion();
@@ -8859,6 +8861,15 @@ function obtenerFacturasSolicitudDetalleArray($codigo){
     $index++;
    }
    return($facturas); 
+=======
+function obtenerSolicitudFacturacionDetalle($codigo){
+   $dbh = new Conexion();
+   $sql="";
+   $sql="SELECT * From solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   return $stmt;
+>>>>>>> 4924298e3589ca150f5761311f6bdc606e940161
 }
 ?>
 

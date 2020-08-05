@@ -690,6 +690,7 @@
           //
         if(cont!=0){
           Swal.fire("Informativo!", "El monto total de las facturas es distinto al solicitado", "warning"); 
+          return false;
         }else{
           var cont2=0;
           for (var i = 0; i < $("#cantidad_filas").val(); i++) {
