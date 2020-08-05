@@ -687,7 +687,7 @@
               cont++; 
             }
           } 
-          cont=0; //para quitar la valicacion momentanea de la factura 
+          //cont=0; //para quitar la valicacion momentanea de la factura 
           //
         if(cont!=0){
           Swal.fire("Informativo!", "El monto total de las facturas es distinto al solicitado", "warning"); 

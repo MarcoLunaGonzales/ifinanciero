@@ -446,6 +446,10 @@
 			require_once('solicitudes/listSolicitudRecursosAdminSis.php');
 		}
 
+		if ($_GET['opcion']=='sr_admin_gestion') {
+			require_once('solicitudes/listGestor.php');
+		}
+
 		
 		
 
