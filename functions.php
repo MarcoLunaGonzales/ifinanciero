@@ -8846,6 +8846,20 @@ function obtenerMontoGastoTotalFacturasSolicituRecurso($codigo){
    }
    return($monto);
 }
+
+function obtenerFacturasSolicitudDetalleArray($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT (importe-exento-ice-tasa_cero) as monto,nro_factura FROM facturas_compra where cod_solicitudrecursodetalle=$codigo");
+   $stmt->execute();
+   $facturas=[];$index=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $monto=$row['monto'];
+    $numero=$row['nro_factura'];
+    $facturas[$index]=array($monto,$numero);
+    $index++;
+   }
+   return($facturas); 
+}
 ?>
 
 

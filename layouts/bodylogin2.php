@@ -673,6 +673,24 @@
            Swal.fire("Informativo!", "La Retencion IVA debe tener al menos una factura registrada", "warning"); 
            return false;
         }else{  //2do else
+          //
+          var cont=0;var sumaFactura=0;
+          for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+           if(parseInt($('#cod_retencion'+(i+1)).val())==parseInt($('#cod_configuracioniva').val())){
+            for (var d = 0; d < itemFacturas[i].length; d++) {
+              sumaFactura+=itemFacturas[i][d].impFac;//-exeFac-iceFac-tazaFac;
+            };    
+           }                  
+          }
+          if(sumaFactura>0){
+            if(sumaFactura!=parseFloat($("#total_solicitado"))){
+              cont++; 
+            }
+          }  
+          //
+        if(cont!=0){
+          Swal.fire("Informativo!", "El monto total de las facturas es distinto al solicitado", "warning"); 
+        }else{
           var cont2=0;
           for (var i = 0; i < $("#cantidad_filas").val(); i++) {
            if(!($('#partida_cuenta_id'+(i+1)).val()>0)){
@@ -759,8 +777,9 @@
           } 
          }      
         }
-      }  
-     }
+      }
+     }  
+    }
       //}    
     });
    document.getElementById('qrquincho').addEventListener('change', readSingleFile, false);
