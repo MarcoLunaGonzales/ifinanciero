@@ -3446,8 +3446,7 @@ function obtener_anios_trabajados($ing_contr){
   $fechaComoEntero = strtotime($ing_contr);
   $anio_ingreso = date("Y", $fechaComoEntero);
   $diferencia_anios=$anio_actual-$anio_ingreso;
-  return $diferencia_anios;
-}
+  return $diferencia_anios}
 function obtener_meses_trabajados($ing_contr){
   $fechaComoEntero = strtotime($ing_contr);  
   $mes_ingreso = date("m", $fechaComoEntero);
