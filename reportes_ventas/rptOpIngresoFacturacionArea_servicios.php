@@ -155,14 +155,14 @@ $i=0;
 			                	<div class="form-group">
 	                              <select class="selectpicker form-control form-control-sm" name="areas[]" id="areas" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
 			  	                     <?php
-			  	                     $stmt = $dbh->prepare("SELECT codigo,nombre,abreviatura from areas where cod_estado=1");
+			  	                     $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
 				                     $stmt->execute();
 				                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				                     	$codigoX=$row['codigo'];
 				                     	$nombreX=$row['nombre'];
 				                     	$abrevX=$row['abreviatura'];
 				                     ?>
-				                     <option value="<?=$codigoX;?>" selected><small><?=$nombreX?> (<?=$abrevX;?>)</small></option>	
+				                     <option value="<?=$codigoX;?>" selected><small><?=$abrevX;?></small></option>	
 				                       <?php
 			  	                       }
 			  	                       ?>

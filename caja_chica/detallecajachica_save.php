@@ -75,8 +75,9 @@ try {
         // echo 'observaciones:'.$observaciones."<br>";
         // echo 'cod_area:'.$cod_area."<br>";
         // echo 'nro_recibo:'.$nro_recibo."<br>";        
-        $patron = "/[^a-zA-Z0-9]+/";
-        $observaciones = preg_replace($patron, "", $observaciones);        
+        // $patron = "/[^a-zA-Z0-9]+/";
+        // $observaciones = preg_replace($patron, "", $observaciones);        
+        $observaciones = str_replace("'","",$observaciones);
 
         $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw) 
         values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_retencion,$numero,'$cod_personal',$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,'$cod_area','$cod_uo',$nro_recibo,'$cod_proveedores','$cod_actividad_sw')");

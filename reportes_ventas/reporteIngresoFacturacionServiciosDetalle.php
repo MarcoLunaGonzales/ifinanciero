@@ -16,118 +16,140 @@
             '</tr>'.
            '</thead>'.
            '<tbody>';
-
- 
-
-    $listaDetalleUnidades=obtenerListaVentasA_servicios($unidadCostoArray,$areasArray,0,$desde,$hasta);
-    $totalImporte=0;
-    while ($rowComp = $listaDetalleUnidades->fetch(PDO::FETCH_ASSOC)) {
-        $codigo_alterno=$rowComp['Codigo'];
-        $IdtipoX=$rowComp['IdTipo'];
-        $codAreaX=$rowComp['cod_area'];
-        $nombreAreaX=$rowComp['area'];
-        // $codAreaX="";
-        // $nombreAreaX="";
-        $descripcion_n2=$rowComp['descripcion_n2'];
-        $importe_realX=$rowComp['importe_real'];
-        $totalImporte+=$importe_realX;
-        $html.='<tr>'.
-                      '<td class="text-left font-weight-bold">'.$nombreAreaX.'</td>'.
-                      '<td class="text-left font-weight-bold">'.$codigo_alterno.'</td>'.
-                      '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
-                      '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
-                  '</tr>';
-
-        $longitudUnidades = count($unidadCosto);
-        for($i=0; $i<$longitudUnidades; $i++){
-          $unidadDetAbrevY=abrevUnidad($unidadCosto[$i]);
-          $listaDetalleUnidades4=obtenerListaVentasA_servicios($unidadCosto[$i],$areasArray,$IdtipoX,$desde,$hasta);
-          while ($rowCompUnidades = $listaDetalleUnidades4->fetch(PDO::FETCH_ASSOC)) {
-            $importe_realY=$rowCompUnidades['importe_real'];
-            if($importe_realY>0){
-              $html.='<tr">'.
-                    '<td class="text-center">-</td>'.  
-                    '<td class="text-center">-</td>'.  
-                    '<td class="text-center">'.$unidadDetAbrevY.'</td>'.  
-                    '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
-                '</tr>';              
-            }        
-          }
-        }
+    $stringAreas_2="";
+    $stringAreas_1="";
+    foreach ($areas as $valor ) {    
+      if($valor!=13){
+        $stringAreas_1.=$valor.",";
+      }else{
+        $stringAreas_2.=$valor.",";
+      }
     } 
-    //para los cursos
-    $listaDetalle_cursos=obtenerListaVentas_cursos($unidadCostoArray,0,$areasArray,$desde,$hasta);
-    // $totalImporte=0;
-    while ($rowComp = $listaDetalle_cursos->fetch(PDO::FETCH_ASSOC)) {        
-        $codAreaX=$rowComp['cod_area'];
-        $nombreAreaX=$rowComp['area'];
-        $IdtipoX=$rowComp['IdCurso'];
-        $codigo_alterno=obtenerCodigoExternoCurso($IdtipoX);
-        $descripcion_n2=obtenerNombreCurso($IdtipoX);
-        $importe_realX=$rowComp['importe_real'];
-        // $tipo_cursoX=$rowComp['tipo_curso'];
-        $string_curso="Curso ( ";        
+    $stringAreas_1=trim($stringAreas_1,",");
+    $stringAreas_2=trim($stringAreas_2,",");
+    $totalImporte=0;
+    if($stringAreas_1!=""){
+      $listaDetalleUnidades=obtenerListaVentasA_servicios($unidadCostoArray,$areasArray,0,$desde,$hasta);
+      while ($rowComp = $listaDetalleUnidades->fetch(PDO::FETCH_ASSOC)) {
+          $codigo_alterno=$rowComp['Codigo'];
+          $IdtipoX=$rowComp['IdTipo'];
+          $codAreaX=$rowComp['cod_area'];
+          $nombreAreaX=$rowComp['area'];
+          // $codAreaX="";
+          // $nombreAreaX="";
+          $descripcion_n2=$rowComp['descripcion_n2'];
+          $importe_realX=$rowComp['importe_real'];
+          $totalImporte+=$importe_realX;
+          $html.='<tr>'.
+                        '<td class="text-left font-weight-bold">'.$nombreAreaX.'</td>'.
+                        '<td class="text-left font-weight-bold">'.$codigo_alterno.'</td>'.
+                        '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
+                        '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
+                    '</tr>';
 
-        $totalImporte+=$importe_realX;
-        $html.='<tr>'.
-                      '<td class="text-left font-weight-bold">'.$nombreAreaX.'</td>'.
-                      '<td class="text-left font-weight-bold">'.$string_curso.$codigo_alterno.')</td>'.
-                      '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
-                      '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
-                  '</tr>';
-
-        $longitudUnidades = count($unidadCosto);
-        for($i=0; $i<$longitudUnidades; $i++){
-          $unidadDetAbrevYX=abrevUnidad($unidadCosto[$i]);
-          $listaDetalleCursos_4=obtenerListaVentas_cursos($unidadCosto[$i],$IdtipoX,$areasArray,$desde,$hasta);
-          while ($rowCompUnidades = $listaDetalleCursos_4->fetch(PDO::FETCH_ASSOC)) {
-            $importe_realY=$rowCompUnidades['importe_real'];
-            if($importe_realY>0){
-              $html.='<tr">'.
-                    '<td class="text-center">-</td>'.  
-                    '<td class="text-center">-</td>'.  
-                    '<td class="text-center">'.$unidadDetAbrevYX.'</td>'.  
-                    '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
-                '</tr>';              
-            }        
+          $longitudUnidades = count($unidadCosto);
+          for($i=0; $i<$longitudUnidades; $i++){
+            $unidadDetAbrevY=abrevUnidad($unidadCosto[$i]);
+            $listaDetalleUnidades4=obtenerListaVentasA_servicios($unidadCosto[$i],$areasArray,$IdtipoX,$desde,$hasta);
+            while ($rowCompUnidades = $listaDetalleUnidades4->fetch(PDO::FETCH_ASSOC)) {
+              $importe_realY=$rowCompUnidades['importe_real'];
+              if($importe_realY>0){
+                $html.='<tr">'.
+                      '<td class="text-center">-</td>'.  
+                      '<td class="text-center">-</td>'.  
+                      '<td class="text-center">'.$unidadDetAbrevY.'</td>'.  
+                      '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
+                  '</tr>';              
+              }        
+            }
           }
-        }
+      }
     }
-    // //para los cursos grupales
-    // $listaDetalle_cursos_grupal=obtenerListaVentas_cursos_grupal($unidadCostoArray,0,$desde,$hasta);
-    // // $totalImporte=0;
-    // while ($rowComp = $listaDetalle_cursos_grupal->fetch(PDO::FETCH_ASSOC)) {        
-        
-    //     $IdtipoX=$rowComp['cod_curso'];
-    //     $codigo_alterno=obtenerCodigoExternoCurso($IdtipoX);
-    //     $descripcion_n2=obtenerNombreCurso($IdtipoX);
-    //     $importe_realX=$rowComp['importe_real'];
-    //     // $tipo_cursoX=$rowComp['tipo_curso'];        
-    //      $string_curso="Curso Grupal ( "; 
+     
+    //para los cursos
+    if($stringAreas_2!=""){
+      //cursos de solicitudes 
+      $listaDetalle_cursos=obtenerListaVentas_cursos($unidadCostoArray,0,$areasArray,$desde,$hasta);
+      // $totalImporte=0;
+      while ($rowComp = $listaDetalle_cursos->fetch(PDO::FETCH_ASSOC)) {        
+          $codAreaX=$rowComp['cod_area'];
+          $nombreAreaX=$rowComp['area'];
+          $IdtipoX=$rowComp['IdCurso'];
+          $codigo_alterno=obtenerCodigoExternoCurso($IdtipoX);
+          $descripcion_n2=obtenerNombreCurso($IdtipoX);
+          $importe_realX=$rowComp['importe_real'];
+          // $tipo_cursoX=$rowComp['tipo_curso'];
+          $string_curso="Curso ( ";        
 
-    //     $totalImporte+=$importe_realX;
-    //     $html.='<tr>'.
-    //                   '<td class="text-left font-weight-bold">'.$string_curso.$codigo_alterno.')</td>'.
-    //                   '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
-    //                   '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
-    //               '</tr>';
+          $totalImporte+=$importe_realX;
+          $html.='<tr>'.
+                        '<td class="text-left font-weight-bold">'.$nombreAreaX.'</td>'.
+                        '<td class="text-left font-weight-bold">'.$string_curso.$codigo_alterno.')</td>'.
+                        '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
+                        '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
+                    '</tr>';
 
-    //     $longitudUnidades = count($unidadCosto);
-    //     for($i=0; $i<$longitudUnidades; $i++){
-    //       $unidadDetAbrevYX=abrevUnidad($unidadCosto[$i]);
-    //       $listaDetalleCursos_4=obtenerListaVentas_cursos_grupal($unidadCosto[$i],$IdtipoX,$desde,$hasta);
-    //       while ($rowCompUnidades = $listaDetalleCursos_4->fetch(PDO::FETCH_ASSOC)) {
-    //         $importe_realY=$rowCompUnidades['importe_real'];
-    //         if($importe_realY>0){
-    //           $html.='<tr">'.
-    //                 '<td class="text-center">-</td>'.  
-    //                 '<td class="text-center">'.$unidadDetAbrevYX.'</td>'.  
-    //                 '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
-    //             '</tr>';              
-    //         }        
-    //       }
-    //     }
-    // } 
+          $longitudUnidades = count($unidadCosto);
+          for($i=0; $i<$longitudUnidades; $i++){
+            $unidadDetAbrevYX=abrevUnidad($unidadCosto[$i]);
+            $listaDetalleCursos_4=obtenerListaVentas_cursos($unidadCosto[$i],$IdtipoX,$areasArray,$desde,$hasta);
+            while ($rowCompUnidades = $listaDetalleCursos_4->fetch(PDO::FETCH_ASSOC)) {
+              $importe_realY=$rowCompUnidades['importe_real'];
+              if($importe_realY>0){
+                $html.='<tr">'.
+                      '<td class="text-center">-</td>'.  
+                      '<td class="text-center">-</td>'.  
+                      '<td class="text-center">'.$unidadDetAbrevYX.'</td>'.  
+                      '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
+                  '</tr>';              
+              }        
+            }
+          }
+      }
+      //para los cursos pagados desde la tienda
+      $listaDetalle_cursos_grupal=obtenerListaVentas_cursos_tienda($unidadCostoArray,0,$areasArray,$desde,$hasta);
+      // $totalImporte=0;
+      while ($rowComp = $listaDetalle_cursos_grupal->fetch(PDO::FETCH_ASSOC)) {        
+      
+          
+          $codAreaX=$rowComp['cod_area'];
+          $nombreAreaX=$rowComp['area'];
+          $IdtipoX=$rowComp['IdCurso'];
+          $codigo_alterno=obtenerCodigoExternoCurso($IdtipoX);
+          $descripcion_n2=obtenerNombreCurso($IdtipoX);
+          $importe_realX=$rowComp['importe_real'];
+          // $tipo_cursoX=$rowComp['tipo_curso'];
+          $string_curso="Curso Tienda ( ";        
+
+          $totalImporte+=$importe_realX;
+          $html.='<tr>'.
+                        '<td class="text-left font-weight-bold">'.$nombreAreaX.'</td>'.
+                        '<td class="text-left font-weight-bold">'.$string_curso.$codigo_alterno.')</td>'.
+                        '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
+                        '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
+                    '</tr>';
+
+          $longitudUnidades = count($unidadCosto);
+          for($i=0; $i<$longitudUnidades; $i++){
+            $unidadDetAbrevYX=abrevUnidad($unidadCosto[$i]);
+            $listaDetalleCursos_4=obtenerListaVentas_cursos_tienda($unidadCosto[$i],$IdtipoX,$areasArray,$desde,$hasta);
+            while ($rowCompUnidades = $listaDetalleCursos_4->fetch(PDO::FETCH_ASSOC)) {
+              $importe_realY=$rowCompUnidades['importe_real'];
+              if($importe_realY>0){
+                $html.='<tr">'.
+                      '<td class="text-center">-</td>'.  
+                      '<td class="text-center">-</td>'.  
+                      '<td class="text-center">'.$unidadDetAbrevYX.'</td>'.  
+                      '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
+                  '</tr>';              
+              }        
+            }
+          }
+      } 
+
+    }
+    
+  
 
     $html.='<tr class="bg-secondary text-white">'.
                 '<td class="text-center">-</td>'.  

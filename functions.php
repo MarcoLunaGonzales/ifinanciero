@@ -8310,14 +8310,14 @@ function obtenerCodigoActividadProyecto($codigo){
   }
   function importe_total_facturas($codigo){
     $dbh = new Conexion();
-    $sql="SELECT importe from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo";
+    $sql="SELECT (importe-exento-tasa_cero-ice) as importe2 from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo";
     // $sql="SELECT sum(f.importe)+sum(f.exento)+sum(f.tasa_cero)+sum(f.ice) as importe from facturas_detalle_cajachica f where f.cod_cajachicadetalle=$codigo";
 
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $valor=0;
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {      
-      $valor+=$row['importe'];
+      $valor+=$row['importe2'];
     }         
     return($valor);
   }
