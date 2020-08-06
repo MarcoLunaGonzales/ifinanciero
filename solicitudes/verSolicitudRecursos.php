@@ -249,7 +249,8 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                      //$nombreX=$verificarArchivo[1];
                      $urlArchivo=$verificarArchivo[2];
                      $codigoArchivoX=$verificarArchivo[3];
-
+                     $arrayArchivo=explode("/",$urlArchivo);
+                     $nombreArchivo=$arrayArchivo[count($arrayArchivo)-1];
                   ?>
                   <tr>
                     <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
@@ -271,7 +272,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                         <div class="btn-group" id="existe_div_archivo_cabecera<?=$filaA?>">
                           <div class='btn-group'>
                             <a class='btn btn-sm btn-info btn-block' href='<?=$urlArchivo?>' target='_blank'><?=$nombreX?></a>
-                            <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' download='Descargar: Doc - IFINANCIERO (<?=$nombreX?>)'><i class='material-icons'>vertical_align_bottom</i></a>
+                            <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' download='Descargar: Doc - IFINANCIERO (<?=$nombreX?>)<?=$nombreArchivo?>'><i class='material-icons'>vertical_align_bottom</i></a>
                             <a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivo?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
                           </div>
                         <!--<a href="#" class="btn btn-button btn-sm">Registrado</a>
@@ -303,6 +304,8 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                      if($nombreX==""){
                       $nombreX="Registrado";
                      }
+                     $arrayArchivo=explode("/",$urlArchivo);
+                     $nombreArchivo=$arrayArchivo[count($arrayArchivo)-1];
                   ?>
                   <tr id="fila_archivo<?=$filaA?>">
                     <td class="text-left"><input type="hidden" name="codigo_archivoregistrado<?=$filaE?>" id="codigo_archivoregistrado<?=$filaE?>" value="<?=$codigoArchivoX;?>">Otros Documentos</td>
@@ -318,7 +321,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                         <!--<a href="#" class="btn btn-button btn-sm" >Registrado</a>  
                         <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  -->
                         <a class='btn btn-sm btn-info btn-block' href='<?=$urlArchivo?>' target='_blank'><?=$nombreX?></a>
-                        <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' download='Descargar: Doc - IFINANCIERO (<?=$nombreX?>)'><i class='material-icons'>vertical_align_bottom</i></a>
+                        <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' download='Descargar: Doc - IFINANCIERO (<?=$nombreX?>)<?=$nombreArchivo?>'><i class='material-icons'>vertical_align_bottom</i></a>
                         <a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivo?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
                       
                       </div>     

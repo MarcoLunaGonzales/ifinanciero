@@ -169,9 +169,15 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
         $codSolicitudDetalleOrigen=$rowNuevo['codigo'];
         $tituloFactura="";
         if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
-          $tituloFactura="F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ";
+          $numeroFacturas=obtenerFacturasSolicitudDetalleArray($rowNuevo['codigo']);
+          $numerosFacturasDetalle=[];
+          for ($y=0; $y < count($numeroFacturas); $y++) { 
+            $numerosFacturasDetalle[$y]=$numeroFacturas[$y][1];
+          }
+          $tituloFactura="F/ ".implode($numerosFacturasDetalle,',')." - ";
         }
         $glosaDetalle="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
+        $glosaDetalleRetencion="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$datosServicio." ".$glosa;
         
 
         if($codProveedor!=$rowNuevo['cod_proveedor']){
@@ -223,6 +229,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             $codigoRet=$rowNuevo['cod_confretencion'];
             $importeOriginal=$rowNuevo['monto'];
             $importeRetencion=(porcentRetencion($codigoRet)/100)*$importeOriginal;
+            //importe de la factura
             if($rowNuevo['cod_confretencion']==8||$rowNuevo['cod_confretencion']==10){
               $importeOriginalAux=$importeOriginal;
               $importeOriginal=obtenerMontoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);
@@ -238,6 +245,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             $stmtRetenciones = $dbh->prepare("SELECT cd.*,c.porcentaje_cuentaorigen from configuracion_retenciones c join configuracion_retencionesdetalle cd on cd.cod_configuracionretenciones=c.codigo where cd.cod_configuracionretenciones=$codigoRet and cd.cod_cuenta!=0 order by cd.codigo");
             $stmtRetenciones->execute();
             $j=0;
+            $retenciones=[];
 
             //INICIO CARGAR EL DETALLE DE LAS RETENCIONES AL ARRAY
             while ($rowRet = $stmtRetenciones->fetch(PDO::FETCH_ASSOC)) {
@@ -253,7 +261,60 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
              }else{
                $importe=$importeOriginal;
              }
+             
+             //IMPORTE POR FACTURA
+
+             if($rowNuevo['cod_confretencion']==8||$rowNuevo['cod_confretencion']==10){
+              //RETENCION POR FACTURAS
+              $facturasSolicitud=obtenerFacturasSolicitudDetalleArray($codSolicitudDetalleOrigen);
+                for ($fac=0; $fac < count($facturasSolicitud); $fac++) { 
+                   //MONTO DE LA RETENCION
+                   $montoRetencion=($porcentajeX/100)*$facturasSolicitud[$fac][0];
             
+                  //SUMAR DATOS O RESTAR PARA LA CUENTA PASIVO
+                  if($debehaberX==1){
+                     $importePasivoFila=$importePasivoFila+$montoRetencion;
+                     $debeRet=$montoRetencion;
+                     $haberRet=0;    
+                   }else{
+                     $importePasivoFila=$importePasivoFila-$montoRetencion;
+                     $debeRet=0;
+                     $haberRet=$montoRetencion;
+                   }
+             
+                  //DATOS PARA EL DETALLE DEL COMPROBANTE CUENTA - RETENCION  
+                  $montoRetencion=number_format(($montoRetencion), 2, '.', '');   
+                  //$importe=number_format(($facturasSolicitud[$fac]['monto']), 2, '.', '');
+                  $cuentaRetencion=$rowRet['cod_cuenta'];  
+                  $cuentaAuxiliar=0;
+                  $n_cuenta=trim(obtieneNumeroCuenta($cuentaRetencion));
+                  $nom_cuenta=nameCuenta($cuentaRetencion);
+                  $inicioNumeroRet=$n_cuenta[0];
+                  $unidadareaRet=obtenerUnidadAreaCentrosdeCostos($inicioNumeroRet);////////////////////////unidad y area para el detalle
+                  if($unidadareaRet[0]==0){
+                        $unidadDetalleRet=$unidadDetalle;
+                        $areaRet=$area;
+                  }else{
+                       $unidadDetalleRet=$unidadDetalle;
+                        $areaRet=$area;
+                  }
+             
+                 $unidadDetalleGrupal=$unidadDetalleRet;
+                 $areaDetalleGrupal=$areaRet;
+                 //AGREGAR LOS DATOS AL ARRAY DE LA RETENCION ($J POR SI HAY MAS DE UN DETALLE DE LA RETENCION)
+                 $retenciones[$j]['cuenta']=$cuentaRetencion;
+                 $retenciones[$j]['unidad']=$unidadDetalleRet;
+                 $retenciones[$j]['area']=$areaRet;
+                 $retenciones[$j]['debe']=$debeRet;
+                 $retenciones[$j]['haber']=$haberRet;
+                 $retenciones[$j]['glosa']=$glosaX." - ".$glosaDetalleRetencion. " F:".$facturasSolicitud[$fac][1];
+                 $retenciones[$j]['numero']=$ii; 
+                 $retenciones[$j]['debe_haber']=$debehaberX;
+                 //echo "CODIGO FACTURA: ".$facturasSolicitud[$fac][1];
+                 $j++;
+                }
+             }else{
+
              //MONTO DE LA RETENCION
              $montoRetencion=($porcentajeX/100)*$importe;
             
@@ -296,7 +357,10 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
              $retenciones[$j]['glosa']=$glosaX." - ".$glosaDetalle;
              $retenciones[$j]['numero']=$ii; 
              $retenciones[$j]['debe_haber']=$debehaberX;
-           $j++;
+             $j++;
+
+             }  
+           
           }
 
           //FIN CARGAR DETALLE DE LAS RETENCIONES AL ARRAY

@@ -3446,8 +3446,7 @@ function obtener_anios_trabajados($ing_contr){
   $fechaComoEntero = strtotime($ing_contr);
   $anio_ingreso = date("Y", $fechaComoEntero);
   $diferencia_anios=$anio_actual-$anio_ingreso;
-  return $diferencia_anios;
-}
+  return $diferencia_anios}
 function obtener_meses_trabajados($ing_contr){
   $fechaComoEntero = strtotime($ing_contr);  
   $mes_ingreso = date("m", $fechaComoEntero);
@@ -8847,6 +8846,20 @@ function obtenerMontoGastoTotalFacturasSolicituRecurso($codigo){
    }
    return($monto);
 }
+
+function obtenerFacturasSolicitudDetalleArray($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT (importe-exento-ice-tasa_cero) as monto,nro_factura FROM facturas_compra where cod_solicitudrecursodetalle=$codigo");
+   $stmt->execute();
+   $facturas=[];$index=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $monto=$row['monto'];
+    $numero=$row['nro_factura'];
+    $facturas[$index]=array($monto,$numero);
+    $index++;
+   }
+   return($facturas); 
+}
 function obtenerSolicitudFacturacionDetalle($codigo){
    $dbh = new Conexion();
    $sql="";
@@ -8854,6 +8867,7 @@ function obtenerSolicitudFacturacionDetalle($codigo){
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
+
 }
 ?>
 
