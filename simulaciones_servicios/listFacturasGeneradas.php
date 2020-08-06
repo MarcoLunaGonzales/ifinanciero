@@ -275,13 +275,14 @@ $globalPersonal=$_SESSION["globalUser"];
         <h2 class="modal-title" id="myModalLabel"><b>Anular Factura<b></h2>
       </div>
       <div class="modal-body">        
+        <form id="form_anular_facturas" action="simulaciones_servicios/anular_facturaGenerada.php" method="post"  onsubmit="return valida(this)" enctype="multipart/form-data">
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
         <input type="hidden" name="estado" id="estado" value="0">
         <input type="hidden" name="admin" id="admin" value="0">
         <input type="hidden" name="direccion" id="direccion" value="0">
         <input type="hidden" name="codigo_factura" id="codigo_factura" value="0">
         <input type="hidden" name="codigo_comprobante" id="codigo_comprobante" value="0">
-
+        <input type="hidden" name="estado_factura" id="estado_factura" value="0">
         <div class="row">
           <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_nro_fact"><b><small>Nro(s)<br>Factura(s)</small></b></span></label>
           <div class="col-sm-3">
@@ -295,7 +296,30 @@ $globalPersonal=$_SESSION["globalUser"];
               <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
             </div>
           </div>
-        </div>                
+        </div> 
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row col-sm-11 div-center">
+                  <table class="table table-warning table-bordered table-condensed">
+                    <thead>
+                      <tr>
+                        <th class="small" width="30%">Tipo de Documento <a href="#" title="Otro Documento" class="btn btn-primary btn-round btn-sm btn-fab float-left" onClick="agregarFilaArchivosAdjuntosCabecera()"><i class="material-icons">add</i></a></th>
+                        <th class="small">Obligatorio</th>
+                        <th class="small" width="35%">Archivo</th>
+                        <th class="small">Descripción</th>                  
+                      </tr>
+                    </thead>
+                    <tbody id="tabla_archivos">
+                      <?php
+                        $filaE=0;
+                      ?>       
+                    </tbody>
+                  </table>
+                  <input type="hidden" value="<?=$filaE?>" id="cantidad_archivosadjuntos" name="cantidad_archivosadjuntos">
+                </div>
+                </center>
+            </div>
+        </div>   
         <div class="row">
           <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
         </div>
@@ -309,12 +333,13 @@ $globalPersonal=$_SESSION["globalUser"];
       </div>
       <div class="modal-footer">
         <div id="boton_registrar_anticipo">
-          <button type="button" class="btn btn-success" id="anular_factura_devolucion" name="anular_factura_devolucion" data-dismiss="modal">Registrar Como Anticipo</button>  
+          <button type="submit" class="btn btn-success" onclick="registrarRechazoFactura(2)">Registrar Como Anticipo</button>  
         </div>
-        
-        <button type="button" class="btn btn-warning" id="anular_factura" name="anular_factura" data-dismiss="modal">Transacción No Válida</button>
+        <button type="submit" class="btn btn-warning" onclick="registrarRechazoFactura(1)">Transacción No Válida</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>
+      </form>
+
     </div>
   </div>
 </div>
@@ -336,26 +361,25 @@ $globalPersonal=$_SESSION["globalUser"];
           // $asunto="ENVIO FACTURA - IBNORCA";
 
         ?>
+        <?php
+        echo "<script>var array_correos=[];</script>";
 
-<?php
-echo "<script>var array_correos=[];</script>";
-
-$i=0;
-  $correoLista=obtenerCorreosListaPersonal(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
-   while ($rowCorreo = $correoLista->fetch(PDO::FETCH_ASSOC)) {
-    $codigoX=$rowCorreo['codigo'];
-    $correoX=strtolower($rowCorreo['email_empresa']);
-    ?>
-    <script>
-     var obtejoLista={
-       label:'<?=$correoX?>',
-       value:'<?=$codigoX?>'};
-       array_correos[<?=$i?>]=obtejoLista;
-    </script>
-    <?php
-    $i=$i+1;
-  }
-  ?>
+        $i=0;
+          $correoLista=obtenerCorreosListaPersonal(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+           while ($rowCorreo = $correoLista->fetch(PDO::FETCH_ASSOC)) {
+            $codigoX=$rowCorreo['codigo'];
+            $correoX=strtolower($rowCorreo['email_empresa']);
+            ?>
+            <script>
+             var obtejoLista={
+               label:'<?=$correoX?>',
+               value:'<?=$codigoX?>'};
+               array_correos[<?=$i?>]=obtejoLista;
+            </script>
+            <?php
+            $i=$i+1;
+          }
+          ?>
         <div class="row">
           <label class="col-sm-1 col-form-label" style="color:#000000"><small>Nro. Factura</small></label>
           <div class="col-sm-2">
@@ -383,9 +407,6 @@ $i=0;
             </div>
           </div>
         </div>
-
-
-        
         <!-- <h6> Asunto : </h6>
         <input class="form-control" type="text" name="asunto" id="asunto" value="<?=$asunto?>" required="true"/>
         <h6> Mensaje : </h6>
@@ -439,6 +460,43 @@ $i=0;
 </div>
 
 <script type="text/javascript">
+   function valida(f) {
+      // alert("e");
+        var ok = true;
+        var msg = "Por favor introduzca la observación";
+        var observaciones=f.elements["observaciones"].value;
+        if(observaciones == 0 || observaciones < 0 || observaciones == '')
+        {                
+            ok = false;
+        }
+        var cantidad_archivosadjuntos=f.elements["cantidad_archivosadjuntos"].value;
+        if(cantidad_archivosadjuntos>0){
+          for (var ar=1; ar <= cantidad_archivosadjuntos ; ar++) {             
+            var codigo_archivo=f.elements["codigo_archivo"+ar].value;
+            if(codigo_archivo){
+              var documentos_cabecera=f.elements["documentos_cabecera"+ar].value;
+              if(documentos_cabecera){
+                sw_adjuntos=true;
+              }else{
+                sw_adjuntos=false;
+              }
+            }else{
+              sw_adjuntos=false;
+            }
+          }
+        }else{
+          sw_adjuntos=false;
+        }
+        if(!sw_adjuntos){
+          var msg = "Por favor agregue Archivo Adjunto.";        
+          ok = false;            
+        }
+        if(ok == false)    
+            Swal.fire("Informativo!",msg, "warning");
+        return ok;
+    }
+</script>
+<script type="text/javascript">
   $(document).ready(function(){
     $(".bootstrap-tagsinput input").attr("id","tag_inputcorreo");
     autocompletar("tag_inputcorreo","correo_autocompleteids",array_correos);
@@ -465,37 +523,6 @@ $i=0;
       }else{
         EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social);  
       }
-    });
-    $('#anular_factura').click(function(){      
-      var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
-      var estado=document.getElementById("estado").value;
-      var admin=document.getElementById("admin").value;
-      var direccion=document.getElementById("direccion").value;
-      var observaciones=$('#observaciones').val();
-      var codigo_factura=$('#codigo_factura').val();
-      var codigo_comprobante=$('#codigo_comprobante').val();
-      var estado_factura=2;
-      if(observaciones==null || observaciones==0 || observaciones=='' || observaciones==' '){
-        Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
-      }else{        
-        registrarRechazoFactura(cod_solicitudfacturacion,observaciones,estado,admin,direccion,codigo_factura,codigo_comprobante,1);
-      }      
-    }); 
-    $('#anular_factura_devolucion').click(function(){      
-      var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
-      var estado=document.getElementById("estado").value;
-      var admin=document.getElementById("admin").value;
-      var direccion=document.getElementById("direccion").value;
-      var observaciones=$('#observaciones').val();
-      var codigo_factura=$('#codigo_factura').val();
-      var codigo_comprobante=$('#codigo_comprobante').val();
-      var estado_factura=2;
-      if(observaciones==null || observaciones==0 || observaciones=='' || observaciones==' '){
-        Swal.fire("Informativo!", "Por favor introduzca la observación.", "warning");
-      }else{        
-        registrarRechazoFactura(cod_solicitudfacturacion,observaciones,estado,admin,direccion,codigo_factura,codigo_comprobante,2);
-      }      
-    }); 
-
+    });   
   });
 </script>

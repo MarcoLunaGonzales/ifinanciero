@@ -1,5 +1,5 @@
 <?php
-// require_once 'layouts/bodylogin.php';
+require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
@@ -137,7 +137,6 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 if($flagSuccess){
 	$sql="UPDATE facturas_venta set cod_estadofactura='2' where codigo in ($codigos_facturas_x)";	
 	$stmt = $dbh->prepare($sql);
-	
 	$flagSuccess=$stmt->execute();
 	if($cod_solicitudfacturacion!=-100){
 		//volvemos al estado de registro de la sol fac.
@@ -151,10 +150,42 @@ if($flagSuccess){
 		// $obs="Factura Anulada Normal";
 		actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_solicitudfacturacion,$fechaHoraActual,$obs);
 	}
+	//insertar archivos adjuntos
+	$nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];	
+	for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
+	    if(isset($_POST['codigo_archivo'.$ar])){
+	        if($_FILES['documentos_cabecera'.$ar]["name"]){
+	        	$filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos	        	
+		         $filename = str_replace("%","",$filename);//quitamos el % del nombre;
+		         $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    		         
+	        	// echo $source;
+	        	$directorio = '../assets/archivos-respaldo/archivos_facturas/FAC-'.$codigos_facturas_x; //Declaramos una  
+	          //variable con la ruta donde guardaremos los archivoss
+	          //Validamos si la ruta de destino existe, en caso de no existir la creamos	        	
+	          if(!file_exists($directorio)){
+	            mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+	          }
+	          $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos                      
+	          //Movemos y validamos que el archivos se haya cargado correctamente
+	          //El primer campo es el origen y el segundo el destino	          
+	          if(move_uploaded_file($source, $target_path)) { 	           
+	            $tipo=$_POST['codigo_archivo'.$ar];
+	            $descripcion=$_POST['nombre_archivo'.$ar];	            
+	            $sqlInsert="INSERT INTO archivos_adjuntos_facturasventa(cod_tipoarchivo,descripcion,direccion_archivo,cod_facturasventa) 
+	            VALUES ('$tipo','$descripcion','$target_path','$codigos_facturas_x')";
+	            // echo $sqlInsert;
+	            $stmtInsert = $dbh->prepare($sqlInsert);
+	            $stmtInsert->execute();
+	            echo "Archivo guargado.";
+	            // print_r($sqlInsert);
+	          }else {    
+	              echo "Error al guardar archivo.";
+	          } 
+	        }
+	    }
+	}
 
 }
-if($flagSuccess)echo 1;
-else echo 2;
 
-
+showAlertSuccessError($flagSuccess,"../".$urllistFacturasServicios);
 ?>

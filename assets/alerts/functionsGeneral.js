@@ -15498,21 +15498,28 @@ function registrarRechazoSolicitud_intranet(cod_solicitudfacturacion,observacion
     }
   });
 }
-function registrarRechazoFactura(cod_solicitudfacturacion,observaciones,estado,admin,direccion,codigo_factura,codigo_comprobante,estado_factura){
-  iniciarCargaAjax();
-  $.ajax({
-    type:"POST",
-    data:"codigo_factura="+codigo_factura+"&cod_solicitudfacturacion="+cod_solicitudfacturacion+"&observaciones="+observaciones+"&codigo_comprobante="+codigo_comprobante+"&estado_factura="+estado_factura,
-    url:"simulaciones_servicios/anular_facturaGenerada.php",
-    success:function(r){
-      detectarCargaAjax();
-      if(r==1){        
-          alerts.showSwal('success-message',direccion);        
-      }else{
-        Swal.fire("A ocurrido un error!", "No se pudo Anular la Factura.", "warning");        
-      }
-    }
-  });
+// function registrarRechazoFactura(cod_solicitudfacturacion,observaciones,estado,admin,direccion,codigo_factura,codigo_comprobante,estado_factura,archivo){
+//   iniciarCargaAjax();
+//   $.ajax({
+//     type:"POST",
+//     data:"codigo_factura="+codigo_factura+"&cod_solicitudfacturacion="+cod_solicitudfacturacion+"&observaciones="+observaciones+"&codigo_comprobante="+codigo_comprobante+"&estado_factura="+estado_factura+"&archivo="+archivo,
+//     url:"simulaciones_servicios/anular_facturaGenerada.php",
+//     // cache: false,
+//     // contentType: false,
+//     // processData: false,
+//     success:function(r){
+//       $("#modalDevolverSolicitud").modal("hide");
+//       detectarCargaAjax();
+//       if(r==1){        
+//           alerts.showSwal('success-message',direccion);        
+//       }else{
+//         Swal.fire("A ocurrido un error!", "No se pudo Anular la Factura.", "warning");        
+//       }
+//     }
+//   });
+// }
+function registrarRechazoFactura(estado_factura){
+  document.getElementById("estado_factura").value=estado_factura;
 }
 
 function cargarLotesPago(){
