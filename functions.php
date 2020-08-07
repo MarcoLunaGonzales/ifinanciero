@@ -3335,8 +3335,7 @@ function obtenerAtrasoPersonal($id_personal,$haber_basico,$cod_gestion,$mes){
   $dbh = null;
   return ($descuentos_neto);
 }
-function obtenerOtrosDescuentos($codigo_personal,$cod_gestion,$mes)
-{  
+function obtenerOtrosDescuentos($codigo_personal,$cod_gestion,$mes){  
   // $mes=date('m');
   // $gestion=date('Y');
 
@@ -3446,7 +3445,8 @@ function obtener_anios_trabajados($ing_contr){
   $fechaComoEntero = strtotime($ing_contr);
   $anio_ingreso = date("Y", $fechaComoEntero);
   $diferencia_anios=$anio_actual-$anio_ingreso;
-  return $diferencia_anios}
+  return $diferencia_anios;
+}
 function obtener_meses_trabajados($ing_contr){
   $fechaComoEntero = strtotime($ing_contr);  
   $mes_ingreso = date("m", $fechaComoEntero);
