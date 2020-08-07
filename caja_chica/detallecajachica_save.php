@@ -93,23 +93,26 @@ try {
                 $flagSuccess=$stmtContraCuenta->execute();
                 if($flagSuccess){
                     //busacmos el codigo de estado de cuenta
-                    $sqlEstadoCuenta="SELECT e.codigo From estados_cuenta e where e.cod_comprobantedetalle=$codigo_comprobante limit 1"; 
+                    $sqlEstadoCuenta="SELECT e.codigo From estados_cuenta e where e.cod_comprobantedetalle=$cod_comprobante limit 1"; 
                     $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
                     $stmtEstadoCuenta->execute();                    
                     $resultado=$stmtEstadoCuenta->fetch();
                     $codigo_estadoCuenta=$resultado['codigo'];
                     $codigo_sr=0;
-                    $sqlDetalleX="SELECT codigo,cod_solicitudrecurso,cod_solicitudrecursodetalle,cod_proveedor,cod_tipopagoproveedor from solicitud_recursosdetalle where cod_estadocuenta=$codigo_estadoCuenta";
-                    $stmtDetalleX = $dbh->prepare($sqlDetalleX);
-                    $stmtDetalleX->execute();                    
-                    $stmtDetalleX->bindColumn('codigo', $codigo_sr);
-                    $stmtDetalleX->bindColumn('cod_solicitudrecurso', $cod_solicitudrecurso_sr);
-                    $stmtDetalleX->bindColumn('cod_solicitudrecursodetalle', $cod_solicitudrecursodetalle_sr);
-                    $stmtDetalleX->bindColumn('cod_proveedor', $cod_proveedor_sr);
-                    $stmtDetalleX->bindColumn('cod_tipopagoproveedor', $cod_tipopagoproveedor_sr);
-                    while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)){ 
+                    if($codigo_estadoCuenta!=""){
+                        $sqlDetalleX="SELECT codigo,cod_solicitudrecurso,cod_solicitudrecursodetalle,cod_proveedor,cod_tipopagoproveedor from solicitud_recursosdetalle where cod_estadocuenta=$codigo_estadoCuenta";
+                        $stmtDetalleX = $dbh->prepare($sqlDetalleX);
+                        $stmtDetalleX->execute();                    
+                        $stmtDetalleX->bindColumn('codigo', $codigo_sr);
+                        $stmtDetalleX->bindColumn('cod_solicitudrecurso', $cod_solicitudrecurso_sr);
+                        $stmtDetalleX->bindColumn('cod_solicitudrecursodetalle', $cod_solicitudrecursodetalle_sr);
+                        $stmtDetalleX->bindColumn('cod_proveedor', $cod_proveedor_sr);
+                        $stmtDetalleX->bindColumn('cod_tipopagoproveedor', $cod_tipopagoproveedor_sr);
+                        while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)){ 
 
+                        }
                     }
+                    
                     if($codigo_sr>0){
                         $cod_pagoproveedor=obtenerCodigoPagoProveedor();
                         $sqlInsert="INSERT INTO pagos_proveedores (codigo, fecha,observaciones,cod_comprobante,cod_estadopago,cod_ebisa,cod_cajachicadetalle) 

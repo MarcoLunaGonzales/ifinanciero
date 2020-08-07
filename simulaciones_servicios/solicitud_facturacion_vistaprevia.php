@@ -226,6 +226,9 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                      $codigoX=$rowArchivo['cod_tipoarchivo'];
                      $nombreX=$rowArchivo['descripcion'];
                      $urlArchivo=$rowArchivo['direccion_archivo'];
+                     $array=explode('/', $urlArchivo);
+                     $posicion=count($array)-1;
+                     $nombre_ar=$array[$posicion];
                      $ObligatorioX=0;
                      $Obli='NO';
                      if($ObligatorioX==1){
@@ -249,7 +252,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                         <!--<a href="#" class="btn btn-button btn-sm" >Registrado</a>  
                         <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  -->
                         <a class='btn btn-sm btn-info btn-block' href='<?=$urlArchivo?>' target='_blank'><?=$nombreX?></a>
-                        <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' download='Descargar: Doc - IFINANCIERO (<?=$nombreX?>)'><i class='material-icons'>vertical_align_bottom</i></a>
+                        <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' download='IBNORCA_<?=$nombre_ar?>'><i class='material-icons'>vertical_align_bottom</i></a>
                         <a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivo?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
                       
                       </div>     
