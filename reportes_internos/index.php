@@ -22,10 +22,19 @@ $dbh = new Conexion();
 
 			  	<div class="card-body ">
 					<div class="row">				  	
-				  		
 				  		<div class="col-sm-4">
 							<div class="form-group">
 								<a href="<?=$urlReporteIngresoFacturacion_libretas;?>" class="btn btn-success"> Facturas Con libretas Bancarias</a>
+							</div>
+				  		</div>
+					</div>
+					<div class="row">				  	
+				  		<div class="col-sm-4">
+							<div class="form-group">
+								<!-- <a href="<?=$urlReporteIngresoFacturacion_libretas;?>" class="btn btn-success">Lista Facturas Generadas</a> -->								
+								<a class="btn btn-info" href="../index.php?opcion=listFacturasGeneradas&interno=100">				                
+				                    <span class="sidebar-normal"> Facturas Generadas</span>
+				                </a>
 							</div>
 				  		</div>
 					</div>

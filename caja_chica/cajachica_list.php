@@ -102,37 +102,43 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                 
                               <!-- href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>' -->
                               <td class="td-actions text-right">
+                                <div class="btn-group dropdown">
+                                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                     <i class="material-icons" >list</i><small><small>OPTIONS</small></small>
+                                  </button>
+                                  <div class="dropdown-menu" >
                                 <?php
                                 if($globalAdmin==1 and $cod_estado==1){ ?>
-                              <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="btn" style="vertical-align: middle;padding: 0;font-size:18px;width:30px;height:30px;background-color:#013ADF;">
-                                  <i class="material-icons" title="Agregar Detalle">playlist_add</i>
-                              </a>
-                              <label class="text-danger"> | </label>
-                              <a  rel="tooltip" class="btn btn-danger" style="color:#ffffff;" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=1')">
-                                  <i class="material-icons" title="Cerrar Caja Chica">lock</i>                                
+                                  <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="dropdown-item" style="background-color:#4a4ea2;">
+                                      <i class="material-icons" style="color:#FFF;" title="Agregar Detalle">playlist_add</i>Agregar Gastos
+                                  </a>
+                                  <!-- <label class="text-danger"> | </label> -->
+                                  <a  rel="tooltip" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=1')">
+                                      <i class="material-icons text-danger"  title="Cerrar Caja Chica">lock</i>Cerrar
+                                    </a>
+                                <?php }?>
+                                <a href='<?=$urlprint_cajachica;?>?codigo=<?=$cod_cajachica;?>' target="_blank" rel="tooltip" class=" dropdown-item">
+                                    <i class="material-icons text-primary" title="Imprimir Detalle Gastos">print</i>Imprimir
                                 </a>
-                              <?php }?>
-                                <a href='<?=$urlprint_cajachica;?>?codigo=<?=$cod_cajachica;?>' target="_blank" rel="tooltip" class="btn btn-primary">
-                                  <i class="material-icons" title="Imprimir Detalle Gastos">print</i>
-                              </a>
 
-                              <?php
-                                if($globalAdmin==1 and $cod_estado==1){
-                              ?>
-                                <a href='<?=$urlFormCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                                  <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
-                                </a>
-                                <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=2')">
-                                  <i class="material-icons" title="Borrar"><?=$iconDelete;?></i>
-                                </button>
                                 <?php
-                                  }
+                                  if($globalAdmin==1 and $cod_estado==1){
                                 ?>
+                                <a href='<?=$urlFormCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-success" title="Editar"><?=$iconEdit;?></i>Editar
+                                </a>
+                                <a rel="tooltip" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=2')">
+                                  <i class="material-icons text-danger" title="Borrar"><?=$iconDelete;?></i>Borrar
+                                </a>
+                                  <?php
+                              }
+                                  ?>
+                              </div></div>
                               </td>
                               <td class="td-actions text-center">
                                 <?php
                                 //si es mayo a cero, ya se genero el comprobante.
-                                  if($cod_comprobante>0){?>                                    
+                                  if($globalAdmin==1 and $cod_estado==1 and $cod_comprobante>0){?>
                                     <div class="btn-group dropdown">
                                       <button type="button" class="btn btn-ganger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:red;background-color:#FFFFFF;">
                                          <i class="material-icons" title="Comprobante" >input</i>
@@ -141,25 +147,36 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                         <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1" class="dropdown-item" type="button" target="_blank">
                                           <i class="material-icons" title="Imprimir Comprobante" style="color:red; ">print</i> Imprimir comprobante
                                         </a>
-                                        <button title="Generar Factura a Pagos" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalComprobanteCajaChica" onclick="agregaDatosComprCajaChica('<?=$datos_ComproCajaChica;?>')">
+                                        <button title="Revertir en Comprobante Existente" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalComprobanteCajaChica" onclick="agregaDatosComprCajaChica('<?=$datos_ComproCajaChica;?>')">
                                         <i class="material-icons text-danger">input</i> Revertir en Comprobante Existente
                                         </button>                                          
                                       </div>
                                     </div>
-                                  <?php }else{ ?>
+                                  <?php }elseif($globalAdmin==1 and $cod_estado==1){?>
                                     <div class="btn-group dropdown">
                                       <button type="button" class="btn btn-ganger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:red;background-color:#FFFFFF;">
                                          <i class="material-icons" title="Comprobante" >input</i>
                                       </button>
                                       <div class="dropdown-menu" style="background-color: #D8CEF6;">                                    
-                                        <button title="Generar Factura Manual" class="dropdown-item" type="button" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>')" target="_blank">
-                                        <i class="material-icons text-danger">input</i> Generar en Comprobante Nuevo
+                                        <button title="Generar en Comprobante Nuevo" class="dropdown-item" type="button" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>')" target="_blank">
+                                        <i class="material-icons text-danger">input</i>En Comprobante Nuevo
                                         </button>
-                                        <button title="Generar Factura a Pagos" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalComprobanteCajaChica" onclick="agregaDatosComprCajaChica('<?=$datos_ComproCajaChica;?>')">
-                                        <i class="material-icons text-danger">input</i> Generar en Comprobante Existente
+                                        <button title="Generar en Comprobante Existente" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalComprobanteCajaChica" onclick="agregaDatosComprCajaChica('<?=$datos_ComproCajaChica;?>')">
+                                        <i class="material-icons text-danger">input</i>En Comprobante Existente
                                         </button>                                          
                                       </div>
-                                    </div>                                  
+                                    </div> 
+                                  <?php }else{ ?>
+                                    <div class="btn-group dropdown">
+                                      <button type="button" class="btn btn-ganger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:red;background-color:#FFFFFF;">
+                                         <i class="material-icons" title="Comprobante" >input</i>
+                                      </button>
+                                      <div class="dropdown-menu" style="background-color: #D8CEF6;">   
+                                        <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1" class="dropdown-item" type="button" target="_blank">
+                                          <i class="material-icons" title="Imprimir Comprobante" style="color:red; ">print</i> Imprimir comprobante
+                                        </a>
+                                      </div>
+                                    </div>                  
                                   <?php }
                                 ?>
 

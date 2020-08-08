@@ -94,7 +94,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               break;
                               case 4:                                
                                 // $label='<span style="padding:1;" class="badge badge-warning">';
-                                $btnEstado="btn-warning";
+                                $btnEstado="btn-info";
                               break;
                               case 5:                                
                                 // $label='<span style="padding:1;" class="badge badge-warning">';
@@ -155,35 +155,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
                             }
                             $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
-                            $cod_area_simulacion=$cod_area;
-                            // $nombre_simulacion='OTROS';
-                            // if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
-                            //   //obtenemos datos de la simulacion TCP
-                            //   $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-                            //   from simulaciones_servicios sc,plantillas_servicios ps
-                            //   where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-                            //   $stmtSimu = $dbh->prepare($sql);
-                            //   $stmtSimu->execute();
-                            //   $resultSimu = $stmtSimu->fetch();
-                            //   $nombre_simulacion = $resultSimu['nombre'];
-                            //   $cod_area_simulacion = $resultSimu['cod_area'];
-                            // }elseif($tipo_solicitud==2){//  pertence capacitacion
-                            //   $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-                            //   from simulaciones_costos sc,plantillas_servicios ps
-                            //   where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
-                            //   $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                            //   $stmtSimuCostos->execute();
-                            //   $resultSimu = $stmtSimuCostos->fetch();
-                            //   $nombre_simulacion = $resultSimu['nombre'];
-                            //   $cod_area_simulacion = $resultSimu['cod_area'];
-                            // }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
-                            //   $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
-                            //   $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                            //   $stmtSimuCostos->execute();
-                            //   $resultSimu = $stmtSimuCostos->fetch();
-                            //   $nombre_simulacion = $resultSimu['Descripcion'];
-                            //   $cod_area_simulacion = $resultSimu['IdArea'];
-                            // }
+                            $cod_area_simulacion=$cod_area;                           
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
                             // --------
                             $responsable=namePersonal($cod_personal);//nombre del personal
@@ -208,17 +180,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                               // $precioX=(trim($row2['precio'])*$cantidadX);
                               $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
                               $descuento_porX=trim($row2['descuento_por']);
-                              $descuento_bobX=trim($row2['descuento_bob']);                             
-                              // $descripcion_alternaX=trim($row2['descripcion_alterna']);
-                              // $dato->codigo=($nc+1);
-                              // $dato->cod_facturacion=$codFila;
-                              // $dato->serviciox=$cod_claservicioX;
-                              // $dato->cantidadX=$cantidadX;
-                              // $dato->precioX=$precioX;
-                              // $dato->descuento_porX=$descuento_porX;
-                              // $dato->descuento_bobX=$descuento_bobX;
-                              // $dato->descripcion_alternaX=$descripcion_alternaX;
-                              // $datos[$index-1][$nc]=$dato;                           
+                              $descuento_bobX=trim($row2['descuento_bob']);
                               $nc++;
                               $sumaTotalMonto+=$precioX;
                               $sumaTotalDescuento_por+=$descuento_porX;
@@ -226,56 +188,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             }
                             $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                             $cont[$index-1]=$nc;
-                            // $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
-                            // if($importe_fact_x!=$sumaTotalImporte && $cod_estado_factura_x!=4){ //para los items de la factura a pagos
-                              ?>
-                              <!-- <script>var nfac=[];itemGenerar_factura_parcial.push(nfac);</script> -->
-                              <?php
-                                // $queryParciales = "SELECT codigo,cantidad,descuento_bob,precio,cod_claservicio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
-                                // $statementParciales = $dbh->query($queryParciales);
-                                // $nc_parciales=0;
-                                // while ($row = $statementParciales->fetch()){ 
-                                //   $cod_claservicio=$row['cod_claservicio'];
-                                //   //busacmos el monto ya pagado;
-
-                                //   // $cadenaCodFacturas_x=trim($cadenaCodFacturas,',');
-                                //   // $sqlMontoFact="SELECT sum(precio) as precio_x from facturas_ventadetalle where cod_facturaventa in ($cadenaCodFacturas_x) and cod_claservicio=$cod_claservicio";
-                                //   // // echo $sqlMontoFact;
-                                //   // $stmtFactMontoFacturado = $dbh->prepare($sqlMontoFact);
-                                //   // $stmtFactMontoFacturado->execute();
-                                //   // $resultMontoFAC = $stmtFactMontoFacturado->fetch();
-                                //   // $importe_facturato = $resultMontoFAC['precio_x'];
-                                //   // // echo "importe:".$importe_facturato;
-                                //   // // echo $importe_facturato;
-                                //   // //objeto dato donde guarda tipos de pago
-                                //   // $dato_parcial = new stdClass();//obejto
-                                //   // $codFila=(int)$cod_claservicio;                                  
-                                //   // $cantidad_x=trim($row['cantidad']);
-                                //   // $precio_x=trim($row['precio']);
-                                //   // $descuento_x=trim($row['descuento_bob']);
-                                //   // $descripcion_x=trim($row['descripcion_alterna']);
-                                //   // $dato_parcial->codigo=($nc_parciales+1);
-                                //   // $dato_parcial->cod_claservicio=$codFila;
-                                //   // $dato_parcial->preciox=$precio_x;
-                                //   // $dato_parcial->cantidadxx=$cantidad_x;
-                                //   // $dato_parcial->descuentox=$descuento_x;
-                                //   // if($importe_fact_x!=0)$dato_parcial->importe_anterior_x=$importe_facturato;
-                                //   // else $dato_parcial->importe_anterior_x=0;
-                                //   // $dato_parcial->descripcionx=$descripcion_x;                
-                                //   // $dato_parciales[$index-1][$nc_parciales]=$dato_parcial;                           
-                                //   // $nc_parciales++;
-                                // } 
-                                // $cont_pagosParciales[$index-1]=$nc_parciales;
                               $saldo=0;
 
                               $saldo=$sumaTotalImporte-$importe_fact_x;
                               $datos_FacManual=$codigo_facturacion."/0/".$saldo."/".$index."/".$nit."/".$razon_social;//dato para modal
-                              // if($importe_fact_x!=null){
-                              //   $saldo=$sumaTotalImporte-$importe_fact_x;                                
-                              //   $datos_FacManual=$codigo_facturacion."/0/".$saldo."/".$index."/".$nit."/".$razon_social;//dato para modal
-                              // }else{                                
-                              //   $datos_FacManual=$codigo_facturacion."/0/0/".$index."/".$nit."/".$razon_social;//dato para modal
-                              // }
                               if($cont_facturas>1){                              
                                 $estado="FACTURA PARCIAL";
                                 $nro_fact_x=trim($cadenaFacturas,',');
@@ -301,13 +217,12 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                 <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
                                 <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
                                 <td class="td-actions text-right">
-                                  <button class="btn <?=$btnEstado?> btn-sm btn-link" style="padding:0;"><small><?=$estado;?></small></button><br>
                                   <?php
-                                    if($globalAdmin==1){
+                                  if($globalAdmin==1){
                                       if($codEstado==3){ ?>                                          
                                         <div class="btn-group dropdown">
                                           <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                             <small><?=$estado;?></small>
+                                             <small>Generar</small>
                                           </button>
                                           <div class="dropdown-menu">
                                             <?php                                                  
@@ -374,7 +289,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                         </div>                           
                                         <?php 
                                       }
-
+                                  }
+                                  ?>
+                                <!--   <button class="btn <?=$btnEstado?> btn-sm btn-link" style="padding:0;"><small><?=$estado;?></small></button><br> -->
+                                  <div class="btn-group dropdown">
+                                  <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                     <i class="material-icons" >list</i><small><small><?=$estado;?></small></small>
+                                  </button>
+                                  <div class="dropdown-menu" > 
+                                  <?php
+                                    if($globalAdmin==1){
                                       if($codEstado==6 || $codEstado==4){?>
                                         <a title="Aceptar Solicitud" href='#'  class="btn btn-default" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=3&admin=0')">
                                          <i class="material-icons">send</i>
@@ -386,9 +310,13 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                           <i class="material-icons" title="Devolver Solicitud de Facturación">settings_backup_restore</i>
                                       </button>
                                       <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
+                                      <a href="<?=$urlVer_SF;?>?codigo=<?=$codigo_facturacion;?>" target="_blank" class="btn btn-info" title="Ver Solicitud">
+                                        <i class="material-icons">remove_red_eye</i>
+                                      </a>
                                       <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_FacManual;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
                                     <?php }
                                   ?>
+                                </div></div>
                                 </td>
                               </tr>
                             <?php //}else{

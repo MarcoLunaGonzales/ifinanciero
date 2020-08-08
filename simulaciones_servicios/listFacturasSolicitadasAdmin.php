@@ -18,9 +18,6 @@ if(isset($_GET['q'])){
   $q=0;
   // $sqlAreas="";
 }
-// $globalUnidad=$_SESSION["globalUnidad"];
-// $sqlAreas="and sf.cod_area=".$globalUnidad;
-
 // echo $globalUnidad;
 if(isset($_GET['s'])){
   $s=$_GET['s'];
@@ -126,7 +123,7 @@ $item_1=2709;
                             $btnEstado="btn-success";
                           break;
                           case 4:
-                            $btnEstado="btn-warning";
+                            $btnEstado="btn-info";
                           break;
                           case 5:
                             $btnEstado="btn-warning";
@@ -158,39 +155,9 @@ $item_1=2709;
                           // $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
                         }
                         $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
-
-                          //obtenemos datos de la simulacion
-                          // if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
-                          //     //obtenemos datos de la simulacion TCP
-                          //     $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-                          //     from simulaciones_servicios sc,plantillas_servicios ps
-                          //     where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-                          //     $stmtSimu = $dbh->prepare($sql);
-                          //     $stmtSimu->execute();
-                          //     $resultSimu = $stmtSimu->fetch();
-                          //     $nombre_simulacion = $resultSimu['nombre'];
-                          //     $cod_area_simulacion = $resultSimu['cod_area'];
-                          // }elseif($tipo_solicitud==2){//  pertence capacitacion
-                          //     $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-                          //     from simulaciones_costos sc,plantillas_servicios ps
-                          //     where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
-                          //     $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                          //     $stmtSimuCostos->execute();
-                          //     $resultSimu = $stmtSimuCostos->fetch();
-                          //     $nombre_simulacion = $resultSimu['nombre'];
-                          //     $cod_area_simulacion = $resultSimu['cod_area'];
-                          // }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
-                          //     $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
-                          //     $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                          //     $stmtSimuCostos->execute();
-                          //     $resultSimu = $stmtSimuCostos->fetch();
-                          //     $nombre_simulacion = $resultSimu['Descripcion'];
-                          //     $cod_area_simulacion = $resultSimu['IdArea'];
-                          // }
                           $cod_area_simulacion=$cod_area;
                           // $nombre_simulacion='OTROS';
                           $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
-
                           // --------
                           $responsable=namePersonal($cod_personal);//nombre del personal
                           $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
@@ -209,23 +176,23 @@ $item_1=2709;
                           $sumaTotalDescuento_bob=0;
 
                           while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                            $dato = new stdClass();//obejto
+                            // $dato = new stdClass();//obejto
                             $codFila=(int)$row2['codigo'];
                             $cod_claservicioX=trim($row2['nombre_serv']);
                             $cantidadX=trim($row2['cantidad']);                            
                             $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
                             $descuento_porX=trim($row2['descuento_por']);
                             $descuento_bobX=trim($row2['descuento_bob']);                             
-                            $descripcion_alternaX=trim($row2['descripcion_alterna']);
-                            $dato->codigo=($nc+1);
-                            $dato->cod_facturacion=$codFila;
-                            $dato->serviciox=$cod_claservicioX;
-                            $dato->cantidadX=$cantidadX;
-                            $dato->precioX=$precioX;
-                            $dato->descuento_porX=$descuento_porX;
-                            $dato->descuento_bobX=$descuento_bobX;
-                            $dato->descripcion_alternaX=$descripcion_alternaX;
-                            $datos[$index-1][$nc]=$dato;                           
+                            // $descripcion_alternaX=trim($row2['descripcion_alterna']);
+                            // $dato->codigo=($nc+1);
+                            // $dato->cod_facturacion=$codFila;
+                            // $dato->serviciox=$cod_claservicioX;
+                            // $dato->cantidadX=$cantidadX;
+                            // $dato->precioX=$precioX;
+                            // $dato->descuento_porX=$descuento_porX;
+                            // $dato->descuento_bobX=$descuento_bobX;
+                            // $dato->descripcion_alternaX=$descripcion_alternaX;
+                            // $datos[$index-1][$nc]=$dato;                           
                             $nc++;
                             $sumaTotalMonto+=$precioX;
                             $sumaTotalDescuento_por+=$descuento_porX;
@@ -249,15 +216,19 @@ $item_1=2709;
                           <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;">-</span></small></td>
                           <td class="text-left" style="color:#ff0000;"><small><?=$string_formaspago;?></small></td>
                           <td class="td-actions text-right">                              
-                            <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
-                            <?php
-                              //if($globalAdmin==1){ 
-                                if($codigo_fact_x>0){//print facturas
+                            <!-- <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br> -->
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                 <i class="material-icons" >list</i><small><?=$estado;?></small>
+                              </button>
+                              <div class="dropdown-menu" >  
+                            <?php                              
+                              if($codigo_fact_x>0){//print facturas
                                   ?>
-                                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
+                                  <!-- <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a> -->
                                   <!-- <a class="btn btn-danger" href='<?=$urlAnularFactura;?>&codigo=<?=$codigo_facturacion;?>' ><i class="material-icons" title="Anular Factura">delete</i></a> -->
                                   
-                                <?php }else{// generar facturas ?>                                      
+                              <?php }else{// generar facturas ?>                                      
                                     <?php
                                     if(isset($_GET['q'])){ ?>
                                           <a title="Enviar a contabilidad(Revisado)" href='#'  class="btn btn-info" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=20&q=<?=$q?>&v=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>')">
@@ -275,15 +246,19 @@ $item_1=2709;
                                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud_intranet" onclick="modalDevolverSolicitud_regional('<?=$datos_devolucion;?>')">
                                       <i class="material-icons" title="Devolver Solicitud Facturación">settings_backup_restore</i>
                                     </button>
-                                    <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud Facturación">print</i></a>
                                     <!-- <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
                                       <i class="material-icons" title="Ver Detalle Solicitud">settings_applications</i>
                                     </a> -->
                                  <?php                                      
-                                 }                                  
+                              }                                  
                               //}
-                            ?>                            
-                             <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
+                            ?>      
+                            <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud Facturación">print</i></a>
+                            <a href="<?=$urlVer_SF;?>?codigo=<?=$codigo_facturacion;?>" target="_blank" class="btn btn-info" title="Ver Solicitud">
+                              <i class="material-icons">remove_red_eye</i>
+                            </a>
+                            <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
+                          </div></div>
                           </td>
                         </tr>
                         <?php
@@ -389,7 +364,7 @@ $item_1=2709;
 
 
 <!--    end small modal -->
-<?php 
+<!-- <?php 
   $lan=sizeof($cont);
   error_reporting(0);
   for ($i=0; $i < $lan; $i++) {
@@ -403,7 +378,7 @@ $item_1=2709;
           }
       ?><script>detalle_tabla_general.push(detalle_fac);</script><?php                    
   }
-  ?>
+  ?> -->
 
 
   
