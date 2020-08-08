@@ -683,18 +683,165 @@
                           <input type="text" class="form-control" <?=(isset($sinEdicionModal))?"readonly":"";?> name="modal_des_serv" id="modal_des_serv" value="<?=$descripcionServSimulacionXX?>">                          
                         </div>
                         </div>
-                      </div> 
-                      <?php 
-                       if($codAreaX==38){
-                        ?>
-                         <div class="row">
+                      </div>
+                      <div class="row">
                        <label class="col-sm-2 col-form-label">Alcance</label>
                        <div class="col-sm-10">
                         <div class="form-group">
                           <textarea class="form-control" <?=(isset($sinEdicionModal))?"readonly":"";?> name="modal_alcance" id="modal_alcance"><?=$alcanceSimulacionXX?></textarea>                          
                         </div>
                         </div>
-                      </div>
+                      </div> 
+                      <?php 
+                       if($codAreaX==38){
+                        ?>
+                       <div class="row">
+                       <label class="col-sm-2 col-form-label">Objeto del Servicio</label>
+                       <div class="col-sm-7">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control form-control-sm" onchange="ponerDescripcionServicio()" name="objeto_servicio" id="objeto_servicio" data-style="btn btn-info"  required>
+                                <?php
+                                $tituloObjeto="";
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM objeto_servicio c where c.cod_estadoreferencial=1 order by 1");
+                                 $stmt->execute();
+                                 $indexOb=0;
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  if($indexOb==0){
+                                      $tituloObjeto=obtenerServiciosTipoObjetoNombre($codigoX);
+                                  }
+                                  $indexOb++;
+                                   ?>
+                                  <option value="<?=$codigoX;?>" <?=($cod_objetoservicioX==$codigoX)?"selected":"";?>><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
+                     <div class="row">
+                       <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                          <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();">       
+                                <?php
+                                $tituloTipoServ="";
+                                $indexOb=0;
+                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo_n2'];
+                                  $nombreX=$row['descripcion_n2'];
+                                  if($indexOb==0){
+                                      $tituloTipoServ=obtenerServiciosClaServicioTipoNombre($codigoX);
+                                  }
+                                  if($idTipoServicioX==$codigoX){
+                                     ?>
+                                      <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option> 
+                                      <?php
+                                  }else{
+                                    if($idServicioSimX==0){
+                                        ?>
+                                      <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                      <?php
+                                    }
+                                  }
+                                  $indexOb++;
+                                    }
+                                    ?>
+                            </select>
+                        </div>
+                        </div>
+                     </div>
+                     <div class="row d-none" id="div_normastipo">
+                       <label class="col-sm-2 col-form-label">Normas</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                          <select class="selectpicker form-control form-control-sm" data-size="4" data-live-search="true" multiple name="normas_tiposervicio[]" id="normas_tiposervicio" data-style="btn btn-success"  required>       
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT codigo,abreviatura from normas where cod_estado=1 order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['abreviatura'];
+                                  $existeNorma=obtenerNormaSimulacionServicioTCS($codigoSimulacionSuper,2778,$codigoX);
+                                   ?>
+                                  <option value="<?=$codigoX;?>" <?=($existeNorma>0)?"selected":"";?>><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                            </select>
+                        </div>
+                        </div>
+                     </div>
+                     <div class="row d-none" id="div_normastipotexto">
+                          <label class="col-sm-2 col-form-label">Otras Normas</label>
+                           <div class="col-sm-9">                     
+                             <div class="form-group" style="border-bottom: 1px solid #CACFD2">       
+                                <input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="normas_tiposerviciotext" id="normas_tiposerviciotext" value="<?=$existeNormaText?>" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                             </div>
+                           </div>  
+                      </div>  
+                        <?php
+                       }else{
+                        ?>
+                       <div class="row">
+                       <label class="col-sm-2 col-form-label">IAF</label>
+                       <div class="col-sm-3">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control form-control-sm" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_primario" id="iaf_primario" data-style="btn btn-info"  required>
+                                  <option value="0" select>NINGUNO</option> 
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $abreviaturaX=$row['abreviatura'];
+
+                                   ?>
+                                  <option value="<?=$codigoX;?>" <?=($codIAFX==$codigoX)?"selected":"";?>><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                       <label class="col-sm-1 col-form-label">IAF Sec.</label>
+                       <div class="col-sm-3">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control form-control-sm" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_secundario" id="iaf_secundario" data-style="btn btn-default"  required>
+                                 <option value="0" select>NINGUNO</option> 
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $abreviaturaX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>" <?=($codIAFSecX==$codigoX)?"selected":"";?>><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div>  
                         <?php
                        }
                       ?>
@@ -1083,3 +1230,8 @@
   </div>
 <!--    end small modal -->
 
+<script>
+$(document).ready(function() {
+ ponerSistemasIntegrados();ponerDescripcionServicio();
+});
+</script>

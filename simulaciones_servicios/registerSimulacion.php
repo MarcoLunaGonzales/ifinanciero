@@ -89,6 +89,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('alcance_propuesta', $alcanceSimulacionX);
             $stmt1->bindColumn('descripcion_servicio', $descripcionServSimulacionX);
             $stmt1->bindColumn('cod_unidadorganizacional', $oficinaGlobalX);
+            $stmt1->bindColumn('cod_iaf_primario', $codIAFX);
+            $stmt1->bindColumn('cod_iaf_secundario', $codIAFSecX);
+
+            $stmt1->bindColumn('cod_objetoservicio', $cod_objetoservicioX);
+            $stmt1->bindColumn('idServicio', $idServicioSimX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -104,7 +109,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt->bindColumn('unidad', $unidadX);
             
             $oficinaGlobalX=$oficinaGlobalX;
-            
+            $codIAFX=$codIAFX;
+            $codIAFSecX=$codIAFSecX;
+
+            $cod_objetoservicioX=$cod_objetoservicioX;
+            $idServicioSimX=$idServicioSimX;
+            $existeNormaText=implode(",",obtenerNormasTextSimulacionServicio($codigoSimulacionSuper));
            $anioGeneral=$anioX;
            $nombreSimulacion=$nombreX;
            $porcentajeFijoSim=$porcentajeFijoX;
