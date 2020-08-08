@@ -29,6 +29,22 @@ $anio_fila=$_POST['anio_fila'];
 $iteracion=$_POST['iteracion'];
 $des_serv=$_POST['des_serv'];
 $oficina_servicio=$_POST['oficina_servicio'];
+
+$iaf_primario=$_POST['iaf_primario'];
+$iaf_secundario=$_POST['iaf_secundario'];
+
+$objeto_servicio=$_POST['objeto_servicio'];
+$tipo_servicio=$_POST['tipo_servicio'];
+$normas_tiposervicio=json_decode($_POST['normas_tiposervicio']);
+$normas_tiposerviciotext=$_POST['normas_tiposerviciotext'];
+
+$sqlEditSet="";
+if($objeto_servicio!=""){
+  $sqlEditSet=",cod_objetoservicio='$objeto_servicio'";
+}
+if($tipo_servicio!=""){
+  $sqlEditSet.=",id_tiposervicio='$tipo_servicio'";
+}
 if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
   $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=0 where cod_simulacionservicio=$codSimulacion";
   $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
@@ -37,15 +53,45 @@ if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
 
 if($_POST['tcs']==0){
   $tipo_atributo=1;
-  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' where codigo=$codSimulacion";
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos',cod_iaf_primario='$iaf_primario',cod_iaf_secundario='$iaf_secundario'
+     where codigo=$codSimulacion";
 }else{
   $tipo_atributo=2;
   $atributosDias= json_decode($_POST['sitios_dias']);
-  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos' where codigo=$codSimulacion";
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos',cod_iaf_primario='$iaf_primario',cod_iaf_secundario='$iaf_secundario'
+    $sqlEditSet where codigo=$codSimulacion";
 }
 
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();
+
+//insertarNormas
+if($tipo_servicio==2778){ //sistemas integrados 
+      $dbhD = new Conexion();
+      $sqlD="DELETE FROM simulaciones_servicios_normas where cod_simulacionservicio=$codSimulacion";
+      $stmtD = $dbhD->prepare($sqlD);
+      $stmtD->execute();     
+      if(isset($_POST['normas_tiposervicio'])){ 
+       $normasTipo=json_decode($_POST['normas_tiposervicio']);
+       for ($ntp=0; $ntp < count($normasTipo); $ntp++) { 
+        $codigoNormasTipo=$normasTipo[$ntp];       
+        $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
+          VALUES ('".$codSimulacion."','".$tipo_servicio."','".$codigoNormasTipo."','')";
+         $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
+         $flagsuccess=$stmtInsertNormas->execute();
+       }
+       if($normas_tiposerviciotext!=""){
+        $normasTipoText=explode(",",$normas_tiposerviciotext);
+        for ($ntp=0; $ntp < count($normasTipoText); $ntp++) { 
+        $nombreNormasTipo=$normasTipoText[$ntp];       
+        $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
+          VALUES ('".$codSimulacion."','".$tipo_servicio."',0,'".$nombreNormasTipo."')";
+         $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
+         $flagsuccess=$stmtInsertNormas->execute();
+        }    
+       }
+      }
+  }
 
 if($cantidad==0){
 	$cantidad=1;

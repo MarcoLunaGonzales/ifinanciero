@@ -7963,8 +7963,34 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       if($("#modal_alcance").length>0){
         alcance=$("#modal_alcance").val();
       }
+      var iaf_primario="";
+      if($("#iaf_primario").length>0){
+        iaf_primario=$("#iaf_primario").val();
+      }
+      var iaf_secundario="";
+      if($("#iaf_secundario").length>0){
+        iaf_secundario=$("#iaf_secundario").val();
+      }
+
+      var objeto_servicio="";
+      if($("#objeto_servicio").length>0){
+        objeto_servicio=$("#objeto_servicio").val();
+      }
+      var tipo_servicio="";
+      if($("#tipo_servicio").length>0){
+        tipo_servicio=$("#tipo_servicio").val();
+      }
+      var normas_tiposervicio=[];
+      if($("#normas_tiposervicio").length>0){
+        normas_tiposervicio=$("#normas_tiposervicio").val();
+      }
+      var normas_tiposerviciotext="";
+      if($("#normas_tiposerviciotext").length>0){
+        normas_tiposerviciotext=$("#normas_tiposerviciotext").val();
+      }
+
       var des_serv = $("#modal_des_serv").val();
-      var parametros = {"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
+      var parametros = {"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
       $.ajax({
         type:"POST",
         data:parametros,
@@ -7978,7 +8004,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
             detectarCargaAjax();
             
           }   
-         //alert(resp);
+         //alert(resp); //registrar datos de la simulacion
         }
       });
   }; 

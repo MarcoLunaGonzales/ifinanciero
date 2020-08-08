@@ -8903,7 +8903,30 @@ function obtenerSolicitudFacturacionDetalle($codigo){
    $stmt = $dbh->prepare($sql);
    $stmt->execute();
    return $stmt;
+}
 
+function obtenerNormaSimulacionServicioTCS($codSim,$tipoNorma,$codigo){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT codigo FROM simulaciones_servicios_normas where cod_simulacionservicio=$codSim and cod_tiposervicio=$tipoNorma and cod_norma=$codigo");
+   $stmt->execute();
+   $codigo=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigo=$row['codigo'];
+   }
+   return($codigo);
+}
+function obtenerNormasTextSimulacionServicio($codigo){
+  $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT * FROM simulaciones_servicios_normas where cod_simulacionservicio=$codigo and cod_norma=0");
+   $stmt->execute();
+   $arrayDatos=[];
+   $index=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $observaciones=$row['observaciones'];
+        $arrayDatos[$index]=$observaciones;
+        $index++;
+   }
+   return($arrayDatos);
 }
 ?>
 
