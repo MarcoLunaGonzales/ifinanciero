@@ -117,9 +117,10 @@ $contadorRegistros=0;
 
 <?php
 $fechaActual=date("Y-m-d");
-$fechaActualFormat= "31/07/".date("Y");
 
-//$fechaActualFormat=date("d/m/Y");
+//$fechaActualFormat= "31/07/".date("Y");
+
+$fechaActualFormat=date("d/m/Y");
 $m=date("m");
 $y=date("Y");
 $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
