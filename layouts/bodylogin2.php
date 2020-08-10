@@ -455,7 +455,7 @@
                             if(dato[4]==""){  dato[4]=0;}
                             if(dato[7]==""){  dato[7]=0;}
                             if(dato[8]==""){  dato[8]=0;}
-                            sumaTotalFactura=sumaTotalFactura+parseFloat(dato[4])+parseFloat(dato[7])+parseFloat(dato[8]);
+                            sumaTotalFactura=sumaTotalFactura+parseFloat(dato[4]);//+parseFloat(dato[7])+parseFloat(dato[8]);
                           }                                                                                 
                         }                
                       }
