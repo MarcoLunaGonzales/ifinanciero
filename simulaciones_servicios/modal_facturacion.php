@@ -443,7 +443,7 @@
         <input type="hidden" name="saldo_x" id="saldo_x" value="0">
         <div class="row">
 
-        <div class="btn-group">
+        <div class="">
           <a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(0)">Todas</a>
           <?php 
            //LIBRETAS BANCARIAS DETALLE CARGAR
