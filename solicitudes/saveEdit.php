@@ -64,8 +64,9 @@ if(isset($_POST['numero'])){
   }
 
   $codCont=0;//CODIGO DE CONTRATO
-  $fecha= date("Y")."-07-31 ".date("h:m:s");
-  //$fecha= date("Y-m-d h:m:s");
+  //$fecha= date("Y")."-07-31 ".date("h:m:s");
+  
+  $fecha= date("Y-m-d h:m:s");
   $codSolicitud=obtenerCodigoSolicitudRecursos();
   $dbh = new Conexion();
   if(isset($_POST['usuario_ibnored_v'])){
