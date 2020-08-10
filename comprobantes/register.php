@@ -27,6 +27,7 @@ $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 $codMesActiva=$_SESSION['globalMes'];
+$globalMesActivo=$_SESSION['globalMes'];
 $contadorRegistros=0;
 $nombreCompletoUnidad=nameUnidad($globalUnidad);
 ?>

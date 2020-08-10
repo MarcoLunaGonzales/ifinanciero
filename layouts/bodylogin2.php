@@ -498,8 +498,8 @@
                           var libretasBancarias=$("#libretas_bancarias"+(i+1)).hasClass("d-none"); 
                           var fechaComprobante=$("#fecha").val().split("-"); 
                           var d = new Date();
-                          var mesActual = parseInt($("#global_mes").val());//d.getMonth()+1;
-                          var anioActual = parseInt($("#global_gestion").val());//d.getFullYear();
+                          var mesActual = 7;//parseInt($("#global_mes").val());//d.getMonth()+1;
+                          var anioActual = 2020;//parseInt($("#global_gestion").val());//d.getFullYear();
                           
                         if($("#debe"+(i+1)).length>0){
                           //VALIDAMOS CUANDO LA CUENTA TENGA EC LA CUENTA AUXILIAR SIEMPRE ESTE SELECCIONADA.
@@ -529,7 +529,7 @@
                             }  
                           }
                           //LA LIBRETA DEBE ESTAR RELACIONADA A LA CUENTA DE LA LIBRETA BANCARIA 
-                          if(detalleLibretaSelect==false && libretasBancarias==false && $("#tipo_comprobante").val()!=4 && parseInt(fechaComprobante[1])==parseInt(mesActual)&&parseInt(fechaComprobante[0])==parseInt(anioActual)){
+                          if(detalleLibretaSelect==false && libretasBancarias==false && $("#tipo_comprobante").val()!=4 && parseInt(fechaComprobante[1])>=parseInt(mesActual)&&parseInt(fechaComprobante[0])>=parseInt(anioActual)){
                                 $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un detalle de la Libreta Bancaria para Cerrar.");
                                 $('#modalAlert').modal('show');
                                 return false;
