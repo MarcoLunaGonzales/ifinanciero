@@ -683,7 +683,7 @@
            }                  
           }
           if(sumaFactura>0){
-            if(sumaFactura!=parseFloat($("#total_solicitado"))){
+            if(sumaFactura!=parseFloat($("#total_solicitado").val())){
               cont++; 
             }
           } 
