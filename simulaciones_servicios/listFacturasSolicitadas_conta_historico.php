@@ -90,26 +90,26 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                 while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   $observaciones_string=obtener_string_observaciones($obs_devolucion,$observaciones,$observaciones_2);
                   $datos_otros=$codigo_facturacion."/0/0/0/".$nit."/".$razon_social;//dato 
-                switch ($codEstado) {
-                  case 1:
-                    $btnEstado="btn-default";
-                  break;
-                  case 2:
-                    $btnEstado="btn-danger";
-                  break;
-                  case 3:
-                    $btnEstado="btn-success";
-                  break;
-                  case 4:
-                    $btnEstado="btn-warning";
-                  break;
-                  case 5:
-                    $btnEstado="btn-warning";
-                  break;
-                  case 6:
-                    $btnEstado="btn-default";
-                  break;
-                }
+                  switch ($codEstado) {
+                    case 1:
+                      $btnEstado="btn-default";
+                    break;
+                    case 2:
+                      $btnEstado="btn-danger";
+                    break;
+                    case 3:
+                      $btnEstado="btn-success";
+                    break;
+                    case 4:
+                      $btnEstado="btn-info";
+                    break;
+                    case 5:
+                      $btnEstado="btn-warning";
+                    break;
+                    case 6:
+                      $btnEstado="btn-default";
+                    break;
+                  }
 
                   //verificamos si ya tiene factura generada y esta activa                           
                   $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe,cod_comprobante from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion order by codigo desc limit 1");
@@ -244,65 +244,77 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                   }
                   // $cadenaFacturasM=trim($cadenaFacturasM,',');
                   ?>
-                <tr>
-                  <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
-                  <td class="text-right"><small><?=$nro_correlativo;?></small></td>
-                  <td><small><?=$responsable;?></small></td>
-                  <td><small><?=$codigo_alterno?></small></td>
-                  <td><small><?=$fecha_registro;?></small></td>
-                  <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
-                  <td><small><small><?=$razon_social;?></small></small></td>
-                  <td><small><small><?=$concepto_contabilizacion?></small></small></td>
-                  <td>
-                    <?php if($cod_estado_factura_x==3){
-                        $estadofactura=obtener_nombreestado_factura($cod_estadofactura);?>
-                        <span class="badge badge-dark"><small><?=$estadofactura?></small></span><?php
-                    }else{?><small><?=$observaciones_string;?></small><?php 
-                    }?>
-                  </td>
-                  <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
-                  <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
-                  <td class="td-actions text-right"><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
-                    <?php
-                      if($globalAdmin==1){ //
-                        if($codigo_fact_x>0 && $cont_facturas<2 && ($cod_estado_factura_x!=2)){//print facturas
-                          ?>
-                          <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
-                          <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
-                            <i class="material-icons" title="Imprimir Comprobante">print</i>
-                          <?php 
-                        }elseif($cont_facturas>1){?>
-                          <div class="btn-group dropdown">
-                            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>Facturas</small></button>
-                            <div class="dropdown-menu"><?php 
-                              $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
-                              $arrayFacturas = explode(",",trim($cadenaFacturas,','));
-                              for ($i=0; $i < $cont_facturas; $i++) { 
-                                $cod_factura_x= $arrayCodFacturas[$i];
-                                $nro_factura_x= $arrayFacturas[$i];
-                                if($cod_factura_x!=0){?>
-                                  <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
-                                <?php }else{?>
-                                  <a class="dropdown-item" type="button" href='#'><i class="material-icons text-success" title="Factura">list</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
-                                <?php }
-                              }?>
-                            </div>
-                          </div> <?php 
-                        }elseif($cod_estado_factura_x==4){//factura manual ?>
-                          <button title="Detalles Factura Manual" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
-                            <i class="material-icons">list</i>
-                          </button> <?php 
-                        }?>
-                          <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
-                            <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
+                  <tr>
+                    <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
+                    <td class="text-right"><small><?=$nro_correlativo;?></small></td>
+                    <td><small><?=$responsable;?></small></td>
+                    <td><small><?=$codigo_alterno?></small></td>
+                    <td><small><?=$fecha_registro;?></small></td>
+                    <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
+                    <td><small><small><?=$razon_social;?></small></small></td>
+                    <td><small><small><?=$concepto_contabilizacion?></small></small></td>
+                    <td>
+                      <?php if($cod_estado_factura_x==3){
+                          $estadofactura=obtener_nombreestado_factura($cod_estadofactura);?>
+                          <span class="badge badge-dark"><small><?=$estadofactura?></small></span><?php
+                      }else{?><small><?=$observaciones_string;?></small><?php 
+                      }?>
+                    </td>
+                    <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
+                    <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
+                    <td class="td-actions text-right">
+                      <!-- <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br> -->
                       <?php
+                      if($cont_facturas>1){?>
+                        <div class="btn-group dropdown">
+                          <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>Facturas</small></button>
+                          <div class="dropdown-menu"><?php 
+                            $arrayCodFacturas = explode(",",trim($cadenaCodFacturas,','));
+                            $arrayFacturas = explode(",",trim($cadenaFacturas,','));
+                            for ($i=0; $i < $cont_facturas; $i++) { 
+                              $cod_factura_x= $arrayCodFacturas[$i];
+                              $nro_factura_x= $arrayFacturas[$i];
+                              if($cod_factura_x!=0){?>
+                                <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
+                              <?php }else{?>
+                                <a class="dropdown-item" type="button" href='#'><i class="material-icons text-success" title="Factura">list</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
+                              <?php }
+                            }?>
+                          </div>
+                        </div> <?php 
                       }
-                    ?>
-                  </td>
-                </tr>
-                <?php
+                      ?>
+                      <div class="btn-group dropdown">
+                        <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                           <i class="material-icons" >list</i><small><small><?=$estado;?></small></small>
+                        </button>
+                        <div class="dropdown-menu" >   
+                      <?php
+                        if($globalAdmin==1){ //
+                          if($codigo_fact_x>0 && $cont_facturas<2 && ($cod_estado_factura_x!=2)){//print facturas
+                            ?>
+                            <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
+                            <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
+                              <i class="material-icons" title="Imprimir Comprobante">print</i></a><?php
+                          }elseif($cod_estado_factura_x==4){//factura manual ?>
+                            <button title="Detalles Factura Manual" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
+                              <i class="material-icons">list</i>
+                            </button> <?php 
+                          }?>
+                            <a class="btn btn-danger" title="Imprimir Solicitud" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons">print</i></a>
+                            <a href="<?=$urlVer_SF;?>?codigo=<?=$codigo_facturacion;?>" target="_blank" class="btn btn-info" title="Ver Solicitud">
+                              <i class="material-icons">remove_red_eye</i>
+                            </a>
+                            <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
+                        <?php
+                        }
+                      ?>
+                    </div></div>
+                    </td>
+                  </tr>
+                  <?php
                     $index++;
-                  }
+                }
                 ?>
               </tbody>
             </table>

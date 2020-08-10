@@ -1,0 +1,13 @@
+**Revertir comprobante caja chica alguna manera..
+
+filtro de busqueda por fechas en libreta bancaria--
+editar archivo adjuntos..
+--ver el caso de que cuando se registra 2 un servicio add en tcp o oi, no me deje facturar otra vez.
+solicitud..
+habilitar variable de configuracion par limitar la cantidad de caracteres que se muestran en la glosa,
+ tanto en la glosa y comporbante a impimir
+20 en una variable conf..automatizar la cantidad d items a dividir
+
+--montos altos en cierre de fact
+--reporte de solicitudes de facturacion..filtrar por area,uo,estado,
+--ver el caso del listado de estados de cuenta...

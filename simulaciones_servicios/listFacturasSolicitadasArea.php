@@ -23,15 +23,16 @@ if(isset($_GET['q'])){
 }
 if(isset($_GET['s'])){
   $s=$_GET['s'];
+  // echo $s;
   // $sqlFilter1 = str_replace("IdOficina", "p.cod_unidadorganizacional", $_GET['s']);
   // $sqlFilter2 = "and ".str_replace("IdArea", "p.cod_area", $sqlFilter1);
   $arraySql=explode("IdArea",$s);
-  $codigoArea=0;
-  if(isset($arraySql[1])){
+  $codigoArea='0';  
+  if(isset($arraySql[1])){    
     $codigoArea=trim($arraySql[1]);
-  }
-  if($codigoArea==null || $codigoArea=='' || $codigoArea==0){
-    $sqlAreas="and sf.cod_area=0";
+  }   
+  if($codigoArea=='0'){    
+    $sqlAreas="and sf.cod_area=0";    
   }else{
     $sqlAreas="and sf.cod_area ".$codigoArea;  
   } 
@@ -39,6 +40,7 @@ if(isset($_GET['s'])){
   $globalArea=$_SESSION["globalArea"];
   $sqlAreas="and sf.cod_area =".$globalArea;
 }
+
 // echo $sqlAreas;
 ?>
 <input type="hidden" name="q" value="<?=$q?>" id="q"/>
@@ -49,7 +51,8 @@ if(isset($_GET['s'])){
 <?php
 
 //datos registrado de la simulacion en curso
-$sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where $sqlAreas order by codigo desc ";
+$sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_estadosolicitudfacturacion in (2,3,4,5) $sqlAreas order by codigo desc ";
+// echo $sqlDatos;
   $stmt = $dbh->prepare($sqlDatos);
 
   $stmt->execute();
@@ -132,8 +135,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                 $btnEstado="btn-success";
                               break;
                               case 4:                                
-                                $label='<span style="padding:1;" class="badge badge-warning">';
-                                $btnEstado="btn-warning";
+                                $label='<span style="padding:1;" class="badge badge-info">';
+                                $btnEstado="btn-info";
                               break;
                               case 5:                                
                                 $label='<span style="padding:1;" class="badge badge-warning">';
@@ -292,7 +295,19 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
                             <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
                             <td class="td-actions text-right">                              
-                              <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br>
+                              <!-- <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br> -->
+                              <div class="btn-group dropdown">
+                                <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                   <i class="material-icons" >list</i><small><?=$estado;?></small>
+                                </button>
+                                <div class="dropdown-menu" >  
+                                  <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud Facturación">print</i></a>
+                                  <a href="<?=$urlVer_SF;?>?codigo=<?=$codigo_facturacion;?>" target="_blank" class="btn btn-info" title="Ver Solicitud">
+                                    <i class="material-icons">remove_red_eye</i>
+                                  </a>
+                                  <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_otros;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
+                                </div>
+                              </div>
                             </td>
                           </tr>
                           <?php

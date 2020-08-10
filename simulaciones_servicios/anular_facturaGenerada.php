@@ -13,6 +13,8 @@ $observaciones=$_POST['observaciones'];
 $cod_solicitudfacturacion=$_POST['cod_solicitudfacturacion'];
 // $cod_comprobante=$_POST['codigo_comprobante'];
 $estado_factura=$_POST['estado_factura'];//1 normal, 2 devolucion
+$interno_delete=$_POST['interno_delete'];//1 normal, 2 devolucion
+
 session_start();
 $globalUser=$_SESSION["globalUser"];
 $stmtFActuras = $dbh->prepare("SELECT codigo,nro_factura,nit,razon_social,cod_comprobante,cod_unidadorganizacional,cod_area from facturas_venta where codigo in ($codigos_facturas_x)");
@@ -187,5 +189,10 @@ if($flagSuccess){
 
 }
 
-showAlertSuccessError($flagSuccess,"../".$urllistFacturasServicios);
+if($interno_delete==0){
+	showAlertSuccessError($flagSuccess,"../".$urllistFacturasServicios);
+}else{
+	showAlertSuccessError($flagSuccess,"../".$urllistFacturasServicios2);
+}
+
 ?>

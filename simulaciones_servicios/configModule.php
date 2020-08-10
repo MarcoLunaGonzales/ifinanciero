@@ -40,6 +40,7 @@ $urlAnularFactura="?opcion=anular_facturaGenerada";
 
 
 $urllistFacturasServicios="index.php?opcion=listFacturasGeneradas";
+$urllistFacturasServicios2="index.php?opcion=listFacturasGeneradas&interno=100";
 $urlPrintSolicitud="simulaciones_servicios/printSolicitud.php";
 // $urlSolicitudfactura="simulaciones_servicios/solicitud_facturacion.php";
 
@@ -87,4 +88,5 @@ $urlAnular_SoliciutdFacturacion="simulaciones_servicios/anular_SoliciutdFacturac
 $urlImpOferta="simulaciones_servicios/imp_oferta.php";
 $urlOferta="simulaciones_servicios/oferta.php";
 $urlSaveOferta="simulaciones_servicios/save_oferta.php";
+$urlVer_SF="simulaciones_servicios/solicitud_facturacion_vistaprevia.php";
 ?>

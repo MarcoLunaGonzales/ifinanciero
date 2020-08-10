@@ -11380,6 +11380,7 @@ function agregaformEnviarCorreo(datos){
   $("#correo_destino").tagsinput('removeAll');
   $("#correo_destino").tagsinput('add', d[3]);
   document.getElementById("razon_social").value=d[4];
+  document.getElementById("interno_x").value=d[5];
 }
 // function agregaformEnviarCorreo_solfac(datos){ 
 
@@ -11391,7 +11392,7 @@ function agregaformEnviarCorreo(datos){
 //   document.getElementById("razon_social_sf").value=d[4];
 // }
 
-function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social){
+function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social,interno){
   iniciarCargaAjax();
   $.ajax({
     type:"POST",
@@ -11402,18 +11403,24 @@ function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacio
       var success = resp[0];
       var correos = resp[1];
       detectarCargaAjax();
+      if(interno==0){
+        var url="index.php?opcion=listFacturasGeneradas";
+      }else{
+        var url="index.php?opcion=listFacturasGeneradas&interno=100";
+      }
+
       if(success==1){
-        alerts.showSwal('success-message','index.php?opcion=listFacturasGeneradas');
+        alerts.showSwal('success-message',url);
       }
       if(success==2){
         Swal.fire("ERROR! :(", "Ocurrio un error de envío a los correos: <br> "+correos, "warning");
-        // alerts.showSwal('error-messageEnviarCorreo','index.php?opcion=listFacturasGeneradas');
+        // alerts.showSwal('error-messageEnviarCorreo',url);
       }
       if(success==3){        
-        alerts.showSwal('error-messageEnviarCorreoAdjunto','index.php?opcion=listFacturasGeneradas');
+        alerts.showSwal('error-messageEnviarCorreoAdjunto',url);
       }
       if(success==0){
-        alerts.showSwal('error-messageCamposVacios','index.php?opcion=listFacturasGeneradas');
+        alerts.showSwal('error-messageCamposVacios',url);
       }
     }
   });
@@ -15435,6 +15442,7 @@ function modal_rechazarFactura(datos){
   document.getElementById("direccion").value=d[3];  //link destino
   document.getElementById("codigo_factura").value=d[4];  //codigo factura
   document.getElementById("codigo_comprobante").value=d[5];  //codigo factura
+  document.getElementById("interno_delete").value=d[6];  //interno
   var tipo_pago_credito=d[6];  //codigo factura  
   if(tipo_pago_credito!=0){    
     document.getElementById('boton_registrar_anticipo').style.display = 'none';   
@@ -15907,6 +15915,19 @@ function cargar_dataTable_ajax_grande(tabla){
       "info":     false,          
       "scrollY":        "900px",
       "scrollCollapse": true
+  });
+}
+function cargar_dataTable_ajax_listas(tabla){
+  // DataTable
+  var table = $('#'+tabla+'').DataTable({
+    "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    fixedHeader: {
+      header: true
+    },
+    "ordering": false,
+    "searching":false
   });
 }
 function cargar_filtro_datatable_ajax(modal){
@@ -16575,7 +16596,7 @@ function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
 function botonBuscar_facturas(){
   iniciarCargaAjax();
   $("#texto_ajax_titulo").html("Listando Facturas...");        
-
+  var interno=$("#interno").val();
   var razon_social_f=$("#razon_social_f").val();
   var detalle_f=$("#detalle_f").val();
   var fechaBusquedaInicio=$("#fechaBusquedaInicio").val();
@@ -16585,13 +16606,15 @@ function botonBuscar_facturas(){
   var personal_p=$("#personal_p").val();
   // var valor_glosa=$("#glosaBusqueda").val();
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_facturas.php?razon_social_f='+razon_social_f+'&detalle_f='+detalle_f+'&fechaI='+fechaBusquedaInicio+'&fechaF='+fechaBusquedaFin+'&nit_f='+nit_f+'&nro_f='+nro_f+'&personal_p='+personal_p,true);
+  ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_facturas.php?razon_social_f='+razon_social_f+'&detalle_f='+detalle_f+'&fechaI='+fechaBusquedaInicio+'&fechaF='+fechaBusquedaFin+'&nit_f='+nit_f+'&nro_f='+nro_f+'&personal_p='+personal_p+'&interno='+interno,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_facturas_generadas");
       contenedor.html(ajax.responseText);
       $("#modalBuscadorFacturas").modal("hide");
       detectarCargaAjax();
+      cargar_dataTable_ajax_listas('tablePaginator50NoFinder');
+      // cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
     }
   }
   ajax.send(null)
