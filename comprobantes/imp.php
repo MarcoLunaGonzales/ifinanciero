@@ -15,6 +15,7 @@ if(!isset($_GET['comp'])){
     $nombreMonedaG=nameMoneda($moneda);
 }
 
+$estadoComp=obtenerEstadoComprobante($codigo);
 $dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
@@ -57,6 +58,13 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
     $numeroC=$nroCorrelativo;
     $codigoUOX=$codigoUO;
 }
+//estado anulado
+if($estadoComp==2){
+  $glosaC="***************"." CONCEPTO: ".$glosaC." ***************";
+}else{
+  $glosaC="CONCEPTO: ".$glosaC;
+}
+
 //INICIAR valores de las sumas
 $tDebeDol=0;$tHaberDol=0;$tDebeBol=0;$tHaberBol=0;
 
@@ -127,7 +135,7 @@ $html.=  '<header class="header">'.
               '<td width="45%" class="text-right">'.$tipoC.' '.strtoupper(abrevMes(strftime('%m',strtotime($fechaC)))).' N&uacute;mero: '.generarNumeroCeros(6,$numeroC).'</td>'.
             '</tr>'.
             '<tr>'.
-            '<td colspan="3">CONCEPTO: '.$glosaC.'</td>'.
+            '<td colspan="3">'.$glosaC.'</td>'.
             '</tr>'.
          '</table><table class="table">'.
             '<thead>'.
@@ -151,7 +159,8 @@ $html.=  '<header class="header">'.
            '</thead>'.
            '<tbody>';
             $index=1;
-            while ($row = $data->fetch(PDO::FETCH_ASSOC)) {
+            if($estadoComp!=2){ //para listar solo los que no estan anulados
+             while ($row = $data->fetch(PDO::FETCH_ASSOC)) {
               $tamanioGlosa=obtenerValorConfiguracion(72); 
               if($row['glosa']>$tamanioGlosa){
                  $row['glosa']=substr($row['glosa'], 0, $tamanioGlosa);
@@ -171,7 +180,8 @@ $html.=  '<header class="header">'.
                       }
                                                   
                     $html.='</tr>';
-              }
+               }
+            }
 
       $entero=floor($tDebeBol);
       $decimal=$tDebeBol-$entero;
