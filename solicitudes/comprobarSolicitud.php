@@ -303,15 +303,57 @@ if(isset($_GET['cod'])){
             </div>
             <div class="col-sm-1">
               <div class="form-group">
-                  <label class="bmd-label-static">Unidad</label>
-                  <input class="form-control" type="text" name="unidad" value="<?=$unidadX?>" id="unidad" readonly/>
+                  <!--<label class="bmd-label-static">Unidad</label>-->
+                  <select class="selectpicker form-control form-control-sm" name="unidad_solicitud" onchange="cargarArrayAreaDistribucion(-1)" id="unidad_solicitud" data-style="btn btn-primary">
+                       <option disabled value="">--OFICINA--</option>               
+                                      <?php
+                                   $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
+                                   $stmt->execute();
+                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoX=$row['codigo'];
+                                    $nombreX=$row['nombre'];
+                                    $abrevX=$row['abreviatura'];
+                                    if($codigoX==$codUnidadX){
+                                     ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
+                                   }else{
+                                    //if($v==0){
+                                      ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                    //}      
+                                   }
+                                       
+                                      }
+                                    ?>
+                  </select>
+                  <!--<input class="form-control" type="text" name="unidad" value="<?=$unidadX?>" id="unidad" readonly/>-->
               </div>
             </div>
 
             <div class="col-sm-1">
                   <div class="form-group">
-                  <label class="bmd-label-static">Area</label>
-                  <input class="form-control" type="text" name="area" value="<?=$areaX?>" id="area" readonly/>
+                  <!--<label class="bmd-label-static">Area</label>
+                  <input class="form-control" type="text" name="area" value="<?=$areaX?>" id="area" readonly/>-->
+                  <select class="selectpicker form-control form-control-sm" name="area_solicitud" id="area_solicitud" data-style="btn btn-rose">
+                                   <option disabled value="">--AREA--</option>                 
+                                     <?php
+                                                             
+                                           $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo where a.cod_estado=1 order by 2");
+                                         $stmt->execute();
+                                         $cont=0;
+                                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                           $codigoX=$row['codigo'];
+                                           $nombreX=$row['nombre'];
+                                           $abrevX=$row['abreviatura'];
+                                           if($codigoX==$codAreaX){
+                                             ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                           }else{
+                                            //if($v==0){
+                                              ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
+                                            //}          
+                                           }
+                                            
+                                         } 
+                                         ?>
+                                        </select>
               </div>
             </div>
             <div class="col-sm-2">

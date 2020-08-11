@@ -100,6 +100,14 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
         $nombreCuentaTitle=substr($nombreCuentaTitle,0,190)."...";
       }
 ?>
+<!--<style>
+.dt-buttons{
+position: absolute !important;
+right :50px !important;
+top:-20px !important;
+z-index: 20;
+}
+</style>-->
  <div class="content">
   <div class="container-fluid">
         <div class="row">

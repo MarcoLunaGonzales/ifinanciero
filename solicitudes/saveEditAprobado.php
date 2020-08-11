@@ -25,6 +25,12 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 
 $codSolicitud=$_POST['cod_solicitud'];
 
+$unidad_solicitud=$_POST["unidad_solicitud"];
+$area_solicitud=$_POST["area_solicitud"];
+
+$sqlUpdate="UPDATE solicitud_recursos SET cod_unidadorganizacional=$unidad_solicitud,cod_area=$area_solicitud where codigo=$codSolicitud";
+$stmtUpdate = $dbh->prepare($sqlUpdate);
+$stmtUpdate->execute();
 
 // Preparamos
 $stmtSolicitud = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.codigo=$codSolicitud");

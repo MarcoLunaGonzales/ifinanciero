@@ -93,7 +93,7 @@ if(isset($_GET['codigo_lib'])){
               else $color_aux="background-color:#f6ddcc;";
               
               $datosEnviarModal="";
-              if($tipo_listado==1 || $saldo>0){//todo 
+              if($tipo_listado==1 || $saldo!=0){//todo 
               $datosEnviarModal=$Fecha."####".$Descripcion." ".$InformacionComplementaria."####".number_format($monto,2)."####".number_format($saldo,2)."####".$saldo; 
                 ?>
 
