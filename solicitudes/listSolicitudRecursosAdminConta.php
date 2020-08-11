@@ -225,7 +225,7 @@ $item_1=2708;
                               <div class="dropdown-menu menu-fixed-sm-table">
                                 <?php
                               if(isset($_GET['q'])){
-                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" target="_blank" class="dropdown-item">
                                     <i class="material-icons text-info">bar_chart</i> Ver Solicitud
                                  </a>
                               
@@ -581,7 +581,7 @@ $item_1=2708;
                                  <?php 
                                 }
                               }else{
-                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2" class="dropdown-item">
+                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2" class="dropdown-item" target="_blank">
                                     <i class="material-icons text-info">bar_chart</i> Ver Solicitud
                                  </a>
                               

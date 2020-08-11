@@ -283,7 +283,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
              
              //IMPORTE POR FACTURA
 
-             if($rowNuevo['cod_confretencion']==8||$rowNuevo['cod_confretencion']==10){
+             if($rowNuevo['cod_confretencion']==8){ //||$rowNuevo['cod_confretencion']==10
               //RETENCION POR FACTURAS
               $facturasSolicitud=obtenerFacturasSolicitudDetalleArray($codSolicitudDetalleOrigen);
                 for ($fac=0; $fac < count($facturasSolicitud); $fac++) { 

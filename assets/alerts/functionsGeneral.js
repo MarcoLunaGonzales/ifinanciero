@@ -12831,7 +12831,10 @@ function saveFacturaEdit(){
                     itemFacturas[fila-1][i].conFac=$("#con_fac_edit").val();
                     itemFacturas[fila-1][i].tipoFac=$("#tipo_fac_edit").val();
                     itemFacturas[fila-1][i].razonFac=$("#razon_fac_edit").val();
-                    $("#modalEditFac").modal("hide");
+                    limpiarModalCache("modalEditFac");
+                    //$("#modalFac").modal("hide");
+                    $("#modalFac").modal("show");
+                    //$("#modalEditFac").modal("hide");
                     listarFact(fila);
                     $("#link110").addClass("active");$("#link111").removeClass("active");$("#link112").removeClass("active");
                     $("#nav_boton1").addClass("active");$("#nav_boton2").removeClass("active");$("#nav_boton3").removeClass("active");               
