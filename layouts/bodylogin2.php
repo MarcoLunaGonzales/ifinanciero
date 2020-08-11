@@ -683,7 +683,7 @@
            }                  
           }
 
-          var restaIva=parseFloat($("#total_solicitado").val()-sumaFactura;
+          var restaIva=parseFloat($("#total_solicitado").val())-sumaFactura;
           if(sumaFactura>0){
             if((sumaFactura+restaIva)!=parseFloat($("#total_solicitado").val())){
               cont++; 
