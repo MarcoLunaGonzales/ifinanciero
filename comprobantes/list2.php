@@ -194,6 +194,18 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                         <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default" title="Ver Adjuntos">
                           <i class="material-icons">attachment</i>
                         </a>
+                        <?php 
+          $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
+          if($codigoSol!=0){
+           ?>
+           <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol;?>&comp=1" target="_blank" class="btn btn-success">
+             <i class="material-icons">preview</i>
+          </a>
+          <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol;?>&mon=1')" class="btn btn-info">
+            <i class="material-icons"><?=$iconImp;?></i>
+          </a><?php
+          }
+          ?>
                         <?php
                         if($existeCuenta==0){
                           ?>
