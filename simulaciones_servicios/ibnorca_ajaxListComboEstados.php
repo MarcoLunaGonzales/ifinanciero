@@ -26,7 +26,10 @@ $stmt2->execute();
     $descX=$row2['descr'];  
     if($codigoX!=2725){ //para quitar el estado pagado
       if($codigoX!=2729){
-        ?><option value="<?=$codigoX?>"><?=$descX?></option><?php
+        if($codigoX!=3107){
+          ?><option value="<?=$codigoX?>"><?=$descX?></option><?php  
+        }
+      
       }else{
         
       }

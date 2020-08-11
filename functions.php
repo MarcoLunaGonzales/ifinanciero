@@ -5663,7 +5663,10 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
          break;
        case 2822:
          return 6;
-         break;       
+         break;
+      case 3107:
+         return 7;
+         break;         
        default:
          return 1;
          break;
