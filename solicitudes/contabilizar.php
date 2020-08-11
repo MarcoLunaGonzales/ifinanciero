@@ -249,7 +249,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             $importeOriginal=$rowNuevo['monto'];
             $importeRetencion=(porcentRetencion($codigoRet)/100)*$importeOriginal;
             //importe de la factura
-            if($rowNuevo['cod_confretencion']==8||$rowNuevo['cod_confretencion']==10){
+            if($rowNuevo['cod_confretencion']==8){//||$rowNuevo['cod_confretencion']==10
               $importeOriginalAux=$importeOriginal;
               $importeOriginal=obtenerMontoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);
               $importeRetencion=($importeRetencion)+obtenerMontoGastoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);  
