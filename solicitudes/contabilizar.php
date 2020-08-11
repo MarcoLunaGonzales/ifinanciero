@@ -18,14 +18,19 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $fechaHoraActual=date("Y-m-d H:i:s");
-
+$userAdmin=obtenerValorConfiguracion(74);
 
 //  CREAR EL COMPROBANTE DEBENGADO
 
 //INICIO DE VARIABLES
 $glosaDetalleGeneral="";
 $tipoComprobante=3;
+
 $codComprobante=obtenerCodigoComprobante();
+if(isset($_GET['existe'])&&$globalUser==$userAdmin){
+  $codComprobante=$_GET['existe'];  
+}
+
 
 
 //fecha hora actual para el comprobante (SESIONES)

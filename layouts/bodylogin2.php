@@ -682,8 +682,10 @@
             };    
            }                  
           }
+
+          var restaIva=parseFloat($("#total_solicitado").val()-sumaFactura;
           if(sumaFactura>0){
-            if(sumaFactura!=parseFloat($("#total_solicitado").val())){
+            if((sumaFactura+restaIva)!=parseFloat($("#total_solicitado").val())){
               cont++; 
             }
           } 

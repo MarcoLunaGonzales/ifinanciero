@@ -4,6 +4,8 @@ require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
+
+$userAdmin=obtenerValorConfiguracion(74);
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
@@ -482,6 +484,7 @@ $item_1=2708;
                        if(verificarMontoPresupuestadoSolicitadoSR($codigo)==1){
                         $numeroSolTitulo='<a href="#" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning btn-sm btn-round">'.$numeroSol.'</a>';
                        }
+                       $otrosPagosCuenta=comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo);
 ?>
                         <tr>
                           <td><?=$unidad;?> - <?=$area;?></td>
@@ -523,7 +526,23 @@ $item_1=2708;
                                          ?>
                                     </div>
                                   </div> 
-                                   <?php       
+                                   <?php 
+                                   //opciones Admin
+                                    if($userAdmin==$globalUser){
+                                    ?>
+                                    <a title="Editar Solicitud" href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" class="btn btn-success">
+                                      <i class="material-icons">edit</i>
+                                    </a>
+                                    <?php 
+                                    if($otrosPagosCuenta==0){
+                                    ?>
+                                   <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&existe=<?=$codComprobante?>')" href='#'  class="btn btn-danger">
+                                      <i class="material-icons">assignment_turned_in</i>
+                                    </a>
+                                    <?php
+                                     } 
+                                  
+                                    }      
                                    }
                               ?>
                             <div class="btn-group dropdown">
