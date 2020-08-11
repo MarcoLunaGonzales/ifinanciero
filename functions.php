@@ -8789,11 +8789,11 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      }
      return $valor; 
   }
-  function obtenerValorOferta($codOferta,$codigo,$default){
+  function obtenerValorOferta($codOferta,$codigo,$default,$orden){
     $dbh = new Conexion();
-    $sql="SELECT descripcion FROM ofertas_complementos where cod_oferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1";
+    $sql="SELECT descripcion FROM ofertas_complementos where cod_oferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
     if($default==0){
-      $sql="SELECT descripcion FROM simulaciones_servicios_ofertas_complementos where cod_simulacionoferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1";
+      $sql="SELECT descripcion FROM simulaciones_servicios_ofertas_complementos where cod_simulacionoferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
     }
      //echo $sql;
      $stmt = $dbh->prepare($sql);

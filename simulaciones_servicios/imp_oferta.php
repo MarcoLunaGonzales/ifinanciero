@@ -11,15 +11,34 @@ if($codOferta==0){
  if($_GET["cod_area"]==39){
   $codOferta=1;
  }else{
- 	//tipo de oferta TCS A B C
-  $codOferta=2;
+ 	$codOferta=2;	
  }	
 }
+
+  if(isset($_GET["of"])){
+      switch ($_GET["of"]) {
+        case 'a':
+          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2.png";
+          break;
+        case 'b':
+          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2b.png";
+          break;
+        case 'c':
+          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2c.png";
+          break;  
+        default:
+          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2.png";
+          break;
+      }
+   }else{
+     $pdf_tipo="../assets/libraries/img/logos_oferta/cert2.png";
+   }
+
 
 if($_GET["cod_area"]==39){
  require 'imp_oferta_html.php';
 }else{
- require 'imp_oferta_html.php';
+ require 'imp_oferta_html_a.php';
 }
 $html = ob_get_clean();
 //echo $html;

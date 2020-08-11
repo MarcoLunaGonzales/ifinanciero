@@ -67,7 +67,24 @@ if(isset($_GET['cod'])){
                 $codOferta=1;
                }else{
                 //tipo de oferta TCS A B C
-                $codOferta=2;
+                if(isset($_GET["of"])){
+                  switch ($_GET["of"]) {
+                    case 'a':
+                      $codOferta=2;
+                      break;
+                    case 'b':
+                      $codOferta=3;
+                      break;
+                    case 'c':
+                      $codOferta=4;
+                      break;  
+                    default:
+                      $codOferta=2;
+                      break;
+                  }
+                }else{
+                  $codOferta=2;
+                }     
                }  
               }
 
