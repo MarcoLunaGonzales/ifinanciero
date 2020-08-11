@@ -126,7 +126,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                       <th class="text-center small">Fecha</th>
                       <th class="text-center small">Glosa</th>
                       <th class="text-center small">Estado</th>
-                      <th class="text-center small">Actions</th>
+                      <th class="text-center small" width="15%">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
