@@ -9030,7 +9030,7 @@ function guardarDatosProveedor(){
                   }else{
                     if(resp.trim()=="2"){
                       Swal.fire("Informativo!",respuesta.split("####")[1], "warning");
-                      actualizarRegistroProveedor();
+                      //actualizarRegistroProveedor();
                     }else{
                       Swal.fire("Error!",respuesta.split("####")[1], "warning");
                     }                    

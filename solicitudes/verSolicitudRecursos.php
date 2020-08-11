@@ -351,7 +351,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 				  	<div class="card-footer fixed-bottom col-sm-12">
 						
 						<?php 
-            if(isset($_GET['v_cajachica'])){
+            if(isset($_GET['v_cajachica'])||isset($_GET['comp'])){
 
             }else{
               if(isset($_GET['q'])){

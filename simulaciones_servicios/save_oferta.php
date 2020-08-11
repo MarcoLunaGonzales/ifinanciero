@@ -41,8 +41,8 @@ if(isset($_POST['cantidad_items'])){
   } 
 }
 
-if(isset($_GET['url'])){
-  $url=$_GET['url'];
+if(isset($_POST['url'])){
+  $url=$_POST['url'];
   showAlertSuccessError($flagSuccess,"../".$urlList.$url);  
 }else{
   showAlertSuccessError($flagSuccess,"../".$urlList);

@@ -2529,7 +2529,7 @@
 
   function obtenerCorrelativoComprobante($cod_tipocomprobante, $unidad_organizacional, $gestion, $mes){
     $dbh = new Conexion(); 
-    $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$cod_tipocomprobante' and c.cod_unidadorganizacional='$unidad_organizacional' and YEAR(c.fecha)='$gestion' and MONTH(c.fecha)='$mes' and c.cod_estadocomprobante<>2";
+    $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante='$cod_tipocomprobante' and c.cod_unidadorganizacional='$unidad_organizacional' and YEAR(c.fecha)='$gestion' and MONTH(c.fecha)='$mes'"; // and c.cod_estadocomprobante<>2
     //echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -2542,7 +2542,7 @@
 
 function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $dbh = new Conexion(); 
-    $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00' and c.cod_estadocomprobante<>2";
+    $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00'"; //and c.cod_estadocomprobante<>2
     //echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -8789,11 +8789,11 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      }
      return $valor; 
   }
-  function obtenerValorOferta($codOferta,$codigo,$default){
+  function obtenerValorOferta($codOferta,$codigo,$default,$orden){
     $dbh = new Conexion();
-    $sql="SELECT descripcion FROM ofertas_complementos where cod_oferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1";
+    $sql="SELECT descripcion FROM ofertas_complementos where cod_oferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
     if($default==0){
-      $sql="SELECT descripcion FROM simulaciones_servicios_ofertas_complementos where cod_simulacionoferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1";
+      $sql="SELECT descripcion FROM simulaciones_servicios_ofertas_complementos where cod_simulacionoferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
     }
      //echo $sql;
      $stmt = $dbh->prepare($sql);
@@ -8928,6 +8928,29 @@ function obtenerNormasTextSimulacionServicio($codigo){
    }
    return($arrayDatos);
 }
+
+function obtenerEstadoComprobante($codigo){
+     $dbh = new Conexion();
+     $sql="SELECT cod_estadocomprobante from comprobantes where codigo=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_estadocomprobante'];
+     }
+     return($valor);
+  }
+ function obtenerCodigoSolicitudRecursosComprobante($codigo){
+     $dbh = new Conexion();
+     $sql="SELECT codigo from solicitud_recursos where cod_comprobante=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+     }
+     return($valor);
+  } 
 ?>
 
 

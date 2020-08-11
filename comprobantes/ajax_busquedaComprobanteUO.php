@@ -80,7 +80,7 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
       <th class="text-center small">Fecha</th>
       <th class="text-left small">Glosa</th>
       <th class="text-center small">Estado</th>
-      <th class="text-center small">Actions</th>
+      <th class="text-center small" width="15%">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -139,9 +139,22 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
         <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default">
           <i class="material-icons">attachment</i>
         </a>
+        <?php 
+          $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
+          if($codigoSol!=0){
+           ?>
+           <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol;?>&comp=1" target="_blank" class="btn btn-success">
+             <i class="material-icons">preview</i>
+          </a>
+          <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol;?>&mon=1')" class="btn btn-info">
+            <i class="material-icons"><?=$iconImp;?></i>
+          </a><?php
+          }
+          ?>
         <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
           <i class="material-icons"><?=$iconEdit;?></i>
         </a>
+        
         <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
           <i class="material-icons"><?=$iconDelete;?></i>
         </button>

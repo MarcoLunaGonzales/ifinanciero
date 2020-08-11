@@ -49,8 +49,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
    </head><body>
    <header class="header">            
             <div id="header_titulo_texto"><center><label class="text-muted font-weight-bold">
-              <small><small><i><u><?=obtenerValorOferta($codOferta,1,$default)?></u></i></small></small>
-              <b><br>REGISTRO<br><?=obtenerValorOferta($codOferta,2,$default)?></b>
+              <small><small><i><u><?=obtenerValorOferta($codOferta,1,$default,1)?></u></i></small></small>
+              <b><br>REGISTRO<br><?=obtenerValorOferta($codOferta,2,$default,1)?></b>
             </label></center>
           </div>
           <img class="imagen-logo-der" src="../assets/img/ibnorca2.jpg">
@@ -70,10 +70,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
   <div class="pagina">
     <div class="container" style="width:100% !important;">
        <div class="float-left pl-6 pt-2">
-         <div class="s-9 text-left"><label class="">Nuestra Fecha</label><br> <?=obtenerValorOferta($codOferta,4,$default)?></div>
+         <div class="s-9 text-left"><label class="">Nuestra Fecha</label><br> <?=obtenerValorOferta($codOferta,4,$default,1)?></div>
        </div> 
        <div class="float-left pl-20 pt-2">
-         <div class="s-9 text-left"><label class="">Nuestra Referencia</label><br> <?=obtenerValorOferta($codOferta,5,$default)?></div>  
+         <div class="s-9 text-left"><label class="">Nuestra Referencia</label><br> <?=obtenerValorOferta($codOferta,5,$default,1)?></div>  
        </div> 
     </div>
 
@@ -93,10 +93,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     </div>
     <div class="pt-2 pl-6 pr-6 text-justificar s-9">
         <p class="pb-2 s-9">De nuestra consideración:</p>
-        <p>Mediante la presente tenemos el agrado de dirigirnos a usted a fin de enviarle la propuesta para la <?=$descripcionServSimulacionX?>.</p>
-        <p>La presente propuesta ha sido confeccionada en base a los datos suministrados en la solicitud de servicio enviado oportunamente, si desea cualquier información o aclaración, no dude en contactarse con el personal de certificación al teléfono 2783629 int. 120 email:</p>
-        <p>IBNORCA agradece la confianza depositada al haber solicitado una cotización para la certificación del sistema de gestión de su organización.</p>
-        <p class="pt-2">Esperando tener la oportunidad de brindarle el servicio solicitado.</p>
+        <p><?=obtenerValorOferta($codOferta,8,$default,1)?> <?=$descripcionServSimulacionX?>.</p>
+        <p><?=obtenerValorOferta($codOferta,8,$default,2)?></p>
+        <p><?=obtenerValorOferta($codOferta,8,$default,3)?></p>
+        <p class="pt-2"><?=obtenerValorOferta($codOferta,8,$default,4)?></p>
         <p class="pt-2 text-right">Saluda a usted muy atentamente,</p>
 
         <p class="pt-8 text-right"><?=ucfirst(namePersonalCompleto(obtenerValorConfiguracion(68)));?><br>
@@ -108,19 +108,26 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     <div class="s-9">
         <p class="font-weight-bold bg-danger text-white">1. &nbsp;&nbsp;INTRODUCCIÓN</p>
         <p class="font-weight-bold">1.1. &nbsp;&nbsp;Quienes somos</p>
-        <div class="pl-6 pr-6 text-justificar">
-            <p>IBNORCA es un organismo privado sin fines de lucro y de ámbito nacional que tiene como funciones las actividades de Normalización técnica, Certificación, Capacitación e Inspección, y se constituye en uno de los pilares fundamentales del Sistema Boliviano de Normalización, Metrología, Acreditación y Certificación – SNMAC.</p>
-            <p>IBNORCA es el único representante de la Organización Internacional de Normalización (ISO) en Bolivia y el único organismo acreditado en Certificación de Sistemas de Gestión en el país por la Dirección Técnica de Acreditación (DTA) del IBMETRO conforme a las normas internacionales ISO/IEC 17021 e ISO/IEC 17065, cumpliendo con el Decreto supremo 29519 del 16 de abril de 2008, que indica que es atribución del IBMETRO la acreditación de los organismos de certificación que operar en el territorio Nacional seas, estos nacionales o internacionales como condición necesaria para que sus certificaciones sean reconocidos a nivel del Estado Boliviano.</p>
-            <p>La acreditación garantiza y reconoce que IBNORCA tiene las competencias y cumple los requisitos para realizar labores de certificación a las organizaciones bajo distintos esquemas, entre ellos, los de sistemas de gestión bajo la MARCA IBNORCA y la certificación de productos con SELLO IBNORCA, adicionalmente verifica si en IBNORCA se ha implementado un Sistema de Gestión que asegure la imparcialidad, confidencialidad y calidad de sus certificaciones.</p>
-            <p>IBNORCA también cuenta con una alianza estratégica con AFNOR por la cual brindamos la certificación IQNET, como reconocimiento internacional a la certificación por los miembros de esta red.</p>
-        </div>
+          <table>
+          <tr>
+            <td width="30%"><div class="card-imagen"><img src="../assets/img/ibnorca2.jpg" alt="NONE" width="200px" height="150px"></div></td>
+            <td class="text-justificar"><p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,10,$default,1))?></p></td>
+          </tr>
+        </table>
     </div>
     <div class="s-9">
         <p class="font-weight-bold">1.2. &nbsp;&nbsp;Proceso de Certificación</p>
+        <table>
+          <tr>
+            <td width="38%"><div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/certificacion.jpg" alt="NONE" width="200px" height="100px"></div></td>
+            <td class="text-justificar"><p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,11,$default,1))?></p></td>
+          </tr>
+        </table>
+        <br>
         <div class="pl-6 pr-6 text-justificar">
-            <p>COMERCIAL:</p>
-            <p>Solicitud – Revisión de la solicitud – Emisión de la oferta contrato – Aceptación de la oferta contrato por parte del Cliente.</p>
-            <p>CERTIFICACIÓN – Ciclo de certificación (<?=$anioX?> años)</p>
+            <p class="text-danger">COMERCIAL</p>
+            <img src="../assets/libraries/img/logos_oferta/cert.jpg" alt="NONE" width="100%" height="150px">
+            <p class="text-danger">CERTIFICACIÓN – Ciclo de certificación (<?=$anioX?> años)</p>
         </div>
         <table class="table pt-4">
             <thead>
@@ -133,7 +140,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 <tr>
                     <td class="border-b">
                        <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/1.png" alt="NONE"></div>
+                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/1.jpg" alt="NONE"></div>
                            <div class="card-titulo font-weight-bold">AUDITORIA DE CERTIFICACION DE PRODUCTO CON SELLO IBNORCA / EVALUACION DE CONFORMIDAD DE PRODUCTO SEGÚN REGLAMENTO TÉCNICO </div>
                        </div>   
                     </td>
@@ -152,7 +159,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 <tr>
                     <td class="border-b">
                        <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/2.png" alt="NONE"></div>
+                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/2.jpg" alt="NONE"></div>
                            <div class="card-titulo font-weight-bold">DECISIÓN DE LA CERTIFICACION DE PRODUCTO CON SELLO IBNORCA / OTORGAMIENTO DEL DOCUMENTO DE CONFORMIDAD DE PRODUCTO SEGÚN REGLAMENTO TÉCNICO </div>
                        </div>   
                     </td>
@@ -167,7 +174,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 <tr>
                     <td class="border-b">
                        <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/3.png" alt="NONE"></div>
+                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/3.jpg" alt="NONE"></div>
                            <div class="card-titulo font-weight-bold">MANTENIMIENTO DE LA CERTIFICACION DE PRODUCTO CON SELLO IBNORCA / EVALUACION DE CONFORMIDAD SEGÚN REGLAMENTO TÉCNICO </div>
                        </div>   
                     </td>
@@ -179,7 +186,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 <tr>
                     <td class="border-b">
                        <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/4.png" alt="NONE"></div>
+                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/4.jpg" alt="NONE"></div>
                            <div class="card-titulo font-weight-bold">RENOVACIÓN DE LA CERTIFICACIÓN DE PRODUCTO CON SELLO IBNORCA /DOCUMENTO DE CONFORMIDAD DEL PRODUCTO.</div>
                        </div>   
                     </td>
@@ -215,11 +222,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     <div class="s-9">
         <p class="font-weight-bold bg-danger text-white">3. &nbsp;&nbsp;DOCUMENTOS DE REFERENCIA</p>
         <div class="pl-6 pr-6 text-justificar">
-            <p>-    Reglamento Técnico Nro.<br>
-               -   NB 011:2012 Cemento – Definiciones clasificación y especificaciones<br>
-               -   Reglamento de certificación de producto RMT-TCP-01-14<br>
-               -   Especificación Esquema 5 para Certificación de productos con SELLO IBNORCA ESP-TCP-04_00.<br>
-            </p>
+            <p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,12,$default,1))?></p>
         </div>
     </div>
     <div class="s-9">
@@ -292,10 +295,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
         ?>
         
         <div class="pl-6 pr-6 pt-1 text-justificar">
-            <p><b>Nota 1:</b> Considerar que esta propuesta puede ser modificada si luego de haberse realizado la auditoria de certificación se detecta que los datos brindados en la solicitud no son exactos y existieron cambios en el alcance de la certificación que cubre esta propuesta.</p>
-            <div><b>Nota 2:</b></div> 
-               <div>- Todos los precios de las auditorias INCLUYEN los impuestos de ley correspondientes y se facturan.</div>
-               <div>- La presente oferta NO INCLUYE: Todos los gastos directos e indirectos, como ser, pasajes, traslado, hospedaje, alimentación, transporte al punto de auditoría viáticos (deberá cancelar un monto de 600 BOB), serán de responsabilidad y consecuentemente asumidos por el CLIENTE, en forma separada o incluida en el costo total del servicio.</div>
+            <p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,13,$default,1))?></p>
             </p>
 
             <p><i>AMPLIACIÓN DEL ALCANCE DE LA CERTIFICACIÓN</i></p>
@@ -341,7 +341,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     <div class="s-9">
         <p class="font-weight-bold bg-danger text-white">9. &nbsp;&nbsp;FORMA DE PAGO</p>
         <div class="pl-6 pr-6 text-justificar">
-            <p>IBNORCA emitirá la factura al inicio de cada auditoría y el pago de la misma puede realizarse en un plazo máximo de 15 días calendario después de ser emitida, el Derecho de Uso de Sello será facturado una vez se otorgue los certificados y anualmente se realizara el cobro en el mes de vigencia de dicho documento y el pago de la misma puede realizarse en un plazo máximo de 15 días calendario después de ser emitida la factura. En caso que el CLIENTE no pague el monto de la factura en el plazo señalado, el CLIENTE pagará a IBNORCA, el 2 % de interés sobre el monto adeudado. Asimismo, las Partes aclaran que para el caso que el CLIENTE no solicite la realización de la auditoría de certificación de la Etapa II, Renovación según los términos y plazos  establecidos en el Reglamento de Certificación de Sistemas de Gestión de IBNORCA, y en caso que el CLIENTE aún esté interesado en continuar el proceso de Certificación correspondiente, deberá iniciar nuevamente la Etapa I, debiendo pagar por la misma, de acuerdo a la contraprestación acordada mediante la presente cláusula. </p>
+            <p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,14,$default,1))?></p>
         </div>
     </div>
     <div class="s-9">
@@ -378,9 +378,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             <p class="s-10 bg-danger text-white"><u>SOLUCION DE CONTROVERSIAS CERTIFICACIÓN IBNORCA</u></p>
             <p>Las Partes expresan que los términos de la presente Oferta contrato y las obligaciones que de él emergen, se encuentran bajo la jurisdicción de las leyes y autoridades bolivianas. Todo litigio, discrepancia, cuestión y reclamación resultante de la ejecución o interpretación de la presente Oferta contrato o relacionado con él, directa o indirectamente, se someterá previamente a la negociación directa entre Partes. Si agotada la negociación entre Partes o expirado el plazo máximo de 10 (Diez) días calendario, la controversia no fuese resuelta amigablemente, la misma se resolverá definitivamente mediante arbitraje en el marco de la Ley No. 708 de 25 de junio de 2015 Ley de Conciliación y Arbitraje o de la ley que regule dicho medio alternativo de solución de controversias. El arbitraje se sujetará a las autoridades, reglas y al procedimiento contenido en el Reglamento de Arbitraje del Centro de Conciliación y Arbitraje de la Cámara Nacional de Comercio de la ciudad de La Paz. Igualmente, las Partes hacen constar expresamente su compromiso de cumplir el Laudo Arbitral que se dicte, renunciando en la medida permitida por Ley, a cualquier tipo de recurso contra el mismo. Los costos emergentes del proceso de arbitraje serán asumidos en su totalidad por la parte que resulte perdedora. En caso de que se pudiera llegar a una conciliación antes de emitirse el Laudo Arbitral, los costos en los que se hubieran incurrido serán cubiertos por ambas partes en iguales porcentajes (50%). Las Partes excluyen de la presente cláusula la verificación por parte de la autoridad competente, la comisión de infracciones en las que incurra LA EMPRESA a los derechos de propiedad intelectual de IBNORCA. No obstante, de ello, una vez verificada la infracción, los daños y perjuicios que genere dicha infracción serán calculados en negociación o en arbitraje conforme lo establece la presenta clausula.</p>
             <p class="s-10 bg-danger text-white"><u>ACEPTACIÓN DE LA OFERTA Y REGLAMENTO DE CERTIFICACIÓN POR PARTE DE LA ORGANIZACIÓN POSTULANTE</u></p>
-            <p>El INSTITUTO BOLIVIANO DE NORMALIZACIÓN Y CALIDAD (IBNORCA), asociación sin fines de lucro legalmente constituida, con NIT Nº 1020745020, que en virtud al Testimonio de Poder Nº 1140/2018 de fecha 04 de octubre de 2018 otorgado por ante Notaría de Fe Pública de Primera Clase Nº 097 del Distrito Judicial de La Paz, a cargo de la <?=obtenerValorConfiguracion(69)?> se encuentra debidamente representado en el presente acto por el <?=obtenerValorConfiguracion(70)?> mayor de edad, hábil por derecho, con C.I. Nº <?=obtenerValorConfiguracion(71)?> y que en lo sucesivo a los fines del presente contrato se denominará simplemente “IBNORCA”.</p>
-            <p>Por otra ............. empresa legalmente constituida, se encuentra debidamente representado en el presente acto por ............ mayor de edad, hábil por derecho, y que en lo sucesivo a los fines del presente contrato se denominará simplemente el “CLIENTE”.   </p>
-            <p>Las partes, aceptan todos los términos y CONDICIONES descritas en la presente OFERTA y en el REGLAMENTO DE CERTIFICACIÓN RMT-TCS-01, para lo cual proceder a la firma y a la devolución en físico de este documento a IBNORCA y con ello se da por iniciado el proceso de certificación. </p>
+            <p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,15,$default,1))?></p>
+            
         </div>
     </div>
     

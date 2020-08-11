@@ -182,6 +182,19 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                 <?php
                                 }
                                 ?>
+                                
+                                <?php 
+                                $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
+                                if($codigoSol!=0){
+                                 ?>
+                                 <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol;?>&comp=1" target="_blank" class="dropdown-item">
+                                  <i class="material-icons text-success">preview</i> <b class="text-dark">Adjuntos SR</b>
+                                </a>
+                                <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol;?>&mon=1')" class="dropdown-item">
+                                  <i class="material-icons text-info"><?=$iconImp;?></i> <b class="text-dark">SR</b>
+                                </a><?php
+                                }
+                                ?>
                                 <a href="#" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
                                   <i class="material-icons text-danger"><?=$iconDelete;?></i> Eliminar
                                 </a>
