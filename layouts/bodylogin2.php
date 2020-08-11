@@ -679,10 +679,12 @@
            if(parseInt($('#cod_retencion'+(i+1)).val())==parseInt($('#cod_configuracioniva').val())){
             for (var d = 0; d < itemFacturas[i].length; d++) {
               sumaFactura+=itemFacturas[i][d].impFac;//-exeFac-iceFac-tazaFac;
+              console.log("fac monto:"+itemFacturas[i][d].impFac);
             };    
            }                  
           }
-
+          console.log("SUMATORIA FACTURAS:"+sumaFactura);
+          console.log("TOTAL SOLICITUD:"+parseFloat($("#total_solicitado").val()));
           var restaIva=parseFloat($("#total_solicitado").val())-sumaFactura;
           if(sumaFactura>0){
             if((sumaFactura+restaIva)!=parseFloat($("#total_solicitado").val())){
