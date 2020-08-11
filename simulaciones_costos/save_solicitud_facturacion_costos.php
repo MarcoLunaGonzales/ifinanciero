@@ -30,7 +30,8 @@ try {//recibiendo datos
     $nit = $_POST["nit"];
     $observaciones = $_POST["observaciones"];    
     $observaciones_2 = $_POST["observaciones_2"];    
-    $persona_contacto = 0;
+    $persona_contacto = $_POST["persona_contacto"];
+    $cod_cliente = $_POST["cod_cliente"];
     $modal_totalmontos = $_POST["modal_totalmontos"];
     $modal_numeroservicio = $_POST["modal_numeroservicio"];
 
@@ -46,8 +47,8 @@ try {//recibiendo datos
     // $estado_ibnorca=0;
     if ($cod_facturacion == 0){//insertamos       
         $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
-        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud,dias_credito) 
-        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$ci_estudiante','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo','$persona_contacto',1,'$codigo_alterno',2,'$dias_credito')");//2 tipo capacitacion
+        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud,dias_credito,ci_estudiante) 
+        values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo','$persona_contacto',1,'$codigo_alterno',2,'$dias_credito','$ci_estudiante')");//2 tipo capacitacion
         $flagSuccess=$stmt->execute();        
         if($flagSuccess){
             //antes de insertar sacamos el codigo de la solicitud para el detalle
@@ -81,8 +82,8 @@ try {//recibiendo datos
                     // $estado_x=$datos["estado"];
                     // $mensaje_x=$datos["mensaje"];
                     // if($estado_x){//registro correcto webservice
-                        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
-                        values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
+                        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,ci_estudiante) 
+                        values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,$ci_estudiante)");
                         $flagSuccess=$stmt->execute();                        
                     // }else{
                     //     $stmtDelte = $dbh->prepare("DELETE from solicitudes_facturacion where codigo=$cod_facturacion");
@@ -144,7 +145,7 @@ try {//recibiendo datos
         //$stmt->debugDumpParams();
     }else {//update
         //actualizamos los campos estaticos
-        $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipoobjeto='$cod_tipoobjeto',cod_tipopago='$cod_tipopago',cod_cliente='$ci_estudiante',cod_personal='$cod_personal',razon_social='$razon_social',nit='$nit',observaciones='$observaciones',observaciones_2='$observaciones_2',persona_contacto='$persona_contacto',dias_credito = '$dias_credito'
+        $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipoobjeto='$cod_tipoobjeto',cod_tipopago='$cod_tipopago',cod_cliente='$cod_cliente',cod_personal='$cod_personal',razon_social='$razon_social',nit='$nit',observaciones='$observaciones',observaciones_2='$observaciones_2',persona_contacto='$persona_contacto',dias_credito = '$dias_credito'
         where codigo = $cod_facturacion");      
         $flagSuccess=$stmt->execute();
         if($flagSuccess){

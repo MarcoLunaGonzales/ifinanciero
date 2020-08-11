@@ -18,7 +18,7 @@ try {
     $cod_cc = $_POST["cod_cc"];
 
     $cod_cuenta=trim($_POST["cuenta_auto_id"]);    
-    $cod_comprobante=trim($_POST["comprobante"]);
+    $cod_comprobante_ec=trim($_POST["comprobante"]);
     $cuenta_auxiliar1=trim($_POST["cuenta_auxiliar1"]);
     $cod_retencion = trim($_POST["tipo_retencion"]);
     $numero = trim($_POST["numero"]);
@@ -88,19 +88,25 @@ try {
             $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) values ($codigo,$numero,$cod_retencion,$monto,$monto_rendicion,'$cod_personal','$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
             $flagSuccess=$stmtrendiciones->execute();
             //insertamos estado_de_cuentas y comprobantes
-            if($cod_comprobante>0){                
-                $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)values('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobante','$cuenta_auxiliar1','$codigo')");
+            if($cod_comprobante_ec>0){//llebga el cod de estado de cuenta
+                $sqlEstadoCuenta="SELECT e.cod_comprobantedetalle From estados_cuenta e where e.codigo=$cod_comprobante_ec limit 1"; 
+                    $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
+                $stmtEstadoCuenta->execute();                    
+                $resultado=$stmtEstadoCuenta->fetch();
+                $cod_comprobantedetalle=$resultado['cod_comprobantedetalle'];
+
+                $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)values('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobantedetalle','$cuenta_auxiliar1','$codigo')");
                 $flagSuccess=$stmtContraCuenta->execute();
                 if($flagSuccess){
                     //busacmos el codigo de estado de cuenta
-                    $sqlEstadoCuenta="SELECT e.codigo From estados_cuenta e where e.cod_comprobantedetalle=$cod_comprobante limit 1"; 
-                    $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
-                    $stmtEstadoCuenta->execute();                    
-                    $resultado=$stmtEstadoCuenta->fetch();
-                    $codigo_estadoCuenta=$resultado['codigo'];
+                    // $sqlEstadoCuenta="SELECT e.codigo From estados_cuenta e where e.cod_comprobantedetalle=$cod_comprobante_ec limit 1"; 
+                    // $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
+                    // $stmtEstadoCuenta->execute();                    
+                    // $resultado=$stmtEstadoCuenta->fetch();
+                    // $codigo_estadoCuenta=$resultado['codigo'];
                     $codigo_sr=0;
-                    if($codigo_estadoCuenta!=""){
-                        $sqlDetalleX="SELECT codigo,cod_solicitudrecurso,cod_solicitudrecursodetalle,cod_proveedor,cod_tipopagoproveedor from solicitud_recursosdetalle where cod_estadocuenta=$codigo_estadoCuenta";
+                    // if($codigo_estadoCuenta!=""){
+                        $sqlDetalleX="SELECT codigo,cod_solicitudrecurso,cod_solicitudrecursodetalle,cod_proveedor,cod_tipopagoproveedor from solicitud_recursosdetalle where cod_estadocuenta=$cod_comprobante_ec";
                         $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                         $stmtDetalleX->execute();                    
                         $stmtDetalleX->bindColumn('codigo', $codigo_sr);
@@ -111,7 +117,7 @@ try {
                         while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)){ 
 
                         }
-                    }
+                    // }
                     
                     if($codigo_sr>0){
                         $cod_pagoproveedor=obtenerCodigoPagoProveedor();
@@ -188,7 +194,7 @@ try {
 
             //para la parte de la contra cuenta
             //insertamos estado_de_cuentas y comprobantes
-            if($cod_comprobante>0){                
+            if($cod_comprobante_ec>0){                
                 $stmtContraCuenta = $dbh->prepare("UPDATE estados_cuenta set cod_plancuenta='$cod_cuenta',monto='$monto',cod_proveedor='$cod_proveedores',fecha='$fecha',cod_cuentaaux='$cuenta_auxiliar1' where cod_cajachicadetalle=$codigo ");
                 $flagSuccess=$stmtContraCuenta->execute();
             }

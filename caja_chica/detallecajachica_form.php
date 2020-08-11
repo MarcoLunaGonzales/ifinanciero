@@ -59,12 +59,13 @@ if ($codigo > 0){
     $cod_actividad_sw= $result['cod_actividad_sw'];
     $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;
     // sacamos datos del comprobante
-    $stmtComprobante = $dbh->prepare("SELECT cod_comprobantedetalle,cod_plancuenta,cod_cuentaaux from estados_cuenta where cod_cajachicadetalle=$cod_dcc order by codigo asc LIMIT 1");
+    $stmtComprobante = $dbh->prepare("SELECT e.cod_comprobantedetalleorigen,e.cod_plancuenta,e.cod_cuentaaux,c.glosa from estados_cuenta e,comprobantes_detalle c where e.cod_comprobantedetalleorigen=c.codigo and e.cod_cajachicadetalle=$codigo order by e.codigo asc LIMIT 1");
     $stmtComprobante->execute();
     $resultComprobante = $stmtComprobante->fetch();
-    $cod_comprobante =  $resultComprobante['cod_comprobantedetalle'];
+    $cod_comprobante =  $resultComprobante['cod_comprobantedetalleorigen'];
     $cod_cuenta_compro=$resultComprobante['cod_plancuenta'];
     $cod_cuenta_aux_compro=$resultComprobante['cod_cuentaaux']; 
+    $glosa_comprobante=$resultComprobante['glosa']; 
 }else{
     //para el numero correlativo
     $stmtCC = $dbh->prepare("SELECT nro_documento,nro_recibo from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$cod_cc order by codigo desc limit 1");
@@ -99,6 +100,7 @@ if ($codigo > 0){
     $cuenta_aux="";
     $cod_cuenta=0;
     $cod_actividad_sw=null;
+    $glosa_comprobante="";
 }
 //sacmos el valor de fechas hacia atrás
 $dias_atras=obtenerValorConfiguracion(31);
@@ -392,6 +394,20 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                       </a> 
                   </div>
               </div>                          
+            </div>          
+            <div id="div_contenedor_glosa_estadocuenta">                    
+                <?php
+                if($codigo>0 && ($glosa_comprobante!=null || $glosa_comprobante!="")){?>
+                <div class="row">
+                  <label class="col-sm-2 col-form-label">Glosa Comprobante</label>
+                    <div class="col-sm-8">
+                      <div class="form-group">
+                        <textarea class="form-control" readonly><?=$glosa_comprobante;?></textarea>
+                      </div>
+                    </div>
+                </div>
+                <?php }
+                ?>
             </div>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Detalle</label>
@@ -407,7 +423,27 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
               <div class="col-sm-12">
                 <div class="form-group">                        
                   <div id="div_contenedor_sol_recursos" align="center">                    
-                    
+                    <?php
+                    if($codigo>0){                      
+                      //sacar codigo de estado de cuenta
+                      $sqlEstadoCuenta="SELECT e.codigo From estados_cuenta e where e.cod_comprobantedetalle=$cod_comprobante limit 1"; 
+                      $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
+                      $stmtEstadoCuenta->execute();                    
+                      $resultado=$stmtEstadoCuenta->fetch();
+                      $codigo_estadoCuenta=$resultado['codigo'];
+                      $sqlDetalleX="SELECT codigo,cod_solicitudrecurso,cod_solicitudrecursodetalle,cod_proveedor,cod_tipopagoproveedor from solicitud_recursosdetalle where cod_estadocuenta=$codigo_estadoCuenta limit 1";        
+                      $stmtDetalleX = $dbh->prepare($sqlDetalleX);
+                      $stmtDetalleX->execute();                    
+                      $resultado=$stmtDetalleX->fetch();
+                      $cod_solicitudrecursodetalle_sr=$resultado['cod_solicitudrecursodetalle'];
+                      $cod_solicitudrecurso_sr=$resultado['cod_solicitudrecurso'];  
+                      // echo $cod_solicitudrecurso_sr."-";
+                      if($cod_solicitudrecurso_sr!=0 && $cod_solicitudrecurso_sr!='' && $cod_solicitudrecurso_sr!=null){?>
+                        <a class="btn btn-success" href='<?=$urlSolicitudRecursos;?>?cod=<?=$cod_solicitudrecurso_sr;?>&v_cajachica=10' target="_blank"><i class="material-icons" title="Imprimir Factura">bar_chart</i>Ver Solicitud
+                        </a>
+                      <?php }
+                    }
+                    ?>
                   </div>
                 </div>
               </div>              

@@ -206,6 +206,10 @@ $html.=  '<header class="header">'.
           $stmtTipoPago->execute();          
           $html.='<table class="table" >
                   <tr class="td-color-celeste"><td class="text-center"><b>Forma de Pago</b></td></tr>';
+          $cod_tipopago_credito=obtenerValorConfiguracion(48);
+          $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
+          $cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
+          $cod_tipopago_anticipo=obtenerValorConfiguracion(64);
           while ($rowTipoPago = $stmtTipoPago->fetch(PDO::FETCH_ASSOC)) {
               $cod_tipopago=$rowTipoPago['cod_tipopago'];
               $porcentaje=$rowTipoPago['porcentaje'];
@@ -213,7 +217,7 @@ $html.=  '<header class="header">'.
                 $html.='<tr><td class="text-left"><b>EN EFECTIVO('.$porcentaje.' %)</b></td></tr>';
               }elseif($cod_tipopago==47){//cheque
                 $html.='<tr><td class="text-left"><b>CHEQUE('.$porcentaje.' %)</b></td></tr>';
-              }elseif($cod_tipopago==217){//credito
+              }elseif($cod_tipopago==$cod_tipopago_credito){//credito
                 $datosContacto=obtenerDatosContactoSolFac($persona_contacto);                
                 if($datosContacto!=''){                  
                   $array_datos = explode("#####", $datosContacto);
@@ -263,9 +267,10 @@ $html.=  '<header class="header">'.
                     </table>
                   </td>
                 </tr>';
-              }elseif($cod_tipopago==49){
+              }elseif($cod_tipopago==$cod_tipopago_deposito_cuenta){
+
                 $html.='<tr><td class="text-left"><b>DEPOSITO EN CUENTA('.$porcentaje.' %)</b></td></tr>';
-              }elseif($cod_tipopago==50){
+              }elseif($cod_tipopago==$cod_tipopago_anticipo){
                 $html.='<tr><td class="text-left"><b>ANTICIPO CLIENTE('.$porcentaje.' %)</b></td></tr>';
               }else{
                 $html.='<tr><td class="text-left">&nbsp</td></tr>';
