@@ -126,7 +126,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
         <br>
         <div class="pl-6 pr-6 text-justificar">
             <p class="text-danger">COMERCIAL</p>
-            <img src="../assets/libraries/img/logos_oferta/cert.png" alt="NONE" width="100%" height="150px">
+            <img src="../assets/libraries/img/logos_oferta/cert.jpg" alt="NONE" width="100%" height="150px">
             <p class="text-danger">CERTIFICACIÓN – Ciclo de certificación (<?=$anioX?> años)</p>
         </div>
         <table class="table pt-4">
@@ -140,7 +140,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 <tr>
                     <td class="border-b">
                        <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/1.png" alt="NONE"></div>
+                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/1.jpg" alt="NONE"></div>
                            <div class="card-titulo font-weight-bold">AUDITORIA DE CERTIFICACION DE PRODUCTO CON SELLO IBNORCA / EVALUACION DE CONFORMIDAD DE PRODUCTO SEGÚN REGLAMENTO TÉCNICO </div>
                        </div>   
                     </td>
@@ -159,7 +159,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 <tr>
                     <td class="border-b">
                        <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/2.png" alt="NONE"></div>
+                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/2.jpg" alt="NONE"></div>
                            <div class="card-titulo font-weight-bold">DECISIÓN DE LA CERTIFICACION DE PRODUCTO CON SELLO IBNORCA / OTORGAMIENTO DEL DOCUMENTO DE CONFORMIDAD DE PRODUCTO SEGÚN REGLAMENTO TÉCNICO </div>
                        </div>   
                     </td>
@@ -174,7 +174,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 <tr>
                     <td class="border-b">
                        <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/3.png" alt="NONE"></div>
+                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/3.jpg" alt="NONE"></div>
                            <div class="card-titulo font-weight-bold">MANTENIMIENTO DE LA CERTIFICACION DE PRODUCTO CON SELLO IBNORCA / EVALUACION DE CONFORMIDAD SEGÚN REGLAMENTO TÉCNICO </div>
                        </div>   
                     </td>
@@ -186,7 +186,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 <tr>
                     <td class="border-b">
                        <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/4.png" alt="NONE"></div>
+                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/4.jpg" alt="NONE"></div>
                            <div class="card-titulo font-weight-bold">RENOVACIÓN DE LA CERTIFICACIÓN DE PRODUCTO CON SELLO IBNORCA /DOCUMENTO DE CONFORMIDAD DEL PRODUCTO.</div>
                        </div>   
                     </td>

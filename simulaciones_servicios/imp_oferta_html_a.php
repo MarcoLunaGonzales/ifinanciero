@@ -127,7 +127,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
         <br>
         <div class="pl-6 pr-6 text-justificar">
             <p class="text-danger">COMERCIAL</p>
-            <img src="../assets/libraries/img/logos_oferta/cert.png" alt="NONE" width="100%" height="150px">
+            <img src="../assets/libraries/img/logos_oferta/cert.jpg" alt="NONE" width="100%" height="150px">
             <p><br></p>
             <p class="text-danger">CERTIFICACIÓN</p>
 

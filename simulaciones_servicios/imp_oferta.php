@@ -18,20 +18,20 @@ if($codOferta==0){
   if(isset($_GET["of"])){
       switch ($_GET["of"]) {
         case 'a':
-          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2.png";
+          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2.jpg";
           break;
         case 'b':
-          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2b.png";
+          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2b.jpg";
           break;
         case 'c':
-          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2c.png";
+          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2c.jpg";
           break;  
         default:
-          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2.png";
+          $pdf_tipo="../assets/libraries/img/logos_oferta/cert2.jpg";
           break;
       }
    }else{
-     $pdf_tipo="../assets/libraries/img/logos_oferta/cert2.png";
+     $pdf_tipo="../assets/libraries/img/logos_oferta/cert2.jpg";
    }
 
 
