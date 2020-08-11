@@ -8953,6 +8953,21 @@ function obtenerEstadoComprobante($codigo){
         $valor=$row['codigo'];
      }
      return($valor);
+  }
+  function verificarEdicionComprobanteUsuario($codigo){
+     $codigosAdmin=obtenerValorConfiguracion(74);
+     $dbh = new Conexion();
+     $sql="SELECT codigo from personal where codigo in ('$codigosAdmin')";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;$admin=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+        if($valor==$codigo){
+          $admin=1;
+        }
+     }
+     return($admin);
   } 
 ?>
 

@@ -528,7 +528,7 @@ $item_1=2708;
                                   </div> 
                                    <?php 
                                    //opciones Admin
-                                    if($userAdmin==$globalUser){
+                                    if(verificarEdicionComprobanteUsuario($globalUser)!=0){
                                     ?>
                                     <a title="Editar Solicitud" href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" class="btn btn-success">
                                       <i class="material-icons">edit</i>
@@ -559,10 +559,10 @@ $item_1=2708;
                                 <?php 
                                 if($codEstado==4){
                                  ?>
-                                 <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
+                                 <a href="#" targetonclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
-                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
+                                 <a targethref="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
                                     <i class="material-icons text-success">edit</i> Editar Solicitud
                                  </a>
                                  <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">

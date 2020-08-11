@@ -27,7 +27,7 @@ $glosaDetalleGeneral="";
 $tipoComprobante=3;
 
 $codComprobante=obtenerCodigoComprobante();
-if(isset($_GET['existe'])&&$globalUser==$userAdmin){
+if(isset($_GET['existe'])&&verificarEdicionComprobanteUsuario($globalUser)!=0){
   $codComprobante=$_GET['existe'];  
 }
 
@@ -121,7 +121,7 @@ $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3,$glob
 $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
 //CREACION DEL COMPROBANTE
-    if(isset($_GET['existe'])&&$globalUser==$userAdmin){
+    if(isset($_GET['existe'])&&verificarEdicionComprobanteUsuario($globalUser)!=0){
        $sqlEstadosCuenta="SELECT * from comprobantes_detalle where cod_comprobante=$codComprobante";
        $stmtEstadosCuenta = $dbh->prepare($sqlEstadosCuenta);
        $stmtEstadosCuenta->execute();

@@ -460,12 +460,12 @@
                         }                
                       }
                       var monto_debe_total_comprobante = $("#totaldeb").val();  
-                      if(sumaTotalFactura!=monto_debe_total_comprobante){
+                      /*if(sumaTotalFactura!=monto_debe_total_comprobante){
                         mensaje+="<p>El Monto registrado en las facturas difiere del total!</p>";
                         $('#msgError').html(mensaje);
                         $('#modalAlert').modal('show');
                         envio=1; 
-                      }
+                      }*/
                       console.log("SUMA FACTURAS: "+sumaTotalFactura+" "+monto_debe_total_comprobante);
                       if(contadorFacturas==cantiFacturas){
                         mensaje+="<p>No puede existir Facturas vacías!</p>";
