@@ -5,6 +5,7 @@ require_once 'configModule.php'; //configuraciones
 require_once 'styles.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
+$globalUser=$_SESSION["globalUser"];
 
 $dbh = new Conexion();
 $codigo_tipo_caja_Chica=$codigo;
@@ -116,7 +117,14 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                   <a  rel="tooltip" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=1')">
                                       <i class="material-icons text-danger"  title="Cerrar Caja Chica">lock</i>Cerrar
                                     </a>
-                                <?php }?>
+                                <?php }
+                                if(($globalUser==90 || $globalUser==89) && $cod_estado==2){?>
+                                  <a  rel="tooltip" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=3')">
+                                    <i class="material-icons text-success"  title="Abrir Caja Chica">lock_open</i>Abrir
+                                  </a>
+                                <?php }
+                                ?>
+
                                 <a href='<?=$urlprint_cajachica;?>?codigo=<?=$cod_cajachica;?>' target="_blank" rel="tooltip" class=" dropdown-item">
                                     <i class="material-icons text-primary" title="Imprimir Detalle Gastos">print</i>Imprimir
                                 </a>

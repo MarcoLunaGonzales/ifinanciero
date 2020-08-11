@@ -16,13 +16,16 @@ if(isset($_GET['q'])){
   $u=$_GET['u'];
 }
 
-$stmtCantidad = $dbh->prepare("SELECT tipo_solicitud,cod_simulacion_servicio,cod_cliente,ci_estudiante from solicitudes_facturacion where codigo=$codigo_facturacion");//and cod_estado=1
+$sql="SELECT tipo_solicitud,cod_simulacion_servicio,cod_cliente,ci_estudiante from solicitudes_facturacion where codigo=$codigo_facturacion";
+$stmtCantidad = $dbh->prepare($sql);//and cod_estado=1
 $stmtCantidad->execute();
 $resutCanitdad = $stmtCantidad->fetch();
 $tipo_solicitud = $resutCanitdad['tipo_solicitud'];//1 tcp_tcs, 2 capacitacion estudiantes,6 capacitacion empresas, 3 servicios,4 manual,5Normas, 7 capacitacion estudiantes grupal
 $cod_simulacion_servicio = $resutCanitdad['cod_simulacion_servicio'];
 $cod_cliente = $resutCanitdad['cod_cliente'];
 $ci_estudiante = $resutCanitdad['ci_estudiante'];
+
+// echo $ci_estudiante;
 //para capacitacion grupal
 
 if($tipo_solicitud==7){  
@@ -37,7 +40,6 @@ if($tipo_solicitud==7){
   $string_ci=trim($string_ci,',');
   $string_curso=trim($string_curso,',');
 }
-
 
 if(isset($_GET['q'])){  
   if($tipo_solicitud==1){//tcp ?>  
