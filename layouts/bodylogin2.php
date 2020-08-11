@@ -678,7 +678,7 @@
           for (var i = 0; i < $("#cantidad_filas").val(); i++) {
            if(parseInt($('#cod_retencion'+(i+1)).val())==parseInt($('#cod_configuracioniva').val())){
             for (var d = 0; d < itemFacturas[i].length; d++) {
-              sumaFactura+=itemFacturas[i][d].impFac;//-exeFac-iceFac-tazaFac;
+              sumaFactura+=parseFloat(itemFacturas[i][d].impFac);//-exeFac-iceFac-tazaFac;
               console.log("fac monto:"+itemFacturas[i][d].impFac);
             };    
            }                  
