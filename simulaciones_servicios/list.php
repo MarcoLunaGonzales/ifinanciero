@@ -221,9 +221,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                               </div>
                             </div>                           
                             <?php
-                             if($codEstado==5){
-                               $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
-                               if(isset($_GET['q'])){
+                            if(isset($_GET['q'])){
                                   ?>
                                   <div class="btn-group dropdown">
                                     <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" title="Ver Oferta en PDF" aria-expanded="false">
@@ -248,8 +246,37 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                          <i class="material-icons text-success">edit</i> Editar PDF
                                       </a> 
                                     </div>
-                                  </div>      
-                                  
+                                  </div>
+                             <?php
+                             }else{
+                                ?><div class="btn-group dropdown">
+                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" title="Ver Oferta en PDF" aria-expanded="false">
+                                      <i class="material-icons text-dark">picture_as_pdf</i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                      <a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="dropdown-item"  target="_blank">
+                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF
+                                      </a>
+                                      <?php 
+                                      if($codAreaX==38){
+                                       ?><a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&of=b" class="dropdown-item"  target="_blank">
+                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF B
+                                      </a><?php
+                                      ?><a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&of=c" class="dropdown-item"  target="_blank">
+                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF C
+                                      </a><?php
+                                      } 
+                                      ?>
+                                      <a href="<?=$urlOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="dropdown-item"  target="_blank">
+                                         <i class="material-icons text-success">edit</i> Editar PDF
+                                      </a> 
+                                    </div>
+                                  </div><?php
+                             }     
+                             if($codEstado==5){
+                               $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);
+                               if(isset($_GET['q'])){
+                                  ?>      
                                   <a href="solicitudes/registerSolicitudDetalle.php?sim=<?=$codigo?>&det=2&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>" target="_self" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
                                  </a>
@@ -277,29 +304,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                   } 
                                 }else{
                                 ?>
-                                <div class="btn-group dropdown">
-                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" title="Ver Oferta en PDF" aria-expanded="false">
-                                      <i class="material-icons text-dark">picture_as_pdf</i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                      <a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF
-                                      </a>
-                                      <?php 
-                                      if($codAreaX==38){
-                                       ?><a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&of=b" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF B
-                                      </a><?php
-                                      ?><a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&of=c" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF C
-                                      </a><?php
-                                      } 
-                                      ?>
-                                      <a href="<?=$urlOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-success">edit</i> Editar PDF
-                                      </a> 
-                                    </div>
-                                  </div>  
+                                  
                                 <a href="solicitudes/registerSolicitudDetalle.php?sim=<?=$codigo?>&det=2" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
                                  </a>
