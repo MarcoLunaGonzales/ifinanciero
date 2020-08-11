@@ -81,6 +81,7 @@ if($cod_facturacion>0){//editar
     $cod_uo= $resultSimuFact['cod_unidadorganizacional'];
     $cod_area= $resultSimuFact['cod_area'];
     $dias_credito=$resultSimuFact['dias_credito'];
+    $cod_cliente=$resultSimuFact['cod_cliente'];
 
 }else{//registrar
 
@@ -90,11 +91,9 @@ if($cod_facturacion>0){//editar
     $stmtSimuFact->execute();
     $resultSimuFact = $stmtSimuFact->fetch();
     $fecha_registro = $resultSimuFact['fecha_registro'];
-    
-
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');    
-    // $razon_social=$razon_social;
+    // $razon_social=$razon_social;//ya está arriba
     // $nit = $ci_estudiante;    
     $observaciones = $Codigo_alterno." - ".$nombreAlumno;
     $observaciones_2 = null;
@@ -106,7 +105,7 @@ if($cod_facturacion>0){//editar
     }else{
         $cod_personal= $globalUser;
     }
-    
+    $cod_cliente=0;//por defecto otros clientes
     $descuento_por=0;
     $descuento_bob=0;
     if(isset($_POST['q'])){
@@ -308,7 +307,7 @@ $contadorRegistros=0;
                             </div>
                                                       
                             
-                            <input type="hidden" name="persona_contacto" id="persona_contacto" class="form-control" value="<?=$persona_contacto?>">
+                            <!-- <input type="hidden" name="persona_contacto" id="persona_contacto" class="form-control" value="<?=$persona_contacto?>"> -->
                         </div>
                         <!-- fin tipos pago y objeto  -->                                                 
                         <div class="row dias_credito_x" id="" style="display: none">                            
@@ -336,8 +335,54 @@ $contadorRegistros=0;
                                 </div>
                             </div>     
                         </div>
-                        <!-- fin cliente y responsable -->                       
-                                                                
+                        <!-- fin cliente y responsable -->
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Cliente</label>
+                            <div class="col-sm-4">
+                                <div class="form-group" >                                                            
+                                    <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContactoNormas(this);" data-live-search="true" >
+                                        <option value=""></option>
+                                        <?php 
+                                        $queryTipoObjeto = "SELECT * from clientes where cod_estadoreferencial=1 order by nombre";
+                                        $statementObjeto = $dbh->query($queryTipoObjeto);
+                                        while ($row = $statementObjeto->fetch()){ ?>
+                                            <option <?=($cod_cliente==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <?php } ?>
+                                    </select>  
+                                        
+                                </div>
+                            </div>
+                            <label class="col-sm-2 col-form-label">Persona Contacto</label>
+                            <div class="col-sm-3">
+                                <div class="form-group" >
+                                    <div id="div_contenedor_contactos">
+                                        <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
+                                          <?php 
+                                          $query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
+                                          $stmt = $dbh->prepare($query);
+                                          $stmt->execute();
+                                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                            $codigo_contacto=$row['codigo'];    
+                                            $nombre_conatacto=$row['nombre']." ".$row['paterno']." ".$row['materno'];
+                                            ?><option <?=($persona_contacto==$codigo_contacto)?"selected":"";?> value="<?=$codigo_contacto?>" class="text-right"><?=$nombre_conatacto?></option>
+                                           <?php 
+                                           } ?> 
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group" >                                        
+                                    <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroContactoNormas()">
+                                        <i class="material-icons" title="Add Contacto">add</i>
+                                    </a>
+                                    <a href="#" class="btn btn-success btn-round btn-fab btn-sm" onclick="actualizarRegistroContactoNormas()">
+                                       <i class="material-icons" title="Actualizar Clientes & Contactos">update</i>
+                                    </a> 
+                                </div>
+                            </div>                    
+                        </div>
+                        <!-- fin cliente  -->
 
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Razón Social</label>
@@ -515,12 +560,12 @@ $contadorRegistros=0;
                                                     if($estadoPagado!=1){
                                                         // if($cod_facturacion==0){
                                                             //parte del controlador de check//impedir los ya registrados
-                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_cliente=$ci_estudiante and tipo_solicitud=2 and sf.cod_estadosolicitudfacturacion!=2";
+                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.ci_estudiante=$ci_estudiante and tipo_solicitud=2 and sf.cod_estadosolicitudfacturacion!=2";
                                                              // echo $sqlControlador2;
                                                             $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                             $stmtControlador2->execute();
                                                             //sacamos el monto total
-                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion<>5 and sf.cod_cliente=$ci_estudiante and tipo_solicitud=2 and sf.cod_estadosolicitudfacturacion!=2";
+                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion<>5 and sf.ci_estudiante=$ci_estudiante and tipo_solicitud=2 and sf.cod_estadosolicitudfacturacion!=2";
                                                              // echo $sqlControladorTotal;
                                                             $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
                                                             $stmtControladorTotal->execute();

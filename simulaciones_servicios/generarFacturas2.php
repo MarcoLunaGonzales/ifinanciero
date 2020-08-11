@@ -57,6 +57,7 @@ try{
             $observaciones = $resultInfo['observaciones'];
             $nombre_cliente = $resultInfo['nombre_cliente'];
             $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
+            $ci_estudiante = $resultInfo['ci_estudiante'];
             if($nombre_cliente==null || $nombre_cliente==''){//no hay registros con ese dato
                 $stmtInfo = $dbh->prepare("SELECT sf.* FROM solicitudes_facturacion sf where sf.codigo=$codigo");
                 $stmtInfo->execute();
@@ -73,6 +74,7 @@ try{
                 $observaciones = $resultInfo['observaciones'];
                 $nombre_cliente = $resultInfo['razon_social'];
                 $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
+                $ci_estudiante = $resultInfo['ci_estudiante'];
             }
             $cod_personal=$globalUser;
             $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
@@ -141,7 +143,7 @@ try{
                                 for($i=$contador_aux_items_y;$i<$contador_aux_items;$i++){
                                     $cadena_cod_facdet_1.=$array_codigo_detalle[$i].",";
                                 }                                
-                                $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador);
+                                $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador,$ci_estudiante);
                                 $contador_aux_items_y+=$cantidad_por_defecto;
                                 $variable_controlador++;
                             }else{
@@ -152,7 +154,7 @@ try{
                             $stringFacturas=obtenerStringFacturas($codigo);
                             $stringFacturasCod=obtenerStringCodigoFacturas($codigo);
                             $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$stringFacturas,$stringFacturasCod,$cod_libreta,$cod_estadocuenta);                            
-                            if($cod_comprobante==null || $cod_comprobante==''){
+                            if($cod_comprobante==null || $cod_comprobante=='' || $cod_comprobante==0){
                                 $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo in ($stringFacturasCod)";
                                 $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
                                 $stmtDeleteCAbeceraFactura->execute();

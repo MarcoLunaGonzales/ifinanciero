@@ -16,12 +16,13 @@ if(isset($_GET['q'])){
   $u=$_GET['u'];
 }
 
-$stmtCantidad = $dbh->prepare("SELECT tipo_solicitud,cod_simulacion_servicio,cod_cliente from solicitudes_facturacion where codigo=$codigo_facturacion");//and cod_estado=1
+$stmtCantidad = $dbh->prepare("SELECT tipo_solicitud,cod_simulacion_servicio,cod_cliente,ci_estudiante from solicitudes_facturacion where codigo=$codigo_facturacion");//and cod_estado=1
 $stmtCantidad->execute();
 $resutCanitdad = $stmtCantidad->fetch();
 $tipo_solicitud = $resutCanitdad['tipo_solicitud'];//1 tcp_tcs, 2 capacitacion estudiantes,6 capacitacion empresas, 3 servicios,4 manual,5Normas, 7 capacitacion estudiantes grupal
 $cod_simulacion_servicio = $resutCanitdad['cod_simulacion_servicio'];
 $cod_cliente = $resutCanitdad['cod_cliente'];
+$ci_estudiante = $resutCanitdad['ci_estudiante'];
 //para capacitacion grupal
 
 if($tipo_solicitud==7){  
@@ -57,7 +58,7 @@ if(isset($_GET['q'])){
     </script><?php 
   }elseif($tipo_solicitud==2){//solicitud capacitacion estudiantes 
     $IdCurso=$cod_simulacion_servicio;
-    $CiAlumno=$cod_cliente;
+    $CiAlumno=$ci_estudiante;
     ?>  
     <script type="text/javascript">
       location = "<?=$urlregistro_solicitud_facturacion_sec_estudiantes?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$IdCurso;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5&q=<?=$q?>&r=<?=$v?>&s=<?=$s?>&u=<?=$u?>"
@@ -98,7 +99,7 @@ if(isset($_GET['q'])){
     </script><?php 
   }elseif($tipo_solicitud==2){//solicitud capacitacion estudiantes 
     $IdCurso=$cod_simulacion_servicio;
-    $CiAlumno=$cod_cliente;
+    $CiAlumno=$ci_estudiante;
     ?>  
     <script type="text/javascript">
       location = "<?=$urlregistro_solicitud_facturacion_sec_estudiantes?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$IdCurso;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=<?=$codigo_facturacion?>&cod_sw=5"

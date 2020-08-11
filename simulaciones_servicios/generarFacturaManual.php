@@ -57,6 +57,7 @@ try{
             $observaciones = $resultInfo['observaciones'];
             $nombre_cliente = $resultInfo['nombre_cliente'];
             $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
+            $ci_estudiante_p = $resultInfo['ci_estudiante'];
             if($nombre_cliente==null || $nombre_cliente==''){//no hay registros con ese dato
                 $stmtInfo = $dbh->prepare("SELECT sf.* FROM solicitudes_facturacion sf where sf.codigo=$codigo");
                 $stmtInfo->execute();
@@ -73,6 +74,7 @@ try{
                 $observaciones = $resultInfo['observaciones'];
                 $nombre_cliente = $resultInfo['razon_social'];
                 $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
+                $ci_estudiante_p = $resultInfo['ci_estudiante'];
             }
             $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
             if($cod_sucursal==null || $cod_sucursal==''){//sucursal no encontrada
@@ -127,8 +129,8 @@ try{
                 $cadena_factura="F ".$nro_factura;                
                 $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$cadena_factura,$nro_factura,$cod_libreta,$cod_estadocuenta);
                 if($cod_comprobante!=0){
-                    $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante) 
-                    values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH',null,'$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_factura','$nroAutorizacion',null,'$monto_total','$observaciones','4',$cod_comprobante)";
+                    $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,ci_estudiante) 
+                    values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH',null,'$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_factura','$nroAutorizacion',null,'$monto_total','$observaciones','4',$cod_comprobante,'$ci_estudiante_p')";
                     // echo $sql;
                     $stmtInsertSoliFact = $dbh->prepare($sql);
                     $flagSuccess=$stmtInsertSoliFact->execute();
@@ -218,8 +220,8 @@ try{
                             if($estado_ibnorca==0){//sin errores en el servicio web
                                 $precio_x=$precio_x+$descuento_bob_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario
                                 $descripcion_alterna_x=$row['descripcion_alterna'];            
-                                $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
-                                values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0)");
+                                $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId,ci_estudiante) 
+                                values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0,$ci_estudiante_p)");
                                 $flagSuccess=$stmtInsertSoliFactDet->execute();
                             }
                         }
