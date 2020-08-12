@@ -15354,6 +15354,44 @@ function descargar_txt_libro_compras(){
       }
     }
 }
+
+function descargar_txt_libro_comprasProy(){
+    var cod_gestion=$("#gestiones").val();
+    var cod_mes=$("#cod_mes_x").val();
+    var estado=$("#estado").val();
+    if(cod_gestion==null || cod_gestion==''){
+      Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
+    }else{
+      if(cod_mes==null || cod_mes==''){
+        Swal.fire("Informativo!", "Por favor Seleccione el mes!", "warning");
+      }else{
+        if(estado==null || estado==''){
+          Swal.fire("Informativo!", "Por favor seleccione el estado!", "warning");
+        }else{     
+          $.ajax({
+          type:"POST",
+          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&estado="+estado,
+          url:"reportes_compras/reportePrintLibroCompraProyTXT.php",
+          success:function(r){
+            var respu=r.split('#####');
+            var estado=respu[1];
+            var nombre_ar=respu[2];
+            // console.log(r);
+            if(estado==1){
+              var direccion=nombre_ar;
+              descargar_txt_libro_compras_xProy(direccion);
+            }else{
+              
+              Swal.fire("ERROR!", "Hubo un error al generar el TXT!", "warning");
+              
+            }
+          }
+          }); 
+        }      
+      }
+    }
+}
+
 function descargar_txt_libro_ventas_x(url){
   // var monto_total=$("#modal_totalmontos").val();
   $('#modal_descargarTXT').modal('show');
@@ -15386,7 +15424,22 @@ function descargar_txt_libro_compras_x(url){
     }
     ajax.send(null); 
 }
-
+function descargar_txt_libro_compras_xProy(url){
+  // var monto_total=$("#modal_totalmontos").val();
+  $('#modal_descargarTXT').modal('show');
+      //agregamos la cuenta si lo tuviese  
+    var contenedor;  
+    contenedor = document.getElementById('contenedor_DescargaTxt');
+    ajax=nuevoAjax();
+    ajax.open('GET', 'reportes_compras/ajax_contenedor_boton_descarga_txt_compras_proy.php?url='+url,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;
+        $('.selectpicker').selectpicker(["refresh"]);          
+      }
+    }
+    ajax.send(null); 
+}
 function cerrarmodal_reportes(){
   // var monto_total=$("#modal_totalmontos").val();
   $('#modal_descargarTXT').modal('hide');

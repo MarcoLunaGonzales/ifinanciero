@@ -23,7 +23,7 @@ $dbh = new Conexion();
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Libro Compras</h4>
+                  <h4 class="card-title">Reporte Libro Compras Proyecto</h4>
                 </div>
                 <form class="" action="<?=$urlReporteComprasProy?>" target="_blank" method="POST">
                 <div class="card-body">
@@ -95,7 +95,7 @@ $dbh = new Conexion();
                   	
                 <div class="card-footer">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_compras()">Generar TXT</a>
+                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_comprasProy()">Generar TXT</a>
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
 			  </div>
                </form> 
