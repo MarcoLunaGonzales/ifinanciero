@@ -54,8 +54,8 @@ if (!$conexión) {
     $sqlIni="SET dateformat ymd;";
     $rsIni = odbc_exec( $conexión, $sqlIni );
 
-    $fechaInicial="2020-01-01 00:00:00";
-    $fechaFinal="2020-01-31 23:59:59";
+    $fechaInicial="2020-02-01 00:00:00";
+    $fechaFinal="2020-02-29 23:59:59";
 
     $sql = "SELECT forma.fondo, forma.clase, forma.numero, forma.fecha, forma.moneda, forma.glosa, forma.estado FROM ibnorca2020.dbo.forma where forma.clase in ('FAC') and forma.fecha between '$fechaInicial' and '$fechaFinal' order by forma.fecha, forma.clase, forma.numero";
     // end modificado
@@ -117,7 +117,10 @@ if (!$conexión) {
         $unidadInsertar=$fondo;
       }
 
-      list($tipoComprobante, $mesComprobante) = explode('-',$clase);
+      //list($tipoComprobante, $mesComprobante) = explode('-',$clase);
+      $tipoComprobante=$clase;
+      $tipoComprobanteInsertar=4;
+      /*
       if($tipoComprobante=="T"){
         $tipoComprobanteInsertar=3;
       }elseif ($tipoComprobante=="I") {
@@ -126,7 +129,7 @@ if (!$conexión) {
         $tipoComprobanteInsertar=2;
       }elseif ($tipoComprobante=="FAC"){
         $tipoComprobanteInsertar=4;
-      }
+      }*/
 
       $numeroComprobante=intval($numero);
 

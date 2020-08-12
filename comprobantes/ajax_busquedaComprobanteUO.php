@@ -34,7 +34,7 @@ $cuenta=$_GET['cuenta'];
 $sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
   (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
   (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c, estados_comprobantes ec, comprobantes_detalle cd where c.cod_estadocomprobante=ec.codigo and cd.cod_comprobante=c.codigo and c.cod_estadocomprobante!=2";  
+  from comprobantes c, estados_comprobantes ec, comprobantes_detalle cd where c.cod_estadocomprobante=ec.codigo and cd.cod_comprobante=c.codigo ";  
 
 if($cod_uo!=""){
   $sql.=" and c.cod_unidadorganizacional in ($cod_uo)";
@@ -43,7 +43,7 @@ if($tipo!=""){
   $sql.=" and c.cod_tipocomprobante in ($tipo)";  
 }
 if($fechaI!="" && $fechaF!=""){
-  $sql.=" and c.fecha BETWEEN '$fechaI' and '$fechaF'"; 
+  $sql.=" and c.fecha BETWEEN '$fechaI 00:00:00' and '$fechaF 23:59:59'"; 
 }
 if($glosa!=""){
   $sql.=" and c.glosa like '%$glosa%'";
@@ -54,7 +54,7 @@ if($comprobante!=""){
 if($cuenta!=""){
   $sql.=" and cd.cod_cuenta=$cuenta";
 }
-$sql.=" GROUP BY c.codigo order by c.fecha desc, c.numero desc;";
+$sql.=" GROUP BY c.codigo order by c.cod_tipocomprobante, c.numero desc;";
 
 // echo $sql;
 
@@ -96,6 +96,7 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
         break;
         case 2:
         $btnEstado="btn-danger";$estadoIcon="thumb_down";
+        $glosaComprobante="***ANULADO***";
         break;
         case 3:
           $btnEstado="btn-warning";$estadoIcon="thumb_up";
@@ -113,6 +114,7 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
       <td class="text-left small"><?=$glosaComprobante;?></td>
       <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
       <td class="td-actions text-right">
+        
         <div class="btn-group dropdown">
           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="material-icons"><?=$iconImp;?></i>
@@ -136,6 +138,7 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
                ?>
           </div>
         </div>
+        <?php if($estadoC!=2){?>
         <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default">
           <i class="material-icons">attachment</i>
         </a>
@@ -157,7 +160,8 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
         
         <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
           <i class="material-icons"><?=$iconDelete;?></i>
-        </button>
+        </button>        
+        <?php }?>
       </td>
     </tr>
     <?php

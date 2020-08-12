@@ -32,7 +32,7 @@ $cuenta=$_GET['cuenta'];
 $sqlArray="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
   (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
   (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c, estados_comprobantes ec, comprobantes_detalle cd,plan_cuentas pc where c.cod_estadocomprobante=ec.codigo and cd.cod_comprobante=c.codigo and cd.cod_cuenta=pc.codigo and c.cod_estadocomprobante!=2  ";//and c.cod_gestion='$globalGestion'
+  from comprobantes c, estados_comprobantes ec, comprobantes_detalle cd,plan_cuentas pc where c.cod_estadocomprobante=ec.codigo and cd.cod_comprobante=c.codigo and cd.cod_cuenta=pc.codigo ";//and c.cod_gestion='$globalGestion'
 if($cod_uo!=""){
   $sqlArray.=" and c.cod_unidadorganizacional in ($cod_uo)";
 }
@@ -40,7 +40,7 @@ if($tipo!=""){
   $sqlArray.=" and c.cod_tipocomprobante in ($tipo)";  
 }
 if($fechaI!="" && $fechaF!=""){
-  $sqlArray.=" and c.fecha BETWEEN '$fechaI' and '$fechaF'"; 
+  $sqlArray.=" and c.fecha BETWEEN '$fechaI 00:00:00' and '$fechaF 23:59:59'"; 
 }
 if($glosa!=""){
   $sqlArray.=" and c.glosa like '%$glosa%'";
@@ -80,11 +80,11 @@ if($cantidad_itms>0){
 $sql="SELECT c.cod_tipocomprobante,(select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
 (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and c.codigo=$cod_comprobante_x";
+from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where  c.codigo=$cod_comprobante_x";
 $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
 $sql.=" and c.cod_gestion='$globalGestion' order by c.fecha asc, unidad, tipo_comprobante, c.numero asc limit 1";
 
-//echo $sql;
+// echo $sql;
 
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
@@ -168,6 +168,7 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
               break;
               case 2:
               $btnEstado="btn-danger";$estadoIcon="thumb_down";
+              $glosaComprobante="***ANULADO***";
               break;
               case 3:
                 $btnEstado="btn-warning";$estadoIcon="thumb_up";
@@ -185,6 +186,7 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
             <td class="text-left small"><?=$glosaComprobante;?></td>
             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
             <td class="td-actions text-right">
+              
               <div class="btn-group dropdown">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
                   <i class="material-icons"><?=$iconImp;?></i>
@@ -208,6 +210,7 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
                      ?>
                 </div>
               </div>
+              <?php if($estadoC!=2){?>        
               <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default" title="Ver Adjuntos">
                 <i class="material-icons">attachment</i>
               </a>
@@ -236,7 +239,8 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
               
               <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
                 <i class="material-icons"><?=$iconDelete;?></i>
-              </button>
+              </button>              
+            <?php }?>
             </td>
           </tr>
           <?php
@@ -267,7 +271,7 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
               $totalDebe=0;
               $totalHaber=0;
               $indexDetalle=1;
-              $data = obtenerComprobantesDetImp($codigo_comprobante);                                    
+              $data = obtenerComprobantesDetImp($cod_comprobante_x);                                    
               while ($rowDet = $data->fetch(PDO::FETCH_ASSOC)) {  
                 $totalDebe+=$rowDet['debe'];
                 $totalHaber+=$rowDet['haber'];

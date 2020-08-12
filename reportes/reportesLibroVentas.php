@@ -103,7 +103,7 @@ $i=0;
           <h3 class="modal-title" id="myModalLabel"><b>Correcto</b></h3>
         </div>
         <div class="modal-body">                
-              <center><span>El proceso se completo correctamente!</span></center>     
+              <center><span>El proceso se completó correctamente!</span></center>     
         </div>    
         <div id="contenedor_DescargaTxt">
           
