@@ -15297,6 +15297,44 @@ function descargar_txt_libro_ventas(){
       }
     }
 }
+function descargar_txt_libro_compras(){
+    var fecha_desde=$("#fecha_desde").val();
+    var fecha_hasta=$("#fecha_hasta").val();
+    var unidad=$("#unidad").val();
+    if(fecha_desde==null || fecha_desde==''){
+      Swal.fire("Informativo!", "Por favor seleccione el rango de fechas!", "warning");
+    }else{
+      if(fecha_hasta==null || fecha_hasta==''){
+        Swal.fire("Informativo!", "Por favor seleccione el rango de fechas!", "warning");
+      }else{     
+        if(unidad==null || unidad==''){
+          Swal.fire("Informativo!", "Por favor seleccione la unidad!", "warning");
+        }else{        
+          $.ajax({
+          type:"POST",
+          data:"fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta+"&unidad="+unidad,
+          url:"reportes/reportePrintLibroComprasTXT.php",
+          success:function(r){
+            var respu=r.split('#####');
+            var estado=respu[1];
+            var nombre_ar=respu[2];
+            // console.log(r);
+            if(estado==1){
+              // Swal.fire("Correcto!", "El proceso se completo correctamente!", "success");
+              // alerts.showSwal('success-message','reportes/'+nombre_ar);
+              var direccion=nombre_ar;
+              descargar_txt_libro_compras_x(direccion);
+            }else{
+              
+              Swal.fire("ERROR!", "Hubo un error al generar el TXT!", "warning");
+              
+            }
+          }
+          }); 
+        }         
+      }
+    }
+}
 function descargar_txt_libro_ventas_x(url){
   // var monto_total=$("#modal_totalmontos").val();
   $('#modal_descargarTXT').modal('show');
@@ -15312,6 +15350,30 @@ function descargar_txt_libro_ventas_x(url){
       }
     }
     ajax.send(null); 
+}
+function descargar_txt_libro_compras_x(url){
+  // var monto_total=$("#modal_totalmontos").val();
+  $('#modal_descargarTXT').modal('show');
+      //agregamos la cuenta si lo tuviese  
+    var contenedor;  
+    contenedor = document.getElementById('contenedor_DescargaTxt');
+    ajax=nuevoAjax();
+    ajax.open('GET', 'reportes/ajax_contenedor_boton_descarga_txt_compras.php?url='+url,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;
+        $('.selectpicker').selectpicker(["refresh"]);          
+      }
+    }
+    ajax.send(null); 
+}
+
+function cerrarmodal_reportes(){
+  // var monto_total=$("#modal_totalmontos").val();
+  $('#modal_descargarTXT').modal('hide');
+  Swal.fire("Correcto!", "El proceso se completó correctamente.!", "success"); 
+
+
 }
 
 function ajaxTipoProveedorCliente_comprobante(tipo){
@@ -15465,6 +15527,16 @@ function modal_rechazarFactura(datos){
   }else{
     document.getElementById('boton_registrar_anticipo').style.display = 'inline';
   }  
+}
+
+function modal_editarFactura_sf(datos){    
+  var d=datos.split('###');  
+  document.getElementById("nro_factura_e").value=d[0];  //link destino
+  document.getElementById("razon_social_e").value=d[1];  //codigo factura
+  document.getElementById("cod_facturaventa_e").value=d[2];  //codigo factura
+
+  
+  
 }
 function modalDevolverSolicitud_regional(datos){    
   var d=datos.split('###');  

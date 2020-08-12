@@ -18,7 +18,7 @@ $codTipoComprobanteDefault="3";
 $sql="SELECT c.cod_tipocomprobante,(select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
 (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and c.cod_tipocomprobante in ($codTipoComprobanteDefault) and MONTH(c.fecha)='$globalMesTrabajo' ";
+from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_tipocomprobante in ($codTipoComprobanteDefault) and MONTH(c.fecha)='$globalMesTrabajo' ";
 
 //if($globalAdmin!=1){
   $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
@@ -120,6 +120,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                             break;
                             case 2:
                             $btnEstado="btn-danger";$estadoIcon="thumb_down";
+                            $glosaComprobante="***ANULADO***";
                             break;
                             case 3:
                               $btnEstado="btn-warning";$estadoIcon="thumb_up";
@@ -141,66 +142,68 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           <td class="text-left small"><?=$glosaComprobante;?></td>
                           <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
                           <td class="td-actions text-right">
+                            <?php if($estadoC!=2){?>
                             <div class="btn-group">
-                            <div class="dropdown">
-                              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
-                                <i class="material-icons"><?=$iconImp;?></i>
-                              </button>
-                              <div class="dropdown-menu">
-                                <?php
-                                  $stmtMoneda = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM monedas where cod_estadoreferencial=1 order by 2");
-                                 $stmtMoneda->execute();
-                                  while ($row = $stmtMoneda->fetch(PDO::FETCH_ASSOC)) {
-                                    $codigoX=$row['codigo'];
-                                    $nombreX=$row['nombre'];
-                                    $abrevX=$row['abreviatura'];
-                                    //if($codigoX!=1){
-                                      ?>
-                                       <a href="#" onclick="javascript:window.open('<?=$urlImp;?>?comp=<?=$codigo;?>&mon=<?=$codigoX?>')" class="dropdown-item">
-                                           <i class="material-icons">keyboard_arrow_right</i> <?=$abrevX?>
-                                       </a> 
-                                     <?php
-                                    //}
-                                   }
+                              <div class="dropdown">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
+                                  <i class="material-icons"><?=$iconImp;?></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                  <?php
+                                    $stmtMoneda = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM monedas where cod_estadoreferencial=1 order by 2");
+                                   $stmtMoneda->execute();
+                                    while ($row = $stmtMoneda->fetch(PDO::FETCH_ASSOC)) {
+                                      $codigoX=$row['codigo'];
+                                      $nombreX=$row['nombre'];
+                                      $abrevX=$row['abreviatura'];
+                                      //if($codigoX!=1){
+                                        ?>
+                                         <a href="#" onclick="javascript:window.open('<?=$urlImp;?>?comp=<?=$codigo;?>&mon=<?=$codigoX?>')" class="dropdown-item">
+                                             <i class="material-icons">keyboard_arrow_right</i> <?=$abrevX?>
+                                         </a> 
+                                       <?php
+                                      //}
+                                     }
+                                     ?>
+                                </div>
+                              </div>
+                              <div class="dropdown">
+                                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
+                                  <i class="material-icons">more_horiz</i>
+                                </button>
+                                <div class="dropdown-menu">
+                                  <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Ver Adjuntos">
+                                    <i class="material-icons text-default">attachment</i> Adjuntos
+                                  </a>
+                                  <?php
+                                  if($existeCuenta==0){
+                                  ?>
+                                  <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
+                                    <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
+                                  </a>
+                                  <?php
+                                  }
+                                  ?>
+                                  
+                                  <?php 
+                                  $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
+                                  if($codigoSol!=0){
                                    ?>
+                                   <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol;?>&comp=1" target="_blank" class="dropdown-item">
+                                    <i class="material-icons text-success">preview</i> <b class="text-dark">Adjuntos SR</b>
+                                  </a>
+                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol;?>&mon=1')" class="dropdown-item">
+                                    <i class="material-icons text-info"><?=$iconImp;?></i> <b class="text-dark">SR</b>
+                                  </a><?php
+                                  }
+                                  ?>
+                                  <a href="#" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
+                                    <i class="material-icons text-danger"><?=$iconDelete;?></i> Eliminar
+                                  </a>
+                                </div>
                               </div>
-                            </div>
-                            <div class="dropdown">
-                              <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
-                                <i class="material-icons">more_horiz</i>
-                              </button>
-                              <div class="dropdown-menu">
-                                <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Ver Adjuntos">
-                                  <i class="material-icons text-default">attachment</i> Adjuntos
-                                </a>
-                                <?php
-                                if($existeCuenta==0){
-                                ?>
-                                <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
-                                  <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
-                                </a>
-                                <?php
-                                }
-                                ?>
-                                
-                                <?php 
-                                $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
-                                if($codigoSol!=0){
-                                 ?>
-                                 <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol;?>&comp=1" target="_blank" class="dropdown-item">
-                                  <i class="material-icons text-success">preview</i> <b class="text-dark">Adjuntos SR</b>
-                                </a>
-                                <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol;?>&mon=1')" class="dropdown-item">
-                                  <i class="material-icons text-info"><?=$iconImp;?></i> <b class="text-dark">SR</b>
-                                </a><?php
-                                }
-                                ?>
-                                <a href="#" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
-                                  <i class="material-icons text-danger"><?=$iconDelete;?></i> Eliminar
-                                </a>
-                              </div>
-                            </div>
-                           </div>
+                            </div> 
+                            <?php }?>
                           </td>
                         </tr>
                         <?php

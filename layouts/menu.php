@@ -707,6 +707,12 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> P </span>
                     <span class="sidebar-normal"> Proveedores Listado</span>
                   </a>
+                </li>    
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listFacturasGeneradas_admin" target="_blank">
+                    <span class="sidebar-mini"> GF </span>
+                    <span class="sidebar-normal"> Gestión de Facturas</span>
+                  </a>
                 </li>                         
               </ul>
             </div>

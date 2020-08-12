@@ -32,8 +32,8 @@ $totalItem=$_GET['total'];
 $sql="SELECT c.cod_tipocomprobante,(select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
   (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
   (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 ";  
-  $sql.=" and c.codigo = $codigo_comprobante";
+  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where ";  
+  $sql.=" c.codigo = $codigo_comprobante";
 $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
 $sql.=" and c.cod_gestion='$globalGestion' order by unidad, tipo_comprobante, c.numero";
 
@@ -121,6 +121,7 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
               break;
               case 2:
               $btnEstado="btn-danger";$estadoIcon="thumb_down";
+              $glosaComprobante="***ANULADO***";
               break;
               case 3:
                 $btnEstado="btn-warning";$estadoIcon="thumb_up";
@@ -142,6 +143,7 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
             <td class="text-left small"><?=$glosaComprobante;?></td>
             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
             <td class="td-actions text-right">
+              <?php if($estadoC!=2){?>        
               <div class="btn-group dropdown">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
                   <i class="material-icons"><?=$iconImp;?></i>
@@ -179,7 +181,8 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
               ?>
               <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
                 <i class="material-icons"><?=$iconDelete;?></i>
-              </button>
+              </button>              
+            <?php }?> 
             </td>
           </tr>
           <?php
@@ -189,6 +192,8 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
         </tbody>
       </table>
     </div>
+    <?php
+    if($estadoC!=2){?>
     <div class="card">            
       <h4 class="card-title" align="center">Detalle</h4>
       <div class="card-body">                                    
@@ -237,6 +242,8 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
         </div>
       </div>
     </div>
+    <?php }
+    ?>
   </div>
 </div>
 

@@ -168,6 +168,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                       <td class="text-left small"><?=$glosaComprobante;?></td>
                       <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
                       <td class="td-actions text-right">
+                        <?php if($estadoC!=2){?>
                         <div class="btn-group dropdown">
                           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
                             <i class="material-icons"><?=$iconImp;?></i>
@@ -205,7 +206,8 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                         ?>
                         <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
                           <i class="material-icons"><?=$iconDelete;?></i>
-                        </button>
+                        </button>                        
+                        <?php }?>
                       </td>
                     </tr>
                     <?php

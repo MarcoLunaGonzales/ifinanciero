@@ -110,8 +110,8 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                     if($porcentaje_retencion>100)
                       $porcentaje_retencion=$porcentaje_retencion-100;
                     else $porcentaje_retencion=0;
-                    $importe_retencion=$row['monto']+($row['monto']*$porcentaje_retencion/100);
-                    $total_retencion=$total_retencion+$importe_retencion;
+
+                    
                     //nro factura
                     if(!$sw_rembolso){
                       $stmtFactura = $dbh->prepare("SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_cajachicadetalle");
@@ -126,12 +126,15 @@ $codigo = $_POST["caja_chica"];//codigoactivofijo
                       if($cont_facturas>1)$nro_factura="VARIOS";
                       $saldo_inicial=$saldo_inicial-$row['monto'];                  
                       $total_egresos+=$row['monto'];
+                      $importe_retencion=$row['monto']+($row['monto']*$porcentaje_retencion/100);
+                      $total_retencion=$total_retencion+$importe_retencion;
                     }else{
                       $nombre_uo="";
                       $nombre_area="";
                       $total_ingresos+=$row['monto'];
                       $saldo_inicial=$saldo_inicial+$row['monto'];                
                       $nro_recibo='';
+                      $importe_retencion=0;
                     }
 
                     ?>

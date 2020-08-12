@@ -10,7 +10,7 @@ $url=$_GET['url'];
 ?>
 
  <div class="modal-footer">
-  <a type="button" href="reportes/archivos_txt/<?=$url?>" download="<?=$url?>" class="btn btn-success" id="guardarFacturaPagos" name="guardarFacturaPagos" onclick="cerrarmodal_reportes()">Descargar TXT</a>
+  <a type="button" href="reportes/archivos_txt_compras/<?=$url?>" download="<?=$url?>" class="btn btn-success" id="guardarFacturaPagos" name="guardarFacturaPagos" onclick="cerrarmodal_reportes()">Descargar TXT</a>
 
   <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar </button>
   

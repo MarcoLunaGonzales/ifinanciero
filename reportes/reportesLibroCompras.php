@@ -110,6 +110,7 @@ $i=0;
 	                </div><!--div fechas row-->
                 <div class="card-footer fixed-bottom">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
+                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_compras()">Generar TXT</a>
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
 			  </div>
                </form> 
@@ -120,3 +121,19 @@ $i=0;
         
 </div>
 
+<div class="modal fade" id="modal_descargarTXT" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">    
+      <div class="modal-content">
+        <div class="modal-header">          
+          <h3 class="modal-title" id="myModalLabel"><b>Correcto</b></h3>
+        </div>
+        <div class="modal-body">                
+              <center><span>El proceso se completó correctamente!</span></center>     
+        </div>    
+        <div id="contenedor_DescargaTxt">
+          
+        </div>    
+      </div>
+    </form>
+  </div>
+</div>

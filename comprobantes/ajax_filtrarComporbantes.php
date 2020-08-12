@@ -31,7 +31,7 @@ $codigo_tipo=$_GET['codigo'];
 $sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
   (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
   (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
-  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and MONTH(c.fecha)='$globalMesTrabajo' ";  
+  from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where  MONTH(c.fecha)='$globalMesTrabajo' ";  
 
   $sql.=" and c.cod_tipocomprobante in ($codigo_tipo)";
 $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
@@ -78,6 +78,7 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
         break;
         case 2:
         $btnEstado="btn-danger";$estadoIcon="thumb_down";
+        $glosaComprobante="***ANULADO***";
         break;
         case 3:
           $btnEstado="btn-warning";$estadoIcon="thumb_up";
@@ -95,6 +96,7 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
       <td class="text-left small"><?=$glosaComprobante;?></td>
       <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
       <td class="td-actions text-right">
+        <?php if($estadoC!=2){?>        
         <div class="btn-group dropdown">
           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="material-icons"><?=$iconImp;?></i>
@@ -140,6 +142,7 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
         <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
           <i class="material-icons"><?=$iconDelete;?></i>
         </button>
+        <?php }?>
       </td>
     </tr>
     <?php

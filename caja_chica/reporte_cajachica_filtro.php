@@ -12,7 +12,7 @@ $dbh = new Conexion();
 
 <div class="content">
 	<div class="container-fluid">
-		<div style="overflow-y:scroll; ">			 		
+		<!-- <div style="overflow-y:scroll; ">	 -->		 		
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
@@ -55,11 +55,12 @@ $dbh = new Conexion();
                 <div class="card-footer ">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
-			  </div>
-               </form> 
+			  	</div>
+               </form>
+                
               </div>	  
             </div>         
-        </div>	
+      <!--   </div>	 -->
 	</div>
         
 </div>

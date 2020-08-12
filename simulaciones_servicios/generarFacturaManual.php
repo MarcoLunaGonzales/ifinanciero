@@ -140,6 +140,12 @@ try{
                         // $stmtNroFac->execute();
                         // $resultNroFact = $stmtNroFac->fetch();    
                         // $cod_facturaVenta = $resultNroFact['codigo'];
+
+                        //obtenemos el registro del ultimo insert
+                        $stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_solicitudfacturacion=$codigo order by codigo desc LIMIT 1");
+                        $stmtNroFac->execute();
+                        $resultNroFact = $stmtNroFac->fetch();    
+                        $cod_facturaVenta = $resultNroFact['codigo'];
                         // if($cod_libreta!=0){
                         //     $array_libreta=explode(',',$cod_libreta);
                         //     for($i=0;$i<sizeof($array_libreta);$i++){
