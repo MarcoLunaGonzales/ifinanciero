@@ -32,7 +32,7 @@ from facturas_compra f
 join solicitud_recursosdetalle sd on sd.codigo=f.cod_solicitudrecursodetalle
 join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso
 
-where s.cod_estadosolicitudrecurso in ($stringEstadoX) and sd.cod_unidadorganizacional=3000 and MONTH(f.fecha)=$cod_mes_x and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha asc";
+where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_estadoreferencial<>2 and sd.cod_unidadorganizacional=3000 and MONTH(f.fecha)=$cod_mes_x and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha asc";
 $stmt2 = $dbh->prepare($sql);
 // echo $sql;
 // Ejecutamos                        
@@ -68,8 +68,11 @@ try {
 		if($razon_social==null || $razon_social=='' || $razon_social==' '){
 			$razon_social="S/N";
 		}
+		if(trim($codigo_control)==""){
+             $codigo_control="0";
+        }
 		//agregamos los items al archivo	
-		$texto="1|".$index."|".$fecha_factura."|".$nit."|".$razon_social."|".$nro_factura."|0|".$nro_autorizacion."|".$importe."|".$importe_no_iva."|".$subtotal."|".$rebajas_sujetos_iva."|".$importe_credito_fiscal."|".$credito_fiscal."|".$codigo_control."|".$tipo_compra;
+		$texto="1|".$index."|".$fecha_factura."|".$nit."|".strtoupper($razon_social)."|".$nro_factura."|0|".$nro_autorizacion."|".$importe."|".$importe_no_iva."|".$subtotal."|".$rebajas_sujetos_iva."|".$importe_credito_fiscal."|".$credito_fiscal."|".$codigo_control."|".$tipo_compra;
 		fwrite($archivo, $texto);
 		fwrite($archivo, "\n".PHP_EOL);
 		

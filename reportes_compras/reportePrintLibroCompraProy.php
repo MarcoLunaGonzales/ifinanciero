@@ -24,7 +24,7 @@ from facturas_compra f
 join solicitud_recursosdetalle sd on sd.codigo=f.cod_solicitudrecursodetalle
 join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso
 
-where s.cod_estadosolicitudrecurso in ($stringEstadoX) and sd.cod_unidadorganizacional=3000 and MONTH(f.fecha)=$cod_mes_x and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha asc";
+where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_estadoreferencial<>2 and sd.cod_unidadorganizacional=3000 and MONTH(f.fecha)=$cod_mes_x and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha asc";
 
 //echo $sql;
 $stmt2 = $dbh->prepare($sql);
@@ -122,12 +122,15 @@ $razon_social=$result['razon_social'];
 
                                 // $sumadeimporte=$importe+$ice+$exento;
                                 $sumadeimporte=$importe;
+                                if(trim($codigo_control)==""){
+                                  $codigo_control="0";
+                                }
                                 ?>
                                 <tr>
                                   <td class="text-center small"><?=$index;?></td>
                                   <td class="text-center small"><?=$fecha;?></td>
                                   <td class="text-right small"><?=$nit;?></td>
-                                  <td class="text-left small"><?=$razon_social;?></td>
+                                  <td class="text-left small"><?=strtoupper($razon_social);?></td>
                                   <td class="text-right small"><?=$nro_factura;?></td>
                                   <td class="text-right small"><?=$nro_autorizacion;?></td>
                                   <td class="text-center small"><?=$codigo_control;?></td>
