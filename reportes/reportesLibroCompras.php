@@ -98,6 +98,13 @@ $dbh = new Conexion();
                 	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_compras()">Generar TXT</a>
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
 			  </div>
+			  <hr>
+			  <div class="col-sm-12">
+			  	<div class="float-right">
+			  	  <a  href="index.php?opcion=reportesLibroComprasProy" class="btn btn-info btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Reporte Libro Compras - PROYECTO</a>		
+			  	</div>
+			  </div>
+			  
                </form> 
               </div>	  
             </div>         
