@@ -168,7 +168,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                       <td class="text-left small"><?=$glosaComprobante;?></td>
                       <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
                       <td class="td-actions text-right">
-                        <?php if($estadoC!=2){?>
+                        
                         <div class="btn-group dropdown">
                           <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
                             <i class="material-icons"><?=$iconImp;?></i>
@@ -192,6 +192,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                ?>
                           </div>
                         </div>
+                        <?php if($estadoC!=2){?>
                         <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default" title="Ver Adjuntos">
                           <i class="material-icons">attachment</i>
                         </a>
@@ -366,6 +367,12 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
         <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button> -->
       </div>
     </div>
+  </div>
+</div>
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Enviando Correo..</h4>
+     <p class="text-white">Aguarde un momento por favor.</p>  
   </div>
 </div>
 

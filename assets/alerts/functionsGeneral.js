@@ -1488,6 +1488,9 @@ function buscarComprobantes(estado){
 //     ajax.send(null)
 // }
 function botonBuscarComprobante(){
+  $("#texto_ajax_titulo").html("Obteniendo Comprobantes..."); 
+  iniciarCargaAjax();
+
   var valor_uo=$("#OficinaBusqueda").val();
   var valor_tipo=$("#tipoBusqueda").val();
   var valor_fi=$("#fechaBusquedaInicio").val();
@@ -1495,8 +1498,6 @@ function botonBuscarComprobante(){
   var valor_glosa=$("#glosaBusqueda").val();
   var valor_nro_compr=$("#nro_comprobante").val();
   var valor_nro_cuenta=$("#cuenta_auto_id").val();
-  
-  
   ajax=nuevoAjax();
   ajax.open('GET', 'comprobantes/ajax_busquedaComprobanteUO.php?cod_uo='+valor_uo+'&tipo='+valor_tipo+'&fechaI='+valor_fi+'&fechaF='+valor_ff+'&glosa='+valor_glosa+'&comprobante='+valor_nro_compr+'&cuenta='+valor_nro_cuenta,true);
   ajax.onreadystatechange=function() {
@@ -1504,11 +1505,14 @@ function botonBuscarComprobante(){
       var contenedor=$("#data_comprobantes");
       contenedor.html(ajax.responseText);
       $("#modalBuscador").modal("hide");
+      detectarCargaAjax();
     }
   }
   ajax.send(null)
 }
 function botonBuscarComprobante2(){
+  $("#texto_ajax_titulo").html("Obteniendo Comprobantes..."); 
+  iniciarCargaAjax();
   var valor_uo=$("#OficinaBusqueda").val();
   var valor_tipo=$("#tipoBusqueda").val();
   var valor_fi=$("#fechaBusquedaInicio").val();
@@ -1523,6 +1527,7 @@ function botonBuscarComprobante2(){
       var contenedor=$("#data_comprobantes");
       contenedor.html(ajax.responseText);
       $("#modalBuscador").modal("hide");
+      detectarCargaAjax();
     }
   }
   ajax.send(null)

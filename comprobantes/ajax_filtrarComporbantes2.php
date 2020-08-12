@@ -159,7 +159,7 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
             <td class="text-left small"><?=$glosaComprobante;?></td>
             <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estadoComprobante;?>  <span class="material-icons small"><?=$estadoIcon?></span></button></td>
             <td class="td-actions text-right">
-              <?php if($estadoC!=2){?>        
+                  
               <div class="btn-group dropdown">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
                   <i class="material-icons"><?=$iconImp;?></i>
@@ -183,6 +183,7 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
                      ?>
                 </div>
               </div>
+              <?php if($estadoC!=2){?>    
               <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default" title="Ver Adjuntos">
                 <i class="material-icons">attachment</i>
               </a>
