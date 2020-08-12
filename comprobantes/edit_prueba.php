@@ -661,14 +661,14 @@ $stmt->execute();
 		                        <div class="col-sm-1">
                                     <div class="form-group">
                                     	<!--<label class="bmd-label-static">Debe</label>-->			
-                                  		<input class="form-control small" type="number" placeholder="0" value="<?=$debeDet?>" name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.00001">	
+                                  		<input class="form-control small" type="number" placeholder="0" value="<?=$debeDet?>" name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="any">	
 		                        	</div>
       	                        </div>
 
 		                        <div class="col-sm-1">
                                     <div class="form-group">
                                     	<!--<label class="bmd-label-static">Haber</label>-->			
-                                  		<input class="form-control small" type="number" placeholder="0" value="<?=$haberDet?>" name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.00001"> 	
+                                  		<input class="form-control small" type="number" placeholder="0" value="<?=$haberDet?>" name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="any"> 	
 		                        	</div>
       	                        </div>
 
@@ -776,19 +776,19 @@ $stmt->execute();
 								<div class="col-sm-2">
 						            <div class="form-group">
 						                <label class="bmd-label-static fondo-boton">Debe</label>	
-						          		<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step="0.0001" placeholder="0" value="<?=$totalDebeComp?>" id="totaldeb_fijo" readonly="true">	
+						          		<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step="any" placeholder="0" value="<?=$totalDebeComp?>" id="totaldeb_fijo" readonly="true">	
 									</div>
 						      	</div>
 								<div class="col-sm-2">
 						            <div class="form-group">
 						            	<label class="bmd-label-static fondo-boton">Haber</label>	
-						            	<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step="0.0001" placeholder="0" value="<?=$totalHaberComp?>" id="totalhab_fijo" readonly="true">	
+						            	<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step="any" placeholder="0" value="<?=$totalHaberComp?>" id="totalhab_fijo" readonly="true">	
 									</div>
 						      	</div>
 						      	<div class="col-sm-2">
 						            <div class="form-group">
 						            	<label class="bmd-label-static fondo-boton">Diferencia</label>	
-						            	<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step="0.0001" placeholder="0" value="<?=$totalesDif?>" id="total_dif_fijo" readonly="true">	
+						            	<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step="any" placeholder="0" value="<?=$totalesDif?>" id="total_dif_fijo" readonly="true">	
 									</div>
 						      	</div>
 							</div>
