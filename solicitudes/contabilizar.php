@@ -130,6 +130,9 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
         $sqlDelete="DELETE from estados_cuenta where cod_comprobantedetalle='$codigoDetalle'";
         $stmtDel = $dbh->prepare($sqlDelete);
         $stmtDel->execute();
+        $sqlDelete="DELETE from facturas_compra where cod_comprobantedetalle='$codigoDetalle'";
+        $stmtDel = $dbh->prepare($sqlDelete);
+        $stmtDel->execute();
        }
       
     }else{
@@ -441,9 +444,17 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
                  $stmtDetalle = $dbh->prepare($sqlDetalle);
                  $flagSuccessDetalle=$stmtDetalle->execute();
 
-                 $sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen";
+                 /*$sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen";
                  $stmtFacturas = $dbh->prepare($sqlActualizarFaturas);
-                 $stmtFacturas->execute();
+                 $stmtFacturas->execute();*/
+
+                 $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra) 
+                 (select $codComprobanteDetalle as cod_comprobantedetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,
+                  codigo_control,ice,tasa_cero,tipo_compra from facturas_compra where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen)";
+                 $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
+                 $flagSuccessDetalle2=$stmtDetalle2->execute();
+                 array_push($SQLDATOSINSTERT,$flagSuccessDetalle2);
+
                 }
                }
              }//FIN DE FOR RETENCIONES
@@ -503,7 +514,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
               $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
               $stmtDetalleEstadoCuenta->execute();             
               //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
-              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_proveedor=$codProveedorEstado,cod_estadocuenta=$codEstadoCuenta,glosa_comprobantedetalle='$glosaDetalleProv' where codigo=$codSolicitudDetalle";
+              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_estadocuenta=$codEstadoCuenta,glosa_comprobantedetalle='$glosaDetalleProv' where codigo=$codSolicitudDetalle";
               $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
               $stmtUpdateSolicitudRecursoDetalle->execute();
 
@@ -529,7 +540,9 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
          $stmtDetalle = $dbh->prepare($sqlDetalle);
          $flagSuccessDetalle=$stmtDetalle->execute();
 
-         $sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen";
+         $sqlActualizarFaturas="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra) 
+                 (select $codComprobanteDetalle as cod_comprobantedetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,
+                  codigo_control,ice,tasa_cero,tipo_compra from facturas_compra where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen)";
          $stmtFacturas = $dbh->prepare($sqlActualizarFaturas);
          $stmtFacturas->execute();
 

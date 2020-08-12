@@ -328,8 +328,15 @@ function buscarCuenta(combo){
 }
 
 function setBusquedaCuenta(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuentaAux, nombreCuentaAux){
+
   var fila=filaActiva;
   var inicio=numeroCuenta.substr(0,1);
+
+  //setar Estados de cuenta y más
+  $("#tipo_estadocuentas"+fila).val("-100");
+  $("#tipo_proveedorcliente"+fila).val("-100");
+  $("#proveedorcliente"+fila).val("-100");
+  $("#tipo_estadocuentas_casoespecial"+fila).val("-100");
   //console.log(fila);
   document.getElementById('cuenta'+fila).value=codigoCuenta;
 

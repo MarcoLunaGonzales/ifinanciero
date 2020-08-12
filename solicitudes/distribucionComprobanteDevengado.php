@@ -19,6 +19,9 @@ if($nuevaDistribucion==3){
 	} 
 }
 
+$debeUnidad=number_format($debeUnidad,2,'.','');
+$debeArea=number_format($debeArea,2,'.','');
+
 if($nuevaDistribucion==4){
    //distribucion con 4 AREA Y OFICINA
 $datosDistribucionArea=obtenerDistribucionGastoSolicitudRecursoGeneral($codigo,2,$debeArea,0);

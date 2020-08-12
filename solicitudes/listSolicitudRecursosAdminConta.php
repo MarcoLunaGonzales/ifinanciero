@@ -530,7 +530,7 @@ $item_1=2708;
                                    //opciones Admin
                                     if(verificarEdicionComprobanteUsuario($globalUser)!=0){
                                     ?>
-                                    <a title="Editar Solicitud" href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" class="btn btn-success">
+                                    <a title="Editar Solicitud" href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" target="_blank" class="btn btn-success">
                                       <i class="material-icons">edit</i>
                                     </a>
                                     <?php 
@@ -562,7 +562,7 @@ $item_1=2708;
                                  <a href="#" targetonclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
-                                 <a targethref="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
+                                 <a targethref="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item" target="_blank">
                                     <i class="material-icons text-success">edit</i> Editar Solicitud
                                  </a>
                                  <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
@@ -591,7 +591,7 @@ $item_1=2708;
                                  <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
-                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" class="dropdown-item">
+                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" target="_blank" class="dropdown-item">
                                     <i class="material-icons text-success">edit</i> Editar Solicitud
                                  </a>
 

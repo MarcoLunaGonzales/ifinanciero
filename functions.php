@@ -8957,7 +8957,7 @@ function obtenerEstadoComprobante($codigo){
   function verificarEdicionComprobanteUsuario($codigo){
      $codigosAdmin=obtenerValorConfiguracion(74);
      $dbh = new Conexion();
-     $sql="SELECT codigo from personal where codigo in ('$codigosAdmin')";
+     $sql="SELECT codigo from personal where codigo in ($codigosAdmin)";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor=0;$admin=0;
