@@ -78,22 +78,23 @@ $razon_social=$result['razon_social'];
                           </tr>                        
                           <tr>
                             <td style="border:2px solid;"><small><b>Esp.</b></small></td>
-                            <td style="border:2px solid;"><small><b>Nro.</b></small></td>                            
+                            <td style="border:2px solid;"><small><b>-</b></small></td>                            
                             <td style="border:2px solid;"><small><b>Fecha</b></small></td>
-                            <td style="border:2px solid;"><small><b>Nro.</b></small></td>
+                            <td style="border:2px solid;"><small><b>Nro.<br>Factura</b></small></td>
                             <td style="border:2px solid;"><small><b>Estado</b></small></td>
                             <td style="border:2px solid;"><small><b>Nit/CI<br>Cliente</b></small></td>
                             <td style="border:2px solid;"><small><b>Nombre o<br>Razón Social</b></small></td>
-                            <td style="border:2px solid;"><small><b>Importe Total<br> Venta A</b></small></td>
-                            <td style="border:2px solid;"><small><b>Importe<br> otros no sujetos a iva B</b></small></td>
-                            <td style="border:2px solid;"><small><b>Export.<br> y Operac. Extentas C</b></small></td>
-                            <td style="border:2px solid;"><small><b>Ventas Gravadas<br> a tasa Cero D</b></small></td>
-                            <td style="border:2px solid;"><small><b>Subtotal E=A-B-C-D</b></small></td>
-                            <td style="border:2px solid;"><small><b>Desc.,<br> Bonif. y<br> Rebajas sujetos al IVA F</b></small></td>
-                            <td style="border:2px solid;"><small><b>Importe Débito <br>Fiscal G=E-F</b></small></td>
-                            <td style="border:2px solid;"><small><b>Débito Fiscal<br> H=G*13%</b></small></td>
                             <td style="border:2px solid;"><small><b>Código Control</b></small></td>
                             <td style="border:2px solid;"><small><b>Nro. Autorización</b></small></td>
+                            <td style="border:2px solid;" width="6%"><small><b>Importe Total<br> Venta (A)</b></small></td>
+                            <td style="border:2px solid;" width="6%"><small><b>Importe<br> otros no sujetos a iva (B)</b></small></td>
+                            <td style="border:2px solid;" width="6%"><small><b>Export.<br> y Operac. Extentas (C)</b></small></td>
+                            <td style="border:2px solid;" width="6%"><small><b>Ventas Gravadas<br> a tasa Cero (D)</b></small></td>
+                            <td style="border:2px solid;"><small><b>Subtotal <br>E=A-B-C-D</b></small></td>
+                            <td style="border:2px solid;" width="6%"><small><b>Desc., Bonif. y<br> Rebajas sujetos al IVA <br>(F)</b></small></td>
+                            <td style="border:2px solid;" width="5%"><small><b>Importe Débito <br>Fiscal (G=E-F)</b></small></td>
+                            <td style="border:2px solid;" width="5%"><small><b>Débito Fiscal<br> (H=G*13%)</b></small></td>
+                            
 
                           </tr>                                
                         </thead>
@@ -156,42 +157,44 @@ $razon_social=$result['razon_social'];
                                 <td class="text-center small">3</td>
                                 <td class="text-center small"><?=$index?></td>
                                 <td class="text-center small"><?=$fecha_factura; ?></td>
-                                <td class="text-center small"><?=$nro_factura ?></td>
+                                <td class="text-right small"><?=$nro_factura ?></td>
                                 <td class="text-center small"><?=$nombre_estado;?></td>
-                                <td class="text-center small"><?=$nit?></td>
+                                <td class="text-right small"><?=$nit?></td>
                                 <td class="text-left small"><small><?=mb_strtoupper($razon_social,'utf-8');?></small></td>
                                 <td class="text-center small"><?=$codigo_control?></td>
-                                <td class="text-center small"><?=$nro_autorizacion?></td>
-                                <td class="text-center small"><?=formatNumberDec($importe); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($importe_no_iva); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($extento); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($ventas_gravadas); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($subtotal); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($rebajas_sujetos_iva); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($importe_debito_fiscal); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($debito_fiscal); ?></td>
+                                <td class="text-right small"><?=$nro_autorizacion?></td>
+                                <td class="text-right small"><?=formatNumberDec($importe); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($importe_no_iva); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($extento); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($ventas_gravadas); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($subtotal); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($rebajas_sujetos_iva); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($importe_debito_fiscal); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($debito_fiscal); ?></td>
                                 
                             </tr>
                           <?php $index++; } ?>
 
-                            <tr class="bg-dark text-white">
+                            <tr style="border:2px solid;">
+                                <!-- <td class="d-none"></td>
                                 <td class="d-none"></td>
                                 <td class="d-none"></td>
                                 <td class="d-none"></td>
                                 <td class="d-none"></td>
                                 <td class="d-none"></td>
                                 <td class="d-none"></td>
-                                <td class="text-center small" colspan="7">TOTAL</td>                                
-                                <td class="text-center small"><?=formatNumberDec($total_importe); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($total_importe_no_iva); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($total_extento); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($total_ventas_gravadas); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($total_subtotal); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($total_rebajas_sujetos_iva); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($total_importe_debito_fiscal); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($total_debito_fiscal); ?></td>
-                                <td class="text-center small"> - </td>
-                                <td class="text-center small"> - </td>
+                                <td class="d-none"></td> -->
+                                <td class="text-left small" colspan="4" style="border:2px solid;">CI:</td>
+                                <td class="text-left small" colspan="4" style="border:2px solid;">Nombre Responsable:</td>
+                                <td class="text-center small">TOTAL</td>                                
+                                <td class="text-right small"><?=formatNumberDec($total_importe); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($total_importe_no_iva); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($total_extento); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($total_ventas_gravadas); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($total_subtotal); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($total_rebajas_sujetos_iva); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($total_importe_debito_fiscal); ?></td>
+                                <td class="text-right small"><?=formatNumberDec($total_debito_fiscal); ?></td>
                             </tr>
                         </tbody>
                     </table>

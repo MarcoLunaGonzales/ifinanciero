@@ -21,6 +21,7 @@ $paterno=$_GET['paterno'];
 $materno=$_GET['materno'];
 $fecha=$_GET['fecha'];
 $nombre_curso=$_GET['nombre_curso'];
+$codigo_curso=$_GET['codigo_curso'];
 
 
 $codigo_simulacion=0;//codigo de simulacion
@@ -58,6 +59,18 @@ if($fecha!=""){
 if($nombre_curso!=""){
   $sql.=" and pc.Nombre like '%$nombre_curso%'";
 }
+if($codigo_curso!=""){
+  $arrayCodigo=explode("-",$codigo_curso);
+  $IdOficina=$arrayCodigo[0];
+  $idprograma=$arrayCodigo[1];
+  $idtipo=$arrayCodigo[2];
+  $grupo=$arrayCodigo[3];
+  $grupo_x=trim($grupo,'G');
+  $IdGestion=$arrayCodigo[4];
+  $sql.=" and d_abrevclasificador(pc.IdOficina) like '%$IdOficina%' and d_abrevclasificador(pc.idprograma) like '%$idprograma%' and d_abrevclasificador(pc.idtipo) like '%$idtipo%' and pc.grupo=$grupo_x and d_abrevclasificador(pc.IdGestion) like '%$IdGestion%'";
+}
+
+
 $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
 // echo $sql;
 

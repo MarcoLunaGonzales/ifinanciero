@@ -85,6 +85,16 @@ if(isset($_GET['u']))
                   <input class="form-control input-sm" type="text" name="glosa" id="glosa"  >
               </div>                    
             </div>
+            <div class="row">                                                  
+              <label class="col-sm-12 col-form-label text-center">Código Curso</label>
+            </div> 
+            <div class="row">
+              <div class="form-group col-sm-3">            
+                </div>
+              <div class="form-group col-sm-6">
+                  <input class="form-control input-sm" type="text" name="codigo_curso" id="codigo_curso"  >
+              </div>                    
+            </div>
           </div>
           <div class="card-footer fixed-bottom"> 
           <button type="button" class="btn btn-primary" id="botonBuscarEmpresas" name="botonBuscarEmpresas" title="Buscar" onclick="botonBuscarEmpresasCapacitacion()">Buscar</button>             

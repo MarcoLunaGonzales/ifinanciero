@@ -8,7 +8,7 @@ require_once '../layouts/bodylogin2.php';
 $dbh = new Conexion();
 //creamos el archivo txt
 $fecha=date('Y-m-d');
-$nombre_archivo="archivofacilito-".$fecha.".txt";
+$nombre_archivo="archivofacilito_ventas-".$fecha.".txt";
 //limpiamos en archivo
 $arch = fopen ("archivos_txt/".$nombre_archivo, "w+") or die ("nada");
 fwrite($arch,"");
@@ -18,9 +18,10 @@ $archivo=fopen("archivos_txt/".$nombre_archivo, "a") or die ("#####0#####");//a 
 //RECIBIMOS LAS VARIABLES
 $gestion = $_POST["cod_gestion"];
 $cod_mes_x = $_POST["cod_mes"];
+$unidad=$_POST["unidad"];
 
 $nombre_gestion=nameGestion($gestion);
-$sql="SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion";
+$sql="SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion and cod_unidadorganizacional in ($unidad)";
 $stmt2 = $dbh->prepare($sql);
 $stmt2->execute();
 //resultado
