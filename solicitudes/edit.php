@@ -60,8 +60,8 @@ if($estado!=1){
     $idTipoObjeto=2708;
     $idObjeto=2722; //regristado
     $obs="En Aprobacion Solicitud";
-    if(isset($_GET['u'])){
-       $u=$_GET['u'];
+    if(isset($_GET['q'])){
+       $u=$_GET['q'];
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
      }else{
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    

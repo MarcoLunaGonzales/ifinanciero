@@ -18,14 +18,19 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $fechaHoraActual=date("Y-m-d H:i:s");
-
+$userAdmin=obtenerValorConfiguracion(74);
 
 //  CREAR EL COMPROBANTE DEBENGADO
 
 //INICIO DE VARIABLES
 $glosaDetalleGeneral="";
 $tipoComprobante=3;
+
 $codComprobante=obtenerCodigoComprobante();
+if(isset($_GET['existe'])&&verificarEdicionComprobanteUsuario($globalUser)!=0){
+  $codComprobante=$_GET['existe'];  
+}
+
 
 
 //fecha hora actual para el comprobante (SESIONES)
@@ -116,12 +121,24 @@ $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3,$glob
 $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
 //CREACION DEL COMPROBANTE
-
-    $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
-    VALUES ('$codComprobante', '1', '$cod_unidadX', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
-    //echo $sqlInsert;
-    $stmtInsert = $dbh->prepare($sqlInsert);
-    $flagSuccessComprobante=$stmtInsert->execute();
+    if(isset($_GET['existe'])&&verificarEdicionComprobanteUsuario($globalUser)!=0){
+       $sqlEstadosCuenta="SELECT * from comprobantes_detalle where cod_comprobante=$codComprobante";
+       $stmtEstadosCuenta = $dbh->prepare($sqlEstadosCuenta);
+       $stmtEstadosCuenta->execute();
+       while ($rowEsta = $stmtEstadosCuenta->fetch(PDO::FETCH_ASSOC)) {
+        $codigoDetalle=$rowEsta['codigo'];
+        $sqlDelete="DELETE from estados_cuenta where cod_comprobantedetalle='$codigoDetalle'";
+        $stmtDel = $dbh->prepare($sqlDelete);
+        $stmtDel->execute();
+       }
+      
+    }else{
+      $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
+      VALUES ('$codComprobante', '1', '$cod_unidadX', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
+      //echo $sqlInsert;
+      $stmtInsert = $dbh->prepare($sqlInsert);
+      $flagSuccessComprobante=$stmtInsert->execute();
+    }
 
     $sqlUpdateSolicitud="UPDATE solicitud_recursos SET cod_comprobante=$codComprobante where codigo=$codigo";
     $stmtUpdateSolicitudRecurso = $dbh->prepare($sqlUpdateSolicitud);
@@ -131,6 +148,8 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
     $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";
     $stmtDel = $dbh->prepare($sqlDelete);
     $flagSuccess=$stmtDel->execute();
+
+
 
 //FIN CREACION CABECERA COMPROBANTE
 
@@ -151,7 +170,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
 //CARGAR SI HAY UNA RETENCION (PARA AGRUPAR TODA LA SOLUCITUD)   
 
-    $numeroRetencionFactura=numeroDeRetencionesIVA($codigo)[0];
+    $numeroRetencionFactura=2; //numeroDeRetencionesIVA($codigo)[0];
     $codRetencionGlobal=numeroDeRetencionesIVA($codigo)[1];
     $porcentajeRetencionGlobal=porcentRetencion($codRetencionGlobal);
 
@@ -230,7 +249,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             $importeOriginal=$rowNuevo['monto'];
             $importeRetencion=(porcentRetencion($codigoRet)/100)*$importeOriginal;
             //importe de la factura
-            if($rowNuevo['cod_confretencion']==8||$rowNuevo['cod_confretencion']==10){
+            if($rowNuevo['cod_confretencion']==8){//||$rowNuevo['cod_confretencion']==10
               $importeOriginalAux=$importeOriginal;
               $importeOriginal=obtenerMontoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);
               $importeRetencion=($importeRetencion)+obtenerMontoGastoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);  
@@ -264,7 +283,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
              
              //IMPORTE POR FACTURA
 
-             if($rowNuevo['cod_confretencion']==8||$rowNuevo['cod_confretencion']==10){
+             if($rowNuevo['cod_confretencion']==8){ //||$rowNuevo['cod_confretencion']==10
               //RETENCION POR FACTURAS
               $facturasSolicitud=obtenerFacturasSolicitudDetalleArray($codSolicitudDetalleOrigen);
                 for ($fac=0; $fac < count($facturasSolicitud); $fac++) { 

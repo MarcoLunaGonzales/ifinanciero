@@ -5663,7 +5663,10 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
          break;
        case 2822:
          return 6;
-         break;       
+         break;
+      case 3107:
+         return 7;
+         break;         
        default:
          return 1;
          break;
@@ -8950,6 +8953,21 @@ function obtenerEstadoComprobante($codigo){
         $valor=$row['codigo'];
      }
      return($valor);
+  }
+  function verificarEdicionComprobanteUsuario($codigo){
+     $codigosAdmin=obtenerValorConfiguracion(74);
+     $dbh = new Conexion();
+     $sql="SELECT codigo from personal where codigo in ('$codigosAdmin')";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;$admin=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+        if($valor==$codigo){
+          $admin=1;
+        }
+     }
+     return($admin);
   } 
 ?>
 

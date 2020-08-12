@@ -4,6 +4,8 @@ require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
+
+$userAdmin=obtenerValorConfiguracion(74);
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
@@ -30,7 +32,7 @@ if(isset($_GET['q'])){
   $sqlAreas="";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (3)) $sqlAreas order by sr.revisado_contabilidad,sr.fecha desc");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (3)) order by sr.revisado_contabilidad,sr.fecha desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -223,7 +225,7 @@ $item_1=2708;
                               <div class="dropdown-menu menu-fixed-sm-table">
                                 <?php
                               if(isset($_GET['q'])){
-                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" target="_blank" class="dropdown-item">
                                     <i class="material-icons text-info">bar_chart</i> Ver Solicitud
                                  </a>
                               
@@ -387,7 +389,7 @@ $item_1=2708;
 <!--    end small modal -->
 
 <?php
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (5)) $sqlAreas order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (5)) order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -482,6 +484,7 @@ $item_1=2708;
                        if(verificarMontoPresupuestadoSolicitadoSR($codigo)==1){
                         $numeroSolTitulo='<a href="#" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning btn-sm btn-round">'.$numeroSol.'</a>';
                        }
+                       $otrosPagosCuenta=comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo);
 ?>
                         <tr>
                           <td><?=$unidad;?> - <?=$area;?></td>
@@ -523,7 +526,23 @@ $item_1=2708;
                                          ?>
                                     </div>
                                   </div> 
-                                   <?php       
+                                   <?php 
+                                   //opciones Admin
+                                    if(verificarEdicionComprobanteUsuario($globalUser)!=0){
+                                    ?>
+                                    <a title="Editar Solicitud" href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" class="btn btn-success">
+                                      <i class="material-icons">edit</i>
+                                    </a>
+                                    <?php 
+                                    if($otrosPagosCuenta==0){
+                                    ?>
+                                   <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&existe=<?=$codComprobante?>')" href='#'  class="btn btn-danger">
+                                      <i class="material-icons">assignment_turned_in</i>
+                                    </a>
+                                    <?php
+                                     } 
+                                  
+                                    }      
                                    }
                               ?>
                             <div class="btn-group dropdown">
@@ -540,10 +559,10 @@ $item_1=2708;
                                 <?php 
                                 if($codEstado==4){
                                  ?>
-                                 <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
+                                 <a href="#" targetonclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
-                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
+                                 <a targethref="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
                                     <i class="material-icons text-success">edit</i> Editar Solicitud
                                  </a>
                                  <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
@@ -562,7 +581,7 @@ $item_1=2708;
                                  <?php 
                                 }
                               }else{
-                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2" class="dropdown-item">
+                                ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2" class="dropdown-item" target="_blank">
                                     <i class="material-icons text-info">bar_chart</i> Ver Solicitud
                                  </a>
                               

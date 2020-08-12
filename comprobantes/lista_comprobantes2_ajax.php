@@ -101,7 +101,7 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
             <th class="text-center small">Fecha</th>
             <th class="text-center small">Glosa</th>
             <th class="text-center small">Estado</th>
-            <th class="text-center small">Actions</th>
+            <th class="text-center small" width="15%">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -170,6 +170,18 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
               <a href='<?=$urlArchivo;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-default" title="Ver Adjuntos">
                 <i class="material-icons">attachment</i>
               </a>
+              <?php 
+          $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
+          if($codigoSol!=0){
+           ?>
+           <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol;?>&comp=1" target="_blank" class="btn btn-success">
+             <i class="material-icons">preview</i>
+          </a>
+          <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol;?>&mon=1')" class="btn btn-info">
+            <i class="material-icons"><?=$iconImp;?></i>
+          </a><?php
+          }
+          ?>
               <?php
               if($existeCuenta==0){
                 ?>

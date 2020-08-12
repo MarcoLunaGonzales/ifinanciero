@@ -516,8 +516,8 @@ $stmt->execute();
 							$codDet=$row['cod_det'];
 							$unidadDet=$row['cod_unidadorganizacional'];
 							$areaDet=$row['cod_area'];
-							$debeDet=$row['debe'];
-							$haberDet=$row['haber'];
+							$debeDet=number_format($row['debe'],2,'.','');
+							$haberDet=number_format($row['haber'],2,'.','');
 							$glosaDet=$row['glosa'];
 							$numeroDet=$row['numero'];
 							$nombreDet=$row['nombre'];
@@ -661,14 +661,14 @@ $stmt->execute();
 		                        <div class="col-sm-1">
                                     <div class="form-group">
                                     	<!--<label class="bmd-label-static">Debe</label>-->			
-                                  		<input class="form-control small" type="number" placeholder="0" value="<?=$debeDet?>" name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01">	
+                                  		<input class="form-control small" type="number" placeholder="0" value="<?=$debeDet?>" name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);">	
 		                        	</div>
       	                        </div>
 
 		                        <div class="col-sm-1">
                                     <div class="form-group">
                                     	<!--<label class="bmd-label-static">Haber</label>-->			
-                                  		<input class="form-control small" type="number" placeholder="0" value="<?=$haberDet?>" name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01"> 	
+                                  		<input class="form-control small" type="number" placeholder="0" value="<?=$haberDet?>" name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);"> 	
 		                        	</div>
       	                        </div>
 

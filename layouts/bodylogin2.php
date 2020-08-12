@@ -460,12 +460,12 @@
                         }                
                       }
                       var monto_debe_total_comprobante = $("#totaldeb").val();  
-                      if(sumaTotalFactura!=monto_debe_total_comprobante){
+                      /*if(sumaTotalFactura!=monto_debe_total_comprobante){
                         mensaje+="<p>El Monto registrado en las facturas difiere del total!</p>";
                         $('#msgError').html(mensaje);
                         $('#modalAlert').modal('show');
                         envio=1; 
-                      }
+                      }*/
                       console.log("SUMA FACTURAS: "+sumaTotalFactura+" "+monto_debe_total_comprobante);
                       if(contadorFacturas==cantiFacturas){
                         mensaje+="<p>No puede existir Facturas vacías!</p>";
@@ -678,12 +678,16 @@
           for (var i = 0; i < $("#cantidad_filas").val(); i++) {
            if(parseInt($('#cod_retencion'+(i+1)).val())==parseInt($('#cod_configuracioniva').val())){
             for (var d = 0; d < itemFacturas[i].length; d++) {
-              sumaFactura+=itemFacturas[i][d].impFac;//-exeFac-iceFac-tazaFac;
+              sumaFactura+=parseFloat(itemFacturas[i][d].impFac);//-exeFac-iceFac-tazaFac;
+              console.log("fac monto:"+itemFacturas[i][d].impFac);
             };    
            }                  
           }
+          console.log("SUMATORIA FACTURAS:"+sumaFactura);
+          console.log("TOTAL SOLICITUD:"+parseFloat($("#total_solicitado").val()));
+          var restaIva=parseFloat($("#total_solicitado").val())-sumaFactura;
           if(sumaFactura>0){
-            if(sumaFactura!=parseFloat($("#total_solicitado").val())){
+            if((sumaFactura+restaIva)!=parseFloat($("#total_solicitado").val())){
               cont++; 
             }
           } 
