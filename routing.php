@@ -132,6 +132,10 @@
 			require_once('reportes/reportesLibroCompras.php');
 		}
 		//REPORTES
+		if ($_GET['opcion']=='reportesLibroComprasProy') {
+			require_once('reportes_compras/reportesLibroComprasProy.php');
+		}
+		//REPORTES
 		if ($_GET['opcion']=='reportesLibroVentas') {
 			require_once('reportes/reportesLibroVentas.php');
 		}
