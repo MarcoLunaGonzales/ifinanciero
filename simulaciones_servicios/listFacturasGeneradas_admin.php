@@ -83,14 +83,6 @@ $globalPersonal=$_SESSION["globalUser"];
                       <?php
                         $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          //para la anulacion de facturas                        
-                          $fechaComoEntero = strtotime($fecha_factura_xy);
-                          $mes_factura = date("m", $fechaComoEntero);  
-                          if($mes_factura==$mes_actual){
-                            $sw_anular=true;
-                          }else{
-                            $sw_anular=false;
-                          }                          
                           //==
                           $nombre_personal=namePersonalCompleto($cod_personal);
                           if($cod_personal==0){
@@ -99,17 +91,17 @@ $globalPersonal=$_SESSION["globalUser"];
                           $cadenaFacturas='F '.$nro_factura;
                           $codigos_facturas=$codigo_factura;                          
                           $importe=sumatotaldetallefactura($codigo_factura);
-                          $correosEnviados=obtenerCorreosEnviadosFactura($codigo_factura);
-                          if($correosEnviados!=""){
-                            $correosEnviados="\nFactura enviada a: \n *".$correosEnviados;
-                          }
+                          // $correosEnviados=obtenerCorreosEnviadosFactura($codigo_factura);
+                          // if($correosEnviados!=""){
+                          //   $correosEnviados="\nFactura enviada a: \n *".$correosEnviados;
+                          // }
                           $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
                           $cliente=nameCliente($cod_cliente);
                           //correos de contactos
                           $tipo_solicitud=obtenerTipoSolicitud($cod_solicitudfacturacion);
-                          if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
-                            $correos_string=obtenerCorreoEstudiante($nit);
-                          }else $correos_string=obtenerCorreosCliente($cod_cliente);                            
+                          // if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
+                          //   $correos_string=obtenerCorreoEstudiante($nit);
+                          // }else $correos_string=obtenerCorreosCliente($cod_cliente);                            
                           //colores de estados                            
                           $observaciones_solfac="";
                           switch ($cod_estadofactura) {
@@ -124,8 +116,8 @@ $globalPersonal=$_SESSION["globalUser"];
                               $label='btn-info';
                               break;
                           }
-                          $cod_tipopago_anticipo=obtenerValorConfiguracion(48);//tipo pago credito
-                          $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$cod_solicitudfacturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista                            
+                          // $cod_tipopago_anticipo=obtenerValorConfiguracion(48);//tipo pago credito
+                          // $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$cod_solicitudfacturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista                            
                           // $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
                           ?>
                           <tr>
@@ -143,7 +135,7 @@ $globalPersonal=$_SESSION["globalUser"];
                               <?php
                                 // $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux."###".$interno;
                               $datos_edit=$cadenaFacturas."###".$razon_social."###".$codigos_facturas;
-                                if($cod_estadofactura!=2){?>
+                                if($cod_estadofactura!=2 && $globalAdmin==1){?>
                                   <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditarFactura" onclick="modal_editarFactura_sf('<?=$datos_edit;?>')">
                                     <i class="material-icons" title="Editar Factura">edit</i>
                                   </button>
@@ -233,91 +225,12 @@ $globalPersonal=$_SESSION["globalUser"];
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="botonBuscarComprobante" name="botonBuscarComprobante" onclick="botonBuscar_facturas()">Buscar</button>
+        <button type="button" class="btn btn-success" id="botonBuscarComprobante" name="botonBuscarComprobante" onclick="botonBuscar_facturas_admin()">Buscar</button>
         <!-- <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button> -->
       </div>
     </div>
   </div>
 </div>
-<!-- modal devolver solicitud -->
-<!-- <div class="modal fade" id="modalDevolverSolicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h2 class="modal-title" id="myModalLabel"><b>Anular Factura<b></h2>
-      </div>
-      <div class="modal-body">        
-        <form id="form_anular_facturas" action="simulaciones_servicios/anular_facturaGenerada.php" method="post"  onsubmit="return valida(this)" enctype="multipart/form-data">
-        <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
-        <input type="hidden" name="estado" id="estado" value="0">
-        <input type="hidden" name="admin" id="admin" value="0">
-        <input type="hidden" name="direccion" id="direccion" value="0">
-        <input type="hidden" name="codigo_factura" id="codigo_factura" value="0">
-        <input type="hidden" name="codigo_comprobante" id="codigo_comprobante" value="0">
-        <input type="hidden" name="estado_factura" id="estado_factura" value="0">
-        <input type="hidden" name="interno_delete" id="interno_delete" value="0">
-        
-        <div class="row">
-          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_nro_fact"><b><small>Nro(s)<br>Factura(s)</small></b></span></label>
-          <div class="col-sm-3">
-            <div class="form-group" >
-              <input type="text" class="form-control" name="nro_solicitud" id="nro_solicitud" readonly="true" style="background-color:#e2d2e0">              
-            </div>
-          </div>
-          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_rs_fact"><b><small>Razón<br>Social</small></b></span></label>
-          <div class="col-sm-7">
-            <div class="form-group" >              
-              <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
-            </div>
-          </div>
-        </div> 
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="row col-sm-11 div-center">
-                  <table class="table table-warning table-bordered table-condensed">
-                    <thead>
-                      <tr>
-                        <th class="small" width="30%">Tipo de Documento <a href="#" title="Otro Documento" class="btn btn-primary btn-round btn-sm btn-fab float-left" onClick="agregarFilaArchivosAdjuntosCabecera()"><i class="material-icons">add</i></a></th>
-                        <th class="small">Obligatorio</th>
-                        <th class="small" width="35%">Archivo</th>
-                        <th class="small">Descripción</th>                  
-                      </tr>
-                    </thead>
-                    <tbody id="tabla_archivos">
-                      <?php
-                        $filaE=0;
-                      ?>       
-                    </tbody>
-                  </table>
-                  <input type="hidden" value="<?=$filaE?>" id="cantidad_archivosadjuntos" name="cantidad_archivosadjuntos">
-                </div>
-                </center>
-            </div>
-        </div>   
-        <div class="row">
-          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
-        </div>
-        <div class="row">
-          <div class="col-sm-12" style="background-color:#f9edf7">
-            <div class="form-group" >              
-              <textarea type="text" name="observaciones" id="observaciones" class="form-control" required="true"></textarea>
-            </div>
-          </div>
-        </div>        
-      </div>
-      <div class="modal-footer">
-        <div id="boton_registrar_anticipo">
-          <button type="submit" class="btn btn-success" onclick="registrarRechazoFactura(2)">Registrar Como Anticipo</button>  
-        </div>
-        <button type="submit" class="btn btn-warning" onclick="registrarRechazoFactura(1)">Transacción No Válida</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
-      </div>
-      </form>
-
-    </div>
-  </div>
-</div> -->
 <!-- Modal editar-->
 <div class="modal fade" id="modalEditarFactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -327,17 +240,7 @@ $globalPersonal=$_SESSION["globalUser"];
         <h3 class="modal-title" id="myModalLabel"><b>Editar Factura</b></h3>
       </div>
       <div class="modal-body">
-        <input type="hidden" name="cod_facturaventa_e" id="cod_facturaventa_e" value="0">
-        <!-- <input type="hidden" name="cod_libreta_manual" id="cod_libreta_manual" value="0" >
-        <input type="hidden" name="cod_estadocuenta_manual" id="cod_estadocuenta_manual" value="0" > -->
-      <!--   <div class="row">
-          <label class="col-sm-5 text-right col-form-label" style="color:#424242">Importe de Solicitud de Facturacón</label>
-          <div class="col-sm-12">
-            <div class="form-group"> -->
-              <!-- <input type="text" name="importe_total" id="importe_total" class="form-control text-center" readonly="true" style="background-color:#E3CEF6;text-align: left"> -->
-           <!--  </div>
-          </div>
-        </div> -->
+        <input type="hidden" name="cod_facturaventa_e" id="cod_facturaventa_e" value="0">        
         <div class="row">
           <label class="col-sm-3 text-right col-form-label" style="color:#424242">Numero de Factura: </label>
           <div class="col-sm-8">
@@ -345,27 +248,19 @@ $globalPersonal=$_SESSION["globalUser"];
               <input type="text" name="nro_factura_e" id="nro_factura_e" class="form-control" readonly="true">
             </div>
           </div>
-        </div>        
-        <!-- <div class="row">
-          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Nit Cliente </label>
-          <div class="col-sm-8">
-            <div class="form-group">
-              <input type="number" name="nit_cliente" id="nit_cliente" class="form-control">
-            </div>
-          </div>
-        </div> -->
+        </div>                
         <div class="row">
           <label class="col-sm-3 text-right col-form-label" style="color:#424242">Razón Social </label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input type="text" name="razon_social_e" id="razon_social_e" class="form-control">
+              <textarea name="razon_social_e" id="razon_social_e" class="form-control"></textarea>
             </div>
           </div>
         </div>
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="guardarFacturaManual" name="guardarFacturaManual">Guardar</button>
+        <button type="button" class="btn btn-success" id="guardarFacturaEdit" name="guardarFacturaEdit">Guardar</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>
     </div>
@@ -378,71 +273,20 @@ $globalPersonal=$_SESSION["globalUser"];
      <p class="text-white">Aguarde un momento por favor.</p>  
   </div>
 </div>
-
 <script type="text/javascript">
-   function valida(f) {
-      // alert("e");
-        var ok = true;
-        var msg = "Por favor introduzca la observación";
-        var observaciones=f.elements["observaciones"].value;
-        if(observaciones == 0 || observaciones < 0 || observaciones == '')
-        {                
-            ok = false;
-        }
-        var cantidad_archivosadjuntos=f.elements["cantidad_archivosadjuntos"].value;
-        if(cantidad_archivosadjuntos>0){
-          for (var ar=1; ar <= cantidad_archivosadjuntos ; ar++) {             
-            var codigo_archivo=f.elements["codigo_archivo"+ar].value;
-            if(codigo_archivo){
-              var documentos_cabecera=f.elements["documentos_cabecera"+ar].value;
-              if(documentos_cabecera){
-                sw_adjuntos=true;
-              }else{
-                sw_adjuntos=false;
-              }
-            }else{
-              sw_adjuntos=false;
-            }
-          }
-        }else{
-          sw_adjuntos=false;
-        }
-        if(!sw_adjuntos){
-          var msg = "Por favor agregue Archivo Adjunto.";        
-          ok = false;            
-        }
-        if(ok == false)    
-            Swal.fire("Informativo!",msg, "warning");
-        return ok;
-    }
-</script>
-<script type="text/javascript">
-  $(document).ready(function(){
-    $(".bootstrap-tagsinput input").attr("id","tag_inputcorreo");
-    autocompletar("tag_inputcorreo","correo_autocompleteids",array_correos);
-
-    $('#EnviarCorreo').click(function(){    
-      codigo_facturacion=document.getElementById("codigo_facturacion").value;
-      cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion").value;
-      nro_factura=document.getElementById("nro_factura").value;
-      razon_social=document.getElementById("razon_social").value;
-      interno=document.getElementById("interno_x").value;
-      
-      correo_copia=$('#correo_copia').val();
-      if(correo_copia!=""){
-        correo_destino=$('#correo_destino').val()+","+correo_copia;        
-      }else{
-        correo_destino=$('#correo_destino').val();        
-      } 
+  $(document).ready(function(){  
+    $('#guardarFacturaEdit').click(function(){          
+      cod_facturaventa_e=document.getElementById("cod_facturaventa_e").value;
+      razon_social_e=$('#razon_social_e').val();      
       // asunto=$('#asunto').val();
       // mensaje=$('#mensaje').val();
       asunto=null;
       mensaje=null;
-      if(correo_destino==null || correo_destino == "" ||correo_destino == 0){
+      if(razon_social_e==null || razon_social_e == "" ||razon_social_e == 0){
         // alert("Por Favor Agregue Un correo para el envío de la Factura!");
-        Swal.fire("Informativo!", "Por Favor Agregue Un correo válido para el envío de la Factura!", "warning");
+        Swal.fire("Informativo!", "La Razón Social No debe ir Vacío!", "warning");
       }else{
-        EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social,interno);  
+        actualizar_factura(cod_facturaventa_e,razon_social_e);  
       }
     });   
   });

@@ -103,20 +103,6 @@ if(isset($_GET['interno'])){
   <?php
     $index=1;
     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-      //para la anulacion de facturas
-      if($interno>0){
-        $sw_anular=true;
-        // echo "aqui";
-      }else{
-        $dias_alargo=obtenerValorConfiguracion(75);//defecto                            
-        $fecha_inicio=date('Y-m-1'); 
-        $fecha_fin = date("Y-m-t", strtotime($fecha_inicio)); 
-        $fecha_inicio_x= date("Y-m-d",strtotime($fecha_inicio."- ".$dias_alargo." days")); 
-        $fechaComoEntero = strtotime($fecha_factura_xy);
-        $fecha_factura = date("Y-m-d", $fechaComoEntero);
-        // echo $fecha_inicio_x."-".$fecha_fin."<br>";
-        $sw_anular=verificar_fecha_rango($fecha_inicio_x, $fecha_fin, $fecha_factura);
-      }
       //==
       $nombre_personal=namePersonalCompleto($cod_personal);
       if($cod_personal==0){
@@ -125,17 +111,17 @@ if(isset($_GET['interno'])){
       $cadenaFacturas='F '.$nro_factura;
       $codigos_facturas=$codigo_factura;                          
       $importe=sumatotaldetallefactura($codigo_factura);
-      $correosEnviados=obtenerCorreosEnviadosFactura($codigo_factura);
-      if($correosEnviados!=""){
-        $correosEnviados="\nFactura enviada a: \n *".$correosEnviados;
-      }
+      // $correosEnviados=obtenerCorreosEnviadosFactura($codigo_factura);
+      // if($correosEnviados!=""){
+      //   $correosEnviados="\nFactura enviada a: \n *".$correosEnviados;
+      // }
       $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
       $cliente=nameCliente($cod_cliente);
       //correos de contactos
       $tipo_solicitud=obtenerTipoSolicitud($cod_solicitudfacturacion);
-      if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
-        $correos_string=obtenerCorreoEstudiante($nit);
-      }else $correos_string=obtenerCorreosCliente($cod_cliente);                            
+      // if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
+      //   $correos_string=obtenerCorreoEstudiante($nit);
+      // }else $correos_string=obtenerCorreosCliente($cod_cliente);                            
       //colores de estados                            
       $observaciones_solfac="";
       switch ($cod_estadofactura) {
@@ -150,9 +136,9 @@ if(isset($_GET['interno'])){
           $label='btn-info';
           break;
       }
-      $cod_tipopago_anticipo=obtenerValorConfiguracion(48);//tipo pago credito
-      $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$cod_solicitudfacturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista                            
-      $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social.'/'.$interno;
+      // $cod_tipopago_anticipo=obtenerValorConfiguracion(48);//tipo pago credito
+      // $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$cod_solicitudfacturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista                            
+      // $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
       ?>
       <tr>
         <!-- <td align="center"><?=$index;?></td> -->
@@ -166,42 +152,16 @@ if(isset($_GET['interno'])){
         <td style="color: #ff0000;"><?=strtoupper($observaciones_solfac)?></td>
         <td class="td-actions text-right">
           <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br>
-          <?php                                
-            if(($cod_estadofactura==1)){?>
-              <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
-                <i class="material-icons" title="Enviar Correo">email</i>
+          <?php
+            // $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux."###".$interno;
+          $datos_edit=$cadenaFacturas."###".$razon_social."###".$codigos_facturas;
+            if($cod_estadofactura!=2 && $globalAdmin==1){?>
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditarFactura" onclick="modal_editarFactura_sf('<?=$datos_edit;?>')">
+                <i class="material-icons" title="Editar Factura">edit</i>
               </button>
-              <?php
-            } if($cod_estadofactura!=4){?>  
-
-              <div class="btn-group dropdown">
-                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 1">
-                   <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
-                </button>
-                <div class="dropdown-menu">                                      
-                  <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=1' target="_blank"><i class="material-icons text-success">print</i> Original Cliente y Copia Contabilidad</a>
-                  <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
-                  <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>                                    
-                </div>
-              </div>
-              <div class="btn-group dropdown">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 2">
-                   <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
-                </button>
-                <div class="dropdown-menu">                                      
-                  <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=4' target="_blank"><i class="material-icons text-success">print</i> Original Cliente y Copia Contabilidad</a>
-                  <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=5' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
-                  <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=6' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>                                    
-                </div>
-              </div> 
-              <?php                               
-            }
-                                            
-            $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux."###".$interno;                                
-            if($cod_estadofactura!=4 && $cod_estadofactura!=2 && $sw_anular){?>
-              <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
+              <!-- <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
                 <i class="material-icons" title="Anular Factura">delete</i>
-              </button>
+              </button> -->
             <?php } ?>
         </td>
       </tr>
