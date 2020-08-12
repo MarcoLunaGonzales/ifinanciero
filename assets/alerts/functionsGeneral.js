@@ -337,6 +337,7 @@ function setBusquedaCuenta(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuent
   $("#tipo_proveedorcliente"+fila).val("-100");
   $("#proveedorcliente"+fila).val("-100");
   $("#tipo_estadocuentas_casoespecial"+fila).val("-100");
+  // fin setear estados de cuenta
   //console.log(fila);
   document.getElementById('cuenta'+fila).value=codigoCuenta;
 
