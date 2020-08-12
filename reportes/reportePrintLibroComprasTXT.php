@@ -9,26 +9,24 @@ require_once  __DIR__.'/../fpdf_html.php';
 require_once __DIR__.'/../conexion.php';
 $dbh = new Conexion();
 //creamos el archivo txt
+$gestion = $_POST["cod_gestion"];
+$cod_mes_x = $_POST["cod_mes"];
+$unidad=$_POST["unidad"];
+$unidad = str_replace(",", "_", $unidad); 
 $fecha=date('Y-m-d');
 $nombre_archivo="archivofacilito_compras-".$fecha.".txt";
 //limpiamos en archivo
-$arch = fopen ("archivos_txt/".$nombre_archivo, "w+") or die ("nada");
+$arch = fopen ("archivos_txt_compras/".$nombre_archivo, "w+") or die ("nada");
 fwrite($arch,"");
 fclose($arch);
-//archi limpiado
+//archivo limpiado
 $archivo=fopen("archivos_txt_compras/".$nombre_archivo, "a") or die ("#####0#####");//a de apertura de archivo
 //RECIBIMOS LAS VARIABLES
-
-$unidad=$_POST["unidad"];
-// $stringUnidadesX=implode(",", $unidad);
-
-$porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
-$porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
-$desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
-$hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
+$nombre_gestion=nameGestion($gestion);
+$nombre_mes=nombreMes($cod_mes_x);
 
 
-$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c, comprobantes cc where cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_unidadorganizacional in ($unidad) and f.fecha BETWEEN '$desde' and '$hasta' and cc.cod_estadocomprobante<>2 ORDER BY fecha asc";
+$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c, comprobantes cc where cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo  and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($unidad) and MONTH(f.fecha)=$cod_mes_x and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha asc";
 $stmt2 = $dbh->prepare($sql);
 // echo $sql;
 // Ejecutamos                        

@@ -1541,12 +1541,15 @@ function botonBuscarComprobante2(){
   ajax.send(null)
 }  
 function botonBuscarComprobanteIng(codigo){
+  $("#texto_ajax_titulo").html("Obteniendo Comprobantes..."); 
+  iniciarCargaAjax();
   ajax=nuevoAjax();
   ajax.open('GET', 'comprobantes/ajax_filtrarComporbantes.php?codigo='+codigo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_comprobantes");
       contenedor.html(ajax.responseText);
+      detectarCargaAjax();
       // $("#modalBuscador").modal("hide");
     }
   }
@@ -1554,12 +1557,15 @@ function botonBuscarComprobanteIng(codigo){
 }
 
 function botonBuscarComprobanteIng2(codigo){
+  $("#texto_ajax_titulo").html("Obteniendo Comprobantes..."); 
+  iniciarCargaAjax();
   ajax=nuevoAjax();
   ajax.open('GET', 'comprobantes/ajax_filtrarComporbantes2.php?codigo='+codigo,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_comprobantes");
       contenedor.html(ajax.responseText);
+      detectarCargaAjax();
       // $("#modalBuscador").modal("hide");
     }
   }
@@ -11454,33 +11460,23 @@ function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacio
     }
   });
 }
-// function EnviarCorreoAjaxSolFac(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje){
-//   iniciarCargaAjax();
-//   $.ajax({
-//     type:"POST",
-//     data:"codigo_facturacion="+codigo_facturacion+"&nro_factura="+nro_factura+"&cod_solicitudfacturacion="+cod_solicitudfacturacion+"&correo_destino="+correo_destino+"&asunto="+asunto+"&mensaje="+mensaje,
-//     url:"simulaciones_servicios/enviarCorreo.php",
-//     success:function(r){
-//       var resp = r.split('$$$');
-//       var success = resp[0];
-//       var correos = resp[1];
-//       detectarCargaAjax();
-//       if(success==1){
-//         alerts.showSwal('success-message','index.php?opcion=listFacturasServicios');
-//       }
-//       if(success==2){
-//         Swal.fire("ERROR! :(", "Ocurrio un error de envío a los correos: <br> "+correos, "warning");
-//         // alerts.showSwal('error-messageEnviarCorreo','index.php?opcion=listFacturasServicios');
-//       }
-//       if(success==3){        
-//         alerts.showSwal('error-messageEnviarCorreoAdjunto','index.php?opcion=listFacturasServicios');
-//       }
-//       if(success==0){
-//         alerts.showSwal('error-messageCamposVacios','index.php?opcion=listFacturasServicios');
-//       }
-//     }
-//   });
-// }
+function actualizar_factura(cod_facturaventa_e,razon_social_e){
+  iniciarCargaAjax();
+  $.ajax({
+    type:"POST",
+    data:"cod_facturaventa_e="+cod_facturaventa_e+"&razon_social_e="+razon_social_e,
+    url:"simulaciones_servicios/listFacturasGeneradas_admin_save.php",
+    success:function(r){      
+      detectarCargaAjax();
+      if(r==1){
+        var url="index.php?opcion=listFacturasGeneradas_admin";
+        alerts.showSwal('success-message',url);
+      }else{
+        Swal.fire("ERROR! :(", "Ocurrio un error al actualizar la factura.", "warning");        
+      }      
+    }
+  });
+}
 //entidades 
 var unidades_tabla=[]; 
 var unidades_tabla_general=[];
@@ -15314,21 +15310,21 @@ function descargar_txt_libro_ventas(){
     }
 }
 function descargar_txt_libro_compras(){
-    var fecha_desde=$("#fecha_desde").val();
-    var fecha_hasta=$("#fecha_hasta").val();
+    var cod_gestion=$("#gestiones").val();
+    var cod_mes=$("#cod_mes_x").val();
     var unidad=$("#unidad").val();
-    if(fecha_desde==null || fecha_desde==''){
-      Swal.fire("Informativo!", "Por favor seleccione el rango de fechas!", "warning");
+    if(cod_gestion==null || cod_gestion==''){
+      Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
     }else{
-      if(fecha_hasta==null || fecha_hasta==''){
-        Swal.fire("Informativo!", "Por favor seleccione el rango de fechas!", "warning");
-      }else{     
+      if(cod_mes==null || cod_mes==''){
+        Swal.fire("Informativo!", "Por favor Seleccione el mes!", "warning");
+      }else{
         if(unidad==null || unidad==''){
           Swal.fire("Informativo!", "Por favor seleccione la unidad!", "warning");
-        }else{        
+        }else{     
           $.ajax({
           type:"POST",
-          data:"fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta+"&unidad="+unidad,
+          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad,
           url:"reportes/reportePrintLibroComprasTXT.php",
           success:function(r){
             var respu=r.split('#####');
@@ -15347,7 +15343,7 @@ function descargar_txt_libro_compras(){
             }
           }
           }); 
-        }         
+        }      
       }
     }
 }
@@ -16711,6 +16707,32 @@ function botonBuscar_facturas(){
   // var valor_glosa=$("#glosaBusqueda").val();
   ajax=nuevoAjax();
   ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_facturas.php?razon_social_f='+razon_social_f+'&detalle_f='+detalle_f+'&fechaI='+fechaBusquedaInicio+'&fechaF='+fechaBusquedaFin+'&nit_f='+nit_f+'&nro_f='+nro_f+'&personal_p='+personal_p+'&interno='+interno,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#data_facturas_generadas");
+      contenedor.html(ajax.responseText);
+      $("#modalBuscadorFacturas").modal("hide");
+      detectarCargaAjax();
+      cargar_dataTable_ajax_listas('tablePaginator50NoFinder');
+      // cargar_filtro_datatable_ajax('modalListaLibretaBancaria');
+    }
+  }
+  ajax.send(null)
+}
+function botonBuscar_facturas_admin(){
+  iniciarCargaAjax();
+  $("#texto_ajax_titulo").html("Listando Facturas...");        
+  var interno=$("#interno").val();
+  var razon_social_f=$("#razon_social_f").val();
+  var detalle_f=$("#detalle_f").val();
+  var fechaBusquedaInicio=$("#fechaBusquedaInicio").val();
+  var fechaBusquedaFin=$("#fechaBusquedaFin").val();
+  var nit_f=$("#nit_f").val();
+  var nro_f=$("#nro_f").val();
+  var personal_p=$("#personal_p").val();
+  // var valor_glosa=$("#glosaBusqueda").val();
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_facturas_admin.php?razon_social_f='+razon_social_f+'&detalle_f='+detalle_f+'&fechaI='+fechaBusquedaInicio+'&fechaF='+fechaBusquedaFin+'&nit_f='+nit_f+'&nro_f='+nro_f+'&personal_p='+personal_p+'&interno='+interno,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_facturas_generadas");

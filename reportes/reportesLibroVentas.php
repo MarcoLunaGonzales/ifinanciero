@@ -7,24 +7,12 @@ require_once 'functionsGeneral.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalGestion=$_SESSION["globalGestion"];
 $global_mes=$_SESSION["globalMes"];
+$globalUnidad=$_SESSION["globalUnidad"];
+
+
 
 $dbh = new Conexion();
-$stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.nivel from plan_cuentas p order by p.numero");
-$stmt->execute();
-$i=0;
-  echo "<script>var array_cuenta=[];</script>";
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-	 $codigoX=$row['codigo'];
-	 $numeroX=$row['numero'];
-	 $nombreX=$row['nombre'];
-	 $nivelX=$row['nivel'];
-	 $nombreCuenta=formateaPlanCuenta($numeroX." ".$nombreX,$nivelX);
-	 $arrayNuevo[$i][0]=$codigoX;
-	 $arrayNuevo[$i][1]=$numeroX;
-	 $arrayNuevo[$i][2]=$nombreCuenta;
-	 $arrayNuevo[$i][3]=$nivelX;
-		$i++;
-	}
+
 ?>
 
 <div class="content">
@@ -40,6 +28,29 @@ $i=0;
                 </div>
                 <form class="" action="<?=$urlReporteVentas?>" target="_blank" method="POST">
                 <div class="card-body">
+                	<div class="row">
+		                <label class="col-sm-2 col-form-label">Oficina</label>
+		                <div class="col-sm-8">
+		                	<div class="form-group">
+		                		<div id="">		
+		                			<?php
+									$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
+									$stmt = $dbh->prepare($sqlUO);
+									$stmt->execute();
+									?>
+										<select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+										    <?php 
+										    	while ($row = $stmt->fetch()){ 
+											?>
+										      	 <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>" <?=($row["codigo"]==$globalUnidad)?"selected":""?> ><?=$row["abreviatura"];?></option>
+							    	<?php 
+										 		} 
+								 	?>
+										</select>
+		                		</div>
+		                     </div>
+		                </div>				             
+                  	</div><!--div row-->
                   	<div class="row">
 		                <label class="col-sm-2 col-form-label">Gestión</label>
 		                <div class="col-sm-6">
@@ -83,7 +94,7 @@ $i=0;
 		                  </div>
 		            </div>
 	         	</div>
-                <div class="card-footer fixed-bottom">
+                <div class="card-footer">
                 	<button type="submit" class="btn btn-success">Ver Reporte</button>
                 	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_ventas()">Generar TXT</a>
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->

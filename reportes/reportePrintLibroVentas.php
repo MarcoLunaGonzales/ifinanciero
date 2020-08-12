@@ -11,11 +11,13 @@ $dbh = new Conexion();
 //RECIBIMOS LAS VARIABLES
 $gestion = $_POST["gestiones"];
 $cod_mes_x = $_POST["cod_mes_x"];
+$unidad=$_POST["unidad"];
+$stringUnidadesX=implode(",", $unidad);
 
 $nombre_gestion=nameGestion($gestion);
 $nombre_mes=nombreMes($cod_mes_x);
 
-$stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion");
+$stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion and cod_unidadorganizacional in ($stringUnidadesX)");
 $stmt2->execute();
 //resultado
 $stmt2->bindColumn('codigo', $codigo);
@@ -34,50 +36,64 @@ $stmt2->bindColumn('cod_dosificacionfactura', $cod_dosificacionfactura);
 $stmt2->bindColumn('nro_factura', $nro_factura);
 $stmt2->bindColumn('nro_autorizacion', $nro_autorizacion);
 $stmt2->bindColumn('codigo_control', $codigo_control);
-// $stmt2->bindColumn('importe', $importe);
 $stmt2->bindColumn('observaciones', $observaciones);
 $stmt2->bindColumn('cod_estadofactura', $cod_estadofactura);
 $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
-?>
 
+//datos de la factura
+$stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in (5)");
+$stmtPersonal->execute();
+$result=$stmtPersonal->fetch();
+$sucursal=$result['sucursal'];
+$direccion=$result['direccion'];
+$nit=$result['nit'];
+$razon_social=$result['razon_social'];
+?>
+<script> 
+          gestion_reporte='<?=$nombre_gestion;?>';
+          mes_reporte='<?=$nombre_mes;?>';
+ </script>
 <div class="content">
   <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">                  
-                  <h4 class="card-title">
-                    <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
-                      Libro de Ventas
-                  </h4>
-                  <!-- <h4 class="card-title text-center">Reporte De Activos Fijos Por Unidad</h4> -->
-                  <h6 class="card-title">
-                    Gestión: <?=$nombre_gestion;?><br>
-                    Mes: <?=$nombre_mes;?><br>
-                  </h6>                  
+                <div class="card-header <?=$colorCard;?> card-header-icon">
+                  <div class="card-icon bg-blanco">
+                    <img class="" width="60" height="60" src="../assets/img/logo_ibnorca_origen.png">
+                  </div>                  
+                  <h3 class="card-title text-center" ><b>Libro de Ventas</b>
+                    <span><br><h6>
+                    Del Período: <?=$nombre_mes;?>/<?=$nombre_gestion;?><br>
+                    Expresado En Bolivianos</h6></span></h3>                  
+                  <!-- <h6 class="card-title">Unidad: <?=$stringUnidades;?></h6> -->
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">                  
-                    <table id="ventas_rep" class="table table-bordered table-condensed" style="width:100%">
-                        <thead>                          
-                          <tr style="background-color:#D8D8D8;">
-                            <td><small><b>Esp.</b></small></td>
-                            <td><small><b>Nro.</b></small></td>                            
-                            <td><small><b>Fecha<br>Factura</b></small></td>
-                            <td><small><b>Nro.<br>Factura</b></small></td>
-                            <td><small><b>Estado</b></small></td>
-                            <td><small><b>Nit/CI<br>Cliente</b></small></td>
-                            <td><small><b>Nombre o<br>Razón Social</b></small></td>
-                            <td><small><b>Importe Total<br>Venta A</b></small></td>
-                            <td><small><b>Importe<br> otros no sujetos a iva B</b></small></td>
-                            <td><small><b>Exportanciones<br> y Operaciones Extentas C</b></small></td>
-                            <td><small><b>Ventas Gravadas<br> a tasa Cero D</b></small></td>
-                            <td><small><b>Subtotal E=A-B-C-D</b></small></td>
-                            <td><small><b>Descuentos,<br> Bonificaciones y<br> Rebajas sujetos al IVA F</b></small></td>
-                            <td><small><b>Importe Débito <br>Fiscal G=E-F</b></small></td>
-                            <td><small><b>Débito Fiscal<br> H=G*13%</b></small></td>
-                            <td><small><b>Código Control</b></small></td>
-                            <td><small><b>Nro. Autorización</b></small></td>
+                    <table id="libro_ventas_rep_2" class="table table-bordered table-condensed" style="width:100%">
+                        <thead>  
+                          <tr style="border:2px solid;">
+                            <th colspan="9" class="text-left"><small> Razón Social : <?=$razon_social?><br>Sucursal : <?=$sucursal?></small></th>   
+                            <th colspan="8" class="text-left"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
+                          </tr>                        
+                          <tr>
+                            <td style="border:2px solid;"><small><b>Esp.</b></small></td>
+                            <td style="border:2px solid;"><small><b>Nro.</b></small></td>                            
+                            <td style="border:2px solid;"><small><b>Fecha</b></small></td>
+                            <td style="border:2px solid;"><small><b>Nro.</b></small></td>
+                            <td style="border:2px solid;"><small><b>Estado</b></small></td>
+                            <td style="border:2px solid;"><small><b>Nit/CI<br>Cliente</b></small></td>
+                            <td style="border:2px solid;"><small><b>Nombre o<br>Razón Social</b></small></td>
+                            <td style="border:2px solid;"><small><b>Importe Total<br> Venta A</b></small></td>
+                            <td style="border:2px solid;"><small><b>Importe<br> otros no sujetos a iva B</b></small></td>
+                            <td style="border:2px solid;"><small><b>Export.<br> y Operac. Extentas C</b></small></td>
+                            <td style="border:2px solid;"><small><b>Ventas Gravadas<br> a tasa Cero D</b></small></td>
+                            <td style="border:2px solid;"><small><b>Subtotal E=A-B-C-D</b></small></td>
+                            <td style="border:2px solid;"><small><b>Desc.,<br> Bonif. y<br> Rebajas sujetos al IVA F</b></small></td>
+                            <td style="border:2px solid;"><small><b>Importe Débito <br>Fiscal G=E-F</b></small></td>
+                            <td style="border:2px solid;"><small><b>Débito Fiscal<br> H=G*13%</b></small></td>
+                            <td style="border:2px solid;"><small><b>Código Control</b></small></td>
+                            <td style="border:2px solid;"><small><b>Nro. Autorización</b></small></td>
 
                           </tr>                                
                         </thead>
@@ -141,9 +157,11 @@ $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
                                 <td class="text-center small"><?=$index?></td>
                                 <td class="text-center small"><?=$fecha_factura; ?></td>
                                 <td class="text-center small"><?=$nro_factura ?></td>
-                                <td class="text-center small"><?=$btnEstado.$nombre_estado."</span>";?></td>
+                                <td class="text-center small"><?=$nombre_estado;?></td>
                                 <td class="text-center small"><?=$nit?></td>
                                 <td class="text-left small"><small><?=mb_strtoupper($razon_social,'utf-8');?></small></td>
+                                <td class="text-center small"><?=$codigo_control?></td>
+                                <td class="text-center small"><?=$nro_autorizacion?></td>
                                 <td class="text-center small"><?=formatNumberDec($importe); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($importe_no_iva); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($extento); ?></td>
@@ -152,12 +170,17 @@ $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
                                 <td class="text-center small"><?=formatNumberDec($rebajas_sujetos_iva); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($importe_debito_fiscal); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($debito_fiscal); ?></td>
-                                <td class="text-center small"><?=$codigo_control?></td>
-                                <td class="text-center small"><?=$nro_autorizacion?></td>
+                                
                             </tr>
                           <?php $index++; } ?>
 
                             <tr class="bg-dark text-white">
+                                <td class="d-none"></td>
+                                <td class="d-none"></td>
+                                <td class="d-none"></td>
+                                <td class="d-none"></td>
+                                <td class="d-none"></td>
+                                <td class="d-none"></td>
                                 <td class="text-center small" colspan="7">TOTAL</td>                                
                                 <td class="text-center small"><?=formatNumberDec($total_importe); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($total_importe_no_iva); ?></td>

@@ -9,20 +9,17 @@ require_once '../layouts/bodylogin2.php';
 $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
+$gestion = $_POST["gestiones"];
+$cod_mes_x = $_POST["cod_mes_x"];
+
 $unidad=$_POST["unidad"];
 $stringUnidadesX=implode(",", $unidad);
 
-$porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
-$porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
-$desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
-$hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
-$fechaTitulo="De ".strftime('%d/%m/%Y',strtotime($desde))." a ".strftime('%d/%m/%Y',strtotime($hasta));
+$nombre_gestion=nameGestion($gestion);
+$nombre_mes=nombreMes($cod_mes_x);
+
 // echo $areaString;
-$stringUnidades="";
-foreach ($unidad as $valor ) {    
-    $stringUnidades.=" ".abrevUnidad($valor)." ";
-}
-$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c, comprobantes cc where cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_unidadorganizacional in ($stringUnidadesX) and f.fecha BETWEEN '$desde' and '$hasta' and cc.cod_estadocomprobante<>2 ORDER BY fecha asc";
+$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c, comprobantes cc where cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($stringUnidadesX) and MONTH(f.fecha)=$cod_mes_x and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha asc";
 $stmt2 = $dbh->prepare($sql);
 // echo $sql;
 // Ejecutamos                        
@@ -40,7 +37,7 @@ $stmt2->bindColumn('exento', $exento);
 $stmt2->bindColumn('tipo_compra', $tipo_compra);  
 
 //datos de la factura
-$stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in ($stringUnidadesX)");
+$stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in (5)");
 $stmtPersonal->execute();
 $result=$stmtPersonal->fetch();
 $sucursal=$result['sucursal'];
@@ -49,7 +46,10 @@ $nit=$result['nit'];
 $razon_social=$result['razon_social'];
 
 ?>
-
+ <script> 
+          gestion_reporte='<?=$nombre_gestion;?>';
+          mes_reporte='<?=$nombre_mes;?>';
+ </script>
 <div class="content">
   <div class="container-fluid">
         <div class="row">
@@ -57,37 +57,35 @@ $razon_social=$result['razon_social'];
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
                   <div class="card-icon bg-blanco">
-                    <img class="" width="40" height="40" src="../assets/img/logoibnorca.png">
-                  </div>
-                  <div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div>
-                  <h4 class="card-title text-center">Libro de Compras IVA</h4>                  
-                  <h6 class="card-title">Unidad: <?=$stringUnidades;?></h6>
-                  <div class="row">
-                     <h6 class="card-title col-sm-3"><?=$fechaTitulo?></h6>                     
-                  </div> 
-
+                    <img class="" width="60" height="60" src="../assets/img/logo_ibnorca_origen.png">
+                  </div>                  
+                  <h3 class="card-title text-center" ><b>Libro de Compras IVA</b>
+                    <span><br><h6>
+                    Del Período: <?=$nombre_mes;?>/<?=$nombre_gestion;?><br>
+                    Expresado En Bolivianos</h6></span></h3>                  
+                  <!-- <h6 class="card-title">Unidad: <?=$stringUnidades;?></h6> -->
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
-                        <table id="libro_diario_rep" class="table table-bordered table-condensed" style="width:100%">
+                        <table id="libro_compras_rep_2" class="table table-bordered table-condensed" style="width:100%">
                             <thead>
-                              <!-- <tr>
-                                  <th colspan="6" class="text-left"><small><b> Razón Social : <?=$razon_social?><br>Sucursal : <?=$sucursal?></b></small></th>   
-                                  <th colspan="6" class="text-left"><small><b> Nit : <?=$nit?><br>Dirección : <?=$direccion?></b></small></th>   
-                              </tr>                                          -->
-                              <tr>
-                                  <th><small><b>-</b></small></th>   
-                                  <th><small><b>Fecha</b></small></th>                                
-                                  <th><small><b>NIT</b></small></th>
-                                  <th><small><b>Razón Social </b></small></th>
-                                  <th><small><b>No de FACTURA</b></small></th>
-                                  <th><small><b>No  de Autorización</b></small></th>
-                                  <th><small><b>Código de Control</b></small></th>                                  
-                                  <th><small><b>Total Factura (A)</b></small></th>
-                                  <th><small><b>Total I.C.E (B)</b></small></th>
-                                  <th><small><b>Importes Exentos (C)</b></small></th>
-                                  <th><small><b>Importe Neto Sujeto a IVA (A-B-C)</b></small></th>
-                                  <th><small><b>Crédito Fiscal Obtenido</b></small></th>
+                              <tr style="border:2px solid;">
+                                  <th colspan="6" class="text-left"><small> Razón Social : <?=$razon_social?><br>Sucursal : <?=$sucursal?></small></th>   
+                                  <th colspan="6" class="text-left"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
+                              </tr>
+                              <tr >
+                                  <th width="2%" style="border:2px solid;"><small><b>-</b></small></th>   
+                                  <th style="border:2px solid;"><small><b>Fecha</b></small></th>                                
+                                  <th style="border:2px solid;"><small><b>NIT</b></small></th>
+                                  <th style="border:2px solid;"><small><b>Razón Social </b></small></th>
+                                  <th style="border:2px solid;"><small><b>No de FACTURA</b></small></th>
+                                  <th style="border:2px solid;"><small><b>No  de Autorización</b></small></th>
+                                  <th style="border:2px solid;"><small><b>Código de Control</b></small></th>                                  
+                                  <th style="border:2px solid;"><small><b>Total Factura (A)</b></small></th>
+                                  <th style="border:2px solid;"><small><b>Total I.C.E (B)</b></small></th>
+                                  <th style="border:2px solid;"><small><b>Importes Exentos (C)</b></small></th>
+                                  <th style="border:2px solid;"><small><b>Importe Neto Sujeto a IVA (A-B-C)</b></small></th>
+                                  <th style="border:2px solid;"><small><b>Crédito Fiscal Obtenido</b></small></th>
                               </tr>                                  
                             </thead>
                             <tbody>
@@ -125,7 +123,7 @@ $razon_social=$result['razon_social'];
                                   <td class="text-left small"><?=$razon_social;?></td>
                                   <td class="text-right small"><?=$nro_factura;?></td>
                                   <td class="text-right small"><?=$nro_autorizacion;?></td>
-                                  <td class="text-left small"><?=$codigo_control;?></td>
+                                  <td class="text-center small"><?=$codigo_control;?></td>
                                   <td class="text-right small"><?=formatNumberDec($sumadeimporte);?></td>
                                   <td class="text-right small"><?=formatNumberDec($ice);?></td>
                                   <td class="text-right small"><?=formatNumberDec($exento);?></td>
@@ -147,7 +145,7 @@ $razon_social=$result['razon_social'];
                                   <td class="text-right small"><?=formatNumberDec($total_ice);?></td>
                                   <td class="text-right small"><?=formatNumberDec($total_exento);?></td>
                                   <td class="text-right small"><?=formatNumberDec($total_importe_sujeto_iva);?></td>
-                                  <td class="text-center small"><?=formatNumberDec($total_iva_obtenido);?></td>                                      
+                                  <td class="text-right small"><?=formatNumberDec($total_iva_obtenido);?></td>                                      
                                 </tr>
                             </tbody>
                         </table>

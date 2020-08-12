@@ -38,7 +38,6 @@ $globalPersonal=$_SESSION["globalUser"];
   $stmt->bindColumn('cod_comprobante', $cod_comprobante);
 
   date_default_timezone_set('America/La_Paz');
-  $mes_actual=date('m');
   if(isset($_GET['interno'])){
     $interno=$_GET['interno'];
   }else{
@@ -90,14 +89,16 @@ $globalPersonal=$_SESSION["globalUser"];
                           //para la anulacion de facturas
                           if(isset($_GET['interno'])){
                             $sw_anular=true;
+                            // echo "aqui";
                           }else{
+                            $dias_alargo=obtenerValorConfiguracion(75);//defecto                            
+                            $fecha_inicio=date('Y-m-1'); 
+                            $fecha_fin = date("Y-m-t", strtotime($fecha_inicio)); 
+                            $fecha_inicio_x= date("Y-m-d",strtotime($fecha_inicio."- ".$dias_alargo." days")); 
                             $fechaComoEntero = strtotime($fecha_factura_xy);
-                            $mes_factura = date("m", $fechaComoEntero);  
-                            if($mes_factura==$mes_actual){
-                              $sw_anular=true;
-                            }else{
-                              $sw_anular=false;
-                            }
+                            $fecha_factura = date("Y-m-d", $fechaComoEntero);
+                            // echo $fecha_inicio_x."-".$fecha_fin."<br>";
+                            $sw_anular=verificar_fecha_rango($fecha_inicio_x, $fecha_fin, $fecha_factura);
                           }
                           //==
                           $nombre_personal=namePersonalCompleto($cod_personal);
