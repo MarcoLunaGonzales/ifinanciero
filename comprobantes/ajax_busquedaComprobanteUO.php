@@ -43,7 +43,7 @@ if($tipo!=""){
   $sql.=" and c.cod_tipocomprobante in ($tipo)";  
 }
 if($fechaI!="" && $fechaF!=""){
-  $sql.=" and c.fecha BETWEEN '$fechaI' and '$fechaF'"; 
+  $sql.=" and c.fecha BETWEEN '$fechaI 00:00:00' and '$fechaF 23:59:59'"; 
 }
 if($glosa!=""){
   $sql.=" and c.glosa like '%$glosa%'";
@@ -54,7 +54,7 @@ if($comprobante!=""){
 if($cuenta!=""){
   $sql.=" and cd.cod_cuenta=$cuenta";
 }
-$sql.=" GROUP BY c.codigo order by c.fecha desc, c.numero desc;";
+$sql.=" GROUP BY c.codigo order by c.cod_tipocomprobante, c.numero desc;";
 
 // echo $sql;
 

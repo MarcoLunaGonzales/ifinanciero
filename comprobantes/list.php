@@ -24,9 +24,9 @@ from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.c
   $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
 //}
 
-$sql.=" and c.cod_gestion='$globalGestion' order by c.fecha desc, unidad, tipo_comprobante, c.numero desc limit 200";
+$sql.=" and c.cod_gestion='$globalGestion' order by c.numero desc limit 200";
 
-// echo $sql;
+//echo $sql;
 
 $stmt = $dbh->prepare($sql);
 

@@ -40,7 +40,7 @@ if($tipo!=""){
   $sqlArray.=" and c.cod_tipocomprobante in ($tipo)";  
 }
 if($fechaI!="" && $fechaF!=""){
-  $sqlArray.=" and c.fecha BETWEEN '$fechaI' and '$fechaF'"; 
+  $sqlArray.=" and c.fecha BETWEEN '$fechaI 00:00:00' and '$fechaF 23:59:59'"; 
 }
 if($glosa!=""){
   $sqlArray.=" and c.glosa like '%$glosa%'";
