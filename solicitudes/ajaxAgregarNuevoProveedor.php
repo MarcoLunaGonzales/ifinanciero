@@ -50,8 +50,8 @@ if($_GET['tipo']=='E'){
 						  "ciudad"=>$ciudad, //Valor numerico determinado por el ws-paises opcion ciudad y idEstado=480 para La Paz (Ej. 72=ciudad El Alto)
 						  "ciudadOtro"=>$otra, // campo VARCHAR, se emplea en el caso de seleccionar otro en el campo Ciudad 
 						  "direccion"=>$_GET['direccion'], //Direccion del Cliente, campo VARCHAR 
-						  "telefono"=>$_GET['telefono'], //Telefono fijo del cliente, campo VARCHAR 
-						  "correo"=>$_GET['correo'], //correo de la empresa
+						  "telefono"=>$_GET['telefono'], //Telefono fijo del cliente, campo VARCHAR DEFECTO ** NULL
+						  "correo"=>$_GET['correo'], //correo de la empresa DEFECTO ** NULL
 						  "nombreContacto"=>$_GET['nombre_contacto'], //Nombre del contacto que manejara la cuenta de la empresa
 						  "apellidoContacto"=>$_GET['apellido_contacto'], //Apellido del contacto que manejara la cuenta de la empresa
 						  "cargoContacto"=>$_GET['cargo_contacto'], //Cargo que ocupa el contacto dentro la empresa
@@ -143,7 +143,7 @@ if($_GET['tipo']=='E'){
 			if($respuesta->existe=="1"||$respuesta->existe==1){
 				if(isset($respuesta->IdCliente)){
 					if(isset($respuesta->Identificacion)){
-				       $mensajeDevuelta.=" Se cambio de Cliente a Proveedor (".$respuesta->NombreRazon.")";	
+				       $mensajeDevuelta.=" (".$respuesta->NombreRazon.")";	
 
 				      $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 						  "accion"=>"AsignarAtributoProveedor", 

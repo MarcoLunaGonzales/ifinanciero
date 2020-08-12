@@ -66,10 +66,21 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
   $stmtDel = $dbh->prepare($sqlDel);
   $stmtDel->execute();
 
+  $sqlDeleteFact="SELECT * from solicitud_recursosdetalle where cod_solicitudrecurso=$codSolicitud";
+  $stmtDeleteFac = $dbh->prepare($sqlDeleteFact);
+  $stmtDeleteFac->execute();
+  while ($rowEsta = $stmtDeleteFac->fetch(PDO::FETCH_ASSOC)) {
+   $codigoDetalle=$rowEsta['codigo'];
+   $sqlDelete="DELETE from facturas_compra where cod_solicitudrecursodetalle='$codigoDetalle'";
+   $stmtDel = $dbh->prepare($sqlDelete);
+   $stmtDel->execute();
+  }
+
+
   //insertamos la distribucion
-  $sqlDel="DELETE FROM facturas_compra where cod_solicitudrecursodetalle in (select codigo from solicitud_recursosdetalle where cod_solicitudrecurso=$codSolicitud)";
+  /*$sqlDel="DELETE FROM facturas_compra where cod_solicitudrecursodetalle in (select codigo from solicitud_recursosdetalle where cod_solicitudrecurso=$codSolicitud)";
   $stmtDel = $dbh->prepare($sqlDel);
-  $stmtDel->execute();
+  $stmtDel->execute();*/
 
   
   $valorDist=$_POST['n_distribucion'];
