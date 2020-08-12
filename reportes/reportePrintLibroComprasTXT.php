@@ -12,7 +12,7 @@ $dbh = new Conexion();
 $gestion = $_POST["cod_gestion"];
 $cod_mes_x = $_POST["cod_mes"];
 $unidad=$_POST["unidad"];
-$unidad = str_replace(",", "_", $unidad); 
+// $unidad_x = str_replace(",", "_", $unidad);
 $fecha=date('Y-m-d');
 $nombre_archivo="archivofacilito_compras-".$fecha.".txt";
 //limpiamos en archivo

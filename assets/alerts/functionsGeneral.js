@@ -13007,11 +13007,12 @@ function botonBuscarEstudiantesCapacitacion(){
   var valor_materno_cliente=$("#maternoCliente").val(); 
   var valor_nombre_curso= $("#nombre_curso").val(); 
   var valor_fecha_inscripcion=$("#fecha_inscripcion").val(); 
+  var valor_codigo_curso= $("#codigo_curso").val();
   var q=$("#q").val();   
   var r=$("#r").val();   
   var u=$("#r").val();   
   var s=$("#r").val();   
-  var url='index.php?opcion=listFacturasServicios_costos_estudiantes&ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente+'&fecha='+valor_fecha_inscripcion+'&nombre_curso='+valor_nombre_curso;
+  var url='index.php?opcion=listFacturasServicios_costos_estudiantes&ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente+'&fecha='+valor_fecha_inscripcion+'&nombre_curso='+valor_nombre_curso+'&codigo_curso='+valor_codigo_curso;
   if(q!=0){    
     location.href=url+'&q='+q+'&r='+r+'&u='+u+'&s='+s;
   }else{    
@@ -13050,12 +13051,13 @@ function botonBuscarEmpresasCapacitacion(){
 
   var valor_cod_empresa=$("#cod_empresa").val();    
   var valor_glosa=$("#glosa").val();   
+  var valor_codigo_curso=$("#codigo_curso").val();   
   var q=$("#q").val();   
   var r=$("#r").val(); 
   var u=$("#r").val(); 
   var s=$("#r").val(); 
 
-  var url='index.php?opcion=listFacturasServicios_costos_empresas&cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa;
+  var url='index.php?opcion=listFacturasServicios_costos_empresas&cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa+'&codigo_curso='+valor_codigo_curso;
    if(q!=0){    
     location.href=url+'&q='+q+'&r='+r+'&u='+u+'&s='+s;     
   }else{    
@@ -15277,34 +15279,39 @@ function ajax_mes_de_gestion(combo){
 function descargar_txt_libro_ventas(){
     var cod_gestion=$("#gestiones").val();
     var cod_mes=$("#cod_mes_x").val();
+    var unidad=$("#unidad").val();
     if(cod_gestion==null || cod_gestion==''){
       Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
     }else{
       if(cod_mes==null || cod_mes==''){
         Swal.fire("Informativo!", "Por favor Seleccione el mes!", "warning");
       }else{
-        // alert("llegue");
-        $.ajax({
-        type:"POST",
-        data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes,
-        url:"reportes/reportePrintLibroVentasTXT.php",
-        success:function(r){
-          var respu=r.split('#####');
-          var estado=respu[1];
-          var nombre_ar=respu[2];
-          // console.log(r);
-          if(estado==1){
-            // Swal.fire("Correcto!", "El proceso se completo correctamente!", "success");
-            // alerts.showSwal('success-message','reportes/'+nombre_ar);
-            var direccion=nombre_ar;
-            descargar_txt_libro_ventas_x(direccion);
-          }else{
-            
-            Swal.fire("ERROR!", "Hubo un error al generar el TXT!", "warning");
-            
+        if(unidad==null || unidad==''){
+          Swal.fire("Informativo!", "Por favor seleccione la unidad!", "warning");
+        }else{   
+          // alert("llegue");
+          $.ajax({
+          type:"POST",
+          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad,
+          url:"reportes/reportePrintLibroVentasTXT.php",
+          success:function(r){
+            var respu=r.split('#####');
+            var estado=respu[1];
+            var nombre_ar=respu[2];
+            // console.log(r);
+            if(estado==1){
+              // Swal.fire("Correcto!", "El proceso se completo correctamente!", "success");
+              // alerts.showSwal('success-message','reportes/'+nombre_ar);
+              var direccion=nombre_ar;
+              descargar_txt_libro_ventas_x(direccion);
+            }else{
+              
+              Swal.fire("ERROR!", "Hubo un error al generar el TXT!", "warning");
+              
+            }
           }
-        }
-        });         
+          }); 
+        }         
       }
     }
 }

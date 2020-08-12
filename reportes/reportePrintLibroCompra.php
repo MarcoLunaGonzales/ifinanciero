@@ -75,17 +75,17 @@ $razon_social=$result['razon_social'];
                               </tr>
                               <tr >
                                   <th width="2%" style="border:2px solid;"><small><b>-</b></small></th>   
-                                  <th style="border:2px solid;"><small><b>Fecha</b></small></th>                                
-                                  <th style="border:2px solid;"><small><b>NIT</b></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><b>Fecha</b></small></th>                                
+                                  <th style="border:2px solid;" width="6%"><small><b>NIT</b></small></th>
                                   <th style="border:2px solid;"><small><b>Razón Social </b></small></th>
-                                  <th style="border:2px solid;"><small><b>No de FACTURA</b></small></th>
-                                  <th style="border:2px solid;"><small><b>No  de Autorización</b></small></th>
-                                  <th style="border:2px solid;"><small><b>Código de Control</b></small></th>                                  
-                                  <th style="border:2px solid;"><small><b>Total Factura (A)</b></small></th>
-                                  <th style="border:2px solid;"><small><b>Total I.C.E (B)</b></small></th>
-                                  <th style="border:2px solid;"><small><b>Importes Exentos (C)</b></small></th>
-                                  <th style="border:2px solid;"><small><b>Importe Neto Sujeto a IVA (A-B-C)</b></small></th>
-                                  <th style="border:2px solid;"><small><b>Crédito Fiscal Obtenido</b></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><b>Nro. de<br> FACTURA</b></small></th>
+                                  <th style="border:2px solid;" width="10%"><small><b>Nro de Autorización</b></small></th>
+                                  <th style="border:2px solid;" width="10%"><small><b>Código de Control</b></small></th>                                  
+                                  <th style="border:2px solid;" width="6%"><small><b>Total Factura (A)</b></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><b>Total I.C.E (B)</b></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><b>Importes Exentos (C)</b></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><b>Importe Neto Sujeto a IVA <br>(A-B-C)</b></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><b>Crédito Fiscal Obtenido</b></small></th>
                               </tr>                                  
                             </thead>
                             <tbody>
@@ -132,15 +132,10 @@ $razon_social=$result['razon_social'];
                                 </tr>
                                 <?php                                  
                               }?>
-                              <tr>
-                                  <td class="text-center small" colspan="7"><b>SubTotal:</b></td>
-                                  <td class="d-none"></td>
-                                  <td class="d-none"></td>
-                                  <td class="d-none"></td>
-                                  <td class="d-none"></td>
-                                  <td class="d-none"></td>
-                                  <td class="d-none"></td>
-                                  
+                              <tr style="border:2px solid;">                               
+                                  <td class="text-left small" colspan="3" style="border:2px solid;">CI:</td>
+                                  <td class="text-left small" colspan="3" style="border:2px solid;">Nombre del Responsable:</td>
+                                  <td class="text-center small"><b>SubTotal:</b></td>                                  
                                   <td class="text-right small"><?=formatNumberDec($total_importe);?></td>
                                   <td class="text-right small"><?=formatNumberDec($total_ice);?></td>
                                   <td class="text-right small"><?=formatNumberDec($total_exento);?></td>

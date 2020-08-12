@@ -16,16 +16,9 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-// session_start();
-// $globalAdmin=$_SESSION["globalAdmin"];
-// $globalAdmin=$_SESSION["globalAdmin"];
-// $globalGestion=$_SESSION["globalGestion"];
-// $globalUnidad=$_SESSION["globalUnidad"];
-// $globalArea=$_SESSION["globalArea"];
-
-
 $cod_empresa=$_GET['cod_empresa'];
 $glosa=$_GET['glosa'];
+$codigo_curso_x=$_GET['codigo_curso'];
 $codigo_simulacion=0;//codigo de simulacion
 if(isset($_GET['q'])){
   $q=$_GET['q'];
@@ -34,13 +27,23 @@ if(isset($_GET['q'])){
   $u=$_GET['u'];  
 }
 
-$sql="SELECT *,DATE_FORMAT(FechaRegistro,'%d/%m/%Y')as FechaRegistro_x from programas_cursos pc where (pc.idEmpresa<>0 || pc.idEmpresa<>null)";  
+$sql="SELECT pc.*,DATE_FORMAT(pc.FechaRegistro,'%d/%m/%Y')as FechaRegistro_x from programas_cursos pc where (pc.idEmpresa<>0 || pc.idEmpresa<>null)";  
 
 if($cod_empresa!=""){
-  $sql.=" and idEmpresa in ($cod_empresa)";
+  $sql.=" and pc.idEmpresa in ($cod_empresa)";
 }
 if($glosa!=""){
-  $sql.=" and Nombre like '%$glosa%'";
+  $sql.=" and pc.Nombre like '%$glosa%'";
+}
+if($codigo_curso_x!=""){
+  $arrayCodigo=explode("-",$codigo_curso_x);
+  $IdOficina=$arrayCodigo[0];
+  $idprograma=$arrayCodigo[1];
+  $idtipo=$arrayCodigo[2];
+  $grupo=$arrayCodigo[3];
+  $grupo_x=trim($grupo,'G');
+  $IdGestion=$arrayCodigo[4];
+  $sql.=" and d_abrevclasificador(pc.IdOficina) like '%$IdOficina%' and d_abrevclasificador(pc.idprograma) like '%$idprograma%' and d_abrevclasificador(pc.idtipo) like '%$idtipo%' and pc.grupo=$grupo_x and d_abrevclasificador(pc.IdGestion) like '%$IdGestion%'";
 }
 $sql.=" order by pc.IdCurso desc";
 // echo $sql;
@@ -73,6 +76,7 @@ $sql.=" order by pc.IdCurso desc";
                           <th>Id Empresa</th>
                           <th>Empresa</th>
                           <th>Precio <br>curso (BOB)</th>
+                          <th><small>Código<br>curso</small></th>   
                           <th>Nombre Curso</th>
                           <th>Fecha Registro</th>
                           <th class="text-right">Actions</th>
@@ -90,9 +94,10 @@ $sql.=" order by pc.IdCurso desc";
                     // $stmtIBNO->bindColumn('nombreAlumno', $nombreAlumno);                   
                     $stmtIBNO->bindColumn('Costo', $Costo);
                     $stmtIBNO->bindColumn('CantidadModulos', $CantidadModulos);          
-                    $stmtIBNO->bindColumn('Nombre', $nombre_mod);
+                    $stmtIBNO->bindColumn('Nombre', $nombre_curso);
                     $stmtIBNO->bindColumn('FechaRegistro_x', $FechaRegistro);
                     while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
+                      $codigo_curso=obtenerCodigoExternoCurso($IdCurso);
                       $monto_pagar=$Costo; //monto a pagar del estudiante                         
                       $codigo_facturacion=0;
                       $nombre_empresa=nameCliente($idEmpresa);
@@ -114,10 +119,11 @@ $sql.=" order by pc.IdCurso desc";
                       <tr>
                         <td align="center"></td>
                         <td><?=$idEmpresa;?></td>
-                        <td><?=$nombre_empresa;?></td>
-                        <td class="text-right"><?=formatNumberDec($Costo) ;?></td>                                    
-                        <td class="text-left"><?=$nombre_mod;?></td>      
-                        <td class="text-left"><?=$FechaRegistro;?></td>   
+                        <td class="small"><?=$nombre_empresa;?></td>
+                        <td class="text-right small"><?=formatNumberDec($Costo) ;?></td>  
+                        <td class="text-left small" ><?=$codigo_curso;?></td>                                  
+                        <td class="text-left small"><?=$nombre_curso;?> / # Modulos = <?=$CantidadModulos?></td>      
+                        <td class="text-left small"><?=$FechaRegistro;?></td>   
                         <td class="td-actions text-right">
                           <?php
                             
