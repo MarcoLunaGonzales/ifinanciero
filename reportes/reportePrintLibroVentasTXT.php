@@ -80,7 +80,7 @@ try {
 	//agregamos los items al archivo	
 	$texto="3|".$index."|".$fecha_factura."|".$nro_factura."|0|".$nombre_estado."|".$nit."|".$razon_social."|".$importe."|".$importe_no_iva."|".$extento."|".$ventas_gravadas."|".$subtotal."|".$rebajas_sujetos_iva."|".$importe_debito_fiscal."|".$debito_fiscal."|".$codigo_control;
 	fwrite($archivo, $texto);
-	fwrite($archivo, "\n");
+	fwrite($archivo, "".PHP_EOL);
 	
 	$index++; } 
 	fclose($archivo);

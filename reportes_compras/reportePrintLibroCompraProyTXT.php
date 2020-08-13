@@ -74,7 +74,7 @@ try {
 		//agregamos los items al archivo	
 		$texto="1|".$index."|".$fecha_factura."|".$nit."|".strtoupper($razon_social)."|".$nro_factura."|0|".$nro_autorizacion."|".$importe."|".$importe_no_iva."|".$subtotal."|".$rebajas_sujetos_iva."|".$importe_credito_fiscal."|".$credito_fiscal."|".$codigo_control."|".$tipo_compra;
 		fwrite($archivo, $texto);
-		fwrite($archivo, "\n".PHP_EOL);
+		fwrite($archivo, "".PHP_EOL);
 		
 		$index++; 
 	}
