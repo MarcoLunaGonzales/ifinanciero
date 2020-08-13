@@ -260,19 +260,19 @@ $fechaActual=date("Y-m-d");
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Importe</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <input class="form-control" type="number" step="0.01" name="imp_fac" id="imp_fac" required="true"/>
+                                <input class="form-control" type="number" readonly step="0.01" name="imp_fac" id="imp_fac"/>
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Exento</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <input class="form-control" type="number" step="0.01" name="exe_fac" id="exe_fac" required="true" value="0" />
+                                <input class="form-control" type="number" readonly step="0.01" name="exe_fac" id="exe_fac"value="0" />
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">ICE</label>
                             <div class="col-sm-3">
                               <div class="form-group">
-                                <input class="form-control" type="number" step="0.01" name="ice_fac" id="ice_fac" required="true" value="0" />
+                                <input class="form-control" type="number" readonly step="0.01" name="ice_fac" id="ice_fac" value="0" />
                               </div>
                              </div>
                           </div>                                                                  
@@ -282,7 +282,7 @@ $fechaActual=date("Y-m-d");
                             <div class="col-sm-3">
                               <div class="form-group">
                                 <!-- <label for="taza_fac" class="bmd-label-floating" style="color: #4a148c;">Taza Cero</label>      -->
-                                <input class="form-control" type="number" step="0.01" name="taza_fac" id="taza_fac" required="true" value="0" />
+                                <input class="form-control" type="number" readonly step="0.01" name="taza_fac" id="taza_fac" value="0" />
                               </div>
                             </div>
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Autorizaci&oacute;n</label>
@@ -302,7 +302,7 @@ $fechaActual=date("Y-m-d");
                             <label class="col-sm-1 col-form-label" style="color: #4a148c;">Tipo</label>
                             <div class="col-sm-2">
                               <div class="form-group">
-                                <select class="selectpicker form-control form-control-sm" name="tipo_fac" id="tipo_fac" data-style="btn btn-primary">                                  
+                                <select class="selectpicker form-control form-control-sm" required name="tipo_fac" id="tipo_fac" data-style="btn btn-primary">                                  
                                    <?php
                                        $stmt = $dbh->prepare("SELECT codigo, nombre FROM tipos_compra_facturas where cod_estadoreferencial=1");
                                        $stmt->execute();
