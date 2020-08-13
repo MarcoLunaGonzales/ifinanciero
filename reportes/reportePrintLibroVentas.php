@@ -121,7 +121,7 @@ $razon_social=$result['razon_social'];
                                 $importe=0;
                                 $codigo_control=0;
                                 $nit=0;
-                                $fecha_factura=0;
+                               // $fecha_factura=0;
                               break;
                               case 3:
                                 $btnEstado='<span class="badge badge-success">';

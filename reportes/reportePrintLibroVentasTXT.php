@@ -49,20 +49,25 @@ try {
 	$index=1;           
 	while ($row = $stmt2->fetch()) {                             
 	switch ($cod_estadofactura) {
-	  case 1:
-	    $btnEstado='<span class="badge badge-success">';
-	  break;
-	  case 2:
-	    $btnEstado='<span class="badge badge-danger">';
-	  break;
-	  case 3:
-	    $btnEstado='<span class="badge badge-success">';
-	    $cod_estadofactura=1;
-	  break;
-	  case 4:
-	    $btnEstado='<span class="badge badge-default">';
-	    $cod_estadofactura=1;
-	}
+        case 1:
+          $btnEstado='<span class="badge badge-success">';
+        break;
+        case 2:
+          $btnEstado='<span class="badge badge-danger">';
+          $razon_social="ANULADO";
+          $importe=0;
+          $codigo_control=0;
+          $nit=0;
+         // $fecha_factura=0;
+        break;
+        case 3:
+          $btnEstado='<span class="badge badge-success">';
+          $cod_estadofactura=1;
+        break;
+        case 4:
+          $btnEstado='<span class="badge badge-default">';
+          $cod_estadofactura=1;
+      }
 	$nombre_estado=nameEstadoFactura($cod_estadofactura);
 	$importe_no_iva=0;
 	$extento=0;
