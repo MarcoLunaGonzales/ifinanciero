@@ -101,7 +101,7 @@
                     $ci_estudiante_x=$row['ci_estudiante'];//solo se guarda este campo cuando es grupal
 
                     if($tipo_solicitud==2){// la solicitud pertence capacitacion estudiantes
-                        $datos=resgistrar_pago_curso($cod_cliente,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$codigo);
+                        $datos=resgistrar_pago_curso($ci_estudiante,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$codigo);
                         $estado_x=$datos["estado"];
                         $mensaje_x=$datos["mensaje"];
                         if(!$estado_x){//registro correcto webservice
