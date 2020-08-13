@@ -78,7 +78,7 @@ try {
 		$razon_social="S/N";
 	}
 	//agregamos los items al archivo	
-	$texto="3|".$index."|".$fecha_factura."|".$nro_factura."|0|".$nombre_estado."|".$nit."|".$razon_social."|".$importe."|".$importe_no_iva."|".$extento."|".$ventas_gravadas."|".$subtotal."|".$rebajas_sujetos_iva."|".$importe_debito_fiscal."|".$debito_fiscal."|".$codigo_control;
+	$texto="3|".$index."|".$fecha_factura."|".$nro_factura."|0|".$nombre_estado."|".$nit."|".$razon_social."|".number_format($importe,2,'.',',')."|".number_format($importe_no_iva,2,'.',',')."|".number_format($extento,2,'.',',')."|".number_format($ventas_gravadas,2,'.',',')."|".number_format($subtotal,2,'.',',')."|".number_format($rebajas_sujetos_iva,2,'.',',')."|".number_format($importe_debito_fiscal,2,'.',',')."|".number_format($debito_fiscal,2,'.',',')."|".$codigo_control;
 	fwrite($archivo, $texto);
 	fwrite($archivo, "".PHP_EOL);
 	

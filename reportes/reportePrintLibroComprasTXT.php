@@ -27,6 +27,7 @@ $nombre_mes=nombreMes($cod_mes_x);
 
 
 $sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c, comprobantes cc where cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo  and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($unidad) and MONTH(f.fecha)=$cod_mes_x and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha asc";
+//echo $sql;
 $stmt2 = $dbh->prepare($sql);
 // echo $sql;
 // Ejecutamos                        
@@ -62,16 +63,22 @@ try {
 		if($razon_social==null || $razon_social=='' || $razon_social==' '){
 			$razon_social="S/N";
 		}	
+		$razon_social=trim($razon_social);
 		$caracter=substr($codigo_control, -1);
         if($caracter=='-'){
           $codigo_control=trim($codigo_control, '-');
         }
         if($codigo_control==null || $codigo_control=="")
           $codigo_control=0;
+
+      	if($tipo_compra=="" || $tipo_compra==null){
+      		$tipo_compra=1;
+      	}
+      	$nro_autorizacion=trim($nro_autorizacion);
 		//agregamos los items al archivo	
-		$texto="1|".$index."|".$fecha_factura."|".$nit."|".$razon_social."|".$nro_factura."|0|".$nro_autorizacion."|".number_format($importe,2,',','.')."|".number_format($importe_no_iva,2,',','.')."|".number_format($subtotal,2,',','.')."|".number_format($rebajas_sujetos_iva,2,',','.')."|".number_format($importe_credito_fiscal,2,',','.')."|".number_format($credito_fiscal,2,',','.')."|".$codigo_control."|".$tipo_compra;
+		$texto="1|".$index."|".$fecha_factura."|".$nit."|".$razon_social."|".$nro_factura."|0|".$nro_autorizacion."|".number_format($importe,2,'.',',')."|".number_format($importe_no_iva,2,'.',',')."|".number_format($subtotal,2,'.',',')."|".number_format($rebajas_sujetos_iva,2,'.',',')."|".number_format($importe_credito_fiscal,2,'.',',')."|".number_format($credito_fiscal,2,'.',',')."|".$codigo_control."|".$tipo_compra;
 		fwrite($archivo, $texto);
-		fwrite($archivo, "\n");
+		fwrite($archivo, "".PHP_EOL);
 		
 		$index++; 
 	} 
