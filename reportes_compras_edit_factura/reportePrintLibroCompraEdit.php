@@ -80,7 +80,7 @@ $razon_social=$result['razon_social'];
                   <div class="card-icon bg-blanco">
                     <img class="" width="60" height="60" src="../assets/img/logo_ibnorca_origen.png">
                   </div>                  
-                  <h3 class="card-title text-center" ><b>Libro de Compras IVA- Proyecto</b>
+                  <h3 class="card-title text-center" ><b>Libro de Compras - Edición</b>
                     <span><br><h6>
                     Del Período: <?=$nombre_mes;?>/<?=$nombre_gestion;?><br>
                     Expresado En Bolivianos</h6></span></h3>                  
