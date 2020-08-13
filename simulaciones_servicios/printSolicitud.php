@@ -33,6 +33,7 @@ try{
   $tipo_solicitud = $resultInfo['tipo_solicitud'];  
   $dias_credito = $resultInfo['dias_credito'];  
   $persona_contacto = $resultInfo['persona_contacto'];  
+  $ci_estudiante = $resultInfo['ci_estudiante'];
   
   $nombre_unidad=nameUnidad($cod_unidadorganizacional);
   $abrev_area=trim(abrevArea($cod_area),'-');
@@ -94,7 +95,7 @@ $html.=  '<header class="header">'.
               <td class="td-color-celeste"><b>Cliente:</b></td>';
               $tipo_solicitud = $resultInfo['tipo_solicitud'];  
               if($tipo_solicitud==2 || $tipo_solicitud==7){                
-                $nombre_cliente=obtenerNombreEstudiante($cod_cliente);
+                $nombre_cliente=obtenerNombreEstudiante($ci_estudiante);
               }              
               $html.='<td width="10%" colspan="2" align="left">'.$nombre_cliente.'</td>
               <td width="3%" colspan="2" class="td-color-celeste"><b>Tipo Cambio:</b></td>

@@ -105,7 +105,8 @@ $razon_social=$result['razon_social'];
                                 if($caracter=='-'){
                                   $codigo_control=trim($codigo_control, '-');
                                 }
-                                
+                                if($codigo_control==null || $codigo_control=="")
+                                  $codigo_control=0;
 
                                 $total_importe+=$importe;
                                 $total_ice+=$ice;
