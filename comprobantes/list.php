@@ -177,7 +177,8 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                     <i class="material-icons text-default">attachment</i> Adjuntos
                                   </a>
                                   <?php
-                                  if($existeCuenta==0){
+                                  $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
+                                  if($existeCuenta==0&&$codigoSol==0){
                                   ?>
                                   <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
                                     <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
@@ -187,7 +188,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                   ?>
                                   
                                   <?php 
-                                  $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
+                                  
                                   if($codigoSol!=0){
                                    ?>
                                    <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol;?>&comp=1" target="_blank" class="dropdown-item">
