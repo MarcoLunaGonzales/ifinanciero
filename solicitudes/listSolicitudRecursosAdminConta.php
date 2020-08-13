@@ -333,6 +333,7 @@ $item_1=2708;
 ?>
                       </tbody>
                     </table>
+                    <br><br><br><br><br>
                 </div>
               </div>
               <div class="card-footer fixed-bottom col-sm-9">

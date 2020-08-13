@@ -738,7 +738,7 @@
                               <div class="form-group">
                                 <select class="selectpicker form-control form-control-sm" name="tipo_fac" id="tipo_fac" data-style="btn btn-primary">                                  
                                    <?php
-                                         $stmt = $dbh->prepare("SELECT codigo, nombre FROM tipos_compra_facturas where cod_estadoreferencial=1");
+                                       $stmt = $dbh->prepare("SELECT codigo, nombre FROM tipos_compra_facturas where cod_estadoreferencial=1");
                                        $stmt->execute();
                                       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         $codigoX=$row['codigo'];
