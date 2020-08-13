@@ -1378,12 +1378,11 @@ function guardarPlantilla(){
     type: "POST",
     proccessData: false, // this is true by default
     success: function(resp){
-      $("#mensaje").html("<p class='text-success'>Registro satisfactorio</p>");
       $("#titulo").val("");
       $("#descrip_plan").val("");
       $('#modalPlantilla').modal('hide');
-      Swal.fire("Correcto!", resp, "success");
-          //window.location="../index.php?opcion=listComprobantes";
+      Swal.fire("Correcto!","Registro satisfactorio", "success");
+      $("#mensaje").html("<p class='text-success'>OK</p>");
     }
    });
   }else{
