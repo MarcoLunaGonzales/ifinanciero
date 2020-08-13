@@ -71,10 +71,14 @@ try {
 		if(trim($codigo_control)==""){
              $codigo_control="0";
         }
+        $razon_social=trim($razon_social);
+        $nro_autorizacion=trim($nro_autorizacion);
+        $codigo_control=trim($codigo_control);
+        $tipo_compra=2;
 		//agregamos los items al archivo	
 		$texto="1|".$index."|".$fecha_factura."|".$nit."|".strtoupper($razon_social)."|".$nro_factura."|0|".$nro_autorizacion."|".$importe."|".$importe_no_iva."|".$subtotal."|".$rebajas_sujetos_iva."|".$importe_credito_fiscal."|".$credito_fiscal."|".$codigo_control."|".$tipo_compra;
 		fwrite($archivo, $texto);
-		fwrite($archivo, "\n".PHP_EOL);
+		fwrite($archivo, "\n");
 		
 		$index++; 
 	}
