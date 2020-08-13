@@ -61,7 +61,13 @@ try {
 		}
 		if($razon_social==null || $razon_social=='' || $razon_social==' '){
 			$razon_social="S/N";
-		}
+		}	
+		$caracter=substr($codigo_control, -1);
+        if($caracter=='-'){
+          $codigo_control=trim($codigo_control, '-');
+        }
+        if($codigo_control==null || $codigo_control=="")
+          $codigo_control=0;
 		//agregamos los items al archivo	
 		$texto="1|".$index."|".$fecha_factura."|".$nit."|".$razon_social."|".$nro_factura."|0|".$nro_autorizacion."|".$importe."|".$importe_no_iva."|".$subtotal."|".$rebajas_sujetos_iva."|".$importe_credito_fiscal."|".$credito_fiscal."|".$codigo_control."|".$tipo_compra;
 		fwrite($archivo, $texto);

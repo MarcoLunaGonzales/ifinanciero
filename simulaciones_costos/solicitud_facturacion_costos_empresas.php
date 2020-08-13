@@ -58,7 +58,7 @@ if(isset($_GET['u']))
             </div>
           <div class="card-body">
             <div class="row">
-                <label class="col-sm-12 col-form-label text-center">Empresa</label>
+                <label style="color:#000000" class="col-sm-12 col-form-label text-center">Empresa</label>
             </div> 
             <div class="row">
               <div class="form-group col-sm-3">            
@@ -76,7 +76,7 @@ if(isset($_GET['u']))
               </div>
             </div> 
             <div class="row">                                                  
-              <label class="col-sm-12 col-form-label text-center">Nombre Curso</label>
+              <label style="color:#000000" class="col-sm-12 col-form-label text-center">Nombre Curso</label>
             </div> 
             <div class="row">
               <div class="form-group col-sm-3">            
@@ -86,7 +86,7 @@ if(isset($_GET['u']))
               </div>                    
             </div>
             <div class="row">                                                  
-              <label class="col-sm-12 col-form-label text-center">Código Curso</label>
+              <label style="color:#000000" class="col-sm-12 col-form-label text-center">Código Curso</label>
             </div> 
             <div class="row">
               <div class="form-group col-sm-3">            
