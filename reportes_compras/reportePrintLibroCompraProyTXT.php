@@ -76,7 +76,7 @@ try {
         $codigo_control=trim($codigo_control);
         $tipo_compra=2;
 		//agregamos los items al archivo	
-		$texto="1|".$index."|".$fecha_factura."|".$nit."|".$razon_social."|".$nro_factura."|0|".$nro_autorizacion."|".number_format($importe,2,'.',',')."|".number_format($importe_no_iva,2,'.',',')."|".number_format($subtotal,2,'.',',')."|".number_format($rebajas_sujetos_iva,2,'.',',')."|".number_format($importe_credito_fiscal,2,'.',',')."|".number_format($credito_fiscal,2,'.',',')."|".$codigo_control."|".$tipo_compra;
+		$texto="1|".$index."|".$fecha_factura."|".$nit."|".$razon_social."|".$nro_factura."|0|".$nro_autorizacion."|".number_format($importe,2,'.','')."|".number_format($importe_no_iva,2,'.','')."|".number_format($subtotal,2,'.','')."|".number_format($rebajas_sujetos_iva,2,'.','')."|".number_format($importe_credito_fiscal,2,'.','')."|".number_format($credito_fiscal,2,'.','')."|".$codigo_control."|".$tipo_compra;
 		fwrite($archivo, $texto);
 		fwrite($archivo, "".PHP_EOL);
 
