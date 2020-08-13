@@ -47,7 +47,8 @@ $stmt2->bindColumn('cod_estadofactura', $cod_estadofactura);
 $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
 try {
 	$index=1;           
-	while ($row = $stmt2->fetch()) {                             
+	while ($row = $stmt2->fetch()) {
+	$importe=sumatotaldetallefactura($codigo);                             
 	switch ($cod_estadofactura) {
         case 1:
           $btnEstado='<span class="badge badge-success">';
