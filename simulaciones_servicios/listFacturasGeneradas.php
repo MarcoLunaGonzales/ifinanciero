@@ -391,7 +391,7 @@ $globalPersonal=$_SESSION["globalUser"];
             $i=$i+1;
           }
 
-          $sqlLogsCorreos="SELECT DISTINCT trim(correo) from log_instancias_envios_correo where correo!='' order by correo desc";
+          $sqlLogsCorreos="SELECT DISTINCT trim(correo) as correo from log_instancias_envios_correo where correo!='' order by correo desc";
           $stmtLogsCorreos = $dbh->prepare($sqlLogsCorreos);
           $stmtLogsCorreos->execute();                           
          while ($row = $stmtLogsCorreos->fetch(PDO::FETCH_ASSOC)) {
