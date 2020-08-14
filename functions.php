@@ -8160,13 +8160,14 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
     function obtenerCorreosEnviadosFactura($codigo){
       $dbh = new Conexion();
-      $sql="SELECT correo from log_instancias_envios_correo where cod_factura=$codigo";  
+      $sql="SELECT correo,fecha from log_instancias_envios_correo where cod_factura=$codigo";  
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
       $stmt->bindColumn('correo', $correo);
+      $stmt->bindColumn('fecha', $fecha);
       $valor=[];
       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
-         array_push($valor,$correo);   
+         array_push($valor,$correo." ".$fecha);   
       }  
       return implode("\n *", $valor);
     }
