@@ -77,7 +77,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                         <td class="text-right font-weight-bold">Observaciones</td>
                         <td class="text-left" width="" colspan="3">
                         	<div class="form-group">
-                               <textarea type="text" class="form-control" name="observaciones_pago" id="observaciones_pago" value=""></textarea>
+                               <textarea type="text" class="form-control" name="observaciones_pago" required id="observaciones_pago" value=""></textarea>
                              </div>
                         </td>
                       </tr>
