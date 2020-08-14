@@ -4865,7 +4865,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
   join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
   join areas a on s.cod_area=a.codigo
-  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=3";
+  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=5";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -4877,7 +4877,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
   join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
   join areas a on s.cod_area=a.codigo
-  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=3 and s.codigo=$codigo";
+  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=5 and s.codigo=$codigo";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -5086,7 +5086,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
   join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
   join areas a on s.cod_area=a.codigo
-  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=3 and sd.cod_proveedor=$codigo";
+  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=5 and sd.cod_proveedor=$codigo";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -5100,7 +5100,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   join areas a on s.cod_area=a.codigo
   join af_proveedores p on sd.cod_proveedor=p.codigo 
   join pagos_proveedoresdetalle pd on pd.cod_proveedor=sd.cod_proveedor
-  where s.cod_estadosolicitudrecurso=3 and sd.cod_proveedor=$codigo and pd.cod_pagoproveedor=$codigoPago";
+  where s.cod_estadosolicitudrecurso=5 and sd.cod_proveedor=$codigo and pd.cod_pagoproveedor=$codigoPago";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -5116,7 +5116,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   join af_proveedores p on sd.cod_proveedor=p.codigo 
   join pagos_proveedoresdetalle pd on pd.cod_proveedor=sd.cod_proveedor
   join pagos_proveedores pp on pp.codigo=pd.cod_pagoproveedor
-  where s.cod_estadosolicitudrecurso=3 and sd.cod_proveedor in ($codigo) and pp.cod_pagolote=$codigoPagoLote";
+  where s.cod_estadosolicitudrecurso=5 and sd.cod_proveedor in ($codigo) and pp.cod_pagolote=$codigoPagoLote";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
