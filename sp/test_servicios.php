@@ -27,7 +27,6 @@ $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
       $remote_server_output = curl_exec ($ch);
       // cerramos la sesión cURL
       curl_close ($ch);  
-        
     
     header('Content-type: application/json');   
     print_r($remote_server_output); 
