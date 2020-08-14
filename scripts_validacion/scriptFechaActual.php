@@ -1,11 +1,9 @@
 <?php
 
-echo date('l jS \of F Y h:i:s A');
 
+$nitciCliente="4454229011";
 
-date_default_timezone_set('America/La_Paz');
-
-
-echo date('l jS \of F Y h:i:s A');
-
+echo $nitciCliente."<br>";
+$nitciCliente=(int)$nitciCliente;
+echo $nitciCliente;
 ?>

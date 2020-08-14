@@ -70,10 +70,10 @@ $stmt->bindColumn('peso', $peso);
                                     if($globalAdmin==1){
                                   ?>                                	
                                   <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaFuncionCargoE('<?=$datos;?>')">
-                                		<i class="material-icons" title="Editar"><?=$iconEdit;?></i>
+                                		<i class="material-icons" title="Editar función"><?=$iconEdit;?></i>
                                   </button>
                                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminar" onclick="agregaFuncionCargoB('<?=$datos;?>')">
-                                    <i class="material-icons" title="Eliminar"><?=$iconDelete;?></i>
+                                    <i class="material-icons" title="Eliminar Función"><?=$iconDelete;?></i>
                                   </button>
                                 <?php } ?>
                                 </td>
@@ -90,7 +90,7 @@ $stmt->bindColumn('peso', $peso);
                 if($globalAdmin==1){
                 ?>            
                   <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalAgregarFuncionCargo" onclick="agregaFuncionCargo('<?=$datos;?>')">
-                      <i class="material-icons" title="Agregar Contrato">add</i>
+                      <i class="material-icons" title="Agregar Función">add</i>
   		             </button>                                            
                 <?php
                 }
