@@ -390,6 +390,23 @@ $globalPersonal=$_SESSION["globalUser"];
             <?php
             $i=$i+1;
           }
+
+          $sqlLogsCorreos="SELECT DISTINCT correo from log_instancias_envios_correo where correo!='' order by correo desc";
+          $stmtLogsCorreos = $dbh->prepare($sqlLogsCorreos);
+          $stmtLogsCorreos->execute();                           
+         while ($row = $stmtLogsCorreos->fetch(PDO::FETCH_ASSOC)) {
+          $codigoX=$i;
+          $correoX=trim($row['correo']);
+          ?>
+            <script>
+             var obtejoLista={
+               label:'<?=$correoX?>',
+               value:'<?=$codigoX?>'};
+               array_correos[<?=$i?>]=obtejoLista;
+            </script>
+            <?php
+          $i++;
+         }  
           ?>
         <div class="row">
           <label class="col-sm-1 col-form-label" style="color:#000000"><small>Nro. Factura</small></label>
