@@ -89,14 +89,16 @@ $distribucionArea=obtenerDistribucionCentroCostosAreaActivo($globalUnidad); //nu
           nombre:'<?=$nombreX?> - <?=$abrevX?>',
           porcentaje:0
         }
+        var porcentajeOfi=0;
         for (var i = 0; i < itemDistOficina.length; i++) {
+          //if (i == 0){ porcentajeOfi=100; }else{ porcentajeOfi=0;}
           var ofi = {
           cod_fila:<?=$codigoX?>,
           codigo:itemDistOficina[i].codigo,
           cod_dis:itemDistOficina[i].cod_dis,
           unidad:itemDistOficina[i].unidad,
           nombre:itemDistOficina[i].nombre,
-          porcentaje:0
+          porcentaje:porcentajeOfi
           }
           itemDistOficinaGeneral.push(ofi); 
         }

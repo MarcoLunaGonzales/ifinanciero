@@ -8981,6 +8981,17 @@ function obtenerEstadoComprobante($codigo){
     }
   }
 
+  function obtenerCodigoLogRegistroProveedor(){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from log_registro_proveedores c");
+     $stmt->execute();
+     $codigo=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigo=$row['codigo'];
+     }
+     return($codigo);
+  }
+
 ?>
 
 
