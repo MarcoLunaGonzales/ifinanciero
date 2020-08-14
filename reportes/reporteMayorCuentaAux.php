@@ -143,8 +143,8 @@ for ($xx=0; $xx < cantidadF($codcuentaAux); $xx++) {
     $nombreComprobanteX=nombreComprobante($codComprobanteX);
     //INICIAR valores de las sumas
     if($glosaLen==0){      
-      if(strlen($glosaX)>15){
-        $glosaX=substr($glosaX,0,15)."...";
+      if(strlen($glosaX)>obtenerValorConfiguracion(72)){
+          $glosaX=substr($glosaX,0,obtenerValorConfiguracion(72))."...";
       }
     }
     $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
@@ -203,7 +203,7 @@ for ($xx=0; $xx < cantidadF($codcuentaAux); $xx++) {
       }
 
       $html.='<tr class="bg-secondary text-white">'.
-                  '<td colspan="5" class="text-center">Sumas del periodo:</td>'.
+                  '<td colspan="5" class="text-center">Sumas del periodo: '.$nombreCuenta.'</td>'.
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.
@@ -213,7 +213,7 @@ for ($xx=0; $xx < cantidadF($codcuentaAux); $xx++) {
                   '<td class="text-right font-weight-bold small">'.$saldoYFormato.'</td>'.       
               '</tr>';
       $html.='<tr class="bg-secondary text-white">'.
-                  '<td colspan="5" class="text-center">Sumas y saldos finales:</td>'.
+                  '<td colspan="5" class="text-center">Sumas y saldos finales: '.$nombreCuenta.'</td>'.
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.
                   '<td style="display: none;"></td>'.

@@ -787,7 +787,7 @@ function isValidDate(dateString) {
   if(Number.isNaN(d.getTime())) return false; // Invalid date
   var fechaActual = new Date();
   var anio=d.getFullYear();
-  if(anio<2000||d.getTime() > fechaActual.getTime()) return false; // Invalid date
+  if(anio<2020||d.getTime() > fechaActual.getTime()) return false; // Invalid date
   return d.toISOString().slice(0,10) === dateString;
 }
  function abrirFactura(index,nit,nro,fecha,razon,imp,exe,aut,con,ice,tipocompra,tazacero){
@@ -1378,12 +1378,11 @@ function guardarPlantilla(){
     type: "POST",
     proccessData: false, // this is true by default
     success: function(resp){
-      $("#mensaje").html("<p class='text-success'>Registro satisfactorio</p>");
       $("#titulo").val("");
       $("#descrip_plan").val("");
       $('#modalPlantilla').modal('hide');
-      Swal.fire("Correcto!", resp, "success");
-          //window.location="../index.php?opcion=listComprobantes";
+      Swal.fire("Correcto!","Registro satisfactorio", "success");
+      $("#mensaje").html("<p class='text-success'>OK</p>");
     }
    });
   }else{
@@ -16893,4 +16892,22 @@ function ajax_cajachica_intancia(combo){
     }
   }
   ajax.send(null)
+}
+
+function editarFacturaModalReporte(codigo,nit,numero,aut,control,importe,exe,ice,tasa,fecha,razon_social,tipo){
+  $("#codigo_factura").val(codigo);
+  $("#titulo_modal_factura").html("NIT:"+nit+", NRO:"+numero);
+  $("#nit_fac").val(nit);
+  $("#nro_fac").val(numero);
+  $("#fecha_fac").val(fecha);
+  $("#imp_fac").val(importe);
+  $("#exe_fac").val(exe);
+  $("#ice_fac").val(ice);
+  $("#taza_fac").val(tasa);
+  $("#aut_fac").val(aut);
+  $("#con_fac").val(control);
+  $("#tipo_fac").val(tipo);
+  $("#razon_fac").val(razon_social);
+  $('.selectpicker').selectpicker("refresh");
+  $("#editarFactura").modal("show");
 }
