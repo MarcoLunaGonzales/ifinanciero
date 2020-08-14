@@ -27,13 +27,14 @@ $fecha_pago=date("Y-m-d");
     $month = $globalNombreGestion."-".$codMesActiva;
     $aux = date('Y-m-d', strtotime("{$month} + 1 month"));
     $diaUltimo = date('d', strtotime("{$aux} - 1 day"));
+    $horasActual=date("H:i:s");
     if((int)$globalNombreGestion<(int)$anioActual){
-      $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
+      $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo." ".$horasActual;
     }else{
       if((int)$mesActual==(int)$codMesActiva){
-          $fechaHoraActual=date("Y-m-d");
+          $fechaHoraActual=date("Y-m-d H:i:s");
       }else{
-        $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
+        $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo." ".$horasActual;
       } 
     }
     
