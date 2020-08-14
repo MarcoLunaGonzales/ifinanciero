@@ -7,8 +7,33 @@ require_once __DIR__.'/../functionsGeneral.php';
 require_once  __DIR__.'/../fpdf_html.php';
 require_once '../layouts/bodylogin2.php';
 require_once 'configModule.php';
-
+// fin de editar Facturas
 $dbh = new Conexion();
+
+
+//editar las facturas
+if(isset($_POST['codigo_factura'])){
+    $codigo=$_POST['codigo_factura'];
+    $nit=$_POST['nit_fac'];
+    $nroFac=$_POST['nro_fac'];
+      
+    $fechaFac=$_POST['fecha_fac'];
+    $razonFac=$_POST['razon_fac'];
+    $impFac=$_POST['imp_fac'];            
+    $autFac=$_POST['aut_fac'];
+    $conFac=$_POST['con_fac'];
+            
+    $exeFac=$_POST['exe_fac'];
+    $tipoFac=$_POST['tipo_fac'];
+    $tazaFac=$_POST['taza_fac'];
+    $iceFac=$_POST['ice_fac'];
+    
+    $sqlDetalle="UPDATE facturas_compra SET nit='$nit', nro_factura='$nroFac', fecha='$fechaFac', 
+    razon_social='$razonFac', importe='$impFac', exento='$exeFac', nro_autorizacion='$autFac', codigo_control='$conFac',
+    ice='$iceFac',tasa_cero='$tazaFac',tipo_compra='$tipoFac' WHERE codigo=$codigo";
+    $stmtDetalle = $dbh->prepare($sqlDetalle);
+    $flagSuccessDetalle=$stmtDetalle->execute();
+  }
 
 //RECIBIMOS LAS VARIABLES
 $gestion = $_POST["gestiones"];
@@ -23,6 +48,11 @@ $nombre_mes=nombreMes($cod_mes_x[0]);
 if(count($cod_mes_x)>1){
   $nombre_mes=nombreMes($cod_mes_x[0])."-".nombreMes($cod_mes_x[count($cod_mes_x)-1]);
 }
+
+//datos Reporte
+$gestionPost=$gestion;
+$cod_mes_xPost=$stringMesX;
+$estadoPost=$stringEstadoX;
 
 
 // echo $areaString;
@@ -71,6 +101,8 @@ $razon_social=$result['razon_social'];
           gestion_reporte='<?=$nombre_gestion;?>';
           mes_reporte='<?=$nombre_mes;?>';
  </script>
+
+
 <div class="content">
   <div class="container-fluid">
         <div class="row">
@@ -232,8 +264,49 @@ $fechaActual=date("Y-m-d");
                   </button>
                 </div>
                 <div class="card-body">
-                  <form action="../<?=$urlSaveEdit?>" method="post">
+                  <form action="../<?=$urlReporteComprasProy?>" method="post">
                     <input type="hidden" class="form-control" name="codigo_factura" id="codigo_factura" value="-1">
+                    <div class="d-none">   
+                          <?php
+                  $sqlUO="SELECT uo.codigo, uo.nombre from estados_solicitudrecursos uo where uo.codigo in ($estadoPost) order by 2";
+                  $stmt = $dbh->prepare($sqlUO);
+                  $stmt->execute();
+                  ?>
+                    <select class="selectpicker form-control form-control-sm" name="estado[]" id="estado" multiple>
+                        <?php 
+                          while ($row = $stmt->fetch()){ 
+                      ?>
+                             <option value="<?=$row["codigo"];?>" selected><?=$row["nombre"];?></option>
+                        <?php 
+                        } 
+                       ?>
+                         </select>
+                         <select name="gestiones" id="gestiones" class="selectpicker form-control form-control-sm">
+                                    <option value=""></option>
+                                    <?php 
+                                    $query = "SELECT codigo,nombre from gestiones where codigo in ($gestionPost) ORDER BY nombre desc";
+                                    $stmt = $dbh->query($query);
+                                    while ($row = $stmt->fetch()){ ?>
+                                        <option value="<?=$row["codigo"];?>" selected><?=$row["nombre"];?></option>
+                                    <?php } ?>
+                                </select>
+                         <?php $sql="SELECT c.cod_mes,(select m.nombre from meses m where m.codigo=c.cod_mes) as nombre_mes from meses_trabajo c where c.codigo in ($cod_mes_xPost)";
+                         $stmtg = $dbh->prepare($sql);
+                         $stmtg->execute();
+                         ?>
+                         <select name="cod_mes_x[]" id="cod_mes_x" class="selectpicker form-control form-control-sm" multiple>
+                         <?php
+                    
+                         while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {    
+                           $cod_mes=$rowg['cod_mes'];    
+                           $nombre_mes=$rowg['nombre_mes'];    
+                         ?>
+                             <option value="<?=$cod_mes;?>" selected><?=$nombre_mes;?></option>
+                            <?php 
+                            }
+                          ?>
+                          </select>       
+                        </div>
                     
                      <div style="padding: 20px;">
                           <div class="row">                      
