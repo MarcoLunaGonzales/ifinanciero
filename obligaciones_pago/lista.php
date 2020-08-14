@@ -196,7 +196,7 @@ $stmt->bindColumn('cod_cajachicadetalle', $cod_cajachicadetalle);
                                     </a><?php 
                                   }else{
                                     if($codEstado==3){
-                                      if(!($cod_cajachicadetalle==""||$cod_cajachicadetalle==0)){
+                                      if(($cod_cajachicadetalle==""||$cod_cajachicadetalle==0)){
                                         ?>
                                        <a href="#" onclick="alerts.showSwal('warning-message-crear-comprobante','<?=$urlGenerarComprobante?>?cod=<?=$codigo?>')" class="dropdown-item">
                                        <i class="material-icons text-success">attach_money</i> Generar Comprobante
