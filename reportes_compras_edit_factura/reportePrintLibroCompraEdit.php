@@ -33,6 +33,16 @@ if(isset($_POST['codigo_factura'])){
     ice='$iceFac',tasa_cero='$tazaFac',tipo_compra='$tipoFac' WHERE codigo=$codigo";
     $stmtDetalle = $dbh->prepare($sqlDetalle);
     $flagSuccessDetalle=$stmtDetalle->execute();
+    //$flagSuccessDetalle=false; 
+    if($flagSuccessDetalle==true){
+      $tituloSuccess="Se Modificó la factura exitosamente!";
+      $txtEstilo="#194519";
+      $bgEstilo="#C2E7C8";
+    }else{
+      $tituloSuccess="Ocurrio un error al editar la factura";
+      $txtEstilo="#8F1707";
+      $bgEstilo="#E7C3C2";
+    }
   }
 
 //RECIBIMOS LAS VARIABLES
@@ -119,6 +129,15 @@ $razon_social=$result['razon_social'];
                   <!-- <h6 class="card-title">Unidad: <?=$stringUnidades;?></h6> -->
                 </div>
                 <div class="card-body">
+                  <?php
+                  if(isset($_POST['codigo_factura'])){
+                     ?><div class="" style="border-radius:7px; border:2px solid <?=$txtEstilo?>;text-align:center; background:<?=$bgEstilo?>;">
+                           <label class="font-weight-bold" style="color:<?=$txtEstilo?>;"><?=$tituloSuccess?></label>
+                       </div>
+                       <br> 
+                       <?php
+                   }
+                  ?>
                   <div class="table-responsive">
                         <table id="libro_compras_rep_2" class="table table-bordered table-condensed" style="width:100%">
                             <thead>
