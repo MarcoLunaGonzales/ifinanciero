@@ -46,98 +46,108 @@ while ($row = $stmtConfig->fetch(PDO::FETCH_BOUND)) {
 
 if($nombre_tipo_contrato=="CONTRATO INDEFINIDO"){
 	//dividimos la fecha de inicio
-	$porciones = explode("-", $fecha_inicio);
-	$anio= $porciones[0]; // porción1
-	$mes= $porciones[1]; // porción2
-	$dia=$porciones[2];
+	// $porciones = explode("-", $fecha_inicio);
+	// $anio= $porciones[0]; // porción1
+	// $mes= $porciones[1]; // porción2
+	// $dia=$porciones[2];
 
-	if($dia=28||$dia=29||$dia=30||$dia=31)
+	// // if($dia=28||$dia=29||$dia=30||$dia=31)
 		
-	for ($i=0; $i < $val_conf_meses_alerta_indef; $i++) { 
-		if($mes<12){
-			$mes=$mes+1;
-		}else{
-			$mes=1;
-			$anio=$anio+1;
-		}
-	}
-	$fecha_fincontrato="INDEFINIDO";
-	$fecha_fincontrato_x=$anio."-".$mes."-01";
-	switch ($mes) {
-		case 2:
-			if($dia==29||$dia==30||$dia==31){
-				$dia=date('t',strtotime($fecha_fincontrato_x));
-			}
-		break;
-		case 04||06||09||11:
-			if($dia==30||$dia==31){
-				$dia=date('t',strtotime($fecha_fincontrato_x));				
-			}
-		break;
+	// for ($i=0; $i < $val_conf_meses_alerta_indef; $i++) { 
+	// 	if($mes<12){
+	// 		$mes=$mes+1;
+	// 	}else{
+	// 		$mes=1;
+	// 		$anio=$anio+1;
+	// 	}
+	// }
+	// $fecha_fincontrato="INDEFINIDO";
+	// $fecha_fincontrato_x=$anio."-".$mes."-01";
+	// switch ($mes) {
+	// 	case 2:
+	// 		if($dia==29||$dia==30||$dia==31){
+	// 			$dia=date('t',strtotime($fecha_fincontrato_x));
+	// 		}
+	// 	break;
+	// 	case 04||06||09||11:
+	// 		if($dia==30||$dia==31){
+	// 			$dia=date('t',strtotime($fecha_fincontrato_x));				
+	// 		}
+	// 	break;
 		
-		default:
-			# code...
-			break;
-	}
-	$fecha_evaluacioncontrato=$anio."-".$mes."-".$dia;
+	// 	default:
+	// 		# code...
+	// 		break;
+	// }
+	// $fecha_actual = "2020-06-01";
+	// $mese_au=3;
+	//sumo 1 día
+	$fecha_evaluacioncontrato_x= date("Y-m-d",strtotime($fecha_inicio."+ ".$val_conf_meses_alerta_indef." month")); 
+	$fecha_evaluacioncontrato = date("Y-m-d",strtotime($fecha_evaluacioncontrato_x."- 1 days")); 
+	// echo $nuevafecha_x;
+
+	// $fecha_evaluacioncontrato=$anio."-".$mes."-".$dia;
 	// echo "añoB: ".$anio."<br>";
 	// echo "mesB: ".$mes."<br>";
 	 // echo "se va: ".$fecha_evaluacioncontrato."<br>";
 }else{
 	//dividimos la fecha de inicio
-	$porciones = explode("-", $fecha_inicio);
-	$anio= $porciones[0]; // porción1
-	$mes= $porciones[1]; // porción2
-	$dia=$porciones[2];
+	// $porciones = explode("-", $fecha_inicio);
+	// $anio= $porciones[0]; // porción1
+	// $mes= $porciones[1]; // porción2
+	// $dia=$porciones[2];
 
-	// echo "fecha: ".$fecha_inicio."<br>";
-	// echo "añoA: ".$anio."<br>";
-	// echo "mesA: ".$mes."<br>";
-	// echo "duracionA: ".$meses_alerta."<br>";
+	// // echo "fecha: ".$fecha_inicio."<br>";
+	// // echo "añoA: ".$anio."<br>";
+	// // echo "mesA: ".$mes."<br>";
+	// // echo "duracionA: ".$meses_alerta."<br>";
 
-	for ($i=0; $i < $duracion_meses; $i++) {
-		if($mes<12){
-			$mes=$mes+1;
-		}else{
-			$mes=1;
-			$anio=$anio+1;
-		}
-	}
-	$fecha_fincontrato=$anio."-".$mes."-01";
-	switch ($mes) {
-		case 2:
-			if($dia==29||$dia==30||$dia==31){
-				$dia=date('t',strtotime($fecha_fincontrato));
-			}
-		break;
-		case 04||06||09||11:
-			if($dia==30||$dia==31){
-				$dia=date('t',strtotime($fecha_fincontrato));				
-			}
-		break;
+	// for ($i=0; $i < $duracion_meses; $i++) {
+	// 	if($mes<12){
+	// 		$mes=$mes+1;
+	// 	}else{
+	// 		$mes=1;
+	// 		$anio=$anio+1;
+	// 	}
+	// }
+	// $fecha_fincontrato=$anio."-".$mes."-01";
+	// switch ($mes) {
+	// 	case 2:
+	// 		if($dia==29||$dia==30||$dia==31){
+	// 			$dia=date('t',strtotime($fecha_fincontrato));
+	// 		}
+	// 	break;
+	// 	case 04||06||09||11:
+	// 		if($dia==30||$dia==31){
+	// 			$dia=date('t',strtotime($fecha_fincontrato));				
+	// 		}
+	// 	break;
 		
-		default:
-			# code...
-			break;
-	}
-	$fecha_fincontrato=$anio."-".$mes."-".$dia;
-	$dia_a=$dia;$meses_a=$mes;$anio_a=$anio;
+	// 	default:
+	// 		# code...
+	// 		break;
+	// }
+	// $fecha_fincontrato=$anio."-".$mes."-".$dia;
+	// $dia_a=$dia;$meses_a=$mes;$anio_a=$anio;
 	
-	// echo "prueba:".date('t',strtotime('2020-02-02'));
-	for ($j=0; $j < $val_conf_dias_alerta_def; $j++) {
-		if($dia_a>1){
-			$dia_a=$dia_a-1;
-		}else{
-			$dia_a=date('t',strtotime($fecha_fincontrato));
-			if($meses_a>1){
-				$meses_a=$meses_a-1;
-			}else{
-				$meses_a=12;
-				$anio_a=$anio_a-1;
-			}		
-		}
-	}
-	$fecha_evaluacioncontrato=$anio_a."-".$meses_a."-".$dia_a;
+	// // echo "prueba:".date('t',strtotime('2020-02-02'));
+	// for ($j=0; $j < $val_conf_dias_alerta_def; $j++) {
+	// 	if($dia_a>1){
+	// 		$dia_a=$dia_a-1;
+	// 	}else{
+	// 		$dia_a=date('t',strtotime($fecha_fincontrato));
+	// 		if($meses_a>1){
+	// 			$meses_a=$meses_a-1;
+	// 		}else{
+	// 			$meses_a=12;
+	// 			$anio_a=$anio_a-1;
+	// 		}		
+	// 	}
+	// }
+	// $fecha_evaluacioncontrato=$anio_a."-".$meses_a."-".$dia_a;
+
+	$fecha_evaluacioncontrato_x= date("Y-m-d",strtotime($fecha_inicio."+ ".$duracion_meses." month")); 
+	$fecha_evaluacioncontrato = date("Y-m-d",strtotime($fecha_evaluacioncontrato_x."- 1 days")); 
 }
 	// Prepare
 if($cod_estadoreferencial==1){//insertar

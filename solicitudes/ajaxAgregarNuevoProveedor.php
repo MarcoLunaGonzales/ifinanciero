@@ -36,7 +36,7 @@ if(isset($_GET['identificacion'])){
 	$identificacion=(int)$_GET['nit'];
   }	 
 }
-$mensajeDevuelta="";
+$mensajeDevuelta="";$errorDevuelta=0;
   // Tipo P=Persona, E=Empresa
 if($_GET['tipo']=='E'){
 	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
@@ -119,6 +119,21 @@ if($_GET['tipo']=='E'){
 	}
 }		
 
+
+/*INTEDAMOS DATOS DEL PROVEEDOR EN EL LOG*/
+$codLog=obtenerCodigoLogRegistroProveedor();
+$fechaActual=date("Y-m-d H:i:s");
+//$json_datos=implode(",",$parametros);
+$json_datos=array2json($parametros);
+$sqlDetalle2="INSERT INTO log_registro_proveedores (codigo, fecha,cod_error_devuelto,detalle_error_devuelto,json_datos) 
+VALUES ('$codLog', '$fechaActual', '0', 'REGISTRO SATISFACTORIO - IFINANCIERO', '$json_datos')";
+$stmtDetalle2 = $dbh->prepare($sqlDetalle2);
+$stmtDetalle2->execute();
+
+
+/*FIN DE LOG*/
+
+
 		$parametros=json_encode($parametros);
 		// abrimos la sesion cURL
 		$ch = curl_init();
@@ -170,15 +185,24 @@ if($_GET['tipo']=='E'){
 				  }
 				}	
 				echo "2";
+				$errorDevuelta=2;
 			}else{
-				echo "1";		
+				echo "1";
+				$errorDevuelta=1;		
 			}	
 		  }else{
 		  	echo "1";
+		  	$errorDevuelta=1;
 		  }	
 		}else{
           echo "0";
+          $errorDevuelta=0;
 		}
+
+		$sqlDetalle2="UPDATE log_registro_proveedores SET detalle_error_devuelto='$mensajeDevuelta',cod_error_devuelto='$errorDevuelta' where codigo=$codLog";
+        $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
+        $stmtDetalle2->execute();
+
 		echo "####".$mensajeDevuelta;
 		//print_r($respuesta); 
 		/*PARAMETROS PARA ASIGNAR ATRIBUTO PROVEEDOR
@@ -189,5 +213,44 @@ if($_GET['tipo']=='E'){
 								  "IdUsuario"=>1 // valor del id del usuario retornado en el login						  
 								  );
 		*/
+function array2json($data){
+    $data = json_encode($data);
+    
+    $tabCount = 0;
+    $result = '';
+    $quotes = false;
+    $separator = "\t";
+    $newLine = "\n";
+
+    for($i=0;$i<strlen($data);$i++){
+        $c = $data[$i];
+        if($c=='"' && $data[$i-1]!='\\') $quotes = !$quotes;
+        if($quotes){
+            $result .= $c;
+            continue;
+        }
+        switch($c){
+            case '{':
+            case '[':
+                $result .= $c . $newLine . str_repeat($separator, ++$tabCount);
+                break;
+            case '}':
+            case ']':
+                $result .= $newLine . str_repeat($separator, --$tabCount) . $c;
+                break;
+            case ',':
+                $result .= $c;
+                if($data[$i+1]!='{' && $data[$i+1]!='[') $result .= $newLine . str_repeat($separator, $tabCount);
+                break;
+            case ':':
+                $result .= $c . ' ';
+                break;
+            default:
+                $result .= $c;
+        }
+    }
+    return  $result;
+}
+
 
 ?>

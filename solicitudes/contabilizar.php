@@ -219,6 +219,9 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             $area=$rowNuevo['cod_area'];
         }
 
+        $unidadDetalleGlobal=$unidadDetalle;
+        $areaDetalleGlobal=$area;
+
         $debe=$rowNuevo['monto'];
         $sumaProveedorPasivo+=$debe;
         $haber=0;
@@ -252,6 +255,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             if($rowNuevo['cod_confretencion']==8){//||$rowNuevo['cod_confretencion']==10
               $importeOriginalAux=$importeOriginal;
               $importeOriginal=obtenerMontoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);
+              $importeRetencion=(porcentRetencion($codigoRet)/100)*$importeOriginal;
               $importeRetencion=($importeRetencion)+obtenerMontoGastoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);  
             }
             
@@ -458,14 +462,14 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
           $cuentaProv=obtenerCuentaPasivaSolicitudesRecursos($cuenta);
           $nomProveedor=nameProveedor($codProveedor);
        //CREAR CUENTA AUXILIAR SI NO EXISTE 
-          if(obtenerCodigoCuentaAuxiliarProveedorCliente(1,$codProveedor)==0){
+          if(obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$codProveedor,$cuentaProv)==0){
             $codEstado="1";
             $stmtInsertAux = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente) 
             VALUES ('$nomProveedor', $codEstado,$cuentaProv, 1, $codProveedor)");
             $stmtInsertAux->execute();
           }
 
-          $cuentaAuxiliarProv=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$codProveedor);
+          $cuentaAuxiliarProv=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$codProveedor,$cuentaProv);
           $numeroCuentaProv=trim(obtieneNumeroCuenta($cuentaProv));
           $inicioNumeroProv=$numeroCuentaProv[0];
           $unidadareaProv=obtenerUnidadAreaCentrosdeCostos($inicioNumeroProv);

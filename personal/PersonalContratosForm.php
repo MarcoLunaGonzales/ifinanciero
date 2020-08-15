@@ -21,7 +21,7 @@ $primer_nombre=$result['primer_nombre'];
 $paterno=$result['paterno'];
 $materno=$result['materno'];
 //SELECT
-$stmt = $dbh->prepare("SELECT *,
+$stmt = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_iniciocontrato,'%d/%m/%Y')as fecha_iniciocontrato_x,DATE_FORMAT(fecha_fincontrato,'%d/%m/%Y')as fecha_fincontrato_x,DATE_FORMAT(fecha_evaluacioncontrato,'%d/%m/%Y')as fecha_evaluacioncontrato_x,DATE_FORMAT(fecha_finalizado,'%d/%m/%Y')as fecha_finalizado_x,
   (select ec.nombre from estados_contrato ec where ec.codigo=cod_estadocontrato)as estado_contrato,
 (select c.nombre from tipos_contrato_personal c where c.codigo=cod_tipocontrato)as nombre_contrato,
 (select ct.duracion_meses from tipos_contrato_personal ct where ct.codigo=cod_tipocontrato)as meses_contrato
@@ -34,12 +34,12 @@ $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigo_contrato);
 $stmt->bindColumn('cod_tipocontrato', $cod_tipocontrato);
-$stmt->bindColumn('fecha_iniciocontrato', $fecha_iniciocontrato);
-$stmt->bindColumn('fecha_fincontrato', $fecha_fincontrato);
-$stmt->bindColumn('fecha_evaluacioncontrato', $fecha_evaluacioncontrato);
+$stmt->bindColumn('fecha_iniciocontrato_x', $fecha_iniciocontrato);
+$stmt->bindColumn('fecha_fincontrato_x', $fecha_fincontrato);
+$stmt->bindColumn('fecha_evaluacioncontrato_x', $fecha_evaluacioncontrato);
 $stmt->bindColumn('cod_estadocontrato', $cod_estadocontrato);
 $stmt->bindColumn('estado_contrato', $estado_contrato);
-$stmt->bindColumn('fecha_finalizado', $fecha_finalizado);
+$stmt->bindColumn('fecha_finalizado_x', $fecha_finalizado);
 $stmt->bindColumn('nombre_contrato', $nombre_contrato);
 $stmt->bindColumn('meses_contrato', $meses_contrato);
 
@@ -135,10 +135,10 @@ $fecha_actual=date("Y-m-d");
                                     }
 
                                   }else{
-                                    $porcionesFin = explode("-", $fecha_fincontrato);
-                                    $anioFin= $porcionesFin[0]; // porción1
+                                    $porcionesFin = explode("/", $fecha_fincontrato);
+                                    $anioFin= $porcionesFin[2]; // porción1
                                     $mesFin= $porcionesFin[1]; // porción2 
-                                    $diaFin= $porcionesFin[2]; // porción2
+                                    $diaFin= $porcionesFin[0]; // porción2
                                     if($anioActual==$anioFin){
                                       if($mesActual-$mesFin==-1){
                                         $label='<span class="badge badge-warning">';
@@ -160,10 +160,10 @@ $fecha_actual=date("Y-m-d");
                                     }
 
                                     //para la evaluacion de contrato
-                                    $porcionesEvaluacion = explode("-", $fecha_evaluacioncontrato);
-                                    $anioEvaluacion= $porcionesEvaluacion[0]; // porción1
+                                    $porcionesEvaluacion = explode("/", $fecha_evaluacioncontrato);
+                                    $anioEvaluacion= $porcionesEvaluacion[2]; // porción1
                                     $mesEvaluacion= $porcionesEvaluacion[1]; // porción2 
-                                    $diaEvaluacion= $porcionesEvaluacion[2]; // porción2
+                                    $diaEvaluacion= $porcionesEvaluacion[0]; // porción2
                                     if($anioActual==$anioEvaluacion){
                                       if($mesActual-$mesEvaluacion==-1){
                                         $label='<span class="badge badge-warning">';

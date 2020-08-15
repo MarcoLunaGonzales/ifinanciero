@@ -121,7 +121,7 @@ $razon_social=$result['razon_social'];
                                 $importe=0;
                                 $codigo_control=0;
                                 $nit=0;
-                                $fecha_factura=0;
+                               // $fecha_factura=0;
                               break;
                               case 3:
                                 $btnEstado='<span class="badge badge-success">';
@@ -159,8 +159,8 @@ $razon_social=$result['razon_social'];
                                 <td class="text-center small"><?=$fecha_factura; ?></td>
                                 <td class="text-right small"><?=$nro_factura ?></td>
                                 <td class="text-center small"><?=$nombre_estado;?></td>
-                                <td class="text-right small"><?=$nit?></td>
-                                <td class="text-left small"><small><?=mb_strtoupper($razon_social,'utf-8');?></small></td>
+                                <td class="text-right small"><?=$nit?></td>                                
+                                <td class="text-left small"><small><span style="padding-left: 15px;"><?=mb_strtoupper($razon_social,'utf-8');?></small></span></td>
                                 <td class="text-center small"><?=$codigo_control?></td>
                                 <td class="text-right small"><?=$nro_autorizacion?></td>
                                 <td class="text-right small"><?=formatNumberDec($importe); ?></td>

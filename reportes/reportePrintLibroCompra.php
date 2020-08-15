@@ -122,7 +122,7 @@ $razon_social=$result['razon_social'];
                                   <td class="text-center small"><?=$index;?></td>
                                   <td class="text-center small"><?=$fecha;?></td>
                                   <td class="text-right small"><?=$nit;?></td>
-                                  <td class="text-left small"><?=$razon_social;?></td>
+                                  <td class="text-left small"><span style="padding-left: 15px;"><?=$razon_social;?></span></td>
                                   <td class="text-right small"><?=$nro_factura;?></td>
                                   <td class="text-right small"><?=$nro_autorizacion;?></td>
                                   <td class="text-center small"><?=$codigo_control;?></td>

@@ -75,12 +75,12 @@ $totalPagadoX=0;
                             <?php 
                             if(($importe-$pagado)>0){
                               ?>
-                              <input type="number" step="0.01" class="form-control text-right text-success" value="0" id="monto_pago<?=$index?>PPPP<?=$fila?>" name="monto_pago<?=$index?>PPPP<?=$fila?>">
+                              <input type="number" step="any" required min="1000" class="form-control text-right text-success" value="0" id="monto_pago<?=$index?>PPPP<?=$fila?>" name="monto_pago<?=$index?>PPPP<?=$fila?>">
                               
                               <?php
                             }else{
                               ?>
-                              <input type="number" step="0.01" class="form-control text-right text-success" readonly value="0" id="monto_pago<?=$index?>PPPP<?=$fila?>" name="monto_pago<?=$index?>PPPP<?=$fila?>">
+                              <input type="number" step="any" required min="1000" class="form-control text-right text-success" readonly value="0" id="monto_pago<?=$index?>PPPP<?=$fila?>" name="monto_pago<?=$index?>PPPP<?=$fila?>">
                               <?php
                             } 
                             ?>
@@ -89,7 +89,7 @@ $totalPagadoX=0;
                           <td><input type="text" class="form-control datepicker" value="<?=date('d/m/Y')?>" id="fecha_pago<?=$index?>PPPP<?=$fila?>" name="fecha_pago<?=$index?>PPPP<?=$fila?>"></td>
                           <td>
                           	<div class="form-group">
-                               <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosChequeDetalle('<?=$index?>PPPP<?=$fila?>')" data-live-search="true" name="tipo_pago<?=$index?>PPPP<?=$fila?>" id="tipo_pago<?=$index?>PPPP<?=$fila?>" data-style="btn btn-danger">
+                               <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosChequeDetalle('<?=$index?>PPPP<?=$fila?>')" data-live-search="true" name="tipo_pago<?=$index?>PPPP<?=$fila?>" id="tipo_pago<?=$index?>PPPP<?=$fila?>" data-style="btn btn-danger" required>
                                     <option disabled value="">--TIPO--</option>
                                     <?php 
                                      $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where codigo=2 and cod_estadoreferencial=1");

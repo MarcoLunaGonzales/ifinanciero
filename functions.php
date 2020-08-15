@@ -4865,7 +4865,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
   join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
   join areas a on s.cod_area=a.codigo
-  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=3";
+  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=5";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -4877,7 +4877,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
   join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
   join areas a on s.cod_area=a.codigo
-  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=3 and s.codigo=$codigo";
+  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=5 and s.codigo=$codigo";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -5086,7 +5086,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
   join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
   join areas a on s.cod_area=a.codigo
-  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=3 and sd.cod_proveedor=$codigo";
+  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=5 and sd.cod_proveedor=$codigo";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -5100,7 +5100,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   join areas a on s.cod_area=a.codigo
   join af_proveedores p on sd.cod_proveedor=p.codigo 
   join pagos_proveedoresdetalle pd on pd.cod_proveedor=sd.cod_proveedor
-  where s.cod_estadosolicitudrecurso=3 and sd.cod_proveedor=$codigo and pd.cod_pagoproveedor=$codigoPago";
+  where s.cod_estadosolicitudrecurso=5 and sd.cod_proveedor=$codigo and pd.cod_pagoproveedor=$codigoPago";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -5116,7 +5116,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   join af_proveedores p on sd.cod_proveedor=p.codigo 
   join pagos_proveedoresdetalle pd on pd.cod_proveedor=sd.cod_proveedor
   join pagos_proveedores pp on pp.codigo=pd.cod_pagoproveedor
-  where s.cod_estadosolicitudrecurso=3 and sd.cod_proveedor in ($codigo) and pp.cod_pagolote=$codigoPagoLote";
+  where s.cod_estadosolicitudrecurso=5 and sd.cod_proveedor in ($codigo) and pp.cod_pagolote=$codigoPagoLote";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -5309,6 +5309,20 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      }
      return($valor);
   }
+
+
+ function obtenerCodigoCuentaAuxiliarProveedorClienteCuenta($tipo,$codigo,$cuenta){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_cuenta=$cuenta");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+     }
+     return($valor);
+  }
+
+
 
    function listaSumaMontosDebeHaberComprobantesDetalle($fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$padre,$gestion,$fechaInicio){
       $dbh = new Conexion();
@@ -8160,13 +8174,14 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
     function obtenerCorreosEnviadosFactura($codigo){
       $dbh = new Conexion();
-      $sql="SELECT correo from log_instancias_envios_correo where cod_factura=$codigo";  
+      $sql="SELECT correo,fecha from log_instancias_envios_correo where cod_factura=$codigo";  
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
       $stmt->bindColumn('correo', $correo);
+      $stmt->bindColumn('fecha', $fecha);
       $valor=[];
       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
-         array_push($valor,$correo);   
+         array_push($valor,$correo." ".$fecha);   
       }  
       return implode("\n *", $valor);
     }
@@ -8782,7 +8797,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerSaldoPorPagarProveedor($codigo){
     $dbh = new Conexion();
-    $sql="SELECT IFNULL(sum(sd.importe),0)-((SELECT IFNULL(sum(monto),0) as monto from pagos_proveedoresdetalle where cod_solicitudrecursosdetalle=sd.codigo)) as saldo from solicitud_recursosdetalle sd join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso where sd.cod_proveedor=$codigo and s.cod_estadosolicitudrecurso=3 and s.cod_estadoreferencial=1";
+    $sql="SELECT IFNULL(sum(sd.importe),0)-((SELECT IFNULL(sum(monto),0) as monto from pagos_proveedoresdetalle where cod_solicitudrecursosdetalle=sd.codigo)) as saldo from solicitud_recursosdetalle sd join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso where sd.cod_proveedor=$codigo and s.cod_estadosolicitudrecurso=5 and s.cod_estadoreferencial=1";
      //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
@@ -8978,6 +8993,17 @@ function obtenerEstadoComprobante($codigo){
     }else{
        return false;
     }
+  }
+
+  function obtenerCodigoLogRegistroProveedor(){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from log_registro_proveedores c");
+     $stmt->execute();
+     $codigo=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigo=$row['codigo'];
+     }
+     return($codigo);
   }
 
 ?>

@@ -135,10 +135,15 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
             <i class="material-icons"><?=$iconImp;?></i>
           </a><?php
           }
+        if($codigoSol==0){
           ?>
-        <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
-          <i class="material-icons"><?=$iconEdit;?></i>
-        </a>
+          <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
+            <i class="material-icons"><?=$iconEdit;?></i>
+          </a> 
+          <?php  
+         }  
+          ?>
+        
         
         <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
           <i class="material-icons"><?=$iconDelete;?></i>

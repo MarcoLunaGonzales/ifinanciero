@@ -72,7 +72,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                       $codigoSel=$rowSel['codigo'];
                                       $nombreSelX=$rowSel['nombre'];
                                       $saldoX=obtenerSaldoPorPagarProveedor($codigoSel);
-                                      if($saldoX>0){
+                                      if($saldoX>0&&$saldoX>=1000){
                                          ?><option value="<?=$codigoSel;?>####<?=$nombreSelX?>"><?=$nombreSelX?></option><?php   
                                       }  
                                      }
@@ -91,7 +91,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                         <td class="text-right font-weight-bold">Observaciones</td>
                         <td class="text-left" width="" colspan="3">
                         	<div class="form-group">
-                               <textarea type="text" class="form-control" name="observaciones_pago" id="observaciones_pago" value=""></textarea>
+                               <textarea type="text" class="form-control" name="observaciones_pago" id="observaciones_pago" value="" required></textarea>
                              </div>
                         </td>
                       </tr>
@@ -109,7 +109,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                $codigoSel=$rowSel['codigo'];
                                $nombreSelX=$rowSel['nombre'];
                                $saldoX=obtenerSaldoPorPagarProveedor($codigoSel);
-                               if($saldoX>0){
+                               if($saldoX>0&&$saldoX>=1000){
                                 ?><script>
                                var fondo="random";
                                var type = ['', 'card-snippets', 'card-themes', 'card-templates', 'card-guides'];
@@ -118,7 +118,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                                  fondo=type[color];
                                } 
                              </script>       
-                                <div class="col-lg-3 col-md-8 mb-5 mb-lg-0 mx-auto">
+                                <div class="col-lg-4 col-sm-8 col-md-8 mb-2 mb-lg-0 mx-auto">
                                   <a href="#<?=str_replace(' ', '_',$nombreSelX)?>" onclick="cambiarComboProveedor('<?=$codigoSel?>####<?=$nombreSelX?>');" id="modulo<?=$fila?>" class="after-loop-item card border-0  shadow-lg">
                                      <div class="card-body d-flex align-items-end flex-column text-right">
                                         <h5><small><?=strtoupper($nombreSelX)?></small></h5>
