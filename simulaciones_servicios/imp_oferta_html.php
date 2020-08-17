@@ -130,13 +130,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             <p class="text-danger">CERTIFICACIÓN – Ciclo de certificación (<?=$anioX?> años)</p>
         </div>
         <table class="table pt-4">
-            <thead>
                 <tr class="s-12 text-white bg-plomo">
                     <td width="35%">CONCEPTO</td>
                     <td width="65%">DESCRIPCIÓN</td>
                 </tr>
-            </thead>
-            <tbody>
                 <tr>
                     <td class="border-b">
                        <div class="card">
@@ -194,7 +191,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                         <p>Tres meses antes del vencimiento del certificado de producto con Sello IBNORCA / documento de conformidad de producto, IBNORCA se pone en contacto con la organización para acordar la renovación del mismo.  La auditoría de renovación tiene características similares a la auditoria de certificación.</p>
                     </td>
                 </tr>
-            </tbody>
         </table>
     </div>
     <div class="s-9">
@@ -236,7 +232,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
              $ordinal=ordinalSuffix($i);
              ?>
         <table class="table pt-2 table-bordered">
-            <thead>
                 <tr class="s-10 text-white bg-plomo text-center font-weight-bold">
                     <td width="27%">SERVICIO</td>
                     <td width="27%">COSTO</td>
@@ -244,8 +239,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                     <td width="16%">AUDITORES</td>
                     <td width="20%">TOTAL COSTO USD</td>
                 </tr>
-            </thead>
-            <tbody>
                 <tr class="bg-plomo-claro">
                    <td colspan="5"><?=$ordinal?> año (GESTIÓN <?=$gestionInicio?>)</td>  
                 </tr>
@@ -287,7 +280,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                    <td colspan="4">Total, Gestión <?=$gestionInicio?></td>
                    <td class="text-right"><?=number_format($modal_totalmontopretotal/$usd,2, ',', '')?></td>  
                 </tr>
-            </tbody>
         </table>
              <?php
              $gestionInicio++;

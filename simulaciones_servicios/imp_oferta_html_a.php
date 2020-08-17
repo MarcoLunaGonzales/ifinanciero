@@ -264,14 +264,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
              ?>
              <p>Para <?=$tituloTabla?>, los montos a cancelar son:</p>
         <table class="table table-bordered">
-            <thead>
                 <tr class="s-10 text-white bg-danger text-center font-weight-bold">
                     <td width="27%">CONCEPTO</td>
                     <td width="27%">DÍAS  AUDITOR</td>
                     <td width="10%">COSTO BOB</td>
                 </tr>
-            </thead>
-            <tbody>
                 <?php 
                 $queryPr="SELECT s.*,t.Descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigo and s.cod_claservicio=t.IdClaServicio and s.habilitado=1 $sqlAnio order by t.nro_orden";
                 $stmt = $dbh->prepare($queryPr);
@@ -308,7 +305,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                    <td colspan="2">Total, (<?=$ordinal?>) año</td>
                    <td class="text-right"><?=number_format($modal_totalmontopretotal,2, ',', '')?></td>  
                 </tr>
-            </tbody>
         </table>
              <?php
              $gestionInicio++;

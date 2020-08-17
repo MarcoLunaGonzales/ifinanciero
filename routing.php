@@ -140,6 +140,10 @@
 			require_once('reportes_compras_edit_factura/reportesLibroComprasEdit.php');
 		}
 		//REPORTES
+		if ($_GET['opcion']=='reportesFacturasAdministrativo') {
+			require_once('reportes_ventas_administrativo/reportesLibroVentasAdministrativo.php');
+		}
+		//REPORTES
 		if ($_GET['opcion']=='reportesLibroVentas') {
 			require_once('reportes/reportesLibroVentas.php');
 		}

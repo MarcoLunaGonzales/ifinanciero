@@ -23,5 +23,6 @@ $urlReporteEgresoCompArea="reporteEgresoCompArea.php";
 $urlReporteResumidoAreaCuentaEg="rptOpEgresoCompAreaCuenta.php";
 $urlReporteEgresoCompAreaCuenta="reporteEgresoCompAreaCuenta.php";
 
+$urlFacturaAdministrativo="../reportes_ventas_administrativo/reportesLibroVentasAdministrativo.php";
 
 ?>
