@@ -44,7 +44,7 @@ class Inline_Renderer extends Abstract_Renderer {
     foreach ($frame->get_children() as $child) {
       list($child_x, $child_y, $child_w, $child_h) = $child->get_padding_box();
       
-      if ( !is_null($w) && $child_x < $x + $w ) {
+      if ( !is_null($w) && (float)$child_x < (float)$x + (float)$w ) {
         //This branch seems to be supposed to being called on the first part
         //of an inline html element, and the part after the if clause for the
         //parts after a line break.
@@ -96,17 +96,17 @@ class Inline_Renderer extends Abstract_Renderer {
           $this->_canvas->add_link($href, $x, $y, $w, $h);
         }
 
-        $x = $child_x;
-        $y = $child_y;
-        $w = $child_w;
-        $h = $child_h;
+        $x = (float)$child_x;
+        $y = (float)$child_y;
+        $w = (float)$child_w;
+        $h = (float)$child_h;
         continue;
       }
 
       if ( is_null($w) )
-        $w = $child_w;
+        $w = (float)$child_w;
       else
-        $w += $child_w;
+        $w += (float)$child_w;
       
       $h = max($h, $child_h);
 

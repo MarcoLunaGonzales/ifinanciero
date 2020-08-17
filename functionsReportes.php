@@ -240,6 +240,23 @@ function obtenerListaCuentasEgreso($unidades,$areas,$cuentas,$desde,$hasta){
     return($stmt);
 }
 
+function obtenerListaVentasResumidoAdministrativo($unidades,$areas,$formas,$desde,$hasta,$personal){
 
+    $dbh = new Conexion();
+    $sql="SELECT f.cod_personal,f.codigo, f.cod_solicitudfacturacion, 
+    (SELECT uo.abreviatura from unidades_organizacionales uo where uo.codigo=f.cod_unidadorganizacional)uo, 
+    (SELECT a.abreviatura from areas a where a.codigo=f.cod_area)area,
+    (SELECT t.nombre from tipos_pago t where t.codigo=f.cod_tipopago) as tipo_pago,  
+    f.fecha_factura, f.razon_social, f.nit, f.cod_personal, 
+    (SELECT SUM((cantidad*precio)-descuento_bob) as importe from facturas_ventadetalle where cod_facturaventa=f.codigo )as importe_real, f.nro_factura
+      FROM facturas_venta f
+WHERE f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and f.cod_area in ($areas) 
+    and f.cod_personal in ($personal) and f.cod_tipopago in ($formas)
+    order by fecha_factura desc, nro_factura desc";
+   // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return($stmt);
+}
  ?>
 

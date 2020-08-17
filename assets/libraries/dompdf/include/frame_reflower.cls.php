@@ -207,8 +207,8 @@ abstract class Frame_Reflower {
       if ( $max < $width ) $max = $width;
     }
 
-    $min += $delta;
-    $max += $delta;
+    $min += (float)$delta;
+    $max += (float)$delta;
     return $this->_min_max_cache = array($min, $max, "min"=>$min, "max"=>$max);
   }
 

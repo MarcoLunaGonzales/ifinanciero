@@ -23,20 +23,25 @@ $dbh = new Conexion();
 
 			  	<div class="card-body ">
 					<div class="row">
-				  		<div class="col-sm-4">
+				  		<div class="col-sm-3">
 							<div class="form-group">
 								<a href="<?=$urlReporteResumido;?>" class="btn btn-success"> Ingresos por Factura y Área</a>
 							</div>
 				  		</div>
 
-				  		<div class="col-sm-4">
+				  		<div class="col-sm-3">
 							<div class="form-group">
 								<a href="<?=$urlReporteResumidoArea;?>" class="btn btn-primary"> Ingresos por Área</a>
 							</div>
 				  		</div>
-				  		<div class="col-sm-4">
+				  		<div class="col-sm-3">
 							<div class="form-group">
 								<a href="<?=$urlReporteResumidoArea_servicios;?>" class="btn btn-warning"> Ingresos por Servicios</a>
+							</div>
+				  		</div>
+				  		<div class="col-sm-3">
+							<div class="form-group">
+								<a href="<?=$urlFacturaAdministrativo;?>" class="btn btn-default"> Facturas Administrativo</a>
 							</div>
 				  		</div>
 					</div>
