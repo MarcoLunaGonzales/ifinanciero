@@ -518,7 +518,7 @@ function minusCuentaContable(idF){
        $("#numero_fila"+i).html(i);
        $("#div"+nuevoId).attr("id","div"+i);
        $("#unidad"+nuevoId).attr("name","unidad"+i);
-       $("#unidad"+nuevoId).attr("onclick","relacionSolicitudesSIS('"+i+"')");
+       $("#unidad"+nuevoId).attr("onchange","relacionSolicitudesSIS('"+i+"')");
        $("#unidad"+nuevoId).attr("id","unidad"+i);
        $("#area"+nuevoId).attr("name","area"+i);
        $("#area"+nuevoId).attr("id","area"+i);
