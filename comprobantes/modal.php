@@ -40,6 +40,40 @@
   </div>
 </div>
 
+<!-- modal solicitud recursos -->
+<div class="modal fade modal-arriba" id="modal_solicitudes_recursos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content card">
+      <div class="card-header card-header-default card-header-text">
+        <div class="card-text">
+          <h4><span class="material-icons text-dark">view_sidebar</span> Lista de Solicitudes SIS  <div id="numero_solicitud_relacionado"></div></h4>      
+        </div>   
+        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <input type="hidden" id="fila_detallesolicitudsis" value="0"> 
+        <div class="btn-group float-right">
+          <a title="Quitar" href="#"  onclick="quitarSolicitudRecursoDelComprobante()" class="btn btn-rose btn-sm">
+          <i class="material-icons">close</i> Quitar Solicitud Recurso <span id="numero_badge_sr"></span>
+          </a>
+        </div>          
+            <div class="" id="div_contenido_solicitudes">
+              
+            </div>          
+        </div>
+      </div>
+      <div class="modal-footer">
+         <span class="text-success"><i class="material-icons">check_box</i> Habilitado</span><br>
+         <span class="text-danger"><i class="material-icons">check_box</i> Deshabilitado</span><br>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- modal libreta bancaria -->
 <div class="modal fade modal-arriba" id="modalListaMayoresCuenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
   <div class="modal-dialog modal-xl" role="document">

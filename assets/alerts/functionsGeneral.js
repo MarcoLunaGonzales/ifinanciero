@@ -567,6 +567,12 @@ function minusCuentaContable(idF){
        $("#cerrar_detalles"+nuevoId).attr("id","cerrar_detalles"+i);
        $("#numero_fila"+nuevoId).attr("id","numero_fila"+i);
        $("#numero_fila"+i).html(i);
+       //sis  
+       $("#cod_detallesolicitudsis"+nuevoId).attr("name","cod_detallesolicitudsis"+i); 
+       $("#cod_detallesolicitudsis"+nuevoId).attr("id","cod_detallesolicitudsis"+i);
+       $("#boton_solicitud_recurso"+nuevoId).attr("onclick","verSolicitudesDeRecursosSis('"+i+"')");
+       $("#boton_solicitud_recurso"+nuevoId).attr("id","boton_solicitud_recurso"+i);
+       $("#nestadosol"+nuevoId).attr("id","nestadosol"+i); //
       }
      } 
       itemFacturas.splice((idF-1), 1);
@@ -17035,4 +17041,77 @@ function editarFacturaModalReporte(codigo,nit,numero,aut,control,importe,exe,ice
   $("#razon_fac").val(razon_social);
   $('.selectpicker').selectpicker("refresh");
   $("#editarFactura").modal("show");
+}
+
+function quitarFilaComprobante(fila){
+  swal({
+    title: '¿Estás Seguro?',
+    text: "¡Se borrará el detalle!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonClass: 'btn btn-warning',
+    cancelButtonClass: 'btn btn-danger',
+    confirmButtonText: 'Si',
+    cancelButtonText: 'No',
+    buttonsStyling: false
+  }).then((result) => {
+    if (result.value) {
+      minusCuentaContable(fila);
+      return(true);
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      return(false);
+    }
+  }); 
+}
+
+function relacionSolicitudesSIS(fila){
+  if($("#unidad"+fila).val()==3000){
+    if($("#boton_solicitud_recurso"+fila).hasClass("d-none")){
+      $("#boton_solicitud_recurso"+fila).removeClass("d-none");
+    }
+  }else{
+    if(!($("#boton_solicitud_recurso"+fila).hasClass("d-none"))){
+      $("#boton_solicitud_recurso"+fila).addClass("d-none");
+    }
+  }
+}
+
+function verSolicitudesDeRecursosSis(fila){
+  $("#fila_detallesolicitudsis").val(fila)
+  var codigo=$("#cod_detallesolicitudsis"+fila).val();
+  var parametros={"fila":fila,"codigo":codigo};
+  $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajaxListSolicitudesRecursos.php",
+        data: parametros,
+        beforeSend:function(){
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+          detectarCargaAjax();
+          $("#div_contenido_solicitudes").html(resp);
+          cargar_filtro_datatable_ajax('modal_solicitudes_recursos');
+          $("#modal_solicitudes_recursos").modal("show");   
+        }
+    });
+}
+
+function ponerCodigoSolicitudComprobante(fila,codigo){
+  $("#cod_detallesolicitudsis"+fila).val(codigo);
+  if(!($("#nestadosol"+fila).hasClass("estado"))){
+    $("#nestadosol"+fila).addClass("estado");
+  }
+  $("#modal_solicitudes_recursos").modal("hide");
+}
+
+function quitarSolicitudRecursoDelComprobante(){
+  var fila=$("#fila_detallesolicitudsis").val();
+  $("#cod_detallesolicitudsis"+fila).val(0);
+  if($("#nestadosol"+fila).hasClass("estado")){
+    $("#nestadosol"+fila).removeClass("estado");
+  }
+  $("#numero_badge_sr").html("");
+  $("#numero_solicitud_relacionado").html("");
+  $("#modal_solicitudes_recursos").modal("hide");   
 }

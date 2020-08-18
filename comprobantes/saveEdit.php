@@ -50,6 +50,8 @@ $sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=0, cod_c
 $stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
 $flagsuccess=$stmtDetalleUpdate->execute(); 
 array_push($SQLDATOSINSTERT,$flagsuccess);
+
+
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
     foreach($_FILES["archivos"]['tmp_name'] as $key => $tmp_name)
@@ -114,18 +116,19 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$debe=$_POST["debe".$i];
 		$haber=$_POST["haber".$i];
 		$glosaDetalle=$_POST["glosa_detalle".$i];
+    $codSolicitudRecurso=$_POST["cod_detallesolicitudsis".$i];
    
     if((isset($_POST['codigo_detalle'.$i]))&&(isset($_POST['incompleto']))){
 	    $codigoDetalle=$_POST["codigo_detalle".$i];
       $codComprobanteDetalle=$codigoDetalle;
-      $sqlDetalle="UPDATE comprobantes_detalle SET cod_comprobante=$codComprobante , cod_cuenta= '$cuenta', cod_cuentaauxiliar= '$cuentaAuxiliar', cod_unidadorganizacional= '$unidadDetalle', cod_area= '$area', debe= '$debe', haber= '$haber', glosa= '$glosaDetalle', orden ='$i'  where codigo='$codComprobanteDetalle' ";
+      $sqlDetalle="UPDATE comprobantes_detalle SET cod_solicitudrecurso='$codSolicitudRecurso',cod_comprobante=$codComprobante , cod_cuenta= '$cuenta', cod_cuentaauxiliar= '$cuentaAuxiliar', cod_unidadorganizacional= '$unidadDetalle', cod_area= '$area', debe= '$debe', haber= '$haber', glosa= '$glosaDetalle', orden ='$i'  where codigo='$codComprobanteDetalle' ";
 		  $stmtDetalle = $dbh->prepare($sqlDetalle);
 		  $flagSuccessDetalle=$stmtDetalle->execute();
       array_push($SQLDATOSINSTERT,$flagSuccessDetalle);	
     }else{
       $codigoDetalle=obtenerCodigoComprobanteDetalle()+($i-1);
       $codComprobanteDetalle=$codigoDetalle;
-      $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+      $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_solicitudrecurso) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codSolicitudRecurso')";
       $stmtDetalle = $dbh->prepare($sqlDetalle);
       $flagSuccessDetalle=$stmtDetalle->execute();
       array_push($SQLDATOSINSTERT,$flagSuccessDetalle);
@@ -139,6 +142,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 
       array_push($SQLDATOSINSTERT,$flagDetalleUpdate);  
     }
+
 
     /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA CON LA VALIDACION DE TIPO(DEBE/HABER)*/
     $verificaEC=verificarCuentaEstadosCuenta($cuenta);
