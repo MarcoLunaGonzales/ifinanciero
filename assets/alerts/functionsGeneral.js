@@ -512,6 +512,8 @@ function minusCuentaContable(idF){
       if(idF<numFilas){
       for (var i = parseInt(idF); i < (numFilas+1); i++) {
         var nuevoId=i+1;
+        $("#numero_fila"+nuevoId).attr("id","numero_fila"+i);
+       $("#numero_fila"+i).html(i);
        $("#div"+nuevoId).attr("id","div"+i);
        $("#unidad"+nuevoId).attr("name","unidad"+i);
        $("#unidad"+nuevoId).attr("id","unidad"+i);
@@ -528,7 +530,7 @@ function minusCuentaContable(idF){
        $("#haber"+nuevoId).attr("id","haber"+i);
        $("#glosa_detalle"+nuevoId).attr("name","glosa_detalle"+i);
        $("#glosa_detalle"+nuevoId).attr("id","glosa_detalle"+i);
-       $("#boton_remove"+nuevoId).attr("onclick","minusCuentaContable('"+i+"')");
+       $("#boton_remove"+nuevoId).attr("onclick","quitarFilaComprobante('"+i+"');return false;");
        $("#boton_remove"+nuevoId).attr("id","boton_remove"+i);
        $("#boton_fac"+nuevoId).attr("onclick","listFac('"+i+"')");
        $("#boton_fac"+nuevoId).attr("id","boton_fac"+i);
@@ -565,8 +567,7 @@ function minusCuentaContable(idF){
        //mayores seleccion
        $("#cerrar_detalles"+nuevoId).attr("onclick","verMayoresCierre('"+i+"')");
        $("#cerrar_detalles"+nuevoId).attr("id","cerrar_detalles"+i);
-       $("#numero_fila"+nuevoId).attr("id","numero_fila"+i);
-       $("#numero_fila"+i).html(i);
+       
        //sis  
        $("#cod_detallesolicitudsis"+nuevoId).attr("name","cod_detallesolicitudsis"+i); 
        $("#cod_detallesolicitudsis"+nuevoId).attr("id","cod_detallesolicitudsis"+i);

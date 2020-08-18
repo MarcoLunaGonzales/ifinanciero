@@ -897,12 +897,14 @@
             });
         },
         footerCallback: function ( row, data, start, end, display ) {
+          if($("#importe_bruto").length>0){
             var api = this.api();
             var pageTotal = api.column(10,{page:'current'}).data().reduce( function (a,b) {
                 return parseFloat(a) + parseFloat(b);
                },0);
             //alert(pageTotal)
             $("#importe_bruto").val(pageTotal.toFixed(2));
+          }
         },
         "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
