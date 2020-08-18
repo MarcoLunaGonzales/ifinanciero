@@ -200,7 +200,8 @@ $i=0;
 				                 <label class="col-sm-4 col-form-label">Personal</label>
 				                 <div class="col-sm-8">
 				                	<div class="form-group">
-		                               <select class="selectpicker form-control form-control-sm" name="personal[]" id="personal" data-live-search="true" data-style="select-with-transition" data-size="4" multiple data-actions-box="true" required>				  	   
+		                               <select class="selectpicker form-control form-control-sm" name="personal[]" id="personal" data-live-search="true" data-style="select-with-transition" data-size="4" multiple data-actions-box="true" required>	
+		                               	<option value="0">TIENDA</option>	
 					                       <?php
 			  	                     $stmt = $dbh->prepare("SELECT DISTINCT f.cod_personal,UPPER(CONCAT(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno)) as nombre from facturas_venta f join personal p on p.codigo=f.cod_personal order by 2");
 				                     $stmt->execute();
