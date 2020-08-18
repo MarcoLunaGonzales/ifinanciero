@@ -61,10 +61,11 @@
           <i class="material-icons">close</i> Quitar Solicitud Recurso <span id="numero_badge_sr"></span>
           </a>
         </div>          
-            <div class="" id="div_contenido_solicitudes">
-              
-            </div>          
+                     
         </div>
+        <div class="row" id="div_contenido_solicitudes">
+              
+        </div> 
       </div>
       <div class="modal-footer">
          <span class="text-success"><i class="material-icons">check_box</i> Habilitado</span><br>
