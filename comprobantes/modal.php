@@ -63,7 +63,7 @@
         </div>          
                      
         </div>
-        <div class="row" id="div_contenido_solicitudes">
+        <div class="row col-sm-12" id="div_contenido_solicitudes">
               
         </div> 
       </div>
