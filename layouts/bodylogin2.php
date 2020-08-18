@@ -903,7 +903,7 @@
                 return parseFloat(a) + parseFloat(b);
                },0);
             //alert(pageTotal)
-            $("#importe_bruto").val(pageTotal.toFixed(2));
+            $("#importe_bruto").val((new Intl.NumberFormat('de-DE').format(pageTotal.toFixed(2))).replace('.',' ').replace(',','.').replace(' ',','));
           }
         },
         "language": {
