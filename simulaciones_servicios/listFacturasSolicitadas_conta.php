@@ -302,7 +302,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                         </a><?php                                        
                                       }
                                       $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###10###".$urlEdit2Sol."###"; 
-                                      $datos_edit=$nro_correlativo."###".$cod_tipopago."###".$codigo_facturacion;
+                                      $datos_edit=$nro_correlativo."###".$cod_tipopago."###".$codigo_facturacion."###".$nit."###".$razon_social;
                                       ?>
                                       <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
                                           <i class="material-icons" title="Devolver Solicitud de Facturación">settings_backup_restore</i>

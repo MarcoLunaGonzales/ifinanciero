@@ -640,25 +640,30 @@
       <div class="modal-body">
         <input type="hidden" name="cod_solicitud_e" id="cod_solicitud_e" value="0">        
         <div class="row">
-          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Numero de Solicitud: </label>
-          <div class="col-sm-5">
+          <label class="col-sm-2 text-right col-form-label" style="color:#424242">Nro. de Solicitud: </label>
+          <div class="col-sm-3">
             <div class="form-group">
               <input type="text" name="nro_correlativo_e" id="nro_correlativo_e" class="form-control" readonly="true">
             </div>
           </div>
+          <label class="col-sm-1 text-right col-form-label" style="color:#424242">Nit: </label>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <input type="text" name="nit_e_sf" id="nit_e_sf" class="form-control" readonly="true">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 text-right col-form-label" style="color:#424242">Razón Social: </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="razon_social_e_sf" id="razon_social_e_sf" class="form-control" readonly="true">
+            </div>
+          </div>          
         </div>                
-        
-          
           <div id="contenedor_formapago_edit">
             
-          </div>
-          <!-- <div class="col-sm-8">
-            <div class="form-group">
-              <textarea name="razon_social_e" id="razon_social_e" class="form-control"></textarea>
-            </div>
-          </div> -->
-        
-
+          </div>             
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="guardarSolFacEdit" name="guardarSolFacEdit">Guardar</button>

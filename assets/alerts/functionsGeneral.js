@@ -15777,6 +15777,8 @@ function modal_editar_sf_conta(datos){
   document.getElementById("nro_correlativo_e").value=d[0];
   var cod_tipopago=d[1];
   document.getElementById("cod_solicitud_e").value=d[2];
+  document.getElementById("nit_e_sf").value=d[3];
+  document.getElementById("razon_social_e_sf").value=d[4];
   contenedor = document.getElementById('contenedor_formapago_edit');
   ajax=nuevoAjax();
   ajax.open('GET', 'simulaciones_servicios/ajax_tipopago_edit_conta.php?cod_tipo='+cod_tipopago,true);
