@@ -289,36 +289,7 @@
     </div>
   </div>
 </div>
-<!-- factura pagos -->
-<div class="modal fade" id="modalGenerarFacturapagos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-xl" role="document">
-    <form id="formFacturaParcial" class="form-horizontal" action="<?=$urlGenerarFacturaParciales;?>" method="post" onsubmit="return valida_modalFacPar(this)" enctype="multipart/form-data">  
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title" id="myModalLabel"><b>Generar Factura Parcial</b></h3>
-        </div>      
-        <div class="modal-body">
-          <input type="hidden" name="cod_solicitudfacturacion_factpagos" id="cod_solicitudfacturacion_factpagos" value="0">
 
-          <div class="row" id="contenedor_GenerarFactParcial_cabecera">
-          
-          </div>
-          <div id="contenedor_GenerarFactParcial">
-          
-          </div>
-          <input type="hidden" name="cantidad_items" id="cantidad_items" value="0">
-          <input type="hidden" name="cod_libreta_pagos" id="cod_libreta_pagos" value="0" >
-        </div>    
-        <div class="modal-footer">
-          <!-- <button type="button" class="btn btn-success" id="guardarFacturaPagos" name="guardarFacturaPagos"></button> -->
-          <button type="submit" class="btn btn-success">Generar Factura</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
-        </div>    
-      </div>
-    </form>
-  </div>
-</div>
 <!-- modal devolver solicitud -->
 <div class="modal fade" id="modalDevolverSolicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -656,5 +627,48 @@
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
+
+<div class="modal fade" id="modalEditarSolFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel"><b>Editar Forma Pago SF</b></h3>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="cod_solicitud_e" id="cod_solicitud_e" value="0">        
+        <div class="row">
+          <label class="col-sm-2 text-right col-form-label" style="color:#424242">Nro. de Solicitud: </label>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <input type="text" name="nro_correlativo_e" id="nro_correlativo_e" class="form-control" readonly="true">
+            </div>
+          </div>
+          <label class="col-sm-1 text-right col-form-label" style="color:#424242">Nit: </label>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <input type="text" name="nit_e_sf" id="nit_e_sf" class="form-control" readonly="true">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 text-right col-form-label" style="color:#424242">Razón Social: </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="razon_social_e_sf" id="razon_social_e_sf" class="form-control" readonly="true">
+            </div>
+          </div>          
+        </div>                
+          <div id="contenedor_formapago_edit">
+            
+          </div>             
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="guardarSolFacEdit" name="guardarSolFacEdit">Guardar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
   </div>
 </div>

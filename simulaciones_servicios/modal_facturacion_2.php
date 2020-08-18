@@ -56,3 +56,37 @@
     </div>
   </div>
 </div>
+
+<!-- modal reenviar solicitud devuelto -->
+<div class="modal fade" id="modal_info_enviocorreo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Envío de Correo</h4>
+      </div>
+      <div class="modal-body">                
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Factura Nro.: </small></label>
+          <div class="col-sm-10">
+            <div class="form-group" >              
+              <input type="text" class="form-control" name="nro_factura_enviado" id="nro_factura_enviado" readonly="true" style="background-color:#e2d2e0">
+            </div>
+          </div>
+        </div>  
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Enviada a:</small></label>
+          <div class="col-sm-10">
+            <div class="form-group" >
+              <textarea class="form-control" id="enviado_a" name="enviado_a" readonly="true" style="background-color:#e2d2e0" ></textarea>
+            </div>
+          </div>
+        </div>              
+           
+      </div>
+      <div class="modal-footer">        
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Cerrar </button>
+      </div>
+    </div>
+  </div>
+</div>

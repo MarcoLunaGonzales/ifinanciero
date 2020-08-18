@@ -1333,7 +1333,60 @@ function readSingleFileDRC(evt) {
   }
 
 
+function modalPegarDatosComprobante(){
+  $('#modalPegarDatosComprobante').modal('show');
+}
+function limpiarComprobanteExcel(){
+  $('textarea[name=data_excel]').val("");
+   $('#div_datos_excel').html("");
+   if($("#boton_cargar_datos").hasClass("d-none")){
+    $("#boton_cargar_datos").removeClass("d-none");
+    $("#boton_generar_filas").addClass("d-none");
+  }
+}
 
+var itemDatosComprobante=[];
+function cargarComprobanteExcel() {
+  $('#div_datos_excel').html("");
+    var data = $('textarea[name=data_excel]').val();
+    console.log(data);
+    var rows = data.split("\n");
+    var table = $('<table />');
+    table.addClass("table").addClass("table-condensed").addClass("table-bordered").addClass("table-sm");
+    var index=0;
+    for(var y in rows) {
+      var cells = rows[y].split("\t");
+      var row = $('<tr />'); 
+      var coli=0;
+      var itemsFila=[];
+    for(var x in cells) {
+        if(!(coli==1||coli==3||coli==7||coli==8)){
+          itemsFila.push(cells[x]);
+          row.append('<td>'+cells[x]+'</td>');   
+        }
+        coli++;
+    }
+    
+    if(index==0){
+      row.addClass("bg-success").addClass("text-white"); 
+    }else{
+      if(itemsFila.length>0&&itemsFila[0]!=""&&itemsFila[1]!=""&&itemsFila[4]!=""){ //validacion para mas de una fila
+        itemDatosComprobante.push(itemsFila);
+      }
+      row.addClass("font-weight-bold").addClass("small"); 
+    }
+    table.append(row);
+    index++;
+}
+if(index>1){
+  if($("#boton_generar_filas").hasClass("d-none")){
+    $("#boton_generar_filas").removeClass("d-none");
+    $("#boton_cargar_datos").addClass("d-none");
+  }
+}
+// Insert into DOM
+$('#div_datos_excel').html(table);
+}
 
 function modalPlantilla(){
   if(cantidadItems==0){
@@ -1442,6 +1495,35 @@ function abrirPlantilla(id,n,glosa,tipo){
         }
     }); 
 }
+
+function generarComprobanteExcel(){
+  var datos=itemDatosComprobante;
+  var parametros={"filas":$("#cantidad_filas").val(),"datos":JSON.stringify(datos)};
+  $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "ajaxCargarExcel.php",
+        data: parametros,
+        beforeSend:function(){
+          iniciarCargaAjax();
+          $("#texto_ajax_titulo").html("Generando Filas");
+        },
+        success:  function (resp) {
+          detectarCargaAjax();
+          $("#texto_ajax_titulo").html("Procesando Datos");
+          var fi=$("#fiel");
+          fi.append(resp);
+          calcularTotalesComprobante("null");
+          $('.selectpicker').selectpicker("refresh");
+          $("#div_datos_excel").html("");
+          $("#data_excel").val("");
+          $("#boton_cargar_datos").removeClass("d-none");
+          $("#boton_generar_filas").addClass("d-none");
+          $("#modalPegarDatosComprobante").modal("hide");     
+        }
+    }); 
+}
+
 function nuevaDistribucionPonerFila(fila,tipoDistribucion){
  var glosa = $("#glosa_detalle"+fila).val();
  if(glosa==""){
@@ -1923,7 +2005,6 @@ function readSingleFile(evt) {
     if (e.keyCode === 13 && !e.shiftKey) {
         buscarCuenta();
     }
-
 }
 
 function cargarTipoCambio(id){
@@ -11532,6 +11613,23 @@ function actualizar_factura(cod_facturaventa_e,razon_social_e){
     }
   });
 }
+function actualizar_solfacturacion_edit(cod_solicitud_e,cod_tipopagoE){
+  iniciarCargaAjax();
+  $.ajax({
+    type:"POST",
+    data:"cod_solicitud_e="+cod_solicitud_e+"&cod_tipopagoE="+cod_tipopagoE,
+    url:"simulaciones_servicios/ajax_tipopago_edit_conta_save.php",
+    success:function(r){      
+      detectarCargaAjax();
+      if(r==1){
+        var url="index.php?opcion=listFacturasServicios_conta";
+        alerts.showSwal('success-message',url);
+      }else{
+        Swal.fire("ERROR! :(", "Ocurrio un error al actualizar la Solicitud de Facturación.", "warning");        
+      }      
+    }
+  });
+}
 //entidades 
 var unidades_tabla=[]; 
 var unidades_tabla_general=[];
@@ -15105,6 +15203,14 @@ function agregaDatosDetalleFactManual(datos){
   document.getElementById("importe_facmanual").value=number_format(d[5],2);  
 
 }
+function modal_info_enviocorreo_f(datos){  
+  var d=datos.split('######');  
+  $("#modal_info_enviocorreo").modal("show");
+  document.getElementById("nro_factura_enviado").value=d[0];
+  document.getElementById("enviado_a").value=d[1];  
+
+}
+
 var detalle_tabla_general=[];
 var numFilasA=0;
 function filaTablaAGeneral(tabla,index,stringCabecera){
@@ -15662,12 +15768,27 @@ function modal_rechazarFactura(datos){
 
 function modal_editarFactura_sf(datos){    
   var d=datos.split('###');  
-  document.getElementById("nro_factura_e").value=d[0];  //link destino
-  document.getElementById("razon_social_e").value=d[1];  //codigo factura
-  document.getElementById("cod_facturaventa_e").value=d[2];  //codigo factura
-
-  
-  
+  document.getElementById("nro_factura_e").value=d[0];
+  document.getElementById("razon_social_e").value=d[1];
+  document.getElementById("cod_facturaventa_e").value=d[2];
+}
+function modal_editar_sf_conta(datos){    
+  var d=datos.split('###');  
+  document.getElementById("nro_correlativo_e").value=d[0];
+  var cod_tipopago=d[1];
+  document.getElementById("cod_solicitud_e").value=d[2];
+  document.getElementById("nit_e_sf").value=d[3];
+  document.getElementById("razon_social_e_sf").value=d[4];
+  contenedor = document.getElementById('contenedor_formapago_edit');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_tipopago_edit_conta.php?cod_tipo='+cod_tipopago,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null)  
 }
 function modalDevolverSolicitud_regional(datos){    
   var d=datos.split('###');  

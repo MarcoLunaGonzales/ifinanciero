@@ -435,11 +435,6 @@ $globalPersonal=$_SESSION["globalUser"];
             </div>
           </div>
         </div>
-        <!-- <h6> Asunto : </h6>
-        <input class="form-control" type="text" name="asunto" id="asunto" value="<?=$asunto?>" required="true"/>
-        <h6> Mensaje : </h6>
-        <textarea class="form-control" name="mensaje" id="mensaje" required="true"><?=$texto_cuerpo?></textarea> -->
-        <!-- <input class="form-control" type="text" /> -->
         <?php 
          $sqlInstancia="SELECT codigo,descripcion from instancias_envios_correos where codigo=1";
          $stmtInstancia = $dbh->prepare($sqlInstancia);
@@ -542,8 +537,6 @@ $globalPersonal=$_SESSION["globalUser"];
       }else{
         correo_destino=$('#correo_destino').val();        
       } 
-      // asunto=$('#asunto').val();
-      // mensaje=$('#mensaje').val();
       asunto=null;
       mensaje=null;
       if(correo_destino==null || correo_destino == "" ||correo_destino == 0){

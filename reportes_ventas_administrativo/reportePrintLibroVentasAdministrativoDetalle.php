@@ -11,9 +11,9 @@
   <div class="table-responsive">
     <?php
     $txtEstiloPersonal="";
-    if($filtroPersonal==0){
-      $txtEstiloPersonal="display: none;";
-    }
+    // if($filtroPersonal==0){
+    //   $txtEstiloPersonal="display: none;";
+    // }
 
     $html='<table class="table table-bordered table-condensed" id="reporte_datos_busqueda">'.
             '<thead >'.

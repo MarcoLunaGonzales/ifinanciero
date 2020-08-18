@@ -430,6 +430,9 @@ $stmt->execute();
 		                        <a  title="Guardar como Plantilla (shift+s)" href="#" onclick="modalPlantilla()"class="btn btn-danger btn-fab btn-sm">
                       		        <i class="material-icons">favorite</i>
 		                        </a>
+		                         <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante()" class="btn btn-primary btn-fab btn-sm">
+	                      		        <i class="material-icons">content_paste</i>
+			                     </a>
                             </div>
 						</div>
 					</div>

@@ -244,8 +244,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                 $cod_tipopago=$cod_tipopago_aux;
                                                 $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_anticipo,$codigo_facturacion);//
                                                 $datos_FacManual_anticipo=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
-
-                                                $datos_FacManual_de.="/".$saldo_dc;//adicionamos el saldo de la libreta
+                                                if(isset($datos_FacManual_de)){
+                                                  $datos_FacManual_de.="/".$saldo_dc;//adicionamos el saldo de la libreta
+                                                }                                              
                                               }
                                               if($cont_de_tipos_pago==2){?>
                                                 <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','4')">
@@ -262,8 +263,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                   <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','3')">
                                                     <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                   </a><?php                                               
-                                                }elseif($cod_tipopago==$cod_tipopago_anticipo){ //echo $cod_tipopago."-".$cod_tipopago_anticipo
-                                                ?>
+                                                }elseif($cod_tipopago==$cod_tipopago_anticipo){ //echo ?>
                                                   <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual_anticipo;?>','<?=$urlGenerarFacturas2;?>','1','0')">
                                                     <i class="material-icons text-success">receipt</i> Generar Factura
                                                   </a>
@@ -281,10 +281,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                 }  
                                               }
 
-                                               ?>
-                                             <!--  <a href='#' rel="tooltip" class="dropdown-item" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                                <i class="material-icons text-warning" title="Ver Detalle">settings_applications</i> Ver Detalle
-                                              </a> -->
+                                               ?>                                             
                                           </div>
                                         </div>                           
                                         <?php 
@@ -305,6 +302,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                         </a><?php                                        
                                       }
                                       $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###1###10###".$urlEdit2Sol."###"; 
+                                      $datos_edit=$nro_correlativo."###".$cod_tipopago."###".$codigo_facturacion."###".$nit."###".$razon_social;
                                       ?>
                                       <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
                                           <i class="material-icons" title="Devolver Solicitud de Facturación">settings_backup_restore</i>
@@ -314,6 +312,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                         <i class="material-icons">remove_red_eye</i>
                                       </a>
                                       <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_FacManual;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
+                                      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditarSolFac" onclick="modal_editar_sf_conta('<?=$datos_edit;?>')">
+                                        <i class="material-icons" title="Editar Factura">edit</i>
+                                      </button>
                                     <?php }
                                   ?>
                                 </div></div>
@@ -341,21 +342,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
   </div>
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
 <?php  require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
-<!-- <?php 
-  $lan=sizeof($cont);
-  error_reporting(0);
-  for ($i=0; $i < $lan; $i++) {
-    ?>
-    <script>var detalle_fac=[];</script>
-    <?php
-       for ($j=0; $j < $cont[$i]; $j++) {     
-           if($cont[$i]>0){
-            ?><script>detalle_fac.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_facturacion:<?=$datos[$i][$j]->cod_facturacion?>,serviciox:'<?=$datos[$i][$j]->serviciox?>',cantidadX:'<?=$datos[$i][$j]->cantidadX?>',precioX:'<?=$datos[$i][$j]->precioX?>',descuento_porX:'<?=$datos[$i][$j]->descuento_porX?>',descuento_bobX:'<?=$datos[$i][$j]->descuento_bobX?>',descripcion_alternaX:'<?=$datos[$i][$j]->descripcion_alternaX?>'});</script><?php         
-            }          
-          }
-      ?><script>detalle_tabla_general.push(detalle_fac);</script><?php                    
-  }
-?> -->
+
 
 <!-- para la factura manual -->
 <script type="text/javascript">
@@ -404,7 +391,20 @@ $globalAdmin=$_SESSION["globalAdmin"];
       }else{        
         registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion,q,s,u,v);
       }      
-    }); 
+    });
+    $('#guardarSolFacEdit').click(function(){          
+      cod_solicitud_e=document.getElementById("cod_solicitud_e").value;
+      cod_tipopagoE=$('#cod_tipopagoE').val();      
+      // asunto=$('#asunto').val();
+      // mensaje=$('#mensaje').val();
+      
+      if(cod_tipopagoE==null || cod_tipopagoE == "" ||cod_tipopagoE == 0){        
+        Swal.fire("Informativo!", "Seleccione una opción por favor!", "warning");
+      }else{
+        actualizar_solfacturacion_edit(cod_solicitud_e,cod_tipopagoE);  
+      }
+    });   
+
   });
   function valida_modalFacPar(f) {
       var ok = true;
@@ -441,27 +441,3 @@ $globalAdmin=$_SESSION["globalAdmin"];
     }
 </script>
 <!-- objeto tipo de pago -->
-<?php 
-    //$lan_parciales=sizeof($cont_pagosParciales);//filas si lo hubiese         
-    // echo "cont:".$lan_parciales;
-    // var_dump($dato_parciales[2]);
-    //for ($i=0; $i < $lan_parciales; $i++) {
-      // echo "i:".$i."<br>";
-      ?>
-      <script>var detalle_pagoparcial=[];</script>
-      <?php      
-        //for ($j=0; $j < $cont_pagosParciales[$i]; $j++) {
-
-            // if($cont_pagosParciales[$i]>0){?>
-                <script>
-              //      detalle_pagoparcial.push({codigo:<?=$dato_parciales[$i][$j]->codigo?>,codigox:<?=$dato_parciales[$i][$j]->cod_claservicio?>,preciox:'<?=$dato_parciales[$i][$j]->preciox?>',cantidadxx:'<?=$dato_parciales[$i][$j]->cantidadxx?>',descuentox:'<?=$dato_parciales[$i][$j]->descuentox?>',importe_anterior_x:'<?=$dato_parciales[$i][$j]->importe_anterior_x?>',descripcionx:'<?=$dato_parciales[$i][$j]->descripcionx?>'});
-                    // console.log(detalle_pagoparcial);
-                </script>
-
-              <?php
-            //   }          
-            // }
-        ?><script>//itemGenerar_factura_parcial_aux.push(detalle_pagoparcial);
-        </script><?php                    
-    // }
-?>

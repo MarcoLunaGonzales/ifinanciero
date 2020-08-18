@@ -78,7 +78,10 @@ try{
 			$codAnio=$_SESSION["globalNombreGestion"];
 			$codMoneda=1;
 			$codEstadoComprobante=1;
-			$fechaActual=date("Y-m-d H:i:s");
+			$diaActual=date("d");
+			$horaActual=date("H:i:s");
+			$fechaActual=$gestionTrabajo."-".$mesTrabajo."-".$diaActual." ".$horaActual;
+
 			$tipoComprobante=3;
 
 			$numeroComprobante=obtenerCorrelativoComprobante($tipoComprobante, $cod_uo_tcc, $gestionTrabajo, $mesTrabajo);

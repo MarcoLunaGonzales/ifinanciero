@@ -146,6 +146,19 @@
      return($nombreX);
   }
 
+  function obtieneCuentaPorNumero($numero){
+     
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT codigo FROM plan_cuentas where numero=:numero");
+     $stmt->bindParam(':numero',$numero);
+     $stmt->execute();
+     $codigo=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigo=$row['codigo'];
+     }
+     return($codigo);
+  }
+
   function obtieneNuevaCuenta($codigo){//ESTA FUNCION TRABAJA CON UNA CUENTA FORMATEADA CON PUNTOS
      $dbh = new Conexion();
      $nivelCuenta=buscarNivelCuenta($codigo);
@@ -580,6 +593,19 @@
         $nombreX=$row['nombre'];
      }
      return($nombreX);
+  }
+
+  function codigoUnidadNombre($nombre){
+    $nombre=strtolower($nombre);
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT codigo FROM unidades_organizacionales where lower(nombre) like '%$nombre%'");
+     $stmt->execute();
+
+     $codigo=5;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigo=$row['codigo'];
+     }
+     return($codigo);
   }
 
   function namePersonalCompleto($codigo){
@@ -3960,6 +3986,24 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      } 
       $pdf = $dompdf->output();
       file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
+  }
+  function descargarPDFFacturas_reporte($nom,$html,$codFactura){//PARA EL REPORTE DE FACTURAS CONJUNTAS
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->set_paper("A4", "portrait");
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));   
+    $mydompdf->set_base_path('assets/libraries/plantillaPDFFactura.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+    //guardar pdf
+    // $pdf = $mydompdf->output();
+    // file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
   }
 
   function descargarPDFFiniquito($nom,$html){
