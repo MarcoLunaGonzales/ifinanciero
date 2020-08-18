@@ -100,7 +100,7 @@ class Table_Cell_Frame_Reflower extends Block_Frame_Reflower {
     $height = max($style_height, $this->_frame->get_content_height());
 
     // Let the cellmap know our height
-    $cell_height = $height / count($cells["rows"]);
+    $cell_height = (int)$height / (int)count($cells["rows"]);
 
     if ($style_height <= $height)
       $cell_height += $top_space + $bottom_space;

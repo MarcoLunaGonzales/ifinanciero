@@ -146,7 +146,6 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 		}
 		$html.='<div  style="height: 49.4%">';
     		$html.='<table  style="width: 100%;">
-              	<thead>
 	                <tr>
 	                  	<td align="center" width="37%">
 		                    <img class="imagen-logo-izq_2" src="../assets/img/logo_ibnorca_origen_3.jpg">
@@ -189,7 +188,6 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 		                    </b></span></small>
 	                  	</td>
 	                </tr>
-	            </thead>
             </table>';
             $html.='<table class="table">'.
               '<tr class="bold table-title text-left">'.
@@ -198,16 +196,14 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
                   '<td  class="td-border-none" width="18%"><b>NIT/CI:</b>&nbsp;'.$nit.'</td>'.
                 '</tr>'.
             '</table>';
-    		$html.='<table class="table2">'.
-				'<thead>'.                
+    		$html.='<table class="table2">'.              
 					'<tr>'.
 					  '<td width="10%" align="center">CANTIDAD</td> 
 					  <td align="center" colspan="2">DESCRIPCIÓN</td>                   
 					  <td width="5%" align="center"><b>SUBTOTAL</b></td>
-					</tr>
-				</thead>';
+					</tr>';
               	$suma_total=0;
-              	$html.='<tbody><tr><td></td><td colspan="2"></td><td></td></tr>';
+              	$html.='<tr><td></td><td colspan="2"></td><td></td></tr>';
 
 						// if($tipo_impresion==1){//tipo de impresion normal
 						// 	$html.='<td valign="top" height="8%" class="text-right"><h5 style="padding: 0px;margin: 0px;">'.formatNumberDec($cantidad).'</h5></td>'.
@@ -314,9 +310,7 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
                     <tr>
                         <td style="border-right: hidden"><small><b>CÓDIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</small></td>
                         <td align="right" style="border-left: hidden" colspan="2"><small><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</small></td> 
-                    </tr>'.
-             
-            	'</tbody>'.                        
+                    </tr>'.                       
         	'</table>'; 
 	        $html.='<table class="table3" >
 	            <tr align="center"><td>&quot;'.obtenerValorConfiguracionFactura(7).'&quot;<br>&quot;'.$leyenda.'&quot;</td></tr>

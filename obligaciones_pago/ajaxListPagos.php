@@ -116,12 +116,12 @@ $totalPagadoX=0;
                             <?php 
                             if(($importe-$pagado)>0){
                               ?>
-                              <input type="number" step="0.01" class="form-control text-right text-success" value="0" id="monto_pago<?=$index?>" name="monto_pago<?=$index?>">
+                              <input type="number" step="any" min="1000" required class="form-control text-right text-success" value="0" id="monto_pago<?=$index?>" name="monto_pago<?=$index?>">
                               
                               <?php
                             }else{
                               ?>
-                              <input type="number" step="0.01" class="form-control text-right text-success" readonly value="0" id="monto_pago<?=$index?>" name="monto_pago<?=$index?>">
+                              <input type="number" step="any" min="1000" required class="form-control text-right text-success" readonly value="0" id="monto_pago<?=$index?>" name="monto_pago<?=$index?>">
                               <?php
                             } 
                             ?>
@@ -130,7 +130,7 @@ $totalPagadoX=0;
                           <td><input type="text" class="form-control datepicker" value="<?=date('d/m/Y')?>" id="fecha_pago<?=$index?>" name="fecha_pago<?=$index?>"></td>
                           <td>
                             <div class="form-group">
-                               <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosChequeDetalle(<?=$index?>)" data-live-search="true" name="tipo_pago<?=$index?>" id="tipo_pago<?=$index?>" data-style="btn btn-danger">
+                               <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosChequeDetalle(<?=$index?>)" data-live-search="true" name="tipo_pago<?=$index?>" id="tipo_pago<?=$index?>" data-style="btn btn-danger" required>
                                     <option disabled selected="selected" value="">--TIPO--</option>
                                     <?php 
                                      $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where cod_estadoreferencial=1");

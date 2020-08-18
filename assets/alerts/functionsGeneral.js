@@ -10449,6 +10449,7 @@ function pagarSolicitudRecursos(){
   if(monto==""||monto==0||!(tipo_pago>0)||!(proveedores_pago>0)){
     Swal.fire("Informativo!", "Debe llenar los campos requeridos", "warning");
   }else{
+
     if(tipo_pago==1){
       var banco=$("#banco_pago").val();
        if(!(banco>0)){
@@ -10473,7 +10474,10 @@ function pagarSolicitudRecursos(){
       pago=1;
          var parametros={"codigo_detalle":codigo_detalle,"cod_solicitud":cod_solicitud,"cod_pagoproveedor":cod_pagoproveedor,"monto":monto,"saldo":saldo,"tipo_pago":tipo_pago,"proveedores_pago":proveedores_pago,"observaciones_pago":observaciones_pago};
     }
-
+    if(monto<1000){
+      Swal.fire("Informativo!", "Montos Menores a 1000, se pagan con CAJA CHICA", "warning");
+      pago=0;
+    }
     if(parseFloat(monto)>parseFloat(saldo)){
       Swal.fire("Informativo!", "El Monto debe ser Menor al Saldo", "warning");
     }else{

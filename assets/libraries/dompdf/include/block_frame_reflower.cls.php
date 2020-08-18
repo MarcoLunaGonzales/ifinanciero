@@ -499,7 +499,7 @@ class Block_Frame_Reflower extends Frame_Reflower {
       case "centre":
         foreach ($this->_frame->get_line_boxes() as $line) {
           // Centre each line by moving each frame in the line by:
-          $dx = ($width + $line->left - $line->w - $line->right ) / 2;
+          $dx = ((float)$width + (float)$line->left - (float)$line->w - (float)$line->right ) / 2;
           
           foreach ($line->get_frames() as $frame) {
             // Block frames are not aligned by text-align
@@ -723,7 +723,7 @@ class Block_Frame_Reflower extends Frame_Reflower {
                                          $style->margin_bottom,
                                          $style->padding_bottom), $cb["h"]);
 
-    $cb_x = $x + $left_margin + $style->length_in_pt(array($style->border_left_width, 
+    $cb_x = (float)$x + (float)$left_margin + (float)$style->length_in_pt(array($style->border_left_width, 
                                                            $style->padding_left), $cb["w"]);
 
     $cb_y = $y + $top;

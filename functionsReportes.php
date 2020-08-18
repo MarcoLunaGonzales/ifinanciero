@@ -16,18 +16,6 @@ function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta,$
     if($soloCredito==1){
       $queryCredito=" and f.cod_tipopago=217";
     }
-
-    /*$sql="SELECT f.codigo, f.cod_solicitudfacturacion, 
-    (SELECT uo.abreviatura from unidades_organizacionales uo where uo.codigo=f.cod_unidadorganizacional)uo, 
-    (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, 
-    f.fecha_factura, f.razon_social, f.nit, f.cod_personal, 
-    (SELECT SUM((cantidad*precio)-descuento_bob) as importe from facturas_ventadetalle where cod_facturaventa=f.codigo )as importe_real, f.nro_factura, 
-    (SELECT concat(p.paterno,' ',p.primer_nombre) from personal p where p.codigo=f.cod_personal) as facturador, da.porcentaje, 
-    (SELECT concat(p.paterno,' ',p.primer_nombre) from personal p, solicitudes_facturacion sf where p.codigo=sf.cod_personal and sf.codigo=f.cod_solicitudfacturacion) as solicitante
-      FROM facturas_venta f, facturas_venta_distribucion da,solicitudes_facturacion_tipospago tp
-WHERE da.cod_factura=f.codigo and f.cod_solicitudfacturacion=tp.cod_solicitudfacturacion and tp.cod_tipopago in ($formas_pago) and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) 
-    $queryTienda
-    order by area, fecha_factura, nro_factura";*/
     $sql="SELECT f.codigo, f.cod_solicitudfacturacion, 
     (SELECT uo.abreviatura from unidades_organizacionales uo where uo.codigo=f.cod_unidadorganizacional)uo, 
     (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, 
@@ -56,8 +44,6 @@ function obtenerListaVentasArea($unidades,$areas,$desde,$hasta,$soloCredito){
       $queryCredito=" and f.cod_tipopago=217";
     }
 
-    /*$sql="SELECT da.cod_area, (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, SUM(((fd.cantidad*fd.precio)-fd.descuento_bob)*(da.porcentaje/100)*($valorIVA/100))as importe_real FROM facturas_venta f, facturas_ventadetalle fd, facturas_venta_distribucion da,solicitudes_facturacion_tipospago tp WHERE da.cod_factura=f.codigo and f.codigo=fd.cod_facturaventa and fd.cod_facturaventa=da.cod_factura and f.cod_solicitudfacturacion=tp.cod_solicitudfacturacion and tp.cod_tipopago in ($formas_pago)
-        and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) group by area order by area";*/
     $sql="SELECT da.cod_area, (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, SUM(((fd.cantidad*fd.precio)-fd.descuento_bob)*(da.porcentaje/100)*($valorIVA/100))as importe_real FROM facturas_venta f, facturas_ventadetalle fd, facturas_venta_distribucion da WHERE da.cod_factura=f.codigo and f.codigo=fd.cod_facturaventa and fd.cod_facturaventa=da.cod_factura and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) $queryCredito group by area order by area";
     echo $sql;
     $stmt = $dbh->prepare($sql);
@@ -240,6 +226,23 @@ function obtenerListaCuentasEgreso($unidades,$areas,$cuentas,$desde,$hasta){
     return($stmt);
 }
 
+function obtenerListaVentasResumidoAdministrativo($unidades,$areas,$formas,$desde,$hasta,$personal){
 
+    $dbh = new Conexion();
+    $sql="SELECT f.cod_personal,f.codigo, f.cod_solicitudfacturacion, 
+    (SELECT uo.abreviatura from unidades_organizacionales uo where uo.codigo=f.cod_unidadorganizacional)uo, 
+    (SELECT a.abreviatura from areas a where a.codigo=f.cod_area)area,
+    (SELECT t.nombre from tipos_pago t where t.codigo=f.cod_tipopago) as tipo_pago,  
+    f.fecha_factura, f.razon_social, f.nit, f.cod_personal, 
+    (SELECT SUM((cantidad*precio)-descuento_bob) as importe from facturas_ventadetalle where cod_facturaventa=f.codigo )as importe_real, f.nro_factura
+      FROM facturas_venta f
+WHERE f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and f.cod_area in ($areas) 
+    and f.cod_personal in ($personal) and f.cod_tipopago in ($formas)
+    order by fecha_factura desc, nro_factura desc";
+   // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return($stmt);
+}
  ?>
 

@@ -11,11 +11,9 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 ?>
-<!-- formato cabeza fija para pdf-->
 <html><head>
     <link href="../assets/libraries/plantillaPDFSolicitudesRecursos.css" rel="stylesheet" />
    </head><body>
-<!-- fin formato cabeza fija para pdf--> 
 <?php
 
 
@@ -93,94 +91,37 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 
     <table class="table" border="0">
         <tr>
-            <td>
-              <div class="col-sm-6">
-              <div class="form-group">
-                  <label class="bmd-label-static">Nombre</label><br>
-                  <input class="form-control bg-celeste" type="text" name="nombre" readonly value="<?=$nombreX?>" id="nombre"/>
-              </div>
-            </div>
-              <div class="col-sm-6">
-              <div class="form-group">
-                  <label class="bmd-label-static">Responsable</label><br>
-                  <input class="form-control bg-celeste" type="text" name="responsable" readonly value="<?=$responsable?>" id="responsable"/>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                  <label class="bmd-label-static">Fecha Creación</label><br>
-                  <input class="form-control bg-celeste" type="text" name="fecha" value="<?=$fechaX?>" id="fecha" readonly/>
-                  <input class="form-control bg-celeste" type="hidden" name="fecha_curso" value="<?=$fechaCurso?>" id="fecha_curso" readonly/>
-              </div>
-            </div>
-            </td>
-            <td>
-
-             <div class="card col-sm-5">
-        
-        <div class="card-body ">
-          <div class="row">
-            <div class="col-sm-6">
-                  <div class="form-group">
-                  <label class="bmd-label-static">Estado</label><br>
-                  <input class="form-control bg-celeste" type="text" name="estado" value="<?=$estadoX?>" id="estado" readonly/>
-              </div>
-            </div>
-            <?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
-             <div class="col-sm-2">
-                  <div class="form-group">
-                  <label class="bmd-label-static">Area</label><br>
-                  <input class="form-control bg-celeste" type="text" name="area_plan" value="<?=$areaX?>" id="area_plan" readonly/>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="form-group">
-                  <label class="bmd-label-static">Tipo Curso</label><br>
-                  <input class="form-control bg-celeste" type="text" name="tipo_curso" readonly value="<?=$nombreTipoCurso?>" id="tipo_curso"/>
-              </div>
-            </div>
-
-
-          </div>
-        </div>
-      </div>   
-            </td>
-             <td>
-        <div class="card col-sm-7">
-        <div class="card-body ">
-           <div class="row">
-                             
-          <div class="col-sm-2">
-              <div class="form-group">
-                  <label class="bmd-label-static">N. Estudiantes</label><br>
-                  <input class="form-control bg-celeste" type="text" name="alumnos_plan" readonly value="<?=$alumnosX?>" id="alumnos_plan"/>
-              </div>
-            </div>
-           
-            <div class="col-sm-2">
-              <div class="form-group">
-                  <label class="bmd-label-static">Ut. M&iacute;n %</label><br>
-                  <input class="form-control bg-celeste" type="text" name="utilidad_minlocal" readonly value="<?=$utilidadIbnorcaX?>" id="utilidad_minlocal"/>
-              </div>
-            </div>
-            <div class="col-sm-2">
-              <div class="form-group">
-                  <label class="bmd-label-static">Precio</label><br>
-                  <input class="form-control bg-celeste" type="text" name="precio_local" readonly value="<?=$precioLocalX?>" id="precio_local"/>
-              </div>
-            </div>
-            <div class="col-sm-2">
-              <div class="form-group">
-                  <label class="bmd-label-static">Días Curso</label><br>
-                  <input class="form-control bg-celeste" type="text" name="dias_curso" readonly value="<?=$diasCursoXX?>" id="dias_curso"/>
-              </div>
-            </div>
-                            <?php } ?>
-          </div> 
-            </div>
-      </div>          
-            </td>
+            <td>Nombre</td>
+            <td><?=$nombreX?></td>  
+            <td>Responsable</td>
+            <td><?=$responsable?></td>  
         </tr>
+        <tr>
+            <td>Fecha Creación</td>
+            <td><?=$fechaX?></td>  
+            <td>Estado</td>
+            <td><?=$estadoX?></td>  
+        </tr>
+        <?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {?>
+        <tr>
+            <td>Area</td>
+            <td><?=$areaX?></td>  
+            <td>Tipo Curso</td>
+            <td><?=$nombreTipoCurso?></td>  
+        </tr>
+        <tr>
+            <td>N. Estudiantes</td>
+            <td><?=$alumnosX?></td>  
+            <td>Ut. M&iacute;n %</td>
+            <td><?=$utilidadIbnorcaX?></td>  
+        </tr>
+        <tr>
+            <td>Precio</td>
+            <td><?=$precioLocalX?></td>  
+            <td>Días Curso</td>
+            <td><?=$diasCursoXX?></td>  
+        </tr>
+      <?php } ?>
     </table>
 
            <div class="row">
@@ -257,7 +198,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 
                  $codEstadoSimulacion=4; 
                  if($pUtilidadLocal>=$utilidadIbnorcaX&&$pUtilidadExterno>=$utilidadFueraX){
-                    $estiloUtilidad="bg-success text-white";
+                    $estiloUtilidadIbnorca="bg-success text-white";
                     $mensajeText="La Propuesta SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                     $estiloMensaje="text-success font-weight-bold";
                     $codEstadoSimulacion=3;  
@@ -297,8 +238,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
           <div class="row">   
           <div class="col-sm-3">
             <p class="font-weight-bold float-right">DATOS ADICIONALES PARA EL CALCULO</p>
-            <table class="table table-bordered table-condensed" style="font-size:11px;">
-              <tbody>
+            <table class="table table-bordered " style="font-size:11px;">
                 <tr class="bg-celeste">
                   <td  style="font-size:9px !important;"></td>
                   <td class="bg-table-primary text-white">IMPORTE</td>
@@ -315,10 +255,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <td  style="font-size:9px !important;"></td>
                   <td class="bg-table-primary text-white">CANTIDAD</td>
                 </tr>
-                <!--<tr class="bg-celeste">
-                  <td class="text-left bg-table-primary text-white">CANTIDAD DE PARTICIPANTES MINIMA "UTILIZADO"</td>
-                  <td class="text-right font-weight-bold"><?=$alumnosX?></td>
-                </tr>-->
                 
                 <tr class="bg-celeste">
                   <td class="text-left bg-table-primary text-white">CANTIDAD DE PARTICIPANTES</td>
@@ -335,13 +271,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <td class="text-left">PUNTO DE EQUILIBRIO FINANCIERO</td>
                   <td class="text-right font-weight-bold"><?=number_format($puntoEquilibrio, 2, '.', ',')?></td>
                 </tr>
-              </tbody>
             </table>
           </div>
           <div class="col-sm-4">
             <p class="font-weight-bold float-left">&nbsp;</p>
-            <table class="table table-bordered table-condensed" style="font-size:11px;">
-              <tbody>
+            <table class="table table-bordered " style="font-size:11px;">
                 <tr class="bg-celeste">
                   <td  style="font-size:9px !important;"></td>
                   <td class="bg-table-primary text-white">IMPORTE</td>
@@ -382,20 +316,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <td class="text-left">PRECIO DE VENTA CON FACTURA "UTILIZADO"</td>
                   <td class="text-right font-weight-bold"><?=number_format($precioLocalX, 2, '.', ',')?></td>
                 </tr>
-              </tbody>
             </table>
            </div>
            <br><br><br><br><br><br><br>
           <div class="col-sm-5 bg-blanco2">
             <p class="font-weight-bold float-left">DATOS DEL CALCULO x MODULO</p>
-            <table class="table table-bordered table-condensed" style="font-size:11px;">
-              <thead>
+            <table class="table table-bordered " style="font-size:11px;">
                 <tr class="bg-celeste">
-                  <td></td>
-                  <td colspan="2" class="bg-table-primary2 text-white">EN IBNORCA</td>
+                  <td colspan="3" class="bg-table-primary2 text-white">EN IBNORCA</td>
                 </tr>
-              </thead>
-              <tbody>
                 <tr>
                   <td class="text-left bg-table-primary2 text-white">INGRESOS POR VENTAS</td>
                   <td class="text-right font-weight-bold"><?=number_format($ingresoLocal, 2, '.', ',')?></td>
@@ -416,12 +345,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*$ingresoLocal, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>
                 </tr>
-                <tr class="<?=$estiloUtilidad?>">
+                <tr class="">
                   <td class="text-left bg-table-primary2 text-white">UTILIDAD NETA</td>
                   <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=bcdiv($pUtilidadLocal, '1', 2)?> %</td>
                 </tr>
-              </tbody>
             </table>
           <div class="row div-center">
             <h5><p class="<?=$estiloMensaje?>"><?=$mensajeText?></p></h5>
@@ -430,14 +358,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
           </div>
           <div class="col-sm-5 bg-blanco2 div-center">
             <p class="font-weight-bold float-left">DATOS DEL CALCULO PARA <?=$cantidadModuloX?> <?php if($cantidadModuloX>1){ echo "MODULOS";}else{ echo "MODULO";} ?></p>
-            <table class="table table-bordered table-condensed" style="font-size:11px;">
-              <thead>
+            <table class="table table-bordered " style="font-size:11px;">
                 <tr class="bg-celeste">
-                  <td></td>
-                  <td colspan="2" class="bg-table-primary2 text-white">EN IBNORCA</td>
+                  <td colspan="3" class="bg-table-primary2 text-white">EN IBNORCA</td>
                 </tr>
-              </thead>
-              <tbody>
                 <tr>
                   <td class="text-left bg-table-primary2 text-white">MODULOS</td>
                   <td class="text-right font-weight-bold"><?=$cantidadModuloX?></td>
@@ -463,17 +387,14 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   <td class="text-right font-weight-bold"><?=number_format(((($iva+$it)/100)*$ingresoLocal*$cantidadModuloX), 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>
                 </tr>
-                <tr class="<?=$estiloUtilidad?>">
+                <tr class="">
                   <td class="text-left bg-table-primary2 text-white">UTILIDAD NETA</td>
                   <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal*$cantidadModuloX, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($pUtilidadLocal, 2, '.', ',')?> %</td>
                 </tr>
-              </tbody>
             </table>
           
        </div>
-       
-       <!--COSTOS VARIABLES-->
         <?php
 $j=1;
    $stmtUpdate = $dbh->prepare("SELECT distinct c.cod_partidapresupuestaria as codPartida, p.nombre from cuentas_simulacion c,partidas_presupuestarias p where p.codigo=c.cod_partidapresupuestaria and c.cod_simulacioncostos=$codigo");
@@ -496,7 +417,7 @@ $j=1;
     
     <h4 class="font-weight-bold"><center>PARTIDA: <?=$nombrePartida?></center>
     </h4>
-   <table class="table table-condensed table-bordered" style="font-size:11px;">
+   <table class="table  table-bordered" style="font-size:11px;">
          <tr class="text-white bg-naranja">
         <td width="25%">CUENTA</td>
         <td width="35%">DETALLE</td>
@@ -561,13 +482,10 @@ $j=1;
   $j++; 
   }
   ?>
-
       </div>
     </div>
-  </div>
-</div>
-
-<!-- FIN CONTENIDO-->
-<!-- formato pie fijo para pdf-->  
+   </div>
+  </div> 
+ </div> 
+</div> 
 </body></html>
-<!-- fin formato pie fijo para pdf-->

@@ -30,7 +30,7 @@ if(isset($_GET['q'])){
   $sqlAreas="";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (4)) order by sr.fecha desc");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (4)) order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -102,6 +102,9 @@ $item_1=2708;
                             break;
                             case 6:
                               $nEst=50;$barEstado="progress-bar-default";$btnEstado="btn-default";
+                            break;
+                            case 7:
+                              $nEst=55;$barEstado="progress-bar-info";$btnEstado="btn-info";
                             break;
                           }
                           if($codSimulacion!=0){
@@ -202,13 +205,7 @@ $item_1=2708;
                                  </a>
                                  <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
                                     <i class="material-icons text-success">edit</i> Editar Solicitud
-                                 </a>
-                                 <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
-                                    <i class="material-icons text-dark">report</i> Rechazar Solicitud
-                                 </a>
-                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="dropdown-item">
-                                    <i class="material-icons text-danger">clear</i> Anular Solicitud
-                                 </a>--><?php 
+                                 </a><?php 
                                 }else{
                                   if($codEstado==3){
                                     ?>
@@ -224,9 +221,7 @@ $item_1=2708;
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a><?php  
                                   }
-                                ?><!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>" class="dropdown-item">
-                                    <i class="material-icons text-dark">reply</i> Deshacer Cambios
-                                 </a>-->
+                                ?>
                                  <?php 
                                 }
                               }else{
@@ -407,6 +402,9 @@ $item_1=2708;
                             case 6:
                               $nEst=50;$barEstado="progress-bar-default";$btnEstado="btn-default";
                             break;
+                            case 7:
+                              $nEst=55;$barEstado="progress-bar-info";$btnEstado="btn-info";
+                            break;
                           }
                           if($codSimulacion!=0){
                            $nombreCliente="Sin Cliente";
@@ -489,20 +487,12 @@ $item_1=2708;
                                  </a>
                                  <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
                                     <i class="material-icons text-success">edit</i> Editar Solicitud
-                                 </a>
-                                 <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&q=<?=$q?>" class="dropdown-item">
-                                    <i class="material-icons text-dark">report</i> Rechazar Solicitud
-                                 </a>
-                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2&q=<?=$q?>" class="dropdown-item">
-                                    <i class="material-icons text-danger">clear</i> Anular Solicitud
-                                 </a>--><?php 
+                                 </a><?php 
                                 }else{
                                   ?>
                                  
                                  <?php
-                                ?><!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>" class="dropdown-item">
-                                    <i class="material-icons text-dark">reply</i> Deshacer Cambios
-                                 </a>-->
+                                ?>
                                  <?php 
                                 }
                               }else{
@@ -519,19 +509,7 @@ $item_1=2708;
                                  <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0" class="dropdown-item">
                                     <i class="material-icons text-success">edit</i> Editar Solicitud
                                  </a>
-
-                                 <!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=3" class="dropdown-item">
-                                    <i class="material-icons text-success">edit</i> Aprobar Solicitud
-                                 </a>
-                                 <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0" class="dropdown-item">
-                                    <i class="material-icons text-success">edit</i> Editar Solicitud
-                                 </a>
-                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1" class="dropdown-item">
-                                    <i class="material-icons text-dark">report</i> Rechazar Solicitud
-                                 </a>
-                                 <a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=2" class="dropdown-item">
-                                    <i class="material-icons text-danger">clear</i> Anular Solicitud
-                                 </a>--><?php 
+                               <?php 
                                 }else{
                                 ?>
                                  <?php 

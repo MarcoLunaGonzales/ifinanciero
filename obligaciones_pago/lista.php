@@ -196,7 +196,7 @@ $stmt->bindColumn('cod_cajachicadetalle', $cod_cajachicadetalle);
                                     </a><?php 
                                   }else{
                                     if($codEstado==3){
-                                      if(!($cod_cajachicadetalle==""||$cod_cajachicadetalle==0)){
+                                      if(($cod_cajachicadetalle==""||$cod_cajachicadetalle==0)){
                                         ?>
                                        <a href="#" onclick="alerts.showSwal('warning-message-crear-comprobante','<?=$urlGenerarComprobante?>?cod=<?=$codigo?>')" class="dropdown-item">
                                        <i class="material-icons text-success">attach_money</i> Generar Comprobante
@@ -262,97 +262,3 @@ $stmt->bindColumn('cod_cajachicadetalle', $cod_cajachicadetalle);
         </div>
     </div>
 
-
-
-    <!-- small modal -->
-<div class="modal fade modal-arriba modal-primary" id="modal_txtarchivo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
-    <div class="modal-content card">
-               <div class="card-header card-header-primary card-header-text">
-                  <div class="card-text">
-                    <h4>Nuevo Archivo Txt</h4>
-                  </div>
-                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">close</i>
-                  </button>
-                </div>
-                <div class="card-body">
-                  <div>
-                    <center><h4 class="text-muted">Lista de Pagos Aprobados</h4></center>
-                       <table class="table table-bordered table-condensed small">
-                        <thead>
-                         <tr style="background:#21618C; color:#fff;">
-                          <th>H/D</th>
-                           <th>Proveedor</th>
-                          <th>Detalle</th>
-                          <th>Fecha Pago</th>
-                          <th>Fecha Sol.</th>
-                          <th># Sol.</th>
-                          <th>Oficina</th>
-                          <th>Observaciones</th>
-                          <th>Estado</th>
-                         </tr> 
-                        </thead>
-                        <tbody>
-                        <?php
-                        $stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo where sr.cod_estadopago=3 order by sr.codigo desc");
-                        $stmt->execute();
-                        $index=0;
-                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                            $codigo=$row['codigo'];
-                            $nombre_lote=$row['nombre_lote'];
-                            $fecha=$row['fecha'];
-                            $observaciones=$row['observaciones'];
-                            $codComprobante=$row['cod_comprobante'];
-                            $estado=$row['estado'];
-                            $codEstado=$row['cod_estadopago'];
-                            $cod_ebisa=$row['cod_ebisa'];
-
-                          $datosArray=obtenerDatosProveedoresPagoDetalle($codigo);
-                          $descripcion=obtenerGlosaComprobante($codComprobante);
-                          if(strlen($descripcion)>50){
-                            $descripcion=substr($descripcion, 0, 50)."...";
-                          }
-                          if($nombre_lote!=""){
-                            $datosArray[0]="<a href='#' title='".$datosArray[0]."' class='btn btn-primary btn-sm'><i class='material-icons'>view_comfy</i> ".$nombre_lote."</a>";
-                          }
-                          if($cod_ebisa!=0){
-                            $banderaHab=1;
-                          }else{
-                            $banderaHab=0;
-                          }
-                          ?>
-                          <tr>
-                            <td>
-                              <div class="togglebutton">
-                                <label>
-                                   <input type="checkbox" <?=($banderaHab==1)?"checked":"";?> id="modal_checkprov" onclick="activarInputFilaPago(<?=$index?>)">
-                                   <span class="toggle"></span>
-                                </label>
-                              </div>
-                              <input type="hidden" id="codigo_pagofila<?=$index?>" value="<?=$codigo?>" <?=($banderaHab==0)?"readonly":"";?>>
-                             </td>
-                             <td><?=$datosArray[0]?></td>
-                             <td><?=$datosArray[1]?></td>
-                             <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
-                             <td><?=$datosArray[2]?></td>
-                             <td><div class="btn-group"><?=$datosArray[3]?></div></td>
-                             <td><?=$datosArray[4]?></td>
-                             <td><?=$observaciones;?></td>
-                             <td class="text-muted"><?=$estado?></td>
-                          </tr>
-                                      <?php 
-                                      $index++;
-                                     }
-                         ?>
-                         </tbody>
-                       </table>
-                    <input type="hidden" id="cantidad_filaspago" value="<?=$index?>">   
-                </div>
-                <hr>
-                <a href="#" onclick="generarArchivosTXTVarios()" class="btn btn-white float-right" style="background:#F7FF5A; color:#07B46D;" >Generar TXT</a>
-                <br><br>
-      </div>  
-    </div>
-  </div>
-<!--    end small modal -->
