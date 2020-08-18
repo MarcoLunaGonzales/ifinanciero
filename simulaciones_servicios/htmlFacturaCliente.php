@@ -192,6 +192,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 					</tr>';
               	$suma_total=0;
               	$html.='<tr><td></td><td colspan="2"></td><td></td></tr>';
+
 						// if($tipo_impresion==1){//tipo de impresion normal
 						// 	$html.='<td valign="top" height="8%" class="text-right"><h5 style="padding: 0px;margin: 0px;">'.formatNumberDec($cantidad).'</h5></td>'.
 						// 	'<td valign="top" height="8%" colspan="2"><h5 style="padding: 0px;margin: 0px;">'.$observaciones.'</h5></td>'.
@@ -228,7 +229,42 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 							// $html.='&nbsp;<br>';
 							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td></tr>';
 						}	
-					$importe=$suma_total;						
+               				
+       //         				$contador_items=0;
+							// $html.='<td class="text-right" valign="top"><h5 style="padding: 0px;margin: 0px;">';
+							// while ($row = $stmtDesCli->fetch()) 
+							// {
+							// 	$html.=formatNumberDec($row["cantidad"]).'<br>';
+							// 	$contador_items++;
+							// }
+							// for($i=$contador_items;$i<20;$i++){
+							// 	$html.='&nbsp;<br>';
+							// }							
+							
+							// $html.='</h5></td> 
+							// <td valign="top" colspan="2"><h5 style="padding: 0px;margin: 0px;" >';
+							// while ($row = $stmt2DesCli->fetch()) 
+							// {
+							// $html.=$row["descripcion_alterna"].'<br>';
+							// }
+							// $html.='</h5></td>                   
+							// <td class="text-right" valign="top"><h5 style="padding: 0px;margin: 0px;">';
+							// while ($row = $stmt3DesCli->fetch()) 
+							// {
+							// $precio=$row["precio"];
+							// $descuento_bob=$row["descuento_bob"];
+							// $cantidad=$row["cantidad"];
+							// $precio=$precio*$cantidad-$descuento_bob;
+
+							// $html.=formatNumberDec($precio).'<br>';
+							// $suma_total+=$precio;
+							// }
+							// $html.='</h5></td>';
+
+
+							$importe=$suma_total;
+						// } 
+                	// $html.='</tr>';            
                 	$html.='<tr>
                         <td rowspan="3" align="center" style="padding: 0px;margin: 0px;"> ';
                             //GENERAMOS LA CADENA DEL QR
