@@ -33,7 +33,7 @@ $fechaHasta2=$y."-12-31";
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Facturas Generadas</h4>
+                  <h4 class="card-title">Impresión de Facturas</h4>
                 </div>
                 <form class="" action="reporte_facturas_venta_print.php" target="_blank" method="POST">
                 <div class="card-body">
@@ -81,7 +81,7 @@ $fechaHasta2=$y."-12-31";
 	            </div><!--div fechas row-->
                 <div class="card-footer fixed-bottom">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
+				   <a href="../reportes_ventas/" class="<?=$buttonCancel;?>"> Volver </a>
 			  </div>
                </form> 
               </div>	  
