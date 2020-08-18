@@ -1,4 +1,5 @@
 <?php
+ini_set('memory_limit', '-1');
 /**
  * @package dompdf
  * @link    http://dompdf.github.com/
