@@ -81,7 +81,7 @@ $fechaHasta2=$y."-12-31";
 	            </div><!--div fechas row-->
                 <div class="card-footer fixed-bottom">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
+				   <a href="../reportes_ventas/" class="<?=$buttonCancel;?>"> Volver </a>
 			  </div>
                </form> 
               </div>	  
