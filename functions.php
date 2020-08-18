@@ -3987,6 +3987,24 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       $pdf = $dompdf->output();
       file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
   }
+  function descargarPDFFacturas_reporte($nom,$html,$codFactura){//PARA EL REPORTE DE FACTURAS CONJUNTAS
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->set_paper("A4", "portrait");
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));   
+    $mydompdf->set_base_path('assets/libraries/plantillaPDFFactura.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+    //guardar pdf
+    // $pdf = $mydompdf->output();
+    // file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
+  }
 
   function descargarPDFFiniquito($nom,$html){
     //aumentamos la memoria  

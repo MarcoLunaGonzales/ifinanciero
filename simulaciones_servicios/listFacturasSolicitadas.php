@@ -10,7 +10,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  $v=$_GET['v'];
+  if(isset($_GET['']))
+    $v=$_GET['v'];
+  else $v=0;
+  
   $s=$_GET['s'];
   $u=$_GET['u'];
   $globalUser=$_GET['q'];
@@ -340,7 +343,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                             }?>
                                           </div>
                                         </div> <?php 
-                                      }
+                                      }                                    
                                     }
                                 ?>
                                 <div class="btn-group dropdown">
@@ -361,9 +364,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                         <i class="material-icons" title="Imprimir Comprobante">print</i>
                                       </a>  -->
                                        <?php               
-                                      }elseif($cont_facturas>1){ //para factura parcial?>
-                                        <?php 
                                       }
+                                      
                                     }else{// generar facturas                                        
                                       if($codEstado==1){
                                         $cod_tipopago=obtenemosformaPagoSolfact($codigo_facturacion);//fomra pago
@@ -475,6 +477,24 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                       </button>
                                     <?php }
                                   }
+                                  if($codigo_fact_x>0 && $cod_estado_factura_x==3 && $cont_facturas<2){
+                                    $cadenaFacturas=trim($cadenaFacturas,",");
+                                    $cadenaCodFacturas=trim($cadenaCodFacturas,",");
+                                    $correosEnviados=obtenerCorreosEnviadosFactura($cadenaCodFacturas);
+                                    if($correosEnviados!=""){
+                                      $correosEnviados="\nFactura enviada a: \n *".$correosEnviados;
+
+                                    }
+                                    $correosEnviados = preg_replace("[\n|\r|\n\r]", ", ", $correosEnviados);     
+                                    $correosEnviados=trim($correosEnviados,"Factura enviada a:,");
+
+                                    $datos_envio_correo=$cadenaFacturas."######".$correosEnviados;?>
+                                    <a href='#' title="Información de envío de Correo" class="btn btn-primary" onclick="modal_info_enviocorreo_f('<?=$datos_envio_correo;?>')"><i class="material-icons" >email</i></a>
+
+                                    <!-- <button type="button" class="btn btn-default" data-toggle="modal" data-target="modal_info_enviocorreo" onclick="modal_info_enviocorreo_f('<?=$datos_envio_correo;?>')">
+                                      <i class="material-icons" title="Información de envío">email</i>
+                                    </button>       -->
+                                  <?php }
                                 ?>
                               </div></div>
                               </td>

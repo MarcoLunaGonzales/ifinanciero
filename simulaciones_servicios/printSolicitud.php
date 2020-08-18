@@ -28,6 +28,8 @@ try{
   $razon_social = $resultInfo['razon_social'];  
   $nit = $resultInfo['nit'];  
   $observaciones = $resultInfo['observaciones'];  
+  $observaciones_2 = $resultInfo['observaciones_2'];  
+  $obs_devolucion = $resultInfo['obs_devolucion'];  
   $nro_correlativo = $resultInfo['nro_correlativo'];  
   $codigo_alterno = $resultInfo['codigo_alterno'];  
   $tipo_solicitud = $resultInfo['tipo_solicitud'];  
@@ -281,7 +283,8 @@ $html.=  '<header class="header">'.
 
           $html.='<table class="table">
                   <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
-                  <tr><td>&nbsp;'.$observaciones.'</td></tr>
+                  <tr><td>'.mb_strtoupper($observaciones).'.<br>'.mb_strtoupper($observaciones_2).'.<br>'.mb_strtoupper($obs_devolucion).
+                  '.</td></tr>
                 </table><br><br><br>';
           // $cod_tipopago=3;
           //efectivo
@@ -382,7 +385,7 @@ $html.=  '<header class="header">'.
 
 $html.='</body>'.
       '</html>';           
-descargarPDFCajaChica("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDFCajaChica("IBNORCA - ".$nro_correlativo." (".$razon_social.")",$html);
 
 ?>
 

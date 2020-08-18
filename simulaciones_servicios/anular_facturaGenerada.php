@@ -17,10 +17,11 @@ $interno_delete=$_POST['interno_delete'];//1 normal, 2 devolucion
 
 session_start();
 $globalUser=$_SESSION["globalUser"];
-$stmtFActuras = $dbh->prepare("SELECT codigo,nro_factura,nit,razon_social,cod_comprobante,cod_unidadorganizacional,cod_area from facturas_venta where codigo in ($codigos_facturas_x)");
+$stmtFActuras = $dbh->prepare("SELECT codigo,fecha_factura,nro_factura,nit,razon_social,cod_comprobante,cod_unidadorganizacional,cod_area from facturas_venta where codigo in ($codigos_facturas_x)");
 $stmtFActuras->execute();	
 $stmtFActuras->bindColumn('codigo', $codigo_factura);  	
 $stmtFActuras->bindColumn('nro_factura', $nro_factura); 
+$stmtFActuras->bindColumn('fecha_factura', $fecha_factura); 
 $stmtFActuras->bindColumn('nit', $nit_factura); 
 $stmtFActuras->bindColumn('razon_social', $rs_factura); 
 $stmtFActuras->bindColumn('cod_comprobante', $cod_comprobante); 
@@ -50,9 +51,14 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 	$fechaActual=date("Y-m-d H:i:s");		
 	$cod_libretabancaria=obtenerLibretaBancariaFacturaVenta($codigo_factura);//devuelve cadena de codigos de libreta detalle
 	$glosa_libreta=obtenerGlosaLibretaBancariaDetalle($cod_libretabancaria);//la informacion complemetaria de la libreta
+	if($glosa_libreta==null || $glosa_libreta==""){
+		$glosa_libreta="S/N";
+	}
 	$tipoComprobante=3;//traspaso
 	$unidad=5;
-	$codMes=date('m');
+	// $codMes=date('m');
+
+  	$codMes= date("m", strtotime($fecha_factura));
 
 	$codGestion=$_SESSION['globalGestion'];	
 	
@@ -71,10 +77,18 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 	
 	$concepto_contabilizacion="Anulación de ".$cadenaFacturas."/ RS: ".$rs_factura.", Nit: ".$nit_factura."&#010;";	
 	$concepto_contabilizacion.=" Detalle: ".$glosa_libreta;
-	$codComprobante=obtenerCodigoComprobante();
+	// $cod_comprobante=obtenerCodigoComprobante();
 	//insertamos cabecera
-	$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser,$globalUser);	
-	if($flagSuccess){	
+	// $flagSuccess=insertarCabeceraComprobante($cod_comprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser,$globalUser);	
+	$sqlDelete="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";			
+    $stmtDelete = $dbh->prepare($sqlDelete);
+    $stmtDelete->execute();
+
+	$sqlUpdateCabecera="UPDATE comprobantes set glosa='$concepto_contabilizacion',numero='$numeroComprobante',fecha='$fechaActual',cod_tipocomprobante='$tipoComprobante' where codigo=$cod_comprobante";
+    $stmtUpdateCAbecera = $dbh->prepare($sqlUpdateCabecera);
+    $flagSuccess=$stmtUpdateCAbecera->execute();
+
+	if($flagSuccess){
 		//listado del detalle tipo pago
 		$monto_tipopago_total=0;
 		$cod_cuenta_pasivo=0;
@@ -100,18 +114,18 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 		}	
 		$ordenDetalle=1;//
 		$descripcion=$concepto_contabilizacion;	
-		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_total,0,$descripcion,$ordenDetalle);
+		$flagSuccessDet=insertarDetalleComprobante($cod_comprobante,$cod_cuenta_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_total,0,$descripcion,$ordenDetalle);
 		$ordenDetalle++;
 		if($flagSuccessDet){
 			$descripcion=$concepto_contabilizacion;
 			$cod_cuenta=obtenerValorConfiguracion(62);//cod defecto para la anulacion de facturas
 			$cuenta_axiliar=obtenerValorConfiguracion(63);//cod cuenta auxiliar por defecto para la anulacion de facturas		
 			$cod_proveedor=obtenerCodigoProveedorCuentaAux($cuenta_axiliar);	
-			$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,$cuenta_axiliar,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_tipopago_total,$descripcion,$ordenDetalle);	
+			$flagSuccessDet=insertarDetalleComprobante($cod_comprobante,$cod_cuenta,$cuenta_axiliar,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_tipopago_total,$descripcion,$ordenDetalle);	
 		}
 		//buscamos el cod_Detalle_comprobante
 		$cod_comprobante_detalle=0;
-		$stmtdetalleCom = $dbh->prepare("SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante and orden=2");
+		$stmtdetalleCom = $dbh->prepare("SELECT codigo from comprobantes_detalle where cod_comprobante=$cod_comprobante and orden=2");
 		$stmtdetalleCom->execute();			
 		$stmtdetalleCom->bindColumn('codigo', $cod_comprobante_detalle);
 		while ($row = $stmtdetalleCom->fetch()) {						
@@ -125,7 +139,7 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 			$stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
 			$flagSuccess=$stmtEstadoCuenta->execute();			
 		}else{			
-            $sqldeletecomprobante="DELETE from comprobantes where codigo=$codComprobante";
+            $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
             $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
             $flagSuccess=$stmtDeleteCopmprobante->execute();
 
