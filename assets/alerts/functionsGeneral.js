@@ -579,6 +579,7 @@ function minusCuentaContable(idF){
        $("#nestadosol"+nuevoId).attr("id","nestadosol"+i); //
       }
      } 
+     $('.selectpicker').selectpicker('refresh');
       itemFacturas.splice((idF-1), 1);
       itemEstadosCuentas.splice((idF-1), 1);
       numFilas=numFilas-1;
