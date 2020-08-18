@@ -11,7 +11,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 
 	$dbh = new Conexion();
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
-	set_time_limit(300);
+	set_time_limit(3000);
 
 	$codigo = $codigo;
 	$auxiliar =$auxiliar; //de dónde llega la solicitud para impresión 1=lista facturas (cod_factura) / 2=lista solicitudes (cod_sol_Fact)//3=lista facturas (cod_factura)tienda virtual
