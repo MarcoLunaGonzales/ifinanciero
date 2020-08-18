@@ -23,12 +23,12 @@
               '<th width="5%">Tipo Pago</th>'.
               '<th width="10%">Fecha Factura</th>'.
               '<th width="10%"># Factura</th>'.
+              '<th width="10%"># S.F.</th>'.
               '<th width="15%">NIT</th>'.
               '<th width="10%">Razon Social</th>'.
               '<th width="10%" style="'.$txtEstiloPersonal.'">Personal</th>'.
               '<th width="10%">Origen</th>'.
               '<th width="10%">Importe Bruto</th>'.
-              '<th width="10%">Importe Neto</th>'.
             '</tr>'.
            '</thead>'.
            '<tbody>';
@@ -56,6 +56,7 @@
         $importe_realX=$rowComp['importe_real'];
         $fecha_fac=$rowComp['fecha_factura'];
         $nroFactura=$rowComp['nro_factura'];
+        $nroSolicitudF=$rowComp['nro_solicitud'];
         
         $importe_realXBruto=$importe_realX; 
         $totalImporteBruto+=$importe_realXBruto;
@@ -74,16 +75,16 @@
                       '<td class="text-left font-weight-bold">'.$tipoPago.'</td>'.
                       '<td class="text-right">'.strftime('%d/%m/%Y',strtotime($fecha_fac)).' </td>'.
                       '<td class="text-right">'.$nroFactura.' </td>'.
+                      '<td class="text-right text-primary small">'.$nroSolicitudF.' </td>'.
                       '<td class="text-right">'.$nitX.' </td>'.
                       '<td class="text-left">'.$razon_socialX.'</td>'.
                       '<td class="text-left" style="'.$txtEstiloPersonal.'">'.$personalReporte.'</td>'.
                       '<td class="text-left">'.$origenFacturaX.'</td>'.
                       '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realXBruto).' </td>'. 
-                      '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
                   '</tr>';
     }
         $html.='<tr class="bg-secondary text-white">'.
-                    '<td colspan="9" class="text-center">Importe Total</td>'.
+                    '<td colspan="10" class="text-center">Importe Total</td>'.
                     '<td class="d-none"></td>'.
                     '<td class="d-none"></td>'.
                     '<td class="d-none"></td>'.
@@ -92,8 +93,9 @@
                     '<td class="d-none"></td>'.
                     '<td class="d-none"></td>'.
                     '<td class="d-none"></td>'.
-                    '<td class="text-right font-weight-bold small">'.formatNumberDec($totalImporteBruto).'</td>'.       
-                    '<td class="text-right font-weight-bold small">'.formatNumberDec($totalImporte).'</td>'.      
+                    '<td class="d-none"></td>'.
+                    '<td class="d-none"></td>'.
+                    '<td class="text-right font-weight-bold small">'.formatNumberDec($totalImporteBruto).'</td>'.      
                 '</tr>';
 
     $html.=    '</tbody><tfoot>
@@ -103,12 +105,12 @@
         <th class="small" width="5%"><small>Tipo Pago</small></th>
         <th class="small" width="5%"><small>Fecha</small></th>
         <th class="small" width="3%"><small><small># Factura</small></small></th>
+        <th class="small" width="3%"><small><small># S.F.</small></small></th>
         <th class="small" width="4%"><small>Nit</small></th>
         <th class="small" width="30%"><small>Razón Social</small></th>      
         <th class="small" width="7%"><small>Personal</small></th>
         <th class="small" width="7%"><small>Origen</small></th>
         <th class="small" width="5%"><small>Importe Bruto</small></th>
-        <th class="small" width="5%"><small>Importe Neto</small></th>        
       </tr>
     </tfoot></table>';
 
