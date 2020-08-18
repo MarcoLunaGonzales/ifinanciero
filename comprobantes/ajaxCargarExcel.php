@@ -37,9 +37,10 @@ for ($fila=0; $fila < count($datos); $fila++) {
 
     $unidadDet=codigoUnidadNombre(trim($datos[$fila][0]));//verficia la oficina por el nombre like '%nombre%' retorna codigo
     $areaDet=502;// area por defecto 
-    $debe=(float)str_replace(",", ".", str_replace(".", "", $datos[$fila][2]));
-    $haber=(float)str_replace(",", ".", str_replace(".", "", $datos[$fila][3]));
-
+    //$debe=(float)str_replace(",", ".", str_replace(".", "", $datos[$fila][2]));
+    //$haber=(float)str_replace(",", ".", str_replace(".", "", $datos[$fila][3]));
+    $debe=(float)str_replace(",", "",$datos[$fila][2]);
+    $haber=(float)str_replace(",", "",$datos[$fila][3]);
     $totaldebDet+=$debe;
     $totalhabDet+=$haber;
     $glosa=$datos[$fila][4];
