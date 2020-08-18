@@ -194,7 +194,7 @@ for ($fila=0; $fila < count($datos); $fila++) {
  </div>
  <div class="h-divider"></div>
 </div>
-<script>$("#div"+<?=$idFila?>).bootstrapMaterialDesign();
+<script>$("#cantidad_filas").val(<?=$idFila?>);$("#div"+<?=$idFila?>).bootstrapMaterialDesign();
       numFilas++;
       cantidadItems++;
       filaActiva=numFilas;
