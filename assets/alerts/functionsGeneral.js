@@ -474,6 +474,7 @@ function updateSelect(valor,id){
            idn++;
          }else{
           $('select[name='+id+(i+1)+']').val(valor);
+          relacionSolicitudesSIS((i+1));
          }   
    }
    if(idn!=0){
@@ -503,6 +504,7 @@ function copiarSelect(){
   var area =$('select[name=area]').val();
   updateSelect(unidad,'unidad');
   updateSelect(area,'area');
+
 }
 function minusCuentaContable(idF){
  // alert(idF+"_"+cantidadItems);
