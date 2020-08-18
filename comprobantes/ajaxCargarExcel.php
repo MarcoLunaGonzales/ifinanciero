@@ -21,64 +21,40 @@ $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
-$codigoPlan=$_GET['codigo'];
+$filas=$_POST['filas'];
+$datos=json_decode($_POST['datos']);
 
-$data=obtenerPlantilla($codigoPlan);
-// bindColumn
-$data->bindColumn('codigo', $codigo);
-$data->bindColumn('titulo', $titulo);
-$data->bindColumn('descripcion', $descripcion);
-$data->bindColumn('archivo_json', $archivo);
-$data->bindColumn('cod_unidadorganizacional', $codUnidad);
-$data->bindColumn('cod_personal', $codPersona);
 
-//cuentas auxliliares
- $un=0;
- $sqlCuentasAux="SELECT codigo, nombre,cod_cuenta FROM cuentas_auxiliares order by 2";
- $stmtAux = $dbh->prepare($sqlCuentasAux);
- $stmtAux->execute();
- $stmtAux->bindColumn('codigo', $codigoCuentaAux);
- $stmtAux->bindColumn('nombre', $nombreCuentaAux);
- $stmtAux->bindColumn('cod_cuenta', $codigoCuentaPlan);
- while ($rowAux = $stmtAux->fetch(PDO::FETCH_BOUND)) {  
-      $arrayCuentasAux[$un]['cod_cuenta']=$codigoCuentaPlan;
-      $arrayCuentasAux[$un]['codigo']=$codigoCuentaAux;
-      $arrayCuentasAux[$un]['nombre']=$nombreCuentaAux;
-      $un++;
-  }
-
-while ($rowData = $data->fetch(PDO::FETCH_BOUND)) {
-    //REALIZAR ALGO AQUI
-  $json=json_decode($archivo);
+for ($fila=0; $fila < count($datos); $fila++) { 
 
   $totaldebDet=0;$totalhabDet=0;
-  for ($i=0; $i < count($json[1]); $i++) {
-    if($json[1][$i]->debe==""){
-      $json[1][$i]->debe=0;
+    if($datos[$fila][2]==""){
+      $datos[$fila][2]="0";
     }
-    if($json[1][$i]->haber==""){
-      $json[1][$i]->haber=0;
+    if($datos[$fila][3]==""){
+      $datos[$fila][3]="0";
     }
-    $totaldebDet+=$json[1][$i]->debe;
-    $totalhabDet+=$json[1][$i]->haber;
-    $unidadDet=$json[1][$i]->unidad;
-    $areaDet=$json[1][$i]->area;
-    $debe=$json[1][$i]->debe;
-    $haber=$json[1][$i]->haber;
-    $glosa=$json[1][$i]->glosa_detalle;
-    $cod_cuenta=$json[1][$i]->cuenta;
-    $cod_cuenta_aux=$json[1][$i]->cuenta_auxiliar;
-    $nombre_cuenta=$json[1][$i]->nom_cuenta;
-    $nombre_cuenta_aux=$json[1][$i]->nom_cuenta_auxiliar;
-    $numero_cuenta=$json[1][$i]->n_cuenta;
 
-    $codigoCuenta=$json[1][$i]->cuenta;
-    $codCuentaAuxDet=$json[1][$i]->cuenta_auxiliar;
-    $numeroDet=$json[1][$i]->n_cuenta;
-    $nombreDet=$json[1][$i]->nom_cuenta;
+    $unidadDet=codigoUnidadNombre(trim($datos[$fila][0]));//verficia la oficina por el nombre like '%nombre%' retorna codigo
+    $areaDet=502;
+    $debe=(float)str_replace(",", ".", str_replace(".", "", $datos[$fila][2]));
+    $haber=(float)str_replace(",", ".", str_replace(".", "", $datos[$fila][3]));
 
+    $totaldebDet+=$debe;
+    $totalhabDet+=$haber;
+    $glosa=$datos[$fila][4];
+    $cod_cuenta=obtieneCuentaPorNumero(trim($datos[$fila][1]));
+    $cod_cuenta_aux=0;
+    $nombre_cuenta=nameCuenta($cod_cuenta);
+    $nombre_cuenta_aux='';
+    $numero_cuenta=trim($datos[$fila][1]);
+
+    $codigoCuenta=$cod_cuenta;
+    $codCuentaAuxDet=0;
+    $numeroDet=$numero_cuenta;
+    $nombreDet=$nombre_cuenta;
     
-  $idFila=($i+1); 
+  $idFila=(($filas+$fila)+1); 
       ?>      
 <div id="div<?=$idFila?>">
  <div class="col-md-12">
@@ -185,30 +161,17 @@ while ($rowData = $data->fetch(PDO::FETCH_BOUND)) {
                               ?><script>var nfac=[];
       itemFacturas.push(nfac);var nest=[];
       itemEstadosCuentas.push(nest);itemFacturas[<?=$idFila?>]=[];filaActiva=<?=$idFila?>;</script><?php
-                                    for ($ff=0; $ff < count($arrayCuentasAux) ; $ff++) {
-                                  $codigoCuentaAux=$arrayCuentasAux[$ff]['codigo'];
-                                  $codX=$arrayCuentasAux[$ff]['cod_cuenta'];
-                                  $nombreCuentaAux=$arrayCuentasAux[$ff]['nombre'];
-                                  if($codCuentaAuxDet==$codigoCuentaAux){
-                                    $existeAux=1;
-                                    break;                         
-                                  }
-                               }
-                               if($existeAux==0){
-                                  ?><script>setBusquedaCuenta('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');</script><?php   
-                               }else{
-                                 ?><script>setBusquedaCuenta('<?=$codigoCuenta?>','<?=$numeroCuenta?>','<?=$nombreCuenta?>','<?=$codigoCuentaAux?>','<?=$nombreCuentaAux?>');</script><?php   
-                               }
-                                  ?>
+                                   
+                              ?><script>setBusquedaCuentaEdit('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');</script>   
 
     <div class="col-sm-1">
             <div class="form-group">      
-              <input class="form-control small" type="number" placeholder="0" value="<?=$debe?>" name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01"> 
+              <input class="form-control small" type="number" placeholder="0" value="<?=$debe?>" name="debe<?=$idFila;?>" id="debe<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="any"> 
       </div>
     </div>
     <div class="col-sm-1">
             <div class="form-group">     
-              <input class="form-control small" type="number" placeholder="0" value="<?=$haber?>" name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="0.01">   
+              <input class="form-control small" type="number" placeholder="0" value="<?=$haber?>" name="haber<?=$idFila;?>" id="haber<?=$idFila;?>" onChange="calcularTotalesComprobante(this.id,event);" OnKeyUp="calcularTotalesComprobante(this.id,event);" step="any">   
       </div>
     </div>
     <div class="col-sm-3">
@@ -233,9 +196,12 @@ while ($rowData = $data->fetch(PDO::FETCH_BOUND)) {
  </div>
  <div class="h-divider"></div>
 </div>
-<script>$("#div"+<?=$idFila?>).bootstrapMaterialDesign();</script>
+<script>$("#cantidad_filas").val(<?=$idFila?>);$("#div"+<?=$idFila?>).bootstrapMaterialDesign();
+      numFilas++;
+      cantidadItems++;
+      filaActiva=numFilas;
+</script>
       <?php
   }
-  
-}
+
 ?>
