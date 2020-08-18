@@ -25,4 +25,6 @@ $urlReporteEgresoCompAreaCuenta="reporteEgresoCompAreaCuenta.php";
 
 $urlFacturaAdministrativo="../reportes_ventas_administrativo/reportesLibroVentasAdministrativo.php";
 
+$urlImpresionFacturas="../reportes_facturacion/reporte_facturas_venta_filtro.php";
+
 ?>

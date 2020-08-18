@@ -50,7 +50,7 @@ $i=0;
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Ingresos por Factura y Área</h4>
+                  <h4 class="card-title">Detalle de Recaudaciones</h4>
                 </div>
                 <form class="" action="<?=$urlReporteVentasAdministrativo?>" target="_blank" method="POST">
                 <div class="card-body">
@@ -80,7 +80,7 @@ $i=0;
 					     <div class="col-sm-6">
 	                  		<div class="row">
 			      	             
-				               <label class="col-sm-4 col-form-label">Tipo</label>
+				               <label class="col-sm-4 col-form-label">Forma de Pago</label>
 	                           <div class="col-sm-8">
 				                  <div class="form-group">
 	      	             	           <select class="selectpicker form-control form-control-sm" name="forma_pago[]" id="forma_pago"  data-style="select-with-transition" multiple data-actions-box="true" required>				  	   

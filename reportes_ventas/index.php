@@ -17,7 +17,7 @@ $dbh = new Conexion();
 			<div class="card">
 			  	<div class="card-header <?=$colorCard;?> card-header-text">
 					<div class="card-text">
-				  		<h4 class="card-title">Reportes Ingresos</h4>
+				  		<h4 class="card-title">Reportes de Ingresos</h4>
 					</div>
 			  	</div>
 
@@ -39,11 +39,7 @@ $dbh = new Conexion();
 								<a href="<?=$urlReporteResumidoArea_servicios;?>" class="btn btn-warning"> Ingresos por Servicios</a>
 							</div>
 				  		</div>
-				  		<div class="col-sm-3">
-							<div class="form-group">
-								<a href="<?=$urlFacturaAdministrativo;?>" class="btn btn-default"> Facturas Administrativo</a>
-							</div>
-				  		</div>
+				  		
 					</div>
 			  	</div>
 			</div>
@@ -52,7 +48,7 @@ $dbh = new Conexion();
 		 <div class="card">
 			  	<div class="card-header card-header-default card-header-text">
 					<div class="card-text">
-				  		<h4 class="card-title">Reportes Egresos</h4>
+				  		<h4 class="card-title">Reportes de Egresos</h4>
 					</div>
 			  	</div>
 
@@ -77,5 +73,32 @@ $dbh = new Conexion();
 					</div>
 			  	</div>
 			</div>
+
+
+			<div class="card">
+			  	<div class="card-header card-header-primary card-header-text">
+					<div class="card-text">
+				  		<h4 class="card-title">Reportes Administrativos</h4>
+					</div>
+			  	</div>
+
+			  	<div class="card-body ">
+					<div class="row">
+				  		<div class="col-sm-3">
+							<div class="form-group">
+								<a href="<?=$urlFacturaAdministrativo;?>" class="btn btn-default"> Detalle de Recaudaciones </a>
+							</div>
+				  		</div>
+
+				  		<div class="col-sm-3">
+							<div class="form-group">
+								<a href="<?=$urlImpresionFacturas;?>" class="btn btn-default"> Impresión de Facturas </a>
+							</div>
+				  		</div>
+					</div>
+			  	</div>
+			</div>
+
+
 	</div>
 </div>
