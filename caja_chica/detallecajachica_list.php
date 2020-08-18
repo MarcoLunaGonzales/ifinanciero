@@ -238,10 +238,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                     }                                    
                               ?> 
                                 
-
-                               <!--  <a href='<?=trim($urlFormAgregarFacturas);?>&codigo=<?=$idFila;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' title="Facturas" id="boton_fac<?=$idFila;?>" class="btn btn-info btn-sm btn-fab">
-                                  <i class="material-icons">featured_play_list</i>
-                                </a> -->
+                        
                                
                                 <a href='#' title="Facturas" id="boton_fac<?=$idFila;?>" class="btn btn-info" onclick="listFacDCC(<?=$idFila;?>,'<?=$fecha;?>','<?=$observaciones;?>',<?=$monto;?>,<?=$nro_documento;?>,<?=$codigo_detalle_Cajachica?>);">
                                   <i class="material-icons">featured_play_list</i>
@@ -250,9 +247,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                 <a href='#' title="Distribución de Gastos" class="btn btn-warning" onclick="listDistribuciones_cajachica(<?=$codigo_detalle_Cajachica?>);">
                                   <i class="material-icons">list</i>                                  
                                 </a>
-                               <!--  <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="btn btn-warning">
-                                  <i class="material-icons">list</i>
-                                </a> -->
+                              
                                 <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                   <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
                                 </a>
@@ -303,7 +298,6 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                 <div class="card-header" id="divTituloCuentaDetalle">
                   <h4 class="card-title">DETALLE FACTURAS
 
-                    <!-- <small class="description"><input type="text" name="observaciones_dcc" id="observaciones_dcc" readonly="readonly"><input type="text" name="fecha_dcc" id="fecha_dcc" readonly="readonly"></small> -->
                   </h4>
                   <div class="row" >
                       <label class="col-sm-1 col-form-label text-right"><b>Nro. Doc.</b></label>
@@ -500,7 +494,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                 </div>
               </div>
         
-        <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque ullam autem illum, minima doloribus doloremque adipisci dolorem, repellendus debitis animi laboriosam commodi dolores et sint, quod. Pariatur, repudiandae sequi assumenda.</p>-->
+
       </div>
       <div class="modal-footer justify-content-center">
         
@@ -529,7 +523,7 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
               </div> 
              </div>                     
              <div class="form-group float-right">
-                <!-- <button type="button" class="btn btn-success btn-round" onclick="guardarDistribucionSolicitudRecurso()">Guardar</button> -->
+
              </div>         
           </div>
     </div>

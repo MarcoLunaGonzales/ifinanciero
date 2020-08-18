@@ -11528,6 +11528,23 @@ function actualizar_factura(cod_facturaventa_e,razon_social_e){
     }
   });
 }
+function actualizar_solfacturacion_edit(cod_solicitud_e,cod_tipopagoE){
+  iniciarCargaAjax();
+  $.ajax({
+    type:"POST",
+    data:"cod_solicitud_e="+cod_solicitud_e+"&cod_tipopagoE="+cod_tipopagoE,
+    url:"simulaciones_servicios/ajax_tipopago_edit_conta_save.php",
+    success:function(r){      
+      detectarCargaAjax();
+      if(r==1){
+        var url="index.php?opcion=listFacturasServicios_conta";
+        alerts.showSwal('success-message',url);
+      }else{
+        Swal.fire("ERROR! :(", "Ocurrio un error al actualizar la Solicitud de Facturación.", "warning");        
+      }      
+    }
+  });
+}
 //entidades 
 var unidades_tabla=[]; 
 var unidades_tabla_general=[];
@@ -15101,6 +15118,14 @@ function agregaDatosDetalleFactManual(datos){
   document.getElementById("importe_facmanual").value=number_format(d[5],2);  
 
 }
+function modal_info_enviocorreo_f(datos){  
+  var d=datos.split('######');  
+  $("#modal_info_enviocorreo").modal("show");
+  document.getElementById("nro_factura_enviado").value=d[0];
+  document.getElementById("enviado_a").value=d[1];  
+
+}
+
 var detalle_tabla_general=[];
 var numFilasA=0;
 function filaTablaAGeneral(tabla,index,stringCabecera){
@@ -15658,12 +15683,25 @@ function modal_rechazarFactura(datos){
 
 function modal_editarFactura_sf(datos){    
   var d=datos.split('###');  
-  document.getElementById("nro_factura_e").value=d[0];  //link destino
-  document.getElementById("razon_social_e").value=d[1];  //codigo factura
-  document.getElementById("cod_facturaventa_e").value=d[2];  //codigo factura
-
-  
-  
+  document.getElementById("nro_factura_e").value=d[0];
+  document.getElementById("razon_social_e").value=d[1];
+  document.getElementById("cod_facturaventa_e").value=d[2];
+}
+function modal_editar_sf_conta(datos){    
+  var d=datos.split('###');  
+  document.getElementById("nro_correlativo_e").value=d[0];
+  var cod_tipopago=d[1];
+  document.getElementById("cod_solicitud_e").value=d[2];
+  contenedor = document.getElementById('contenedor_formapago_edit');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_tipopago_edit_conta.php?cod_tipo='+cod_tipopago,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null)  
 }
 function modalDevolverSolicitud_regional(datos){    
   var d=datos.split('###');  

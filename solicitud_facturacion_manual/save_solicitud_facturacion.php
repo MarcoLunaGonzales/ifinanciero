@@ -126,7 +126,7 @@ try {
                     $servicioInsert=$_POST["servicio_a".$i];
                     $CantidadInsert=$_POST["cantidad_a".$i];
                     // $importeInsert=$_POST["modal_importe".$i];
-                    $importeInsert=$_POST["monto_precio".$i];
+                    $importeInsert=$_POST["modal_importe".$i]/$CantidadInsert;
                     
                     $DescricpionInsert=$_POST["descripcion_alterna".$i];
                     $descuento_por_Insert=$_POST["descuento_por".$i];

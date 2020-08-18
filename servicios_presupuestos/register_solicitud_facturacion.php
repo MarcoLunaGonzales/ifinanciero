@@ -394,7 +394,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
 
 
                                     </div>
-
+                                    <?=$index=1;?>
                                     <div id="div<?=$index;?>">  
                                         <div class="h-divider">
                                         
