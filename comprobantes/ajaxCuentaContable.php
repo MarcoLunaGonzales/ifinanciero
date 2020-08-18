@@ -19,7 +19,8 @@ $glosaDet="";
 
 
 ?>
-<div id="comp_row" class="col-md-12">
+<div id="div<?=$idFila?>">
+<div class="col-md-12">
 	<div class="row">
 		<div class="col-sm-1">
         	<div class="form-group">
@@ -158,3 +159,4 @@ $glosaDet="";
 </div>
 
 <div class="h-divider"></div>
+</div>
