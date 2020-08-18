@@ -3,6 +3,43 @@
          display: none !important;
        }      
 </style>
+<!-- modal -->
+<div class="modal fade modal-arriba" id="modalPegarDatosComprobante" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content card">
+      <div class="card-header card-header-primary card-header-text">
+        <div class="card-text">
+          <h4>Pegar Datos - Excel</h4>      
+        </div>
+        
+        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="card-body">  
+        <div class="row">                      
+            <label class="col-sm-2 col-form-label" style="color: #4a148c;">Pega los datos del EXCEL aquí</label>
+            <div class="col-sm-12">
+                <div class="form-group">  
+                  <div id="">
+                   <textarea class="form-control" style="background-color:#E3CEF6;text-align: left;" rows="10" name="data_excel" id="data_excel"></textarea>                        
+                 </div>                                                                                                
+               </div>
+             </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+            <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos" onclick="cargarComprobanteExcel()">Cargar Datos</a>
+            <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas" onclick="generarComprobanteExcel()">Genenerar Filas</a>
+            <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a>
+      </div>
+      <hr>
+      <div id="div_datos_excel"></div>
+    </div>
+  </div>
+</div>
+
 <!-- modal libreta bancaria -->
 <div class="modal fade modal-arriba" id="modalListaMayoresCuenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
   <div class="modal-dialog modal-xl" role="document">
@@ -353,17 +390,22 @@
     	      	<div class="form-group col-sm-3">
             		<!--<label for="nro_cuenta" class="bmd-label-floating">Nro. Cuenta:</label>-->
                 <input type="hidden" id="nro_cuenta_id" name="nro_cuenta_id">
-            		<input type="number" class="form-control" style="background-color:#E3CEF6;text-align: left" id="nro_cuenta" name="nro_cuenta" onkeypress="buscarCuentaList('numero'); pulsar(event);" onkeyDown="buscarCuentaList('numero');" onkeyUp="buscarCuentaList('numero');" autofocus>
+            		<input type="number" class="form-control" style="background-color:#E3CEF6;text-align: left" id="nro_cuenta" name="nro_cuenta" onkeypress=" pulsar(event);" onkeyDown="pulsar(event);" onkeyUp="pulsar(event);" autofocus><!--onkeypress="buscarCuentaList('numero'); pulsar(event);" onkeyDown="buscarCuentaList('numero');" onkeyUp="buscarCuentaList('numero');"-->
           		</div>
           		<div class="form-group col-sm-3">
             		<!--<label for="cuenta" class="bmd-label-floating">Cuenta:</label>-->
                 <input type="hidden" id="cuenta_id" name="cuenta_id">
-            		<input type="text" class="form-control" id="cuenta" style="background-color:#E3CEF6;text-align: left" name="cuenta" onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');">
+            		<input type="text" class="form-control" id="cuenta" style="background-color:#E3CEF6;text-align: left" name="cuenta" onkeypress="pulsar(event)" onkeyDown="pulsar(event);" onkeyUp="pulsar(event);"><!--onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
           		</div>
-              <div class="form-group col-sm-3">
+              <div class="form-group col-sm-2">
                 <!--<label for="cuenta" class="bmd-label-floating">Cuenta Auxiliar:</label>-->
                 <input type="hidden" id="cuenta_id_auxiliar" name="cuenta_id_auxiliar">
-                <input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" id="cuenta_auxiliar_modal" name="cuenta_auxiliar_modal" onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');">
+                <input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" id="cuenta_auxiliar_modal" name="cuenta_auxiliar_modal" onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"><!--onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
+              </div>
+              <div class="form-group col-sm-2">
+                  <button type="button" class="btn btn-danger btn-sm" onclick="buscarCuenta(form1);">
+                    <i class="material-icons">search</i> Buscar
+                  </button>
               </div>
           		<div class="form-group col-sm-2">
 	              <select class="selectpicker form-control form-control-sm" name="padre" id="padre" data-style="<?=$comboColor;?>" onchange="buscarCuenta(form1);">
@@ -379,11 +421,7 @@
 			  	           ?>
 			       </select>
 			    </div>
-    	      	<div class="form-group col-sm-1">
-      		        <button type="button" class="btn btn-just-icon btn-danger btn-link" onclick="buscarCuenta(form1);">
-      		        	<i class="material-icons">search</i>
-      		        </button>
-          		</div>
+    	      	
           	</div>
           	<div class="row" id="divResultadoBusqueda">
               <?php 

@@ -146,6 +146,19 @@
      return($nombreX);
   }
 
+  function obtieneCuentaPorNumero($numero){
+     
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT codigo FROM plan_cuentas where numero=:numero");
+     $stmt->bindParam(':numero',$numero);
+     $stmt->execute();
+     $codigo=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigo=$row['codigo'];
+     }
+     return($codigo);
+  }
+
   function obtieneNuevaCuenta($codigo){//ESTA FUNCION TRABAJA CON UNA CUENTA FORMATEADA CON PUNTOS
      $dbh = new Conexion();
      $nivelCuenta=buscarNivelCuenta($codigo);
@@ -580,6 +593,19 @@
         $nombreX=$row['nombre'];
      }
      return($nombreX);
+  }
+
+  function codigoUnidadNombre($nombre){
+    $nombre=strtolower($nombre);
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT codigo FROM unidades_organizacionales where lower(nombre) like '%$nombre%'");
+     $stmt->execute();
+
+     $codigo=5;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigo=$row['codigo'];
+     }
+     return($codigo);
   }
 
   function namePersonalCompleto($codigo){
