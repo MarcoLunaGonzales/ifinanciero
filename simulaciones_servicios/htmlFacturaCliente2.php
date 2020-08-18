@@ -243,36 +243,7 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td></tr>';
 						}	
                				
-       //         				$contador_items=0;
-							// $html.='<td class="text-right" valign="top"><h5 style="padding: 0px;margin: 0px;">';
-							// while ($row = $stmtDesCli->fetch()) 
-							// {
-							// 	$html.=formatNumberDec($row["cantidad"]).'<br>';
-							// 	$contador_items++;
-							// }
-							// for($i=$contador_items;$i<20;$i++){
-							// 	$html.='&nbsp;<br>';
-							// }							
-							
-							// $html.='</h5></td> 
-							// <td valign="top" colspan="2"><h5 style="padding: 0px;margin: 0px;" >';
-							// while ($row = $stmt2DesCli->fetch()) 
-							// {
-							// $html.=$row["descripcion_alterna"].'<br>';
-							// }
-							// $html.='</h5></td>                   
-							// <td class="text-right" valign="top"><h5 style="padding: 0px;margin: 0px;">';
-							// while ($row = $stmt3DesCli->fetch()) 
-							// {
-							// $precio=$row["precio"];
-							// $descuento_bob=$row["descuento_bob"];
-							// $cantidad=$row["cantidad"];
-							// $precio=$precio*$cantidad-$descuento_bob;
 
-							// $html.=formatNumberDec($precio).'<br>';
-							// $suma_total+=$precio;
-							// }
-							// $html.='</h5></td>';
 
 
 							$importe=$suma_total;
@@ -294,18 +265,22 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
                             $html.= '<img src="'.$fileName.'"/>';
                             // echo '<img src="'.$fileName.'"/>';        
                         $html.='</td>
-                        <td style="border-right: hidden;border-bottom: hidden;" valign="bottom" >';
-                          $entero=floor($importe);
-                          $decimal=$importe-$entero;
-                          $centavos=round($decimal*100);
-                          if($centavos<10){
-                            $centavos="0".$centavos;
-                          }
-                          $html.='<span class="bold table-title"><small>Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</small></span>
-                          '; 
-                          $html.='</td>
-                        <td align="right" style="border-left: hidden;border-bottom: hidden;" colspan="2" valign="bottom"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>
-                    </tr>
+                         <td  colspan="3">';
+                        	$html.='<table class="table">'.
+		             			'<tr ><td style="padding: 0px;margin: 0px;border-right: hidden;border-bottom: hidden;border-top: hidden;border-left: hidden;" valign="top">';
+								$entero=floor($importe);
+								$decimal=$importe-$entero;
+								$centavos=round($decimal*100);
+								if($centavos<10){
+									$centavos="0".$centavos;
+								}
+	                          	$html.='<span class="bold table-title"><small>Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</small></span>'; 
+			                    $html.='</td>
+		                        <td align="right" style="border-left: hidden;border-bottom: hidden; border-top: hidden;border-right: hidden;" valign="bottom"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>';
+		             			$html.='<tr >'.
+		             		'</table >
+		             	</td>';
+                    $html.='</tr>
                     <tr><td colspan="3" style="border-top:hidden;" valign="bottom"><span style="padding: 0px;margin: 0px;"><small><small>Forma de Pago: '.$string_formaspago.'</small></small></span></td></tr>
                     <tr>
                         <td style="border-right: hidden"><small><b>CÓDIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</small></td>

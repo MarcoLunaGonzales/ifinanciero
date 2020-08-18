@@ -313,7 +313,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                       </a>
                                       <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_FacManual;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
                                       <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditarSolFac" onclick="modal_editar_sf_conta('<?=$datos_edit;?>')">
-                                        <i class="material-icons" title="Editar Factura">edit</i>
+                                        <i class="material-icons" title="Editar Forma De Pago">edit</i>
                                       </button>
                                     <?php }
                                   ?>
