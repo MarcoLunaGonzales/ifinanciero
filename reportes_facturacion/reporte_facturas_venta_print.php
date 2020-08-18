@@ -31,7 +31,7 @@ while ($row = $stmt2->fetch()) {
 		$htmlConta1=generarHTMLFacCliente($codigo_factura,$auxiliar,$index);
 	    $array_html=explode('@@@@@@', $htmlConta1);
 	    $html.=$array_html[0];
-	    $sw=2;
+	    $sw=2;	    
 	}else{
 		$htmlConta1=generarHTMLFacCliente($codigo_factura,$auxiliar,$index);
 	    $array_html=explode('@@@@@@', $htmlConta1);

@@ -3987,7 +3987,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       $pdf = $dompdf->output();
       file_put_contents("../simulaciones_servicios/facturas/".$nom.".pdf", $pdf);
   }
-  function descargarPDFFacturas_reporte($nom,$html,$codFactura){//PARA EL REPORTE DE FACTURAS CONJUNTAS
+  function descargarPDFFacturas_reporte($nom,$html){//PARA EL REPORTE DE FACTURAS CONJUNTAS
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");
     // Cargamos DOMPDF
