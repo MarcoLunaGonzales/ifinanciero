@@ -31,7 +31,7 @@
 
       <div class="modal-footer">
             <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos" onclick="cargarComprobanteExcel()">Cargar Datos</a>
-            <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas" onclick="generarComprobanteExcel()">Genenerar Filas</a>
+            <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas" onclick="generarComprobanteExcel()">Generar Filas</a>
             <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a>
       </div>
       <hr>

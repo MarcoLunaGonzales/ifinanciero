@@ -182,7 +182,9 @@ while ($rowData = $data->fetch(PDO::FETCH_BOUND)) {
                                 $numeroCuenta=trim($numeroDet);
                                 $nombreCuenta=trim($nombreDet);
                                 $existeAux=0;
-                              ?><script>filaActiva=<?=$idFila?>;</script><?php
+                              ?><script>var nfac=[];
+      itemFacturas.push(nfac);var nest=[];
+      itemEstadosCuentas.push(nest);itemFacturas[<?=$idFila?>]=[];filaActiva=<?=$idFila?>;</script><?php
                                     for ($ff=0; $ff < count($arrayCuentasAux) ; $ff++) {
                                   $codigoCuentaAux=$arrayCuentasAux[$ff]['codigo'];
                                   $codX=$arrayCuentasAux[$ff]['cod_cuenta'];

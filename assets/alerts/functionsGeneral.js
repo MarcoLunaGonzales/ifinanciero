@@ -1357,11 +1357,14 @@ function cargarComprobanteExcel() {
     for(var y in rows) {
       var cells = rows[y].split("\t");
       var row = $('<tr />'); 
-
+      var coli=0;
       var itemsFila=[];
     for(var x in cells) {
-        row.append('<td>'+cells[x]+'</td>');
-       itemsFila.push(cells[x]);
+        if(!(coli==1||coli==3||coli==7||coli==8)){
+          itemsFila.push(cells[x]);
+          row.append('<td>'+cells[x]+'</td>');   
+        }
+        coli++;
     }
     
     if(index==0){

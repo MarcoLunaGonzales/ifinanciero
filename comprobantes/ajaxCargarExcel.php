@@ -37,8 +37,8 @@ for ($fila=0; $fila < count($datos); $fila++) {
 
     $unidadDet=codigoUnidadNombre(trim($datos[$fila][0]));//verficia la oficina por el nombre like '%nombre%' retorna codigo
     $areaDet=502;
-    $debe=(float)str_replace(",", ".", $datos[$fila][2]);
-    $haber=(float)str_replace(",", ".", $datos[$fila][3]);
+    $debe=(float)str_replace(",", ".", str_replace(".", "", $datos[$fila][2]));
+    $haber=(float)str_replace(",", ".", str_replace(".", "", $datos[$fila][3]));
 
     $totaldebDet+=$debe;
     $totalhabDet+=$haber;
@@ -158,7 +158,9 @@ for ($fila=0; $fila < count($datos); $fila++) {
                                 $numeroCuenta=trim($numeroDet);
                                 $nombreCuenta=trim($nombreDet);
                                 $existeAux=0;
-                              ?><script>filaActiva=<?=$idFila?>;</script><?php
+                              ?><script>var nfac=[];
+      itemFacturas.push(nfac);var nest=[];
+      itemEstadosCuentas.push(nest);itemFacturas[<?=$idFila?>]=[];filaActiva=<?=$idFila?>;</script><?php
                                    
                               ?><script>setBusquedaCuentaEdit('<?=$codigoCuenta;?>','<?=$numeroCuenta;?>','<?=$nombreCuenta;?>','0','');</script>   
 
