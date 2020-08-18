@@ -33,7 +33,7 @@ $fechaHasta2=$y."-12-31";
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Facturas Generadas</h4>
+                  <h4 class="card-title">Impresión de Facturas</h4>
                 </div>
                 <form class="" action="reporte_facturas_venta_print.php" target="_blank" method="POST">
                 <div class="card-body">
