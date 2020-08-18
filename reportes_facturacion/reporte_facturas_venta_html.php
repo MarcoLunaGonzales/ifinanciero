@@ -12,9 +12,6 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	$dbh = new Conexion();
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 	set_time_limit(300);
-	//RECIBIMOS LAS VARIABLES
-	// $codigo = $_GET["codigo"];
-	// $auxiliar = $_GET["tipo"];
 
 	$codigo = $codigo;
 	$auxiliar =$auxiliar; //de dónde llega la solicitud para impresión 1=lista facturas (cod_factura) / 2=lista solicitudes (cod_sol_Fact)//3=lista facturas (cod_factura)tienda virtual
@@ -138,6 +135,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
                   '<td  class="td-border-none" width="18%"><b>NIT/CI:</b>&nbsp;'.$nit.'</td>'.
                 '</tr>'.
             '</table>';
+            $html.='<div style="background-image: url(../assets/img/logo_ibnorca_origen_3.jpg);">';
     		$html.='<table class="table2">'.
 				'<thead>'.                
 					'<tr>'.
@@ -184,43 +182,9 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 						for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
 							// $html.='&nbsp;<br>';
 							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td></tr>';
-						}	
-               				
-       //         				$contador_items=0;
-							// $html.='<td class="text-right" valign="top"><h5 style="padding: 0px;margin: 0px;">';
-							// while ($row = $stmtDesCli->fetch()) 
-							// {
-							// 	$html.=formatNumberDec($row["cantidad"]).'<br>';
-							// 	$contador_items++;
-							// }
-							// for($i=$contador_items;$i<20;$i++){
-							// 	$html.='&nbsp;<br>';
-							// }							
-							
-							// $html.='</h5></td> 
-							// <td valign="top" colspan="2"><h5 style="padding: 0px;margin: 0px;" >';
-							// while ($row = $stmt2DesCli->fetch()) 
-							// {
-							// $html.=$row["descripcion_alterna"].'<br>';
-							// }
-							// $html.='</h5></td>                   
-							// <td class="text-right" valign="top"><h5 style="padding: 0px;margin: 0px;">';
-							// while ($row = $stmt3DesCli->fetch()) 
-							// {
-							// $precio=$row["precio"];
-							// $descuento_bob=$row["descuento_bob"];
-							// $cantidad=$row["cantidad"];
-							// $precio=$precio*$cantidad-$descuento_bob;
+						}	     
 
-							// $html.=formatNumberDec($precio).'<br>';
-							// $suma_total+=$precio;
-							// }
-							// $html.='</h5></td>';
-
-
-							$importe=$suma_total;
-						// } 
-                	// $html.='</tr>';            
+						$importe=$suma_total;						
                 	$html.='<tr>
                         <td rowspan="3" align="center" style="padding: 0px;margin: 0px;"> ';
                             //GENERAMOS LA CADENA DEL QR
@@ -254,9 +218,9 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
                         <td style="border-right: hidden"><small><b>CÓDIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</small></td>
                         <td align="right" style="border-left: hidden" colspan="2"><small><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</small></td> 
                     </tr>'.
-             
             	'</tbody>'.                        
         	'</table>'; 
+        	$html.='</div>';
 	        $html.='<table class="table3" >
 	            <tr align="center"><td>&quot;'.obtenerValorConfiguracionFactura(7).'&quot;<br>&quot;'.$leyenda.'&quot;</td></tr>
 	        </table>';
