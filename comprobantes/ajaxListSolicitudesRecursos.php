@@ -10,7 +10,7 @@ $dbh = new Conexion();
 $codigoSeleccionado=$_GET['codigo'];
 $fila=$_GET['fila'];
 
-$sqlEstados="";//"and (sr.cod_estadosolicitudrecurso in (3))";
+$sqlEstados="and (sr.cod_estadosolicitudrecurso in (3))";//"and (sr.cod_estadosolicitudrecurso in (3))";
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(SELECT sum(importe) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo) as monto_solicitado 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
@@ -125,7 +125,7 @@ $stmt->bindColumn('monto_solicitado', $monto_solicitadoX);
                             </a>
                             <?php 
                             if($codigo!=$codigoSeleccionado){
-                             if($codEstado!=3){
+                             if($codEstado==3){
                             ?>
                              <a title="Seleccionar Solicitud" href='#' onclick="ponerCodigoSolicitudComprobante(<?=$fila?>,<?=$codigo;?>)" class="<?=$buttonEdit;?>">
                               <i class="material-icons">check_box</i>

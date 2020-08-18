@@ -889,13 +889,20 @@
             this.api().columns().every( function () {
                 var that = this;
                 $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                  var sumaBruto=0;
                     if ( that.search() !== this.value ) {
-                        that
-                            .search( this.value )
-                            .draw();
+                        that.search( this.value ).draw();
                     }
                 });
             });
+        },
+        footerCallback: function ( row, data, start, end, display ) {
+            var api = this.api();
+            var pageTotal = api.column(10,{page:'current'}).data().reduce( function (a,b) {
+                return parseFloat(a) + parseFloat(b);
+               },0);
+            //alert(pageTotal)
+            $("#importe_bruto").val(pageTotal.toFixed(2));
         },
         "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
