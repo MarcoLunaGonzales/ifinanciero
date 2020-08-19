@@ -54,18 +54,18 @@ $dbh = new Conexion();
 
 			  	<div class="card-body ">
 					<div class="row">
-				  		<div class="col-sm-4">
+				  		<div class="col-sm-3">
 							<div class="form-group">
 								<a href="<?=$urlReporteResumidoEg;?>" class="btn btn-info"> Egreso Detallado</a>
 							</div>
 				  		</div>
 
-				  		<div class="col-sm-4">
+				  		<div class="col-sm-3">
 							<div class="form-group">
 								<a href="<?=$urlReporteResumidoAreaEg;?>" class="btn btn-defult"> Egreso por Área</a>
 							</div>
 				  		</div>
-				  		<div class="col-sm-4">
+				  		<div class="col-sm-3">
 							<div class="form-group">
 								<a href="<?=$urlReporteResumidoAreaCuentaEg;?>" class="btn btn-warning"> Egreso por Área y Cuenta</a>
 							</div>
