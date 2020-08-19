@@ -31,6 +31,20 @@ if(isset($_GET['existe'])&&verificarEdicionComprobanteUsuario($globalUser)!=0){
   $codComprobante=$_GET['existe'];  
 }
 
+if(isset($_GET["personal_encargado"])){
+ //insertamos la distribucion
+  $sqlDel="DELETE FROM solicitud_recursosencargado where cod_solicitudrecurso=$codigo";
+  $stmtDel = $dbh->prepare($sqlDel);
+  $stmtDel->execute();
+  
+  if($_GET["personal_encargado"]>0){
+  $codEncargado=$_GET["personal_encargado"];
+  $sqlInsert="INSERT INTO solicitud_recursosencargado (cod_solicitudrecurso,cod_personal) 
+        VALUES ('$codigo','$codEncargado')";
+  $stmtInsert = $dbh->prepare($sqlInsert);
+  $stmtInsert->execute();  
+  } 
+}
 
 
 //fecha hora actual para el comprobante (SESIONES)
@@ -507,7 +521,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
               $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
               $stmtDetalleEstadoCuenta->execute();             
               //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
-              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_estadocuenta=$codEstadoCuenta,glosa_comprobantedetalle='$glosaDetalleProv' where codigo=$codSolicitudDetalleOrigen";
+              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_estadocuenta='$codEstadoCuenta',glosa_comprobantedetalle='$glosaDetalleProv' where codigo='$codSolicitudDetalleOrigen'";
               $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
               $stmtUpdateSolicitudRecursoDetalle->execute();
 
@@ -527,17 +541,6 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
     $flagSuccessCompro=$stmtUpdate->execute();
 
 //FIN DE CREACION DEL COPMROBANTE
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -9086,7 +9086,7 @@ function obtenerEstadoComprobante($codigo){
 
   function obtenerPersonalEncargadoSolicitud($codigo){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT s.cod_personal,CONCAT_WS(' ',p.primer_nombre,p.materno,p.paterno)as nombre from solicitud_recursosencargado s join personal p on p.codigo=s.cod_personal where s.cod_solicitudrecurso=$codigo");
+     $stmt = $dbh->prepare("SELECT s.cod_personal,CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as nombre from solicitud_recursosencargado s join personal p on p.codigo=s.cod_personal where s.cod_solicitudrecurso=$codigo");
      $stmt->execute();
      $data=[];$index=0;$nombres=[];
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -9099,7 +9099,7 @@ function obtenerEstadoComprobante($codigo){
   
   function obtenerNombreConcatenadoEncargadoSolicitudRecurso($codigo){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT CONCAT_WS(' ',p.primer_nombre,p.materno,p.paterno)as nombre from solicitud_recursosencargado s, personal p where s.cod_solicitudrecurso=$codigo and s.cod_personal=p.codigo");
+     $stmt = $dbh->prepare("SELECT CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as nombre from solicitud_recursosencargado s, personal p where s.cod_solicitudrecurso=$codigo and s.cod_personal=p.codigo");
      $stmt->execute();
      $valor="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
