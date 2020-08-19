@@ -140,10 +140,9 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                           <td><?=$unidad;?>- <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSol;?></td>
                           <td><?=$codigoServicio;?></td>
-                          <td><small><?=$nombreProveedor?></small></td>
-                          <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
-                          <td><?=$solicitante;?>
-                          </td>
+                          <td class="text-left"><?=$nombreProveedor?></td>
+                          <td class="text-left"><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
+                          <td class="text-left"><small><?=$solicitante;?></small></td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
                           <td class="text-muted font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
                           <td class="text-muted font-weight-bold"><small><b><?=obtenerNombreConcatenadoEncargadoSolicitudRecurso($codigo)?></b></small></td>
