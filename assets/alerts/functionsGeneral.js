@@ -508,7 +508,7 @@ function copiarSelect(){
 }
 function minusCuentaContable(idF){
  // alert(idF+"_"+cantidadItems);
-      //$('#div'+idF).remove();
+     // $('#div'+idF).remove();
       var elem = document.getElementById('div'+idF);
       elem.parentNode.removeChild(elem);
       if(idF<numFilas){
@@ -525,7 +525,7 @@ function minusCuentaContable(idF){
       filaActiva=numFilas;
       document.getElementById("cantidad_filas").value=numFilas;
       document.getElementById("totalhab").value=numFilas;
-      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems); 
+      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems+" fila:"+idF); 
       calcularTotalesComprobante("null");   
 }
 
@@ -17081,11 +17081,10 @@ function addCuentaContableMedio(obj,filaC) {
       itemEstadosCuentas.push(nfac);
       document.getElementById("cantidad_filas").value=numFilas;
       console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
-      fi = document.getElementById(obj);
+      fi=$("#"+obj);
       contenedor = document.createElement('div');
       contenedor.id = 'div'+numFilas;  
-      fi.type="style";
-      fi.appendChild(contenedor);
+      fi.after(contenedor);
       var divDetalle;
       divDetalle=$("#div"+numFilas);
       //document.getElementById('nro_cuenta').focus();
