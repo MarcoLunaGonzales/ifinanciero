@@ -82,7 +82,7 @@ $mes=$_GET['mes'];
       $stmtDetalleX->execute();                    
       $resultado=$stmtDetalleX->fetch();      
       $cod_solicitudrecurso_sr=$resultado['cod_solicitudrecurso'];
-      $sw_personal=false;
+      $sw_personal=0;
       // echo $codigoX."..";
       if($cod_solicitudrecurso_sr!=0 && $cod_solicitudrecurso_sr!='' && $cod_solicitudrecurso_sr!=null){
         // echo $cod_solicitudrecurso_sr."..";
@@ -92,12 +92,12 @@ $mes=$_GET['mes'];
         $resultado=$stmtDetalleY->fetch();      
         $contador_sr=$resultado['contador'];
         if($contador_sr>0 ){
-          $sw_personal=true;
+          $sw_personal=1;
         }else{
-          $sw_personal=false;
+          $sw_personal=0;
         }
       }else{
-        $sw_personal=true;
+        $sw_personal=1;
       }
 
 
@@ -106,7 +106,7 @@ $mes=$_GET['mes'];
           <td>
           <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <!-- style="display:none"-->
-    	   	<?php if($tipo==2 && $sw_personal){ 
+    	   	<?php if($tipo==2 && $sw_personal>0){ 
               ?>
               <div class="form-check">
                  <label class="form-check-label">
