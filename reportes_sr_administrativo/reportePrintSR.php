@@ -75,12 +75,13 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                               <th style="border:2px solid;"><small><b>Of. - Area</b></small></th>
                               <th style="border:2px solid;"><small><b>Nº Sol.</b></small></th>
                               <th style="border:2px solid;"><small><b>Cod. Servicio</b></small></th>
-                              <th style="border:2px solid;"><small><b>Proveedor</b></small></th>
+                              <th style="border:2px solid;" width="16%"><small><b>Proveedor</b></small></th>
                               <th style="border:2px solid;"><small><b>Cuenta</b></small></th>
                               <th style="border:2px solid;" width="16%"><small><b>Solicitante</b></small></th>
                               <th style="border:2px solid;"><small><b>Fecha</b></small></th>
                               <th style="border:2px solid;" width="16%"><small><b>Observaciones</b></small></th>
                               <th style="border:2px solid;" width="16%"><small><b>Personal Pago</b></small></th>
+                              <th style="border:2px solid;"><small><b>Monto</b></small></th>
                               <th style="border:2px solid;"><small><b>Estado</b></small></th>
                             </tr>
                           </thead>
@@ -146,6 +147,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
                           <td class="text-muted font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
                           <td class="text-muted font-weight-bold"><small><b><?=obtenerNombreConcatenadoEncargadoSolicitudRecurso($codigo)?></b></small></td>
+                          <td><?=number_format(obtenerSumaDetalleSolicitud($codigo),2,'.',',')?></td>
                           <td class="td-actions text-right"><button class="btn <?=$btnEstado?> btn-sm btn-round btn-block"><?=$estado;?></button>
                           </td> 
                         </tr>

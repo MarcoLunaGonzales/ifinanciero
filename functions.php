@@ -6093,8 +6093,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor.=$row['nombre'].",";
      }
-     if (strlen($valor)>22){
-      $valor= substr($valor, 0, 22)."..."; 
+     if (strlen($valor)>32){
+      $valor= substr($valor, 0, 32)."..."; 
      }
      
      return($valor);
@@ -6107,8 +6107,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor.=$row['nombre'].",";
      }
-     if (strlen($valor)>22){
-      $valor= substr($valor, 0, 22)."..."; 
+     if (strlen($valor)>32){
+      $valor= substr($valor, 0, 32)."..."; 
      }
      
      return($valor);
@@ -9105,10 +9105,20 @@ function obtenerEstadoComprobante($codigo){
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor.=$row['nombre'].",";
      }
-     if (strlen($valor)>22){
-      $valor= substr($valor, 0, 22)."..."; 
+     if (strlen($valor)>32){
+      $valor= substr($valor, 0, 32)."..."; 
      }
      return($valor);
+  }
+  function obtenerSumaDetalleSolicitud($codigo){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT sum(importe)as monto from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto'];
+     }
+     return $valor;
   }
 ?>
 
