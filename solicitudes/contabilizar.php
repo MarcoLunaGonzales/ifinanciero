@@ -507,7 +507,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
               $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
               $stmtDetalleEstadoCuenta->execute();             
               //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
-              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_estadocuenta=$codEstadoCuenta,glosa_comprobantedetalle='$glosaDetalleProv' where codigo=$codSolicitudDetalleOrigen";
+              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_estadocuenta='$codEstadoCuenta',glosa_comprobantedetalle='$glosaDetalleProv' where codigo='$codSolicitudDetalleOrigen'";
               $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
               $stmtUpdateSolicitudRecursoDetalle->execute();
 
@@ -527,17 +527,6 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
     $flagSuccessCompro=$stmtUpdate->execute();
 
 //FIN DE CREACION DEL COPMROBANTE
-
-
-
-
-
-
-
-
-
-
-
 
 
 
