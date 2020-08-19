@@ -1,5 +1,5 @@
 <?php
-function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
+function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin,$estado_factura){
 	require_once __DIR__.'/../conexion.php';
 	if($tipo_admin==1){
 		require '../assets/phpqrcode/qrlib.php';
@@ -135,7 +135,6 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
                   '<td  class="td-border-none" width="18%"><b>NIT/CI:</b>&nbsp;'.$nit.'</td>'.
                 '</tr>'.
             '</table>';
-            $html.='<div style="background-image: url(../assets/img/logo_ibnorca_origen_3.jpg);">';
     		$html.='<table class="table2">'.
 				'<thead>'.                
 					'<tr>'.
@@ -179,10 +178,42 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 							$html.='</tr>';
 							$contador_items++;
 						}
-						for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
-							// $html.='&nbsp;<br>';
-							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td></tr>';
-						}	     
+						// $estado_factura=1;
+						if($estado_factura==2){	
+							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;
+							<table class="table">';
+							for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
+							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden; border-left: hidden; border-right: hidden;">&nbsp</td></tr>';
+							}
+							$html.='</table>';
+							$cont_aux=1;
+							for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
+								$cont_aux++;
+							}
+							$html.='</td>
+							<td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;">
+								<table class="table">
+								<tr>
+								<td rowspan="19" colspan="2" style="padding-top: 0px;padding-bottom: 0px;border-bottom: hidden; border-top: hidden;border-left: hidden; border-right: hidden;">
+								<span style="color:#FF0000;font:57px;">ANULADO</span>
+								</td>
+								</tr>
+								</table>
+							</td>
+
+							<td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;">
+								<table class="table">';
+							for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
+							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;border-left: hidden; border-right: hidden;">&nbsp;</td></tr>';
+							}
+							$html.='</table>';
+							$html.='</td></tr>';
+						}else{
+							for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
+								// $html.='&nbsp;<br>';
+								$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td></tr>';
+							}
+						}     
 
 						$importe=$suma_total;						
                 	$html.='<tr>
@@ -220,7 +251,6 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
                     </tr>'.
             	'</tbody>'.                        
         	'</table>'; 
-        	$html.='</div>';
 	        $html.='<table class="table3" >
 	            <tr align="center"><td>&quot;'.obtenerValorConfiguracionFactura(7).'&quot;<br>&quot;'.$leyenda.'&quot;</td></tr>
 	        </table>';

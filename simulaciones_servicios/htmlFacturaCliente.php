@@ -184,125 +184,83 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
                   '<td  class="td-border-none" width="18%"><b>NIT/CI:</b>&nbsp;'.$nit.'</td>'.
                 '</tr>'.
             '</table>';
-    		$html.='<table class="table2">'.               
-					'<tr>'.
-					  '<td width="10%" align="center">CANTIDAD</td> 
-					  <td align="center" colspan="2">DESCRIPCIÓN</td>                   
-					  <td width="5%" align="center"><b>SUBTOTAL</b></td>
-					</tr>';
+    		$html.='<table class="table2">'.
+				'<tr>'.
+				  '<td width="10%" align="center">CANTIDAD</td> 
+				  <td align="center" colspan="2">DESCRIPCIÓN</td>                   
+				  <td width="5%" align="center"><b>SUBTOTAL</b></td>
+				</tr>';
               	$suma_total=0;
               	$html.='<tr><td></td><td colspan="2"></td><td></td></tr>';
+          	        $contador_items=0;
+          	        // $cantidad_por_defecto=20;//cantidad de items por defecto
+          	        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defect
+          	        // $cantidad_por_defecto=obtenerValorConiguracion(66);//cantidad de items por defectoo
 
-						// if($tipo_impresion==1){//tipo de impresion normal
-						// 	$html.='<td valign="top" height="8%" class="text-right"><h5 style="padding: 0px;margin: 0px;">'.formatNumberDec($cantidad).'</h5></td>'.
-						// 	'<td valign="top" height="8%" colspan="2"><h5 style="padding: 0px;margin: 0px;">'.$observaciones.'</h5></td>'.
-						// 	'<td valign="top" height="8%" class="text-right"><h5 style="padding: 0px;margin: 0px;">'.formatNumberDec($importe).'</h5></td>';
-						// 	$suma_total+=$importe;
-						// }else{//imporesion detallada
-              	        $contador_items=0;
-              	        // $cantidad_por_defecto=20;//cantidad de items por defecto
-              	        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defect
-              	        // $cantidad_por_defecto=obtenerValorConiguracion(66);//cantidad de items por defectoo
+               		while ($row = $stmtDesCli->fetch()) 
+					{
+						$html.='<tr>';
+						$html.='<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden;border-top: hidden; font-size: 8px;">';
+						$html.=formatNumberDec($row["cantidad"]);
+						$html.='</td> 
+						<td valign="top" colspan="2" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
+						$html.=mb_strtoupper($row["descripcion_alterna"]);
+						$html.='</td>                   
+						<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
+						$precio=$row["precio"];
+						$descuento_bob=$row["descuento_bob"];
+						$cantidad=$row["cantidad"];
+						$precio=$precio*$cantidad-$descuento_bob;
 
-	               		while ($row = $stmtDesCli->fetch()) 
-						{
-							$html.='<tr>';
-							$html.='<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden;border-top: hidden; font-size: 8px;">';
-							$html.=formatNumberDec($row["cantidad"]);
-							$html.='</td> 
-							<td valign="top" colspan="2" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
-							$html.=mb_strtoupper($row["descripcion_alterna"]);
-							$html.='</td>                   
-							<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
-							$precio=$row["precio"];
-							$descuento_bob=$row["descuento_bob"];
-							$cantidad=$row["cantidad"];
-							$precio=$precio*$cantidad-$descuento_bob;
+						$html.=formatNumberDec($precio);
+						$suma_total+=$precio;
+						$html.='</td>';
+						$html.='</tr>';
+						$contador_items++;
+					}
+					for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
+						// $html.='&nbsp;<br>';
+						$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td></tr>';
+					}
 
-							$html.=formatNumberDec($precio);
-							$suma_total+=$precio;
-							$html.='</td>';
-							$html.='</tr>';
-							$contador_items++;
-						}
-						for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
-							// $html.='&nbsp;<br>';
-							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td></tr>';
-						}	
-               				
-       //         				$contador_items=0;
-							// $html.='<td class="text-right" valign="top"><h5 style="padding: 0px;margin: 0px;">';
-							// while ($row = $stmtDesCli->fetch()) 
-							// {
-							// 	$html.=formatNumberDec($row["cantidad"]).'<br>';
-							// 	$contador_items++;
-							// }
-							// for($i=$contador_items;$i<20;$i++){
-							// 	$html.='&nbsp;<br>';
-							// }							
-							
-							// $html.='</h5></td> 
-							// <td valign="top" colspan="2"><h5 style="padding: 0px;margin: 0px;" >';
-							// while ($row = $stmt2DesCli->fetch()) 
-							// {
-							// $html.=$row["descripcion_alterna"].'<br>';
-							// }
-							// $html.='</h5></td>                   
-							// <td class="text-right" valign="top"><h5 style="padding: 0px;margin: 0px;">';
-							// while ($row = $stmt3DesCli->fetch()) 
-							// {
-							// $precio=$row["precio"];
-							// $descuento_bob=$row["descuento_bob"];
-							// $cantidad=$row["cantidad"];
-							// $precio=$precio*$cantidad-$descuento_bob;
-
-							// $html.=formatNumberDec($precio).'<br>';
-							// $suma_total+=$precio;
-							// }
-							// $html.='</h5></td>';
-
-
-							$importe=$suma_total;
-						// } 
-                	// $html.='</tr>';            
-                	$html.='<tr>
-                        <td rowspan="3" align="center" style="padding: 0px;margin: 0px;"> ';
-                            //GENERAMOS LA CADENA DEL QR
-                            $contenidoQr=$nit_empresa."|".$nro_factura."|".$nro_autorizacion."|".$fecha_factura."|".$importe."|".$importe."|".$codigo_control."|".$nit."|0|0|0|0";
-                            $dir = 'qr_temp/';
-                            if(!file_exists($dir)){
-                                mkdir ($dir);}
-                            $fileName = $dir.$cod_factura.'.png';
-                            $tamanio = 2; //tamaño de imagen que se creará
-                            $level = 'M'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
-                            $frameSize = 1; //marco de qr
-                            $contenido = $contenidoQr;
-                            QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
-                            $html.= '<img src="'.$fileName.'"/>';
-                            // echo '<img src="'.$fileName.'"/>';        
-                        $html.='</td>
-                        <td  colspan="3">';
-                        	$html.='<table class="table">'.
-		             			'<tr ><td style="padding: 0px;margin: 0px;border-right: hidden;border-bottom: hidden;border-top: hidden;border-left: hidden;" valign="top">';
-								$entero=floor($importe);
-								$decimal=$importe-$entero;
-								$centavos=round($decimal*100);
-								if($centavos<10){
-									$centavos="0".$centavos;
-								}
-	                          	$html.='<span class="bold table-title"><small>Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</small></span>'; 
-			                    $html.='</td>
-		                        <td align="right" style="border-left: hidden;border-bottom: hidden; border-top: hidden;border-right: hidden;" valign="bottom"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>';
-		             			$html.='<tr >'.
-		             		'</table >
-		             	</td>';
-                          
-                    $html.='</tr>
-                    <tr><td colspan="3" style="border-top:hidden;" valign="bottom"><span style="padding: 0px;margin: 0px;"><small><small>Forma de Pago: '.$string_formaspago.'</small></small></span></td></tr>
-                    <tr>
-                        <td style="border-right: hidden"><small><b>CÓDIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</small></td>
-                        <td align="right" style="border-left: hidden" colspan="2"><small><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</small></td> 
-                    </tr>'.                     
+					$importe=$suma_total;						
+                $html.='<tr>
+                    <td rowspan="3" align="center" style="padding: 0px;margin: 0px;"> ';
+                        //GENERAMOS LA CADENA DEL QR
+                        $contenidoQr=$nit_empresa."|".$nro_factura."|".$nro_autorizacion."|".$fecha_factura."|".$importe."|".$importe."|".$codigo_control."|".$nit."|0|0|0|0";
+                        $dir = 'qr_temp/';
+                        if(!file_exists($dir)){
+                            mkdir ($dir);}
+                        $fileName = $dir.$cod_factura.'.png';
+                        $tamanio = 2; //tamaño de imagen que se creará
+                        $level = 'M'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
+                        $frameSize = 1; //marco de qr
+                        $contenido = $contenidoQr;
+                        QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
+                        $html.= '<img src="'.$fileName.'"/>';
+                        // echo '<img src="'.$fileName.'"/>';        
+                    $html.='</td>
+                    <td  colspan="3">';
+                    	$html.='<table class="table">'.
+	             			'<tr ><td style="padding: 0px;margin: 0px;border-right: hidden;border-bottom: hidden;border-top: hidden;border-left: hidden;" valign="top">';
+							$entero=floor($importe);
+							$decimal=$importe-$entero;
+							$centavos=round($decimal*100);
+							if($centavos<10){
+								$centavos="0".$centavos;
+							}
+                          	$html.='<span class="bold table-title"><small>Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</small></span>'; 
+		                    $html.='</td>
+	                        <td align="right" style="border-left: hidden;border-bottom: hidden; border-top: hidden;border-right: hidden;" valign="bottom"><b>Total Bs &nbsp;&nbsp;&nbsp;&nbsp;'.formatNumberDec($suma_total).'</b></td>';
+	             			$html.='<tr >'.
+	             		'</table >
+	             	</td>';
+                $html.='</tr>
+                <tr><td colspan="3" style="border-top:hidden;" valign="bottom"><span style="padding: 0px;margin: 0px;"><small><small>Forma de Pago: '.$string_formaspago.'</small></small></span></td></tr>
+                <tr>
+                    <td style="border-right: hidden"><small><b>CÓDIGO DE CONTROL:&nbsp;&nbsp;&nbsp;&nbsp;</b> '.$codigo_control.'</small></td>
+                    <td align="right" style="border-left: hidden" colspan="2"><small><b>FECHA LÍMITE DE EMISIÓN:&nbsp;&nbsp;&nbsp;&nbsp;</b>'.$fecha_limite_emision.'</small></td> 
+                </tr>'.                     
         	'</table>'; 
 	        $html.='<table class="table3" >
 	            <tr align="center"><td>&quot;'.obtenerValorConfiguracionFactura(7).'&quot;<br>&quot;'.$leyenda.'&quot;</td></tr>

@@ -72,7 +72,8 @@ $sql.=" order by Fecha desc;";
             $NombreCliente=$rowPre['NombreCliente'];
             $Fecha=$rowPre['Fecha_x'];
             $idNorma=$rowPre['idNorma'];
-            $Norma=nameNorma($idNorma);
+            $Catalogo=$rowPre['Catalogo'];
+            $Norma=nameNorma($idNorma,$Catalogo);
             $Cantidad=$rowPre['Cantidad'];
             if($Cantidad==null || $Cantidad=='' || $Cantidad==' '){
               $Cantidad=1;

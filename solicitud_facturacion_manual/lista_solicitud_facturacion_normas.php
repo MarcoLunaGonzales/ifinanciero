@@ -52,9 +52,9 @@ $contadorRegistros=0;
                                 <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscador">
                                     <i class="material-icons" title="Buscador Avanzado">search</i>
                                 </button> 
-                                <a href="#" class="btn btn-primary btn-round btn-fab btn-sm" onclick="actualizarRegistroNormas()">
+                                <!-- <a href="#" class="btn btn-primary btn-round btn-fab btn-sm" onclick="actualizarRegistroNormas()">
                                    <i class="material-icons" title="Actualizar Normas">update</i>
-                                </a> 
+                                </a>  -->
                             </div>
                         </div>
                     </div>
@@ -89,8 +89,10 @@ $contadorRegistros=0;
                                         $NombreCliente=$rowPre['NombreCliente'];
                                         $Fecha=$rowPre['Fecha_x'];
                                         $idNorma=$rowPre['idNorma'];
-                                        $Norma=nameNorma($idNorma);
+                                        $Catalogo=$rowPre['Catalogo'];
+                                        $Norma=nameNorma($idNorma,$Catalogo);
                                         $Cantidad=$rowPre['Cantidad'];
+
                                         if($Cantidad==null || $Cantidad=='' || $Cantidad==' '){
                                           $Cantidad=1;
                                         }
