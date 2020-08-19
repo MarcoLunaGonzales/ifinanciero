@@ -23,24 +23,7 @@ $fechaHasta=$y."-".$m."-".$d;
 
 $fechaDesde2=$y."-01-01";
 $fechaHasta2=$y."-12-31";
-
-$dbh = new Conexion();
-$stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.nivel from plan_cuentas p order by p.numero");
-$stmt->execute();
-$i=0;
-  echo "<script>var array_cuenta=[];</script>";
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-	 $codigoX=$row['codigo'];
-	 $numeroX=$row['numero'];
-	 $nombreX=$row['nombre'];
-	 $nivelX=$row['nivel'];
-	 $nombreCuenta=formateaPlanCuenta($numeroX." ".$nombreX,$nivelX);
-	 $arrayNuevo[$i][0]=$codigoX;
-	 $arrayNuevo[$i][1]=$numeroX;
-	 $arrayNuevo[$i][2]=$nombreCuenta;
-	 $arrayNuevo[$i][3]=$nivelX;
-		$i++;
-	}
+  
 ?>
 
 <div class="content">

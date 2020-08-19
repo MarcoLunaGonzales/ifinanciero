@@ -51,7 +51,9 @@
 	        	$monto_recalculado_iva=$importe_total_facturas;
 	        }				        
             //buscamos el tipo de retencion
-            $stmtRetenciones = $dbh->prepare("SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica");
+            $stmtRetenciones = $dbh->prepare("SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica and cod_cuenta=0
+				UNION 
+				SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica and cod_cuenta<>0");
             $stmtRetenciones->execute();
             $stmtRetenciones->bindColumn('cod_cuenta', $cod_cuenta_retencion);
             $stmtRetenciones->bindColumn('porcentaje', $porcentaje_retencion);
@@ -238,7 +240,9 @@
             }
         }else{//compra no tiene factura registrada
 	        //buscamos el tipo de retencion
-	        $stmtRetenciones = $dbh->prepare("SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica");
+	        $stmtRetenciones = $dbh->prepare("SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica and cod_cuenta=0
+				UNION 
+				SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica and cod_cuenta<>0");
 	        $stmtRetenciones->execute();
 	        $stmtRetenciones->bindColumn('cod_cuenta', $cod_cuenta_retencion);
 	        $stmtRetenciones->bindColumn('porcentaje', $porcentaje_retencion);
