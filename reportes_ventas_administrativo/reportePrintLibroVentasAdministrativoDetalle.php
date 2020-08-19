@@ -8,6 +8,15 @@
   <h6 class="card-title">Areas: <?=$areaAbrev;?></h6>
   <h6 class="card-title">Oficinas:<?=$unidadAbrev?></h6>
   <!-- <h6 class="card-title">Formas Pago:<?=$formas_pago_titulo?></h6>   -->
+  <div class="float-right col-sm-6 row">
+    <label class="col-sm-4 col-form-label" style="color:#000000; ">Importe Bruto :</label>
+      <div class="col-sm-8">
+        <div class="form-group">
+         <input type="text" class="form-control" id="importe_bruto" readonly value="0" style="background-color:#E3CEF6;text-align: right;" >
+        </div>
+      </div>           
+  </div>
+  <br>
   <div class="table-responsive">
     <?php
     $txtEstiloPersonal="";
@@ -80,10 +89,10 @@
                       '<td class="text-left">'.$razon_socialX.'</td>'.
                       '<td class="text-left" style="'.$txtEstiloPersonal.'">'.$personalReporte.'</td>'.
                       '<td class="text-left">'.$origenFacturaX.'</td>'.
-                      '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realXBruto).' </td>'. 
+                      '<td class="text-right font-weight-bold">'.number_format($importe_realXBruto,2,'.','').' </td>'. 
                   '</tr>';
     }
-        $html.='<tr class="bg-secondary text-white">'.
+        /*$html.='<tr class="bg-secondary text-white">'.
                     '<td colspan="10" class="text-center">Importe Total</td>'.
                     '<td class="d-none"></td>'.
                     '<td class="d-none"></td>'.
@@ -96,7 +105,7 @@
                     '<td class="d-none"></td>'.
                     '<td class="d-none"></td>'.
                     '<td class="text-right font-weight-bold small">'.formatNumberDec($totalImporteBruto).'</td>'.      
-                '</tr>';
+                '</tr>';*/
 
     $html.=    '</tbody><tfoot>
       <tr style="background:#21618C; color:#fff;">
@@ -118,4 +127,5 @@
     ?>
   </div>
 </div>
+<script>$("#importe_bruto").val(<?=number_format($totalImporteBruto,2,'.','')?>);</script>
               

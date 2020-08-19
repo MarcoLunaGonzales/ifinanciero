@@ -80,10 +80,10 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$debe=$_POST["debe".$i];
 		$haber=$_POST["haber".$i];
 		$glosaDetalle=$_POST["glosa_detalle".$i];
-    
-		
+		$codSolicitudRecurso=$_POST["cod_detallesolicitudsis".$i];
+
     $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-		$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+		$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_solicitudrecurso) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codSolicitudRecurso')";
 		$stmtDetalle = $dbh->prepare($sqlDetalle);
 		$flagSuccessDetalle=$stmtDetalle->execute();	
     
@@ -93,6 +93,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       $stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
       $stmtDetalleUpdate->execute();  
     }
+
     /*ACA INSERTAMOS EL ESTADO DE CUENTAS DE FORMA AUTOMATICA CON LA VALIDACION DE TIPO(DEBE/HABER)*/
     $verificaEC=verificarCuentaEstadosCuenta($cuenta);
     $tipoEstadoCuenta=verificarTipoEstadoCuenta($cuenta); // DEBE O HABER PARA ACUMULAR

@@ -8349,6 +8349,18 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       }  
       return($valor);
     }
+
+    function obtenerCodigoSolicitudRecursoSisComprobante($codigo){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT cod_solicitudrecurso FROM comprobantes_detalle WHERE codigo  = '$codigo'");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+          $valor=$row['cod_solicitudrecurso'];
+      }  
+      return($valor);
+    }
+
     function obtenerDescripcionLibretaDetalleComprobante($codigo){
       $dbh = new Conexion();
       $stmt = $dbh->prepare("SELECT fecha_hora,CONCAT(descripcion,' Info: ',informacion_complementaria) as descripcion FROM libretas_bancariasdetalle WHERE cod_comprobantedetalle = '$codigo'");

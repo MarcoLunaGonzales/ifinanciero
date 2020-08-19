@@ -80,6 +80,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                    <!--<div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div>-->
                    <h4 class="card-title text-center">Detalle de Recaudaciones</h4>
                 </div>
+                
                 <?php
                 include "reportePrintLibroVentasAdministrativoDetalle.php";  
                  ?>

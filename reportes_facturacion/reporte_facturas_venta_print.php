@@ -1,5 +1,7 @@
 <?php //ESTADO FINALIZADO
 
+ini_set('memory_limit', '-1');
+
 require_once __DIR__.'/../conexion.php';
 require_once __DIR__.'/../functions.php';
 require_once 'reporte_facturas_venta_html.php';
