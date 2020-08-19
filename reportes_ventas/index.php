@@ -102,7 +102,7 @@ $dbh = new Conexion();
             <div class="card">
 			  	<div class="card-header card-header-rose card-header-text">
 					<div class="card-text">
-				  		<h4 class="card-title">Reportes SR Administrativos</h4>
+				  		<h4 class="card-title">Reportes Solicitudes de Recursos</h4>
 					</div>
 			  	</div>
 
