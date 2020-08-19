@@ -424,7 +424,7 @@ if(isset($_GET['cod'])){
           <div class="row">
             
             <div class="col-sm-3">
-              <label class="bmd-label-static">PERSONA PROCESAR PAGO</label>
+              <label class="bmd-label-static">Persona que Procesará el Pago</label>
               <?php
               if(verificarEdicionComprobanteUsuario($globalUser)!=0){
                ?>
