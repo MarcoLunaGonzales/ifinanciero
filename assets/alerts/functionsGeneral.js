@@ -17239,3 +17239,37 @@ function cambiarValorElementosComprobante(nuevoId,i,aux,aux2){
        $('.selectpicker').selectpicker(['refresh']);
       console.log(" Filas "+numFilas+":"+aux2+nuevoId+"->"+aux+i);
 }
+
+function contabilizarSolicitudRecursoModal(tipo,nro,monto,cuentas,url,prov,arry){
+  if(tipo==1){
+    $("#titulo_conta").html("Contabilizar Solicitud Recurso");
+    $("#cabecera_conta").attr("style","background:#DA053C !important;color:#fff;");
+    $("#modalListSolEliminados").modal("hide");
+  }else{
+    $("#modalListSolEliminados").modal("hide");
+    $("#titulo_conta").html("Asignar Personal Procesador del Pago");
+    $("#cabecera_conta").attr("style","background:#9D9B9C !important;color:#000;");
+  }
+    var array = arry.split(",");
+    if(array.length>0){
+      $("#personal_encargado").val(array[0]);  
+    }else{
+      $("#personal_encargado").val("-1");
+    }
+    $("#nro_solicitud_conta").val(nro);
+    $("#monto_nombre_conta").val(monto);
+    $("#cuenta_conta").val(cuentas);
+    $("#proveedor_nombre_conta").val(prov);
+   $("#urlEnvioModalConta").val(url);
+   $('.selectpicker').selectpicker('refresh');
+   $("#modalContabilizarSolicitudRecurso").modal("show");
+  }
+function saveContaSolicitudRecursoModal(){
+    var encargado = $("#personal_encargado").val();
+   // alert(encargado);
+    window.location.href=$("#urlEnvioModalConta").val()+"&personal_encargado="+encargado;  
+     $("#personal_encargado").val("-1");
+     $('.selectpicker').selectpicker('refresh');
+     iniciarCargaAjax();
+     $("#modalContabilizarSolicitudRecurso").modal("hide");
+  }

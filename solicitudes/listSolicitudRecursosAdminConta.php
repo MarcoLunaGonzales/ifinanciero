@@ -54,7 +54,12 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
 
 $item_1=2708;
 ?>
-
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <div class="content">
   <div class="container-fluid">
         <div class="row">
@@ -132,6 +137,8 @@ $item_1=2708;
 
                        $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);
                        $otrosPagosCuenta=comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo);
+                       $montoDetalleSoliditud=number_format(obtenerSumaDetalleSolicitud($codigo),2,'.',',');
+                       $arrayEnc=implode(',',obtenerPersonalEncargadoSolicitud($codigo)[0]);
 ?>
                         <tr>
                           <td><?=$unidad;?>- <?=$area;?></td>
@@ -298,8 +305,10 @@ $item_1=2708;
                                   </a>
                                    <?php 
                                   if($otrosPagosCuenta==0){
+                                    
                                     ?>
-                                   <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>')" href='#'  class="dropdown-item">
+                                    <!--onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>')"-->
+                                   <a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="dropdown-item">
                                       <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
                                     </a>
                                     <?php
@@ -437,6 +446,7 @@ $item_1=2708;
                           <th>Cuenta</th>
                           <th>Solicitante</th>
                           <th>Fecha</th>
+                          <th>Personal Pago</th>
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -487,6 +497,8 @@ $item_1=2708;
                         $numeroSolTitulo='<a href="#" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning btn-sm btn-round">'.$numeroSol.'</a>';
                        }
                        $otrosPagosCuenta=comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo);
+                       $montoDetalleSoliditud=number_format(obtenerSumaDetalleSolicitud($codigo),2,'.',',');
+                       $arrayEnc=implode(',',obtenerPersonalEncargadoSolicitud($codigo)[0]);
 ?>
                         <tr>
                           <td><?=$unidad;?> - <?=$area;?></td>
@@ -499,6 +511,7 @@ $item_1=2708;
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
+                          <td class="text-muted font-weight-bold"><small><b><?=obtenerNombreConcatenadoEncargadoSolicitudRecurso($codigo)?></b></small></td>
                           <td class="td-actions text-right">
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
@@ -535,10 +548,13 @@ $item_1=2708;
                                     <a title="Editar Solicitud" href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" target="_blank" class="btn btn-success">
                                       <i class="material-icons">edit</i>
                                     </a>
+                                    <a title="Editar Personal Procesar Pago" onclick="contabilizarSolicitudRecursoModal(2,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlEncargado?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" target="_blank" class="btn btn-default">
+                                      <i class="material-icons text-dark">people_alt</i>
+                                    </a>
                                     <?php 
                                     if($otrosPagosCuenta==0){
                                     ?>
-                                   <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&existe=<?=$codComprobante?>')" href='#'  class="btn btn-danger">
+                                   <a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&existe=<?=$codComprobante?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="btn btn-danger">
                                       <i class="material-icons">assignment_turned_in</i>
                                     </a>
                                     <?php
@@ -658,6 +674,76 @@ $item_1=2708;
       </div>
       <div class="modal-footer">
         <a href="#" class="btn btn-success" onclick="devolverSolicitudRecursoModal()">Aceptar</a>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal reenviar solicitud devuelto -->
+
+
+<!-- modal devolver solicitud -->
+<div class="modal fade" id="modalContabilizarSolicitudRecurso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header" id="cabecera_conta" style="background:#DA053C !important;color:#fff;">
+        <h4 class="modal-title" id="titulo_conta">Contabilizar Solicitud Recurso</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> 
+      </div>
+      <div class="modal-body">        
+        <input type="hidden" name="urlEnvioModalConta" id="urlEnvioModalConta" value="">
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_nro_fact_conta"><small>Nro.<br>Solicitud.</small></span></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="nro_solicitud_conta" id="nro_solicitud_conta" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_cuentas_conta"><small >Cuentas</small></span></label>
+          <div class="col-sm-8">
+            <div class="form-group" >              
+              <input type="text" class="form-control" name="cuenta_conta" id="cuenta_conta" readonly="true" style="background-color:#e2d2e0">
+            </div>
+          </div>
+        </div> 
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_proveedor_conta"><small>Proveedor</small></span></label>
+          <div class="col-sm-8">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="proveedor_nombre_conta" id="proveedor_nombre_conta" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+           <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_monto_conta"><small>Monto</small></span></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="monto_nombre_conta" id="monto_nombre_conta" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+        </div>                
+        <div class="row">
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Persona que Procesará el Pago</small></label>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#f9edf7">
+            <div class="form-group" >              
+              <select class="selectpicker form-control form-control-sm" name="personal_encargado" id="personal_encargado" data-live-search="true" data-size="6" data-style="btn btn-default text-dark">
+                         <option value="-1">Ninguno</option>
+                        <?php 
+                         $stmt3 = $dbh->prepare("SELECT p.codigo,CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as nombre from personal p join configuracion_encargado c on c.cod_personal=p.codigo order by 2");
+                         $stmt3->execute();
+                          while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                           $codigoSel=$rowSel['codigo'];
+                          $nombreSelX=$rowSel['nombre'];
+                          ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                          }
+                        ?>
+                    </select>
+            </div>
+          </div>
+        </div>        
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-success" onclick="saveContaSolicitudRecursoModal()">Guardar</a>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>
     </div>
