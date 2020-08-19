@@ -12,6 +12,7 @@ $stmtX->execute();
 
 session_start();
 $globalAdmin=$_SESSION["globalAdmin"];
+$globalUser=$_SESSION["globalUser"];
 $globalGestion=$_SESSION["globalGestion"];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
@@ -54,8 +55,6 @@ $mes=$_GET['mes'];
   	 $haberX=$row['haber'];
      $codigoExtra=$row['extra'];
      $codCuentaAuxX=$row['cod_cuentaaux'];
-  	 
-
      list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
      $nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);
      $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
@@ -68,12 +67,37 @@ $mes=$_GET['mes'];
      }else{
       $proveedorX=obtenerProveedorCuentaAux($row['cod_cuentaaux']);
      }
-  	 if($haberX>0){?>
+     //buscamos al personal correspondiente
+      $sqlDetalleX="SELECT cod_solicitudrecurso from solicitud_recursosdetalle where cod_estadocuenta=$codigoX limit 1";        
+      $stmtDetalleX = $dbh->prepare($sqlDetalleX);
+      $stmtDetalleX->execute();                    
+      $resultado=$stmtDetalleX->fetch();      
+      $cod_solicitudrecurso_sr=$resultado['cod_solicitudrecurso'];
+      $sw_personal=false;
+      // echo $codigoX."..";
+      if($cod_solicitudrecurso_sr!=0 && $cod_solicitudrecurso_sr!='' && $cod_solicitudrecurso_sr!=null){
+        // echo $cod_solicitudrecurso_sr."..";
+        $sqlDetalleY="SELECT cod_personal from solicitud_recursosencargado where cod_solicitudrecurso=$cod_solicitudrecurso_sr limit 1";
+        $stmtDetalleY = $dbh->prepare($sqlDetalleY);
+        $stmtDetalleY->execute();                    
+        $resultado=$stmtDetalleY->fetch();      
+        $cod_personal_sr=$resultado['cod_personal'];
+        if($cod_personal_sr==$globalUser){
+          $sw_personal=true;
+        }else{
+          $sw_personal=false;
+        }
+      }else{
+        $sw_personal=true;
+      }
+
+
+  	 if($haberX>0 ){?>
     	 <tr class="bg-white" onclick="verDetalleEstadosCuenta2('<?=$i?>')">
           <td>
           <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <!-- style="display:none"-->
-    	   	<?php if($tipo==2){ 
+    	   	<?php if($tipo==2 && $sw_personal){ 
               ?>
               <div class="form-check">
                  <label class="form-check-label">
