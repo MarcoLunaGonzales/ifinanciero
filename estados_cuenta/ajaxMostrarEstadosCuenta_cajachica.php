@@ -39,7 +39,7 @@ $mes=$_GET['mes'];
 	</thead>
 	<tbody id="tabla_estadocuenta">
   <?php
-    $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0  order by e.fecha");
+    $stmt = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_comprobante FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0  order by e.fecha");
     $stmt->execute();
     $i=0;$saldo=0;
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -55,9 +55,16 @@ $mes=$_GET['mes'];
   	 $haberX=$row['haber'];
      $codigoExtra=$row['extra'];
      $codCuentaAuxX=$row['cod_cuentaaux'];
+     $cod_comprobante_x=$row['cod_comprobante'];
      list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
      $nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);
-     $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
+     
+     
+     // $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
+
+     $nombreTipoComprobante=nombreComprobante($cod_comprobante_x);
+
+
      $credito_padre=ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigoX);
      $saldo=$montoX-$credito_padre;
      $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
