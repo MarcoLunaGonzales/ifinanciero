@@ -282,7 +282,7 @@
             fixedHeader: {
               header: true,
               footer: true
-            }
+            },"ordering": false
         } );
 
         // Setup - add a text input to each footer cell
