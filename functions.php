@@ -6247,15 +6247,26 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     }
 
 
-  function nameNorma($codigo){
+  function nameNorma($codigo,$catalogo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT abreviatura FROM normas where codigo=:codigo");
-     $stmt->bindParam(':codigo',$codigo);
-     $stmt->execute();
-     $valor="";
-     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     if($catalogo=='N'){
+      $stmt = $dbh->prepare("SELECT abreviatura FROM v_normas where codigo=:codigo");
+      $stmt->bindParam(':codigo',$codigo);
+      $stmt->execute();
+      $valor="";
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $valor=$row['abreviatura'];
+      }
+     }else{
+      $stmt = $dbh->prepare("SELECT abreviatura FROM v_normas_int where codigo=:codigo");
+      $stmt->bindParam(':codigo',$codigo);
+      $stmt->execute();
+      $valor="";
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row['abreviatura'];
+      }
      }
+     
      return($valor);
   }
 

@@ -422,13 +422,14 @@ $contadorRegistros=0;
                                             for ($i=1;$i<=$total_items-1;$i++){
                                                 if($_POST["idVentaNormas_a".$i]!=''){
                                                     $idVentaNormas=$_POST["idVentaNormas_a".$i];
+                                                    // $Catalogo=$_POST["Catalogo".$i];
                                                     $ids_normas[$i-1]=$idVentaNormas;
                                                 }
                                             }
                                             $stringNormas=implode(",", $ids_normas);
                                             $stringNormas=trim($stringNormas,',');
 
-                                            $queryPr="SELECT IdVentaNormas,idNorma,Precio,Cantidad from ibnorca.ventanormas where IdVentaNormas in ($stringNormas)";
+                                            $queryPr="SELECT IdVentaNormas,idNorma,Precio,Cantidad,Catalogo from ibnorca.ventanormas where IdVentaNormas in ($stringNormas)";
                                            // echo $queryPr;
                                             $stmt = $dbh->prepare($queryPr);
                                             $stmt->execute();
@@ -437,6 +438,7 @@ $contadorRegistros=0;
                                             // echo $queryPr;
                                              $stmt = $dbh->prepare($queryPr);
                                             $stmt->execute();
+
                                         }
                                         $modal_totalmontopre=0;$modal_totalmontopretotal=0;
                                         $descuento_cliente=0;
@@ -446,6 +448,7 @@ $contadorRegistros=0;
                                                 $codCS=488;//por defecto
                                                 $tipoPre=descripcionClaServicio($codCS);                                            
                                                 $cantidadPre=$rowPre['Cantidad'];
+                                                $catalogo=$rowPre['Catalogo'];
                                                 if($cantidadPre==null || $cantidadPre=='' || $cantidadPre==' ')$cantidadPre=1;
                                                 $montoPre=$rowPre['Precio'];
                                                 $descuento_bob_cliente=0; //descuento maximo
@@ -454,7 +457,7 @@ $contadorRegistros=0;
                                                 $descuento_porX=0;
                                                 $descuento_bobX=0;                                                
                                                 $idNorma=$rowPre['idNorma'];
-                                                $descripcion_alternaX=nameNorma($idNorma);
+                                                $descripcion_alternaX=nameNorma($idNorma,$catalogo);
                                                 $montoPre=number_format($montoPre,2,".","");
                                             }else{
                                                 $codigoPre=0;
