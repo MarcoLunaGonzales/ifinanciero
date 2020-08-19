@@ -507,7 +507,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
               $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
               $stmtDetalleEstadoCuenta->execute();             
               //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
-              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_estadocuenta=$codEstadoCuenta,glosa_comprobantedetalle='$glosaDetalleProv' where codigo=$codSolicitudDetalle";
+              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_estadocuenta=$codEstadoCuenta,glosa_comprobantedetalle='$glosaDetalleProv' where codigo=$codSolicitudDetalleOrigen";
               $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
               $stmtUpdateSolicitudRecursoDetalle->execute();
 
@@ -519,52 +519,6 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
   
     }//FIN WHILE DETALLES DE SOLICITUD
 
-
-
-
-
-//RETENCION Y PASIVO SI ESTAN AGRUPADAS
- if($numeroRetencionFactura==1){
-         $debeRet=$sumaRetencionDiferido;
-         $haberRet=0;
-         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-         $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-               VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaRetencion', '$cuentaAuxiliar', '$unidadDetalleGrupal', '$areaDetalleGrupal', '$debeRet', '$haberRet', '$glosaX', '$ii')";
-         $stmtDetalle = $dbh->prepare($sqlDetalle);
-         $flagSuccessDetalle=$stmtDetalle->execute();
-
-         $sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen";
-         $stmtFacturas = $dbh->prepare($sqlActualizarFaturas);
-         $stmtFacturas->execute();
-
-          $haberProv=number_format($sumaProveedorPasivo,2,'.','');
-          $debeProv=0;
-           $tituloFactura="";
-            if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
-              $tituloFactura="F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ";
-            }
-            $glosaDetalleProv="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
-            $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-            $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-            VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaDetalleProv', '$i')";
-            $stmtDetalle = $dbh->prepare($sqlDetalle);
-            $flagSuccessDetalle=$stmtDetalle->execute();
-            print_r($sqlDetalle); 
-            $codProveedorEstado=$codProveedor;
-              //estado de cuentas devengado
-              $codEstadoCuenta=obtenerCodigoEstadosCuenta();
-              $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) 
-              VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '0', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv')";
-              $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
-              $stmtDetalleEstadoCuenta->execute();             
-             //echo $sqlDetalleEstadoCuenta."";
-              //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
-              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_proveedor=$codProveedorEstado,cod_estadocuenta=$codEstadoCuenta,glosa_comprobantedetalle='$glosaDetalleProv' where codigo=$codSolicitudDetalle";
-              $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
-              $stmtUpdateSolicitudRecursoDetalle->execute();
-
-
- }//FIN DE RETENCION Y PASIVO SI ESTAN AGRUPADAS
 
 
     //ACTUALIZAR LA GLOSA DEL COMPROBANTE CABECERA 
