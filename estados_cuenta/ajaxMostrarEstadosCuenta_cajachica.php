@@ -77,12 +77,12 @@ $mes=$_GET['mes'];
       // echo $codigoX."..";
       if($cod_solicitudrecurso_sr!=0 && $cod_solicitudrecurso_sr!='' && $cod_solicitudrecurso_sr!=null){
         // echo $cod_solicitudrecurso_sr."..";
-        $sqlDetalleY="SELECT cod_personal from solicitud_recursosencargado where cod_solicitudrecurso=$cod_solicitudrecurso_sr limit 1";
+        $sqlDetalleY="SELECT count(*) as contador  from solicitud_recursosencargado where cod_solicitudrecurso=$cod_solicitudrecurso_sr and cod_personal =$globalUser ";
         $stmtDetalleY = $dbh->prepare($sqlDetalleY);
         $stmtDetalleY->execute();                    
         $resultado=$stmtDetalleY->fetch();      
-        $cod_personal_sr=$resultado['cod_personal'];
-        if($cod_personal_sr==$globalUser){
+        $contador_sr=$resultado['contador'];
+        if($contador_sr>0 ){
           $sw_personal=true;
         }else{
           $sw_personal=false;
