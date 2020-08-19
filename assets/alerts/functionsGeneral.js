@@ -17120,3 +17120,7 @@ function quitarSolicitudRecursoDelComprobante(){
   $("#numero_solicitud_relacionado").html("");
   $("#modal_solicitudes_recursos").modal("hide");   
 }
+
+function mostrarPersonalEncargadoCierre(){
+  $("#modalEncargadoSolicitud").modal("show");
+}

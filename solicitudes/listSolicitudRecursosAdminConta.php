@@ -79,6 +79,7 @@ $item_1=2708;
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th>Observaciones</th>
+                          <th>Personal</th>
                           <th class="text-right" width="25%">Actions</th>
                         </tr>
                       </thead>
@@ -139,11 +140,13 @@ $item_1=2708;
                           <!--<td><?=$nombreCliente;?></td>-->
                           <td><small><?=$nombreProveedor?></small></td>
                           <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
+
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
                           <td class="text-muted font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
+                          <td class="text-muted font-weight-bold"><small><b><?=obtenerNombreConcatenadoEncargadoSolicitudRecurso($codigo)?></b></small></td>
                           <td class="td-actions text-right">
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>

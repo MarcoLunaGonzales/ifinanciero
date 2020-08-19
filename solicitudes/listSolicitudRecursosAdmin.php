@@ -76,6 +76,7 @@ $item_1=2708;
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th>Observaciones</th>
+                          <th>Personal</th>
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
@@ -139,6 +140,7 @@ $item_1=2708;
                           </td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
                           <td class="text-muted font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
+                          <td class="text-muted font-weight-bold"><small><b><?=obtenerNombreConcatenadoEncargadoSolicitudRecurso($codigo)?></b></small></td>
                           <td class="td-actions text-right">
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>

@@ -66,6 +66,22 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
   $stmtDel = $dbh->prepare($sqlDel);
   $stmtDel->execute();
 
+//insertamos la distribucion
+  $sqlDel="DELETE FROM solicitud_recursosencargado where cod_solicitudrecurso=$codSolicitud";
+  $stmtDel = $dbh->prepare($sqlDel);
+  $stmtDel->execute();
+  
+  $encargados=$_POST["personal_encargado"];
+
+  for ($encar=0; $encar < count($encargados); $encar++) { 
+    $codEncargado=$encargados[$encar];
+        $sqlInsert="INSERT INTO solicitud_recursosencargado (cod_solicitudrecurso,cod_personal) 
+        VALUES ('$codSolicitud','$codEncargado')";
+        $stmtInsert = $dbh->prepare($sqlInsert);
+        $stmtInsert->execute();  
+  }
+
+
   $sqlDeleteFact="SELECT * from solicitud_recursosdetalle where cod_solicitudrecurso=$codSolicitud";
   $stmtDeleteFac = $dbh->prepare($sqlDeleteFact);
   $stmtDeleteFac->execute();
