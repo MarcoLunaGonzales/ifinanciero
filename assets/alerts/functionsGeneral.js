@@ -514,69 +514,7 @@ function minusCuentaContable(idF){
       if(idF<numFilas){
       for (var i = parseInt(idF); i < (numFilas+1); i++) {
         var nuevoId=i+1;
-        $("#numero_fila"+nuevoId).attr("id","numero_fila"+i);
-       $("#numero_fila"+i).html(i);
-       $("#div"+nuevoId).attr("id","div"+i);
-       $("#unidad"+nuevoId).attr("name","unidad"+i);
-       $("#unidad"+nuevoId).attr("onchange","relacionSolicitudesSIS('"+i+"')");
-       $("#unidad"+nuevoId).attr("id","unidad"+i);
-       $("#area"+nuevoId).attr("name","area"+i);
-       $("#area"+nuevoId).attr("id","area"+i);
-       $("#cuenta"+nuevoId).attr("name","cuenta"+i);
-       $("#cuenta"+nuevoId).attr("id","cuenta"+i);
-       $("#cuenta_auxiliar"+nuevoId).attr("name","cuenta_auxiliar"+i);
-       $("#cuenta_auxiliar"+nuevoId).attr("id","cuenta_auxiliar"+i);
-       $("#divCuentaDetalle"+nuevoId).attr("id","divCuentaDetalle"+i);
-       $("#debe"+nuevoId).attr("name","debe"+i);
-       $("#debe"+nuevoId).attr("id","debe"+i);
-       $("#haber"+nuevoId).attr("name","haber"+i);
-       $("#haber"+nuevoId).attr("id","haber"+i);
-       $("#glosa_detalle"+nuevoId).attr("name","glosa_detalle"+i);
-       $("#glosa_detalle"+nuevoId).attr("id","glosa_detalle"+i);
-       $("#boton_remove"+nuevoId).attr("onclick","quitarFilaComprobante('"+i+"');return false;");
-       $("#boton_remove"+nuevoId).attr("id","boton_remove"+i);
-       $("#boton_fac"+nuevoId).attr("onclick","listFac('"+i+"')");
-       $("#boton_fac"+nuevoId).attr("id","boton_fac"+i);
-       $("#nfac"+nuevoId).attr("id","nfac"+i);
-
-       $("#mayor"+nuevoId).attr("onclick","mayorReporteComprobante('"+i+"')");
-       $("#mayor"+nuevoId).attr("id","mayor"+i);
-       $("#cambiar_cuenta"+nuevoId).attr("onclick","editarCuentaComprobante('"+i+"')");
-       $("#cambiar_cuenta"+nuevoId).attr("id","cambiar_cuenta"+i);
-       $("#distribucion"+nuevoId).attr("onclick","nuevaDistribucionPonerFila('"+i+"')");
-       $("#distribucion"+nuevoId).attr("id","distribucion"+i);
-       $("#boton_ret"+nuevoId).attr("onclick","listRetencion('"+i+"')");
-       $("#boton_ret"+nuevoId).attr("id","boton_ret"+i);
-
-       $("#tipo_estadocuentas"+nuevoId).attr("id","tipo_estadocuentas"+i);
-       $("#tipo_proveedorcliente"+nuevoId).attr("id","tipo_proveedorcliente"+i);
-       $("#tipo_estadocuentas_casoespecial"+nuevoId).attr("id","tipo_estadocuentas_casoespecial"+i);
-       $("#proveedorcliente"+nuevoId).attr("id","proveedorcliente"+i);
-       if($("#codigo_detalle"+i).length){
-         $("#codigo_detalle"+nuevoId).attr("id","codigo_detalle"+i);
-       }
-       $("#estados_cuentas"+nuevoId).attr("onclick","verEstadosCuentas('"+i+"',0)");
-       $("#estados_cuentas"+nuevoId).attr("id","estados_cuentas"+i);
-       $("#nestado"+nuevoId).attr("id","nestado"+i);   
-
-       //libreta bancaria  
-       $("#libretas_bancarias"+nuevoId).attr("onclick","verLibretasBancarias('"+i+"')");
-       $("#libretas_bancarias"+nuevoId).attr("id","libretas_bancarias"+i);
-       $("#nestadolib"+nuevoId).attr("id","nestadolib"+i); //
-       $("#cod_detallelibreta"+nuevoId).attr("name","cod_detallelibreta"+i); 
-       $("#cod_detallelibreta"+nuevoId).attr("id","cod_detallelibreta"+i);
-       $("#descripcion_detallelibreta"+nuevoId).attr("id","descripcion_detallelibreta"+i);
-       $("#tipo_libretabancaria"+nuevoId).attr("id","tipo_libretabancaria"+i);
-       //mayores seleccion
-       $("#cerrar_detalles"+nuevoId).attr("onclick","verMayoresCierre('"+i+"')");
-       $("#cerrar_detalles"+nuevoId).attr("id","cerrar_detalles"+i);
-       
-       //sis  
-       $("#cod_detallesolicitudsis"+nuevoId).attr("name","cod_detallesolicitudsis"+i); 
-       $("#cod_detallesolicitudsis"+nuevoId).attr("id","cod_detallesolicitudsis"+i);
-       $("#boton_solicitud_recurso"+nuevoId).attr("onclick","verSolicitudesDeRecursosSis('"+i+"')");
-       $("#boton_solicitud_recurso"+nuevoId).attr("id","boton_solicitud_recurso"+i);
-       $("#nestadosol"+nuevoId).attr("id","nestadosol"+i); //
+        cambiarValorElementosComprobante(nuevoId,i,'','');
       }
      } 
      $('.selectpicker').selectpicker(['refresh']);
@@ -17123,4 +17061,168 @@ function quitarSolicitudRecursoDelComprobante(){
 
 function mostrarPersonalEncargadoCierre(){
   $("#modalEncargadoSolicitud").modal("show");
+}
+
+function addCuentaContableMedio(obj,filaC) {
+  if($("#add_boton").length>0){
+    $("#add_boton").attr("disabled",true);
+  }
+  var glosa_det=$("#glosa").val();
+  var tipoComprobante=document.getElementById("tipo_comprobante").value;
+  console.log("tipocomprobante: "+tipoComprobante);
+  if(tipoComprobante>0){
+      numFilas++;
+      cantidadItems++;
+      filaActiva=parseInt(filaC)+1;
+      //alert(filaActiva);
+      //aumentar un itemfactura
+      var nfac=[];
+      itemFacturas.push(nfac);
+      itemEstadosCuentas.push(nfac);
+      document.getElementById("cantidad_filas").value=numFilas;
+      console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+      fi = document.getElementById(obj);
+      contenedor = document.createElement('div');
+      contenedor.id = 'div'+numFilas;  
+      fi.type="style";
+      fi.appendChild(contenedor);
+      var divDetalle;
+      divDetalle=$("#div"+numFilas);
+      //document.getElementById('nro_cuenta').focus();
+      ajax=nuevoAjax();
+      ajax.open("GET","ajaxCuentaContable.php?idFila="+numFilas+"&glosa="+glosa_det,true);
+      ajax.onreadystatechange=function(){
+        if (ajax.readyState==4) {
+          divDetalle.html(ajax.responseText);
+          divDetalle.bootstrapMaterialDesign();   
+          $('#nro_cuenta').val("");
+          $('#cuenta').val("");//
+          $('#padre').val("");
+          $("#divResultadoBusqueda").html("<div class='form-group col-sm-8'>Resultados de la Búsqueda</div>");
+          recorrerCuentaContable(parseInt(filaC)); 
+          $('.selectpicker').selectpicker("refresh");
+          $('#myModal').modal('show');
+          if($("#add_boton").length>0){
+            $("#add_boton").removeAttr("disabled");
+          }
+       }
+      }   
+      ajax.send(null);
+  }else{
+    console.log('entrando a notify!!!!');
+    $('#msgError').html("<p>Debe seleccionar un tipo de comprobante</p>");
+    $('#modalAlert').modal('show');
+    if($("#add_boton").length){
+            $("#add_boton").removeAttr("disabled");
+    }
+  }
+}
+
+function agregarFilaComprobante(fila){
+  if(fila<numFilas){
+   addCuentaContableMedio('div'+fila,fila);
+  }else{
+   addCuentaContable('s');
+  }
+}
+
+function recorrerCuentaContable(idF){
+  var itemFacturasAux=[];
+  var itemEstadosCuentasAux=[];
+      if(idF<numFilas){
+      for (var f = parseInt(idF+1); f < (numFilas+1); f++) {
+        var nuevoId=f;
+        if(f==numFilas){
+          var i=idF+1;
+        }else{
+         var i=f+1;
+        }
+        //asignar elementos auxiliares        
+        cambiarValorElementosComprobante(nuevoId,i,'test_aux','');
+        itemFacturasAux[i-1]=itemFacturas[nuevoId-1];
+        itemEstadosCuentasAux[i-1]=itemEstadosCuentas[nuevoId-1];
+        console.log(JSON.stringify(itemFacturasAux[i-1]));
+      }
+
+      for (var f = parseInt(idF+1); f < (numFilas+1); f++) {      
+        //asignar elementos originales ordenados
+        cambiarValorElementosComprobante(f,f,'','test_aux');
+        itemFacturas[f-1]=itemFacturasAux[f-1];
+        itemEstadosCuentas[f-1]=itemEstadosCuentasAux[f-1];
+        console.log("******************"+JSON.stringify(itemFacturasAux[f-1]));
+      }
+    }
+    calcularTotalesComprobante("null");       
+}
+
+
+function cambiarValorElementosComprobante(nuevoId,i,aux,aux2){
+   $("#numero_fila"+aux2+nuevoId).attr("id","numero_fila"+aux+i);
+       $("#numero_fila"+aux+i).html(i);
+       $("#div"+aux2+nuevoId).attr("id","div"+aux+i);
+       $("#unidad"+aux2+nuevoId).attr("name","unidad"+aux+i);
+       $("#unidad"+aux2+nuevoId).attr("onchange","relacionSolicitudesSIS('"+i+"')");
+       $("#unidad"+aux2+nuevoId).attr("id","unidad"+aux+i);
+       $("#area"+aux2+nuevoId).attr("name","area"+aux+i);
+       $("#area"+aux2+nuevoId).attr("id","area"+aux+i);
+       $("#cuenta"+aux2+nuevoId).attr("name","cuenta"+aux+i);
+       $("#cuenta"+aux2+nuevoId).attr("id","cuenta"+aux+i);
+       $("#cuenta_auxiliar"+aux2+nuevoId).attr("name","cuenta_auxiliar"+aux+i);
+       $("#cuenta_auxiliar"+aux2+nuevoId).attr("id","cuenta_auxiliar"+aux+i);
+       $("#divCuentaDetalle"+aux2+nuevoId).attr("id","divCuentaDetalle"+aux+i);
+       $("#debe"+aux2+nuevoId).attr("name","debe"+i);
+       $("#debe"+aux2+nuevoId).attr("id","debe"+aux+i);
+       $("#haber"+aux2+nuevoId).attr("name","haber"+aux+i);
+       $("#haber"+aux2+nuevoId).attr("id","haber"+aux+i);
+       $("#glosa_detalle"+aux2+nuevoId).attr("name","glosa_detalle"+aux+i);
+       $("#glosa_detalle"+aux2+nuevoId).attr("id","glosa_detalle"+aux+i);
+       $("#boton_remove"+aux2+nuevoId).attr("onclick","quitarFilaComprobante('"+i+"');return false;");
+       $("#boton_remove"+aux2+nuevoId).attr("id","boton_remove"+aux+i);
+       $("#boton_fac"+aux2+nuevoId).attr("onclick","listFac('"+i+"')");
+       $("#boton_fac"+aux2+nuevoId).attr("id","boton_fac"+aux+i);
+       $("#nfac"+aux2+nuevoId).attr("id","nfac"+aux+i);
+
+       $("#mayor"+aux2+nuevoId).attr("onclick","mayorReporteComprobante('"+i+"')");
+       $("#mayor"+aux2+nuevoId).attr("id","mayor"+aux+i);
+       $("#cambiar_cuenta"+aux2+nuevoId).attr("onclick","editarCuentaComprobante('"+i+"')");
+       $("#cambiar_cuenta"+aux2+nuevoId).attr("id","cambiar_cuenta"+aux+i);
+       $("#distribucion"+aux2+nuevoId).attr("onclick","nuevaDistribucionPonerFila('"+i+"')");
+       $("#distribucion"+aux2+nuevoId).attr("id","distribucion"+aux+i);
+       $("#boton_ret"+aux2+nuevoId).attr("onclick","listRetencion('"+i+"')");
+       $("#boton_ret"+aux2+nuevoId).attr("id","boton_ret"+aux+i);
+
+       $("#tipo_estadocuentas"+aux2+nuevoId).attr("id","tipo_estadocuentas"+aux+i);
+       $("#tipo_proveedorcliente"+aux2+nuevoId).attr("id","tipo_proveedorcliente"+aux+i);
+       $("#tipo_estadocuentas_casoespecial"+aux2+nuevoId).attr("id","tipo_estadocuentas_casoespecial"+aux+i);
+       $("#proveedorcliente"+aux2+nuevoId).attr("id","proveedorcliente"+aux+i);
+       if($("#codigo_detalle"+i).length){
+         $("#codigo_detalle"+aux2+nuevoId).attr("id","codigo_detalle"+aux+i);
+       }
+       $("#estados_cuentas"+aux2+nuevoId).attr("onclick","verEstadosCuentas('"+i+"',0)");
+       $("#estados_cuentas"+aux2+nuevoId).attr("id","estados_cuentas"+aux+i);
+       $("#nestado"+aux2+nuevoId).attr("id","nestado"+aux+i);   
+
+       //libreta bancaria  
+       $("#libretas_bancarias"+aux2+nuevoId).attr("onclick","verLibretasBancarias('"+i+"')");
+       $("#libretas_bancarias"+aux2+nuevoId).attr("id","libretas_bancarias"+aux+i);
+       $("#nestadolib"+aux2+nuevoId).attr("id","nestadolib"+aux+i); //
+       $("#cod_detallelibreta"+aux2+nuevoId).attr("name","cod_detallelibreta"+aux+i); 
+       $("#cod_detallelibreta"+aux2+nuevoId).attr("id","cod_detallelibreta"+aux+i);
+       $("#descripcion_detallelibreta"+aux2+nuevoId).attr("id","descripcion_detallelibreta"+aux+i);
+       $("#tipo_libretabancaria"+aux2+nuevoId).attr("id","tipo_libretabancaria"+aux+i);
+       //mayores seleccion
+       $("#cerrar_detalles"+aux2+nuevoId).attr("onclick","verMayoresCierre('"+i+"')");
+       $("#cerrar_detalles"+aux2+nuevoId).attr("id","cerrar_detalles"+aux+i);
+       
+       //sis  
+       $("#cod_detallesolicitudsis"+aux2+nuevoId).attr("name","cod_detallesolicitudsis"+aux+i); 
+       $("#cod_detallesolicitudsis"+aux2+nuevoId).attr("id","cod_detallesolicitudsis"+aux+i);
+       $("#boton_solicitud_recurso"+aux2+nuevoId).attr("onclick","verSolicitudesDeRecursosSis('"+i+"')");
+       $("#boton_solicitud_recurso"+aux2+nuevoId).attr("id","boton_solicitud_recurso"+aux+i);
+       $("#nestadosol"+aux2+nuevoId).attr("id","nestadosol"+aux+i); //
+
+       $("#boton_agregar_fila"+aux2+nuevoId).attr("onclick","agregarFilaComprobante('"+i+"');return false;");
+       $("#boton_agregar_fila"+aux2+nuevoId).attr("id","boton_agregar_fila"+aux+i);
+       $('.selectpicker').selectpicker(['refresh']);
+      console.log(" Filas "+numFilas+":"+aux2+nuevoId+"->"+aux+i);
 }
