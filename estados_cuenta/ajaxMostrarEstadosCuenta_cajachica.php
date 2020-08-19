@@ -75,7 +75,9 @@ $mes=$_GET['mes'];
       $proveedorX=obtenerProveedorCuentaAux($row['cod_cuentaaux']);
      }
      //buscamos al personal correspondiente
-      $sqlDetalleX="SELECT cod_solicitudrecurso from solicitud_recursosdetalle where cod_estadocuenta=$codigoX limit 1";        
+     $sqlDetalleX="SELECT s.codigo AS cod_solicitudrecurso from solicitud_recursos s where s.cod_comprobante in ('$cod_comprobante_x')";
+
+     // $sqlDetalleX="SELECT cod_solicitudrecurso from solicitud_recursosdetalle where cod_estadocuenta=$codigoX limit 1";        
       $stmtDetalleX = $dbh->prepare($sqlDetalleX);
       $stmtDetalleX->execute();                    
       $resultado=$stmtDetalleX->fetch();      
@@ -118,7 +120,8 @@ $mes=$_GET['mes'];
               <?php    
     	    } ?>
     	    </td>
-          <td class="text-center small"><?=$nombreUnidadO;?></td>
+          <td class="text-center small"><?=$sw_personal." ".$sqlDetalleX." ".$sqlDetalleY;?> <?=$nombreUnidadO;?></td>
+          <!--td class="text-center small"><?=$nombreUnidadO;?></td-->
           <td class="text-center small"><?=$nombreTipoComprobante;?></td>
           <td class="text-left small"><?=$fechaComprobante;?></td>
           <td class="text-left small"><?=$fechaX;?></td>
