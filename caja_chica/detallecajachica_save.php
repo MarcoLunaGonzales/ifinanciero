@@ -89,13 +89,13 @@ try {
             $flagSuccess=$stmtrendiciones->execute();
             //insertamos estado_de_cuentas y comprobantes
             if($cod_comprobante_ec>0){//llebga el cod de estado de cuenta
-                $sqlEstadoCuenta="SELECT e.cod_comprobantedetalle From estados_cuenta e where e.codigo=$cod_comprobante_ec limit 1"; 
-                    $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
-                $stmtEstadoCuenta->execute();                    
-                $resultado=$stmtEstadoCuenta->fetch();
-                $cod_comprobantedetalle=$resultado['cod_comprobantedetalle'];
+                // $sqlEstadoCuenta="SELECT e.cod_comprobantedetalle From estados_cuenta e where e.codigo=$cod_comprobante_ec limit 1"; 
+                //     $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
+                // $stmtEstadoCuenta->execute();                    
+                // $resultado=$stmtEstadoCuenta->fetch();
+                // $cod_comprobantedetalle=$resultado['cod_comprobantedetalle'];
 
-                $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)values('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobantedetalle','$cuenta_auxiliar1','$codigo')");
+                $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle)values('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobante_ec','$cuenta_auxiliar1','$codigo')");
                 $flagSuccess=$stmtContraCuenta->execute();
                 if($flagSuccess){
                     //busacmos el codigo de estado de cuenta

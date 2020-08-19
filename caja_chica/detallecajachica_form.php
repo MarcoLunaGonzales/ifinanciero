@@ -200,14 +200,16 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 <label class="col-sm-2 col-form-label">Tipo Retención</label>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <select name="tipo_retencion" id="tipo_retencion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>                                    
+                      <div id="div_contenedor_tiporetencion">  
+                        <select name="tipo_retencion" id="tipo_retencion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
                           <option value="" disabled selected="selected">-Retenciones-</option>
                             <?php                                     
                             $stmtTipoRet = $dbh->query("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order by 2");
                             while ($row = $stmtTipoRet->fetch()){ ?>
                                 <option <?=($cod_retencion==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                             <?php } ?>
-                        </select>                                  
+                        </select>  
+                      </div>                                  
                     </div>
                 </div>
 
