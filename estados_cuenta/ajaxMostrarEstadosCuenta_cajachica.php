@@ -75,12 +75,14 @@ $mes=$_GET['mes'];
       $proveedorX=obtenerProveedorCuentaAux($row['cod_cuentaaux']);
      }
      //buscamos al personal correspondiente
-      $sqlDetalleX="SELECT cod_solicitudrecurso from solicitud_recursosdetalle where cod_estadocuenta=$codigoX limit 1";        
+     $sqlDetalleX="SELECT s.codigo AS cod_solicitudrecurso from solicitud_recursos s where s.cod_comprobante in ('$cod_comprobante_x')";
+
+     // $sqlDetalleX="SELECT cod_solicitudrecurso from solicitud_recursosdetalle where cod_estadocuenta=$codigoX limit 1";        
       $stmtDetalleX = $dbh->prepare($sqlDetalleX);
       $stmtDetalleX->execute();                    
       $resultado=$stmtDetalleX->fetch();      
       $cod_solicitudrecurso_sr=$resultado['cod_solicitudrecurso'];
-      $sw_personal=false;
+      $sw_personal=0;
       // echo $codigoX."..";
       if($cod_solicitudrecurso_sr!=0 && $cod_solicitudrecurso_sr!='' && $cod_solicitudrecurso_sr!=null){
         // echo $cod_solicitudrecurso_sr."..";
@@ -90,12 +92,12 @@ $mes=$_GET['mes'];
         $resultado=$stmtDetalleY->fetch();      
         $contador_sr=$resultado['contador'];
         if($contador_sr>0 ){
-          $sw_personal=true;
+          $sw_personal=1;
         }else{
-          $sw_personal=false;
+          $sw_personal=0;
         }
       }else{
-        $sw_personal=true;
+        $sw_personal=1;
       }
 
 
@@ -104,7 +106,7 @@ $mes=$_GET['mes'];
           <td>
           <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <!-- style="display:none"-->
-    	   	<?php if($tipo==2 && $sw_personal){ 
+    	   	<?php if($tipo==2 && $sw_personal>0){ 
               ?>
               <div class="form-check">
                  <label class="form-check-label">
@@ -118,7 +120,8 @@ $mes=$_GET['mes'];
               <?php    
     	    } ?>
     	    </td>
-          <td class="text-center small"><?=$nombreUnidadO;?></td>
+          <td class="text-center small"><?=$sw_personal." ".$sqlDetalleX." ".$sqlDetalleY;?> <?=$nombreUnidadO;?></td>
+          <!--td class="text-center small"><?=$nombreUnidadO;?></td-->
           <td class="text-center small"><?=$nombreTipoComprobante;?></td>
           <td class="text-left small"><?=$fechaComprobante;?></td>
           <td class="text-left small"><?=$fechaX;?></td>
