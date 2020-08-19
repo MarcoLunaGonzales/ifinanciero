@@ -79,7 +79,7 @@ $item_1=2708;
                           <th>Solicitante</th>
                           <th>Fecha</th>
                           <th>Observaciones</th>
-                          <th>Personal</th>
+                          <th>Personal Pago</th>
                           <th class="text-right" width="25%">Actions</th>
                         </tr>
                       </thead>

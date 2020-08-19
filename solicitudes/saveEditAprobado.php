@@ -73,15 +73,23 @@ if(isset($_POST["personal_encargado"])){
   $stmtDel = $dbh->prepare($sqlDel);
   $stmtDel->execute();
   
-  $encargados=$_POST["personal_encargado"];
+  if($_POST["personal_encargado"]>0){
+  $codEncargado=$_POST["personal_encargado"];
+  $sqlInsert="INSERT INTO solicitud_recursosencargado (cod_solicitudrecurso,cod_personal) 
+        VALUES ('$codSolicitud','$codEncargado')";
+  $stmtInsert = $dbh->prepare($sqlInsert);
+  $stmtInsert->execute();  
+  }
 
+  /*
+  //$encargados=$_POST["personal_encargado"];
   for ($encar=0; $encar < count($encargados); $encar++) { 
     $codEncargado=$encargados[$encar];
         $sqlInsert="INSERT INTO solicitud_recursosencargado (cod_solicitudrecurso,cod_personal) 
         VALUES ('$codSolicitud','$codEncargado')";
         $stmtInsert = $dbh->prepare($sqlInsert);
         $stmtInsert->execute();  
-  }
+  }*/
   
 }
 

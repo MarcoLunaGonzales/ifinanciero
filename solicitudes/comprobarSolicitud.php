@@ -439,26 +439,15 @@ if(isset($_GET['cod'])){
   $queryEncargadoNot="where p.codigo not in ($arrayEncargados)";
  }
 ?>
-                    <select class="selectpicker form-control form-control-sm" name="personal_encargado[]" multiple id="personal_encargado" data-live-search="true" data-size="6"data-style="btn btn-default text-dark" data-actions-box="true">
-                         <?php 
-                         if(count($arrayEnc[0])>0){
-                         $stmt3 = $dbh->prepare("SELECT p.codigo,CONCAT_WS(' ',p.primer_nombre,p.materno,p.paterno)as nombre from personal p join configuracion_encargado c on c.cod_personal=p.codigo $queryEncargado");
-                         $stmt3->execute();
-                          while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                           $codigoSel=$rowSel['codigo'];
-                          $nombreSelX=$rowSel['nombre'];
-                          ?><option value="<?=$codigoSel;?>" selected><?=$nombreSelX?></option><?php 
-                          }
-                        }
-                        ?>
-
+                    <select class="selectpicker form-control form-control-sm" name="personal_encargado" id="personal_encargado" data-live-search="true" data-size="6" data-style="btn btn-default text-dark">
+                         <option value="-1">Ninguno</option>
                         <?php 
-                         $stmt3 = $dbh->prepare("SELECT p.codigo,CONCAT_WS(' ',p.primer_nombre,p.materno,p.paterno)as nombre from personal p join configuracion_encargado c on c.cod_personal=p.codigo $queryEncargadoNot");
+                         $stmt3 = $dbh->prepare("SELECT p.codigo,CONCAT_WS(' ',p.primer_nombre,p.materno,p.paterno)as nombre from personal p join configuracion_encargado c on c.cod_personal=p.codigo order by 2");
                          $stmt3->execute();
                           while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                            $codigoSel=$rowSel['codigo'];
                           $nombreSelX=$rowSel['nombre'];
-                          ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                          ?><option value="<?=$codigoSel;?>" <?=(in_array($codigoSel,$arrayEnc[0]))?"selected":""?>><?=$nombreSelX?></option><?php 
                           }
                         ?>
                     </select>
