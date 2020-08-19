@@ -421,6 +421,52 @@ if(isset($_GET['cod'])){
             </div> 
           </div>
           <?php } //fin del while de la cabecera?>
+          <div class="row">
+            
+            <div class="col-sm-3">
+              <label class="bmd-label-static">Persona que Procesará el Pago</label>
+              <?php
+              if(verificarEdicionComprobanteUsuario($globalUser)!=0){
+               ?>
+               <!--    end small modal -->
+<?php 
+ $arrayEnc=obtenerPersonalEncargadoSolicitud($codigoSolicitud);
+ $arrayEncargados=implode(",",$arrayEnc[0]);
+ $queryEncargado="";
+ $queryEncargadoNot="";
+ if(count($arrayEnc[0])>0){
+  $queryEncargado="where p.codigo in ($arrayEncargados)";
+  $queryEncargadoNot="where p.codigo not in ($arrayEncargados)";
+ }
+?>
+                    <select class="selectpicker form-control form-control-sm" name="personal_encargado[]" multiple id="personal_encargado" data-live-search="true" data-size="6"data-style="btn btn-default text-dark" data-actions-box="true">
+                         <?php 
+                         if(count($arrayEnc[0])>0){
+                         $stmt3 = $dbh->prepare("SELECT p.codigo,CONCAT_WS(' ',p.primer_nombre,p.materno,p.paterno)as nombre from personal p join configuracion_encargado c on c.cod_personal=p.codigo $queryEncargado");
+                         $stmt3->execute();
+                          while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                           $codigoSel=$rowSel['codigo'];
+                          $nombreSelX=$rowSel['nombre'];
+                          ?><option value="<?=$codigoSel;?>" selected><?=$nombreSelX?></option><?php 
+                          }
+                        }
+                        ?>
+
+                        <?php 
+                         $stmt3 = $dbh->prepare("SELECT p.codigo,CONCAT_WS(' ',p.primer_nombre,p.materno,p.paterno)as nombre from personal p join configuracion_encargado c on c.cod_personal=p.codigo $queryEncargadoNot");
+                         $stmt3->execute();
+                          while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                           $codigoSel=$rowSel['codigo'];
+                          $nombreSelX=$rowSel['nombre'];
+                          ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                          }
+                        ?>
+                    </select>
+               
+               <?php 
+             } ?>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -584,11 +630,7 @@ if(isset($_GET['cod'])){
               if($datosEncargadoSolicitud>0){
                 $estiloBoton="estado";
               }
-               if(verificarEdicionComprobanteUsuario($globalUser)!=0){
                ?>
-               <a href="#" onclick="mostrarPersonalEncargadoCierre()" title="Personal Encargado del cierre" class="btn btn-default float-right"><i class="material-icons text-dark">supervisor_account</i><span id="nencargado" class="bg-danger <?=$estiloBoton?>"></span></a>
-               <?php 
-             } ?>
                <input type="hidden" id="cantidad_filas_proyecto" value="0">
                <div class="row col-sm-12">
                     <div class="col-sm-1">
@@ -766,90 +808,6 @@ if(isset($_GET['cod'])){
     </div>
   </div>
 </div>
-<!--    end small modal -->
-<?php 
- $arrayEnc=obtenerPersonalEncargadoSolicitud($codigoSolicitud);
- $arrayEncargados=implode(",",$arrayEnc[0]);
- $queryEncargado="";
- $queryEncargadoNot="";
- if(count($arrayEnc[0])>0){
-  $queryEncargado="and codigo in ($arrayEncargados)";
-  $queryEncargadoNot="and codigo not in ($arrayEncargados)";
- }
-?>
-<!-- notice modal -->
-<div class="modal fade" id="modalEncargadoSolicitud" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content card">
-      <div class="card-header card-header-primary card-header-text">
-          <div class="card-text">
-            <h5>Lista Detalles con Actividades</h5> 
-          </div>
-          <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-            <i class="material-icons">close</i>
-          </button>
-      </div>
-          <div class="card-body">
-            <div class="col-sm-12">
-              <div class="row">                      
-                   <table class="table table-bordered table-condensed">
-                     <thead>
-                       <tr class="fondo-boton">
-                         <td width="90%">Personal</td>
-                         <td width="10%">Escargado</td>
-                       </tr>
-                     </thead>
-                     <tbody id="contenedor_encargado_solicitud">
-                        <tr class="">
-                         <td><select class="selectpicker form-control form-control-sm" name="personal_encargado[]" multiple id="personal_encargado" data-live-search="true" data-size="6"data-style="btn btn-primary" data-actions-box="true">
-                         <?php 
-                         if(count($arrayEnc[0])>0){
-                         $stmt3 = $dbh->prepare("SELECT codigo,CONCAT_WS(' ',primer_nombre,materno,paterno)as nombre from personal where bandera=1 $queryEncargado");
-                         $stmt3->execute();
-                          while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                           $codigoSel=$rowSel['codigo'];
-                          $nombreSelX=$rowSel['nombre'];
-                          ?><option value="<?=$codigoSel;?>" selected><?=$nombreSelX?></option><?php 
-                          }
-                        }
-                        ?>
-
-                        <?php 
-                         $stmt3 = $dbh->prepare("SELECT codigo,CONCAT_WS(' ',primer_nombre,materno,paterno)as nombre from personal where bandera=1 $queryEncargadoNot");
-                         $stmt3->execute();
-                          while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                           $codigoSel=$rowSel['codigo'];
-                          $nombreSelX=$rowSel['nombre'];
-                          ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
-                          }
-                        ?>
-                    </select></td>
-                         <td></td>
-                        </tr>
-                      <?php 
-                       for ($i=0; $i < count($arrayEnc[1]) ; $i++) {
-                       ?> 
-                           <tr class="">
-                         <td class="text-left"><img src="../assets/img/faces/persona1.png" width="20" height="20"/> <?=$arrayEnc[1][$i]?></td>
-                         <td><a class="btn btn-sm btn-success btn-round" href="#">Registrado</a></td>
-                        </tr>
-                        <?php
-                         }  
-                      ?>
-
-                     </tbody>
-                   </table>
-                </div>
-               <div class="row">                        
-              </div>
-             </div>                     
-             <p class="text-muted"><small>Los cambios se realizaran al guardar la solicitud.</small></p>             
-          </div>
-    </div>
-  </div>
-</div>
-<!-- end notice modal -->
-
 
 </form>
 <?php
