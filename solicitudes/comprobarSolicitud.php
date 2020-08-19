@@ -424,7 +424,7 @@ if(isset($_GET['cod'])){
           <div class="row">
             
             <div class="col-sm-3">
-              <label class="bmd-label-static">Persona que Procesará el Pago</label>
+              
               <?php
               if(verificarEdicionComprobanteUsuario($globalUser)!=0){
                ?>
@@ -439,6 +439,7 @@ if(isset($_GET['cod'])){
   $queryEncargadoNot="where p.codigo not in ($arrayEncargados)";
  }
 ?>
+<label class="bmd-label-static">Persona que Procesará el Pago</label>
                     <select class="selectpicker form-control form-control-sm" name="personal_encargado" id="personal_encargado" data-live-search="true" data-size="6" data-style="btn btn-default text-dark">
                          <option value="-1">Ninguno</option>
                         <?php 

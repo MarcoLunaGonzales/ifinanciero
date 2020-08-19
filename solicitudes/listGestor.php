@@ -592,7 +592,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
                             <?php 
-                                   if($codComprobante!=0&&$codEstado==3){
+                                   if($codComprobante!=0&&$codEstado==5){
                                    ?>
                                    <div class="btn-group dropdown">
                                      <button type="button" class="btn btn-primary dropdown-toggle" title="COMPROBANTE - DEVENGADO" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
