@@ -10955,7 +10955,6 @@ function ajaxCajaCPersonalArea_cuentapasiva(codigo_comprobante,cod_proveedor,cod
   ajax.send(null)  
 }
 
-
 function ajaxCajaCProveedor_cuentapasiva(codigo_comprobante,codigo_proveedor,cod_estado_cuenta){
   var contenedor_p;
   // alert(codigo_proveedor);
@@ -10978,6 +10977,21 @@ function ajaxCajaCGlosa_estadocuenta(codigo_comprobante,cod_estado_cuenta){
   contenedor_p = document.getElementById('div_contenedor_glosa_estadocuenta');
   ajax=nuevoAjax();
   ajax.open('GET', 'caja_chica/ajax_glosaestadocuenta_rgastos.php?cod_estado_cuenta='+cod_estado_cuenta,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor_p.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);  
+      ajaxCajaC_tipoRetencion(codigo_comprobante);
+      // $("#modalEstadosCuentas").modal("hide");//cerramos modal  
+    }
+  }
+  ajax.send(null)  
+}
+function ajaxCajaC_tipoRetencion(codigo_comprobante){
+  var contenedor_p;  
+  contenedor_p = document.getElementById('div_contenedor_tiporetencion');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/ajax_tiporetencion_estadocuenta.php',true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor_p.innerHTML = ajax.responseText;

@@ -18,6 +18,7 @@ $cod_comprobante_x=$resultComproDet['cod_comprobante'];
 $sql="SELECT cod_cuenta from comprobantes_detalle where cod_comprobante=$cod_comprobante_x";
 $stmtComprobantesDet = $db->prepare($sql);
 $stmtComprobantesDet->execute();
+$cod_plan_cuenta=0;
 while ($rowComprobantesDet = $stmtComprobantesDet->fetch()){ 
 	$cod_cuenta_x=$rowComprobantesDet['cod_cuenta'];	
 	// verificamos que cuenta es de gastos
@@ -27,13 +28,14 @@ while ($rowComprobantesDet = $stmtComprobantesDet->fetch()){
 	$codigo_cuenta=$resultPlanCuenta['codigo'];
 	$numero_cuenta=$resultPlanCuenta['numero'];
 	$digito = substr($numero_cuenta, 0, 1);
-	$cod_plan_cuenta=0;
+	
 	if($digito==5)
 	{
 		$cod_plan_cuenta=$codigo_cuenta;
 	}
 }
 $sql="SELECT cod_area from comprobantes_detalle where cod_comprobante=$cod_comprobante_x and cod_cuenta=$cod_plan_cuenta";
+// echo $sql;
 $stmtComprobant = $db->prepare($sql);
 $stmtComprobant->execute();
 $resultCompro=$stmtComprobant->fetch();
