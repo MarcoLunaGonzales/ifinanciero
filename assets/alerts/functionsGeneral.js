@@ -1950,9 +1950,9 @@ function readSingleFile(evt) {
   }
 
 
- function pulsar(e) {
+ function pulsar(e,inp) {
     if (e.keyCode === 13 && !e.shiftKey) {
-        buscarCuenta();
+      buscarCuentaList(inp);//  buscarCuenta();
     }
 }
 
