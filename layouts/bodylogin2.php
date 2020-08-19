@@ -1101,6 +1101,19 @@
             }
           ]
         });
+ var table_diario=$('#reporte_sr').DataTable({
+          "paging":   false,
+            "info":     false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            "order": false,
+            "searching": true,
+            fixedHeader: {
+              header: true,
+              footer: true
+            },
+        });
         var table_diario=$('#libro_compras_rep').DataTable({
           "paging":   false,
             "info":     false,

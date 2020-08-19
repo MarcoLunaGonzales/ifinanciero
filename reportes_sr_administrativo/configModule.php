@@ -1,0 +1,4 @@
+<?php
+$urlReporteSR="reportePrintSR.php";
+
+?>

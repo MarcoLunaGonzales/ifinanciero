@@ -99,6 +99,22 @@ $dbh = new Conexion();
 			  	</div>
 			</div>
 
+            <div class="card">
+			  	<div class="card-header card-header-rose card-header-text">
+					<div class="card-text">
+				  		<h4 class="card-title">Reportes SR Administrativos</h4>
+					</div>
+			  	</div>
 
+			  	<div class="card-body ">
+					<div class="row">
+				  		<div class="col-sm-3">
+							<div class="form-group">
+								<a href="<?=$urlSRAdministrativo;?>" class="btn btn-default"> Solicitudes de Recursos </a>
+							</div>
+				  		</div>
+					</div>
+			  	</div>
+			</div> 
 	</div>
 </div>
