@@ -101,7 +101,7 @@ $mes=$_GET['mes'];
       }
 
 
-  	 if($haberX>0 ){?>
+  	 if($haberX>0 && $saldo!=0){?>
     	 <tr class="bg-white" onclick="verDetalleEstadosCuenta2('<?=$i?>')">
           <td>
           <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
@@ -120,8 +120,8 @@ $mes=$_GET['mes'];
               <?php    
     	    } ?>
     	    </td>
-          <td class="text-center small"><?=$sw_personal." ".$sqlDetalleX." ".$sqlDetalleY;?> <?=$nombreUnidadO;?></td>
-          <!--td class="text-center small"><?=$nombreUnidadO;?></td-->
+          <!-- <td class="text-center small"><?=$sw_personal." ".$sqlDetalleX." ".$sqlDetalleY;?> <?=$nombreUnidadO;?></td> -->
+          <td class="text-center small"><?=$nombreUnidadO;?></td>
           <td class="text-center small"><?=$nombreTipoComprobante;?></td>
           <td class="text-left small"><?=$fechaComprobante;?></td>
           <td class="text-left small"><?=$fechaX;?></td>

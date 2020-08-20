@@ -10704,6 +10704,7 @@ function quitarEstadoCuenta_cajachica(){
   $("#nestado"+fila).removeClass("estado");
 }
 function agregarEstadoCuenta_cajachica(){
+  iniciarCargaAjax();
   $("#mensaje_estadoscuenta").html("");
   var fila=$("#estFila").val();
   // var tipo=$("#tipo_estadocuentas"+fila).val();
@@ -11014,6 +11015,7 @@ function ajax_boton_sol_recursos_cajachica(codigo_comprobante){
       contenedor_p.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);  
       $("#modalEstadosCuentas").modal("hide");//cerramos modal  
+      detectarCargaAjax();
     }
   }
   ajax.send(null)  
