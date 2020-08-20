@@ -10775,6 +10775,7 @@ function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
    $('#msgError').html("<p>El monto debe de ser llenado</p>");
    $("#modalAlert").modal("show");
   }else{
+    var monto_cajachica=$("#monto").val();
     itemEstadosCuentas_cc.push(fila);
     var cod_cuenta_form=$("#cuenta_auto_id").val();
     document.getElementById('cuenta'+fila).value=cod_cuenta_form;
@@ -10825,7 +10826,7 @@ function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
       } 
     }
     //ajax estado de cuentas
-    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12,"auxi":auxi};
+    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12,"auxi":auxi,"monto_cajachica":monto_cajachica};
     $.ajax({
         type: "GET",
         dataType: 'html',
