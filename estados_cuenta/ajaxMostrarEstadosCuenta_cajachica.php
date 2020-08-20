@@ -21,6 +21,14 @@ $fechaActual=date("d/m/Y");
 $codCuenta=$_GET['cod_cuenta'];
 $tipo=$_GET['tipo'];
 $mes=$_GET['mes'];
+if(isset($_GET['monto_cajachica'])){
+  $monto_cajachica=$_GET['monto_cajachica'];
+}else{
+  $monto_cajachica=0;
+}
+
+
+
 ?>
 <table class="table table-bordered table-condensed table-warning">
 	<thead>
@@ -58,12 +66,9 @@ $mes=$_GET['mes'];
      $cod_comprobante_x=$row['cod_comprobante'];
      list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
      $nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);
-     
-     
      // $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
 
      $nombreTipoComprobante=nombreComprobante($cod_comprobante_x);
-
 
      $credito_padre=ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigoX);
      $saldo=$montoX-$credito_padre;
@@ -101,12 +106,12 @@ $mes=$_GET['mes'];
       }
 
 
-  	 if($haberX>0 ){?>
+  	 if($haberX>0 && $saldo>0){?>
     	 <tr class="bg-white" onclick="verDetalleEstadosCuenta2('<?=$i?>')">
           <td>
           <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <!-- style="display:none"-->
-    	   	<?php if($tipo==2 && $sw_personal>0){ 
+    	   	<?php if($tipo==2 && $sw_personal>0 && ($saldo>$monto_cajachica)){ 
               ?>
               <div class="form-check">
                  <label class="form-check-label">
@@ -120,8 +125,9 @@ $mes=$_GET['mes'];
               <?php    
     	    } ?>
     	    </td>
-          <td class="text-center small"><?=$sw_personal." ".$sqlDetalleX." ".$sqlDetalleY;?> <?=$nombreUnidadO;?></td>
-          <!--td class="text-center small"><?=$nombreUnidadO;?></td-->
+
+          <!--td class="text-center small"><?=$sw_personal." ".$sqlDetalleX." ".$sqlDetalleY;?> <?=$nombreUnidadO;?></td-->
+          <td class="text-center small"><?=$nombreUnidadO;?></td>
           <td class="text-center small"><?=$nombreTipoComprobante;?></td>
           <td class="text-left small"><?=$fechaComprobante;?></td>
           <td class="text-left small"><?=$fechaX;?></td>

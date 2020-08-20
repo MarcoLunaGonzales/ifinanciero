@@ -10704,6 +10704,7 @@ function quitarEstadoCuenta_cajachica(){
   $("#nestado"+fila).removeClass("estado");
 }
 function agregarEstadoCuenta_cajachica(){
+  iniciarCargaAjax();
   $("#mensaje_estadoscuenta").html("");
   var fila=$("#estFila").val();
   // var tipo=$("#tipo_estadocuentas"+fila).val();
@@ -10774,6 +10775,7 @@ function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
    $('#msgError').html("<p>El monto debe de ser llenado</p>");
    $("#modalAlert").modal("show");
   }else{
+    var monto_cajachica=$("#monto").val();
     itemEstadosCuentas_cc.push(fila);
     var cod_cuenta_form=$("#cuenta_auto_id").val();
     document.getElementById('cuenta'+fila).value=cod_cuenta_form;
@@ -10824,7 +10826,7 @@ function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
       } 
     }
     //ajax estado de cuentas
-    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12,"auxi":auxi};
+    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12,"auxi":auxi,"monto_cajachica":monto_cajachica};
     $.ajax({
         type: "GET",
         dataType: 'html',
@@ -11014,6 +11016,7 @@ function ajax_boton_sol_recursos_cajachica(codigo_comprobante){
       contenedor_p.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);  
       $("#modalEstadosCuentas").modal("hide");//cerramos modal  
+      detectarCargaAjax();
     }
   }
   ajax.send(null)  
