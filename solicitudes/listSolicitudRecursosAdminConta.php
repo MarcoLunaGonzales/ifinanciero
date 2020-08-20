@@ -315,8 +315,11 @@ $item_1=2708;
                                     <?php
                                   }else{
                                     ?>
-                                   <a title="Contabilizar Solicitud"  href="#" onclick="javascript:window.open('<?=$urlRegisterCompro;?>')"  class="dropdown-item">
-                                      <i class="material-icons text-warning">assignment_turned_in</i> Contabilización Manual Solicitud
+                                   <a title="Contabilizar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=8')" class="dropdown-item">
+                                      <i class="material-icons text-dark">dns</i> <b class="text-muted">Estado <u class="text-dark">Contabilizado</u></b>
+                                    </a>
+                                    <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=5')" class="dropdown-item">
+                                      <i class="material-icons text-warning">dns</i> <b class="text-muted">Estado <u class="text-warning">Pagado</u></b>
                                     </a>
                                     <?php
                                    }
@@ -341,7 +344,7 @@ $item_1=2708;
 ?>
                       </tbody>
                     </table>
-                    <br><br><br><br><br>
+                    <br><br><br><br><br><br><br><br>
                 </div>
               </div>
               <div class="card-footer fixed-bottom col-sm-9">
@@ -398,7 +401,7 @@ $item_1=2708;
 <!--    end small modal -->
 
 <?php
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (5)) order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (5,8)) order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -478,6 +481,9 @@ $item_1=2708;
                             case 7:
                               $nEst=55;$barEstado="progress-bar-info";$btnEstado="btn-info";
                             break;
+                            case 8:
+                              $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
+                            break;
                           }
                           if($codSimulacion!=0){
                            $nombreCliente="Sin Cliente";
@@ -545,9 +551,11 @@ $item_1=2708;
                                    <?php 
                                    //opciones Admin
                                     if(verificarEdicionComprobanteUsuario($globalUser)!=0){
+                                      if(verificarMesEnCursoSolicitudRecursos($codigo)!=0){
+
                                     ?>
-                                    <a title="Editar Solicitud" href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" target="_blank" class="btn btn-success">
-                                      <i class="material-icons">edit</i>
+                                    <a title="Editar Solicitud" href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" target="_blank" class="btn btn-warning">
+                                      <i class="material-icons text-dark">vpn_key</i><i class="material-icons text-dark">lock_open</i>
                                     </a>
                                     <a title="Editar Personal Procesar Pago" onclick="contabilizarSolicitudRecursoModal(2,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlEncargado?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" target="_blank" class="btn btn-default">
                                       <i class="material-icons text-dark">people_alt</i>
@@ -559,9 +567,14 @@ $item_1=2708;
                                       <i class="material-icons">assignment_turned_in</i>
                                     </a>
                                     <?php
-                                     } 
-                                  
-                                    }      
+                                      } 
+                                     }else{//if mes en curso
+                                       //si tiene permisos pero no está en el mes en curso
+                                      ?><a title="Solicitud No Editable" href='#'  class="btn btn-danger">
+                                      <i class="material-icons text-dark">lock</i>
+                                    </a><?php
+                                      }
+                                    }     
                                    }
                               ?>
                             <div class="btn-group dropdown">
@@ -595,8 +608,15 @@ $item_1=2708;
                                 ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2" class="dropdown-item" target="_blank">
                                     <i class="material-icons text-info">bar_chart</i> Ver Solicitud
                                  </a>
-                              
+                                 <?php 
+                                if($otrosPagosCuenta>0&&$codEstado!=8){
+                                 ?>
+                                 <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=8')" class="dropdown-item">
+                                      <i class="material-icons text-warning">dns</i> <b class="text-muted">Estado <u class="text-warning">Pagado</u></b>
+                                    </a>
                                 <?php 
+                                  
+                                }
                                 if($codEstado==4){
                                  ?>
                                  <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">

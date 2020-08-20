@@ -507,7 +507,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (7,6,4,3,5,2)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (7,6,4,3,5,2,8)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -584,6 +584,9 @@ $stmt->bindColumn('idServicio', $idServicioX);
                             break;
                             case 7:
                               $btnEstado="btn-info";
+                            break;
+                            case 8:
+                              $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
                             break;
                           }
                           if($codSimulacion!=0){
@@ -789,7 +792,7 @@ from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosol
 )l
 
 
-where l.cod_estadoreferencial=1 and (l.cod_estadosolicitudrecurso in (7,6,4,3,5,2)) and (l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.detalle_sis>0) order by l.numero desc
+where l.cod_estadoreferencial=1 and (l.cod_estadosolicitudrecurso in (7,6,4,3,5,2,8)) and (l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.detalle_sis>0) order by l.numero desc
 ");
 // Ejecutamos
 $stmt->execute();
@@ -867,6 +870,9 @@ $stmt->bindColumn('idServicio', $idServicioX);
                             break;
                             case 7:
                               $btnEstado="btn-info";
+                            break;
+                            case 8:
+                              $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
                             break;
                           }
                           if($codSimulacion!=0){

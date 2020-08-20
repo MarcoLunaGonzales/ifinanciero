@@ -9120,6 +9120,25 @@ function obtenerEstadoComprobante($codigo){
      }
      return $valor;
   }
+  function verificarMesEnCursoSolicitudRecursos($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_gestion,cod_mes from meses_trabajo_solicitudes where cod_estadomesestrabajo=3");
+     $stmt->execute();
+     $mes=$_SESSION["globalMes"];
+     $gestion=nameGestion($_SESSION["globalGestion"]);
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $mes=$row['cod_mes'];
+      $gestion=nameGestion($row['cod_gestion']);
+     }
+    //verificar fecha Solicitud
+     $stmt = $dbh->prepare("SELECT codigo from solicitud_recursos where codigo=$codigo and year(fecha)=$gestion and month(fecha)=$mes");
+     $stmt->execute();
+     $existe=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $existe=1;
+     }
+     return $existe;
+  }
 ?>
 
 

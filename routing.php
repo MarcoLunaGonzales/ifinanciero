@@ -374,6 +374,9 @@
 		if ($_GET['opcion']=='mesCurso2') {
 			require_once('mes_curso/list2.php');
 		}
+		if ($_GET['opcion']=='mesCursoSolicitud') {
+			require_once('mes_curso_solicitud/list.php');
+		}
 
 		//CAMBIAR GESTION DE TRABAJO
 		if ($_GET['opcion']=='listGestionTrabajo') {
