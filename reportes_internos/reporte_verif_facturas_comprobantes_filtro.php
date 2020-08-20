@@ -35,9 +35,9 @@ $fechaHasta2=$y."-12-31";
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reportes VS Estado Resutado</h4>
+                  <h4 class="card-title">Facturas Vs Comprobantes</h4>
                 </div>
-                <form class="" action="reporte_verif_reportes_resultados_print.php" target="_blank" method="POST">
+                <form class="" action="reporte_verif_facturas_comprobantes_print.php" target="_blank" method="POST">
                 <div class="card-body">
                
 	                <div class="row">

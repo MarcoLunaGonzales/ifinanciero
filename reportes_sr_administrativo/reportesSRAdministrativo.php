@@ -26,7 +26,7 @@ $dbh = new Conexion();
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Libro Compras Proyecto</h4>
+                  <h4 class="card-title">Reporte Solicitud de Recursos Administración</h4>
                 </div>
                 <form class="" action="<?=$urlReporteSR?>" target="_blank" method="POST">
                 <div class="card-body">
