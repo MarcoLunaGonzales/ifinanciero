@@ -159,6 +159,7 @@ $item_1=2708;
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
                             <?php 
+                            $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);  
                             if($estadoContabilidadX==1){
                               if(isset($_GET['q'])){
                                 ?>
