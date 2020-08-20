@@ -17242,12 +17242,12 @@ function cambiarValorElementosComprobante(nuevoId,i,aux,aux2){
 
 function contabilizarSolicitudRecursoModal(tipo,nro,monto,cuentas,url,prov,arry){
   if(tipo==1){
-    $("#titulo_conta").html("Contabilizar Solicitud Recurso");
+    $("#titulo_conta").html("Contabilizar Solicitud Recursos");
     $("#cabecera_conta").attr("style","background:#DA053C !important;color:#fff;");
     $("#modalListSolEliminados").modal("hide");
   }else{
     $("#modalListSolEliminados").modal("hide");
-    $("#titulo_conta").html("Asignar Personal Procesador del Pago");
+    $("#titulo_conta").html("Asignar Personal que Procesará Pago");
     $("#cabecera_conta").attr("style","background:#9D9B9C !important;color:#000;");
   }
     var array = arry.split(",");
