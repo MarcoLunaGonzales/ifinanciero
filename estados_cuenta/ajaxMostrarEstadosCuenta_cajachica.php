@@ -120,7 +120,8 @@ $mes=$_GET['mes'];
               <?php    
     	    } ?>
     	    </td>
-          <!-- <td class="text-center small"><?=$sw_personal." ".$sqlDetalleX." ".$sqlDetalleY;?> <?=$nombreUnidadO;?></td> -->
+
+          <!--td class="text-center small"><?=$sw_personal." ".$sqlDetalleX." ".$sqlDetalleY;?> <?=$nombreUnidadO;?></td-->
           <td class="text-center small"><?=$nombreUnidadO;?></td>
           <td class="text-center small"><?=$nombreTipoComprobante;?></td>
           <td class="text-left small"><?=$fechaComprobante;?></td>

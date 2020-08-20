@@ -72,15 +72,19 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                         <table id="reporte_sr" class="table table-bordered table-condensed" style="width:100%">
                           <thead>
                             <tr>
+                              <th style="border:2px solid;" width="2%"><small><b>#</b></small></th>
                               <th style="border:2px solid;"><small><b>Of. - Area</b></small></th>
                               <th style="border:2px solid;"><small><b>Nº Sol.</b></small></th>
-                              <th style="border:2px solid;"><small><b>Cod. Servicio</b></small></th>
-                              <th style="border:2px solid;" width="16%"><small><b>Proveedor</b></small></th>
-                              <th style="border:2px solid;"><small><b>Cuenta</b></small></th>
-                              <th style="border:2px solid;" width="16%"><small><b>Solicitante</b></small></th>
+                              <th style="border:2px solid;"><small><b>Comprobante</b></small></th>
                               <th style="border:2px solid;"><small><b>Fecha</b></small></th>
-                              <th style="border:2px solid;" width="16%"><small><b>Observaciones</b></small></th>
-                              <th style="border:2px solid;" width="16%"><small><b>Personal Pago</b></small></th>
+                              <th style="border:2px solid;" width="22%"><small><b>Glosa</b></small></th>
+                              <!--<th style="border:2px solid;"><small><b>Cod. Servicio</b></small></th>-->
+                              <th style="border:2px solid;" width="12%"><small><b>Proveedor</b></small></th>
+                              <th style="border:2px solid;"><small><b>Cuenta</b></small></th>
+                              <th style="border:2px solid;" width="12%"><small><b>Solicitante</b></small></th>
+                              <th style="border:2px solid;"><small><b>Fecha</b></small></th>
+                              <!--<th style="border:2px solid;" width="16%"><small><b>Observaciones</b></small></th>-->
+                              <th style="border:2px solid;" width="12%"><small><b>Personal Pago</b></small></th>
                               <th style="border:2px solid;"><small><b>Monto</b></small></th>
                               <th style="border:2px solid;"><small><b>Estado</b></small></th>
                             </tr>
@@ -119,6 +123,20 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                               $nEst=55;$barEstado="progress-bar-info";$btnEstado="btn-info";
                             break;
                           }
+                          
+                          $nombreComprobante="";
+                          $fechaComprobante="";
+                          $glosaComprobante="";
+                          if($codEstado==5||$codEstado==8){
+                            $nombreComprobante=nombreComprobante($codComprobante);
+                            $fechaComprobante=obtenerFechaComprobante($codComprobante); 
+                            $glosaComprobante=obtenerGlosaComprobante($codComprobante); 
+                          }
+                          $tamanioGlosa=obtenerValorConfiguracion(72); 
+                          if($glosaComprobante>$tamanioGlosa){
+                            $glosaComprobante=substr($glosaComprobante, 0, $tamanioGlosa);
+                          }
+
                           if($codSimulacion!=0){
                            $nombreCliente="Sin Cliente";
                            $nombreSimulacion=nameSimulacion($codSimulacion);
@@ -138,17 +156,21 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                        $otrosPagosCuenta=comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo);
 ?>
                         <tr>
-                          <td><?=$unidad;?>- <?=$area;?></td>
-                          <td class="font-weight-bold"><?=$numeroSol;?></td>
-                          <td><?=$codigoServicio;?></td>
-                          <td class="text-left"><?=$nombreProveedor?></td>
+                          <td><small><?=$index;?></small></td>
+                          <td><small><?=$unidad;?>- <?=$area;?></small></td>
+                          <td class="font-weight-bold"><small><?=$numeroSol;?></small></td>
+                          <td class="font-weight-bold"><small><?=$nombreComprobante;?></small></td>
+                          <td class=""><small><?=$fechaComprobante;?></small></td>
+                          <td class=""><small><?=$glosaComprobante;?></small></td>
+                          <!--<td><?=$codigoServicio;?></td>-->
+                          <td class="text-left"><small><?=$nombreProveedor?></small></td>
                           <td class="text-left"><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td class="text-left"><small><?=$solicitante;?></small></td>
-                          <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
-                          <td class="text-muted font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
+                          <td><small><?=strftime('%d/%m/%Y',strtotime($fecha));?></small></td>
+                          <!--<td class="text-muted font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>-->
                           <td class="text-muted font-weight-bold"><small><b><?=obtenerNombreConcatenadoEncargadoSolicitudRecurso($codigo)?></b></small></td>
-                          <td><?=number_format(obtenerSumaDetalleSolicitud($codigo),2,'.',',')?></td>
-                          <td class="td-actions text-right"><button class="btn <?=$btnEstado?> btn-sm btn-round btn-block"><?=$estado;?></button>
+                          <td><small><?=number_format(obtenerSumaDetalleSolicitud($codigo),2,'.',',')?></small></td>
+                          <td class="td-actions text-right"><small><button class="btn <?=$btnEstado?> btn-sm btn-round btn-block"><?=$estado;?></button></small>
                           </td> 
                         </tr>
 <?php

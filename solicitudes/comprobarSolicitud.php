@@ -431,19 +431,12 @@ if(isset($_GET['cod'])){
                <!--    end small modal -->
 <?php 
  $arrayEnc=obtenerPersonalEncargadoSolicitud($codigoSolicitud);
- $arrayEncargados=implode(",",$arrayEnc[0]);
- $queryEncargado="";
- $queryEncargadoNot="";
- if(count($arrayEnc[0])>0){
-  $queryEncargado="where p.codigo in ($arrayEncargados)";
-  $queryEncargadoNot="where p.codigo not in ($arrayEncargados)";
- }
 ?>
 <label class="bmd-label-static">Persona que Procesará el Pago</label>
                     <select class="selectpicker form-control form-control-sm" name="personal_encargado" id="personal_encargado" data-live-search="true" data-size="6" data-style="btn btn-default text-dark">
                          <option value="-1">Ninguno</option>
                         <?php 
-                         $stmt3 = $dbh->prepare("SELECT p.codigo,CONCAT_WS(' ',p.primer_nombre,p.materno,p.paterno)as nombre from personal p join configuracion_encargado c on c.cod_personal=p.codigo order by 2");
+                         $stmt3 = $dbh->prepare("SELECT p.codigo,CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as nombre from personal p join configuracion_encargado c on c.cod_personal=p.codigo order by 2");
                          $stmt3->execute();
                           while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                            $codigoSel=$rowSel['codigo'];
