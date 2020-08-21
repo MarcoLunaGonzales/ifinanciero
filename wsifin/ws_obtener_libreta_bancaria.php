@@ -11,7 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $estado=0;
         $mensaje="";
         if($accion=="ObtenerLibretaBancaria"){
-                $datos=obtenerDatosLibreta($codLibreta);
+           if(isset($datos['anio'])){
+             $datos=obtenerDatosLibreta($codLibreta,$datos['anio']);
+           }else{
+             $datos=obtenerDatosLibreta($codLibreta,0);
+           }
                 if($datos[0]==0){
                  $estado=2;
                  $mensaje = "Libreta Inexistente";
@@ -45,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo json_encode($resp);
 }
 
-function obtenerDatosLibreta($codigo){
+function obtenerDatosLibreta($codigo,$anioLib){
   require_once __DIR__.'/../conexion.php';
   require_once __DIR__.'/../functions.php';
   $dbh = new Conexion();
@@ -74,9 +78,13 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
      $datos['CodBanco']=$rowLib['cod_banco'];
      $datos['NumeroCuenta']=$rowLib['nro_cuenta'];
      $datos['IdCuenta']=$rowLib['cod_cuenta'];
-
-     $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura
-FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 order by ce.codigo";
+    if($anioLib==0){
+       $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura
+       FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 order by ce.codigo";
+    }else{
+      $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura
+       FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 and year(ce.fecha_hora)=$anioLib order by ce.codigo";
+    }
      $stmtFacDetalle = $dbh->prepare($sqlDetalle);
      $stmtFacDetalle->execute();
      $datosDetalle=[];

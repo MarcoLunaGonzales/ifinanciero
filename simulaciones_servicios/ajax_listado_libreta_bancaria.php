@@ -22,7 +22,12 @@ $codLibretaBan=0;
 if(isset($_GET['codigo_lib'])){
   $codLibretaBan=$_GET['codigo_lib'];
 }
+if(isset($_GET['anio'])){
+  $lista=obtenerObtenerLibretaBancariaIndividualAnio($codLibretaBan,$_GET['anio']);  
+}else{
   $lista=obtenerObtenerLibretaBancariaIndividual($codLibretaBan);  
+}
+  
 ?>
 <style>
   tfoot input {
