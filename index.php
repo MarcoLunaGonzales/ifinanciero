@@ -1,3 +1,15 @@
+<?php
+
+/* establecer el limitador de caché a 'private' */
+
+session_cache_limiter('private');
+$cache_limiter = session_cache_limiter();
+
+/* establecer la caducidad de la caché a 30 minutos */
+session_cache_expire(1);
+$cache_expire = session_cache_expire();
+
+?>
 <?php 
 	//carga la plantilla con la header y el footer
 require_once 'conexion.php';

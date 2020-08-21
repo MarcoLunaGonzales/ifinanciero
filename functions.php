@@ -84,7 +84,7 @@
      $stmt->bindParam(':codigo',$codigo);
      $stmt->execute();
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $nombreX=$row['nombre'];
+        $nombreX=ucfirst(strtolower($row['nombre']));
      }
      return($nombreX);
   }
@@ -9197,6 +9197,21 @@ function obtenerEstadoComprobante($codigo){
     }
     return $existe;
   }
+
+  function obtenerDatosUsuariosComprobante($codigo){
+      $dbh = new Conexion();
+      $sql="SELECT created_by,modified_by,created_at,modified_at from comprobantes where codigo=$codigo";  
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      $valor=[];
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+        if(!($row['created_by']==""||$row['created_by']==0)){
+          array_push($valor,"Creado por: ".namePersonal($row['created_by']).", En: ".strftime('%d/%m/%Y',strtotime($row['created_at'])));
+        }
+        if(!($row['modified_by']==""||$row['modified_by']==0)){
+         array_push($valor,"Modificado por: ".namePersonal($row['modified_by']).", En: ".strftime('%d/%m/%Y',strtotime($row['modified_at'])));  
+        }         
+      }  
+      return implode("\n ", $valor);
+    }
 ?>
-
-

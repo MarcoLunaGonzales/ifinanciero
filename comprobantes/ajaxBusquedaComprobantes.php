@@ -55,6 +55,10 @@ $i=1;
  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
  	$codigo=(int)$row['codigo'];
  	$codigoEstado=(int)$row['codigo_estado'];
+  $cambiosDatos=obtenerDatosUsuariosComprobante($codigo);
+                          if($cambiosDatos!=""){
+                            $cambiosDatos="\n".$cambiosDatos;
+                          }
 ?>
 	<tr>
                           <td align="center"><?=$i;?></td>
@@ -71,7 +75,7 @@ $i=1;
                              if($_GET['estado']=="registrado"){
                              ?>
                              <div class="btn-group dropdown">
-                              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante <?=$cambiosDatos?>">
                                 <i class="material-icons"><?=$iconImp;?></i>
                               </button>
                               <div class="dropdown-menu">
