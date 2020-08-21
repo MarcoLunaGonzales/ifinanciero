@@ -690,12 +690,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Mes de Trabajo </span>
                   </a>
                 </li>
-                <li class="nav-item ">
+                <!--<li class="nav-item ">
                   <a class="nav-link" href="?opcion=mesCursoSolicitud">
                     <span class="sidebar-mini"> MCS </span>
                     <span class="sidebar-normal"> Mes de Trabajo Solicitudes</span>
                   </a>
-                </li>
+                </li>-->
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=configuracionDeRetenciones">
                     <span class="sidebar-mini"> CR </span>

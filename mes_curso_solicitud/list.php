@@ -107,6 +107,9 @@ $stmtEstado->bindColumn('nombre', $nombre_e);
                   </div>
                 </div>
               </div>
+              <div class="card-footer fixed-bottom">
+                    <a class="btn btn-danger" href="index.php?opcion=mesCurso">VOLVER</a>
+                </div>
             </div>
           </div>  
         </div>

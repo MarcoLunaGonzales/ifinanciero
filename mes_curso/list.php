@@ -107,6 +107,9 @@ $stmtEstado->bindColumn('nombre', $nombre_e);
                   </div>
                 </div>
               </div>
+              <div class="card-footer fixed-bottom">
+                    <a class="btn btn-default" href="index.php?opcion=mesCursoSolicitud">MES DE TRABAJO DE SOLICITUDES</a>
+              </div>
               <?php 
               if($cont>0){
       				?><div class="card-footer fixed-bottom">
