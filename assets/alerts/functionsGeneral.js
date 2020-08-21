@@ -12560,6 +12560,33 @@ function mostrarCambioEstadoObjeto(codigo){
     });
 }
 
+function mostrarCambioEstadoObjetoSol(codigo,glosa){
+  $("#modal_codigopropuesta").val(codigo);  
+  $("#modal_observacionesestado").val(glosa);  
+  var item_1=$("#modal_tipoobjeto").val();
+  var item_2=codigo;
+  var item_3=$("#modal_rolpersona").val();
+
+  var parametros={"item_1":item_1,"item_2":item_2,"item_3":item_3};
+     $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "simulaciones_servicios/ibnorca_ajaxListComboEstados.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Cargando los estados disponibles de la solicitud"); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");
+           $("#modal_codigoestado").html(resp); 
+           $('.selectpicker').selectpicker("refresh");
+           $("#modalEstadoObjeto").modal("show");
+        }
+    });
+}
+
 
 function cambiarEstadoObjeto(){
   if($("#modal_codigoestado").val()>0){
@@ -16874,10 +16901,11 @@ function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
     });
   }
 
-  function devolverSolicitudRecurso(nro,codServ,url,prov){
+  function devolverSolicitudRecurso(nro,codServ,url,prov,obs){
     $("#nro_solicitud").val(nro);
     $("#codigo_servicio").val(codServ);
     $("#proveedor_nombre").val(prov);
+    $("#observaciones_modal").val(obs);
    $("#urlEnvioModal").val(url);
    $("#modalDevolverSolicitudRecurso").modal("show");
   }
@@ -17278,12 +17306,12 @@ function cambiarValorElementosComprobante(nuevoId,i,aux,aux2){
 
 function contabilizarSolicitudRecursoModal(tipo,nro,monto,cuentas,url,prov,arry){
   if(tipo==1){
-    $("#titulo_conta").html("Contabilizar Solicitud Recurso");
+    $("#titulo_conta").html("Contabilizar Solicitud Recursos");
     $("#cabecera_conta").attr("style","background:#DA053C !important;color:#fff;");
     $("#modalListSolEliminados").modal("hide");
   }else{
     $("#modalListSolEliminados").modal("hide");
-    $("#titulo_conta").html("Asignar Personal Procesador del Pago");
+    $("#titulo_conta").html("Asignar Personal que Procesará Pago");
     $("#cabecera_conta").attr("style","background:#9D9B9C !important;color:#000;");
   }
     var array = arry.split(",");

@@ -146,6 +146,7 @@ $item_1=2708;
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
                             <?php 
+                            $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);  
                             if($codEstado==4){
                               if(isset($_GET['q'])){
                                 ?>
@@ -202,7 +203,7 @@ $item_1=2708;
                                 <?php 
                                 if($codEstado==4){
                                  ?>
-                                 <a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
+                                 <a href="#" onclick="mostrarCambioEstadoObjetoSol(<?=$codigo?>,'<?=$glosa_estadoX?>')" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a>
                                  <a href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=0&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>" class="dropdown-item">
@@ -219,7 +220,7 @@ $item_1=2708;
                                     </a>
                                     <?php
                                   }else{
-                                  ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
+                                  ?><a href="#" onclick="mostrarCambioEstadoObjetoSol(<?=$codigo?>,'<?=$glosa_estadoX?>')" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
                                  </a><?php  
                                   }

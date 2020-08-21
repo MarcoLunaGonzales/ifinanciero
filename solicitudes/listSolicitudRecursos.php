@@ -135,6 +135,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                        if(verificarMontoPresupuestadoSolicitadoSR($codigo)==1){
                         $numeroSolTitulo='<a href="#" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning btn-sm btn-round">'.$numeroSol.'</a>';
                        }    
+                       $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);
 ?>
                         <tr>
                           <td><?=$unidad;?>- <?=$area;?></td>
@@ -152,6 +153,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                           <td class="text-danger font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
                           <td class="td-actions text-right">
                             <?php
+                            $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);  
                               if($codEstado==4||$codEstado==3||$codEstado==5){
                             ?>
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
@@ -236,7 +238,23 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                      Enviado
                                     </a><?php
                                 }else{
-                                 if(isset($_GET['q'])){
+                                 if($glosa_estadoX!=""){
+                                    if(isset($_GET['q'])){
+                                   ?>
+
+                                    <a title="Enviar a Autorización - Solicitud Recursos" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" href='#' class="btn btn-default">
+                                      <i class="material-icons">send</i>
+                                    </a>
+                                   <?php
+                                  }else{
+                                    ?>
+                                     <a title="Enviar a Autorización - Solicitud Recursos" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" href='#'  class="btn btn-default">
+                                       <i class="material-icons">send</i>
+                                     </a>
+                                    <?php
+                                    }
+                                 }else{
+                                    if(isset($_GET['q'])){
                                    ?>
                                     <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
                                       <i class="material-icons">send</i>
@@ -248,7 +266,8 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                        <i class="material-icons">send</i>
                                      </a>
                                     <?php
-                                  }                                   
+                                    }  
+                                 }
                                 }
                             if(isset($_GET['q'])){
                               ?>
@@ -488,7 +507,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (7,6,4,3,5,2)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (7,6,4,3,5,2,8)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -565,6 +584,9 @@ $stmt->bindColumn('idServicio', $idServicioX);
                             break;
                             case 7:
                               $btnEstado="btn-info";
+                            break;
+                            case 8:
+                              $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
                             break;
                           }
                           if($codSimulacion!=0){
@@ -762,9 +784,16 @@ $stmt->bindColumn('idServicio', $idServicioX);
 
 <?php
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
-  from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (7,6,4,3,5,2)) and sr.cod_unidadorganizacional=3000 order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT * FROM (SELECT (select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_area=1235 and cod_unidadorganizacional=3000)) as detalle_sis ,
+sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area
+
+ 
+from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+)l
+
+
+where l.cod_estadoreferencial=1 and (l.cod_estadosolicitudrecurso in (7,6,4,3,5,2,8)) and (l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.detalle_sis>0) order by l.numero desc
+");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -841,6 +870,9 @@ $stmt->bindColumn('idServicio', $idServicioX);
                             break;
                             case 7:
                               $btnEstado="btn-info";
+                            break;
+                            case 8:
+                              $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
                             break;
                           }
                           if($codSimulacion!=0){
@@ -1034,3 +1066,57 @@ $stmt->bindColumn('idServicio', $idServicioX);
   </div>
 </div>
 <!--    end small modal -->
+
+
+<!-- modal devolver solicitud -->
+<div class="modal fade" id="modalDevolverSolicitudRecurso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Enviar Solicitud</h4>
+      </div>
+      <div class="modal-body">        
+        <input type="hidden" name="urlEnvioModal" id="urlEnvioModal" value="">
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_nro_fact"><small>Nro.<br>Solicitud.</small></span></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="nro_solicitud" id="nro_solicitud" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_rs_fact"><small >Código<br>Servicio</small></span></label>
+          <div class="col-sm-8">
+            <div class="form-group" >              
+              <input type="text" class="form-control" name="codigo_servicio" id="codigo_servicio" readonly="true" style="background-color:#e2d2e0">
+            </div>
+          </div>
+        </div> 
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id="campo_proveedor"><small>Proveedor</small></span></label>
+          <div class="col-sm-11">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="proveedor_nombre" id="proveedor_nombre" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+        </div>               
+        <div class="row">
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#f9edf7">
+            <div class="form-group" >              
+              <textarea type="text" name="observaciones_modal" id="observaciones_modal" class="form-control" required="true"></textarea>
+            </div>
+          </div>
+        </div>        
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-success" onclick="devolverSolicitudRecursoModal()">Aceptar</a>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal reenviar solicitud devuelto -->
+

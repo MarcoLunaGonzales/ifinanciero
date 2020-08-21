@@ -48,7 +48,7 @@ if(isset($_GET['cod_sim'])){
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (7,6,4,3,5) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (7,6,4,3,5,8) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -92,7 +92,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                           <th>Cuenta</th>
                           <th>Solicitante</th>
                           <th>Fecha</th>
-                          <th>Estado</th>
+                          <!--<th>Estado</th>-->
                           <th>Observaciones</th>
                           <th class="text-right" width="18%">Actions</th>
                         </tr>
@@ -123,6 +123,9 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                             break;
                             case 7:
                               $btnEstado="btn-info";
+                            break;
+                            case 8:
+                              $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
                             break;
                           }
                           if($codSimulacion!=0){
@@ -156,12 +159,13 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
-                          <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button>
+                          <!--<td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button>-->
                           </td> 
                           <td class="text-warning font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
                           <td class="td-actions text-right">
                             <?php
-                              if($codEstado==4||$codEstado==3||$codEstado==5){
+                            $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);  
+                              if($codEstado==4||$codEstado==3||$codEstado==5||$codEstado==8){
                             ?>
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
@@ -240,7 +244,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                     <a title="Autorizar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" href='#'  class="btn btn-warning">
                                       <i class="material-icons">assignment_turned_in</i>
                                     </a>
-                                    <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>','<?=$nombreProveedor?>')" title="Devolver Solicitud Recurso" href='#'  class="btn btn-danger">
+                                    <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" title="Devolver Solicitud Recurso" href='#'  class="btn btn-danger">
                                       <i class="material-icons">reply</i>
                                     </a>
                                    <?php
@@ -249,7 +253,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                      <a title="Autorizar Solicitud Recurso" onclick="alerts.showSwal('aprobar-solicitud-recurso','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=4&admin=0')" href='#'  class="btn btn-warning">
                                        <i class="material-icons">assignment_turned_in</i>
                                      </a>
-                                     <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0','<?=$nombreProveedor?>')" title="Devolver Solicitud Recurso" href='#'  class="btn btn-danger">
+                                     <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&reg=1&estado=1&admin=0','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" title="Devolver Solicitud Recurso" href='#'  class="btn btn-danger">
                                        <i class="material-icons">reply</i>
                                      </a>
                                     <?php
@@ -565,3 +569,4 @@ $stmt->bindColumn('idServicio', $idServicioX);
   </div>
 </div>
 <!-- modal reenviar solicitud devuelto -->
+

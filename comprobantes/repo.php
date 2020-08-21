@@ -16,8 +16,8 @@ $dbh = new Conexion();
 <?php
 $anio=2020;
 $unidad=5;
-//
-$sql="SELECT DISTINCT cod_plancuenta FROM estados_cuenta";
+
+$sql="SELECT DISTINCT cod_plancuenta FROM estados_cuenta where cod_plancuenta=154";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $nro_registros=0;
@@ -39,13 +39,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             <td>AUXILIAR CE/CC</td>
             <td>AUX ESTADO</td>
             <td>AUX COMP.</td>
+            <td>GLOSA COMP</td>
             <td>GLOSA</td>
             <td>NOMBRE AUX ESTADO</td>
             <td>NOMBRE AUX COMP.</td>
             <td>NUEVO COD AUX</td>  
           </tr>
       <?php 
-        $sql2="SELECT e.*,d.haber,d.debe,d.glosa as glosa_comp,d.cod_cuentaauxiliar from estados_cuenta e ,(select cd.* from comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.cod_cuenta=$codCuenta and c.fecha<='$anio-01-01' and c.cod_gestion=$anio) d where e.cod_comprobantedetalle=d.codigo order by d.codigo";
+        $sql2="SELECT e.*,d.haber,d.debe,d.glosa as glosa_comp,d.cod_cuentaauxiliar from estados_cuenta e ,(select cd.* from comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.cod_cuenta=$codCuenta and year(c.fecha)=$anio and c.cod_gestion=$anio) d where e.cod_comprobantedetalle=d.codigo order by d.codigo";
         $stmt2 = $dbh->prepare($sql2);
         $stmt2->execute();
         while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
@@ -57,6 +58,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           $montoEstado=$row2['monto'];
           $debe=$row2['debe'];
           $haber=$row2['haber'];
+          $glosa_comp=$row2['glosa_comp'];
           $codPlan=$row2['cod_plancuenta'];
           $codCuentaAux=$row2['cod_cuentaaux'];
           $codCuentaAuxiliar=$row2['cod_cuentaauxiliar'];
@@ -137,6 +139,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             <td class="<?=$estiloAuxiliar?>"><?=$codCuentaAux?></td>
             <td class="<?=$estiloAuxPadre?>"><?=$codCuentaAuxPadre?></td> 
             <td class="<?=$estiloAuxiliarPadre?>"><?=$codCuentaAuxiliarPadre?></td>
+            <td><?=$glosa_comp?></td> 
             <td><?=$glosa?></td>  
             <td><b class="<?=$estiloNomCuentaAux?>"><?=$nomCuentaAux?></b></td>
             <td><b class="<?=$estiloNomCuentaAuxiliar?>"><?=$nomCuentaAuxiliar?></b></td>
