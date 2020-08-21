@@ -5189,7 +5189,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   { 
     $saldo=0;
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT e.monto FROM estados_cuenta e where e.cod_plancuenta=$codCuenta and cod_comprobantedetalleorigen=$codigo_compDe");
+     $stmt = $dbh->prepare("SELECT SUM(e.monto) as monto FROM estados_cuenta e where e.cod_plancuenta=$codCuenta and cod_comprobantedetalleorigen=$codigo_compDe");
      $stmt->execute();   
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $saldo=$saldo+$row['monto'];
@@ -5197,6 +5197,18 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
     return($saldo);
   }
+  //  function ObtenerMontoTotalEstadoCuentas_hijos_cajachica($codCuenta,$codigo_compDe)
+  // { 
+  //   $saldo=0;
+  //   $dbh = new Conexion();
+  //    $stmt = $dbh->prepare("SELECT sum(e.monto) as monto FROM estados_cuenta e, caja_chicadetalle ccd where e.cod_cajachicadetalle=ccd.codigo and ccd.cod_estadoreferencial<>2 and e.cod_plancuenta=$codCuenta and cod_comprobantedetalleorigen=$codigo_compDe");
+  //    $stmt->execute();   
+  //    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  //       $saldo=$saldo+$row['monto'];
+  //    }
+
+  //   return($saldo);
+  // }
 
   function obtenerFechaEnLetra($fecha){
       // $dia= date("d", strtotime($fecha));
@@ -6264,6 +6276,28 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       $valor="";
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row['abreviatura'];
+      }
+     }
+     
+     return($valor);
+  }
+  function abrevNorma($codigo,$catalogo){
+     $dbh = new Conexion();
+     if($catalogo=='N'){
+      $stmt = $dbh->prepare("SELECT nombre FROM v_normas where codigo=:codigo");
+      $stmt->bindParam(':codigo',$codigo);
+      $stmt->execute();
+      $valor="";
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $valor=$row['nombre'];
+      }
+     }else{
+      $stmt = $dbh->prepare("SELECT nombre FROM v_normas_int where codigo=:codigo");
+      $stmt->bindParam(':codigo',$codigo);
+      $stmt->execute();
+      $valor="";
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['nombre'];
       }
      }
      
@@ -9120,24 +9154,48 @@ function obtenerEstadoComprobante($codigo){
      }
      return $valor;
   }
+
+
+  function obtener_monto_formapago($codigo_sf,$codigo_tp){
+    $dbh = new Conexion();
+    $sql="SELECT monto from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_sf and cod_tipopago=$codigo_tp";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['monto'];
+    }
+    return $valor;
+  }
+  function obtener_porcentaje_formapago($codigo_sf,$codigo_tp){
+    $dbh = new Conexion();
+    $sql="SELECT porcentaje from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigo_sf and cod_tipopago=$codigo_tp";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['porcentaje'];
+    }
+    return $valor;
+  }
   function verificarMesEnCursoSolicitudRecursos($codigo){
-     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cod_gestion,cod_mes from meses_trabajo_solicitudes where cod_estadomesestrabajo=3");
-     $stmt->execute();
-     $mes=$_SESSION["globalMes"];
-     $gestion=nameGestion($_SESSION["globalGestion"]);
-     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $mes=$row['cod_mes'];
-      $gestion=nameGestion($row['cod_gestion']);
-     }
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT cod_gestion,cod_mes from meses_trabajo_solicitudes where cod_estadomesestrabajo=3");
+    $stmt->execute();
+    $mes=$_SESSION["globalMes"];
+    $gestion=nameGestion($_SESSION["globalGestion"]);
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $mes=$row['cod_mes'];
+    $gestion=nameGestion($row['cod_gestion']);
+    }
     //verificar fecha Solicitud
-     $stmt = $dbh->prepare("SELECT codigo from solicitud_recursos where codigo=$codigo and year(fecha)=$gestion and month(fecha)=$mes");
-     $stmt->execute();
-     $existe=0;
-     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $existe=1;
-     }
-     return $existe;
+    $stmt = $dbh->prepare("SELECT codigo from solicitud_recursos where codigo=$codigo and year(fecha)=$gestion and month(fecha)=$mes");
+    $stmt->execute();
+    $existe=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $existe=1;
+    }
+    return $existe;
   }
 ?>
 

@@ -23,8 +23,10 @@ $tipo=$_GET['tipo'];
 $mes=$_GET['mes'];
 if(isset($_GET['monto_cajachica'])){
   $monto_cajachica=$_GET['monto_cajachica'];
+  $codigo_cajachica=$_GET['codigo_cajachica'];
 }else{
   $monto_cajachica=0;
+  $codigo_cajachica=0;
 }
 
 
@@ -70,7 +72,7 @@ if(isset($_GET['monto_cajachica'])){
 
      $nombreTipoComprobante=nombreComprobante($cod_comprobante_x);
 
-     $credito_padre=ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigoX);
+     $credito_padre=ObtenerMontoTotalEstadoCuentas_hijos_cajachica($codCuenta,$codigoX);
      $saldo=$montoX-$credito_padre;
      $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
 

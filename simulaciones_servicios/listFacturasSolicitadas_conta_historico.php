@@ -63,7 +63,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                 </div>
             </div>
         </div>
-        <div class="card-body">
+        <div class="card-body" id="data_solicitudes_facturacion">
           <!-- <div id="data_solicitudes_facturacion"> -->
             <table class="table" id="tablePaginator50NoFinder">
               <thead>
@@ -82,7 +82,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                   <th class="text-right"><small>Actions</small></th>
                 </tr>
               </thead>
-              <tbody id="data_solicitudes_facturacion">
+              <tbody >
               <?php                          
                 $index=1;
                 $codigo_fact_x=0;
@@ -214,30 +214,31 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                   $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
 
                   //los registros de la factura
-                  $dbh1 = new Conexion();
-                  $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
-                  $stmt2 = $dbh1->prepare($sqlA);                                   
-                  $stmt2->execute(); 
-                  $nc=0;
-                  $sumaTotalMonto=0;
-                  $sumaTotalDescuento_por=0;
-                  $sumaTotalDescuento_bob=0;
-                  while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                    // $dato = new stdClass();//obejto
-                    $codFila=(int)$row2['codigo'];
-                    $cod_claservicioX=trim($row2['nombre_serv']);
-                    $cantidadX=trim($row2['cantidad']);
-                    // $precioX=trim($row2['precio'])+trim($row2['descuento_bob']);
-                    $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);                              
-                    $descuento_porX=trim($row2['descuento_por']);
-                    $descuento_bobX=trim($row2['descuento_bob']);                             
-                    $descripcion_alternaX=trim($row2['descripcion_alterna']);
-                    $nc++;
-                    $sumaTotalMonto+=$precioX;
-                    $sumaTotalDescuento_por+=$descuento_porX;
-                    $sumaTotalDescuento_bob+=$descuento_bobX;
-                  }
-                  $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
+                  // $dbh1 = new Conexion();
+                  // $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
+                  // $stmt2 = $dbh1->prepare($sqlA);                                   
+                  // $stmt2->execute(); 
+                  // $nc=0;
+                  // $sumaTotalMonto=0;
+                  // $sumaTotalDescuento_por=0;
+                  // $sumaTotalDescuento_bob=0;
+                  // while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                  //   // $dato = new stdClass();//obejto
+                  //   $codFila=(int)$row2['codigo'];
+                  //   $cod_claservicioX=trim($row2['nombre_serv']);
+                  //   $cantidadX=trim($row2['cantidad']);
+                  //   // $precioX=trim($row2['precio'])+trim($row2['descuento_bob']);
+                  //   $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);                              
+                  //   $descuento_porX=trim($row2['descuento_por']);
+                  //   $descuento_bobX=trim($row2['descuento_bob']);                             
+                  //   $descripcion_alternaX=trim($row2['descripcion_alterna']);
+                  //   $nc++;
+                  //   $sumaTotalMonto+=$precioX;
+                  //   $sumaTotalDescuento_por+=$descuento_porX;
+                  //   $sumaTotalDescuento_bob+=$descuento_bobX;
+                  // }
+                  // $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
+                  $sumaTotalImporte=obtenerSumaTotal_solicitudFacturacion($codigo_facturacion);
                   if($cont_facturas>1){                              
                       // $estado="FACTURA PARCIAL";
                       $nro_fact_x=trim($cadenaFacturas,',');
@@ -318,7 +319,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                 ?>
               </tbody>
             </table>
-          </div>
+          <!-- </div> -->
         </div>                    
         <div class="card-footer fixed-bottom col-sm-9">
           <a href='<?=$urlListSolicitudContabilidad;?>' class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
@@ -456,3 +457,10 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
     </div>
   </div>
 </div>
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
+
