@@ -10778,6 +10778,7 @@ function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
     var monto_cajachica=$("#monto").val();
     itemEstadosCuentas_cc.push(fila);
     var cod_cuenta_form=$("#cuenta_auto_id").val();
+    var codigo_cajachica=$("#codigo").val();
     document.getElementById('cuenta'+fila).value=cod_cuenta_form;
     document.getElementById('cuenta_auxiliar'+fila).value=0;
     if(cuenta==0){
@@ -10826,7 +10827,7 @@ function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
       } 
     }
     //ajax estado de cuentas
-    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12,"auxi":auxi,"monto_cajachica":monto_cajachica};
+    var parametros={"cod_cuenta":cod_cuenta,"tipo":tipo,"mes":12,"auxi":auxi,"monto_cajachica":monto_cajachica,"codigo_cajachica":codigo_cajachica};
     $.ajax({
         type: "GET",
         dataType: 'html',
@@ -11579,23 +11580,23 @@ function actualizar_factura(cod_facturaventa_e,razon_social_e){
     }
   });
 }
-function actualizar_solfacturacion_edit(cod_solicitud_e,cod_tipopagoE){
-  iniciarCargaAjax();
-  $.ajax({
-    type:"POST",
-    data:"cod_solicitud_e="+cod_solicitud_e+"&cod_tipopagoE="+cod_tipopagoE,
-    url:"simulaciones_servicios/ajax_tipopago_edit_conta_save.php",
-    success:function(r){      
-      detectarCargaAjax();
-      if(r==1){
-        var url="index.php?opcion=listFacturasServicios_conta";
-        alerts.showSwal('success-message',url);
-      }else{
-        Swal.fire("ERROR! :(", "Ocurrio un error al actualizar la Solicitud de Facturación.", "warning");        
-      }      
-    }
-  });
-}
+// function actualizar_solfacturacion_edit(cod_solicitud_e,cod_tipopagoE){
+//   iniciarCargaAjax();
+//   $.ajax({
+//     type:"POST",
+//     data:"cod_solicitud_e="+cod_solicitud_e+"&cod_tipopagoE="+cod_tipopagoE,
+//     url:"simulaciones_servicios/ajax_tipopago_edit_conta_save.php",
+//     success:function(r){      
+//       detectarCargaAjax();
+//       if(r==1){
+//         var url="index.php?opcion=listFacturasServicios_conta";
+//         alerts.showSwal('success-message',url);
+//       }else{
+//         Swal.fire("ERROR! :(", "Ocurrio un error al actualizar la Solicitud de Facturación.", "warning");        
+//       }      
+//     }
+//   });
+// }
 //entidades 
 var unidades_tabla=[]; 
 var unidades_tabla_general=[];
@@ -13316,6 +13317,7 @@ function verificar_dias_credito(){
 
 
 function botonBuscarSolicitudes_conta(){
+  iniciarCargaAjax();
   var valor_uo=$("#OficinaBusqueda").val();
   var valor_cliente=$("#cliente").val();
   var valor_fi=$("#fechaBusquedaInicio").val();
@@ -13330,6 +13332,8 @@ function botonBuscarSolicitudes_conta(){
       var contenedor=$("#data_solicitudes_facturacion");
       contenedor.html(ajax.responseText);
       $("#modalBuscador").modal("hide");
+      detectarCargaAjax();
+      cargar_dataTable_ajax_listas('tablePaginator50NoFinder');
     }
   }
   ajax.send(null)
@@ -13476,7 +13480,7 @@ function tablaGeneral_tipoPagos_solFac(){
   var table = $('<table>').addClass('table table-bordered table-condensed table-sm');
   var titulos = $('<tr>').addClass('fondo-boton');
     titulos.append($('<th>').addClass('').text('#'));
-    titulos.append($('<th>').addClass('').text('Tipo de Pago'));
+    titulos.append($('<th>').addClass('').text('Forma de Pago'));
     titulos.append($('<th>').addClass('').text('Porcentaje(%)'));    
     titulos.append($('<th>').addClass('').text('Monto(BOB)'));    
     table.append(titulos);
@@ -13589,6 +13593,14 @@ function calcularTotalFilaTipoPagoModal(){
   var diferencia_porcentaje_tipopago = 100 - suma_porcentaje;
   $("#total_diferencia_porcentaje_tipopago").val(number_format(diferencia_porcentaje_tipopago,2));//con formato
   $("#total_diferencia_bob_tipopago").val(number_format(diferencia_bob_tipopago,2));//con formato
+  if(diferencia_bob_tipopago==0){
+    $("#total_diferencia_porcentaje_tipopago").css("background-color", "   #6ccf93");
+    $("#total_diferencia_bob_tipopago").css("background-color", "  #6ccf93");
+  }else{
+    $("#total_diferencia_porcentaje_tipopago").css("background-color", "#F5A9A9;");
+    $("#total_diferencia_bob_tipopago").css("background-color", "#F5A9A9;");
+  }
+
 }
 function savePorcentajeTipopago(){
   var total_porcentaje=$('#total_monto_porcentaje_a_tipopago').val();
@@ -15248,7 +15260,23 @@ function agregaDatosComprCajaChica(datos){
   document.getElementById("cod_cajachica").value=d[0];  
   document.getElementById("detalle_cajachica").value=d[1];  
   document.getElementById("cod_tipocajachica").value=d[2];
-  
+  var cod_comprobante=d[3];
+  if(cod_comprobante>0){
+    var contenedor = document.getElementById('contenedor_items_comprobante');  
+    // console.log(gestion);
+    ajax=nuevoAjax();
+    ajax.open('GET', 'caja_chica/ajax_detalle_buscador_comprobante.php?cod_comprobante='+cod_comprobante,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;      
+        $('.selectpicker').selectpicker(["refresh"]);
+      }
+    }
+    ajax.send(null);
+  }
+
+
+
 }
 function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_comprobante,mes_comprobante,tipo_comprobante,gestion,unidad){
   iniciarCargaAjax();
@@ -15768,17 +15796,19 @@ function modal_editarFactura_sf(datos){
 function modal_editar_sf_conta(datos){    
   var d=datos.split('###');  
   document.getElementById("nro_correlativo_e").value=d[0];
-  var cod_tipopago=d[1];
+  var monto_total=d[1];
+  var cod_solicitud=d[2];
   document.getElementById("cod_solicitud_e").value=d[2];
   document.getElementById("nit_e_sf").value=d[3];
   document.getElementById("razon_social_e_sf").value=d[4];
   contenedor = document.getElementById('contenedor_formapago_edit');
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_tipopago_edit_conta.php?cod_tipo='+cod_tipopago,true);
+  ajax.open('GET', 'simulaciones_servicios/ajax_tipopago_edit_conta.php?cod_solicitud='+cod_solicitud+"&monto_total="+monto_total,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
+      calcularTotalFilaTipoPagoModal();
     }
   }
   ajax.send(null)  
@@ -16980,6 +17010,7 @@ function botonBuscar_facturas_admin(){
   ajax.send(null)
 }
 function botonBuscarSolicitudes_gral(){
+  iniciarCargaAjax();
   var valor_uo=$("#OficinaBusqueda").val();
   var valor_cliente=$("#cliente").val();
   var valor_fi=$("#fechaBusquedaInicio").val();
@@ -16993,6 +17024,8 @@ function botonBuscarSolicitudes_gral(){
       var contenedor=$("#data_solicitudes_facturacion");
       contenedor.html(ajax.responseText);
       $("#modalBuscador_solicitudes").modal("hide");
+      detectarCargaAjax();
+      cargar_dataTable_ajax_listas('tablePaginator50NoFinder');
     }
   }
   ajax.send(null)

@@ -37,7 +37,7 @@ if($detalle_f!=""){
   $sql.=" and f.observaciones like '%$detalle_f%'";  
 }
 if($fechaBusquedaInicio!="" && $fechaBusquedaFin!=""){
-  $sql.=" and f.fecha_factura BETWEEN '$fechaBusquedaInicio' and '$fechaBusquedaFin'"; 
+  $sql.=" and f.fecha_factura BETWEEN '$fechaBusquedaInicio 00:00:00' and '$fechaBusquedaFin 23:59:59'"; 
 }
 if($nit_f!="" ){
   $sql.=" and f.nit=$nit_f"; 

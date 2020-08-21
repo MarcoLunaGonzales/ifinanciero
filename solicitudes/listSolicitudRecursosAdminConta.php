@@ -315,11 +315,11 @@ $item_1=2708;
                                     <?php
                                   }else{
                                     ?>
-                                   <a title="Contabilizar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=8')" class="dropdown-item">
-                                      <i class="material-icons text-dark">dns</i> <b class="text-muted">Estado <u class="text-dark">Contabilizado</u></b>
+                                   <a title="Contabilizar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=5')" class="dropdown-item">
+                                      <i class="material-icons text-dark">dns</i> <b class="text-muted">Cambiar a <u class="text-dark">Contabilizado</u></b>
                                     </a>
-                                    <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=5')" class="dropdown-item">
-                                      <i class="material-icons text-warning">dns</i> <b class="text-muted">Estado <u class="text-warning">Pagado</u></b>
+                                    <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=8')" class="dropdown-item">
+                                      <i class="material-icons text-warning">dns</i> <b class="text-muted">Cambiar a <u class="text-warning">Pagado</u></b>
                                     </a>
                                     <?php
                                    }
@@ -551,15 +551,18 @@ $item_1=2708;
                                    <?php 
                                    //opciones Admin
                                     if(verificarEdicionComprobanteUsuario($globalUser)!=0){
+                                    ?>
+                                    <a title="Editar Personal Procesar Pago" onclick="contabilizarSolicitudRecursoModal(2,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlEncargado?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" target="_blank" class="btn btn-default">
+                                      <i class="material-icons text-dark">people_alt</i>
+                                    </a> 
+                                    <?php  
                                       if(verificarMesEnCursoSolicitudRecursos($codigo)!=0){
 
                                     ?>
                                     <a title="Editar Solicitud" href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" target="_blank" class="btn btn-warning">
                                       <i class="material-icons text-dark">vpn_key</i><i class="material-icons text-dark">lock_open</i>
                                     </a>
-                                    <a title="Editar Personal Procesar Pago" onclick="contabilizarSolicitudRecursoModal(2,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlEncargado?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" target="_blank" class="btn btn-default">
-                                      <i class="material-icons text-dark">people_alt</i>
-                                    </a>
+                                    
                                     <?php 
                                     if($otrosPagosCuenta==0){
                                     ?>
@@ -612,7 +615,7 @@ $item_1=2708;
                                 if($otrosPagosCuenta>0&&$codEstado!=8){
                                  ?>
                                  <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=8')" class="dropdown-item">
-                                      <i class="material-icons text-warning">dns</i> <b class="text-muted">Estado <u class="text-warning">Pagado</u></b>
+                                      <i class="material-icons text-warning">dns</i> <b class="text-muted">Cambiar a <u class="text-warning">Pagado</u></b>
                                     </a>
                                 <?php 
                                   

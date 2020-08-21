@@ -90,7 +90,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                       </div>
                     </div>
                   </div>
-                  <div class="card-body">
+                  <div class="card-body" id="data_solicitudes_facturacion">
                       <table class="table" id="tablePaginator50NoFinder">
                         <thead>
                           <tr>
@@ -108,7 +108,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <th class="text-right"><small>Actions</small></th>
                           </tr>
                         </thead>
-                        <tbody id="data_solicitudes_facturacion">
+                        <tbody >
                         <?php
                           $index=1;
                           $codigo_fact_x=0;
@@ -191,11 +191,12 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             }                  
                             // echo $cont_facturas."<br>";
                             //sacamos nombre de los detalles
-                            $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
+                            $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna,ci_estudiante from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
                             $stmtDetalleSol->execute();
                             $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
                             $stmtDetalleSol->bindColumn('precio', $precio_unitario);
                             $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                
+                            $stmtDetalleSol->bindColumn('ci_estudiante', $ci_estudiante_x); 
                             $concepto_contabilizacion="";
                             // if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
                             //   $concepto_contabilizacion="";
@@ -203,10 +204,13 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             //   $concepto_contabilizacion=$codigo_alterno." - ";  
                             // }
                             while ($row_det = $stmtDetalleSol->fetch()){
-                              $precio=$precio_unitario*$cantidad;
+                              //$precio=$precio_unitario*$cantidad;
                               // $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
                               // $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
                               // $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
+                              if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){                              
+                                $concepto_contabilizacion="CI: ".$ci_estudiante_x." / "; 
+                              }
                               $concepto_contabilizacion.=$descripcion_alterna."<br>\n";
                             }
                             $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100)); //limite de string
@@ -249,40 +253,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $string_formaspago=obtnerFormasPago($codigo_facturacion);
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
-
-                            //los registros de la factura
-                            // $dbh1 = new Conexion();
-                            // $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
-                            // $stmt2 = $dbh1->prepare($sqlA);                                   
-                            // $stmt2->execute(); 
-                            // $nc=0;
-                            // $sumaTotalMonto=0;
-                            // $sumaTotalDescuento_por=0;
-                            // $sumaTotalDescuento_bob=0;
-                            // while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                            //   // $dato = new stdClass();//obejto
-                            //   $codFila=(int)$row2['codigo'];
-                            //   $cod_claservicioX=trim($row2['nombre_serv']);
-                            //   $cantidadX=trim($row2['cantidad']);
-                            //   $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
-                            //   $descuento_porX=trim($row2['descuento_por']);
-                            //   $descuento_bobX=trim($row2['descuento_bob']);
-                            //   $descripcion_alternaX=trim($row2['descripcion_alterna']);
-                            //   // $dato->codigo=($nc+1);
-                            //   // $dato->cod_facturacion=$codFila;
-                            //   // $dato->serviciox=$cod_claservicioX;
-                            //   // $dato->cantidadX=$cantidadX;
-                            //   // $dato->precioX=$precioX;
-                            //   // $dato->descuento_porX=$descuento_porX;
-                            //   // $dato->descuento_bobX=$descuento_bobX;
-                            //   // $dato->descripcion_alternaX=$descripcion_alternaX;
-                            //   // $datos[$index-1][$nc]=$dato;                           
-                            //   // $nc++;
-                            //   $sumaTotalMonto+=$precioX;
-                            //   $sumaTotalDescuento_por+=$descuento_porX;
-                            //   $sumaTotalDescuento_bob+=$descuento_bobX;
-                            // }
-                            // $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
+                           
                             $sumaTotalImporte=obtenerSumaTotal_solicitudFacturacion($codigo_facturacion);
                             // $cont[$index-1]=$nc;
                             // $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;

@@ -112,6 +112,9 @@ try {
                     $stmtDetalleX->bindColumn('cod_tipopagoproveedor', $cod_tipopagoproveedor_sr);
                     while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)){ 
                         $codigo_sr=$codigo_sr;
+                        $cod_solicitudrecurso_sr=$cod_solicitudrecurso_sr;
+                        $cod_proveedor_sr=$cod_proveedor_sr;
+                        $cod_tipopagoproveedor_sr=$cod_tipopagoproveedor_sr;
                     }                    
                     
                     if($codigo_sr>0){

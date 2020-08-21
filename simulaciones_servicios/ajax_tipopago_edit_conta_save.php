@@ -2,46 +2,48 @@
 require_once __DIR__.'/../conexion.php';
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
+require_once '../layouts/bodylogin.php';
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 set_time_limit(0);
 // $globalUser=$_SESSION["globalUser"];
 //RECIBIMOS LAS VARIABLES
 $cod_solicitud_e=$_POST['cod_solicitud_e'];
-$cod_tipopagoE=$_POST['cod_tipopagoE'];
+$total_items_tipopago=$_POST['total_items_tipopago'];
 
-$sqlA="SELECT sf.* from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$cod_solicitud_e";
-$stmt2 = $dbh->prepare($sqlA);                                   
-$stmt2->execute(); 
-$sumaTotalMonto=0;
-// $sumaTotalDescuento_bob=0;
-while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {  
-  $cantidadX=trim($row2['cantidad']);                                
-  $precioX=(trim($row2['precio'])*$cantidadX);
-  $descuento_bobX=trim($row2['descuento_bob']);  
-  $sumaTotalMonto+=$precioX;  
-  // $sumaTotalDescuento_bob+=$descuento_bobX;  
-}
-$sumaTotalImporte=$sumaTotalMonto;
-try{    
-	$sqlDeleteTiposPago="DELETE from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$cod_solicitud_e";
-    $stmtDelTiposPago = $dbh->prepare($sqlDeleteTiposPago);
-    $flagSuccess=$stmtDelTiposPago->execute();
-    if($flagSuccess){
-    	$stmt = $dbh->prepare("UPDATE solicitudes_facturacion set cod_tipopago='$cod_tipopagoE' where codigo=$cod_solicitud_e");
-    	$flagSuccess=$stmt->execute();
+$sqlDeleteTiposPago="DELETE from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$cod_solicitud_e";
+$stmtDelTiposPago = $dbh->prepare($sqlDeleteTiposPago);
+$flagSuccess=$stmtDelTiposPago->execute();
+$flagSuccess=true;
+if($flagSuccess){
+  $nF=$total_items_tipopago;
+  if($nF>0){
+    $tipo_pago_mayor=0;//varibale que alamcenara el tipo de pago en la solictud
+    $monto_bob_mayor=0;
 
-    	$sqlTiposPago="INSERT INTO solicitudes_facturacion_tipospago(cod_solicitudfacturacion, cod_tipopago, porcentaje, monto) VALUES ('$cod_solicitud_e','$cod_tipopagoE','100','$sumaTotalImporte')";
-        $stmtTiposPago = $dbh->prepare($sqlTiposPago);
-        $flagSuccess=$stmtTiposPago->execute();
-    
+    $sw_auxiliar_tp=1;
+    for($j=0;$j<$nF;$j++){
+        $codigo_tipopago=$_POST['codigo_tipopago'.$j];
+        $monto_porcentaje=$_POST['monto_porcentaje_tipopago'.$j];
+        $monto_bob=$_POST['monto_bob_tipopago'.$j];  
+        
+        // echo "codigo_tipopago:".$codigo_tipopago."<br>";
+        // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
+        // echo "monto_bob:".$monto_bob."<br>";                      
+        if($monto_porcentaje!=0 && $monto_porcentaje!="" ){
+          // echo "una<br><br><br>";
+          $sqlTiposPago="INSERT INTO solicitudes_facturacion_tipospago(cod_solicitudfacturacion, cod_tipopago, porcentaje, monto) VALUES ('$cod_solicitud_e','$codigo_tipopago','$monto_porcentaje','$monto_bob')";
+          $stmtTiposPago = $dbh->prepare($sqlTiposPago);
+          $stmtTiposPago->execute();
+        }
+        
     }
-    if($flagSuccess){
-        echo 1;
-    }else echo 0;   
-
-} catch(PDOException $ex){
-    echo 0;
+    $stmtUpdateFormaPago = $dbh->prepare("UPDATE solicitudes_facturacion set cod_tipopago='$tipo_pago_mayor'
+    where codigo = $cod_solicitud_e");      
+    $flagSuccess=$stmtUpdateFormaPago->execute();
+  }
 }
+showAlertSuccessError($flagSuccess,"../index.php?opcion=listFacturasServicios_conta_admin");
 
-?>
+
+

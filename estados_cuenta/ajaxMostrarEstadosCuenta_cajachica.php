@@ -23,8 +23,10 @@ $tipo=$_GET['tipo'];
 $mes=$_GET['mes'];
 if(isset($_GET['monto_cajachica'])){
   $monto_cajachica=$_GET['monto_cajachica'];
+  $codigo_cajachica=$_GET['codigo_cajachica'];
 }else{
   $monto_cajachica=0;
+  $codigo_cajachica=0;
 }
 
 
@@ -111,7 +113,7 @@ if(isset($_GET['monto_cajachica'])){
           <td>
           <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <!-- style="display:none"-->
-    	   	<?php if($tipo==2 && $sw_personal>0 && ($saldo>$monto_cajachica)){ 
+    	   	<?php if($tipo==2 && $sw_personal>0 && ($saldo>=$monto_cajachica)){ 
               ?>
               <div class="form-check">
                  <label class="form-check-label">
