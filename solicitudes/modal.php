@@ -828,7 +828,7 @@
                      </tr>
                    </thead>
                    <tbody>
-                    <tr>
+                    <!--<tr>
                           <td align="center" width="20%">
                           <div class="form-check">
                             <label class="form-check-label">
@@ -840,7 +840,7 @@
                           </div>
                           </td>
                           <td class="text-left">NINGUNA</td>
-                        </tr>
+                        </tr>-->
                      <?php 
                         $stmtRetencion = $dbh->prepare("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order BY nombre");
                         $stmtRetencion->execute();
@@ -849,12 +849,18 @@
                            $abrevX=$row['abreviatura'];
                            $nombreX=$row['nombre'];
                            $codigoX=$row['codigo'];
+                           $estiloRetencion="";
+                           $checkRetencion="";
+                           if($codigoX==6){
+                             $estiloRetencion="bg-primary text-white";
+                             $checkRetencion="checked";
+                           }
 ?>
-                        <tr>
+                        <tr class="<?=$estiloRetencion?>">
                           <td align="center" width="20%">
                           <div class="form-check">
                             <label class="form-check-label">
-                              <input class="form-check-input" type="radio" id="retencion<?=$codigoX?>" name="retenciones" value="<?=$codigoX?>@<?=$nombreX?>">
+                              <input class="form-check-input" type="radio" id="retencion<?=$codigoX?>" <?=$checkRetencion?> name="retenciones" value="<?=$codigoX?>@<?=$nombreX?>">
                               <span class="form-check-sign">
                                 <span class="check"></span>
                               </span>
@@ -872,7 +878,7 @@
                  </table>
                  <div id="mensaje_retencion"></div>
                  <div class="form-group float-right">
-                        <button type="button" class="btn btn-info btn-round" onclick="agregarRetencionSolicitud()">Agregar</button>
+                        <button type="button" class="btn btn-info btn-round" onclick="agregarRetencionSolicitud()">GUARDAR</button>
                   </div>
                 </div>
       </div>  

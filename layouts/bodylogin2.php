@@ -661,16 +661,23 @@
         return false;
       }else{  //    primer else
         var cont=0;
+        var mensajeRet="La Retencion IVA debe tener al menos una factura registrada";
         for (var i = 0; i < $("#cantidad_filas").val(); i++) {
            if(parseInt($('#cod_retencion'+(i+1)).val())==parseInt($('#cod_configuracioniva').val())){
              if(itemFacturas[i].length==0){
               cont++; 
               break;
              }      
+           }else{
+             if($('#cod_retencion'+(i+1)).val()==0||$('#cod_retencion'+(i+1)).val()==""){
+              cont++;
+              mensajeRet="Debe seleccionar una Retención <a href='#' class='btn btn-sm btn-fab btn-warning'><i class='material-icons text-dark'>ballot</i></a>";
+              break;
+             }
            }                  
         }
         if(cont!=0){
-           Swal.fire("Informativo!", "La Retencion IVA debe tener al menos una factura registrada", "warning"); 
+           Swal.fire("Informativo!", mensajeRet, "warning"); 
            return false;
         }else{  //2do else
           //
@@ -742,9 +749,13 @@
            }else{       //quinto else
                //para poner la retencion iva si tiene al menos una factura..
            for (var i = 0; i < $("#cantidad_filas").val(); i++) {
-             if(itemFacturas[i].length!=0){
+            if($('#cod_retencion'+(i+1)).val()==0||$('#cod_retencion'+(i+1)).val()==""){
+              $('#cod_retencion'+(i+1)).val(6); //agregar retenciones sin gasto;
+            }else{
+              if(itemFacturas[i].length!=0){
               $('#cod_retencion'+(i+1)).val($('#cod_configuracioniva').val()); 
-             }                       
+              }                        
+            }
            }
 
            $('<input />').attr('type', 'hidden')
