@@ -91,3 +91,76 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
     header('Content-type: application/json');   
     print_r($remote_server_output);   
 ?>
+
+select COUNT(*) from comprobantes where codigo in (select cod_comprobante from solicitud_recursos where cod_estadosolicitudrecurso=5);
+select COUNT(*) from comprobantes where codigo in (select cod_comprobante from solicitud_recursos where cod_estadosolicitudrecurso<>5);
+
+/*COMPROBANTES NO RELACIONADOS A LAS SOLICITUD DE RECURSOS*/
+
+/*LISTA DE COMPROBANTES NO RELACIONADOS A LA SOLICITUD DE RECURSOS (CONTABILIZADOS)*/
+SELECT codigo,numero,fecha,glosa,cod_tipocomprobante,cod_estadocomprobante FROM comprobantes where glosa like '%SR %' and year(fecha)=2020 and cod_tipocomprobante=3 and codigo not in 
+(select cod_comprobante from solicitud_recursos where cod_estadosolicitudrecurso=5)
+order by 1 desc;
+
+/*LISTA DE LOS ESTADOS DE CUENTAS DE LOS COMPROBANTES NO RELACIONADOS A LA SOLICITUD DE RECURSOS (CONTABILIZADOS) */
+SELECT c.cod_comprobante,e.* FROM estados_cuenta e,
+(SELECT 
+* FROM comprobantes_detalle WHERE cod_comprobante in (SELECT codigo FROM comprobantes where glosa like '%SR %' and year(fecha)=2020 and cod_tipocomprobante=3 and codigo not in 
+(select cod_comprobante from solicitud_recursos where cod_estadosolicitudrecurso=5)
+order by 1 desc)) c
+where e.cod_comprobantedetalle=c.codigo;
+
+/*LISTA DE FACTURAS COMPRA DE LOS COMPROBANTES NO RELACIONADOS A LA SOLICITUD DE RECURSOS (CONTABILIZADOS)*/
+SELECT * FROM facturas_compra where cod_comprobantedetalle in (SELECT 
+codigo FROM comprobantes_detalle WHERE cod_comprobante in (SELECT codigo FROM comprobantes where glosa like '%SR %' and year(fecha)=2020 and cod_tipocomprobante=3 and codigo not in 
+(select cod_comprobante from solicitud_recursos where cod_estadosolicitudrecurso=5)
+order by 1 desc));
+
+
+
+
+
+
+
+/*COMPROBANTES RELACIONADOS A LAS SOLICITUD DE RECURSOS*/
+
+/*LISTA DE FACTURAS(CON COMPROBANTE DETALLE Y SIN SOLICITUD DETALLE) DE LOS COMPROBANTES RELACIONADOS A LA SOLICITUD DE RECURSOS(CONTABILIZADO)*/
+SELECT f.* FROM facturas_compra f where cod_comprobantedetalle in (SELECT 
+codigo FROM comprobantes_detalle WHERE cod_comprobante in (SELECT codigo FROM comprobantes where glosa like '%SR %' and year(fecha)=2020 and cod_tipocomprobante=3 and cod_estadocomprobante<>2 and codigo in 
+(select cod_comprobante from solicitud_recursos where cod_estadosolicitudrecurso=5)
+order by 1 desc))
+and f.cod_solicitudrecursodetalle is null;
+
+/*LISTA ********PARA RELACIONAR LA FACTURA CON EL DETALLE DE LA SOLICITUD************* DE FACTURAS(CON COMPROBANTE DETALLE Y SIN SOLICITUD DETALLE) DE LOS COMPROBANTES RELACIONADOS A LA SOLICITUD DE RECURSOS(CONTABILIZADO)*/
+SELECT f.*,(SELECT numero from solicitud_recursos where cod_comprobante=cd.cod_comprobante)as numero_sol,
+(SELECT codigo from solicitud_recursos where cod_comprobante=cd.cod_comprobante)as codigo_sol,
+(SELECT GROUP_CONCAT(ssd.codigo) from solicitud_recursosdetalle ssd where ssd.cod_confretencion=8 and ssd.cod_solicitudrecurso=(SELECT codigo from solicitud_recursos where cod_comprobante=cd.cod_comprobante))as codigo_sol_detalle
+FROM facturas_compra f join comprobantes_detalle cd on cd.codigo=f.cod_comprobantedetalle
+where f.cod_comprobantedetalle in (SELECT 
+codigo FROM comprobantes_detalle WHERE cod_comprobante in (SELECT codigo FROM comprobantes where glosa like '%SR %' and year(fecha)=2020 and cod_tipocomprobante=3 and cod_estadocomprobante<>2 and codigo in 
+(select cod_comprobante from solicitud_recursos where cod_estadosolicitudrecurso=5)
+order by 1 desc))
+and f.cod_solicitudrecursodetalle is null;
+
+/*LISTA ********PARA RELACIONAR LA FACTURA CON EL DETALLE DEL COMPROBANTE*************  DE FACTURAS(SIN COMPROBANTE DETALLE Y CON SOLICITUD DETALLE) DE LOS COMPROBANTES RELACIONADOS A LA SOLICITUD DE RECURSOS(CONTABILIZADO)*/
+SELECT f.*,l.cod_estadosolicitudrecurso FROM facturas_compra f,(SELECT sd.*,s.cod_estadosolicitudrecurso FROM solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo where s.cod_estadosolicitudrecurso=5)
+l where f.cod_solicitudrecursodetalle=l.codigo  
+ and f.cod_comprobantedetalle is null;
+
+/*LISTA2 DE FACTURAS(SIN COMPROBANTE DETALLE Y CON SOLICITUD DETALLE) DE LOS COMPROBANTES RELACIONADOS A LA SOLICITUD DE RECURSOS(CONTABILIZADO)*/
+SELECT f.*,l.cod_estadosolicitudrecurso,l.cod_comprobante,
+(SELECT GROUP_CONCAT(codigo) from comprobantes_detalle where cod_comprobante=l.cod_comprobante and cod_cuenta=63) as cod_comprobante_detalle 
+FROM facturas_compra f,(SELECT sd.*,s.cod_estadosolicitudrecurso,s.cod_comprobante FROM solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo where s.cod_estadosolicitudrecurso=5)
+l where f.cod_solicitudrecursodetalle=l.codigo  
+ and f.cod_comprobantedetalle is null;
+
+/*LISTA DE FACTURAS(SIN COMPROBANTE DETALLE Y SIN SOLICITUD DETALLE)*/
+SELECT * FROM facturas_compra WHERE cod_comprobantedetalle is null and cod_solicitudrecursodetalle is null;
+
+
+
+
+
+
+
+
