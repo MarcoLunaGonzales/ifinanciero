@@ -73,15 +73,8 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                       </thead>
                       <tbody>
                         <?php $index=1;
-                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
-                          $datos_ComproCajaChica=$cod_cajachica."/".$observaciones."/".$codigo_tipo_caja_Chica;  
-                            // $sql_rendicion="SELECT SUM(c.monto)-IFNULL((select SUM(r.monto) from caja_chicareembolsos r where r.cod_cajachica=$cod_cajachica and r.cod_estadoreferencial=1),0) as monto_total from caja_chicadetalle c where c.cod_cajachica=$cod_cajachica and c.cod_estadoreferencial=1";
-                            // $stmtSaldo = $dbh->prepare($sql_rendicion);
-                            // $stmtSaldo->execute();
-                            // $resultSaldo=$stmtSaldo->fetch();
-                            // if($resultSaldo['monto_total']!=null || $resultSaldo['monto_total']!='')
-                            //   $monto_total=$resultSaldo['monto_total'];
-                            // else $monto_total=0;      
+                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {                           
+                          $datos_ComproCajaChica=$cod_cajachica."/".$observaciones."/".$codigo_tipo_caja_Chica."/".$cod_comprobante;                            
                             $monto_total=importe_total_cajachica($cod_cajachica);      
                             $monto_saldo=$monto_inicio-$monto_total;
 
@@ -229,115 +222,116 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
       <div class="modal-body">
         <input type="hidden" name="cod_cajachica" id="cod_cajachica" value="0">
         <input type="hidden" name="cod_tipocajachica" id="cod_tipocajachica" value="0">
-        <div class="row">
-          <!-- <label class="col-sm-3 text-right col-form-label" style="color:#424242">Importe De Solicitud de Facturación</label> -->
+        <div class="row">      
           <div class="col-sm-12">
             <div class="form-group text-center">
               <input type="text" name="detalle_cajachica" id="detalle_cajachica" value="0" readonly="true" class="form-control text-center" style="background-color:#E3CEF6;text-align: left">            
             </div>
           </div>       
         </div>
-        <div class="row">
-          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Gestión</label>
-          <div class="col-sm-6">
-            <div class="form-group">            
-              <select class="selectpicker form-control form-control-sm" name="gestion" id="gestion" data-style="<?=$comboColor;?>">
-                    <option disabled selected value="">Gestión</option>
-                  <?php
-                  $stmt = $dbh->prepare("SELECT nombre from gestiones where cod_estado=1 order by nombre desc");
-                $stmt->execute();
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                  $codigoX=$row['nombre'];
-                  $nombreX=$row['nombre'];                  
-                ?>
-                <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
-                <?php
-                  }
+        <div id="contenedor_items_comprobante">
+          <div class="row">
+            <label class="col-sm-4 text-right col-form-label" style="color:#424242">Gestión</label>
+            <div class="col-sm-6">
+              <div class="form-group">            
+                <select class="selectpicker form-control form-control-sm" name="gestion" id="gestion" data-style="<?=$comboColor;?>">
+                      <option disabled selected value="">Gestión</option>
+                    <?php
+                    $stmt = $dbh->prepare("SELECT nombre from gestiones where cod_estado=1 order by nombre desc");
+                  $stmt->execute();
+                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $codigoX=$row['nombre'];
+                    $nombreX=$row['nombre'];                  
                   ?>
-              </select>
-            </div>
-          </div>
-        </div>  
-        <div class="row">
-          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Mes del comprobante</label>
-          <div class="col-sm-6">
-            <div class="form-group">              
-              <select class="selectpicker form-control form-control-sm" name="mes_comprobante" id="mes_comprobante" data-style="<?=$comboColor;?>">
-                  <option disabled selected value=""></option>                
-                  <option value="1">ENERO</option>
-                  <option value="2">FEBRERO</option>
-                  <option value="3">MARZO</option>
-                  <option value="4">ABRIL</option>
-                  <option value="5">MAYO</option>
-                  <option value="6">JUNIO</option>
-                  <option value="7">JULIO</option>
-                  <option value="8">AGOSTO</option>
-                  <option value="9">SEPTIEMBRE</option>
-                  <option value="10">OCTUBRE</option>
-                  <option value="11">NOVIEMBRE</option>
-                  <option value="12">DICIEMBRE</option>                  
-              </select>
-            </div>
-          </div>
-        </div>      
-        <div class="row">
-          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Tipo de comprobante</label>
-          <div class="col-sm-6">
-            <div class="form-group">            
-              <select class="selectpicker form-control form-control-sm" name="tipo_comprobante" id="tipo_comprobante" data-style="<?=$comboColor;?>">
-                    <option disabled selected value="">Tipo</option>
+                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
                   <?php
-                  $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM tipos_comprobante where cod_estadoreferencial=1 order by 1");
-                $stmt->execute();
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                  $codigoX=$row['codigo'];
-                  $nombreX=$row['nombre'];
-                  $abrevX=$row['abreviatura'];
-                ?>
-                <option value="<?=$codigoX;?>"><?=$nombreX;?> - <?=$abrevX;?></option>  
-                <?php
-                  }
-                  ?>
-              </select>
+                    }
+                    ?>
+                </select>
+              </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Unidad</label>
-          <div class="col-sm-6">
-            <div class="form-group">            
-              <select class="selectpicker form-control form-control-sm" name="unidad" id="unidad" data-style="<?=$comboColor;?>">
-                    <option disabled selected value="">Tipo</option>
+          </div>  
+          <div class="row">
+            <label class="col-sm-4 text-right col-form-label" style="color:#424242">Mes del comprobante</label>
+            <div class="col-sm-6">
+              <div class="form-group">              
+                <select class="selectpicker form-control form-control-sm" name="mes_comprobante" id="mes_comprobante" data-style="<?=$comboColor;?>">
+                    <option disabled selected value=""></option>                
+                    <option value="1">ENERO</option>
+                    <option value="2">FEBRERO</option>
+                    <option value="3">MARZO</option>
+                    <option value="4">ABRIL</option>
+                    <option value="5">MAYO</option>
+                    <option value="6">JUNIO</option>
+                    <option value="7">JULIO</option>
+                    <option value="8">AGOSTO</option>
+                    <option value="9">SEPTIEMBRE</option>
+                    <option value="10">OCTUBRE</option>
+                    <option value="11">NOVIEMBRE</option>
+                    <option value="12">DICIEMBRE</option>                  
+                </select>
+              </div>
+            </div>
+          </div>      
+          <div class="row">
+            <label class="col-sm-4 text-right col-form-label" style="color:#424242">Tipo de comprobante</label>
+            <div class="col-sm-6">
+              <div class="form-group">            
+                <select class="selectpicker form-control form-control-sm" name="tipo_comprobante" id="tipo_comprobante" data-style="<?=$comboColor;?>">
+                      <option disabled selected value="">Tipo</option>
+                    <?php
+                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM tipos_comprobante where cod_estadoreferencial=1 order by 1");
+                  $stmt->execute();
+                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $codigoX=$row['codigo'];
+                    $nombreX=$row['nombre'];
+                    $abrevX=$row['abreviatura'];
+                  ?>
+                  <option value="<?=$codigoX;?>"><?=$nombreX;?> - <?=$abrevX;?></option>  
                   <?php
-                  $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 order by 1");
-                $stmt->execute();
-                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                  $codigoX=$row['codigo'];
-                  $nombreX=$row['nombre'];
-                  $abrevX=$row['abreviatura'];
-                ?>
-                <option value="<?=$codigoX;?>"><?=$nombreX;?> - <?=$abrevX;?></option>  
-                <?php
-                  }
-                  ?>
-              </select>
+                    }
+                    ?>
+                </select>
+              </div>
             </div>
           </div>
-        </div>  
-
-        <div class="row">
-          <label class="col-sm-4 text-right col-form-label" style="color:#424242">Número de Comprobante</label>
-          <div class="col-sm-6">
-            <div class="form-group">
-              <input type="number"name="nro_comprobante" id="nro_comprobante" class="form-control" onchange="ajaxBuscarComprobanteCajaChica()">
+          <div class="row">
+            <label class="col-sm-4 text-right col-form-label" style="color:#424242">Unidad</label>
+            <div class="col-sm-6">
+              <div class="form-group">            
+                <select class="selectpicker form-control form-control-sm" name="unidad" id="unidad" data-style="<?=$comboColor;?>">
+                      <option disabled selected value="">Tipo</option>
+                    <?php
+                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 order by 1");
+                  $stmt->execute();
+                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $codigoX=$row['codigo'];
+                    $nombreX=$row['nombre'];
+                    $abrevX=$row['abreviatura'];
+                  ?>
+                  <option value="<?=$codigoX;?>"><?=$nombreX;?> - <?=$abrevX;?></option>  
+                  <?php
+                    }
+                    ?>
+                </select>
+              </div>
             </div>
-          </div>        
-        </div>    
-        <div class="row" id="contenedor_detalle_comprobante">
+          </div>  
+          <div class="row">
+            <label class="col-sm-4 text-right col-form-label" style="color:#424242">Número de Comprobante</label>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <input type="number"name="nro_comprobante" id="nro_comprobante" class="form-control" onchange="ajaxBuscarComprobanteCajaChica()">
+              </div>
+            </div>        
+          </div>   
+          <div class="row" id="contenedor_detalle_comprobante">
           
+        </div>
         </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success d-none" id="guardarDatosModalComprobante" name="guardarDatosModalComprobante">Generar Comprobante</button>
+        <button type="button" class="btn btn-primary" onclick="ajaxBuscarComprobanteCajaChica()" >Buscar Comprobante</button>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
       </div>
     </div>

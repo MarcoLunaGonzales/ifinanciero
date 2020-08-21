@@ -18,6 +18,11 @@ if(isset($_GET['q'])){
 $cod_simulacion=0;
 $cod_facturacion=null;
 $contadorRegistros=0;
+
+$queryPr="SELECT *,DATE_FORMAT(Fecha,'%d/%m/%Y')as Fecha_x from ibnorca.ventanormas where (idSolicitudfactura=0 or idSolicitudfactura is null) order by Fecha desc limit 50";
+// echo $queryPr;
+$stmt = $dbh->prepare($queryPr);
+$stmt->execute();                    
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -67,22 +72,18 @@ $contadorRegistros=0;
                                         <!-- <th >Año</th> -->
                                         <th>Oficina</th>
                                         <th>Fecha</th>
-                                        <th width="40%">Cliente</th>
-                                        <th>Norma</th>
+                                        <th width="20%">Cliente</th>
+                                        <th>Código<br> Norma</th>
+                                        <th>Nombre Norma</th>
                                         <th>Cantidad</th>
-                                        <th width="10%">Importe(BOB)</th>                                            
+                                        <th width="10%">Importe<br>(BOB)</th>                                            
                                         <th class="small">H/D</th>  
                                       </tr>
                                   </thead>
                                   <tbody>                                
                                     <?php 
                                     $iii=1;
-                                    $queryPr="SELECT *,DATE_FORMAT(Fecha,'%d/%m/%Y')as Fecha_x from ibnorca.ventanormas where (idSolicitudfactura=0 or idSolicitudfactura is null) order by Fecha desc limit 50";
-                                    // echo $queryPr;
-                                    $stmt = $dbh->prepare($queryPr);
-                                    $stmt->execute();                                        
                                     while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                     
                                         $idVentaNormas=$rowPre['IdVentaNormas'];
                                         $idOficina=$rowPre['idOficina'];
                                         $nombre_oficina=trim(abrevUnidad($idOficina),'-');
@@ -90,6 +91,7 @@ $contadorRegistros=0;
                                         $Fecha=$rowPre['Fecha_x'];
                                         $idNorma=$rowPre['idNorma'];
                                         $Catalogo=$rowPre['Catalogo'];
+                                        $Norma_descripcion=abrevNorma($idNorma,$Catalogo);
                                         $Norma=nameNorma($idNorma,$Catalogo);
                                         $Cantidad=$rowPre['Cantidad'];
 
@@ -105,12 +107,13 @@ $contadorRegistros=0;
                                         <tr>
                                           <td><?=$iii?></td>
                                           <!-- <td class="text-left"><?=$cod_anio?> </td> -->
-                                          <td class="text-left"><?=$nombre_oficina?></td>
-                                          <td class="text-right"><?=$Fecha?></td>
-                                          <td class="text-left"><?=$NombreCliente?></td>
-                                          <td class="text-left"><?=$Norma?></td>
-                                          <td class="text-right"><?=$Cantidad?></td>
-                                          <td class="text-right"><?=number_format($Precio,2,".","")?></td>
+                                          <td class="text-left small"><?=$nombre_oficina?></td>
+                                          <td class="text-righ small"><?=$Fecha?></td>
+                                          <td class="text-left small"><?=$NombreCliente?></td>
+                                          <td class="text-left small"><?=$Norma?></td>
+                                          <td class="text-left small"><?=$Norma_descripcion?></td>
+                                          <td class="text-righ smallt"><?=$Cantidad?></td>
+                                          <td class="text-righ smallt"><?=number_format($Precio,2,".","")?></td>
                                           <!-- checkbox -->
                                           <td>
                                             <div class="togglebutton">

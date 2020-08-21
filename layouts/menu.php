@@ -545,7 +545,7 @@ if($menuModulo==0){
                   <a class="nav-link" href="?opcion=listFacturasServicios_conta">
                     <span class="sidebar-mini"> SF </span>
                     <span class="sidebar-normal"> Solicitudes de Facturación</span>
-                  </a>
+                  </a> 
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listFacturasGeneradas">
@@ -709,11 +709,17 @@ if($menuModulo==0){
                   </a>
                 </li>    
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listFacturasGeneradas_admin" target="_blank">
-                    <span class="sidebar-mini"> GF </span>
-                    <span class="sidebar-normal"> Gestión de Facturas</span>
+                  <a class="nav-link" href="?opcion=listFacturasGeneradas_admin">
+                    <span class="sidebar-mini"> ERSF</span>
+                    <span class="sidebar-normal">Edición RS Facturas</span>
                   </a>
-                </li>                         
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listFacturasServicios_conta_admin">
+                    <span class="sidebar-mini"> EFPSF </span>
+                    <span class="sidebar-normal"> Edición Formas de Pago SF</span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>

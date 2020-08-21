@@ -58,11 +58,12 @@ if ($codigo > 0){
     $cod_proveedores= $result['cod_proveedores'];
     $cod_actividad_sw= $result['cod_actividad_sw'];
     $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;
-    // sacamos datos del comprobante
-    $stmtComprobante = $dbh->prepare("SELECT e.cod_comprobantedetalleorigen,e.cod_plancuenta,e.cod_cuentaaux,c.glosa from estados_cuenta e,comprobantes_detalle c where e.cod_comprobantedetalleorigen=c.codigo and e.cod_cajachicadetalle=$codigo order by e.codigo asc LIMIT 1");
+    // sacamos datos del comprobante (estao de cuenta)
+    $stmtComprobante = $dbh->prepare("SELECT e.cod_comprobantedetalleorigen,e.cod_plancuenta,e.cod_cuentaaux,(select c.glosa from comprobantes_detalle c where c.codigo in (select ee.cod_comprobantedetalle from estados_cuenta ee where ee.codigo=e.cod_comprobantedetalleorigen))as glosa
+    FROM estados_cuenta e WHERE cod_cajachicadetalle=$codigo");
     $stmtComprobante->execute();
     $resultComprobante = $stmtComprobante->fetch();
-    $cod_comprobante =  $resultComprobante['cod_comprobantedetalleorigen'];
+    $cod_comprobante =  $resultComprobante['cod_comprobantedetalleorigen'];//estado de cuenta
     $cod_cuenta_compro=$resultComprobante['cod_plancuenta'];
     $cod_cuenta_aux_compro=$resultComprobante['cod_cuentaaux']; 
     $glosa_comprobante=$resultComprobante['glosa']; 
@@ -201,14 +202,27 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 <div class="col-sm-4">
                     <div class="form-group">
                       <div id="div_contenedor_tiporetencion">  
-                        <select name="tipo_retencion" id="tipo_retencion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
-                          <option value="" disabled selected="selected">-Retenciones-</option>
-                            <?php                                     
-                            $stmtTipoRet = $dbh->query("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order by 2");
-                            while ($row = $stmtTipoRet->fetch()){ ?>
-                                <option <?=($cod_retencion==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                            <?php } ?>
-                        </select>  
+                        <?php
+                        if($codigo>0 && $cod_comprobante>0 && $cod_comprobante!=""){?>
+                          <select name="tipo_retencion" id="tipo_retencion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
+                            <option value="" disabled selected="selected">-Retenciones-</option>
+                              <?php                                     
+                              $stmtTipoRet = $dbh->query("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order by 2");
+                              while ($row = $stmtTipoRet->fetch()){ ?>
+                                  <option <?=($cod_retencion==$row["codigo"])?"selected":"disabled";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                              <?php } ?>
+                          </select>  
+                        <?php }else{?>
+                          <select name="tipo_retencion" id="tipo_retencion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
+                            <option value="" disabled selected="selected">-Retenciones-</option>
+                              <?php                                     
+                              $stmtTipoRet = $dbh->query("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order by 2");
+                              while ($row = $stmtTipoRet->fetch()){ ?>
+                                  <option <?=($cod_retencion==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                              <?php } ?>
+                          </select>  
+                        <?php }
+                        ?>
                       </div>                                  
                     </div>
                 </div>
@@ -231,15 +245,24 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
               </div>
               <div class="col-sm-2">
                 <div class="form-group">                                
-                  <div class="retencion_sin_gastos" style="display: none">
-                   <!--  <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="AgregarContraCuentaCajaChica()">
-                      <i class="material-icons" title="Estado de Cuentas">add</i>
-                    </a> -->
-
-                    <a  href="#" onclick="verEstadosCuentas_cajachica(1,0,0);" class="btn btn-danger btn-fab btn-round btn-sm">
-                      <i class="material-icons text-dark" title="Estado de Cuentas">ballot</i>
-                    </a>
-                  </div>
+                  <?php
+                  if($cod_comprobante>0 && $cod_comprobante!=""){?>
+                    <div class="retencion_sin_gastos" >
+                      <a  href="#" onclick="verEstadosCuentas_cajachica(1,0,0);" class="btn btn-danger btn-fab btn-round btn-sm">
+                        <i class="material-icons text-dark" title="Estado de Cuentas">ballot</i>
+                        <span id="ec_icon" class="count bg-warning">*</span>
+                      </a>
+                    </div>
+                  <?php }else{?>
+                    <div class="retencion_sin_gastos" style="display: none">
+                      <a  href="#" onclick="verEstadosCuentas_cajachica(1,0,0);" class="btn btn-danger btn-fab btn-round btn-sm">
+                        <i class="material-icons text-dark" title="Estado de Cuentas">ballot</i>
+                        <span id="ec_icon" class="count bg-warning"></span>
+                      </a>
+                    </div>
+                  <?php }
+                  ?>
+                  
                 </div>
                 </div>
             </div><!-- cuenta-->
@@ -428,16 +451,21 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                     <?php
                     if($codigo>0){                      
                       //sacar codigo de estado de cuenta
-                      $sqlEstadoCuenta="SELECT e.codigo From estados_cuenta e where e.cod_comprobantedetalle=$cod_comprobante limit 1"; 
+                      $sqlEstadoCuenta="SELECT e.cod_comprobantedetalle From estados_cuenta e where e.codigo=$cod_comprobante limit 1"; 
+                      // echo $sqlEstadoCuenta;
                       $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
                       $stmtEstadoCuenta->execute();                    
                       $resultado=$stmtEstadoCuenta->fetch();
-                      $codigo_estadoCuenta=$resultado['codigo'];
-                      $sqlDetalleX="SELECT codigo,cod_solicitudrecurso,cod_solicitudrecursodetalle,cod_proveedor,cod_tipopagoproveedor from solicitud_recursosdetalle where cod_estadocuenta=$codigo_estadoCuenta limit 1";        
+                      $cod_comprobantedetalle=$resultado['cod_comprobantedetalle'];
+                      // $sqlDetalleX="SELECT codigo,cod_solicitudrecurso,cod_solicitudrecursodetalle,cod_proveedor,cod_tipopagoproveedor from solicitud_recursosdetalle where cod_estadocuenta=$codigo_estadoCuenta limit 1";        
+
+                      $sqlDetalleX="SELECT sd.codigo,sd.cod_solicitudrecurso,sd.cod_proveedor,sd.cod_tipopagoproveedor 
+                      FROM solicitud_recursos s,solicitud_recursosdetalle sd
+                      WHERE s.codigo=sd.cod_solicitudrecurso and s.cod_comprobante in (select cd.cod_comprobante from comprobantes_detalle cd where cd.codigo=$cod_comprobantedetalle)";
                       $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                       $stmtDetalleX->execute();                    
                       $resultado=$stmtDetalleX->fetch();
-                      $cod_solicitudrecursodetalle_sr=$resultado['cod_solicitudrecursodetalle'];
+                      $cod_solicitudrecursodetalle_sr=$resultado['codigo'];
                       $cod_solicitudrecurso_sr=$resultado['cod_solicitudrecurso'];  
                       // echo $cod_solicitudrecurso_sr."-";
                       if($cod_solicitudrecurso_sr!=0 && $cod_solicitudrecurso_sr!='' && $cod_solicitudrecurso_sr!=null){?>

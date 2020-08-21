@@ -151,6 +151,9 @@ $item_1=2709;
                         while ($row_det = $stmtDetalleSol->fetch()){
                           // $precio_natural=$precio/$cantidad;
                           // $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
+                          if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){                              
+                            $concepto_contabilizacion="CI: ".$ci_estudiante_x." / "; 
+                          }
                           $concepto_contabilizacion.=$descripcion_alterna."<br>\n";
                           // $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
                         }
@@ -166,40 +169,41 @@ $item_1=2709;
                           $string_formaspago=obtnerFormasPago($codigo_facturacion);
 
                           //los registros de la factura
-                          $dbh1 = new Conexion();
-                          $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
-                          $stmt2 = $dbh1->prepare($sqlA);                                   
-                          $stmt2->execute(); 
-                          $nc=0;
-                          $sumaTotalMonto=0;
-                          $sumaTotalDescuento_por=0;
-                          $sumaTotalDescuento_bob=0;
+                          // $dbh1 = new Conexion();
+                          // $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
+                          // $stmt2 = $dbh1->prepare($sqlA);                                   
+                          // $stmt2->execute(); 
+                          // $nc=0;
+                          // $sumaTotalMonto=0;
+                          // $sumaTotalDescuento_por=0;
+                          // $sumaTotalDescuento_bob=0;
 
-                          while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                            // $dato = new stdClass();//obejto
-                            $codFila=(int)$row2['codigo'];
-                            $cod_claservicioX=trim($row2['nombre_serv']);
-                            $cantidadX=trim($row2['cantidad']);                            
-                            $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
-                            $descuento_porX=trim($row2['descuento_por']);
-                            $descuento_bobX=trim($row2['descuento_bob']);                             
-                            // $descripcion_alternaX=trim($row2['descripcion_alterna']);
-                            // $dato->codigo=($nc+1);
-                            // $dato->cod_facturacion=$codFila;
-                            // $dato->serviciox=$cod_claservicioX;
-                            // $dato->cantidadX=$cantidadX;
-                            // $dato->precioX=$precioX;
-                            // $dato->descuento_porX=$descuento_porX;
-                            // $dato->descuento_bobX=$descuento_bobX;
-                            // $dato->descripcion_alternaX=$descripcion_alternaX;
-                            // $datos[$index-1][$nc]=$dato;                           
-                            $nc++;
-                            $sumaTotalMonto+=$precioX;
-                            $sumaTotalDescuento_por+=$descuento_porX;
-                            $sumaTotalDescuento_bob+=$descuento_bobX;
-                          }
-                          $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
-                          $cont[$index-1]=$nc;
+                          // while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                          //   // $dato = new stdClass();//obejto
+                          //   $codFila=(int)$row2['codigo'];
+                          //   $cod_claservicioX=trim($row2['nombre_serv']);
+                          //   $cantidadX=trim($row2['cantidad']);                            
+                          //   $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
+                          //   $descuento_porX=trim($row2['descuento_por']);
+                          //   $descuento_bobX=trim($row2['descuento_bob']);                             
+                          //   // $descripcion_alternaX=trim($row2['descripcion_alterna']);
+                          //   // $dato->codigo=($nc+1);
+                          //   // $dato->cod_facturacion=$codFila;
+                          //   // $dato->serviciox=$cod_claservicioX;
+                          //   // $dato->cantidadX=$cantidadX;
+                          //   // $dato->precioX=$precioX;
+                          //   // $dato->descuento_porX=$descuento_porX;
+                          //   // $dato->descuento_bobX=$descuento_bobX;
+                          //   // $dato->descripcion_alternaX=$descripcion_alternaX;
+                          //   // $datos[$index-1][$nc]=$dato;                           
+                          //   $nc++;
+                          //   $sumaTotalMonto+=$precioX;
+                          //   $sumaTotalDescuento_por+=$descuento_porX;
+                          //   $sumaTotalDescuento_bob+=$descuento_bobX;
+                          // }
+                          // $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
+                          $sumaTotalImporte=obtenerSumaTotal_solicitudFacturacion($codigo_facturacion);
+                          // $cont[$index-1]=$nc;
                           // $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
 
                           ?>
