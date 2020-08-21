@@ -42,7 +42,7 @@ and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.Id
 m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo ";  
 
 if($ci!=""){
-  $sql.=" and cpe.clIdentificacion=$ci";
+  $sql.=" and cpe.clIdentificacion like '%$ci%'";
 }
 if($nombre!=""){
   $sql.=" and cpe.clNombreRazon like '%$nombre%'";

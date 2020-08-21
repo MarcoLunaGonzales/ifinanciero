@@ -713,17 +713,11 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> P </span>
                     <span class="sidebar-normal"> Proveedores Listado</span>
                   </a>
-                </li>    
+                </li>                    
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listFacturasGeneradas_admin">
-                    <span class="sidebar-mini"> ERSF</span>
-                    <span class="sidebar-normal">Edición RS Facturas</span>
-                  </a>
-                </li>
-                <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listFacturasServicios_conta_admin">
-                    <span class="sidebar-mini"> EFPSF </span>
-                    <span class="sidebar-normal"> Edición Formas de Pago SF</span>
+                  <a class="nav-link" href="?opcion=configuracion_edit_sf">
+                    <span class="sidebar-mini"> CESF </span>
+                    <span class="sidebar-normal"> Configuración Edición SF</span>
                   </a>
                 </li>
               </ul>

@@ -339,7 +339,7 @@ $descuento_cliente=0;
                             <label class="col-sm-1 col-form-label">Nit</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true"/>
+                                    <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true"/>
                                 </div>
                             </div>
                         </div>

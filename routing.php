@@ -325,8 +325,8 @@
 		if ($_GET['opcion']=='listFacturasServicios_conta') {
 			require_once('simulaciones_servicios/listFacturasSolicitadas_conta.php');
 		}
-		if ($_GET['opcion']=='listFacturasServicios_conta_admin') {
-			require_once('simulaciones_servicios/listFacturasSolicitadas_conta_admin.php');
+		if ($_GET['opcion']=='configuracion_edit_sf') {
+			require_once('utilitarios/configuracion_edit_sf.php');
 		}
 		if ($_GET['opcion']=='listFacturasServiciosAdmin') {
 			require_once('simulaciones_servicios/listFacturasSolicitadasAdmin.php');
@@ -334,11 +334,7 @@
 
 		if ($_GET['opcion']=='listFacturasGeneradas') {
 			require_once('simulaciones_servicios/listFacturasGeneradas.php');
-		}
-		if ($_GET['opcion']=='listFacturasGeneradas_admin') {
-			require_once('simulaciones_servicios/listFacturasGeneradas_admin.php');
-		}
-
+		}		
         if ($_GET['opcion']=='registerSimulacionServicio') {
 			require_once('simulaciones_servicios/registerSimulaciones.php');
 		}

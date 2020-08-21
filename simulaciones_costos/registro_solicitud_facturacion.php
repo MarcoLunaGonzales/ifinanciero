@@ -30,7 +30,7 @@ $sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,'
 FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
 where cpe.clIdentificacion=aa.CiAlumno 
 and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
-m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion=$ci_estudiante and aa.IdCurso=$IdCurso limit 1;";
+m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion like '%$ci_estudiante%' and aa.IdCurso=$IdCurso limit 1;";
 // echo $sqlIBNORCA;
 $stmtIbno = $dbhIBNO->prepare($sqlIBNORCA);
 $stmtIbno->execute();
@@ -396,7 +396,7 @@ $contadorRegistros=0;
                             <label class="col-sm-1 col-form-label">Nit</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true"/>
+                                    <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true"/>
                                 </div>
                             </div>
                         </div>
@@ -460,7 +460,7 @@ $contadorRegistros=0;
                                             FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
                                             where cpe.clIdentificacion=aa.CiAlumno 
                                             and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
-                                            m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion=$ci_estudiante and aa.IdCurso=$IdCurso";    
+                                            m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion like '%$ci_estudiante%' and aa.IdCurso=$IdCurso";    
                                         // echo $queryPr;
                                         $stmt = $dbhIBNO->prepare($queryPr);
                                         $stmt->execute();
@@ -560,12 +560,12 @@ $contadorRegistros=0;
                                                     if($estadoPagado!=1){
                                                         // if($cod_facturacion==0){
                                                             //parte del controlador de check//impedir los ya registrados
-                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.ci_estudiante=$ci_estudiante and tipo_solicitud=2 and sf.cod_estadosolicitudfacturacion!=2";
+                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.ci_estudiante like '%$ci_estudiante%' and tipo_solicitud=2 and sf.cod_estadosolicitudfacturacion!=2";
                                                              // echo $sqlControlador2;
                                                             $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                             $stmtControlador2->execute();
                                                             //sacamos el monto total
-                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion<>5 and sf.ci_estudiante=$ci_estudiante and tipo_solicitud=2 and sf.cod_estadosolicitudfacturacion!=2";
+                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.cod_estadosolicitudfacturacion<>5 and sf.ci_estudiante like '%$ci_estudiante%' and tipo_solicitud=2 and sf.cod_estadosolicitudfacturacion!=2";
                                                              // echo $sqlControladorTotal;
                                                             $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
                                                             $stmtControladorTotal->execute();

@@ -206,59 +206,68 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                               $cod_tipopago=obtenemosformaPagoSolfact($codigo_facturacion);//fomra pago
                                               $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
                                               $cod_tipopago_anticipo=obtenerValorConfiguracion(64);
-                                              $cont_de_tipos_pago=0;//cuando el contador sea 0 exite deposito y anticipo
-                                              $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_deposito_cuenta,$codigo_facturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista
-                                              if($cod_tipopago_aux!=0){
-                                                $cont_de_tipos_pago++;
-                                                $cod_tipopago=$cod_tipopago_aux;
-                                                $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_deposito_cuenta,$codigo_facturacion);//
-                                                $datos_FacManual_de=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
-                                              }
-                                              // verifiacamos si pertenece a tipo de apgo anticipo
-                                              $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$codigo_facturacion);                                              
-                                              if($cod_tipopago_aux!=0){
-                                                $cont_de_tipos_pago++;
-                                                $cod_tipopago=$cod_tipopago_aux;
-                                                $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_anticipo,$codigo_facturacion);//
-                                                $datos_FacManual_anticipo=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
-                                                if(isset($datos_FacManual_de)){
-                                                  $datos_FacManual_de.="/".$saldo_dc;//adicionamos el saldo de la libreta
-                                                }                                              
-                                              }
-                                              if($cont_de_tipos_pago==2){?>
-                                                <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','4')">
-                                                    <i class="material-icons text-success">receipt</i> Generar Factura
-                                                  </a>
-                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','5')">
-                                                    <i class="material-icons text-info">receipt</i>Generar Factura Manual
-                                                  </a><?php
+                                              $cod_tipopago_credito=obtenerValorConfiguracion(48);//creidto
+                                              $cod_cliente_x=obtenerCodigoCuentaAuxiliarProveedorCliente(2,$cod_cliente);//solo par credito nos sirve
+                                              $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_credito,$codigo_facturacion);//
+                                              if($cod_tipopago_aux==$cod_tipopago_credito && $cod_cliente_x==0){//si es a credito y no tiene cuenta auxiliar
+                                                $datos_sf_credito=$codigo_facturacion."/".$cod_cliente;?>
+                                                <a href='#' title="Registrar Cuenta Auxiliar" class="dropdown-item" onclick="abrirRegistroCuentaAuxiliar('<?=$datos_sf_credito;?>','1')">
+                                                  <i class="material-icons text-success">receipt</i>Registrar Cuenta Auxiliar</a><?php 
                                               }else{
-                                                if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito se activa la libreta bancaria?>
-                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','1')">
-                                                    <i class="material-icons text-success">receipt</i> Generar Factura
-                                                  </a>
-                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','3')">
-                                                    <i class="material-icons text-info">receipt</i>Generar Factura Manual
-                                                  </a><?php                                               
-                                                }elseif($cod_tipopago==$cod_tipopago_anticipo){ //echo ?>
-                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual_anticipo;?>','<?=$urlGenerarFacturas2;?>','1','0')">
-                                                    <i class="material-icons text-success">receipt</i> Generar Factura
-                                                  </a>
-                                                  <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual_anticipo;?>','<?=$urlGenerarFacturas2;?>','3','0')">
-                                                    <i class="material-icons text-info">receipt</i>Generar Factura Manual
-                                                  </a>
-                                                  <?php
-                                                }else{?>
-                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
-                                                    <i class="material-icons text-success">receipt</i> Generar Factura
-                                                  </a>                                                  
-                                                  <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
-                                                    <i class="material-icons text-info">receipt</i> Generar Factura Manual
-                                                  </button><?php 
-                                                }  
+                                                $cont_de_tipos_pago=0;//cuando el contador sea 0 exite deposito y anticipo
+                                                $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_deposito_cuenta,$codigo_facturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista
+                                                if($cod_tipopago_aux!=0){
+                                                  $cont_de_tipos_pago++;
+                                                  $cod_tipopago=$cod_tipopago_aux;
+                                                  $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_deposito_cuenta,$codigo_facturacion);//
+                                                  $datos_FacManual_de=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
+                                                }
+                                                // verifiacamos si pertenece a tipo de Pago anticipo
+                                                $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$codigo_facturacion);
+                                                if($cod_tipopago_aux!=0){
+                                                  $cont_de_tipos_pago++;
+                                                  $cod_tipopago=$cod_tipopago_aux;
+                                                  $saldo_dc=obtenerMontoporcentaje_formapago($cod_tipopago_anticipo,$codigo_facturacion);//
+                                                  $datos_FacManual_anticipo=$codigo_facturacion."/0/".$saldo_dc."/".$index."/".$nit."/".$razon_social;//dato para modal
+                                                  if(isset($datos_FacManual_de)){
+                                                    $datos_FacManual_de.="/".$saldo_dc;//adicionamos el saldo de la libreta
+                                                  }                                              
+                                                }
+                                                if($cont_de_tipos_pago==2){?>
+                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','4')">
+                                                      <i class="material-icons text-success">receipt</i> Generar Factura
+                                                    </a>
+                                                    <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','5')">
+                                                      <i class="material-icons text-info">receipt</i>Generar Factura Manual
+                                                    </a><?php
+                                                }else{                                                
+                                                  if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito se activa la libreta bancaria?>
+                                                    <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','1')">
+                                                      <i class="material-icons text-success">receipt</i> Generar Factura
+                                                    </a>
+                                                    <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','3')">
+                                                      <i class="material-icons text-info">receipt</i>Generar Factura Manual
+                                                    </a><?php                                               
+                                                  }elseif($cod_tipopago==$cod_tipopago_anticipo){ //echo ?>
+                                                    <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual_anticipo;?>','<?=$urlGenerarFacturas2;?>','1','0')">
+                                                      <i class="material-icons text-success">receipt</i> Generar Factura
+                                                    </a>
+                                                    <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual_anticipo;?>','<?=$urlGenerarFacturas2;?>','3','0')">
+                                                      <i class="material-icons text-info">receipt</i>Generar Factura Manual
+                                                    </a>
+                                                    <?php
+                                                  }else{
+                                                    ?>
+                                                    <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
+                                                      <i class="material-icons text-success">receipt</i> Generar Factura
+                                                    </a>                                                  
+                                                    <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
+                                                      <i class="material-icons text-info">receipt</i> Generar Factura Manual
+                                                    </button><?php 
+                                                  }  
+                                                }
                                               }
-
-                                               ?>                                             
+                                              ?>                                             
                                           </div>
                                         </div>                           
                                         <?php 
@@ -284,15 +293,20 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                       <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modalDevolverSolicitud('<?=$datos_devolucion;?>')">
                                           <i class="material-icons" title="Devolver Solicitud de Facturación">settings_backup_restore</i>
                                       </button>
-                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir">print</i></a>
+                                      <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a>
                                       <a href="<?=$urlVer_SF;?>?codigo=<?=$codigo_facturacion;?>" target="_blank" class="btn btn-info" title="Ver Solicitud">
                                         <i class="material-icons">remove_red_eye</i>
                                       </a>
                                       <a href='#' title="Archivos Adjuntos" class="btn btn-primary" onclick="abrirArchivosAdjuntos('<?=$datos_FacManual;?>')"><i class="material-icons" ><?=$iconFile?></i></a>
-                                      <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditarSolFac" onclick="modal_editar_sf_conta('<?=$datos_edit;?>')">
-                                        <i class="material-icons" title="Editar Forma De Pago">edit</i>
-                                      </button> -->
-                                    <?php }
+                                      <?php
+                                      $variable_configuracion_edit=obtenerValorConfiguracion(76);
+                                      if($variable_configuracion_edit==1){
+                                        $datos_edit=$nro_correlativo."###".$sumaTotalImporte."###".$codigo_facturacion."###".$nit."###".$razon_social;?>
+                                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditarSolFac" onclick="modal_editar_sf_conta('<?=$datos_edit;?>')">
+                                          <i class="material-icons" title="Editar Forma De Pago">edit</i>
+                                        </button>
+                                      <?php }
+                                    }
                                   ?>
                                 </div></div>
                                 </td>
@@ -317,6 +331,116 @@ $globalAdmin=$_SESSION["globalAdmin"];
       </div>
     </div>
   </div>
+
+<div class="modal fade" id="modalEditarSolFac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <form id="formSoliFact_modal" class="form-horizontal" action="simulaciones_servicios/ajax_tipopago_edit_conta_save.php" method="post" onsubmit="return valida_xy(this)" enctype="multipart/form-data">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title" id="myModalLabel"><b>Porcentaje de Distribución del Ingreso por Forma de Pago</b></h3>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="cod_solicitud_e" id="cod_solicitud_e" value="0">        
+          <div class="row">
+            <label class="col-sm-2 text-right col-form-label" style="color:#424242">Nro. de Solicitud: </label>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <input type="text" name="nro_correlativo_e" id="nro_correlativo_e" class="form-control" readonly="true">
+              </div>
+            </div>
+            <input type="hidden" name="nit_e_sf" id="nit_e_sf" class="form-control" readonly="true">
+            <label class="col-sm-1 text-right col-form-label" style="color:#424242">Razón Social: </label>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <input type="text" name="razon_social_e_sf" id="razon_social_e_sf" class="form-control" readonly="true">
+              </div>
+            </div>    
+          </div>        
+            <div id="contenedor_formapago_edit">
+              
+            </div>             
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success" >Guardar</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal fade" id="modalRegisterCuentasAux_sf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+      <div class="card-header card-header-success card-header-text">
+        <div class="card-text">
+          <h5>Nueva Cuenta Auxiliar</h5> 
+        </div>
+        <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <input type="hidden" name="cod_solicitudfacturacion_cred" id="cod_solicitudfacturacion_cred"/>
+      <div class="card-body">
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Cuenta</label>
+          <div class="col-sm-4">
+            <div class="form-group">                  
+              <select name="cod_cuenta" id="cod_cuenta" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" >
+                <option value="">SELECCIONAR UNA OPCION</option><?php 
+                $cod_defecto_clientes=obtenerValorConfiguracion(78);
+                $sql="SELECT codigo,numero,nombre from plan_cuentas where cuenta_auxiliar=1  order by nombre";
+                $stmt = $dbh->prepare($sql);
+                $stmt->bindParam(':codigo', $codigo);
+                $stmt->bindParam(':nombre', $nombre);
+                $stmt->bindParam(':numero', $numero);
+                $stmt->execute();
+                while ($row = $stmt->fetch()){ ?>
+                  <option <?=($cod_defecto_clientes==$row["codigo"])?"selected":"disabled";?> value="<?=$row["codigo"];?>"><?=$row["numero"];?> - <?=$row["nombre"];?></option><?php 
+                } 
+                ?>
+             </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Nombre</label>
+          <div class="col-sm-7">
+          <div class="form-group">
+            <input class="form-control" type="text" name="nombre_x" id="nombre_x" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+          </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Tipo</label>
+            <div class="col-sm-4">
+                  <div class="form-group">
+                  <select class="selectpicker form-control form-control-sm" name="tipo_x" id="tipo_x" data-style="<?=$comboColor;?>" required="true" onChange="ajaxTipoProveedorCliente_comprobante(this);">
+                  <option disabled selected value="">Seleccionar una opcion</option>
+                <option disabled value="1">Proveedor</option>  
+                <option selected value="2">Cliente</option>  
+              </select>
+              </div>
+                </div>
+        </div>
+
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Proveedor/Cliente</label>
+          <div class="col-sm-7">
+          <div class="form-group" id="divProveedorCliente">
+            
+          </div>
+          </div>
+        </div>
+        <div class="form-group float-right">
+            <button type="button" class="btn btn-warning btn-round" onclick="guardarNuevaCuentaAuxi_facturacion()">Guardar</button>
+        </div>         
+      </div>
+    </div>
+  </div>
+</div>
 <?php  require_once 'simulaciones_servicios/modal_facturacion.php';?>
 <?php  require_once 'simulaciones_servicios/modal_subir_archivos.php';?>
 
@@ -368,49 +492,16 @@ $globalAdmin=$_SESSION["globalAdmin"];
       }else{        
         registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion,q,s,u,v);
       }      
-    });
-    // $('#guardarSolFacEdit').click(function(){          
-    //   cod_solicitud_e=document.getElementById("cod_solicitud_e").value;
-    //   cod_tipopagoE=$('#cod_tipopagoE').val();      
-    //   // asunto=$('#asunto').val();
-    //   // mensaje=$('#mensaje').val();
-      
-    //   if(cod_tipopagoE==null || cod_tipopagoE == "" ||cod_tipopagoE == 0){        
-    //     Swal.fire("Informativo!", "Seleccione una opción por favor!", "warning");
-    //   }else{
-    //     actualizar_solfacturacion_edit(cod_solicitud_e,cod_tipopagoE);  
-    //   }
-    // });   
-
+    });    
   });
-  function valida_modalFacPar(f) {
-      var ok = true;
-      calcular_monto_total_items_factura_parcial();
-      if(f.elements["total_importe_pagar"].value == 0 || f.elements["total_importe_pagar"].value < 0 || f.elements["total_importe_pagar"].value == '')
+</script>
+<script type="text/javascript">
+  function valida_xy(f) {
+      var ok = true;      
+      if(f.elements["total_diferencia_bob_tipopago"].value != 0 )
       {
-        var msg = "El Monto Total a pagar no debe ser 0 o Nulo...\n";      
+        var msg = "EL porcentaje de los montos difiere del 100%.";
         ok = false;
-      }      
-      if(f.elements["total_importe_anterior"].value!=0){
-        var importe_anterior=f.elements["total_importe_anterior"].value;
-        var importe=f.elements["total_importe"].value;
-        var saldo=parseFloat(importe)-parseFloat(importe_anterior);
-        // alert(saldo);
-
-        if(parseFloat(f.elements["total_importe_pagar"].value)>saldo)
-        {
-          var msg = "El Monto Total a pagar es Superior al total del Saldo anterior ("+number_format(saldo,2)+") ...\n";      
-          ok = false;
-        }
-      }else{        
-        var total_importe_pagar =f.elements["total_importe_pagar"].value;
-        var total_importe =f.elements["total_importe"].value;
-        // alert(total_importe_pagar+"-"+total_importe);
-        if(parseFloat(total_importe_pagar) > parseFloat(total_importe))
-        {
-          var msg = "El Monto Total a pagar es Superior al total del importe de la solicitud ("+number_format(total_importe_pagar,2)+">"+number_format(total_importe,2)+")...\n";
-          ok = false;
-        }  
       }      
       if(ok == false)    
         Swal.fire("Informativo!",msg, "warning");

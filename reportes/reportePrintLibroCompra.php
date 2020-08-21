@@ -18,8 +18,22 @@ $stringUnidadesX=implode(",", $unidad);
 $nombre_gestion=nameGestion($gestion);
 $nombre_mes=nombreMes($cod_mes_x);
 
+if (isset($_POST["check_rs_librocompras"])) {
+  $check_rs_librocompras=$_POST["check_rs_librocompras"]; 
+  if($check_rs_librocompras){
+    $razon_social=$_POST["razon_social"]; 
+    $sql_rs=" and f.razon_social like '%$razon_social%'";
+  }else{
+    $sql_rs="";
+  }
+}else{
+  $sql_rs="";
+}
+
 // echo $areaString;
-$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c, comprobantes cc where cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($stringUnidadesX) and MONTH(f.fecha)=$cod_mes_x and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha asc";
+$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra 
+  FROM facturas_compra f, comprobantes_detalle c, comprobantes cc 
+  WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($stringUnidadesX) and MONTH(cc.fecha)=$cod_mes_x and YEAR(cc.fecha)=$nombre_gestion $sql_rs ORDER BY f.fecha asc";
 //echo $sql;
 $stmt2 = $dbh->prepare($sql);
 // echo $sql;
