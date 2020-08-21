@@ -504,7 +504,7 @@ $contadorRegistros=0;
                                                 $sw="";
                                                 if($cod_facturacion>0){
                                                     //$sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd, solicitudes_facturacion_grupal sfg where sf.codigo=sfg.cod_solicitudfacturacion and  sf.codigo=sfd.cod_solicitudfacturacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and sfg.cod_curso=$IdCurso and tipo_solicitud in (2,7)";
-                                                    $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and sfd.cod_curso=$IdCurso and sf.tipo_solicitud in (2,7) and sfd.ci_estudiante=$ci_estudiante";
+                                                    $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and sfd.cod_curso=$IdCurso and sf.tipo_solicitud in (2,7) and sfd.ci_estudiant like '%$ci_estudiante%'";
                                                     // echo $sqlControlador;
                                                     $stmtControlado = $dbh->prepare($sqlControlador);
                                                    $stmtControlado->execute();                                                   
@@ -551,12 +551,12 @@ $contadorRegistros=0;
                                                     if($estadoPagado!=1){
                                                         // if($cod_facturacion==0){
                                                             //parte del controlador de check//impedir los ya registrados
-                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sfd.cod_claservicio=$codCS and sf.ci_estudiante=$ci_estudiante and tipo_solicitud in (2,7) and sf.cod_estadosolicitudfacturacion!=2";
+                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sfd.cod_claservicio=$codCS and sf.ci_estudiante like '%$ci_estudiante%' and tipo_solicitud in (2,7) and sf.cod_estadosolicitudfacturacion!=2";
                                                              // echo $sqlControlador2;
                                                             $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                             $stmtControlador2->execute();
                                                             //sacamos el monto total
-                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sfd.cod_claservicio=$codCS and sf.ci_estudiante=$ci_estudiante and tipo_solicitud in (2,7) and sf.cod_estadosolicitudfacturacion!=2";
+                                                            $sqlControladorTotal="SELECT SUM(sfd.precio) as precio from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sfd.cod_claservicio=$codCS and sf.ci_estudiante like '%$ci_estudiante%' and tipo_solicitud in (2,7) and sf.cod_estadosolicitudfacturacion!=2";
                                                              // echo $sqlControladorTotal;
                                                             $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
                                                             $stmtControladorTotal->execute();

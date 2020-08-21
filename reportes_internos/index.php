@@ -32,7 +32,7 @@ $dbh = new Conexion();
 						<div class="col-sm-4">
 							<div class="form-group">								
 								<a class="btn btn-info" href="lista_de_facturas_generadas.php">				                
-				                    <span class="sidebar-normal"> Informaciòn Facturas Generadas</span>
+				                    <span class="sidebar-normal"> Información Facturas Generadas</span>
 				                </a>
 							</div>
 				  		</div>  	
@@ -67,7 +67,7 @@ $dbh = new Conexion();
 			<div class="card">
 			  	<div class="card-header card-danger card-header-text">
 					<div class="card-text">
-				  		<h4 class="card-title">Reportes Facturación,estado de resultados,comprobnates</h4>
+				  		<h4 class="card-title">Reportes Facturación,estado de resultados,comprobantes</h4>
 					</div>
 			  	</div>
 
@@ -82,7 +82,7 @@ $dbh = new Conexion();
 				  		</div>  	
 				  		<div class="col-sm-4">
 							<div class="form-group">
-								<a class="btn btn-warning" href="reporte_verif_facturas_compronbates_filtro.php">				                
+								<a class="btn btn-warning" href="reporte_verificacion_facturas_comprobante_filtro.php">				                
 				                    <span class="sidebar-normal"> Facturas vs Comprobantes</span>
 				                </a>
 							</div>

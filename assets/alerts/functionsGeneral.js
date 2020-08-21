@@ -11568,11 +11568,11 @@ function actualizar_factura(cod_facturaventa_e,razon_social_e){
   $.ajax({
     type:"POST",
     data:"cod_facturaventa_e="+cod_facturaventa_e+"&razon_social_e="+razon_social_e,
-    url:"simulaciones_servicios/listFacturasGeneradas_admin_save.php",
+    url:"simulaciones_servicios/generarFacturas_editsave.php",
     success:function(r){      
       detectarCargaAjax();
       if(r==1){
-        var url="index.php?opcion=listFacturasGeneradas_admin";
+        var url="index.php?opcion=listFacturasGeneradas";
         alerts.showSwal('success-message',url);
       }else{
         Swal.fire("ERROR! :(", "Ocurrio un error al actualizar la factura.", "warning");        
@@ -15461,7 +15461,25 @@ function ajax_mes_de_gestion(combo){
     }
   }
   ajax.send(null);
+}
+function ajax_razon_social_filtro_compras(){
+  var contenedor = document.getElementById('contenedor_razos_social_librocompras');      
 
+  var check=document.getElementById("check_rs_librocompras");
+  if(check.checked){
+    var check_var=1;
+  }else{
+    var check_var=0;
+  }
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/ajax_librocompras_razonsocial.php?check_var='+check_var,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null);
 }
 function descargar_txt_libro_ventas(){
     var cod_gestion=$("#gestiones").val();
@@ -15681,6 +15699,45 @@ function guardarNuevaCuentaAuxi(){
                 codCuenta: cod_cuenta}
               itemCuentasAux.push(objeto_cuenta_aux);
 
+            }else{
+              Swal.fire("ERROR!", "Hubo un error al Guardar la cuenta Auxiliar", "error");
+            }
+          }
+          });         
+          
+        }
+      }
+    }
+  }
+}
+function guardarNuevaCuentaAuxi_facturacion(){
+  var cod_cuenta=document.getElementById('cod_cuenta').value;  
+  var nombre=$('#nombre_x').val();
+  var tipo=$('#tipo_x').val();
+  var proveedor=$('#proveedor_cliente').val();
+  if(nombre==null || nombre=='' || nombre==0){
+    Swal.fire("Informativo!", "Por favor, Seleccione una cuenta!", "warning");
+  }else{
+    if(nombre==null || nombre=='' || nombre==0){
+      Swal.fire("Informativo!", "Por favor, Introduzca el nombre de la cuenta Auxiliar!", "warning");
+    }else{
+      if(tipo==null || tipo=='' || tipo==0){
+        Swal.fire("Informativo!", "Por favor, Seleccione un tipo de cuenta!", "warning");
+      }else{
+        if(proveedor==null || proveedor==''){
+            Swal.fire("Informativo!", "Por favor, Seleccione un proveedor o Cliente!", "warning");
+        }else{
+          $.ajax({
+          type:"POST",
+          data:"cod_cuenta="+cod_cuenta+"&nombre="+nombre+"&tipo="+tipo+"&proveedor="+proveedor,
+          url:"comprobantes/ajax_contenedor_cuentas_auxiliares_save.php",
+          success:function(r){
+            var respu=r.split('####');
+            var estado=respu[1];
+            var cod_cuenta_auxiliar=respu[2];
+            if(estado==1){                          
+              $('#modalRegisterCuentasAux').modal('hide');            
+              alerts.showSwal('success-message','index.php?opcion=listFacturasServicios_conta');
             }else{
               Swal.fire("ERROR!", "Hubo un error al Guardar la cuenta Auxiliar", "error");
             }
@@ -16392,6 +16449,27 @@ function abrirEstadoCuenta(datos,direccion,indice,cod_libreta){
       contenedor.innerHTML = ajax.responseText;      
       $('.selectpicker').selectpicker(["refresh"]);
       ajax_contenedor_tabla_estados_cuenta(saldo);
+      // detectarCargaAjax();      
+    }
+  }
+  ajax.send(null);
+}
+function abrirRegistroCuentaAuxiliar(datos,indice){
+  // iniciarCargaAjax();
+  var d=datos.split('/');
+  var cod_solicitudfacturacion=d[0];
+  var cod_cliente=d[1];
+  
+  document.getElementById("cod_solicitudfacturacion_cred").value=cod_solicitudfacturacion;  
+  $("#modalRegisterCuentasAux_sf").modal("show");  
+  var contenedor = document.getElementById('divProveedorCliente');    
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_cliente_cuenta_auxiliar.php?cod_cliente='+cod_cliente,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+      
       // detectarCargaAjax();      
     }
   }

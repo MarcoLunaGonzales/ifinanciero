@@ -43,7 +43,7 @@ if($flagSuccess){
     $flagSuccess=$stmtUpdateFormaPago->execute();
   }
 }
-showAlertSuccessError($flagSuccess,"../index.php?opcion=listFacturasServicios_conta_admin");
+showAlertSuccessError($flagSuccess,"../index.php?opcion=listFacturasServicios_conta");
 
 
 

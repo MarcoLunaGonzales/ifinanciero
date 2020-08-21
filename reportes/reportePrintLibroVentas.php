@@ -13,11 +13,22 @@ $gestion = $_POST["gestiones"];
 $cod_mes_x = $_POST["cod_mes_x"];
 $unidad=$_POST["unidad"];
 $stringUnidadesX=implode(",", $unidad);
-
 $nombre_gestion=nameGestion($gestion);
 $nombre_mes=nombreMes($cod_mes_x);
+//para la razon social
+if (isset($_POST["check_rs_librocompras"])) {
+  $check_rs_librocompras=$_POST["check_rs_librocompras"]; 
+  if($check_rs_librocompras){
+    $razon_social=$_POST["razon_social"]; 
+    $sql_rs=" and razon_social like '%$razon_social%'";
+  }else{
+    $sql_rs="";
+  }
+}else{
+  $sql_rs="";
+}
 
-$stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion and cod_unidadorganizacional in ($stringUnidadesX)");
+$stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion and cod_unidadorganizacional in ($stringUnidadesX) $sql_rs");
 $stmt2->execute();
 //resultado
 $stmt2->bindColumn('codigo', $codigo);

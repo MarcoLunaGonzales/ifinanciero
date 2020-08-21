@@ -148,15 +148,9 @@ $globalPersonal=$_SESSION["globalUser"];
                             <td><small><?=strtoupper($observaciones);?></small></td>                            
                             <td style="color: #ff0000;"><?=strtoupper($observaciones_solfac)?></td>
                             <td class="td-actions text-right">
-                              <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br>
-                              <?php                                
-                                if(($cod_estadofactura==1)){?>
-                                  <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
-                                    <i class="material-icons" title="Enviar Correo">email</i>
-                                  </button>
-                                  <?php
-                                } if($cod_estadofactura!=4){?>  
-
+                              <!-- <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br> -->
+                              <?php
+                              if($cod_estadofactura!=4){?>                                   
                                   <div class="btn-group dropdown">
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 1">
                                        <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
@@ -178,14 +172,37 @@ $globalPersonal=$_SESSION["globalUser"];
                                     </div>
                                   </div> 
                                   <?php                               
-                                }
-                                                                
-                                $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux."###".$interno;                                
-                                if($cod_estadofactura!=4 && $cod_estadofactura!=2 && $sw_anular){?>
-                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
-                                    <i class="material-icons" title="Anular Factura">delete</i>
-                                  </button>
-                                <?php } ?>
+                              }?>
+                              <div class="btn-group dropdown">
+                                <button type="button" class="btn <?=$label?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                   <i class="material-icons" >list</i><small><small><?=$estadofactura;?></small></small>
+                                </button>
+                                <div class="dropdown-menu" >
+                                  <?php                                
+                                  if(($cod_estadofactura==1)){?>
+                                    <button  rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
+                                      <i class="material-icons text-warning" title="Enviar Correo">email</i> Enviar Correo
+                                    </button><?php
+                                  } 
+                                  if($cod_estadofactura!=4){?>  
+                                    <a rel="tooltip" class="dropdown-item" href='<?=$urlPrintSolicitud;?>?codigo=<?=$cod_solicitudfacturacion;?>' target="_blank"><i class="material-icons text-primary" title="Imprimir Solicitud Facturación">print</i> Imprimir SF</a>
+                                    <?php                               
+                                  }
+                                  $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux."###".$interno;                                
+                                  if($cod_estadofactura!=4 && $cod_estadofactura!=2 && $sw_anular){?>
+                                    <button rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
+                                      <i class="material-icons text-danger" title="Anular Factura">delete</i> Anular Factura
+                                    </button><?php 
+                                  } 
+                                  $configuracion_defecto_edit=obtenerValorConfiguracion(77);
+                                  $datos_edit=$cadenaFacturas."###".$razon_social."###".$codigos_facturas;
+                                  if($cod_estadofactura!=2 && $configuracion_defecto_edit==1){?>
+                                    <button rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalEditarFactura" onclick="modal_editarFactura_sf('<?=$datos_edit;?>')">
+                                      <i class="material-icons text-success" title="Editar Razón Social">edit</i> Editar Razón S.
+                                    </button><?php 
+                                  }?>
+                                </div>
+                              </div>
                             </td>
                           </tr>
                           <?php
@@ -210,7 +227,7 @@ $globalPersonal=$_SESSION["globalUser"];
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button  class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Buscar Facturas</h4>
       </div>
       <div class="modal-body ">
@@ -481,7 +498,40 @@ $globalPersonal=$_SESSION["globalUser"];
      <p class="text-white">Aguarde un momento por favor.</p>  
   </div>
 </div>
+<div class="modal fade" id="modalEditarFactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="myModalLabel"><b>Editar Factura</b></h3>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="cod_facturaventa_e" id="cod_facturaventa_e" value="0">        
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Numero de Factura: </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="text" name="nro_factura_e" id="nro_factura_e" class="form-control" readonly="true">
+            </div>
+          </div>
+        </div>                
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Razón Social </label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <textarea name="razon_social_e" id="razon_social_e" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="guardarFacturaEdit" name="guardarFacturaEdit">Guardar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
    function valida(f) {
       // alert("e");
@@ -544,6 +594,19 @@ $globalPersonal=$_SESSION["globalUser"];
         Swal.fire("Informativo!", "Por Favor Agregue Un correo válido para el envío de la Factura!", "warning");
       }else{
         EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social,interno);  
+      }
+    });
+
+    $('#guardarFacturaEdit').click(function(){          
+      cod_facturaventa_e=document.getElementById("cod_facturaventa_e").value;
+      razon_social_e=$('#razon_social_e').val();      
+      // asunto=$('#asunto').val();
+      // mensaje=$('#mensaje').val();      
+      if(razon_social_e==null || razon_social_e=="" ||razon_social_e == 0){
+        // alert("Por Favor Agregue Un correo para el envío de la Factura!");
+        Swal.fire("Informativo!", "La Razón Social No debe ir Vacío!", "warning");
+      }else{
+        actualizar_factura(cod_facturaventa_e,razon_social_e);  
       }
     });   
   });

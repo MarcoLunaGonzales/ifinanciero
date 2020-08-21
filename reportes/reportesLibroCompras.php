@@ -31,7 +31,7 @@ $dbh = new Conexion();
                 <div class="card-body">
                 	<div class="row">
 		                <label class="col-sm-2 col-form-label">Oficina</label>
-		                <div class="col-sm-8">
+		                <div class="col-sm-9">
 		                	<div class="form-group">
 		                		<div id="">		
 		                			<?php
@@ -54,7 +54,7 @@ $dbh = new Conexion();
                   	</div><!--div row-->
                 	<div class="row">
 		                <label class="col-sm-2 col-form-label">Gestión</label>
-		                <div class="col-sm-6">
+		                <div class="col-sm-4">
 		                	<div class="form-group">
 		                		<select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
                                     <option value=""></option>
@@ -66,11 +66,9 @@ $dbh = new Conexion();
                                     <?php } ?>
                                 </select>
 		                     </div>
-		                </div>				             
-                  	</div><!--div row-->
-              		<div class="row">
-		                 <label class="col-sm-2 col-form-label">Mes</label>
-		                 <div class="col-sm-6">
+		                </div>	
+		                <label class="col-sm-1 col-form-label">Mes</label>
+		                <div class="col-sm-4">
 		                	<div class="form-group">
 		                		<div id="div_contenedor_mes">		
 		                			<?php $sql="SELECT c.cod_mes,(select m.nombre from meses m where m.codigo=c.cod_mes) as nombre_mes from meses_trabajo c where c.cod_gestion=$globalGestion";
@@ -92,8 +90,28 @@ $dbh = new Conexion();
 		                			
 		                		</div>		                                
 		                     </div>
-		                  </div>
+		                </div>			             
+                  	</div><!--div row-->
+              	
+		            <div class="row">
+		            	<label class="col-sm-2 col-form-label">Razón Social</label>
+		                <div class="col-sm-1">
+		                	<div class="form-group">
+								<div class="togglebutton">
+								    <label>
+										<input type="checkbox" name="check_rs_librocompras" id="check_rs_librocompras" onChange="ajax_razon_social_filtro_compras()">
+										<span class="toggle"></span>
+								    </label>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-8" >
+		                	<div class="form-group" id="contenedor_razos_social_librocompras">
+								
+							</div>
+						</div>
 		            </div>
+		   
                   	
                 <div class="card-footer">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
