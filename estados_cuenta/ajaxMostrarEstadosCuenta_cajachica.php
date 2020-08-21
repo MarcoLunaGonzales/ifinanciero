@@ -72,7 +72,7 @@ if(isset($_GET['monto_cajachica'])){
 
      $nombreTipoComprobante=nombreComprobante($cod_comprobante_x);
 
-     $credito_padre=ObtenerMontoTotalEstadoCuentas_hijos_cajachica($codCuenta,$codigoX);
+     $credito_padre=ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigoX);
      $saldo=$montoX-$credito_padre;
      $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
 
@@ -113,7 +113,7 @@ if(isset($_GET['monto_cajachica'])){
           <td>
           <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <!-- style="display:none"-->
-    	   	<?php if($tipo==2 && $sw_personal>0 && ($saldo>$monto_cajachica)){ 
+    	   	<?php if($tipo==2 && $sw_personal>0 && ($saldo>=$monto_cajachica)){ 
               ?>
               <div class="form-check">
                  <label class="form-check-label">
