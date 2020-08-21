@@ -174,6 +174,10 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
                 $btnEstado="btn-warning";$estadoIcon="thumb_up";
               break;
             }
+            $cambiosDatos=obtenerDatosUsuariosComprobante($codigo);
+                          if($cambiosDatos!=""){
+                            $cambiosDatos="\n".$cambiosDatos;
+                          }
           ?>
           <tr>
             
@@ -188,7 +192,7 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
             <td class="td-actions text-right">
               
               <div class="btn-group dropdown">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante <?=$cambiosDatos?>">
                   <i class="material-icons"><?=$iconImp;?></i>
                 </button>
                 <div class="dropdown-menu">

@@ -11,9 +11,13 @@ if(!isset($_GET['comp'])){
 }else{
     $codigo=$_GET['comp'];
     $moneda=$_GET['mon'];
+    if($moneda==1){
+      $moneda=2;
+    }
     $abrevMon=abrevMoneda($moneda);
     $nombreMonedaG=nameMoneda($moneda);
 }
+
 
 $estadoComp=obtenerEstadoComprobante($codigo);
 $dbh = new Conexion();
@@ -74,6 +78,12 @@ $tcUFV=0;
 $tcUFV=obtenerValorTipoCambio(4,strftime('%Y-%m-%d',strtotime($fechaC)));
 $abrevUFV="";
 $abrevUFV=abrevMoneda(4);
+
+//tipo de cambio DOLARES
+$tcUSD=0;
+$tcUSD=obtenerValorTipoCambio(2,strftime('%Y-%m-%d',strtotime($fechaC)));
+$abrevUSD="";
+$abrevUSD=abrevMoneda(2);
 
 // Llamamos a la funcion para obtener el reporte de comprobantes
 $data = obtenerComprobantesDetImp($codigo);

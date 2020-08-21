@@ -88,6 +88,10 @@ $stmt->bindColumn('cod_estado', $codigoEstado);
                           if($glosaComprobante>$tamanioGlosa){
                             $glosaComprobante=substr($glosaComprobante, 0, $tamanioGlosa);
                           }
+                          $cambiosDatos=obtenerDatosUsuariosComprobante($codigo);
+                          if($cambiosDatos!=""){
+                            $cambiosDatos="\n".$cambiosDatos;
+                          }
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
@@ -103,7 +107,7 @@ $stmt->bindColumn('cod_estado', $codigoEstado);
                               <i class="material-icons">done_all</i>
                             </a>--> 
                            <div class="btn-group dropdown">
-                              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver comprobante <?=$cambiosDatos?>">
                                 <i class="material-icons"><?=$iconImp;?></i>
                               </button>
                               <div class="dropdown-menu">

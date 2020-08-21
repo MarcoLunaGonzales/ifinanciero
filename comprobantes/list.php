@@ -130,6 +130,11 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           if($glosaComprobante>$tamanioGlosa){
                             $glosaComprobante=substr($glosaComprobante, 0, $tamanioGlosa);
                           }
+
+                          $cambiosDatos=obtenerDatosUsuariosComprobante($codigo);
+                          if($cambiosDatos!=""){
+                            $cambiosDatos="\n".$cambiosDatos;
+                          }
                         ?>
                         <tr>
                           
@@ -145,7 +150,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                             
                             <div class="btn-group">
                               <div class="dropdown">
-                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Comprobante <?=$cambiosDatos?>">
                                   <i class="material-icons"><?=$iconImp;?></i>
                                 </button>
                                 <div class="dropdown-menu">

@@ -399,12 +399,50 @@
         <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
         </button>
-        <button id="boton_libreta_detalle_todo" title="Listar todo" onclick="ajax_listado_libreta_bancaria_filtrar()" type="button" class="btn btn-warning btn-sm btn-fab float-right" >
-          <i class="material-icons">list</i>
-        </button>
+        
         <a href="#" id="boton_libreta_detalle_facturas" title="Lista Libretas Detalle" onclick="mostrar_listado_facturas()" class="btn btn-primary btn-sm btn-fab float-right">
           <i class="material-icons">L</i><span id="nfacturaslibretas" class="count bg-warning">0</span>
         </a>
+        <!--<button id="boton_libreta_detalle_todo" title="Listar todo" onclick="ajax_listado_libreta_bancaria_filtrar()" type="button" class="btn btn-warning btn-sm btn-fab float-right" >
+          <i class="material-icons">list</i>
+        </button>-->
+        <label for="" class="float-right">|</label>
+        <a title="Buscar Libretas" href="#" onclick="buscarLibretasBancariasServicioWeb()" class="btn btn-info btn-sm btn-fab float-right">
+          <i class="material-icons">search</i>
+        </a>
+        <label for="" class="float-right">|</label>
+        <select class="selectpicker form-control form-control-sm col-sm-1 float-right" name="modal_anio_actual" id="modal_anio_actual" data-style="btn btn-default text-dark">
+          <option disabled value="">--Filtrar Año--</option>
+                        <option value="0">Todo</option>
+                        <option value="<?=$_SESSION["globalNombreGestion"]?>" selected><?=$_SESSION['globalNombreGestion']?></option>
+                  </select>
+                <select class="selectpicker form-control form-control-sm col-sm-3 float-right" data-size="6" data-live-search="true" name="modal_libretas_select" id="modal_libretas_select" data-style="fondo-boton fondo-boton-active">
+                        <option disabled selected="selected" value="">--Filtrar Libreta--</option>
+                        <option value="0">Todos</option>
+                        <?php 
+                        //LIBRETAS BANCARIAS DETALLE CARGAR
+                        $stmt = $dbh->prepare("SELECT p.nombre as banco,dc.* FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo WHERE dc.cod_estadoreferencial=1");
+                        $stmt->execute();
+                        $i=0;
+                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                          $codigoX=$row['codigo'];
+                          $bancoX=$row['banco'];
+                          $cod_banco=$row['cod_banco'];
+                          $cod_cuenta=$row['cod_cuenta'];
+                          $cod_contracuenta=$row['cod_contracuenta'];
+                          $nombreX=$row['nombre'];
+                          $nombreBan=nameBancos($cod_banco);
+                        if($nombreBan==""){
+                          $nombreBan=$Banco." - ".$nombreX;
+                        }else{
+                          $nombreBan=$nombreBan." - ".$nombreX;  
+                        }
+                      ?><option value="<?=$codigoX?>"><?=$nombreBan?></option><?php
+    
+                      }
+                      ?>
+                  </select>
+                  
       </div>
       <div class="card-body">
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
@@ -415,28 +453,9 @@
         <div class="row">
 
         <div class="">
-          <a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(0)">Todas</a>
+          <!--<a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(0)">Todas</a>-->
           <?php 
-           //LIBRETAS BANCARIAS DETALLE CARGAR
-             $stmt = $dbh->prepare("SELECT p.nombre as banco,dc.* FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo WHERE dc.cod_estadoreferencial=1");
-             $stmt->execute();
-             $i=0;
-             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $codigoX=$row['codigo'];
-                $bancoX=$row['banco'];
-                $cod_banco=$row['cod_banco'];
-                $cod_cuenta=$row['cod_cuenta'];
-                $cod_contracuenta=$row['cod_contracuenta'];
-                $nombreX=$row['nombre'];
-                $nombreBan=nameBancos($cod_banco);
-                if($nombreBan==""){
-                  $nombreBan=$Banco." - ".$nombreX;
-                }else{
-                  $nombreBan=$nombreBan." - ".$nombreX;  
-                }
-            ?><a href="#" class="btn btn-sm fila-button" onclick="ajax_contenedor_tabla_libretaBancariaIndividual(<?=$codigoX?>)"><?=$nombreBan?></a><?php
-    
-             }
+           
             /*$lista=obtenerObtenerLibretaBancaria();
             foreach ($lista->libretas as $v) {
               $CodLibreta=$v->CodLibreta;

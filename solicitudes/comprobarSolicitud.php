@@ -194,6 +194,7 @@ if(isset($_GET['cod'])){
             $stmt->bindColumn('cod_simulacion', $codSimulacionX);
             $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServX);
             $stmt->bindColumn('cod_proveedor', $codProveedorX);
+            $stmt->bindColumn('observaciones', $observaciones_solicitudX);
 ?>
 <div class="cargar">
   <div class="div-loading text-center">
@@ -249,6 +250,7 @@ if(isset($_GET['cod'])){
         <div class="card-body ">
          <div class="row">
           <?php while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+            $observaciones_solicitud=$observaciones_solicitudX;
             $solicitante=namePersonal($codPersonalX);
             $fechaSolicitud=strftime('%d/%m/%Y',strtotime($fechaX));
             $distribucionArea=obtenerDistribucionCentroCostosAreaActivo($unidadX); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
@@ -358,8 +360,14 @@ if(isset($_GET['cod'])){
             </div>
             <div class="col-sm-2">
                <div class="btn-group">
-                  <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-default btn-sm">Archivos 
+                  <a title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-primary btn-sm">Archivos 
                     <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
+                  </a>
+                  <a title="Agregar Observacion" href="#modalObs" data-toggle="modal" data-target="#modalObs" class="btn btn-rose btn-sm btn-fab">
+                    <i class="material-icons">sticky_note_2</i>
+                  </a>
+                  <a title="Borrar los detalles de la Solicitud" href="#" class="btn btn-default btn-sm btn-fab" onclick="limpiarDetalleSolicitud()"> 
+                    <i class="material-icons">format_clear</i>
                   </a>
                 </div> 
             </div>
@@ -792,6 +800,37 @@ if(isset($_GET['cod'])){
   </div>
 </div>
 
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalObs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+      <div class="card-header card-header-info card-header-text">
+                  <div class="card-text">
+                    <h5>Observaciones</h5>      
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+      <div class="card-body">
+              <div class="row">
+                <div class="col-sm-12">
+                   <div class="form-group">
+                    <label class="bmd-label-static">Registre una observaciones</label>
+                    <textarea rows="5" id="observaciones_solicitud" name="observaciones_solicitud" class="form-control"><?=$observaciones_solicitud?></textarea>
+                   </div> 
+                </div>
+              </div>
+              <p class="text-muted"><small>Está observacion se mostrará en la impresion de la Solicitud de Recurso</small></p> 
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="" class="btn btn-success" data-dismiss="modal">Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--    end small modal -->
 </form>
 <?php
 require_once 'modal.php';

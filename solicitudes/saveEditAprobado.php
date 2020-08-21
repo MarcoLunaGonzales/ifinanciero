@@ -27,8 +27,9 @@ $codSolicitud=$_POST['cod_solicitud'];
 
 $unidad_solicitud=$_POST["unidad_solicitud"];
 $area_solicitud=$_POST["area_solicitud"];
+$observaciones_solicitud=$_POST["observaciones_solicitud"];
 
-$sqlUpdate="UPDATE solicitud_recursos SET cod_unidadorganizacional=$unidad_solicitud,cod_area=$area_solicitud where codigo=$codSolicitud";
+$sqlUpdate="UPDATE solicitud_recursos SET cod_unidadorganizacional=$unidad_solicitud,cod_area=$area_solicitud,observaciones='$observaciones_solicitud' where codigo=$codSolicitud";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $stmtUpdate->execute();
 

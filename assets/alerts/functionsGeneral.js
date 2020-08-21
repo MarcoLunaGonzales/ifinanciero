@@ -16197,6 +16197,9 @@ function ajax_contenedor_tabla_libretaBancaria(saldo){
       });
 }
 
+function buscarLibretasBancariasServicioWeb(){
+ ajax_contenedor_tabla_libretaBancariaIndividual($("#modal_libretas_select").val());
+}
 function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
   var contenedor = document.getElementById('contenedor_tabla_libreta_bancaria');
   if($("#tipo_comprobante").length>0){
@@ -16213,6 +16216,11 @@ function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
      $("#datos_libreta_bancaria_detalle").html("");
    }
   }  
+  if($("#modal_anio_actual").length>0){
+    if($("#modal_anio_actual").length>0){
+     var parametros={"saldo":saldo,"tipo_listado":1,"codigo_lib":idLib,"anio":$("#modal_anio_actual").val()};  
+    }
+  }
      $.ajax({
         type: "GET",
         dataType: 'html',

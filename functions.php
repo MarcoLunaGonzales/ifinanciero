@@ -84,7 +84,7 @@
      $stmt->bindParam(':codigo',$codigo);
      $stmt->execute();
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $nombreX=$row['nombre'];
+        $nombreX=ucfirst(strtolower($row['nombre']));
      }
      return($nombreX);
   }
@@ -7687,7 +7687,33 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     // header('Content-type: application/json');   
     // print_r($remote_server_output);
   }
-
+function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
+    //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
+    // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
+    $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+    $sIde = "libBan";
+    $sKey = "89i6u32v7xda12jf96jgi30lh";
+    //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>$codigo,"anio"=>$anio); 
+    $parametros=json_encode($parametros);
+    // abrimos la sesión cURL
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    curl_setopt($ch, CURLOPT_URL,$direccion."ws_obtener_libreta_bancaria.php"); 
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    // cerramos la sesión cURL
+    curl_close ($ch);
+    return json_decode($remote_server_output);
+    // imprimir en formato JSON
+    // header('Content-type: application/json');   
+    // print_r($remote_server_output);
+  }
   function verificarFechaMaxDetalleLibreta($fecha,$codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT * FROM libretas_bancariasdetalle where cod_libretabancaria=:codigo and fecha_hora >= :fecha and cod_estadoreferencial!=2");
@@ -9197,6 +9223,21 @@ function obtenerEstadoComprobante($codigo){
     }
     return $existe;
   }
+
+  function obtenerDatosUsuariosComprobante($codigo){
+      $dbh = new Conexion();
+      $sql="SELECT created_by,modified_by,created_at,modified_at from comprobantes where codigo=$codigo";  
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      $valor=[];
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+        if(!($row['created_by']==""||$row['created_by']==0)){
+          array_push($valor,"Creado por: ".namePersonal($row['created_by']).", En: ".strftime('%d/%m/%Y',strtotime($row['created_at'])));
+        }
+        if(!($row['modified_by']==""||$row['modified_by']==0)){
+         array_push($valor,"Modificado por: ".namePersonal($row['modified_by']).", En: ".strftime('%d/%m/%Y',strtotime($row['modified_at'])));  
+        }         
+      }  
+      return implode("\n ", $valor);
+    }
 ?>
-
-

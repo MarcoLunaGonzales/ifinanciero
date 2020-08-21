@@ -72,7 +72,7 @@ $item_1=2708;
                   <h4 class="card-title"><b>Contabilización de <?=$moduleNamePlural?></b></h4>
                 </div>
                 <div class="card-body">
-                    <table class="table table-condesed" id="tablePaginator">
+                    <table class="table table-condesed" id="tablePaginator100">
                       <thead>
                         <tr>
                           <th>Of. - Area</th>
@@ -439,7 +439,7 @@ $item_1=2708;
               <div class="row" id="div_cabecera" >
                     
               </div>
-                <table class="table table-condesed" id="tablePaginatorHead">
+                <table class="table table-condesed" id="tablePaginator100NoFidexHead">
                       <thead>
                         <tr class="bg-info">
                           <th>Of. - Area</th>
