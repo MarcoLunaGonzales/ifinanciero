@@ -230,6 +230,7 @@
         <input type="hidden" name="cod_solicitudfacturacion_factmanual" id="cod_solicitudfacturacion_factmanual" value="0">
         <input type="hidden" name="cod_libreta_manual" id="cod_libreta_manual" value="0" >
         <input type="hidden" name="cod_estadocuenta_manual" id="cod_estadocuenta_manual" value="0" >
+        <input type="hidden" name="cuenta_auxiliar_manual" id="cuenta_auxiliar_manual" value="0" >
         <div class="row">
           <!-- <label class="col-sm-5 text-right col-form-label" style="color:#424242">Importe de Solicitud de Facturacón</label> -->
           <div class="col-sm-12">

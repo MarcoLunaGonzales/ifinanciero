@@ -1,6 +1,6 @@
 <?php //ESTADO FINALIZADO
 
-function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,$stringFacturasCod,$cod_libretas_X,$cod_estado_cuenta_x){
+function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,$stringFacturasCod,$cod_libretas_X,$cod_estado_cuenta_x,$cod_cuentaaux){
 	require_once __DIR__.'/../conexion.php';
 	require_once '../functions.php';
 	require_once '../assets/libraries/CifrasEnLetras.php';
@@ -156,8 +156,10 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 		            $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
 		            $flagSuccess=$stmtEstadoCuenta->execute(); 
 				}elseif($cod_tipopago==$cod_tipopago_credito){
-					$cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(2,$cod_cliente);//tipo cliente
-					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,$cuenta_auxiliar,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+					// $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(2,$cod_cliente);//tipo cliente
+					$cuenta_defecto_cliente=obtenerValorConfiguracion(78);//creidto
+                    // $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(2,$cod_cliente,$cuenta_defecto_cliente);//solo par credito 
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,$cod_cuentaaux,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
 					// $cod_compte_origen=obtenerCod_comprobanteDetalleorigen($cod_estado_cuenta_x);					
 					$stmtdetalleCom = $dbh->prepare("SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante and orden=$ordenDetalle");
 					//en este caso insertamos la contra cuenta del estado de cuenta, para ello necesitamos el codigo del comprobnate detalle
@@ -168,9 +170,9 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 					}
 					// $cuenta_axiliar=obtenerValorConfiguracion(63);//cod cuenta auxiliar por defecto de anulacion de facturas
 					// $cod_proveedor=obtenerCodigoProveedorCuentaAux($cuenta_axiliar);
-					// $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(2,$cod_cliente);//tipo cliente
-					// $cod_proveedor=obtenerCodigoProveedorCuentaAux($cuenta_auxiliar);
-					$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta,$monto_tipopago,$cod_cliente,'$fechaActual',0,$cuenta_auxiliar,'1','$concepto_contabilizacion')";
+					// $cod_cuentaaux=obtenerCodigoCuentaAuxiliarProveedorCliente(2,$cod_cliente);//tipo cliente
+					// $cod_proveedor=obtenerCodigoProveedorCuentaAux($cod_cuentaaux);
+					$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta,$monto_tipopago,$cod_cliente,'$fechaActual',0,$cod_cuentaaux,'1','$concepto_contabilizacion')";
 					// echo $sqlEstadoCuenta;
 		            $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
 		            $flagSuccess=$stmtEstadoCuenta->execute(); 

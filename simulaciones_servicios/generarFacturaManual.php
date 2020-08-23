@@ -126,8 +126,13 @@ try{
                 }else{
                     $cod_estadocuenta=0;
                 }
+                if(isset($_POST["cuenta_auxiliar"])){
+                    $cuenta_auxiliar=$_POST["cuenta_auxiliar"];
+                }else{
+                    $cuenta_auxiliar=0;
+                }
                 $cadena_factura="F ".$nro_factura;                
-                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$cadena_factura,$nro_factura,$cod_libreta,$cod_estadocuenta);
+                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$cadena_factura,$nro_factura,$cod_libreta,$cod_estadocuenta,$cuenta_auxiliar);
                 if($cod_comprobante!=0){
                     $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,ci_estudiante) 
                     values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area','$fecha_actual_cH',null,'$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_factura','$nroAutorizacion',null,'$monto_total','$observaciones','4',$cod_comprobante,'$ci_estudiante_p')";

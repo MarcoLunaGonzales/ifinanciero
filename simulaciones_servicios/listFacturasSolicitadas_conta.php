@@ -207,13 +207,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                               $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
                                               $cod_tipopago_anticipo=obtenerValorConfiguracion(64);
                                               $cod_tipopago_credito=obtenerValorConfiguracion(48);//creidto
-                                              $cod_cliente_x=obtenerCodigoCuentaAuxiliarProveedorCliente(2,$cod_cliente);//solo par credito nos sirve
-                                              $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_credito,$codigo_facturacion);//
-                                              if($cod_tipopago_aux==$cod_tipopago_credito && $cod_cliente_x==0){//si es a credito y no tiene cuenta auxiliar
-                                                $datos_sf_credito=$codigo_facturacion."/".$cod_cliente;?>
-                                                <a href='#' title="Registrar Cuenta Auxiliar" class="dropdown-item" onclick="abrirRegistroCuentaAuxiliar('<?=$datos_sf_credito;?>','1')">
-                                                  <i class="material-icons text-success">receipt</i>Registrar Cuenta Auxiliar</a><?php 
-                                              }else{
+                                              $cuenta_defecto_cliente=obtenerValorConfiguracion(78);//creidto
+                                              // $cod_cliente_x=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(2,$cod_cliente,$cuenta_defecto_cliente);//solo par credito nos sirve
+                                              // $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_credito,$codigo_facturacion);//
+                                              
                                                 $cont_de_tipos_pago=0;//cuando el contador sea 0 exite deposito y anticipo
                                                 $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_deposito_cuenta,$codigo_facturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista
                                                 if($cod_tipopago_aux!=0){
@@ -256,6 +253,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                       <i class="material-icons text-info">receipt</i>Generar Factura Manual
                                                     </a>
                                                     <?php
+                                                  }elseif($cod_tipopago==$cod_tipopago_credito){//si es a credito y no tiene cuenta auxiliar
+                                                    $datos_sf_credito=$codigo_facturacion."/".$cod_cliente;?>
+                                                    <a href='#' title="Registrar Cuenta Auxiliar" class="dropdown-item" onclick="abrirRegistroCuentaAuxiliar('<?=$datos_sf_credito;?>','1')">
+                                                      <i class="material-icons text-success">receipt</i>Seleccionar Cuenta Auxiliar</a><?php 
                                                   }else{
                                                     ?>
                                                     <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
@@ -266,7 +267,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                     </button><?php 
                                                   }  
                                                 }
-                                              }
+                                              
                                               ?>                                             
                                           </div>
                                         </div>                           
@@ -369,10 +370,72 @@ $globalAdmin=$_SESSION["globalAdmin"];
     </form>
   </div>
 </div>
-<div class="modal fade" id="modalRegisterCuentasAux_sf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+
+
+
+<div class="modal fade" id="modalListCuentasAux_sf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content card">
       <div class="card-header card-header-success card-header-text">
+        <div class="card-text">
+          <h5>Cuenta Auxiliar</h5> 
+        </div>
+        <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <input type="hidden" name="cod_solicitudfacturacion_cred" id="cod_solicitudfacturacion_cred"/>
+      <div class="card-body">
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Cuenta</label>
+          <div class="col-sm-4">
+            <div class="form-group">                  
+              <select name="cod_cuenta_list" id="cod_cuenta_list" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" >
+                <?php 
+                $cod_defecto_clientes=obtenerValorConfiguracion(78);
+                $sql="SELECT codigo,numero,nombre from plan_cuentas where cuenta_auxiliar=1  order by nombre";
+                $stmt = $dbh->prepare($sql);
+                $stmt->bindParam(':codigo', $codigo);
+                $stmt->bindParam(':nombre', $nombre);
+                $stmt->bindParam(':numero', $numero);
+                $stmt->execute();
+                while ($row = $stmt->fetch()){ ?>
+                  <option <?=($cod_defecto_clientes==$row["codigo"])?"selected":"disabled";?> value="<?=$row["codigo"];?>"><?=$row["numero"];?> - <?=$row["nombre"];?></option><?php 
+                } 
+                ?>
+             </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Tipo</label>
+            <div class="col-sm-4">
+                <div class="form-group">
+                <select class="selectpicker form-control form-control-sm" name="tipo_x_list" id="tipo_x_list" data-style="<?=$comboColor;?>" required="true" onChange="ajaxTipoProveedorCliente_comprobante(this);">
+                <option disabled selected value="">Seleccionar una opcion</option>
+              <option disabled value="1">Proveedor</option>  
+              <option selected value="2">Cliente</option>  
+            </select>
+            </div>
+              </div>
+        </div>
+
+        <div id="divCuentaAuxiliar_cliente">
+          
+        </div>
+        <div class="form-group float-right">
+            <button type="button" class="btn btn-success btn-round" onclick="generarFacturaCredito('1')">Generar Factura </button>
+            <button type="button" class="btn btn-info btn-round" onclick="generarFacturaCredito('2')">Generar Factura Manual </button>
+        </div>         
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalRegisterCuentasAux_sf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+      <div class="card-header card-header-warning card-header-text">
         <div class="card-text">
           <h5>Nueva Cuenta Auxiliar</h5> 
         </div>
@@ -381,6 +444,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
         </button>
       </div>
       <input type="hidden" name="cod_solicitudfacturacion_cred" id="cod_solicitudfacturacion_cred"/>
+      <input type="hidden" name="cod_cliente_cred" id="cod_cliente_cred"/>
       <div class="card-body">
         <div class="row">
           <label class="col-sm-2 col-form-label">Cuenta</label>
@@ -452,6 +516,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
       var cod_solicitudfacturacion_factmanual=document.getElementById("cod_solicitudfacturacion_factmanual").value;
       var cod_libreta_manual=document.getElementById("cod_libreta_manual").value;
       var cod_estadocuenta_manual=document.getElementById("cod_estadocuenta_manual").value;
+      var cuenta_auxiliar_manual=document.getElementById("cuenta_auxiliar_manual").value;
 
       var nro_factura=$('#nro_factura').val();
       var nro_autorizacion=$('#nro_autorizacion').val();
@@ -473,7 +538,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
               if(razon_social==null || razon_social=='' || razon_social==' '){
                 Swal.fire("Informativo!", "Por favor introduzca la Razón Social", "warning");
               }else{
-                RegistrarFacturaManual(cod_solicitudfacturacion_factmanual,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social,cod_libreta_manual,cod_estadocuenta_manual);
+                RegistrarFacturaManual(cod_solicitudfacturacion_factmanual,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social,cod_libreta_manual,cod_estadocuenta_manual,cuenta_auxiliar_manual);
               }          
             }          
           }          

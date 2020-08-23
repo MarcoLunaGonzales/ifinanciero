@@ -122,6 +122,11 @@ try{
                         }else{
                             $cod_estadocuenta=0;
                         }
+                        if(isset($_GET["cod_cuentaaux"])){
+                            $cod_cuentaaux=$_GET["cod_cuentaaux"];
+                        }else{
+                            $cod_cuentaaux=0;
+                        }
                         $codigo_error=0;
                         $array_codigo_detalle=obtenerCodigoDetalleSolFac($codigo);
                         // var_dump($array_codigo_detalle);
@@ -153,7 +158,7 @@ try{
                         if($codigo_error==0){
                             $stringFacturas=obtenerStringFacturas($codigo);
                             $stringFacturasCod=obtenerStringCodigoFacturas($codigo);
-                            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$stringFacturas,$stringFacturasCod,$cod_libreta,$cod_estadocuenta);                            
+                            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$stringFacturas,$stringFacturasCod,$cod_libreta,$cod_estadocuenta,$cod_cuentaaux);                            
                             if($cod_comprobante==null || $cod_comprobante=='' || $cod_comprobante==0){
                                 $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo in ($stringFacturasCod)";
                                 $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
