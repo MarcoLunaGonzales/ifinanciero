@@ -648,6 +648,6 @@ if(isset($_GET['sim'])){
 ?>
 <script>
   $(document).ready(function() {
-    notificacionMD('random','top','left',false,'add_alert','IFINANCIERO','Registre <b>Nuevos Detalles</b> a la Solicitud de Recursos presionando el botón con signo de más. <br><center><a href="#" onClick="addSolicitudDetalle(this,3)" class="btn btn-white btn-round btn-sm btn-fab"><i class="material-icons">add</i></a></center>','<img src="../assets/img/robot.gif" width="100px" height="100px">');
+  //  notificacionMD('random','top','left',false,'add_alert','IFINANCIERO','Registre <b>Nuevos Detalles</b> a la Solicitud de Recursos presionando el botón con signo de más. <br><center><a href="#" onClick="addSolicitudDetalle(this,3)" class="btn btn-white btn-round btn-sm btn-fab"><i class="material-icons">add</i></a></center>','<img src="../assets/img/robot.gif" width="100px" height="100px">');
    });
    </script>

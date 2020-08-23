@@ -414,7 +414,18 @@
         <select class="selectpicker form-control form-control-sm col-sm-1 float-right" name="modal_anio_actual" id="modal_anio_actual" data-style="btn btn-default text-dark">
           <option disabled value="">--Filtrar Año--</option>
                         <option value="0">Todo</option>
-                        <option value="<?=$_SESSION["globalNombreGestion"]?>" selected><?=$_SESSION['globalNombreGestion']?></option>
+                        <?php 
+                        for ($ann=(int)$_SESSION['globalNombreGestion']; $ann >=((int)$_SESSION['globalNombreGestion']-3); $ann--) { 
+                          if($ann==(int)$_SESSION['globalNombreGestion']){
+                           ?><option value="<?=$ann?>" selected><?=$ann?></option>
+                           <?php 
+                         }else{
+                          ?><option value="<?=$ann?>"><?=$ann?></option>
+                           <?php
+                         }
+                        }
+                        ?>
+                        
                   </select>
                 <select class="selectpicker form-control form-control-sm col-sm-3 float-right" data-size="6" data-live-search="true" name="modal_libretas_select" id="modal_libretas_select" data-style="fondo-boton fondo-boton-active">
                         <option disabled selected="selected" value="">--Filtrar Libreta--</option>

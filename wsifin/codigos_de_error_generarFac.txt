@@ -142,12 +142,12 @@ codigo FROM comprobantes_detalle WHERE cod_comprobante in (SELECT codigo FROM co
 order by 1 desc))
 and f.cod_solicitudrecursodetalle is null;
 
-/*LISTA ********PARA RELACIONAR LA FACTURA CON EL DETALLE DEL COMPROBANTE*************  DE FACTURAS(SIN COMPROBANTE DETALLE Y CON SOLICITUD DETALLE) DE LOS COMPROBANTES RELACIONADOS A LA SOLICITUD DE RECURSOS(CONTABILIZADO)*/
+/*LISTA DE FACTURAS(SIN COMPROBANTE DETALLE Y CON SOLICITUD DETALLE) DE LOS COMPROBANTES RELACIONADOS A LA SOLICITUD DE RECURSOS(CONTABILIZADO)*/
 SELECT f.*,l.cod_estadosolicitudrecurso FROM facturas_compra f,(SELECT sd.*,s.cod_estadosolicitudrecurso FROM solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo where s.cod_estadosolicitudrecurso=5)
 l where f.cod_solicitudrecursodetalle=l.codigo  
  and f.cod_comprobantedetalle is null;
 
-/*LISTA2 DE FACTURAS(SIN COMPROBANTE DETALLE Y CON SOLICITUD DETALLE) DE LOS COMPROBANTES RELACIONADOS A LA SOLICITUD DE RECURSOS(CONTABILIZADO)*/
+/*LISTA ********PARA RELACIONAR LA FACTURA CON EL DETALLE DEL COMPROBANTE*************  DE FACTURAS(SIN COMPROBANTE DETALLE Y CON SOLICITUD DETALLE) DE LOS COMPROBANTES RELACIONADOS A LA SOLICITUD DE RECURSOS(CONTABILIZADO)*/
 SELECT f.*,l.cod_estadosolicitudrecurso,l.cod_comprobante,
 (SELECT GROUP_CONCAT(codigo) from comprobantes_detalle where cod_comprobante=l.cod_comprobante and cod_cuenta=63) as cod_comprobante_detalle 
 FROM facturas_compra f,(SELECT sd.*,s.cod_estadosolicitudrecurso,s.cod_comprobante FROM solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo where s.cod_estadosolicitudrecurso=5)
@@ -156,6 +156,7 @@ l where f.cod_solicitudrecursodetalle=l.codigo
 
 /*LISTA DE FACTURAS(SIN COMPROBANTE DETALLE Y SIN SOLICITUD DETALLE)*/
 SELECT * FROM facturas_compra WHERE cod_comprobantedetalle is null and cod_solicitudrecursodetalle is null;
+
 
 
 

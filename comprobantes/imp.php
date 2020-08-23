@@ -11,9 +11,9 @@ if(!isset($_GET['comp'])){
 }else{
     $codigo=$_GET['comp'];
     $moneda=$_GET['mon'];
-    if($moneda==1){
+    /*if($moneda==1){
       $moneda=2;
-    }
+    }*/
     $abrevMon=abrevMoneda($moneda);
     $nombreMonedaG=nameMoneda($moneda);
 }
