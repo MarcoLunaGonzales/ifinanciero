@@ -28,7 +28,7 @@ else $sw_f_rs="";
                   <div class="card-icon">
                     <i class="material-icons">assignment</i>
                   </div>
-                  <h4 class="card-title">Configuración Edición SF y Facturas</h4>
+                  <h4 class="card-title">Configuraciones</h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -41,7 +41,7 @@ else $sw_f_rs="";
                       </thead>
                       <tbody>
                         <tr>
-                          <td class="text-left">Edición Forma de Pago SF</td>
+                          <td class="text-left">Edición de Forma de Pago en SF</td>
                           <td>
                             <div class="togglebutton">
                                <label>
@@ -52,7 +52,7 @@ else $sw_f_rs="";
                           </td>                          
                         </tr>
                         <tr>
-                          <td class="text-left">Edición RS Facturas</td>
+                          <td class="text-left">Edición de Razón Social en Facturas</td>
                           <td>
                             <div class="togglebutton">
                                <label>

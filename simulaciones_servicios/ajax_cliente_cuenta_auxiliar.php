@@ -28,7 +28,7 @@ $stmt->execute();
     <?php 
         while ($row = $stmt->fetch()){ 
     ?>
-         <option <?=($cod_cliente==$row["codigo"])?"selected":"disabled";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+         <option <?=($cod_cliente==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
      <?php 
         } 
     ?>

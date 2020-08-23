@@ -198,7 +198,7 @@ $globalPersonal=$_SESSION["globalUser"];
                                   $datos_edit=$cadenaFacturas."###".$razon_social."###".$codigos_facturas;
                                   if($cod_estadofactura!=2 && $configuracion_defecto_edit==1){?>
                                     <button rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalEditarFactura" onclick="modal_editarFactura_sf('<?=$datos_edit;?>')">
-                                      <i class="material-icons text-success" title="Editar Razón Social">edit</i> Editar Razón S.
+                                      <i class="material-icons text-success" title="Editar Razón Social">edit</i> Editar Razón Social
                                     </button><?php 
                                   }?>
                                 </div>
