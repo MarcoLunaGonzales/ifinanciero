@@ -59,6 +59,11 @@ $stmt->bindColumn('cuenta_auxiliar', $cuentaAuxiliar);
                       <?php
                         $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $numeroFormateado=formateaPuntosPlanCuenta($numero);
+
+                          $numeroPadreX=obtieneNumeroCuenta($codPadre);
+                          $numeroPadreX=formateaPuntosPlanCuenta($numeroPadreX);
+                        
                           $nombre=formateaPlanCuenta($nombre, $nivel);
                           $linkAdd="";
                           if($nivel<5){
@@ -71,9 +76,9 @@ $stmt->bindColumn('cuenta_auxiliar', $cuentaAuxiliar);
                         ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td><?=$numero;?></td>
+                          <td><?=$numeroFormateado;?></td>
                           <td><?=$nombre;?><?=$linkAdd;?></td>
-                          <td><?=$codPadre;?></td>
+                          <td><?=$numeroPadreX;?></td>
                           <td><?=$nivel;?></td>
                           <td><?=$codTipoCuenta;?></td>
                           <td class="td-actions text-center"><?=$imgCuentaAuxiliar;?></td>
@@ -103,11 +108,11 @@ $stmt->bindColumn('cuenta_auxiliar', $cuentaAuxiliar);
               </div>
               <!--div class="card-footer ml-auto mr-auto"-->
               <div class="card-footer fixed-bottom">
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>'">Registrar</button>
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlSolRecursos;?>'">PC Sol. Recursos</button>
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlTiposPago;?>'">PC Tipos Pago</button>
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlCajaChica;?>'">PC Caja Chica</button>
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlAreas;?>'">PC Áreas</button>                    
+                    <!--button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegister;?>'">Registrar</button-->
+                    <button class="<?=$buttonCeleste;?>" onClick="location.href='<?=$urlSolRecursos;?>'">PC Solicitud Recursos</button>
+                    <button class="<?=$buttonCeleste;?>" onClick="location.href='<?=$urlTiposPago;?>'">PC Formas de Pago</button>
+                    <button class="<?=$buttonCeleste;?>" onClick="location.href='<?=$urlCajaChica;?>'">PC Caja Chica</button>
+                    <button class="<?=$buttonCeleste;?>" onClick="location.href='<?=$urlAreas;?>'">PC Áreas</button>                    
               </div>      
             </div>
           </div>  

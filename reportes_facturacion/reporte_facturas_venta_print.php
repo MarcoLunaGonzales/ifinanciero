@@ -18,7 +18,7 @@ $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHa
 $fechaTitulo="De ".strftime('%d/%m/%Y',strtotime($desde))." a ".strftime('%d/%m/%Y',strtotime($hasta));
 $sql="SELECT f.codigo,f.cod_estadofactura
 FROM facturas_venta f 
-WHERE f.cod_unidadorganizacional in ($stringUnidadesX) and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura not in (2,4)   ORDER BY f.fecha_factura asc";
+WHERE f.cod_unidadorganizacional in ($stringUnidadesX) and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura not in (2,4)   ORDER BY f.nro_factura asc";
 // echo $sql;
 $stmt2 = $dbh->prepare($sql);
 $stmt2->execute();

@@ -166,11 +166,14 @@
      $nivelCuentaBuscado=$nivelCuenta+1;
      
      //echo "nivel cta: ".$nivelCuentaBuscado; 
+     //echo "cuentaSinFormato: ".$cuentaSinFormato; 
 
      list($nivel1, $nivel2, $nivel3, $nivel4, $nivel5) = explode('.', $codigo);
      
-     $stmt = $dbh->prepare("SELECT (max(numero))numero FROM plan_cuentas where cod_padre=:codigo");
-     $stmt->bindParam(':codigo',$cuentaSinFormato);
+     $codigoCuentaPadre=obtieneCuentaPorNumero($cuentaSinFormato);
+
+     $stmt = $dbh->prepare("SELECT (max(numero)) as numero FROM plan_cuentas where cod_padre=:codigo");
+     $stmt->bindParam(':codigo',$codigoCuentaPadre);
      $stmt->execute();
      $cuentaHijoMaxima="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5369,7 +5372,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
  function obtenerCodigoCuentaAuxiliarProveedorClienteCuenta($tipo,$codigo,$cuenta){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_cuenta=$cuenta");
+     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_estadoreferencial<>2 and c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_cuenta=$cuenta");
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

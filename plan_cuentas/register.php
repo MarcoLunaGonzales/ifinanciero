@@ -18,6 +18,11 @@ if($codigo>0){
 	$codcuentaPadre=$codigo;
 	$cuentaPadre=obtieneNumeroCuenta($codigo);
 	$nuevaCuentaFormateada=formateaPuntosPlanCuenta($cuentaPadre);
+	$nombrePadreInicio=nameCuenta($codigo);
+	$nombrePadreCompletoInicio=$nuevaCuentaFormateada." ".$nombrePadreInicio;
+
+
+	$nivelX=$row['nivel'];
 	$nivelCuenta=buscarNivelCuenta($nuevaCuentaFormateada);
 	$nuevaCuenta=obtieneNuevaCuenta($nuevaCuentaFormateada);
 }
@@ -59,8 +64,8 @@ if($codigo>0){
 				  <label class="col-sm-2 col-form-label">Cuenta Padre</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <input class="form-control" type="text" name="numero_padre" id="numero_padre" required="true" readonly="true" value="<?=$cuentaPadre;?>"/>
-					  <input class="form-control" type="hidden" name="padre" id="padre" required="true" readonly="true" value="<?=$codcuentaPadre;?>"/>
+					  <input class="form-control" type="hidden" name="codigo_padre" id="codigo_padre" required="true" readonly="true" value="<?=$codcuentaPadre;?>"/>					  
+					  <input class="form-control" type="text" name="padre" id="padre" required="true" readonly="true" value="<?=$nombrePadreCompletoInicio;?>"/>
 					</div>
 				  </div>
 				</div>
@@ -69,7 +74,7 @@ if($codigo>0){
 				  <label class="col-sm-2 col-form-label">Nombre</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <input class="form-control" type="text" name="nombre" id="nombre" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+					  <input class="form-control" type="text" name="nombre" id="nombre" required="true" />
 					</div>
 				  </div>
 				</div>

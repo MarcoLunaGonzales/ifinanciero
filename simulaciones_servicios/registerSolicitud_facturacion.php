@@ -176,7 +176,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             $codigoPre=$rowPre['codigo'];
                                             $codCS=$rowPre['cod_claservicio'];
                                             $tipoPre=$Codigo_alterno." - ".$rowPre['nombre_serv'];
-                                            $cantidadPre=$rowPre['cantidad_editado'];
+                                            $cantidadPre=$rowPre['cantidad_editado'];                                            
 
                                             // echo $cantidadPre."-";
                                             // $cantidadPre=1;

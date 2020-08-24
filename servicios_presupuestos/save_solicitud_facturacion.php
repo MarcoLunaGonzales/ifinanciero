@@ -50,7 +50,7 @@ try {
         values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo','$persona_contacto',1,'$codigo_alterno',3,'$dias_credito')");//3 tipo servicios
 
         $flagSuccess=$stmt->execute();
-        $flagSuccess=true;
+        // $flagSuccess=true;
         if($flagSuccess){
             //sacamos el codigo insertado
             $stmt = $dbh->prepare("SELECT codigo from solicitudes_facturacion where cod_simulacion_servicio=$cod_simulacion ORDER BY codigo desc LIMIT 1");

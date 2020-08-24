@@ -10,7 +10,7 @@ $dbh = new Conexion();
 $codigo=$codigo;
 
 $sql="SELECT p.codigo, p.numero, p.nombre, p.cod_padre, p.nivel, p.cod_tipocuenta, p.cod_moneda, p.cuenta_auxiliar FROM $table p where p.codigo='$codigo'";
-//  echo $sql;
+//echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 
@@ -19,6 +19,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$numeroX=$row['numero'];
 	$nombreX=$row['nombre'];
 	$codPadreX=$row['cod_padre'];
+	$numeroPadreX=obtieneNumeroCuenta($codPadreX);
+	$numeroPadreX=formateaPuntosPlanCuenta($numeroPadreX);
+	$nombrePadreX=nameCuenta($codPadreX);
+	$nombrePadreCompleto=$numeroPadreX." ".$nombrePadreX;
 	$nivelX=$row['nivel'];
 	$codTipoCuentaX=$row['cod_tipocuenta'];
 	$codMonedaX=$row['cod_moneda'];
@@ -59,12 +63,14 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				  </div>
 				</div>
 
+				<input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>">	
+
 				<div class="row">
 				  <label class="col-sm-2 col-form-label">Cuenta Padre</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-						<input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>">	
-					  <input class="form-control" type="text" name="padre" id="padre" required="true" readonly="true" value="<?=$codPadreX;?>"/>
+						<input type="hidden" name="codigo_padre" id="codigo_padre" value="<?=$codPadreX;?>">	
+					  	<input class="form-control" type="text" name="padre" id="padre" required="true" readonly="true" value="<?=$nombrePadreCompleto;?>"/>
 					</div>
 				  </div>
 				</div>
@@ -73,7 +79,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				  <label class="col-sm-2 col-form-label">Nombre</label>
 				  <div class="col-sm-7">
 					<div class="form-group">
-					  <input class="form-control" type="text" name="nombre" id="nombre" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$nombreX;?>"/>
+					  <input class="form-control" type="text" name="nombre" id="nombre" required="true" value="<?=$nombreX;?>"/>
 					</div>
 				  </div>
 				</div>

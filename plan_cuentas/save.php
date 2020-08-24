@@ -9,7 +9,8 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 $numero=$_POST["numero"];
-$padre=$_POST["padre"];
+$padre=$_POST["codigo_padre"];
+$numeroPadre=$_POST["padre"];
 $nombre=$_POST["nombre"];
 $tipoCuenta=$_POST["tipocuenta"];
 $moneda=$_POST["moneda"];
