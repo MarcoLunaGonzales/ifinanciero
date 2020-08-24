@@ -9241,4 +9241,24 @@ function obtenerEstadoComprobante($codigo){
       }  
       return implode("\n ", $valor);
     }
+
+function obtenerResumenDistribucionSR($codigo){
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT d.porcentaje,d.tipo_distribucion,d.oficina_area 
+      from distribucion_gastos_solicitud_recursos d 
+      where d.cod_solicitudrecurso=$codigo and d.padre_oficina_area=0 and d.porcentaje<>0");
+    $stmt->execute();
+    $detalle="";
+    $monto=obtenerSumaDetalleSolicitud($codigo);
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $tipo=$row['tipo_distribucion'];
+    $porcentaje=$row['porcentaje'];
+    if($tipo==1){
+      $detalle.="<b>OF-".abrevUnidad_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")<br>";
+    }else{
+      $detalle.="<b>AREA-".abrevArea_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")<br>";
+    }
+   }
+    return $detalle;
+  }
 ?>
