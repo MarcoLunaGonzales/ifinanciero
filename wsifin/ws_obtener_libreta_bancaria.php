@@ -127,7 +127,9 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
            //$saldoFactura=0;
            //if($rowLibDetalle['cod_factura']!=""){
            //$sqlFacturaLibreta="SELECT * FROM facturas_venta where cod_libretabancariadetalle=".$rowLibDetalle['codigo'];
-           $sqlFacturaLibreta="SELECT * from facturas_venta where codigo in (select cod_facturaventa from libretas_bancariasdetalle_facturas where cod_libretabancariadetalle=".$rowLibDetalle['codigo'].")";
+           $sqlFacturaLibreta="select f.* from facturas_venta f join 
+libretas_bancariasdetalle_facturas lf on lf.cod_facturaventa=f.codigo 
+where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']."";
            $stmtFacLibreta = $dbh->prepare($sqlFacturaLibreta);
            $stmtFacLibreta->execute();
            $sumaImporte=0;
@@ -136,15 +138,14 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
            $existeFactura=0;
            while ($rowFacLib = $stmtFacLibreta->fetch(PDO::FETCH_ASSOC)) {
               if($rowFacLib['cod_estadofactura']!=2){
-               $datosFacturas=obtenerDatosFacturaVenta($rowFacLib['codigo']);
-               $datosDetalleFac[$indexAux]['FechaFactura']=strftime('%d/%m/%Y',strtotime($datosFacturas[0]));
-               $datosDetalleFac[$indexAux]['NumeroFactura']=$datosFacturas[1];
-               $datosDetalleFac[$indexAux]['NitFactura']=$datosFacturas[2];
-               $datosDetalleFac[$indexAux]['RSFactura']=$datosFacturas[3];
-               $datosDetalleFac[$indexAux]['DetalleFactura']=$datosFacturas[4];
-               $datosDetalleFac[$indexAux]['MontoFactura']=number_format($datosFacturas[5],2,".","");
+               $datosDetalleFac[$indexAux]['FechaFactura']=strftime('%d/%m/%Y',strtotime($rowFacLib['fecha_factura']));
+               $datosDetalleFac[$indexAux]['NumeroFactura']=$rowFacLib['nro_factura'];
+               $datosDetalleFac[$indexAux]['NitFactura']=$rowFacLib['nit'];
+               $datosDetalleFac[$indexAux]['RSFactura']=$rowFacLib['razon_social'];
+               $datosDetalleFac[$indexAux]['DetalleFactura']=$rowFacLib['observaciones'];
+               $datosDetalleFac[$indexAux]['MontoFactura']=number_format($rowFacLib['importe'],2,".","");
                $existeFactura++;           
-               $sumaImporte+=$datosFacturas[5];
+               $sumaImporte+=$rowFacLib['importe'];
                $indexAux++;
               } 
             }
@@ -181,5 +182,3 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
 
  return array($filaA,$datosMega);
 }
-
-

@@ -7664,9 +7664,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
 
   function obtenerObtenerLibretaBancariaIndividual($codigo){
-    //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
+    $direccion='http://127.0.0.1/ifinanciero/wsifin/';
     // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
-    $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+    //$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
     $sIde = "libBan";
     $sKey = "89i6u32v7xda12jf96jgi30lh";
     //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
@@ -7691,9 +7691,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     // print_r($remote_server_output);
   }
 function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
-    //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
+    $direccion='http://127.0.0.1/ifinanciero/wsifin/';
     // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
-    $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+    //$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
     $sIde = "libBan";
     $sKey = "89i6u32v7xda12jf96jgi30lh";
     //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
