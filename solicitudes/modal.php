@@ -236,8 +236,9 @@
                         <th>#</th>
                         <th width="45%">Areas</th>
                         <th width="10%">%</th>
-                        <th class="bg-info" width="32%">Oficina</th>
+                        <th class="bg-info" width="23%">Oficina</th>
                         <th class="bg-info" width="10%">%</th>
+                        <th class="bg-info" width="7%">%</th>
                       </tr>
                     </thead>
                     <tbody id="cuerpo_tabladistarea_general">

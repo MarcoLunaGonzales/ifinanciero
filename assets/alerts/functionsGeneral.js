@@ -14183,6 +14183,9 @@ var itemDistArea=[];
 var itemDistAreaGlobal=[];
 var itemDistOficinaGeneral=[];
 function cargarDistribucionSol(valor){
+  if($("#cantidad_filas").val()==0){
+        Swal.fire("Informativo!", "Debe registrar al menos un detalle", "warning");
+  }else{ 
   $("#nueva_distribucion").val(valor);
   switch (valor){
     case 1:
@@ -14205,6 +14208,7 @@ function cargarDistribucionSol(valor){
     quitarDistribucionSolicitud();
     break;
   }
+ }
 }
 function cargarTablaDistribucion(array1,array2){  
   console.log(JSON.stringify(array1));
@@ -14254,6 +14258,7 @@ function listarArrayTablaGeneral(array,array2,cuerpo){
       bgcolor=fondo2;
     }
     var filaOficina=0;
+    var porcentajeOficinaSuma=0;
      var row = $('<tr>').addClass(bgcolor);
      row.append($('<td>').attr("rowspan",cantidad).addClass('').text(i+1));
      row.append($('<td>').attr("rowspan",cantidad).addClass('font-weight-bold text-left').text(array[i].nombre));
@@ -14266,6 +14271,12 @@ function listarArrayTablaGeneral(array,array2,cuerpo){
        }      
        row.append($('<td>').addClass('font-weight-bold text-left small').text(array2[h].nombre));
        row.append($('<td>').addClass('').html('<input type="number" onkeyup="calcularTotalesSolicitudDistribucionGeneral()" onkeydown="calcularTotalesSolicitudDistribucionGeneral()" step="0.01" class="form-control text-right" id="'+cuerpo+'_'+(i+1)+'_'+(h+1)+'"  value="'+redondeo(array2[h].porcentaje)+'">'));    
+       if(filaOficina==(cantidad-1)){
+         row.append($('<td>').attr("id","total_porcentaje_area"+(i+1)).addClass('font-weight-bold small bg-info text-white').text(redondeo(porcentajeOficinaSuma)));
+       }else{
+         row.append($('<td>').addClass('font-weight-bold small').text(""));
+       }
+       porcentajeOficinaSuma+=redondeo(array2[h].porcentaje);
        filaOficina++;
       }
      }; 
@@ -14275,8 +14286,9 @@ function listarArrayTablaGeneral(array,array2,cuerpo){
      row.append($('<td>').addClass('').text(""));
      row.append($('<td>').addClass('text-left font-weight-bold').text("Total"));
      row.append($('<td>').addClass('text-right font-weight-bold').text('0').attr("id","total_"+cuerpo));
-     row.append($('<td>').addClass('text-right font-weight-bold').text(''));
-     row.append($('<td>').addClass('text-right font-weight-bold').text(''));    
+     row.append($('<td>').addClass('text-right font-weight-bold bg-info').text(''));
+     row.append($('<td>').addClass('text-right font-weight-bold bg-info').text(''));
+     row.append($('<td>').addClass('text-right font-weight-bold bg-info').text(''));    
      table.append(row);
    calcularTotalesSolicitudDistribucionGeneral();  
 }
@@ -14364,10 +14376,10 @@ function guardarDistribucionSolicitudRecurso(){
   if((itemDistArea.length==0||itemDistOficina.length==0)&&$("#titulo_distribucion").html()=="x OFICINA y x Area"){
     Swal.fire("Informativo!", "Debe existir distribucion para Area y Oficina", "warning");
   }else{
-   if(sumaOfi!=100&&sumaOfi!=0){
+   if(sumaOfi!=100){
     Swal.fire("Informativo!", "El porcentaje Total de Oficina debe ser 100 !", "warning");
    }else{
-    if(sumaArea!=100&&sumaArea!=0){
+    if(sumaArea!=100){
      Swal.fire("Informativo!", "El porcentaje Total de Area debe ser 100 !", "warning");
     }else{
        saveDistribucionSolicitudRecurso();
@@ -14377,32 +14389,41 @@ function guardarDistribucionSolicitudRecurso(){
 }
 
 function guardarDistribucionSolicitudRecursoGeneral(){
-  var sumaOfi=0; var sumaArea=0;
-  
+  var sumaOfi=0; var sumaArea=0;var oficinaPorcentajeMayor=0;
+  var porcentaje=0;
   for (var i = 0; i < itemDistAreaGlobal.length; i++) {  
+    porcentaje=0;
    if($("#cuerpo_tabladistarea_general_"+(i+1)).length>0){
     if(!($("#cuerpo_tabladistarea_general_"+(i+1)).val()==""||$("#cuerpo_tabladistarea_general_"+(i+1)).val()<0)){
-      sumaArea+=parseFloat($("#cuerpo_tabladistarea_general_"+(i+1)).val())
+      porcentaje=parseFloat($("#cuerpo_tabladistarea_general_"+(i+1)).val());
+      sumaArea+=porcentaje;
     }
+    sumaOfi=0;
      for (var h = 0; h < itemDistOficinaGeneral.length; h++) {  
       if(itemDistOficinaGeneral[h].cod_fila==itemDistAreaGlobal[i].fila){
        if($("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).length>0){
         if(!($("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).val()==""||$("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).val()<0)){
-         sumaOfi+=parseFloat($("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).val())
+         sumaOfi+=parseFloat($("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).val());
+
         }
        }    
       }
      }
+     if(porcentaje>0){
+      if(sumaOfi!=100){
+         oficinaPorcentajeMayor++;  
+      }
+     }//fin validacion de oficinas
    }
   }
-    if(sumaArea!=100&&sumaArea!=0){
+    if(sumaArea!=100){
       Swal.fire("Informativo!", "El porcentaje Total de Area debe ser 100 !", "warning");
     }else{
-      //if(sumaOfi!=(itemDistAreaGlobal.length*100)){
-       // Swal.fire("Informativo!", "El porcentaje Total de las oficinas debe ser 100 !", "warning");  
-      //}else{
+      if(oficinaPorcentajeMayor>0){
+        Swal.fire("Informativo!", "El porcentaje Total de las oficinas debe ser 100 !", "warning");  
+      }else{
        saveDistribucionSolicitudRecursoGeneral(); 
-      //}    
+      }    
     }    
 }
 
@@ -14434,7 +14455,19 @@ function calcularTotalesSolicitudDistribucionGeneral(){
   for (var i = 0; i < itemDistAreaGlobal.length; i++) {  
    if($("#cuerpo_tabladistarea_general_"+(i+1)).length>0){
     if(!($("#cuerpo_tabladistarea_general_"+(i+1)).val()==""||$("#cuerpo_tabladistarea_general_"+(i+1)).val()<0)){
-      sumaArea+=parseFloat($("#cuerpo_tabladistarea_general_"+(i+1)).val())
+      var porcentaje=parseFloat($("#cuerpo_tabladistarea_general_"+(i+1)).val());
+      sumaArea+=porcentaje;
+      
+      if(porcentaje>0){
+        //$("#total_porcentaje_area"+(i+1)).val();
+      }
+      var porcentajeUnidad=0;
+      for (var h = 0; h < itemDistOficinaGeneral.length; h++) {
+         if(itemDistOficinaGeneral[h].cod_fila==itemDistAreaGlobal[i].fila){
+           porcentajeUnidad+=parseFloat($("#cuerpo_tabladistarea_general_"+(i+1)+"_"+(h+1)).val());   
+         }
+     }//fin sub for
+     $("#total_porcentaje_area"+(i+1)).text(redondeo(porcentajeUnidad));
     }
    }
   }

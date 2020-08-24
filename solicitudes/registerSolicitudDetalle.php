@@ -557,7 +557,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               <div class="row">
                 <div class="col-sm-12">
                    <div class="form-group">
-                    <label class="bmd-label-static">Registre una observaciones</label>
+                    <label class="bmd-label-static">Registre una observacion</label>
                     <textarea rows="5" id="observaciones_solicitud" name="observaciones_solicitud" class="form-control"></textarea>
                    </div> 
                 </div>
