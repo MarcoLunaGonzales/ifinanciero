@@ -9253,11 +9253,31 @@ function obtenerResumenDistribucionSR($codigo){
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $tipo=$row['tipo_distribucion'];
     $porcentaje=$row['porcentaje'];
+    $unidad_area=$row['oficina_area'];
+    $detalleHijo="";
+    $montoPadre=$monto*($row['porcentaje']/100);
     if($tipo==1){
-      $detalle.="<b>OF-".abrevUnidad_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")<br>";
+      $detalle.="<b>OF-".abrevUnidad_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")";
     }else{
-      $detalle.="<b>AREA-".abrevArea_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")<br>";
+      $detalle.="<b>AREA-".abrevArea_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")";
     }
+    //detalle Hijo Distribucion
+    $stmt2 = $dbh->prepare("SELECT d.porcentaje,d.tipo_distribucion,d.oficina_area 
+      from distribucion_gastos_solicitud_recursos d 
+      where d.cod_solicitudrecurso=$codigo and d.padre_oficina_area=$unidad_area and d.porcentaje<>0");
+    $stmt2->execute();
+    $detalleHijo="";
+    while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+    $tipo2=$row2['tipo_distribucion'];
+    $porcentaje2=$row2['porcentaje'];
+    if($tipo2==1){
+      $detalleHijo.="<small> [<b>".abrevUnidad_solo($row2['oficina_area']).":</b>".$porcentaje2."%"."(".number_format(($montoPadre*($porcentaje2/100)),2,'.',',').")]</small>";
+    }else{
+      $detalleHijo.="<small> [<b>".abrevArea_solo($row2['oficina_area']).":</b>".$porcentaje2."%"."(".number_format(($montoPadre*($porcentaje2/100)),2,'.',',').")]</small>";
+    }
+   }
+    //fin detalle Hijo Distribucion
+   $detalle.=$detalleHijo."<br>";
    }
     return $detalle;
   }
