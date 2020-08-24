@@ -19,29 +19,27 @@ if($cod_cliente!=0 && $cuenta_auxiliar==0){
 
 }
 
-$sql="SELECT c.codigo, c.nombre from clientes c where c.cod_estadoreferencial=1 order by c.nombre";
-$stmt = $dbh->prepare($sql);
-$stmt->execute();
+// $sql="SELECT c.codigo, c.nombre from clientes c where c.cod_estadoreferencial=1 order by c.nombre";
+// $stmt = $dbh->prepare($sql);
+// $stmt->execute();
 
 $sql_cuentasAux="SELECT codigo,nombre,cod_cuenta From cuentas_auxiliares where cod_estadoreferencial=1 and cod_tipoauxiliar=2 and cod_cuenta=$cuenta_defecto_cliente";
 $stmt_cuentas_aux = $dbh->prepare($sql_cuentasAux);
 $stmt_cuentas_aux->execute();
-?>
-<div class="row">
-	<label class="col-sm-2 col-form-label">Proveedor/Cliente</label>
+// echo $cuenta_auxiliar."--";
+if($cuenta_auxiliar==""){?>
+<div class="row">	
+	<label class="col-sm-2 col-form-label"></label>
 	<div class="col-sm-7">
 		<div class="form-group">
-			<select name="proveedor_cliente_list" id="proveedor_cliente_list" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" >
-		    <?php 
-		        while ($row = $stmt->fetch()){ ?>
-		         <option <?=($cod_cliente==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option><?php 
-		        } 
-		    ?>
-		 </select>
+			<span style="color: #ff0000;">El Cliente No Tiene Una Cuenta Auxliar Asociada.</span>
 		</div>
 	</div>	
 </div>
-<div class="row">
+<?php }
+?>
+
+<div class="row" >
 	<label class="col-sm-2 col-form-label">Cuenta Auxiliar</label>
 	<div class="col-sm-7">
 		<div class="form-group">
@@ -58,7 +56,7 @@ $stmt_cuentas_aux->execute();
 	<div class="col-sm-1">
 		<div class="form-group">
 			<a href="#" style="background-color: #0489B1" class="btn btn-round btn-fab btn-sm" onclick="abrirRegistroCuentaAuxiliar('<?=$datos?>',2)">
-            	<i class="material-icons" title="Add Cuenta Auxiliar">add</i>
+            	<i class="material-icons" title="Registrar Cuenta Auxiliar">add</i>
           	</a>
 		</div>
 	</div>

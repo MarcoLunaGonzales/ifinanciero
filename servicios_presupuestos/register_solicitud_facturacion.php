@@ -314,7 +314,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     <td><small><?=$iii?></small></td>
                                                     <td class="text-left" ><small><?=$tipoPre?></small></td>
                                                     <!-- <td class="text-right"><small><?=$cantidadPre?></small></td> -->
-                                                    <td class="text-right"><input type="number" id="cantidad<?=$iii?>" name="cantidad<?=$iii?>" class="form-control input-sm"  value="<?=$cantidad_saldo?>" onkeyup="cantidad_por_importe_servicio_sf_2(<?=$iii?>)" <?=$sw2?> ><span style="color: #6ab682;font-size: 8px;">(<?=$cantidad_inicial?></span>-<span style="color: #FF0000;font-size: 8px; "><?=$cantidad_total_registrado?>)</span></td>
+                                                    <td class="text-right"><input type="number" id="cantidad<?=$iii?>" name="cantidad<?=$iii?>" class="form-control input-sm"  value="<?=$cantidad_saldo?>" onkeyup="cantidad_por_importe_servicio_sf_2(<?=$iii?>)" <?=$sw2?> ><span style="color: #6ab682;font-size: 8px;">(CT: <?=$cantidad_inicial?></span><br><span style="color: #FF0000;font-size: 8px; ">CF: <?=$cantidad_total_registrado?>)</span></td>
 
                                                     <td class="text-right"><input type="number" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control input-sm"  value="<?=$monto_pagar?>" step="0.01" onkeyup="activarInputMontoFilaServicio2()" <?=$sw2?> readonly></td>
                                                     <!--  descuentos -->

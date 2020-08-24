@@ -256,7 +256,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                                   }elseif($cod_tipopago==$cod_tipopago_credito){//si es a credito y no tiene cuenta auxiliar
                                                     $datos_sf_credito=$codigo_facturacion."/".$cod_cliente;?>
                                                     <a href='#' title="Registrar Cuenta Auxiliar" class="dropdown-item" onclick="abrirRegistroCuentaAuxiliar('<?=$datos_sf_credito;?>','1')">
-                                                      <i class="material-icons text-success">receipt</i>Seleccionar Cuenta Auxiliar</a><?php 
+                                                      <i class="material-icons text-success">receipt</i>Generar Factura</a><?php 
                                                   }else{
                                                     ?>
                                                     <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
@@ -379,7 +379,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
     <div class="modal-content card">
       <div class="card-header card-header-success card-header-text">
         <div class="card-text">
-          <h5>Cuenta Auxiliar</h5> 
+          <h5>Cuenta Auxiliar Con La Que Se Contabilizará la Factura</h5> 
         </div>
         <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
@@ -408,7 +408,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
             </div>
           </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <label class="col-sm-2 col-form-label">Tipo</label>
             <div class="col-sm-4">
                 <div class="form-group">
@@ -419,14 +419,14 @@ $globalAdmin=$_SESSION["globalAdmin"];
             </select>
             </div>
               </div>
-        </div>
+        </div> -->
 
         <div id="divCuentaAuxiliar_cliente">
           
         </div>
         <div class="form-group float-right">
             <button type="button" class="btn btn-success btn-round" onclick="generarFacturaCredito('1')">Generar Factura </button>
-            <button type="button" class="btn btn-info btn-round" onclick="generarFacturaCredito('2')">Generar Factura Manual </button>
+            <!-- <button type="button" class="btn btn-info btn-round" onclick="generarFacturaCredito('2')">Generar Factura Manual </button> -->
         </div>         
       </div>
     </div>
