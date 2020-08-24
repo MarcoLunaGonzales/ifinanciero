@@ -435,7 +435,7 @@
               <div class="form-group col-sm-2">
                 <!--<label for="cuenta" class="bmd-label-floating">Cuenta Auxiliar:</label>-->
                 <input type="hidden" id="cuenta_id_auxiliar" name="cuenta_id_auxiliar">
-                <input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" id="cuenta_auxiliar_modal" name="cuenta_auxiliar_modal" onkeypress="buscarCuentaList('nombre');" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"><!--onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
+                <input type="text" class="form-control" style="background-color:#E3CEF6;text-align: left" id="cuenta_auxiliar_modal" name="cuenta_auxiliar_modal" onkeypress="pulsar(event,'nombre')" onkeyDown="pulsar(event,'nombre');" onkeyUp="pulsar(event,'nombre');"><!--onkeypress="buscarCuentaList('nombre');pulsar(event)" onkeyDown="buscarCuentaList('nombre');" onkeyUp="buscarCuentaList('nombre');"-->
               </div>
               <div class="form-group col-sm-2">
                   <button type="button" class="btn btn-danger btn-sm" onclick="buscarCuenta(form1);">

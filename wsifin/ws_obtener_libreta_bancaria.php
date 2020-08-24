@@ -12,11 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mensaje="";
         if($accion=="ObtenerLibretaBancaria"){
            if(isset($datos['anio'])){
-             $datos=obtenerDatosLibreta($codLibreta,$datos['anio']);
+             $datosResp=obtenerDatosLibreta($codLibreta,$datos['anio']);
            }else{
-             $datos=obtenerDatosLibreta($codLibreta,0);
+             $datosResp=obtenerDatosLibreta($codLibreta,0);
            }
-                if($datos[0]==0){
+                if($datosResp[0]==0){
                  $estado=2;
                  $mensaje = "Libreta Inexistente";
                  $resultado=array("estado"=>$estado, 
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             "totalComponentes"=>0);
                 }else{
                   $estado=1;
-                  $libreta = $datos[1]; 
+                  $libreta = $datosResp[1]; 
                   $resultado=array(
                             "estado"=>$estado,
                             "mensaje"=>"Libreta Obtenida Correctamente", 
@@ -68,16 +68,27 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
   $filaA=0;
   $datos=null;
   $datosMega=null;
-  while ($rowLib = $stmtFac->fetch(PDO::FETCH_ASSOC)) {
 
-    
+  $datosLibretasCabecera=[];
+  $ff=0;
+  while ($rowLib = $stmtFac->fetch(PDO::FETCH_ASSOC)) {
      $codigoLib=$rowLib['codigo'];
-     $datos['CodLibreta']=$rowLib['codigo'];
-     $datos['Nombre']=$rowLib['nombre'];
-     $datos['Banco']=$rowLib['banco'];
-     $datos['CodBanco']=$rowLib['cod_banco'];
-     $datos['NumeroCuenta']=$rowLib['nro_cuenta'];
-     $datos['IdCuenta']=$rowLib['cod_cuenta'];
+     $datosLibretasCabecera[$ff]['codigo']=$rowLib['codigo'];
+     $datosLibretasCabecera[$ff]['nombre']=$rowLib['nombre'];
+     $datosLibretasCabecera[$ff]['banco']=$rowLib['banco'];
+     $datosLibretasCabecera[$ff]['cod_banco']=$rowLib['cod_banco'];
+     $datosLibretasCabecera[$ff]['nro_cuenta']=$rowLib['nro_cuenta'];
+     $datosLibretasCabecera[$ff]['cod_cuenta']=$rowLib['cod_cuenta'];
+     $ff++;
+  }
+  for ($ff=0; $ff <count($datosLibretasCabecera) ; $ff++) { 
+     $codigoLib=$datosLibretasCabecera[$ff]['codigo'];
+     $datos['CodLibreta']=$datosLibretasCabecera[$ff]['codigo'];
+     $datos['Nombre']=$datosLibretasCabecera[$ff]['nombre'];
+     $datos['Banco']=$datosLibretasCabecera[$ff]['banco'];
+     $datos['CodBanco']=$datosLibretasCabecera[$ff]['cod_banco'];
+     $datos['NumeroCuenta']=$datosLibretasCabecera[$ff]['nro_cuenta'];
+     $datos['IdCuenta']=$datosLibretasCabecera[$ff]['cod_cuenta'];
     if($anioLib==0){
        $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura
        FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 order by ce.codigo";
@@ -90,9 +101,6 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
      $datosDetalle=[];
      $index=0;
      while ($rowLibDetalle = $stmtFacDetalle->fetch(PDO::FETCH_ASSOC)) {
-        $validacion=1;
-        
-       if($validacion==1){
           $codComprobanteDetalle=$rowLibDetalle['cod_comprobantedetalle'];
           $codComprobante=$rowLibDetalle['cod_comprobante'];
            $datosDetalle[$index]['CodLibretaDetalle']=$rowLibDetalle['codigo'];
@@ -163,11 +171,15 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
             $datosDetalle[$index]['DetalleFacturas']=null;
            }*/  
            $index++;    
-       }
      }
+
+
     $datos['detalle']=$datosDetalle; 
     $datosMega[$filaA]=$datos;
     $filaA++;     
  }
+
  return array($filaA,$datosMega);
 }
+
+
