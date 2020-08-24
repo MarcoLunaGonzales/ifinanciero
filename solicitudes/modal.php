@@ -843,7 +843,15 @@
                           <td class="text-left">NINGUNA</td>
                         </tr>-->
                      <?php 
-                        $stmtRetencion = $dbh->prepare("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order BY nombre");
+                     if(verificarEdicionComprobanteUsuario($globalUser)!=0){
+                       //admin 
+                      $stmtRetencion = $dbh->prepare("SELECT r.abreviatura,r.nombre,r.codigo from configuracion_retenciones r where r.cod_estadoreferencial=1 order BY r.nombre");
+                     }else{
+                        $stmtRetencion = $dbh->prepare("SELECT r.abreviatura,r.nombre,r.codigo from configuracion_retenciones r 
+                          join configuracion_retencionesresumido cr on cr.cod_retencion=r.codigo 
+                          where r.cod_estadoreferencial=1 order BY r.nombre");
+                     }
+                        
                         $stmtRetencion->execute();
                         $contRetencion=0;
                         while ($row = $stmtRetencion->fetch(PDO::FETCH_ASSOC)) {
