@@ -9899,7 +9899,8 @@ function calcularTotalFilaServicio2Costos(){
     var importe=$("#modal_importe"+i).val();
     var modal_importe_pagado_dos_a=$("#modal_importe_pagado_dos_a"+i).val();
     // alert(importe+"-"+modal_importe_pagado_dos_a);
-    var saldo=parseFloat(importe)-parseFloat(modal_importe_pagado_dos_a);
+    // var saldo=parseFloat(importe)-parseFloat(modal_importe_pagado_dos_a);
+    var saldo=$("#saldo_monto"+i).val();
     var monto_importe_total=parseFloat(importe_a_pagar);
     var check=document.getElementById("modal_check"+i).checked;
     if(monto_importe_total>saldo){      
@@ -10217,7 +10218,7 @@ function cantidad_por_importe_manual_sf(id){
     }
   }  
 }
-function cantidad_por_importe_servicio_sf(id){  
+function cantidad_por_importe_servicio_sf(id){  //adicionar nuevos items
   var monto_precio=$("#modal_montoserv"+id).val();// precio de item
   var descuento_bob=$("#descuento_bob_add"+id).val();//monto de descuento %
   var cantidad=$("#cantidad_servicios"+id).val();//
@@ -10234,6 +10235,33 @@ function cantidad_por_importe_servicio_sf(id){
        sumartotalAddServiciosFacturacion(id);
     }
   }  
+}
+function cantidad_por_importe_servicio_sf_2(id){//cantidad modificado de servicio
+  var check=document.getElementById("modal_check"+id).checked;
+  if(check){
+    var monto_precio=$("#monto_precio"+id).val();// precio de item
+    var descuento_bob=$("#descuento_bob"+id).val();//monto de descuento %
+    var cantidad=$("#cantidad_a"+id).val();//
+    if(monto_precio<0 || monto_precio==0 || monto_precio==null){
+      Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
+    }else{
+      if(cantidad<0 || cantidad==0 || cantidad==null){
+        Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+      }else{
+        var monto_bob_porcentaje=parseFloat(monto_precio)*parseFloat(cantidad)-parseFloat(descuento_bob);
+         //agregamos al total      
+        $("#modal_importe"+id).val(monto_bob_porcentaje);//irá en hidden 
+        $("#modal_importe_dos"+id).val(number_format(monto_bob_porcentaje,2));//para mostrar con formato
+        $("#importe_a_pagar"+id).val(0);//irá en hidden 
+        
+        calcularTotalFilaServicio2Costos();
+      }
+    }  
+  }else{
+    Swal.fire("Informativo!", "Por favor, active la fila.", "warning");
+  }
+
+ 
 }
 function descuento_convertir_a_porcentaje_add_manual(id){
   var monto_precio=$("#modal_montoserv"+id).val();// precio de item
