@@ -166,14 +166,11 @@
      $nivelCuentaBuscado=$nivelCuenta+1;
      
      //echo "nivel cta: ".$nivelCuentaBuscado; 
-     //echo "cuentaSinFormato: ".$cuentaSinFormato; 
 
      list($nivel1, $nivel2, $nivel3, $nivel4, $nivel5) = explode('.', $codigo);
      
-     $codigoCuentaPadre=obtieneCuentaPorNumero($cuentaSinFormato);
-
-     $stmt = $dbh->prepare("SELECT (max(numero)) as numero FROM plan_cuentas where cod_padre=:codigo");
-     $stmt->bindParam(':codigo',$codigoCuentaPadre);
+     $stmt = $dbh->prepare("SELECT (max(numero))numero FROM plan_cuentas where cod_padre=:codigo");
+     $stmt->bindParam(':codigo',$cuentaSinFormato);
      $stmt->execute();
      $cuentaHijoMaxima="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5372,7 +5369,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
  function obtenerCodigoCuentaAuxiliarProveedorClienteCuenta($tipo,$codigo,$cuenta){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_estadoreferencial<>2 and c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_cuenta=$cuenta");
+     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_cuenta=$cuenta");
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -7664,9 +7661,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
 
   function obtenerObtenerLibretaBancariaIndividual($codigo){
-    $direccion='http://127.0.0.1/ifinanciero/wsifin/';
+    //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
     // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
-    //$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+    $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
     $sIde = "libBan";
     $sKey = "89i6u32v7xda12jf96jgi30lh";
     //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
@@ -7691,9 +7688,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     // print_r($remote_server_output);
   }
 function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
-    $direccion='http://127.0.0.1/ifinanciero/wsifin/';
+    //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
     // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
-    //$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+    $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
     $sIde = "libBan";
     $sKey = "89i6u32v7xda12jf96jgi30lh";
     //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
