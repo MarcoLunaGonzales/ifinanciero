@@ -14,9 +14,8 @@ $cod_solicitudfacturacion=$_GET["cod_solicitudfacturacion"];
 $datos=$cod_solicitudfacturacion."/".$cod_cliente;
 $cuenta_defecto_cliente=obtenerValorConfiguracion(78);//
 $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(2,$cod_cliente,$cuenta_defecto_cliente);
-if($cod_cliente!=0 && $cuenta_auxiliar==0){
+if($cuenta_auxiliar==0){
 	$cuenta_auxiliar="";
-
 }
 
 // $sql="SELECT c.codigo, c.nombre from clientes c where c.cod_estadoreferencial=1 order by c.nombre";

@@ -220,7 +220,10 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 if($precio_total_x>0){
                                                     $saldo=$monto_pagar*$cantidad_saldo-$precio_total_x;
                                                     $saldo_real=$saldo;
-                                                    //$cantidad_saldo=$cantidad_inicial-$cantidad_total_registrado;
+                                                    if($cod_facturacion==0){
+                                                        $cantidad_saldo=$cantidad_inicial-$cantidad_total_registrado;    
+                                                    }
+                                                    
                                                 }
                                                 if($precio_total_x==null || $precio_total_x=='' || $precio_total_x==' ' || $precio_total_x==0){
                                                 }else $monto_total_pagado=$precio_total_x;
