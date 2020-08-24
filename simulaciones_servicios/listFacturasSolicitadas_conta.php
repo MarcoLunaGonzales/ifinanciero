@@ -63,9 +63,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             <th><small>Codigo<br>Servicio</small></th>                            
                             <th><small>Fecha<br>Registro</small></th>
                             <th><small>Importe<br>(BOB)</small></th>                              
-                            <th width="15%"><small>Razón Social</small></th>
-                            <th width="35%"><small>Concepto</small></th>                            
-                            <th width="12%"><small>Observaciones</small></th>
+                            <th><small>Razón Social</small></th>
+                            <th><small>Concepto</small></th>                            
+                            <th><small>Observaciones</small></th>
                             <th style="color:#ff0000;"><small>#Fact</small></th>
                             <th style="color:#ff0000;" width="6%"><small>Forma<br>Pago</small></th>
                             <th class="text-right"><small>Actions</small></th>                            

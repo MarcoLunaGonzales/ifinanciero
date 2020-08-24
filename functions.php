@@ -166,11 +166,14 @@
      $nivelCuentaBuscado=$nivelCuenta+1;
      
      //echo "nivel cta: ".$nivelCuentaBuscado; 
+     //echo "cuentaSinFormato: ".$cuentaSinFormato; 
 
      list($nivel1, $nivel2, $nivel3, $nivel4, $nivel5) = explode('.', $codigo);
      
-     $stmt = $dbh->prepare("SELECT (max(numero))numero FROM plan_cuentas where cod_padre=:codigo");
-     $stmt->bindParam(':codigo',$cuentaSinFormato);
+     $codigoCuentaPadre=obtieneCuentaPorNumero($cuentaSinFormato);
+
+     $stmt = $dbh->prepare("SELECT (max(numero)) as numero FROM plan_cuentas where cod_padre=:codigo");
+     $stmt->bindParam(':codigo',$codigoCuentaPadre);
      $stmt->execute();
      $cuentaHijoMaxima="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

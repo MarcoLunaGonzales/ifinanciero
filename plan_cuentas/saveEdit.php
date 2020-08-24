@@ -11,6 +11,7 @@ $dbh = new Conexion();
 $codigo=$_POST["codigo"];
 $numero=$_POST["numero"];
 $padre=$_POST["padre"];
+$codigoPadre=$_POST["codigo_padre"];
 $nombre=$_POST["nombre"];
 $tipoCuenta=$_POST["tipocuenta"];
 $moneda=$_POST["moneda"];
@@ -28,7 +29,7 @@ $sql="UPDATE $table SET numero=:numero, cod_padre=:cod_padre, nombre=:nombre, co
 $stmt = $dbh->prepare($sql);
 $stmt->bindParam(':codigo', $codigo);
 $stmt->bindParam(':numero', $numero);
-$stmt->bindParam(':cod_padre', $padre);
+$stmt->bindParam(':cod_padre', $codigoPadre);
 $stmt->bindParam(':nombre', $nombre);
 $stmt->bindParam(':cod_moneda', $moneda);
 $stmt->bindParam(':nivel', $nivelCuenta);
