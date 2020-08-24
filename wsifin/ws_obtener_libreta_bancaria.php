@@ -127,9 +127,9 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
            //$saldoFactura=0;
            //if($rowLibDetalle['cod_factura']!=""){
            //$sqlFacturaLibreta="SELECT * FROM facturas_venta where cod_libretabancariadetalle=".$rowLibDetalle['codigo'];
-           $sqlFacturaLibreta="select f.* from facturas_venta f join 
+           $sqlFacturaLibreta="select f.fecha_factura,f.nro_factura,f.nit,f.razon_social,f.observaciones,f.importe from facturas_venta f join 
 libretas_bancariasdetalle_facturas lf on lf.cod_facturaventa=f.codigo 
-where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']."";
+where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']." and f.cod_estadofactura<>2";
            $stmtFacLibreta = $dbh->prepare($sqlFacturaLibreta);
            $stmtFacLibreta->execute();
            $sumaImporte=0;
@@ -137,7 +137,6 @@ where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']."";
            $indexAux=0;
            $existeFactura=0;
            while ($rowFacLib = $stmtFacLibreta->fetch(PDO::FETCH_ASSOC)) {
-              if($rowFacLib['cod_estadofactura']!=2){
                $datosDetalleFac[$indexAux]['FechaFactura']=strftime('%d/%m/%Y',strtotime($rowFacLib['fecha_factura']));
                $datosDetalleFac[$indexAux]['NumeroFactura']=$rowFacLib['nro_factura'];
                $datosDetalleFac[$indexAux]['NitFactura']=$rowFacLib['nit'];
@@ -146,8 +145,7 @@ where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']."";
                $datosDetalleFac[$indexAux]['MontoFactura']=number_format($rowFacLib['importe'],2,".","");
                $existeFactura++;           
                $sumaImporte+=$rowFacLib['importe'];
-               $indexAux++;
-              } 
+               $indexAux++; 
             }
             $saldoFactura=$rowLibDetalle['monto'];
             if($existeFactura>0){

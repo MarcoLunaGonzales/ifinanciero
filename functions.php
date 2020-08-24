@@ -8855,7 +8855,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
 
   function obtenerSaldoLibretaBancariaDetalleAux($codigo,$codigoAux){
     $dbh = new Conexion();
-    $sql="SELECT ld.*,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
+    $sql="SELECT ld.monto,ld.codigo,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
     where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta f  where lbdf.cod_libretabancariadetalle='$codigo' 
       and f.codigo=lbdf.cod_facturaventa and f.cod_estadofactura<>2) and ld.codigo!=$codigoAux order by fecha_hora";
     //echo $sql;
@@ -8881,7 +8881,8 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
 
   function obtenerSaldoLibretaBancariaDetalle($codigo){
     $dbh = new Conexion();
-    $sql="SELECT ld.*,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
+    $sql="SELECT ld.codigo,ld.monto,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf 
+    join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
     where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta f  where lbdf.cod_libretabancariadetalle='$codigo' 
       and f.codigo=lbdf.cod_facturaventa and f.cod_estadofactura<>2) order by fecha_hora";
     $stmt = $dbh->prepare($sql);
