@@ -9899,7 +9899,8 @@ function calcularTotalFilaServicio2Costos(){
     var importe=$("#modal_importe"+i).val();
     var modal_importe_pagado_dos_a=$("#modal_importe_pagado_dos_a"+i).val();
     // alert(importe+"-"+modal_importe_pagado_dos_a);
-    var saldo=parseFloat(importe)-parseFloat(modal_importe_pagado_dos_a);
+    // var saldo=parseFloat(importe)-parseFloat(modal_importe_pagado_dos_a);
+    var saldo=$("#saldo_monto"+i).val();
     var monto_importe_total=parseFloat(importe_a_pagar);
     var check=document.getElementById("modal_check"+i).checked;
     if(monto_importe_total>saldo){      
@@ -10217,7 +10218,7 @@ function cantidad_por_importe_manual_sf(id){
     }
   }  
 }
-function cantidad_por_importe_servicio_sf(id){  
+function cantidad_por_importe_servicio_sf(id){  //adicionar nuevos items
   var monto_precio=$("#modal_montoserv"+id).val();// precio de item
   var descuento_bob=$("#descuento_bob_add"+id).val();//monto de descuento %
   var cantidad=$("#cantidad_servicios"+id).val();//
@@ -10234,6 +10235,33 @@ function cantidad_por_importe_servicio_sf(id){
        sumartotalAddServiciosFacturacion(id);
     }
   }  
+}
+function cantidad_por_importe_servicio_sf_2(id){//cantidad modificado de servicio
+  var check=document.getElementById("modal_check"+id).checked;
+  if(check){
+    var monto_precio=$("#monto_precio"+id).val();// precio de item
+    var descuento_bob=$("#descuento_bob"+id).val();//monto de descuento %
+    var cantidad=$("#cantidad_a"+id).val();//
+    if(monto_precio<0 || monto_precio==0 || monto_precio==null){
+      Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
+    }else{
+      if(cantidad<0 || cantidad==0 || cantidad==null){
+        Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
+      }else{
+        var monto_bob_porcentaje=parseFloat(monto_precio)*parseFloat(cantidad)-parseFloat(descuento_bob);
+         //agregamos al total      
+        $("#modal_importe"+id).val(monto_bob_porcentaje);//irá en hidden 
+        $("#modal_importe_dos"+id).val(number_format(monto_bob_porcentaje,2));//para mostrar con formato
+        $("#importe_a_pagar"+id).val(0);//irá en hidden 
+        
+        calcularTotalFilaServicio2Costos();
+      }
+    }  
+  }else{
+    Swal.fire("Informativo!", "Por favor, active la fila.", "warning");
+  }
+
+ 
 }
 function descuento_convertir_a_porcentaje_add_manual(id){
   var monto_precio=$("#modal_montoserv"+id).val();// precio de item
@@ -15162,10 +15190,10 @@ function agregaDatosFactManual(datos){
   document.getElementById("nit_cliente").value=d[4];
   document.getElementById("razon_social").value=d[5];
 }
-function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social,cod_libreta_manual,cod_estadocuenta_manual){
+function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autorizacion,fecha_factura,nit_cliente,razon_social,cod_libreta_manual,cod_estadocuenta_manual,cuenta_auxiliar_manual){
   $.ajax({
     type:"POST",
-    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&fecha_factura="+fecha_factura+"&nit_cliente="+nit_cliente+"&razon_social="+razon_social+"&cod_libreta="+cod_libreta_manual+"&cod_estadocuenta="+cod_estadocuenta_manual,
+    data:"cod_solicitudfacturacion="+cod_solicitudfacturacion+"&nro_factura="+nro_factura+"&nro_autorizacion="+nro_autorizacion+"&fecha_factura="+fecha_factura+"&nit_cliente="+nit_cliente+"&razon_social="+razon_social+"&cod_libreta="+cod_libreta_manual+"&cod_estadocuenta="+cod_estadocuenta_manual+"&cuenta_auxiliar="+cuenta_auxiliar_manual,
     url:"simulaciones_servicios/generarFacturaManual.php",
     success:function(r){
       if(r==1){
@@ -15711,7 +15739,10 @@ function guardarNuevaCuentaAuxi(){
   }
 }
 function guardarNuevaCuentaAuxi_facturacion(){
-  var cod_cuenta=document.getElementById('cod_cuenta').value;  
+  var cod_cuenta=document.getElementById('cod_cuenta').value;
+  var cod_cliente_cred=document.getElementById('cod_cliente_cred').value;
+  var cod_solicitudfacturacion_cred=document.getElementById('cod_solicitudfacturacion_cred').value;
+  var cod_cuenta=document.getElementById('cod_cuenta').value;
   var nombre=$('#nombre_x').val();
   var tipo=$('#tipo_x').val();
   var proveedor=$('#proveedor_cliente').val();
@@ -15736,8 +15767,24 @@ function guardarNuevaCuentaAuxi_facturacion(){
             var estado=respu[1];
             var cod_cuenta_auxiliar=respu[2];
             if(estado==1){                          
-              $('#modalRegisterCuentasAux').modal('hide');            
-              alerts.showSwal('success-message','index.php?opcion=listFacturasServicios_conta');
+              $('#modalRegisterCuentasAux_sf').modal('hide');
+
+              // alerts.showSwal('success-message','index.php?opcion=listFacturasServicios_conta'); 
+              // $("#modalListCuentasAux_sf").modal("show");  
+              var contenedor = document.getElementById('divCuentaAuxiliar_cliente');    
+              ajax=nuevoAjax();
+              ajax.open('GET', 'simulaciones_servicios/ajax_cliente_cuenta_auxiliar_list.php?cod_cliente='+cod_cliente_cred+'&cod_solicitudfacturacion='+cod_solicitudfacturacion_cred,true);
+              ajax.onreadystatechange=function() {
+                if (ajax.readyState==4) {
+                  contenedor.innerHTML = ajax.responseText;      
+                  $('.selectpicker').selectpicker(["refresh"]);
+                  
+                  // detectarCargaAjax();      
+                }
+              }
+              ajax.send(null);  
+
+
             }else{
               Swal.fire("ERROR!", "Hubo un error al Guardar la cuenta Auxiliar", "error");
             }
@@ -15749,7 +15796,30 @@ function guardarNuevaCuentaAuxi_facturacion(){
     }
   }
 }
+function generarFacturaCredito(indice){  
+  var cod_solicitudfacturacion=document.getElementById("cod_solicitudfacturacion_cred").value;    
+  var cuenta_auxiliar=document.getElementById("cuenta_auxiliar_list").value;
+  switch (indice){
+    case '1'://solo factura normal
+    $("#modalListCuentasAux_sf").modal("hide");
+      alerts.showSwal('warning-message-and-confirmation-generar-factura','simulaciones_servicios/generarFacturas2.php?codigo='+cod_solicitudfacturacion+'&cod_cuentaaux='+cuenta_auxiliar);
+    break;
+    case '2'://solo factura manual
+      $("#modalListCuentasAux_sf").modal("hide");
+      $("#modalFacturaManual").modal("show");  
+      var d=datos.split('/');
+      document.getElementById("cod_solicitudfacturacion_factmanual").value=d[0];  
+      // document.getElementById("cod_libreta_manual").value=cod_estadocuenta;
+      // document.getElementById("cod_estadocuenta_manual").value=cod_estadocuenta;
+      document.getElementById("cuenta_auxiliar_manual").value=cuenta_auxiliar;
 
+      
+      document.getElementById("importe_total").value="Saldo de Solicitud de Facturacón: "+number_format(d[2],2);
+      document.getElementById("nit_cliente").value=d[4];
+      document.getElementById("razon_social").value=d[5];
+    break;    
+  }    
+}
 
 function botonBuscarComprobante_caja_chica(){
   // var valor_uo=$("#OficinaBusqueda").val();
@@ -16459,21 +16529,39 @@ function abrirRegistroCuentaAuxiliar(datos,indice){
   var d=datos.split('/');
   var cod_solicitudfacturacion=d[0];
   var cod_cliente=d[1];
-  
-  document.getElementById("cod_solicitudfacturacion_cred").value=cod_solicitudfacturacion;  
-  $("#modalRegisterCuentasAux_sf").modal("show");  
-  var contenedor = document.getElementById('divProveedorCliente');    
-  ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_cliente_cuenta_auxiliar.php?cod_cliente='+cod_cliente,true);
-  ajax.onreadystatechange=function() {
-    if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;      
-      $('.selectpicker').selectpicker(["refresh"]);
-      
-      // detectarCargaAjax();      
+  if(indice==1){//lista de uentas auxiliares
+    document.getElementById("cod_solicitudfacturacion_cred").value=cod_solicitudfacturacion;  
+    $("#modalListCuentasAux_sf").modal("show");  
+    var contenedor = document.getElementById('divCuentaAuxiliar_cliente');    
+    ajax=nuevoAjax();
+    ajax.open('GET', 'simulaciones_servicios/ajax_cliente_cuenta_auxiliar_list.php?cod_cliente='+cod_cliente+'&cod_solicitudfacturacion='+cod_solicitudfacturacion,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;      
+        $('.selectpicker').selectpicker(["refresh"]);
+        
+        // detectarCargaAjax();      
+      }
     }
+    ajax.send(null);  
+  }else{//registra nueva cuenta auxiliar
+    document.getElementById("cod_solicitudfacturacion_cred").value=cod_solicitudfacturacion;  
+    document.getElementById("cod_cliente_cred").value=cod_cliente;
+    $("#modalRegisterCuentasAux_sf").modal("show");  
+    var contenedor = document.getElementById('divProveedorCliente');    
+    ajax=nuevoAjax();
+    ajax.open('GET', 'simulaciones_servicios/ajax_cliente_cuenta_auxiliar.php?cod_cliente='+cod_cliente,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;      
+        $('.selectpicker').selectpicker(["refresh"]);
+        
+        // detectarCargaAjax();      
+      }
+    }
+    ajax.send(null);  
   }
-  ajax.send(null);
+  
 }
 function ajax_contenedor_tabla_estados_cuenta(saldo){
   document.getElementById("saldo_ec").value=saldo;

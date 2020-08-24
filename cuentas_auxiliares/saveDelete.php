@@ -10,15 +10,15 @@ $dbh = new Conexion();
 $codigoX=$codigo;
 $codigoPadre=$codigo_padre;
 $codigo=$codigoPadre;
-
 require_once 'configModule.php';
 
-// Prepare
-$stmt = $dbh->prepare("UPDATE cuentas_auxiliares_cajachica set cod_estadoreferencial=2 where codigo=:codigo");
-// Bind
-$stmt->bindParam(':codigo', $codigoX);
 
+// Prepare
+$sql="UPDATE cuentas_auxiliares set cod_estadoreferencial=2 where codigo=$codigoX";
+// echo $sql; 
+$stmt = $dbh->prepare($sql);
 $flagSuccess=$stmt->execute();
-showAlertSuccessError($flagSuccess,$urlListCC2);
+
+showAlertSuccessError($flagSuccess,$urlList2);
 
 ?>

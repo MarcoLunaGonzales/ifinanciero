@@ -7,7 +7,7 @@ $urlSaveSolicitudfactura="servicios_presupuestos/save_solicitud_facturacion.php"
 $urlGenerarFacturasPrint="simulaciones_servicios/generarFacturasPrint.php";
 
 $urlPrintSolicitud="simulaciones_servicios/printSolicitud.php";
-$urllistFacturasServicios="?opcion=listFacturasServicios";
+$urllistFacturasServicios="index.php?opcion=listFacturasServicios";
 
 
 ?>
