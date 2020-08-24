@@ -32,7 +32,7 @@ if($cuenta_auxiliar==""){?>
 	<label class="col-sm-2 col-form-label"></label>
 	<div class="col-sm-7">
 		<div class="form-group">
-			<span style="color: #ff0000;">El Cliente No Tiene Una Cuenta Auxliar Asociada.</span>
+			<span style="color: #ff0000;">El Cliente No Tiene Una Cuenta Auxiliar Asociada.</span>
 		</div>
 	</div>	
 </div>
