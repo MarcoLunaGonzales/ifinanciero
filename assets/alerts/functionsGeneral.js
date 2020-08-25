@@ -7209,7 +7209,7 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
   var codComproDet=detalle_resp[0];
   var cuenta_auxiliar=detalle_resp[1];
   var saldo_estadocuenta=parseFloat(detalle_resp[3]);
-  if(detalle_resp[0]!=null && montoCerrar<=saldo_estadocuenta){
+  if(detalle_resp[0]!=null && montoCerrar<=(saldo_estadocuenta+1)){
     console.log("entro y DetalleResp: "+detalle_resp);
     var nfila={
       cod_plancuenta:cuenta,
