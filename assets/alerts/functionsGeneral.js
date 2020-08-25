@@ -12077,8 +12077,9 @@ function guardarDatoscontacto(){
 
   // validaciones de campos
   //console.log("departamento_contacto:"+departamento_contacto+"-telefono_contacto:"+telefono_contacto+"-correo_contacto:"+correo_contacto+"-identificacion_contacto:"+identificacion_contacto);
-  if(nombre_contacto!=""&&paterno_contacto!=""&&identificacion_contacto>0&&departamento_contacto!=""&&telefono_contacto>0&&correo_contacto!="")
+  if(nombre_contacto!=""&&paterno_contacto!=""&&cargo_contacto!=""){
     var sw=true;
+  }
   else{
     var sw=false;
   }
@@ -12195,8 +12196,9 @@ function guardarDatoscontactoNormas(){
 
   // validaciones de campos
   //console.log("departamento_contacto:"+departamento_contacto+"-telefono_contacto:"+telefono_contacto+"-correo_contacto:"+correo_contacto+"-identificacion_contacto:"+identificacion_contacto);
-  if(nombre_contacto!=""&&paterno_contacto!=""&&identificacion_contacto>0&&departamento_contacto!=""&&telefono_contacto>0&&correo_contacto!="")
+  if(nombre_contacto!=""&&paterno_contacto!=""&&cargo_contacto!=""){
     var sw=true;
+  }
   else{
     var sw=false;
   }

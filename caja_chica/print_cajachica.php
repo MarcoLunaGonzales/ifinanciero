@@ -13,9 +13,9 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 
 $codigo = $_GET["codigo"];//codigoactivofijo
 try{
-    $stmt = $dbh->prepare("SELECT codigo,monto,fecha,observaciones,nro_recibo,cod_uo,cod_area from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$codigo 
+    $stmt = $dbh->prepare("SELECT codigo,monto,fecha,observaciones,nro_recibo,cod_uo,cod_area,cod_estadoreferencial from caja_chicadetalle where  cod_cajachica=$codigo 
 UNION
-SELECT codigo,monto,fecha,observaciones,0 as nro_recibo,0 as cod_uo,0 as cod_area from caja_chicareembolsos where cod_estadoreferencial=1 and cod_cajachica=$codigo ORDER BY nro_recibo");
+SELECT codigo,monto,fecha,observaciones,0 as nro_recibo,0 as cod_uo,0 as cod_area,cod_estadoreferencial from caja_chicareembolsos where cod_estadoreferencial=1 and cod_cajachica=$codigo ORDER BY nro_recibo");
     $stmt->execute();    
         //==================================================================================================================
     //datos caja chica
@@ -127,6 +127,11 @@ $html.=  '<header class="header">'.
               $nombre_uo=abrevUnidad($row['cod_uo']);
               $nombre_area=abrevArea($row['cod_area']);
               $nro_recibo=$row['nro_recibo'];
+              $monto_detalle =$row['monto'];
+              $cod_estadoreferencial_x=$row['cod_estadoreferencial'];
+              if($cod_estadoreferencial_x==2){
+                $monto_detalle=0;
+              }
               //nro factura
               if(!$sw_rembolso){
                 $stmtFactura = $dbh->prepare("SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_cajachicadetalle");
@@ -139,13 +144,13 @@ $html.=  '<header class="header">'.
                   $cont_facturas++;
                 }
                 if($cont_facturas>1)$nro_factura="VARIOS";
-                $saldo_inicial=$saldo_inicial-$row['monto'];                  
-                $total_egresos+=$row['monto'];
+                $saldo_inicial=$saldo_inicial-$monto_detalle;                  
+                $total_egresos+=$monto_detalle;
               }else{
                 $nombre_uo="";
                 $nombre_area="";
-                $total_ingresos+=$row['monto'];
-                $saldo_inicial=$saldo_inicial+$row['monto'];                
+                $total_ingresos+=$monto_detalle;
+                $saldo_inicial=$saldo_inicial+$monto_detalle;                
                 $nro_recibo='';
               }
               $html.='<tr>'.                      
@@ -160,9 +165,9 @@ $html.=  '<header class="header">'.
                             '<td class="text-center small">'.$nro_factura.'</td>';
                             if(!$sw_rembolso){
                               $html.='<td class="text-right small">'.$ingresos.'</td>'.
-                              '<td class="text-right small">'.formatNumberDec($row['monto']).'</td>';
+                              '<td class="text-right small">'.formatNumberDec($monto_detalle).'</td>';
                             }else{
-                              $html.='<td class="text-right small">'.formatNumberDec($row['monto']).'</td>'.
+                              $html.='<td class="text-right small">'.formatNumberDec($monto_detalle).'</td>'.
                               '<td class="text-right small"></td>';
                             }
                             $html.='<td class="text-right small">'.formatNumberDec($saldo_inicial).'</td>

@@ -8147,6 +8147,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {    
         $valor=$monto;
     }  
+    $valor=round($valor, 0);
     return($valor);
   }
   function obtenerNombreEstudiante($ci_estudiante){

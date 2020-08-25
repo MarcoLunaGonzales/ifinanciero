@@ -91,21 +91,30 @@ if(isset($_GET['monto_cajachica'])){
       $cod_solicitudrecurso_sr=$resultado['cod_solicitudrecurso'];
       $sw_personal=0;
       // echo $codigoX."..";
-      if($cod_solicitudrecurso_sr!=0 && $cod_solicitudrecurso_sr!='' && $cod_solicitudrecurso_sr!=null){
-        // echo $cod_solicitudrecurso_sr."..";
-        $sqlDetalleY="SELECT count(*) as contador  from solicitud_recursosencargado where cod_solicitudrecurso=$cod_solicitudrecurso_sr and cod_personal =$globalUser ";
-        $stmtDetalleY = $dbh->prepare($sqlDetalleY);
-        $stmtDetalleY->execute();                    
-        $resultado=$stmtDetalleY->fetch();      
-        $contador_sr=$resultado['contador'];
-        if($contador_sr>0 ){
-          $sw_personal=1;
+      $mesComprobante=strftime('%m',strtotime($fechaComprobante));
+      $gestionComprobante=strftime('%Y',strtotime($fechaComprobante));
+
+      if($mesComprobante>=8 && $gestionComprobante>=2020){
+
+        if($cod_solicitudrecurso_sr!=0 && $cod_solicitudrecurso_sr!='' && $cod_solicitudrecurso_sr!=null){
+          // echo $cod_solicitudrecurso_sr."..";
+          $sqlDetalleY="SELECT count(*) as contador  from solicitud_recursosencargado where cod_solicitudrecurso=$cod_solicitudrecurso_sr and cod_personal =$globalUser ";
+          $stmtDetalleY = $dbh->prepare($sqlDetalleY);
+          $stmtDetalleY->execute();                    
+          $resultado=$stmtDetalleY->fetch();      
+          $contador_sr=$resultado['contador'];
+          if($contador_sr>0 ){
+            $sw_personal=1;
+          }else{
+            $sw_personal=0;
+          }
         }else{
-          $sw_personal=0;
-        }
+          $sw_personal=1;
+        }  
       }else{
         $sw_personal=1;
       }
+      
 
 
   	 if($haberX>0 && $saldo>0){?>
