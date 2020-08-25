@@ -134,6 +134,9 @@ try{
                         $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defecto
                         $cant_items_sfd=sizeof($array_codigo_detalle);
                         $nro_facturas = ceil($cant_items_sfd/$cantidad_por_defecto);
+                        // $nro_facturas=2;
+                        
+                    
                         $contador_aux_items=0;//controla el final del array
                         $contador_aux_items_y=0;//controla el inicio del array
                         $variable_controlador=1;//indica la vez que entra a la funcion                        
@@ -188,6 +191,8 @@ try{
                             <script>Swal.fire("Error!","Hubo un error durante el proceso de generar la factura.", "error");
                             </script> <?php
                         }
+                        
+
                     }
                 }
             }        

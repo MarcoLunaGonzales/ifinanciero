@@ -116,5 +116,22 @@ $dbh = new Conexion();
 					</div>
 			  	</div>
 			</div> 
+			<div class="card">
+			  	<div class="card-header card-header-rose card-header-text">
+					<div class="card-text">
+				  		<h4 class="card-title">Reportes Solicitudes de Facturación</h4>
+					</div>
+			  	</div>
+
+			  	<div class="card-body ">
+					<div class="row">
+				  		<div class="col-sm-3">
+							<div class="form-group">
+								<a href="<?=$urlReporeSF;?>" class="btn btn-default"> Solicitudes de Facturación</a>
+							</div>
+				  		</div>
+					</div>
+			  	</div>
+			</div> 
 	</div>
 </div>

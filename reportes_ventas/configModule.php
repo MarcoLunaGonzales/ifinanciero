@@ -28,4 +28,6 @@ $urlFacturaAdministrativo="../reportes_ventas_administrativo/reportesLibroVentas
 $urlImpresionFacturas="../reportes_facturacion/reporte_facturas_venta_filtro.php";
 
 $urlSRAdministrativo="../reportes_sr_administrativo/reportesSRAdministrativo.php";
+
+$urlReporeSF="../reportes_facturacion/filtro_solicitud_facturacion.php";
 ?>

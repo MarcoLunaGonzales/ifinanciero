@@ -7752,6 +7752,16 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
      }
      return($valor);
   }
+    function abrevTipoPagoSolFac($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT abreviatura FROM tipos_pago where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['abreviatura'];
+     }
+     return($valor);
+  }
 
   function obtenerCodigoPagoLote(){
      $dbh = new Conexion();

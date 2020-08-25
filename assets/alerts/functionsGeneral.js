@@ -15542,6 +15542,26 @@ function ajax_razon_social_filtro_compras(){
   }
   ajax.send(null);
 }
+function ajax_razon_social_filtro_ventas(){
+  var contenedor = document.getElementById('contenedor_razos_social_libroventas');      
+
+  var check=document.getElementById("check_rs_librocompras");
+  if(check.checked){
+    var check_var=1;
+  }else{
+    var check_var=0;
+  }
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/ajax_libroventas_razonsocial.php?check_var='+check_var,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null);
+}
+
 function descargar_txt_libro_ventas(){
     var cod_gestion=$("#gestiones").val();
     var cod_mes=$("#cod_mes_x").val();
