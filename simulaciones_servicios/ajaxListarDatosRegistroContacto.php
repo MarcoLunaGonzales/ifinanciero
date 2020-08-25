@@ -47,7 +47,7 @@ $lista= obtenerDepartamentoServicioIbrnorca(26);
  </div>
 </div>
 <div class="row">
- <label class="col-sm-3 col-form-label">CI o Identificación *</label>
+ <label class="col-sm-3 col-form-label">CI o Identificación </label>
  <div class="col-sm-9">
   <div class="form-group">
     <input type="number" class="form-control" name="identificacion_contacto" id="identificacion_contacto" value="" required="true">
@@ -58,7 +58,7 @@ $lista= obtenerDepartamentoServicioIbrnorca(26);
 
 
 <div class="row">
-   <label class="col-sm-3 col-form-label">Lugar Emisión *</label>
+   <label class="col-sm-3 col-form-label">Lugar Emisión </label>
    <div class="col-sm-9">
     <div class="form-group">
       <select name="departamento_contacto" id="departamento_contacto"  class="form-control form-control-sm selectpicker" data-style="btn btn-info" required="true">
@@ -90,7 +90,7 @@ $lista= obtenerDepartamentoServicioIbrnorca(26);
  </div>
 </div>
 <div class="row">
- <label class="col-sm-3 col-form-label">Teléfono o Celular *</label>
+ <label class="col-sm-3 col-form-label">Teléfono o Celular </label>
  <div class="col-sm-9">
   <div class="form-group">
     <input type="number" class="form-control" name="telefono_contacto" id="telefono_contacto" value="" required="true">
@@ -98,7 +98,7 @@ $lista= obtenerDepartamentoServicioIbrnorca(26);
  </div>
 </div>
 <div class="row">
- <label class="col-sm-3 col-form-label">Correo Contacto *</label>
+ <label class="col-sm-3 col-form-label">Correo Contacto </label>
  <div class="col-sm-9">
   <div class="form-group">
     <input type="text" class="form-control" name="correo_contacto" id="correo_contacto" value="" required="true">

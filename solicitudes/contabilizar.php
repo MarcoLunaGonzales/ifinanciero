@@ -506,6 +506,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
             //validacion si la solicitud es agrupada
             if($numeroRetencionFactura!=1){ 
+              
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
             $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
             VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaDetalleProv', '$i')";
@@ -517,7 +518,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
               //estado de cuentas devengado
               $codEstadoCuenta=obtenerCodigoEstadosCuenta();
               $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
-              VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '0', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaDetalleProv')";
+              VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaProv', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaDetalleProv')";
               $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
               $stmtDetalleEstadoCuenta->execute();             
               //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 

@@ -29,7 +29,7 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
 //echo $sqlZ;
 
 ?>
-<table id="tablePaginatorReport" class="table table-bordered table-condensed table-warning">
+<table id="libreta_bancaria_reporte_modal" class="table table-bordered table-condensed table-warning">
   <thead>
     <tr class="">
       <th class="text-left">Of</th>
@@ -174,9 +174,30 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
 ?>
     <tr>
       <td colspan="8">Saldo Total</td>
+              <td class="d-none"></td>
+              <td class="d-none"></td>
+              <td class="d-none"></td>                        
+              <td class="d-none"></td>
+              <td class="d-none"></td>
+              <td class="d-none"></td>
+              <td class="d-none"></td>
       <td class="text-right font-weight-bold"><?=formatNumberDec($saldo);?></td>
     </tr>
   </tbody>
+  <tfoot>
+      <tr style="background:#21618C; color:#fff;">
+        <th class="small text-left"><small>Of</small></th>
+      <th class="small text-left"><small>Tipo/#</small></th>
+      <th class="small text-left"><small>FechaComp</small></th>
+      <th class="small text-left"><small>FechaEC</small></th>
+      <th class="small text-left"><small>Proveedor/Cliente</small></th>
+      <th class="small text-left"><small>Glosa</small></th>
+      <th class="small text-right"><small>D&eacute;bito</small></th>
+      <th class="small text-right"><small>Cr&eacute;dito</small></th>
+      <th class="small text-right"><small>Saldo</small></th>
+      <td class="small text-left"><small>*</small></td>     
+      </tr>
+    </tfoot>
 </table>
 <?php
 echo "@".$saldo;

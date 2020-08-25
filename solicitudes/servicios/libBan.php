@@ -1,13 +1,33 @@
 <?php 
 
-$direccion='http://127.0.0.1/ifinanciero/wsifin/';
-//$direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
+//$direccion='http://127.0.0.1/ifinanciero/wsifin/';
+
+$direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
 $sIde = "libBan";
 $sKey = "89i6u32v7xda12jf96jgi30lh";
 
-//PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
-//para obtener todas las libretas idLibreta=0
-	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4); 
+//para obtener el detalle de las libretas con idLibreta<>0
+	//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4); 
+
+
+//LIBRETAS BANCARIAS DETALLE CON FILTROS
+// variables para filtros
+// anio -> numero (Busca el anio de detalle)
+// fecha -> texto (Busca la fecha del detalle)
+// monto -> numero entero o numero decimal (Busca el monto del detalle)
+// nombre -> texto (Busca en la descripcion y en informacion complementaria del detalle)
+
+
+//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4,"anio"=>2020,"fecha"=>"2020-06-30","monto"=>320.00,"nombre"=>"FLORENTINO");
+    //Ej:
+$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4,"nombre"=>"FLORENTINO"); 
+
+//para obtener la libreta por el idFactura
+	//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancariaPorFactura","idFactura"=>300); 
+
+//para obtener la lista de libretas
+	//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerListaLibretaBancaria"); 
+
 
 		$parametros=json_encode($parametros);
 		// abrimos la sesión cURL

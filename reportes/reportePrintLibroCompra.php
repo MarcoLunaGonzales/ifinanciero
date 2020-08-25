@@ -51,8 +51,21 @@ $stmt2->bindColumn('ice', $ice);
 $stmt2->bindColumn('exento', $exento);          
 $stmt2->bindColumn('tipo_compra', $tipo_compra);  
 
+$cant_unidad=sizeof($unidad);
+
+if($cant_unidad>1){
+  $cod_unidad_x=5;
+}else{  
+  
+  if($stringUnidadesX==9 || $stringUnidadesX==10 ){
+    $cod_unidad_x=$stringUnidadesX;
+  }else{    
+    $cod_unidad_x=5;
+  }
+}
+
 //datos de la factura
-$stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in (5)");
+$stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in ($cod_unidad_x)");
 $stmtPersonal->execute();
 $result=$stmtPersonal->fetch();
 $sucursal=$result['sucursal'];

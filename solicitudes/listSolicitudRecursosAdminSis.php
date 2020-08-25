@@ -179,6 +179,10 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                        <i class="material-icons"><?=$iconImp;?></i>
                                      </button>
                                     <div class="dropdown-menu">
+                                      <a href="#" onclick="javascript:window.open('<?=$urlImpComp;?>?comp=<?=$codComprobante;?>&mon=-1')" class="dropdown-item">
+                                                 <i class="material-icons text-muted">monetization_on</i> BIMONETARIO (Bs - Usd)
+                                      </a>
+                                      <div class="dropdown-divider"></div>
                                       <?php
                                         $stmtMoneda = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM monedas where cod_estadoreferencial=1 order by 2");
                                        $stmtMoneda->execute();
@@ -188,7 +192,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                          $abrevX=$row['abreviatura'];
                                             ?>
                                              <a href="#" onclick="javascript:window.open('<?=$urlImpComp;?>?comp=<?=$codComprobante;?>&mon=<?=$codigoX?>')" class="dropdown-item">
-                                                 <i class="material-icons">list_alt</i> <?=$abrevX?>
+                                                 <i class="material-icons">keyboard_arrow_right</i> <?=$abrevX?>
                                              </a> 
                                            <?php
                                          }

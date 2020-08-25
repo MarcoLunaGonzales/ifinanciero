@@ -16,9 +16,7 @@ $password=$_POST["password"];
 
 //OBTENEMOS EL VALOR DE LA CONFIGURACION 1 -> LOGIN PROPIO DE MONITOREO    2-> LOGIN POR SERVICIO WEB
 $tipoLogin=obtieneValorConfig(-10);
-
 $banderaLogin=0;
-
 if($tipoLogin==2){
 	$sIdentificador = "ifinanciero";
 	$sKey="ce94a8dabdf0b112eafa27a5aa475751";

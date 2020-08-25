@@ -7101,8 +7101,11 @@ function verEstadosCuentas(fila,cuenta){
             var rsaldo=listarEstadosCuentasCredito(fila,respuesta[1]);
             console.log("listarEstadoCuentas;");
             //listarEstadosCuentas(fila,rsaldo);
-          } 
-          //mostrarSelectProveedoresClientes()          
+          }
+          //actualizar tabla 
+          //mostrarSelectProveedoresClientes() 
+          cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+          cargar_filtro_datatable_ajax('modalEstadosCuentas');         
         }
     });
     $("#estFila").val(fila);
@@ -7206,7 +7209,7 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
   var codComproDet=detalle_resp[0];
   var cuenta_auxiliar=detalle_resp[1];
   var saldo_estadocuenta=parseFloat(detalle_resp[3]);
-  if(detalle_resp[0]!=null && montoCerrar<=saldo_estadocuenta){
+  if(detalle_resp[0]!=null && montoCerrar<=(saldo_estadocuenta+1)){
     console.log("entro y DetalleResp: "+detalle_resp);
     var nfila={
       cod_plancuenta:cuenta,
@@ -12074,8 +12077,9 @@ function guardarDatoscontacto(){
 
   // validaciones de campos
   //console.log("departamento_contacto:"+departamento_contacto+"-telefono_contacto:"+telefono_contacto+"-correo_contacto:"+correo_contacto+"-identificacion_contacto:"+identificacion_contacto);
-  if(nombre_contacto!=""&&paterno_contacto!=""&&identificacion_contacto>0&&departamento_contacto!=""&&telefono_contacto>0&&correo_contacto!="")
+  if(nombre_contacto!=""&&paterno_contacto!=""&&cargo_contacto!=""){
     var sw=true;
+  }
   else{
     var sw=false;
   }
@@ -12192,8 +12196,9 @@ function guardarDatoscontactoNormas(){
 
   // validaciones de campos
   //console.log("departamento_contacto:"+departamento_contacto+"-telefono_contacto:"+telefono_contacto+"-correo_contacto:"+correo_contacto+"-identificacion_contacto:"+identificacion_contacto);
-  if(nombre_contacto!=""&&paterno_contacto!=""&&identificacion_contacto>0&&departamento_contacto!=""&&telefono_contacto>0&&correo_contacto!="")
+  if(nombre_contacto!=""&&paterno_contacto!=""&&cargo_contacto!=""){
     var sw=true;
+  }
   else{
     var sw=false;
   }
@@ -16409,9 +16414,10 @@ function cargar_dataTable_ajax(tabla){
                   if ( that.search() !== this.value ) {
                       that
                           .search( this.value )
-                          .draw(); 
-                   ponerSumatoriaDeMayorCuenta();       
-                      
+                          .draw();
+                   if($("#cantidad_mayor_modal").length>0){
+                      ponerSumatoriaDeMayorCuenta();
+                   }        
                   }
               });
           });
