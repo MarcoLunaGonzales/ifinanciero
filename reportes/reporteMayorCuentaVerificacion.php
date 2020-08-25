@@ -158,10 +158,13 @@
         }
 
         $montoComprobanteDetalle=0;
+        $txtColorFila="";
         if($debeX>0){
           $montoComprobanteDetalle=$debeX;
+          $txtColorFila="#d4ff33";
         }else{
           $montoComprobanteDetalle=$haberX;
+          $txtColorFila="#33ffe9";
         }
 
         
@@ -195,7 +198,7 @@
         $txtCuenta="text-danger font-weight-bold";
       }
 
-      $html.='<tr>'.
+      $html.='<tr style="background-color: '.$txtColorFila.'">'.
                 '<td class="font-weight-bold small">'.$nombreUnidad.'</td>'.
                 '<td class="font-weight-bold small">'.$nombreComprobanteX.'</td>'.
                 '<td class="font-weight-bold small">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.

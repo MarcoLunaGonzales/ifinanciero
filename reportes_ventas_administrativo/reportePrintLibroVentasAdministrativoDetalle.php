@@ -34,7 +34,8 @@
               '<th width="10%"># Factura</th>'.
               '<th width="10%"># S.F.</th>'.
               '<th width="15%">NIT</th>'.
-              '<th width="10%">Razon Social</th>'.
+              '<th width="5%">Razon Social</th>'.
+              '<th width="5%">Detalle</th>'.
               '<th width="10%" style="'.$txtEstiloPersonal.'">Personal</th>'.
               '<th width="10%">Origen</th>'.
               '<th width="10%">Importe Bruto</th>'.
@@ -66,6 +67,8 @@
         $fecha_fac=$rowComp['fecha_factura'];
         $nroFactura=$rowComp['nro_factura'];
         $nroSolicitudF=$rowComp['nro_solicitud'];
+
+        $detalleFactura=obtenerNombreDetalleFactura($codigoX);
         
         $importe_realXBruto=$importe_realX; 
         $totalImporteBruto+=$importe_realXBruto;
@@ -87,6 +90,7 @@
                       '<td class="text-right text-primary small">'.$nroSolicitudF.' </td>'.
                       '<td class="text-right">'.$nitX.' </td>'.
                       '<td class="text-left">'.$razon_socialX.'</td>'.
+                      '<td class="text-left">'.$detalleFactura.'</td>'.
                       '<td class="text-left" style="'.$txtEstiloPersonal.'">'.$personalReporte.'</td>'.
                       '<td class="text-left">'.$origenFacturaX.'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($importe_realXBruto,2,'.','').' </td>'. 
@@ -116,7 +120,8 @@
         <th class="small" width="3%"><small><small># Factura</small></small></th>
         <th class="small" width="3%"><small><small># S.F.</small></small></th>
         <th class="small" width="4%"><small>Nit</small></th>
-        <th class="small" width="30%"><small>Razón Social</small></th>      
+        <th class="small" width="20%"><small>Razón Social</small></th>      
+        <th class="small" width="10%"><small>Detalle</small></th>      
         <th class="small" width="7%"><small>Personal</small></th>
         <th class="small" width="7%"><small>Origen</small></th>
         <th class="small" width="5%"><small>Importe Bruto</small></th>
