@@ -276,10 +276,16 @@ where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']." and f.cod_estad
 
     $datos['detalle']=$datosDetalle;
     $datos['totalDetalle']=$index;
-    if($index>0){
+    $datosMega[$filaA]=$datos; 
+    if($codFactura!=null){
+     if($index>0){
       $datosMega[$filaA]=$datos; 
       $filaA++; 
-    } 
+     }  
+    }else{
+      $datosMega[$filaA]=$datos; 
+      $filaA++; 
+    }
  }
 
  return array($filaA,$datosMega);
