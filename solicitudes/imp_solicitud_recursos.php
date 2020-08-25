@@ -88,7 +88,6 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
     if($observacionesX==""){
       $observacionesC="";  
     }
-    $observacionesC.="".$distribucionGlosa;
 }
 //INICIAR valores de las sumas
 $tDebeDol=0;$tHaberDol=0;$tDebeBol=0;$tHaberBol=0;
@@ -308,6 +307,20 @@ $tituloImporte="";
             <td class="s3 text-left"><?=$observacionesC?></td>
         </tr>
      </table>
+     <?php 
+   if($distribucionGlosa!=""){
+    ?> 
+    <table class="table">
+        <tr class="bg-celeste">
+            <td class="s3 text-center">DISTRIBUCIÓN</td>
+        </tr>
+        <tr>
+            <td class="s3 text-left"><?=$distribucionGlosa?></td>
+        </tr>
+     </table>
+<?php     
+   }
+  ?>
      <table class="table">
         <tr>
             <td class="s3 text-center" height="80px"></td>

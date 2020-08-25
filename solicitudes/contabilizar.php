@@ -517,7 +517,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
               //estado de cuentas devengado
               $codEstadoCuenta=obtenerCodigoEstadosCuenta();
               $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
-              VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '0', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaDetalleProv')";
+              VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaProv', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaDetalleProv')";
               $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
               $stmtDetalleEstadoCuenta->execute();             
               //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 

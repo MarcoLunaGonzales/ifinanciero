@@ -7101,8 +7101,11 @@ function verEstadosCuentas(fila,cuenta){
             var rsaldo=listarEstadosCuentasCredito(fila,respuesta[1]);
             console.log("listarEstadoCuentas;");
             //listarEstadosCuentas(fila,rsaldo);
-          } 
-          //mostrarSelectProveedoresClientes()          
+          }
+          //actualizar tabla 
+          //mostrarSelectProveedoresClientes() 
+          cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+          cargar_filtro_datatable_ajax('modalEstadosCuentas');         
         }
     });
     $("#estFila").val(fila);
@@ -16409,9 +16412,10 @@ function cargar_dataTable_ajax(tabla){
                   if ( that.search() !== this.value ) {
                       that
                           .search( this.value )
-                          .draw(); 
-                   ponerSumatoriaDeMayorCuenta();       
-                      
+                          .draw();
+                   if($("#cantidad_mayor_modal").length>0){
+                      ponerSumatoriaDeMayorCuenta();
+                   }        
                   }
               });
           });
