@@ -974,12 +974,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Reportes Ingresos por Facturación</span>
                   </a>
                 </li>
-                <li class="nav-item ">
+                <!-- <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reporte_solicitudfacturacion_filtro">
                     <span class="sidebar-mini"> RSF </span>
                     <span class="sidebar-normal"> Reporte Solicitud de Facturación</span>
                   </a>
-                </li>                                
+                </li>  -->                               
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listObligacionesPago">
                     <span class="sidebar-mini"> OP </span>

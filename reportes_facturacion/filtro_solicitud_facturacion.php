@@ -1,15 +1,17 @@
 <?php
-require_once 'conexion.php';
+require_once '../conexion.php';
 require_once 'configModule.php';
-require_once 'styles.php';
-require_once 'functions.php';
-require_once 'functionsGeneral.php';
+require_once '../styles.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
+require_once '../layouts/bodylogin2.php';
 
-$globalAdmin=$_SESSION["globalAdmin"];
-$globalUnidad=$_SESSION["globalUnidad"];
-$globalArea=$_SESSION["globalArea"];
-$globalUser=$_SESSION["globalUser"];
+$globalAdmin="";
+$globalUnidad="";
+$globalArea="";
+$globalUser="";
 
+$dbh = new Conexion();
 $fechaActual=date("m/d/Y");
 $m=date("m");
 $y=date("Y");
@@ -23,7 +25,7 @@ $fechaHasta2=$y."-12-31";
 
 <div class="content">
 	<div class="container-fluid">
-		<div style="overflow-y:scroll; ">			 		
+				 	
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
@@ -130,14 +132,14 @@ $fechaHasta2=$y."-12-31";
 		            </div>
 				            
 	            </div><!--div fechas row-->
-                <div class="card-footer fixed-bottom">
+                <div class="card-footer">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
+				  <a href="../reportes_ventas/" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  </div>
                </form> 
               </div>	  
             </div>         
-        </div>	
+        
 	</div>
         
 </div>

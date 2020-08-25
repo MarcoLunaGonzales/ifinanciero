@@ -96,14 +96,14 @@ $dbh = new Conexion();
 		                	<div class="form-group">
 								<div class="togglebutton">
 								    <label>
-										<input type="checkbox" name="check_rs_librocompras" id="check_rs_librocompras" onChange="ajax_razon_social_filtro_compras()">
+										<input type="checkbox" name="check_rs_librocompras" id="check_rs_librocompras" onChange="ajax_razon_social_filtro_ventas()">
 										<span class="toggle"></span>
 								    </label>
 								</div>
 							</div>
 						</div>
 						<div class="col-sm-8" >
-		                	<div class="form-group" id="contenedor_razos_social_librocompras">
+		                	<div class="form-group" id="contenedor_razos_social_libroventas">
 								
 							</div>
 						</div>

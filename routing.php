@@ -592,9 +592,9 @@
 		}
 
 		//solicitudes factuacion
-		 if ($_GET['opcion']=='reporte_solicitudfacturacion_filtro') {
-			require_once('reportes_facturacion/filtro_solicitud_facturacion.php');
-		}
+		//  if ($_GET['opcion']=='reporte_solicitudfacturacion_filtro') {
+		// 	require_once('reportes_facturacion/filtro_solicitud_facturacion.php');
+		// }
 		//******************************ACTIVOS FIJOS***********************************************************
 		if ($_GET['opcion']=='listUbicaciones') {
 			require_once('activosFijos/ubicacionesLista.php');

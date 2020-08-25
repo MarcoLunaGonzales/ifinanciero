@@ -62,8 +62,11 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
             $stmt->bindColumn('cod_simulacion_servicio', $codSimulacionX);
             $stmt->bindColumn('cod_cliente', $codProveedorX);
             $stmt->bindColumn('cod_tipopago', $codProveedorX);
-            $stmt->bindColumn('cod_cliente', $cod_clienteX);            
-            $stmt->bindColumn('observaciones', $observacionesX);
+            $stmt->bindColumn('cod_cliente', $cod_cliente);            
+            $stmt->bindColumn('nit', $nit);            
+            $stmt->bindColumn('razon_social', $razon_social);            
+            $stmt->bindColumn('observaciones', $observaciones);
+            $stmt->bindColumn('observaciones_2', $observaciones_2);
             $stmt->bindColumn('codigo_alterno', $codigoServicio);
             
 
@@ -82,9 +85,30 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 				</div>
 				<div class="card-body">
 					<div class=""> 	
-					<div class="row" id="">
+					
 				    <?php 
             while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+              //distribucion de tipos pago
+              $sqlTipoPago="SELECT cod_tipopago,porcentaje from solicitudes_facturacion_tipospago where cod_solicitudfacturacion=$codigoX ";
+              $stmtTipoPago = $dbh->prepare($sqlTipoPago);                                   
+              $stmtTipoPago->execute();                    
+              $string_tipospago="";
+              while ($rowTipoPago = $stmtTipoPago->fetch(PDO::FETCH_ASSOC)) {
+                $string_tipospago.=abrevTipoPagoSolFac($rowTipoPago['cod_tipopago'])."(".$rowTipoPago['porcentaje']."%)/";
+              }
+              $string_tipospago=trim($string_tipospago,"/");
+              //distribucion de tipos pago
+              $sqlareas="SELECT cod_area,porcentaje from solicitudes_facturacion_areas where cod_solicitudfacturacion=$codigoX";
+              $stmtAreas = $dbh->prepare($sqlareas);                                   
+              $stmtAreas->execute();                    
+              $string_areas="";
+              while ($rowAreas = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
+                $string_areas.=trim(abrevArea($rowAreas['cod_area']),",")."(".$rowAreas['porcentaje']."%)/";
+              }
+              $string_areas=trim($string_areas,"/");
+
+              $cliente=nameCliente($cod_cliente);
+
               $solicitante=namePersonal($codPersonalX);
               $fechaSolicitud=strftime('%d/%m/%Y',strtotime($fechaX));
               // $codigoServicio=obtenerCodigoServicioPorIdServicio($idServicioX);
@@ -92,54 +116,97 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
               $anioSol=strftime('%Y',strtotime($fechaX));
               $mesSol=strftime('%m',strtotime($fechaX));
               ?>
-              <label class="col-sm-1 col-form-label" style="color:#000000; ">Oficina :</label>
-              <div class="col-sm-2">
-                <div class="form-group">
-                	<input type="text" class="form-control" readonly="true" value="<?=$unidadX?>" style="background-color:#E3CEF6;text-align: left" >
-                </div>
-              </div>  
-              <label class="col-sm-1 col-form-label" style="color:#000000; ">Area :</label>
-              <div class="col-sm-1">
-                <div class="form-group">
-                	<input type="text" class="form-control" readonly="true" value="<?=$areaX?>" style="background-color:#E3CEF6;text-align: left">
-                </div>
-              </div>  
-              <label class="col-sm-1 col-form-label" style="color:#000000; ">Servicio :</label>
-              <div class="col-sm-2">
-                <div class="form-group">
-                	<input type="text" class="form-control" readonly="true" value="<?=$codigoServicio?>" style="background-color:#E3CEF6;text-align: left" >
-                </div>
-              </div>  
-              <label class="col-sm-1 col-form-label" style="color:#000000; ">Fecha Solicitud:</label>
-              <div class="col-sm-2">
-                <div class="form-group">
-                	<input type="text" class="form-control" readonly="true" value="<?=$fechaSolicitud?>" style="background-color:#E3CEF6;text-align: left" >
-                </div>
-              </div> 
+              <div class="row">
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Oficina :</label>
+                <div class="col-sm-1">
+                  <div class="form-group">
+                  	<input type="text" class="form-control" readonly="true" value="<?=$unidadX?>" style="background-color:#E3CEF6;text-align: left" >
+                  </div>
+                </div>  
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Area :</label>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                  	<input type="text" class="form-control" readonly="true" value="<?=$string_areas?>" style="background-color:#E3CEF6;text-align: left">
+                  </div>
+                </div>  
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Forma Pago</label>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <input type="text" class="form-control" readonly="true" value="<?=$string_tipospago?>" style="background-color:#E3CEF6;text-align: left">
+                  </div>
+                </div>  
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Fecha Solicitud:</label>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                  	<input type="text" class="form-control" readonly="true" value="<?=$fechaSolicitud?>" style="background-color:#E3CEF6;text-align: left" >
+                  </div>
+                </div> 
               </div>
               <div class="row">
-              <label class="col-sm-1 col-form-label" style="color:#000000; ">N&uacute;mero</label>
-              <div class="col-sm-2">
-                <div class="form-group">
-                	<input type="text" class="form-control" readonly="true" value="<?=$numeroX?>" style="background-color:#E3CEF6;text-align: left" >
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">N&uacute;mero</label>
+                <div class="col-sm-1">
+                  <div class="form-group">
+                  	<input type="text" class="form-control" readonly="true" value="<?=$numeroX?>" style="background-color:#E3CEF6;text-align: left" >
+                  </div>
+                </div> 
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Estado</label>
+                <div class="col-sm-1">
+                  <div class="form-group">
+                  	<input type="text" class="form-control" readonly="true" value="<?=$estadoX?>" style="background-color:#E3CEF6;text-align: left" >
+                  </div>
+                </div> 
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Solicitante</label>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                  	<input type="text" class="form-control" readonly="true" value="<?=$solicitante?>" style="background-color:#E3CEF6;text-align: left" >
+                  </div>
                 </div>
-              </div> 
-              <label class="col-sm-1 col-form-label" style="color:#000000; ">Estado</label>
-              <div class="col-sm-1">
-                <div class="form-group">
-                	<input type="text" class="form-control" readonly="true" value="<?=$estadoX?>" style="background-color:#E3CEF6;text-align: left" >
-                </div>
-              </div> 
-              <label class="col-sm-1 col-form-label" style="color:#000000; ">Solicitante</label>
-              <div class="col-sm-3">
-                <div class="form-group">
-                	<input type="text" class="form-control" readonly="true" value="<?=$solicitante?>" style="background-color:#E3CEF6;text-align: left" >
-                </div>
-              </div><?php
-
-            } ?>
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Servicio :</label>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <input type="text" class="form-control" readonly="true" value="<?=$codigoServicio?>" style="background-color:#E3CEF6;text-align: left" >
+                  </div>
+                </div>  
               </div>
-               
+              <div class="row">
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Cliente</label>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <input type="text" class="form-control" readonly="true" value="<?=$cliente?>" style="background-color:#E3CEF6;text-align: left" >
+                  </div>
+                </div> 
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Razón Social</label>
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <input type="text" class="form-control" readonly="true" value="<?=$razon_social?>" style="background-color:#E3CEF6;text-align: left" >
+                  </div>
+                </div> 
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Nit</label>
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <input type="text" class="form-control" readonly="true" value="<?=$nit?>" style="background-color:#E3CEF6;text-align: left" >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Observaciones 1</label>
+                <div class="col-sm-8">
+                  <div class="form-group">
+                    <input type="text" class="form-control" readonly="true" value="<?=$observaciones?>" style="background-color:#E3CEF6;text-align: left" >
+                  </div>
+                </div>                 
+              </div>
+              <div class="row">
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Observaciones 2</label>
+                <div class="col-sm-8">
+                  <div class="form-group">
+                    <input type="text" class="form-control" readonly="true" value="<?=$observaciones_2?>" style="background-color:#E3CEF6;text-align: left" >
+                  </div>
+                </div>                 
+              </div>
+
+              <?php
+            } ?>
           <br>
 					<div class="col-sm-12 div-center"><center><h3>Detalle de la Solicitud de Facturación</h3></center></div>
 					<div class="col-sm-12 div-center">	

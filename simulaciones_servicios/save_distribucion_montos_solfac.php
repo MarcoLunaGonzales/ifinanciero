@@ -57,12 +57,19 @@ if(isset($_POST['areas_facturacion'])){
     $areas_facturacion= json_decode($_POST['areas_facturacion']);
     $nF=cantidadF($areas_facturacion[0]);
     if($nF>0){
+        $area_mayor=0;//varibale que alamcenara el tipo de pago en la solictud
+        $monto_bob_mayor=0;
+
         $sw_auxiliar_areas=1;
         for($j=0;$j<$nF;$j++){
             $codigo_area=$areas_facturacion[0][$j]->codigo_areas;
             $monto_porcentaje=$areas_facturacion[0][$j]->monto_porcentaje;
             $monto_bob=$areas_facturacion[0][$j]->monto_bob;                                
             if($monto_porcentaje>0){
+                if($monto_bob_mayor<$monto_bob){
+                    $monto_bob_mayor=$monto_bob;
+                    $area_mayor=$codigo_area;
+                }
                 // echo "codigo_area:".$codigo_area."<br>";
                 // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
                 // echo "monto_bob:".$monto_bob."<br>";          
@@ -96,6 +103,9 @@ if(isset($_POST['areas_facturacion'])){
                 }
             }
         }
+        $stmtUpdateFormaPago = $dbh->prepare("UPDATE solicitudes_facturacion set cod_area='$area_mayor'
+        where codigo = $cod_facturacion");      
+        $stmtUpdateFormaPago->execute();
     }
 }
 

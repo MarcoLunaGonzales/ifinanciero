@@ -39,7 +39,7 @@ $fechaHasta2=$y."-12-31";
                 <div class="card-body">
                   	<div class="row">
 		                <label class="col-sm-2 col-form-label">Unidad</label>
-		                <div class="col-sm-8">
+		                <div class="col-sm-7">
 		                	<div class="form-group">		                		
 	                			<?php
 								$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
@@ -59,25 +59,34 @@ $fechaHasta2=$y."-12-31";
 
 	                <div class="row">	                  	
 						<label class="col-sm-2 col-form-label">Desde</label>
-						<div class="col-sm-8">
+						<div class="col-sm-3">
 							<div class="form-group">
 								<div id="div_contenedor_fechaI">				                			
 									<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaDesde?>">	
 								</div>		                                
 							 </div>
 						</div>
-	                </div><!--div fechas row-->
-	                <div class="row">	                  	
-						<label class="col-sm-2 col-form-label">Hasta</label>
-						<div class="col-sm-8">
+						<label class="col-sm-1 col-form-label">Hasta</label>
+						<div class="col-sm-3">
 							<div class="form-group">
 								<div id="div_contenedor_fechaH">				                			
 									<input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaHasta?>">
 								</div>
 							   
 							</div>
-						</div>				            
+						</div>
 	                </div><!--div fechas row-->
+	                   <div class="row">	                  	
+						<label class="col-sm-2 col-form-label">Rango de Números</label>
+						<div class="col-sm-2">
+							<div class="form-group">
+								<div id="div_contenedor_fechaI">				                			
+									<input type="text" placeholder="1-10" class="form-control" name="numero_rango" id="numero_rango" min="0">	
+								</div>		                                
+							 </div>
+						</div>
+	                </div><!--div rango numero row-->
+	             
 	            </div><!--div fechas row-->
                 <div class="card-footer fixed-bottom">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>

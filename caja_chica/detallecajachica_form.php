@@ -575,6 +575,15 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
               ok = false;
         }
     }
+    if(nro_cuenta2.substr(0,1)==2){//comprobamos el primer digito de la cuenta 
+      if(f.elements["comprobante"].value == "" && f.elements["comprobante"].value == 0)
+      {
+        var msg = "Estado de Cuenta No seleccionada.'\n";
+        ok = false;
+      }
+    }
+    
+
     var dato = document.getElementById("cuenta_auto_id").value;
     if(dato==0){
         ok=false;
