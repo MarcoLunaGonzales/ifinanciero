@@ -216,7 +216,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
      $existeNorma=-1;
      for ($nr=0; $nr < count($normaAtrib); $nr++) { 
       if($normaAtrib[$nr]!=null){
-        if($normaAtrib[$nr]==nameNorma($rowAtributoNorma['cod_norma'])){
+        if($normaAtrib[$nr]==nameNorma($rowAtributoNorma['cod_norma'],'N')){
           $existeNorma=$nr; 
         }
       }    

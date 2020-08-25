@@ -42,7 +42,9 @@ $stmt->execute();
             $stmt->bindColumn('observaciones', $observacionesX);
 
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
-
+    
+    $distribucionGlosa=obtenerResumenDistribucionSR($codigoX);
+    
     $nombreCliente=obtenerNombreClienteSimulacion($codSimulacionServicioX);
 
     //
@@ -84,8 +86,9 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
             }
     $observacionesC=$observacionesX;                
     if($observacionesX==""){
-      $observacionesC="NINGUNO";  
-    }            
+      $observacionesC="";  
+    }
+    $observacionesC.="".$distribucionGlosa;
 }
 //INICIAR valores de las sumas
 $tDebeDol=0;$tHaberDol=0;$tDebeBol=0;$tHaberBol=0;

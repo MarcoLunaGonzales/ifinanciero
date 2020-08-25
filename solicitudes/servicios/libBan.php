@@ -1,13 +1,13 @@
 <?php 
 
-$direccion='http://ibnored.ibnorca.org/ifinanciero/wsifin/';
+$direccion='http://127.0.0.1/ifinanciero/wsifin/';
 //$direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
 $sIde = "libBan";
 $sKey = "89i6u32v7xda12jf96jgi30lh";
 
 //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
 //para obtener todas las libretas idLibreta=0
-	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>0); 
+	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4); 
 
 		$parametros=json_encode($parametros);
 		// abrimos la sesión cURL

@@ -64,7 +64,7 @@ if(isset($_GET["area"])){
                                                <!--<option value="" disabled selected>Area</option>-->
                                      <?php
                                                              
-                                           $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo where a.cod_estado=1 order by 2");
+                                           $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
                                          $stmt->execute();
                                          $cont=0;
                                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

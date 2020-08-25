@@ -166,14 +166,11 @@
      $nivelCuentaBuscado=$nivelCuenta+1;
      
      //echo "nivel cta: ".$nivelCuentaBuscado; 
-     //echo "cuentaSinFormato: ".$cuentaSinFormato; 
 
      list($nivel1, $nivel2, $nivel3, $nivel4, $nivel5) = explode('.', $codigo);
      
-     $codigoCuentaPadre=obtieneCuentaPorNumero($cuentaSinFormato);
-
-     $stmt = $dbh->prepare("SELECT (max(numero)) as numero FROM plan_cuentas where cod_padre=:codigo");
-     $stmt->bindParam(':codigo',$codigoCuentaPadre);
+     $stmt = $dbh->prepare("SELECT (max(numero))numero FROM plan_cuentas where cod_padre=:codigo");
+     $stmt->bindParam(':codigo',$cuentaSinFormato);
      $stmt->execute();
      $cuentaHijoMaxima="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5372,7 +5369,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
  function obtenerCodigoCuentaAuxiliarProveedorClienteCuenta($tipo,$codigo,$cuenta){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_estadoreferencial<>2 and c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_cuenta=$cuenta");
+     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_cuenta=$cuenta");
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -8868,7 +8865,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
 
   function obtenerSaldoLibretaBancariaDetalleAux($codigo,$codigoAux){
     $dbh = new Conexion();
-    $sql="SELECT ld.*,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
+    $sql="SELECT ld.monto,ld.codigo,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
     where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta f  where lbdf.cod_libretabancariadetalle='$codigo' 
       and f.codigo=lbdf.cod_facturaventa and f.cod_estadofactura<>2) and ld.codigo!=$codigoAux order by fecha_hora";
     //echo $sql;
@@ -8894,7 +8891,8 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
 
   function obtenerSaldoLibretaBancariaDetalle($codigo){
     $dbh = new Conexion();
-    $sql="SELECT ld.*,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
+    $sql="SELECT ld.codigo,ld.monto,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf 
+    join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
     where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta f  where lbdf.cod_libretabancariadetalle='$codigo' 
       and f.codigo=lbdf.cod_facturaventa and f.cod_estadofactura<>2) order by fecha_hora";
     $stmt = $dbh->prepare($sql);
@@ -9253,4 +9251,44 @@ function obtenerEstadoComprobante($codigo){
       }  
       return implode("\n ", $valor);
     }
+
+function obtenerResumenDistribucionSR($codigo){
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT d.porcentaje,d.tipo_distribucion,d.oficina_area 
+      from distribucion_gastos_solicitud_recursos d 
+      where d.cod_solicitudrecurso=$codigo and d.padre_oficina_area=0 and d.porcentaje<>0");
+    $stmt->execute();
+    $detalle="";
+    $monto=obtenerSumaDetalleSolicitud($codigo);
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $tipo=$row['tipo_distribucion'];
+    $porcentaje=$row['porcentaje'];
+    $unidad_area=$row['oficina_area'];
+    $detalleHijo="";
+    $montoPadre=$monto*($row['porcentaje']/100);
+    if($tipo==1){
+      $detalle.="<b>OF-".abrevUnidad_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")";
+    }else{
+      $detalle.="<b>AREA-".abrevArea_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")";
+    }
+    //detalle Hijo Distribucion
+    $stmt2 = $dbh->prepare("SELECT d.porcentaje,d.tipo_distribucion,d.oficina_area 
+      from distribucion_gastos_solicitud_recursos d 
+      where d.cod_solicitudrecurso=$codigo and d.padre_oficina_area=$unidad_area and d.porcentaje<>0");
+    $stmt2->execute();
+    $detalleHijo="";
+    while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+    $tipo2=$row2['tipo_distribucion'];
+    $porcentaje2=$row2['porcentaje'];
+    if($tipo2==1){
+      $detalleHijo.="<small> [<b>".abrevUnidad_solo($row2['oficina_area']).":</b>".$porcentaje2."%"."(".number_format(($montoPadre*($porcentaje2/100)),2,'.',',').")]</small>";
+    }else{
+      $detalleHijo.="<small> [<b>".abrevArea_solo($row2['oficina_area']).":</b>".$porcentaje2."%"."(".number_format(($montoPadre*($porcentaje2/100)),2,'.',',').")]</small>";
+    }
+   }
+    //fin detalle Hijo Distribucion
+   $detalle.=$detalleHijo."<br>";
+   }
+    return $detalle;
+  }
 ?>
