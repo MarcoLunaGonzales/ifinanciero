@@ -328,8 +328,8 @@ function buscarCuenta(combo){
 }
 
 function setBusquedaCuenta(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuentaAux, nombreCuentaAux){
-
   var fila=filaActiva;
+  //quitarEstadoCuentaFila(fila);
   var inicio=numeroCuenta.substr(0,1);
 
   //setar Estados de cuenta y más
@@ -7122,6 +7122,13 @@ function quitarEstadoCuenta(){
   $("#nestado"+fila).removeClass("estado");
 }
 
+function quitarEstadoCuentaFila(fila){
+  itemEstadosCuentas[fila-1]=[];
+  verEstadosCuentas(fila,0);
+  $("#nestado"+fila).removeClass("estado");
+}
+
+
 function agregarEstadoCuenta(){
   $("#mensaje_estadoscuenta").html("");
   var fila=$("#estFila").val();
@@ -7305,8 +7312,8 @@ function listarEstadosCuentasDebito(id,saldo){
       }
       
       row.append($('<td>').addClass('text-right '+estiloMonto+' font-weight-bold').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));
-      row.append($('<td>').addClass('text-left').text(""));
-      row.append($('<td>').addClass('text-left').text(""));
+      //row.append($('<td>').addClass('text-left').text(""));
+      //row.append($('<td>').addClass('text-left').text(""));
      table.append(row);
      return nsaldo;
    }
