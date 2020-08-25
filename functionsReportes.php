@@ -239,11 +239,38 @@ function obtenerListaVentasResumidoAdministrativo($unidades,$areas,$formas,$desd
       FROM facturas_venta f
 WHERE f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and f.cod_area in ($areas) 
     and f.cod_personal in ($personal) and f.cod_tipopago in ($formas)
-    order by fecha_factura desc, nro_factura desc";
+    order by fecha_factura, nro_factura";
    // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return($stmt);
 }
- ?>
+
+function obtenerNombreDetalleFactura($codigoFactura){
+    $dbh=new Conexion();
+    $sql="SELECT fd.cod_claservicio,
+CASE 
+    WHEN da.cod_area <> 13 THEN (select cs.Descripcion from cla_servicios cs where cs.IdClaServicio=fd.cod_claservicio)
+    WHEN (da.cod_area=13 and f.cod_solicitudfacturacion<>-100) THEN (select v.codigo_curso from v_cursosdetalles v where v.IdModulo=fd.cod_claservicio)
+    WHEN (da.cod_area=13 and f.cod_solicitudfacturacion=-100) THEN (select vcd.codigo_curso from v_cursosdetalles vcd, v_facturacion_tienda vft where vft.pago_id=fd.cod_claservicio and vft.pcm_modulo_id=vcd.IdModulo limit 0,1)
+    END AS item 
+from facturas_venta f, facturas_ventadetalle fd, facturas_venta_distribucion da where f.codigo=fd.cod_facturaventa and f.codigo=da.cod_factura and 
+f.codigo='$codigoFactura' GROUP BY fd.cod_claservicio;";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {        
+        $codItem=$row['cod_claservicio'];
+        $nombreItem=$row['item'];
+        if (stristr($valor, $nombreItem)) {
+            //  no pasa nada
+        }else{
+            $valor=$valor." - ".$nombreItem;        
+        }
+    }
+    $valor=substr($valor, 2);     
+    return($valor);
+}
+
+?>
 
