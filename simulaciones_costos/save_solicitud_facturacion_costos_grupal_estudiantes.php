@@ -220,7 +220,7 @@ try {//recibiendo datos
               showAlertSuccessError($flagSuccess,"../".$urlListSol);
             }
         }//si es insert o update
-    else{
+    }else{
         if(isset($_POST['q'])){
           $q=$_POST['q'];
           $s=$_POST['s'];
