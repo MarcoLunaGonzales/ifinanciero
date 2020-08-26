@@ -74,7 +74,10 @@ if(isset($_GET['monto_cajachica'])){
 
      $credito_padre=ObtenerMontoTotalEstadoCuentas_hijos($codCuenta,$codigoX);
      $saldo=$montoX-$credito_padre;
-     $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
+     $saldo=round($saldo,0);
+     
+     $fechaComprobante_x=strtotime($fechaComprobante);
+     $fechaComprobante_comparar=strtotime("2020-08-01 00:00:00");
 
      if(obtenerProveedorCuentaAux($row['cod_cuentaaux'])==""){
       $proveedorX="Sin Proveedor";
@@ -91,10 +94,14 @@ if(isset($_GET['monto_cajachica'])){
       $cod_solicitudrecurso_sr=$resultado['cod_solicitudrecurso'];
       $sw_personal=0;
       // echo $codigoX."..";
-      $mesComprobante=strftime('%m',strtotime($fechaComprobante));
-      $gestionComprobante=strftime('%Y',strtotime($fechaComprobante));
+      // $fechaComoEntero = strtotime($fechaComprobante);
+      // $gestionComprobante = date("Y", $fechaComoEntero);
+
+      $mesComprobante=date('m',strtotime($fechaComprobante));
+      $gestionComprobante=date('Y',strtotime($fechaComprobante));
 
       if($mesComprobante>=8 && $gestionComprobante>=2020){
+      // if($fechaComprobante_x>=$fechaComprobante_comparar){
 
         if($cod_solicitudrecurso_sr!=0 && $cod_solicitudrecurso_sr!='' && $cod_solicitudrecurso_sr!=null){
           // echo $cod_solicitudrecurso_sr."..";
@@ -138,7 +145,7 @@ if(isset($_GET['monto_cajachica'])){
     	    </td>
 
           <!--td class="text-center small"><?=$sw_personal." ".$sqlDetalleX." ".$sqlDetalleY;?> <?=$nombreUnidadO;?></td-->
-          <td class="text-center small"><?=$nombreUnidadO;?></td>
+          <td class="text-center small"><?=$fechaComprobante."-".$mesComprobante."-".$gestionComprobante?><?=$nombreUnidadO;?></td>
           <td class="text-center small"><?=$nombreTipoComprobante;?></td>
           <td class="text-left small"><?=$fechaComprobante;?></td>
           <td class="text-left small"><?=$fechaX;?></td>
