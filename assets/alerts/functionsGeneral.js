@@ -17546,7 +17546,15 @@ function cambiarValorElementosComprobante(nuevoId,i,aux,aux2){
       console.log(" Filas "+numFilas+":"+aux2+nuevoId+"->"+aux+i);
 }
 
-function contabilizarSolicitudRecursoModal(tipo,nro,monto,cuentas,url,prov,arry){
+function contabilizarSolicitudRecursoModal(codigo,tipo,nro,monto,cuentas,url,prov,arry){
+  //var validacion=[];
+  //validacion[0]=2;
+  //validacion[1]="Error de prueba codigo:"+codigo;
+  var validacion=validarFacturasRetencionesSRAjax(codigo);
+  if(validacion[0]==1){
+    //validacion error mensaje validacion[1];
+    Swal.fire("ERROR!", validacion[1], "warning");
+  }else{
   if(tipo==1){
     $("#titulo_conta").html("Contabilizar Solicitud Recursos");
     $("#cabecera_conta").attr("style","background:#DA053C !important;color:#fff;");
@@ -17569,6 +17577,7 @@ function contabilizarSolicitudRecursoModal(tipo,nro,monto,cuentas,url,prov,arry)
    $("#urlEnvioModalConta").val(url);
    $('.selectpicker').selectpicker('refresh');
    $("#modalContabilizarSolicitudRecurso").modal("show");
+   }
   }
 function saveContaSolicitudRecursoModal(){
     var encargado = $("#personal_encargado").val();
@@ -17588,4 +17597,25 @@ var anio =$("#modal_anio_actual").val();
   }else{
 
   }
+}
+
+function validarFacturasRetencionesSRAjax(codigo){
+  var validacion = [];
+  validacion[0]=1;
+  validacion[1]="Error al contabilizar";
+  var parametros={"codigo":codigo};
+  $.ajax({
+        async:false,
+        type: "POST",
+        dataType: 'html',
+        url: "solicitudes/ajax_validacion_SR_contabilizacion.php",
+        data: parametros,      
+        success:  function (resp) {
+          var respuesta=resp.split("####");
+           validacion[0]=respuesta[0];
+           validacion[1]=respuesta[1];
+
+        }
+    });
+  return validacion;
 }

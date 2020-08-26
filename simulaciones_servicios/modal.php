@@ -733,7 +733,7 @@
                                 <?php
                                 $tituloTipoServ="";
                                 $indexOb=0;
-                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 order by 2");
+                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 vigente=1 order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo_n2'];
@@ -746,11 +746,12 @@
                                       <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option> 
                                       <?php
                                   }else{
-                                    if($idServicioSimX==0){
-                                        ?>
+                                    ?>
                                       <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                       <?php
-                                    }
+                                   /* if($idServicioSimX==0){
+                                        
+                                    }*/
                                   }
                                   $indexOb++;
                                     }

@@ -123,12 +123,12 @@ $bgClase="bg-info";
             $codAreaX=$rowPlantilla['cod_area'];
           }
 
-          $presupuestoMes=obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,$mesActualConsulta)['presupuesto'];
+          /*$presupuestoMes=obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,$mesActualConsulta)['presupuesto'];
           if($presupuestoMes>0){
             $porcentPreciosMes=($precioLocalX*100)/($presupuestoMes);
           }else{
             $porcentPreciosMes=0;
-          }
+          }*/
          
          $valorConfiguracionTCPTCS=obtenerValorConfiguracion(52);
          $tituloPorpuestaTCPTCS="NACIONAL";
@@ -149,14 +149,7 @@ $bgClase="bg-info";
               <td class="bg-plomo">Porcentaje</td>
               <td class="text-right"><?=number_format($porcentPrecios, 2, '.', ',')?> %</td>
             </tr>
-            <tr>
-              <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$tituloPorpuestaTCPTCS?> MES (INFORMATIVO)</td>
-              <td class="text-right"><?=number_format($presupuestoMes, 2, '.', ',')?></td>
-              <td class="bg-plomo">Precio</td>
-              <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
-              <td class="bg-plomo">Porcentaje</td>
-              <td class="text-right"><?=number_format($porcentPreciosMes, 2, '.', ',')?> %</td>
-            </tr>
+
           </table>
        <?php
         }?>
