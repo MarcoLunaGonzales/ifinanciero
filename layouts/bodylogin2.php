@@ -98,6 +98,42 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
+
+        // Setup - add a text input to each footer cell
+        $('#libreta_bancaria_reporte_modal tfoot th').each( function () {
+            var title = $(this).text();
+            $(this).html( '<input type="text" placeholder="'+title+'" />' );
+        } );
+     
+        // DataTable
+        var table = $('#libreta_bancaria_reporte_modal').DataTable({
+            initComplete: function () {
+                // Apply the search
+                this.api().columns().every( function () {
+                    var that = this;
+                    $( 'input', this.footer() ).on( 'keyup change clear', function () {
+                        if ( that.search() !== this.value ) {
+                            that
+                                .search( this.value )
+                                .draw();
+                        }
+                    });
+                });
+            },
+            "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            fixedHeader: {
+                  header: false,
+                  footer: false
+            },
+            "order": false,
+            "paging":   false,
+            "info":     false,          
+            "scrollY":        "400px",
+            "scrollCollapse": true
+        });
+        
       $('#tablePaginator').DataTable( {
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"

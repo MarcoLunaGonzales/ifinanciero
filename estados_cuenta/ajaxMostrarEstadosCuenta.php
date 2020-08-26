@@ -23,15 +23,19 @@ $codCuentaAuxiliar=$_GET['cod_cuenta_auxiliar'];
 $tipoComprobanteX=$_GET['tipo_comprobante'];
 $cerrarEstadoCuenta=$_GET["cerrar_ec"];
 
+if($codCuentaAuxiliar!=0){
+  $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar order by e.fecha";
+}else{
+  $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
+}
 
-$sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar order by e.fecha";
 
 //echo $sqlZ;
 
 ?>
-<table id="tablePaginatorReport" class="table table-bordered table-condensed table-warning">
+<table id="libreta_bancaria_reporte_modal" class="table table-bordered table-condensed">
   <thead>
-    <tr class="">
+    <tr style="background:#746F72; color:#fff;">
       <th class="text-left">Of</th>
       <th class="text-left">Tipo/#</th>
       <th class="text-left">FechaComp</th>
@@ -159,9 +163,20 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
             <?php
               $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX."####".$saldoIndividual;
               if( $cerrarEstadoCuenta==1 ){
+                if($codCuentaAuxiliar!=0){
             ?>
               <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
-            <?php
+            <?php        
+                }else{
+                  $codigoCuentaAux=$codCuentaAuxX;
+                  $nombreCuentaAux=nameCuentaAuxiliar($codigoCuentaAux);
+                  $codigoCuenta=$codPlanCuentaX;
+                  $numeroCuenta=obtieneNumeroCuenta($codigoCuenta);
+                  $nombreCuenta=nameCuenta($codigoCuenta);
+            ?>
+              <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="setBusquedaCuenta('<?=$codigoCuenta?>','<?=$numeroCuenta?>','<?=$nombreCuenta?>','<?=$codigoCuentaAux?>','<?=$nombreCuentaAux?>');agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
+            <?php      
+                }
               }
             ?>
           </div>
@@ -172,11 +187,33 @@ $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.c
     }
   }
 ?>
-    <tr>
+    <tr style="background:#746F72; color:#fff;">
       <td colspan="8">Saldo Total</td>
+              <td class="d-none"></td>
+              <td class="d-none"></td>
+              <td class="d-none"></td>                        
+              <td class="d-none"></td>
+              <td class="d-none"></td>
+              <td class="d-none"></td>
+              <td class="d-none"></td>
       <td class="text-right font-weight-bold"><?=formatNumberDec($saldo);?></td>
+      <td></td>
     </tr>
   </tbody>
+  <tfoot>
+      <tr style="background:#746F72; color:#fff;">
+        <th class="small text-left"><small>Of</small></th>
+      <th class="small text-left"><small>Tipo/#</small></th>
+      <th class="small text-left"><small>FechaComp</small></th>
+      <th class="small text-left"><small>FechaEC</small></th>
+      <th class="small text-left"><small>Proveedor/Cliente</small></th>
+      <th class="small text-left"><small>Glosa</small></th>
+      <th class="small text-right"><small>D&eacute;bito</small></th>
+      <th class="small text-right"><small>Cr&eacute;dito</small></th>
+      <th class="small text-right"><small>Saldo</small></th>
+      <td class="small text-left"><small>*</small></td>     
+      </tr>
+    </tfoot>
 </table>
 <?php
 echo "@".$saldo;

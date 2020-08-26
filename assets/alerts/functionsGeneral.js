@@ -328,8 +328,8 @@ function buscarCuenta(combo){
 }
 
 function setBusquedaCuenta(codigoCuenta, numeroCuenta, nombreCuenta, codigoCuentaAux, nombreCuentaAux){
-
   var fila=filaActiva;
+  //quitarEstadoCuentaFila(fila);
   var inicio=numeroCuenta.substr(0,1);
 
   //setar Estados de cuenta y más
@@ -7101,8 +7101,11 @@ function verEstadosCuentas(fila,cuenta){
             var rsaldo=listarEstadosCuentasCredito(fila,respuesta[1]);
             console.log("listarEstadoCuentas;");
             //listarEstadosCuentas(fila,rsaldo);
-          } 
-          //mostrarSelectProveedoresClientes()          
+          }
+          //actualizar tabla 
+          //mostrarSelectProveedoresClientes() 
+          cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+          cargar_filtro_datatable_ajax('modalEstadosCuentas');         
         }
     });
     $("#estFila").val(fila);
@@ -7118,6 +7121,13 @@ function quitarEstadoCuenta(){
   verEstadosCuentas(fila,0);
   $("#nestado"+fila).removeClass("estado");
 }
+
+function quitarEstadoCuentaFila(fila){
+  itemEstadosCuentas[fila-1]=[];
+  verEstadosCuentas(fila,0);
+  $("#nestado"+fila).removeClass("estado");
+}
+
 
 function agregarEstadoCuenta(){
   $("#mensaje_estadoscuenta").html("");
@@ -7206,7 +7216,8 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
   var codComproDet=detalle_resp[0];
   var cuenta_auxiliar=detalle_resp[1];
   var saldo_estadocuenta=parseFloat(detalle_resp[3]);
-  if(detalle_resp[0]!=null && montoCerrar<=saldo_estadocuenta){
+  console.log("MONTO : "+montoCerrar+", SALDO : "+(saldo_estadocuenta+1));
+  if(detalle_resp[0]!=null && montoCerrar<=(saldo_estadocuenta+1)){
     console.log("entro y DetalleResp: "+detalle_resp);
     var nfila={
       cod_plancuenta:cuenta,
@@ -7301,8 +7312,8 @@ function listarEstadosCuentasDebito(id,saldo){
       }
       
       row.append($('<td>').addClass('text-right '+estiloMonto+' font-weight-bold').text(numberFormat(itemEstadosCuentas[id-1][i].monto,2)));
-      row.append($('<td>').addClass('text-left').text(""));
-      row.append($('<td>').addClass('text-left').text(""));
+      //row.append($('<td>').addClass('text-left').text(""));
+      //row.append($('<td>').addClass('text-left').text(""));
      table.append(row);
      return nsaldo;
    }
@@ -16411,9 +16422,10 @@ function cargar_dataTable_ajax(tabla){
                   if ( that.search() !== this.value ) {
                       that
                           .search( this.value )
-                          .draw(); 
-                   ponerSumatoriaDeMayorCuenta();       
-                      
+                          .draw();
+                   if($("#cantidad_mayor_modal").length>0){
+                      ponerSumatoriaDeMayorCuenta();
+                   }        
                   }
               });
           });

@@ -9268,9 +9268,9 @@ function obtenerResumenDistribucionSR($codigo){
     $detalleHijo="";
     $montoPadre=$monto*($row['porcentaje']/100);
     if($tipo==1){
-      $detalle.="<b>OF-".abrevUnidad_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")";
+      $detalle.="<b>".abrevUnidad_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")";
     }else{
-      $detalle.="<b>AREA-".abrevArea_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")";
+      $detalle.="<b>".abrevArea_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")";
     }
     //detalle Hijo Distribucion
     $stmt2 = $dbh->prepare("SELECT d.porcentaje,d.tipo_distribucion,d.oficina_area 

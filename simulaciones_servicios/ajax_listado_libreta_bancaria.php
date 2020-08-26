@@ -3,7 +3,7 @@ session_start();
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../styles.php';
-require_once '../layouts/librerias.php';
+//require_once '../layouts/librerias.php';
 $dbh = new Conexion();
 
 $saldo_solfac=0; //desde comprobantes
@@ -98,7 +98,7 @@ if(isset($_GET['anio'])){
               else $color_aux="background-color:#f6ddcc;";
               
               $datosEnviarModal="";
-              if($tipo_listado==1 || $saldo!=0){//todo 
+              if($tipo_listado==1||$saldo!=0){//todo  $tipo_listado==1 || 
               $datosEnviarModal=$Fecha."####".$Descripcion." ".$InformacionComplementaria."####".number_format($monto,2)."####".number_format($saldo,2)."####".$saldo; 
                 ?>
 

@@ -7,15 +7,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(isset($datos['accion'])&&isset($datos['sIdentificador'])&&isset($datos['sKey']))
         if($datos['sIdentificador']=="libBan"&&$datos['sKey']=="89i6u32v7xda12jf96jgi30lh"){
         $accion=$datos['accion']; //recibimos la accion
-        $codLibreta=$datos['idLibreta'];//recibimos el codigo del proyecto
         $estado=0;
         $mensaje="";
         if($accion=="ObtenerLibretaBancaria"){
-           if(isset($datos['anio'])){
-             $datosResp=obtenerDatosLibreta($codLibreta,$datos['anio']);
-           }else{
-             $datosResp=obtenerDatosLibreta($codLibreta,0);
-           }
+          $codLibreta=$datos['idLibreta'];//recibimos el codigo del proyecto
+
+          //variables para el filtro
+          $montoLibreta=null;
+          if(isset($datos['monto'])){
+            $montoLibreta=$datos['monto'];
+          }
+          $fechaLibreta=null;
+          if(isset($datos['fecha'])){
+            $fechaLibreta=$datos['fecha'];
+          }
+          $nombreLibreta=null;
+          if(isset($datos['nombre'])){
+            $nombreLibreta=$datos['nombre'];
+          }
+          $anioLibreta=0;
+          if(isset($datos['anio'])){
+            $anioLibreta=$datos['anio'];
+          }
+
+          $datosResp=obtenerDatosLibreta($codLibreta,$anioLibreta,$montoLibreta,$fechaLibreta,$nombreLibreta,null);
+                
                 if($datosResp[0]==0){
                  $estado=2;
                  $mensaje = "Libreta Inexistente";
@@ -33,8 +49,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             );
                 }
             }else{
-               $resultado=array("estado"=>3, 
-                            "mensaje"=>"No existe la Accion Solicitada.");
+               if($accion=="ObtenerListaLibretaBancaria"){
+                  $datosResp=obtenerListaLibretaBancaria();
+                  $estado=1;
+                  $resultado=array(
+                            "estado"=>$estado,
+                            "mensaje"=>"Listado Obtenido Correctamente", 
+                            "lista"=>$datosResp, 
+                            "totalComponentes"=>count($datosResp)    
+                            );
+               }else{
+                    if($accion=="ObtenerLibretaBancariaPorFactura"){
+                      $codFactura=0;
+                      if(isset($datos['idFactura'])){
+                        $codFactura=$datos['idFactura'];
+                        $datosResp=obtenerDatosLibreta(0,0,null,null,null,$codFactura);
+                      }else{
+                        $datosResp=obtenerDatosLibreta(-100,0,null,null,null,$codFactura);
+                      }
+                
+                      if($datosResp[0]==0){
+                       $estado=2;
+                       $mensaje = "Libreta Inexistente";
+                       $resultado=array("estado"=>$estado, 
+                                  "mensaje"=>$mensaje, 
+                                  "totalComponentes"=>0);
+                      }else{
+                        $estado=1;
+                        $libreta = $datosResp[1]; 
+                        $resultado=array(
+                            "estado"=>$estado,
+                            "mensaje"=>"Libreta Obtenida Correctamente", 
+                            "libretas"=>$libreta, 
+                            "totalComponentes"=>1     
+                            );
+                      }
+                   }else{
+                
+                   $resultado=array("estado"=>3, 
+                            "mensaje"=>"No existe la Accion Solicitada.");        
+                   }
+               }
             }        
         }else{
             $resultado=array("estado"=>4, 
@@ -49,17 +104,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo json_encode($resp);
 }
 
-function obtenerDatosLibreta($codigo,$anioLib){
+function obtenerListaLibretaBancaria(){
+  require_once __DIR__.'/../conexion.php';
+  $dbh = new Conexion();
+  $sqlX="SET NAMES 'utf8'";
+  $stmtX = $dbh->prepare($sqlX);
+  $stmtX->execute();
+  $sql="SELECT p.nombre as banco,dc.* 
+FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo
+WHERE dc.cod_estadoreferencial=1";
+  $stmtFac = $dbh->prepare($sql);
+  $stmtFac->execute();
+  $filaA=0;
+  $datosLibretasCabecera=[];
+  $ff=0;
+  while ($rowLib = $stmtFac->fetch(PDO::FETCH_ASSOC)) {
+     $datosLib=[];
+     $codigoLib=$rowLib['codigo'];
+     $datosLib['codigo']=$rowLib['codigo'];
+     $datosLib['nombre']=$rowLib['nombre'];
+     $datosLib['banco']=$rowLib['banco'];
+     $datosLib['cod_banco']=$rowLib['cod_banco'];
+     $datosLib['nro_cuenta']=$rowLib['nro_cuenta'];
+     $datosLib['cod_cuenta']=$rowLib['cod_cuenta'];
+     $datosLibretasCabecera[$ff]=$datosLib;
+     $ff++;
+  }
+  return $datosLibretasCabecera;
+}
+
+function obtenerDatosLibreta($codigo,$anioLib,$montoLibreta,$fechaLibreta,$nombreLibreta,$codFactura){
   require_once __DIR__.'/../conexion.php';
   require_once __DIR__.'/../functions.php';
   $dbh = new Conexion();
   $sqlX="SET NAMES 'utf8'";
   $stmtX = $dbh->prepare($sqlX);
   $stmtX->execute();
+//filtros query cabecera
   $sqlCodigo="";
 if($codigo!=0){
   $sqlCodigo=" and dc.codigo=".$codigo;
 }
+//filtros query detalle
+$sqlFiltroDetalle="";
+if($anioLib!=0){
+  $sqlFiltroDetalle.=" and year(ce.fecha_hora)=".$anioLib." ";
+}
+if($montoLibreta!=null){
+  $sqlFiltroDetalle.=" and ce.monto=".$montoLibreta." ";
+}
+if($fechaLibreta!=null){
+  $sqlFiltroDetalle.=" and date_format(date(ce.fecha_hora),'%Y-%m-%d')='".$fechaLibreta."' ";
+}
+if($nombreLibreta!=null){
+  $sqlFiltroDetalle.=" and (ce.descripcion like '%".$nombreLibreta."%' or ce.informacion_complementaria like '%".$nombreLibreta."%')";
+}
+
   $sql="SELECT p.nombre as banco,dc.* 
 FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo
 WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
@@ -89,13 +189,14 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
      $datos['CodBanco']=$datosLibretasCabecera[$ff]['cod_banco'];
      $datos['NumeroCuenta']=$datosLibretasCabecera[$ff]['nro_cuenta'];
      $datos['IdCuenta']=$datosLibretasCabecera[$ff]['cod_cuenta'];
-    if($anioLib==0){
-       $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura
-       FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 order by ce.codigo";
-    }else{
-      $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura
-       FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 and year(ce.fecha_hora)=$anioLib order by ce.codigo";
-    }
+     if($codFactura!=null){
+        $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura,(SELECT obtener_saldo_libreta_bancaria_detalle(ce.codigo)) as saldo_libreta_detalle
+       FROM libretas_bancariasdetalle ce join libretas_bancariasdetalle_facturas ldf on ldf.cod_libretabancariadetalle=ce.codigo       
+       where ce.cod_libretabancaria=$codigoLib and ldf.cod_facturaventa=$codFactura and  ce.cod_estadoreferencial=1 $sqlFiltroDetalle order by ce.codigo";
+     }else{
+    $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura,(SELECT obtener_saldo_libreta_bancaria_detalle(ce.codigo)) as saldo_libreta_detalle
+       FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 $sqlFiltroDetalle order by ce.codigo";
+     }
      $stmtFacDetalle = $dbh->prepare($sqlDetalle);
      $stmtFacDetalle->execute();
      $datosDetalle=[];
@@ -150,7 +251,7 @@ where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']." and f.cod_estad
             $saldoFactura=$rowLibDetalle['monto'];
             if($existeFactura>0){
               //calcular Saldo
-              $saldoFactura=obtenerSaldoLibretaBancariaDetalle($rowLibDetalle['codigo']);      
+              $saldoFactura=number_format($rowLibDetalle['saldo_libreta_detalle'],2,".","");
              }else{
                if(!($codComprobante==""||$codComprobante==0)){
                   $datosDetalleCompro=obtenerDatosComprobanteDetalle($codComprobanteDetalle);
@@ -173,9 +274,18 @@ where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']." and f.cod_estad
      }
 
 
-    $datos['detalle']=$datosDetalle; 
-    $datosMega[$filaA]=$datos;
-    $filaA++;     
+    $datos['detalle']=$datosDetalle;
+    $datos['totalDetalle']=$index;
+    $datosMega[$filaA]=$datos; 
+    if($codFactura!=null){
+     if($index>0){
+      $datosMega[$filaA]=$datos; 
+      $filaA++; 
+     }  
+    }else{
+      $datosMega[$filaA]=$datos; 
+      $filaA++; 
+    }
  }
 
  return array($filaA,$datosMega);

@@ -4,18 +4,22 @@ set_time_limit(0);
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
-
+$monedaBimon=1;
 session_start();
 if(!isset($_GET['comp'])){
     header("location:list.php");
 }else{
     $codigo=$_GET['comp'];
     $moneda=$_GET['mon'];
-    /*if($moneda==1){
-      $moneda=2;
-    }*/
+    if($moneda==-1){
+      $monedaBimon=0;
+      $moneda=1;
+    }
     $abrevMon=abrevMoneda($moneda);
     $nombreMonedaG=nameMoneda($moneda);
+    if($moneda==2){
+      $nombreMonedaG="Dólares";
+    }
 }
 
 
@@ -85,6 +89,12 @@ $tcUSD=obtenerValorTipoCambio(2,strftime('%Y-%m-%d',strtotime($fechaC)));
 $abrevUSD="";
 $abrevUSD=abrevMoneda(2);
 
+//tipo de cambio EUROS
+$tcEU=0;
+$tcEU=obtenerValorTipoCambio(3,strftime('%Y-%m-%d',strtotime($fechaC)));
+$abrevEU="";
+$abrevEU=abrevMoneda(3);
+
 // Llamamos a la funcion para obtener el reporte de comprobantes
 $data = obtenerComprobantesDetImp($codigo);
 $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaC)));
@@ -141,7 +151,7 @@ $html.=  '<header class="header">'.
          '<table class="table">'.
             '<tr class="bold table-title">'.
               '<td width="22%">Fecha: '.strftime('%d/%m/%Y',strtotime($fechaC)).'</td>'.
-              '<td width="33%" align="right">t/c: '.$abrevMon.': '.$tc.' '.$abrevUFV.':'.$tcUFV.'</td>'.
+              '<td width="33%" align="right">t/c: '.$abrevUFV.':'.$tcUFV.', '.$abrevUSD.':'.$tcUSD.', '.$abrevEU.':'.$tcEU.'</td>'.
               '<td width="45%" class="text-right">'.$tipoC.' '.strtoupper(abrevMes(strftime('%m',strtotime($fechaC)))).' N&uacute;mero: '.generarNumeroCeros(6,$numeroC).'</td>'.
             '</tr>'.
             '<tr>'.
@@ -151,9 +161,9 @@ $html.=  '<header class="header">'.
             '<thead>'.
             '<tr class="bold table-title text-center">'.
               '<td colspan="2" class="td-border-none"></td>'.
-              '<td colspan="2" class="td-border-none">Bolivianos</td>';
-              if($moneda!=1){
-               $html.='<td colspan="2" class="td-border-none">'.$nombreMonedaG.'</td>'; 
+              '<td colspan="2" class="td-border-none">'.$nombreMonedaG.'</td>';
+              if($monedaBimon!=1){
+               $html.='<td colspan="2" class="td-border-none">Dólares</td>'; 
               }      
             $html.='</tr>'.
             '<tr class="bold table-title text-center">'.
@@ -161,7 +171,7 @@ $html.=  '<header class="header">'.
               '<td>Nombre de la cuenta / Descripci&oacute;n</td>'.
               '<td>Debe</td>'.
               '<td>Haber</td>';
-              if($moneda!=1){
+              if($monedaBimon!=1){
                $html.='<td>Debe</td>'.
               '<td>Haber</td>'; 
               }    
@@ -180,38 +190,38 @@ $html.=  '<header class="header">'.
              $html.='<tr>'.
                       '<td>'.$row['numero'].'<br>'.$row['unidadAbrev'].'<br>'.$row['abreviatura'].'</td>'.
                       '<td>'.$row['nombre'].' - '.$row['nombrecuentaauxiliar'].'<br>'.$row['glosa'].'</td>';
-                      $tDebeBol+=$row['debe'];$tHaberBol+=$row['haber'];
+                      $tDebeBol+=$row['debe']/$tcUSD;$tHaberBol+=$row['haber']/$tcUSD;
                       $tDebeDol+=$row['debe']/$tc;$tHaberDol+=$row['haber']/$tc;
-                       $html.='<td class="text-right">'.number_format($row['debe'], 2, '.', ',').'</td>'.
-                      '<td class="text-right">'.number_format($row['haber'], 2, '.', ',').'</td>';
-                      if($moneda!=1){
                        $html.='<td class="text-right">'.number_format($row['debe']/$tc, 2, '.', ',').'</td>'.
                       '<td class="text-right">'.number_format($row['haber']/$tc, 2, '.', ',').'</td>';
+                      if($monedaBimon!=1){
+                       $html.='<td class="text-right">'.number_format($row['debe']/$tcUSD, 2, '.', ',').'</td>'.
+                      '<td class="text-right">'.number_format($row['haber']/$tcUSD, 2, '.', ',').'</td>';
                       }
                                                   
                     $html.='</tr>';
                }
             }
 
-      $entero=floor($tDebeBol);
-      $decimal=$tDebeBol-$entero;
+      $entero=floor($tDebeDol);
+      $decimal=$tDebeDol-$entero;
       $centavos=round($decimal*100);
       if($centavos<10){
         $centavos="0".$centavos;
       }
       $html.='<tr class="bold table-title">'.
                   '<td colspan="2" class="text-center">Sumas:</td>'.
-                  '<td class="text-right">'.number_format($tDebeBol, 2, '.', ',').'</td>'.
-                  '<td class="text-right">'.number_format($tHaberBol, 2, '.', ',').'</td>';
-                   if($moneda!=1){
-                       $html.='<td class="text-right">'.number_format($tDebeDol, 2, '.', ',').'</td>'. 
-                      '<td class="text-right">'.number_format($tHaberDol, 2, '.', ',').'</td>';
+                  '<td class="text-right">'.number_format($tDebeDol, 2, '.', ',').'</td>'.
+                  '<td class="text-right">'.number_format($tHaberDol, 2, '.', ',').'</td>';
+                   if($monedaBimon!=1){
+                       $html.='<td class="text-right">'.number_format($tDebeBol, 2, '.', ',').'</td>'. 
+                      '<td class="text-right">'.number_format($tHaberBol, 2, '.', ',').'</td>';
                       }
                          
               $html.='</tr>'.
               '</tbody>';
 $html.=    '</table>';
-$html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>';         
+$html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 '.$nombreMonedaG.'</p>';         
 $html.='</body>'.
       '</html>';
 //detectando el error 
