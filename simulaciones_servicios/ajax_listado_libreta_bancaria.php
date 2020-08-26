@@ -22,7 +22,7 @@ if(isset($_GET['codigo_lib'])){
   $codLibretaBan=$_GET['codigo_lib'];
 }
 if(isset($_GET['anio'])){
-  $lista=obtenerObtenerLibretaBancariaIndividualAnio($codLibretaBan,$_GET['anio']);  
+  $lista=obtenerObtenerLibretaBancariaIndividualAnio($codLibretaBan,$_GET['anio'],$_GET['fecha'],$_GET['monto'],$_GET['nombre']);  
 }else{
   $lista=obtenerObtenerLibretaBancariaIndividual($codLibretaBan);  
 } 

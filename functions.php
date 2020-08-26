@@ -7687,7 +7687,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     // header('Content-type: application/json');   
     // print_r($remote_server_output);
   }
-function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
+function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto,$nombre){
     //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
     // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
     $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
@@ -7695,6 +7695,19 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
     $sKey = "89i6u32v7xda12jf96jgi30lh";
     //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
     $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>$codigo,"anio"=>$anio); 
+    if(!($monto==0||$monto=="")){
+      $monto=array('monto' =>$monto);
+       array_push($parametros,$monto);
+    }
+    if($nombre!=""){
+      $nombre=array('nombre' =>$nombre);
+       array_push($parametros,$nombre);
+    }
+    if($fecha=="" ||$fecha==null){
+      $fecha=array('fecha' =>$fecha);
+       array_push($parametros,$fecha);
+    }
+
     $parametros=json_encode($parametros);
     // abrimos la sesión cURL
     $ch = curl_init();

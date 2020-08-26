@@ -412,7 +412,7 @@
           <i class="material-icons">search</i>
         </a>
         <label for="" class="float-right">|</label>
-        <select class="selectpicker form-control form-control-sm col-sm-1 float-right" name="modal_anio_actual" id="modal_anio_actual" data-style="btn btn-default text-dark">
+        <select class="selectpicker form-control form-control-sm col-sm-1 float-right" name="modal_anio_actual" id="modal_anio_actual" data-style="btn btn-default text-dark" onchange="cambiarValorAnioFechaBuscar()">
           <option disabled value="">--Filtrar Año--</option>
                         <option value="0">Todo</option>
                         <?php 
@@ -454,7 +454,9 @@
                       }
                       ?>
                   </select>
-                  
+               <input type="date" id="modal_buscar_fecha" min="<?=(int)$_SESSION['globalNombreGestion']?>-01-01" max="<?=(int)$_SESSION['globalNombreGestion']?>-12-31" class="form-control col-sm-2 float-right text-right" value=""/>
+               <input type="text" id="modal_buscar_monto" min="<?=(int)$_SESSION['globalNombreGestion']?>-01-01" max="<?=(int)$_SESSION['globalNombreGestion']?>-12-31" class="form-control col-sm-1 float-right" value="" placeholder="Monto"/>                     
+               <input type="text" id="modal_buscar_nombre" min="<?=(int)$_SESSION['globalNombreGestion']?>-01-01" max="<?=(int)$_SESSION['globalNombreGestion']?>-12-31" class="form-control col-sm-8 float-right" style="margin-top:-30px !important;" value="" placeholder="Descripción"/>
       </div>
       <div class="card-body">
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
