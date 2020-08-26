@@ -746,12 +746,12 @@
                                       <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option> 
                                       <?php
                                   }else{
-                                    ?>
+                                    
+                                    if($idServicioSimX==0){
+                                      ?>
                                       <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
-                                      <?php
-                                   /* if($idServicioSimX==0){
-                                        
-                                    }*/
+                                      <?php  
+                                    }
                                   }
                                   $indexOb++;
                                     }
