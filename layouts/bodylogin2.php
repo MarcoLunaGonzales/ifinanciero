@@ -946,7 +946,7 @@
         footerCallback: function ( row, data, start, end, display ) {
           if($("#importe_bruto").length>0){
             var api = this.api();
-            var pageTotal = api.column(10,{page:'current'}).data().reduce( function (a,b) {
+            var pageTotal = api.column(11,{page:'current'}).data().reduce( function (a,b) {
                 return parseFloat(a) + parseFloat(b);
                },0);
             //alert(pageTotal)
