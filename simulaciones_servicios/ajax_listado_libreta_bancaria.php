@@ -5,7 +5,6 @@ require_once '../functions.php';
 require_once '../styles.php';
 //require_once '../layouts/librerias.php';
 $dbh = new Conexion();
-
 $saldo_solfac=0; //desde comprobantes
 $tipoCuentaLib=0;
 if(isset($_GET['tipo_cuentalibreta'])){
@@ -26,8 +25,7 @@ if(isset($_GET['anio'])){
   $lista=obtenerObtenerLibretaBancariaIndividualAnio($codLibretaBan,$_GET['anio']);  
 }else{
   $lista=obtenerObtenerLibretaBancariaIndividual($codLibretaBan);  
-}
-  
+} 
 ?>
 <style>
   tfoot input {
@@ -35,6 +33,7 @@ if(isset($_GET['anio'])){
     padding: 3px;
   }
 </style> 
+
 <table id="libreta_bancaria_reporte_modal" class="table table-condensed table-bordered table-sm" style="width:100% !important;">
     <thead>
       <tr style="background:#21618C; color:#fff;">
