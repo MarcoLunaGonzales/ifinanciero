@@ -110,7 +110,7 @@ if($codCuentaAuxiliar!=0){
     }
  
     $proveedorX="";
-    if($tipoComprobanteX==2){
+    /*if($tipoComprobanteX==2){
       $proveedorX=obtenerProveedorCuentaAux($codCuentaAuxX);
     }
     if($tipoComprobanteX==1){
@@ -122,7 +122,8 @@ if($codCuentaAuxiliar!=0){
     }
     if($tipoComprobanteX==2){
       $nombreProveedorClienteX=nameProveedorCliente(1,$codProveedorX);
-    }
+    }*/
+    $nombreCuentaAuxEstadoCuenta=nameCuentaAuxiliar($codCuentaAuxX);
     $debeX=$montoContra;
 
     //Filtramos las cuentas que ya esten cerradas.
@@ -141,7 +142,7 @@ if($codCuentaAuxiliar!=0){
       <td class="text-center small"><?=$nombreComprobante;?></td>
       <td class="text-left small"><?=$fechaComprobante;?></td>
       <td class="text-left small"><?=$fechaX;?></td>
-      <td class="text-left small"><?=$proveedorX?></td>
+      <td class="text-left small"><?=$nombreCuentaAuxEstadoCuenta?></td>
       <td class="text-left small"><?=$glosaMostrar;?></td>
       <?php
       if($tipoComprobanteX==1){
@@ -161,7 +162,7 @@ if($codCuentaAuxiliar!=0){
         <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <div class="form-check">
             <?php
-              $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX."####".$saldoIndividual;
+              $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX."####".$montoX;
               if( $cerrarEstadoCuenta==1 ){
                 if($codCuentaAuxiliar!=0){
             ?>
