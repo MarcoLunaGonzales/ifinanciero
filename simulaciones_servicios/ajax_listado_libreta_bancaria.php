@@ -3,7 +3,7 @@ session_start();
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../styles.php';
-require_once '../layouts/librerias.php';
+//require_once '../layouts/librerias.php';
 $dbh = new Conexion();
 
 $saldo_solfac=0; //desde comprobantes
