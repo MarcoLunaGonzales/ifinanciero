@@ -16354,7 +16354,7 @@ function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
   }  
   if($("#modal_anio_actual").length>0){
     if($("#modal_anio_actual").length>0){
-
+     //alert($("#modal_buscar_monto").val());
      var parametros={"saldo":saldo,"tipo_listado":1,"codigo_lib":idLib,"anio":$("#modal_anio_actual").val(),"fecha":$("#modal_buscar_fecha").val(),"monto":$("#modal_buscar_monto").val(),"nombre":$("#modal_buscar_nombre").val()};  
     }
   }
@@ -17583,6 +17583,7 @@ function saveContaSolicitudRecursoModal(){
 function cambiarValorAnioFechaBuscar(){
 var anio =$("#modal_anio_actual").val();
   if(anio!=0){
+    $("#modal_buscar_fecha").val("");
       $("#modal_buscar_fecha").attr("min",anio+"-01-01").attr("max",anio+"-12-31");
   }else{
 

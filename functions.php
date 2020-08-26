@@ -7694,18 +7694,15 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
     $sIde = "libBan";
     $sKey = "89i6u32v7xda12jf96jgi30lh";
     //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
-    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>$codigo,"anio"=>$anio); 
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>$codigo,"anio"=>$anio,"monto"=>null,"nombre"=>null,"fecha"=>null); 
     if(!($monto==0||$monto=="")){
-      $monto=array('monto' =>$monto);
-       array_push($parametros,$monto);
+      $parametros['monto']=$monto;
     }
     if($nombre!=""){
-      $nombre=array('nombre' =>$nombre);
-       array_push($parametros,$nombre);
+      $parametros['nombre']=$nombre;
     }
-    if($fecha=="" ||$fecha==null){
-      $fecha=array('fecha' =>$fecha);
-       array_push($parametros,$fecha);
+    if(!($fecha=="" ||$fecha==null)){
+     $parametros['fecha']=$fecha;
     }
 
     $parametros=json_encode($parametros);
