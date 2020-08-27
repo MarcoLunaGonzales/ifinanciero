@@ -13,9 +13,9 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 
 $codigo = $_GET["codigo"];//codigoactivofijo
 try{
-    $stmt = $dbh->prepare("SELECT codigo,monto,fecha,observaciones,nro_recibo,cod_uo,cod_area,cod_estadoreferencial from caja_chicadetalle where  cod_cajachica=$codigo 
+    $stmt = $dbh->prepare("SELECT codigo,monto,DATE_FORMAT(fecha,'%d/%m/%Y')as fecha_x,observaciones,nro_recibo,cod_uo,cod_area,cod_estadoreferencial from caja_chicadetalle where  cod_cajachica=$codigo 
 UNION
-SELECT codigo,monto,fecha,observaciones,0 as nro_recibo,0 as cod_uo,0 as cod_area,cod_estadoreferencial from caja_chicareembolsos where cod_estadoreferencial=1 and cod_cajachica=$codigo ORDER BY nro_recibo");
+SELECT codigo,monto,DATE_FORMAT(fecha,'%d/%m/%Y')as fecha_x,observaciones,0 as nro_recibo,0 as cod_uo,0 as cod_area,cod_estadoreferencial from caja_chicareembolsos where cod_estadoreferencial=1 and cod_cajachica=$codigo ORDER BY nro_recibo");
     $stmt->execute();    
         //==================================================================================================================
     //datos caja chica
@@ -129,8 +129,10 @@ $html.=  '<header class="header">'.
               $nro_recibo=$row['nro_recibo'];
               $monto_detalle =$row['monto'];
               $cod_estadoreferencial_x=$row['cod_estadoreferencial'];
+              $observaciones=$row['observaciones'];
               if($cod_estadoreferencial_x==2){
                 $monto_detalle=0;
+                $observaciones="***ANULADO***";
               }
               //nro factura
               if(!$sw_rembolso){
@@ -154,13 +156,13 @@ $html.=  '<header class="header">'.
                 $nro_recibo='';
               }
               $html.='<tr>'.                      
-                            '<td class="text-center small">'.$row['fecha'].'</td>';
+                            '<td class="text-center small">'.$row['fecha_x'].'</td>';
                             if(!$sw_rembolso){
                               $html.='<td class="text-left small">'.$nombre_uo.'/'.$nombre_area.'</td>';
                             }else{
                               $html.='<td class="text-left small"></td>';
                             }
-                            $html.='<td class="text-left small">'.$row['observaciones'].'</td>'.
+                            $html.='<td class="text-left small">'.$observaciones.'</td>'.
                             '<td class="text-center small">'.$nro_recibo.'</td>'.
                             '<td class="text-center small">'.$nro_factura.'</td>';
                             if(!$sw_rembolso){

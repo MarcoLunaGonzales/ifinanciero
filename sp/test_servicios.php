@@ -5,18 +5,11 @@ require_once '../functions.php';
   // $sKey = "c066ffc2a049cf11f9ee159496089a15";
 
 
-// $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
-//     $sIde = "ifinanciero";
-//     $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
-//     // $sIde = "monitoreo"; 
 $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
     $sIde = "ifinanciero";
-    $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
-    // $sIde = "monitoreo"; 
-    // $sKey = "837b8d9aa8bb73d773f5ef3d160c9b17";
-
-    /*Lista de Clientes Empresa*/
-    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "lista"=>"Clientes");
+    $sKey = "ce94a8dabdf0b112eafa27a5aa475751"; 
+    /*Datos de Clientes Empresa*/
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"DatosClienteEmpresa", "IdCliente"=>2165); //
       $parametros=json_encode($parametros);
       // abrimos la sesión cURL
       $ch = curl_init();

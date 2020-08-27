@@ -31,12 +31,12 @@ $stmtFActuras->bindColumn('cod_area', $cod_area);
 $cadenaFacturas="";
 while ($row = $stmtFActuras->fetch()) {
 	$cadenaFacturas.="F ".$nro_factura.", ";
-	if($estado_factura!=2){
+	// if($estado_factura!=2){
 		$sqlUpdateComprobante="UPDATE comprobantes SET  cod_estadocomprobante=2 where codigo=$cod_comprobante";
 		$stmtUpdateComprobante = $dbh->prepare($sqlUpdateComprobante);
 		$flagSuccess=$stmtUpdateComprobante->execute();
 		//actualizamos facturas	
-	}
+	// }
 }
 $cadenaFacturas=trim($cadenaFacturas,", ");
 if($estado_factura==2){ //tipo devolucion tiene contabilizacion
@@ -55,11 +55,8 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 		$glosa_libreta="S/N";
 	}
 	$tipoComprobante=3;//traspaso
-	$unidad=5;
-	// $codMes=date('m');
-
+	$unidad=5;	
   	$codMes= date("m", strtotime($fecha_factura));
-
 	$codGestion=$_SESSION['globalGestion'];	
 	
 
@@ -75,18 +72,19 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 		$cod_area_solicitud = $cod_area; 
 	}
 	
-	$concepto_contabilizacion="Anulación de ".$cadenaFacturas."/ RS: ".$rs_factura.", Nit: ".$nit_factura."&#010;";	
-	$concepto_contabilizacion.=" Detalle: ".$glosa_libreta;
-	// $cod_comprobante=obtenerCodigoComprobante();
+	$concepto_contabilizacion="Anulación de ".$cadenaFacturas."/ RS: ".$rs_factura.", NIT: ".$nit_factura."&#010;";	
+	$concepto_contabilizacion.="/ Detalle: ".$glosa_libreta;
+	$cod_comprobante=obtenerCodigoComprobante();
 	//insertamos cabecera
-	// $flagSuccess=insertarCabeceraComprobante($cod_comprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser,$globalUser);	
-	$sqlDelete="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";			
-    $stmtDelete = $dbh->prepare($sqlDelete);
-    $stmtDelete->execute();
+	$flagSuccess=insertarCabeceraComprobante($cod_comprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser,$globalUser);	
 
-	$sqlUpdateCabecera="UPDATE comprobantes set glosa='$concepto_contabilizacion',numero='$numeroComprobante',fecha='$fechaActual',cod_tipocomprobante='$tipoComprobante' where codigo=$cod_comprobante";
-    $stmtUpdateCAbecera = $dbh->prepare($sqlUpdateCabecera);
-    $flagSuccess=$stmtUpdateCAbecera->execute();
+	// $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";			
+ //    $stmtDelete = $dbh->prepare($sqlDelete);
+ //    $stmtDelete->execute();
+
+	// $sqlUpdateCabecera="UPDATE comprobantes set glosa='$concepto_contabilizacion',numero='$numeroComprobante',fecha='$fechaActual',cod_tipocomprobante='$tipoComprobante' where codigo=$cod_comprobante";
+ //    $stmtUpdateCAbecera = $dbh->prepare($sqlUpdateCabecera);
+ //    $flagSuccess=$stmtUpdateCAbecera->execute();
 
 	if($flagSuccess){
 		//listado del detalle tipo pago
