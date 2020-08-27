@@ -272,8 +272,13 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                         <div class="btn-group" id="existe_div_archivo_cabecera<?=$filaA?>">
                           <div class='btn-group'>
                             <a class='btn btn-sm btn-info btn-block' href='<?=$urlArchivo?>' target='_blank'><?=$nombreX?></a>
-                            <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' download='Descargar: Doc - IFINANCIERO (<?=$nombreX?>)<?=$nombreArchivo?>'><i class='material-icons'>vertical_align_bottom</i></a>
-                            <a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivo?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
+                            <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' download='Descargar: Doc - IFINANCIERO (<?=$nombreX?>)<?=$nombreArchivo?>'><i class='material-icons'>vertical_align_bottom</i></a>           
+                            <a class='btn btn-sm btn-primary' id="boton_previo<?=$filaA?>" href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivo?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
+                            <script>
+                               >/* if ( navigator.userAgent.indexOf("MSIE")>0|| navigator.userAgent.indexOf("Firefox")>0){
+                                    $("#boton_previo"+<?=$filaA?>).prepend("X").addClass("btn-danger").attr("title","Puede que su navegador no muestre las firmas digitales en PDF, Recomendamos usar Chrome");    
+                                   }*/
+                            </script>
                           </div>
                         <!--<a href="#" class="btn btn-button btn-sm">Registrado</a>
                         <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  -->

@@ -92,6 +92,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('cod_iaf_secundario', $codIAFSecX);
             $stmt1->bindColumn('cod_objetoservicio', $cod_objetoservicioX);
             $stmt1->bindColumn('idServicio', $idServicioSimX);
+            $stmt1->bindColumn('cod_cliente', $cod_clienteX);
+            $stmt1->bindColumn('cod_tipoclientenacionalidad', $cod_tipoclientenacionalidadX);
+            $stmt1->bindColumn('cod_tipocliente', $cod_tipoclienteX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -105,12 +108,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt->bindColumn('cod_area', $codAreaX);
             $stmt->bindColumn('area', $areaX);
             $stmt->bindColumn('unidad', $unidadX);
-
+            $afnorX=$afnorX;
             $oficinaGlobalX=$oficinaGlobalX;
             $codIAFX=$codIAFX;
             $codIAFSecX=$codIAFSecX;
             $cod_objetoservicioX=$cod_objetoservicioX;
             $idServicioSimX=$idServicioSimX;
+            $cod_clienteX=$cod_clienteX;
+            $cod_tipoclientenacionalidadX=$cod_tipoclientenacionalidadX;
+            $cod_tipoclienteX=$cod_tipoclienteX;
             $existeNormaText=implode(",",obtenerNormasTextSimulacionServicio($codigoSimulacionSuper));
            $anioGeneral=$anioX;
            $nombreSimulacion=$nombreX;

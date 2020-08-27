@@ -46,6 +46,7 @@ if(isset($_GET["personal_encargado"])){
   } 
 }
 
+$fechaHoraActualSitema=date("Y-m-d H:i:s");
 
 //fecha hora actual para el comprobante (SESIONES)
 $anioActual=date("Y");
@@ -136,7 +137,11 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
 //CREACION DEL COMPROBANTE
     if(isset($_GET['existe'])&&verificarEdicionComprobanteUsuario($globalUser)!=0){
-       $sqlEstadosCuenta="SELECT * from comprobantes_detalle where cod_comprobante=$codComprobante";
+       $sqlUpdateComprobantes="UPDATE comprobantes SET modified_at='$fechaHoraActualSitema',modified_by=$globalUser where codigo=$codComprobante";
+       $stmtUpdateComprobante = $dbh->prepare($sqlUpdateComprobantes);
+       $stmtUpdateComprobante->execute();
+
+       $sqlEstadosCuenta="SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante";
        $stmtEstadosCuenta = $dbh->prepare($sqlEstadosCuenta);
        $stmtEstadosCuenta->execute();
        while ($rowEsta = $stmtEstadosCuenta->fetch(PDO::FETCH_ASSOC)) {
@@ -148,7 +153,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
       
     }else{
       $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
-      VALUES ('$codComprobante', '1', '$cod_unidadX', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActual', '$userSolicitud', '$fechaHoraActual', '$userSolicitud')";
+      VALUES ('$codComprobante', '1', '$cod_unidadX', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActualSitema', '$globalUser', '$fechaHoraActualSitema', '$globalUser')";
       //echo $sqlInsert;
       $stmtInsert = $dbh->prepare($sqlInsert);
       $flagSuccessComprobante=$stmtInsert->execute();

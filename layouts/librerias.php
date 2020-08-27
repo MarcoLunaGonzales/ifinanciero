@@ -248,6 +248,19 @@
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
+            initComplete: function () {
+            // Apply the search
+            this.api().columns().every( function () {
+                var that = this;
+                if($("#area_solicitud_lista").length>0){
+                  $("#area_solicitud_lista").on( 'change', function () {
+                    if ( that.search() !== this.value ) {
+                        that.column(0).search( this.value ).draw();
+                    }
+                  });          
+                }
+            });
+            },
             "ordering": false/*,
              'scrollY': '70vh', 
              'scrollCollapse': false,
