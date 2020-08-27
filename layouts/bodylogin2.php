@@ -700,10 +700,10 @@
         var mensajeRet="La Retencion IVA debe tener al menos una factura registrada";
         for (var i = 0; i < $("#cantidad_filas").val(); i++) {
            if(parseInt($('#cod_retencion'+(i+1)).val())==parseInt($('#cod_configuracioniva').val())){
-             if(itemFacturas[i].length==0){
+             /*if(itemFacturas[i].length==0){
               cont++; 
               break;
-             }      
+             }*/      
            }else{
              if($('#cod_retencion'+(i+1)).val()==0||$('#cod_retencion'+(i+1)).val()==""){
               cont++;

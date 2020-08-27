@@ -16363,7 +16363,8 @@ function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
   }  
   if($("#modal_anio_actual").length>0){
     if($("#modal_anio_actual").length>0){
-     var parametros={"saldo":saldo,"tipo_listado":1,"codigo_lib":idLib,"anio":$("#modal_anio_actual").val()};  
+     //alert($("#modal_buscar_monto").val());
+     var parametros={"saldo":saldo,"tipo_listado":1,"codigo_lib":idLib,"anio":$("#modal_anio_actual").val(),"fecha":$("#modal_buscar_fecha").val(),"monto":$("#modal_buscar_monto").val(),"nombre":$("#modal_buscar_nombre").val()};  
     }
   }
      $.ajax({
@@ -17554,7 +17555,15 @@ function cambiarValorElementosComprobante(nuevoId,i,aux,aux2){
       console.log(" Filas "+numFilas+":"+aux2+nuevoId+"->"+aux+i);
 }
 
-function contabilizarSolicitudRecursoModal(tipo,nro,monto,cuentas,url,prov,arry){
+function contabilizarSolicitudRecursoModal(codigo,tipo,nro,monto,cuentas,url,prov,arry){
+  //var validacion=[];
+  //validacion[0]=2;
+  //validacion[1]="Error de prueba codigo:"+codigo;
+  var validacion=validarFacturasRetencionesSRAjax(codigo);
+  if(validacion[0]==1){
+    //validacion error mensaje validacion[1];
+    Swal.fire("ERROR!", validacion[1], "warning");
+  }else{
   if(tipo==1){
     $("#titulo_conta").html("Contabilizar Solicitud Recursos");
     $("#cabecera_conta").attr("style","background:#DA053C !important;color:#fff;");
@@ -17577,6 +17586,7 @@ function contabilizarSolicitudRecursoModal(tipo,nro,monto,cuentas,url,prov,arry)
    $("#urlEnvioModalConta").val(url);
    $('.selectpicker').selectpicker('refresh');
    $("#modalContabilizarSolicitudRecurso").modal("show");
+   }
   }
 function saveContaSolicitudRecursoModal(){
     var encargado = $("#personal_encargado").val();
@@ -17587,3 +17597,34 @@ function saveContaSolicitudRecursoModal(){
      iniciarCargaAjax();
      $("#modalContabilizarSolicitudRecurso").modal("hide");
   }
+
+function cambiarValorAnioFechaBuscar(){
+var anio =$("#modal_anio_actual").val();
+  if(anio!=0){
+    $("#modal_buscar_fecha").val("");
+      $("#modal_buscar_fecha").attr("min",anio+"-01-01").attr("max",anio+"-12-31");
+  }else{
+
+  }
+}
+
+function validarFacturasRetencionesSRAjax(codigo){
+  var validacion = [];
+  validacion[0]=1;
+  validacion[1]="Error al contabilizar";
+  var parametros={"codigo":codigo};
+  $.ajax({
+        async:false,
+        type: "POST",
+        dataType: 'html',
+        url: "solicitudes/ajax_validacion_SR_contabilizacion.php",
+        data: parametros,      
+        success:  function (resp) {
+          var respuesta=resp.split("####");
+           validacion[0]=respuesta[0];
+           validacion[1]=respuesta[1];
+
+        }
+    });
+  return validacion;
+}

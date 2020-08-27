@@ -347,6 +347,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
                  $retenciones[$j]['glosa']=$glosaX." - ".$glosaDetalleRetencion. " F:".$facturasSolicitud[$fac][1];
                  $retenciones[$j]['numero']=$ii; 
                  $retenciones[$j]['debe_haber']=$debehaberX;
+                 $retenciones[$j]['conf_retencion']=$rowNuevo['cod_confretencion'];
                  //echo "CODIGO FACTURA: ".$facturasSolicitud[$fac][1];
                  $j++;
                 }
@@ -394,6 +395,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
              $retenciones[$j]['glosa']=$glosaX." - ".$glosaDetalle;
              $retenciones[$j]['numero']=$ii; 
              $retenciones[$j]['debe_haber']=$debehaberX;
+             $retenciones[$j]['conf_retencion']=$rowNuevo['cod_confretencion'];
              $j++;
 
              }  
@@ -462,6 +464,23 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
                  $sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen";
                  $stmtFacturas = $dbh->prepare($sqlActualizarFaturas);
                  $stmtFacturas->execute();
+                 if($retenciones[$j]['conf_retencion']==10){
+                   $codEstadoCuenta=obtenerCodigoEstadosCuenta();
+                   //datos del proveedor para le estado de cuentas
+                   $codProveedorEstado=$codProveedor;
+                   //CREAR CUENTA AUXILIAR SI NO EXISTE 
+                   if(obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$codProveedor,$cuentaRetencion)==0){
+                     $codEstado="1";
+                     $stmtInsertAux = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente) 
+                     VALUES ('$nomProveedor', $codEstado,$cuentaRetencion, 1, $codProveedor)");
+                     $stmtInsertAux->execute();
+                   }
+                   $cuentaAuxiliarProv=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$codProveedor,$cuentaRetencion); 
+                   $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
+                   VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaRetencion', '$debeRet', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaX')";
+                   $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
+                   $stmtDetalleEstadoCuenta->execute();             
+                 }
                 }
                }
              }//FIN DE FOR RETENCIONES

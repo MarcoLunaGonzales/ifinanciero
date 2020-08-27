@@ -67,7 +67,7 @@ tfoot input {
 
         if($verificar==1){          
           // echo $verificar;
-          $sqlFacturas="SELECT lf.cod_facturaventa,(SELECT sum(f.importe) from facturas_venta f where f.codigo=lf.cod_facturaventa and f.cod_estadofactura!=2 $sqlFiltro2)as monto_fac From libretas_bancariasdetalle_facturas lf where lf.cod_libretabancariadetalle=$codigo limit 1";
+          $sqlFacturas="SELECT lf.cod_facturaventa,(SELECT sum(f.importe) from facturas_venta f where f.codigo=lf.cod_facturaventa and f.cod_estadofactura!=2 $sqlFiltro2)as monto_fac From libretas_bancariasdetalle_facturas lf join facturas_venta f on f.codigo=lf.cod_facturaventa where lf.cod_libretabancariadetalle=$codigo and f.cod_estadofactura<>2 limit 1";
           $stmtFacturas = $dbh->prepare($sqlFacturas);
           // echo $sqlFacturas;
           $stmtFacturas->execute();        

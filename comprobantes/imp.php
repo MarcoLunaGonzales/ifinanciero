@@ -222,6 +222,15 @@ $html.=  '<header class="header">'.
               '</tbody>';
 $html.=    '</table>';
 $html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 '.$nombreMonedaG.'</p>';         
+if($monedaBimon!=1){
+      $entero=floor($tDebeBol);
+      $decimal=$tDebeBol-$entero;
+      $centavos=round($decimal*100);
+      if($centavos<10){
+        $centavos="0".$centavos;
+      }
+ $html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Dólares</p>';          
+}
 $html.='</body>'.
       '</html>';
 //detectando el error 

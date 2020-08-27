@@ -22,7 +22,7 @@ if(isset($_GET['codigo_lib'])){
   $codLibretaBan=$_GET['codigo_lib'];
 }
 if(isset($_GET['anio'])){
-  $lista=obtenerObtenerLibretaBancariaIndividualAnio($codLibretaBan,$_GET['anio']);  
+  $lista=obtenerObtenerLibretaBancariaIndividualAnio($codLibretaBan,$_GET['anio'],$_GET['fecha'],$_GET['monto'],$_GET['nombre']);  
 }else{
   $lista=obtenerObtenerLibretaBancariaIndividual($codLibretaBan);  
 } 
@@ -97,7 +97,7 @@ if(isset($_GET['anio'])){
               else $color_aux="background-color:#f6ddcc;";
               
               $datosEnviarModal="";
-              if($tipo_listado==1||$saldo!=0){//todo  $tipo_listado==1 || 
+              if($saldo!=0){//todo  $tipo_listado==1 || 
               $datosEnviarModal=$Fecha."####".$Descripcion." ".$InformacionComplementaria."####".number_format($monto,2)."####".number_format($saldo,2)."####".$saldo; 
                 ?>
 

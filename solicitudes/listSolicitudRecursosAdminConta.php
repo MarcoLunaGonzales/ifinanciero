@@ -4,7 +4,8 @@ require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
-
+$globalNombreGestion=$_SESSION["globalNombreGestion"];
+$globalMesActivo=$_SESSION['globalMes'];
 $userAdmin=obtenerValorConfiguracion(74);
 $dbh = new Conexion();
 if(isset($_GET['q'])){
@@ -69,7 +70,7 @@ $item_1=2708;
                   <div class="card-icon">
                     <i class="material-icons">content_paste</i>
                   </div>
-                  <h4 class="card-title"><b>Contabilización de <?=$moduleNamePlural?></b></h4>
+                  <h4 class="card-title"><b>Contabilización de <?=$moduleNamePlural?></b> - Mes y Gestión de Trabajo <b style="color:#FF0000;">[<?=nombreMes($globalMesActivo);?> - <?=$globalNombreGestion?>]</b></h4>
                 </div>
                 <div class="card-body">
                     <table class="table table-condesed" id="tablePaginator100">
@@ -313,7 +314,7 @@ $item_1=2708;
                                     
                                     ?>
                                     <!--onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>')"-->
-                                   <a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="dropdown-item">
+                                   <a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="dropdown-item">
                                       <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
                                     </a>
                                     <?php
@@ -560,7 +561,7 @@ $item_1=2708;
                                    //opciones Admin
                                     if(verificarEdicionComprobanteUsuario($globalUser)!=0){
                                     ?>
-                                    <a title="Editar Personal Procesar Pago" onclick="contabilizarSolicitudRecursoModal(2,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlEncargado?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" target="_blank" class="btn btn-default">
+                                    <a title="Editar Personal Procesar Pago" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,2,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlEncargado?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" target="_blank" class="btn btn-default">
                                       <i class="material-icons text-dark">people_alt</i>
                                     </a> 
                                     <?php  
@@ -574,7 +575,7 @@ $item_1=2708;
                                     <?php 
                                     if($otrosPagosCuenta==0){
                                     ?>
-                                   <a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&existe=<?=$codComprobante?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="btn btn-danger">
+                                   <a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&existe=<?=$codComprobante?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="btn btn-danger">
                                       <i class="material-icons">assignment_turned_in</i>
                                     </a>
                                     <?php
