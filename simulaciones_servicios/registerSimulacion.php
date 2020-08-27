@@ -711,14 +711,25 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                 if($anioGeneral==0){
                   $anioGeneral=1;
                 } 
-                //costos fijos porcentaje configuracion ***************************************************************************************
+                //costos fijos porcentaje configuracion ***************************************************************************************                                
+                $precioRegistradoAux=$precioRegistrado;
+                if($an>1){
+                    for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
+                      $sumaPrecioRegistrado=$precioRegistradoAux*($porcentajeFijoX/100);
+                      $precioRegistradoAux=$precioRegistradoAux+$sumaPrecioRegistrado;
+                    }
+                  }
+                 $porcentPreciosPeriodo=(float)number_format(($precioLocalXPeriodo*100)/($precioRegistradoAux),2,'.','');
 
-                  $sumPrecioRegistrado=$precioRegistrado*(($porcentajeFijoX/100)*($an-1));                  
-
-                 $porcentPreciosPeriodo=($precioLocalXPeriodo*100)/($precioRegistrado+$sumPrecioRegistrado);
-                 $costoFijoFinal=$totalFijo[0]*($porcentPreciosPeriodo/100);
-
-                $costoFijoPrincipalPeriodo+=$costoFijoFinal;
+                 $costoFijoRegistrado=$totalFijo[0];
+                if($an>1){
+                    for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
+                      $sumaCostoFijoRegistrado=$costoFijoRegistrado*($porcentajeFijoX/100);
+                      $costoFijoRegistrado=$costoFijoRegistrado+$sumaCostoFijoRegistrado;
+                    }
+                  }
+                 $costoFijoFinal=$costoFijoRegistrado*($porcentPreciosPeriodo/100);
+                 $costoFijoPrincipalPeriodo+=$costoFijoFinal;  
                 //fin datos para costo fijo             ***************************************************************************************
 
                 $costoTotalLocalPeriodo=$costoFijoFinal+($totalVariablePeriodo[2])+$costoVariablePersonalPeriodo;
@@ -948,23 +959,23 @@ for ($an=0; $an<=$anioGeneral; $an++) {
 				  	<div class="card-footer fixed-bottom">
             <?php 
             if(!(isset($_GET['q']))){
-            if(!isset($_GET['edit'])){
+            //if(!isset($_GET['edit'])){
               if($pUtilidadLocal>0){
               ?><a onclick="guardarServicioSimulacion()" class="btn btn-warning text-white"><i class="material-icons">send</i> Enviar Propuesta UT <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php    
               }else{
                 ?><a href="#" title="No se puede enviar Propuesta" class="btn btn-danger text-white"><i class="material-icons">warning</i> UTILIDAD NETA <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php
               }
-            }
+            //}
              ?>   
             <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
             }else{
-             if(!isset($_GET['edit'])){
+             //if(!isset($_GET['edit'])){
               if($pUtilidadLocal>0){
               ?><a onclick="guardarServicioSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta UT <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php    
               }else{
                 ?><a href="#" title="No se puede enviar Propuesta" class="btn btn-danger text-white"><i class="material-icons">warning</i> UTILIDAD NETA <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php
               }
-            }
+            //}
             ?>
             <a href="../<?=$urlList;?>&q=<?=$idServicioX?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a><?php
             }

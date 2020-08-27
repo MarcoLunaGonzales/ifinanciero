@@ -722,13 +722,24 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                   $anioGeneral=1;
                 } 
                 //costos fijos porcentaje configuracion ***************************************************************************************
+                $precioRegistradoAux=$precioRegistrado;
+                if($an>1){
+                    for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
+                      $sumaPrecioRegistrado=$precioRegistradoAux*($porcentajeFijoX/100);
+                      $precioRegistradoAux=$precioRegistradoAux+$sumaPrecioRegistrado;
+                    }
+                  }
+                 $porcentPreciosPeriodo=(float)number_format(($precioLocalXPeriodo*100)/($precioRegistradoAux),2,'.','');
 
-                  $sumPrecioRegistrado=$precioRegistrado*(($porcentajeFijoX/100)*($an-1));                  
-
-                 $porcentPreciosPeriodo=($precioLocalXPeriodo*100)/($precioRegistrado+$sumPrecioRegistrado);
-                 $costoFijoFinal=$totalFijo[0]*($porcentPreciosPeriodo/100);
-
-                $costoFijoPrincipalPeriodo+=$costoFijoFinal;
+                 $costoFijoRegistrado=$totalFijo[0];
+                if($an>1){
+                    for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
+                      $sumaCostoFijoRegistrado=$costoFijoRegistrado*($porcentajeFijoX/100);
+                      $costoFijoRegistrado=$costoFijoRegistrado+$sumaCostoFijoRegistrado;
+                    }
+                  }
+                 $costoFijoFinal=$costoFijoRegistrado*($porcentPreciosPeriodo/100);
+                 $costoFijoPrincipalPeriodo+=$costoFijoFinal; 
                 //fin datos para costo fijo             ***************************************************************************************
 
                 $costoTotalLocalPeriodo=$costoFijoFinal+($totalVariablePeriodo[2])+$costoVariablePersonalPeriodo;
