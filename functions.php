@@ -8147,7 +8147,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio){
     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {    
         $valor=$monto;
     }  
-    $valor=round($valor, 0);
+    $valor=round($valor, 2);
     return($valor);
   }
   function obtenerNombreEstudiante($ci_estudiante){
@@ -9253,7 +9253,7 @@ function obtenerEstadoComprobante($codigo){
       return implode("\n ", $valor);
     }
 
-function obtenerResumenDistribucionSR($codigo){
+  function obtenerResumenDistribucionSR($codigo){
     $dbh = new Conexion();
     $stmt = $dbh->prepare("SELECT d.porcentaje,d.tipo_distribucion,d.oficina_area 
       from distribucion_gastos_solicitud_recursos d 
@@ -9292,4 +9292,63 @@ function obtenerResumenDistribucionSR($codigo){
    }
     return $detalle;
   }
+
+  function validacion_facturas_cajachica($cod_cajachica){
+    $dbh = new Conexion();
+    $cod_retencion=obtenerValorConfiguracion(53);
+      $sqlVerifRetencion="SELECT cc.nro_documento,(select (sum(f.importe)-sum(f.exento)-sum(f.tasa_cero)-sum(f.ice)) from facturas_detalle_cajachica f where f.cod_cajachicadetalle=cc.codigo) importe_factura,(select sum(g.importe) from detalle_cajachica_gastosdirectos g where g.cod_cajachicadetalle=cc.codigo) as importe_gasto_directo, cc.monto from caja_chicadetalle cc where cc.cod_cajachica=$cod_cajachica and cc.cod_tipodoccajachica=$cod_retencion and cc.cod_estadoreferencial=1;";
+      // echo $sqlVerifRetencion;
+    $stmtVerifRetencion = $dbh->prepare($sqlVerifRetencion);
+    $stmtVerifRetencion->execute();
+    $contadorRentencion=0;
+    $stringRetenciones="";
+    while($rowVeriRetencion = $stmtVerifRetencion->fetch()) 
+    {       
+      $nro_documento=$rowVeriRetencion['nro_documento'];
+      $importe_gasto_directo_x=$rowVeriRetencion['importe_gasto_directo'];      
+      if($importe_gasto_directo_x==null || $importe_gasto_directo_x=='')$importe_gasto_directo_x=0;
+      $importe_factura_x=$rowVeriRetencion['importe_factura']+$importe_gasto_directo_x;
+
+      $monto_x=$rowVeriRetencion['monto'];
+      $importe_factura_x=round($importe_factura_x, 2);
+      if($importe_factura_x!=$monto_x){
+        $contadorRentencion++;
+        $stringRetenciones.="Nro. Documento: ".$nro_documento."<br>";
+      }
+    }
+    $string_valor=$contadorRentencion."#####@@@@@".$stringRetenciones;
+    return $string_valor;
+  }
+  function validacion_estadoscuenta_cajachica($cod_cajachica){
+    $dbh = new Conexion();
+    $cod_retencion=obtenerValorConfiguracion(53);
+      $sql="SELECT c.codigo,c.cod_cuenta,c.nro_documento,(select b.numero from plan_cuentas b where b.codigo=c.cod_cuenta) as numero_cuenta from caja_chicadetalle c where c.cod_estadoreferencial=1 and  c.cod_cajachica=$cod_cajachica";
+      // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $contadorRentencion=0;
+    $stringRetenciones="";
+    while($row = $stmt->fetch()) 
+    {       
+      $codigo_det=$row['codigo'];
+      $cod_cuenta_x=$row['cod_cuenta'];      
+      $nro_documento_x=$row['nro_documento'];   
+      $numero_cuenta_x=$row['numero_cuenta'];      
+      $digito=$numero_cuenta_x[0];
+      if($digito==2){//cuenta pasiva
+        $sql="SELECT count(*)as cont from  estados_cuenta where cod_cajachicadetalle=$codigo_det";
+        $stmtVerifRetencion = $dbh->prepare($sql);
+        $stmtVerifRetencion->execute();
+        $result=$stmtVerifRetencion->fetch();
+        $cont_estados=$result['cont'];
+        if($cont_estados==0){
+          $contadorRentencion++;
+          $stringRetenciones.="Nro. Documento: ".$nro_documento_x."<br>";
+        }
+      }
+    }    
+    $string_valor=$contadorRentencion."#####@@@@@".$stringRetenciones;
+    return $string_valor;
+  }
+
 ?>

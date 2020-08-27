@@ -61,7 +61,7 @@ if($nombre_tipo_contrato=="CONTRATO INDEFINIDO"){
 	// 		$anio=$anio+1;
 	// 	}
 	// }
-	// $fecha_fincontrato="INDEFINIDO";
+	$fecha_fincontrato="INDEFINIDO";
 	// $fecha_fincontrato_x=$anio."-".$mes."-01";
 	// switch ($mes) {
 	// 	case 2:
@@ -146,8 +146,11 @@ if($nombre_tipo_contrato=="CONTRATO INDEFINIDO"){
 	// }
 	// $fecha_evaluacioncontrato=$anio_a."-".$meses_a."-".$dia_a;
 
-	$fecha_evaluacioncontrato_x= date("Y-m-d",strtotime($fecha_inicio."+ ".$duracion_meses." month")); 
-	$fecha_evaluacioncontrato = date("Y-m-d",strtotime($fecha_evaluacioncontrato_x."- 1 days")); 
+
+	$fecha_fincontrato_x= date("Y-m-d",strtotime($fecha_inicio."+ ".$duracion_meses." month")); 
+	$fecha_fincontrato = date("Y-m-d",strtotime($fecha_fincontrato_x."- 1 days")); 
+	
+	$fecha_evaluacioncontrato= date("Y-m-d",strtotime($fecha_fincontrato."- ".$val_conf_dias_alerta_def." days")); 
 }
 	// Prepare
 if($cod_estadoreferencial==1){//insertar

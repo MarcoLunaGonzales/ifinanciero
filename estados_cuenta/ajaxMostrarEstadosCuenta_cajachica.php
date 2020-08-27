@@ -76,8 +76,10 @@ if(isset($_GET['monto_cajachica'])){
      $saldo=$montoX-$credito_padre;
      $saldo=round($saldo,0);
      
+
      $fechaComprobante_x=strtotime($fechaComprobante);
      $fechaComprobante_comparar=strtotime("2020-08-01 00:00:00");
+     $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
 
      if(obtenerProveedorCuentaAux($row['cod_cuentaaux'])==""){
       $proveedorX="Sin Proveedor";
