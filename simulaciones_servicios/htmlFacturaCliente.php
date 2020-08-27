@@ -21,6 +21,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	$tipo_admin=$tipo_admin;//1 original cliente completo(abre y cierra de html), 2 original cliente (abre html), 3 copia contabilidad (cierra html), 4 original (abre y cierra html), 5 copia(abre y cierra html)
 	$tipo_impresion=2;//tipo de impresión 1 sin detalles, 2 detalladamente
 	try {
+		//cabecera factura
 		if($auxiliar==1){//
 		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf where sf.codigo=$codigo");
 		    $stmtInfo->execute();
@@ -98,10 +99,10 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		//para generar factura
 		$stmtDesCli = $dbh->prepare("SELECT sf.cantidad,sf.descripcion_alterna,sf.precio,sf.descuento_bob from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
 		$stmtDesCli->execute();
-		$stmt2DesCli = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
-		$stmt2DesCli->execute();
-		$stmt3DesCli = $dbh->prepare("SELECT sf.precio,sf.descuento_bob,sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
-		$stmt3DesCli->execute();
+		// $stmt2DesCli = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
+		// $stmt2DesCli->execute();
+		// $stmt3DesCli = $dbh->prepare("SELECT sf.precio,sf.descuento_bob,sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
+		// $stmt3DesCli->execute();
 		//primero guardamos la factura del cliente
 		$nit_empresa=obtenerValorConfiguracionFactura(9);
 		if($cod_solicitudfacturacion==-100){

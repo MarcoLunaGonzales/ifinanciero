@@ -103,10 +103,19 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 			$tipo_solicitud=obtenerTipoSolicitud($cod_solicitud);
 		}
 
-		if($tipo_solicitud==7){
+		if($tipo_solicitud==7 && ($tipo_admin==6 || $tipo_admin==7 || $tipo_admin==8 || $tipo_admin==9)){
 			$stmtDesCli = $dbh->prepare("SELECT s.descripcion_alterna,1 as cantidad,ci_estudiante,(sum(s.cantidad*s.precio)) as precio, 0 as descuento_bob from solicitudes_facturaciondetalle s  where s.cod_solicitudfacturacion=$cod_solicitud group by s.ci_estudiante;");
 			$stmtDesCli->execute();
-		}else{
+		}elseif($tipo_admin==10){//formato 3 de clientes
+			$stmtDesFac = $dbh->prepare("SELECT sf.observaciones_2 from facturas_venta f, solicitudes_facturacion sf where f.cod_solicitudfacturacion=sf.codigo and f.codigo=$cod_factura");
+			$stmtDesFac->execute();
+			$resultDesFac=$stmtDesFac->fetch();
+			$observaciones_x=$resultDesFac['observaciones_2'];
+			$cantidad_x=1;
+			$monto_factura=$importe=sumatotaldetallefactura($cod_factura);
+
+		}else{//normal
+
 			$stmtDesCli = $dbh->prepare("SELECT sf.cantidad,sf.descripcion_alterna,sf.precio,sf.descuento_bob from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
 			$stmtDesCli->execute();		
 		}
@@ -123,7 +132,7 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 		}
 		
 		$html = '';
-		if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==6 || $tipo_admin==4 || $tipo_admin==5 || $tipo_admin==9  || $tipo_admin==8 ){
+		if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==6 || $tipo_admin==4 || $tipo_admin==5 || $tipo_admin==9  || $tipo_admin==8 || $tipo_admin==10 ){
 			$html.='<html>'.
 			            '<head>'.
 			                '<!-- CSS Files -->'.
@@ -178,7 +187,7 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 		                    </table>
 		                    <br>
 		                    <small><span><b>';
-		                    if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==6 || $tipo_admin==4 || $tipo_admin==8){
+		                    if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==6 || $tipo_admin==4 || $tipo_admin==8 || $tipo_admin==10){
 		                    	$html.='ORIGINAL: CLIENTE<br><br>';
 		                    }else{
 		                    	$html.='COPIA: CONTABILIDAD<br><br>';
@@ -211,41 +220,53 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 						// 	'<td valign="top" height="8%" class="text-right"><h5 style="padding: 0px;margin: 0px;">'.formatNumberDec($importe).'</h5></td>';
 						// 	$suma_total+=$importe;
 						// }else{//imporesion detallada
-              	        $contador_items=0;
-              	        // $cantidad_por_defecto=20;//cantidad de items por defecto
-              	        // $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defect
-              	        $cantidad_por_defecto=20;//cantidad de items por defect
-              	        // $cantidad_por_defecto=obtenerValorConiguracion(66);//cantidad de items por defectoo
+              	        $contador_items=0;              	        
+              	        // $cantidad_por_defecto=20;//cantidad de items por defect
+              	        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defectoo
+              	        if($tipo_admin!=10){
+              	        	while ($row = $stmtDesCli->fetch()) 
+							{
+								$html.='<tr>';
+								$html.='<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden;border-top: hidden; font-size: 8px;">';
+								$html.=formatNumberDec($row["cantidad"]);
+								$html.='</td> 
+								<td valign="top" colspan="2" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
+								$html.=mb_strtoupper($row["descripcion_alterna"]);
+								$html.='</td>                   
+								<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
+								$precio=$row["precio"];
+								$descuento_bob=$row["descuento_bob"];
+								$cantidad=$row["cantidad"];
+								$precio=$precio*$cantidad-$descuento_bob;
 
-	               		while ($row = $stmtDesCli->fetch()) 
-						{
-							$html.='<tr>';
+								$html.=formatNumberDec($precio);
+								$suma_total+=$precio;
+								$html.='</td>';
+								$html.='</tr>';
+								$contador_items++;
+							}
+              	        }else{
+              	        	$html.='<tr>';
 							$html.='<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden;border-top: hidden; font-size: 8px;">';
-							$html.=formatNumberDec($row["cantidad"]);
+							$html.=formatNumberDec($cantidad_x);
 							$html.='</td> 
 							<td valign="top" colspan="2" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
-							$html.=mb_strtoupper($row["descripcion_alterna"]);
+							$html.=mb_strtoupper($observaciones_x);
 							$html.='</td>                   
 							<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
-							$precio=$row["precio"];
-							$descuento_bob=$row["descuento_bob"];
-							$cantidad=$row["cantidad"];
-							$precio=$precio*$cantidad-$descuento_bob;
-
+							$precio=$monto_factura;
 							$html.=formatNumberDec($precio);
-							$suma_total+=$precio;
+							$suma_total=$precio;
 							$html.='</td>';
 							$html.='</tr>';
 							$contador_items++;
-						}
+              	        }
+	               		
 						for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
 							// $html.='&nbsp;<br>';
 							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td></tr>';
 						}	
-               				
-
-
-
+               			
 							$importe=$suma_total;
 						// } 
                 	// $html.='</tr>';            
@@ -292,7 +313,7 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 	        </table>';
 		$html.='</div>';
 		// $html.='<hr>';//temporal
-        if($tipo_admin==1 || $tipo_admin==3 || $tipo_admin==7 || $tipo_admin==4 || $tipo_admin==5 || $tipo_admin==9 || $tipo_admin==8){
+        if($tipo_admin==1 || $tipo_admin==3 || $tipo_admin==7 || $tipo_admin==4 || $tipo_admin==5 || $tipo_admin==9 || $tipo_admin==8 || $tipo_admin==10){
         	// $html.='</header>';
 			$html.='</body>'.
 			      '</html>';   
