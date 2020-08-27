@@ -9361,4 +9361,34 @@ function obtenerEstadoComprobante($codigo){
     return $string_valor;
   }
 
+function verificarImporteMayorAlPresupuestado($codigo){
+      $dbh = new Conexion();
+      $sql="SELECT l.importe FROM (SELECT sum(sd.importe_presupuesto) as presupuesto,sum(sd.importe) as importe FROM solicitud_recursosdetalle sd
+join solicitud_recursos s
+on s.codigo=sd.cod_solicitudrecurso 
+where sd.cod_solicitudrecurso=$codigo
+and (s.cod_simulacionservicio!=0 or s.cod_simulacion!=0 or s.cod_proveedor!=0)) l
+WHERE l.presupuesto>=l.importe;";  
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+        $valor++;        
+      }  
+      return $valor;
+    }
+function verificarSolicitudRecursosManual($codigo){
+   $dbh = new Conexion();
+      $sql="SELECT s.codigo FROM solicitud_recursos s  where
+      s.codigo=$codigo
+      and (s.cod_simulacionservicio!=0 or s.cod_simulacion!=0 or s.cod_proveedor!=0);";  
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+        $valor++;        
+      }  
+      return $valor;
+}    
+
 ?>

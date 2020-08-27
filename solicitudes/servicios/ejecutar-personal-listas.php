@@ -1,7 +1,8 @@
 <?php 
 require_once '../../functions.php';
 
-$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+//$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+$direccion="http://ibnored.ibnorca.org/wsibno/";
 /*ACCESO A WEB SERVICE LISTA DE PERSONAS Y PROVEEDOR IBNORCA*/
 //21-01-2020
 //LLAVES DE ACCESO AL WS

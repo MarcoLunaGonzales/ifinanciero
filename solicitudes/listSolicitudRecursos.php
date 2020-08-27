@@ -242,17 +242,24 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                      Enviado
                                     </a><?php
                                 }else{
+                                  $estadoSiguiente=6;
+                                 if(verificarSolicitudRecursosManual($codigo)!=0){
+                                     if(verificarImporteMayorAlPresupuestado($codigo)!=0){
+                                          $estadoSiguiente=4;
+                                     }
+                                 }
+
                                  if($glosa_estadoX!=""){
                                     if(isset($_GET['q'])){
                                    ?>
 
-                                    <a title="Enviar a Autorización - Solicitud Recursos" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" href='#' class="btn btn-default">
+                                    <a title="Enviar a Autorización - Solicitud Recursos" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" href='#' class="btn btn-default">
                                       <i class="material-icons">send</i>
                                     </a>
                                    <?php
                                   }else{
                                     ?>
-                                     <a title="Enviar a Autorización - Solicitud Recursos" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" href='#'  class="btn btn-default">
+                                     <a title="Enviar a Autorización - Solicitud Recursos" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" href='#'  class="btn btn-default">
                                        <i class="material-icons">send</i>
                                      </a>
                                     <?php
@@ -260,13 +267,13 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                  }else{
                                     if(isset($_GET['q'])){
                                    ?>
-                                    <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+                                    <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
                                       <i class="material-icons">send</i>
                                     </a>
                                    <?php
                                   }else{
                                     ?>
-                                     <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0'  class="btn btn-default">
+                                     <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0'  class="btn btn-default">
                                        <i class="material-icons">send</i>
                                      </a>
                                     <?php
