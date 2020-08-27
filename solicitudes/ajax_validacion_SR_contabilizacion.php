@@ -47,14 +47,16 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
    $error_facturas_fecha=1;
   }    
 }
+//validacion montos
+
 if($error_retencion>0){
   $mensajeError.="No tiene asignada la rentención, ";
 }
 if($error_facturas>0){
-  $mensajeError.="Existen retenciones IVA sin factura Asociada!, ";
+  $mensajeError.="No Existe ninguna Factura Asociada para el tipo de Retencion, ";
 }
 if($error_facturas_fecha>0){
-  $mensajeError.="La fecha de la factura no esta configurada en el Mes y Gestión de Trabajo, ";
+  $mensajeError.="La fecha de la Factura no corresponde al Mes y Gestión de Trabajo, ";
 }
 
 if($error_retencion>0||$error_facturas>0||$error_facturas_fecha>0){
