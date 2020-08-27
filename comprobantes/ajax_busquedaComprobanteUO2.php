@@ -258,6 +258,8 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
         </tbody>
       </table>
     </div>
+    <?php
+    if($estadoC!=2){?>
     <div class="card">            
       <h4 class="card-title" align="center">Detalle</h4>
       <div class="card-body">                                    
@@ -306,6 +308,8 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
         </div>
       </div>
     </div>
+    <?php }
+    ?>
   </div>
 </div>
 <script>

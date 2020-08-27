@@ -239,6 +239,8 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                 </table>
               </div>
               <!-- card detalle -->
+              <?php
+              if($estadoC!=2){?>
               <div class="card">            
                 <h4 class="card-title" align="center">Detalle</h4>                                    
                 <div class="card-body">                                    
@@ -287,6 +289,8 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                   </div>
                 </div>
               </div>
+              <?php }
+              ?>
             </div>
           </div>
         </div>

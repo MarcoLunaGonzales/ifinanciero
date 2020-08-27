@@ -35,8 +35,11 @@ $stmt->execute();
 $stmt->bindColumn('codigo', $codigo_contrato);
 $stmt->bindColumn('cod_tipocontrato', $cod_tipocontrato);
 $stmt->bindColumn('fecha_iniciocontrato_x', $fecha_iniciocontrato);
+$stmt->bindColumn('fecha_iniciocontrato', $fecha_iniciocontrato_x);
 $stmt->bindColumn('fecha_fincontrato_x', $fecha_fincontrato);
+$stmt->bindColumn('fecha_fincontrato', $fecha_fincontrato_x);
 $stmt->bindColumn('fecha_evaluacioncontrato_x', $fecha_evaluacioncontrato);
+$stmt->bindColumn('fecha_evaluacioncontrato', $fecha_evaluacioncontrato_x);
 $stmt->bindColumn('cod_estadocontrato', $cod_estadocontrato);
 $stmt->bindColumn('estado_contrato', $estado_contrato);
 $stmt->bindColumn('fecha_finalizado_x', $fecha_finalizado);
@@ -56,7 +59,7 @@ $statementTiposContratoE = $dbh->query($query_contratoE);
 $query_retiro = "select * from tipos_retiro_personal where cod_estadoreferencial=1 order by 2";
 $statementTiposRetiro = $dbh->query($query_retiro);
 
-$fecha_actual=date("Y-m-d");
+$fecha_actual=date("d/m/Y");
 ?>
 
 <div class="content">
@@ -92,7 +95,7 @@ $fecha_actual=date("Y-m-d");
                         <?php $index=1;                      
                         $datos=$cod_personal_1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {                       	
-                        	$datos=$cod_personal_1."/".$codigo_contrato."/".$fecha_iniciocontrato."/".$fecha_evaluacioncontrato;
+                        	$datos=$cod_personal_1."/".$codigo_contrato."/".$fecha_iniciocontrato_x."/".$fecha_evaluacioncontrato_x;
                         	?>
                             <tr>
                                 <td><?=$index;?></td>                                
@@ -101,19 +104,20 @@ $fecha_actual=date("Y-m-d");
                                 <td><?=$fecha_iniciocontrato;?></td>
                                 
                                 <?php
-                                  $porcionesActual = explode("-", $fecha_actual);
-                                  $anioActual= $porcionesActual[0]; // porción1
+                                  $porcionesActual = explode("/", $fecha_actual);
+                                  $anioActual= $porcionesActual[2]; // porción1
                                   $mesActual= $porcionesActual[1]; // porción2                                  
-                                  $diaActual= $porcionesActual[2]; // porción2 
+                                  $diaActual= $porcionesActual[0]; // porción2 
                                   // $cadena = "uno,dos,tres,cuatro,cinco";
                                   // $array = explode(",", $fecha_fincontrato);
-                                  if($fecha_fincontrato=="INDEFINIDO"){
+                                  if($fecha_fincontrato_x=="INDEFINIDO"){
+                                    $fecha_fincontrato=$fecha_fincontrato_x;
                                     $label='<span class="badge badge-success">';
                                     //fecha evaluacion
-                                    $porcionesEvaluacion = explode("-", $fecha_evaluacioncontrato);
-                                    $anioEvaluacion= $porcionesEvaluacion[0]; // porción1
+                                    $porcionesEvaluacion = explode("/", $fecha_evaluacioncontrato);
+                                    $anioEvaluacion= $porcionesEvaluacion[2]; // porción1
                                     $mesEvaluacion= $porcionesEvaluacion[1]; // porción2 
-                                    $diaEvaluacion= $porcionesEvaluacion[2]; // porción2
+                                    $diaEvaluacion= $porcionesEvaluacion[0]; // porción2
                                     if($anioActual==$anioEvaluacion){
                                       if($mesActual-$mesEvaluacion==-1){
                                         $label='<span class="badge badge-warning">';

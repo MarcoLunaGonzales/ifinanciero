@@ -37,7 +37,7 @@ try{
     echo "hubo un error al generar la factura";
   }
 
-  if($admin==1 || $admin==0){
+  if($admin==1 || $admin==0){//original cliente y conta 
     $htmlConta1=generarHTMLFacCliente($codigo,$auxiliar,2);  
     $array_html2=explode('@@@@@@', $htmlConta1);
     $html2=$array_html2[0];
@@ -58,7 +58,7 @@ try{
     }else{
       echo "hubo un error al generar la factura";
     }
-  }elseif($admin==2){
+  }elseif($admin==2){ //original cliente
     $htmlConta1=generarHTMLFacCliente($codigo,$auxiliar,4);  
     $array_html2=explode('@@@@@@', $htmlConta1);
     $html2=$array_html2[0];
@@ -69,7 +69,7 @@ try{
     }else{
       echo "hubo un error al generar la factura";
     }
-  }elseif($admin==3){
+  }elseif($admin==3){ //copia contabilidad
     $htmlConta1=generarHTMLFacCliente($codigo,$auxiliar,5);
     $array_html2=explode('@@@@@@', $htmlConta1);
     $html2=$array_html2[0];
@@ -80,7 +80,7 @@ try{
     }else{
       echo "hubo un error al generar la factura";
     }
-  }if($admin==4){//desde aquí para el segundo formato.
+  }if($admin==4){//desde aquí para el segundo formato. original y copia de conta
     $htmlConta1=generarHTMLFacCliente2($codigo,$auxiliar,6);  
     $array_html2=explode('@@@@@@', $htmlConta1);
     $html2=$array_html2[0];
@@ -96,12 +96,12 @@ try{
       $html2.=$array_html3[0];
     if($html2!='ERROR'){
       $cod_factura=$array_html3[1];
-      $nro_factura=$array_html3[2];    
+      $nro_factura=$array_html3[2];
       descargarPDFFacturas("IBNORCA-C".$cod_factura."-F".$nro_factura,$html2,$codigo_factura);
     }else{
       echo "hubo un error al generar la factura";
     }
-  }elseif($admin==5){
+  }elseif($admin==5){//original cliente
     $htmlConta1=generarHTMLFacCliente2($codigo,$auxiliar,8);
     $array_html2=explode('@@@@@@', $htmlConta1);
     $html2=$array_html2[0];
@@ -112,7 +112,7 @@ try{
     }else{
       echo "hubo un error al generar la factura";
     }
-  }elseif($admin==6){
+  }elseif($admin==6){//copia contabilidad
     $htmlConta1=generarHTMLFacCliente2($codigo,$auxiliar,9);
     $array_html2=explode('@@@@@@', $htmlConta1);
     $html2=$array_html2[0];
@@ -123,8 +123,19 @@ try{
     }else{
       echo "hubo un error al generar la factura";
     }
-
+  }elseif($admin==7){//original cliente, formato 3
+    $htmlConta1=generarHTMLFacCliente2($codigo,$auxiliar,10);
+    $array_html2=explode('@@@@@@', $htmlConta1);
+    $html2=$array_html2[0];
+    descargarPDFFacturas("IBNORCA-C".$cod_factura."-F".$nro_factura,$html2,$codigo_factura);
+    if($html2!='ERROR'){
+      $cod_factura=$array_html2[1];
+      $nro_factura=$array_html2[2];    
+    }else{
+      echo "hubo un error al generar la factura";
+    }
   }
+
   // //EL PDF DE FACTURA PARA MOSTRAR EN PANTALLA
   // $htmlConta1=generarHTMLFacCliente($codigo,$auxiliar,2);
   // $htmlConta1.=generarHTMLFacCliente($codigo,$auxiliar,3);

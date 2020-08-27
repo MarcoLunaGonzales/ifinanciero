@@ -130,7 +130,7 @@ $descuento_cliente=0;
                           <label class="col-sm-2 col-form-label">Oficina</label>
                           <div class="col-sm-4">
                             <div class="form-group">                                
-                                <select name="cod_uo" id="cod_uo" onChange="ajaxAFunidadorganizacionalArea_solicitud_Fact(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">                                        
+                                <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">                                        
                                     <option value=""></option>
                                     <?php 
                                     $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
@@ -145,7 +145,7 @@ $descuento_cliente=0;
                           <label class="col-sm-2 col-form-label">Area</label>
                             <div class="col-sm-4">
                                 <div class="form-group" >                                    
-                                    <div id="div_contenedor_area">
+                                    <!-- <div id="div_contenedor_area"> -->
                                         <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true"> 
                                             <?php 
                                             $sqlArea="SELECT uo.cod_unidad,uo.cod_area,a.nombre as nombre_area,a.abreviatura as abrev_area
@@ -157,7 +157,7 @@ $descuento_cliente=0;
                                                  <option <?=($cod_area==$rowArea["cod_area"])?"selected":"";?> value="<?=$rowArea["cod_area"];?>" data-subtext="(<?=$rowArea['cod_area']?>)"><?=$rowArea["abrev_area"];?> - <?=$rowArea["nombre_area"];?></option><?php 
                                             } ?>
                                         </select>                                   
-                                    </div>                    
+                                    <!-- </div>   -->                  
                                 </div>
                             </div>
                         </div>

@@ -10836,6 +10836,10 @@ function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
    $('#msgError').html("<p>El monto debe de ser llenado</p>");
    $("#modalAlert").modal("show");
   }else{
+    if(fila==1 && cuenta==0 && saldo_comprob==0){
+      iniciarCargaAjax();  
+    }
+    
     var monto_cajachica=$("#monto").val();
     itemEstadosCuentas_cc.push(fila);
     var cod_cuenta_form=$("#cuenta_auto_id").val();
@@ -10863,11 +10867,11 @@ function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
     var tipo=2;
 
     if(tipo==1){
-      $("#monto_estadocuenta").val($("#monto").val());
-      if(!($("#div_cuentasorigen").hasClass("d-none"))){
-        $("#div_cuentasorigen").addClass("d-none");
-        $("#div_cuentasorigendetalle").addClass("d-none"); 
-      }      
+      // $("#monto_estadocuenta").val($("#monto").val());
+      // if(!($("#div_cuentasorigen").hasClass("d-none"))){
+      //   $("#div_cuentasorigen").addClass("d-none");
+      //   $("#div_cuentasorigendetalle").addClass("d-none"); 
+      // }      
     }else{
       $("#monto_estadocuenta").val($("#monto").val());
       if($("#div_cuentasorigen").hasClass("d-none")){
@@ -10899,13 +10903,14 @@ function verEstadosCuentas_cajachica(fila,cuenta,saldo_comprob){
             $("#cuentas_origen").val(cod_cuenta_form+"###NNN");
             $('.selectpicker').selectpicker("refresh");
             verEstadosCuentasCred_cc();  
+            // detectarCargaAjax();
           }
           var respuesta=resp.split('@');          
           $("#div_estadocuentas").html(respuesta[0]);
           if(tipo==1){
             // var rsaldo=listarEstadosCuentas_cc(fila,respuesta[1]);
-            var rsaldo=listarEstadosCuentas_cc(fila,saldo_comprob);
-            listarEstadosCuentasDebito_cc(fila,rsaldo);
+            // var rsaldo=listarEstadosCuentas_cc(fila,saldo_comprob);
+            // listarEstadosCuentasDebito_cc(fila,rsaldo);
           }else{
             // var rsaldo=listarEstadosCuentasCredito_cc(fila,respuesta[1]);
             var rsaldo=listarEstadosCuentasCredito_cc(fila,saldo_comprob);
@@ -15399,6 +15404,10 @@ function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_compr
             }else{
               if(estado==4){
                 Swal.fire("ERROR!", "No se pudo generar el comprobante.<br>\n Error en: "+stringRetenciones+"<br>\n No tiene Factura registrada.", "warning");
+              }else{
+                if(estado==5){
+                  Swal.fire("ERROR!", "No se pudo generar el comprobante.<br>\n Error en: "+stringRetenciones+"<br>\n No tiene Estado de Cuenta Asociada.", "warning");
+                }
               }
             }
           }

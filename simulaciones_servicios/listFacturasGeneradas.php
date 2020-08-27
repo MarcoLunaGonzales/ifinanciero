@@ -169,6 +169,7 @@ $globalPersonal=$_SESSION["globalUser"];
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=4' target="_blank"><i class="material-icons text-success">print</i> Original Cliente y Copia Contabilidad</a>
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=5' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=6' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>                                    
+                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=7' target="_blank"><i class="material-icons text-warning">print</i>Copia Original 3</a>
                                     </div>
                                   </div> 
                                   <?php                               

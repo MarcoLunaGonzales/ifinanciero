@@ -26,6 +26,9 @@ switch ($cod_area) {
   case '11':    //oi
   $codigoAreaServ=107;
   break;
+  case '13':    //sec
+    $codigoAreaServ=107;
+  break;
   default:
     $codigoAreaServ=0;
     break;
@@ -42,7 +45,7 @@ switch ($cod_area) {
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php                 
-                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where vigente=1 and codigo_n1=$codigoAreaServ
+                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where vigente=1 and IdArea=$cod_area
                 UNION 
                   Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2=$codigoAdministrativos";
                 $stmt3 = $dbh->prepare($sql);
