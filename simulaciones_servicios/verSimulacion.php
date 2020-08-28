@@ -92,6 +92,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('cod_iaf_secundario', $codIAFSecX);
             $stmt1->bindColumn('cod_objetoservicio', $cod_objetoservicioX);
             $stmt1->bindColumn('idServicio', $idServicioSimX);
+            $stmt1->bindColumn('cod_cliente', $cod_clienteX);
+            $stmt1->bindColumn('cod_tipoclientenacionalidad', $cod_tipoclientenacionalidadX);
+            $stmt1->bindColumn('cod_tipocliente', $cod_tipoclienteX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -105,12 +108,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt->bindColumn('cod_area', $codAreaX);
             $stmt->bindColumn('area', $areaX);
             $stmt->bindColumn('unidad', $unidadX);
-
+            $afnorX=$afnorX;
             $oficinaGlobalX=$oficinaGlobalX;
             $codIAFX=$codIAFX;
             $codIAFSecX=$codIAFSecX;
             $cod_objetoservicioX=$cod_objetoservicioX;
             $idServicioSimX=$idServicioSimX;
+            $cod_clienteX=$cod_clienteX;
+            $cod_tipoclientenacionalidadX=$cod_tipoclientenacionalidadX;
+            $cod_tipoclienteX=$cod_tipoclienteX;
             $existeNormaText=implode(",",obtenerNormasTextSimulacionServicio($codigoSimulacionSuper));
            $anioGeneral=$anioX;
            $nombreSimulacion=$nombreX;
@@ -716,13 +722,24 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                   $anioGeneral=1;
                 } 
                 //costos fijos porcentaje configuracion ***************************************************************************************
+                $precioRegistradoAux=$precioRegistrado;
+                if($an>1){
+                    for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
+                      $sumaPrecioRegistrado=$precioRegistradoAux*($porcentajeFijoX/100);
+                      $precioRegistradoAux=$precioRegistradoAux+$sumaPrecioRegistrado;
+                    }
+                  }
+                 $porcentPreciosPeriodo=(float)number_format(($precioLocalXPeriodo*100)/($precioRegistradoAux),2,'.','');
 
-                  $sumPrecioRegistrado=$precioRegistrado*(($porcentajeFijoX/100)*($an-1));                  
-
-                 $porcentPreciosPeriodo=($precioLocalXPeriodo*100)/($precioRegistrado+$sumPrecioRegistrado);
-                 $costoFijoFinal=$totalFijo[0]*($porcentPreciosPeriodo/100);
-
-                $costoFijoPrincipalPeriodo+=$costoFijoFinal;
+                 $costoFijoRegistrado=$totalFijo[0];
+                if($an>1){
+                    for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
+                      $sumaCostoFijoRegistrado=$costoFijoRegistrado*($porcentajeFijoX/100);
+                      $costoFijoRegistrado=$costoFijoRegistrado+$sumaCostoFijoRegistrado;
+                    }
+                  }
+                 $costoFijoFinal=$costoFijoRegistrado*($porcentPreciosPeriodo/100);
+                 $costoFijoPrincipalPeriodo+=$costoFijoFinal; 
                 //fin datos para costo fijo             ***************************************************************************************
 
                 $costoTotalLocalPeriodo=$costoFijoFinal+($totalVariablePeriodo[2])+$costoVariablePersonalPeriodo;

@@ -642,10 +642,81 @@
                        <label class="col-sm-2 col-form-label">Cliente</label>
                        <div class="col-sm-10">
                         <div class="form-group">
-                          <input type="text" readonly value="<?=$nombreClienteX?>" class="form-control" name="modal_nombrecliente" id="modal_nombrecliente">                          
+                          <input type="hidden" readonly value="<?=$nombreClienteX?>" class="form-control" name="modal_nombrecliente" id="modal_nombrecliente">                          
+                          <select class="selectpicker form-control form-control-sm" data-size="4" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="mod_cliente" id="mod_cliente" data-style="btn btn-info"  required>
+          
+                                <!--<option disabled selected="selected" value="">Cliente</option>-->
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM clientes c where c.cod_estadoreferencial=1 order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  //$tipoX=$row['tipo'];
+                                  //$abrevX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>" <?=($cod_clienteX==$codigoX)?"selected":"";?>><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
                         </div>
                         </div>
                       </div>
+                      <?php 
+                       if($codAreaX==39){
+                       ?>
+                        <div class="row">
+                       <label class="col-sm-2 col-form-label">Regi&oacute;n</label>
+                       <div class="col-sm-10">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control form-control-sm" name="mod_region_cliente" id="mod_region_cliente" data-style="btn btn-info"  required>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.descripcion FROM tipos_clientenacionalidad c order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['descripcion'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>" <?=($cod_tipoclientenacionalidadX==$codigoX)?"selected":"";?>><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Tipo Cliente</label>
+                       <div class="col-sm-10">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control form-control-sm" name="mod_tipo_cliente" id="mod_tipo_cliente" data-style="btn btn-warning"  required>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM tipos_clientes c order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>" <?=($cod_tipoclienteX==$codigoX)?"selected":"";?>><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div><!--row-->
+                       <?php
+                       }
+                        ?>
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Oficina Servicio</label>
                        <div class="col-sm-5">
@@ -733,7 +804,7 @@
                                 <?php
                                 $tituloTipoServ="";
                                 $indexOb=0;
-                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 vigente=1 order by 2");
+                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 and vigente=1 order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo_n2'];
@@ -789,7 +860,23 @@
                              </div>
                            </div>  
                       </div>  
+                      <div class="row">
+                     <label class="col-sm-2 col-form-label">AFNOR</label>
+                           <div class="col-sm-10">
+                        <div class="form-group">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox" id="mod_afnor" name="mod_afnor[]" value="1" <?=($afnorX!=0)?"checked":"";?>>
+                                      <span class="form-check-sign">
+                                        <span class="check"></span>
+                                      </span>
+                                    </label>
+                                  </div>
+                                </div>  
+                             </div>     
+                        </div>
                         <?php
+
                        }else{
                         ?>
                        <div class="row">

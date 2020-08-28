@@ -10,6 +10,7 @@ if(isset($_GET['q'])){
   $u=$_GET['u'];
   $sqlAreas="";
   $sqlServicio="";
+  $sqlAreasLista="";
   if(isset($_GET['v'])){
     $v=$_GET['v'];
     $sqlServicio="and sr.idServicio=".$v;
@@ -29,8 +30,10 @@ if(isset($_GET['q'])){
     
     if($codigoArea=='0'){
       $sqlAreas="and (sr.cod_area=0 or sr.cod_area=".obtenerValorConfiguracion(65).")";             
+      $sqlAreasLista="and (a.codigo=0 or a.codigo=".obtenerValorConfiguracion(65).")";             
     }else{
-      $sqlAreas="and (sr.cod_area ".$codigoArea." or sr.cod_area=".obtenerValorConfiguracion(65).")";  
+      $sqlAreas="and (sr.cod_area ".$codigoArea." or sr.cod_area=".obtenerValorConfiguracion(65).")";
+      $sqlAreasLista="and (a.codigo ".$codigoArea." or a.codigo=".obtenerValorConfiguracion(65).")";               
     }
     //echo $s."<br>";
     //echo var_dump($arraySql);
@@ -39,6 +42,7 @@ if(isset($_GET['q'])){
 }else{
   $sqlAreas="";
   $sqlServicio="";
+  $sqlAreasLista="";
 }
 $sqlSimCosto="";
 if(isset($_GET['cod_sim'])){
@@ -79,6 +83,27 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                     <i class="material-icons">content_paste</i>
                   </div>
                   <h4 class="card-title"><b><?=$moduleNamePlural?> - Aprobación</b></h4>
+                  <?php
+                  if(isset($_GET['q'])){
+                  ?>
+                  <select class="selectpicker form-control form-control-sm float-right col-sm-2" name="area_solicitud_lista" id="area_solicitud_lista" data-style="btn btn-rose">
+                    <option disabled value="">--Areas--</option>
+                    <option selected value="">TODOS</option>
+                                     <?php
+                                         $stmtAreasLista = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo where a.cod_estado=1 $sqlAreasLista order by 2");
+                                         $stmtAreasLista->execute();
+                                         $cont=0;
+                                         while ($rowLista = $stmtAreasLista->fetch(PDO::FETCH_ASSOC)) {
+                                           $codigoX=$rowLista['codigo'];
+                                           $nombreX=$rowLista['nombre'];
+                                           $abrevX=$rowLista['abreviatura'];
+                                             ?><option value="<?=$abrevX;?>"><?=$abrevX;?></option><?php                                           
+                                         } 
+                                         ?>
+                    </select>
+                    <?php
+                    }
+                  ?>
                 </div>
                 <div class="card-body">
                     <table class="table table-condesed" id="tablePaginator">

@@ -100,7 +100,8 @@ $bgClase="bg-info";
 ?>
        <div class=""><center>
         <?php if($tipoCosto==1){
-          $porCre=($_GET['porcentaje_fijo']/100)*($yyyy-1);
+          $porCre=($_GET['porcentaje_fijo']/100);//*($yyyy-1);
+
           /* DATOS PARA PRECIO EN LUGAR DE CANTIDAD AUDITORIAS*/
           $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo,$yyyy);
           $precioRegistrado=obtenerPrecioRegistradoPropuestaTCPTCS($codigo);
@@ -108,14 +109,21 @@ $bgClase="bg-info";
              $precioRegistrado=1;
           }
           $sumaPrecioRegistrado=0;
+          $precioRegistradoAux=$precioRegistrado;
+
+          
           if($yyyy>1){
+            for ($anioAumento=2; $anioAumento <= $yyyy; $anioAumento++) { 
+              $sumaPrecioRegistrado=$precioRegistradoAux*$porCre;
+              $precioRegistradoAux=$precioRegistradoAux+$sumaPrecioRegistrado;
+            }
            //$precioLocalX=($precioLocalX*$porCre)+$precioLocalX;
-           $sumaPrecioRegistrado=$precioRegistrado*$porCre;
+           //$sumaPrecioRegistrado=$precioRegistrado*$porCre;
           }
           $nAuditorias=obtenerCantidadAuditoriasPlantilla($codPlan); 
           
-          $porcentPrecios=($precioLocalX*100)/($precioRegistrado+$sumaPrecioRegistrado);  
-
+          $porcentPrecios=($precioLocalX*100)/($precioRegistradoAux);  
+          $porcentPrecios=(float)number_format($porcentPrecios,2,'.','');
           $codOficina=0;$codAreaX=0;
           $datosPlantilla=obtenerPlantillaServicioDatos($codPlan);
           while ($rowPlantilla = $datosPlantilla->fetch(PDO::FETCH_ASSOC)) {
@@ -143,7 +151,7 @@ $bgClase="bg-info";
             </tr>
             <tr>
               <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$tituloPorpuestaTCPTCS?> GESTION</td>
-              <td class="text-right"><?=number_format($precioRegistrado+$sumaPrecioRegistrado, 2, '.', ',')?></td>
+              <td class="text-right"><?=number_format($precioRegistradoAux, 2, '.', ',')?></td>
               <td class="bg-plomo">Precio</td>
               <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
               <td class="bg-plomo">Porcentaje</td>
@@ -176,16 +184,31 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     
     if($tipoCosto==1){
       if($row['calculado']==$row['local']){
-      $montoPresupuestoFila=$row['calculado']*$nAuditorias;
-      $montoCalculadoTit=($row['calculado']*$nAuditorias)*($porcentPrecios/100);
+        $precioRegistradoAux1=($row['calculado']*$nAuditorias);
+        if($yyyy>1){
+            for ($anioAumento=2; $anioAumento <= $yyyy; $anioAumento++) { 
+              $sumaPrecioRegistrado1=$precioRegistradoAux1*$porCre;
+              $precioRegistradoAux1=$precioRegistradoAux1+$sumaPrecioRegistrado1;
+            }
+          }
+      $montoPresupuestoFila=$precioRegistradoAux1;
+      $montoCalculadoTit=$precioRegistradoAux1*($porcentPrecios/100);
     }else{
-      $montoPresupuestoFila=$row['calculado']*$nAuditorias;
-      $montoCalculadoTit=($row['local']*$nAuditorias)*($porcentPrecios/100);
+      $precioRegistradoAux1=($row['local']*$nAuditorias);
+        if($yyyy>1){
+            for ($anioAumento=2; $anioAumento <= $yyyy; $anioAumento++) { 
+              $sumaPrecioRegistrado1=$precioRegistradoAux1*$porCre;
+              $precioRegistradoAux1=$precioRegistradoAux1+$sumaPrecioRegistrado1;
+            }
+          }
+      $montoPresupuestoFila=$precioRegistradoAux1;
+      $montoCalculadoTit=$precioRegistradoAux1*($porcentPrecios/100);
     }
+    //$montoPresupuestoFila=($montoCalculadoTit*100)/($porcentPrecios);
       $montoTotales+=$montoCalculadoTit;
       $montoTotalesPresupuesto+=$montoPresupuestoFila;
        $html.='<tr class="bg-plomo">'.
-                      '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
+                      '<td class="font-weight-bold text-left">'.$row['nombre'].'-'.$porcentPrecios.'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoPresupuestoFila, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit/$usd, 2, '.', ',').'</td>';
@@ -211,12 +234,26 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
          if($tipoCosto==1){
         if($row_partidas['tipo_calculo']!=1){
           $numeroCuentas="(Manual)";
-          $montoPresupuestoFila2=$row_partidas['monto_local']*$nAuditorias;
-          $montoCalculado=($row_partidas['monto_local']*$nAuditorias)*($porcentPrecios/100);
+          $precioRegistradoAux2=($row_partidas['monto_local']*$nAuditorias);
+          if($yyyy>1){
+            for ($anioAumento=2; $anioAumento <= $yyyy; $anioAumento++) { 
+              $sumaPrecioRegistrado2=$precioRegistradoAux2*$porCre;
+              $precioRegistradoAux2=$precioRegistradoAux2+$sumaPrecioRegistrado2;
+            }
+          }
+          $montoPresupuestoFil2=$precioRegistradoAux2;//+($porCre);
+          $montoCalculado=$precioRegistradoAux2*($porcentPrecios/100);
         }else{
           $numeroCuentas="(".$numeroCuentas.")";
-          $montoPresupuestoFila2=$row_partidas['monto_local']*$nAuditorias;
-          $montoCalculado=($row_partidas['monto_calculado']*$nAuditorias)*($porcentPrecios/100);
+          $precioRegistradoAux2=($row_partidas['monto_calculado']*$nAuditorias);
+          if($yyyy>1){
+            for ($anioAumento=2; $anioAumento <= $yyyy; $anioAumento++) { 
+              $sumaPrecioRegistrado2=$precioRegistradoAux2*$porCre;
+              $precioRegistradoAux2=$precioRegistradoAux2+$sumaPrecioRegistrado2;
+            }
+          }
+          $montoPresupuestoFila2=$precioRegistradoAux2;
+          $montoCalculado=$precioRegistradoAux2*($porcentPrecios/100);
         }
            $html.='<tr class="bg-info text-white">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp; '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
@@ -246,14 +283,23 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $monto=ejecutadoEgresosMes($grupoUnidad,$anio,$mesActual,$grupoArea,1,$row_cuentas['numero']);
                 //$monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mesActual,$grupoArea,0,$row_cuentas['numero']);
                }
-                
-                if($monto==null){$monto=0;}
+                $precioRegistradoAux3=$monto;
+                if($yyyy>1){
+                  for ($anioAumento=2; $anioAumento <= $yyyy; $anioAumento++) { 
+                    $sumaPrecioRegistrado3=$precioRegistradoAux3*$porCre;
+                    $precioRegistradoAux3=$precioRegistradoAux3+$sumaPrecioRegistrado3;
+                  }
+                }
+                $montoPresupuestoFila3=$precioRegistradoAux3;
+                $montoCal=$precioRegistradoAux3*($porcentPrecios/100);
+
+                if($montoPresupuestoFila3==null){$montoPresupuestoFila3=0;}
                 //$montoCal=costoModulo($monto,$mes);
-                $montoCal=$monto*($porcentPrecios/100);
+                //$montoCal=$monto*($porcentPrecios/100);
                 $html.='<tr class="">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].'</td>';
                     if($tipoCosto==1){
-                      $html.='<td class="text-right text-muted">'.number_format($monto, 2, '.', ',').'</td>';
+                      $html.='<td class="text-right text-muted">'.number_format($montoPresupuestoFila3, 2, '.', ',').'</td>';
                     }  
                 $html.='<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal/$usd, 2, '.', ',').'</td>';

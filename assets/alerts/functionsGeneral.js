@@ -8082,7 +8082,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       if($("#iaf_secundario").length>0){
         iaf_secundario=$("#iaf_secundario").val();
       }
-
+      
       var objeto_servicio="";
       if($("#objeto_servicio").length>0){
         objeto_servicio=$("#objeto_servicio").val();
@@ -8100,8 +8100,30 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
         normas_tiposerviciotext=$("#normas_tiposerviciotext").val();
       }
 
+      var mod_cliente="";
+      if($("#mod_cliente").length>0){
+        mod_cliente=$("#mod_cliente").val();
+      }
+      var mod_region_cliente="";
+      if($("#mod_region_cliente").length>0){
+        mod_region_cliente=$("#mod_region_cliente").val();
+      }
+      var mod_tipo_cliente="";
+      if($("#mod_tipo_cliente").length>0){
+        mod_tipo_cliente=$("#mod_tipo_cliente").val();
+      }
+      var mod_afnor=0;
+      if($("#mod_afnor").length>0){
+        if($("#afnor").is(':checked')){
+          mod_afnor=1;
+        }else{
+          mod_afnor=0;
+        } 
+      }
+
+      //datos afnor
       var des_serv = $("#modal_des_serv").val();
-      var parametros = {"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
+      var parametros = {"mod_afnor":mod_afnor,"mod_region_cliente":mod_region_cliente,"mod_tipo_cliente":mod_tipo_cliente,"mod_cliente":mod_cliente,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
       $.ajax({
         type:"POST",
         data:parametros,

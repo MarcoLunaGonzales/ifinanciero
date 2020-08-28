@@ -35,16 +35,34 @@ $iaf_secundario=$_POST['iaf_secundario'];
 
 $objeto_servicio=$_POST['objeto_servicio'];
 $tipo_servicio=$_POST['tipo_servicio'];
+$mod_cliente=$_POST['mod_cliente'];
+$mod_region_cliente=$_POST['mod_region_cliente'];
+$mod_tipo_cliente=$_POST['mod_tipo_cliente'];
 $normas_tiposervicio=json_decode($_POST['normas_tiposervicio']);
 $normas_tiposerviciotext=$_POST['normas_tiposerviciotext'];
+$mod_afnor=$_POST['mod_afnor'];
 
 $sqlEditSet="";
+$sqlEditSetTCP="";
 if($objeto_servicio!=""){
   $sqlEditSet=",cod_objetoservicio='$objeto_servicio'";
 }
 if($tipo_servicio!=""){
   $sqlEditSet.=",id_tiposervicio='$tipo_servicio'";
 }
+  $sqlEditSet.=",afnor='$mod_afnor'";
+
+if($mod_cliente!=""){
+  $sqlEditSetTCP.=",cod_cliente='$mod_cliente'";
+  $sqlEditSet.=",cod_cliente='$mod_cliente'";
+}
+if($mod_region_cliente!=""){
+  $sqlEditSetTCP.=",cod_tipoclientenacionalidad='$mod_region_cliente'";
+}
+if($mod_tipo_cliente!=""){
+  $sqlEditSetTCP.=",cod_tipocliente='$mod_tipo_cliente'";
+}
+
 if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
   $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=0 where cod_simulacionservicio=$codSimulacion";
   $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
@@ -53,7 +71,7 @@ if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
 
 if($_POST['tcs']==0){
   $tipo_atributo=1;
-  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos',cod_iaf_primario='$iaf_primario',cod_iaf_secundario='$iaf_secundario'
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos',cod_iaf_primario='$iaf_primario',cod_iaf_secundario='$iaf_secundario' $sqlEditSetTCP
      where codigo=$codSimulacion";
 }else{
   $tipo_atributo=2;

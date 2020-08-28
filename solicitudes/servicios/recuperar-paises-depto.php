@@ -1,6 +1,7 @@
 <?php 
 require_once '../../functions.php';
-$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+//$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+$direccion="http://ibnored.ibnorca.org/wsibno/";
 /*ACCESO AL SERVICIO WEB PAISES ESTADO CIUDAD*/
 //LLAVES DE ACCESO AL WS
 $sIde = "ifinanciero";
