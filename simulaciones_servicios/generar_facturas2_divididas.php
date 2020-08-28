@@ -5,7 +5,6 @@
     	    require '../assets/phpqrcode/qrlib.php';
     	    include '../assets/controlcode/sin/ControlCode.php';
         }
-
         //require_once 'configModule.php';
         require_once __DIR__.'/../functions.php';
         require_once __DIR__.'/../functionsGeneral.php';    
@@ -54,18 +53,19 @@
                 $resultNroFact = $stmtNroFac->fetch();    
                 $cod_facturaVenta = $resultNroFact['codigo'];
                 //insertamos detalle
-                $stmt = $dbh->prepare("SELECT sf.* from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo and codigo in ($string_cod_Det)");
-                $stmt->execute();
-                while ($row = $stmt->fetch()) 
+                $stmt5 = $dbh->prepare("SELECT sf.* from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo and codigo in ($string_cod_Det)");
+                $stmt5->execute();
+                while ($row = $stmt5->fetch()) 
                 {   
                     $cod_claservicio_x=$row['cod_claservicio'];
                     $cantidad_x=$row['cantidad'];
                     $precio_x=$row['precio'];
                     $descuento_bob_x=$row['descuento_bob'];
                     $cod_curso_x=$row['cod_curso'];//solo se guarda este campo cuando es grupal
-                    $ci_estudiante_x=$row['ci_estudiante'];//solo se guarda este campo cuando es grupal
+                    $ci_estudiante_x=$row['ci_estudiante'];
                     $estado_x=true;
                     if($tipo_solicitud==2){// la solicitud pertence capacitacion estudiantes
+                        echo $ci_estudiante_x."-".$cod_simulacion_servicio."-".$cod_claservicio_x."-".$precio_x."-".$codigo;
                         $datos=resgistrar_pago_curso($ci_estudiante_x,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$codigo);
                         $estado_x=$datos["estado"];
                         $mensaje_x=$datos["mensaje"];                    

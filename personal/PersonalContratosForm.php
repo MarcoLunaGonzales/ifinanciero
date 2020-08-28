@@ -45,18 +45,19 @@ $stmt->bindColumn('estado_contrato', $estado_contrato);
 $stmt->bindColumn('fecha_finalizado_x', $fecha_finalizado);
 $stmt->bindColumn('nombre_contrato', $nombre_contrato);
 $stmt->bindColumn('meses_contrato', $meses_contrato);
+$stmt->bindColumn('cod_finiquito', $cod_finiquito);
 
 
 
 
 //listado de contratos
-$query_contrato = "select * from tipos_contrato_personal where cod_estadoreferencial=1 order by 1";
+$query_contrato = "SELECT * from tipos_contrato_personal where cod_estadoreferencial=1 order by 1";
 $statementTiposContrato = $dbh->query($query_contrato);
 //listado de editar areas
-$query_contratoE = "select * from tipos_contrato_personal where cod_estadoreferencial=1 order by 1";
+$query_contratoE = "SELECT * from tipos_contrato_personal where cod_estadoreferencial=1 order by 1";
 $statementTiposContratoE = $dbh->query($query_contratoE);
 //listado de retiro personal
-$query_retiro = "select * from tipos_retiro_personal where cod_estadoreferencial=1 order by 2";
+$query_retiro = "SELECT * from tipos_retiro_personal where cod_estadoreferencial=1 order by 2";
 $statementTiposRetiro = $dbh->query($query_retiro);
 
 $fecha_actual=date("d/m/Y");
@@ -94,15 +95,28 @@ $fecha_actual=date("d/m/Y");
                       <tbody>
                         <?php $index=1;                      
                         $datos=$cod_personal_1;
-                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {                       	
-                        	$datos=$cod_personal_1."/".$codigo_contrato."/".$fecha_iniciocontrato_x."/".$fecha_evaluacioncontrato_x;
+                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                        	$datos=$cod_personal_1."/".$codigo_contrato."/".$fecha_iniciocontrato_x."/".$fecha_evaluacioncontrato_x."/".$fecha_fincontrato_x."/".$cod_tipocontrato;
+                          $cod_defecto_contrato_otros=obtenerValorConfiguracion(79);
+                          $cod_contradoidefinido=obtenerValorConfiguracion(80);
+                          if($cod_tipocontrato==$cod_defecto_contrato_otros){//este tipo de contrato no tiene definido cantidad de meses
+                            $datetime1=new DateTime($fecha_iniciocontrato_x);
+                            $datetime2=new DateTime($fecha_fincontrato_x);
+                            # obtenemos la diferencia entre las dos fechas
+                            $interval=$datetime2->diff($datetime1);
+                            # obtenemos la diferencia en meses
+                            $intervalMeses=$interval->format("%m");
+                            # obtenemos la diferencia en años y la multiplicamos por 12 para tener los meses
+                            $intervalAnos = $interval->format("%y")*12;
+                            $meses_contrato=$intervalMeses+$intervalAnos;
+                            // echo "hay una diferencia de ".($intervalMeses+$intervalAnos)." meses";                            
+                          }
                         	?>
                             <tr>
                                 <td><?=$index;?></td>                                
                                 <td><?=$nombre_contrato;?></td>
                                 <td><?=$meses_contrato;?></td>
                                 <td><?=$fecha_iniciocontrato;?></td>
-                                
                                 <?php
                                   $porcionesActual = explode("/", $fecha_actual);
                                   $anioActual= $porcionesActual[2]; // porción1
@@ -208,18 +222,26 @@ $fecha_actual=date("d/m/Y");
                                 <td><?=$fecha_finalizado;?></td>
                                 <td class="td-actions text-right">
                                   <?php
-                                    if($cod_estadocontrato==1){
-                                  ?>
-                                	<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalContratoFin" onclick="agregaContratoFin('<?=$datos;?>')">
-                                    <i class="material-icons" title="Finalizar Contrato">play_for_work</i>
-                                  </button>
-                                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaformPCE('<?=$datos;?>')">
-                                		<i class="material-icons" title="Editar"><?=$iconEdit;?></i>
-                                  </button>
-                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminar" onclick="agregaformPCB('<?=$datos;?>')">
-                                    <i class="material-icons" title="Eliminar"><?=$iconDelete;?></i>
-                                  </button>
-                                <?php } ?>
+                                  if($cod_estadocontrato==1){ ?>
+                                  	<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalContratoFin" onclick="agregaContratoFin('<?=$datos;?>')">
+                                      <i class="material-icons" title="Finalizar Contrato">play_for_work</i>
+                                    </button>
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaformPCE('<?=$datos;?>')">
+                                  		<i class="material-icons" title="Editar"><?=$iconEdit;?></i>
+                                    </button>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminar" onclick="agregaformPCB('<?=$datos;?>')">
+                                      <i class="material-icons" title="Eliminar"><?=$iconDelete;?></i>
+                                    </button><?php 
+                                  }else{
+                                    if($cod_finiquito==null && $cod_tipocontrato!=$cod_contradoidefinido){?>
+                                      <button class="btn btn-primary" onClick="location.href='<?=$urlFormFiniquitos;?>&codigo=0&codigo_contrato=<?=$codigo_contrato?>'"><i class="material-icons" title="Registrar Finiquito">play_for_work</i></button>
+                                    <?php }elseif($cod_finiquito==null && $cod_tipocontrato==$cod_contradoidefinido){?>
+                                      <button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>')">
+                                        <i class="material-icons" title="Retirar Personal y Registrar Finiquito">play_for_work</i>
+                                     </button>
+                                    <?php }
+                                  }?>
+
                                 </td>
                             </tr>
                         <?php $index++; } ?>            				
@@ -236,9 +258,9 @@ $fecha_actual=date("d/m/Y");
                   <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalAgregarC" onclick="agregaformPC('<?=$datos;?>')">
                       <i class="material-icons" title="Agregar Contrato">add</i>
   		             </button>
-                   <button type="button" class="btn btn-primary btn-round btn-fab" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>')">
+                  <!--  <button type="button" class="btn btn-primary btn-round btn-fab" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>')">
                       <i class="material-icons" title="Retirar Personal">play_for_work</i>
-                   </button>		                           
+                   </button>	     -->                       
                 <?php
                 }
                 ?>
@@ -261,14 +283,12 @@ $fecha_actual=date("d/m/Y");
         <h4 class="modal-title" id="myModalLabel">Agregar Contrato a Personal</h4>
       </div>
       <div class="modal-body">
-        <input type="hidden" name="codigo_personalA" id="codigo_personalA" value="0">   
-
-
+        <input type="hidden" name="codigo_personalA" id="codigo_personalA" value="0">
         <div class="row">
           <label class="col-sm-2 col-form-label" style="color:#424242">Tipo Contrato</label>
           <div class="col-sm-8">
             <div class="form-group">
-                <select name="cod_tipocontratoA" id="cod_tipocontratoA" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true">
+                <select name="cod_tipocontratoA" id="cod_tipocontratoA" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true" onChange="ajax_tiposContratoPersonal(this,1);">
                   <?php while ($row = $statementTiposContrato->fetch()){ ?>
                       <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?> - <?=$row["duracion_meses"];?> meses</option>
                   <?php } ?>
@@ -284,12 +304,12 @@ $fecha_actual=date("d/m/Y");
             </div>
           </div>
         </div>
-
-        
+        <div  id="div_contenedor_fecha_fin">          
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="registrarPC" name="registrarPC" data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
+        <button type="button" class="btn btn-success" id="registrarPC" name="registrarPC" data-dismiss="modal">Guardar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> <i class="material-icons" title="Volver">keyboard_return</i> Volver </button>
       </div>
     </div>
   </div>
@@ -327,15 +347,12 @@ $fecha_actual=date("d/m/Y");
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personalE" id="codigo_personalE" value="0">
-        <input type="hidden" name="codigo_contratoE" id="codigo_contratoE" value="0">        
-        
-
+        <input type="hidden" name="codigo_contratoE" id="codigo_contratoE" value="0">
         <div class="row">
           <label class="col-sm-2 col-form-label" style="color:#424242">Tipo Contrato</label>
           <div class="col-sm-8">
             <div class="form-group">
-              
-                <select name="cod_tipocontratoE" id="cod_tipocontratoE" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true">
+                <select name="cod_tipocontratoE" id="cod_tipocontratoE" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true" onChange="ajax_tiposContratoPersonal(this,2);">
                   <?php while ($row = $statementTiposContratoE->fetch()){ ?>
                       <option <?=($cod_tipocontrato==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?> - <?=$row["duracion_meses"];?> meses</option>
                   <?php } ?>
@@ -351,11 +368,12 @@ $fecha_actual=date("d/m/Y");
             </div>
           </div>
         </div>
-
+        <div  id="div_contenedor_fecha_fin_e">          
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" id="EditarPC"  data-dismiss="modal">Aceptar</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal"> <-- Volver </button>
+        <button type="button" class="btn btn-success" id="EditarPC"  data-dismiss="modal">Guardar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons" title="Volver">keyboard_return</i> Volver </button>
       </div>
     </div>
   </div>
@@ -412,11 +430,6 @@ $fecha_actual=date("d/m/Y");
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personalR" id="codigo_personalR" value="0">
-
-
-
-
-
         <div class="row">
           <label class="col-sm-3 col-form-label" style="color:#424242">Tipo De Retiro : </label>
           <div class="col-sm-8">
@@ -461,14 +474,16 @@ $fecha_actual=date("d/m/Y");
       cod_personalA=document.getElementById("codigo_personalA").value;
       cod_tipocontratoA=$('#cod_tipocontratoA').val();
       fecha_inicioA=$('#fecha_inicioA').val();
-      RegistrarContratoPersonal(cod_personalA,cod_tipocontratoA,fecha_inicioA);
+      fecha_finA=$('#fecha_finA').val();
+      RegistrarContratoPersonal(cod_personalA,cod_tipocontratoA,fecha_inicioA,fecha_finA);
     });
     $('#EditarPC').click(function(){
       codigo_contratoE=document.getElementById("codigo_contratoE").value;
       codigo_personalE=document.getElementById("codigo_personalE").value;
       cod_tipocontratoE=$('#cod_tipocontratoE').val();
       fecha_inicioE=$('#fecha_inicioE').val();
-      EditarContratoPersonal(codigo_contratoE,codigo_personalE,cod_tipocontratoE,fecha_inicioE);
+      fecha_finE=$('#fecha_finE').val();
+      EditarContratoPersonal(codigo_contratoE,codigo_personalE,cod_tipocontratoE,fecha_inicioE,fecha_finE);
     });
     $('#EditarEva').click(function(){
       codigo_contratoEv=document.getElementById("codigo_contratoEv").value;

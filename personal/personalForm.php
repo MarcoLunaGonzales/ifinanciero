@@ -67,6 +67,8 @@ $nombre_uo = $result['nombre_uo'];
 $nombre_area = $result['nombre_area'];
 $email_empresa = $result['email_empresa'];
 $personal_confianza = $result['personal_confianza'];
+$cuenta_bancaria = $result['cuenta_bancaria'];
+
 
 //personal discapacitado
 $stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo and cod_estadoreferencial=1");
@@ -125,13 +127,13 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Tipo Identificación</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" name="cod_tipoIdentificacion" id="cod_tipoIdentificacion" value="<?=$cod_tipoIdentificacion;?>" readonly="readonly"/>
+                                        <input class="form-control" name="cod_tipoIdentificacion" id="cod_tipoIdentificacion" value="<?=obtenerNombreIdentificacionPersona($cod_tipoIdentificacion,1);?>" readonly="readonly"/>
                                     </div>
                                 </div>
                                 <label class="col-sm-2 col-form-label">Tipo Identificación Otro</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" name="tipo_identificacionOtro" id="tipo_identificacionOtro" value="<?=$tipo_identificacionOtro;?>" readonly="readonly"/>
+                                        <input class="form-control" name="tipo_identificacionOtro" id="tipo_identificacionOtro" value="<?=obtenerNombreIdentificacionPersona($tipo_identificacionOtro,2);?>" readonly="readonly"/>
                                     </div>
                                 </div>                            
                             </div><!--fin campo tipo_identificacionOtro--> 
@@ -147,7 +149,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label" >Lugar Emision</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control"  name="cod_lugar_emision" id="cod_lugar_emision" readonly="readonly" value="<?=$cod_lugar_emision;?>"/>                                      
+                                        <input class="form-control"  name="cod_lugar_emision" id="cod_lugar_emision" readonly="readonly" value="<?=obtenerlugarEmision($cod_lugar_emision,1);?>"/>
                                     </div>
                                 </div>                            
                             </div><!--fin campo ci_lugar_emision -->
@@ -161,7 +163,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Nacionalidad</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" name="cod_nacionalidad" id="cod_nacionalidad" value="<?=$cod_nacionalidad;?>" readonly="readonly"/>
+                                        <input class="form-control" name="cod_nacionalidad" id="cod_nacionalidad" value="<?=obtenerNombreNacionalidadPersona($cod_nacionalidad,1);?>" readonly="readonly"/>
                                     </div>
                                 </div>
                             </div><!--fin campo Nacionalidad -->
@@ -169,13 +171,13 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Pais</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" name="cod_pais" id="cod_pais" value="<?=$cod_pais;?>" readonly="readonly"/>
+                                        <input class="form-control" name="cod_pais" id="cod_pais" value="<?=obtenerNombreNacionalidadPersona($cod_pais,2);?>" readonly="readonly"/>
                                     </div>
                                 </div>
                                 <label class="col-sm-2 col-form-label">Departamento</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" name="cod_departamento" id="cod_departamento" value="<?=$cod_departamento;?>" readonly="readonly"/>
+                                        <input class="form-control" name="cod_departamento" id="cod_departamento" value="<?=obtenerlugarEmision($cod_departamento,2);?>" readonly="readonly"/>
                                     </div>
                                 </div>
                             </div><!--fin campo pais y departamento -->
@@ -183,7 +185,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Ciudad</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" name="cod_ciudad" id="cod_ciudad" value="<?=$cod_ciudad;?>" readonly="readonly"/>
+                                        <input class="form-control" name="cod_ciudad" id="cod_ciudad" value="<?=obtenerNombreCiudadPersona($cod_ciudad);?>" readonly="readonly"/>
                                     </div>
                                 </div>
                                 <label class="col-sm-2 col-form-label">Otra Ciudad</label>
@@ -197,14 +199,14 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Estado Civil</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control"  name="cod_estadocivil" id="cod_estadocivil" readonly="readonly" value="<?=$cod_estadocivil;?>"/>
+                                        <input class="form-control"  name="cod_estadocivil" id="cod_estadocivil" readonly="readonly" value="<?=obtenerNombreEstadoCivilPersona($cod_estadocivil);?>"/>
                                     </div>
                                 </div>
                                 
                                 <label class="col-sm-2 col-form-label">Genero</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" name="cod_genero" id="cod_genero" readonly="readonly" value="<?=$cod_genero;?>"/>
+                                        <input class="form-control" name="cod_genero" id="cod_genero" readonly="readonly" value="<?=obtenerNombreGeneroPersona($cod_genero);?>"/>
                                     
                                     </div>
                                 </div>
@@ -463,7 +465,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 </div>
                             </div><!--fin campo nua_cua_asignado-->
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Afp</label>
+                                <label class="col-sm-2 col-form-label">AFP</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <select name="cod_tipoafp" id="cod_tipoafp"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
@@ -486,36 +488,38 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 </div>
                             </div><!--fin campo cod_tipoaporteafp-->
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Nro seguro</label>
+                                <label class="col-sm-2 col-form-label">Nro. Seguro</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
                                     <input class="form-control" type="number" name="nro_seguro" id="nro_seguro" required value="<?=$nro_seguro;?>"/>
                                 </div>
                                 </div>
-
-                                <label class="col-sm-2 col-form-label">Estado</label>
+                                <label class="col-sm-2 col-form-label">Cuenta Bancaria</label>
                                 <div class="col-sm-4">
-                                <div class="form-group">
-                                <select name="cod_estadopersonal"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
-                                <?php while ($row = $statementestados_personal->fetch()) { ?>
-                                    <option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                                <?php } ?>
-                                </select>                  
-                                </div>
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" name="cuenta_bancaria" id="cuenta_bancaria" required value="<?=$cuenta_bancaria;?>"/>
+                                    </div>
                                 </div>
                             </div><!--fin campo cod_estadopersonal-->
                             <div class="row">
+                                <label class="col-sm-2 col-form-label">Estado</label>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <select name="cod_estadopersonal"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
+                                        <?php while ($row = $statementestados_personal->fetch()) { ?>
+                                            <option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        <?php } ?>
+                                        </select>                  
+                                    </div>
+                                </div>
+
                                 <label class="col-sm-2 col-form-label">Persona Contacto</label>
-                                <div class="col-sm-7">
+                                <div class="col-sm-6">
                                 <div class="form-group">
                                     <input class="form-control" type="text" name="persona_contacto" id="persona_contacto" required value="<?=$persona_contacto;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
                                 </div>                        
                             </div><!--fin campo persona_contacto -->
-
-
-                            
-
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Tipo De Persona Con Discapacidad</label>
                                 <div class="col-sm-4">

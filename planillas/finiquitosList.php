@@ -96,7 +96,7 @@ $dbh = new Conexion();
               ?>
               <div class="card-footer fixed-bottom">
                     <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormFiniquitos;?>&codigo=0'">Registrar</button>
+                    <!-- <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormFiniquitos;?>&codigo=0'">Registrar</button> -->
               </div>
               <?php
               }

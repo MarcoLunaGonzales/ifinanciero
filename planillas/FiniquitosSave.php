@@ -13,6 +13,14 @@ try {
     $codigo = $_POST["codigo"];
     $cod_personal = $_POST["cod_personal"];
     $anios_trabajados_pagados = $_POST["anios_trabajados_pagados"];
+    $codigo_contrato = $_POST["codigo_contrato"];
+    $cod_tiporetiro = $_POST["cod_tiporetiro"];
+
+    $vacaciones_pagar = $_POST["vacaciones_pagar"];
+    $duodecimas = $_POST["duodecimas"];
+    $otros_pagar = $_POST["otros"];
+    
+    
     //$fecha_retiro = $_POST["fecha_retiro"];
     
 
@@ -22,36 +30,33 @@ try {
     $created_by = 1;//$_POST["created_by"];
     $modified_by = 1;//$_POST["modified_by"];    
     //tipo_retiro
-    $stmttipoRetiro = $dbh->prepare("SELECT cod_tiporetiro,fecha_retiro from personal_retiros where cod_personal=$cod_personal");
+    $stmttipoRetiro = $dbh->prepare("SELECT fecha_iniciocontrato,fecha_fincontrato From personal_contratos where codigo=$codigo_contrato");
     $stmttipoRetiro->execute();
     $resultRetiro =  $stmttipoRetiro->fetch();
-    $motivo_retiro = $resultRetiro['cod_tiporetiro'];
-    $fecha_retiro=$resultRetiro['fecha_retiro'];
+    $motivo_retiro = $cod_tiporetiro;
+    $fecha_retiro=$resultRetiro['fecha_fincontrato'];
+    $ing_contr_x = $resultRetiro['fecha_iniciocontrato'];
 
     $anio_retiro = date("Y", strtotime($fecha_retiro));
     $mes_retiro = date("m", strtotime($fecha_retiro));
     $dia_retiro = date("d", strtotime($fecha_retiro));
     
-    $stmtGestion = $dbh->prepare("SELECT codigo from gestiones where nombre=$anio_retiro");
-    $stmtGestion->execute();
-    $resultGestion =  $stmtGestion->fetch();
-    $cod_gestion = $resultGestion['codigo'];
-    //sacar datos del personal
-    $stmtPersonal = $dbh->prepare("SELECT ing_contr from personal where codigo=$cod_personal");
-    $stmtPersonal->execute();
-    $resultPersonal =  $stmtPersonal->fetch();
-    $ing_contr_x = $resultPersonal['ing_contr'];
-
     $anio_ingreso = date("Y", strtotime($ing_contr_x));
     $mes_ingreso = date("m", strtotime($ing_contr_x));
     $dia_ingreso = date("d", strtotime($ing_contr_x));
 
+    $stmtGestion = $dbh->prepare("SELECT codigo from gestiones where nombre=$anio_retiro");
+    $stmtGestion->execute();
+    $resultGestion =  $stmtGestion->fetch();
+    $cod_gestion = $resultGestion['codigo'];
+ 
+
     $anios_aux=$anio_ingreso+$anios_trabajados_pagados;
     $ing_contr = $anios_aux.'/'.$mes_ingreso.'/'.$dia_ingreso;
     // echo $ing_contr."-".$ing_contr_x;
-    $anio_ingreso2 = date("Y", strtotime($ing_contr));
-    $mes_ingreso2 = date("m", strtotime($ing_contr));
-    $dia_ingreso2 = date("d", strtotime($ing_contr));
+    $anio_ingreso2 = $anios_aux;
+    $mes_ingreso2 = $mes_ingreso;
+    $dia_ingreso2 = $dia_ingreso;
     //aun no hay datos de planillas
     $cod_planilla_3_atras=obtener_id_planilla($cod_gestion,($mes_retiro-3));
     $cod_planilla_2_atras=obtener_id_planilla($cod_gestion,($mes_retiro-2));
@@ -59,20 +64,17 @@ try {
     if($cod_planilla_3_atras==0 || $cod_planilla_3_atras=='')
         $sueldo_3_atras=0;
     else
-        $sueldo_3_atras=obtenerSueldomes($codigo_personal,$cod_planilla_3_atras);   
+        $sueldo_3_atras=obtenerSueldomes($cod_personal,$cod_planilla_3_atras);   
     if($cod_planilla_2_atras==0 || $cod_planilla_2_atras=='')
         $sueldo_2_atras=0;
     else
-        $sueldo_2_atras=obtenerSueldomes($codigo_personal,$cod_planilla_2_atras);    
+        $sueldo_2_atras=obtenerSueldomes($cod_personal,$cod_planilla_2_atras);    
     if($cod_planilla_1_atras==0 || $cod_planilla_1_atras=='')
         $sueldo_1_atras=0;
     else
-        $sueldo_1_atras=obtenerSueldomes($codigo_personal,$cod_planilla_1_atras);
+        $sueldo_1_atras=obtenerSueldomes($cod_personal,$cod_planilla_1_atras);
 
 
-    
-    
-    
     // $sueldo_3_atras=5843.18;//cambiar
     // $sueldo_2_atras=5843.18;//cambiar
     // $sueldo_1_atras=5843.18;//cambiar
@@ -102,8 +104,8 @@ try {
     $aguinaldo_dias_monto=($sueldo_promedio/12/30)*$aguinaldo_dias;
     $suma_aguinaldo=$aguinaldo_meses_monto+$aguinaldo_dias_monto;
     //vacaciones
-    $vacaciones_dias=20;//ver datos
-    $vacaciones_doudecimas=6.89;//ver datos
+    $vacaciones_dias=$vacaciones_pagar;
+    $vacaciones_doudecimas=$duodecimas;
 
     $vacaciones_dias_monto=$sueldo_promedio/30*$vacaciones_dias;
     $vacaciones_duodecimas_monto=$sueldo_promedio/30*$vacaciones_doudecimas;
@@ -116,7 +118,8 @@ try {
     $subsidios_meses=0;//buscar datos
     $finiquitos_a_cuenta=0;//buscar datos
 
-    $suma_otros=$servicios_adicionales+$subsidios_meses+$finiquitos_a_cuenta;
+    // $suma_otros=$servicios_adicionales+$subsidios_meses+$finiquitos_a_cuenta;
+    $suma_otros=$otros_pagar;
     //deducciones
     $porcentaje_deducciones_por_vacaciones=obtenerValorConfiguracion(14);
     $deducciones_total=-($suma_vacaciones*$porcentaje_deducciones_por_vacaciones/100);
@@ -131,8 +134,8 @@ try {
 
     
     if ($_POST["codigo"] == 0){
-        $stmt = $dbh->prepare("INSERT INTO finiquitos(cod_personal,fecha_ingreso,fecha_retiro,cod_tiporetiro,sueldo_promedio,sueldo_3_atras,sueldo_2_atras,sueldo_1_atras,indemnizacion_anios_monto,indemnizacion_meses_monto,indemnizacion_dias_monto,aguinaldo_anios_monto,aguinaldo_meses_monto,aguinaldo_dias_monto,vacaciones_dias_monto,vacaciones_duodecimas_monto,desahucio_monto,servicios_adicionales,subsidios_meses,finiquitos_a_cuenta,deducciones_total,total_a_pagar,observaciones,cod_estadoreferencial,created_by,modified_by) 
-        values (:cod_personal,:ing_contr,:fecha_retiro,:motivo_retiro,:sueldo_promedio,:sueldo_3_atras,:sueldo_2_atras,:sueldo_1_atras,:indemnizacion_anios_monto,:indemnizacion_meses_monto,:indemnizacion_dias_monto,:aguinaldo_anios_monto,:aguinaldo_meses_monto,:aguinaldo_dias_monto,:vacaciones_dias_monto,:vacaciones_duodecimas_monto,:desahucio_monto,:servicios_adicionales,:subsidios_meses,:finiquitos_a_cuenta,:deducciones_total,:total_a_pagar,:observaciones,:cod_estadoreferencial,:created_by,:modified_by)");
+        $stmt = $dbh->prepare("INSERT INTO finiquitos(cod_personal,fecha_ingreso,fecha_retiro,cod_tiporetiro,sueldo_promedio,sueldo_3_atras,sueldo_2_atras,sueldo_1_atras,indemnizacion_anios_monto,indemnizacion_meses_monto,indemnizacion_dias_monto,aguinaldo_anios_monto,aguinaldo_meses_monto,aguinaldo_dias_monto,vacaciones_dias_monto,vacaciones_duodecimas_monto,desahucio_monto,servicios_adicionales,subsidios_meses,finiquitos_a_cuenta,deducciones_total,total_a_pagar,observaciones,cod_estadoreferencial,created_by,modified_by,cod_contrato,anios_pagados,dias_vacaciones_pagar,duodecimas,otros_pagar) 
+        values (:cod_personal,:ing_contr,:fecha_retiro,:motivo_retiro,:sueldo_promedio,:sueldo_3_atras,:sueldo_2_atras,:sueldo_1_atras,:indemnizacion_anios_monto,:indemnizacion_meses_monto,:indemnizacion_dias_monto,:aguinaldo_anios_monto,:aguinaldo_meses_monto,:aguinaldo_dias_monto,:vacaciones_dias_monto,:vacaciones_duodecimas_monto,:desahucio_monto,:servicios_adicionales,:subsidios_meses,:finiquitos_a_cuenta,:deducciones_total,:total_a_pagar,:observaciones,:cod_estadoreferencial,:created_by,:modified_by,:codigo_contrato, :anios_pagados, :dias_vacaciones_pagar, :duodecimas,:otros_pagar)");
         //Bind
         $stmt->bindParam(':cod_personal', $cod_personal);
         $stmt->bindParam(':ing_contr',$ing_contr);
@@ -160,14 +163,27 @@ try {
         $stmt->bindParam(':cod_estadoreferencial',$cod_estadoreferencial);
         $stmt->bindParam(':created_by',$created_by);
         $stmt->bindParam(':modified_by',$modified_by);
+        $stmt->bindParam(':codigo_contrato',$codigo_contrato);
+
+        $stmt->bindParam(':anios_pagados',$anios_trabajados_pagados);
+        $stmt->bindParam(':dias_vacaciones_pagar',$vacaciones_pagar);
+        $stmt->bindParam(':duodecimas',$duodecimas);
+        $stmt->bindParam(':otros_pagar',$otros_pagar);
+
         $flagSuccess=$stmt->execute();
-        $tabla_id = $dbh->lastInsertId();
+        //sacamos el codigo de finiquito;
+        $stmtCodFiniquito = $dbh->prepare("SELECT codigo from finiquitos where cod_contrato=$codigo_contrato");
+        $stmtCodFiniquito->execute();
+        $resultFiniquitoCod =  $stmtCodFiniquito->fetch();
+        $cod_finiquito_x = $resultFiniquitoCod['codigo'];
+        $stmtUpdateContrato = $dbh->prepare("UPDATE personal_contratos set cod_finiquito=$cod_finiquito_x where codigo=$codigo_contrato");
+        $stmtUpdateContrato->execute();
+        
         showAlertSuccessError($flagSuccess,$urlFiniquitosList);
 
         //$stmt->debugDumpParams();
     } else {//update
-
-        $stmt = $dbh->prepare("UPDATE finiquitos set cod_personal=$cod_personal,fecha_ingreso='$ing_contr',fecha_retiro='$fecha_retiro',motivo_retiro='$motivo_retiro',sueldo_promedio=$sueldo_promedio,sueldo_3_atras=$sueldo_3_atras,sueldo_2_atras=$sueldo_2_atras,sueldo_1_atras=$sueldo_1_atras,indemnizacion_anios_monto=$indemnizacion_anios_monto,indemnizacion_meses_monto=$indemnizacion_meses_monto,indemnizacion_dias_monto=$indemnizacion_dias_monto,aguinaldo_anios_monto=$aguinaldo_anios_monto,aguinaldo_meses_monto=$aguinaldo_meses_monto,aguinaldo_dias_monto=$aguinaldo_dias_monto,vacaciones_dias_monto=$vacaciones_dias_monto,vacaciones_duodecimas_monto=$vacaciones_duodecimas_monto,desahucio_monto=$desahucio_monto,servicios_adicionales=$servicios_adicionales,subsidios_meses=$subsidios_meses,finiquitos_a_cuenta=$finiquitos_a_cuenta,deducciones_total=$deducciones_total,total_a_pagar=$total_a_pagar,observaciones='$observaciones',modified_by=$modified_by
+        $stmt = $dbh->prepare("UPDATE finiquitos set cod_personal=$cod_personal,fecha_ingreso='$ing_contr',fecha_retiro='$fecha_retiro',cod_tiporetiro='$motivo_retiro',sueldo_promedio='$sueldo_promedio',sueldo_3_atras='$sueldo_3_atras',sueldo_2_atras='$sueldo_2_atras',sueldo_1_atras='$sueldo_1_atras',indemnizacion_anios_monto='$indemnizacion_anios_monto',indemnizacion_meses_monto='$indemnizacion_meses_monto',indemnizacion_dias_monto='$indemnizacion_dias_monto',aguinaldo_anios_monto='$aguinaldo_anios_monto',aguinaldo_meses_monto='$aguinaldo_meses_monto',aguinaldo_dias_monto='$aguinaldo_dias_monto',vacaciones_dias_monto='$vacaciones_dias_monto',vacaciones_duodecimas_monto='$vacaciones_duodecimas_monto',desahucio_monto='$desahucio_monto',servicios_adicionales='$servicios_adicionales',subsidios_meses='$subsidios_meses',finiquitos_a_cuenta='$finiquitos_a_cuenta',deducciones_total='$deducciones_total',total_a_pagar='$total_a_pagar',observaciones='$observaciones',modified_by=$modified_by,anios_pagados='$anios_trabajados_pagados',dias_vacaciones_pagar='$vacaciones_pagar',duodecimas='$duodecimas',otros_pagar='$otros_pagar'
          where codigo = $codigo");
         $flagSuccess=$stmt->execute();
         
