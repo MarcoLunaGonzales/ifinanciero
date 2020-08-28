@@ -11,7 +11,7 @@ if(isset($_GET['q'])){
   $u=$_GET['u'];
   $sqlAreas="";
   $sqlServicio="";
-  if(isset($_GET['v'])){
+  if(isset($_GET['v'])&&$_GET['v']!=0){
     $v=$_GET['v'];
     $sqlServicio="and sr.idServicio=".$v;
   }else{
@@ -63,7 +63,10 @@ $stmt->bindColumn('idServicio', $idServicioX);
 $stmt->bindColumn('glosa_estado', $glosa_estadoX);
 
 ?>
+<style>
 
+
+</style>
 <div class="content">
   <div class="container-fluid">
         <div class="row">
@@ -348,7 +351,8 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                 }
 
                 if(isset($_GET['q'])){
-                ?><a href="<?=$urlRegister3;?>?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?><?=$codUrl?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><a href="#" target="_blank" class="btn btn-warning float-right"><i class="material-icons">fullscreen</i> Ver Pantalla Completa</a><?php
+                ?><a href="<?=$urlRegister3;?>?q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?><?=$codUrl?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a>
+                <a href="#" target="_blank" class="btn btn-warning float-right"><i class="material-icons">fullscreen</i> Ver Pantalla Completa</a><?php
                 }else{
                  ?><a href="#" onclick="javascript:window.open('<?=$urlRegister3;?><?=$codUrl2?>')" class="<?=$buttonNormal;?>">Registrar</a>
                   <?php

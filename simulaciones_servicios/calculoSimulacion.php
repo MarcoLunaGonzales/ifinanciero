@@ -26,11 +26,33 @@
 $costoFijoPrincipalPeriodo=0;
 for ($eee=1; $eee <=$anioGeneral; $eee++) { 
                  //costos fijos porcentaje configuracion ***************************************************************************************
-               $precioLocalXPeriodo=obtenerPrecioServiciosSimulacionPeriodo($codigo,$eee);
+               /*
                $sumPrecioRegistrado=$precioRegistrado*(($porcentajeFijoX/100)*($eee-1));                  
                  $porcentPreciosPeriodo=($precioLocalXPeriodo*100)/($precioRegistrado+$sumPrecioRegistrado);
                  $costoFijoFinal=$totalFijo[0]*($porcentPreciosPeriodo/100);
-                $costoFijoPrincipalPeriodo+=$costoFijoFinal;
+                $costoFijoPrincipalPeriodo+=$costoFijoFinal;*/
+$precioLocalXPeriodo=obtenerPrecioServiciosSimulacionPeriodo($codigo,$eee);
+
+                 //costos fijos porcentaje configuracion ***************************************************************************************                                
+                $precioRegistradoAux=$precioRegistrado;
+                if($eee>1){
+                    for ($anioAumento=2; $anioAumento <= $eee; $anioAumento++) { 
+                      $sumaPrecioRegistrado=$precioRegistradoAux*($porcentajeFijoX/100);
+                      $precioRegistradoAux=$precioRegistradoAux+$sumaPrecioRegistrado;
+                    }
+                  }
+                 $porcentPreciosPeriodo=(float)number_format(($precioLocalXPeriodo*100)/($precioRegistradoAux),2,'.','');
+
+                 $costoFijoRegistrado=$totalFijo[0];
+                if($eee>1){
+                    for ($anioAumento=2; $anioAumento <= $eee; $anioAumento++) { 
+                      $sumaCostoFijoRegistrado=$costoFijoRegistrado*($porcentajeFijoX/100);
+                      $costoFijoRegistrado=$costoFijoRegistrado+$sumaCostoFijoRegistrado;
+                    }
+                  }
+                 $costoFijoFinal=$costoFijoRegistrado*($porcentPreciosPeriodo/100);
+                 $costoFijoPrincipalPeriodo+=$costoFijoFinal;  
+                //fin datos para costo fijo             ***************************************************************************************
 }
 
 

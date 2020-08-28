@@ -809,6 +809,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
             </table>
                 <?php
             }
+            $costoTotalLocal=$costoFijoPrincipalPeriodo+(($totalVariable[2]*$alumnosX)+$costoVariablePersonal);
            ?> 
           </div>
           <br>

@@ -244,7 +244,7 @@
   <script type="text/javascript">
     $(document).ready(function() {
 
-        $('#tablePaginator').DataTable( {
+           $('#tablePaginator').DataTable( {
             "language": {
                 "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
             },
@@ -744,7 +744,12 @@
             }
         } );
     } );
+
+    $(".dataTable").addClass("hover");
+
+
   </script>
+
 
   <script type="text/javascript">
     $(document).ready(function() {
@@ -763,7 +768,29 @@
             'copy', 'csv', 'excel', 'pdf', 'print'
             ]
         } );
+
+        $('.dataTable tbody').on('click', 'tr', function () {
+          $('.dataTable tbody tr').removeClass("fila_activa_color");
+          $(this).addClass("fila_activa_color");
+          var texto= $(this).text().replace(/ /g,'').replace(/\n/g,'').substr(0,70);
+          localStorage.ClassName = texto;
+         } );
+         SetClass();
+
+
+         
     } );
+    $.extend( true, $.fn.dataTable.defaults,{
+          "stateSave":true
+         } );
+    function SetClass() {
+     //before assigning class check local storage if it has any value
+     $(".dataTable tbody tr").each(function(){
+         if($(this).text().replace(/ /g,'').replace(/\n/g,'').substr(0,70)==localStorage.ClassName){
+            $(this).addClass("fila_activa_color");
+         }
+      });
+     }
   </script>
 
 

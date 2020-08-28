@@ -384,7 +384,7 @@ echo $html;
   </table>
    
    <?php 
-    if(isset($_GET['verSim'])){
+    //if(isset($_GET['verSim'])){
       ?>
      <h4 class="font-weight-bold"><center>HONORARIOS <?=$tituloItem?> </center></h4>  
      <table class="table table-condensed table-bordered">
@@ -441,7 +441,7 @@ echo $html;
         <tr>
      </table>    
       <?php
-    }  
+    //}  
    if($tipoCosto!=1){
         ?><!--<div class="row div-center"><h4 class="font-weight-bold"><small>N&uacute;mero de personal registrado:</small> <small class="text-success"><?=$alumnos?></small></h4></div>--><?php 
     }
