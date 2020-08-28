@@ -48,7 +48,7 @@ if($nro_f!="" ){
 if($personal_p!=""){  
   $sql.=" and f.cod_personal in ($personal_p)"; 
 }
-$sql.=" order by f.fecha_factura desc;";
+$sql.=" order by f.nro_factura desc;";
 // echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();

@@ -9868,7 +9868,8 @@ function calcularTotalFilaServicio2(){
 
     //document.getElementById("descripcion_alterna"+i).value=nombre_servicio;//glosa descrip
   } 
-  var resulta=sumal;
+  var resulta=parseFloat(Math.round(sumal * 100) / 100).toFixed(2);
+  // var resulta=sumal;
   //sumamos la parte que se adiciona
 
 
@@ -9884,6 +9885,7 @@ function calcularTotalFilaServicio2(){
       importe_ajax+=parseFloat(document.getElementById("modal_importe_add"+j).value);
     }
     var suma_servicios_add=parseFloat(costos_total)+parseFloat(importe_ajax);
+    var suma_servicios_add=parseFloat(Math.round(suma_servicios_add * 100) / 100).toFixed(2);
     $("#monto_total").val(number_format(suma_servicios_add,2));
     $("#monto_total_a").val(suma_servicios_add);//tipo hidde
     // alert(importe_ajax);
@@ -9918,8 +9920,9 @@ function activarInputMontoFilaServicio_manual()
       sumal+=parseFloat(importe)*parseFloat(cantidad_x)-parseFloat(descuento_bob);
     }
   } 
-  var resulta=sumal;
-  document.getElementById("modal_totalmontoserv_costo_a").value=resulta;//si formato
+  
+  var resulta=parseFloat(Math.round(sumal * 100) / 100).toFixed(2);
+  document.getElementById("modal_totalmontoserv_costo_a").value=resulta ;//si formato
   calcularTotalFilaServicio2();
 }
 function calcularTotalFilaServicio2Costos(){
@@ -9960,7 +9963,8 @@ function calcularTotalFilaServicio2Costos(){
     
   } 
 
-  var resulta=sumal;  
+  // var resulta=sumal;
+  var resulta=parseFloat(Math.round(sumal * 100) / 100).toFixed(2);
   document.getElementById("modal_totalmontoserv_costo").value=number_format(resulta,2);//con formato
   document.getElementById("modal_totalmontoserv_costo_a").value=resulta;//si formato
   document.getElementById("modal_totalmontoserv_pagado").value=number_format(suma_pagado,2);
@@ -11629,11 +11633,11 @@ function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacio
     }
   });
 }
-function actualizar_factura(cod_facturaventa_e,razon_social_e){
+function actualizar_factura(cod_facturaventa_e,razon_social_e,glosa_factura3_e){
   iniciarCargaAjax();
   $.ajax({
     type:"POST",
-    data:"cod_facturaventa_e="+cod_facturaventa_e+"&razon_social_e="+razon_social_e,
+    data:"cod_facturaventa_e="+cod_facturaventa_e+"&razon_social_e="+razon_social_e+"&glosa_factura3_e="+glosa_factura3_e,
     url:"simulaciones_servicios/generarFacturas_editsave.php",
     success:function(r){      
       detectarCargaAjax();
@@ -13494,6 +13498,7 @@ function agregarDatosModalTipoPagoFacturacion(sw_auxiliar){
   }else{
     var monto_total=$("#monto_total_a").val();    
   }
+  monto_total=parseFloat(Math.round(monto_total * 100) / 100).toFixed(2);
   if(monto_total<=0 || monto_total==null || monto_total==''){
     // $('#modalTipoPagoPorcentaje').modal('hide');
     Swal.fire("Informativo!", "El monto Total NO debe ser 0 o número negativo!", "warning");
@@ -13958,6 +13963,13 @@ function calcularTotalFilaAreasModal(){
   var diferencia_porcentaje_areas = 100 - suma_porcentaje;
   $("#total_diferencia_porcentaje_areas").val(number_format(diferencia_porcentaje_areas,2));//con formato
   $("#total_diferencia_bob_areas").val(number_format(diferencia_bob_areas,2));//con formato
+  if(diferencia_porcentaje_areas==0){
+    $("#total_diferencia_porcentaje_areas").css("background-color", "   #6ccf93");
+    $("#total_diferencia_bob_areas").css("background-color", "  #6ccf93");
+  }else{
+    $("#total_diferencia_porcentaje_areas").css("background-color", "#F5A9A9;");
+    $("#total_diferencia_bob_areas").css("background-color", "#F5A9A9;");
+  }
 }
 function savePorcentajeAreas(){
   var porcentaje_dif=$('#total_diferencia_porcentaje_areas').val();
@@ -16016,6 +16028,7 @@ function modal_editarFactura_sf(datos){
   document.getElementById("nro_factura_e").value=d[0];
   document.getElementById("razon_social_e").value=d[1];
   document.getElementById("cod_facturaventa_e").value=d[2];
+  document.getElementById("glosa_factura3_e").value=d[3];
 }
 function modal_editar_sf_conta(datos){    
   var d=datos.split('###');  

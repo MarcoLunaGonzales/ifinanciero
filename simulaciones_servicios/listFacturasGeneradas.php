@@ -10,7 +10,7 @@ $globalPersonal=$_SESSION["globalUser"];
 
   //datos registrado de la simulacion en curso
   $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal
- from facturas_venta f where cod_estadofactura in (1,2,3) order by  f.fecha_factura desc limit 50");
+ from facturas_venta f where cod_estadofactura in (1,2,3) order by  f.nro_factura desc limit 50");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_factura);
   $stmt->bindColumn('cod_sucursal', $cod_sucursal);
@@ -36,6 +36,7 @@ $globalPersonal=$_SESSION["globalUser"];
   // $stmt->bindColumn('cliente', $cliente);
   // $stmt->bindColumn('estadofactura', $estadofactura);
   $stmt->bindColumn('cod_comprobante', $cod_comprobante);
+  $stmt->bindColumn('glosa_factura3', $glosa_factura3);
 
   date_default_timezone_set('America/La_Paz');
   if(isset($_GET['interno'])){
@@ -96,9 +97,9 @@ $globalPersonal=$_SESSION["globalUser"];
                             $fecha_fin = date("Y-m-t", strtotime($fecha_inicio)); 
                             $fecha_inicio_x= date("Y-m-d",strtotime($fecha_inicio."- ".$dias_alargo." days")); 
                             $fechaComoEntero = strtotime($fecha_factura_xy);
-                            $fecha_factura = date("Y-m-d", $fechaComoEntero);
+                            $fecha_factura_xyz = date("Y-m-d", $fechaComoEntero);
                             // echo $fecha_inicio_x."-".$fecha_fin."<br>";
-                            $sw_anular=verificar_fecha_rango($fecha_inicio_x, $fecha_fin, $fecha_factura);
+                            $sw_anular=verificar_fecha_rango($fecha_inicio_x, $fecha_fin, $fecha_factura_xyz);
                           }
                           //==
                           $nombre_personal=namePersonalCompleto($cod_personal);
@@ -196,10 +197,10 @@ $globalPersonal=$_SESSION["globalUser"];
                                     </button><?php 
                                   } 
                                   $configuracion_defecto_edit=obtenerValorConfiguracion(77);
-                                  $datos_edit=$cadenaFacturas."###".$razon_social."###".$codigos_facturas;
+                                  $datos_edit=$cadenaFacturas."###".$razon_social."###".$codigos_facturas."###".$glosa_factura3;
                                   if($cod_estadofactura!=2 && $configuracion_defecto_edit==1){?>
                                     <button rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalEditarFactura" onclick="modal_editarFactura_sf('<?=$datos_edit;?>')">
-                                      <i class="material-icons text-success" title="Editar Razón Social">edit</i> Editar Razón Social
+                                      <i class="material-icons text-success" title="Editar Razón Social">edit</i> Editar Factura
                                     </button><?php 
                                   }?>
                                 </div>
@@ -525,6 +526,15 @@ $globalPersonal=$_SESSION["globalUser"];
           </div>
         </div>
 
+        <div class="row">
+          <label class="col-sm-3 text-right col-form-label" style="color:#424242">Glosa Factura 3</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <textarea name="glosa_factura3_e" id="glosa_factura3_e" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="guardarFacturaEdit" name="guardarFacturaEdit">Guardar</button>
@@ -600,14 +610,21 @@ $globalPersonal=$_SESSION["globalUser"];
 
     $('#guardarFacturaEdit').click(function(){          
       cod_facturaventa_e=document.getElementById("cod_facturaventa_e").value;
-      razon_social_e=$('#razon_social_e').val();      
+      razon_social_e=$('#razon_social_e').val();     
+      glosa_factura3_e=$('#glosa_factura3_e').val();     
+      
       // asunto=$('#asunto').val();
       // mensaje=$('#mensaje').val();      
       if(razon_social_e==null || razon_social_e=="" ||razon_social_e == 0){
         // alert("Por Favor Agregue Un correo para el envío de la Factura!");
-        Swal.fire("Informativo!", "La Razón Social No debe ir Vacío!", "warning");
+        Swal.fire("Informativo!", "La Razón Social No debe ir Vacía!", "warning");
       }else{
-        actualizar_factura(cod_facturaventa_e,razon_social_e);  
+        if(glosa_factura3_e==null || glosa_factura3_e=="" ||glosa_factura3_e == 0){
+          // alert("Por Favor Agregue Un correo para el envío de la Factura!");
+          Swal.fire("Informativo!", "La Glosa para la  Factura No debe ir Vacía!", "warning");
+        }else{
+          actualizar_factura(cod_facturaventa_e,razon_social_e,glosa_factura3_e);  
+        }
       }
     });   
   });

@@ -444,11 +444,12 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     $descripcion_alternaX=$tipoPre;
                                                     // $modal_totalmontopre+=$montoPre;
                                                     $montoPre=number_format($montoPre,2,".","");
+                                                    // $montoPre=round($montoPre,2);
                                                     //parte del controlador de check
                                                     $sw="";//para la parte de editar
                                                     $sw2="";//para registrar nuevos, impedir los ya registrados
-                                                    if($cod_facturacion>0){
-                                                        $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and tipo_solicitud=4";
+                                                    if($cod_facturacion>0){//edit
+                                                        $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and sf.tipo_solicitud=4";
                                                         // echo $sqlControlador;
                                                         $stmtControlado = $dbh->prepare($sqlControlador);
                                                        $stmtControlado->execute();                                           
@@ -461,6 +462,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                             if($tipo_item==2){
                                                                 $montoPre=$montoPre+$descuento_bobX/$cantidadPre;
                                                             }
+                                                            $montoPre=round($montoPre,2);
                                                         }
                                                     }                                                    
                                                     

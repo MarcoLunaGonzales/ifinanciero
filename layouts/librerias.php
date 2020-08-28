@@ -509,7 +509,9 @@
           }else{
             var montoTotalItems=$("#monto_total_a").val();
           }
+          var montoTotalItems=parseFloat(Math.round(montoTotalItems * 100) / 100).toFixed(2);
           var monto_modal_por_tipopago=$("#total_monto_bob_a_tipopago").val();
+          var monto_modal_por_tipopago=parseFloat(Math.round(monto_modal_por_tipopago * 100) / 100).toFixed(2);
           //si existe array de objetos transformarlo a json
           $('<input />').attr('type', 'hidden')
             .attr('name', 'tiposPago_facturacion')
@@ -543,7 +545,9 @@
                 }else{
                   var montoTotalItems=$("#monto_total_a").val();
                 }
+                var montoTotalItems=parseFloat(Math.round(montoTotalItems * 100) / 100).toFixed(2);
                 var monto_modal_por_area=$("#total_monto_bob_a_areas").val();
+                var monto_modal_por_area=parseFloat(Math.round(monto_modal_por_area * 100) / 100).toFixed(2);
                 var sw_x=true;//para ver la cantidad de las unidades
                 var mensaje='<p>Por favor verifique los montos de la distribución de porcentajes en Unidades...<p>';
                 //si existe array de objetos areas
@@ -561,11 +565,13 @@
                   if(dato!=''){                
                     var monto_total_unidades=0;              
                     var datoArea = Object.values(itemAreas_facturacion[0][i]);                
-                    var monto_area=datoArea[2];              
+                    var monto_area=datoArea[2];
+                    var monto_area=parseFloat(Math.round(monto_area * 100) / 100).toFixed(2);              
                     for(var j = 0; j < itemUnidades_facturacion[i].length; j++){
                       var dato2 = Object.values(itemUnidades_facturacion[i][j]);
                       monto_total_unidades=monto_total_unidades+parseFloat(dato2[2]);
                     }
+                    var monto_total_unidades=parseFloat(Math.round(monto_total_unidades * 100) / 100).toFixed(2);
                     if(monto_area!=monto_total_unidades){
                       // alert(monto_area+"-"+monto_total_unidades);
                       sw_x=false;

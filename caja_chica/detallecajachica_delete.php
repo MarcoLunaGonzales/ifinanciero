@@ -4,7 +4,7 @@ require_once 'styles.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
-
+$globalUser=$_SESSION["globalUser"];
 // RECIBIMOS LAS VARIABLES
 $cod_cc=$cod_cc;
 $cod_tcc=$cod_tcc;
@@ -26,7 +26,7 @@ $monto_rendicion=0;
 
 
 // Prepare
-$stmt = $dbh->prepare("UPDATE caja_chicadetalle set cod_estadoreferencial=2 where codigo=$cod_dcc");
+$stmt = $dbh->prepare("UPDATE caja_chicadetalle set cod_estadoreferencial=2,modified_by=$globalUser,modified_at=NOW() where codigo=$cod_dcc");
 $flagSuccess=$stmt->execute();
 if($flagSuccess){
 	$stmtRendicion = $dbh->prepare("UPDATE rendiciones set cod_estadoreferencial=2 where codigo=$cod_dcc");

@@ -25,7 +25,12 @@ if($flagSuccess){
     for($j=0;$j<$nF;$j++){
         $codigo_tipopago=$_POST['codigo_tipopago'.$j];
         $monto_porcentaje=$_POST['monto_porcentaje_tipopago'.$j];
-        $monto_bob=$_POST['monto_bob_tipopago'.$j];  
+        $monto_bob=$_POST['monto_bob_tipopago'.$j];          
+        $monto_bob=round($monto_bob,2);
+        if($monto_bob_mayor<$monto_bob){
+            $monto_bob_mayor=$monto_bob;
+            $tipo_pago_mayor=$codigo_tipopago;
+        }
         
         // echo "codigo_tipopago:".$codigo_tipopago."<br>";
         // echo "monto_porcentaje:".$monto_porcentaje."<br>";        

@@ -15,7 +15,8 @@ if(isset($_POST['tiposPago_facturacion'])){
         for($j=0;$j<$nF;$j++){
             $codigo_tipopago=$tiposPago_facturacion[0][$j]->codigo_tipopago;
             $monto_porcentaje=$tiposPago_facturacion[0][$j]->monto_porcentaje;
-            $monto_bob=$tiposPago_facturacion[0][$j]->monto_bob;                                
+            $monto_bob=$tiposPago_facturacion[0][$j]->monto_bob;  
+            $monto_bob=round($monto_bob,2);
             if($monto_bob_mayor<$monto_bob){
                 $monto_bob_mayor=$monto_bob;
                 $tipo_pago_mayor=$codigo_tipopago;
@@ -40,6 +41,7 @@ if($sw_auxiliar_tp==0){//cuando no haya objeto tipo de pago
     }else{
     	$monto_bob=$_POST["monto_total_a"];	
     } 
+    $monto_bob=round($monto_bob,2);
     $sqlTiposPago="INSERT INTO solicitudes_facturacion_tipospago(cod_solicitudfacturacion, cod_tipopago, porcentaje, monto) VALUES ('$cod_facturacion','$codigo_tipopago','$monto_porcentaje','$monto_bob')";
     $stmtTiposPago = $dbh->prepare($sqlTiposPago);
     $stmtTiposPago->execute();
@@ -64,7 +66,8 @@ if(isset($_POST['areas_facturacion'])){
         for($j=0;$j<$nF;$j++){
             $codigo_area=$areas_facturacion[0][$j]->codigo_areas;
             $monto_porcentaje=$areas_facturacion[0][$j]->monto_porcentaje;
-            $monto_bob=$areas_facturacion[0][$j]->monto_bob;                                
+            $monto_bob=$areas_facturacion[0][$j]->monto_bob;    
+            $monto_bob=round($monto_bob,2);                            
             if($monto_porcentaje>0){
                 if($monto_bob_mayor<$monto_bob){
                     $monto_bob_mayor=$monto_bob;
@@ -86,7 +89,8 @@ if(isset($_POST['areas_facturacion'])){
                         for($u=0;$u<$nFU;$u++){                                
                             $codigo_unidad=$unidades_facturacion[$j][$u]->codigo_unidad;
                             $monto_porcentaje_uo=$unidades_facturacion[$j][$u]->monto_porcentaje;
-                            $monto_bob_uo=$unidades_facturacion[$j][$u]->monto_bob;                                
+                            $monto_bob_uo=$unidades_facturacion[$j][$u]->monto_bob;
+                            $monto_bob_uo=round($monto_bob_uo,2);                                
                             // echo "codigo_unidad:".$codigo_unidad."<br>";
                             // echo "monto_porcentaje:".$monto_porcentaje."<br>";        
                             // echo "monto_bob:".$monto_bob."<br>";    

@@ -1,16 +1,10 @@
 <?php //ESTADO FINALIZADO
 
 require_once __DIR__.'/../conexion.php';
-// require '../assets/phpqrcode/qrlib.php';
-// include '../assets/controlcode/sin/ControlCode.php';
-
-//require_once 'configModule.php';
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
-// require_once 'executeComprobante_factura.php';
+require_once 'executeComprobante_factura.php';
 require_once '../layouts/bodylogin.php';
-
-
 require_once 'generar_facturas2_divididas.php';
 
 $dbh = new Conexion();
@@ -27,6 +21,11 @@ $codigo = $_GET["codigo"];?>
 </script>
 
 <?php
+//rollback inicia
+$SQLDATOSINSTERT=[];
+$sqlCommit="SET AUTOCOMMIT=0;";
+$stmtCommit = $dbh->prepare($sqlCommit);
+$stmtCommit->execute();
 try{
     
     //verificamos si se registró las cuentas en los tipos de pago 
@@ -45,8 +44,8 @@ try{
         // verificamos si ya se registro la factura
         $codigo_facturacion=verificamosFacturaDuplicada($codigo);
         if($codigo_facturacion==null){//no se registró            
-            //datos de la solicitud de facturacion
-            $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.codigo=$codigo");
+            //datos de la solicitud de facturacion           
+            $stmtInfo = $dbh->prepare("SELECT sf.* FROM solicitudes_facturacion sf where sf.codigo=$codigo");
             $stmtInfo->execute();
             $resultInfo = $stmtInfo->fetch();    
             $cod_simulacion_servicio = $resultInfo['cod_simulacion_servicio'];
@@ -55,35 +54,17 @@ try{
             $cod_tipoobjeto = $resultInfo['cod_tipoobjeto'];
             $cod_tipopago = $resultInfo['cod_tipopago'];
             $cod_cliente = $resultInfo['cod_cliente'];
-            
             // $cod_personal = $resultInfo['cod_personal'];
             $razon_social = $resultInfo['razon_social'];
             $nitCliente = $resultInfo['nit'];
             $observaciones = $resultInfo['observaciones'];
-            $nombre_cliente = $resultInfo['nombre_cliente'];
+            $nombre_cliente = $resultInfo['razon_social'];
             $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
-            $ci_estudiante = $resultInfo['ci_estudiante'];
-            if($nombre_cliente==null || $nombre_cliente==''){//no hay registros con ese dato
-                $stmtInfo = $dbh->prepare("SELECT sf.* FROM solicitudes_facturacion sf where sf.codigo=$codigo");
-                $stmtInfo->execute();
-                $resultInfo = $stmtInfo->fetch();    
-                $cod_simulacion_servicio = $resultInfo['cod_simulacion_servicio'];
-                $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
-                $cod_area = $resultInfo['cod_area'];
-                $cod_tipoobjeto = $resultInfo['cod_tipoobjeto'];
-                $cod_tipopago = $resultInfo['cod_tipopago'];
-                $cod_cliente = $resultInfo['cod_cliente'];
-                // $cod_personal = $resultInfo['cod_personal'];
-                $razon_social = $resultInfo['razon_social'];
-                $nitCliente = $resultInfo['nit'];
-                $observaciones = $resultInfo['observaciones'];
-                $nombre_cliente = $resultInfo['razon_social'];
-                $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
-                $ci_estudiante = $resultInfo['ci_estudiante'];
-            }
+            $ci_estudiante = $resultInfo['ci_estudiante'];  
+
             $cod_personal=$globalUser;
             $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
-            if($cod_sucursal==null || $cod_sucursal==''){//sucursal no encontrado?>
+            if($cod_sucursal==null || $cod_sucursal==''){//sucursal no encontrado ?>
                 <script>                    
                     Swal.fire("Error!","A ocurrido un error: Por favor verifique la existencia de sucursales!.", "error");
                 </script><?php 
@@ -100,22 +81,17 @@ try{
                 $nroAutorizacion = $resultInfo['nro_autorizacion'];
                 $llaveDosificacion = $resultInfo['llave_dosificacion'];
                 $fecha_limite_emision = $resultInfo['fecha_limite_emision'];
-                if($nroAutorizacion==null || $nroAutorizacion=='' || $nroAutorizacion==' '){                    
-                    ?>
+                if($nroAutorizacion==null || $nroAutorizacion=='' || $nroAutorizacion==' '){?>
                     <script>
                         Swal.fire("Error!","DOSIFICACION de sucursal No encontrada.", "error");
-                    </script>
-                    <?php
-                    //header('Location: ../index.php?opcion=listFacturasServicios');
+                    </script><?php                    
                 }else{                                    
                     //NUMERO CORRELATIVO DE FACTURA                    
                     $nro_correlativo = nro_correlativo_facturas($cod_sucursal);//solo para verificar
-                    if($nro_correlativo==0){
-                        ?>
+                    if($nro_correlativo==0){ ?>
                         <script>                            
                             Swal.fire("Error!","DOSIFICACION de sucursal incorrecta.", "error");
-                        </script>
-                        <?php
+                        </script> <?php
                     }else{
                         if(isset($_GET["cod_libreta"])){
                             $cod_libreta=$_GET["cod_libreta"];
@@ -140,7 +116,7 @@ try{
                         $cant_items_sfd=sizeof($array_codigo_detalle);
                         $nro_facturas = ceil($cant_items_sfd/$cantidad_por_defecto);
                         // $nro_facturas=2;                        
-                        if($nro_facturas>1 && !isset($_GET['cargar_pagina'])){?>
+                        if($nro_facturas>1 && !isset($_GET['cargar_pagina'])){ ?>
                             <script>
                                 Swal.fire({
                                     title: 'Advertencia!',
@@ -161,8 +137,7 @@ try{
                                         return(false);
                                     }
                                 });    
-                            </script>
-                        <?php                        
+                            </script> <?php                        
                         }else{                            
                             $contador_aux_items=0;//controla el final del array
                             $contador_aux_items_y=0;//controla el inicio del array
@@ -195,23 +170,42 @@ try{
                                     $stmtDeleteCAbeceraFactura->execute();
                                     $sqldeleteDetalleFactura="DELETE from facturas_ventadetalle where cod_facturaventa in ($stringFacturasCod)";
                                     $stmtDeleteDetalleFactura = $dbh->prepare($sqldeleteDetalleFactura);
-                                    $stmtDeleteDetalleFactura->execute();
-                                    ?>
+                                    $stmtDeleteDetalleFactura->execute(); ?>
                                     <script>Swal.fire("Error!","Hubo un error Al generar el comprobante.", "error");
                                     </script> <?php
                                 }else{
-                                    $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where codigo in ($stringFacturasCod)";                                
+                                    $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where codigo in ($stringFacturasCod)";
                                     $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-                                    $stmtUpdateLibreta->execute();
+                                    $flagSuccess=$stmtUpdateLibreta->execute();
+                                    array_push($SQLDATOSINSTERT,$flagSuccess);
                                     $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
                                     $stmtUpdate = $dbh->prepare($sqlUpdate);
                                     $flagSuccess=$stmtUpdate->execute(); 
+                                    array_push($SQLDATOSINSTERT,$flagSuccess);
                                     //enviar propuestas para la actualizacion de ibnorca
                                     $fechaHoraActual=date("Y-m-d H:i:s");
                                     $idTipoObjeto=2709;
                                     $idObjeto=2729; //facturado
                                     $obs="Solicitud Facturada";                                    
                                     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+                                    //finalizando en rollback
+                                    $errorInsertar=0;
+                                    for ($flag=0; $flag < count($SQLDATOSINSTERT); $flag++) { 
+                                        if($SQLDATOSINSTERT[$flag]==false){
+                                         $errorInsertar++;
+                                         // echo $flag;
+                                         break;
+                                        }
+                                    } 
+                                    if($errorInsertar!=0){//si hay errores deshace todo
+                                      $sqlRolBack="ROLLBACK;";
+                                      $stmtRolBack = $dbh->prepare($sqlRolBack);
+                                      $stmtRolBack->execute();
+                                    }
+                                    $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
+                                    $stmtCommit = $dbh->prepare($sqlCommit);
+                                    $stmtCommit->execute();
+
                                     header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
                                 }                            
                             }else{?>
@@ -223,12 +217,27 @@ try{
                 }
             }        
         }else{//ya se registro
-            echo "ya se registró la factura.";            
+            echo "ya se registró la factura.";  
+            $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
+            $stmtUpdate = $dbh->prepare($sqlUpdate);
+            $stmtUpdate->execute(); 
+            // $sqlRolBack="ROLLBACK;";
+            // $stmtRolBack = $dbh->prepare($sqlRolBack);
+            // $stmtRolBack->execute();          
+            $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
+            $stmtCommit = $dbh->prepare($sqlCommit);
+            $stmtCommit->execute();
             header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');            
         }
     }
 } catch(PDOException $ex){
-    echo "Un error ocurrio".$ex->getMessage();
-    echo "Error : ";
+    // echo "Un error ocurrio".$ex->getMessage();
+    // echo "Error : ";
+    $sqlRolBack="ROLLBACK;";
+    $stmtRolBack = $dbh->prepare($sqlRolBack);
+    $stmtRolBack->execute();
+    $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
+    $stmtCommit = $dbh->prepare($sqlCommit);
+    $stmtCommit->execute();
 }
 ?>

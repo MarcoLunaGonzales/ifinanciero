@@ -1,16 +1,10 @@
 <?php //ESTADO FINALIZADO
 
 require_once __DIR__.'/../conexion.php';
-// require '../assets/phpqrcode/qrlib.php';
-// include '../assets/controlcode/sin/ControlCode.php';
-
-//require_once 'configModule.php';
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
 // require_once 'executeComprobante_factura.php';
 require_once '../layouts/bodylogin.php';
-
-
 require_once 'generar_facturas2_divididas.php';
 
 $dbh = new Conexion();
@@ -21,7 +15,12 @@ date_default_timezone_set('America/La_Paz');
 $globalUser=$_SESSION["globalUser"];
 
 //RECIBIMOS LAS VARIABLES
-$codigo = $_GET["codigo"];
+$codigo = $_GET["codigo"];?>
+<script>
+    var confirmar_division_factura=0;
+</script>
+
+<?php
 try{
     
     //verificamos si se registró las cuentas en los tipos de pago 
@@ -134,65 +133,86 @@ try{
                         $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defecto
                         $cant_items_sfd=sizeof($array_codigo_detalle);
                         $nro_facturas = ceil($cant_items_sfd/$cantidad_por_defecto);
-                        // $nro_facturas=2;
-                        
-                    
-                        $contador_aux_items=0;//controla el final del array
-                        $contador_aux_items_y=0;//controla el inicio del array
-                        $variable_controlador=1;//indica la vez que entra a la funcion                        
-                        for($p=0;$p<$nro_facturas;$p++){
-                            if($codigo_error==0){//codigo de error al generar factura;
-                                if($variable_controlador==$nro_facturas){
-                                    $contador_aux_items=$cant_items_sfd;
+                        // $nro_facturas=2;                        
+                        if($nro_facturas>1 && !isset($_GET['cargar_pagina'])){?>
+                            <script>
+                                Swal.fire({
+                                    title: 'Advertencia!',
+                                    text: "La Solicitud se Dividirá en 2 Facturas ¿Desea Continuar?",
+                                    type: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonClass: 'btn btn-info',
+                                    cancelButtonClass: 'btn btn-danger',
+                                    confirmButtonText: 'Si',
+                                    cancelButtonText: 'No',
+                                    buttonsStyling: false
+                                    }).then((result) => {
+                                    if (result.value) {
+                                       location.href="generarFacturas2.php?codigo=<?=$codigo?>&cod_libreta=<?=$cod_libreta?>&cod_estadocuenta=<?=$cod_estadocuenta?>&cod_cuentaaux=<?=$cod_cuentaaux?>&cargar_pagina=1";
+                                        return(true);
+                                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                                        window.close();
+                                        return(false);
+                                    }
+                                });    
+                            </script>
+                        <?php                        
+                        }else{                            
+                            $contador_aux_items=0;//controla el final del array
+                            $contador_aux_items_y=0;//controla el inicio del array
+                            $variable_controlador=1;//indica la vez que entra a la funcion                        
+                            for($p=0;$p<$nro_facturas;$p++){
+                                if($codigo_error==0){//codigo de error al generar factura;
+                                    if($variable_controlador==$nro_facturas){
+                                        $contador_aux_items=$cant_items_sfd;
+                                    }else{
+                                        $contador_aux_items+=$cantidad_por_defecto;
+                                    }                        
+                                    $cadena_cod_facdet_1='';
+                                    for($i=$contador_aux_items_y;$i<$contador_aux_items;$i++){
+                                        $cadena_cod_facdet_1.=$array_codigo_detalle[$i].",";
+                                    }                                
+                                    $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador,$ci_estudiante);
+                                    $contador_aux_items_y+=$cantidad_por_defecto;
+                                    $variable_controlador++;
                                 }else{
-                                    $contador_aux_items+=$cantidad_por_defecto;
-                                }                        
-                                $cadena_cod_facdet_1='';
-                                for($i=$contador_aux_items_y;$i<$contador_aux_items;$i++){
-                                    $cadena_cod_facdet_1.=$array_codigo_detalle[$i].",";
-                                }                                
-                                $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador,$ci_estudiante);
-                                $contador_aux_items_y+=$cantidad_por_defecto;
-                                $variable_controlador++;
-                            }else{
-                                break;
+                                    break;
+                                }
+                            }
+                            if($codigo_error==0){
+                                $stringFacturas=obtenerStringFacturas($codigo);
+                                $stringFacturasCod=obtenerStringCodigoFacturas($codigo);
+                                $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$stringFacturas,$stringFacturasCod,$cod_libreta,$cod_estadocuenta,$cod_cuentaaux);                            
+                                if($cod_comprobante==null || $cod_comprobante=='' || $cod_comprobante==0){
+                                    $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo in ($stringFacturasCod)";
+                                    $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
+                                    $stmtDeleteCAbeceraFactura->execute();
+                                    $sqldeleteDetalleFactura="DELETE from facturas_ventadetalle where cod_facturaventa in ($stringFacturasCod)";
+                                    $stmtDeleteDetalleFactura = $dbh->prepare($sqldeleteDetalleFactura);
+                                    $stmtDeleteDetalleFactura->execute();
+                                    ?>
+                                    <script>Swal.fire("Error!","Hubo un error Al generar el comprobante.", "error");
+                                    </script> <?php
+                                }else{
+                                    $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where codigo in ($stringFacturasCod)";                                
+                                    $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+                                    $stmtUpdateLibreta->execute();
+                                    $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
+                                    $stmtUpdate = $dbh->prepare($sqlUpdate);
+                                    $flagSuccess=$stmtUpdate->execute(); 
+                                    //enviar propuestas para la actualizacion de ibnorca
+                                    $fechaHoraActual=date("Y-m-d H:i:s");
+                                    $idTipoObjeto=2709;
+                                    $idObjeto=2729; //facturado
+                                    $obs="Solicitud Facturada";                                    
+                                    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+                                    header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+                                }                            
+                            }else{?>
+                                <script>Swal.fire("Error!","Hubo un error durante el proceso de generar la factura.", "error");
+                                </script> <?php
                             }
                         }
-                        if($codigo_error==0){
-                            $stringFacturas=obtenerStringFacturas($codigo);
-                            $stringFacturasCod=obtenerStringCodigoFacturas($codigo);
-                            $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$stringFacturas,$stringFacturasCod,$cod_libreta,$cod_estadocuenta,$cod_cuentaaux);                            
-                            if($cod_comprobante==null || $cod_comprobante=='' || $cod_comprobante==0){
-                                $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo in ($stringFacturasCod)";
-                                $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
-                                $stmtDeleteCAbeceraFactura->execute();
-                                $sqldeleteDetalleFactura="DELETE from facturas_ventadetalle where cod_facturaventa in ($stringFacturasCod)";
-                                $stmtDeleteDetalleFactura = $dbh->prepare($sqldeleteDetalleFactura);
-                                $stmtDeleteDetalleFactura->execute();
-                                ?>
-                                <script>Swal.fire("Error!","Hubo un error Al generar el comprobante.", "error");
-                                </script> <?php
-                            }else{
-                                $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where codigo in ($stringFacturasCod)";                                
-                                $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-                                $stmtUpdateLibreta->execute();
-                                $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
-                                $stmtUpdate = $dbh->prepare($sqlUpdate);
-                                $flagSuccess=$stmtUpdate->execute(); 
-                                //enviar propuestas para la actualizacion de ibnorca
-                                $fechaHoraActual=date("Y-m-d H:i:s");
-                                $idTipoObjeto=2709;
-                                $idObjeto=2729; //facturado
-                                $obs="Solicitud Facturada";                                    
-                                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
-                                header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
-                            }                            
-                        }else{?>
-                            <script>Swal.fire("Error!","Hubo un error durante el proceso de generar la factura.", "error");
-                            </script> <?php
-                        }
-                        
-
                     }
                 }
             }        
