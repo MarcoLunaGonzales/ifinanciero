@@ -32,7 +32,7 @@ $cadenaFacturas="";
 while ($row = $stmtFActuras->fetch()) {
 	$cadenaFacturas.="F ".$nro_factura.", ";
 	// if($estado_factura!=2){
-		$sqlUpdateComprobante="UPDATE comprobantes SET  cod_estadocomprobante=2 where codigo=$cod_comprobante";
+		$sqlUpdateComprobante="UPDATE comprobantes SET cod_estadocomprobante=2,modified_by=$globalUser,modified_at=NOW() where codigo=$cod_comprobante";
 		$stmtUpdateComprobante = $dbh->prepare($sqlUpdateComprobante);
 		$flagSuccess=$stmtUpdateComprobante->execute();
 		//actualizamos facturas	
@@ -76,7 +76,7 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 	$concepto_contabilizacion.="/ Detalle: ".$glosa_libreta;
 	$cod_comprobante=obtenerCodigoComprobante();
 	//insertamos cabecera
-	$flagSuccess=insertarCabeceraComprobante($cod_comprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser,$globalUser);	
+	$flagSuccess=insertarCabeceraComprobante($cod_comprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser);	
 
 	// $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";			
  //    $stmtDelete = $dbh->prepare($sqlDelete);
@@ -149,7 +149,7 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 	$obs="Factura Anulada, transaccion no valida";
 }
 if($flagSuccess){
-	$sql="UPDATE facturas_venta set cod_estadofactura='2' where codigo in ($codigos_facturas_x)";	
+	$sql="UPDATE facturas_venta set cod_estadofactura='2',modified_by=$globalUser,modified_at=NOW() where codigo in ($codigos_facturas_x)";	
 	$stmt = $dbh->prepare($sql);
 	$flagSuccess=$stmt->execute();
 	if($cod_solicitudfacturacion!=-100){

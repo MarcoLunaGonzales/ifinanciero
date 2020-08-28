@@ -79,8 +79,8 @@ try {
         // $observaciones = preg_replace($patron, "", $observaciones);        
         $observaciones = str_replace("'","",$observaciones);
 
-        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw) 
-        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_retencion,$numero,'$cod_personal',$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,'$cod_area','$cod_uo',$nro_recibo,'$cod_proveedores','$cod_actividad_sw')");
+        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by) 
+        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_retencion,$numero,'$cod_personal',$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,'$cod_area','$cod_uo',$nro_recibo,'$cod_proveedores','$cod_actividad_sw',NOW(),$globalUser)");
         $flagSuccess=$stmt->execute();
         if($flagSuccess){//registramos rendiciones
             $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
@@ -181,7 +181,7 @@ try {
         // echo 'cod_contra_cuenta:'.$cod_contra_cuenta."<br>";
         
 
-        $stmtCCD = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta='$cod_cuenta',fecha='$fecha',cod_tipodoccajachica='$cod_retencion',nro_documento='$numero',cod_personal='$cod_personal',monto='$monto',observaciones='$observaciones',cod_area='$cod_area',cod_uo='$cod_uo',nro_recibo='$nro_recibo',cod_proveedores='$cod_proveedores',cod_actividad_sw='$cod_actividad_sw'
+        $stmtCCD = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta='$cod_cuenta',fecha='$fecha',cod_tipodoccajachica='$cod_retencion',nro_documento='$numero',cod_personal='$cod_personal',monto='$monto',observaciones='$observaciones',cod_area='$cod_area',cod_uo='$cod_uo',nro_recibo='$nro_recibo',cod_proveedores='$cod_proveedores',cod_actividad_sw='$cod_actividad_sw',modified_by=$globalUser,modified_at=NOW()
          where codigo = $codigo");      
         $flagSuccess=$stmtCCD->execute();        
         

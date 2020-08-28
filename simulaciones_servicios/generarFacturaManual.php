@@ -42,23 +42,23 @@ try{
         $codigo_facturacion=verificamosFacturaDuplicada($codigo);
         // if($codigo_facturacion==null){//no se registró
             //datos de la solicitud de facturacion
-            $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.codigo=$codigo");
-            $stmtInfo->execute();
-            $resultInfo = $stmtInfo->fetch();    
-            $cod_simulacion_servicio = $resultInfo['cod_simulacion_servicio'];
-            $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
-            $cod_area = $resultInfo['cod_area'];
-            $cod_tipoobjeto = $resultInfo['cod_tipoobjeto'];
-            $cod_tipopago = $resultInfo['cod_tipopago'];
-            $cod_cliente = $resultInfo['cod_cliente'];
-            $cod_personal = $resultInfo['cod_personal'];
-            $razon_social = $razon_social;
-            $nitCliente = $nit_cliente;
-            $observaciones = $resultInfo['observaciones'];
-            $nombre_cliente = $resultInfo['nombre_cliente'];
-            $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
-            $ci_estudiante_p = $resultInfo['ci_estudiante'];
-            if($nombre_cliente==null || $nombre_cliente==''){//no hay registros con ese dato
+            // $stmtInfo = $dbh->prepare("SELECT sf.*,t.nombre as nombre_cliente FROM solicitudes_facturacion sf,clientes t  where sf.cod_cliente=t.codigo and sf.codigo=$codigo");
+            // $stmtInfo->execute();
+            // $resultInfo = $stmtInfo->fetch();    
+            // $cod_simulacion_servicio = $resultInfo['cod_simulacion_servicio'];
+            // $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
+            // $cod_area = $resultInfo['cod_area'];
+            // $cod_tipoobjeto = $resultInfo['cod_tipoobjeto'];
+            // $cod_tipopago = $resultInfo['cod_tipopago'];
+            // $cod_cliente = $resultInfo['cod_cliente'];
+            // $cod_personal = $resultInfo['cod_personal'];
+            // $razon_social = $razon_social;
+            // $nitCliente = $nit_cliente;
+            // $observaciones = $resultInfo['observaciones'];
+            // $nombre_cliente = $resultInfo['nombre_cliente'];
+            // $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
+            // $ci_estudiante_p = $resultInfo['ci_estudiante'];
+            // if($nombre_cliente==null || $nombre_cliente==''){//no hay registros con ese dato
                 $stmtInfo = $dbh->prepare("SELECT sf.* FROM solicitudes_facturacion sf where sf.codigo=$codigo");
                 $stmtInfo->execute();
                 $resultInfo = $stmtInfo->fetch();    
@@ -75,7 +75,7 @@ try{
                 $nombre_cliente = $resultInfo['razon_social'];
                 $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
                 $ci_estudiante_p = $resultInfo['ci_estudiante'];
-            }
+            // }
             $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
             if($cod_sucursal==null || $cod_sucursal==''){//sucursal no encontrada
             	echo 5;

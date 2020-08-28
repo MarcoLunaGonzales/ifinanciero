@@ -7550,7 +7550,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser){
      $dbh = new Conexion();
-     $sqlInsertCabecera="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa,created_by,modified_by) values ('$codComprobante','$codEmpresa','$cod_uo_solicitud','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante','$fechaActual','$numeroComprobante','$concepto_contabilizacion','$globalUser','$globalUser')";
+     $sqlInsertCabecera="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa,created_at,created_by,modified_at,modified_by) values ('$codComprobante','$codEmpresa','$cod_uo_solicitud','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante',NOW(),'$numeroComprobante','$concepto_contabilizacion',NOW(),'$globalUser',NOW(),'$globalUser')";
       $stmtInsertCab = $dbh->prepare($sqlInsertCabecera);
       $flagSuccess=$stmtInsertCab->execute();
      return $flagSuccess;
@@ -7600,7 +7600,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function verificamosFacturaGenerada($codigo){
     $dbh = new Conexion();
-    $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo");
+    $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo and cod_estadofactura=1");
     $stmtVerif->execute();
     $valor=0;
     while ($row = $stmtVerif->fetch())    

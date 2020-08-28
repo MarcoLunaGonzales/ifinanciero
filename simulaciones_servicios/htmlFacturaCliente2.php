@@ -21,7 +21,7 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 	$tipo_admin=$tipo_admin;//1 original cliente completo(abre y cierra de html), 2 original cliente (abre html), 3 copia contabilidad (cierra html), 4 original (abre y cierra html), 5 copia(abre y cierra html)
 	$tipo_impresion=2;//tipo de impresión 1 sin detalles, 2 detalladamente
 	try {
-		if($auxiliar==1){//
+		if($auxiliar==1){//facturas
 		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf where sf.codigo=$codigo");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
@@ -44,8 +44,8 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 		    $observaciones = $resultInfo['observaciones'];
 		    $cod_tipopago = $resultInfo['cod_tipopago'];
 		    $nombre_cliente = $razon_social;
-		}elseif($auxiliar==2){
-		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo");
+		}elseif($auxiliar==2){//solicitudes
+		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo and sf.cod_estadofactura=1");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
 		    $cod_factura = $resultInfo['codigo']; 
@@ -107,10 +107,10 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 			$stmtDesCli = $dbh->prepare("SELECT s.descripcion_alterna,1 as cantidad,ci_estudiante,(sum(s.cantidad*s.precio)) as precio, 0 as descuento_bob from solicitudes_facturaciondetalle s  where s.cod_solicitudfacturacion=$cod_solicitud group by s.ci_estudiante;");
 			$stmtDesCli->execute();
 		}elseif($tipo_admin==10){//formato 3 de clientes
-			$stmtDesFac = $dbh->prepare("SELECT sf.observaciones_2 from facturas_venta f, solicitudes_facturacion sf where f.cod_solicitudfacturacion=sf.codigo and f.codigo=$cod_factura");
+			$stmtDesFac = $dbh->prepare("SELECT glosa_factura3 FROM facturas_venta WHERE codigo=$cod_factura");
 			$stmtDesFac->execute();
 			$resultDesFac=$stmtDesFac->fetch();
-			$observaciones_x=$resultDesFac['observaciones_2'];
+			$observaciones_x=$resultDesFac['glosa_factura3'];
 			$cantidad_x=1;
 			$monto_factura=$importe=sumatotaldetallefactura($cod_factura);
 

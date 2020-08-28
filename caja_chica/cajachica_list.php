@@ -17,7 +17,7 @@ $nombre_tipoCC=$resultTCC['nombre'];
 $sql="SELECT *,date_format(fecha,'%d/%m/%Y') as fecha_x,
   (select e.nombre from estados_contrato e where e.codigo=cod_estado) as nombre_estado,
 (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal) as personal
- from caja_chica where cod_estadoreferencial=1 and cod_tipocajachica = $codigo_tipo_caja_Chica";
+ from caja_chica where cod_estadoreferencial=1 and cod_tipocajachica = $codigo_tipo_caja_Chica order by codigo desc";
 //echo $sql;
 $stmt = $dbh->prepare($sql);
 //ejecutamos

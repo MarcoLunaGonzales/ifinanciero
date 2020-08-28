@@ -150,11 +150,11 @@ $descuento_cliente=0;
                                             <?php 
                                             $sqlArea="SELECT uo.cod_unidad,uo.cod_area,a.nombre as nombre_area,a.abreviatura as abrev_area
                                             FROM areas_organizacion uo,areas a
-                                            where uo.cod_estadoreferencial=1 and uo.cod_area=a.codigo and a.areas_ingreso=1 and uo.cod_unidad=$cod_uo order by nombre_area";
+                                            where uo.cod_estadoreferencial=1 and uo.cod_area=a.codigo and a.areas_ingreso=1 group by uo.cod_area order by nombre_area";
                                             $stmtArea = $dbh->prepare($sqlArea);                                            
                                             $stmtArea->execute();
                                             while ($rowArea = $stmtArea->fetch()){ ?>
-                                                 <option <?=($cod_area==$rowArea["cod_area"])?"selected":"";?> value="<?=$rowArea["cod_area"];?>" data-subtext="(<?=$rowArea['cod_area']?>)"><?=$rowArea["abrev_area"];?> - <?=$rowArea["nombre_area"];?></option><?php 
+                                                 <option <?=($cod_area==$rowArea["cod_area"])?"selected":"disabled";?> value="<?=$rowArea["cod_area"];?>" data-subtext="(<?=$rowArea['cod_area']?>)"><?=$rowArea["abrev_area"];?> - <?=$rowArea["nombre_area"];?></option><?php 
                                             } ?>
                                         </select>                                   
                                     <!-- </div>   -->                  

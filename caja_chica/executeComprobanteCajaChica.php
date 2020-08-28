@@ -10,6 +10,7 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
 set_time_limit(3000);
 session_start();
+$globalUser=$_SESSION["globalUser"];
 $cod_cajachica = $_GET["cod_cajachica"];//codigoactivofijo
 try{
 	//comprobamos si el comprobante ya se generó
@@ -114,7 +115,7 @@ try{
 				$centroCostosDN=obtenerValorConfiguracion(29);//DN 
 				// echo $numeroComprobante;
 
-				$sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) values ('$codComprobante','$codEmpresa','$cod_uo_tcc','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante','$fechaActual','$numeroComprobante','$concepto_contabilizacion')";
+				$sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa,created_at,created_by) values ('$codComprobante','$codEmpresa','$cod_uo_tcc','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante','$fechaActual','$numeroComprobante','$concepto_contabilizacion',NOW(),$globalUser)";
 				$stmtInsertCab = $dbh->prepare($sqlInsertCab);
 				$flagSuccess=$stmtInsertCab->execute();
 				   //listado de todo el detalle de caja chica en curso
