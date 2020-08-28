@@ -799,6 +799,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
             </table>
                 <?php
             }
+           
            ?> 
           </div>
           <br>
