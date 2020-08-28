@@ -1,13 +1,13 @@
 
 /*Para dejar clase despues de presionar tr*/
 .dataTable tbody tr:hover {
-       background-color:#504E4E !important;
-       color: white !important;
+       background-color:rgba(207, 152, 83,0.4);/*#D1C0AB !important;*/
+      /* color: white !important;*/
        cursor: pointer !important;
    }
 .fila_activa_color{
-  background-color:#504E4E !important;
-  color: white !important;
+  background-color:#F57042 !important;
+  /*color: white !important;*/
 }
 
 
