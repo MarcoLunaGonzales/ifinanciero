@@ -19,7 +19,10 @@ if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
   $u=$_GET['u'];
-  $v=$_GET['v'];
+  $v=0;
+  if(isset($_GET['v'])){
+    $v=$_GET['v'];
+  }
 }
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];

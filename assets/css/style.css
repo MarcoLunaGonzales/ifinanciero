@@ -1,3 +1,22 @@
+
+/*Para dejar clase despues de presionar tr*/
+.dataTable tbody tr:hover {
+       background-color:#504E4E !important;
+       color: white !important;
+       cursor: pointer !important;
+   }
+.fila_activa_color{
+  background-color:#504E4E !important;
+  color: white !important;
+}
+
+
+
+
+
+
+
+
 .menu-fixed-sm-table {
     top:27px !important;
 }
