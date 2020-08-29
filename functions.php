@@ -7721,8 +7721,8 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
     curl_close ($ch);
     return json_decode($remote_server_output);
     // imprimir en formato JSON
-    // header('Content-type: application/json');   
-    // print_r($remote_server_output);
+    //header('Content-type: application/json');   
+    //print_r($remote_server_output);
   }
   function verificarFechaMaxDetalleLibreta($fecha,$codigo){
      $dbh = new Conexion();
