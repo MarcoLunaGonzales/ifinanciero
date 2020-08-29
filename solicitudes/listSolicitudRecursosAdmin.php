@@ -172,20 +172,22 @@ $item_1=2708;
                               $iconRevisado="check_box_outline_blank";
                               $estiloIconRevisado="btn-default";
                               $irEstado=12;
+                              $mensajeTitle="Marca como Examinado";
                               if($estadoContabilidadX==2){
                                 $iconRevisado="adjust";
                                 $estiloIconRevisado="btn-info";
                                 $irEstado=10;
+                                $mensajeTitle="Quitar Examinado";
                               }
                               if(isset($_GET['q'])){
                                 ?>
-                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$irEstado?>&ladmin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn <?=$estiloIconRevisado?>">
+                                <a title="<?=$mensajeTitle?>" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$irEstado?>&ladmin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn <?=$estiloIconRevisado?>">
                                        <i class="material-icons"><?=$iconRevisado?></i>
                                 </a>
                                 <?php
                               }else{
                                 ?>
-                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$irEstado?>&ladmin=0'  class="btn <?=$estiloIconRevisado?>">
+                                <a title="<?=$mensajeTitle?>" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$irEstado?>&ladmin=0'  class="btn <?=$estiloIconRevisado?>">
                                        <i class="material-icons"><?=$iconRevisado?></i>
                                 </a>
                                 <?php
