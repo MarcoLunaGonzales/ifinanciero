@@ -27,10 +27,10 @@ $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 // $Objeto_detalle3->cantidad = 1;
 
 $Objeto_detalle4 = new stdClass();
-$Objeto_detalle4->suscripcionId = 8795;
-$Objeto_detalle4->pagoCursoId = 0;
-$Objeto_detalle4->detalle = "NB 74013:2010";
-$Objeto_detalle4->precioUnitario = "70.00";
+$Objeto_detalle4->suscripcionId = 0;
+$Objeto_detalle4->pagoCursoId = 4778;
+$Objeto_detalle4->detalle = "Curso OV-PSST-CO-G2-2020 , Mu00f3dulo 2 elaboracion de programas de seguridad y salud en el trabajo - psst";
+$Objeto_detalle4->precioUnitario = "480";
 $Objeto_detalle4->cantidad = 1;
 
 $Array= array($Objeto_detalle4);
@@ -40,12 +40,11 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
               "fechaFactura"=>'2020-08-29', // fecha de la factura
-              "nitciCliente"=>'3693986', //nit o ci de cliente
-              "razonSocial"=>'Gonzalo Perez', //razon social
-              "importeTotal"=>"70", //importe total
-              "tipoPago"=>5, // array con el detalle    
-              "codLibretaDetalle"=>'5035', // array con el detalle
-
+              "nitciCliente"=>'1712164', //nit o ci de cliente
+              "razonSocial"=>'Santiago Molexxx', //razon social
+              "importeTotal"=>"480", //importe total
+              "tipoPago"=>6, // array con el detalle    
+              "codLibretaDetalle"=>'4624,4623', // array con el detalle
               "items"=>$Array // array con el detalle    
               );
 $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero

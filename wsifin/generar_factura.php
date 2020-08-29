@@ -142,13 +142,13 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                     //echo "cod:".$code;
                     // $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,created_at,created_by) 
                     //   values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0',NOW(),'1')";
-                      $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,created_at,created_by) 
-                      values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0',NOW(),1)";
-                      // echo $sql;
+                    $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,created_at,created_by) values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0',NOW(),1)";
+                    echo $sql."<br>";
                       // echo $sql;
                     $stmtInsertSoliFact = $dbh->prepare($sql);
                     $flagSuccess=$stmtInsertSoliFact->execute();
                     $cod_factura_12 = $dbh->lastInsertId();
+                    echo $cod_factura_12."<br>";
                     // $flagSuccess=true;
 
                     if($flagSuccess){
@@ -162,16 +162,19 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             $cod_libreta=$CodLibretaDetalle;
                             //si es de tipo deposito en cuenta insertamos en libreta bancaria
                             $sqlUpdateLibreta="UPDATE libretas_bancariasdetalle SET cod_factura=$cod_facturaVenta where codigo=$cod_libreta";
+                            echo $sqlUpdateLibreta."<br>";
                             $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);                            
                             $stmtUpdateLibreta->execute();
                             $number_of_rows  = $stmtUpdateLibreta->rowCount();
 
                             $sqlUpdateFac="UPDATE facturas_venta SET cod_libretabancariadetalle=$cod_libreta where codigo=$cod_facturaVenta";
+                            echo $sqlUpdateFac."<br>";
                             $stmtUpdateFac = $dbh->prepare($sqlUpdateFac);
                             $flagSuccessFac=$stmtUpdateFac->execute(); 
                             
                             if($number_of_rows==0 || $number_of_rows==''){
                                 $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo=$cod_facturaVenta";
+                                echo $sqldeleteCabeceraFactura."<br>";
                                 $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
                                 $stmtDeleteCAbeceraFactura->execute();
                                 // $sqldeletecomprobante="DELETE from comprobantes where codigo=$cod_comprobante";
@@ -194,24 +197,28 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             if($normas!=0){
                                 $cod_claservicio_x=488;
                             }
-                            $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
-                             values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle',0,$suscripcionId)");
+                            $sqlFacturaDetalle="INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
+                             values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle',0,$suscripcionId)";
+                            echo $sqlFacturaDetalle."<br>";
+                            $stmtInsertSoliFactDet = $dbh->prepare($sqlFacturaDetalle);
                             $flagSuccess=$stmtInsertSoliFactDet->execute();                         
                         }
                         if($flagSuccess){
                             $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,$tipoPago,$CodLibretaDetalle,$normas,$cod_facturaVenta);
                             if($cod_comprobante==null || $cod_comprobante==''){
                                 $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo=$cod_facturaVenta";
+                                echo $sqldeleteCabeceraFactura."<br>";
                                 $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
                                 $stmtDeleteCAbeceraFactura->execute();
                                 $sqlDet="DELETE from facturas_ventadetalle where cod_facturaventa=$cod_facturaVenta";
+                                echo $sqlDet."<br>";
                                 $stmtDelDet = $dbh->prepare($sqlDet);
                                 $stmtDelDet->execute();
                                 return "12###";
 
                             }else{
                                 $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where codigo=$cod_facturaVenta";
-                                // echo $sqlUpdateLibreta;
+                                echo $sqlUpdateLibreta."<br>";
                                 $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
                                 $stmtUpdateLibreta->execute();
                                 return "0###".$cod_facturaVenta;    
