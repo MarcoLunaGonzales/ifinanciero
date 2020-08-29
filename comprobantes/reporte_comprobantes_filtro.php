@@ -33,9 +33,9 @@ $fechaHasta2=$y."-12-31";
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Impresión de Facturas</h4>
+                  <h4 class="card-title">Impresión de Comprobantes</h4>
                 </div>
-                <form class="" action="reporte_facturas_venta_print.php" target="_blank" method="POST">
+                <form class="" action="reporte_comprobantes_print.php" target="_blank" method="POST">
                 <div class="card-body">
                   	<div class="row">
 		                <label class="col-sm-2 col-form-label">Unidad</label>
@@ -55,14 +55,32 @@ $fechaHasta2=$y."-12-31";
 		                     </div>
 		                </div>				             
                   	</div><!--div row-->
+                  	<div class="row">
+		                <label class="col-sm-2 col-form-label">Tipo Comprobante</label>
+		                <div class="col-sm-7">
+		                	<div class="form-group">		                		
+	                			<?php
+								$sqlComprobante="SELECT codigo,nombre,abreviatura from tipos_comprobante where cod_estadoreferencial=1";
+								$stmtComprobante = $dbh->prepare($sqlComprobante);
+								$stmtComprobante->execute();
+								?>
+								<select class="selectpicker form-control form-control-sm" name="tipos_comprobante[]" id="tipos_comprobante" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+								    <?php 
+								    while ($row = $stmtComprobante->fetch()){ ?>
+								      	<option value="<?=$row["codigo"];?>" data-subtext="<?=$row["abreviatura"];?>" <?=($row["codigo"]==$globalUnidad)?"selected":""?> ><?=$row["nombre"];?></option><?php 
+								 	} ?>
+								</select>		                		
+		                     </div>
+		                </div>				             
+                  	</div><!--div row-->
                   	
 
 	                <div class="row">	                  	
 						<label class="col-sm-2 col-form-label">Desde</label>
 						<div class="col-sm-3">
 							<div class="form-group">
-								<div id="div_contenedor_fechaI">				                			
-									<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaDesde?>">	
+								<div id="div_contenedor_fechaI">
+									<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaDesde?>">
 								</div>		                                
 							 </div>
 						</div>
@@ -76,11 +94,11 @@ $fechaHasta2=$y."-12-31";
 							</div>
 						</div>
 	                </div><!--div fechas row-->
-	                   <div class="row">	                  	
+	                <div class="row">	                  	
 						<label class="col-sm-2 col-form-label">Rango de Números</label>
 						<div class="col-sm-2">
 							<div class="form-group">
-								<div id="div_contenedor_fechaI">				                			
+								<div id="div_contenedor_fechaI">
 									<input type="text" placeholder="1-10" class="form-control" name="numero_rango" id="numero_rango" min="0">	
 								</div>		                                
 							 </div>

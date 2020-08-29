@@ -83,6 +83,7 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                   <tbody>
                     <?php $index=1;
                     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+                      $lugarEmision=obtenerlugarEmision($ci_lugar_emision,1);
                       if ($cod_estadopersonal==3) {
                           $labelestadoPersonal='<span class="badge badge-danger">';
                       }elseif ($cod_estadopersonal==1) {
@@ -97,7 +98,7 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                         </td>
                         <td><?=$codigo?></td>
                         <td><?=$paterno;?> <?=$materno;?> <?=$primer_nombre;?></td>      
-                        <td><?=$ci;?>-<?=$ci_lugar_emision;?></td>
+                        <td><?=$ci;?>-<?=$lugarEmision;?></td>
                         <td><?=$xcargo;?></td>
                         <td><?=$xuonombre;?>-<?=$xarea;?></td>                        
                         <td><?=$xcod_tipopersonal;?></td>                                              

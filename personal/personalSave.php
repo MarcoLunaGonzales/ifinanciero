@@ -45,35 +45,20 @@ try {
     $fecha_nac_persona_dis =$_POST['fecha_nac_persona_dis'];
 
     $personal_confianza=$_POST['personal_confianza'];
-
-    // if($nro_carnet_discapacidad==null)$nro_carnet_discapacidad=0;
-    // if($fecha_nac_persona_dis==null)$fecha_nac_persona_dis="0000-00-00";
-
-    
+    $cuenta_bancaria=$_POST['cuenta_bancaria'];
+    $globalUser=$_SESSION['globalUser'];
     //$created_at = $_POST["created_at"];
-    $created_by = 1;//$_POST["created_by"];
+    $created_by = $globalUser;//$_POST["created_by"];
     //$modified_at = $_POST["modified_at"];
-    $modified_by = 1;//$_POST["modified_by"];
+    $modified_by = $globalUser;//$_POST["modified_by"];
     $cod_estadoreferencial=1;
     $porcentaje=100;
-
-
-    // $stmtRetiros = $dbh->prepare("SELECT codigo,cod_personal from personal_retiros where cod_personal=$codigo and cod_estadoreferencial=1");
-    // $stmtRetiros->execute();
-    // $resultsRetiros=$stmtRetiros->fetch();
-    // $cod_retiro_x=$resultsRetiros['codigo'];
-    // $cod_personal_x=$resultsRetiros['cod_personal'];
-    // //preguntamos si hay registros de retirors del personal
-    // if($codigo==$cod_personal_x){
-    //     $stmtUR = $dbh->prepare("UPDATE personal_retiros set cod_estadoreferencial=2 where codigo = $cod_retiro_x");
-    //     $stmtUR->execute();
-    // }
 
     $stmt = $dbh->prepare("UPDATE personal set cod_cargo=:cod_cargo,cod_unidadorganizacional=:cod_unidadorganizacional,cod_area=:cod_area,jubilado=:jubilado,
     cod_tipopersonal=:cod_tipopersonal,haber_basico=:haber_basico,apellido_casada=:apellido_casada,otros_nombres=:otros_nombres,
     nua_cua_asignado=:nua_cua_asignado,ing_contr=:ing_contr,ing_planilla=:ing_planilla,
     cod_tipoafp=:cod_tipoafp,nro_seguro=:nro_seguro,cod_grado_academico=:grado_academico,
-    cod_estadopersonal=:cod_estadopersonal,persona_contacto=:persona_contacto,cod_tipoaporteafp = :cod_tipoaporteafp,email_empresa=:email_empresa,bandera=:bandera,personal_confianza=:personal_confianza  
+    cod_estadopersonal=:cod_estadopersonal,persona_contacto=:persona_contacto,cod_tipoaporteafp = :cod_tipoaporteafp,email_empresa=:email_empresa,bandera=:bandera,personal_confianza=:personal_confianza ,modified_by=:modified_by,modified_at=NOW(),cuenta_bancaria=:cuenta_bancaria
     where codigo = :codigo");
     //bind
     $stmt->bindParam(':codigo', $codigo);
@@ -98,6 +83,10 @@ try {
     $stmt->bindParam(':email_empresa', $email_empresa);
     $stmt->bindParam(':bandera', $bandera);
     $stmt->bindParam(':personal_confianza', $personal_confianza);
+    $stmt->bindParam(':modified_by', $modified_by);
+    $stmt->bindParam(':cuenta_bancaria', $cuenta_bancaria);
+
+    
     $flagSuccess=$stmt->execute();
 
     //sacmos el id de area distribucion area distribucion

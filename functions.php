@@ -9407,4 +9407,91 @@ function verificarSolicitudRecursosManual($codigo){
       return $valor;
 }    
 
+
+function obtenerlugarEmision($codigo,$indice){
+  $dbh = new Conexion();
+  $sql="SELECT nombre,abreviatura from personal_departamentos where codigo=$codigo;";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+    if($indice==2){
+      $valor=$row['nombre'];
+    }else{
+      $valor=$row['abreviatura'];  
+    }
+  }  
+  return $valor;
+}
+function obtenerNombreGeneroPersona($cod_genero){
+  $dbh = new Conexion();
+  $sql="SELECT nombre from tipos_genero where codigo=$cod_genero;";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+    $valor=$row['nombre'];
+  }  
+  return $valor;
+}
+function obtenerNombreIdentificacionPersona($codigo,$indice){
+  $dbh = new Conexion();
+  if($indice==1){
+    $sql="SELECT nombre FROM tipos_identificacion_personal where codigo=$codigo;";  
+  }else{
+    $sql="SELECT nombre FROM tipos_identificacion_personal where codigo=$codigo;";
+  } 
+  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+    $valor=$row['nombre'];
+  }  
+  return $valor;
+}
+function obtenerNombreNacionalidadPersona($codigo,$indice){
+  $dbh = new Conexion();
+  if($indice==1){
+    $sql="SELECT abreviatura FROM personal_pais  where codigo=$codigo;"; 
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+      $valor=$row['abreviatura'];
+    }  
+  }else{
+    $sql="SELECT nombre FROM personal_pais  where codigo=$codigo;"; 
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+      $valor=$row['nombre'];
+    }  
+  }
+  return $valor;
+}
+
+function obtenerNombreCiudadPersona($codigo){
+    $dbh = new Conexion();
+  $sql="SELECT nombre from ciudades where codigo=$codigo;";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+    $valor=$row['nombre'];
+  }  
+  return $valor;
+}
+function obtenerNombreEstadoCivilPersona($codigo){
+    $dbh = new Conexion();
+  $sql="SELECT nombre from tipos_estado_civil where codigo=$codigo;";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+    $valor=$row['nombre'];
+  }  
+  return $valor;
+}
 ?>

@@ -70,6 +70,7 @@ try{
     $celular = $result['celular'];
     $email = $result['email'];
     $persona_contacto = $result['persona_contacto'];
+    $cuenta_bancaria = $result['cuenta_bancaria'];
     $created_at = $result['created_at'];
     $created_by = $result['created_by'];
     $modified_at = $result['modified_at'];
@@ -150,12 +151,12 @@ $html.=  '<header class="header">'.
                     '<tr>'.
                         '<td>Tipo De identificación</td>'.
                         '<td align="center">:</td>'.
-                        '<td>'.$cod_tipoIdentificacion.' '.$tipo_identificacionOtro.'</td>'.
+                        '<td>'.obtenerNombreIdentificacionPersona($cod_tipoIdentificacion,1).' '.obtenerNombreIdentificacionPersona($tipo_identificacionOtro,2).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Identificación</td>'.
                         '<td align="center">:</td>'.
-                        '<td>'.$identificacion.' - '.$cod_lugar_emision.' '.$lugar_emisionOtro.'</td>'.
+                        '<td>'.$identificacion.' - '.obtenerlugarEmision($cod_lugar_emision,1).' '.obtenerlugarEmision($lugar_emisionOtro,1).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Grado Académico</td>'.
@@ -194,27 +195,27 @@ $html.=  '<header class="header">'.
                     '<tr>'.
                         '<td>Nacionalidad</td>'.
                         '<td align="center">:</td>'.
-                        '<td colspan=2>'.$cod_nacionalidad.'</td>'.
+                        '<td colspan=2>'.obtenerNombreNacionalidadPersona($cod_nacionalidad,1).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Pais</td>'.
                         '<td align="center">:</td>'.
-                        '<td colspan=2>'.$cod_pais.'</td>'.
+                        '<td colspan=2>'.obtenerNombreNacionalidadPersona($cod_pais,2).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Departamento</td>'.
                         '<td align="center">:</td>'.
-                        '<td colspan=2>'.$cod_departamento.'</td>'.
+                        '<td colspan=2>'.obtenerlugarEmision($cod_departamento,2).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Ciudad</td>'.
                         '<td align="center">:</td>'.
-                        '<td colspan=2>'.$cod_ciudad.'</td>'.
+                        '<td colspan=2>'.obtenerNombreCiudadPersona($cod_ciudad).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Otra Ciudad</td>'.
                         '<td align="center">:</td>'.
-                        '<td colspan=2>'.$ciudadOtro.'</td>'.
+                        '<td colspan=2>'.obtenerNombreCiudadPersona($ciudadOtro).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td colspan="4"><br></td>           '.
@@ -256,6 +257,11 @@ $html.=  '<header class="header">'.
                         '<td>Contacto</td>'.
                         '<td align="center">:</td>'.
                         '<td colspan=2>'.$persona_contacto.'</td>'.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td>Cuenta Bancaria</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.$cuenta_bancaria.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td colspan="4"><br></td>           '.
