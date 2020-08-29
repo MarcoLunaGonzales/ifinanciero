@@ -27,9 +27,9 @@ $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 // $Objeto_detalle3->cantidad = 1;
 
 $Objeto_detalle4 = new stdClass();
-$Objeto_detalle4->suscripcionId = 8063;
-$Objeto_detalle4->pagoCursoId = "0";
-$Objeto_detalle4->detalle = "NB 338003:2009";
+$Objeto_detalle4->suscripcionId = 8795;
+$Objeto_detalle4->pagoCursoId = 0;
+$Objeto_detalle4->detalle = "NB 74013:2010";
 $Objeto_detalle4->precioUnitario = "70.00";
 $Objeto_detalle4->cantidad = 1;
 
@@ -39,12 +39,12 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
-              "fechaFactura"=>'2020-08-21', // fecha de la factura
-              "nitciCliente"=>'8282882-1B', //nit o ci de cliente
-              "razonSocial"=>'Ismael Sullcamani', //razon social
+              "fechaFactura"=>'2020-08-29', // fecha de la factura
+              "nitciCliente"=>'3693986', //nit o ci de cliente
+              "razonSocial"=>'Gonzalo Perez', //razon social
               "importeTotal"=>"70", //importe total
-              "tipoPago"=>6, // array con el detalle    
-              "codLibretaDetalle"=>'4239', // array con el detalle
+              "tipoPago"=>5, // array con el detalle    
+              "codLibretaDetalle"=>'5035', // array con el detalle
 
               "items"=>$Array // array con el detalle    
               );

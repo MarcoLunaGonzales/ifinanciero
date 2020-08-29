@@ -140,20 +140,24 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                     $llaveDosificacion//Llave de dosificación
                     );
                     //echo "cod:".$code;
-                    $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,created_at,created_by) 
-                      values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0',NOW(),'1')";
+                    // $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,created_at,created_by) 
+                    //   values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0',NOW(),'1')";
+                      $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,created_at,created_by) 
+                      values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0',NOW(),1)";
+                      // echo $sql;
                       // echo $sql;
                     $stmtInsertSoliFact = $dbh->prepare($sql);
                     $flagSuccess=$stmtInsertSoliFact->execute();
+                    $cod_factura_12 = $dbh->lastInsertId();
                     // $flagSuccess=true;
 
                     if($flagSuccess){
                         //obtenemos el registro del ultimo insert
-                        $stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_sucursal=$sucursalId and fecha_factura like '$fechaFactura_x%' and nit=$nitciCliente and razon_social like '%$razonSocial%' order by codigo desc");
-                        //$stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_sucursal=$sucursalId and DATE_FORMAT(fecha_factura,'%Y-%m-%d') like '$fechaFactura_xy%' and nit=$nitciCliente and razon_social like '%$razonSocial%' order by codigo desc limit 1");
-                        $stmtNroFac->execute();
-                        $resultNroFact = $stmtNroFac->fetch();    
-                        $cod_facturaVenta = $resultNroFact['codigo'];
+                        // $stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_sucursal=$sucursalId and nit=$nitciCliente and razon_social like '%$razonSocial%' order by codigo desc");
+                        // //$stmtNroFac = $dbh->prepare("SELECT codigo from facturas_venta where cod_sucursal=$sucursalId and DATE_FORMAT(fecha_factura,'%Y-%m-%d') like '$fechaFactura_xy%' and nit=$nitciCliente and razon_social like '%$razonSocial%' order by codigo desc limit 1");
+                        // $stmtNroFac->execute();
+                        // $resultNroFact = $stmtNroFac->fetch();    
+                        $cod_facturaVenta = $cod_factura_12;
                         if($CodLibretaDetalle!='0'){
                             $cod_libreta=$CodLibretaDetalle;
                             //si es de tipo deposito en cuenta insertamos en libreta bancaria
