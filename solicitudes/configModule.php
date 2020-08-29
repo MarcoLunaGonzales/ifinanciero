@@ -5,6 +5,9 @@ $moduleNameSingular="Solicitud de Recursos";
 $moduleNamePlural="Solicitudes de Recursos";
 
 //$moduleNameSingular="Comprobantes";
+$urlList2Auxiliar="index.php?opcion=listSolicitudRecursosAdmin"; 
+//al editar un estado $urlList2 Cambia constantemente segun el origen de la lista de solicitudes (Esta variable debe ser fija)
+
 $urlList="index.php?opcion=listSolicitudRecursos";
 $urlList2="index.php?opcion=listSolicitudRecursosAdmin";
 $urlList3="index.php?opcion=listSolicitudRecursosAdminReg";

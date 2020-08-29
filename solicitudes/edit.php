@@ -22,8 +22,13 @@ if(isset($_GET["conta"])){
   $urlList2=$urlList4;
 }
 
-if($estado==10||$estado==11){
-  $urlList2=$urlList4;
+if($estado==10||$estado==11||$estado==12){
+  if($estado==12){
+    $urlList2=$urlList3;
+  }else{
+   $urlList2=$urlList4;  
+  }
+  
   $estado=$estado-10;
   $sqlUpdate="UPDATE solicitud_recursos SET  revisado_contabilidad=$estado where codigo=$codigo";
   $stmtUpdate = $dbh->prepare($sqlUpdate);
@@ -44,7 +49,11 @@ if(obtenerUnidadSolicitanteRecursos($codigo)==3000){ //&&obtenerAreaSolicitanteR
 $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado where codigo=$codigo";
 if(isset($_GET['obs'])){
   $obs=$_GET['obs'];
-  $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado,glosa_estado='$obs' where codigo=$codigo";
+  if(isset($_GET["ll"])){
+    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado,glosa_estado=CONCAT(glosa_estado,'####','$obs') where codigo=$codigo";  
+  }else{
+    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado,glosa_estado='$obs' where codigo=$codigo";
+  }  
 }
 
 
@@ -138,6 +147,10 @@ if(isset($_GET['admin'])){
     $urlc=$urlc."&r=".$_GET['r'];
   }
 }
+if(isset($_GET["ladmin"])){
+  $urlList2=$urlList2Auxiliar;
+}
+
 if(isset($_GET['q'])){
 	$q=$_GET['q'];
   $s=$_GET['s'];

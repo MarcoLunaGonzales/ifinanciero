@@ -9133,6 +9133,22 @@ function obtenerEstadoComprobante($codigo){
      }
      return($admin);
   } 
+  function verificarComprobanteUsuarioRevisor($codigo){
+     $codigosAdmin=obtenerValorConfiguracion(81);
+     $dbh = new Conexion();
+     $sql="SELECT codigo from personal where codigo in ($codigosAdmin)";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;$admin=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+        if($valor==$codigo){
+          $admin=1;
+        }
+     }
+     return($admin);
+  } 
+
   function verificar_fecha_rango($fecha_inicio, $fecha_fin, $fecha){
     $fecha_inicio = strtotime($fecha_inicio);
     $fecha_fin = strtotime($fecha_fin);

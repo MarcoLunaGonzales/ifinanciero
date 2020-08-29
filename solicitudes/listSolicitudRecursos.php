@@ -156,7 +156,8 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                           <td class="text-danger font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
                           <td class="td-actions text-right">
                             <?php
-                            $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);  
+                            $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);
+                            $glosa_estadoX = str_replace("####", " ", $glosa_estadoX);  
                               if($codEstado==4||$codEstado==3||$codEstado==5){
                             ?>
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
@@ -256,13 +257,13 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                     if(isset($_GET['q'])){
                                    ?>
 
-                                    <a title="Enviar a Autorización - Solicitud Recursos" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" href='#' class="btn btn-default">
+                                    <a title="Enviar a Autorización - Solicitud Recursos" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>&ll=0','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" href='#' class="btn btn-default">
                                       <i class="material-icons">send</i>
                                     </a>
                                    <?php
                                   }else{
                                     ?>
-                                     <a title="Enviar a Autorización - Solicitud Recursos" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" href='#'  class="btn btn-default">
+                                     <a title="Enviar a Autorización - Solicitud Recursos" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0&ll=0','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" href='#'  class="btn btn-default">
                                        <i class="material-icons">send</i>
                                      </a>
                                     <?php
@@ -270,13 +271,13 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                  }else{
                                     if(isset($_GET['q'])){
                                    ?>
-                                    <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
+                                    <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>&ll=0' class="btn btn-default">
                                       <i class="material-icons">send</i>
                                     </a>
                                    <?php
                                   }else{
                                     ?>
-                                     <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0'  class="btn btn-default">
+                                     <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0&ll=0'  class="btn btn-default">
                                        <i class="material-icons">send</i>
                                      </a>
                                     <?php
@@ -1126,6 +1127,17 @@ $stmt->bindColumn('idServicio', $idServicioX);
         </div>               
         <div class="row">
           <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Observaciones</small></label>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#f9edf7">
+            <div class="form-group" >              
+              <textarea type="text" name="observaciones_modal_lg" id="observaciones_modal_lg" class="form-control" required="true" readonly></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Correcciones</small></label>
         </div>
         <div class="row">
           <div class="col-sm-12" style="background-color:#f9edf7">

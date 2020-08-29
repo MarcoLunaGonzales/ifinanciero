@@ -17191,7 +17191,12 @@ function notificacionMD(fondo,from, align,tiempo,icono,cabecera,mensaje,pie) {
     $("#nro_solicitud").val(nro);
     $("#codigo_servicio").val(codServ);
     $("#proveedor_nombre").val(prov);
-    $("#observaciones_modal").val(obs);
+    if($("#observaciones_modal_lg").length>0){
+      $("#observaciones_modal_lg").val(obs);
+      $("#observaciones_modal").val("");
+    }else{
+      $("#observaciones_modal").val(obs);
+    }   
    $("#urlEnvioModal").val(url);
    $("#modalDevolverSolicitudRecurso").modal("show");
   }

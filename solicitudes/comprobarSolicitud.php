@@ -305,7 +305,7 @@ if(isset($_GET['cod'])){
             </div>
             <div class="col-sm-1">
               <div class="form-group">
-                  <!--<label class="bmd-label-static">Unidad</label>-->
+                  <label class="bmd-label-static">ORIGEN DE</label>
                   <select class="selectpicker form-control form-control-sm" name="unidad_solicitud" onchange="cargarArrayAreaDistribucion(-1)" id="unidad_solicitud" data-style="btn btn-primary">
                        <option disabled value="">--OFICINA--</option>               
                                       <?php
@@ -332,7 +332,7 @@ if(isset($_GET['cod'])){
 
             <div class="col-sm-1">
                   <div class="form-group">
-                  <!--<label class="bmd-label-static">Area</label>
+                  <label class="bmd-label-static">SOLICITUD</label><!--
                   <input class="form-control" type="text" name="area" value="<?=$areaX?>" id="area" readonly/>-->
                   <select class="selectpicker form-control form-control-sm" name="area_solicitud" id="area_solicitud" data-style="btn btn-rose">
                                    <option disabled value="">--AREA--</option>                 
@@ -486,7 +486,7 @@ if(isset($_GET['cod'])){
               <div class="float-right">
               </div>
               <div class="row">
-                <label class="col-sm-1 col-form-label" style="text-align: center;">Of / Area</label>
+                <label class="col-sm-1 col-form-label" style="text-align: center;">Of / Área (CC)</label>
                 <label class="col-sm-3 col-form-label" style="text-align: center;">Cuenta Relacionada</label>                
                 <label class="col-sm-3 col-form-label" style="text-align: left;">Detalle / Glosa</label>
                 <label class="col-sm-1 col-form-label" style="text-align: left; left:-25px !important;">Presupuestado</label>

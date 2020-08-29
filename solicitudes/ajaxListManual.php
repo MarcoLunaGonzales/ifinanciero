@@ -23,9 +23,15 @@ if(isset($_GET['v'])){
  }
 }
   ?>
+  <div class="row col-sm-12 float-right">
+    <div class="col-sm-12">
+      <label class="bmd-label-static">ORIGEN DE LA SOLICITUD Of/Área</label>
+    </div>
+  </div>
   <div class="row col-sm-12">
                            <div class="col-sm-6">
                                  <div class="form-group">
+
                                     <select class="selectpicker form-control form-control-sm" name="unidad_solicitud" onchange="cargarArrayAreaDistribucion(-1)" id="unidad_solicitud" data-style="btn btn-primary">
                                       <?php
                                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");

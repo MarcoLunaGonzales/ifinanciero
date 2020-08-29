@@ -3,7 +3,7 @@ require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
@@ -70,7 +70,7 @@ $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
 $stmt->bindColumn('numero', $numeroSol);
 $stmt->bindColumn('idServicio', $idServicioX);
 $stmt->bindColumn('glosa_estado', $glosa_estadoX);
-
+$stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
 ?>
 
 <div class="content">
@@ -172,6 +172,10 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                         $numeroSolTitulo='<a href="#" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning btn-sm btn-round">'.$numeroSol.'</a>';
                        } 
                        $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);   
+
+                       $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);
+                       $glosaArray=explode("####", $glosa_estadoX);
+                       $glosa_estadoX = str_replace("####", " - ", $glosa_estadoX);
 ?>
                         <tr>
                           <td><?=$unidad;?>- <?=$area;?></td>
@@ -186,10 +190,57 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
                           <!--<td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button>-->
                           </td> 
-                          <td class="text-warning font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
+                          <td class="text-dark font-weight-bold"><small><b>
+                            <?php if(isset($glosaArray[1])){
+                                echo "".$glosaArray[0].""."<u class='text-muted'> ".$glosaArray[1]."</u>";
+                            }else{
+                                echo $glosa_estadoX;
+                            }?></b></small></td>
                           <td class="td-actions text-right">
-                            <?php
-                            $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);  
+                            <?php 
+                            if(($codEstado==4||$codEstado==6)&&verificarComprobanteUsuarioRevisor($globalUser)!=0){
+                            if($estadoContabilidadX==1){
+                              if(isset($_GET['q'])){
+                                ?>
+                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&admin=0&reg=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-rose" style="background:#661E1B">
+                                       <i class="material-icons">check_box</i><!--check_box-->
+                                </a>
+                                <?php
+                              }else{
+                                ?>
+                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&admin=0&reg=0'  class="btn btn-rose" style="background:#661E1B">
+                                       <i class="material-icons">check_box</i><!--check_box-->
+                                </a>
+                                <?php
+                              }
+                            }else{
+                              $iconRevisado="check_box_outline_blank";
+                              $estiloIconRevisado="btn-default";
+                              $irEstado=12;
+                              if($estadoContabilidadX==2){
+                                $iconRevisado="adjust";
+                                $estiloIconRevisado="btn-info";
+                                $irEstado=10;
+                              }
+                              if(isset($_GET['q'])){
+                                ?>
+                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$irEstado?>&admin=0&reg=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn <?=$estiloIconRevisado?>">
+                                       <i class="material-icons"><?=$iconRevisado?></i>
+                                </a>
+                                <?php
+                              }else{
+                                ?>
+                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$irEstado?>&admin=0&reg=0'  class="btn <?=$estiloIconRevisado?>">
+                                       <i class="material-icons"><?=$iconRevisado?></i>
+                                </a>
+                                <?php
+                              }
+                            }
+
+                          }
+
+                           //fin de boton extra de estado
+                              
                               if($codEstado==4||$codEstado==3||$codEstado==5||$codEstado==8){
                             ?>
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">

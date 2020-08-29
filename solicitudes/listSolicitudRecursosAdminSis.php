@@ -143,6 +143,9 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                         $numeroSolTitulo='<a href="#" title="El Monto Solicitado es Mayor al Presupuestado" class="btn btn-warning btn-sm btn-round">'.$numeroSol.'</a>';
                        }    
                        $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);
+                       $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);
+                       $glosaArray=explode("####", $glosa_estadoX);
+                       $glosa_estadoX = str_replace("####", " - ", $glosa_estadoX);
 ?>
                         <tr>
                           <td><?=$unidad;?>- <?=$area;?></td>
@@ -162,10 +165,13 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                </div>
                              </div>-->
                           </td> 
-                          <td class="text-warning font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>
+                          <td class="text-warning font-weight-bold"><small><b><?php if(isset($glosaArray[1])){
+                                echo "".$glosaArray[0].""."<u class='text-muted'> ".$glosaArray[1]."</u>";
+                            }else{
+                                echo $glosa_estadoX;
+                            }?></b></small></td>
                           <td class="td-actions text-right">
-                            <?php
-                          $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);    
+                            <?php   
                               if($codEstado==4||$codEstado==3||$codEstado==5){
                             ?>
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">

@@ -391,7 +391,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             </div>
           </div>
            <div class="row">
-                <label class="col-sm-1 col-form-label" style="text-align: center;">Of / Area</label>
+                <label class="col-sm-1 col-form-label" style="text-align: center;">Of / Área (CC)</label>
                 <label class="col-sm-3 col-form-label" style="text-align: center;">Cuenta Relacionada</label>                
                 <label class="col-sm-3 col-form-label" style="text-align: left;">Detalle / Glosa</label>
                 <label class="col-sm-1 col-form-label" style="text-align: left; left:-25px !important;">Presupuestado</label>
