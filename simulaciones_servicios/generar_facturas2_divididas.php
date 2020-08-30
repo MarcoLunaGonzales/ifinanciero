@@ -90,7 +90,7 @@
                     }
                 }
                 $sw_controlador="0";//verifica si todo esta okey
-                $errorInsertar=0;
+                $errorInsertar=0;                
                 for ($flag=0; $flag < count($SQLDATOSINSTERT); $flag++) { 
                     if($SQLDATOSINSTERT[$flag]==false){
                         $errorInsertar++;
