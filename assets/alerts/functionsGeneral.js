@@ -8144,7 +8144,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       }
       var mod_afnor=0;
       if($("#mod_afnor").length>0){
-        if($("#afnor").is(':checked')){
+        if($("#mod_afnor").is(':checked')){
           mod_afnor=1;
         }else{
           mod_afnor=0;
