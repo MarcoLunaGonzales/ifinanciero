@@ -9494,4 +9494,23 @@ function obtenerNombreEstadoCivilPersona($codigo){
   }  
   return $valor;
 }
+function verificarLibretaBancarias($CodLibretaDetalle){
+  $dbh = new Conexion();
+  $CodLibretaDetalle=trim($CodLibretaDetalle,",");
+  $array_libreta=explode(',',$CodLibretaDetalle);
+  $contador_array=sizeof($array_libreta);
+  $sqlUpdateLibreta="SELECT count(*) as contador from libretas_bancariasdetalle where codigo in ($CodLibretaDetalle);";
+  $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
+  $stmtUpdateLibreta->execute();        
+  $result=$stmtUpdateLibreta->fetch();
+  $contador_select=$result['contador'];
+  if($contador_select==$contador_array){
+    return 0;
+  }else{
+    return 1;
+  }
+
+
+}
+
 ?>
