@@ -65,7 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $detalle=strval($valor['detalle']);
                         $precioUnitario=$valor['precioUnitario'];
                         $cantidad=$valor['cantidad'];
-                        $importeTotal_x=$importeTotal_x+($precioUnitario*$cantidad);                        
+
+                        //$importeTotal_x=$importeTotal_x+($precioUnitario*$cantidad);                        
                         // echo $suscripcionId." - ".$pagoCursoId."<br>";
                         if($suscripcionId<=0 && $pagoCursoId<=0 && !is_numeric($suscripcionId) && !is_numeric($pagoCursoId)){
                             $sw=false;
@@ -75,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $sw=false;
                             $estado=8;
                             $mensaje = "algún item con detalle vacío";
-                        }elseif($precioUnitario<=0 && !is_numeric($precioUnitario)){
+                        }elseif($precioUnitario<=0 || !is_numeric($precioUnitario)){
                             $sw=false;
                             $estado=9;
                             $mensaje = "algún item con precio incorrecto";
@@ -86,6 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         }
                         if($suscripcionId>0 || $pagoCursoId==0){
                             $normas=1;
+                        }
+
+                        if($precioUnitario>0 && is_numeric($precioUnitario)){
+                            $importeTotal_x=$importeTotal_x+($precioUnitario*$cantidad);                        
                         }
                     }
                     // $sw=false;

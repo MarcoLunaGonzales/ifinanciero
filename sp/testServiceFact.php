@@ -27,10 +27,10 @@ $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 // $Objeto_detalle3->cantidad = 1;
 
 $Objeto_detalle4 = new stdClass();
-$Objeto_detalle4->suscripcionId = 0;
-$Objeto_detalle4->pagoCursoId = 3821;
-$Objeto_detalle4->detalle = "Curso OV-PBFT-CO-G1-2020 , Mu00f3dulo 1 protocolo de bioseguridad para servicios de restaurantes, catering y foodtrucks durante la pandemia del covid 19";
-$Objeto_detalle4->precioUnitario = "100";
+$Objeto_detalle4->suscripcionId = 4778;
+$Objeto_detalle4->pagoCursoId = 0;
+$Objeto_detalle4->detalle = "Curso OV-PSST-CO-G2-2020 , Mu00f3dulo 2 elaboracion de programas de seguridad y salud en el trabajo - psst";
+$Objeto_detalle4->precioUnitario = "480";
 $Objeto_detalle4->cantidad = 1;
 
 $Array= array($Objeto_detalle4);
@@ -40,11 +40,11 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
               "fechaFactura"=>'2020-08-29', // fecha de la factura
-              "nitciCliente"=>'04081511721010', //nit o ci de cliente
-              "razonSocial"=>'JULIO CESAR VALLE', //razon social
-              "importeTotal"=>"100", //importe total
-              "tipoPago"=>4, // array con el detalle    
-              "codLibretaDetalle"=>'0', // array con el detalle
+              "nitciCliente"=>'1712164', //nit o ci de cliente
+              "razonSocial"=>'Santiago Mole', //razon social
+              "importeTotal"=>"480", //importe total
+              "tipoPago"=>6, // array con el detalle    
+              "codLibretaDetalle"=>'4624,4623', // array con el detalle
               "items"=>$Array // array con el detalle    
               );
 $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
