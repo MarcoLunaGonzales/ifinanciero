@@ -239,7 +239,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 	    return "0";
 	}	
 }
-function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$tipoPago,$cod_cuenta_libreta,$normas,$cod_facturaventa){
+function ejecutarComprobanteSolicitud_tiendaVirtual_bk($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$tipoPago,$cod_cuenta_libreta,$normas,$cod_facturaventa){
 	require_once __DIR__.'/../conexion.php';
 	$dbh = new Conexion();
 	date_default_timezone_set('America/La_Paz');
@@ -414,13 +414,18 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 	    return "";
 	}	
 }
-function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$tipoPago,$cod_libretas_X,$normas,$cod_facturaventa){
+function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$tipoPago,$cod_libretas_X,$normas,$cod_facturaventa){
 	require_once __DIR__.'/../conexion.php';
 	require_once '../functions.php';	
 	require_once __DIR__.'/../functionsGeneral.php';
 	$dbh = new Conexion();
 	date_default_timezone_set('America/La_Paz');
 	// session_start();
+	        //rollback inicia
+    $SQLDATOSINSTERT=[];
+    $sqlCommit="SET AUTOCOMMIT=0;";
+    $stmtCommit = $dbh->prepare($sqlCommit);
+    $stmtCommit->execute();
 	try{
 	    $cod_uo_solicitud = 5;
 	    // $cod_uo_unico=5;	   	 
@@ -456,8 +461,9 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio_x)."<br>\n";
         }
 		$codComprobante=obtenerCodigoComprobante();		
-		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);		
+		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);	
 		$ordenDetalle=1;//<--
+		array_push($SQLDATOSINSTERT,$flagSuccess);
 		if($flagSuccess){	
 			$cod_tipopago=obtenerValorConfiguracion(55);//deposito  en cuenta
 			$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago);
@@ -473,7 +479,9 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 				$monto_tipopago_2=$monto_total*$porcentaje_cuenta_transitoria/100;
 				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
 				$ordenDetalle++;
+				array_push($SQLDATOSINSTERT,$flagSuccessDet);
 				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle);
+				array_push($SQLDATOSINSTERT,$flagSuccessDet);
 			}else{
 				if($cod_libretas_X!='0'){
 					$cod_libretas_X=trim($cod_libretas_X,",");
@@ -486,9 +494,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 					$monto_libreta_total=0;
 					$array_libreta_save="";
 					$sw_controlador=0;//contrala la entradas
-					while ($row_libreta = $stmtLibreta->fetch()) {
-						// $monto_facturas=obtenerTotalFacturasLibreta($codigo_libreta_det);
-						// $monto_libreta=$monto_libreta-$monto_facturas;
+					while ($row_libreta = $stmtLibreta->fetch()) {						
 						$monto_libreta_x=obtenerSaldoLibretaBancariaDetalle($codigo_libreta_det);
 						if($monto_libreta_x==0){
 							$monto_libreta=$monto_libreta;
@@ -502,13 +508,16 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 								if($estado_libreta==0){//cueenta de libreta
 					                $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
 					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
+					                array_push($SQLDATOSINSTERT,$flagSuccessDet);
 					            }elseif($estado_libreta==1){//contra cuenta de libreta
 					                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
 									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
+									array_push($SQLDATOSINSTERT,$flagSuccessDet);
 					            }
 					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$cod_facturaventa)";
 		                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-		                        $stmtUpdateLibreta->execute();
+		                        $flagSuccessLibreta=$stmtUpdateLibreta->execute();
+		                        array_push($SQLDATOSINSTERT,$flagSuccessLibreta);
 							}else{
 								// $array_libreta_save.=$codigo_libreta_det.",";
 								$saldo_libreta=$monto_libreta_total-$monto_libreta;//volvemos al monto anterior
@@ -516,35 +525,20 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 								if($estado_libreta==0){//cueenta de libreta								
 					                $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
 					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle);
+					                array_push($SQLDATOSINSTERT,$flagSuccessDet);
 					            }elseif($estado_libreta==1){//contra cuenta de libreta
 					                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
 									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle);
+									array_push($SQLDATOSINSTERT,$flagSuccessDet);
 					            }
 					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$cod_facturaventa)";
 		                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
-		                        $stmtUpdateLibreta->execute();
+		                        $flagSuccessLibreta=$stmtUpdateLibreta->execute();
 					            $sw_controlador=1;
+					            array_push($SQLDATOSINSTERT,$flagSuccessLibreta);
 							}
 						}
-					}
-					// $cod_libretas_X=trim($cod_libretas_X,",");
-					// $sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_libretas_X) order by  fecha_hora asc";
-					// $stmtDetalleTipoPago = $dbh->prepare($sqlTipopago);
-					// $stmtDetalleTipoPago->execute();							
-					// $stmtDetalleTipoPago->bindColumn('codigo', $codigo_libreta_det);
-					// $stmtDetalleTipoPago->bindColumn('cod_estado', $estado_libreta);  
-					// $stmtDetalleTipoPago->bindColumn('monto', $monto_libreta);  					
-					// $monto_libreta_total=0;
-					// while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {
-					// 	$monto_libreta_total+=$monto_libreta;
-					// 	if($estado_libreta==0){//cueenta de libreta
-			  //               $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
-			  //               $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
-			  //           }elseif($estado_libreta==1){//contra cuenta de libreta
-			  //               $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
-					// 		$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
-			  //           }
-					// }
+					}				
 					if($monto_libreta_total<$monto_total){	
 						$sw=1;				
 						$sqldeletecomprobante="DELETE from comprobantes where codigo=$codComprobante";
@@ -553,11 +547,19 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
                         $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$codComprobante";
                         $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
                         $flagSuccess=$stmtDeleteComprobanteDet->execute();
+                        $sw_controlador="1";//hubo algun error
+		                $sqlRolBack="ROLLBACK;";
+		                $stmtRolBack = $dbh->prepare($sqlRolBack);
+		                $stmtRolBack->execute();
+		                $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
+		                $stmtCommit = $dbh->prepare($sqlCommit);
+		                $stmtCommit->execute();
                         return "-1";//error en montos
 					}
 
 				}else{
 					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_total,0,$descripcion,$ordenDetalle);
+					array_push($SQLDATOSINSTERT,$flagSuccessDet);
 				}
 			}
 			if($sw==0){			
@@ -567,21 +569,24 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 				$porcentaje_it_gasto=obtenerValorConfiguracion(2);
 				$monto_it_gasto=$porcentaje_it_gasto*$monto_total/100;
 				$descripcion_it_gasto=$concepto_contabilizacion;
-				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_gasto,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_it_gasto,0,$descripcion_it_gasto,$ordenDetalle);			
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_gasto,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_it_gasto,0,$descripcion_it_gasto,$ordenDetalle);
+				array_push($SQLDATOSINSTERT,$flagSuccessDet);
 		        $ordenDetalle++;
 		        //para IVA
 				$cod_cuenta_debito_iva=obtenerValorConfiguracion(50);
 				$porcentaje_debito_iva=obtenerValorConfiguracion(1);
 				$monto_debito_iva=$porcentaje_debito_iva*$monto_total/100;
 				$descripcion_debito_iva=$concepto_contabilizacion;
-				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_debito_iva,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_debito_iva,$descripcion_debito_iva,$ordenDetalle);			
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_debito_iva,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_debito_iva,$descripcion_debito_iva,$ordenDetalle);	
+				array_push($SQLDATOSINSTERT,$flagSuccessDet);		
 		        $ordenDetalle++;
 		        //para IT pasivo
 				$cod_cuenta_it_pasivo=obtenerValorConfiguracion(51);
 				$porcentaje_it_pasivo=obtenerValorConfiguracion(2);
 				$monto_it_pasivo=$porcentaje_it_pasivo*$monto_total/100;
 				$descripcion_it_pasivo=$concepto_contabilizacion;
-				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_it_pasivo,$descripcion_it_pasivo,$ordenDetalle);			
+				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_it_pasivo,$descripcion_it_pasivo,$ordenDetalle);
+				array_push($SQLDATOSINSTERT,$flagSuccessDet);
 		        $ordenDetalle++;	       
 		        //ingresos por capacitacion	  
 		        $porcentaje_pasivo=100-$porcentaje_debito_iva;
@@ -589,16 +594,58 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_test($nitciCliente,$razonSoc
 				$descripcion=$concepto_contabilizacion;
 				$cod_cuenta_areas=obtenerCodCuentaArea($cod_area_solicitud);
 				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_areas_format,$descripcion,$ordenDetalle);
-	            $ordenDetalle++;				
-				return $codComprobante;
+				array_push($SQLDATOSINSTERT,$flagSuccessDet);
+	            $ordenDetalle++;
+	            $sw_controlador="0";//verifica si todo esta okey
+                $errorInsertar=0;                
+                for ($flag=0; $flag < count($SQLDATOSINSTERT); $flag++) { 
+                    if($SQLDATOSINSTERT[$flag]==false){
+                        $errorInsertar++;
+                        // echo $flag;
+                        break;
+                    }
+                } 
+                if($errorInsertar!=0){
+                    $sw_controlador="1";//hubo algun error
+                    $sqlRolBack="ROLLBACK;";
+                    $stmtRolBack = $dbh->prepare($sqlRolBack);
+                    $stmtRolBack->execute();
+                }
+                $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
+                $stmtCommit = $dbh->prepare($sqlCommit);
+                $stmtCommit->execute();
+                if($sw_controlador==0)
+					return $codComprobante;
+				else
+					return "" ;
 			}else{
+				$sw_controlador="1";//hubo algun error
+                $sqlRolBack="ROLLBACK;";
+                $stmtRolBack = $dbh->prepare($sqlRolBack);
+                $stmtRolBack->execute();
+                $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
+                $stmtCommit = $dbh->prepare($sqlCommit);
+                $stmtCommit->execute();
 				return "-1";//error en montos
-			}
-			// header('Location: ../comprobantes/imp.php?comp='.$codComprobante.'&mon=1');
+			}	
 		}else{
+			$sw_controlador="1";//hubo algun error
+            $sqlRolBack="ROLLBACK;";
+            $stmtRolBack = $dbh->prepare($sqlRolBack);
+            $stmtRolBack->execute();
+            $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
+            $stmtCommit = $dbh->prepare($sqlCommit);
+            $stmtCommit->execute();
 			return "";
 		}
 	} catch(PDOException $ex){
+		$sw_controlador="1";//hubo algun error
+        $sqlRolBack="ROLLBACK;";
+        $stmtRolBack = $dbh->prepare($sqlRolBack);
+        $stmtRolBack->execute();
+        $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
+        $stmtCommit = $dbh->prepare($sqlCommit);
+        $stmtCommit->execute();
 	    return "";
 	}	
 }

@@ -147,15 +147,14 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 								<tr class="text-dark bg-plomo">
 									<th>#</th>
 									<th>Numero</th>
-                  <th class="text-left">Cuenta</th>
-                  <th class="text-left">C.C.</th>
+									<th class="text-left">Nombre Cuenta</th>
 									<th>Detalle</th>
 									<th>Retenci&oacute;n</th>
-                  <th>Proveedor</th>
-									<th class="text-right">Ppto.</th>
-                  <th class="text-right bg-info text-white">Seguimiento Ppto.</th>
+									<th class="text-right">Presupuestado</th>
+                  <th class="text-right bg-info text-white">Seguimiento Presupuestal</th>
                   <th class="text-right bg-info text-white">%</th>
 									<th class="text-right text-white" style="background:#741C89;">Importe</th>			
+									<th>Proveedor</th>
 									<!--<th>Archivos Adjuntos</th>-->
 								</tr>
 							</thead>
@@ -173,7 +172,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 							    $totalImportePres+=$importeX;
 							    $totalImporte+=$importeSolX;
 							    if($retencionX!=0){
-							   	  $tituloImporte=nameRetencion($retencionX);
+							   	  $tituloImporte="<strong>".nameRetencion($retencionX)."</strong>";
 							    }else{
 							      $tituloImporte="Ninguno";	
 							    }
@@ -182,9 +181,6 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                   
                   $codAreaXX=$rowDetalles['cod_area'];
                   $codOficinaXX=$rowDetalles['cod_unidadorganizacional'];
-
-                  $nombreOficinaXX=abrevUnidad_solo($codOficinaXX);
-                  $nombreAreaXX=abrevArea_solo($codAreaXX);
 
                   $datosSeg=obtenerPresupuestoEjecucionDelServicio($codOficinaXX,$codAreaXX,$anioSol,(int)$mesSol,$numeroCuentaX);
             
@@ -197,23 +193,22 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                                 ?>
                                 <tr>
                                     <td><?=$index?></td>
-                                	<td class="text-center small"><?=$numeroCuentaX?></td>
-                                    <td class="text-left small font-weight-bold"><?=$nombreCuentaX?></td>
-                                    <td class="text-left small font-weight-bold text-primary"><?=$nombreOficinaXX?>-<?=$nombreAreaXX;?></td>
-                                    <td class="text-left font-weight-bold text-primary"><?=$detalleX?> <?=$tituloActividad?></td>
-                                    <td class="text-left small"><?=$tituloImporte?></td>
-                                    <td class="text-left text-primary font-weight-bold"><?=$proveedorX?></td>
+                                	<td class="font-weight-bold"><?=$numeroCuentaX?></td>
+                                    <td class="text-left"><?=$nombreCuentaX?></td>
+                                    <td><?=$detalleX?> <?=$tituloActividad?></td>
+                                    <td><?=$tituloImporte?></td>
                                     <td class="text-right"><?=number_format($importeX, 2, '.', ',')?></td>
                                     <td class="text-center" style="background:#6CE2F0;"><?=number_format($segPres, 0, '.', ',')?></td>
                                     <td class="text-center" style="background:#6CE2F0;"><?=number_format($porcentSegPres, 0, '.', '')?> %</td>
                                     <td class="text-right" style="background:#C100F1;"><?=number_format($importeSolX, 2, '.', ',')?></td>
+                                    <td><?=$proveedorX?></td>
                                     <!--<td><?=obtenerDirectoriosSol("../assets/archivos-respaldo/archivos_solicitudes/SOL-".$codigo."/DET-".$index);?></td>-->
                                 </tr><?php
                               $index++;
                              }
                         	?>
                         	  <tr class="font-weight-bold bg-white text-dark">
-                        	  	    <td colspan="9" class="text-left">Total</td>
+                        	  	    <td colspan="7" class="text-left">Total</td>
                                     <td class="text-right"><?=number_format($totalImportePres, 2, '.', ',')?></td>
                                     <td class="text-right"><?=number_format($totalImporte, 2, '.', ',')?></td>
                                     <td></td>

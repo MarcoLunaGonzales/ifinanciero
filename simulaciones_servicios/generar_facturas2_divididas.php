@@ -65,8 +65,8 @@
                     $ci_estudiante_x=$row['ci_estudiante'];
                     $estado_x=true;
                     if($tipo_solicitud==2){// la solicitud pertence capacitacion estudiantes
-                        echo $ci_estudiante_x."-".$cod_simulacion_servicio."-".$cod_claservicio_x."-".$precio_x."-".$codigo;
-                        $datos=resgistrar_pago_curso($ci_estudiante_x,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$codigo);
+                        //echo $ci_estudiante_x."-".$cod_simulacion_servicio."-".$cod_claservicio_x."-".$precio_x."-".$codigo;
+                        $datos=resgistrar_pago_curso($ci_estudiante,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$codigo);
                         $estado_x=$datos["estado"];
                         $mensaje_x=$datos["mensaje"];                    
                     }elseif($tipo_solicitud==7){//pago grupal                     
@@ -90,7 +90,7 @@
                     }
                 }
                 $sw_controlador="0";//verifica si todo esta okey
-                $errorInsertar=0;
+                $errorInsertar=0;                
                 for ($flag=0; $flag < count($SQLDATOSINSTERT); $flag++) { 
                     if($SQLDATOSINSTERT[$flag]==false){
                         $errorInsertar++;

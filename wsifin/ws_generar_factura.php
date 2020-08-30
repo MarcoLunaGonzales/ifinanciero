@@ -11,16 +11,16 @@ function check($x) {
 }
 function insertarlogFacturas_entrada($json,$mensaje){
     $dbh = new Conexion();
-    date_default_timezone_set('America/La_Paz');
-    $fecha =date('Y-m-d H:i:s');
-    $sql="INSERT INTO log_facturas(fecha,detalle_error,json) values('$fecha','$mensaje','$json')";
+    // date_default_timezone_set('America/La_Paz');
+    // $fecha =date('Y-m-d H:i:s');
+    $sql="INSERT INTO log_facturas(fecha,detalle_error,json) values(NOW(),'$mensaje','$json')";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();    
 }
 function InsertlogFacturas_salida($cod_error,$detalle_error,$json){  
     $dbh = new Conexion();
-    $fecha =date('Y-m-d H:i:s');
-    $sql="INSERT INTO log_facturas(fecha,cod_error,detalle_error,json) values('$fecha','$cod_error','$detalle_error','$json')";
+    // $fecha =date('Y-m-d H:i:s');
+    $sql="INSERT INTO log_facturas(fecha,cod_error,detalle_error,json) values(NOW(),'$cod_error','$detalle_error','$json')";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();    
 }
@@ -65,7 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $detalle=strval($valor['detalle']);
                         $precioUnitario=$valor['precioUnitario'];
                         $cantidad=$valor['cantidad'];
-                        $importeTotal_x=$importeTotal_x+($precioUnitario*$cantidad);                        
+
+                        //$importeTotal_x=$importeTotal_x+($precioUnitario*$cantidad);                        
                         // echo $suscripcionId." - ".$pagoCursoId."<br>";
                         if($suscripcionId<=0 && $pagoCursoId<=0 && !is_numeric($suscripcionId) && !is_numeric($pagoCursoId)){
                             $sw=false;
@@ -75,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $sw=false;
                             $estado=8;
                             $mensaje = "algún item con detalle vacío";
-                        }elseif($precioUnitario<=0 && !is_numeric($precioUnitario)){
+                        }elseif($precioUnitario<=0 || !is_numeric($precioUnitario)){
                             $sw=false;
                             $estado=9;
                             $mensaje = "algún item con precio incorrecto";
@@ -86,6 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         }
                         if($suscripcionId>0 || $pagoCursoId==0){
                             $normas=1;
+                        }
+
+                        if($precioUnitario>0 && is_numeric($precioUnitario)){
+                            $importeTotal_x=$importeTotal_x+($precioUnitario*$cantidad);                        
                         }
                     }
                     // $sw=false;
@@ -101,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }elseif(!check($fechaFactura) || $fechaFactura!=$fechaFactura_actual){
                         $estado=3;
                         $mensaje = "Fecha incorrecta o no actual";
-                    }elseif($nitciCliente==null || $nitciCliente<0 || !is_numeric($nitciCliente)){
+                    }elseif($nitciCliente==null || $nitciCliente<0 || !is_numeric($nitciCliente) ||strlen($nitciCliente)>10){
                         $estado=4;
                         $mensaje = "Nit incorrecto";
                     }elseif($razonSocial==null || $razonSocial=='' || $razonSocial==' '){
@@ -110,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }elseif($tipoPago==null || $tipoPago=='' || $tipoPago==' '){
                         $estado=16;
                         $mensaje = "Tipo de Pago no encontrado";
-                    }elseif(($CodLibretaDetalle==null || $CodLibretaDetalle=='' || $CodLibretaDetalle==' ')&&$CodLibretaDetalle!=0){
+                    }elseif(($CodLibretaDetalle==null || $CodLibretaDetalle=='' || $CodLibretaDetalle==' ')&&$CodLibretaDetalle!='0'){
                         $estado=17;
                         $mensaje = "CodLibretaDetalle no encontrado.";
                     }elseif($items==null || $cont_items<=0){
@@ -120,20 +125,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         //mostrará el error de los items 
                     }else{
                         if($tipoPago==5 || $tipoPago==6){
-                            if($CodLibretaDetalle==0){
+                            if($CodLibretaDetalle=='0'){
                                 $estado=17;
                                 $mensaje = "CodLibretaDetalle no encontrado.";
                                 $sw_cod_libreta=false;
                             }else{
-                                $sw_cod_libreta=true;
+                                $controlador_libreta=verificarLibretaBancarias($CodLibretaDetalle);                                
+                                if($controlador_libreta==0){
+                                    $sw_cod_libreta=true;
+                                }else{
+                                    $estado=17;
+                                    $mensaje = "CodLibretaDetalle no encontrado.";
+                                    $sw_cod_libreta=false;
+                                }
                             }
                         }
                         if($sw_cod_libreta){                            
                             $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas);//llamamos a la funcion                 
                             $rspArray = explode("###", $rspString);
                             $rsp=$rspArray[0];
-                            $cod_factura=$rspArray[1];
                             if($rsp=='0'){
+                                $cod_factura=$rspArray[1];
                                 $estado='0';
                                 $mensaje = "Factura Generada Correctamente";
                             }elseif($rsp==11){
@@ -142,6 +154,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             }elseif($rsp==17){
                                 $estado=17;
                                 $mensaje = "CodLibretaDetalle no encontrado.";
+                            }elseif($rsp==18){
+                                $estado=18;
+                                $mensaje = "La Suma del Monto de las Libretas es menor al de la factura.";
                             }else{
                                 $estado=12;//no encuentro el error
                                 $mensaje = "Error interno del servicio";
@@ -166,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $mensaje="Error en las credenciales sKey y sIde";
     }
     if(isset($cod_factura)){
-        $mensaje.=" IdFactura".$cod_factura;
+        $mensaje.=" IdFactura: ".$cod_factura;
     }
     InsertlogFacturas_salida($estado,$mensaje,$json);
     if($estado=='0'){$resultado=array("estado"=>$estado,"mensaje"=>$mensaje,"IdFactura"=>$cod_factura);}
