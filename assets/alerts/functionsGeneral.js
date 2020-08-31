@@ -3196,7 +3196,7 @@ function guardarSimulacionServicio(){
     var des_serv=$("#d_servicio").val();
      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
-        type: "GET",
+        type: "POST",
         dataType: 'html',
         url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
         data: parametros,
@@ -3213,7 +3213,7 @@ function guardarSimulacionServicio(){
             if (log.trim()==""){
               var param={"codigo":resp};
               $.ajax({
-                 type: "GET",
+                 type: "POST",
                  dataType: 'html',
                  url: "simulaciones_servicios/ajaxSimulacionExitosa.php",
                  data: param,
@@ -3248,7 +3248,7 @@ function guardarSimulacionServicio(){
       var des_serv=$("#d_servicio_p").val();
      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
      $.ajax({
-        type: "GET",
+        type: "POST",
         dataType: 'html',
         url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
         data: parametros,
@@ -3266,7 +3266,7 @@ function guardarSimulacionServicio(){
             if (log.trim()==""){
               var param={"codigo":resp};
               $.ajax({
-                 type: "GET",
+                 type: "POST",
                  dataType: 'html',
                  url: "simulaciones_servicios/ajaxSimulacionExitosa.php",
                  data: param,
