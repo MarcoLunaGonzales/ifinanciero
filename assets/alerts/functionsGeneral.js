@@ -11212,6 +11212,7 @@ function listarAtributo(){
   table.addClass("table-bordered");
   table.addClass("table-sm table-striped");
   table.addClass("small");
+  table.attr("id","tabla_de_sitios_productos");
   var titulos = $('<tr>').addClass('bg-info text-white');
      titulos.append($('<th>').addClass('').text('#'));
      titulos.append($('<th>').addClass('').text('NOMBRE'));
@@ -11310,6 +11311,56 @@ function listarAtributo(){
       $('#divResultadoListaAtributosProd').html(div);
       //$('#divResultadoListaAtributosProd').bootstrapMaterialDesign(); 
      } 
+
+}
+
+function listarAtributoUltimo(){
+  if(itemAtributos.length>1){
+    var sumaDias=[];
+     for (var i = (itemAtributos.length-1); i < itemAtributos.length; i++) {
+     var row = $('<tr>').addClass('');
+     row.append($('<td>').addClass('').text(i+1));
+     row.append($('<td>').addClass('').text(itemAtributos[i].nombre));
+     row.append($('<td>').addClass('').text(itemAtributos[i].direccion)); 
+     if(!($("#productos_div").hasClass("d-none"))){
+      row.append($('<td>').addClass('').text(itemAtributos[i].marca));
+      row.append($('<td>').addClass('').text(itemAtributos[i].norma));
+      row.append($('<td>').addClass('').text(itemAtributos[i].sello));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
+     }else{
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
+      if($("#modalEditPlantilla").length>0){
+       if($("#codigo_area").val()!=39){
+        for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
+          for (var j= 0; j< itemAtributosDias.length; j++) {
+           if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
+            sumaDias[k]+=parseFloat(itemAtributosDias[j].dias);
+            row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
+            row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
+              $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
+              '</select></td>');  
+            //alerta 2 0 3
+           } 
+         };     
+        };
+       }    
+      } //fin #modalEditPlantilla
+     }
+       $('.selectpicker').selectpicker("refresh");
+       if($("#sinEdicionModal").length>0){
+         row.append($('<td>').addClass('text-right small').html(''));
+       }else{
+         row.append($('<td>').addClass('text-right small').html('<div class="btn-group"><button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button></div>'));    
+       }
+   }
+     $("#tabla_de_sitios_productos").append(row);
+  }else{
+    listarAtributo();
+  }
 
 }
 
@@ -11466,7 +11517,7 @@ function guardarAtributoItem(){
     limpiarModalCache("modal_atributo");
     editarDatosPlantilla();
    }else{
-    listarAtributo();
+    listarAtributoUltimo();
     $("#modal_atributo").modal("hide");
    }
   }
