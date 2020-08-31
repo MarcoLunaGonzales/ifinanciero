@@ -85,6 +85,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                               <th style="border:2px solid;"><small><b>Fecha</b></small></th>
                               <!--<th style="border:2px solid;" width="16%"><small><b>Observaciones</b></small></th>-->
                               <th style="border:2px solid;" width="12%"><small><b>Personal Pago</b></small></th>
+                              <th style="border:2px solid;" width="12%"><small><b>Observaciones</b></small></th>
                               <th style="border:2px solid;"><small><b>Monto</b></small></th>
                               <th style="border:2px solid;"><small><b>Estado</b></small></th>
                             </tr>
@@ -154,6 +155,11 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
 
                        $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);
                        $otrosPagosCuenta=comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo);
+
+                       $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);
+                       $glosaArray=explode("####", $glosa_estadoX);
+                       $glosa_estadoX = str_replace("####", " - ", $glosa_estadoX);
+
 ?>
                         <tr>
                           <td><small><?=$index;?></small></td>
@@ -169,6 +175,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                           <td><small><?=strftime('%d/%m/%Y',strtotime($fecha));?></small></td>
                           <!--<td class="text-muted font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>-->
                           <td class="text-muted font-weight-bold"><small><b><?=obtenerNombreConcatenadoEncargadoSolicitudRecurso($codigo)?></b></small></td>
+                          <td class="font-weight-bold"><small><b><?=$glosa_estadoX?> <br><?=obtenerFechaCambioEstadoSolicitudRecurso($codigo)?></b></small></td>
                           <td><small><?=number_format(obtenerSumaDetalleSolicitud($codigo),2,'.',',')?></small></td>
                           <td class="td-actions text-right"><small><button class="btn <?=$btnEstado?> btn-sm btn-round btn-block"><?=$estado;?></button></small>
                           </td> 
