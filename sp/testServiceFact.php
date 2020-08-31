@@ -39,7 +39,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
-              "fechaFactura"=>'2020-08-29', // fecha de la factura
+              "fechaFactura"=>'2020-08-31', // fecha de la factura
               "nitciCliente"=>'1712164', //nit o ci de cliente
               "razonSocial"=>'Santiago Mole', //razon social
               "importeTotal"=>"480", //importe total

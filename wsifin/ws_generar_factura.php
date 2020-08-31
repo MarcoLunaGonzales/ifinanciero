@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $sw=false;
                             $estado=9;
                             $mensaje = "algún item con precio incorrecto";
-                        }elseif($cantidad<=0 && !is_numeric($cantidad)){
+                        }elseif($cantidad<=0 || !is_numeric($cantidad)){
                             $sw=false;
                             $estado=10;
                             $mensaje = "algún item con cantidad incorrecta";
