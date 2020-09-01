@@ -3,8 +3,6 @@ require_once 'functions.php';
 require_once 'functionsGeneral.php';
 require_once 'conexion.php';
 // tiempo de la sesion por 8 horas
-ini_set('session.gc_maxlifetime', 28800);
-session_set_cookie_params(28800);
 
 $dbh = new Conexion();
 session_start();

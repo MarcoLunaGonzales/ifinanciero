@@ -5,7 +5,9 @@ require_once 'styles.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
 set_time_limit(0);
-
+  ini_set("session.cookie_lifetime","28800");
+  ini_set("session.gc_maxlifetime","28800");
+  
 session_start();
 if(isset($_SESSION['logueado'])){
   if(isset($_GET['q'])){
