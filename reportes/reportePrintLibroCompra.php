@@ -90,8 +90,7 @@ $razon_social=$result['razon_social'];
                   <h3 class="card-title text-center" ><b>Libro de Compras IVA</b>
                     <span><br><h6>
                     Del Período: <?=$nombre_mes;?>/<?=$nombre_gestion;?><br>
-                    Expresado En Bolivianos</h6></span></h3>                  
-                  <!-- <h6 class="card-title">Unidad: <?=$stringUnidades;?></h6> -->
+                    Expresado En Bolivianos</h6></span></h3>                                    
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">

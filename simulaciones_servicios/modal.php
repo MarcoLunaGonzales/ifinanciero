@@ -654,9 +654,12 @@
                                   $nombreX=$row['nombre'];
                                   //$tipoX=$row['tipo'];
                                   //$abrevX=$row['abreviatura'];
-                                   ?>
-                                  <option value="<?=$codigoX;?>" <?=($cod_clienteX==$codigoX)?"selected":"";?>><?=$nombreX;?></option> 
-                                  <?php
+                                  if ($cod_clienteX==$codigoX){
+                                     ?>
+                                     <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option> 
+                                     <?php
+                                    
+                                      }
                                     }
                                     ?>
                                 </select>

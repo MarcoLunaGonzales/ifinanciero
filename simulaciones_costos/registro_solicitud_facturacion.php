@@ -47,16 +47,12 @@ $NroModulo = $resultSimu['NroModulo'];
 $Nombre = $resultSimu['Nombre'];
 $razon_social = $resultSimu['clRazonSocial'];
 $nit = $resultSimu['clNit'];
-// $monto_pagar=($Costo - ($Costo*$Abrev/100) )/$CantidadModulos; //formula para sacar el monto a pagar del estudiante
 
-// $Costo=$Costo/$CantidadModulos;
 $Abrev=trim($resultSimu['Abrev'],'%');
 $descuento_cliente=trim($resultSimu['Abrev'],'%');
 $descuento_bob_cliente=$Costo*trim($resultSimu['Abrev'],'%')/100;
-// $cantidadEPre=$resultSimu['cantidad_editado'];
 $monto_pagar=($Costo - $descuento_bob_cliente); //formula para sacar el monto a pagar del estudiante
 // echo $monto_pagar;
-// $monto_pagar=number_format($monto_pagar,2,".","");
 
 $Codigo_alterno=obtenerCodigoExternoCurso($IdCurso);
 if($cod_facturacion>0){//editar
@@ -340,7 +336,7 @@ $contadorRegistros=0;
                             <label class="col-sm-2 col-form-label">Cliente</label>
                             <div class="col-sm-4">
                                 <div class="form-group" >                                                            
-                                    <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContactoNormas(this);" data-live-search="true" >
+                                    <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContacto(this);" data-live-search="true" >
                                         <option value=""></option>
                                         <?php 
                                         $queryTipoObjeto = "SELECT * from clientes where cod_estadoreferencial=1 order by nombre";
@@ -558,7 +554,6 @@ $contadorRegistros=0;
                                                     }
                                                     
                                                     if($estadoPagado!=1){
-                                                        // if($cod_facturacion==0){
                                                             //parte del controlador de check//impedir los ya registrados
                                                             $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.ci_estudiante like '%$ci_estudiante%' and tipo_solicitud=2 and sf.cod_estadosolicitudfacturacion!=2";
                                                              // echo $sqlControlador2;
@@ -609,11 +604,7 @@ $contadorRegistros=0;
                                                                 if($monto_pagar==$monto_total_pagado){
                                                                     $sw2="readonly style='background-color:#cec6d6;'";
                                                                 }
-                                                                // $descripcion_alternaX=obtenerDescripcionestudianteGrupal($IdCurso,$ci_estudiante,$codCS);
-                                                            }
-                                                        // }else{
-                                                        //     $monto_total_pagado=$monto_pagadoX;
-                                                        // }
+                                                            }                                                     
                                                         
                                                     }
                                                 }else{           
@@ -675,7 +666,7 @@ $contadorRegistros=0;
 
                                             <?php   $iii++;  }
                                                                                                                     
-                                            // $montoPreTotal=number_format($montoPreTotal,2,".","");
+                                            
                                             ?>
                                             <script>
                                                 window.onload = activarInputMontoFilaServicio2;
@@ -701,30 +692,11 @@ $contadorRegistros=0;
 
                                 <input type="hidden" id="modal_numeroservicio" name="modal_numeroservicio" value="<?=$iii?>">                    
                                 <input type="hidden" id="modal_totalmontos" name="modal_totalmontos">
-                                <!-- <script>activarInputMontoFilaServicio2();</script>   -->
+                                
                                 <input type="hidden" id="comprobante_auxiliar" name="comprobante_auxiliar">
-
-                                <!-- <fieldset id="fiel" style="width:100%;border:0;">
-                                    <button title="Agregar Servicios" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="AgregarSeviciosFacturacion2(this)">
-                                        <i class="material-icons">add</i>
-                                    </button><span style="color:#084B8A;"><b> SERVICIOS ADICIONALES</b></span>
-                                    <div id="div<?=$index;?>">  
-                                        <div class="h-divider">
-                                        
-                                        </div>
-                                    </div>
-                                    
-
-                                </fieldset> -->
-                                <!-- <div class="row">
-                                    <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total + Servicios Adicionales</label>
-                                    <div class="col-sm-4">
-                                        <div class="form-group">                                            
-                                            <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" />-->
+                         
                                             <input  class="form-control" type="hidden" name="monto_total_a" id="monto_total_a"  readonly="readonly" value="0"  />
-                                        <!--</div>
-                                    </div>
-                                </div> -->
+                                   
                             </div>
                         </div>                 
                     </div>
@@ -764,14 +736,6 @@ $contadorRegistros=0;
 <!-- verifica que esté seleccionado al menos un item -->
 <script type="text/javascript">
     function valida(f) {
-        // var aux_tes=document.getElementById('nfac').innerHTML; 
-
-        // var cod_facturacion=document.getElementById("cod_facturacion").value;
-        // console.log(aux_tes);
-        // ejecutar_function_objetos_distribucion_formapago();
-        // ejecutar_function_objetos_distribucion_areas();
-        
-
         var ok = true;    
         if(f.elements["modal_totalmontoserv_costo"].value == 0 || f.elements["modal_totalmontoserv_costo"].value < 0 || f.elements["modal_totalmontoserv_costo"].value == '')
         {    

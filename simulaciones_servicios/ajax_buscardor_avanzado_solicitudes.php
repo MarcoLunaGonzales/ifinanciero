@@ -193,52 +193,14 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
       $stmtDetalleSol->bindColumn('precio', $precio_unitario);
       $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                
       $stmtDetalleSol->bindColumn('ci_estudiante', $ci_estudiante_x); 
-      $concepto_contabilizacion="";
-      // if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
-      //   $concepto_contabilizacion="";
-      // }else{
-      //   $concepto_contabilizacion=$codigo_alterno." - ";  
-      // }
-      while ($row_det = $stmtDetalleSol->fetch()){
-        //$precio=$precio_unitario*$cantidad;
-        // $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
-        // $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
-        // $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
+      $concepto_contabilizacion="";      
+      while ($row_det = $stmtDetalleSol->fetch()){        
         if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){                              
           $concepto_contabilizacion="CI: ".$ci_estudiante_x." / "; 
         }
         $concepto_contabilizacion.=$descripcion_alterna."<br>\n";
       }
       $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100)); //limite de string
-      
-
-      // if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
-      //     //obtenemos datos de la simulacion TCP
-      //     $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-      //     from simulaciones_servicios sc,plantillas_servicios ps
-      //     where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-      //     $stmtSimu = $dbh->prepare($sql);
-      //     $stmtSimu->execute();
-      //     $resultSimu = $stmtSimu->fetch();
-      //     $nombre_simulacion = $resultSimu['nombre'];
-      //     $cod_area_simulacion = $resultSimu['cod_area'];
-      // }elseif($tipo_solicitud==2){//  pertence capacitacion
-      //     $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-      //     from simulaciones_costos sc,plantillas_servicios ps
-      //     where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
-      //     $stmtSimuCostos = $dbh->prepare($sqlCostos);
-      //     $stmtSimuCostos->execute();
-      //     $resultSimu = $stmtSimuCostos->fetch();
-      //     $nombre_simulacion = $resultSimu['nombre'];
-      //     $cod_area_simulacion = $resultSimu['cod_area'];
-      // }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
-      //     $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
-      //     $stmtSimuCostos = $dbh->prepare($sqlCostos);
-      //     $stmtSimuCostos->execute();
-      //     $resultSimu = $stmtSimuCostos->fetch();
-      //     $nombre_simulacion = $resultSimu['Descripcion'];
-      //     $cod_area_simulacion = $resultSimu['IdArea'];
-      // }
       $cod_area_simulacion=$cod_area;
       $nombre_simulacion='OTROS';
       $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
@@ -327,9 +289,7 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
                 if($cont_facturas<2){
                   ?>
                   <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
-                  <!-- <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
-                  <i class="material-icons" title="Imprimir Comprobante">print</i>
-                </a>  -->
+                  
                  <?php               
                 }
                 
@@ -457,10 +417,7 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
 
               $datos_envio_correo=$cadenaFacturas."######".$correosEnviados;?>
               <a href='#' title="Información de envío de Correo" class="btn btn-primary" onclick="modal_info_enviocorreo_f('<?=$datos_envio_correo;?>')"><i class="material-icons" >email</i></a>
-
-              <!-- <button type="button" class="btn btn-default" data-toggle="modal" data-target="modal_info_enviocorreo" onclick="modal_info_enviocorreo_f('<?=$datos_envio_correo;?>')">
-                <i class="material-icons" title="Información de envío">email</i>
-              </button>       -->
+              
             <?php }
           ?>
         </div></div>

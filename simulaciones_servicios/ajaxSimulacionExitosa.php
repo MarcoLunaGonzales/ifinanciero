@@ -10,7 +10,7 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$codigo=$_GET['codigo'];
+$codigo=$_POST['codigo'];
   
   $sqlInsert="UPDATE simulaciones_servicios SET estado_registro=1 where codigo=$codigo";
   $stmtInsert = $dbh->prepare($sqlInsert);

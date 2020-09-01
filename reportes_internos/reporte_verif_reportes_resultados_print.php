@@ -144,6 +144,11 @@ $stmt->execute();
                       '<td class="text-left font-weight-bold">TOTAL Estado Resultados</td>'.                      
                       '<td class="text-right font-weight-bold">'.formatNumberDec($total_estado_resultados).' </td>'.                           
                 '</tr>';
+                //diferencia
+                 $html.='<tr class="bg-danger text-white">'.
+                      '<td class="text-left font-weight-bold">DIFERENCIA</td>'.                      
+                      '<td class="text-right font-weight-bold">'.formatNumberDec( $totalimporteArea-$total_estado_resultados).' </td>'.                           
+                '</tr>';
 
 
             $html.=    '</tbody></table>';

@@ -192,10 +192,10 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
      if($codFactura!=null){
         $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura,(SELECT obtener_saldo_libreta_bancaria_detalle(ce.codigo)) as saldo_libreta_detalle
        FROM libretas_bancariasdetalle ce join libretas_bancariasdetalle_facturas ldf on ldf.cod_libretabancariadetalle=ce.codigo       
-       where ce.cod_libretabancaria=$codigoLib and ldf.cod_facturaventa=$codFactura and  ce.cod_estadoreferencial=1 $sqlFiltroDetalle order by ce.codigo";
+       where ce.cod_libretabancaria=$codigoLib and ldf.cod_facturaventa=$codFactura and  ce.cod_estadoreferencial=1 $sqlFiltroDetalle order by ce.fecha_hora desc";
      }else{
     $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura,(SELECT obtener_saldo_libreta_bancaria_detalle(ce.codigo)) as saldo_libreta_detalle
-       FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 $sqlFiltroDetalle order by ce.codigo";
+       FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 $sqlFiltroDetalle order by ce.fecha_hora desc";
      }
      $stmtFacDetalle = $dbh->prepare($sqlDetalle);
      $stmtFacDetalle->execute();

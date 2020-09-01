@@ -3196,7 +3196,7 @@ function guardarSimulacionServicio(){
     var des_serv=$("#d_servicio").val();
      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
-        type: "GET",
+        type: "POST",
         dataType: 'html',
         url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
         data: parametros,
@@ -3213,7 +3213,7 @@ function guardarSimulacionServicio(){
             if (log.trim()==""){
               var param={"codigo":resp};
               $.ajax({
-                 type: "GET",
+                 type: "POST",
                  dataType: 'html',
                  url: "simulaciones_servicios/ajaxSimulacionExitosa.php",
                  data: param,
@@ -3248,7 +3248,7 @@ function guardarSimulacionServicio(){
       var des_serv=$("#d_servicio_p").val();
      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
      $.ajax({
-        type: "GET",
+        type: "POST",
         dataType: 'html',
         url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
         data: parametros,
@@ -3266,7 +3266,7 @@ function guardarSimulacionServicio(){
             if (log.trim()==""){
               var param={"codigo":resp};
               $.ajax({
-                 type: "GET",
+                 type: "POST",
                  dataType: 'html',
                  url: "simulaciones_servicios/ajaxSimulacionExitosa.php",
                  data: param,
@@ -4884,6 +4884,7 @@ function agregaformRetiroPersonal(datos){
   //console.log("datos: "+datos);
   var d=datos.split('/');
   document.getElementById("codigo_personalR").value=d[0];
+  document.getElementById("codigo_contratoR").value=d[1];
 
   // document.getElementById("cod_areaE").value=d[2];
   // document.getElementById("porcentajeE").value=d[3];
@@ -4900,7 +4901,7 @@ function RegistrarContratoPersonal(cod_personal,cod_tipocontrato,fecha_inicio,fe
         if(r==2){
           alerts.showSwal('error-message5','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
         }else{
-          alerts.showSwal('error-message','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
         }
       } 
     }
@@ -4918,8 +4919,8 @@ function EditarContratoPersonal(codigo_contratoE,codigo_personalE,cod_tipocontra
         // alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalE);
       }else{
-        alerts.showSwal('error-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalE);
-      }
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
     }
   });
 }
@@ -4933,8 +4934,8 @@ function EditarEvaluacionPersonal(codigo_contratoEv,codigo_personalEv,fecha_Eval
       if(r==1){        
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalEv);
       }else{
-        alerts.showSwal('error-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalEv);
-      }
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
     }
   });
 }
@@ -4948,23 +4949,29 @@ function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
         //$('#tabla1').load('index.php');
         // alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalB);    
+      }else{
+        Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
       }
     }
   });
 }
-function RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones){
+function RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones,codigo_contratoR){
   $.ajax({
     type:"POST",
     data:"cod_contrato=0&cod_personal="+cod_personal+"&cod_tipocontrato="+cod_tiporetiro+"&cod_estadoreferencial=5&fecha_inicio="+fecha_Retiro+"&observaciones="+observaciones+"&fecha_fin=''",
     url:"personal/savePersonalcontrato.php",
     success:function(r){
       if(r==1){
-        alerts.showSwal('success-message','index.php?opcion=personalLista');
+        // alerts.showSwal('success-message','index.php?opcion=personalLista');
+        alerts.showSwal('success-message','index.php?opcion=finiquitos_form&codigo=-100&codigo_contrato=codigo_contratoR');
+
+        
       }else{
         if(r==2){
-          alerts.showSwal('error-message6','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+          // alerts.showSwal('error-message6','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+          Swal.fire('Informativo!','No puedes retirar Al personal. Por favor cierre el último contrato. Gracias!.','warning'); 
         }else{
-          alerts.showSwal('error-message','index.php?opcion=personalLista');
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
         }
         
       }
@@ -4982,11 +4989,8 @@ function FinalizarContratoPersonal(codigo_contratoCF,codigo_personalCf){
       if(r==1){   
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalCf);
       }else{
-        alerts.showSwal('error-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalCf);
-        //$('#tabla1').load('index.php');
-        // alertify.success("agregado");
-        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
-      }
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
     }
   });
 }
@@ -11212,6 +11216,7 @@ function listarAtributo(){
   table.addClass("table-bordered");
   table.addClass("table-sm table-striped");
   table.addClass("small");
+  table.attr("id","tabla_de_sitios_productos");
   var titulos = $('<tr>').addClass('bg-info text-white');
      titulos.append($('<th>').addClass('').text('#'));
      titulos.append($('<th>').addClass('').text('NOMBRE'));
@@ -11310,6 +11315,56 @@ function listarAtributo(){
       $('#divResultadoListaAtributosProd').html(div);
       //$('#divResultadoListaAtributosProd').bootstrapMaterialDesign(); 
      } 
+
+}
+
+function listarAtributoUltimo(){
+  if(itemAtributos.length>1){
+    var sumaDias=[];
+     for (var i = (itemAtributos.length-1); i < itemAtributos.length; i++) {
+     var row = $('<tr>').addClass('');
+     row.append($('<td>').addClass('').text(i+1));
+     row.append($('<td>').addClass('').text(itemAtributos[i].nombre));
+     row.append($('<td>').addClass('').text(itemAtributos[i].direccion)); 
+     if(!($("#productos_div").hasClass("d-none"))){
+      row.append($('<td>').addClass('').text(itemAtributos[i].marca));
+      row.append($('<td>').addClass('').text(itemAtributos[i].norma));
+      row.append($('<td>').addClass('').text(itemAtributos[i].sello));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
+     }else{
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
+      if($("#modalEditPlantilla").length>0){
+       if($("#codigo_area").val()!=39){
+        for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
+          for (var j= 0; j< itemAtributosDias.length; j++) {
+           if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
+            sumaDias[k]+=parseFloat(itemAtributosDias[j].dias);
+            row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
+            row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
+              $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
+              '</select></td>');  
+            //alerta 2 0 3
+           } 
+         };     
+        };
+       }    
+      } //fin #modalEditPlantilla
+     }
+       $('.selectpicker').selectpicker("refresh");
+       if($("#sinEdicionModal").length>0){
+         row.append($('<td>').addClass('text-right small').html(''));
+       }else{
+         row.append($('<td>').addClass('text-right small').html('<div class="btn-group"><button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button></div>'));    
+       }
+   }
+     $("#tabla_de_sitios_productos").append(row);
+  }else{
+    listarAtributo();
+  }
 
 }
 
@@ -11466,7 +11521,7 @@ function guardarAtributoItem(){
     limpiarModalCache("modal_atributo");
     editarDatosPlantilla();
    }else{
-    listarAtributo();
+    listarAtributoUltimo();
     $("#modal_atributo").modal("hide");
    }
   }

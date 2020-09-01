@@ -48,7 +48,7 @@ if(isset($_GET['cod_sim'])){
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (7,4,3,5) $sqlServicio $sqlSimCosto $sqlAreas and sr.cod_unidadorganizacional=3000 order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (7,4,3,5) $sqlServicio $sqlSimCosto $sqlAreas and (sr.cod_unidadorganizacional=3000 or sr.cod_area=1235) order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn

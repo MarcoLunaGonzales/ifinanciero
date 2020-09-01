@@ -198,51 +198,15 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                
                             $stmtDetalleSol->bindColumn('ci_estudiante', $ci_estudiante_x); 
                             $concepto_contabilizacion="";
-                            // if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
-                            //   $concepto_contabilizacion="";
-                            // }else{
-                            //   $concepto_contabilizacion=$codigo_alterno." - ";  
-                            // }
+                          
                             while ($row_det = $stmtDetalleSol->fetch()){
-                              //$precio=$precio_unitario*$cantidad;
-                              // $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
-                              // $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
-                              // $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
+                              
                               if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){                              
                                 $concepto_contabilizacion="CI: ".$ci_estudiante_x." / "; 
                               }
                               $concepto_contabilizacion.=$descripcion_alterna."<br>\n";
                             }
-                            $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100)); //limite de string
-                            
-
-                            // if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
-                            //     //obtenemos datos de la simulacion TCP
-                            //     $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-                            //     from simulaciones_servicios sc,plantillas_servicios ps
-                            //     where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-                            //     $stmtSimu = $dbh->prepare($sql);
-                            //     $stmtSimu->execute();
-                            //     $resultSimu = $stmtSimu->fetch();
-                            //     $nombre_simulacion = $resultSimu['nombre'];
-                            //     $cod_area_simulacion = $resultSimu['cod_area'];
-                            // }elseif($tipo_solicitud==2){//  pertence capacitacion
-                            //     $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-                            //     from simulaciones_costos sc,plantillas_servicios ps
-                            //     where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
-                            //     $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                            //     $stmtSimuCostos->execute();
-                            //     $resultSimu = $stmtSimuCostos->fetch();
-                            //     $nombre_simulacion = $resultSimu['nombre'];
-                            //     $cod_area_simulacion = $resultSimu['cod_area'];
-                            // }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
-                            //     $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
-                            //     $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                            //     $stmtSimuCostos->execute();
-                            //     $resultSimu = $stmtSimuCostos->fetch();
-                            //     $nombre_simulacion = $resultSimu['Descripcion'];
-                            //     $cod_area_simulacion = $resultSimu['IdArea'];
-                            // }
+                            $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100)); //limite de string                            
                             $cod_area_simulacion=$cod_area;
                             $nombre_simulacion='OTROS';
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
@@ -255,9 +219,6 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
                            
                             $sumaTotalImporte=obtenerSumaTotal_solicitudFacturacion($codigo_facturacion);
-                            // $cont[$index-1]=$nc;
-                            // $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
-                            
 
                             if($cont_facturas>1){      
                                 // $estado="FACTURA PARCIAL";
@@ -273,7 +234,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               $datos_factura_envio=$cod_factura.'/'.$codigo_facturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
                             ?>
                             <tr>
-                              <!-- <td align="center"><?=$index;?></td> -->
+                              
                               <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
                               <td class="text-right"><small><?=$nro_correlativo;?></small></td>
                               <td><small><?=$responsable;?></small></td>
@@ -293,7 +254,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
                               <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
                               <td class="td-actions text-right">                              
-                                <!-- <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br> -->
+                                
                                 <?php
                                   if($codigo_fact_x>0 && $cod_estado_factura_x!=2 && $cod_estado_factura_x!=5){//print facturas
                                       // echo "entra";//solo para facturas mayores a uno
@@ -323,7 +284,12 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                   </button>
                                   <div class="dropdown-menu" >   
                                 <?php        
-                                $obs_devolucion = preg_replace("[\n|\r|\n\r]", ", ", $obs_devolucion);                     
+                                $patron15 = "/[^a-zA-Z0-9]+/";//solo numeros,letras M y m, tildes y la ñ
+                                $patron1="[\n|\r|\n\r]";
+                                $obs_devolucion = preg_replace($patron1, ", ", $obs_devolucion);//quitamos salto de linea
+                                $obs_devolucion = str_replace('"', " ", $obs_devolucion);//quitamos comillas dobles
+                                $obs_devolucion = str_replace("'", " ", $obs_devolucion);//quitamos comillas simples
+                                // echo $obs_devolucion;
                                   if($cod_estado_factura_x!=4){
                                     // echo $codigo_fact_x."-";
                                     if($codigo_fact_x>0 && $cod_estado_factura_x!=2 && $cod_estado_factura_x!=5){//print facturas
@@ -331,9 +297,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                       if($cont_facturas<2){
                                         ?>
                                         <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
-                                        <!-- <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
-                                        <i class="material-icons" title="Imprimir Comprobante">print</i>
-                                      </a>  -->
+                                        
                                        <?php               
                                       }
                                       
@@ -424,9 +388,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                     ?>
                                     <button title="Detalles Factura Manual" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
                                       <i class="material-icons">list</i>
-                                    </button>
-                                    <!-- <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
-                                        <i class="material-icons" title="Imprimir Comprobante">print</i> -->
+                                    </button>                                    
                                      <?php 
                                   }
 
@@ -461,10 +423,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
 
                                     $datos_envio_correo=$cadenaFacturas."######".$correosEnviados;?>
                                     <a href='#' title="Información de envío de Correo" class="btn btn-primary" onclick="modal_info_enviocorreo_f('<?=$datos_envio_correo;?>')"><i class="material-icons" >email</i></a>
-
-                                    <!-- <button type="button" class="btn btn-default" data-toggle="modal" data-target="modal_info_enviocorreo" onclick="modal_info_enviocorreo_f('<?=$datos_envio_correo;?>')">
-                                      <i class="material-icons" title="Información de envío">email</i>
-                                    </button>       -->
+                                   
                                   <?php }
                                 ?>
                               </div></div>
@@ -562,22 +521,3 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
     }); 
   });
 </script>
-
-<!-- <?php 
-  $lan=sizeof($cont);
-  error_reporting(0);
-  for ($i=0; $i < $lan; $i++) {
-    ?>
-    <script>var detalle_fac=[];</script>
-    <?php
-       for ($j=0; $j < $cont[$i]; $j++) {     
-           if($cont[$i]>0){
-            ?><script>detalle_fac.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_facturacion:<?=$datos[$i][$j]->cod_facturacion?>,serviciox:'<?=$datos[$i][$j]->serviciox?>',cantidadX:'<?=$datos[$i][$j]->cantidadX?>',precioX:'<?=$datos[$i][$j]->precioX?>',descuento_porX:'<?=$datos[$i][$j]->descuento_porX?>',descuento_bobX:'<?=$datos[$i][$j]->descuento_bobX?>',descripcion_alternaX:'<?=$datos[$i][$j]->descripcion_alternaX?>'});</script><?php         
-            }          
-          }
-      ?><script>detalle_tabla_general.push(detalle_fac);</script><?php                    
-  }
-  ?>
- -->
-
-  

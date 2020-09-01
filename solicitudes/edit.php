@@ -35,7 +35,7 @@ if($estado==10||$estado==11||$estado==12){
   $flagSuccess=$stmtUpdate->execute();
 }else{
 
-if(obtenerUnidadSolicitanteRecursos($codigo)==3000){ //&&obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)
+if(obtenerUnidadSolicitanteRecursos($codigo)==3000||obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)){ //&&obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)
   if(isset($_GET["reg"])){
    if($estado==4&&$_GET['reg']!=2){
     $estado=7;

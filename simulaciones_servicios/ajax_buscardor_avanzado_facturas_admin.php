@@ -111,17 +111,11 @@ if(isset($_GET['interno'])){
       $cadenaFacturas='F '.$nro_factura;
       $codigos_facturas=$codigo_factura;                          
       $importe=sumatotaldetallefactura($codigo_factura);
-      // $correosEnviados=obtenerCorreosEnviadosFactura($codigo_factura);
-      // if($correosEnviados!=""){
-      //   $correosEnviados="\nFactura enviada a: \n *".$correosEnviados;
-      // }
+      
       $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
       $cliente=nameCliente($cod_cliente);
       //correos de contactos
       $tipo_solicitud=obtenerTipoSolicitud($cod_solicitudfacturacion);
-      // if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
-      //   $correos_string=obtenerCorreoEstudiante($nit);
-      // }else $correos_string=obtenerCorreosCliente($cod_cliente);                            
       //colores de estados                            
       $observaciones_solfac="";
       switch ($cod_estadofactura) {
@@ -136,9 +130,8 @@ if(isset($_GET['interno'])){
           $label='btn-info';
           break;
       }
-      // $cod_tipopago_anticipo=obtenerValorConfiguracion(48);//tipo pago credito
-      // $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$cod_solicitudfacturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista                            
-      // $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
+      
+      
       ?>
       <tr>
         <!-- <td align="center"><?=$index;?></td> -->
@@ -153,15 +146,13 @@ if(isset($_GET['interno'])){
         <td class="td-actions text-right">
           <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br>
           <?php
-            // $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux."###".$interno;
+          
           $datos_edit=$cadenaFacturas."###".$razon_social."###".$codigos_facturas;
             if($cod_estadofactura!=2 && $globalAdmin==1){?>
               <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditarFactura" onclick="modal_editarFactura_sf('<?=$datos_edit;?>')">
                 <i class="material-icons" title="Editar Factura">edit</i>
               </button>
-              <!-- <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
-                <i class="material-icons" title="Anular Factura">delete</i>
-              </button> -->
+       
             <?php } ?>
         </td>
       </tr>

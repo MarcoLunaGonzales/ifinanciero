@@ -58,6 +58,9 @@
                   </tr> 
                     <?php                   
                 }
+              }else{
+                $filaE=0;
+                $filaA=0;
               }
               ?>       
             </tbody>
