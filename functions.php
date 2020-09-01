@@ -5026,7 +5026,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      $stmt = $dbh->prepare("SELECT p.nombre from cuentas_auxiliares c join af_proveedores p on c.cod_proveedorcliente=p.codigo 
       where c.codigo=$codigo and c.cod_tipoauxiliar=1");
      $stmt->execute();
-     $valor="";
+     $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row['nombre'];
      }
@@ -5037,7 +5037,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT c.cod_proveedorcliente from cuentas_auxiliares c where c.codigo=$codigo");
      $stmt->execute();
-     $valor="";
+     $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row['cod_proveedorcliente'];
     }

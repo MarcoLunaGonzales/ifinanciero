@@ -21,8 +21,7 @@ if(isset($_GET['q'])){
 // echo $globalUnidad;
 if(isset($_GET['s'])){
   $s=$_GET['s'];
-  // $sqlFilter1 = str_replace("IdOficina", "p.cod_unidadorganizacional", $_GET['s']);
-  // $sqlFilter2 = "and ".str_replace("IdArea", "p.cod_area", $sqlFilter1);
+  
   $arraySql=explode("IdArea",$s);
   $codigoArea='0';  
   if(isset($arraySql[1])){
@@ -149,13 +148,12 @@ $item_1=2709;
                         $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);  
                         $concepto_contabilizacion="";
                         while ($row_det = $stmtDetalleSol->fetch()){
-                          // $precio_natural=$precio/$cantidad;
-                          // $concepto_contabilizacion.=$descripcion_alterna." / F ".$nro_fact_x." / ".$razon_social."<br>\n";
+                          
                           if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){                              
                             $concepto_contabilizacion="CI: ".$ci_estudiante_x." / "; 
                           }
                           $concepto_contabilizacion.=$descripcion_alterna."<br>\n";
-                          // $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio)."<br>\n";
+                          
                         }
                         $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
                           $cod_area_simulacion=$cod_area;
@@ -165,47 +163,11 @@ $item_1=2709;
                           $responsable=namePersonal($cod_personal);//nombre del personal
                           $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                           $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
-                          // $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);//
+                          
                           $string_formaspago=obtnerFormasPago($codigo_facturacion);
 
-                          //los registros de la factura
-                          // $dbh1 = new Conexion();
-                          // $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
-                          // $stmt2 = $dbh1->prepare($sqlA);                                   
-                          // $stmt2->execute(); 
-                          // $nc=0;
-                          // $sumaTotalMonto=0;
-                          // $sumaTotalDescuento_por=0;
-                          // $sumaTotalDescuento_bob=0;
-
-                          // while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                          //   // $dato = new stdClass();//obejto
-                          //   $codFila=(int)$row2['codigo'];
-                          //   $cod_claservicioX=trim($row2['nombre_serv']);
-                          //   $cantidadX=trim($row2['cantidad']);                            
-                          //   $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);
-                          //   $descuento_porX=trim($row2['descuento_por']);
-                          //   $descuento_bobX=trim($row2['descuento_bob']);                             
-                          //   // $descripcion_alternaX=trim($row2['descripcion_alterna']);
-                          //   // $dato->codigo=($nc+1);
-                          //   // $dato->cod_facturacion=$codFila;
-                          //   // $dato->serviciox=$cod_claservicioX;
-                          //   // $dato->cantidadX=$cantidadX;
-                          //   // $dato->precioX=$precioX;
-                          //   // $dato->descuento_porX=$descuento_porX;
-                          //   // $dato->descuento_bobX=$descuento_bobX;
-                          //   // $dato->descripcion_alternaX=$descripcion_alternaX;
-                          //   // $datos[$index-1][$nc]=$dato;                           
-                          //   $nc++;
-                          //   $sumaTotalMonto+=$precioX;
-                          //   $sumaTotalDescuento_por+=$descuento_porX;
-                          //   $sumaTotalDescuento_bob+=$descuento_bobX;
-                          // }
-                          // $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                           $sumaTotalImporte=obtenerSumaTotal_solicitudFacturacion($codigo_facturacion);
-                          // $cont[$index-1]=$nc;
-                          // $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
-
+                          
                           ?>
                         <tr>
                          <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
@@ -365,24 +327,6 @@ $item_1=2709;
     }); 
   });
 </script>
-
-
-<!--    end small modal -->
-<!-- <?php 
-  $lan=sizeof($cont);
-  error_reporting(0);
-  for ($i=0; $i < $lan; $i++) {
-    ?>
-    <script>var detalle_fac=[];</script>
-    <?php
-       for ($j=0; $j < $cont[$i]; $j++) {     
-           if($cont[$i]>0){
-            ?><script>detalle_fac.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_facturacion:<?=$datos[$i][$j]->cod_facturacion?>,serviciox:'<?=$datos[$i][$j]->serviciox?>',cantidadX:'<?=$datos[$i][$j]->cantidadX?>',precioX:'<?=$datos[$i][$j]->precioX?>',descuento_porX:'<?=$datos[$i][$j]->descuento_porX?>',descuento_bobX:'<?=$datos[$i][$j]->descuento_bobX?>',descripcion_alternaX:'<?=$datos[$i][$j]->descripcion_alternaX?>'});</script><?php         
-            }          
-          }
-      ?><script>detalle_tabla_general.push(detalle_fac);</script><?php                    
-  }
-  ?> -->
 
 
   

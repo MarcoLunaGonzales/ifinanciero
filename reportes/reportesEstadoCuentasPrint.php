@@ -55,7 +55,7 @@ $totalDebito=0;
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header <?=$colorCard;?> card-header-icon">
+                    <div class="card-header card-header-icon">
                       <div class="float-right col-sm-2">
                         <h6 class="card-title">Exportar como:</h6>
                       </div>
@@ -63,12 +63,6 @@ $totalDebito=0;
                         <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
                           Estado de Cuentas
                       </h4>
-                      
-                      <!-- <div class="row">
-                        <div class="col-sm-6"><h5 class="card-title"><b>Unidades:</b> <small><?=$unidadAbrev?></small></h6></div>
-                        <div class="col-sm-6"><h5 class="card-title"><b>Areas:</b> <small><?=$areaAbrev?></small></h6></div>
-                      </div>  -->
-
                       <!-- <h4 class="card-title text-center">Reporte De Activos Fijos Por Unidad</h4> -->
                       <h6 class="card-title">Gestion: <?= $NombreGestion; ?></h6>                        
                       <h6 class="card-title">Cuenta: <?=$stringGeneraCuentas;?></h6>

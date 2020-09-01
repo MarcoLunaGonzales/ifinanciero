@@ -97,7 +97,7 @@ $dbh = new Conexion();
 				  		</div>
 				  		<div class="col-sm-3">
 							<div class="form-group">
-								<a href="<?=$urlImpresionFacturas;?>" class="btn btn-info"> Impresión de Comprobantes </a>
+								<a href="<?=$urlImpresionComprobantes;?>" class="btn btn-info"> Impresión de Comprobantes </a>
 							</div>
 				  		</div>
 					</div>

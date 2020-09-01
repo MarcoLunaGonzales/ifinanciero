@@ -36,6 +36,11 @@ if ($codigo > 0){
   }else{
     $codigo_contrato = 0;  
   }
+  if($codigo==-100){
+    $sw_contratoidefinido=1;  
+  }else{
+    $sw_contratoidefinido=0;
+  }
   $codigo = 0;
   // $fecha_retiro = ' ';
   $cod_tiporetiro = ' ';

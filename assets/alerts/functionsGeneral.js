@@ -4884,6 +4884,7 @@ function agregaformRetiroPersonal(datos){
   //console.log("datos: "+datos);
   var d=datos.split('/');
   document.getElementById("codigo_personalR").value=d[0];
+  document.getElementById("codigo_contratoR").value=d[1];
 
   // document.getElementById("cod_areaE").value=d[2];
   // document.getElementById("porcentajeE").value=d[3];
@@ -4900,7 +4901,7 @@ function RegistrarContratoPersonal(cod_personal,cod_tipocontrato,fecha_inicio,fe
         if(r==2){
           alerts.showSwal('error-message5','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
         }else{
-          alerts.showSwal('error-message','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
         }
       } 
     }
@@ -4918,8 +4919,8 @@ function EditarContratoPersonal(codigo_contratoE,codigo_personalE,cod_tipocontra
         // alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalE);
       }else{
-        alerts.showSwal('error-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalE);
-      }
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
     }
   });
 }
@@ -4933,8 +4934,8 @@ function EditarEvaluacionPersonal(codigo_contratoEv,codigo_personalEv,fecha_Eval
       if(r==1){        
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalEv);
       }else{
-        alerts.showSwal('error-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalEv);
-      }
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
     }
   });
 }
@@ -4948,23 +4949,29 @@ function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
         //$('#tabla1').load('index.php');
         // alertify.success("agregado");
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalB);    
+      }else{
+        Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
       }
     }
   });
 }
-function RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones){
+function RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones,codigo_contratoR){
   $.ajax({
     type:"POST",
     data:"cod_contrato=0&cod_personal="+cod_personal+"&cod_tipocontrato="+cod_tiporetiro+"&cod_estadoreferencial=5&fecha_inicio="+fecha_Retiro+"&observaciones="+observaciones+"&fecha_fin=''",
     url:"personal/savePersonalcontrato.php",
     success:function(r){
       if(r==1){
-        alerts.showSwal('success-message','index.php?opcion=personalLista');
+        // alerts.showSwal('success-message','index.php?opcion=personalLista');
+        alerts.showSwal('success-message','index.php?opcion=finiquitos_form&codigo=-100&codigo_contrato=codigo_contratoR');
+
+        
       }else{
         if(r==2){
-          alerts.showSwal('error-message6','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+          // alerts.showSwal('error-message6','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
+          Swal.fire('Informativo!','No puedes retirar Al personal. Por favor cierre el último contrato. Gracias!.','warning'); 
         }else{
-          alerts.showSwal('error-message','index.php?opcion=personalLista');
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
         }
         
       }
@@ -4982,11 +4989,8 @@ function FinalizarContratoPersonal(codigo_contratoCF,codigo_personalCf){
       if(r==1){   
         alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalCf);
       }else{
-        alerts.showSwal('error-message','index.php?opcion=FormPersonalContratos&codigo='+codigo_personalCf);
-        //$('#tabla1').load('index.php');
-        // alertify.success("agregado");
-        alerts.showSwal('success-message','index.php?opcion=FormPersonalContratos&codigo='+cod_personal);
-      }
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
     }
   });
 }

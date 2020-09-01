@@ -430,6 +430,7 @@ $fecha_actual=date("d/m/Y");
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_personalR" id="codigo_personalR" value="0">
+        <input type="hidden" name="codigo_contratoR" id="codigo_contratoR" value="0">
         <div class="row">
           <label class="col-sm-3 col-form-label" style="color:#424242">Tipo De Retiro : </label>
           <div class="col-sm-8">
@@ -498,10 +499,11 @@ $fecha_actual=date("d/m/Y");
     });
     $('#registraRetiro').click(function(){    
       cod_personal=document.getElementById("codigo_personalR").value;
+      codigo_contratoR=document.getElementById("codigo_contratoR").value;
       cod_tiporetiro=$('#cod_tiporetiro').val();
       fecha_Retiro=$('#fecha_retiro').val();
       observaciones=$('#observaciones').val();
-      RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones);
+      RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones,codigo_contratoR);
     });
 
     $('#Finalizar_contrato').click(function(){
