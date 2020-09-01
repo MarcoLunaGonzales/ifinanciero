@@ -9513,4 +9513,16 @@ function verificarLibretaBancarias($CodLibretaDetalle){
 
 }
 
+function obtenerFechaCambioEstadoSolicitudRecurso($codigo){
+   $dbh = new Conexion();
+  $sql="SELECT FechaEstado from ibnorca.estadoobjeto where IdTipoObjeto=2708 and IdObjeto=$codigo order by FechaEstado desc LIMIT 1";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+    $fecha=strftime('%d/%m/%Y',strtotime($row['FechaEstado']));
+    $valor="<small class='text-muted'>Fecha Cambio de Estado: ".$fecha."</small>";
+  } 
+  return $valor;
+}
 ?>

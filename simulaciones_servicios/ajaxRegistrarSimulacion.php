@@ -23,25 +23,25 @@ $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
-if(isset($_GET['nombre'])){
-  $nombre=$_GET['nombre'];
-  $plantilla_servicio=$_GET['plantilla_servicio'];
-  $dias=$_GET['dias'];
-  $utilidad=$_GET['utilidad'];
-  $cliente=$_GET['cliente'];
-  $objeto_servicio=$_GET['objeto_servicio'];
-  $productos="";//$productos=$_GET['producto'];
-  $sitios="";   // $sitios=$_GET['sitios'];
-  $atributos= json_decode($_GET['atributos']);
-  $tipo_atributo=$_GET['tipo_atributo'];   
-  $afnor=$_GET['afnor'];
-  $norma=$_GET['norma'];
-  $id_servicio=0; //$_GET['id_servicio']
-  $cod_region=1; //$_GET['local_extranjero']
-  $anios=$_GET['anios'];
-  $alcance=$_GET['alcance'];
-  $des_serv=$_GET['des_serv'];
-  $oficina_servicio=$_GET['oficina_servicio'];
+if(isset($_POST['nombre'])){
+  $nombre=$_POST['nombre'];
+  $plantilla_servicio=$_POST['plantilla_servicio'];
+  $dias=$_POST['dias'];
+  $utilidad=$_POST['utilidad'];
+  $cliente=$_POST['cliente'];
+  $objeto_servicio=$_POST['objeto_servicio'];
+  $productos="";//$productos=$_POST['producto'];
+  $sitios="";   // $sitios=$_POST['sitios'];
+  $atributos= json_decode($_POST['atributos']);
+  $tipo_atributo=$_POST['tipo_atributo'];   
+  $afnor=$_POST['afnor'];
+  $norma=$_POST['norma'];
+  $id_servicio=0; //$_POST['id_servicio']
+  $cod_region=1; //$_POST['local_extranjero']
+  $anios=$_POST['anios'];
+  $alcance=$_POST['alcance'];
+  $des_serv=$_POST['des_serv'];
+  $oficina_servicio=$_POST['oficina_servicio'];
   //$anios=obtenerAnioPlantillaServicio($plantilla_servicio);
   $fecha= date("Y-m-d");
 
@@ -50,17 +50,17 @@ if(isset($_GET['nombre'])){
   $nombreSecundario=obtenerNombreCliente($cliente)."(".($numeroCorrelativoCliente+1).")";
   $dbh = new Conexion();
   $SQLDATOSINSTERT=[];
-  if(isset($_GET['tipo_servicio'])){
-    $idTipoServicio=$_GET['tipo_servicio'];
+  if(isset($_POST['tipo_servicio'])){
+    $idTipoServicio=$_POST['tipo_servicio'];
   }else{
     $idTipoServicio=309; //para servicio TCP
   }
   $tipoCliente=3;
-  if(isset($_GET['region_cliente'])){
-    $regionCliente=$_GET['region_cliente'];
-    $tipoCliente=$_GET['tipo_cliente'];
-    $iafprimario=$_GET['iaf_primario'];
-    $iafsecundario=$_GET['iaf_secundario'];
+  if(isset($_POST['region_cliente'])){
+    $regionCliente=$_POST['region_cliente'];
+    $tipoCliente=$_POST['tipo_cliente'];
+    $iafprimario=$_POST['iaf_primario'];
+    $iafsecundario=$_POST['iaf_secundario'];
   }else{
     $regionCliente=1;
     $iafprimario=0;
@@ -91,7 +91,7 @@ if(isset($_GET['nombre'])){
   $idObjeto=2715; //regristado
   $obs="Registro de propuesta";
   //id de perfil para cambio de estado en ibnorca
-  $id_perfil=$_GET['id_perfil'];
+  $id_perfil=$_POST['id_perfil'];
   if($id_perfil==0){
     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codSimServ,$fechaHoraActual,$obs);
   }else{
@@ -104,8 +104,8 @@ if(isset($_GET['nombre'])){
       $sqlD="DELETE FROM simulaciones_servicios_normas where cod_simulacionservicio=$codSimServ";
       $stmtD = $dbhD->prepare($sqlD);
       $stmtD->execute();     
-      if(isset($_GET['normas_tiposervicio'])){ 
-       $normasTipo=json_decode($_GET['normas_tiposervicio']);
+      if(isset($_POST['normas_tiposervicio'])){ 
+       $normasTipo=json_decode($_POST['normas_tiposervicio']);
        for ($ntp=0; $ntp < count($normasTipo); $ntp++) { 
         $codigoNormasTipo=$normasTipo[$ntp];       
         $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
@@ -113,8 +113,8 @@ if(isset($_GET['nombre'])){
          $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
          $flagsuccess=$stmtInsertNormas->execute();
        }
-       if($_GET['normas_tiposerviciotext']!=""){
-        $normasTipoText=explode(",",$_GET['normas_tiposerviciotext']);
+       if($_POST['normas_tiposerviciotext']!=""){
+        $normasTipoText=explode(",",$_POST['normas_tiposerviciotext']);
         for ($ntp=0; $ntp < count($normasTipoText); $ntp++) { 
         $nombreNormasTipo=$normasTipoText[$ntp];       
         $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
@@ -269,7 +269,7 @@ if(isset($_GET['nombre'])){
     //for ($jjjj=$inicioAnio; $jjjj<=$anios; $jjjj++) { 
      $jjjj=$anios;
      //volcado de datos a la tabla simulaciones_servicios_tiposervicio
-     if(isset($_GET['region_cliente'])){
+     if(isset($_POST['region_cliente'])){
       $jjjj=1;
       $serviciosPlan=obtenerServiciosClaServicioTipo(309,1); //TCP 
      }else{
@@ -296,16 +296,16 @@ if(isset($_GET['nombre'])){
 
       //insertar valores pre definidos a los servicios de sello seleccionados
       $suma=0;$aux=0;$aux2=0;
-      if(obtenerConfiguracionValorServicio($codCS)==true&&isset($_GET['region_cliente'])){
+      if(obtenerConfiguracionValorServicio($codCS)==true&&isset($_POST['region_cliente'])){
         //$productosLista=explode(",", $productos);
-        if(isset($_GET['tipo_cliente'])){
-          $codTC=$_GET['tipo_cliente'];
+        if(isset($_POST['tipo_cliente'])){
+          $codTC=$_POST['tipo_cliente'];
         }else{
           $codTC=obtenerTipoCliente($cliente);
         }        
         $nacional=obtenerTipoNacionalCliente($cliente);
-        if(isset($_GET['region_cliente'])){
-          $nacional=$_GET['region_cliente'];
+        if(isset($_POST['region_cliente'])){
+          $nacional=$_POST['region_cliente'];
         }
         /*if($nacional>1){
           if($codTC<=2){
