@@ -553,28 +553,7 @@ $globalPersonal=$_SESSION["globalUser"];
         {                
             ok = false;
         }
-        // var cantidad_archivosadjuntos=f.elements["cantidad_archivosadjuntos"].value;
-        // if(cantidad_archivosadjuntos>0){
-        //   for (var ar=1; ar <= cantidad_archivosadjuntos ; ar++) {             
-        //     var codigo_archivo=f.elements["codigo_archivo"+ar].value;
-        //     if(codigo_archivo){
-        //       var documentos_cabecera=f.elements["documentos_cabecera"+ar].value;
-        //       if(documentos_cabecera){
-        //         sw_adjuntos=true;
-        //       }else{
-        //         sw_adjuntos=false;
-        //       }
-        //     }else{
-        //       sw_adjuntos=false;
-        //     }
-        //   }
-        // }else{
-        //   sw_adjuntos=false;
-        // }
-        // if(!sw_adjuntos){
-        //   var msg = "Por favor agregue Archivo Adjunto.";        
-        //   ok = false;            
-        // }
+       
         if(ok == false)    
             Swal.fire("Informativo!",msg, "warning");
         return ok;

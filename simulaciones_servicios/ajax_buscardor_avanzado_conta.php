@@ -182,77 +182,18 @@ $stmt = $dbh->prepare($sql);
                     $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
                   }
                   $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
-                  
-                  // $cod_area_simulacion=$cod_area;
-                  // $nombre_simulacion='OTROS';
-                  // if($tipo_solicitud==1){// la solicitud pertence tcp-tcs
-                  //   //obtenemos datos de la simulacion TCP
-                  //   $sql="SELECT sc.nombre,ps.cod_area,ps.cod_unidadorganizacional
-                  //   from simulaciones_servicios sc,plantillas_servicios ps
-                  //   where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio";                            
-                  //   $stmtSimu = $dbh->prepare($sql);
-                  //   $stmtSimu->execute();
-                  //   $resultSimu = $stmtSimu->fetch();
-                  //   $nombre_simulacion = $resultSimu['nombre'];
-                  //   $cod_area_simulacion = $resultSimu['cod_area'];
-                  // }elseif($tipo_solicitud==2){//  pertence capacitacion
-                  //   $sqlCostos="SELECT sc.nombre,sc.cod_responsable,ps.cod_area,ps.cod_unidadorganizacional
-                  //   from simulaciones_costos sc,plantillas_servicios ps
-                  //   where sc.cod_plantillacosto=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion_servicio order by sc.codigo";
-                  //   $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                  //   $stmtSimuCostos->execute();
-                  //   $resultSimu = $stmtSimuCostos->fetch();
-                  //   $nombre_simulacion = $resultSimu['nombre'];
-                  //   $cod_area_simulacion = $resultSimu['cod_area'];
-                  // }elseif($tipo_solicitud==3){// pertence a propuestas y servicios
-                  //   $sqlCostos="SELECT Descripcion,IdArea,IdOficina from servicios s where s.IdServicio=$cod_simulacion_servicio";
-                  //   $stmtSimuCostos = $dbh->prepare($sqlCostos);
-                  //   $stmtSimuCostos->execute();
-                  //   $resultSimu = $stmtSimuCostos->fetch();
-                  //   $nombre_simulacion = $resultSimu['Descripcion'];
-                  //   $cod_area_simulacion = $resultSimu['IdArea'];
-                  // }
-
-                  // $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
-
-                  // --------
+                 
                   $responsable=namePersonal($cod_personal);//nombre del personal
-                  // $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);//
+                  
                   $string_formaspago=obtnerFormasPago($codigo_facturacion);
                   $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
                   $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
 
-                  //los registros de la factura
-                  // $dbh1 = new Conexion();
-                  // $sqlA="SELECT sf.*,(select t.Descripcion from cla_servicios t where t.IdClaServicio=sf.cod_claservicio) as nombre_serv from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo_facturacion";
-                  // $stmt2 = $dbh1->prepare($sqlA);                                   
-                  // $stmt2->execute(); 
-                  // $nc=0;
-                  // $sumaTotalMonto=0;
-                  // $sumaTotalDescuento_por=0;
-                  // $sumaTotalDescuento_bob=0;
-                  // while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                  //   // $dato = new stdClass();//obejto
-                  //   $codFila=(int)$row2['codigo'];
-                  //   $cod_claservicioX=trim($row2['nombre_serv']);
-                  //   $cantidadX=trim($row2['cantidad']);
-                  //   // $precioX=trim($row2['precio'])+trim($row2['descuento_bob']);
-                  //   $precioX=(trim($row2['precio'])*$cantidadX)+trim($row2['descuento_bob']);                              
-                  //   $descuento_porX=trim($row2['descuento_por']);
-                  //   $descuento_bobX=trim($row2['descuento_bob']);                             
-                  //   $descripcion_alternaX=trim($row2['descripcion_alterna']);
-                  //   $nc++;
-                  //   $sumaTotalMonto+=$precioX;
-                  //   $sumaTotalDescuento_por+=$descuento_porX;
-                  //   $sumaTotalDescuento_bob+=$descuento_bobX;
-                  // }
-                  // $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                   $sumaTotalImporte=obtenerSumaTotal_solicitudFacturacion($codigo_facturacion);
                   if($cont_facturas>1){                              
                       // $estado="FACTURA PARCIAL";
                       $nro_fact_x=trim($cadenaFacturas,',');
-                  }
-                  // $cadenaFacturasM=trim($cadenaFacturasM,',');
+                  }                  
                   ?>
                   <tr>
                     <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>

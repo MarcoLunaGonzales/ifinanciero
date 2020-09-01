@@ -132,7 +132,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 <select name="cod_uo" id="cod_uo" onChange="ajaxAFunidadorganizacionalArea_solicitud_Fact(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">                                        
                                     <option value=""></option>
                                     <?php 
-                                    $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
+                                    $queryUO1 = "SELECT uo.codigo,uo.nombre,uo.abreviatura from entidades_uo e, unidades_organizacionales uo where e.cod_uo=uo.codigo and uo.cod_estado=1 order by nombre";
                                     $statementUO1 = $dbh->query($queryUO1);
                                     while ($row = $statementUO1->fetch()){ ?>
                                         <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>

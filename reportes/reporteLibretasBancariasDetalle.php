@@ -1,6 +1,6 @@
 <script> periodo_mayor='<?=$periodoTitle?>';
-          cuenta_mayor='<?=trim($nombreCuentaTitle)?>';
-          unidad_mayor='<?=$unidadGeneral?>';
+          cuenta_mayor='';
+          unidad_mayor='';
  </script>
 <style>
 tfoot input {
