@@ -131,7 +131,7 @@ if(isset($_GET['monto_cajachica'])){
           <td>
           <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <!-- style="display:none"-->
-    	   	<?php if($tipo==2 && $sw_personal>0 && ($saldo>=$monto_cajachica)){ 
+    	   	<?php if($tipo==2 && $sw_personal>0 && ($saldo>=($monto_cajachica+1)){ 
               ?>
               <div class="form-check">
                  <label class="form-check-label">
