@@ -28,7 +28,7 @@ if (isset($_POST["check_rs_librocompras"])) {
   $sql_rs="";
 }
 
-$stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion and cod_unidadorganizacional in ($stringUnidadesX) $sql_rs");
+$stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion and cod_unidadorganizacional in ($stringUnidadesX) $sql_rs ORDER BY nro_factura asc");
 $stmt2->execute();
 //resultado
 $stmt2->bindColumn('codigo', $codigo);

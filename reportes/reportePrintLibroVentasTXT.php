@@ -21,7 +21,7 @@ $cod_mes_x = $_POST["cod_mes"];
 $unidad=$_POST["unidad"];
 
 $nombre_gestion=nameGestion($gestion);
-$sql="SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion and cod_unidadorganizacional in ($unidad)";
+$sql="SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion and cod_unidadorganizacional in ($unidad) ORDER BY nro_factura asc";
 $stmt2 = $dbh->prepare($sql);
 $stmt2->execute();
 //resultado
