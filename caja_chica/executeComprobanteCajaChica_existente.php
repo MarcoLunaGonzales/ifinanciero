@@ -80,8 +80,8 @@ try{
 					$cod_contra_cuenta=obtenerValorConfiguracion(28);// LA PAZ
 				}
 				$centroCostosDN=obtenerValorConfiguracion(29);//DN 
-				// echo $numeroComprobante;
-				$sqlInsertCab="UPDATE comprobantes set glosa='$concepto_contabilizacion',fecha='$fechaActual',modified_by=$globalUser,modified_at=NOW() where codigo='$codComprobante'";
+				// echo $numeroComprobante;,fecha='$fechaActual'
+				$sqlInsertCab="UPDATE comprobantes set glosa='$concepto_contabilizacion',modified_by=$globalUser,modified_at=NOW() where codigo='$codComprobante'";
 				$stmtInsertCab = $dbh->prepare($sqlInsertCab);
 				$flagSuccess=$stmtInsertCab->execute();
 				//necesitamos el codigo del comprobante detalle para borrar las facturas registradas en facturas_Compra

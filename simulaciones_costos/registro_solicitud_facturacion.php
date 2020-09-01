@@ -23,7 +23,6 @@ if(isset($_GET['cod_sw'])){
 
 $globalUser=$_SESSION["globalUser"];
 $globalUnidad=$_SESSION['globalUnidad'];
-$cod_area=13;
 $dbhIBNO = new ConexionIBNORCA();
 //datos del estudiante y el curso que se encuentra
 $sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema,cpe.clRazonSocial,cpe.clNit
@@ -163,7 +162,7 @@ $contadorRegistros=0;
                           <label class="col-sm-2 col-form-label">Oficina</label>
                           <div class="col-sm-4">
                             <div class="form-group">                                
-                                <select name="cod_uo" id="cod_uo" onChange="ajaxAFunidadorganizacionalArea_solicitud_Fact(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+                                <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
                                     <option value=""></option>
                                     <?php 
                                     $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
@@ -186,8 +185,9 @@ $contadorRegistros=0;
                                             where uo.cod_estadoreferencial=1 and uo.cod_area=a.codigo and a.areas_ingreso=1 and uo.cod_unidad=$cod_uo order by nombre_area";
                                             $stmtArea = $dbh->prepare($sqlArea);                                            
                                             $stmtArea->execute();
+
                                             while ($rowArea = $stmtArea->fetch()){ ?>
-                                                 <option <?=($cod_area==$rowArea["cod_area"])?"selected":"";?> value="<?=$rowArea["cod_area"];?>" data-subtext="(<?=$rowArea['cod_area']?>)"><?=$rowArea["abrev_area"];?> - <?=$rowArea["nombre_area"];?></option><?php 
+                                                 <option <?=($cod_area==$rowArea["cod_area"])?"selected":"disabled"?> value="<?=$rowArea["cod_area"];?>" data-subtext="(<?=$rowArea['cod_area']?>)"><?=$rowArea["abrev_area"];?> - <?=$rowArea["nombre_area"];?></option><?php 
                                             } ?>
                                         </select>                                    
                                     </div>                    

@@ -182,8 +182,8 @@ try {//recibiendo datos
                         // $estado_x=$datos["estado"];
                         // $mensaje_x=$datos["mensaje"];
                         // if($estado_x){//registro correcto webservice
-                            $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
-                            values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1)");
+                            $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,ci_estudiante) 
+                            values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,'$ci_estudiante')");
                             $flagSuccess=$stmt->execute();                        
                         // }else{
                         //     $stmtDelte = $dbh->prepare("DELETE from solicitudes_facturacion where codigo=$cod_facturacion");
