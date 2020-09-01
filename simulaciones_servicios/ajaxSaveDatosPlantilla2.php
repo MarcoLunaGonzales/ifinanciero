@@ -229,11 +229,11 @@ $stmtDetAt->execute();
          //FIN simulaciones_serviciosauditores
 
 
-/*if($fijo!=""){
+if($fijo!=""){
 	$cliente=obtenerCodigoClienteSimulacion($codSimulacion);
 	//$productosLista=explode(",", $productos);
-        $codTC=obtenerTipoCliente($cliente);
-        $nacional=obtenerTipoNacionalCliente($cliente);
+        $codTC=$mod_tipo_cliente;
+        $nacional=$mod_region_cliente;
         $suma=0;
         for ($i=0; $i < count($atributos); $i++) {
           $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);
@@ -246,7 +246,7 @@ $stmtDetAt->execute();
         }
        $cantidad=1;
        $monto=$suma; 
-}*/
+}
 
 /*$sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=1 where cod_simulacionservicio=$codSimulacion and dias=0";
 $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
