@@ -23,9 +23,9 @@ $des_actividadproyecto="";
                                     if($codigoX==$unidadXX){
                                        ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                     }else{
-                                      if($tipoSolicitud==4){
+                                      //if($tipoSolicitud==4){
                                         ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                      }
+                                     // }
                                     }
                                   }
                                     ?>
@@ -47,9 +47,9 @@ $des_actividadproyecto="";
                                            if($codigoX==$areaXX){
                                             ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                            }else{
-                                             if($tipoSolicitud==4){
+                                             //if($tipoSolicitud==4){
                                                ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                             }
+                                             //}
                                             }
                                          } 
                                          ?>

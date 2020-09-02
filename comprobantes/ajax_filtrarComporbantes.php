@@ -138,16 +138,16 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
         </a>
         <?php 
           $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
-          if($codigoSol!=0){
+          if($codigoSol[0]!=0){
            ?>
-           <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol;?>&comp=1" target="_blank" class="btn btn-success">
+           <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol[0];?>&comp=1" target="_blank" class="btn btn-success">
              <i class="material-icons">preview</i>
           </a>
-          <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol;?>&mon=1')" class="btn btn-info">
+          <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol[0];?>&mon=1')" class="btn btn-info">
             <i class="material-icons"><?=$iconImp;?></i>
           </a><?php
           }
-        if($codigoSol==0){
+        if($codigoSol[1]==0){
           ?>
           <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
             <i class="material-icons"><?=$iconEdit;?></i>

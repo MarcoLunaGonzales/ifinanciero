@@ -187,7 +187,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                   </a>
                                   <?php
                                   $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
-                                  if($existeCuenta==0&&$codigoSol==0){
+                                  if($existeCuenta==0&&$codigoSol[1]==0){
                                   ?>
                                   <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
                                     <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
@@ -198,12 +198,12 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                   
                                   <?php 
                                   
-                                  if($codigoSol!=0){
+                                  if($codigoSol[0]!=0){
                                    ?>
-                                   <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol;?>&comp=1" target="_blank" class="dropdown-item">
+                                   <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol[0];?>&comp=1" target="_blank" class="dropdown-item">
                                     <i class="material-icons text-success">preview</i> <b class="text-dark">Adjuntos SR</b>
                                   </a>
-                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol;?>&mon=1')" class="dropdown-item">
+                                  <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol[0];?>&mon=1')" class="dropdown-item">
                                     <i class="material-icons text-info"><?=$iconImp;?></i> <b class="text-dark">SR</b>
                                   </a><?php
                                   }

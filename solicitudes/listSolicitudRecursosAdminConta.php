@@ -524,6 +524,9 @@ $item_1=2708;
                        $otrosPagosCuenta=comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo);
                        $montoDetalleSoliditud=number_format(obtenerSumaDetalleSolicitud($codigo),2,'.',',');
                        $arrayEnc=implode(',',obtenerPersonalEncargadoSolicitud($codigo)[0]);
+
+                       $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);
+                       
 ?>
                         <tr>
                           <td><?=$unidad;?> - <?=$area;?></td>

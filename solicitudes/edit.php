@@ -102,6 +102,21 @@ if($estado!=1){
       }else{
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
       } 
+    }else{
+      if($estado==5){
+             //enviar propuestas para la actualizacion de ibnorca
+         $fechaHoraActual=date("Y-m-d H:i:s");
+         $idTipoObjeto=2708;
+         $idObjeto=2725; //regristado
+         $obs="Solicitud Contabilizada";
+         if(isset($_GET['u'])){
+          $u=$_GET['u'];
+           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+          }else{
+           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+          }
+        ///
+      }
     }
    }   
   }

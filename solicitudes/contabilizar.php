@@ -578,7 +578,7 @@ if($flagSuccessCompro==true){
 //enviar propuestas para la actualizacion de ibnorca
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2708;
-    $idObjeto=2723; //regristado
+    $idObjeto=2725; //regristado
     $obs="Solicitud Contabilizada";
     if(isset($_GET['u'])){
        $u=$_GET['u'];

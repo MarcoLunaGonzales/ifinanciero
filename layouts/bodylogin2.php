@@ -1,4 +1,7 @@
-<?php //header('Content-Type: text/html; charset=iso-8859-1');?>
+<?php 
+//header('Content-Type: text/html; charset=iso-8859-1');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <!--ESTE ES EL DOCUMENTO DEL BODYLOGIN -->
