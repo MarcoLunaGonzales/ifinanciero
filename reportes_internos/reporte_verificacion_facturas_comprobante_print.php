@@ -31,9 +31,9 @@ if($_POST["fecha_desde"]==""){
 
 
 $dbh = new Conexion();
-$sql="SELECT cd.codigo,cd.cod_comprobante,cd.cod_cuenta,cd.debe,cd.haber,cd.glosa,c.numero 
+$sql="SELECT cd.codigo,cd.cod_comprobante,cd.cod_cuenta,cd.debe,sum(cd.haber) as haber,cd.glosa,c.numero 
 FROM comprobantes c,comprobantes_detalle cd,areas a
-WHERE c.codigo =cd.cod_comprobante and cd.cod_cuenta=a.cod_cuenta_ingreso and a.cod_cuenta_ingreso is not null and c.cod_tipocomprobante=4 and c.fecha  BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and c.cod_estadocomprobante<>2 order by c.fecha,c.numero";
+WHERE c.codigo =cd.cod_comprobante and cd.cod_cuenta=a.cod_cuenta_ingreso and a.cod_cuenta_ingreso is not null and c.cod_tipocomprobante=4 and c.fecha  BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and c.cod_estadocomprobante<>2 GROUP BY cod_comprobante order by c.fecha,c.numero";
 // echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
@@ -76,12 +76,12 @@ $stmt->execute();
                   $cod_comprobante=$rowComp['cod_comprobante'];
                   $numero=$rowComp['numero'];
                   $cuenta=nameCuenta($rowComp['cod_cuenta']);
-                  $haber=$rowComp['haber'];
+                  $haber=$rowComp['haber'];                  
                   $glosa=$rowComp['glosa'];
                   $sql="SELECT SUM(((fd.cantidad*fd.precio)-fd.descuento_bob)*(da.porcentaje/100)*(87/100))as importe_real 
                   FROM facturas_venta f, facturas_ventadetalle fd, facturas_venta_distribucion da 
                   WHERE da.cod_factura=f.codigo and f.codigo=fd.cod_facturaventa and fd.cod_facturaventa=da.cod_factura and 
-                  f.cod_comprobante= $cod_comprobante";
+                  f.cod_comprobante= $cod_comprobante and f.cod_estadofactura<>2";
                   $stmt5 = $dbh->prepare($sql);
                   $stmt5->execute();                      
                   $stmt5->bindColumn('importe_real', $importe_realX);                  
@@ -90,6 +90,8 @@ $stmt->execute();
                     $monto_factura=$importe_realX;
                   }
                   $monto_diferencia=$haber-$monto_factura;
+
+                  $monto_diferencia=round($monto_diferencia,2);
 
                   $totalimportehaber+=$haber;
                   $totalimportefactura+=$monto_factura;

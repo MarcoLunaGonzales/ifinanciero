@@ -9,7 +9,7 @@ require_once '../functionsGeneral.php';
 $dbh = new Conexion();
 $sql="SELECT fd.codigo as cod_detale,f.codigo as cod_factura,f.nro_factura,f.cod_solicitudfacturacion,f.fecha_factura,fd.cod_claservicio,(fd.cantidad*fd.precio-fd.descuento_bob)*(da.porcentaje/100) importe,fd.descripcion_alterna,fd.ci_estudiante
 FROM facturas_venta f,facturas_venta_distribucion da,facturas_ventadetalle fd
-WHERE f.codigo=da.cod_factura and f.codigo=fd.cod_facturaventa and f.cod_estadofactura<>2 and da.cod_area=13 and f.fecha_factura between '2020-07-01 00:00:00' and '2020-07-31 23:59:59' and f.cod_solicitudfacturacion<>-100 order by f.fecha_factura";
+WHERE f.codigo=da.cod_factura and f.codigo=fd.cod_facturaventa and f.cod_estadofactura<>2 and da.cod_area=13 and f.fecha_factura between '2020-08-01 00:00:00' and '2020-08-31 23:59:59' and f.cod_solicitudfacturacion<>-100 order by f.fecha_factura";
 $stmt = $dbh->prepare($sql); /*and sf.cod_estadosolicitudfacturacion!=5*/
 $stmt->execute();
 $stmt->bindColumn('cod_detale', $cod_detale);
@@ -56,9 +56,10 @@ $stmt->bindColumn('ci_estudiante', $ci_estudiante);
                         $index=1;
                         $monto_totalfactura=0;
                         $monto_totalpago=0;
-                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {           
+                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $importe=round($importe,2);
                           if($cod_solicitudfacturacion!=-100){
-                            $sql="SELECT f.Monto, f.CiAlumno,f.IdSolicitudFactura,f.IdCurso,f.IdModulo,f.Fecha from ibnorca.controlpagos f where f.PlataformaPago=13 and  f.IdModulo=$cod_claservicio and  f.CiAlumno = $ci_estudiante and f.IdSolicitudFactura=$cod_solicitudfacturacion order by f.Fecha desc limit 1";
+                            $sql="SELECT f.Monto, f.CiAlumno,f.IdSolicitudFactura,f.IdCurso,f.IdModulo,f.Fecha from ibnorca.controlpagos f where f.PlataformaPago=13 and  f.IdModulo=$cod_claservicio and  f.CiAlumno like '%$ci_estudiante%' and f.IdSolicitudFactura=$cod_solicitudfacturacion order by f.Fecha desc limit 1";
                             $stmt2 = $dbh->prepare($sql); 
                             // echo $sql;
                             $stmt2->execute();
@@ -76,7 +77,7 @@ $stmt->bindColumn('ci_estudiante', $ci_estudiante);
                             $result=$stmtModulo->fetch();
                             $nombreModulo=$result['nombre_tema'];     
                             //buscamos curso
-                            $sql="SELECT (select pc.Nombre from ibnorca.programas_cursos pc where pc.IdCurso=a.IdCurso)as nombre From ibnorca.asignacionalumno a where a.CiAlumno=$ci_estudiante and a.IdModulo=$cod_claservicio;";
+                            $sql="SELECT (select pc.Nombre from ibnorca.programas_cursos pc where pc.IdCurso=a.IdCurso)as nombre From ibnorca.asignacionalumno a where a.CiAlumno like '%$ci_estudiante%' and a.IdModulo=$cod_claservicio;";
 
                             // echo $cod_solicitudfacturacion;
                             $stmtCurso = $dbh->prepare($sql);
@@ -84,11 +85,12 @@ $stmt->bindColumn('ci_estudiante', $ci_estudiante);
                             $resultCurso=$stmtCurso->fetch();
                             $nombreCurso=$resultCurso['nombre'];
                             
-                            $sql="SELECT  f.nro_correlativo from solicitudes_facturacion f where f.codigo=$cod_solicitudfacturacion";
+                            $sql="SELECT  f.nro_correlativo,f.tipo_solicitud from solicitudes_facturacion f where f.codigo=$cod_solicitudfacturacion";
                             $stmtSolicitud = $dbh->prepare($sql);
                             $stmtSolicitud->execute();
                             $resultSolicitud=$stmtSolicitud->fetch();
                             $nro_solicitud=$resultSolicitud['nro_correlativo'];
+                            $tipo_solicitud=$resultSolicitud['tipo_solicitud'];
                           }else{
                             $sql=" SELECT m.curso_id,(select c.CiAlumno from ibnorca.alumnos c where c.IdAlumno=m.cliente_id)ci_estudiante,m.precio_total
                             FROM ibnorcatienda.pago_curso m
@@ -109,9 +111,9 @@ $stmt->bindColumn('ci_estudiante', $ci_estudiante);
                             $nombreModulo="";                                 
                             // $nombreCurso="";
                             $nro_solicitud="TIENDA";
-                            
-
+                            $tipo_solicitud=2;
                           }
+                          if($tipo_solicitud<>4 && $tipo_solicitud<>6){
                           $monto_totalpago+=$monto_pago;
                           $monto_totalfactura+=$importe;
                           if($importe!=$monto_pago)
@@ -120,24 +122,24 @@ $stmt->bindColumn('ci_estudiante', $ci_estudiante);
                           }else{
                             $stringstyle="";
                           }
-
+                          
                            ?>
-                          <tr>
-                           <td><small><?=$cod_detale?></small></td>
-                           <td><small><?=$nro_factura?></small></td> 
-                           <td><small><?=$nombreAlumno?></small></td>
-                           <td><small><?=$ci_estudiante;?></small></td>
-                           <td><small><?=$fecha_factura;?></small></td>
-                           <td><small><?=$nombreCurso;?></small></td>
-                           <td><small><?=$nombreModulo;?></small></td>
-                           <td><small><?=$nro_solicitud;?></small></td>  
-                           <td><small><?=$importe;?></small></td>                           
-                           
-                           <td><small><span style="<?=$stringstyle;?>" ><?=$monto_pago;?></span></small></td>
-                          </tr>
-                          <?php
+                            <tr>
+                             <td><small><?=$cod_detale?></small></td>
+                             <td><small><?=$nro_factura?></small></td> 
+                             <td><small><?=$nombreAlumno?></small></td>
+                             <td><small><?=$ci_estudiante;?></small></td>
+                             <td><small><?=$fecha_factura;?></small></td>
+                             <td><small><?=$nombreCurso;?></small></td>
+                             <td><small><?=$nombreModulo;?></small></td>
+                             <td><small><?=$nro_solicitud;?></small></td>  
+                             <td><small><?=$importe;?></small></td>                           
+                             <td><small><span style="<?=$stringstyle;?>" ><?=$monto_pago;?></span></small></td>
+                            </tr>
+                            <?php
                               $index++;
-                            }
+                          }
+                        }
                           ?>
                         </tbody>
                         <tfoot>

@@ -45,7 +45,7 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 		    $cod_tipopago = $resultInfo['cod_tipopago'];
 		    $nombre_cliente = $razon_social;
 		}elseif($auxiliar==2){//solicitudes
-		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo and sf.cod_estadofactura=1");
+		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
 		    $cod_factura = $resultInfo['codigo']; 

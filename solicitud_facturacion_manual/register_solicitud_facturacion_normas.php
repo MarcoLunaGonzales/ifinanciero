@@ -153,7 +153,7 @@ $contadorRegistros=0;
                                                 $stmtArea = $dbh->prepare($sqlArea);                                            
                                                 $stmtArea->execute();
                                                 while ($rowArea = $stmtArea->fetch()){ ?>
-                                                     <option <?=($cod_area==$rowArea["cod_area"])?"selected":"";?> value="<?=$rowArea["cod_area"];?>" data-subtext="(<?=$rowArea['cod_area']?>)"><?=$rowArea["abrev_area"];?> - <?=$rowArea["nombre_area"];?></option><?php 
+                                                     <option <?=($cod_area==$rowArea["cod_area"])?"selected":(($cod_facturacion>0)?"disabled":"");?> value="<?=$rowArea["cod_area"];?>" data-subtext="(<?=$rowArea['cod_area']?>)"><?=$rowArea["abrev_area"];?> - <?=$rowArea["nombre_area"];?></option><?php 
                                                 } ?>
                                         </select>                                      
                                     </div>                    
