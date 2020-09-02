@@ -270,15 +270,23 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             $codigoRet=$rowNuevo['cod_confretencion'];
             $importeOriginal=$rowNuevo['monto'];
             $importeRetencion=(porcentRetencion($codigoRet)/100)*$importeOriginal;
+
+            $importeRetencionGasto=$importeRetencion;
             //importe de la factura
             if($rowNuevo['cod_confretencion']==8){//||$rowNuevo['cod_confretencion']==10
               $importeOriginalAux=$importeOriginal;
+  
               $importeOriginal=obtenerMontoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);
               $importeRetencion=(porcentRetencion($codigoRet)/100)*$importeOriginal;
-              $importeRetencion=($importeRetencion)+obtenerMontoGastoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);  
+              $importeExentoIva=obtenerMontoGastoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);  
+              $importeRetencion=($importeRetencion)+$importeExentoIva;
+
+
+              $importeRetencionGasto=(porcentRetencion($codigoRet)/100)*$importeOriginalAux;
+              $importeRetencionGasto+=$importeExentoIva;
             }
             
-            $importePasivoFila=$importeRetencion;
+            $importePasivoFila=$importeRetencionGasto;
             $ii=$i;
             $nom_cuenta_auxiliar="";
             $importeOriginal2=0;
@@ -424,7 +432,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             
           //DATOS PARA AGREGAR CUENTA DE GASTO CON RETENCION
             $haber=0;
-            $debe=$importeRetencion;
+            $debe=$importeRetencionGasto;
             $sumaDevengado=$importePasivoFila;  
             $debe=number_format(($debe), 2, '.', ''); 
 
