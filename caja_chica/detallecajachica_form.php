@@ -183,7 +183,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
               <label class="col-sm-2 col-form-label">Monto</label>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <input class="form-control" type="text" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
+                        <input class="form-control" type="number" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
                     </div>
                 </div>
                 
