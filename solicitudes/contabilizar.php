@@ -594,6 +594,25 @@ if($flagSuccessCompro==true){
      }else{
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
      }
+
+//actualizar SOLICITUDES SIS AL ESTADO PAGADO
+   if(obtenerDetalleRecursosSIS($codigo>0)){
+      $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=8 where codigo=$codigo";
+      $stmtUpdate = $dbh->prepare($sqlUpdate);
+      $flagSuccess=$stmtUpdate->execute();
+
+    //habilitar cuando exista el estado pagado
+    /*$fechaHoraActual=date("Y-m-d H:i:s");
+    $idTipoObjeto=2708;
+    $idObjeto=2725; //regristado
+    $obs="Solicitud Contabilizada";
+    if(isset($_GET['u'])){
+       $u=$_GET['u'];
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+     }else{
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+     }*/
+   }  
 }
 
 

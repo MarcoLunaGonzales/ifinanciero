@@ -9536,7 +9536,19 @@ function obtenerNombreEstadoSol($cod_estado){
         $valor=$row['nombre'];
       }         
       return($valor);
-    }
+}
+
+function obtenerDetalleRecursosSIS($codigo){
+  $dbh = new Conexion();        
+      $sql="SELECT codigo from solicitud_recursosdetalle where (cod_unidadorganizacional=3000 or cod_area=1235) and cod_solicitudrecurso=$codigo";    
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor++;
+      }         
+      return($valor);
+}
 
 
 ?>
