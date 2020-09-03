@@ -270,15 +270,23 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             $codigoRet=$rowNuevo['cod_confretencion'];
             $importeOriginal=$rowNuevo['monto'];
             $importeRetencion=(porcentRetencion($codigoRet)/100)*$importeOriginal;
+
+            $importeRetencionGasto=$importeRetencion;
             //importe de la factura
             if($rowNuevo['cod_confretencion']==8){//||$rowNuevo['cod_confretencion']==10
               $importeOriginalAux=$importeOriginal;
+  
               $importeOriginal=obtenerMontoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);
               $importeRetencion=(porcentRetencion($codigoRet)/100)*$importeOriginal;
-              $importeRetencion=($importeRetencion)+obtenerMontoGastoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);  
+              $importeExentoIva=obtenerMontoGastoTotalFacturasSolicituRecurso($codSolicitudDetalleOrigen);  
+              $importeRetencion=($importeRetencion)+$importeExentoIva;
+
+
+              $importeRetencionGasto=(porcentRetencion($codigoRet)/100)*$importeOriginalAux;
+              $importeRetencionGasto+=$importeExentoIva;
             }
             
-            $importePasivoFila=$importeRetencion;
+            $importePasivoFila=$importeRetencionGasto;
             $ii=$i;
             $nom_cuenta_auxiliar="";
             $importeOriginal2=0;
@@ -424,7 +432,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             
           //DATOS PARA AGREGAR CUENTA DE GASTO CON RETENCION
             $haber=0;
-            $debe=$importeRetencion;
+            $debe=$importeRetencionGasto;
             $sumaDevengado=$importePasivoFila;  
             $debe=number_format(($debe), 2, '.', ''); 
 
@@ -578,7 +586,7 @@ if($flagSuccessCompro==true){
 //enviar propuestas para la actualizacion de ibnorca
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2708;
-    $idObjeto=2723; //regristado
+    $idObjeto=2725; //regristado
     $obs="Solicitud Contabilizada";
     if(isset($_GET['u'])){
        $u=$_GET['u'];
@@ -586,6 +594,25 @@ if($flagSuccessCompro==true){
      }else{
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
      }
+
+//actualizar SOLICITUDES SIS AL ESTADO PAGADO
+   if(obtenerDetalleRecursosSIS($codigo>0)){
+      $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=8 where codigo=$codigo";
+      $stmtUpdate = $dbh->prepare($sqlUpdate);
+      $flagSuccess=$stmtUpdate->execute();
+
+    //habilitar cuando exista el estado pagado
+    /*$fechaHoraActual=date("Y-m-d H:i:s");
+    $idTipoObjeto=2708;
+    $idObjeto=2725; //regristado
+    $obs="Solicitud Contabilizada";
+    if(isset($_GET['u'])){
+       $u=$_GET['u'];
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+     }else{
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+     }*/
+   }  
 }
 
 

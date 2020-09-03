@@ -53,19 +53,64 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 
     $datosServicio=obtenerServiciosTipoObjetoNombre($codObjeto)." - ".obtenerServiciosClaServicioTipoNombre($IdTipo);
 
-    $userEnvio=obtenerPersonaCambioEstado(2708,$codigoX,2722);
-    if($userEnvio==0){
-       $nombreEnviado="Sin registro";    
-    }else{
-       $nombreEnviado=namePersonal($userEnvio);    
-    }
 
-    $userAprobado=obtenerPersonaCambioEstado(2708,$codigoX,2723);
-    if($userAprobado==0){
-       $nombreAprobado="Sin registro";    
-    }else{
-       $nombreAprobado=namePersonal($userAprobado);    
-    }
+          $objeto_sol=2708;
+
+          $nombreEstado_registro=obtenerNombreEstadoSol(1);
+          $personal_registro=namePersonal($codPersonalX);
+          $fecha_registro=obtenerFechaCambioEstado($objeto_sol,$codigoX,2721);//estado registro
+
+          
+          $userRevisado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2722);  //autorizado       
+          $nombreEstado_revisado=obtenerNombreEstadoSol(4);
+          if($userRevisado==0){
+             $fecha_revisado="";    
+             $personal_revisado="";    
+          }else{
+             $personal_revisado=namePersonal($userRevisado);
+             $fecha_revisado=obtenerFechaCambioEstado($objeto_sol,$codigoX,2722);
+          }
+
+          $userAprobado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2723);
+          $nombreEstado_aprobacion=obtenerNombreEstadoSol(3);
+          if($userAprobado==0){
+             $fecha_aprobacion="";    
+             $personal_aprobacion="";    
+          }else{
+             $personal_aprobacion=namePersonal($userAprobado);
+             $fecha_aprobacion=obtenerFechaCambioEstado($objeto_sol,$codigoX,2723);
+          }
+
+          $userprocesado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2725);//contabiliado        
+          $nombreEstado_procesado=obtenerNombreEstadoSol(5);
+          if($userprocesado==0){
+             $personal_procesado="";    
+             $fecha_procesado="";
+          }else{
+             $personal_procesado=namePersonal($userprocesado);    
+             $fecha_procesado=obtenerFechaCambioEstado($objeto_sol,$codigoX,2725);
+          }
+
+          $userRevision=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2822);//enviado autorizacion        
+          $nombreEstado_revision=obtenerNombreEstadoSol(6);
+          if($userRevision==0){
+             $personal_revision="";    
+             $fecha_revision="";
+          }else{
+             $personal_revision=namePersonal($userRevision);    
+             $fecha_revision=obtenerFechaCambioEstado($objeto_sol,$codigoX,2822);
+          }
+
+          $userSIS=obtenerPersonaCambioEstado($objeto_sol,$codigoX,3107);//procesado        
+          $nombreEstado_SIS=obtenerNombreEstadoSol(7);
+          if($userSIS==0){
+             $personal_SIS="";    
+             $fecha_SIS="";
+          }else{
+             $personal_SIS=namePersonal($userSIS);    
+             $fecha_SIS=obtenerFechaCambioEstado($objeto_sol,$codigoX,3107);
+          }
+
     
     $fechaC=$fechaX;
     $unidadC=$unidadNombreX;
@@ -321,7 +366,33 @@ $tituloImporte="";
 <?php     
    }
   ?>
-     <table class="table">
+  <table class="table">
+        <tr>
+            <td class="s3 text-center"><b>Estado</b></td>
+            <td class="s3 text-center"><b>Personal</b></td>
+            <td class="s3 text-center"><b>Fecha</b></td>
+        </tr>
+       <tr>
+                <td class="s3 text-left"><?=$nombreEstado_registro?>: </td><td class="s3 text-center"> <?=$personal_registro?></td><td class="s3 text-center"><?=$fecha_registro?></td>
+              </tr>
+              <tr>
+                <td class="s3 text-left"><?=$nombreEstado_revision?>: </td><td class="s3 text-center"><?=$personal_registro?></td><td class="s3 text-center"><?=$fecha_revision?></td>
+              </tr>
+              <tr>
+                <td class="s3 text-left"><?=$nombreEstado_SIS?>: </td><td class="s3 text-center"><?=$personal_SIS?></td><td class="s3 text-center"><?=$fecha_SIS?></td>
+              </tr>            
+              <tr>
+                <td class="s3 text-left"><?=$nombreEstado_revisado?>: </td><td class="s3 text-center"><?=$personal_revisado?></td><td class="s3 text-center"><?=$fecha_revisado?></td>
+              </tr>
+              <tr>
+                <td class="s3 text-left"><?=$nombreEstado_aprobacion?>: </td><td class="s3 text-center"><?=$personal_aprobacion?></td><td class="s3 text-center"><?=$fecha_aprobacion?></td>
+              </tr>
+              <tr>
+                <td class="s3 text-left"><?=$nombreEstado_procesado?>: </td><td class="s3 text-center"><?=$personal_procesado?></td><td class="s3 text-center"><?=$fecha_procesado?></td>
+              </tr>
+              
+     </table>
+     <!--<table class="table">
         <tr>
             <td class="s3 text-center" height="80px"></td>
             <td class="s3 text-center" height="80px"></td>
@@ -340,7 +411,7 @@ $tituloImporte="";
             <td class="s3 text-left">Fecha:</td>
             <td class="s3 text-left">Fecha:</td>
         </tr>
-     </table>
+     </table>-->
 
 <!-- PIE DE PAGINA-->     
      <footer class="footer">

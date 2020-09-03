@@ -14,6 +14,8 @@ $urlList3="index.php?opcion=listSolicitudRecursosAdminReg";
 $urlList4="index.php?opcion=listSolicitudRecursosAdminConta";
 $urlList5="index.php?opcion=listSolicitudRecursosAdminSis";
 
+$urlList6="index.php?opcion=listSolicitudRecursosAdminContaHistorico";
+
 $urlImp="solicitudes/imp.php";
 $urlImpComp="comprobantes/imp.php";
 $urlRegister="solicitudes/registerSolicitud.php";

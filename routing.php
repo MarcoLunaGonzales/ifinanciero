@@ -470,6 +470,9 @@
 			require_once('solicitudes/listGestor.php');
 		}
 
+		if ($_GET['opcion']=='listSolicitudRecursosAdminContaHistorico') {
+			require_once('solicitudes/listSolicitudRecursosAdminContaHistorico.php');
+		}
 		
 		
 

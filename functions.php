@@ -9109,14 +9109,15 @@ function obtenerEstadoComprobante($codigo){
   }
  function obtenerCodigoSolicitudRecursosComprobante($codigo){
      $dbh = new Conexion();
-     $sql="SELECT codigo from solicitud_recursos where cod_comprobante=$codigo";
+     $sql="SELECT s.codigo,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=s.codigo and cod_confretencion=8) as iva from solicitud_recursos s where s.cod_comprobante=$codigo;";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
-     $valor=0;
+     $valor=0;$iva=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row['codigo'];
+        $iva=$row['iva'];
      }
-     return($valor);
+     return array($valor,$iva);
   }
   function verificarEdicionComprobanteUsuario($codigo){
      $codigosAdmin=obtenerValorConfiguracion(74);
@@ -9525,4 +9526,29 @@ function obtenerFechaCambioEstadoSolicitudRecurso($codigo){
   } 
   return $valor;
 }
+function obtenerNombreEstadoSol($cod_estado){
+      $dbh = new Conexion();        
+      $sql="SELECT nombre from estados_solicitudrecursos where codigo=$cod_estado";    
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      $valor="-";
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['nombre'];
+      }         
+      return($valor);
+}
+
+function obtenerDetalleRecursosSIS($codigo){
+  $dbh = new Conexion();        
+      $sql="SELECT codigo from solicitud_recursosdetalle where (cod_unidadorganizacional=3000 or cod_area=1235) and cod_solicitudrecurso=$codigo";    
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor++;
+      }         
+      return($valor);
+}
+
+
 ?>

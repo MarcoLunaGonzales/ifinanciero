@@ -35,7 +35,7 @@ if($estado==10||$estado==11||$estado==12){
   $flagSuccess=$stmtUpdate->execute();
 }else{
 
-if(obtenerUnidadSolicitanteRecursos($codigo)==3000||obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)){ //&&obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)
+if(obtenerUnidadSolicitanteRecursos($codigo)==3000||obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)||obtenerDetalleRecursosSIS($codigo)>0){ //&&obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)
   if(isset($_GET["reg"])){
    if($estado==4&&$_GET['reg']!=2){
     $estado=7;
@@ -43,10 +43,22 @@ if(obtenerUnidadSolicitanteRecursos($codigo)==3000||obtenerAreaSolicitanteRecurs
   }  
 }
 
-/*if($estado==4){
-  
-}*/
 $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado where codigo=$codigo";
+if($estado==8){
+  //enviar propuestas para la actualizacion de ibnorca
+         $fechaHoraActual=date("Y-m-d H:i:s");
+         $idTipoObjeto=2708;
+         $idObjeto=2725; //regristado
+         $obs="Solicitud Contabilizada";
+         if(isset($_GET['u'])){
+          $u=$_GET['u'];
+           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+          }else{
+           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+          }
+        ///
+}
+
 if(isset($_GET['obs'])){
   $obs=$_GET['obs'];
   if(isset($_GET["ll"])){
@@ -102,6 +114,21 @@ if($estado!=1){
       }else{
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
       } 
+    }else{
+      if($estado==5){
+             //enviar propuestas para la actualizacion de ibnorca
+         $fechaHoraActual=date("Y-m-d H:i:s");
+         $idTipoObjeto=2708;
+         $idObjeto=2725; //regristado
+         $obs="Solicitud Contabilizada";
+         if(isset($_GET['u'])){
+          $u=$_GET['u'];
+           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+          }else{
+           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+          }
+        ///
+      }
     }
    }   
   }

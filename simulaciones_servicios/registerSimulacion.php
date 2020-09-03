@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 set_time_limit(0);
 error_reporting(-1);
 require_once '../layouts/bodylogin2.php';
@@ -8,7 +8,7 @@ require_once '../styles.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
-
+session_start();
 setlocale(LC_TIME, "Spanish");
 
 $dbh = new Conexion();

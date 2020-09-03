@@ -34,7 +34,7 @@ $fechaHoraActual=date("Y-m-d H:i:s");
     //enviar propuestas para la actualizacion de ibnorca
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2708;
-    $idObjeto=$estado; //variable desde get
+    $idObjeto=$iEstado; //variable desde get
     $obs=$_GET['obs']; //$obs="Registro de propuesta";
     if(isset($_GET['u'])){
       $u=$_GET['u'];

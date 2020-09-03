@@ -896,20 +896,23 @@
 <!--    end small modal -->
 <!-- small modal -->
 <div class="modal fade modal-arriba modal-primary" id="modalAgregarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content card">
             <div class="card-header card-header-warning card-header-icon">
-                <div class="card-icon">
-                    <i class="material-icons text-dark">ballot</i>
-                 </div>
-                  <h4 class="card-title">Proveedor</h4>
+                 <div class="card-text">
+                    <h4><i class="material-icons">group_add</i> Agregar Nuevo Proveedor</h4>      
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
             </div>
             <div class="card-body">
                  <div id="datosProveedorNuevo">
                    
                  </div> 
+                <br><br> 
                 <div class="form-group float-right">
-                        <button type="button" onclick="guardarDatosProveedor()" class="btn btn-info btn-round">Agregar</button>
+                        <button type="button" onclick="guardarDatosProveedor()" id="boton_guardar_nuevo_proveedor" class="btn btn-info btn-round">Agregar</button>
                 </div>
           </div>
       </div>  

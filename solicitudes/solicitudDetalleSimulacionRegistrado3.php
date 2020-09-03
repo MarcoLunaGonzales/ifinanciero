@@ -11,6 +11,8 @@
 						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;$listaDetalles=[];
 					?><div id="detalles_solicitud"><?php
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
+							$unidadXX=$codUnidadX;
+                        	$areaXX=$codAreaX;
 							//$cod_plantilladetalle=$row['codigo_detalle'];
 							$codigo_fila=explode("###",$row['codigo_detalle']);
 							if($codigo_fila[1]=="DET-SIM"){
@@ -25,6 +27,7 @@
 							$codCuentaX=$row['codigo'];
 							$codDetalleX=0;
 							$detalleX=$row['glosa'];
+							
 							$proveedorX="";
 							$retencionX="";
                             $codTipoPago=0;
@@ -58,6 +61,8 @@
 							$detalleAux=$detalleX;
 							?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
                             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+                               $unidadXX=$rowDetalles['cod_unidadorganizacional'];
+							   $areaXX=$rowDetalles['cod_area'];
                                $cuentasCodigos[$conta]=$rowDetalles["codigo"];	
                                $codDetalleX=$rowDetalles["codigo"];	
                                $detalleX=$rowDetalles["detalle"];
