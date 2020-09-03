@@ -79,7 +79,8 @@ $i=0;
 			            </div>		      	           
 		            </div>
 		            <div class="card-footer ">
-		                <button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>				  
+		                <button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>	
+		                <a href="../reportes_internos/" class="<?=$buttonCancel;?>"> <-- Volver </a>			  
 					</div>
 	            </form>
 	    	</div>

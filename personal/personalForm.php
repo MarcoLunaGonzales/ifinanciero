@@ -317,14 +317,15 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <div class="row">
                                   <label class="col-sm-2 col-form-label">Oficina</label>
                                   <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxAreaContabilizacionDetalle(this);">
+                                    <div class="form-group">                                        
+
+                                        <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxAreaContabilizacionDetalle(this);" data-show-subtext="true" data-live-search="true">
                                             <option value=""></option>
                                             <?php 
-                                            $queryUO = "SELECT codigo,nombre from unidades_organizacionales where cod_estado=1 order by nombre";
+                                            $queryUO = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
                                             $statementUO = $dbh->query($queryUO);
                                             while ($row = $statementUO->fetch()){ ?>
-                                                <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                                <option <?=($cod_unidadorganizacional==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                             <?php } ?>
                                         </select>
                                     </div>

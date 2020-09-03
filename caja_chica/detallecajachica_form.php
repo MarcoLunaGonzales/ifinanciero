@@ -31,6 +31,22 @@ while ($rowCuenta = $stmtCuenta->fetch(PDO::FETCH_ASSOC)) {
     </script><?php
   $i=$i+1;  
 }
+//cargamos las configuraciones de estados de cuetna
+echo "<script>var array_configuracion_estadocuenta=[];</script>";
+$stmtConfiguracionCuenta = $dbh->prepare("SELECT cod_plancuenta from configuracion_estadocuentas where cod_estadoreferencial=1");
+$stmtConfiguracionCuenta->execute();
+while ($rowConfi = $stmtConfiguracionCuenta->fetch(PDO::FETCH_ASSOC)) {
+  $codigo_plancuentaX=$rowConfi['cod_plancuenta'];
+  ?>
+  <script>
+    var configuracion={
+      codigo_plancuenta: <?=$codigo_plancuentaX?>,
+    }
+    array_configuracion_estadocuenta.push(configuracion);  
+  </script>
+  <?php  
+}
+
 $cod_proveedores=0;
 if ($codigo > 0){
     $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,cod_proveedores,cod_actividad_sw,
@@ -540,10 +556,18 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   //el numero de cuenta comporbamos si empieza con 2
   $( "#cuenta_auto" ).blur(function() {
       var nro_cuenta = document.getElementById("cuenta_auto").value; 
+      var cod_cuenta_id = document.getElementById("cuenta_auto_id").value; 
       if(nro_cuenta.substr(0,1)==2){//comprobamos el primer digito de la cuenta 
-        // alert("es 5");
-        $(".retencion_sin_gastos").show();
-        // $(".contenedor_contra_cuenta").show();
+        for(var j = 0; j < array_configuracion_estadocuenta.length; j++){
+          var dato = Object.values(array_configuracion_estadocuenta[j]);
+          // alert(dato+"-"+cod_cuenta_id);
+          if(dato==cod_cuenta_id){
+            $(".retencion_sin_gastos").show();
+            break;
+          }else{
+            $(".retencion_sin_gastos").hide();    
+          }
+        }
       }else{
         $(".retencion_sin_gastos").hide();
         // $(".contenedor_contra_cuenta").hide();
@@ -555,6 +579,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
 <script type="text/javascript">
   function valida(f) {
     var nro_cuenta2 = document.getElementById("cuenta_auto").value; 
+    var cod_cuenta_id = document.getElementById("cuenta_auto_id").value; 
     var ok = true;
     if(nro_cuenta2.substr(0,1)!=5){//comprobamos el primer digito de la cuenta 
       if(f.elements["cod_personal"].value == "" && f.elements["proveedores"].value == "")
@@ -576,13 +601,17 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
         }
     }
     if(nro_cuenta2.substr(0,1)==2){//comprobamos el primer digito de la cuenta 
-      if(f.elements["comprobante"].value == "" && f.elements["comprobante"].value == 0)
-      {
-        var msg = "Estado de Cuenta No seleccionada.'\n";
-        ok = false;
+      for(var j = 0; j < array_configuracion_estadocuenta.length; j++){
+        var dato = Object.values(array_configuracion_estadocuenta[j]);
+        if(dato==cod_cuenta_id){
+          if(f.elements["comprobante"].value == "" && f.elements["comprobante"].value == 0)
+          {
+            var msg = "Estado de Cuenta No seleccionada.'\n";
+            ok = false;
+          }
+        }
       }
     }
-    
 
     var dato = document.getElementById("cuenta_auto_id").value;
     if(dato==0){

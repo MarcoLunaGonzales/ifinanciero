@@ -54,7 +54,7 @@ $dbh = new Conexion();
 	            </div><!--div fechas row-->
                 <div class="card-footer ">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
+				   <a href="../reportes_internos/" class="<?=$buttonCancel;?>"> <-- Volver </a>
 			  	</div>
                </form>
                 

@@ -55,6 +55,13 @@ $dbh = new Conexion();
 				  		</div>
 				  		<div class="col-sm-4">
 							<div class="form-group">								
+								<a class="btn btn-primary" href="../caja_chica/reporte_cajachica_filtro.php">			
+				                    <span class="sidebar-normal"> Caja Chica Monto Comprobante </span>
+				                </a>
+							</div>
+				  		</div>
+				  		<div class="col-sm-4">
+							<div class="form-group">								
 								<a class="btn btn-info" href="lista_de_estudiantes_sw.php">				                
 				                    <span class="sidebar-normal"> Control De Pago de Estudiantes WS </span>
 				                </a>

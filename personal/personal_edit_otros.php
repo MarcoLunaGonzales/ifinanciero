@@ -67,17 +67,17 @@ if($codigo_item==1){?><!--oficina - area-->
                                         
                                     </select> -->
                                     <?php
-                                    $sqlUO="SELECT cod_unidad,cod_area,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select a.abreviatura from areas a where a.codigo=cod_area) as abrev_area
+                                    $sqlArea="SELECT cod_unidad,cod_area,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select a.abreviatura from areas a where a.codigo=cod_area) as abrev_area
                                     FROM areas_organizacion
                                     where cod_estadoreferencial=1 and cod_unidad=:cod_UO order by nombre_area";
-                                    $stmt = $dbh->prepare($sqlUO);
-                                    $stmt->bindParam(':cod_UO', $cod_unidadorganizacional);
-                                    $stmt->execute();
+                                    $stmtArea = $dbh->prepare($sqlArea);
+                                    $stmtArea->bindParam(':cod_UO', $cod_unidadorganizacional);
+                                    $stmtArea->execute();
                                     ?>
                                     <select name="cod_area" id="cod_area" data-style="btn btn-primary" class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
                                         <option ></option>
                                         <?php 
-                                            while ($row = $stmt->fetch()){ 
+                                            while ($row = $stmtArea->fetch()){ 
                                         ?>
                                              <option <?=($cod_area==$row["cod_area"])?"selected":"";?> value="<?=$row["cod_area"];?>" data-subtext="<?=$row['cod_area'];?>"><?=$row["abrev_area"];?> - <?=$row["nombre_area"];?></option>
                                          <?php 

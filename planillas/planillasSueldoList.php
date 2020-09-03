@@ -16,8 +16,7 @@ if($globalAdmin==1){//para personal admin
   (select m.nombre from meses m where m.codigo=cod_mes)as mes,
   (select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
   (select ep.nombre from estados_planilla ep where ep.codigo=cod_estadoplanilla) as estadoplanilla
-  from planillas 
-  ");
+  from planillas order by cod_gestion desc,cod_mes desc");
   $stmtAdmnin->execute();
   $stmtAdmnin->bindColumn('codigo', $codigo_planilla);
   $stmtAdmnin->bindColumn('gestion', $gestion);
@@ -405,7 +404,7 @@ if($globalAdmin==1){//para personal admin
   (select m.nombre from meses m where m.codigo=cod_mes)as mes,
   (select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
   (select ep.nombre from estados_planilla ep where ep.codigo=cod_estadoplanilla) as estadoplanilla
-  from planillas");
+  from planillas order by cod_gestion desc,cod_mes desc");
   //ejecutamos
   $stmt->execute();
   //bindColumn
