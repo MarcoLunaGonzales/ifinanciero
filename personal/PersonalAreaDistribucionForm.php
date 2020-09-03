@@ -48,8 +48,8 @@ $statementUO = $dbh->query($query_uo);
 $query_uoE = "SELECT * from unidades_organizacionales where cod_estado=1 order by 2";
 $statementUOE = $dbh->query($query_uoE);
 //listado para area Edicion de distribucion
-// $query_areas = "SELECT * from areas where cod_estado=1 order by 2";
-// $statementAREASE = $dbh->query($query_areas);
+$query_areas = "SELECT * from areas where cod_estado=1 order by 2";
+$stmtAreaR = $dbh->query($query_areas);
 
 ?>
 
@@ -169,9 +169,9 @@ $statementUOE = $dbh->query($query_uoE);
           <label class="col-sm-2 col-form-label" style="color:#424242">Oficina :</label>
           <div class="col-sm-8">
             <div class="form-group">
-              <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" onChange="ajaxPersonal_area_distribucion(this);" required data-show-subtext="true" data-live-search="true">            
+              <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" onChange="ajaxPersonal_area_distribucion(this);" required data-show-subtext="true" data-live-search="true">
                   <?php while ($row = $statementUO->fetch()){ ?>
-                      <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
+                      <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                   <?php } ?>
               </select>
             </div>
@@ -183,9 +183,16 @@ $statementUOE = $dbh->query($query_uoE);
           <div class="col-sm-8">
             <div class="form-group">
               <div id="div_contenedor_area">
-                <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" >            
-                  <option value=""></option>
-                </select>
+                
+                <select name="cod_area" id="cod_area" data-style="btn btn-primary" class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
+                  <option></option>
+                  <?php 
+                    while ($row = $stmtAreaR->fetch()){ ?>
+                       <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
+                   <?php 
+                  } 
+                ?>
+               </select>
               </div>
             </div>
           </div>
@@ -194,7 +201,7 @@ $statementUOE = $dbh->query($query_uoE);
           <label class="col-sm-2 col-form-label" style="color:#424242">Porcentaje :</label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input type="number" name="porcentaje" id="porcentaje" class="form-control input-sm">
+              <input type="number" step="any" name="porcentaje" id="porcentaje" class="form-control input-sm">
             </div>
           </div>
         </div>
@@ -262,14 +269,11 @@ $statementUOE = $dbh->query($query_uoE);
           <label class="col-sm-2 col-form-label" style="color:#424242">Porcentaje :</label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input type="number" name="porcentajeE" id="porcentajeE" class="form-control input-sm">
+              <input type="number" step="any" name="porcentajeE" id="porcentajeE" class="form-control input-sm">
             </div>
           </div>
         </div>
 
-        
-
-        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EditarPAD"  data-dismiss="modal">Aceptar</button>
@@ -292,7 +296,7 @@ $statementUOE = $dbh->query($query_uoE);
       cod_distribucion=document.getElementById("codigo_distribucionB").value;
       cod_personal=document.getElementById("codigo_personalB").value;   
       EliminarDistribucion(cod_personal,cod_distribucion);
-    }); 
+    });
     $('#EditarPAD').click(function(){    
       cod_distribucion=document.getElementById("codigo_distribucionE").value;
       cod_personal=document.getElementById("codigo_personalE").value;

@@ -189,7 +189,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                           $abrevUnidad=abrevUnidad_solo($cod_uo);
                           $abrevArea=abrevArea_solo($cod_area);
                           // echo $monto."-".$monto_rendicion."/";
-                          if($cod_tipodoccajachica==8){
+                          $cod_defecto_iva=obtenerValorConfiguracion(53);
+                          if($cod_tipodoccajachica==$cod_defecto_iva){
                             if($monto_rendicion=='')$monto_rendicion=0;
                             if($monto==$monto_rendicion)
                               $labelM='<span class="badge badge-success">';                            
@@ -224,40 +225,40 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                   $stmtFCCD = $dbh->prepare($sqlDetalle);
                                   $stmtFCCD->execute();
                                   while ($row = $stmtFCCD->fetch(PDO::FETCH_ASSOC)) {
-                                        $nit=$row['nit'];
-                                        $factura=$row['nro_factura'];
-                                        $fechaFac=$row['fecha'];
-                                        $razon=$row['razon_social'];
-                                        $importe=$row['importe'];
-                                        $exento=$row['exento'];
-                                        $autorizacion=$row['nro_autorizacion'];
-                                        $control=$row['codigo_control'];
-                                        $ice=$row['ice'];
-                                        $tasa_cero=$row['tasa_cero'];
-                                        ?><script>abrirFacturaDCC(<?=$idFila?>,'<?=trim($nit)?>',<?=trim($factura)?>,'<?=trim($fechaFac)?>','<?=trim($razon)?>',<?=trim($importe)?>,<?=trim($exento)?>,'<?=trim($autorizacion)?>','<?=trim($control)?>',<?=trim($ice)?>,<?=trim($tasa_cero)?>);</script><?php
-                                    }                                    
-                              ?> 
-                                
-                        
-                               
-                                <a href='#' title="Facturas" id="boton_fac<?=$idFila;?>" class="btn btn-info" onclick="listFacDCC(<?=$idFila;?>,'<?=$fecha;?>','<?=$observaciones;?>',<?=$monto;?>,<?=$nro_documento;?>,<?=$codigo_detalle_Cajachica?>);">
-                                  <i class="material-icons">featured_play_list</i>
-                                  <span id="nfac<?=$idFila;?>" class="count bg-warning"></span>
-                                </a>
-                                <a href='#' title="Distribución de Gastos" class="btn btn-warning" onclick="listDistribuciones_cajachica(<?=$codigo_detalle_Cajachica?>);">
-                                  <i class="material-icons">list</i>                                  
-                                </a>
-                              
-                                <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                                  <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
-                                </a>
-                                <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>')">
-                                  <i class="material-icons" title="Borrar"><?=$iconDelete;?></i>
-                                </button> 
-                                <?php
+                                    $nit=$row['nit'];
+                                    $factura=$row['nro_factura'];
+                                    $fechaFac=$row['fecha'];
+                                    $razon=$row['razon_social'];
+                                    $importe=$row['importe'];
+                                    $exento=$row['exento'];
+                                    $autorizacion=$row['nro_autorizacion'];
+                                    $control=$row['codigo_control'];
+                                    $ice=$row['ice'];
+                                    $tasa_cero=$row['tasa_cero'];
+                                    ?><script>abrirFacturaDCC(<?=$idFila?>,'<?=trim($nit)?>',<?=trim($factura)?>,'<?=trim($fechaFac)?>','<?=trim($razon)?>',<?=trim($importe)?>,<?=trim($exento)?>,'<?=trim($autorizacion)?>','<?=trim($control)?>',<?=trim($ice)?>,<?=trim($tasa_cero)?>);</script><?php
                                   }
+                                  // $cod_defecto_iva=obtenerValorConfiguracion(53);
+                                  if($cod_tipodoccajachica==$cod_defecto_iva)//tipo retencios iva
+                                  { ?>
+                                    <a href='#' title="Facturas" id="boton_fac<?=$idFila;?>" class="btn btn-info" onclick="listFacDCC(<?=$idFila;?>,'<?=$fecha;?>','<?=$observaciones;?>',<?=$monto;?>,<?=$nro_documento;?>,<?=$codigo_detalle_Cajachica?>);">
+                                      <i class="material-icons">featured_play_list</i>
+                                      <span id="nfac<?=$idFila;?>" class="count bg-warning"></span>
+                                    </a><?php 
+                                  }
+                                  ?> 
+                                  <a href='#' title="Distribución de Gastos" class="btn btn-warning" onclick="listDistribuciones_cajachica(<?=$codigo_detalle_Cajachica?>);">
+                                    <i class="material-icons">list</i>                                  
+                                  </a>
+                                
+                                  <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                                    <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
+                                  </a>
+                                  <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>')">
+                                    <i class="material-icons" title="Borrar"><?=$iconDelete;?></i>
+                                  </button> 
+                                  <?php
+                                }
                                 ?>
-                              
                               </td>
                           </tr>
                         <?php $index++;$idFila=$idFila+1; } ?>
