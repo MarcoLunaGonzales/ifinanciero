@@ -596,7 +596,7 @@ if($flagSuccessCompro==true){
      }
 
 //actualizar SOLICITUDES SIS AL ESTADO PAGADO
-   if(obtenerDetalleRecursosSIS($codigo>0)){
+   if(obtenerDetalleRecursosSIS($codigo)>0){
       $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=8 where codigo=$codigo";
       $stmtUpdate = $dbh->prepare($sqlUpdate);
       $flagSuccess=$stmtUpdate->execute();
