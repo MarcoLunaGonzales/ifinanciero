@@ -493,9 +493,9 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                     }
                     ?>
                   </div>
-                  <a type="hidden" title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-primary btn-sm">Archivos 
+                  <!-- <a  title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-primary btn-sm">Archivos 
                     <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
-                  </a>
+                  </a> -->
                 </div>
               </div>              
 
