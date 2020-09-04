@@ -58,7 +58,7 @@ $result=$stmtPersonal->fetch();
 $sucursal=$result['sucursal'];
 $direccion=$result['direccion'];
 $nit=$result['nit'];
-$razon_social=$result['razon_social'];
+$razon_social_titulo=$result['razon_social'];
 ?>
 <script> 
           gestion_reporte='<?=$nombre_gestion;?>';
@@ -84,7 +84,7 @@ $razon_social=$result['razon_social'];
                     <table id="libro_ventas_rep_2" class="table table-bordered table-condensed" style="width:100%">
                         <thead>  
                           <tr style="border:2px solid;">
-                            <th colspan="9" class="text-left"><small> Razón Social : <?=$razon_social?><br>Sucursal : <?=$sucursal?></small></th>   
+                            <th colspan="9" class="text-left"><small> Razón Social : <?=$razon_social_titulo?><br>Sucursal : <?=$sucursal?></small></th>   
                             <th colspan="8" class="text-left"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
                           </tr>                        
                           <tr>

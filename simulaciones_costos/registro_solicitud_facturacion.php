@@ -8,6 +8,7 @@ require_once 'configModule.php';
 //$dbh = new Conexion();
 $dbh = new Conexion();
 $ci_estudiante=$codigo;
+$ci_estudiante=trim($ci_estudiante," ");
 $cod_simulacion=$cod_simulacion;
 $cod_facturacion=$cod_facturacion;
 $IdCurso=$IdCurso;

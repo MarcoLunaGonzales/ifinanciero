@@ -1668,6 +1668,41 @@
           echo "No tiene archivos adjuntos";
       }
   }
+  function obtenerDirectoriosCajaChica($ruta,$url_archivo){    
+      $ruta2=$ruta."/";
+      $nombre_archivo_array=explode($ruta2, $url_archivo);    
+      $nombre_archivo=$nombre_archivo_array[1];          
+      // Se comprueba que realmente sea la ruta de un directorio
+      $ruta_aux="../".$ruta;
+      if (is_dir($ruta_aux)){
+          // Abre un gestor de directorios para la ruta indicada
+          $gestor = opendir($ruta_aux);
+          echo "<div>";
+
+          // Recorre todos los elementos del directorio
+          while (($archivo = readdir($gestor)) !== false)  {
+                  
+              $ruta_completa = $ruta."/". $archivo;
+              // echo $ruta_completa."---".$url_archivo;
+              if($ruta_completa==$url_archivo){
+                // Se muestran todos los archivos y carpetas excepto "." y ".."
+                if ($archivo != "." && $archivo != "..") {
+                    // Si es un directorio se recorre recursivamente
+                    if (is_dir($ruta_completa)) {
+                     
+                    } else {
+                      echo "<div class='btn-group'><a class='btn btn-sm btn-info btn-block' href='../ifinanciero/".$ruta_completa."' target='_blank'>" . $archivo . "</a><a class='btn btn-sm btn-default' href='../ifinanciero/".$ruta_completa."' download='ifinanciero/".$archivo."'><i class='material-icons'>vertical_align_bottom</i></a></div>";
+                    }
+                }
+              }          
+          }        
+          // Cierra el gestor de directorios
+          closedir($gestor);
+          echo "</div>";
+      } else {
+          echo "No tiene archivos adjuntos";
+      }
+  }
 
   function obtenerCodigoPlanCosto(){
      $dbh = new Conexion();
@@ -3917,7 +3952,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
     $mydompdf = new DOMPDF();
     ob_clean();
-    $mydompdf->load_html($html);
+    $mydompdf->load_html($html,'UTF-8');
+
     $mydompdf->set_paper("A4", "portrait");
     $mydompdf->render();
     
@@ -8847,6 +8883,18 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
      }
      return $direccion; 
   }
+   function obtenerLinkDirectoArchivoAdjunto_cajachica($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT direccion_archivo FROM archivos_adjuntos_cajachica 
+      where codigo=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $direccion="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $direccion=$row["direccion_archivo"];
+     }
+     return $direccion; 
+  }
 
   function obtenerCod_comprobanteDetalleorigen($codigo){
     $dbh = new Conexion();
@@ -9324,8 +9372,8 @@ function obtenerEstadoComprobante($codigo){
 
   function validacion_facturas_cajachica($cod_cajachica){
     $dbh = new Conexion();
-    $cod_retencion=obtenerValorConfiguracion(53);
-      $sqlVerifRetencion="SELECT cc.nro_documento,(select (sum(f.importe)-sum(f.exento)-sum(f.tasa_cero)-sum(f.ice)) from facturas_detalle_cajachica f where f.cod_cajachicadetalle=cc.codigo) importe_factura,(select sum(g.importe) from detalle_cajachica_gastosdirectos g where g.cod_cajachicadetalle=cc.codigo) as importe_gasto_directo, cc.monto from caja_chicadetalle cc where cc.cod_cajachica=$cod_cajachica and cc.cod_tipodoccajachica=$cod_retencion and cc.cod_estadoreferencial=1;";
+    $cod_retencion=obtenerValorConfiguracion(53);//-sum(f.exento)-sum(f.tasa_cero)-sum(f.ice)
+      $sqlVerifRetencion="SELECT cc.nro_documento,(select (sum(f.importe)) from facturas_detalle_cajachica f where f.cod_cajachicadetalle=cc.codigo) importe_factura,(select sum(g.importe) from detalle_cajachica_gastosdirectos g where g.cod_cajachicadetalle=cc.codigo) as importe_gasto_directo, cc.monto from caja_chicadetalle cc where cc.cod_cajachica=$cod_cajachica and cc.cod_tipodoccajachica=$cod_retencion and cc.cod_estadoreferencial=1;";
       // echo $sqlVerifRetencion;
     $stmtVerifRetencion = $dbh->prepare($sqlVerifRetencion);
     $stmtVerifRetencion->execute();
@@ -9365,17 +9413,25 @@ function obtenerEstadoComprobante($codigo){
       $numero_cuenta_x=$row['numero_cuenta'];      
       $digito=$numero_cuenta_x[0];
       if($digito==2){//cuenta pasiva
-        $sql="SELECT count(*)as cont from  estados_cuenta where cod_cajachicadetalle=$codigo_det";
-        $stmtVerifRetencion = $dbh->prepare($sql);
-        $stmtVerifRetencion->execute();
-        $result=$stmtVerifRetencion->fetch();
-        $cont_estados=$result['cont'];
-        if($cont_estados==0){
-          $contadorRentencion++;
-          $stringRetenciones.="Nro. Documento: ".$nro_documento_x."<br>";
+        $stmtConfiguracionCuenta = $dbh->prepare("SELECT count(*) as contador from configuracion_estadocuentas where cod_estadoreferencial=1 and cod_plancuenta='$cod_cuenta_x'");
+        $stmtConfiguracionCuenta->execute();
+        while ($rowConfi = $stmtConfiguracionCuenta->fetch(PDO::FETCH_ASSOC)) {
+          $contadorX=$rowConfi['contador'];
         }
+        if($contadorX>0){
+          $sql="SELECT count(*)as cont from  estados_cuenta where cod_cajachicadetalle=$codigo_det";
+          $stmtVerifRetencion = $dbh->prepare($sql);
+          $stmtVerifRetencion->execute();
+          $result=$stmtVerifRetencion->fetch();
+          $cont_estados=$result['cont'];
+          if($cont_estados==0){
+            $contadorRentencion++;
+            $stringRetenciones.="Nro. Documento: ".$nro_documento_x."<br>";
+          }
+        }
+        
       }
-    }    
+    }      
     $string_valor=$contadorRentencion."#####@@@@@".$stringRetenciones;
     return $string_valor;
   }
@@ -9551,6 +9607,16 @@ function obtenerDetalleRecursosSIS($codigo){
       }         
       return($valor);
 }
-
+function verificar_archivos_cajachica($codigo){
+  $dbh = new Conexion();        
+  $sql="SELECT count(*) as contador From archivos_adjuntos_cajachica where cod_cajachica_detalle=$codigo";    
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['contador'];
+  }         
+  return($valor); 
+}
 
 ?>

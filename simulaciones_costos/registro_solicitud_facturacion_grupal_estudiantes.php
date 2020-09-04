@@ -42,7 +42,7 @@ if(isset($_GET['cod_sw'])){//para la parte de editar
         if($_POST["CiAlumno_a".$i]!=''){
             $ci_alumno=$_POST["CiAlumno_a".$i];
             $id_curso=$_POST["IdCurso_a".$i];            
-            $array_ci[$i-1]=$ci_alumno;
+            $array_ci[$i-1]=trim($ci_alumno," ");
             $array_curso[$i-1]=$id_curso;
         }    
     }    

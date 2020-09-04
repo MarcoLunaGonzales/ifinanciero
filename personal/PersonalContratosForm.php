@@ -95,7 +95,11 @@ $fecha_actual=date("d/m/Y");
                       <tbody>
                         <?php $index=1;                      
                         $datos=$cod_personal_1;
+                        $sw_control_retiros=0;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          if($cod_estadocontrato==1){//si hay algun abierto marcamos
+                            $sw_control_retiros=1;
+                          }
                         	$datos=$cod_personal_1."/".$codigo_contrato."/".$fecha_iniciocontrato_x."/".$fecha_evaluacioncontrato_x."/".$fecha_fincontrato_x."/".$cod_tipocontrato;
                           $cod_defecto_contrato_otros=obtenerValorConfiguracion(79);
                           $cod_contradoidefinido=obtenerValorConfiguracion(80);
@@ -236,7 +240,7 @@ $fecha_actual=date("d/m/Y");
                                     if($cod_finiquito==null && $cod_tipocontrato!=$cod_contradoidefinido){?>
                                       <button class="btn btn-primary" onClick="location.href='<?=$urlFormFiniquitos;?>&codigo=0&codigo_contrato=<?=$codigo_contrato?>'"><i class="material-icons" title="Registrar Finiquito">play_for_work</i></button>
                                     <?php }elseif($cod_finiquito==null && $cod_tipocontrato==$cod_contradoidefinido){?>
-                                      <button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>')">
+                                      <button type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>',2)">
                                         <i class="material-icons" title="Retirar Personal y Registrar Finiquito">play_for_work</i>
                                      </button>
                                     <?php }
@@ -246,7 +250,6 @@ $fecha_actual=date("d/m/Y");
                             </tr>
                         <?php $index++; } ?>            				
                       </tbody>
-                      
                     </table>
                   </div>
                 </div>
@@ -258,9 +261,13 @@ $fecha_actual=date("d/m/Y");
                   <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalAgregarC" onclick="agregaformPC('<?=$datos;?>')">
                       <i class="material-icons" title="Agregar Contrato">add</i>
   		             </button>
-                  <!--  <button type="button" class="btn btn-primary btn-round btn-fab" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>')">
+                   <?php
+                   if($sw_control_retiros==0){?>
+                     <button type="button" class="btn btn-primary btn-round btn-fab" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>',1)">
                       <i class="material-icons" title="Retirar Personal">play_for_work</i>
-                   </button>	     -->                       
+                   </button>                             
+                   <?php } ?>
+                  
                 <?php
                 }
                 ?>
@@ -431,6 +438,7 @@ $fecha_actual=date("d/m/Y");
       <div class="modal-body">
         <input type="hidden" name="codigo_personalR" id="codigo_personalR" value="0">
         <input type="hidden" name="codigo_contratoR" id="codigo_contratoR" value="0">
+        <input type="hidden" name="indiceR" id="indiceR" value="0">
         <div class="row">
           <label class="col-sm-3 col-form-label" style="color:#424242">Tipo De Retiro : </label>
           <div class="col-sm-8">
@@ -500,10 +508,11 @@ $fecha_actual=date("d/m/Y");
     $('#registraRetiro').click(function(){    
       cod_personal=document.getElementById("codigo_personalR").value;
       codigo_contratoR=document.getElementById("codigo_contratoR").value;
+      indiceR=document.getElementById("indiceR").value;
       cod_tiporetiro=$('#cod_tiporetiro').val();
       fecha_Retiro=$('#fecha_retiro').val();
       observaciones=$('#observaciones').val();
-      RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones,codigo_contratoR);
+      RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones,codigo_contratoR,indiceR);
     });
 
     $('#Finalizar_contrato').click(function(){

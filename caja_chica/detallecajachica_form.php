@@ -178,13 +178,14 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
     <?php
   }  
 
-
+$archivos_cajachica=0;//contador de archivos de caja chica
 ?>
 
 <div class="content">
 	<div class="container-fluid">
 		<div class="col-md-12">
-		  <form id="formDetalleCajaChica" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post" onsubmit="return valida(this)"> 
+		  <form id="formDetalleCajaChica" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">         
+
         <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
         <input type="hidden" name="cod_cc" id="cod_cc" value="<?=$cod_cc;?>"/>
         <input type="hidden" name="cod_tcc" id="cod_tcc" value="<?=$cod_tcc;?>"/>
@@ -310,11 +311,12 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 <div class="form-group">
                     <div id="div_contenedor_uo">                                        
                       <?php
-                          $sqlUO="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1";
+                          $sqlUO="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 and centro_costos=1";
                           $stmt = $dbh->prepare($sqlUO);
                           $stmt->execute();
                           ?>
-                          <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" onChange="ajaxAreaUOCAJACHICA(this);" title="Elija una opción">
+                          <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true"  title="Elija una opción">
+                            <!-- onChange="ajaxAreaUOCAJACHICA(this);" -->
                               <?php 
                                   while ($row = $stmt->fetch()){ 
                               ?>
@@ -359,7 +361,8 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                     <div id="div_contenedor_area">                                        
                         <?php
                         
-                            $sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas,(select a.abreviatura from areas a where a.codigo=cod_area)as abrev_area from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
+                            //$sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas,(select a.abreviatura from areas a where a.codigo=cod_area)as abrev_area from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
+                            $sqlUO="SELECT codigo,nombre,abreviatura from areas where cod_estado=1 and centro_costos=1 ORDER BY nombre";
                             $stmt = $dbh->prepare($sqlUO);
                             $stmt->execute();
                             ?>
@@ -367,7 +370,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                                 <?php 
                                     while ($row = $stmt->fetch()){ 
                                 ?>
-                                     <option value="<?=$row["cod_area"];?>" data-subtext="<?=$row["cod_area"];?>" <?=($cod_area==$row["cod_area"])?"selected":"";?> ><?=$row["nombre_areas"];?>(<?=$row["abrev_area"];?>)</option>
+                                     <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>" <?=($cod_area==$row["codigo"])?"selected":"";?> ><?=$row["nombre"];?>(<?=$row["abreviatura"];?>)</option>
                                  <?php 
                                     } 
                                 ?>
@@ -462,10 +465,12 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
             <!-- para solicitud de recursos -->             
             <div class="row">              
               <div class="col-sm-12">
-                <div class="form-group">                        
-                  <div id="div_contenedor_sol_recursos" align="center">                    
+                <div class="form-group" align="center">                        
+                  <div id="div_contenedor_sol_recursos" >
                     <?php
+                    
                     if($codigo>0){                      
+                      $archivos_cajachica=verificar_archivos_cajachica($codigo);
                       //sacar codigo de estado de cuenta
                       $sqlEstadoCuenta="SELECT e.cod_comprobantedetalle From estados_cuenta e where e.codigo=$cod_comprobante limit 1"; 
                       // echo $sqlEstadoCuenta;
@@ -491,8 +496,19 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                     }
                     ?>
                   </div>
+                  <?php if($codigo>0 && $archivos_cajachica>0){?>
+                    <a  title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-primary btn-sm">Archivos 
+                      <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning estado" ></span>
+                    </a>
+
+                  <?php }else{?>
+                    <a  title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-primary btn-sm">Archivos 
+                    <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning" ></span>
+                  </a>
+                  <?php } ?>
                 </div>
               </div>              
+
             </div>
   			  </div>
   			  <div class="card-footer ml-auto mr-auto">
@@ -500,6 +516,9 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   				<a href="<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cc;?>&cod_tcc=<?=$cod_tcc?>" class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
   			  </div>
   			</div>
+        <!-- archivos adjuntos -->
+       <?php  require_once 'caja_chica/modal_subirarchivos.php';?>
+
 		  </form>
 		</div>
 	
@@ -539,6 +558,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
       </div>  
     </div>
   </div>
+
 <?php
   if($codigo>0){
     $tipo_distribucion=verificamos_distribucion_cajachica($codigo);

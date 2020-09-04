@@ -36,11 +36,6 @@ if ($codigo > 0){
   }else{
     $codigo_contrato = 0;  
   }
-  if($codigo==-100){
-    $sw_contratoidefinido=1;  
-  }else{
-    $sw_contratoidefinido=0;
-  }
   $codigo = 0;
   // $fecha_retiro = ' ';
   $cod_tiporetiro = ' ';
@@ -49,9 +44,23 @@ if ($codigo > 0){
   $duodecimas = 0;
   $otros_pagar = 0;
 }
-$sqlpersonal="SELECT  c.codigo,c.cod_personal,p.primer_nombre,p.paterno,p.materno, DATE_FORMAT(c.fecha_iniciocontrato,'%d/%m/%Y')as ing_contr, DATE_FORMAT(c.fecha_fincontrato,'%d/%m/%Y')as fecha_retiro, DATEDIFF(c.fecha_fincontrato,c.fecha_iniciocontrato) as dias
-FROM personal p,personal_contratos c
-WHERE c.cod_personal=p.codigo and c.codigo=$codigo_contrato";
+$sql="SELECT cod_tipocontrato from personal_contratos where codigo=$codigo_contrato";
+$stmtTipoContrato = $dbh->prepare($sql);
+$stmtTipoContrato->execute();
+$resultTipoContrato = $stmtTipoContrato->fetch();
+$cod_tipocontrato = $resultTipoContrato['cod_tipocontrato'];
+
+if($cod_tipocontrato!=1){
+  $sw_contratoidefinido=0;  
+    $sqlpersonal="SELECT  c.codigo,c.cod_personal,p.primer_nombre,p.paterno,p.materno, DATE_FORMAT(c.fecha_iniciocontrato,'%d/%m/%Y')as ing_contr, DATE_FORMAT(c.fecha_fincontrato,'%d/%m/%Y')as fecha_retiro, DATEDIFF(c.fecha_fincontrato,c.fecha_iniciocontrato) as dias
+      FROM personal p,personal_contratos c
+      WHERE c.cod_personal=p.codigo and c.codigo=$codigo_contrato";
+}else{//indefinido
+  $sw_contratoidefinido=1;  
+  $sqlpersonal="SELECT  c.codigo,c.cod_personal,p.primer_nombre,p.paterno,p.materno, DATE_FORMAT(c.fecha_iniciocontrato,'%d/%m/%Y')as ing_contr, DATE_FORMAT(pr.fecha_retiro,'%d/%m/%Y')as fecha_retiro, DATEDIFF(pr.fecha_retiro,c.fecha_iniciocontrato) as dias
+  FROM personal p,personal_contratos c,personal_retiros pr
+  WHERE c.cod_personal=p.codigo and pr.cod_personal=p.codigo and c.codigo=$codigo_contrato ORDER BY pr.codigo desc limit 1";
+}
 // echo $sqlpersonal;
 $stmtpersonal = $dbh->prepare($sqlpersonal);
 $stmtpersonal->execute();
@@ -83,6 +92,7 @@ $stmtpersonal->execute();
                                       while ($row = $stmtpersonal->fetch()){ 
                                         $dias=$row['dias'];                                        
                                         ?>
+
                                        <option  <?=($dias<89)?"disabled":"";?> data-subtext="FI:<?=$row["ing_contr"];?> FF:<?=$row["fecha_retiro"];?> (<?=$row["dias"];?> días)"  value="<?=$row["cod_personal"];?>"><?=$row["paterno"];?> <?=$row["materno"];?> <?=$row["primer_nombre"];?> </option>
                                    <?php } ?>
                             </select>

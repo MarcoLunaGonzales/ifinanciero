@@ -10,7 +10,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$stmt = $dbh->prepare("SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.paterno,p.materno,p.primer_nombre,p.bandera,p.ing_contr,p.cod_estadopersonal,
+$stmt = $dbh->prepare("SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.paterno,p.materno,p.primer_nombre,p.bandera,p.ing_contr,DATE_FORMAT(p.ing_contr,'%d/%m/%Y')as ing_contr_x,p.cod_estadopersonal,
   (select c.nombre from cargos c where c.codigo=cod_cargo)as xcargo,
  (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as xuonombre,
  (select a.abreviatura from areas a where a.codigo=cod_area)as xarea,
@@ -33,7 +33,7 @@ $stmt->bindColumn('primer_nombre', $primer_nombre);
 $stmt->bindColumn('bandera', $bandera);
 $stmt->bindColumn('cod_estadopersonal', $cod_estadopersonal);
 
-$stmt->bindColumn('ing_contr', $fecha_ingreso);
+$stmt->bindColumn('ing_contr_x', $fecha_ingreso);
 $stmt->bindColumn('xcargo', $xcargo);
 $stmt->bindColumn('xuonombre', $xuonombre);
 $stmt->bindColumn('xarea', $xarea);

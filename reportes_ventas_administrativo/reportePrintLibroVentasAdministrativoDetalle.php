@@ -111,23 +111,26 @@
                     '<td class="text-right font-weight-bold small">'.formatNumberDec($totalImporteBruto).'</td>'.      
                 '</tr>';*/
 
-    $html.=    '</tbody><tfoot>
-      <tr style="background:#21618C; color:#fff;">
-        <th class="small" width="5%"><small>Oficina</small></th>      
-        <th class="small" width="5%"><small>Area</small></th>      
-        <th class="small" width="5%"><small>Tipo Pago</small></th>
-        <th class="small" width="5%"><small>Fecha</small></th>
-        <th class="small" width="3%"><small><small># Factura</small></small></th>
-        <th class="small" width="3%"><small><small># S.F.</small></small></th>
-        <th class="small" width="4%"><small>Nit</small></th>
-        <th class="small" width="20%"><small>Razón Social</small></th>      
-        <th class="small" width="10%"><small>Detalle</small></th>      
-        <th class="small" width="7%"><small>Personal</small></th>
-        <th class="small" width="7%"><small>Origen</small></th>
-        <th class="small" width="5%"><small>Importe Bruto</small></th>
-      </tr>
-    </tfoot></table>';
-
+    $html.=    '</tbody>';
+    if($sw_check=="0"){
+      $html.='<tfoot>
+        <tr style="background:#21618C; color:#fff;">
+          <th class="small" width="5%"><small>Oficina</small></th>      
+          <th class="small" width="5%"><small>Area</small></th>      
+          <th class="small" width="5%"><small>Tipo Pago</small></th>
+          <th class="small" width="5%"><small>Fecha</small></th>
+          <th class="small" width="3%"><small><small># Factura</small></small></th>
+          <th class="small" width="3%"><small><small># S.F.</small></small></th>
+          <th class="small" width="4%"><small>Nit</small></th>
+          <th class="small" width="20%"><small>Razón Social</small></th>      
+          <th class="small" width="10%"><small>Detalle</small></th>      
+          <th class="small" width="7%"><small>Personal</small></th>
+          <th class="small" width="7%"><small>Origen</small></th>
+          <th class="small" width="5%"><small>Importe Bruto</small></th>
+        </tr>
+      </tfoot>';
+    }
+    $html.='</table>';
     echo $html;
     ?>
   </div>
