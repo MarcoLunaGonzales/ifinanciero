@@ -815,7 +815,7 @@ $stmt->execute();
 </div>
 
 <!-- small modal -->
-<div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!--<div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -848,8 +848,146 @@ $stmt->execute();
       </div>
     </div>
   </div>
-</div>
+</div>-->
 <!--    end small modal -->
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content card">
+      <div class="card-header card-header-info card-header-text">
+                  <div class="card-text">
+                    <h5>DOCUMENTOS DE RESPALDO</h5>      
+                  </div>
+                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                  </button>
+                </div>
+      <div class="card-body">
+      	<input type="hidden" value="-100" id="tipo_documento_otro" name="tipo_documento_otro">
+           <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE el COMPROBANTE</small></p>
+            <div class="row col-sm-11 div-center">
+              <table class="table table-warning table-bordered table-condensed">
+                <thead>
+                  <tr>
+                    <th class="small" width="30%">Tipo de Documento <a href="#" title="Otro Documento" class="btn btn-primary btn-round btn-sm btn-fab float-left" onClick="agregarFilaArchivosAdjuntosCabecera()"><i class="material-icons">add</i></a></th>
+                    <th class="small">Obligatorio</th>
+                    <th class="small" width="35%">Archivo</th>
+                    <th class="small">Descripción</th>                  
+                  </tr>
+                </thead>
+                <tbody id="tabla_archivos">
+                  <?php
+                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=1057"); //1057 //1057 localhost
+                  $stmtArchivo->execute();
+                  $filaA=0;
+                  while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
+                     $filaA++;
+                     $codigoX=$rowArchivo['idClaDocumento'];
+                     $nombreX=$rowArchivo['Documento'];
+                     $ObligatorioX=$rowArchivo['Obligatorio'];
+                     $Obli='<i class="material-icons text-danger">clear</i> NO';
+                     if($ObligatorioX==1){
+                      $Obli='<i class="material-icons text-success">done</i> SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
+                     }
+                     $verificarArchivo=verificarArchivoAdjuntoExistente(1057,$globalCode,0,$codigoX);
+                     //$nombreX=$verificarArchivo[1];
+                     $urlArchivo=$verificarArchivo[2];
+                     $codigoArchivoX=$verificarArchivo[3];
+                  ?>
+                  <tr>
+                    <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
+                    <td class="text-center"><?=$Obli?></td>
+                    <td class="text-right">
+                      <?php
+                      if($verificarArchivo[0]==0){
+                       ?>
+                      <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
+                      <span class="input-archivo">
+                        <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
+                      </span>
+                      <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo
+                      </label>
+                       <?php
+                      }else{
+                        ?>
+                        <small id="existe_archivo_cabecera<?=$filaA?>"></small>
+
+                        <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
+                        <span class="input-archivo">
+                          <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
+                        </span>
+                        <label title="Ningún archivo - Click para Cambiar el Archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-success btn-sm btn-fab"><i class="material-icons">publish</i>
+                        </label>
+                        <div class="btn-group" id="existe_div_archivo_cabecera<?=$filaA?>">
+                        <a href="#" class="btn btn-button btn-sm">Registrado</a>
+                        <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
+                        <a href="#" title="Quitar" class="btn btn-danger btn-sm" onClick="quitarArchivoSistemaAdjunto(<?=$filaA?>,<?=$codigoArchivoX;?>,0)"><i class="material-icons">delete_outline</i></a>
+                        </div> 
+                        <?php
+                      }
+                    ?>  
+                    </td>    
+                    <td><?=$nombreX;?></td>
+                  </tr> 
+                  <?php
+                   }
+                  $stmtArchivo = $dbh->prepare("SELECT * from archivos_adjuntos where cod_tipoarchivo=-100 and cod_tipopadre=1057 and cod_objeto=$globalCode and cod_padre=0"); //1057 //1057 localhost
+                  $stmtArchivo->execute();
+                  $filaE=0;
+                  while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
+                     $filaE++;
+                     $filaA++;
+                     $codigoArchivoX=$rowArchivo['codigo'];
+                     $codigoX=$rowArchivo['cod_tipoarchivo'];
+                     $nombreX=$rowArchivo['descripcion'];
+                     $urlArchivo=$rowArchivo['direccion_archivo'];
+                     $ObligatorioX=0;
+                     $Obli='<i class="material-icons text-danger">clear</i> NO';
+                     if($ObligatorioX==1){
+                      $Obli='<i class="material-icons text-success">done</i> SI';
+                     }
+
+                  ?>
+                  <tr id="fila_archivo<?=$filaA?>">
+                    <td class="text-left"><input type="hidden" name="codigo_archivoregistrado<?=$filaE?>" id="codigo_archivoregistrado<?=$filaE?>" value="<?=$codigoArchivoX;?>">Otros Documentos</td>
+                    <td class="text-center"><?=$Obli?></td>
+                    <td class="text-right">
+                      <small id="existe_archivo_cabecera<?=$filaA?>"></small>
+
+                        <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
+                        <span class="input-archivo">
+                          <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
+                        </span>
+                        <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-success btn-sm"><i class="material-icons">publish</i> Cambiar Archivo
+                        </label>
+                      <div class="btn-group">
+                        <a href="#" class="btn btn-button btn-sm" >Registrado</a>  
+                        <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
+                        <a href="#" title="Quitar" class="btn btn-danger btn-sm" onClick="quitarArchivoSistemaAdjunto(<?=$filaA?>,<?=$codigoArchivoX;?>,1)"><i class="material-icons">delete_outline</i></a>
+                      </div>     
+                    </td>    
+                    <td><?=$nombreX;?></td>
+                  </tr> 
+                  <?php
+                   }
+                      ?>     
+                </tbody>
+              </table>
+              <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntos" name="cantidad_archivosadjuntos">
+              <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntosexistentes" name="cantidad_archivosadjuntosexistentes">
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="" class="btn btn-success" data-dismiss="modal">Aceptar
+          <div class="ripple-container"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 </form>
 <?php 
 $dbh = new Conexion();
@@ -897,6 +1035,7 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 require_once 'modal.php';?>
 <?php require_once '../simulaciones_servicios/modal_facturacion.php';?>
  <script>
+ ponerConfirmacionDeArchivosSolRec();
  $("#totaldeb_total").val(<?=$totaldebDet?>);
  $("#totalhab_total").val(<?=$totalhabDet?>);
 

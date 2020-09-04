@@ -5853,7 +5853,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerDatosCompletosPorSimulacionServicios($codigo){
     $dbh = new Conexion();
-    $sql="SELECT p.cod_area,p.cod_unidadorganizacional,s.id_tiposervicio,s.cod_cliente,s.cod_responsable,s.cod_objetoservicio,s.descripcion_servicio,s.cod_unidadorganizacional as unidad_serv 
+    $sql="SELECT s.idServicio,p.cod_area,p.cod_unidadorganizacional,s.id_tiposervicio,s.cod_cliente,s.cod_responsable,s.cod_objetoservicio,s.descripcion_servicio,s.cod_unidadorganizacional as unidad_serv 
     from simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio where s.codigo=$codigo";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -8958,16 +8958,18 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
   }
   function obtenerValorOferta($codOferta,$codigo,$default,$orden){
     $dbh = new Conexion();
-    $sql="SELECT descripcion FROM ofertas_complementos where cod_oferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
+    $sql="SELECT descripcion,editable FROM ofertas_complementos where cod_oferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
     if($default==0){
-      $sql="SELECT descripcion FROM simulaciones_servicios_ofertas_complementos where cod_simulacionoferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
+      $sql="SELECT descripcion,editable FROM simulaciones_servicios_ofertas_complementos where cod_simulacionoferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
     }
      //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      if($row["editable"]==1){
         $valor=$row["descripcion"];
+      }
      }
      return $valor; 
   }

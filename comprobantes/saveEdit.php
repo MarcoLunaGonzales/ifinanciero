@@ -54,7 +54,7 @@ array_push($SQLDATOSINSTERT,$flagsuccess);
 
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
-    foreach($_FILES["archivos"]['tmp_name'] as $key => $tmp_name)
+    /*foreach($_FILES["archivos"]['tmp_name'] as $key => $tmp_name)
     {
         //Validamos que el archivos exista
         if($_FILES["archivos"]["name"][$key]) {
@@ -79,7 +79,49 @@ array_push($SQLDATOSINSTERT,$flagsuccess);
             }
             
         }
+    }*/
+
+//Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
+    $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
+for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
+  if(isset($_POST['codigo_archivo'.$ar])){
+    if($_FILES['documentos_cabecera'.$ar]["name"]){
+      $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
+      $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+      $directorio = '../assets/archivos-respaldo/COMP-'.$codComprobante.'/'; //Declaramos un  variable con la ruta donde guardaremos los archivoss
+      //Validamos si la ruta de destino existe, en caso de no existir la creamos
+      if(!file_exists($directorio)){
+                mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+      }
+      $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+      //Movemos y validamos que el archivos se haya cargado correctamente
+      //El primer campo es el origen y el segundo el destino
+      if(move_uploaded_file($source, $target_path)) { 
+        echo "ok";
+        $tipo=$_POST['codigo_archivo'.$ar];
+        $descripcion=$_POST['nombre_archivo'.$ar];
+        $tipoPadre=1057;
+        $datosArchivo=verificarExisteArchivoSolicitud($tipo,$descripcion,$tipoPadre,$codComprobante);
+        $codigoArchivo=$datosArchivo[0];
+        $linkArchivo=$datosArchivo[1];
+        if($codigoArchivo!=0){
+          $sqlDel="DELETE FROM archivos_adjuntos where codigo='$codigoArchivo'";
+          $stmtDel = $dbh->prepare($sqlDel);
+          $stmtDel->execute();
+          //borrar de la carpeta
+          unlink($linkArchivo);
+        }
+        $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+        VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codComprobante')";
+        $stmtInsert = $dbh->prepare($sqlInsert);
+        $stmtInsert->execute();    
+        print_r($sqlInsert);
+      } else {    
+          echo "error";
+      } 
     }
+  }
+}
 
     $stmt1 = obtenerComprobantesDet($codComprobante);
     while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {

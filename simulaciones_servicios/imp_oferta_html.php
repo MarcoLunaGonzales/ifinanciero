@@ -105,8 +105,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
         </p>
     </div>
     <div class="saltopagina"></div>
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">1. &nbsp;&nbsp;INTRODUCCIÓN</p>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,1);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">1. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <p class="font-weight-bold">1.1. &nbsp;&nbsp;Quienes somos</p>
           <table>
           <tr>
@@ -115,7 +122,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
           </tr>
         </table>
     </div>
-    <div class="s-9">
+
+    <div class="s-9 "<?=$estiloTitulo?>>
         <p class="font-weight-bold">1.2. &nbsp;&nbsp;Proceso de Certificación</p>
         <table>
           <tr>
@@ -193,8 +201,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 </tr>
         </table>
     </div>
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">2. &nbsp;&nbsp;ALCANCE DE LA CERTIFICACIÓN</p>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,2);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">2. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
             <p class="font-weight-bold">La certificación de producto con SELLO IBNORCA, aplica para los productos: </p>
             <p class="pl-2">
@@ -215,14 +230,28 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             </p>
         </div>
     </div>
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">3. &nbsp;&nbsp;DOCUMENTOS DE REFERENCIA</p>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,3);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">3. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
             <p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,12,$default,1))?></p>
         </div>
     </div>
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">4. &nbsp;&nbsp;Proceso de Certificación/Renovación y oferta económica</p>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,4);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">4. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
             <p>En la tabla siguiente se muestra el presupuesto para <b>los <?=$anioLetra?> años que dura el ciclo de certificación.</b> Dicho presupuesto ha sido elaborado teniendo en cuenta el tamaño de la organización postulante, las recomendaciones que a tal efecto tiene establecidas el IBNORCA por su propia experiencia y las tarifas vigentes del proceso de certificación.</p>
             <p>Para la certificación, los montos a cancelar son:</p>
@@ -299,8 +328,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             <p>Asimismo, el costo del Derecho de uso de Sello IBNORCA se mantendrá el segundo y tercer año siempre y cuando se mantengan las condiciones declaradas en el contrato de uso de sello y tarifario vigente. </p>
         </div>  
     </div>
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">5. &nbsp;&nbsp;MUESTREO Y ENSAYOS</p>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,5);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">5. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
             <p>Adicionalmente para el proceso de certificación de producto con Sello IBNORCA o emisión del DOCUMENTO DE CONFORMIDAD DE PRODUCTO, la empresa debe considerar los costos por muestreo y ensayos realizados durante la auditoria a muestras tomadas en la fábrica y en el mercado.</p>
             <p>Para ello debe considerar lo siguiente:</p>
@@ -309,48 +345,96 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
               <p class="pl-2">3. Si la empresa no cuenta con ninguna de las anteriores, entonces debe cubrir con los costos de muestreo y el costo de la ejecución de ensayos en un laboratorio Designado/Acreditado. </p>
         </div>
     </div>
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">6. &nbsp;&nbsp;CALIFICACIÓN DEL EQUIPO AUDITOR</p>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,6);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">6. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
             <p>Todos los miembros del equipo que participan en la auditoria han sido calificados por IBNORCA de acuerdo a sus procedimientos internos.</p>
             <p>Los procedimientos internos de IBNORCA de calificación de auditores satisfacen los requerimientos de la Norma NB/ISO/IEC 17021 "Evaluación de la conformidad-Requisitos para los organismos que realizan la auditoria y certificación de Sistemas de gestión”.</p>
         </div>
     </div>
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">7. &nbsp;&nbsp;CONFIDENCIALIDAD</p>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,7);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">7. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
             <p>IBNORCA mantiene la confidencialidad de los datos e información a los que pudiera tener acceso como consecuencia de su actividad de certificación.</p>
             <p>Además, IBNORCA mantiene el compromiso de salvaguardia del nombre de la organización postulante que se encuentran en fase de evaluación hasta que obtienen el correspondiente certificado, momento en el cual se registra y publica su nombre en la lista de empresas certificadas.</p>
         </div>
     </div> 
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">8. &nbsp;&nbsp;PLAZOS DE EJECUCIÓN</p>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,8);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">8. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
             <p>En un plazo no superior a 7 días desde la aceptación de la oferta contrato de certificación, IBNORCA se pondrá en contacto con el representante de la organización postulante a objeto de coordinar las fechas de ejecución de la certificación/renovación.</p>
         </div>
     </div>  
-
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">9. &nbsp;&nbsp;FORMA DE PAGO</p>
+      <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,9);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">9. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
             <p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,14,$default,1))?></p>
         </div>
     </div>
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">10. &nbsp;&nbsp;VALIDEZ Y VIGENCIA DE LA OFERTA CONTRATO</p>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,10);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">10. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
             <p>La presente oferta contrato tiene un periodo de validez para su aceptación de treinta (30) días calendario a partir de la fecha de emisión.</p>
             <p>La presente oferta contrato estará vigente desde la fecha de su suscripción hasta concluir las etapas del proceso de certificación y sus correspondientes plazos de ejecución que serán coordinados entre <b>IBNORCA</b> y el <b>CLIENTE</b> de acuerdo a lo establecido en el punto 4.</p>
         </div>
     </div>  
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">11. &nbsp;&nbsp;REPROGRAMACIÓN DE AUDITORIAS</p>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,11);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">11. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
             <p>Para el caso en que la organización determine modificar la fecha de realización de auditoria ya prevista, deberá comunicar esta determinación con una antelación de <b>10 días</b> calendario, antes de la fecha prevista para la auditoria, si no se comunicase en el tiempo determinado la organización deberá abonar el lucro cesante y todos los costos de programación de esta actividad.</p>
         </div>
     </div>    
-    <div class="s-9">
-        <p class="font-weight-bold bg-danger text-white">12. &nbsp;&nbsp;CONDICIONES GENERALES</p>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,12);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">12. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
             <p>•   La organización postulante deberá cumplir las disposiciones del Reglamento de Certificación de producto RMT-TCP-01 y la Guía de Uso de Marca ESP-TCP-0X, documentos que se encuentran disponibles en su versión vigente en la página web <a href="www.ibnorca.org" target="_blank" class="text-azul">www.ibnorca.org</a>, y que serán proporcionados por el personal de certificación. En ese sentido, en caso de operar alguna sanción que implique suspensión o revocatoria de la Certificación, el <b>CLIENTE</b> no podrá usar las marcas registradas de <b>IBNORCA</b> a partir del momento en el que opere la suspensión o revocatoria de la certificación.</p>
             <p>•   Excepcionalmente, la organización debe permitir a requerimiento de IBNORCA, la participación de representantes de organismos de acreditación, en calidad de observadores, durante la auditoría.</p>

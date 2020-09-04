@@ -53,7 +53,8 @@ if($estado!=1){
             $Descripcion=obtenerServiciosClaServicioTipoNombre($IdTipo)."  ".obtenerServiciosTipoObjetoNombre($codObjeto);
             $IdUsuarioRegistro=$row['cod_responsable'];
             $fecharegistro=date("Y-m-d");
-            $idServicio=obtenerCodigoServicioIbnorca();
+            if(!($row['idServicio']>0)){
+             $idServicio=obtenerCodigoServicioIbnorca();
             // Prepare
             $stmt = $dbh->prepare("INSERT INTO ibnorca.servicios (idServicio,IdArea,IdOficina,IdTipo,IdCliente,Descripcion,IdUsuarioRegistro,fecharegistro,IdPropuesta) 
             VALUES ('$idServicio','$IdArea','$IdOficina','$IdTipo','$IdCliente','$Descripcion','$IdUsuarioRegistro','$fecharegistro','$codigo')");
@@ -74,6 +75,15 @@ if($estado!=1){
               actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$id_perfil,$idServicio,$fechaHoraActual,$obs);
             }
             
+            
+
+            $stmt2 = $dbh->prepare("UPDATE simulaciones_servicios SET idServicio=$idServicio where codigo=$codigo");
+            $flagSuccess2=$stmt2->execute();  
+            }else{
+              $flagSuccess=$flagSuccessServicio;
+            }
+
+            }
             //enviar propuestas para la actualizacion de ibnorca
             $fechaHoraActual=date("Y-m-d H:i:s");
             $idTipoObjeto=2707;
@@ -84,12 +94,6 @@ if($estado!=1){
             }else{
              $u=$_GET["u"];
              actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);     
-            }
-
-            $stmt2 = $dbh->prepare("UPDATE simulaciones_servicios SET idServicio=$idServicio where codigo=$codigo");
-            $flagSuccess2=$stmt2->execute();  
-            }else{
-              $flagSuccess=$flagSuccessServicio;
             }
         }
         //fin crear servicio

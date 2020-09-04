@@ -18044,3 +18044,12 @@ function generarComprobanteSolicitudRecursoSIS(){
         });  
   }     
 }
+
+
+function activarInputOfertaServicio(fila){
+  if(!($("#descripcion"+fila).is("[readonly]"))){
+    $("#descripcion"+fila).attr("readonly",true);
+  }else{
+    $("#descripcion"+fila).removeAttr("readonly");
+  }
+}
