@@ -23,6 +23,7 @@ $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('cod_area', $cod_area);
 $stmt->bindColumn('cod_uo', $cod_uo);
 $stmt->bindColumn('porcentaje', $porcentaje);
+$stmt->bindColumn('monto', $monto_sueldo);
 $stmt->bindColumn('nombre_uo', $nombre_uo);
 $stmt->bindColumn('nombre_area', $nombre_area);
 
@@ -37,6 +38,7 @@ $ci=$result['identificacion'];
 $nombre_personal=$result['primer_nombre'];
 $paterno_personal=$result['paterno'];
 $materno_personal=$result['materno'];
+$haber_basico=$result['haber_basico'];
 
 //listado para area registro de distribucion
 // $query_areas = "SELECT * from areas where cod_estado=1 order by 2";
@@ -66,33 +68,38 @@ $stmtAreaR = $dbh->query($query_areas);
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
+                    <input type="hidden" name="haber_basico" id="haber_basico" value="<?=$haber_basico?>">
                     <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
-
                       <thead>
                         <tr class="bg-dark text-white">
                         	<th>Codigo</th>
                         	<th>Personal</th>
-                          <th>UO</th>
+                          <th>Oficina</th>
               						<th>Area</th>
               						<th>Porcentaje</th>
+                          <th>Monto</th>
   					             	<th></th>                                                   
                         </tr>
                       </thead>
                       <tbody>
-                        <?php $index=1;
+                        <?php 
+                        $index=1;
                         $sumPorcentaje=0;
                         $datos =$cod_personal;
+                        $sumHAberBasico=0;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+                          // $monto_sueldo=
                         	$sumPorcentaje=$sumPorcentaje+$porcentaje;
-                        	$datos =$cod_personal."-".$codigo."-".$cod_uo."-".$cod_area."-".$porcentaje;
+                          $sumHAberBasico+=$monto_sueldo;
+                        	$datos =$cod_personal."-".$codigo."-".$cod_uo."-".$cod_area."-".$porcentaje."-".$monto_sueldo;
                         	?>
-
                             <tr>
                                 <td><?=$codigo;?></td>
                                 <td><?=$paterno_personal." ".$nombre_personal;?></td>
                                 <td><?=$nombre_uo;?></td>
                                 <td><?=$nombre_area;?></td>
                                 <td><?=$porcentaje;?></td>
+                                <td><?=formatNumberDec($monto_sueldo);?></td>
                                 <td class="td-actions text-right">
                                 	<button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaformPADE('<?=$datos;?>')">
                                 		<i class="material-icons" title="Editar"><?=$iconEdit;?></i>                             
@@ -122,6 +129,7 @@ $stmtAreaR = $dbh->query($query_areas);
 
                             ?>
                             <td <?=$stringClass?> ><?=formatNumberDec($sumPorcentaje); ?></td>
+                            <td <?=$stringClass?> ><?=formatNumberDec($sumHAberBasico); ?></td>
                             <td <?=$stringClass?> ><?=$stringLabel?></td>                           
                           </tr>
 
@@ -201,7 +209,15 @@ $stmtAreaR = $dbh->query($query_areas);
           <label class="col-sm-2 col-form-label" style="color:#424242">Porcentaje :</label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input type="number" step="any" name="porcentaje" id="porcentaje" class="form-control input-sm">
+              <input type="number" step="any" name="porcentaje" id="porcentaje" class="form-control input-sm" onkeyup="convertir_sueldo_bob(1);">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Haber Básico :</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="number" step="any" name="haber_basico_r" id="haber_basico_r" class="form-control input-sm" onkeyup="convertir_sueldo_por(1)">
             </div>
           </div>
         </div>
@@ -269,7 +285,15 @@ $stmtAreaR = $dbh->query($query_areas);
           <label class="col-sm-2 col-form-label" style="color:#424242">Porcentaje :</label>
           <div class="col-sm-8">
             <div class="form-group">
-              <input type="number" step="any" name="porcentajeE" id="porcentajeE" class="form-control input-sm">
+              <input type="number" step="any" name="porcentajeE" id="porcentajeE" class="form-control input-sm" onkeyup="convertir_sueldo_bob(2)">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Haber Básico :</label>
+          <div class="col-sm-8">
+            <div class="form-group">
+              <input type="number" step="any" name="haber_basico_e" id="haber_basico_e" class="form-control input-sm" onkeyup="convertir_sueldo_por(2)">
             </div>
           </div>
         </div>
@@ -290,7 +314,8 @@ $stmtAreaR = $dbh->query($query_areas);
       cod_uo=$('#cod_uo').val();
       cod_area=$('#cod_area').val();
       porcentaje=$('#porcentaje').val();
-      RegistrarDistribucion(cod_uo,cod_personal,cod_area,porcentaje);
+      haber_basico_r=$('#haber_basico_r').val();
+      RegistrarDistribucion(cod_uo,cod_personal,cod_area,porcentaje,haber_basico_r);
     }); 
     $('#eliminarPAD').click(function(){    
       cod_distribucion=document.getElementById("codigo_distribucionB").value;
@@ -300,10 +325,11 @@ $stmtAreaR = $dbh->query($query_areas);
     $('#EditarPAD').click(function(){    
       cod_distribucion=document.getElementById("codigo_distribucionE").value;
       cod_personal=document.getElementById("codigo_personalE").value;
+      haber_basico_e=document.getElementById("haber_basico_e").value;
       cod_uoE=$('#cod_uoE').val();
       cod_area=$('#cod_areaE').val();
       porcentaje=$('#porcentajeE').val();
-      EditarDistribucion(cod_personal,cod_distribucion,cod_uoE,cod_area,porcentaje);
+      EditarDistribucion(cod_personal,cod_distribucion,cod_uoE,cod_area,porcentaje,haber_basico_e);
     });  
 
   });

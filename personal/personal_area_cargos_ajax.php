@@ -25,7 +25,7 @@ $stmtCargos->execute();
 
 ?>
 
-<select name="cod_cargo" id="cod_cargo" class="selectpicker" data-style="btn btn-primary" >
+<select name="cod_cargo" id="cod_cargo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true">
 	<option value=""></option>
     <?php 
     	while ($row = $stmtCargos->fetch()){ 

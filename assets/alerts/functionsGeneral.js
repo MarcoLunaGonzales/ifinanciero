@@ -4726,6 +4726,7 @@ function agregaformPADE(datos){
   // document.getElementById("cod_uoE").value=d[2];
   // document.getElementById("cod_areaE").value=d[3];
   document.getElementById("porcentajeE").value=d[4];
+  document.getElementById("haber_basico_e").value=d[5];
   ajaxUO_Edit(d[2],d[3]);
 
 
@@ -4766,10 +4767,10 @@ function agregaformPADB(datos){
   document.getElementById("codigo_distribucionB").value=d[1];
 }
 
-function RegistrarDistribucion(cod_uo,cod_personal,cod_area,porcentaje){
+function RegistrarDistribucion(cod_uo,cod_personal,cod_area,porcentaje,haber_basico){
   $.ajax({
     type:"POST",
-    data:"cod_personal="+cod_personal+"&cod_uo="+cod_uo+"&cod_area="+cod_area+"&cod_estadoreferencial=1&porcentaje="+porcentaje,
+    data:"cod_personal="+cod_personal+"&cod_uo="+cod_uo+"&cod_area="+cod_area+"&cod_estadoreferencial=1&porcentaje="+porcentaje+"&haber_basico="+haber_basico,
     url:"personal/savePersonalAreaDistribucion.php",
     success:function(r){
       if(r==1){
@@ -4780,10 +4781,10 @@ function RegistrarDistribucion(cod_uo,cod_personal,cod_area,porcentaje){
     }
   });
 }
-function EditarDistribucion(cod_personal,cod_distribucion,cod_uo,cod_area,porcentaje){
+function EditarDistribucion(cod_personal,cod_distribucion,cod_uo,cod_area,porcentaje,haber_basico){
   $.ajax({
     type:"POST",
-    data:"cod_personal="+cod_distribucion+"&cod_uo="+cod_uo+"&cod_area="+cod_area+"&cod_estadoreferencial=2&porcentaje="+porcentaje,
+    data:"cod_personal="+cod_distribucion+"&cod_uo="+cod_uo+"&cod_area="+cod_area+"&cod_estadoreferencial=2&porcentaje="+porcentaje+"&haber_basico="+haber_basico,
     url:"personal/savePersonalAreaDistribucion.php",
     success:function(r){
       if(r==1){
@@ -9949,6 +9950,47 @@ function cambiarTituloPersonalModal(anio){
      $("#num_tituloservicios"+anio).html("("+($("#modal_numeroservicio"+anio).val()-1)+")");
   }*/
 }
+function convertir_sueldo_bob(index){
+  var monto_precio=$("#haber_basico").val();// precio de item //general
+  if(index==1){
+    var porcentaje=$("#porcentaje").val();//monto de descuento Bob  
+  }else{
+    var porcentaje=$("#porcentajeE").val();//monto de descuento Bob  
+  }
+  
+  if(porcentaje<0 || porcentaje==0 || porcentaje==null){
+    Swal.fire("Informativo!", "El Monto introducido es incorrecto!", "warning");
+  }else{    
+      var monto_bob=parseFloat(porcentaje)*parseFloat(monto_precio)/100;
+      //alert(monto_bob);
+      if(index==1){
+        $("#haber_basico_r").val(monto_bob.toFixed(2));
+      }else{
+        $("#haber_basico_e").val(monto_bob.toFixed(2));
+      }
+    //   var monto_bob_porcentaje=parseFloat(descuento_por)*parseFloat(monto_precio)*parseFloat(cantidad_x)/100;    
+    // $("#descuento_bob"+id).val(monto_bob_porcentaje.toFixed(2));
+  }
+}
+function convertir_sueldo_por(index){
+  var monto_precio=$("#haber_basico").val();// precio de item
+  if(index==1){
+    var haber_basico_r=$("#haber_basico_r").val();//monto de descuento Bob  
+  }else{
+    var haber_basico_r=$("#haber_basico_e").val();//monto de descuento Bob  
+  }
+  if(haber_basico_r<0 || haber_basico_r==0 || haber_basico_r==null){
+    Swal.fire("Informativo!", "El Monto introducido es incorrecto!", "warning");
+  }else{    
+      var monto_bob=parseFloat(haber_basico_r)*100/parseFloat(monto_precio);
+      //alert(monto_bob);
+      if(index==1){
+        $("#porcentaje").val(monto_bob.toFixed(2));
+      }else{
+        $("#porcentajeE").val(monto_bob.toFixed(2));
+      }
+  }
+}
 
 function descuento_convertir_a_porcentaje(id){
   var monto_precio=$("#monto_precio"+id).val();// precio de item
@@ -14853,7 +14895,7 @@ function quitarFormaPagoProveedor(fila){
 function agregarFilaArchivosAdjuntosCabecera(){
   var codigo = $("#tipo_documento_otro").val();
   var num = parseInt($("#cantidad_archivosadjuntos").val());
-  num++;  
+  num++;   
   var row = $('<tr>').addClass('').attr('id','fila_archivo'+num);
   row.append($('<td>').addClass('text-left').html('<input type="hidden" name="codigo_archivo'+num+'" id="codigo_archivo'+num+'" value="'+codigo+'">Otros Documentos <a href="#" title="Quitar" class="btn btn-default btn-round btn-sm btn-fab float-right" onClick="quitarElementoAdjunto('+num+')"><i class="material-icons">delete_outline</i></a>'));
   row.append($('<td>').addClass('text-center').html('<i class="material-icons text-danger">clear</i> NO'));

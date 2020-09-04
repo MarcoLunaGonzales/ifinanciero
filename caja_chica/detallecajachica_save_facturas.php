@@ -42,7 +42,7 @@ for($j=0;$j<$nF;$j++){
     $iceFac=trim($facturas[$cantidad_filas_ccd-1][$j]->iceFac);
     $tasaFac=trim($facturas[$cantidad_filas_ccd-1][$j]->tasaFac);
 
-  $suma_importe_fac=$suma_importe_fac+$impFac-$exeFac-$tasaFac-$iceFac;
+  $suma_importe_fac=$suma_importe_fac+$impFac;//-$exeFac-$tasaFac-$iceFac;
 
   // echo "nit:".$nit."<br>";
   // echo "nroFac:".$nroFac."<br>";

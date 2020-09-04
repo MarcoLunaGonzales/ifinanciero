@@ -258,7 +258,8 @@ if($globalAdmin==1){//para personal admin
                     
                     <td class="text-center">
                       <?php if($comprobante_x!=1){ ?>
-                        <a href="<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" > 
+                        <a href="#" 
+                          onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>')"> 
                           <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
                         </a>
                       <?php } ?>
