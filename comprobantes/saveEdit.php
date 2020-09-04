@@ -14,6 +14,8 @@ $cantidadFilas=$_POST["cantidad_filas"];
 $tipoComprobante=$_POST["tipo_comprobante"];
 $nroCorrelativo=$_POST["nro_correlativo"];
 
+$codPadreArchivos=obtenerValorConfiguracion(84);
+
 //$porcionesFecha = explode("/", $_POST['fecha']);
 //$fechaHoraActual2=$porcionesFecha[2]."-".$porcionesFecha[1]."-".$porcionesFecha[0];
 $fechaHoraActual2=$_POST['fecha'];
@@ -100,7 +102,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         echo "ok";
         $tipo=$_POST['codigo_archivo'.$ar];
         $descripcion=$_POST['nombre_archivo'.$ar];
-        $tipoPadre=1057;
+        $tipoPadre=$codPadreArchivos;
         $datosArchivo=verificarExisteArchivoSolicitud($tipo,$descripcion,$tipoPadre,$codComprobante);
         $codigoArchivo=$datosArchivo[0];
         $linkArchivo=$datosArchivo[1];

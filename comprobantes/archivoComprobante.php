@@ -29,6 +29,7 @@ if(isset($_GET['codigo'])){
 	$codigo=0;
 }
 
+$codPadreArchivos=obtenerValorConfiguracion(84);
 ?>
 
 <div class="content">
@@ -74,7 +75,7 @@ if(isset($_GET['codigo'])){
                 </thead>
                 <tbody id="tabla_archivos">
                   <?php
-                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=1057"); //1057 //1057 localhost
+                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=$codPadreArchivos"); //$codPadreArchivos //$codPadreArchivos localhost
                   $stmtArchivo->execute();
                   $filaA=0;
                   while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
@@ -86,8 +87,8 @@ if(isset($_GET['codigo'])){
                      if($ObligatorioX==1){
                       $Obli='SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
                      }
-                     //1057 cabecera //10570 detalle
-                     $verificarArchivo=verificarArchivoAdjuntoExistente(1057,$codigo,0,$codigoX);
+                     //$codPadreArchivos cabecera //$codPadreArchivos0 detalle
+                     $verificarArchivo=verificarArchivoAdjuntoExistente($codPadreArchivos,$codigo,0,$codigoX);
                      //$nombreX=$verificarArchivo[1];
                      $urlArchivo=$verificarArchivo[2];
                      $codigoArchivoX=$verificarArchivo[3];
@@ -133,7 +134,7 @@ if(isset($_GET['codigo'])){
                   </tr> 
                   <?php
                    }
-                  $stmtArchivo = $dbh->prepare("SELECT * from archivos_adjuntos where cod_tipoarchivo=-100 and cod_tipopadre=1057 and cod_objeto=$codigo and cod_padre=0"); //1057 //1057 localhost
+                  $stmtArchivo = $dbh->prepare("SELECT * from archivos_adjuntos where cod_tipoarchivo=-100 and cod_tipopadre=$codPadreArchivos and cod_objeto=$codigo and cod_padre=0"); //$codPadreArchivos //$codPadreArchivos localhost
                   $stmtArchivo->execute();
                   $filaE=0;
                   while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {

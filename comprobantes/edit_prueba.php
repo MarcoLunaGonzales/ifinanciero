@@ -29,6 +29,7 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalMesActivo=$_SESSION['globalMes'];
 
+$codPadreArchivos=obtenerValorConfiguracion(84);
 
 $data = obtenerComprobante($_GET['codigo']);
 // bindColumn
@@ -878,7 +879,7 @@ $stmt->execute();
                 </thead>
                 <tbody id="tabla_archivos">
                   <?php
-                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=1057"); //1057 //1057 localhost
+                  $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=$codPadreArchivos"); //$codPadreArchivos //$codPadreArchivos localhost
                   $stmtArchivo->execute();
                   $filaA=0;
                   while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
@@ -890,7 +891,7 @@ $stmt->execute();
                      if($ObligatorioX==1){
                       $Obli='<i class="material-icons text-success">done</i> SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
                      }
-                     $verificarArchivo=verificarArchivoAdjuntoExistente(1057,$globalCode,0,$codigoX);
+                     $verificarArchivo=verificarArchivoAdjuntoExistente($codPadreArchivos,$globalCode,0,$codigoX);
                      //$nombreX=$verificarArchivo[1];
                      $urlArchivo=$verificarArchivo[2];
                      $codigoArchivoX=$verificarArchivo[3];
@@ -932,7 +933,7 @@ $stmt->execute();
                   </tr> 
                   <?php
                    }
-                  $stmtArchivo = $dbh->prepare("SELECT * from archivos_adjuntos where cod_tipoarchivo=-100 and cod_tipopadre=1057 and cod_objeto=$globalCode and cod_padre=0"); //1057 //1057 localhost
+                  $stmtArchivo = $dbh->prepare("SELECT * from archivos_adjuntos where cod_tipoarchivo=-100 and cod_tipopadre=$codPadreArchivos and cod_objeto=$globalCode and cod_padre=0"); //$codPadreArchivos //$codPadreArchivos localhost
                   $stmtArchivo->execute();
                   $filaE=0;
                   while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {

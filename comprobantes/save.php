@@ -18,6 +18,8 @@ $facturas= json_decode($_POST['facturas']);
 $estadosCuentas= json_decode($_POST['estados_cuentas']);
 session_start();
 
+$codPadreArchivos=obtenerValorConfiguracion(84);
+
 $globalUser=$_SESSION["globalUser"];
 $globalGestion=$_SESSION["globalGestion"];
 $globalMes=$_SESSION['globalMes'];
@@ -41,7 +43,7 @@ $flagSuccess=$stmtInsert->execute();
 
 //subir archivos al servidor
 //borramos los archivos
-  $sqlDel="DELETE FROM archivos_adjuntos where cod_objeto=$codComprobante and cod_tipopadre=1057"; //codigo del padre para comprobantes
+  $sqlDel="DELETE FROM archivos_adjuntos where cod_objeto=$codComprobante and cod_tipopadre=$codPadreArchivos"; //codigo del padre para comprobantes
   $stmtDel = $dbh->prepare($sqlDel);
   $stmtDel->execute();
 
@@ -88,7 +90,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         echo "ok";
         $tipo=$_POST['codigo_archivo'.$ar];
         $descripcion=$_POST['nombre_archivo'.$ar];
-        $tipoPadre=1057;
+        $tipoPadre=$codPadreArchivos;
         $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
         VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codComprobante')";
         $stmtInsert = $dbh->prepare($sqlInsert);
