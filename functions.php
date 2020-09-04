@@ -1668,6 +1668,41 @@
           echo "No tiene archivos adjuntos";
       }
   }
+  function obtenerDirectoriosCajaChica($ruta,$url_archivo){    
+      $ruta2=$ruta."/";
+      $nombre_archivo_array=explode($ruta2, $url_archivo);    
+      $nombre_archivo=$nombre_archivo_array[1];          
+      // Se comprueba que realmente sea la ruta de un directorio
+      $ruta_aux="../".$ruta;
+      if (is_dir($ruta_aux)){
+          // Abre un gestor de directorios para la ruta indicada
+          $gestor = opendir($ruta_aux);
+          echo "<div>";
+
+          // Recorre todos los elementos del directorio
+          while (($archivo = readdir($gestor)) !== false)  {
+                  
+              $ruta_completa = $ruta."/". $archivo;
+              // echo $ruta_completa."---".$url_archivo;
+              if($ruta_completa==$url_archivo){
+                // Se muestran todos los archivos y carpetas excepto "." y ".."
+                if ($archivo != "." && $archivo != "..") {
+                    // Si es un directorio se recorre recursivamente
+                    if (is_dir($ruta_completa)) {
+                     
+                    } else {
+                      echo "<div class='btn-group'><a class='btn btn-sm btn-info btn-block' href='../ifinanciero/".$ruta_completa."' target='_blank'>" . $archivo . "</a><a class='btn btn-sm btn-default' href='../ifinanciero/".$ruta_completa."' download='ifinanciero/".$archivo."'><i class='material-icons'>vertical_align_bottom</i></a></div>";
+                    }
+                }
+              }          
+          }        
+          // Cierra el gestor de directorios
+          closedir($gestor);
+          echo "</div>";
+      } else {
+          echo "No tiene archivos adjuntos";
+      }
+  }
 
   function obtenerCodigoPlanCosto(){
      $dbh = new Conexion();
@@ -3917,7 +3952,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
     $mydompdf = new DOMPDF();
     ob_clean();
-    $mydompdf->load_html($html);
+    $mydompdf->load_html($html,'UTF-8');
+
     $mydompdf->set_paper("A4", "portrait");
     $mydompdf->render();
     
@@ -8847,6 +8883,18 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
      }
      return $direccion; 
   }
+   function obtenerLinkDirectoArchivoAdjunto_cajachica($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT direccion_archivo FROM archivos_adjuntos_cajachica 
+      where codigo=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $direccion="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $direccion=$row["direccion_archivo"];
+     }
+     return $direccion; 
+  }
 
   function obtenerCod_comprobanteDetalleorigen($codigo){
     $dbh = new Conexion();
@@ -9557,6 +9605,16 @@ function obtenerDetalleRecursosSIS($codigo){
       }         
       return($valor);
 }
-
+function verificar_archivos_cajachica($codigo){
+  $dbh = new Conexion();        
+  $sql="SELECT count(*) as contador From archivos_adjuntos_cajachica where cod_cajachica_detalle=$codigo";    
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['contador'];
+  }         
+  return($valor); 
+}
 
 ?>

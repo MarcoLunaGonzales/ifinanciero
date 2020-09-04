@@ -62,21 +62,7 @@ try {
         // }else $cod_estado=1;
         $cod_estado=1;
         $cod_estadoreferencial=1;
-        $monto_rendicion=0;
-
-        // echo 'cod_cuenta:'.$cod_cuenta."<br>";
-        // echo 'fecha:'.$fecha."<br>";
-        // echo 'cod_retencion:'.$cod_retencion."<br>";
-        // echo 'numero:'.$numero."<br>";
-        // echo 'cod_personal:'.$cod_personal."<br>";
-        // echo 'cod_area:'.$cod_area."<br>";
-        // echo 'cod_uo:'.$cod_uo."<br>";
-        // echo 'monto:'.$monto."<br>";
-        // echo 'observaciones:'.$observaciones."<br>";
-        // echo 'cod_area:'.$cod_area."<br>";
-        // echo 'nro_recibo:'.$nro_recibo."<br>";        
-        // $patron = "/[^a-zA-Z0-9]+/";
-        // $observaciones = preg_replace($patron, "", $observaciones);        
+        $monto_rendicion=0;       
         $observaciones = str_replace("'","",$observaciones);
 
         $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by) 
@@ -88,13 +74,7 @@ try {
             $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) values ($codigo,$numero,$cod_retencion,$monto,$monto_rendicion,'$cod_personal','$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
             $flagSuccess=$stmtrendiciones->execute();
             //insertamos estado_de_cuentas y comprobantes
-            if($cod_comprobante_ec>0){//llega el cod de estado de cuenta
-                // $sqlEstadoCuenta="SELECT e.cod_comprobantedetalle From estados_cuenta e where e.codigo=$cod_comprobante_ec limit 1"; 
-                //     $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
-                // $stmtEstadoCuenta->execute();                    
-                // $resultado=$stmtEstadoCuenta->fetch();
-                // $cod_comprobantedetalle=$resultado['cod_comprobantedetalle'];
-
+            if($cod_comprobante_ec>0){//llega el cod de estado de cuenta                
                 $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle,glosa_auxiliar)values('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobante_ec','$cuenta_auxiliar1','$codigo','$observaciones')");
                 $flagSuccess=$stmtContraCuenta->execute();
                 if($flagSuccess){
@@ -154,6 +134,42 @@ try {
                 }   
             }
         }
+        //insertamos archivos adjuntos
+        $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
+        for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
+          if(isset($_POST['codigo_archivo'.$ar])){
+            if($_FILES['documentos_cabecera'.$ar]["name"]){
+              $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
+              $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+              $directorio = 'assets/archivos-respaldo/archivos_cajachicadetalle/GASTO_CC-'.$codigo; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+              //Validamos si la ruta de destino existe, en caso de no existir la creamos
+              if(!file_exists($directorio)){
+                        mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+              }
+              $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+              //Movemos y validamos que el archivos se haya cargado correctamente
+              //El primer campo es el origen y el segundo el destino
+              if(move_uploaded_file($source, $target_path)) { 
+                echo "ok";
+                $tipo=$_POST['codigo_archivo'.$ar];
+                $descripcion=$_POST['nombre_archivo'.$ar];
+                // $tipoPadre=2708;
+
+                // $sqlInsert="INSERT INTO archivos_adjuntos_cajachica (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+                // VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
+                $sqlInsert="INSERT INTO archivos_adjuntos_cajachica(cod_tipoarchivo,descripcion,direccion_archivo,cod_cajachica_detalle) 
+                VALUES ('$tipo','$descripcion','$target_path','$codigo')";
+                $stmtInsert = $dbh->prepare($sqlInsert);
+                $stmtInsert->execute();    
+                // print_r($sqlInsert);
+              } else {    
+                  echo "error";
+              } 
+            }
+          }
+        }
+
+
         showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
     } else {//update
         //actualizamos monto reeembolso
@@ -266,6 +282,41 @@ try {
                 }   
             }
         }
+        //insertamos archivos adjuntos
+        $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
+        for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
+          if(isset($_POST['codigo_archivo'.$ar])){
+            if($_FILES['documentos_cabecera'.$ar]["name"]){
+              $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
+              $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+              $directorio = 'assets/archivos-respaldo/archivos_cajachicadetalle/GASTO_CC-'.$codigo; //Declaramos una  variable con la ruta donde guardaremos los archivoss
+              //Validamos si la ruta de destino existe, en caso de no existir la creamos
+              if(!file_exists($directorio)){
+                        mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+              }
+              $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+              //Movemos y validamos que el archivos se haya cargado correctamente
+              //El primer campo es el origen y el segundo el destino
+              if(move_uploaded_file($source, $target_path)) { 
+                echo "ok";
+                $tipo=$_POST['codigo_archivo'.$ar];
+                $descripcion=$_POST['nombre_archivo'.$ar];
+                // $tipoPadre=2708;
+
+                // $sqlInsert="INSERT INTO archivos_adjuntos_cajachica (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+                // VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
+                $sqlInsert="INSERT INTO archivos_adjuntos_cajachica(cod_tipoarchivo,descripcion,direccion_archivo,cod_cajachica_detalle) 
+                VALUES ('$tipo','$descripcion','$target_path','$codigo')";
+                $stmtInsert = $dbh->prepare($sqlInsert);
+                $stmtInsert->execute();    
+                // print_r($sqlInsert);
+              } else {    
+                  echo "error";
+              } 
+            }
+          }
+        }
+
         showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);        
     }//si es insert o update
 } catch(PDOException $ex){

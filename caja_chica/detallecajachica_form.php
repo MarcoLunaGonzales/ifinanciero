@@ -178,13 +178,14 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
     <?php
   }  
 
-
+$archivos_cajachica=0;//contador de archivos de caja chica
 ?>
 
 <div class="content">
 	<div class="container-fluid">
 		<div class="col-md-12">
-		  <form id="formDetalleCajaChica" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post" onsubmit="return valida(this)"> 
+		  <form id="formDetalleCajaChica" class="form-horizontal" action="<?=$urlSaveDetalleCajaChica;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">         
+
         <input type="hidden" name="codigo" id="codigo" value="<?=$codigo;?>"/>
         <input type="hidden" name="cod_cc" id="cod_cc" value="<?=$cod_cc;?>"/>
         <input type="hidden" name="cod_tcc" id="cod_tcc" value="<?=$cod_tcc;?>"/>
@@ -310,7 +311,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 <div class="form-group">
                     <div id="div_contenedor_uo">                                        
                       <?php
-                          $sqlUO="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1";
+                          $sqlUO="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 and centro_costos=1";
                           $stmt = $dbh->prepare($sqlUO);
                           $stmt->execute();
                           ?>
@@ -467,7 +468,9 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                 <div class="form-group" align="center">                        
                   <div id="div_contenedor_sol_recursos" >
                     <?php
+                    
                     if($codigo>0){                      
+                      $archivos_cajachica=verificar_archivos_cajachica($codigo);
                       //sacar codigo de estado de cuenta
                       $sqlEstadoCuenta="SELECT e.cod_comprobantedetalle From estados_cuenta e where e.codigo=$cod_comprobante limit 1"; 
                       // echo $sqlEstadoCuenta;
@@ -493,9 +496,16 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                     }
                     ?>
                   </div>
-                  <!-- <a  title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-primary btn-sm">Archivos 
-                    <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
-                  </a> -->
+                  <?php if($codigo>0 && $archivos_cajachica>0){?>
+                    <a  title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-primary btn-sm">Archivos 
+                      <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning estado" ></span>
+                    </a>
+
+                  <?php }else{?>
+                    <a  title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-primary btn-sm">Archivos 
+                    <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning" ></span>
+                  </a>
+                  <?php } ?>
                 </div>
               </div>              
 
@@ -507,71 +517,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   			  </div>
   			</div>
         <!-- archivos adjuntos -->
-        <div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-xl">
-            <div class="modal-content card">
-              <div class="card-header card-header-info card-header-text">
-                <div class="card-text">
-                  <h5>DOCUMENTOS DE RESPALDO</h5>      
-                </div>
-                <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-                  <i class="material-icons">close</i>
-                </button>
-              </div>
-              <div class="card-body">
-                   <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE El Gasto de Caja Chica</small></p>
-                    <div class="row col-sm-11 div-center">
-                      <table class="table table-warning table-bordered table-condensed">
-                        <thead>
-                          <tr>
-                            <th class="small" width="30%">Tipo de Documento <a href="#" title="Otro Documento" class="btn btn-primary btn-round btn-sm btn-fab float-left" onClick="agregarFilaArchivosAdjuntosCabecera()"><i class="material-icons">add</i></a></th>
-                            <th class="small">Obligatorio</th>
-                            <th class="small" width="35%">Archivo</th>
-                            <th class="small">Descripción</th>                  
-                          </tr>
-                        </thead>
-                        <tbody id="tabla_archivos">
-                          <?php
-                          $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
-                          $stmtArchivo->execute();
-                          $filaA=0;
-                          while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
-                            $filaA++;
-                            $codigoX=$rowArchivo['idClaDocumento'];
-                            $nombreX=$rowArchivo['Documento'];
-                            $ObligatorioX=$rowArchivo['Obligatorio'];
-                            $Obli='<i class="material-icons text-danger">clear</i> NO';
-                            if($ObligatorioX==1){
-                            $Obli='<i class="material-icons text-success">done</i> SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
-                            } ?>
-                            <tr>
-                              <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
-                              <td class="text-center"><?=$Obli?></td>
-                              <td class="text-right">
-                                <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
-                                <span class="input-archivo">
-                                  <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
-                                </span>
-                                <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo
-                                </label>
-                              </td>    
-                              <td><?=$nombreX;?></td>
-                            </tr> <?php
-                          }
-                          ?>       
-                        </tbody>
-                      </table>
-                      <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntos" name="cantidad_archivosadjuntos">
-                    </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" onclick="" class="btn btn-success" data-dismiss="modal">Aceptar
-                  <div class="ripple-container"></div>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+       <?php  require_once 'caja_chica/modal_subirarchivos.php';?>
 
 		  </form>
 		</div>

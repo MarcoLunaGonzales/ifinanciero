@@ -8,10 +8,17 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	//require_once 'configModule.php';
 	require_once __DIR__.'/../functions.php';
 	require_once __DIR__.'/../functionsGeneral.php';
-
+	
 	$dbh = new Conexion();
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
+
+	$sqlX="SET NAMES 'utf8'";
+	$stmtX = $dbh->prepare($sqlX);
+	$stmtX->execute();
+
+	
 	set_time_limit(300);
+
 	//RECIBIMOS LAS VARIABLES
 	// $codigo = $_GET["codigo"];
 	// $auxiliar = $_GET["tipo"];
@@ -20,7 +27,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	$auxiliar =$auxiliar; //de dónde llega la solicitud para impresión 1=lista facturas (cod_factura) / 2=lista solicitudes (cod_sol_Fact)//3=lista facturas (cod_factura)tienda virtual
 	$tipo_admin=$tipo_admin;//1 original cliente completo(abre y cierra de html), 2 original cliente (abre html), 3 copia contabilidad (cierra html), 4 original (abre y cierra html), 5 copia(abre y cierra html)
 	$tipo_impresion=2;//tipo de impresión 1 sin detalles, 2 detalladamente
-	try {
+	try {	
 		//cabecera factura
 		if($auxiliar==1){//list facturas
 		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf where sf.codigo=$codigo");
@@ -118,6 +125,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 			                '<!-- CSS Files -->'.
 			                '<link rel="icon" type="image/png" href="../assets/img/favicon.png">'.
 			                '<link href="../assets/libraries/plantillaPDFFActura.css" rel="stylesheet" />'.
+			                '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>'.
 			           '</head>';
 			$html.='<body>'.
 			        '<script type="text/php">'.
@@ -178,6 +186,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	                  	</td>
 	                </tr>
             </table>';
+            $nombre_cliente = str_replace("­","",$nombre_cliente);
             $html.='<table class="table">'.
               '<tr class="bold table-title text-left">'.
                   '<td  class="td-border-none text-right" width="12%"><b>Señor(es):</b></td>'.

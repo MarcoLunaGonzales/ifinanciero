@@ -30,12 +30,24 @@ try {
     $created_by = 1;//$_POST["created_by"];
     $modified_by = 1;//$_POST["modified_by"];    
     //tipo_retiro
-    $stmttipoRetiro = $dbh->prepare("SELECT fecha_iniciocontrato,fecha_fincontrato From personal_contratos where codigo=$codigo_contrato");
+    $stmttipoRetiro = $dbh->prepare("SELECT fecha_iniciocontrato,fecha_fincontrato,cod_tipocontrato From personal_contratos where codigo=$codigo_contrato");
     $stmttipoRetiro->execute();
     $resultRetiro =  $stmttipoRetiro->fetch();
     $motivo_retiro = $cod_tiporetiro;
     $fecha_retiro=$resultRetiro['fecha_fincontrato'];
     $ing_contr_x = $resultRetiro['fecha_iniciocontrato'];
+    $cod_tipocontratox = $resultRetiro['cod_tipocontrato'];
+    if($cod_tipocontratox==1){        
+        $sql="SELECT  pr.fecha_retiro
+          FROM personal p,personal_contratos c,personal_retiros pr
+          WHERE c.cod_personal=p.codigo and pr.cod_personal=p.codigo and c.codigo=$codigo_contrato ORDER BY pr.codigo desc limit 1";
+          // echo $sql;
+        $stmtTipoContrato = $dbh->prepare($sql);
+        $stmtTipoContrato->execute();
+        $resultTipoContrato = $stmtTipoContrato->fetch();
+        $fecha_retiro = $resultTipoContrato['fecha_retiro'];
+    }
+    
 
     $anio_retiro = date("Y", strtotime($fecha_retiro));
     $mes_retiro = date("m", strtotime($fecha_retiro));

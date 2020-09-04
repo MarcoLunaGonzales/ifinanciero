@@ -67,6 +67,18 @@ $nombreCuentaTitle="";
 
 $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
 
+
+if (isset($_POST["check_formato2"])) {
+  $check_formato2=$_POST["check_formato2"]; 
+  if($check_formato2){    
+    $sw_check="1";
+  }else{
+    $sw_check="0";
+  }
+}else{
+  $sw_check="0";
+}
+
 ?>
  <div class="content">
   <div class="container-fluid">
@@ -82,8 +94,8 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                 </div>
                 
                 <?php
-                include "reportePrintLibroVentasAdministrativoDetalle.php";  
-                 ?>
+                  include "reportePrintLibroVentasAdministrativoDetalle.php";
+                ?>
               </div>
             </div>
           </div>  

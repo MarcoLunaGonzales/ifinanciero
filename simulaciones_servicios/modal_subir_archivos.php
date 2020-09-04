@@ -51,7 +51,7 @@
                         <div class="btn-group">
                           <a href="#" class="btn btn-button btn-sm" >Registrado</a>  
                           <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
-                          <a href="#" title="Quitar" class="btn btn-danger btn-sm" onClick="quitarArchivoSistemaAdjunto_solfac(<?=$filaA?>,<?=$codigoArchivoX;?>,1)"><i class="material-icons">delete_outline</i></a>
+                          <a href="#" title="Quitar" class="btn btn-danger btn-sm" onClick="quitarArchivoSistemaAdjunto_solfac(<?=$filaA?>,<?=$codigoArchivoX;?>,1,1)"><i class="material-icons">delete_outline</i></a>
                         </div>     
                       </td>    
                     <td><?=$nombreX;?></td>
