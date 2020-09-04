@@ -118,6 +118,25 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$glosaDetalle=$_POST["glosa_detalle".$i];
     $codSolicitudRecurso=$_POST["cod_detallesolicitudsis".$i];
    
+    if($codSolicitudRecurso!=""||$codSolicitudRecurso!=0){
+      //actualizar SOLICITUDES SIS AL ESTADO PAGADO
+     //verificar que la validacion si tiene centro de costo SIS     
+      $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=8 where codigo=$codSolicitudRecurso";
+      $stmtUpdate = $dbh->prepare($sqlUpdate);
+      $flagSuccess=$stmtUpdate->execute();
+
+    //habilitar cuando exista el estado pagado
+    /*$fechaHoraActual=date("Y-m-d H:i:s");
+    $idTipoObjeto=2708;
+    $idObjeto=2725; //regristado
+    $obs="Solicitud Contabilizada";
+    if(isset($_GET['u'])){
+       $u=$_GET['u'];
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+     }else{
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+     }*/
+    }
     if((isset($_POST['codigo_detalle'.$i]))&&(isset($_POST['incompleto']))){
 	    $codigoDetalle=$_POST["codigo_detalle".$i];
       $codComprobanteDetalle=$codigoDetalle;

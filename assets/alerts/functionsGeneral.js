@@ -2634,7 +2634,27 @@ function sendCheked(id,nombres,numeros){
      }
      $("#boton_registradas").html("Cuentas Registradas <span class='badge bg-white text-warning'>"+numFilas+"</span>");
    }
-} 
+}
+
+function sendChekedCR(id,nombres,numeros,oficina,cuenta,fecha,solicitante){
+  var check=document.getElementById("solicitudes_sis"+id);
+    check.onchange = function() {
+     if(this.checked) {
+      cuentas_tabla.push({codigo:id,nombre:nombres,numero:numeros,codigo_item:check.value,oficina:oficina,cuenta:cuenta,fecha:fecha,solicitante:solicitante});
+      numFilas++;
+     }else{
+      for (var i = 0; i < cuentas_tabla.length; i++) {
+        if(cuentas_tabla[i].codigo==id){
+            cuentas_tabla.splice(i, 1);
+            break;
+        }      
+      };
+      numFilas--;
+     }
+     $("#boton_generar_comprobante").html("<i class='material-icons'>assignment_turned_in</i> Contabilizar Solicitudes <span class='badge bg-white text-danger'>"+numFilas+"</span>");
+   }
+}
+
 
 function filaTabla(tabla){
   var html="";
@@ -2643,6 +2663,15 @@ function filaTabla(tabla){
   };
   tabla.html(html);
   $("#modalCuentas").modal("show");
+}
+
+function filaTablaSIS(tabla){
+  var html="";
+  for (var i = 0; i < cuentas_tabla.length; i++) {
+    html+="<tr><td>"+(i+1)+"</td><td>"+cuentas_tabla[i].oficina+"</td><td class='font-weight-bold'>"+cuentas_tabla[i].numero+"</td><td>"+cuentas_tabla[i].nombre+"</td><td>"+cuentas_tabla[i].cuenta+"</td><td>"+cuentas_tabla[i].solicitante+"</td><td>"+cuentas_tabla[i].fecha+"</td></tr>";
+  };
+  tabla.html(html);
+  $("#modalSolSis").modal("show");
 }
 
 function filaTablaGeneral(tabla,index){
@@ -8778,6 +8807,33 @@ function cambiarDosDivPantalla(div,div2){
     $("#button_"+div).addClass("fondo-boton-active");
   }
 }
+
+function cambiarDosDivPantallaClase(div,div2,clase){
+  if(!($("#"+div2).hasClass("d-none"))){
+    $("#"+div2).addClass("d-none");  
+    $("#button_"+div2).removeClass(clase); 
+  }
+  if(($("#"+div).hasClass("d-none"))){
+    $("#"+div).removeClass("d-none");
+    $("#button_"+div).addClass(clase);
+
+    //para el boton del footer generar comprobante
+    if($("#boton_generar_comprobante").length>0){
+     if(div=='list_div_2'){
+      if(($("#boton_generar_comprobante").hasClass("d-none"))){
+        $("#boton_generar_comprobante").removeClass("d-none");
+      }
+     }else{
+      if(!($("#boton_generar_comprobante").hasClass("d-none"))){
+        $("#boton_generar_comprobante").addClass("d-none");
+      }
+     }  
+    }
+  }
+
+}
+
+
 //funciones despues de cargar pantalla
 window.onload = detectarCarga;
   function detectarCarga(){
@@ -18000,4 +18056,33 @@ function convertirARegistroProveedor(){
                }
              });  
   }       
+}
+
+function generarComprobanteSolicitudRecursoSIS(){
+  var solicitudes=cuentas_tabla.length;
+  if(solicitudes==0){
+          Swal.fire("Informativo!", "Debe Seleccionar al menos una Solicitud", "warning");
+  }else{
+      var parametros={"solicitudes":JSON.stringify(cuentas_tabla)};
+      $.ajax({
+               type: "POST",
+               dataType: 'html',
+               url: "solicitudes/ajaxContabilizarSolicitudSIS.php",
+               data: parametros,
+               beforeSend: function () {
+                $("#texto_ajax_titulo").html("Generando Comprobante SIS"); 
+                  iniciarCargaAjax();
+                },
+               success:  function (resp) {
+                  if(resp.trim()=="0"){
+                      actualizarPaginaNuevaP();
+                  }else{
+                    detectarCargaAjax();
+                    $("#texto_ajax_titulo").html("Procesando Datos");
+                    Swal.fire("Informativo!", resp, "warning");
+                    $("#modalSolSis").modal("hide");   
+                  }
+               }
+        });  
+  }     
 }
