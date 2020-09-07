@@ -5082,7 +5082,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerDetalleSolicitudParaComprobante($codigo){
     $dbh = new Conexion();
-    $sql="SELECT cod_unidadorganizacional,cod_area,codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
+    $sql="SELECT cod_actividadproyecto,cod_unidadorganizacional,cod_area,codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -6249,7 +6249,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerNumeroFacturaSolicitudRecursoDetalle($codigo){
     $facturas=obtenerFacturasSoli($codigo);
-              $numeroFac="";
+    $numeroFac="";
       while ($rowFac = $facturas->fetch(PDO::FETCH_ASSOC)) {
                   $numeroFac=$rowFac['nro_factura'];          
       }
@@ -9617,6 +9617,20 @@ function verificar_archivos_cajachica($codigo){
     $valor=$row['contador'];
   }         
   return($valor); 
+}
+
+
+function obtenerNombreDirectoActividad($codigo){
+    $dbh = new Conexion();
+    // Preparamos
+  $stmt = $dbh->prepare("SELECT c.abreviatura,c.nombre from ibnmonitoreo.componentessis c where c.codigo='$codigo'");
+  $stmt->execute();
+  $valor="";$abrev="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['nombre'];
+    $abrev=$row['abreviatura'];
+  }         
+  return array($abrev,$valor); 
 }
 
 ?>
