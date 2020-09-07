@@ -9322,8 +9322,8 @@ function obtenerEstadoComprobante($codigo){
 
   function validacion_facturas_cajachica($cod_cajachica){
     $dbh = new Conexion();
-    $cod_retencion=obtenerValorConfiguracion(53);
-      $sqlVerifRetencion="SELECT cc.nro_documento,(select (sum(f.importe)-sum(f.exento)-sum(f.tasa_cero)-sum(f.ice)) from facturas_detalle_cajachica f where f.cod_cajachicadetalle=cc.codigo) importe_factura,(select sum(g.importe) from detalle_cajachica_gastosdirectos g where g.cod_cajachicadetalle=cc.codigo) as importe_gasto_directo, cc.monto from caja_chicadetalle cc where cc.cod_cajachica=$cod_cajachica and cc.cod_tipodoccajachica=$cod_retencion and cc.cod_estadoreferencial=1;";
+    $cod_retencion=obtenerValorConfiguracion(53);//-sum(f.exento)-sum(f.tasa_cero)-sum(f.ice)
+      $sqlVerifRetencion="SELECT cc.nro_documento,(select (sum(f.importe)) from facturas_detalle_cajachica f where f.cod_cajachicadetalle=cc.codigo) importe_factura,(select sum(g.importe) from detalle_cajachica_gastosdirectos g where g.cod_cajachicadetalle=cc.codigo) as importe_gasto_directo, cc.monto from caja_chicadetalle cc where cc.cod_cajachica=$cod_cajachica and cc.cod_tipodoccajachica=$cod_retencion and cc.cod_estadoreferencial=1;";
       // echo $sqlVerifRetencion;
     $stmtVerifRetencion = $dbh->prepare($sqlVerifRetencion);
     $stmtVerifRetencion->execute();
@@ -9363,17 +9363,25 @@ function obtenerEstadoComprobante($codigo){
       $numero_cuenta_x=$row['numero_cuenta'];      
       $digito=$numero_cuenta_x[0];
       if($digito==2){//cuenta pasiva
-        $sql="SELECT count(*)as cont from  estados_cuenta where cod_cajachicadetalle=$codigo_det";
-        $stmtVerifRetencion = $dbh->prepare($sql);
-        $stmtVerifRetencion->execute();
-        $result=$stmtVerifRetencion->fetch();
-        $cont_estados=$result['cont'];
-        if($cont_estados==0){
-          $contadorRentencion++;
-          $stringRetenciones.="Nro. Documento: ".$nro_documento_x."<br>";
+        $stmtConfiguracionCuenta = $dbh->prepare("SELECT count(*) as contador from configuracion_estadocuentas where cod_estadoreferencial=1 and cod_plancuenta='$cod_cuenta_x'");
+        $stmtConfiguracionCuenta->execute();
+        while ($rowConfi = $stmtConfiguracionCuenta->fetch(PDO::FETCH_ASSOC)) {
+          $contadorX=$rowConfi['contador'];
         }
+        if($contadorX>0){
+          $sql="SELECT count(*)as cont from  estados_cuenta where cod_cajachicadetalle=$codigo_det";
+          $stmtVerifRetencion = $dbh->prepare($sql);
+          $stmtVerifRetencion->execute();
+          $result=$stmtVerifRetencion->fetch();
+          $cont_estados=$result['cont'];
+          if($cont_estados==0){
+            $contadorRentencion++;
+            $stringRetenciones.="Nro. Documento: ".$nro_documento_x."<br>";
+          }
+        }
+        
       }
-    }    
+    }      
     $string_valor=$contadorRentencion."#####@@@@@".$stringRetenciones;
     return $string_valor;
   }

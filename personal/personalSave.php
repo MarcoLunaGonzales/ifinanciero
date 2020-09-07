@@ -109,11 +109,12 @@ try {
         // while ($row = $stmtPer->fetch(PDO::FETCH_BOUND)) {
         // }                
         $stmtDistribucion = $dbh->prepare("UPDATE personal_area_distribucion 
-            set cod_uo=:cod_uo,cod_area=:cod_area,porcentaje=:porcentaje where codigo=:codigo_areaDP");
+            set cod_uo=:cod_uo,cod_area=:cod_area,porcentaje=:porcentaje,monto=:haber_basico where codigo=:codigo_areaDP");
         $stmtDistribucion->bindParam(':codigo_areaDP', $codigo_areaDP);
         $stmtDistribucion->bindParam(':cod_uo', $cod_unidadorganizacional); 
         $stmtDistribucion->bindParam(':cod_area', $cod_area); 
         $stmtDistribucion->bindParam(':porcentaje', $porcentaje);            
+        $stmtDistribucion->bindParam(':haber_basico', $haber_basico);   
         $stmtDistribucion->execute();     
         
         //actualizamos la parte de personal discapacitado        

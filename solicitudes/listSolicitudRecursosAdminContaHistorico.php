@@ -32,7 +32,10 @@ if(isset($_GET['q'])){
   $u=0;
   $sqlAreas="";
 }
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (5,8)) order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle 
+  from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (5,8)) l  
+where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0)  order by l.revisado_contabilidad,l.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -49,7 +52,7 @@ $stmt->bindColumn('cod_comprobante', $codComprobante);
 $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
 $stmt->bindColumn('numero', $numeroSol);
 $stmt->bindColumn('idServicio', $idServicio);
-
+$stmt->bindColumn('devengado', $devenX);
 $item_1=2708;
 ?>
 <div class="cargar-ajax d-none">
@@ -140,6 +143,15 @@ $item_1=2708;
 
                        $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);
                        
+                       $estiloComprobante="btn btn-primary";
+                       if($devenX==0){
+                          $estiloComprobante="btn btn-info";
+                       }
+
+                       if(obtenerUnidadSolicitanteRecursos($codigo)==3000||obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)||obtenerDetalleRecursosSIS($codigo)>0){
+                        $numeroSolTitulo='<a href="#" title="SOLICITUD DE RECURSOS SIS" class="btn btn-rose btn-sm btn-round">'.$numeroSol.'</a>';
+                       }
+
 ?>
                         <tr>
                           <td><?=$unidad;?> - <?=$area;?></td>
@@ -159,13 +171,13 @@ $item_1=2708;
                             </a>
                             <?php 
                             
-                                   if($codComprobante!=0&&$codEstado==5){
+                                   if($codComprobante!=0&&($codEstado==5||$codEstado==8)){
                                    ?>
                                    <div class="btn-group dropdown">
-                                     <button type="button" class="btn btn-primary dropdown-toggle" title="COMPROBANTE - DEVENGADO" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                     <button type="button" class="btn <?=$estiloComprobante?> dropdown-toggle" title="COMPROBANTE - DEVENGADO" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                        <i class="material-icons"><?=$iconImp;?></i>
                                      </button>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu menu-fixed-sm-table">
                                        <a href="#" onclick="javascript:window.open('<?=$urlImpComp;?>?comp=<?=$codComprobante;?>&mon=-1')" class="dropdown-item">
                                                  <i class="material-icons text-muted">monetization_on</i> BIMONETARIO (Bs - Usd)
                                       </a>
@@ -195,23 +207,30 @@ $item_1=2708;
                                     </a> 
                                     <?php  
                                       if(verificarMesEnCursoSolicitudRecursos($codigo)!=0){
-
-                                    ?>
+                                         if($codEstado==8&&$devenX==0&&$otrosPagosCuenta==0){
+                                      ?>
+                                      <a title="Contabilizar Solicitud a Pagado" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&existe=<?=$codComprobante?>&deven=0','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="btn btn-info">
+                                      <i class="material-icons">assignment_turned_in</i>
+                                       </a>
+                                      <?php
+                                      }else{
+                                     ?>
                                     <a title="Editar Solicitud" href="<?=$urlVerificarSolicitud?>?cod=<?=$codigo?>&admin=2" target="_blank" class="btn btn-warning">
                                       <i class="material-icons text-dark">vpn_key</i><i class="material-icons text-dark">lock_open</i>
                                     </a>
-                                    
                                     <?php 
-                                    if($otrosPagosCuenta==0){
-                                    ?>
-                                   <a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&existe=<?=$codComprobante?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="btn btn-danger">
-                                      <i class="material-icons">assignment_turned_in</i>
-                                    </a>
-                                    <?php
+                                       if($otrosPagosCuenta==0){
+                                       ?>
+                                       <a title="Contabilizar Solicitud a Devengado" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&existe=<?=$codComprobante?>&deven=1','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="btn btn-danger">
+                                         <i class="material-icons">assignment_turned_in</i>
+                                       </a>
+                                      <?php                                     
+                                        }  
                                       } 
+                                     
                                      }else{//if mes en curso
                                        //si tiene permisos pero no está en el mes en curso
-                                      ?><a title="Solicitud No Editable" href='#'  class="btn btn-danger">
+                                      ?><a title="Solicitud No Editable" href='#'  class="btn <?=$estiloComprobante?>">
                                       <i class="material-icons text-dark">lock</i>
                                     </a><?php
                                       }
@@ -222,7 +241,7 @@ $item_1=2708;
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
-                              <div class="dropdown-menu">
+                              <div class="dropdown-menu menu-fixed-sm-table">
                                 <?php
                               if(isset($_GET['q'])){
                                 ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" target="_blank"  class="dropdown-item">
@@ -253,7 +272,7 @@ $item_1=2708;
                                 if($otrosPagosCuenta>0&&$codEstado!=8){
                                  ?>
                                  <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=8')" class="dropdown-item">
-                                      <i class="material-icons text-warning">dns</i> <b class="text-muted">Cambiar a <u class="text-warning">Pagado</u></b>
+                                      <i class="material-icons text-info">dns</i> <b class="text-muted">Cambiar a <u class="text-info">Pagado</u></b>
                                     </a>
                                 <?php 
                                   

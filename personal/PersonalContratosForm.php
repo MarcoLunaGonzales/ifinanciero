@@ -95,7 +95,11 @@ $fecha_actual=date("d/m/Y");
                       <tbody>
                         <?php $index=1;                      
                         $datos=$cod_personal_1;
+                        $sw_control_retiros=0;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          if($cod_estadocontrato==1){//si hay algun abierto marcamos
+                            $sw_control_retiros=1;
+                          }
                         	$datos=$cod_personal_1."/".$codigo_contrato."/".$fecha_iniciocontrato_x."/".$fecha_evaluacioncontrato_x."/".$fecha_fincontrato_x."/".$cod_tipocontrato;
                           $cod_defecto_contrato_otros=obtenerValorConfiguracion(79);
                           $cod_contradoidefinido=obtenerValorConfiguracion(80);
@@ -246,7 +250,6 @@ $fecha_actual=date("d/m/Y");
                             </tr>
                         <?php $index++; } ?>            				
                       </tbody>
-                      
                     </table>
                   </div>
                 </div>
@@ -258,9 +261,13 @@ $fecha_actual=date("d/m/Y");
                   <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalAgregarC" onclick="agregaformPC('<?=$datos;?>')">
                       <i class="material-icons" title="Agregar Contrato">add</i>
   		             </button>
-                  <!--  <button type="button" class="btn btn-primary btn-round btn-fab" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>')">
+                   <?php
+                   if($sw_control_retiros==0){?>
+                     <button type="button" class="btn btn-primary btn-round btn-fab" data-toggle="modal" data-target="#modalRetirarPersonal" onclick="agregaformRetiroPersonal('<?=$datos;?>')">
                       <i class="material-icons" title="Retirar Personal">play_for_work</i>
-                   </button>	     -->                       
+                   </button>                             
+                   <?php } ?>
+                  
                 <?php
                 }
                 ?>

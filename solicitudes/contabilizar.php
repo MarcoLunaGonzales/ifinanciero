@@ -20,7 +20,14 @@ $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $fechaHoraActual=date("Y-m-d H:i:s");
 $userAdmin=obtenerValorConfiguracion(74);
 
-//  CREAR EL COMPROBANTE DEBENGADO
+$deven=1;
+//comprobante devengado o pagado
+if(isset($_GET['deven'])){
+  $deven=(int)$_GET['deven']; 
+}
+
+
+//  CREAR EL COMPROBANTE DEVENGADO
 
 //INICIO DE VARIABLES
 $glosaDetalleGeneral="";
@@ -477,7 +484,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
                  $sqlActualizarFaturas="UPDATE facturas_compra set cod_comprobantedetalle=$codComprobanteDetalle  where cod_solicitudrecursodetalle=$codSolicitudDetalleOrigen";
                  $stmtFacturas = $dbh->prepare($sqlActualizarFaturas);
                  $stmtFacturas->execute();
-                 if($retenciones[$j]['conf_retencion']==10){
+                 if($retenciones[$j]['conf_retencion']==10&&$deven==1){
                    $codEstadoCuenta=obtenerCodigoEstadosCuenta();
                    //datos del proveedor para le estado de cuentas
                    $codProveedorEstado=$codProveedor;
@@ -538,7 +545,11 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
             //validacion si la solicitud es agrupada
             if($numeroRetencionFactura!=1){ 
-              
+            
+            if($deven==0){
+              $cuentaProv=obtenerValorConfiguracion(82);
+              $cuentaAuxiliarProv=0;
+            }  
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
             $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
             VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaDetalleProv', '$i')";
@@ -547,6 +558,8 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             print_r($sqlDetalle); 
             $codProveedorEstado=$codProveedor;
         
+            if($deven==1){
+
               //estado de cuentas devengado
               $codEstadoCuenta=obtenerCodigoEstadosCuenta();
               $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
@@ -557,7 +570,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
               $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_estadocuenta='$codEstadoCuenta',glosa_comprobantedetalle='$glosaDetalleProv' where codigo='$codSolicitudDetalleOrigen'";
               $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
               $stmtUpdateSolicitudRecursoDetalle->execute();
-
+             }
 
             }
             // FIN CUENTA PASIVA   
@@ -579,7 +592,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
 /* ACTUALIZAR ESTADOS DE LA SOLICITUD A CONTABILIZADO*/  
 if($flagSuccessCompro==true){
-  $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=5 where codigo=$codigo";
+  $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=5,devengado=$deven where codigo=$codigo";
   $stmtUpdate = $dbh->prepare($sqlUpdate);
   $flagSuccess=$stmtUpdate->execute();
 
@@ -594,7 +607,12 @@ if($flagSuccessCompro==true){
      }else{
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
      }
-
+  
+  if($deven==0){
+    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=8 where codigo=$codigo";
+    $stmtUpdate = $dbh->prepare($sqlUpdate);
+    $flagSuccess=$stmtUpdate->execute();
+  }
   
 }
 

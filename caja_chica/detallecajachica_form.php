@@ -314,7 +314,8 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                           $stmt = $dbh->prepare($sqlUO);
                           $stmt->execute();
                           ?>
-                          <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" onChange="ajaxAreaUOCAJACHICA(this);" title="Elija una opción">
+                          <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true"  title="Elija una opción">
+                            <!-- onChange="ajaxAreaUOCAJACHICA(this);" -->
                               <?php 
                                   while ($row = $stmt->fetch()){ 
                               ?>
@@ -359,7 +360,8 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                     <div id="div_contenedor_area">                                        
                         <?php
                         
-                            $sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas,(select a.abreviatura from areas a where a.codigo=cod_area)as abrev_area from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
+                            //$sqlUO="SELECT cod_area,(select a.nombre from areas a where a.codigo=cod_area )as nombre_areas,(select a.abreviatura from areas a where a.codigo=cod_area)as abrev_area from areas_organizacion where cod_estadoreferencial=1 and cod_unidad=$cod_uo order by nombre_areas";
+                            $sqlUO="SELECT codigo,nombre,abreviatura from areas where cod_estado=1 and centro_costos=1 ORDER BY nombre";
                             $stmt = $dbh->prepare($sqlUO);
                             $stmt->execute();
                             ?>
@@ -367,7 +369,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                                 <?php 
                                     while ($row = $stmt->fetch()){ 
                                 ?>
-                                     <option value="<?=$row["cod_area"];?>" data-subtext="<?=$row["cod_area"];?>" <?=($cod_area==$row["cod_area"])?"selected":"";?> ><?=$row["nombre_areas"];?>(<?=$row["abrev_area"];?>)</option>
+                                     <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>" <?=($cod_area==$row["codigo"])?"selected":"";?> ><?=$row["nombre"];?>(<?=$row["abreviatura"];?>)</option>
                                  <?php 
                                     } 
                                 ?>
@@ -462,8 +464,8 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
             <!-- para solicitud de recursos -->             
             <div class="row">              
               <div class="col-sm-12">
-                <div class="form-group">                        
-                  <div id="div_contenedor_sol_recursos" align="center">                    
+                <div class="form-group" align="center">                        
+                  <div id="div_contenedor_sol_recursos" >
                     <?php
                     if($codigo>0){                      
                       //sacar codigo de estado de cuenta
@@ -491,8 +493,12 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
                     }
                     ?>
                   </div>
+                  <!-- <a  title="Subir Archivos Respaldo (shift+r)" href="#modalFile" data-toggle="modal" data-target="#modalFile" class="btn btn-primary btn-sm">Archivos 
+                    <i class="material-icons"><?=$iconFile?></i><span id="narch" class="bg-warning"></span>
+                  </a> -->
                 </div>
               </div>              
+
             </div>
   			  </div>
   			  <div class="card-footer ml-auto mr-auto">
@@ -500,6 +506,73 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
   				<a href="<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cc;?>&cod_tcc=<?=$cod_tcc?>" class="<?=$buttonCancel;?>"><i class="material-icons" title="Volver">keyboard_return</i> Volver </a>
   			  </div>
   			</div>
+        <!-- archivos adjuntos -->
+        <div class="modal fade modal-primary" id="modalFile" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content card">
+              <div class="card-header card-header-info card-header-text">
+                <div class="card-text">
+                  <h5>DOCUMENTOS DE RESPALDO</h5>      
+                </div>
+                <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                  <i class="material-icons">close</i>
+                </button>
+              </div>
+              <div class="card-body">
+                   <p class="text-muted"><small>Los archivos se subir&aacute;n al servidor cuando se GUARDE El Gasto de Caja Chica</small></p>
+                    <div class="row col-sm-11 div-center">
+                      <table class="table table-warning table-bordered table-condensed">
+                        <thead>
+                          <tr>
+                            <th class="small" width="30%">Tipo de Documento <a href="#" title="Otro Documento" class="btn btn-primary btn-round btn-sm btn-fab float-left" onClick="agregarFilaArchivosAdjuntosCabecera()"><i class="material-icons">add</i></a></th>
+                            <th class="small">Obligatorio</th>
+                            <th class="small" width="35%">Archivo</th>
+                            <th class="small">Descripción</th>                  
+                          </tr>
+                        </thead>
+                        <tbody id="tabla_archivos">
+                          <?php
+                          $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
+                          $stmtArchivo->execute();
+                          $filaA=0;
+                          while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
+                            $filaA++;
+                            $codigoX=$rowArchivo['idClaDocumento'];
+                            $nombreX=$rowArchivo['Documento'];
+                            $ObligatorioX=$rowArchivo['Obligatorio'];
+                            $Obli='<i class="material-icons text-danger">clear</i> NO';
+                            if($ObligatorioX==1){
+                            $Obli='<i class="material-icons text-success">done</i> SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
+                            } ?>
+                            <tr>
+                              <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
+                              <td class="text-center"><?=$Obli?></td>
+                              <td class="text-right">
+                                <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
+                                <span class="input-archivo">
+                                  <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
+                                </span>
+                                <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo
+                                </label>
+                              </td>    
+                              <td><?=$nombreX;?></td>
+                            </tr> <?php
+                          }
+                          ?>       
+                        </tbody>
+                      </table>
+                      <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntos" name="cantidad_archivosadjuntos">
+                    </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" onclick="" class="btn btn-success" data-dismiss="modal">Aceptar
+                  <div class="ripple-container"></div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
 		  </form>
 		</div>
 	
@@ -539,6 +612,7 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
       </div>  
     </div>
   </div>
+
 <?php
   if($codigo>0){
     $tipo_distribucion=verificamos_distribucion_cajachica($codigo);

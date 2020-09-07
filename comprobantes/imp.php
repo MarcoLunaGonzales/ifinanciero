@@ -190,6 +190,8 @@ $html.=  '<header class="header">'.
              $html.='<tr>'.
                       '<td>'.$row['numero'].'<br>'.$row['unidadAbrev'].'<br>'.$row['abreviatura'].'</td>'.
                       '<td>'.$row['nombre'].' - '.$row['nombrecuentaauxiliar'].'<br>'.$row['glosa'].'</td>';
+                      if($tcUSD==0){$tcUSD=1;}
+
                       $tDebeBol+=$row['debe']/$tcUSD;$tHaberBol+=$row['haber']/$tcUSD;
                       $tDebeDol+=$row['debe']/$tc;$tHaberDol+=$row['haber']/$tc;
                        $html.='<td class="text-right">'.number_format($row['debe']/$tc, 2, '.', ',').'</td>'.
