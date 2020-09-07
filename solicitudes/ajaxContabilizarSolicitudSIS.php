@@ -58,7 +58,7 @@ if((int)$globalNombreGestion<(int)$anioActual){
 
 
 //crear comprobante
-$cod_unidadX=obtenerValorConfiguracion(73);
+$cod_unidadX=3000;
 $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3,$globalMes);    
 $datosServicio="";
 
@@ -261,7 +261,7 @@ $glosa="Beneficiario: ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosSer
             $codProveedorEstado=$codProveedor;
             //   
 
-             $glosaDetalleGeneral.=" ".$glosaDetalleProv;
+             $glosaDetalleGeneral=" ".$glosaDetalleProv;
   
     }//FIN WHILE DETALLES DE SOLICITUD
 

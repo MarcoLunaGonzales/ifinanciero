@@ -1,0 +1,6 @@
+
+<IfModule mod_php5.c>
+    #Session timeout
+    php_value session.cookie_lifetime 28800
+    php_value session.gc_maxlifetime 28800
+</IfModule>
