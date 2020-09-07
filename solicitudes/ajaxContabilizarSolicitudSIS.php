@@ -26,7 +26,7 @@ $userAdmin=obtenerValorConfiguracion(74);
 
 //INICIO DE VARIABLES
 $glosaDetalleGeneral="";
-$tipoComprobante=3;
+$tipoComprobante=2;
 $sumaDevengado=0;
 $codComprobante=obtenerCodigoComprobante();
 if(isset($_POST['existe'])&&verificarEdicionComprobanteUsuario($globalUser)!=0){

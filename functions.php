@@ -9159,7 +9159,7 @@ function obtenerEstadoComprobante($codigo){
   }
  function obtenerCodigoSolicitudRecursosComprobante($codigo){
      $dbh = new Conexion();
-     $sql="SELECT s.codigo,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=s.codigo and cod_confretencion=8) as iva from solicitud_recursos s where s.cod_comprobante=$codigo;";
+     $sql="SELECT s.codigo,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=s.codigo and cod_confretencion=8) as iva from solicitud_recursos s where s.cod_comprobante=$codigo and s.devengado=1;";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor=0;$iva=0;
