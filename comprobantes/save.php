@@ -121,7 +121,8 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$haber=$_POST["haber".$i];
 		$glosaDetalle=$_POST["glosa_detalle".$i];
 		$codSolicitudRecurso=$_POST["cod_detallesolicitudsis".$i];
-
+    $codActividadProyecto=$_POST["cod_actividadproyecto".$i];
+    $codAccNum=$_POST["cod_accnum".$i];
     if($codSolicitudRecurso!=""||$codSolicitudRecurso!=0){
       //actualizar SOLICITUDES SIS AL ESTADO PAGADO
      //verificar que la validacion si tiene centro de costo SIS     
@@ -143,7 +144,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     }
     
     $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-		$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_solicitudrecurso) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codSolicitudRecurso')";
+		$sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_solicitudrecurso,cod_actividadproyecto,cod_accnum) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codSolicitudRecurso','$codActividadProyecto','$codAccNum')";
 		$stmtDetalle = $dbh->prepare($sqlDetalle);
 		$flagSuccessDetalle=$stmtDetalle->execute();	
     

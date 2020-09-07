@@ -161,7 +161,8 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$haber=$_POST["haber".$i];
 		$glosaDetalle=$_POST["glosa_detalle".$i];
     $codSolicitudRecurso=$_POST["cod_detallesolicitudsis".$i];
-   
+    $codActividadProyecto=$_POST["cod_actividadproyecto".$i];
+    $codAccNum=$_POST["cod_accnum".$i];
     if($codSolicitudRecurso!=""||$codSolicitudRecurso!=0){
       //actualizar SOLICITUDES SIS AL ESTADO PAGADO
      //verificar que la validacion si tiene centro de costo SIS     
@@ -184,14 +185,14 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     if((isset($_POST['codigo_detalle'.$i]))&&(isset($_POST['incompleto']))){
 	    $codigoDetalle=$_POST["codigo_detalle".$i];
       $codComprobanteDetalle=$codigoDetalle;
-      $sqlDetalle="UPDATE comprobantes_detalle SET cod_solicitudrecurso='$codSolicitudRecurso',cod_comprobante=$codComprobante , cod_cuenta= '$cuenta', cod_cuentaauxiliar= '$cuentaAuxiliar', cod_unidadorganizacional= '$unidadDetalle', cod_area= '$area', debe= '$debe', haber= '$haber', glosa= '$glosaDetalle', orden ='$i'  where codigo='$codComprobanteDetalle' ";
+      $sqlDetalle="UPDATE comprobantes_detalle SET cod_actividadproyecto='$codActividadProyecto',cod_accnum='$codAccNum',cod_solicitudrecurso='$codSolicitudRecurso',cod_comprobante=$codComprobante , cod_cuenta= '$cuenta', cod_cuentaauxiliar= '$cuentaAuxiliar', cod_unidadorganizacional= '$unidadDetalle', cod_area= '$area', debe= '$debe', haber= '$haber', glosa= '$glosaDetalle', orden ='$i'  where codigo='$codComprobanteDetalle' ";
 		  $stmtDetalle = $dbh->prepare($sqlDetalle);
 		  $flagSuccessDetalle=$stmtDetalle->execute();
       array_push($SQLDATOSINSTERT,$flagSuccessDetalle);	
     }else{
       $codigoDetalle=obtenerCodigoComprobanteDetalle()+($i-1);
       $codComprobanteDetalle=$codigoDetalle;
-      $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_solicitudrecurso) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codSolicitudRecurso')";
+      $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_solicitudrecurso,cod_actividadproyecto,cod_accnum) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codSolicitudRecurso','$codActividadProyecto','$codAccNum')";
       $stmtDetalle = $dbh->prepare($sqlDetalle);
       $flagSuccessDetalle=$stmtDetalle->execute();
       array_push($SQLDATOSINSTERT,$flagSuccessDetalle);

@@ -59,7 +59,7 @@ if((int)$globalNombreGestion<(int)$anioActual){
 
 //crear comprobante
 $cod_unidadX=3000;
-$nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3,$globalMes);    
+$nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,$tipoComprobante,$globalMes);    
 $datosServicio="";
 
 //CREACION DEL COMPROBANTE
@@ -92,7 +92,7 @@ $datosServicio="";
     $flagSuccess=$stmtDel->execute();
 
 $glosaResumido="";
-
+$glosaResumidoArray=[];
 //inicio de for
 foreach ($listaSR as $liSR) {
   $codigo=$liSR->codigo_item;
@@ -115,10 +115,10 @@ $stmtSolicitud->bindColumn('numero', $numeroSol);
 $stmtSolicitud->bindColumn('idServicio', $idServicioX);
 
 while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
-      $unidadX=3000;
-      $areaX=obtenerValorConfiguracion(65);
-      $cod_unidadX=$cod_unidadX;
-      $cod_areaX=$cod_areaX;
+      $cod_unidadX=3000;
+      $cod_areaX=obtenerValorConfiguracion(65);
+      /*$cod_unidadX=$cod_unidadX;
+      $cod_areaX=$cod_areaX;*/
       $codSimulacion=$codSimulacion;
       $codProveedor=$codProveedor;
       $codSimulacionServicio=$codSimulacionServicio;
@@ -127,7 +127,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
         $nombreCliente="";
         $nombreSimulacion=nameSimulacion($codSimulacion);
       }else{
-        $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
+        $nombreCliente="";//nameClienteSimulacionServicio($codSimulacionServicio);
         $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
       }
       $glosa=$nombreCliente." SR ".$numeroSol;
@@ -180,23 +180,25 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
         $codSolicitudDetalle=$rowNuevo['codigo'];
         $codSolicitudDetalleOrigen=$rowNuevo['codigo'];
         $codActividadproyecto=$rowNuevo['cod_actividadproyecto'];
+        $codAccNum=$rowNuevo['acc_num'];
         $tituloFactura="";
-        /*if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
+        if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
           $numeroFacturas=obtenerFacturasSolicitudDetalleArray($rowNuevo['codigo']);
           $numerosFacturasDetalle=[];
           for ($y=0; $y < count($numeroFacturas); $y++) { 
             $numerosFacturasDetalle[$y]=$numeroFacturas[$y][1];
           }
           $tituloFactura="F/ ".implode($numerosFacturasDetalle,',')." - ";
-        }*/
+        }
         $detalleActividadFila="";
         if(obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]!=""){
-          $detalleActividadFila=obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]." ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[1]."<br>";
+          $detalleActividadFila="Actividad: ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]."\n"; //." ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[1].
         }
         $glosaDetalle=$detalleActividadFila."Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
         $glosaDetalleRetencion="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$datosServicio." ".$glosa;
-        $glosaResumido.=obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]." ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[1].". Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".$glosa;
-        
+        //$glosaResumido.=obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]." ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[1].". Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".$glosa;
+        $glosaResumido=nameProveedor($rowNuevo['cod_proveedor'])." - ".$glosa;
+        array_push($glosaResumidoArray, $glosaResumido);
 
         if($codProveedor!=$rowNuevo['cod_proveedor']){
            if($codProveedor!=0){
@@ -211,11 +213,13 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
         
          //CARGAR UNIDAD Y AREA DEL DETALLE CENTRO DE COSTOS
         if($unidadarea[0]==0){
-            $unidadDetalle=$rowNuevo['cod_unidadorganizacional'];
-            $area=$rowNuevo['cod_area'];
+            $unidadDetalle=3000;
+            $area=obtenerValorConfiguracion(65);
+            /*$rowNuevo['cod_unidadorganizacional'];
+            $area=$rowNuevo['cod_area'];*/
         }else{
-            $unidadDetalle=$rowNuevo['cod_unidadorganizacional'];
-            $area=$rowNuevo['cod_area'];
+            $unidadDetalle=3000;
+            $area=obtenerValorConfiguracion(65);
         }
 
         $unidadDetalleGlobal=$unidadDetalle;
@@ -237,8 +241,8 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             //detalle comprobante SIN RETENCION ///////////////////////////////////////////////////////////////
             $sumaDevengado+=$debe;
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle(); 
-            $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-            VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+            $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_actividadproyecto,cod_accnum) 
+            VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codActividadproyecto','$codAccNum')";
             $stmtDetalle = $dbh->prepare($sqlDetalle);
             $flagSuccessDetalle=$stmtDetalle->execute();  
           }else{
@@ -340,8 +344,8 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
           //INSERTAR CUENTA DE GASTO  
            if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
               $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-              $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-              VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+              $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_actividadproyecto,cod_accnum) 
+              VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codActividadproyecto','$codAccNum')";
               $stmtDetalle = $dbh->prepare($sqlDetalle);
               $flagSuccessDetalle=$stmtDetalle->execute();
            }else{
@@ -390,9 +394,9 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
           $i++;            
 
             $tituloFactura="";
-            /*if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
+            if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
               $tituloFactura="F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ";
-            }*/
+            }
 
             $glosaDetalleProv="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
 
@@ -407,8 +411,9 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
   
     }//FIN WHILE DETALLES DE SOLICITUD
 
+$glosaResumidoTit="Pago Proyecto Beneficiario: (".implode(",", $glosaResumidoArray).")";
 //ACTUALIZAR LA GLOSA DEL COMPROBANTE CABECERA 
-    $sqlUpdate="UPDATE comprobantes SET glosa='$glosaResumido' WHERE codigo=$codComprobante";
+    $sqlUpdate="UPDATE comprobantes SET glosa='$glosaResumidoTit' WHERE codigo=$codComprobante";
     $stmtUpdate = $dbh->prepare($sqlUpdate);
     $flagSuccessCompro=$stmtUpdate->execute();
 
@@ -440,12 +445,12 @@ if($flagSuccessCompro==true){
   }
 
 
-    $glosaResumido.="<br>";
+    $glosaResumido.="\n";
 }//FOR SOLICITUDES
 
 
     //ACTUALIZAR LA GLOSA DEL COMPROBANTE CABECERA 
-    $sqlUpdate="UPDATE comprobantes SET glosa='$glosaResumido' WHERE codigo=$codComprobante";
+    $sqlUpdate="UPDATE comprobantes SET glosa='$glosaResumidoTit' WHERE codigo=$codComprobante";
     $stmtUpdate = $dbh->prepare($sqlUpdate);
     $flagSuccessCompro=$stmtUpdate->execute();
 
@@ -456,7 +461,7 @@ $haberProv=$sumaDevengado;
 
 $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
 $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-            VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaResumido', '$i')";
+            VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaResumidoTit', '$i')";
 $stmtDetalle = $dbh->prepare($sqlDetalle);
 $flagSuccessDetalle=$stmtDetalle->execute();
 

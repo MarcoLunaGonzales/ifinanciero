@@ -5082,7 +5082,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerDetalleSolicitudParaComprobante($codigo){
     $dbh = new Conexion();
-    $sql="SELECT cod_actividadproyecto,cod_unidadorganizacional,cod_area,codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
+    $sql="SELECT acc_num,cod_actividadproyecto,cod_unidadorganizacional,cod_area,codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -9664,5 +9664,24 @@ function obtenerNombreDirectoActividadServicio($cod_actividad){
       return array($abreviatura,$valor);
     }
 
-
+function obtenerCodigoActividadSisComprobante($codigo){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT cod_actividadproyecto FROM comprobantes_detalle WHERE codigo  = '$codigo'");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+          $valor=$row['cod_actividadproyecto'];
+      }  
+      return($valor);
+}    
+function obtenerCodigoAccNumSisComprobante($codigo){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT cod_accnum FROM comprobantes_detalle WHERE codigo  = '$codigo'");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+          $valor=$row['cod_accnum'];
+      }  
+      return($valor);
+}  
 ?>

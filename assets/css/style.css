@@ -12,11 +12,14 @@
 
 
 
+.btn-orange{
+ background: #11AE81 !important;
+ color: white !important;
+}
 
-
-
-
-
+.btn-orange:hover{
+ background:  #269575 !important;
+}
 .menu-fixed-sm-table {
     top:27px !important;
 }
