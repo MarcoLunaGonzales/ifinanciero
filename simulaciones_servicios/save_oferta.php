@@ -34,9 +34,13 @@ if(isset($_POST['cantidad_items'])){
       $orden=$_POST['orden'.$i];
       $orden=$_POST['orden'.$i];
       $descripcion=$_POST['descripcion'.$i];
+      $editable=1;
+      if(!isset($_POST['editable'.$i])){
+        $editable=0;
+      }
       $codOfertaDetalle=obtenerCodigoSimulacionServicioOfertaDetalle();
       $stmt = $dbh->prepare("INSERT INTO simulaciones_servicios_ofertas_complementos(codigo,cod_simulacionoferta,descripcion,descripcion_alterna,habilitado_alterna,editable,cod_tipocomplemento,cod_estadoreferencial,orden)
-       VALUES($codOfertaDetalle,$codOferta,'$descripcion','$descripcion',0,1,$tipo,1,$orden)");
+       VALUES($codOfertaDetalle,$codOferta,'$descripcion','$descripcion',0,$editable,$tipo,1,$orden)");
       $stmt->execute();   
   } 
 }

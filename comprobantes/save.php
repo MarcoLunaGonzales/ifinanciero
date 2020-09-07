@@ -18,6 +18,8 @@ $facturas= json_decode($_POST['facturas']);
 $estadosCuentas= json_decode($_POST['estados_cuentas']);
 session_start();
 
+$codPadreArchivos=obtenerValorConfiguracion(84);
+
 $globalUser=$_SESSION["globalUser"];
 $globalGestion=$_SESSION["globalGestion"];
 $globalMes=$_SESSION['globalMes'];
@@ -40,8 +42,13 @@ $stmtInsert = $dbh->prepare($sqlInsert);
 $flagSuccess=$stmtInsert->execute();	
 
 //subir archivos al servidor
+//borramos los archivos
+  $sqlDel="DELETE FROM archivos_adjuntos where cod_objeto=$codComprobante and cod_tipopadre=$codPadreArchivos"; //codigo del padre para comprobantes
+  $stmtDel = $dbh->prepare($sqlDel);
+  $stmtDel->execute();
+
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
-    foreach($_FILES["archivos"]['tmp_name'] as $key => $tmp_name)
+    /*foreach($_FILES["archivos"]['tmp_name'] as $key => $tmp_name)
     {
         //Validamos que el archivo exista
         if($_FILES["archivos"]["name"][$key]) {
@@ -62,7 +69,40 @@ $flagSuccess=$stmtInsert->execute();
                 echo "error";
             }            
         }
+    }*/
+
+
+    $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
+for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
+  if(isset($_POST['codigo_archivo'.$ar])){
+    if($_FILES['documentos_cabecera'.$ar]["name"]){
+      $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
+      $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+      $directorio = '../assets/archivos-respaldo/COMP-'.$codComprobante.'/';
+      //Validamos si la ruta de destino existe, en caso de no existir la creamos
+      if(!file_exists($directorio)){
+                mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+      }
+      $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+      //Movemos y validamos que el archivos se haya cargado correctamente
+      //El primer campo es el origen y el segundo el destino
+      if(move_uploaded_file($source, $target_path)) { 
+        echo "ok";
+        $tipo=$_POST['codigo_archivo'.$ar];
+        $descripcion=$_POST['nombre_archivo'.$ar];
+        $tipoPadre=$codPadreArchivos;
+        $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+        VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codComprobante')";
+        $stmtInsert = $dbh->prepare($sqlInsert);
+        $stmtInsert->execute();    
+        print_r($sqlInsert);
+      } else {    
+          echo "error";
+      } 
     }
+  }
+}
+
     //BORRAMOS LA TABLA DETALLE
 		$sqlDelete="";
 		$sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante'";

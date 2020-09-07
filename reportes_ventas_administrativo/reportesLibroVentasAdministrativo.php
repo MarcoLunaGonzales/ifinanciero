@@ -194,31 +194,42 @@ $i=0;
 				      </div>
                   </div><!--div row-->
 
-					<div class="row">
-	                  	<div class="col-sm-6">
-	                  		<div class="row">
-				                 <label class="col-sm-4 col-form-label">Personal</label>
-				                 <div class="col-sm-8">
-				                	<div class="form-group">
-		                               <select class="selectpicker form-control form-control-sm" name="personal[]" id="personal" data-live-search="true" data-style="select-with-transition" data-size="4" multiple data-actions-box="true" required>	
-		                               	<option value="0">TIENDA</option>	
-					                       <?php
-			  	                     $stmt = $dbh->prepare("SELECT DISTINCT f.cod_personal,UPPER(CONCAT(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno)) as nombre from facturas_venta f join personal p on p.codigo=f.cod_personal order by 2");
-				                     $stmt->execute();
-				                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				                     	$codigoX=$row['cod_personal'];
-				                     	$nombreX=$row['nombre'];
-				                     ?>
-				                     <option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
-				                       <?php
-			  	                       }
-			  	                       ?>
-				                        </select>
-				                    </div>
-				                  </div>
-				              </div>
-					      </div>
-	                </div><!--div row-->
+					
+				<div class="row">
+					<label class="col-sm-2 col-form-label">Personal</label>
+					<div class="col-sm-4">
+						<div class="form-group">
+						<select class="selectpicker form-control form-control-sm" name="personal[]" id="personal" data-live-search="true" data-style="select-with-transition" data-size="4" multiple data-actions-box="true" required>	
+							<option value="0">TIENDA</option>	
+						   <?php
+						 $stmt = $dbh->prepare("SELECT DISTINCT f.cod_personal,UPPER(CONCAT(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno)) as nombre from facturas_venta f join personal p on p.codigo=f.cod_personal order by 2");
+						$stmt->execute();
+						while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+							$codigoX=$row['cod_personal'];
+							$nombreX=$row['nombre'];
+						?>
+						<option value="<?=$codigoX;?>"><?=$nombreX;?></option>	
+						<?php
+						   }
+						   ?>
+						</select>
+						</div>
+					</div>
+
+	            	<label class="col-sm-2 col-form-label">Sin Filtro</label>
+	                <div class="col-sm-1">
+	                	<div class="form-group">
+							<div class="togglebutton">
+							    <label>
+									<input type="checkbox" name="check_formato2" id="check_formato2">
+									<span class="toggle"></span>
+							    </label>
+							</div>
+						</div>
+					</div>						
+		            
+				</div>
+					
                 </div><!--card body-->
                 <div class="card-footer ">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>

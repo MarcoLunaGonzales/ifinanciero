@@ -5065,11 +5065,12 @@ function agregaformEditEva(datos){
   document.getElementById("codigo_contratoEv").value=d[1];
   document.getElementById("fecha_EvaluacionEv").value=d[3];
 }
-function agregaformRetiroPersonal(datos){
+function agregaformRetiroPersonal(datos,indice){
   //console.log("datos: "+datos);
   var d=datos.split('/');
   document.getElementById("codigo_personalR").value=d[0];
   document.getElementById("codigo_contratoR").value=d[1];
+  document.getElementById("indiceR").value=indice;
 
   // document.getElementById("cod_areaE").value=d[2];
   // document.getElementById("porcentajeE").value=d[3];
@@ -5140,15 +5141,20 @@ function EliminarContratoPersonal(codigo_contratoB,codigo_personalB){
     }
   });
 }
-function RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones,codigo_contratoR){
+function RetirarPersonal(cod_personal,cod_tiporetiro,fecha_Retiro,observaciones,codigo_contratoR,indiceR){
   $.ajax({
     type:"POST",
     data:"cod_contrato=0&cod_personal="+cod_personal+"&cod_tipocontrato="+cod_tiporetiro+"&cod_estadoreferencial=5&fecha_inicio="+fecha_Retiro+"&observaciones="+observaciones+"&fecha_fin=''",
     url:"personal/savePersonalcontrato.php",
     success:function(r){
       if(r==1){
-        // alerts.showSwal('success-message','index.php?opcion=personalLista');
-        alerts.showSwal('success-message','index.php?opcion=finiquitos_form&codigo=-100&codigo_contrato=codigo_contratoR');
+        if(indiceR==2){
+          alerts.showSwal('success-message','index.php?opcion=finiquitos_form&codigo=-100&codigo_contrato='+codigo_contratoR);
+        }else{
+          alerts.showSwal('success-message','index.php?opcion=personalLista');
+        }
+        
+        
 
         
       }else{
@@ -14999,7 +15005,7 @@ function quitarArchivoSistemaAdjunto(fila,codigo,tipo){
           }
         });
 }
-function quitarArchivoSistemaAdjunto_solfac(fila,codigo,tipo){
+function quitarArchivoSistemaAdjunto_solfac(fila,codigo,tipo,indice){
   Swal.fire({
         title: '¿Esta Seguro?',
         text: "Se borrará el Archivo Adjunto de la base de datos!",
@@ -15022,7 +15028,12 @@ function quitarArchivoSistemaAdjunto_solfac(fila,codigo,tipo){
               $("#label_documentos_cabecera"+fila).addClass("btn-warning");
               $("#label_documentos_cabecera"+fila).html('<i class="material-icons">publish</i> Subir Archivo');
             }
-            quitarArchivoAdjuntoSolicitud_facturacion(codigo);           
+            if(indice==1){
+              quitarArchivoAdjuntoSolicitud_facturacion(codigo);
+            }else{
+              quitarArchivoAdjuntoCajaChica(codigo);
+            }
+            
             return(true);
           } else if (result.dismiss === Swal.DismissReason.cancel) {
             return(false);
@@ -15055,6 +15066,25 @@ function quitarArchivoAdjuntoSolicitud_facturacion(codigo){
   }else{
     var url_aux= "simulaciones_servicios/ajaxSaveDeleteAdjuntoDocumentos_sf.php";
   }
+  var parametros={"codigo":codigo};
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: url_aux,
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Removiendo Documento..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");   
+           $("#cambioCodigoAuxiliar").modal("hide");         
+        }
+      });
+}
+function quitarArchivoAdjuntoCajaChica(codigo){
+  var url_aux= "caja_chica/ajaxSaveDeleteAdjuntoDocumentos_sf.php";
   var parametros={"codigo":codigo};
       $.ajax({
         type: "GET",
@@ -17099,6 +17129,21 @@ function abrirArchivosAdjuntos(datos){
   }
   ajax.send(null);
 }
+function abrirArchivosAdjuntos_cajachica(datos){
+  var d=datos.split('/');
+  var codigo=d[0];
+  var contenedor = document.getElementById('contenedor_archivos_respaldo_cajachica');    
+  ajax=nuevoAjax();
+  ajax.open('GET', 'caja_chica/ajax_modal_archivos_view.php?codigo='+codigo,true);
+  ajax.onreadystatechange=function() {
+  if (ajax.readyState==4) {
+    contenedor.innerHTML = ajax.responseText;      
+    $('.selectpicker').selectpicker(["refresh"]);
+    $("#modalFile_view").modal("show");       
+  }
+  }
+  ajax.send(null);
+}
 function botonBuscarLibretaBancariaDetalle(){
   $("#modalBuscadorLibretaBancaria").modal("hide");
   // $("#modalListaLibretaBancaria").modal("hide");
@@ -18085,4 +18130,13 @@ function generarComprobanteSolicitudRecursoSIS(){
                }
         });  
   }     
+}
+
+
+function activarInputOfertaServicio(fila){
+  if(!($("#descripcion"+fila).is("[readonly]"))){
+    $("#descripcion"+fila).attr("readonly",true);
+  }else{
+    $("#descripcion"+fila).removeAttr("readonly");
+  }
 }
