@@ -11,7 +11,7 @@ function obtenerDatosActividad($codigo){
         $resp = true;
     }
     else{
-        echo "Error: Datos Actividad";
+        echo "Error: Datos Actividad";     
         $resp=false;
         exit;       
     }

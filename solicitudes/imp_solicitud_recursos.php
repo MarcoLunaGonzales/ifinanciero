@@ -275,12 +275,16 @@ $tituloImporte="";
             $tituloActividad="";
             //$tituloActividad=obtenerCodigoActividadesServicioImonitoreo($codActividadX);   
             $detalleActividadFila="";
-            if(obtenerNombreDirectoActividadServicio($codActividadX)[0]!=""){
-              $detalleActividadFila.="<br><small class='text-dark small'> Actividad: ".obtenerNombreDirectoActividadServicio($codActividadX)[0]." - ".obtenerNombreDirectoActividadServicio($codActividadX)[1]."</small>";
+            if($codActividadX>0){
+              if(obtenerNombreDirectoActividadServicio($codActividadX)[0]!=""){
+                $detalleActividadFila.="<br><small class='text-dark small'> Actividad: ".obtenerNombreDirectoActividadServicio($codActividadX)[0]." - ".obtenerNombreDirectoActividadServicio($codActividadX)[1]."</small>";
+             }
             }
             $codAccNum=$row["acc_num"]; 
-            if(obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]!=""){
-              $detalleActividadFila.="<br><small class='text-dark small'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]." - ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[1]."</small>";
+            if($codAccNum>0){
+              if(obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]!=""){
+                $detalleActividadFila.="<br><small class='text-dark small'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]." - ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[1]."</small>";
+              }
             }
 
             if(trim($datosServicio)=="-"){

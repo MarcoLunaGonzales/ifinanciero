@@ -5,7 +5,7 @@ function obtenerDatosAccNum($codigo){
     // Preparamos
     $stmt = $dbh->prepare("SELECT c.codigo, c.nombre, c.abreviatura from ibnmonitoreo.external_costs c where c.cod_estado=1 and c.codigo='$codigo'");
     $resp = false;
-    $filas = array();
+    $filas = array("nombre"=>"","abreviatura"=>"");
     if($stmt->execute()){
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $resp = true;

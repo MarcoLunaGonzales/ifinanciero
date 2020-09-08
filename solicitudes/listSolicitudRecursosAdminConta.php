@@ -500,7 +500,7 @@ $item_1=2708;
                         <tr>
                           <td class="text-center" width="8%">
                             <?php
-                            if($codComprobante!=0&&($codEstado==5||$codEstado==8)){
+                            if($codComprobante>0||($codEstado==5||$codEstado==8)){
                                     ?>
                                     <?php
                             }else{

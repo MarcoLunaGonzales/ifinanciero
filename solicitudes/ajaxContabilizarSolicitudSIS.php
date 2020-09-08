@@ -190,10 +190,14 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
           }
           $tituloFactura="F/ ".implode($numerosFacturasDetalle,',')." - ";
         }
+
         $detalleActividadFila="";
-        if(obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]!=""){
-          $detalleActividadFila="Actividad: ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]."\n"; //." ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[1].
+        if($codActividadproyecto>0){
+          if(obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]!=""){
+            $detalleActividadFila="Actividad: ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]."\n"; //." ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[1].
+          }
         }
+        
         $glosaDetalle=$detalleActividadFila."Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
         $glosaDetalleRetencion="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$datosServicio." ".$glosa;
         //$glosaResumido.=obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]." ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[1].". Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".$glosa;

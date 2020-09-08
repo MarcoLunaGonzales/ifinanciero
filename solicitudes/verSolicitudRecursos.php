@@ -197,14 +197,18 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                   $tituloActividad=obtenerCodigoActividadesServicioImonitoreo($codActividadX);   
 
                   $detalleActividadFila="";
-                  if(obtenerNombreDirectoActividadServicio($codActividadX)[0]!=""){
-                    $detalleActividadFila.="<br><b class='text-dark small'> Actividad: ".obtenerNombreDirectoActividadServicio($codActividadX)[0]." - ".obtenerNombreDirectoActividadServicio($codActividadX)[1]."</b>";
+                  if($codActividadX>0){
+                    if(obtenerNombreDirectoActividadServicio($codActividadX)[0]!=""){
+                      $detalleActividadFila.="<br><b class='text-dark small'> Actividad: ".obtenerNombreDirectoActividadServicio($codActividadX)[0]." - ".obtenerNombreDirectoActividadServicio($codActividadX)[1]."</b>";
+                    }  
                   }
                   $codAccNum=$rowDetalles["acc_num"]; 
-                  if(obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]!=""){
-                    $detalleActividadFila.="<br><b class='text-dark small'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]." - ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[1]."</b>";
-                  }
 
+                  if($codAccNum>0){
+                   if(obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]!=""){
+                      $detalleActividadFila.="<br><b class='text-dark small'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]." - ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[1]."</b>";
+                    }   
+                  }
                                 ?>
                                 <tr>
                                     <td><?=$index?></td>
