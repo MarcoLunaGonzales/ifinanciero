@@ -25,7 +25,9 @@ $tipoComprobante=3;
 //comprobante devengado o pagado
 if(isset($_GET['deven'])){
   $deven=(int)$_GET['deven']; 
-  $tipoComprobante=2;
+  if($deven==0){
+   $tipoComprobante=2;  
+  }
 }
 
 
