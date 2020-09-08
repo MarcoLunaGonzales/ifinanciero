@@ -478,7 +478,9 @@
 			require_once('solicitudes/listSolicitudRecursosAdminContaHistorico.php');
 		}
 		
-		
+		if ($_GET['opcion']=='listSolicitudRecursosSisActividad') {
+			require_once('solicitudes/listSolicitudRecursosSisActividad.php');
+		}
 
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {

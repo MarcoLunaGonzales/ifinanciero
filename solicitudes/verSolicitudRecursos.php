@@ -196,13 +196,13 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 
                   $tituloActividad=obtenerCodigoActividadesServicioImonitoreo($codActividadX);   
 
-                  $detalleActividadFila="<br>";
+                  $detalleActividadFila="";
                   if(obtenerNombreDirectoActividadServicio($codActividadX)[0]!=""){
-                    $detalleActividadFila.="<b class='text-dark'> Actividad: ".obtenerNombreDirectoActividadServicio($codActividadX)[0]."</b>";
+                    $detalleActividadFila.="<br><b class='text-dark small'> Actividad: ".obtenerNombreDirectoActividadServicio($codActividadX)[0]." - ".obtenerNombreDirectoActividadServicio($codActividadX)[1]."</b>";
                   }
                   $codAccNum=$rowDetalles["acc_num"]; 
                   if(obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]!=""){
-                    $detalleActividadFila.="<b class='text-dark'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]."</b>";
+                    $detalleActividadFila.="<br><b class='text-dark small'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]." - ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[1]."</b>";
                   }
 
                                 ?>

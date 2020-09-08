@@ -21,7 +21,7 @@ $userAdmin=obtenerValorConfiguracion(74);
 
 
 
-
+$distribucionSoli=0;
 //  CREAR EL COMPROBANTE
 
 //INICIO DE VARIABLES
@@ -237,7 +237,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
         //SIN RETENCION     
         if($rowNuevo['cod_confretencion']==0||$rowNuevo['cod_confretencion']==8){
-          if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
+          if($distribucionSoli==0){
             //detalle comprobante SIN RETENCION ///////////////////////////////////////////////////////////////
             $sumaDevengado+=$debe;
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle(); 
@@ -342,7 +342,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             $debe=number_format(($debe), 2, '.', ''); 
 
           //INSERTAR CUENTA DE GASTO  
-           if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
+           if($distribucionSoli==0){
               $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
               $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_actividadproyecto,cod_accnum) 
               VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codActividadproyecto','$codAccNum')";
