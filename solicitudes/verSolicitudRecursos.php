@@ -193,14 +193,25 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                      $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
                   }
                   $codActividadX=$rowDetalles["cod_actividadproyecto"]; 
+
                   $tituloActividad=obtenerCodigoActividadesServicioImonitoreo($codActividadX);   
+
+                  $detalleActividadFila="<br>";
+                  if(obtenerNombreDirectoActividadServicio($codActividadX)[0]!=""){
+                    $detalleActividadFila.="<b class='text-dark'> Actividad: ".obtenerNombreDirectoActividadServicio($codActividadX)[0]."</b>";
+                  }
+                  $codAccNum=$rowDetalles["acc_num"]; 
+                  if(obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]!=""){
+                    $detalleActividadFila.="<b class='text-dark'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]."</b>";
+                  }
+
                                 ?>
                                 <tr>
                                     <td><?=$index?></td>
                                 	<td class="text-center small"><?=$numeroCuentaX?></td>
                                     <td class="text-left small font-weight-bold"><?=$nombreCuentaX?></td>
                                     <td class="text-left small font-weight-bold text-primary"><?=$nombreOficinaXX?>-<?=$nombreAreaXX;?></td>
-                                    <td class="text-left font-weight-bold text-primary"><?=$detalleX?> <?=$tituloActividad?></td>
+                                    <td class="text-left font-weight-bold text-primary"><?=$detalleX?> <?=$detalleActividadFila?></td>
                                     <td class="text-left small"><?=$tituloImporte?></td>
                                     <td class="text-left text-primary font-weight-bold"><?=$proveedorX?></td>
                                     <td class="text-right"><?=number_format($importeX, 2, '.', ',')?></td>

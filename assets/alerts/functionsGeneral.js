@@ -18210,3 +18210,63 @@ function quitarActividadProyectoFilasDetalle(){
   }
   $("#modalActividadesProyecto").modal("hide");   
 }
+
+function cambiarActividadesProyectoSolicitudRecursoModal(codigo,nro,monto,cuentas,prov){
+
+  $("#nro_solicitud_conta_2").val(nro);
+  $("#monto_nombre_conta_2").val(monto);
+  $("#cuenta_conta_2").val(cuentas);
+  $("#proveedor_nombre_conta_2").val(prov);
+  $("#codigo_solicitud").val(codigo);
+
+  var parametros={"codigo":codigo};
+  $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "solicitudes/ajaxCargarDetalleSolicitudes.php",
+        data: parametros,      
+        success:  function (resp) {
+          $("#solicitud_recurso_detalle_sis").html(resp);
+          $('.selectpicker').selectpicker('refresh');
+          $("#modalCambiarActividadesProyecto").modal("show");
+        }
+    });
+  }
+
+function saveActividadProyectoSolicitudRecursoModal(){
+var cantidad=$("#cantidad_registros_detalle_sis").val();
+  if(cantidad>0){
+    var detalles=[];
+    for (var i = 0; i < cantidad; i++) {
+      var sub_detalle={
+        "codigo":$("#codigo_detalle"+i).val(),
+        "cod_actividad":$("#actividades_detalle"+i).val(),
+        "cod_accnum":$("#acc_detalle"+i).val(),
+      }
+      detalles.push(sub_detalle);
+    };
+
+  var parametros={"codigo":$("#codigo_solicitud").val(),"detalles":JSON.stringify(detalles)};
+  $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "solicitudes/ajaxSaveDetalleSolicitud.php",
+        data: parametros,
+        beforeSend:function(){
+          iniciarCargaAjax();
+          $("#texto_ajax_titulo").html("Guardando Datos de  la Solicitud de Recursos");
+        },
+        success:  function (resp) {
+          detectarCargaAjax();
+          //alert(resp);
+          $("#texto_ajax_titulo").html("Procesando Datos");
+          actualizarPaginaNuevaP();
+          //$('.selectpicker').selectpicker('refresh');
+          //$("#modalCambiarActividadesProyecto").modal("hide");
+        }
+    });
+
+  }else{
+    Swal.fire("Informativo!", "No hay detalles en la Solicitud", "warning");
+  }
+}

@@ -274,6 +274,15 @@ $tituloImporte="";
             $codActividadX=$row["cod_actividadproyecto"];
             $tituloActividad="";
             //$tituloActividad=obtenerCodigoActividadesServicioImonitoreo($codActividadX);   
+            $detalleActividadFila="";
+            if(obtenerNombreDirectoActividadServicio($codActividadX)[0]!=""){
+              $detalleActividadFila.="- Actividad: ".obtenerNombreDirectoActividadServicio($codActividadX)[0]."";
+            }
+            $codAccNum=$row["acc_num"]; 
+            if(obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]!=""){
+              $detalleActividadFila.="- Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]."";
+            }
+
             if(trim($datosServicio)=="-"){
               $datosServicio="";  
             }else{
@@ -290,7 +299,7 @@ $tituloImporte="";
             <td class="s3 text-center"><?=number_format($porcentSegPres, 0, '.', '')?></td>
             <td class="s3 text-center" width="8%"><?=$nombreArea?></td>
             <td class="s3 text-center" width="8%"><?=$numeroFac?></td>
-            <td class="s3 text-left" width="40%"><?="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$tituloActividad?></td> <!-- F/".$numeroFac."-->
+            <td class="s3 text-left" width="40%"><?="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$detalleActividadFila?></td> <!-- F/".$numeroFac."-->
             <td class="s3 text-right"><?=number_format($importeSolX, 2, '.', ',')?></td>
             <td class="s3 text-right"><?=number_format($montoImporteRes, 2, '.', ',')?></td>
             <td class="s3 text-right"><?=$tituloImporte?></td>

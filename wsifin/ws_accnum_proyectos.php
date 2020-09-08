@@ -1,4 +1,22 @@
 <?php
+function obtenerDatosAccNum($codigo){
+    require_once '../conexion.php';
+    $dbh = new Conexion();
+    // Preparamos
+    $stmt = $dbh->prepare("SELECT c.codigo, c.nombre, c.abreviatura from ibnmonitoreo.external_costs c where c.cod_estado=1 and c.codigo='$codigo'");
+    $resp = false;
+    $filas = array();
+    if($stmt->execute()){
+        $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $resp = true;
+    }
+    else{
+        echo "Error: Datos Acc";
+        $resp=false;
+        exit;       
+    }
+    return $filas;
+}
 
 function listarComponentes(){
     require_once '../conexion.php';
@@ -56,7 +74,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
             
             
-        }
+        }else{
+            if($accion=="DatosAccNumProyecto"){
+                $codigo=$datos['codigo'];//recibimos el codigo del proyecto
+              try{                
+                $lstComponentes = obtenerDatosAccNum($codigo);//llamamos a la funcion 
+                $totalComponentes=count($lstComponentes);
+                $resultado=array(
+                            "estado"=>true,
+                            "mensaje"=>"Datos de Componentes obtenida correctamente", 
+                            "lstComponentes"=>$lstComponentes, 
+                            "totalComponentes"=>$totalComponentes
+                            );
+              }catch(Exception $e){
+                $estado=true;
+                $mensaje = "No se pudo obtener los datos de Componentes".$e;
+                $resultado=array("estado"=>$estado, 
+                            "mensaje"=>$mensaje, 
+                            "lstComponentes"=>array(),
+                            "totalComponentes"=>0);
+              }       
+           }else{
+
+            $resultado=array("estado"=>false, 
+                            "mensaje"=>"Error: Operacion incorrecta!");
+           }
+          } 
         header('Content-type: application/json');
         echo json_encode($resultado);
 }else{
