@@ -573,8 +573,8 @@ if($menuModulo==0){
                 </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSolicitudRecursosSisActividad">
-                    <span class="sidebar-mini"> SR </span>
-                    <span class="sidebar-normal"> SR Actividades SIS </span>
+                    <span class="sidebar-mini"> ASR </span>
+                    <span class="sidebar-normal"> Actividades Solitudes Recursos</span>
                   </a>
                 </li>
 
