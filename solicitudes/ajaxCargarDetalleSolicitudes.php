@@ -13,6 +13,7 @@ $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalMes=$_SESSION['globalMes'];
 
 $codigo=$_POST['codigo'];
+$tipo=$_POST['tipo'];
 
 $sqlDetalle="SELECT sd.codigo,sd.cod_plancuenta,sd.detalle,sd.importe,sd.cod_proveedor,sd.nombre_beneficiario,sd.apellido_beneficiario,sd.cod_actividadproyecto,sd.acc_num FROM solicitud_recursosdetalle sd where sd.cod_solicitudrecurso=$codigo";
 $stmt = $dbh->prepare($sqlDetalle);
@@ -58,10 +59,17 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
  <option disabled selected value="">--SELECCIONE ACTIVIDAD--</option>
 <?php
     foreach ($listaActividad as $listas) { 
-      ?>
-      <option value="<?=$listas->codigo?>" <?=($listas->codigo==$codActividad)?"selected":"";?> class="text-right"><?=$listas->abreviatura?> - <?=substr($listas->nombre, 0, 85)?></option>
+      if($tipo==1){
+        ?>
+          <option value="<?=$listas->codigo?>" <?=($listas->codigo==$codActividad)?"selected":"";?> class="text-right"><?=$listas->abreviatura?> - <?=substr($listas->nombre, 0, 85)?></option>
 
-<?php }?>
+       <?php
+      }else{
+        if($listas->codigo==$codActividad){
+          ?><option value="<?=$listas->codigo?>" selected class="text-right"><?=$listas->abreviatura?> - <?=substr($listas->nombre, 0, 85)?></option><?php
+        }
+      }
+       }?>
 </select>
  <select data-size="6" data-live-search="true" class="selectpicker form-control form-control-sm col-sm-12" name="acc_detalle<?=$cantidad?>" id="acc_detalle<?=$cantidad?>" data-style="btn btn-danger">                                  
  <option disabled selected value="">--SELECCIONE ACC--</option>

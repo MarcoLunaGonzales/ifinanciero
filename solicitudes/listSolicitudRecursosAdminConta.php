@@ -629,7 +629,7 @@ $item_1=2708;
                             //if($codComprobante!=0&&($codEstado==5||$codEstado==8)){
                               if(verificarEdicionComprobanteUsuario($globalUser)!=0){
                                     ?>
-                                    <a title="Cambiar Actividad Proyecto" onclick="cambiarActividadesProyectoSolicitudRecursoModal(<?=$codigo?>,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$nombreProveedor?>');return false;" target="_blank" class="btn btn-orange">
+                                    <a title="Cambiar Actividad Proyecto" onclick="cambiarActividadesProyectoSolicitudRecursoModal(<?=$codigo?>,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$nombreProveedor?>',1);return false;" target="_blank" class="btn btn-orange">
                                       <i class="material-icons">assignment</i>
                                     </a> 
 

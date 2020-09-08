@@ -18215,7 +18215,7 @@ function quitarActividadProyectoFilasDetalle(){
   $("#modalActividadesProyecto").modal("hide");   
 }
 
-function cambiarActividadesProyectoSolicitudRecursoModal(codigo,nro,monto,cuentas,prov){
+function cambiarActividadesProyectoSolicitudRecursoModal(codigo,nro,monto,cuentas,prov,tipo){
 
   $("#nro_solicitud_conta_2").val(nro);
   $("#monto_nombre_conta_2").val(monto);
@@ -18223,7 +18223,7 @@ function cambiarActividadesProyectoSolicitudRecursoModal(codigo,nro,monto,cuenta
   $("#proveedor_nombre_conta_2").val(prov);
   $("#codigo_solicitud").val(codigo);
 
-  var parametros={"codigo":codigo};
+  var parametros={"codigo":codigo,"tipo":tipo};
   $.ajax({
         type: "POST",
         dataType: 'html',
