@@ -139,6 +139,10 @@
 			require_once('reportes_compras/reportesLibroComprasProy.php');
 		}
 		//REPORTES
+		if ($_GET['opcion']=='reportesLibroComprasProyRevision') {
+			require_once('reportes_compras/reportesLibroComprasProyRevision.php');
+		}
+		//REPORTES
 		if ($_GET['opcion']=='reportesLibroComprasEdit') {
 			require_once('reportes_compras_edit_factura/reportesLibroComprasEdit.php');
 		}
