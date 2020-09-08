@@ -1,1 +1,2 @@
-Redirect /ifinanciero/login.html https://www.google.com
+    php_value session.cookie_lifetime 28800
+    php_value session.gc_maxlifetime 28800
