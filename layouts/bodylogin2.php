@@ -611,7 +611,26 @@
         if(envio==1){
           return false;
         }else{
-          $('<input />').attr('type', 'hidden')
+          //verificar archivos obligatorios
+             var contArchOblig=0;
+           for (var i = 0; i < $("#cantidad_archivosadjuntos").val(); i++) {
+            if($('#obligatorio_file'+(i+1)).length>0){
+              if($('#obligatorio_file'+(i+1)).val()==1){
+                if($('#documentos_cabecera'+(i+1)).length>0){
+                  if($('#documentos_cabecera'+(i+1)).val()==""&&!($("#existe_archivo_cabecera"+(i+1)).length>0)){
+                     contArchOblig++; 
+                     break;
+                  }
+                }    
+               }
+             }                  
+            }
+           if(contArchOblig!=0){
+              $('#msgError').html("Debe cargar los archivos obligatorios");
+              $('#modalAlert').modal('show');
+             return false;
+           }else{ 
+            $('<input />').attr('type', 'hidden')
             .attr('name', 'facturas')
             .attr('value', JSON.stringify(itemFacturas))
             .appendTo('#formRegComp');
@@ -619,6 +638,8 @@
             .attr('name', 'estados_cuentas')
             .attr('value', JSON.stringify(itemEstadosCuentas))
             .appendTo('#formRegComp');
+           }
+          
         }
     });
 

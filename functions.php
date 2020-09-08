@@ -5082,7 +5082,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerDetalleSolicitudParaComprobante($codigo){
     $dbh = new Conexion();
-    $sql="SELECT cod_unidadorganizacional,cod_area,codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
+    $sql="SELECT acc_num,cod_actividadproyecto,cod_unidadorganizacional,cod_area,codigo,cod_plancuenta,importe as monto,cod_proveedor,detalle as glosa,cod_confretencion from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo order by cod_proveedor";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -5889,7 +5889,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerDatosCompletosPorSimulacionServicios($codigo){
     $dbh = new Conexion();
-    $sql="SELECT p.cod_area,p.cod_unidadorganizacional,s.id_tiposervicio,s.cod_cliente,s.cod_responsable,s.cod_objetoservicio,s.descripcion_servicio,s.cod_unidadorganizacional as unidad_serv 
+    $sql="SELECT s.idServicio,p.cod_area,p.cod_unidadorganizacional,s.id_tiposervicio,s.cod_cliente,s.cod_responsable,s.cod_objetoservicio,s.descripcion_servicio,s.cod_unidadorganizacional as unidad_serv 
     from simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio where s.codigo=$codigo";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -6249,7 +6249,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerNumeroFacturaSolicitudRecursoDetalle($codigo){
     $facturas=obtenerFacturasSoli($codigo);
-              $numeroFac="";
+    $numeroFac="";
       while ($rowFac = $facturas->fetch(PDO::FETCH_ASSOC)) {
                   $numeroFac=$rowFac['nro_factura'];          
       }
@@ -9006,16 +9006,18 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
   }
   function obtenerValorOferta($codOferta,$codigo,$default,$orden){
     $dbh = new Conexion();
-    $sql="SELECT descripcion FROM ofertas_complementos where cod_oferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
+    $sql="SELECT descripcion,editable FROM ofertas_complementos where cod_oferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
     if($default==0){
-      $sql="SELECT descripcion FROM simulaciones_servicios_ofertas_complementos where cod_simulacionoferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
+      $sql="SELECT descripcion,editable FROM simulaciones_servicios_ofertas_complementos where cod_simulacionoferta=$codOferta and cod_tipocomplemento=$codigo and cod_estadoreferencial=1 and orden=$orden";
     }
      //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      if($row["editable"]==1){
         $valor=$row["descripcion"];
+      }
      }
      return $valor; 
   }
@@ -9157,7 +9159,7 @@ function obtenerEstadoComprobante($codigo){
   }
  function obtenerCodigoSolicitudRecursosComprobante($codigo){
      $dbh = new Conexion();
-     $sql="SELECT s.codigo,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=s.codigo and cod_confretencion=8) as iva from solicitud_recursos s where s.cod_comprobante=$codigo;";
+     $sql="SELECT s.codigo,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=s.codigo and cod_confretencion=8) as iva from solicitud_recursos s where s.cod_comprobante=$codigo and s.devengado=1;";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor=0;$iva=0;
@@ -9617,4 +9619,69 @@ function verificar_archivos_cajachica($codigo){
   return($valor); 
 }
 
+
+function obtenerNombreDirectoActividad($codigo){
+    $dbh = new Conexion();
+    // Preparamos
+  $stmt = $dbh->prepare("SELECT c.abreviatura,c.nombre from ibnmonitoreo.componentessis c where c.codigo='$codigo'");
+  $stmt->execute();
+  $valor="";$abrev="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['nombre'];
+    $abrev=$row['abreviatura'];
+  }         
+  return array($abrev,$valor); 
+}
+
+function obtenerNombreDirectoActividadServicio($cod_actividad){
+    $sIde = "";
+    $sKey = "";
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"DatosActividadProyecto","codigo"=>$cod_actividad);
+    //Lista todos los componentes
+    $parametros=json_encode($parametros);
+      $ch = curl_init();
+      // definimos la URL a la que hacemos la petición    
+      //curl_setopt($ch, CURLOPT_URL,"http://localhost/imonitoreo/componentesSIS/compartir_servicio.php");//prueba
+      curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/ifinanciero/wsifin/ws_actividadesproyectos.php");//prueba    
+      // indicamos el tipo de petición: POST
+      curl_setopt($ch, CURLOPT_POST, TRUE);
+      // definimos cada uno de los parámetros
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+      // recibimos la respuesta y la guardamos en una variable
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      $remote_server_output = curl_exec ($ch);
+      curl_close ($ch);
+      
+      // imprimir en formato JSON  
+      //print_r($remote_server_output);
+      $obj= json_decode($remote_server_output);
+      $detalle=$obj->lstComponentes;
+      $abreviatura=""; $valor="";
+      foreach ($detalle as $listas) { 
+       $abreviatura=$listas->abreviatura;
+       $valor=$listas->nombre;
+      }
+      return array($abreviatura,$valor);
+    }
+
+function obtenerCodigoActividadSisComprobante($codigo){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT cod_actividadproyecto FROM comprobantes_detalle WHERE codigo  = '$codigo'");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+          $valor=$row['cod_actividadproyecto'];
+      }  
+      return($valor);
+}    
+function obtenerCodigoAccNumSisComprobante($codigo){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT cod_accnum FROM comprobantes_detalle WHERE codigo  = '$codigo'");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+          $valor=$row['cod_accnum'];
+      }  
+      return($valor);
+}  
 ?>

@@ -3,6 +3,50 @@
          display: none !important;
        }      
 </style>
+<!-- notice modal -->
+<div class="modal fade" id="modalActividadesProyecto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+      <div class="card-header card-header-primary card-header-text">
+          <div class="card-text">
+            <h5>Lista Detalles con Actividades</h5> 
+          </div>
+          <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+      </div>
+          <div class="card-body">
+            <input type="hidden" id="fila_detalle_cod_actividad_proyecto" value="0"> 
+            <div class="col-sm-12">
+              <a title="Quitar" href="#"  onclick="quitarActividadProyectoFilasDetalle()" class="btn btn-orange btn-sm">
+                <i class="material-icons">close</i> Quitar
+              </a>
+              <div class="row">                      
+                   <table class="table table-bordered table-condensed">
+                     <thead>
+                       <tr class="fondo-boton">
+                         <td width="8%">Nro Fila</td>
+                         <td width="70%">Actividad</td>
+                         <td>Estado</td>
+                       </tr>
+                     </thead>
+                     <tbody id="contenedor_actividadesmodal">
+                       
+                     </tbody>
+                   </table>
+                </div>
+               <div class="row">                        
+              </div>
+             </div>                     
+             <div class="form-group float-right">
+                <button type="button" class="btn btn-warning btn-round" onclick="guardarActividadProyectoFilasDetalle()">Asociar Actividades</button>
+             </div>
+             
+          </div>
+    </div>
+  </div>
+</div>
+<!-- end notice modal -->
 <!-- modal -->
 <div class="modal fade modal-arriba" id="modalPegarDatosComprobante" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
   <div class="modal-dialog modal-xl" role="document">

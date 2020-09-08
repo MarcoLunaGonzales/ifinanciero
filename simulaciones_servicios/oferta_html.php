@@ -48,6 +48,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
   <center><h3 class="text-primary"><?=$descripcionServSimulacionX?></h3></center>
   <center><h4 class="text-muted"><u><?=obtenerTituloEdicionOferta($codigo)?></u></h4></center>
 </div>
+<div class="row col-sm-12">
+  <div class="col-sm-10"></div>
+  <div class="col-sm-2"><h4 class="text-muted"><b>HAB / DES</b></h4></div>
+</div>
 <div class="row col-sm-12"> 
 
  <form method="POST" action="<?='../'.$urlSaveOferta?>" class="row col-sm-11 div-center">
@@ -56,9 +60,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
   <input type="hidden" value="<?=$codigo?>" name="simulacion">
   <?php 
   if($default==1){
-    $stmt = $dbh->prepare("SELECT oc.*,o.nombre as cabecera from ofertas_complementos oc join tipos_ofertascomplementos o on o.codigo=oc.cod_tipocomplemento where oc.cod_oferta=$codOferta and oc.cod_estadoreferencial=1 and oc.editable=1 order by oc.codigo,oc.orden;");
+    $stmt = $dbh->prepare("SELECT oc.*,o.nombre as cabecera from ofertas_complementos oc join tipos_ofertascomplementos o on o.codigo=oc.cod_tipocomplemento where oc.cod_oferta=$codOferta and oc.cod_estadoreferencial=1  order by oc.codigo,oc.orden;");
   }else{
-    $stmt = $dbh->prepare("SELECT oc.*,o.nombre as cabecera from simulaciones_servicios_ofertas_complementos oc join tipos_ofertascomplementos o on o.codigo=oc.cod_tipocomplemento join simulaciones_servicios_ofertas so on so.codigo=oc.cod_simulacionoferta where oc.cod_simulacionoferta=$codOferta and oc.cod_estadoreferencial=1 and oc.editable=1 and so.cod_simulacionservicio=$codigo order by oc.codigo,oc.orden;");  
+    $stmt = $dbh->prepare("SELECT oc.*,o.nombre as cabecera from simulaciones_servicios_ofertas_complementos oc join tipos_ofertascomplementos o on o.codigo=oc.cod_tipocomplemento join simulaciones_servicios_ofertas so on so.codigo=oc.cod_simulacionoferta where oc.cod_simulacionoferta=$codOferta and oc.cod_estadoreferencial=1  and so.cod_simulacionservicio=$codigo order by oc.codigo,oc.orden;");  
   }
   $stmt->execute();
   $fila=0;
@@ -77,19 +81,25 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
       <input type="hidden" value="<?=$row["orden"]?>" name="orden<?=$fila?>">  
   <div class="form-group row col-sm-12">
     <label class="col-sm-2 col-form-label font-weight-bold" style="color:#5D0185; "><?=$cabecera?></label>
-    <div class="col-sm-10">
+    <div class="col-sm-9">
       <div class="form-group">
         <?php
         if(strlen($descripcion)>110){
           ?>
-           <textarea class="form-control" name="descripcion<?=$fila?>" rows="8" style="background-color:#E3CEF6;text-align: left"><?=$descripcion?></textarea>
+           <textarea class="form-control" <?=($row["editable"]!=1)?"readonly":"";?> id="descripcion<?=$fila?>" name="descripcion<?=$fila?>" rows="8"><?=$descripcion?></textarea>
           <?php
         }else{
-          ?><input type="text" name="descripcion<?=$fila?>" class="form-control" style="background-color:#E3CEF6;text-align: left" value="<?=$descripcion?>"><?php
+          ?><input type="text" <?=($row["editable"]!=1)?"readonly":"";?> id="descripcion<?=$fila?>" name="descripcion<?=$fila?>" class="form-control"  value="<?=$descripcion?>"><?php //style="background-color:#E3CEF6;text-align: left"
         } 
          ?>
         
       </div>
+    </div>
+    <div class="togglebutton col-sm-1">
+            <label>
+              <input type="checkbox" <?=($row["editable"]==1)?"checked":"";?> name="editable<?=$fila?>" id="editable<?=$fila?>" onchange="activarInputOfertaServicio('<?=$fila?>')">
+              <span class="toggle"></span>
+            </label>
     </div>
   </div>
         <?php
@@ -133,7 +143,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
   ?>
   <script>
   $(document).ready(function() {
-    notificacionMD('random','top','right',false,'add_alert','IFINANCIERO','Verifique que los datos sean correctos antes de <b>Guardar</b>','<img src="../assets/img/robot.gif" width="100px" height="100px">');
+   // notificacionMD('random','top','right',false,'add_alert','IFINANCIERO','Verifique que los datos sean correctos antes de <b>Guardar</b>','<img src="../assets/img/robot.gif" width="100px" height="100px">');
    });
    </script>
   <?php  

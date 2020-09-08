@@ -14,6 +14,8 @@ $cantidadFilas=$_POST["cantidad_filas"];
 $tipoComprobante=$_POST["tipo_comprobante"];
 $nroCorrelativo=$_POST["nro_correlativo"];
 
+$codPadreArchivos=obtenerValorConfiguracion(84);
+
 //$porcionesFecha = explode("/", $_POST['fecha']);
 //$fechaHoraActual2=$porcionesFecha[2]."-".$porcionesFecha[1]."-".$porcionesFecha[0];
 $fechaHoraActual2=$_POST['fecha'];
@@ -54,7 +56,7 @@ array_push($SQLDATOSINSTERT,$flagsuccess);
 
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
-    foreach($_FILES["archivos"]['tmp_name'] as $key => $tmp_name)
+    /*foreach($_FILES["archivos"]['tmp_name'] as $key => $tmp_name)
     {
         //Validamos que el archivos exista
         if($_FILES["archivos"]["name"][$key]) {
@@ -79,7 +81,49 @@ array_push($SQLDATOSINSTERT,$flagsuccess);
             }
             
         }
+    }*/
+
+//Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
+    $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
+for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
+  if(isset($_POST['codigo_archivo'.$ar])){
+    if($_FILES['documentos_cabecera'.$ar]["name"]){
+      $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
+      $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
+      $directorio = '../assets/archivos-respaldo/COMP-'.$codComprobante.'/'; //Declaramos un  variable con la ruta donde guardaremos los archivoss
+      //Validamos si la ruta de destino existe, en caso de no existir la creamos
+      if(!file_exists($directorio)){
+                mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
+      }
+      $target_path = $directorio.'/'.$filename; //Indicamos la ruta de destino, así como el nombre del archivos
+      //Movemos y validamos que el archivos se haya cargado correctamente
+      //El primer campo es el origen y el segundo el destino
+      if(move_uploaded_file($source, $target_path)) { 
+        echo "ok";
+        $tipo=$_POST['codigo_archivo'.$ar];
+        $descripcion=$_POST['nombre_archivo'.$ar];
+        $tipoPadre=$codPadreArchivos;
+        $datosArchivo=verificarExisteArchivoSolicitud($tipo,$descripcion,$tipoPadre,$codComprobante);
+        $codigoArchivo=$datosArchivo[0];
+        $linkArchivo=$datosArchivo[1];
+        if($codigoArchivo!=0){
+          $sqlDel="DELETE FROM archivos_adjuntos where codigo='$codigoArchivo'";
+          $stmtDel = $dbh->prepare($sqlDel);
+          $stmtDel->execute();
+          //borrar de la carpeta
+          unlink($linkArchivo);
+        }
+        $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+        VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codComprobante')";
+        $stmtInsert = $dbh->prepare($sqlInsert);
+        $stmtInsert->execute();    
+        print_r($sqlInsert);
+      } else {    
+          echo "error";
+      } 
     }
+  }
+}
 
     $stmt1 = obtenerComprobantesDet($codComprobante);
     while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
@@ -117,7 +161,8 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 		$haber=$_POST["haber".$i];
 		$glosaDetalle=$_POST["glosa_detalle".$i];
     $codSolicitudRecurso=$_POST["cod_detallesolicitudsis".$i];
-   
+    $codActividadProyecto=$_POST["cod_actividadproyecto".$i];
+    $codAccNum=$_POST["cod_accnum".$i];
     if($codSolicitudRecurso!=""||$codSolicitudRecurso!=0){
       //actualizar SOLICITUDES SIS AL ESTADO PAGADO
      //verificar que la validacion si tiene centro de costo SIS     
@@ -140,14 +185,14 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     if((isset($_POST['codigo_detalle'.$i]))&&(isset($_POST['incompleto']))){
 	    $codigoDetalle=$_POST["codigo_detalle".$i];
       $codComprobanteDetalle=$codigoDetalle;
-      $sqlDetalle="UPDATE comprobantes_detalle SET cod_solicitudrecurso='$codSolicitudRecurso',cod_comprobante=$codComprobante , cod_cuenta= '$cuenta', cod_cuentaauxiliar= '$cuentaAuxiliar', cod_unidadorganizacional= '$unidadDetalle', cod_area= '$area', debe= '$debe', haber= '$haber', glosa= '$glosaDetalle', orden ='$i'  where codigo='$codComprobanteDetalle' ";
+      $sqlDetalle="UPDATE comprobantes_detalle SET cod_actividadproyecto='$codActividadProyecto',cod_accnum='$codAccNum',cod_solicitudrecurso='$codSolicitudRecurso',cod_comprobante=$codComprobante , cod_cuenta= '$cuenta', cod_cuentaauxiliar= '$cuentaAuxiliar', cod_unidadorganizacional= '$unidadDetalle', cod_area= '$area', debe= '$debe', haber= '$haber', glosa= '$glosaDetalle', orden ='$i'  where codigo='$codComprobanteDetalle' ";
 		  $stmtDetalle = $dbh->prepare($sqlDetalle);
 		  $flagSuccessDetalle=$stmtDetalle->execute();
       array_push($SQLDATOSINSTERT,$flagSuccessDetalle);	
     }else{
       $codigoDetalle=obtenerCodigoComprobanteDetalle()+($i-1);
       $codComprobanteDetalle=$codigoDetalle;
-      $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_solicitudrecurso) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codSolicitudRecurso')";
+      $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_solicitudrecurso,cod_actividadproyecto,cod_accnum) VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codSolicitudRecurso','$codActividadProyecto','$codAccNum')";
       $stmtDetalle = $dbh->prepare($sqlDetalle);
       $flagSuccessDetalle=$stmtDetalle->execute();
       array_push($SQLDATOSINSTERT,$flagSuccessDetalle);

@@ -21,9 +21,11 @@ $fechaHoraActual=date("Y-m-d H:i:s");
 $userAdmin=obtenerValorConfiguracion(74);
 
 $deven=1;
+$tipoComprobante=3;
 //comprobante devengado o pagado
 if(isset($_GET['deven'])){
   $deven=(int)$_GET['deven']; 
+  $tipoComprobante=2;
 }
 
 
@@ -31,7 +33,7 @@ if(isset($_GET['deven'])){
 
 //INICIO DE VARIABLES
 $glosaDetalleGeneral="";
-$tipoComprobante=3;
+
 
 $codComprobante=obtenerCodigoComprobante();
 if(isset($_GET['existe'])&&verificarEdicionComprobanteUsuario($globalUser)!=0){
@@ -139,7 +141,7 @@ while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_BOUND)) {
 if($cod_unidadX!=3000){
   $cod_unidadX=obtenerValorConfiguracion(73);
 }
-$nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,3,$globalMes);    
+$nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$cod_unidadX,$tipoComprobante,$globalMes);    
 $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
 //CREACION DEL COMPROBANTE
