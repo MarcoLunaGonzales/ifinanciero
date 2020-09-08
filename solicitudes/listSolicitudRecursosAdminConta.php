@@ -701,25 +701,11 @@ $item_1=2708;
                                    <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=1','<?=$nombreProveedor?>')" href="#" class="dropdown-item">
                                     <i class="material-icons text-danger">reply</i> Devolver Solicitud
                                   </a>
-                                   <?php 
-                                  if($otrosPagosCuenta==0){
-                                    
-                                    ?>
-                                    <!--onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>')"-->
-                                   <!--<a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="dropdown-item">
-                                      <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
-                                    </a>-->
-                                    <?php
-                                  }else{
-                                    ?>
-                                   <!--<a title="Contabilizar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=5')" class="dropdown-item">
-                                      <i class="material-icons text-dark">dns</i> <b class="text-muted">Cambiar a <u class="text-dark">Contabilizado</u></b>
-                                    </a>
                                     <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=8')" class="dropdown-item">
                                       <i class="material-icons text-info">dns</i> <b class="text-muted">Cambiar a <u class="text-info">Pagado</u></b>
-                                    </a>-->
-                                    <?php
-                                   }
+                                    </a>
+                                   <?php 
+                                  
                                   }else{
                                   ?><?php  
                                   }
