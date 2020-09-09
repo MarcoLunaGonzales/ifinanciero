@@ -398,7 +398,7 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
   var contador=0;
   var cuentaIvaDiferido=$("#codigo_iva_direfido").val();
   for (var i = 0; i < estado_cuentas.length; i++) {
-    if(estado_cuentas[i].cod_cuenta==codigoCuenta&&codigoCuenta!=cuentaIvaDiferido){ //&&codigoCuentaAux==0
+    if(estado_cuentas[i].cod_cuenta==codigoCuenta){ //&&codigoCuentaAux==0 //&&codigoCuenta!=cuentaIvaDiferido
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
       $("#tipo_proveedorcliente"+fila).val(estado_cuentas[i].tipo_estado_cuenta);
