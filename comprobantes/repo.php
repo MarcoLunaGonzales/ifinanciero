@@ -17,7 +17,11 @@ $dbh = new Conexion();
 $anio=2020;
 $unidad=5;
 
-$sql="SELECT DISTINCT cod_plancuenta FROM estados_cuenta where cod_plancuenta=154";
+$cuentaGET=154;
+if(isset($_GET['c'])){
+  $cuentaGET=$_GET['c'];
+}
+$sql="SELECT DISTINCT cod_plancuenta FROM estados_cuenta where cod_plancuenta=$cuentaGET";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $nro_registros=0;
