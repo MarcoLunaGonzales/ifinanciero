@@ -6170,6 +6170,18 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row['idResponsable'];
      }
+     if($valor>0){
+      $sql="SELECT cpe.IdCliente
+        FROM persona p
+        INNER JOIN dbcliente.gu_usuario gu ON gu.idUsuario=p.IdNuevoUsuario
+        INNER JOIN dbcliente.cliente_persona_empresa cpe ON gu.uIdClienteContacto=cpe.idCliente
+      WHERE p.IdPersona=$valor";
+      $stmtPerfil = $dbh->prepare($sql);
+      $stmtPerfil->execute();
+      while ($row = $stmtPerfil->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['IdCliente'];
+      }
+     }
      return($valor);
   }
   function obtenerFechaCambioEstado($tipo,$objeto,$estado){
