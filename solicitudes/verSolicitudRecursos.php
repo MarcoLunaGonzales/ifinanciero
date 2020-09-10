@@ -193,14 +193,29 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                      $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
                   }
                   $codActividadX=$rowDetalles["cod_actividadproyecto"]; 
+
                   $tituloActividad=obtenerCodigoActividadesServicioImonitoreo($codActividadX);   
+
+                  $detalleActividadFila="";
+                  if($codActividadX>0){
+                    if(obtenerNombreDirectoActividadServicio($codActividadX)[0]!=""){
+                      $detalleActividadFila.="<br><b class='text-dark small'> Actividad: ".obtenerNombreDirectoActividadServicio($codActividadX)[0]." - ".obtenerNombreDirectoActividadServicio($codActividadX)[1]."</b>";
+                    }  
+                  }
+                  $codAccNum=$rowDetalles["acc_num"]; 
+
+                  if($codAccNum>0){
+                   if(obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]!=""){
+                      $detalleActividadFila.="<br><b class='text-dark small'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]." - ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[1]."</b>";
+                    }   
+                  }
                                 ?>
                                 <tr>
                                     <td><?=$index?></td>
                                 	<td class="text-center small"><?=$numeroCuentaX?></td>
                                     <td class="text-left small font-weight-bold"><?=$nombreCuentaX?></td>
                                     <td class="text-left small font-weight-bold text-primary"><?=$nombreOficinaXX?>-<?=$nombreAreaXX;?></td>
-                                    <td class="text-left font-weight-bold text-primary"><?=$detalleX?> <?=$tituloActividad?></td>
+                                    <td class="text-left font-weight-bold text-primary"><?=$detalleX?> <?=$detalleActividadFila?></td>
                                     <td class="text-left small"><?=$tituloImporte?></td>
                                     <td class="text-left text-primary font-weight-bold"><?=$proveedorX?></td>
                                     <td class="text-right"><?=number_format($importeX, 2, '.', ',')?></td>

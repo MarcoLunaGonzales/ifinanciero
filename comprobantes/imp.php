@@ -131,7 +131,16 @@ $html.=  '<header class="header">'.
             '<td align="left">Oficina: '.$unidadC.'</td>'.
             '</tr>'.
          '</table>'.
-         ''.
+         '<table class="table">'.
+            '<tr class="bold table-title">'.
+              '<td width="22%">Fecha: '.strftime('%d/%m/%Y',strtotime($fechaC)).'</td>'.
+              '<td width="33%" align="right">t/c: '.$abrevUFV.':'.$tcUFV.', '.$abrevUSD.':'.$tcUSD.', '.$abrevEU.':'.$tcEU.'</td>'.
+              '<td width="45%" class="text-right">'.$tipoC.' '.strtoupper(abrevMes(strftime('%m',strtotime($fechaC)))).' N&uacute;mero: '.generarNumeroCeros(6,$numeroC).'</td>'.
+            '</tr>'.
+            '<tr>'.
+            '<td colspan="3">'.$glosaC.'</td>'.
+            '</tr>'.
+         '</table>'.
          '</header>';
          $html.='
          <footer class="footer"><table class="table">'.
@@ -149,15 +158,6 @@ $html.=  '<header class="header">'.
              '</tr>'.
            '</table></footer>'.
          '<table class="table">'.
-            '<tr class="bold table-title">'.
-              '<td width="22%">Fecha: '.strftime('%d/%m/%Y',strtotime($fechaC)).'</td>'.
-              '<td width="33%" align="right">t/c: '.$abrevUFV.':'.$tcUFV.', '.$abrevUSD.':'.$tcUSD.', '.$abrevEU.':'.$tcEU.'</td>'.
-              '<td width="45%" class="text-right">'.$tipoC.' '.strtoupper(abrevMes(strftime('%m',strtotime($fechaC)))).' N&uacute;mero: '.generarNumeroCeros(6,$numeroC).'</td>'.
-            '</tr>'.
-            '<tr>'.
-            '<td colspan="3">'.$glosaC.'</td>'.
-            '</tr>'.
-         '</table><table class="table">'.
             '<thead>'.
             '<tr class="bold table-title text-center">'.
               '<td colspan="2" class="td-border-none"></td>'.

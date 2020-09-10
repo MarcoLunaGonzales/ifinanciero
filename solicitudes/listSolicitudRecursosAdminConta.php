@@ -500,8 +500,9 @@ $item_1=2708;
                         <tr>
                           <td class="text-center" width="8%">
                             <?php
-                            if($codComprobante!=0&&($codEstado==5||$codEstado==8)){
-                              ?><?php
+                            if($codComprobante>0||($codEstado==5||$codEstado==8)){
+                                    ?>
+                                    <?php
                             }else{
                               ?>
                           <div class="form-check">
@@ -539,6 +540,7 @@ $item_1=2708;
                             </a>
                             <?php 
                             if($estadoContabilidadX==1){
+                              if(!($codComprobante!=0&&($codEstado==5||$codEstado==8))){
                               if(isset($_GET['q'])){
                                 ?>
                                 <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-rose" style="background:#661E1B">
@@ -552,6 +554,7 @@ $item_1=2708;
                                 </a>
                                 <?php
                               }
+                             }
                             }else{
                               $iconRevisado="check_box_outline_blank";
                               $estiloIconRevisado="btn-default";
@@ -559,6 +562,7 @@ $item_1=2708;
                                 $iconRevisado="adjust";
                                 $estiloIconRevisado="btn-info";
                               }
+                              if(!($codComprobante!=0&&($codEstado==5||$codEstado==8))){
                               if(isset($_GET['q'])){
                                 ?>
                                 <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn <?=$estiloIconRevisado?>">
@@ -572,6 +576,7 @@ $item_1=2708;
                                 </a>
                                 <?php
                               }
+                             }
                             }
                             
                             if($codEstado==4){
@@ -619,6 +624,18 @@ $item_1=2708;
                                   </div> 
                                    <?php       
                                    }
+
+                           
+                            //if($codComprobante!=0&&($codEstado==5||$codEstado==8)){
+                              if(verificarEdicionComprobanteUsuario($globalUser)!=0){
+                                    ?>
+                                    <a title="Cambiar Actividad Proyecto" onclick="cambiarActividadesProyectoSolicitudRecursoModal(<?=$codigo?>,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$nombreProveedor?>',1);return false;" target="_blank" class="btn btn-orange">
+                                      <i class="material-icons">assignment</i>
+                                    </a> 
+
+                                <?php
+                                } 
+                            //}       
                               ?>
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -646,15 +663,15 @@ $item_1=2708;
                                    <?php 
                                   if($otrosPagosCuenta==0){
                                     ?>
-                                   <a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>')" href='#'  class="dropdown-item">
+                                   <!--<a title="Contabilizar Solicitud" onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicio?>')" href='#'  class="dropdown-item">
                                       <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
-                                    </a>
+                                    </a>-->
                                     <?php
                                   }else{
                                     ?>
-                                   <a title="Contabilizar Solicitud"  href="#" onclick="javascript:window.open('<?=$urlRegisterCompro;?>')"  class="dropdown-item">
+                                    <!--<a title="Contabilizar Solicitud"  href="#" onclick="javascript:window.open('<?=$urlRegisterCompro;?>')"  class="dropdown-item">
                                       <i class="material-icons text-warning">assignment_turned_in</i> Contabilización Manual Solicitud
-                                    </a>
+                                    </a>-->
                                     <?php
                                   }
                                   }else{
@@ -684,25 +701,11 @@ $item_1=2708;
                                    <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=1','<?=$nombreProveedor?>')" href="#" class="dropdown-item">
                                     <i class="material-icons text-danger">reply</i> Devolver Solicitud
                                   </a>
-                                   <?php 
-                                  if($otrosPagosCuenta==0){
-                                    
-                                    ?>
-                                    <!--onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>')"-->
-                                   <a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="dropdown-item">
-                                      <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar Solicitud
-                                    </a>
-                                    <?php
-                                  }else{
-                                    ?>
-                                   <a title="Contabilizar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=5')" class="dropdown-item">
-                                      <i class="material-icons text-dark">dns</i> <b class="text-muted">Cambiar a <u class="text-dark">Contabilizado</u></b>
-                                    </a>
                                     <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=8')" class="dropdown-item">
                                       <i class="material-icons text-info">dns</i> <b class="text-muted">Cambiar a <u class="text-info">Pagado</u></b>
                                     </a>
-                                    <?php
-                                   }
+                                   <?php 
+                                  
                                   }else{
                                   ?><?php  
                                   }
@@ -959,3 +962,58 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
   </div>
 </div>
 <!-- modal reenviar solicitud devuelto -->
+
+<!-- modal devolver solicitud -->
+<div class="modal fade" id="modalCambiarActividadesProyecto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#DA053C !important;color:#fff;">
+        <h4 class="modal-title">Actividades del Proyecto</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> 
+      </div>
+      <div class="modal-body">        
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span><small>Nro.<br>Solicitud.</small></span></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="nro_solicitud_conta_2" id="nro_solicitud_conta_2" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span><small >Cuentas</small></span></label>
+          <div class="col-sm-8">
+            <div class="form-group" >              
+              <input type="text" class="form-control" name="cuenta_conta_2" id="cuenta_conta_2" readonly="true" style="background-color:#e2d2e0">
+            </div>
+          </div>
+        </div> 
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span><small>Proveedor</small></span></label>
+          <div class="col-sm-8">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="proveedor_nombre_conta_2" id="proveedor_nombre_conta_2" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+           <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span><small>Monto</small></span></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="monto_nombre_conta_2" id="monto_nombre_conta_2" readonly="true" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+        </div>  
+        <br><br>              
+        <div class="row" id="solicitud_recurso_detalle_sis">
+          
+        </div>
+        
+         <input type="hidden" id="cantidad_registros_detalle_sis" value="0">
+         <input type="hidden" id="codigo_solicitud" value="0">                                          
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-success" onclick="saveActividadProyectoSolicitudRecursoModal()">Guardar</a>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal reenviar solicitud devuelto -->
+

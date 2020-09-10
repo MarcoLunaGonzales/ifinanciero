@@ -571,12 +571,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Procesar Solitudes Recursos</span>
                   </a>
                 </li>
-                <!--li class="nav-item ">
-                  <a class="nav-link" href="?opcion=ListaRendiciones">
-                    <span class="sidebar-mini"> MR </span>
-                    <span class="sidebar-normal"> Mis Rendiciones </span>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursosSisActividad">
+                    <span class="sidebar-mini"> ASR </span>
+                    <span class="sidebar-normal"> Actividades Solitudes Recursos</span>
                   </a>
-                </li-->
+                </li>
 
               </ul>
             </div>

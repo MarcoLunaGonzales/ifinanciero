@@ -303,13 +303,49 @@ if(isset($_GET['cod'])){
                   <input class="form-control" type="text" name="estado_solicitud" value="<?=$estadoX?>" id="estado_solicitud" readonly/>
               </div>
             </div>
+            <?php
+            $sqlAreas="";
+  $sqlOficina="";
+  if(isset($_GET['s'])){
+    $s=$_GET['s'];
+    $arraySql=explode("IdArea",$s);
+    $codigoArea='0';  
+    if(isset($arraySql[1])){
+      $codigoArea=trim($arraySql[1]);
+    }
+    
+    if($codigoArea=='0'){
+      $sqlAreas="and (aa.cod_area=0)";
+    }else{
+      $sqlAreas="and (aa.cod_area ".$codigoArea.")";               
+    }
+
+
+    //oficina   
+    $codigoOficina='0';  
+    if(isset($arraySql[0])){
+      $arraySql[0]=str_replace("and","",$arraySql[0]); //para quitar el and
+      $arraySqlOficina=explode("IdOficina",$arraySql[0]);
+      if(isset($arraySqlOficina[1])){
+         $codigoOficina=trim($arraySqlOficina[1]);
+      }
+    }
+    
+    if($codigoOficina=='0'){
+      $sqlOficina="and (codigo=0)";
+    }else{
+      $sqlOficina="and (codigo ".$codigoOficina.")";               
+    }
+
+  }
+            ?>
             <div class="col-sm-1">
               <div class="form-group">
                   <label class="bmd-label-static">ORIGEN DE</label>
                   <select class="selectpicker form-control form-control-sm" name="unidad_solicitud" onchange="cargarArrayAreaDistribucion(-1)" id="unidad_solicitud" data-style="btn btn-primary">
                        <option disabled value="">--OFICINA--</option>               
                                       <?php
-                                   $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
+                                   $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 $sqlOficina order by 2");
                                    $stmt->execute();
                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                     $codigoX=$row['codigo'];
@@ -338,7 +374,7 @@ if(isset($_GET['cod'])){
                                    <option disabled value="">--AREA--</option>                 
                                      <?php
                                                              
-                                           $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo where a.cod_estado=1 order by 2");
+                                           $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo where a.cod_estado=1 $sqlAreas order by 2");
                                          $stmt->execute();
                                          $cont=0;
                                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
