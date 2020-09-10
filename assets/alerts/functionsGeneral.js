@@ -16766,10 +16766,10 @@ function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
    var saldo=$("#saldo_x").val();
    var url = "simulaciones_servicios/ajax_listado_libreta_bancaria.php";
    var parametros={"saldo":saldo,"tipo_listado":1,"codigo_lib":idLib};
-   if($("#cantidad_filas_libretas").length>0){
+   /*if($("#cantidad_filas_libretas").length>0){
      $("#cantidad_filas_libretas").val(0);
      $("#datos_libreta_bancaria_detalle").html("");
-   }
+   }*/
   }  
   if($("#modal_anio_actual").length>0){
     if($("#modal_anio_actual").length>0){
