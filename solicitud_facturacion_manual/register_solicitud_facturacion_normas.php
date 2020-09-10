@@ -35,6 +35,38 @@ if(isset($_GET['cod_f'])){
     $cod_facturacion=0;    
 }
 
+//consulta para oficina y area desde itranet
+if(isset($_GET['q']) || isset($_POST['q'])){
+    //para uo
+    $arraySqlUO=explode("IdOficina",$s);
+    $string_aux='0';  
+    if(isset($arraySqlUO[1])){
+        $string_aux=trim($arraySqlUO[1]);
+        $arraySqlArea=explode("and IdArea",$string_aux);
+        $codigoArea='0';  
+        $codigoUO='0';  
+        if(isset($arraySqlArea[1])){
+            $codigoArea=trim($arraySqlArea[1]);
+            $codigoUO=trim($arraySqlArea[0]);
+        }else{
+            $codigoUO=$string_aux;
+        }
+        if($codigoArea=='0'){    
+            $sqlAreas_x="and codigo=0";    
+        }else{
+            $sqlAreas_x="and codigo ".$codigoArea;  
+        }
+        if($codigoUO=='0'){    
+            $sqlUO_x="and uo.codigo=0";    
+        }else{
+            $sqlUO_x="and uo.codigo ".$codigoUO;  
+        }
+    }
+}else{
+    $sqlUO_x="";
+    $sqlAreas_x="";
+}
+
 if ($cod_facturacion > 0){
     $sql="SELECT * FROM solicitudes_facturacion where codigo=$cod_facturacion";
     // echo $sql;
@@ -64,7 +96,7 @@ if ($cod_facturacion > 0){
     $cod_simulacion=0;
     $cod_facturacion=null;
     $cod_uo=null;
-    $cod_area=null;
+    $cod_area=12;
     $cod_cliente=null;    
     $fecha_registro =date('Y-m-d');
     $fecha_solicitudfactura=$fecha_registro;
@@ -129,10 +161,10 @@ $contadorRegistros=0;
                           <label class="col-sm-2 col-form-label">Oficina</label>
                           <div class="col-sm-4">
                             <div class="form-group">                               
-                                 <select name="cod_uo" id="cod_uo" onChange="ajaxUnidadorganizacionalAreaNormas(this,1);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">                                        
+                                 <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">                                        
                                     <option value=""></option>
                                     <?php 
-                                    $queryUO1 = "SELECT uo.codigo,uo.nombre,uo.abreviatura from entidades_uo e, unidades_organizacionales uo where e.cod_uo=uo.codigo and uo.cod_estado=1 order by nombre";
+                                    $queryUO1 = "SELECT uo.codigo,uo.nombre,uo.abreviatura from entidades_uo e, unidades_organizacionales uo where e.cod_uo=uo.codigo and uo.cod_estado=1 and uo.centro_costos=1 $sqlUO_x order by nombre";
                                     $statementUO1 = $dbh->query($queryUO1);
                                     while ($row = $statementUO1->fetch()){ ?>
                                         <option  <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
@@ -146,15 +178,13 @@ $contadorRegistros=0;
                                 <div class="form-group" >                                
                                     <div id="div_contenedor_area">  
                                         <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true"> 
-                                                <?php 
-                                                $sqlArea="SELECT uo.cod_unidad,uo.cod_area,a.nombre as nombre_area,a.abreviatura as abrev_area
-                                                FROM areas_organizacion uo,areas a
-                                                where uo.cod_estadoreferencial=1 and uo.cod_area=a.codigo and a.areas_ingreso=1 and uo.cod_unidad=$cod_uo order by nombre_area";
-                                                $stmtArea = $dbh->prepare($sqlArea);                                            
-                                                $stmtArea->execute();
-                                                while ($rowArea = $stmtArea->fetch()){ ?>
-                                                     <option <?=($cod_area==$rowArea["cod_area"])?"selected":(($cod_facturacion>0)?"disabled":"");?> value="<?=$rowArea["cod_area"];?>" data-subtext="(<?=$rowArea['cod_area']?>)"><?=$rowArea["abrev_area"];?> - <?=$rowArea["nombre_area"];?></option><?php 
-                                                } ?>
+                                            <?php 
+                                            $sqlArea="SELECT codigo,nombre,abreviatura from areas where cod_estado=1 and centro_costos=1 $sqlAreas_x order by nombre";
+                                            $stmtArea = $dbh->prepare($sqlArea);
+                                            $stmtArea->execute();
+                                            while ($rowArea = $stmtArea->fetch()){ ?>
+                                                 <option <?=($cod_area==$rowArea["codigo"])?"selected":"disabled";?> value="<?=$rowArea["codigo"];?>" data-subtext="(<?=$rowArea['codigo']?>)"><?=$rowArea["abreviatura"];?> - <?=$rowArea["nombre"];?></option><?php 
+                                            } ?>
                                         </select>                                      
                                     </div>                    
                                 </div>

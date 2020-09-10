@@ -88,6 +88,8 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
     $index=1;
     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
       $nombreComprobante=nombreComprobante($codigo);
+      $existeCuenta=0;
+      $existeCuenta=obtenerEstadoCuentaSaldoComprobante($codigo);
       $mes=date('n',strtotime($fechaComprobante));
       // $mes=date("j",$fechaComprobante);
       switch ($estadoC) {
@@ -166,11 +168,19 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
           </a><?php
           }
           if($codigoSol[1]==0){
-          ?>
-        <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
-          <i class="material-icons"><?=$iconEdit;?></i>
-        </a>
-        <?php 
+            if($existeCuenta==0){
+                    ?>
+                    <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>" title="Editar">
+                      <i class="material-icons"><?=$iconEdit;?></i>
+                    </a>
+                  <?php
+                  }else{
+                      ?>
+                      <a href='#' rel="tooltip" class="btn btn-danger" title="No Editable">
+                        <i class="material-icons text-dark"><?=$iconEdit;?></i>
+                       </a>
+                  <?php
+                    } 
         } 
         ?>
         <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">

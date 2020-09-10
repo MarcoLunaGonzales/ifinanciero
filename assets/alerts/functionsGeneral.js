@@ -398,7 +398,7 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
   var contador=0;
   var cuentaIvaDiferido=$("#codigo_iva_direfido").val();
   for (var i = 0; i < estado_cuentas.length; i++) {
-    if(estado_cuentas[i].cod_cuenta==codigoCuenta&&codigoCuenta!=cuentaIvaDiferido){ //&&codigoCuentaAux==0
+    if(estado_cuentas[i].cod_cuenta==codigoCuenta){ //&&codigoCuentaAux==0 //&&codigoCuenta!=cuentaIvaDiferido
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#tipo_estadocuentas"+fila).val(estado_cuentas[i].tipo);
       $("#tipo_proveedorcliente"+fila).val(estado_cuentas[i].tipo_estado_cuenta);
@@ -668,7 +668,7 @@ function saveFactura(){
     
   var monto_debe_total_comprobante = $("#totaldeb").val();
   var monto_suma_factura=parseInt($('#imp_fac').val())+parseInt($('#ice_fac').val())+parseInt($('#exe_fac').val());
-  console.log("SUMAS FACTURAS NIT:"+$('#nit_fac').val()+" monto,"+monto_suma_factura+" "+monto_debe_total_comprobante);
+  console.log("FILA:"+index+",SUMAS FACTURAS NIT:"+$('#nit_fac').val()+" monto,"+monto_suma_factura+" "+monto_debe_total_comprobante);
   //if(monto_suma_factura != monto_debe_total_comprobante){
     //alert("El monto registrado en las facturas difiere del total!");
   //}else{
@@ -13585,8 +13585,8 @@ function botonBuscarEstudiantesCapacitacion(){
   var valor_codigo_curso= $("#codigo_curso").val();
   var q=$("#q").val();   
   var r=$("#r").val();   
-  var u=$("#r").val();   
-  var s=$("#r").val();   
+  var u=$("#u").val();   
+  var s=$("#s").val();   
   var url='index.php?opcion=listFacturasServicios_costos_estudiantes&ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente+'&fecha='+valor_fecha_inscripcion+'&nombre_curso='+valor_nombre_curso+'&codigo_curso='+valor_codigo_curso;
   if(q!=0){    
     location.href=url+'&q='+q+'&r='+r+'&u='+u+'&s='+s;
@@ -13619,8 +13619,6 @@ function itemsSeleccionados_capacitacion_estudiantes(){
   document.getElementById("contador_auxiliar").value=contador_auxiliar;//cantidad de items activados
 }
 
-
-
 function botonBuscarEmpresasCapacitacion(){
   iniciarCargaAjax();
 
@@ -13629,8 +13627,8 @@ function botonBuscarEmpresasCapacitacion(){
   var valor_codigo_curso=$("#codigo_curso").val();   
   var q=$("#q").val();   
   var r=$("#r").val(); 
-  var u=$("#r").val(); 
-  var s=$("#r").val(); 
+  var u=$("#u").val(); 
+  var s=$("#s").val(); 
 
   var url='index.php?opcion=listFacturasServicios_costos_empresas&cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa+'&codigo_curso='+valor_codigo_curso;
    if(q!=0){    
@@ -17996,6 +17994,10 @@ function cambiarValorElementosComprobante(nuevoId,i,aux,aux2){
 
        $("#boton_agregar_fila"+aux2+nuevoId).attr("onclick","agregarFilaComprobante('"+i+"');return false;");
        $("#boton_agregar_fila"+aux2+nuevoId).attr("id","boton_agregar_fila"+aux+i);
+
+       if($("#divNitFactura"+aux2+nuevoId).length>0){
+        $("#divNitFactura"+aux2+nuevoId).attr("id","divNitFactura"+aux+i);
+       }
        $('.selectpicker').selectpicker(['refresh']);
       console.log(" Filas "+numFilas+":"+aux2+nuevoId+"->"+aux+i);
 }
@@ -18209,4 +18211,64 @@ function quitarActividadProyectoFilasDetalle(){
     $("#nestadoactproy"+fila).removeClass("estado");
   }
   $("#modalActividadesProyecto").modal("hide");   
+}
+
+function cambiarActividadesProyectoSolicitudRecursoModal(codigo,nro,monto,cuentas,prov,tipo){
+
+  $("#nro_solicitud_conta_2").val(nro);
+  $("#monto_nombre_conta_2").val(monto);
+  $("#cuenta_conta_2").val(cuentas);
+  $("#proveedor_nombre_conta_2").val(prov);
+  $("#codigo_solicitud").val(codigo);
+
+  var parametros={"codigo":codigo,"tipo":tipo};
+  $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "solicitudes/ajaxCargarDetalleSolicitudes.php",
+        data: parametros,      
+        success:  function (resp) {
+          $("#solicitud_recurso_detalle_sis").html(resp);
+          $('.selectpicker').selectpicker('refresh');
+          $("#modalCambiarActividadesProyecto").modal("show");
+        }
+    });
+  }
+
+function saveActividadProyectoSolicitudRecursoModal(){
+var cantidad=$("#cantidad_registros_detalle_sis").val();
+  if(cantidad>0){
+    var detalles=[];
+    for (var i = 0; i < cantidad; i++) {
+      var sub_detalle={
+        "codigo":$("#codigo_detalle"+i).val(),
+        "cod_actividad":$("#actividades_detalle"+i).val(),
+        "cod_accnum":$("#acc_detalle"+i).val(),
+      }
+      detalles.push(sub_detalle);
+    };
+
+  var parametros={"codigo":$("#codigo_solicitud").val(),"detalles":JSON.stringify(detalles)};
+  $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "solicitudes/ajaxSaveDetalleSolicitud.php",
+        data: parametros,
+        beforeSend:function(){
+          iniciarCargaAjax();
+          $("#texto_ajax_titulo").html("Guardando Datos de  la Solicitud de Recursos");
+        },
+        success:  function (resp) {
+          detectarCargaAjax();
+          //alert(resp);
+          $("#texto_ajax_titulo").html("Procesando Datos");
+          actualizarPaginaNuevaP();
+          //$('.selectpicker').selectpicker('refresh');
+          //$("#modalCambiarActividadesProyecto").modal("hide");
+        }
+    });
+
+  }else{
+    Swal.fire("Informativo!", "No hay detalles en la Solicitud", "warning");
+  }
 }

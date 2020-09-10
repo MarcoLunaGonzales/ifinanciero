@@ -51,6 +51,40 @@ if(isset($_GET['cod_sw'])){//para la parte de editar
     $stringCurso=implode(",", $array_curso);
     $stringCurso=trim($stringCurso,',');
 }
+
+//consulta para oficina y area desde itranet
+if(isset($_GET['q']) || isset($_POST['q'])){
+    //para uo
+    $arraySqlUO=explode("IdOficina",$s);
+    $string_aux='0';  
+    if(isset($arraySqlUO[1])){
+        $string_aux=trim($arraySqlUO[1]);
+        $arraySqlArea=explode("and IdArea",$string_aux);
+        $codigoArea='0';  
+        $codigoUO='0';  
+        if(isset($arraySqlArea[1])){
+            $codigoArea=trim($arraySqlArea[1]);
+            $codigoUO=trim($arraySqlArea[0]);
+        }else{
+            $codigoUO=$string_aux;
+        }
+        if($codigoArea=='0'){    
+            $sqlAreas_x="and codigo=0";    
+        }else{
+            $sqlAreas_x="and codigo ".$codigoArea;  
+        }
+        if($codigoUO=='0'){    
+            $sqlUO_x="and codigo=0";    
+        }else{
+            $sqlUO_x="and codigo ".$codigoUO;  
+        }
+    }
+}else{
+    $sqlUO_x="";
+    $sqlAreas_x="";
+}
+
+
 if ($cod_facturacion > 0){
     $sql="SELECT * FROM solicitudes_facturacion where codigo=$cod_facturacion";
     // echo $sql;
@@ -120,7 +154,7 @@ $contadorRegistros=0;
             <div class="col-md-12">
             <form id="formSoliFactNormas" class="form-horizontal" action="<?=$urlSave_solicitud_facturacion_costos_grupal_estudiantes;?>" method="post" onsubmit="return valida(this)" enctype="multipart/form-data">
                 <?php                   
-                if(isset($_POST['q'])){?>
+                if(isset($_POST['q']) || isset($_GET['q'])){?>
                     <input type="hidden" name="q" id="q" value="<?=$q?>">
                     <input type="hidden" name="r" id="r" value="<?=$r?>">
                     <input type="hidden" name="s" id="s" value="<?=$s?>">
@@ -155,7 +189,7 @@ $contadorRegistros=0;
                                 <select name="cod_uo" id="cod_uo"  class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">                                        
                                     <option value=""></option>
                                     <?php 
-                                    $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
+                                    $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 and centro_costos=1 $sqlUO_x order by nombre";
                                     $statementUO1 = $dbh->query($queryUO1);
                                     while ($row = $statementUO1->fetch()){ ?>
                                         <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
@@ -170,13 +204,12 @@ $contadorRegistros=0;
                                     <div id="div_contenedor_area">
                                         <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true"> 
                                             <?php 
-                                            $sqlArea="SELECT uo.cod_unidad,uo.cod_area,a.nombre as nombre_area,a.abreviatura as abrev_area
-                                            FROM areas_organizacion uo,areas a
-                                            where uo.cod_estadoreferencial=1 and uo.cod_area=a.codigo and a.areas_ingreso=1 and uo.cod_unidad=$cod_uo order by nombre_area";
-                                            $stmtArea = $dbh->prepare($sqlArea);                                            
+                                            $sqlArea="SELECT codigo,nombre,abreviatura from areas where cod_estado=1 and centro_costos=1 $sqlAreas_x order by nombre";
+
+                                            $stmtArea = $dbh->prepare($sqlArea);
                                             $stmtArea->execute();
                                             while ($rowArea = $stmtArea->fetch()){ ?>
-                                                 <option <?=($cod_area==$rowArea["cod_area"])?"selected":"disabled";?> value="<?=$rowArea["cod_area"];?>" data-subtext="(<?=$rowArea['cod_area']?>)"><?=$rowArea["abrev_area"];?> - <?=$rowArea["nombre_area"];?></option><?php 
+                                                 <option <?=($cod_area==$rowArea["codigo"])?"selected":"disabled";?> value="<?=$rowArea["codigo"];?>" data-subtext="(<?=$rowArea['codigo']?>)"><?=$rowArea["abreviatura"];?> - <?=$rowArea["nombre"];?></option><?php 
                                             } ?>
                                         </select>                                    
                                     </div>                    
@@ -458,8 +491,7 @@ $contadorRegistros=0;
                                         $modal_totalmontopre=0;$modal_totalmontopretotal=0;
                                         $sw="";
                                         $sw2="";//para registrar nuevos, impedir los ya registrados
-                                        while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                            // if($cod_facturacion==0){
+                                        while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {                                            
                                                 $IdCurso=$rowPre['IdCurso'];
                                                 $ci_estudiante=$rowPre['CiAlumno'];
                                                 // $nombreAlumno=$rowPre['nombreAlumno'];
@@ -483,17 +515,7 @@ $contadorRegistros=0;
                                                 $monto_pagar=($Costo - ($Costo*$Abrev)/100); //formula para sacar el monto a pagar del estudiante  
                                                 $saldo=$monto_pagar;
                                                 $banderaHab=1;
-                                            // }else{
-                                            //     $codigoPre=0;
-                                            //     $codCS=$rowPre['cod_claservicio'];
-                                            //     $tipoPre=descripcionClaServicio($codCS);
-                                            //     $cantidadPre=$rowPre['cantidad'];                                                
-                                            //     $montoPre=$rowPre['precio'];
-                                            //     $descuento_bob_cliente=0;
-                                            //     $banderaHab=1;                                                
-                                            //     $cod_anio=1;
-                                            //     $descripcion_alternaX=$rowPre['descripcion_alterna'];
-                                            // }                                        
+                                                $controlador_auxiliar=0;                                            
                                             if($banderaHab!=0){
                                                 $descuento_porX=$descuento_cliente;
                                                 $descuento_bobX=$descuento_bob_cliente;
@@ -551,7 +573,7 @@ $contadorRegistros=0;
                                                     if($estadoPagado!=1){
                                                         // if($cod_facturacion==0){
                                                             //parte del controlador de check//impedir los ya registrados
-                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sfd.cod_claservicio=$codCS and sf.ci_estudiante like '%$ci_estudiante%' and tipo_solicitud in (2,7) and sf.cod_estadosolicitudfacturacion!=2";
+                                                            $sqlControlador2="SELECT sfd.cod_solicitudfacturacion,sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso and sfd.cod_claservicio=$codCS and sf.ci_estudiante like '%$ci_estudiante%' and tipo_solicitud in (2,7) and sf.cod_estadosolicitudfacturacion!=2";
                                                              // echo $sqlControlador2;
                                                             $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                             $stmtControlador2->execute();
@@ -574,9 +596,11 @@ $contadorRegistros=0;
                                                             // echo "monto_total_pagado:".$monto_total_pagado;
                                                             $cont_items_aux=0;
                                                             while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
+                                                                $cod_solicitudfacturacion_x=$rowPre['cod_solicitudfacturacion'];
                                                                 $cont_items_aux++;
                                                                 if($sw!="checked"){
                                                                     if($monto_pagar==$monto_total_pagado){
+                                                                        $controlador_auxiliar=1;
                                                                         $sw2="readonly style='background-color:#cec6d6;'";
                                                                         $saldo=0;
                                                                     }
@@ -600,6 +624,8 @@ $contadorRegistros=0;
                                                                 if($sw!="checked"){
                                                                     if($monto_pagar==$monto_total_pagado){
                                                                         $sw2="readonly style='background-color:#cec6d6;'";
+                                                                        $controlador_auxiliar=1;
+                                                                        $cod_solicitudfacturacion_x=obtnerCodigoSFGrupal($IdCurso,$ci_estudiante,$codCS);
                                                                     }    
                                                                 }else{
                                                                     $monto_total_pagado=$precio_total_x-$preciox;
@@ -664,13 +690,17 @@ $contadorRegistros=0;
                                                              <span class="toggle"></span>
                                                            </label>
                                                        </div>
-                                                    <?php }else{?>
-                                                      <div class="togglebutton d-none">
+                                                    <?php }else{
+                                                        if($controlador_auxiliar==1){?>
+                                                            <a rel="tooltip" href='../<?=$urlPrintSolicitud;?>?codigo=<?=$cod_solicitudfacturacion_x;?>' target="_blank"><i class="material-icons text-primary" title="Imprimir Solicitud Facturación">print</i></a>
+                                                        <?php }
+                                                        ?>
+                                                        <div class="togglebutton d-none">
                                                            <label>
                                                              <input type="checkbox"  id="modal_check<?=$iii?>" >
                                                              <span class="toggle"></span>
                                                            </label>
-                                                       </div>                                                
+                                                        </div>                                                
                                                     <?php }?>
                                                   </td><!-- fin checkbox -->
                                                </tr>

@@ -33,11 +33,11 @@ $dbh = new Conexion();
 		                	<div class="form-group">
 		                		<div id="">		
 		                			<?php
-									$sqlUO="SELECT uo.codigo, uo.nombre from estados_solicitudrecursos uo where uo.codigo<>2 order by 2 ";
+									$sqlUO="SELECT uo.codigo, uo.nombre from estados_solicitudrecursos uo where uo.codigo in (5,8) order by 2 ";
 									$stmt = $dbh->prepare($sqlUO);
 									$stmt->execute();
 									?>
-										<select class="selectpicker form-control form-control-sm" name="estado[]" id="estado" multiple data-actions-box="true" required data-live-search="true">
+										<select class="selectpicker form-control form-control-sm" name="estado[]" id="estado" multiple data-actions-box="true" required data-live-search="true" data-style="btn btn-success">
 										    <?php 
 										    	while ($row = $stmt->fetch()){ 
 											?>

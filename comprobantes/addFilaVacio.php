@@ -7,7 +7,8 @@
       itemFacturas.push(nfac);
       itemEstadosCuentas.push(nfac);
       document.getElementById("cantidad_filas").value=numFilas;
-      </script>   
+      </script> 
+       
 <div id="div<?=$idFila?>">
  <div class="col-md-12">
   <div class="row">

@@ -5907,14 +5907,16 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      return($valor);
   }
   function obtenerEstadoCuentaSaldoComprobante($codigo){
-     $dbh = new Conexion();
+     /*$dbh = new Conexion();
      $sql="SELECT count(*) as num from comprobantes_detalle cd join comprobantes c on c.codigo=cd.cod_comprobante join estados_cuenta e on e.cod_comprobantedetalle=cd.codigo where c.codigo=$codigo and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen=0";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         //$valor=$row['num'];
-     }
+     }*/
+     //funcion modificada para el saldo
+     $valor=obtenerEstadoCuentaComprobanteCerrados($codigo);
      return($valor);
   }
 
@@ -6169,6 +6171,18 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row['idResponsable'];
+     }
+     if($valor>0){
+      $sql="SELECT cpe.IdCliente
+        FROM persona p
+        INNER JOIN dbcliente.gu_usuario gu ON gu.idUsuario=p.IdNuevoUsuario
+        INNER JOIN dbcliente.cliente_persona_empresa cpe ON gu.uIdClienteContacto=cpe.idCliente
+      WHERE p.IdPersona=$valor";
+      $stmtPerfil = $dbh->prepare($sql);
+      $stmtPerfil->execute();
+      while ($row = $stmtPerfil->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['IdCliente'];
+      }
      }
      return($valor);
   }
@@ -7892,6 +7906,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
      }
      return($valor);
   }
+
   function obtenerDescripcionestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
     $dbh = new Conexion();
     $stmt = $dbh->prepare("SELECT sfd.descripcion_alterna from solicitudes_facturaciondetalle sfd where sfd.cod_curso=$IdCurso and sfd.ci_estudiante like '%$ci_estudiante%' and sfd.cod_claservicio=$codCS");
@@ -7902,6 +7917,17 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
      }
      return($valor);
   }
+  function obtnerCodigoSFGrupal($IdCurso,$ci_estudiante,$codCS){
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT sf.codigo from solicitudes_facturaciondetalle sfd, solicitudes_facturacion sf where sf.codigo=sfd.cod_solicitudfacturacion and sfd.cod_curso=$IdCurso and sfd.ci_estudiante like '%$ci_estudiante%' and sfd.cod_claservicio=$codCS and sf.tipo_solicitud=7");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+     }
+     return($valor);
+  }
+
   function obtenerEstadoLibretaBancaria($cod_libreta){
     $dbh = new Conexion();
     $valor="";
@@ -9684,4 +9710,48 @@ function obtenerCodigoAccNumSisComprobante($codigo){
       }  
       return($valor);
 }  
+
+function obtenerNombreDirectoActividadServicioAccNum($cod_acc_num){
+    $sIde = "";
+    $sKey = "";
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"DatosAccNumProyecto","codigo"=>$cod_acc_num);
+    //Lista todos los componentes
+    $parametros=json_encode($parametros);
+      $ch = curl_init();
+      // definimos la URL a la que hacemos la petición    
+      //curl_setopt($ch, CURLOPT_URL,"http://localhost/imonitoreo/componentesSIS/compartir_servicio.php");//prueba
+      curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/ifinanciero/wsifin/ws_accnum_proyectos.php");//prueba    
+      // indicamos el tipo de petición: POST
+      curl_setopt($ch, CURLOPT_POST, TRUE);
+      // definimos cada uno de los parámetros
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+      // recibimos la respuesta y la guardamos en una variable
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      $remote_server_output = curl_exec ($ch);
+      curl_close ($ch);
+      
+      // imprimir en formato JSON  
+      //print_r($remote_server_output);
+      $obj= json_decode($remote_server_output);
+      $detalle=$obj->lstComponentes;
+      $abreviatura=""; $valor="";
+      foreach ($detalle as $listas) { 
+       $abreviatura=$listas->abreviatura;
+       $valor=$listas->nombre;
+      }
+      return array($abreviatura,$valor);
+    }
+
+function obtenerEstadoCuentaComprobanteCerrados($codigo){
+     $dbh = new Conexion();
+     $sql="SELECT count(*) as tiene FROM estados_cuenta where cod_comprobantedetalleorigen in (
+     SELECT e.codigo from comprobantes_detalle cd join comprobantes c on c.codigo=cd.cod_comprobante join estados_cuenta e on e.cod_comprobantedetalle=cd.codigo where c.codigo=$codigo and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen=0);";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['tiene'];
+     }
+     return($valor);
+  }
 ?>

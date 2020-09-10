@@ -274,6 +274,19 @@ $tituloImporte="";
             $codActividadX=$row["cod_actividadproyecto"];
             $tituloActividad="";
             //$tituloActividad=obtenerCodigoActividadesServicioImonitoreo($codActividadX);   
+            $detalleActividadFila="";
+            if($codActividadX>0){
+              if(obtenerNombreDirectoActividadServicio($codActividadX)[0]!=""){
+                $detalleActividadFila.="<br><small class='text-dark small'> Actividad: ".obtenerNombreDirectoActividadServicio($codActividadX)[0]." - ".obtenerNombreDirectoActividadServicio($codActividadX)[1]."</small>";
+             }
+            }
+            $codAccNum=$row["acc_num"]; 
+            if($codAccNum>0){
+              if(obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]!=""){
+                $detalleActividadFila.="<br><small class='text-dark small'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]." - ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[1]."</small>";
+              }
+            }
+
             if(trim($datosServicio)=="-"){
               $datosServicio="";  
             }else{
@@ -290,7 +303,7 @@ $tituloImporte="";
             <td class="s3 text-center"><?=number_format($porcentSegPres, 0, '.', '')?></td>
             <td class="s3 text-center" width="8%"><?=$nombreArea?></td>
             <td class="s3 text-center" width="8%"><?=$numeroFac?></td>
-            <td class="s3 text-left" width="40%"><?="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$tituloActividad?></td> <!-- F/".$numeroFac."-->
+            <td class="s3 text-left" width="40%"><?="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$detalleActividadFila?></td> <!-- F/".$numeroFac."-->
             <td class="s3 text-right"><?=number_format($importeSolX, 2, '.', ',')?></td>
             <td class="s3 text-right"><?=number_format($montoImporteRes, 2, '.', ',')?></td>
             <td class="s3 text-right"><?=$tituloImporte?></td>

@@ -159,35 +159,30 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                         if($cont_total_ws==$cont_total_pagados || $importe_curso==0){
                           $estado="Pagado<br>total"; //pagado
                           $btnEstado="btn-success";
+                          $style_s="style='color:  #239b56;'";
+                          
                         }else{
                           $estado="Pendiente";//faltan algunos
-                          $btnEstado="btn-warning";
+                          // $btnEstado="btn-warning";
+                          $style_s="style='color: #dc7633;'";
                         }  
                       }else{
                           $estado="Sin Servicio";//faltan algunos
-                          $btnEstado="btn-danger";
+                          $style_s="style='color: #ff0000;'";
+                          // $btnEstado="btn-danger";
                       }
                       if($cont_total_ws==0 && $cont_total_pagados==0){
                         $sw_aux=false;
                         $estado="No Encontrado";//faltan algunos
-                        $btnEstado="btn-danger"; 
+                        $style_s="style='color: #ff0000;'";
+                        // $btnEstado="btn-danger"; 
                       }
                     }else{
                       $sw_aux=false;
                       $estado="Facturación Por Empresa";//faltan algunos
                       $btnEstado="btn-danger"; 
+                      $style_s="style='color: #ff0000;'";
                     }
-                    
-                    //verificamos si ya tiene factura generada y esta activa                           
-                    $stmtFact = $dbh->prepare("SELECT codigo from solicitudes_facturacion where tipo_solicitud=2 and cod_cliente=$CiAlumno and cod_simulacion_servicio=$IdCurso");
-                    $stmtFact->execute();
-                    $resultSimu = $stmtFact->fetch();
-                    $codigo_facturacion = $resultSimu['codigo'];        
-                    if ($codigo_facturacion==null)$codigo_facturacion=0;
-                    $sumaTotalMonto=0;
-                    $sumaTotalDescuento_por=0;
-                    $sumaTotalDescuento_bob=0;
-                    $sumaTotalImporte=$sumaTotalMonto-$sumaTotalDescuento_bob;
                     ?>
                     <!-- guardamos todos los items en inputs -->
                     <input type="hidden" id="CiAlumno<?=$iii?>" name="CiAlumno<?=$iii?>" value="<?=$CiAlumno?>">
@@ -205,7 +200,9 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                       <td class="text-left small" ><?=$codigo_curso;?></td>
                       <td class="text-left small" ><?=$nombre_mod;?> / # Modulos = <?=$CantidadModulos?></td>
                       <td class="text-right small"><?=$FechaInscripcion;?></td>
-                      <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button></td> 
+                      <td><!-- <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button> -->
+                        <span <?=$style_s?>><small><?=$estado;?></small></span>                                  
+                      </td> 
                       <td class="td-actions text-right">
                         <?php
                           if($sw_aux && $estado!="Pagado<br>total"){
@@ -217,12 +214,37 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                               <a href='<?=$urlregistro_solicitud_facturacion?>&codigo=<?=$CiAlumno?>&cod_simulacion=<?=$codigo_simulacion;?>&IdCurso=<?=$IdCurso;?>&cod_facturacion=0' rel="tooltip" class="btn" style="background-color: #0489B1;padding: 3px; font-size:10px;width:23px;height:23px;">
                                 <i class="material-icons" title="Solicitar Facturación">receipt</i>
                               </a><?php 
+                            }                            
+                          }else{//acticvamos los pdf de la solicitud
+                            if($estado!="Facturación Por Empresa"){?>
+                              <div class="btn-group dropdown">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>SF</small></button>
+                                <div class="dropdown-menu"><?php 
+                                  //verificamos si ya tiene factura generada y esta activa
+                                  $sql="SELECT codigo,nro_correlativo from solicitudes_facturacion where tipo_solicitud=2 and ci_estudiante=$CiAlumno and cod_simulacion_servicio=$IdCurso
+                                  UNION
+                                  SELECT fd.cod_solicitudfacturacion as codigo,f.nro_correlativo from solicitudes_facturacion f, solicitudes_facturaciondetalle fd where f.codigo=fd.cod_solicitudfacturacion and f.tipo_solicitud=7 and fd.ci_estudiante=$CiAlumno and fd.cod_curso=$IdCurso";
+                                  // echo $sql;
+                                  $stmtFact = $dbh->prepare($sql);
+                                  $stmtFact->execute();
+                                  $contador_SolFact=0;
+                                  while ($rowFact = $stmtFact->fetch(PDO::FETCH_ASSOC)){
+                                    $contador_SolFact++;
+                                    $cod_factura_x=$rowFact['codigo'];
+                                    $nro_correlativo_x=$rowFact['nro_correlativo'];
+                                    if($cod_factura_x!=0){?>
+                                      <a class="dropdown-item" type="button" href='<?=$urlPrintSolicitud;?>?codigo=<?=$cod_factura_x;?>' target="_blank"><i class="material-icons text-danger" title="Imprimir Factura">print</i> SF Nro: <?=$nro_correlativo_x?></a>
+                                    <?php }
+                                  }
+                                  if($contador_SolFact==0){?>
+                                    <span style="color: #ff0000;"><small>Solicitudes No Encontradas</small></span>                                  
+                                  <?php }
+                                  ?>
+                                </div>
+                              </div> <?php
                             }
-                            if($codigo_facturacion>0){?>
-                              <!-- <a class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$codigo_facturacion;?>' target="_blank"><i class="material-icons" title="Imprimir Solicitud">print</i></a> --> <?php 
-                            }
+                            
                           }
-
                           if($sw_aux && $estado!="Pagado<br>total"){?>
                             <div class="togglebutton">
                               <label>

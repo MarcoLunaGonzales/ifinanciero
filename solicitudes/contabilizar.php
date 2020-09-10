@@ -25,7 +25,9 @@ $tipoComprobante=3;
 //comprobante devengado o pagado
 if(isset($_GET['deven'])){
   $deven=(int)$_GET['deven']; 
-  $tipoComprobante=2;
+  if($deven==0){
+   $tipoComprobante=2;  
+  }
 }
 
 
@@ -490,6 +492,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
                    $codEstadoCuenta=obtenerCodigoEstadosCuenta();
                    //datos del proveedor para le estado de cuentas
                    $codProveedorEstado=$codProveedor;
+                   $nomProveedor=nameProveedor($codProveedor);
                    //CREAR CUENTA AUXILIAR SI NO EXISTE 
                    if(obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$codProveedor,$cuentaRetencion)==0){
                      $codEstado="1";
@@ -501,7 +504,12 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
                    $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
                    VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaRetencion', '$debeRet', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaX')";
                    $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
-                   $stmtDetalleEstadoCuenta->execute();             
+                   $stmtDetalleEstadoCuenta->execute();  
+
+                    //actualizar cuenta auxiliar al detalle del comprobante
+                    $sqlDetalleAuxiliar="UPDATE comprobantes_detalle set cod_cuentaauxiliar='$cuentaAuxiliarProv' where codigo='$codComprobanteDetalle'"; 
+                    $stmtDetalleAuxiliar = $dbh->prepare($sqlDetalleAuxiliar);
+                    $stmtDetalleAuxiliar->execute();           
                  }
                 }
                }

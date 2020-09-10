@@ -1,11 +1,9 @@
 <?php
 require_once 'conexion.php';
-require_once 'comprobantes/configModule.php';
+require_once 'configModule.php';
 require_once 'styles.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
-
-$globalUser=$_SESSION["globalUser"];
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUnidad=$_SESSION["globalUnidad"];
 
@@ -25,25 +23,25 @@ $dbh = new Conexion();
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Libro Compras</h4>
+                  <h4 class="card-title">Revisión Libro Compras Proyecto</h4>
                 </div>
-                <form class="" action="<?=$urlReporteCompras?>" target="_blank" method="POST">
+                <form class="" action="<?=$urlReporteComprasProyRevision?>" target="_blank" method="POST">
                 <div class="card-body">
                 	<div class="row">
-		                <label class="col-sm-2 col-form-label">Oficina</label>
-		                <div class="col-sm-9">
+		                <label class="col-sm-2 col-form-label">Estado SR</label>
+		                <div class="col-sm-8">
 		                	<div class="form-group">
 		                		<div id="">		
 		                			<?php
-									$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
+									$sqlUO="SELECT uo.codigo, uo.nombre from estados_solicitudrecursos uo where uo.codigo<>2 order by 2 ";
 									$stmt = $dbh->prepare($sqlUO);
 									$stmt->execute();
 									?>
-										<select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+										<select class="selectpicker form-control form-control-sm" name="estado[]" id="estado" multiple data-actions-box="true" required data-live-search="true">
 										    <?php 
 										    	while ($row = $stmt->fetch()){ 
 											?>
-										      	 <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>" <?=($row["codigo"]==$globalUnidad)?"selected":""?> ><?=$row["abreviatura"];?></option>
+										      	 <option value="<?=$row["codigo"];?>" selected><?=$row["nombre"];?></option>
 							    	<?php 
 										 		} 
 								 	?>
@@ -54,7 +52,7 @@ $dbh = new Conexion();
                   	</div><!--div row-->
                 	<div class="row">
 		                <label class="col-sm-2 col-form-label">Gestión</label>
-		                <div class="col-sm-4">
+		                <div class="col-sm-6">
 		                	<div class="form-group">
 		                		<select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
                                     <option value=""></option>
@@ -66,9 +64,11 @@ $dbh = new Conexion();
                                     <?php } ?>
                                 </select>
 		                     </div>
-		                </div>	
-		                <label class="col-sm-1 col-form-label">Mes</label>
-		                <div class="col-sm-4">
+		                </div>				             
+                  	</div><!--div row-->
+              		<div class="row">
+		                 <label class="col-sm-2 col-form-label">Mes</label>
+		                 <div class="col-sm-6">
 		                	<div class="form-group">
 		                		<div id="div_contenedor_mes">		
 		                			<?php $sql="SELECT c.cod_mes,(select m.nombre from meses m where m.codigo=c.cod_mes) as nombre_mes from meses_trabajo c where c.cod_gestion=$globalGestion";
@@ -90,49 +90,13 @@ $dbh = new Conexion();
 		                			
 		                		</div>		                                
 		                     </div>
-		                </div>			             
-                  	</div><!--div row-->
-              	
-		            <div class="row">
-		            	<label class="col-sm-2 col-form-label">Razón Social</label>
-		                <div class="col-sm-1">
-		                	<div class="form-group">
-								<div class="togglebutton">
-								    <label>
-										<input type="checkbox" name="check_rs_librocompras" id="check_rs_librocompras" onChange="ajax_razon_social_filtro_compras()">
-										<span class="toggle"></span>
-								    </label>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-8" >
-		                	<div class="form-group" id="contenedor_razos_social_librocompras">
-								
-							</div>
-						</div>
+		                  </div>
 		            </div>
-		   
                   	
                 <div class="card-footer">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_compras()">Generar TXT</a>
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
 			  </div>
-			  <hr>
-			  <div class="col-sm-12">
-			  	<div class="float-right">
-			  		<a  href="index.php?opcion=reportesLibroComprasProy" class="btn btn-success btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Reporte Libro Compras - PROYECTO</a>		
-			  		<?php 
-			  		if(verificarEdicionComprobanteUsuario($globalUser)!=0){
-			  			?>
-			  		<a  href="index.php?opcion=reportesLibroComprasEdit" class="btn btn-danger btn-sm text-center" target="_blank"><i class="material-icons">edit</i> Editar Facturas</a>		
-			  		<?php 
-			  	   }
-			  	   ?>
-			  	  <a  href="index.php?opcion=reportesLibroComprasProyRevision" class="btn btn-info btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Revisión Libro Compras - PROYECTO</a>		
-			  	</div>
-			  </div>
-			  
                </form> 
               </div>	  
             </div>         
@@ -141,19 +105,3 @@ $dbh = new Conexion();
         
 </div>
 
-<div class="modal fade" id="modal_descargarTXT" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">    
-      <div class="modal-content">
-        <div class="modal-header">          
-          <h3 class="modal-title" id="myModalLabel"><b>Correcto</b></h3>
-        </div>
-        <div class="modal-body">                
-              <center><span>El proceso se completó correctamente!</span></center>     
-        </div>    
-        <div id="contenedor_DescargaTxt">
-          
-        </div>    
-      </div>
-    </form>
-  </div>
-</div>

@@ -139,6 +139,10 @@
 			require_once('reportes_compras/reportesLibroComprasProy.php');
 		}
 		//REPORTES
+		if ($_GET['opcion']=='reportesLibroComprasProyRevision') {
+			require_once('reportes_compras/reportesLibroComprasProyRevision.php');
+		}
+		//REPORTES
 		if ($_GET['opcion']=='reportesLibroComprasEdit') {
 			require_once('reportes_compras_edit_factura/reportesLibroComprasEdit.php');
 		}
@@ -474,7 +478,9 @@
 			require_once('solicitudes/listSolicitudRecursosAdminContaHistorico.php');
 		}
 		
-		
+		if ($_GET['opcion']=='listSolicitudRecursosSisActividad') {
+			require_once('solicitudes/listSolicitudRecursosSisActividad.php');
+		}
 
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {

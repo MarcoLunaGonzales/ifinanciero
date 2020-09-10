@@ -21,7 +21,7 @@ $userAdmin=obtenerValorConfiguracion(74);
 
 
 
-
+$distribucionSoli=0;
 //  CREAR EL COMPROBANTE
 
 //INICIO DE VARIABLES
@@ -190,10 +190,14 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
           }
           $tituloFactura="F/ ".implode($numerosFacturasDetalle,',')." - ";
         }
+
         $detalleActividadFila="";
-        if(obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]!=""){
-          $detalleActividadFila="Actividad: ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]."\n"; //." ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[1].
+        if($codActividadproyecto>0){
+          if(obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]!=""){
+            $detalleActividadFila="Actividad: ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]."\n"; //." ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[1].
+          }
         }
+        
         $glosaDetalle=$detalleActividadFila."Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
         $glosaDetalleRetencion="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$datosServicio." ".$glosa;
         //$glosaResumido.=obtenerNombreDirectoActividadServicio($codActividadproyecto)[0]." ".obtenerNombreDirectoActividadServicio($codActividadproyecto)[1].". Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".$glosa;
@@ -237,7 +241,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
         //SIN RETENCION     
         if($rowNuevo['cod_confretencion']==0||$rowNuevo['cod_confretencion']==8){
-          if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
+          if($distribucionSoli==0){
             //detalle comprobante SIN RETENCION ///////////////////////////////////////////////////////////////
             $sumaDevengado+=$debe;
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle(); 
@@ -342,7 +346,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             $debe=number_format(($debe), 2, '.', ''); 
 
           //INSERTAR CUENTA DE GASTO  
-           if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
+           if($distribucionSoli==0){
               $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
               $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_actividadproyecto,cod_accnum) 
               VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i','$codActividadproyecto','$codAccNum')";

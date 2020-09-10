@@ -644,9 +644,9 @@ $stmt->execute();
 								                </a>
 								              </div>
 								            </div>  
-    			                             <input type="hidden" id="tipo_estadocuentas<?=$idFila?>">
-    			                             <input type="hidden" id="tipo_proveedorcliente<?=$idFila?>">
-    			                             <input type="hidden" id="proveedorcliente<?=$idFila?>">
+    			                             <input type="hidden" id="tipo_estadocuentas<?=$idFila?>" value="-100">
+    			                             <input type="hidden" id="tipo_proveedorcliente<?=$idFila?>" value="-100">
+    			                             <input type="hidden" id="proveedorcliente<?=$idFila?>" value="-100">
 						    			     <input type="hidden" id="tipo_estadocuentas_casoespecial<?=$idFila?>">
 						    			     
     			                             <a title="Estado de Cuentas" id="estados_cuentas<?=$idFila?>" href="#" onclick="verEstadosCuentas(<?=$idFila;?>,0);" class="btn btn-sm btn-danger btn-fab d-none"><span class="material-icons text-dark">ballot</span><span id="nestado<?=$idFila?>" class="bg-warning"></span></a>	  
