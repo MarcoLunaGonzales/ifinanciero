@@ -68,7 +68,8 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
   <?php
     $index=1;
     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-
+      $existeCuenta=0;
+      $existeCuenta=obtenerEstadoCuentaSaldoComprobante($codigo);
       $nombreComprobante=nombreComprobante($codigo);
       $mes=date('n',strtotime($fechaComprobante));
       // $mes=date("j",$fechaComprobante);
@@ -148,11 +149,19 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
           </a><?php
           }
         if($codigoSol[1]==0){
-          ?>
-          <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>">
-            <i class="material-icons"><?=$iconEdit;?></i>
-          </a> 
-          <?php  
+          if($existeCuenta==0){
+                    ?>
+                    <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>" title="Editar">
+                      <i class="material-icons"><?=$iconEdit;?></i>
+                    </a>
+                  <?php
+                  }else{
+                      ?>
+                      <a href='#' rel="tooltip" class="btn btn-danger" title="No Editable">
+                        <i class="material-icons text-dark"><?=$iconEdit;?></i>
+                       </a>
+                  <?php
+                    }  
          }  
           ?>
         

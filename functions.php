@@ -5907,14 +5907,16 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      return($valor);
   }
   function obtenerEstadoCuentaSaldoComprobante($codigo){
-     $dbh = new Conexion();
+     /*$dbh = new Conexion();
      $sql="SELECT count(*) as num from comprobantes_detalle cd join comprobantes c on c.codigo=cd.cod_comprobante join estados_cuenta e on e.cod_comprobantedetalle=cd.codigo where c.codigo=$codigo and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen=0";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         //$valor=$row['num'];
-     }
+     }*/
+     //funcion modificada para el saldo
+     $valor=obtenerEstadoCuentaComprobanteCerrados($codigo);
      return($valor);
   }
 
@@ -9728,4 +9730,16 @@ function obtenerNombreDirectoActividadServicioAccNum($cod_acc_num){
       return array($abreviatura,$valor);
     }
 
+function obtenerEstadoCuentaComprobanteCerrados($codigo){
+     $dbh = new Conexion();
+     $sql="SELECT count(*) as tiene FROM estados_cuenta where cod_comprobantedetalleorigen in (
+     SELECT e.codigo from comprobantes_detalle cd join comprobantes c on c.codigo=cd.cod_comprobante join estados_cuenta e on e.cod_comprobantedetalle=cd.codigo where c.codigo=$codigo and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen=0);";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['tiene'];
+     }
+     return($valor);
+  }
 ?>

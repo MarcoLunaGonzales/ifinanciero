@@ -109,9 +109,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $nombreComprobante=nombreComprobante($codigo);
                           $existeCuenta=0;
-                          if($codTipoC==3){
-                             $existeCuenta=obtenerEstadoCuentaSaldoComprobante($codigo);
-                          }
+                          $existeCuenta=obtenerEstadoCuentaSaldoComprobante($codigo);
                           $mes=date('n',strtotime($fechaComprobante));
                           // $mes=date("j",$fechaComprobante);
                           switch ($estadoC) {
@@ -187,12 +185,21 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                   </a>
                                   <?php
                                   $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
-                                  if($existeCuenta==0&&$codigoSol[1]==0){
-                                  ?>
-                                  <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
-                                    <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
-                                  </a>
+                                  if($codigoSol[1]==0){
+                                    if($existeCuenta==0){
+                                      ?>
+                                      <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
+                                        <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
+                                      </a>
+                                    <?php
+                                    }else{
+                                      ?>
+                                      <a href='#' class="dropdown-item" title="Editar">
+                                         <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
+                                      </a>
                                   <?php
+                                    }
+                                  
                                   }
                                   ?>
                                   

@@ -21,6 +21,27 @@ $cuentaGET=154;
 if(isset($_GET['c'])){
   $cuentaGET=$_GET['c'];
 }
+if(isset($_GET['flotante'])){
+  $arrayFlotantes=[];$indexFlotante=0;
+  $sqlAbiertos="SELECT DISTINCT cod_comprobantedetalleorigen FROM estados_cuenta where cod_comprobantedetalleorigen<>0 order by cod_comprobantedetalleorigen desc";
+  $stmtAbiertos = $dbh->prepare($sqlAbiertos);
+  $stmtAbiertos->execute();
+  while ($rowAbiertos = $stmtAbiertos->fetch(PDO::FETCH_ASSOC)) {
+    $codigoAbierto=$rowAbiertos['cod_comprobantedetalleorigen'];
+    $sqlExiste="SELECT * FROM estados_cuenta where codigo=$codigoAbierto";
+    $stmtExiste = $dbh->prepare($sqlExiste);
+    $stmtExiste->execute();
+    $existe=0;
+    while ($rowExiste = $stmtExiste->fetch(PDO::FETCH_ASSOC)) {
+      $existe++;
+    }
+    if($existe==0){
+      $indexFlotante++;
+      array_push($arrayFlotantes,$codigoAbierto);
+    }
+  }
+  echo "CODIGOS FLOTANTES - ".$indexFlotante.": (".implode(",",$arrayFlotantes).")";
+}
 $sql="SELECT DISTINCT cod_plancuenta FROM estados_cuenta where cod_plancuenta=$cuentaGET";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
@@ -31,6 +52,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $codCuenta=$row['cod_plancuenta'];
   $nombreCuenta=nameCuenta($codCuenta);
   ?>
+
   <center><h4>Codigo:<b><?=$codCuenta?></b>, Cuenta: <b><?=$nombreCuenta?></b></h4></center>
   <div class="col-sm-11 div-center">
    <table class="table table-condensed table-striped table-bordered small">
