@@ -74,7 +74,17 @@ try {
             $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) values ($codigo,$numero,$cod_retencion,$monto,$monto_rendicion,'$cod_personal','$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
             $flagSuccess=$stmtrendiciones->execute();
             //insertamos estado_de_cuentas y comprobantes
-            if($cod_comprobante_ec>0){//llega el cod de estado de cuenta                
+            if($cod_comprobante_ec>0){//llega el cod de estado de cuenta                     
+                //sacamos las cuentas auxiliares
+                $nomProveedor=nameProveedor($cod_proveedores);
+                //CREAR CUENTA AUXILIAR SI NO EXISTE 
+                if(obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$cod_proveedores,$cod_cuenta)==0){
+                    $codEstado="1";
+                    $stmtInsertAux = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente) 
+                    VALUES ('$nomProveedor', $codEstado,$cod_cuenta, 1, $cod_proveedores)");
+                    $stmtInsertAux->execute();
+                }
+                $cuenta_auxiliar1=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$cod_proveedores,$cod_cuenta); 
                 $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle,glosa_auxiliar)values('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobante_ec','$cuenta_auxiliar1','$codigo','$observaciones')");
                 $flagSuccess=$stmtContraCuenta->execute();
                 if($flagSuccess){
@@ -220,7 +230,16 @@ try {
                 $stmtupdate_x = $dbh->prepare($sql);
                 $stmtupdate_x->execute();
 
-                
+                //sacamos las cuentas auxiliares
+                $nomProveedor=nameProveedor($cod_proveedores);
+                //CREAR CUENTA AUXILIAR SI NO EXISTE 
+                if(obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$cod_proveedores,$cod_cuenta)==0){
+                    $codEstado="1";
+                    $stmtInsertAux = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente) 
+                    VALUES ('$nomProveedor', $codEstado,$cod_cuenta, 1, $cod_proveedores)");
+                    $stmtInsertAux->execute();
+                }
+                $cuenta_auxiliar1=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$cod_proveedores,$cod_cuenta);
                 $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle,glosa_auxiliar)values('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobante_ec','$cuenta_auxiliar1','$codigo','$observaciones')");
                 $flagSuccess=$stmtContraCuenta->execute();
                 if($flagSuccess){
