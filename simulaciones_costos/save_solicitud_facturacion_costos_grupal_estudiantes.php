@@ -155,9 +155,6 @@ try {//recibiendo datos
                 // }else{
                 //   showAlertSuccessError($flagSuccess,"../".$urlListSol);
                 // } 
-
-
-            
             //$stmt->debugDumpParams();
         }else {//update
             //actualizamos los campos estaticos

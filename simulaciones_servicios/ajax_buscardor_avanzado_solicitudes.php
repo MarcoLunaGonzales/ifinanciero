@@ -173,13 +173,13 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
           $btnEstado="btn-warning";
           $estado="FACTURA MANUAL";
           // $cadenaFacturasM.="FM".$row_montos['nro_factura'].",";
-          $cadenaFacturas.="FM".$row_montos['nro_factura'].",";
+          $cadenaFacturas.="FM".$row_montos['nro_factura'].", ";
           $cadenaCodFacturas.="0,";
         }elseif($cod_estadofactura==2){
-          $cadenaFacturas.="FA".$row_montos['nro_factura'].",";  
-          $cadenaCodFacturas.="0,";
+          $cadenaFacturas.="FA".$row_montos['nro_factura'].", ";  
+          $cadenaCodFacturas.=$row_montos['codigo'].",";
         }else{
-          $cadenaFacturas.="F".$row_montos['nro_factura'].",";  
+          $cadenaFacturas.="F".$row_montos['nro_factura'].", ";  
           $cadenaCodFacturas.=$row_montos['codigo'].",";
         }
         $importe_fact_x+=$row_montos['importe'];                            
@@ -193,14 +193,16 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
       $stmtDetalleSol->bindColumn('precio', $precio_unitario);
       $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                
       $stmtDetalleSol->bindColumn('ci_estudiante', $ci_estudiante_x); 
-      $concepto_contabilizacion="";      
-      while ($row_det = $stmtDetalleSol->fetch()){        
+      $concepto_contabilizacion="";
+    
+      while ($row_det = $stmtDetalleSol->fetch()){
+        
         if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){                              
           $concepto_contabilizacion="CI: ".$ci_estudiante_x." / "; 
         }
         $concepto_contabilizacion.=$descripcion_alterna."<br>\n";
       }
-      $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100)); //limite de string
+      $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100)); //limite de string                            
       $cod_area_simulacion=$cod_area;
       $nombre_simulacion='OTROS';
       $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
@@ -213,9 +215,6 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
       $nombre_uo=trim(abrevUnidad($cod_unidadorganizacional),' - ');//nombre de la oficina
      
       $sumaTotalImporte=obtenerSumaTotal_solicitudFacturacion($codigo_facturacion);
-      // $cont[$index-1]=$nc;
-      // $stringCabecera=$nombre_uo."##".$nombre_area."##".$nombre_simulacion."##".$name_area_simulacion."##".$fecha_registro."##".$fecha_solicitudfactura."##".$nit."##".$razon_social;
-      
 
       if($cont_facturas>1){      
           // $estado="FACTURA PARCIAL";
@@ -231,7 +230,7 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
         $datos_factura_envio=$cod_factura.'/'.$codigo_facturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
       ?>
       <tr>
-        <!-- <td align="center"><?=$index;?></td> -->
+        
         <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
         <td class="text-right"><small><?=$nro_correlativo;?></small></td>
         <td><small><?=$responsable;?></small></td>
@@ -240,18 +239,18 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
         <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
         <td><small><small><?=$razon_social;?></small></small></td>
         <td><small><small><?=$concepto_contabilizacion?></small></small></td>
-        <td>
+        <td><small><?=$observaciones_string;?></small></td>
+        <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small>
           <?php if($cod_estado_factura_x==3){
             $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
             ?>
               <span class="badge badge-dark"><small><?=$estadofactura?></small></span><?php
-            }else{?><small><?=$observaciones_string;?></small><?php 
-          }?>
+            }?>
         </td>
-        <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
+
         <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
         <td class="td-actions text-right">                              
-          <!-- <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button><br> -->
+          
           <?php
             if($codigo_fact_x>0 && $cod_estado_factura_x!=2 && $cod_estado_factura_x!=5){//print facturas
                 // echo "entra";//solo para facturas mayores a uno
@@ -281,7 +280,12 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
             </button>
             <div class="dropdown-menu" >   
           <?php        
-          $obs_devolucion = preg_replace("[\n|\r|\n\r]", ", ", $obs_devolucion);                     
+          $patron15 = "/[^a-zA-Z0-9]+/";//solo numeros,letras M y m, tildes y la ñ
+          $patron1="[\n|\r|\n\r]";
+          $obs_devolucion = preg_replace($patron1, ", ", $obs_devolucion);//quitamos salto de linea
+          $obs_devolucion = str_replace('"', " ", $obs_devolucion);//quitamos comillas dobles
+          $obs_devolucion = str_replace("'", " ", $obs_devolucion);//quitamos comillas simples
+          // echo $obs_devolucion;
             if($cod_estado_factura_x!=4){
               // echo $codigo_fact_x."-";
               if($codigo_fact_x>0 && $cod_estado_factura_x!=2 && $cod_estado_factura_x!=5){//print facturas
@@ -380,9 +384,7 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
               ?>
               <button title="Detalles Factura Manual" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
                 <i class="material-icons">list</i>
-              </button>
-              <!-- <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
-                  <i class="material-icons" title="Imprimir Comprobante">print</i> -->
+              </button>                                    
                <?php 
             }
 
@@ -417,7 +419,7 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
 
               $datos_envio_correo=$cadenaFacturas."######".$correosEnviados;?>
               <a href='#' title="Información de envío de Correo" class="btn btn-primary" onclick="modal_info_enviocorreo_f('<?=$datos_envio_correo;?>')"><i class="material-icons" >email</i></a>
-              
+             
             <?php }
           ?>
         </div></div>
@@ -429,4 +431,3 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
     ?>
   </tbody>
 </table>
-

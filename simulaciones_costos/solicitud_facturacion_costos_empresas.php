@@ -65,7 +65,7 @@ if(isset($_GET['u']))
               </div>
               <div class="form-group col-sm-6">            
                     <select name="cod_empresa[]" id="cod_empresa" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple>
-                    <option value="0">SELECCIONE UNA EMPRESA</option>
+                    <!-- <option value="0">SELECCIONE UNA EMPRESA</option> -->
                     <?php 
                     $query1 = "SELECT codigo,nombre from clientes where cod_estadoreferencial=1 order by nombre";
                     $statement = $dbh->query($query1);

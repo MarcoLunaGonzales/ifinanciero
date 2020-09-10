@@ -13585,8 +13585,8 @@ function botonBuscarEstudiantesCapacitacion(){
   var valor_codigo_curso= $("#codigo_curso").val();
   var q=$("#q").val();   
   var r=$("#r").val();   
-  var u=$("#r").val();   
-  var s=$("#r").val();   
+  var u=$("#u").val();   
+  var s=$("#s").val();   
   var url='index.php?opcion=listFacturasServicios_costos_estudiantes&ci='+valor_ci_cliente+'&nombre='+valor_nombre_cliente+'&paterno='+valor_paterno_cliente+'&materno='+valor_materno_cliente+'&fecha='+valor_fecha_inscripcion+'&nombre_curso='+valor_nombre_curso+'&codigo_curso='+valor_codigo_curso;
   if(q!=0){    
     location.href=url+'&q='+q+'&r='+r+'&u='+u+'&s='+s;
@@ -13619,8 +13619,6 @@ function itemsSeleccionados_capacitacion_estudiantes(){
   document.getElementById("contador_auxiliar").value=contador_auxiliar;//cantidad de items activados
 }
 
-
-
 function botonBuscarEmpresasCapacitacion(){
   iniciarCargaAjax();
 
@@ -13629,8 +13627,8 @@ function botonBuscarEmpresasCapacitacion(){
   var valor_codigo_curso=$("#codigo_curso").val();   
   var q=$("#q").val();   
   var r=$("#r").val(); 
-  var u=$("#r").val(); 
-  var s=$("#r").val(); 
+  var u=$("#u").val(); 
+  var s=$("#s").val(); 
 
   var url='index.php?opcion=listFacturasServicios_costos_empresas&cod_empresa='+valor_cod_empresa+'&glosa='+valor_glosa+'&codigo_curso='+valor_codigo_curso;
    if(q!=0){    

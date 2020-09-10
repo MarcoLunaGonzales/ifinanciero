@@ -10,7 +10,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  if(isset($_GET['']))
+  if(isset($_GET['v']))
     $v=$_GET['v'];
   else $v=0;
   
@@ -177,13 +177,13 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                 $btnEstado="btn-warning";
                                 $estado="FACTURA MANUAL";
                                 // $cadenaFacturasM.="FM".$row_montos['nro_factura'].",";
-                                $cadenaFacturas.="FM".$row_montos['nro_factura'].",";
+                                $cadenaFacturas.="FM".$row_montos['nro_factura'].", ";
                                 $cadenaCodFacturas.="0,";
                               }elseif($cod_estadofactura==2){
-                                $cadenaFacturas.="FA".$row_montos['nro_factura'].",";  
-                                $cadenaCodFacturas.="0,";
+                                $cadenaFacturas.="FA".$row_montos['nro_factura'].", ";  
+                                $cadenaCodFacturas.=$row_montos['codigo'].",";
                               }else{
-                                $cadenaFacturas.="F".$row_montos['nro_factura'].",";  
+                                $cadenaFacturas.="F".$row_montos['nro_factura'].", ";  
                                 $cadenaCodFacturas.=$row_montos['codigo'].",";
                               }
                               $importe_fact_x+=$row_montos['importe'];                            
@@ -243,15 +243,15 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
                               <td><small><small><?=$razon_social;?></small></small></td>
                               <td><small><small><?=$concepto_contabilizacion?></small></small></td>
-                              <td>
+                              <td><small><?=$observaciones_string;?></small></td>
+                              <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small>
                                 <?php if($cod_estado_factura_x==3){
                                   $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
                                   ?>
                                     <span class="badge badge-dark"><small><?=$estadofactura?></small></span><?php
-                                  }else{?><small><?=$observaciones_string;?></small><?php 
-                                }?>
+                                  }?>
                               </td>
-                              <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
+
                               <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
                               <td class="td-actions text-right">                              
                                 
@@ -444,8 +444,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                       <a href="<?=$urlRegister_solicitudfacturacion_manual;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-primary">SF Manual</a>
                       <a href="<?=$urlListSolicitud_facturacion_normas;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-warning">SF Normas</a>
 
-                      <a href="<?=$urlSolicitudfactura_estudiante;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-success">SF Estudiantes</a>
-                      <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-danger">SF Empresas</a>                      
+                      <a href="<?=$urlSolicitudfactura_estudiante;?>&q=<?=$q?>&u=<?=$u?>&r=<?=$v?>&s=<?=$s?>" class="btn btn-success">SF Estudiantes</a>
+                      <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&r=<?=$v?>" class="btn btn-danger">SF Empresas</a>                      
                       <?php 
                     }else{?>
                       <a href="<?=$urlRegister_solicitudfacturacion_manual;?>" class="btn btn-primary">SF Manual</a>

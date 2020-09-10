@@ -20,10 +20,10 @@ if(isset($_GET['q'])){
   $u=$r;
   $s=$r;
 }
-if(isset($_GET['u']))
+if(isset($_GET['s']))
 {
-  $u=$_GET['u'];
   $s=$_GET['s'];
+  $u=$_GET['u'];
 }
 
 ?>

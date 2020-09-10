@@ -55,6 +55,39 @@ $monto_pagar=($Costo - $descuento_bob_cliente); //formula para sacar el monto a 
 // echo $monto_pagar;
 
 $Codigo_alterno=obtenerCodigoExternoCurso($IdCurso);
+
+
+if(isset($_GET['q'])){
+    //para uo
+    $arraySqlUO=explode("IdOficina",$s);
+    $string_aux='0';  
+    if(isset($arraySqlUO[1])){
+        $string_aux=trim($arraySqlUO[1]);
+        $arraySqlArea=explode("and IdArea",$string_aux);
+        $codigoArea='0';  
+        $codigoUO='0';  
+        if(isset($arraySqlArea[1])){
+            $codigoArea=trim($arraySqlArea[1]);
+            $codigoUO=trim($arraySqlArea[0]);
+        }else{
+            $codigoUO=$string_aux;
+        }
+        if($codigoArea=='0'){    
+            $sqlAreas_x="and codigo=0";    
+        }else{
+            $sqlAreas_x="and codigo ".$codigoArea;  
+        }
+        if($codigoUO=='0'){    
+            $sqlUO_x="and codigo=0";    
+        }else{
+            $sqlUO_x="and codigo ".$codigoUO;  
+        }
+    }
+}else{
+    $sqlUO_x="";
+    $sqlAreas_x="";
+}
+
 if($cod_facturacion>0){//editar
     $sqlFac="SELECT sf.*,sfd.precio,sfd.descuento_por,sfd.descuento_bob from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sfd.cod_solicitudfacturacion=sf.codigo and sf.codigo=$cod_facturacion";
     // echo $sqlFac;
@@ -96,17 +129,15 @@ if($cod_facturacion>0){//editar
     $cod_tipopago=null;
     $persona_contacto= null;
     $cod_tipoobjeto=212;//por defecto}    
-    if(isset($_POST['q'])){
-        $cod_personal=$_POST['q'];
+    if(isset($_GET['q'])){
+        $cod_personal=$_GET['q'];
     }else{
         $cod_personal= $globalUser;
     }
     $cod_cliente=0;//por defecto otros clientes
     $descuento_por=0;
     $descuento_bob=0;
-    if(isset($_POST['q'])){
-        $cod_uo=null;
-    }else $cod_uo=$_SESSION['globalUnidad'];
+    $cod_uo=$_SESSION['globalUnidad'];
     $cod_area=13;
     $dias_credito=obtenerValorConfiguracion(58);
 }
@@ -166,7 +197,7 @@ $contadorRegistros=0;
                                 <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
                                     <option value=""></option>
                                     <?php 
-                                    $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 order by nombre";
+                                    $queryUO1 = "SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 and centro_costos=1 $sqlUO_x order by nombre";
                                     $statementUO1 = $dbh->query($queryUO1);
                                     while ($row = $statementUO1->fetch()){ ?>
                                         <option <?=($cod_uo==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
@@ -181,14 +212,12 @@ $contadorRegistros=0;
                                     <div id="div_contenedor_area">
                                         <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true"> 
                                             <?php 
-                                            $sqlArea="SELECT uo.cod_unidad,uo.cod_area,a.nombre as nombre_area,a.abreviatura as abrev_area
-                                            FROM areas_organizacion uo,areas a
-                                            where uo.cod_estadoreferencial=1 and uo.cod_area=a.codigo and a.areas_ingreso=1 and uo.cod_unidad=$cod_uo order by nombre_area";
-                                            $stmtArea = $dbh->prepare($sqlArea);                                            
+                                            $sqlArea="SELECT codigo,nombre,abreviatura from areas where cod_estado=1 and centro_costos=1 $sqlAreas_x order by nombre";
+                                            // echo $sqlArea;
+                                            $stmtArea = $dbh->prepare($sqlArea);
                                             $stmtArea->execute();
-
                                             while ($rowArea = $stmtArea->fetch()){ ?>
-                                                 <option <?=($cod_area==$rowArea["cod_area"])?"selected":"disabled"?> value="<?=$rowArea["cod_area"];?>" data-subtext="(<?=$rowArea['cod_area']?>)"><?=$rowArea["abrev_area"];?> - <?=$rowArea["nombre_area"];?></option><?php 
+                                                 <option <?=($cod_area==$rowArea["codigo"])?"selected":"disabled"?> value="<?=$rowArea["codigo"];?>" data-subtext="(<?=$rowArea['codigo']?>)"><?=$rowArea["abreviatura"];?> - <?=$rowArea["nombre"];?></option><?php 
                                             } ?>
                                         </select>                                    
                                     </div>                    
@@ -485,6 +514,7 @@ $contadorRegistros=0;
                                             $banderaHab=1;
                                             $codTipoUnidad=1;
                                             $cod_anio=1;
+                                            $controlador_auxiliar=0;//para habilitar la impresión de sf
                                             if($banderaHab!=0){
                                                 $descuento_porX=$descuento_cliente;
                                                 $descuento_bobX=$descuento_bob_cliente;
@@ -556,7 +586,7 @@ $contadorRegistros=0;
                                                     
                                                     if($estadoPagado!=1){
                                                             //parte del controlador de check//impedir los ya registrados
-                                                            $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.ci_estudiante like '%$ci_estudiante%' and tipo_solicitud=2 and sf.cod_estadosolicitudfacturacion!=2";
+                                                            $sqlControlador2="SELECT sfd.precio,sfd.cod_solicitudfacturacion,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdCurso  and sfd.cod_claservicio=$codCS and sf.ci_estudiante like '%$ci_estudiante%' and tipo_solicitud=2 and sf.cod_estadosolicitudfacturacion!=2";
                                                              // echo $sqlControlador2;
                                                             $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                             $stmtControlador2->execute();
@@ -579,10 +609,13 @@ $contadorRegistros=0;
                                                             }else $monto_total_pagado=$precio_total_x;
                                                             // echo "monto_total_pagado:".$monto_total_pagado."-".$monto_pagar;
                                                             $cont_items_aux=0;
+
                                                             while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
+                                                                $cod_solicitudfacturacion_x=$rowPre['cod_solicitudfacturacion'];
                                                                 $cont_items_aux++;
-                                                                if($sw!="checked"){//si el item  es para  editar
+                                                                if($sw!="checked"){//si el item  es diferente de editar
                                                                     if($monto_pagar==$monto_total_pagado){
+                                                                        $controlador_auxiliar=1;
                                                                         $sw2="readonly style='background-color:#cec6d6;'";
                                                                         $saldo=0;
                                                                     }
@@ -602,8 +635,10 @@ $contadorRegistros=0;
                                                                 }
                                                             }
                                                             if($cont_items_aux==0){
-                                                                if($monto_pagar==$monto_total_pagado){
+                                                                if($monto_pagar==$monto_total_pagado){//para el caso de grupal
                                                                     $sw2="readonly style='background-color:#cec6d6;'";
+                                                                    $controlador_auxiliar=1;
+                                                                    $cod_solicitudfacturacion_x=obtnerCodigoSFGrupal($IdCurso,$ci_estudiante,$codCS);
                                                                 }
                                                             }                                                     
                                                         
@@ -654,8 +689,12 @@ $contadorRegistros=0;
                                                                  <span class="toggle"></span>
                                                                </label>
                                                            </div>
-                                                        <?php }else{?>
-                                                          <div class="togglebutton d-none">
+                                                        <?php }else{
+                                                            if($controlador_auxiliar==1){?>
+                                                                <a rel="tooltip" href='<?=$urlPrintSolicitud;?>?codigo=<?=$cod_solicitudfacturacion_x;?>' target="_blank"><i class="material-icons text-primary" title="Imprimir Solicitud Facturación">print</i></a>
+                                                            <?php }
+                                                            ?>
+                                                            <div class="togglebutton d-none">
                                                                <label>
                                                                  <input type="checkbox"  id="modal_check<?=$iii?>" >
                                                                  <span class="toggle"></span>

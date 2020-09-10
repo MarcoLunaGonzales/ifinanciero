@@ -8,6 +8,10 @@
   <h6 class="card-title">Areas: <?=$areaAbrev;?></h6>
   <h6 class="card-title">Oficinas:<?=$unidadAbrev?></h6>
   <!-- <h6 class="card-title">Formas Pago:<?=$formas_pago_titulo?></h6>   -->
+  
+  <?php
+  if($sw_check=="0"){
+  ?>
   <div class="float-right col-sm-6 row">
     <label class="col-sm-4 col-form-label" style="color:#000000; ">Importe Bruto :</label>
       <div class="col-sm-8">
@@ -16,6 +20,9 @@
         </div>
       </div>           
   </div>
+  <?php
+  }
+  ?>
   <br>
   <div class="table-responsive">
     <?php
@@ -24,7 +31,8 @@
     //   $txtEstiloPersonal="display: none;";
     // }
 
-    $html='<table class="table table-bordered table-condensed" id="reporte_datos_busqueda">'.
+    if($sw_check=="0"){
+      $html='<table class="table table-bordered table-condensed" id="reporte_datos_busqueda">'.
             '<thead >'.
             '<tr class="text-center" style="background:#40A3A8;color:#ffffff;">'.
               '<th width="5%">Oficina</th>'.
@@ -42,6 +50,26 @@
             '</tr>'.
            '</thead>'.
            '<tbody>';
+    }else{
+      $html='<table class="table table-bordered table-condensed">'.
+            '<thead >'.
+            '<tr class="text-center" style="background:#40A3A8;color:#ffffff;">'.
+              '<th width="5%">Oficina</th>'.
+              '<th width="5%">Area</th>'.
+              '<th width="5%">Tipo Pago</th>'.
+              '<th width="10%">Fecha Factura</th>'.
+              '<th width="10%"># Factura</th>'.
+              '<th width="10%"># S.F.</th>'.
+              '<th width="15%">NIT</th>'.
+              '<th width="5%">Razon Social</th>'.
+              '<th width="5%">Detalle</th>'.
+              '<th width="10%" style="'.$txtEstiloPersonal.'">Personal</th>'.
+              '<th width="10%">Origen</th>'.
+              '<th width="10%">Importe Bruto</th>'.
+            '</tr>'.
+           '</thead>'.
+           '<tbody>';
+    }
            // $forma_pagoArray="";
     $valorIVA=100-(obtenerValorConfiguracion(1));
     
@@ -93,7 +121,7 @@
                       '<td class="text-left">'.$detalleFactura.'</td>'.
                       '<td class="text-left" style="'.$txtEstiloPersonal.'">'.$personalReporte.'</td>'.
                       '<td class="text-left">'.$origenFacturaX.'</td>'.
-                      '<td class="text-right font-weight-bold">'.number_format($importe_realXBruto,2,'.','').' </td>'. 
+                      '<td class="text-right font-weight-bold">'.number_format($importe_realXBruto,2,'.','').'</td>'. 
                   '</tr>';
     }
         /*$html.='<tr class="bg-secondary text-white">'.
@@ -129,11 +157,34 @@
           <th class="small" width="5%"><small>Importe Bruto</small></th>
         </tr>
       </tfoot>';
+    }else{
+      $html.='<tfoot>
+        <tr style="background:#21618C; color:#fff;">
+          <th class="small" width="5%"></th>      
+          <th class="small" width="5%"></th>      
+          <th class="small" width="5%"></th>
+          <th class="small" width="5%"></th>
+          <th class="small" width="3%"></th>
+          <th class="small" width="3%"></th>
+          <th class="small" width="4%"></th>
+          <th class="small" width="20%"</th>      
+          <th class="small" width="10%"></th>      
+          <th class="small" width="7%"></th>
+          <th class="small" width="7%"></th>
+          <th class="small" width="5%">'.number_format($totalImporteBruto,2,'.','').'</th>
+        </tr>
+      </tfoot>';
     }
     $html.='</table>';
     echo $html;
     ?>
   </div>
 </div>
-<script>$("#importe_bruto").val(<?=number_format($totalImporteBruto,2,'.','')?>);</script>
-              
+
+<?php
+if($sw_check=="0"){
+?>
+  <script>$("#importe_bruto").val(<?=number_format($totalImporteBruto,2,'.','')?>);</script>
+<?php
+}
+?>              
