@@ -10,7 +10,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  if(isset($_GET['']))
+  if(isset($_GET['v']))
     $v=$_GET['v'];
   else $v=0;
   
@@ -444,8 +444,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                       <a href="<?=$urlRegister_solicitudfacturacion_manual;?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-primary">SF Manual</a>
                       <a href="<?=$urlListSolicitud_facturacion_normas;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-warning">SF Normas</a>
 
-                      <a href="<?=$urlSolicitudfactura_estudiante;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-success">SF Estudiantes</a>
-                      <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&r=<?=$s?>" class="btn btn-danger">SF Empresas</a>                      
+                      <a href="<?=$urlSolicitudfactura_estudiante;?>&q=<?=$q?>&u=<?=$u?>&r=<?=$v?>&s=<?=$s?>" class="btn btn-success">SF Estudiantes</a>
+                      <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&r=<?=$v?>" class="btn btn-danger">SF Empresas</a>                      
                       <?php 
                     }else{?>
                       <a href="<?=$urlRegister_solicitudfacturacion_manual;?>" class="btn btn-primary">SF Manual</a>

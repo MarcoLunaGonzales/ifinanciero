@@ -21,13 +21,11 @@ if(isset($_GET['q'])){
 // echo $globalUnidad;
 if(isset($_GET['s'])){
   $s=$_GET['s'];
-  
   $arraySql=explode("IdArea",$s);
   $codigoArea='0';  
   if(isset($arraySql[1])){
     $codigoArea=trim($arraySql[1]);
   }
-    
   if($codigoArea=='0'){    
     $sqlAreas="and sf.cod_area=0";    
   }else{

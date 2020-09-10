@@ -7892,6 +7892,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
      }
      return($valor);
   }
+
   function obtenerDescripcionestudianteGrupal($IdCurso,$ci_estudiante,$codCS){
     $dbh = new Conexion();
     $stmt = $dbh->prepare("SELECT sfd.descripcion_alterna from solicitudes_facturaciondetalle sfd where sfd.cod_curso=$IdCurso and sfd.ci_estudiante like '%$ci_estudiante%' and sfd.cod_claservicio=$codCS");
@@ -7902,6 +7903,17 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
      }
      return($valor);
   }
+  function obtnerCodigoSFGrupal($IdCurso,$ci_estudiante,$codCS){
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT sf.codigo from solicitudes_facturaciondetalle sfd, solicitudes_facturacion sf where sf.codigo=sfd.cod_solicitudfacturacion and sfd.cod_curso=$IdCurso and sfd.ci_estudiante like '%$ci_estudiante%' and sfd.cod_claservicio=$codCS and sf.tipo_solicitud=7");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+     }
+     return($valor);
+  }
+
   function obtenerEstadoLibretaBancaria($cod_libreta){
     $dbh = new Conexion();
     $valor="";
