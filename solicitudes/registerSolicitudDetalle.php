@@ -464,7 +464,7 @@ $i=0;
                <!--DISTRIBUCION-->
                <input type="hidden" id="cantidad_filas_proyecto" value="0"> 
                  <input type="hidden" name="n_distribucion" id="n_distribucion" value="0">
-                 <input type="text" name="nueva_distribucion" id="nueva_distribucion" value="0">
+                 <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="0">
                   <div class="btn-group dropdown">
                       <button type="button" class="btn btn-success dropdown-toggle material-icons text-dark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Distribucion de Gastos">
                       <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning"></span> <b id="boton_titulodist"></b>

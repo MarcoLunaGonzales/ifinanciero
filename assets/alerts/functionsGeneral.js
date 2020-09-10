@@ -14777,10 +14777,10 @@ function guardarDistribucionSolicitudRecurso(){
   if((itemDistArea.length==0||itemDistOficina.length==0)&&$("#titulo_distribucion").html()=="x OFICINA y x Area"){
     Swal.fire("Informativo!", "Debe existir distribucion para Area y Oficina", "warning");
   }else{
-   if(sumaOfi!=100){
+   if(sumaOfi!=100&&$("#nueva_distribucion").val()!=2){
     Swal.fire("Informativo!", "El porcentaje Total de Oficina debe ser 100 !", "warning");
    }else{
-    if(sumaArea!=100){
+    if(sumaArea!=100&&$("#nueva_distribucion").val()!=1){
      Swal.fire("Informativo!", "El porcentaje Total de Area debe ser 100 !", "warning");
     }else{
        saveDistribucionSolicitudRecurso();
