@@ -661,6 +661,14 @@
         $('<input />').attr('type', 'hidden')
           .attr('name', 'd_areas')
           .attr('value', JSON.stringify(itemDistArea))
+          .appendTo('#formDetalleCajaChica');
+        $('<input />').attr('type', 'hidden')
+          .attr('name', 'd_oficinas_global')
+          .attr('value', JSON.stringify(itemDistOficinaGeneral))
+          .appendTo('#formDetalleCajaChica');
+        $('<input />').attr('type', 'hidden')
+          .attr('name', 'd_areas_global')
+          .attr('value', JSON.stringify(itemDistAreaGlobal))
           .appendTo('#formDetalleCajaChica');        
       });
     } );

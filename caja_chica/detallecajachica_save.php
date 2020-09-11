@@ -133,13 +133,21 @@ try {
             if($valorDist!=0){
                 $array1=json_decode($_POST['d_oficinas']);
                 $array2=json_decode($_POST['d_areas']);
+                $array3=json_decode($_POST['d_areas_global']);
+                $array4=json_decode($_POST['d_oficinas_global']);
                 if($valorDist==1){
                     guardarDatosDistribucion($array1,0,$codigo); //dist x Oficina
                 }else{
                     if($valorDist==2){
                       guardarDatosDistribucion(0,$array2,$codigo); //dist x Area
                     }else{
-                      guardarDatosDistribucion($array1,$array2,$codigo); //dist x Oficina y Area
+                        if($valorDist==3){
+                           guardarDatosDistribucion($array1,$array2,$codigo); //dist x Oficina y Area
+                        }else{
+                            guardarDatosDistribucionGeneral($array3,$array4,$codigo); //dist area y Oficina 
+                        }
+
+                      
                     }
                 }   
             }
@@ -290,13 +298,21 @@ try {
             if($valorDist!=0){
                 $array1=json_decode($_POST['d_oficinas']);
                 $array2=json_decode($_POST['d_areas']);
+                $array3=json_decode($_POST['d_areas_global']);
+                $array4=json_decode($_POST['d_oficinas_global']);
                 if($valorDist==1){
                     guardarDatosDistribucion($array1,0,$codigo); //dist x Oficina
                 }else{
                     if($valorDist==2){
                       guardarDatosDistribucion(0,$array2,$codigo); //dist x Area
                     }else{
-                      guardarDatosDistribucion($array1,$array2,$codigo); //dist x Oficina y Area
+                        if($valorDist==3){
+                           guardarDatosDistribucion($array1,$array2,$codigo); //dist x Oficina y Area
+                        }else{
+                            guardarDatosDistribucionGeneral($array3,$array4,$codigo); //dist x area y Oficina 
+                        }
+
+                      
                     }
                 }   
             }
@@ -366,4 +382,34 @@ function guardarDatosDistribucion($array1,$array2,$codigo_cajachica_det){
         }
     } 
 }
+
+function guardarDatosDistribucionGeneral($array3,$array4,$codigo_cajachica_det){
+  $dbh = new Conexion();
+    if($array3!=0){
+        for ($i=0; $i < count($array3); $i++) { 
+            $area=$array3[$i]->area;
+            $porcentaje=$array3[$i]->porcentaje;
+            $fila=$array3[$i]->fila;
+
+            $sqlInsert="INSERT INTO distribucion_gastos_caja_chica (tipo_distribucion,oficina_area,porcentaje,cod_cajachica_detalle,padre_oficina_area) 
+            VALUES ('2','$area','$porcentaje','$codigo_cajachica_det',0)";
+            // echo $sqlInsert;       
+            $stmtInsert = $dbh->prepare($sqlInsert);
+            $stmtInsert->execute();
+            // echo $sqlInsert;
+            for ($k=0; $k < count($array4) ; $k++) { 
+              if($fila==$array4[$k]->cod_fila){
+                $unidad=$array4[$k]->unidad;
+                $porcentaje=$array4[$k]->porcentaje;
+                if($porcentaje>0){
+                  $sqlInsert="INSERT INTO distribucion_gastos_caja_chica (tipo_distribucion,oficina_area,porcentaje,cod_cajachica_detalle,padre_oficina_area) 
+                  VALUES ('1','$unidad','$porcentaje','$codigo_cajachica_det','$fila')";
+                  $stmtInsert = $dbh->prepare($sqlInsert);
+                  $stmtInsert->execute();   
+                }
+              }
+            }
+        }   
+    }
+} 
 ?>

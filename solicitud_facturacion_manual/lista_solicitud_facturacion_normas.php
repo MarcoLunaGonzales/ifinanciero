@@ -34,7 +34,7 @@ $stmt->execute();
             <div class="col-md-12">
             <form id="form1" class="form-horizontal" action="<?=$urlRegisterSolicitudfactura;?>" method="post" onsubmit="return valida(this)">
                 <?php 
-                  if(isset($_GET['q'])){
+                  if(isset($_GET['q']) || isset($_POST['q'])){
                     ?>
                     <input type="hidden" name="q" id="q" value="<?=$q;?>">
                     <input type="hidden" name="v" id="v" value="<?=$v;?>">
