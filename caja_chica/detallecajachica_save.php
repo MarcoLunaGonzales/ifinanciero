@@ -311,8 +311,6 @@ try {
                         }else{
                             guardarDatosDistribucionGeneral($array3,$array4,$codigo); //dist x area y Oficina 
                         }
-
-                      
                     }
                 }   
             }

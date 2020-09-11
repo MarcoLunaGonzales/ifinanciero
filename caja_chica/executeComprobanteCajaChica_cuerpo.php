@@ -312,13 +312,31 @@
 	            }else{                
 	                $monto_restante=$monto_recalculado;//completo
 	                //buscamos si tiene alguna contra cuenta registrada en estados_cuenta
-	                $stmtContraCuenta = $dbh->prepare("SELECT cod_plancuenta,cod_cuentaaux from estados_cuenta where cod_cajachicadetalle=$codigo_ccdetalle");
+	                $sql="SELECT cod_plancuenta,cod_comprobantedetalleorigen from estados_cuenta where cod_cajachicadetalle=$codigo_ccdetalle";
+	                // echo $sql;
+	                $stmtContraCuenta = $dbh->prepare($sql);
 	                $stmtContraCuenta->execute();
 	                $resultContraCuenta = $stmtContraCuenta->fetch();
 	                $cod_plancuenta = $resultContraCuenta['cod_plancuenta']; 
-	                $cod_cuentaaux_x = $resultContraCuenta['cod_cuentaaux']; 
+	                $cod_comprobantedetalleorigen = $resultContraCuenta['cod_comprobantedetalleorigen'];
+	                //sacamops cuenta aux
+
+	                //echo "SELECT e.cod_cuentaaux from estados_cuenta e where e.codigo=$cod_comprobantedetalleorigen";
+	               
+	                
+	               
+
+	                // $cod_cuentaaux_x=0;
+
 	                // echo "llego: ".$cod_plancuenta;
 	                if($cod_plancuenta>0){
+	                	 $stmtContraCuentaAux = $dbh->prepare("SELECT e.cod_cuentaaux from estados_cuenta e where e.codigo=$cod_comprobantedetalleorigen");
+		                $stmtContraCuentaAux->execute();
+		                // $resultContraCuenta_aux = $stmtContraCuentaAux->fetch();
+		                $cod_cuentaaux_x=0;
+		                while ($row_cuentaAux = $stmtContraCuentaAux->fetch()){
+		                	$cod_cuentaaux_x = $row_cuentaAux['cod_cuentaaux']; 
+		                }
 	                    //buscamos el nombre y el numero de la contra cuenta                    
 	                    $descripcionIT=$nombre_uo.'/'.$nombre_area.' '.$proveedor.' SF, '.$observaciones_dcc;
 	                    if($debe_haber==1){ //debe=1
@@ -338,7 +356,7 @@
 		                $resultEstadoCuenta = $stmtEstadoCuenta->fetch();
 		                $cod_compro_det = $resultEstadoCuenta['codigo'];
 		                //actualizamos el campo comporbante del estado_cuentas 
-		                $stmtUpdateEstadoCuenta = $dbh->prepare("UPDATE estados_cuenta set cod_comprobantedetalle=$cod_compro_det where cod_cajachicadetalle=$codigo_ccdetalle");
+		                $stmtUpdateEstadoCuenta = $dbh->prepare("UPDATE estados_cuenta set cod_comprobantedetalle=$cod_compro_det,cod_cuentaaux=$cod_cuentaaux_x where cod_cajachicadetalle=$codigo_ccdetalle");
 		                $stmtUpdateEstadoCuenta->execute();
 		                //actualizamos el cod_comprobante a pagos_proveedores
 		                $stmtUpdatepagosProveedores = $dbh->prepare("UPDATE pagos_proveedores set cod_estadopago=5,cod_comprobante=$codComprobante where cod_cajachicadetalle=$codigo_ccdetalle");
