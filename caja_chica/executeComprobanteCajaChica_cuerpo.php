@@ -94,11 +94,19 @@
 			        }
                 	//Desde aqui las distribuciones por area y/o oficina
 					$cont_tipo_distribucion=0;//verificará si se registró alguna distribucion
-					$stmtTipoDistri=$dbh->prepare("SELECT codigo from distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo_ccdetalle GROUP BY tipo_distribucion");
+					$cont_padre_area=0;
+					$stmtTipoDistri=$dbh->prepare("SELECT codigo,padre_oficina_area from distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo_ccdetalle GROUP BY tipo_distribucion");
 	                $stmtTipoDistri->execute();
 					while ($rowTipoDistr = $stmtTipoDistri->fetch()){
 						$cont_tipo_distribucion++;
-					}	
+						$padre_oficina_area=$rowTipoDistr['padre_oficina_area'];
+						if($padre_oficina_area!=""){          
+				          $cont_padre_area++;
+				        }
+					}
+					if($cont_padre_area>0){
+						$cont_tipo_distribucion=4;
+					}
 					if($cont_tipo_distribucion==1){//distribucion solo area u oficina
 						$stmtTipoDistribucion = $dbh->prepare("SELECT tipo_distribucion,oficina_area,porcentaje from distribucion_gastos_caja_chica where porcentaje>0 and cod_cajachica_detalle=$codigo_ccdetalle order by tipo_distribucion");
 		                $stmtTipoDistribucion->execute();
@@ -138,7 +146,7 @@
 	                            }
 		                	}				                	
 		                }
-					}elseif($cont_tipo_distribucion==2){//distribucion area y oficina
+					}elseif($cont_tipo_distribucion==2){//distribucion x oficina y area
 						$monto_uo_distribuido=$monto_restante*40/100;
 						$monto_area_distribuido=$monto_restante*60/100;
 
@@ -195,7 +203,41 @@
 				            $flagSuccessDet=$stmtInsertDet->execute();
 				            $ordenDetalle++;
                         }  	               
+					}elseif($cont_tipo_distribucion==4){//distribucion x area y oficina
+						// $monto_uo_distribuido=$monto_restante*40/100;
+						// $monto_area_distribuido=$monto_restante*60/100;
+
+						$stmtTipoDistribucion = $dbh->prepare("SELECT tipo_distribucion,oficina_area,porcentaje,padre_oficina_area from distribucion_gastos_caja_chica where porcentaje>0 and padre_oficina_area>0 and cod_cajachica_detalle=$codigo_ccdetalle order by tipo_distribucion");
+		                $stmtTipoDistribucion->execute();
+		                while ($rowTipoDistribucion = $stmtTipoDistribucion->fetch()){
+		                	$tipo=$rowTipoDistribucion['tipo_distribucion'];
+		                	$oficina_area=$rowTipoDistribucion['oficina_area'];
+		                	$porcentaje=$rowTipoDistribucion['porcentaje'];
+		                	$padre_oficina_area=$rowTipoDistribucion['padre_oficina_area'];
+		                	$porcentaje_padrea_area=obtener_porcentaje_padre_area($padre_oficina_area,$codigo_ccdetalle);
+		                	$monto_area_distribuido=$monto_restante*$porcentaje_padrea_area/100;
+		                	// $monto_uo_distribuido=$monto_area_distribuido*40/100;
+		                	if($tipo==1){//oficina
+		                		$name_oficina_dis=abrevUnidad($oficina_area);
+		                		$descripcion_distribucion=$nombre_uo.'/'.$name_oficina_dis.' '.$cadena_facturas.' (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
+	                            
+	                            $monto_of=$monto_area_distribuido*$porcentaje/100;
+	                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
+	                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$oficina_area','$padre_oficina_area','0','$monto_of','$descripcion_distribucion','$ordenDetalle')";
+						            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+						            $flagSuccessDet=$stmtInsertDet->execute();
+						            $ordenDetalle++;
+	                            }else{
+	                                $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$oficina_area','$padre_oficina_area','$monto_of','0','$descripcion_distribucion','$ordenDetalle')";
+						            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+						            $flagSuccessDet=$stmtInsertDet->execute();
+						            $ordenDetalle++;                               
+	                            }
+		                	}
+		                }
 					}
+
+
 					$porcentaje_retencion_x=$porcentaje_retencion;
 					$sw_contracuenta++;
 					$debe_haber_x=$debe_haber;
@@ -270,21 +312,22 @@
 	            }else{                
 	                $monto_restante=$monto_recalculado;//completo
 	                //buscamos si tiene alguna contra cuenta registrada en estados_cuenta
-	                $stmtContraCuenta = $dbh->prepare("SELECT cod_plancuenta from estados_cuenta where cod_cajachicadetalle=$codigo_ccdetalle");
+	                $stmtContraCuenta = $dbh->prepare("SELECT cod_plancuenta,cod_cuentaaux from estados_cuenta where cod_cajachicadetalle=$codigo_ccdetalle");
 	                $stmtContraCuenta->execute();
 	                $resultContraCuenta = $stmtContraCuenta->fetch();
 	                $cod_plancuenta = $resultContraCuenta['cod_plancuenta']; 
+	                $cod_cuentaaux_x = $resultContraCuenta['cod_cuentaaux']; 
 	                // echo "llego: ".$cod_plancuenta;
 	                if($cod_plancuenta>0){
 	                    //buscamos el nombre y el numero de la contra cuenta                    
 	                    $descripcionIT=$nombre_uo.'/'.$nombre_area.' '.$proveedor.' SF, '.$observaciones_dcc;
 	                    if($debe_haber==1){ //debe=1
-	                    	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_plancuenta','0','$cod_uo','$cod_area','0','$monto_restante','$descripcionIT','$ordenDetalle')";
+	                    	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_plancuenta','$cod_cuentaaux_x','$cod_uo','$cod_area','0','$monto_restante','$descripcionIT','$ordenDetalle')";
 				            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
 				            $flagSuccessDet=$stmtInsertDet->execute();
 				            $ordenDetalle++;
 	                    }else{//haber=2
-				            $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_plancuenta','0','$cod_uo','$cod_area','$monto_restante','0','$descripcionIT','$ordenDetalle')";
+				            $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_plancuenta','$cod_cuentaaux_x','$cod_uo','$cod_area','$monto_restante','0','$descripcionIT','$ordenDetalle')";
 				            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
 				            $flagSuccessDet=$stmtInsertDet->execute();
 				            $ordenDetalle++;
@@ -309,11 +352,19 @@
 				        }
 				        //Desde aqui las distribuciones por area y/o oficina
 						$cont_tipo_distribucion=0;//verificará si se registró alguna distribucion
-						$stmtTipoDistri=$dbh->prepare("SELECT codigo from distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo_ccdetalle GROUP BY tipo_distribucion");
+						$cont_padre_area=0;
+						$stmtTipoDistri=$dbh->prepare("SELECT codigo,padre_oficina_area from distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo_ccdetalle GROUP BY tipo_distribucion");
 		                $stmtTipoDistri->execute();
 						while ($rowTipoDistr = $stmtTipoDistri->fetch()){
 							$cont_tipo_distribucion++;
-						}								
+							$padre_oficina_area=$rowTipoDistr['padre_oficina_area'];
+							if($padre_oficina_area!=""){          
+					          $cont_padre_area++;
+					        }
+						}
+						if($cont_padre_area>0){
+							$cont_tipo_distribucion=4;
+						}						
 						if($cont_tipo_distribucion==1){//distribucion solo area u oficina
 							$stmtTipoDistribucion = $dbh->prepare("SELECT tipo_distribucion,oficina_area,porcentaje from distribucion_gastos_caja_chica where porcentaje>0 and cod_cajachica_detalle=$codigo_ccdetalle order by tipo_distribucion");
 			                $stmtTipoDistribucion->execute();
@@ -412,6 +463,38 @@
 					            $flagSuccessDet=$stmtInsertDet->execute();
 					            $ordenDetalle++;
 	                        }		                    
+						}elseif($cont_tipo_distribucion==4){//distribucion x area y oficina
+							// $monto_uo_distribuido=$monto_restante*40/100;
+							// $monto_area_distribuido=$monto_restante*60/100;
+
+							$stmtTipoDistribucion = $dbh->prepare("SELECT tipo_distribucion,oficina_area,porcentaje,padre_oficina_area from distribucion_gastos_caja_chica where porcentaje>0 and padre_oficina_area>0 and cod_cajachica_detalle=$codigo_ccdetalle order by tipo_distribucion");
+			                $stmtTipoDistribucion->execute();
+			                while ($rowTipoDistribucion = $stmtTipoDistribucion->fetch()){
+			                	$tipo=$rowTipoDistribucion['tipo_distribucion'];
+			                	$oficina_area=$rowTipoDistribucion['oficina_area'];
+			                	$porcentaje=$rowTipoDistribucion['porcentaje'];
+			                	$padre_oficina_area=$rowTipoDistribucion['padre_oficina_area'];
+			                	$porcentaje_padrea_area=obtener_porcentaje_padre_area($padre_oficina_area,$codigo_ccdetalle);
+			                	$monto_area_distribuido=$monto_restante*$porcentaje_padrea_area/100;
+			                	// $monto_uo_distribuido=$monto_area_distribuido*40/100;
+			                	if($tipo==1){//oficina
+			                		$name_oficina_dis=abrevUnidad($oficina_area);
+			                		$descripcion_distribucion=$nombre_uo.'/'.$name_oficina_dis.' SF (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;
+		                            
+		                            $monto_of=$monto_area_distribuido*$porcentaje/100;
+		                            if($debe_haber==1){ //preguntamps si pertenece a la columna debe o haber
+		                            	$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$oficina_area','$padre_oficina_area','0','$monto_of','$descripcion_distribucion','$ordenDetalle')";
+							            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+							            $flagSuccessDet=$stmtInsertDet->execute();
+							            $ordenDetalle++;
+		                            }else{
+		                                $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$oficina_area','$padre_oficina_area','$monto_of','0','$descripcion_distribucion','$ordenDetalle')";
+							            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+							            $flagSuccessDet=$stmtInsertDet->execute();
+							            $ordenDetalle++;                               
+		                            }
+			                	}
+			                }
 						}				                    
 	                }
 	                $porcentaje_retencion_x=$porcentaje_retencion;

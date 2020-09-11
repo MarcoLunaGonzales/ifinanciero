@@ -6607,6 +6607,16 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      }
      return($valor);
   }
+  function obtenerPorcentajeDistribucionGastoCajaChicaGeneral($antValor,$tipo,$of_area,$codigoCajaChica,$padre){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT porcentaje FROM distribucion_gastos_caja_chica where tipo_distribucion=$tipo and oficina_area=$of_area and cod_cajachica_detalle=$codigoCajaChica and padre_oficina_area=$padre");
+     $stmt->execute();
+     $valor=$antValor;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['porcentaje'];
+     }
+     return($valor);
+  }
   function obtenerSiDistribucionSolicitudRecurso($codigoSolicitud){
     $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT DISTINCT tipo_distribucion,padre_oficina_area FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codigoSolicitud");
@@ -6737,7 +6747,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      $stmt->execute();
      $valor=0;$val2=0;$distribucion=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      if($row['padre_oficina_area']>0){
+      if($row['padre_oficina_area']>0){ 
         $distribucion=4;
       }else{
         $distribucion+=$row['tipo_distribucion'];
@@ -8624,23 +8634,31 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
     }
     function verificamos_distribucion_cajachica($codigo){
       $dbh = new Conexion();        
-      $sql="SELECT tipo_distribucion from distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo GROUP BY tipo_distribucion";    
+      $sql="SELECT tipo_distribucion,padre_oficina_area from distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo GROUP BY tipo_distribucion";   
+      // echo $sql; 
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
       $valor='0';
       $cont=0;
+      $cont_padre_area=0;
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $cont++;
         $tipo_distribucion=$row['tipo_distribucion'];
+        $padre_oficina_area=$row['padre_oficina_area'];        
+        if($padre_oficina_area!=""){          
+          $cont_padre_area++;
+        }
         if($tipo_distribucion==1){  
           $valor="x OFICINA";
         }else{
           $valor="x AREA";
         }
-      }         
-      if($cont>1){
-        $valor="x OFICINA y AREA";
-      }
+      }      
+      if($cont>1 && $cont_padre_area==0){
+        $valor="x Oficina y Area";
+      }else{
+        $valor="x Area y Oficina";
+      }      
       return($valor);
     }
     function obtenerNombreEstadoSolFac($cod_estado){
@@ -8665,6 +8683,18 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
       }         
       return($valor);
     }
+  function obtener_porcentaje_padre_area($padre_oficina_area,$codigo_ccdetalle){
+    $dbh = new Conexion();        
+    $sql="SELECT porcentaje from distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo_ccdetalle and oficina_area=$padre_oficina_area and padre_oficina_area=0";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['porcentaje'];
+    }         
+    return($valor);
+  }
+    
 
   function obtenerDatosDistribucionSolicitudFacturacion($codigo){
      $dbh = new Conexion();

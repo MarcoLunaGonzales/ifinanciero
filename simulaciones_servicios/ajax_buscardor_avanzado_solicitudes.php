@@ -86,7 +86,6 @@ $stmt->bindColumn('obs_devolucion', $obs_devolucion);
 $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
 
 ?>
- 
 <table class="table" id="tablePaginator50NoFinder">
   <thead>
     <tr>

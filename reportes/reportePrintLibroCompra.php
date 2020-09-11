@@ -102,17 +102,17 @@ $razon_social=$result['razon_social'];
                               </tr>
                               <tr >
                                   <th width="2%" style="border:2px solid;"><small><b>-</b></small></th>   
-                                  <th style="border:2px solid;" width="6%"><small><b>Fecha</b></small></th>                                
-                                  <th style="border:2px solid;" width="6%"><small><b>NIT</b></small></th>
-                                  <th style="border:2px solid;"><small><b>Razón Social </b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Nro. de<br> FACTURA</b></small></th>
-                                  <th style="border:2px solid;" width="10%"><small><b>Nro de Autorización</b></small></th>
-                                  <th style="border:2px solid;" width="10%"><small><b>Código de Control</b></small></th>                                  
-                                  <th style="border:2px solid;" width="6%"><small><b>Total Factura (A)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Total I.C.E (B)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Importes Exentos (C)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Importe Neto Sujeto a IVA <br>(A-B-C)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Crédito Fiscal Obtenido</b></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Fecha</b></small></small></th>                                
+                                  <th style="border:2px solid;" width="6%"><small><small><b>NIT</b></small></small></th>
+                                  <th style="border:2px solid;" width="20%"><small><small><b>Razón Social </b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Nro. Factura</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Nro de Autorización</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Código de Control</b></small></small></th>                                 
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Total Factura (A)</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Total I.C.E (B)</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Importes Exentos (C)</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="10%"><small><small><small><b>Importe Neto Sujeto a IVA (A-B-C)</b></small></small></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Crédito Fiscal Obtenido</b></small></small></small></th>
                               </tr>                                  
                             </thead>
                             <tbody>

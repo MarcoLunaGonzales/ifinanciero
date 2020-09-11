@@ -123,35 +123,36 @@ if ($codigo > 0){
 $dias_atras=obtenerValorConfiguracion(31);
 $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
 
-  //distribucion gastosarea
-  $distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
-  while ($rowOfi = $distribucionOfi->fetch(PDO::FETCH_ASSOC)) {
-    $codigoD=$rowOfi['codigo'];
-    $codDistD=$rowOfi['cod_distribucion_gastos'];
-    $codUnidadD=$rowOfi['cod_unidadorganizacional'];    
-    $nombreD=$rowOfi['nombre'];
-    $porcentajeD=-1;
-    if($codigo>0){
-      $porcentajeD=ontener_porcentaje_distribucion_cajachica($codigo,$codUnidadD,1);      
-    }
-    if($porcentajeD<0){
-      $porcentajeD=$rowOfi['porcentaje'];
-    }
-    ?>
-    <script>
-      var distri = {
-        codigo:<?=$codigoD?>,
-        cod_dis:<?=$codDistD?>,
-        unidad:<?=$codUnidadD?>,
-        nombre:'<?=$nombreD?>',
-        porcentaje:<?=$porcentajeD?>
-      }
-      itemDistOficina.push(distri);
-    </script>  
-    <?php
+//distribucion gastosarea
+$distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+while ($rowOfi = $distribucionOfi->fetch(PDO::FETCH_ASSOC)) {
+  $codigoD=$rowOfi['codigo'];
+  $codDistD=$rowOfi['cod_distribucion_gastos'];
+  $codUnidadD=$rowOfi['cod_unidadorganizacional'];    
+  $nombreD=$rowOfi['nombre'];
+  $porcentajeD=-1;
+  if($codigo>0){
+    $porcentajeD=ontener_porcentaje_distribucion_cajachica($codigo,$codUnidadD,1);      
   }
-  $distribucionArea=obtenerDistribucionCentroCostosAreaActivo($globalUnidad); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
-  while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
+  if($porcentajeD<0){
+    $porcentajeD=$rowOfi['porcentaje'];
+  }
+  //verificarHayAmbasDistribucionesSolicitudRecurso
+  ?>
+  <script>
+    var distri = {
+      codigo:<?=$codigoD?>,
+      cod_dis:<?=$codDistD?>,
+      unidad:<?=$codUnidadD?>,
+      nombre:'<?=$nombreD?>',
+      porcentaje:<?=$porcentajeD?>
+    }
+    itemDistOficina.push(distri);
+  </script>  
+  <?php
+}
+$distribucionArea=obtenerDistribucionCentroCostosAreaActivo($globalUnidad); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
   $codigoD=$rowArea['codigo'];
   $codDistD=$rowArea['cod_distribucionarea'];
   $codAreaD=$rowArea['cod_area'];
@@ -165,19 +166,106 @@ $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
     $porcentajeD=$rowArea['porcentaje'];
   }
   ?>
+  <script>
+    var distri = {
+      codigo:<?=$codigoD?>,
+      cod_dis:<?=$codDistD?>,
+      area:<?=$codAreaD?>,
+      nombre:'<?=$nombreD?>',
+      porcentaje:<?=$porcentajeD?>
+    }
+    itemDistArea.push(distri);
+  </script>  
+  <?php
+}
+
+
+if($codigo>0){
+  $indexArea=0;
+  $stmtAreas = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+  $stmtAreas->execute();
+  while ($row = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
+   $codigoX=$row['codigo'];
+   $nombreX=$row['nombre'];
+   $abrevX=$row['abreviatura'];
+   $porcentajeA=obtenerPorcentajeDistribucionGastoCajaChicaGeneral(0,2,$codigoX,$codigo,0);
+  ?>
+  <script>
+    var distri = {
+      fila:<?=$codigoX?>,
+      codigo:1,
+      cod_dis:2,
+      area:<?=$codigoX?>,
+      nombre:'<?=$nombreX?> - <?=$abrevX?>',
+      porcentaje:<?=$porcentajeA?>
+    }
+      itemDistAreaGlobal.push(distri);
+    
+  </script> 
+    <?php
+    $distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+    while ($rowOfi = $distribucionOfi->fetch(PDO::FETCH_ASSOC)) {
+      $codigoD=$rowOfi['codigo'];
+      $codDistD=$rowOfi['cod_distribucion_gastos'];
+      $codUnidadD=$rowOfi['cod_unidadorganizacional'];
+      $porcentajeD=$rowOfi['porcentaje'];
+      $nombreD=$rowOfi['nombre'];
+      $porcentajeD=obtenerPorcentajeDistribucionGastoCajaChicaGeneral(0,1,$codUnidadD,$codigo,$codigoX);
+    ?>
+     <script>
+     var ofi = {
+          cod_fila:<?=$codigoX?>,
+          codigo:<?=$codigoD?>,
+          cod_dis:<?=$codDistD?>,
+          unidad:<?=$codUnidadD?>,
+          nombre:'<?=$nombreD?>',
+          porcentaje:<?=$porcentajeD?>
+     }
+    itemDistOficinaGeneral.push(ofi);
+     </script>  
+  <?php
+    }
+
+    $indexArea++;
+  }
+}else{
+  $indexArea=0;
+  $stmtAreas = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+  $stmtAreas->execute();
+  while ($row = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
+    $codigoX=$row['codigo'];
+    $nombreX=$row['nombre'];
+    $abrevX=$row['abreviatura'];
+    ?>
     <script>
       var distri = {
-        codigo:<?=$codigoD?>,
-        cod_dis:<?=$codDistD?>,
-        area:<?=$codAreaD?>,
-        nombre:'<?=$nombreD?>',
-        porcentaje:<?=$porcentajeD?>
+        fila:<?=$codigoX?>,
+        codigo:1,
+        cod_dis:2,
+        area:<?=$codigoX?>,
+        nombre:'<?=$nombreX?> - <?=$abrevX?>',
+        porcentaje:0
       }
-      itemDistArea.push(distri);
-    </script>  
+      var porcentajeOfi=0;
+      for (var i = 0; i < itemDistOficina.length; i++) {
+        //if (i == 0){ porcentajeOfi=100; }else{ porcentajeOfi=0;}
+        var ofi = {
+        cod_fila:<?=$codigoX?>,
+        codigo:itemDistOficina[i].codigo,
+        cod_dis:itemDistOficina[i].cod_dis,
+        unidad:itemDistOficina[i].unidad,
+        nombre:itemDistOficina[i].nombre,
+        porcentaje:porcentajeOfi
+        }
+        itemDistOficinaGeneral.push(ofi); 
+      }
+      itemDistAreaGlobal.push(distri);
+      
+    </script> 
     <?php
-  }  
-
+    $indexArea++;
+  }
+}
 $archivos_cajachica=0;//contador de archivos de caja chica
 ?>
 
@@ -345,6 +433,9 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                           </a>
                           <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
                             <i class="material-icons">bubble_chart</i> x Oficina y x Área
+                          </a>
+                          <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(4)" class="dropdown-item">
+                            <i class="material-icons">bubble_chart</i> x Área y Oficina
                           </a>
                           <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(0)" class="dropdown-item">
                             <i class="material-icons">bubble_chart</i> Nínguna
@@ -518,7 +609,6 @@ $archivos_cajachica=0;//contador de archivos de caja chica
   			</div>
         <!-- archivos adjuntos -->
        <?php  require_once 'caja_chica/modal_subirarchivos.php';?>
-
 		  </form>
 		</div>
 	
