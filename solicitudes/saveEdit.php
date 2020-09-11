@@ -80,7 +80,7 @@ if(isset($_POST['numero'])){
   }
   print_r($sqlInsert);
   $stmtInsert = $dbh->prepare($sqlInsert);
-  $stmtInsert->execute();
+  $flagSuccess=$stmtInsert->execute();
 
   //enviar propuestas para la actualizacion de ibnorca
   $fechaHoraActual=date("Y-m-d H:i:s");
@@ -134,7 +134,7 @@ if(isset($_POST['numero'])){
 
 
 
-$flagSuccess=true;
+//$flagSuccess=true;
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
 

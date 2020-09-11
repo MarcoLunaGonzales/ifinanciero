@@ -56,6 +56,16 @@ if(isset($_GET['v'])){
       $sqlOficina="and (codigo ".$codigoOficina.")";               
     }
 
+    $stmtOficinas = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 $sqlOficina order by 2");
+    $stmtOficinas->execute();
+    $existeOficina=0;
+    while ($rowOficinas = $stmtOficinas->fetch(PDO::FETCH_ASSOC)) {
+      $existeOficina++;
+    }
+    if($existeOficina==0){
+      $sqlOficina="";
+    }
+
   }
   ?>
   <div class="row col-sm-12 float-right">

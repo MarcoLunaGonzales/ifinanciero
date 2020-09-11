@@ -144,12 +144,12 @@
       <div class="btn-group">
           <?php
             $cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
-            if($cuenta==$cod_cuenta_configuracion_iva){ ?>
-              <a href="#" title="Facturas" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
+            //if($cuenta==$cod_cuenta_configuracion_iva){ ?>
+              <a href="#" title="Facturas" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="facturas-boton btn btn-info btn-sm btn-fab <?=($cod_cuenta_configuracion_iva==$cuenta)?'':'btn-default text-dark d-none';?>">
                 <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
               </a>
 
-            <?php }
+            <?php //}
           ?>
           
            <a title="Actividad Proyecto SIS" id="boton_actividad_proyecto<?=$idFila?>" href="#" onclick="verActividadesProyectosSis(<?=$idFila;?>);" class="btn btn-sm btn-orange btn-fab d-none"><span class="material-icons">assignment</span><span id="nestadoactproy<?=$idFila?>" class="bg-warning"></span></a>
