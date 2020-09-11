@@ -53,8 +53,9 @@
   <script src="assets/demo/demo.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
-
-
+  
+  <!--CHART GOOGLE-->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
   <script>
     $(document).ready(function() {
