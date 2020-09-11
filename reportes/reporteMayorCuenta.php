@@ -93,7 +93,9 @@
         $haberAnterior=0;
         $saldoAnteriorFormato="0";
       }else{
-        $saldoAnteriorArray=montoCuentaRangoFechas($unidadArray, $unidadCostoArray, $areaCostoArray, $desdeInicioAnio, $desde, $cuenta, $NombreGestion);
+        $diaAntesCalculoSaldoAnterior=date('Y-m-d',strtotime($desde.'-1 day'));
+
+        $saldoAnteriorArray=montoCuentaRangoFechas($unidadArray, $unidadCostoArray, $areaCostoArray, $desdeInicioAnio, $diaAntesCalculoSaldoAnterior, $cuenta, $NombreGestion);
         $saldoAnterior=floatval($saldoAnteriorArray[0])-floatval($saldoAnteriorArray[1]);
         $debeAnterior=$saldoAnteriorArray[0];
         $haberAnterior=$saldoAnteriorArray[1];
