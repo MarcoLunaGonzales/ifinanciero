@@ -9784,4 +9784,11 @@ function obtenerEstadoCuentaComprobanteCerrados($codigo){
      }
      return($valor);
   }
+  function calcularValorEnPoncentaje($valor,$total){
+  $porcentaje=0;
+  if($total>0){
+    $porcentaje=($valor*100)/$total;
+  }     
+  return $porcentaje;
+}
 ?>

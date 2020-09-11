@@ -18272,3 +18272,13 @@ var cantidad=$("#cantidad_registros_detalle_sis").val();
     Swal.fire("Informativo!", "No hay detalles en la Solicitud", "warning");
   }
 }
+
+function buscarIngresosDashboard(){
+  var gestion=$('#gestiones option:selected').text();
+  var mes=$("#cod_mes_x").val();
+  iniciarCargaAjax();
+  window.location.href="index.php?opcion=homeModulo&anio="+gestion+"&mes="+mes;  
+}
+
+
+
