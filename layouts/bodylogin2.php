@@ -157,7 +157,6 @@
           
         });
 
-
         $('#tablePaginatorReport ').DataTable({
             "paging":   false,
             "info":     false,
@@ -167,7 +166,9 @@
             fixedHeader: {
               header: true,
               footer: true
-            }
+            }.
+            "order": false
+
         } );
         if($("#tableCuentasBuscar").length){
           $('#tableCuentasBuscar tfoot th').each( function () {
