@@ -14777,10 +14777,10 @@ function guardarDistribucionSolicitudRecurso(){
   if((itemDistArea.length==0||itemDistOficina.length==0)&&$("#titulo_distribucion").html()=="x OFICINA y x Area"){
     Swal.fire("Informativo!", "Debe existir distribucion para Area y Oficina", "warning");
   }else{
-   if(sumaOfi!=100){
+   if(sumaOfi!=100&&$("#nueva_distribucion").val()!=2){
     Swal.fire("Informativo!", "El porcentaje Total de Oficina debe ser 100 !", "warning");
    }else{
-    if(sumaArea!=100){
+    if(sumaArea!=100&&$("#nueva_distribucion").val()!=1){
      Swal.fire("Informativo!", "El porcentaje Total de Area debe ser 100 !", "warning");
     }else{
        saveDistribucionSolicitudRecurso();
@@ -16764,10 +16764,10 @@ function ajax_contenedor_tabla_libretaBancariaIndividual(idLib){
    var saldo=$("#saldo_x").val();
    var url = "simulaciones_servicios/ajax_listado_libreta_bancaria.php";
    var parametros={"saldo":saldo,"tipo_listado":1,"codigo_lib":idLib};
-   if($("#cantidad_filas_libretas").length>0){
+   /*if($("#cantidad_filas_libretas").length>0){
      $("#cantidad_filas_libretas").val(0);
      $("#datos_libreta_bancaria_detalle").html("");
-   }
+   }*/
   }  
   if($("#modal_anio_actual").length>0){
     if($("#modal_anio_actual").length>0){
@@ -18272,3 +18272,13 @@ var cantidad=$("#cantidad_registros_detalle_sis").val();
     Swal.fire("Informativo!", "No hay detalles en la Solicitud", "warning");
   }
 }
+
+function buscarIngresosDashboard(){
+  var gestion=$('#gestiones option:selected').text();
+  var mes=$("#cod_mes_x").val();
+  iniciarCargaAjax();
+  window.location.href="index.php?opcion=homeModulo&anio="+gestion+"&mes="+mes;  
+}
+
+
+

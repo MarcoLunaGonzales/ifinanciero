@@ -74,7 +74,17 @@ try {
             $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) values ($codigo,$numero,$cod_retencion,$monto,$monto_rendicion,'$cod_personal','$observaciones',$cod_estado,$codigo,$cod_estadoreferencial,'$fecha')");
             $flagSuccess=$stmtrendiciones->execute();
             //insertamos estado_de_cuentas y comprobantes
-            if($cod_comprobante_ec>0){//llega el cod de estado de cuenta                
+            if($cod_comprobante_ec>0){//llega el cod de estado de cuenta                     
+                //sacamos las cuentas auxiliares
+                $nomProveedor=nameProveedor($cod_proveedores);
+                //CREAR CUENTA AUXILIAR SI NO EXISTE 
+                if(obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$cod_proveedores,$cod_cuenta)==0){
+                    $codEstado="1";
+                    $stmtInsertAux = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente) 
+                    VALUES ('$nomProveedor', $codEstado,$cod_cuenta, 1, $cod_proveedores)");
+                    $stmtInsertAux->execute();
+                }
+                $cuenta_auxiliar1=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$cod_proveedores,$cod_cuenta); 
                 $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle,glosa_auxiliar)values('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobante_ec','$cuenta_auxiliar1','$codigo','$observaciones')");
                 $flagSuccess=$stmtContraCuenta->execute();
                 if($flagSuccess){
@@ -123,13 +133,21 @@ try {
             if($valorDist!=0){
                 $array1=json_decode($_POST['d_oficinas']);
                 $array2=json_decode($_POST['d_areas']);
+                $array3=json_decode($_POST['d_areas_global']);
+                $array4=json_decode($_POST['d_oficinas_global']);
                 if($valorDist==1){
                     guardarDatosDistribucion($array1,0,$codigo); //dist x Oficina
                 }else{
                     if($valorDist==2){
                       guardarDatosDistribucion(0,$array2,$codigo); //dist x Area
                     }else{
-                      guardarDatosDistribucion($array1,$array2,$codigo); //dist x Oficina y Area
+                        if($valorDist==3){
+                           guardarDatosDistribucion($array1,$array2,$codigo); //dist x Oficina y Area
+                        }else{
+                            guardarDatosDistribucionGeneral($array3,$array4,$codigo); //dist area y Oficina 
+                        }
+
+                      
                     }
                 }   
             }
@@ -220,7 +238,16 @@ try {
                 $stmtupdate_x = $dbh->prepare($sql);
                 $stmtupdate_x->execute();
 
-                
+                //sacamos las cuentas auxiliares
+                $nomProveedor=nameProveedor($cod_proveedores);
+                //CREAR CUENTA AUXILIAR SI NO EXISTE 
+                if(obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$cod_proveedores,$cod_cuenta)==0){
+                    $codEstado="1";
+                    $stmtInsertAux = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente) 
+                    VALUES ('$nomProveedor', $codEstado,$cod_cuenta, 1, $cod_proveedores)");
+                    $stmtInsertAux->execute();
+                }
+                $cuenta_auxiliar1=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$cod_proveedores,$cod_cuenta);
                 $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle,glosa_auxiliar)values('0','$cod_cuenta','$monto','$cod_proveedores','$fecha','$cod_comprobante_ec','$cuenta_auxiliar1','$codigo','$observaciones')");
                 $flagSuccess=$stmtContraCuenta->execute();
                 if($flagSuccess){
@@ -271,13 +298,21 @@ try {
             if($valorDist!=0){
                 $array1=json_decode($_POST['d_oficinas']);
                 $array2=json_decode($_POST['d_areas']);
+                $array3=json_decode($_POST['d_areas_global']);
+                $array4=json_decode($_POST['d_oficinas_global']);
                 if($valorDist==1){
                     guardarDatosDistribucion($array1,0,$codigo); //dist x Oficina
                 }else{
                     if($valorDist==2){
                       guardarDatosDistribucion(0,$array2,$codigo); //dist x Area
                     }else{
-                      guardarDatosDistribucion($array1,$array2,$codigo); //dist x Oficina y Area
+                        if($valorDist==3){
+                           guardarDatosDistribucion($array1,$array2,$codigo); //dist x Oficina y Area
+                        }else{
+                            guardarDatosDistribucionGeneral($array3,$array4,$codigo); //dist x area y Oficina 
+                        }
+
+                      
                     }
                 }   
             }
@@ -347,4 +382,34 @@ function guardarDatosDistribucion($array1,$array2,$codigo_cajachica_det){
         }
     } 
 }
+
+function guardarDatosDistribucionGeneral($array3,$array4,$codigo_cajachica_det){
+  $dbh = new Conexion();
+    if($array3!=0){
+        for ($i=0; $i < count($array3); $i++) { 
+            $area=$array3[$i]->area;
+            $porcentaje=$array3[$i]->porcentaje;
+            $fila=$array3[$i]->fila;
+
+            $sqlInsert="INSERT INTO distribucion_gastos_caja_chica (tipo_distribucion,oficina_area,porcentaje,cod_cajachica_detalle,padre_oficina_area) 
+            VALUES ('2','$area','$porcentaje','$codigo_cajachica_det',0)";
+            // echo $sqlInsert;       
+            $stmtInsert = $dbh->prepare($sqlInsert);
+            $stmtInsert->execute();
+            // echo $sqlInsert;
+            for ($k=0; $k < count($array4) ; $k++) { 
+              if($fila==$array4[$k]->cod_fila){
+                $unidad=$array4[$k]->unidad;
+                $porcentaje=$array4[$k]->porcentaje;
+                if($porcentaje>0){
+                  $sqlInsert="INSERT INTO distribucion_gastos_caja_chica (tipo_distribucion,oficina_area,porcentaje,cod_cajachica_detalle,padre_oficina_area) 
+                  VALUES ('1','$unidad','$porcentaje','$codigo_cajachica_det','$fila')";
+                  $stmtInsert = $dbh->prepare($sqlInsert);
+                  $stmtInsert->execute();   
+                }
+              }
+            }
+        }   
+    }
+} 
 ?>

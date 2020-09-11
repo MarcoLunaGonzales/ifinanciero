@@ -53,8 +53,9 @@
   <script src="assets/demo/demo.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
-
-
+  
+  <!--CHART GOOGLE-->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
   <script>
     $(document).ready(function() {
@@ -661,6 +662,14 @@
         $('<input />').attr('type', 'hidden')
           .attr('name', 'd_areas')
           .attr('value', JSON.stringify(itemDistArea))
+          .appendTo('#formDetalleCajaChica');
+        $('<input />').attr('type', 'hidden')
+          .attr('name', 'd_oficinas_global')
+          .attr('value', JSON.stringify(itemDistOficinaGeneral))
+          .appendTo('#formDetalleCajaChica');
+        $('<input />').attr('type', 'hidden')
+          .attr('name', 'd_areas_global')
+          .attr('value', JSON.stringify(itemDistAreaGlobal))
           .appendTo('#formDetalleCajaChica');        
       });
     } );
