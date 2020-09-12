@@ -341,6 +341,9 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 			                        <!-- <a href="#"  class="btn btn-round btn-fab btn-sm" onclick="cargarDatosRegistroComprobantes()">
 			                        	<i class="material-icons" title="Add Proveedor">add</i>
 			                        </a> -->
+			                        <a href="#" id="boton_fac_cabecera" class="btn btn-round btn-info btn-fab btn-sm" onclick="mostrarOcultarFacturasComprobante();return false;">
+			                        	<i class="material-icons" title="Mostrar / Ocultar Facturas Secundarias">featured_play_list</i><span class="bg-warning estado"></span> 
+			                        </a>
 			                        <button style="background-color: #0489B1" title="Registrar Cuenta Auxiliar" class="btn btn-round btn-fab btn-sm" type="button" data-toggle="modal" data-target="#modalRegisterCuentasAux">
                                         <i class="material-icons text-info">add</i>
                                     </button>

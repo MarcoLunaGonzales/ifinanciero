@@ -66,12 +66,12 @@ $estadoPost=$stringEstadoX;
 
 
 // echo $areaString;
-$sql="SELECT s.cod_comprobante,f.codigo as cod_factura,s.cod_estadosolicitudrecurso as cod_estado_sol,s.numero as numero_sol,e.nombre as estado_sol,f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tasa_cero,f.tipo_compra 
+$sql="SELECT s.codigo as codigo_solicitud,s.cod_comprobante,f.codigo as cod_factura,s.cod_estadosolicitudrecurso as cod_estado_sol,s.numero as numero_sol,e.nombre as estado_sol,f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tasa_cero,f.tipo_compra 
 from facturas_compra f 
 join solicitud_recursosdetalle sd on sd.codigo=f.cod_solicitudrecursodetalle
 join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso
 join estados_solicitudrecursos e on e.codigo =s.cod_estadosolicitudrecurso
-where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_estadoreferencial<>2 and MONTH(f.fecha) in ($stringMesX) and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha asc";
+where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_estadoreferencial<>2 and MONTH(f.fecha) in ($stringMesX) and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha,f.nit,f.nro_factura asc";
 
 //echo $sql;
 $stmt2 = $dbh->prepare($sql);
@@ -96,7 +96,7 @@ $stmt2->bindColumn('estado_sol', $estado_sol);
 $stmt2->bindColumn('cod_estado_sol', $cod_estado_sol); 
 $stmt2->bindColumn('numero_sol', $numero_sol);  
 $stmt2->bindColumn('cod_comprobante', $cod_comprobante);  
-
+$stmt2->bindColumn('codigo_solicitud', $codSolicitud); 
 //datos de la factura
 $stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in (5)");
 $stmtPersonal->execute();
@@ -138,29 +138,35 @@ $razon_social=$result['razon_social'];
                        <?php
                    }
                   ?>
-                  <div class="table-responsive">
-                        <table id="libro_compras_rep_2" class="table table-bordered table-condensed" style="width:100%">
-                            <thead>
-                              <tr style="border:2px solid;">
-                                  <th colspan="8" class="text-left"><small> Razón Social : <?=$razon_social?><br>Sucursal : <?=$sucursal?></small></th>   
-                                  <th colspan="7" class="text-left"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
+                  <div class="">
+                    <table class="table table-bordered table-condensed" style="width:100%">
+                      <thead>
+                        <tr style="border:1px solid;">
+                                  <th colspan="8" class="text-left csp"><small> Razón Social : <?=$razon_social?><br>Sucursal : <?=$sucursal?></small></th>   
+
+                                  <th colspan="7" class="text-left csp"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
                               </tr>
+                      </thead>
+                    </table>
+
+                        <table id="tablePaginator" class="table table-bordered table-condensed" style="width:100%">
+                            <thead> 
                               <tr >
-                                  <th width="2%" style="border:2px solid;"><small><b>-</b></small></th>   
-                                  <th style="border:2px solid;" width="6%"><small><b>Estado (Sol)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Numero (Sol)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Fecha</b></small></th>                                
-                                  <th style="border:2px solid;" width="6%"><small><b>NIT</b></small></th>
-                                  <th style="border:2px solid;"><small><b>Razón Social </b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Nro. de<br> FACTURA</b></small></th>
-                                  <th style="border:2px solid;" width="10%"><small><b>Nro de Autorización</b></small></th>
-                                  <th style="border:2px solid;" width="10%"><small><b>Código de Control</b></small></th>                                  
-                                  <th style="border:2px solid;" width="6%"><small><b>Total Factura (A)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Total I.C.E (B)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Importes Exentos (C)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Importe Neto Sujeto a IVA <br>(A-B-C)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Crédito Fiscal Obtenido</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Editar</b></small></th>
+                                  <th width="2%" style="border:2px solid;"><small><small><b>-</b></small></small></th>   
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Estado (Sol)</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Numero (Sol)</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Fecha</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>NIT</b></small></small></th>
+                                  <th style="border:2px solid;"><small><small><b>Razón Social </b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Nro. de<br> FACTURA</b></small></small></th>
+                                  <th style="border:2px solid;" width="10%"><small><small><b>Nro de Autorización</b></small></small></th>
+                                  <th style="border:2px solid;" width="10%"><small><small><b>Código de Control</b></small></small></th>                          
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Total Factura (A)</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Total I.C.E (B)</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Importes Exentos (C)</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Importe Neto Sujeto a IVA <br>(A-B-C)</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Crédito Fiscal Obtenido</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Editar</b></small></small></small></th>
                               </tr>                                  
                             </thead>
                             <tbody>
@@ -235,17 +241,25 @@ $razon_social=$result['razon_social'];
                                   <td class="text-right small"><?=formatNumberDec($exento);?></td>
                                   <td class="text-right small"><?=formatNumberDec($importe_sujeto_iva);?></td>
                                   <td class="text-right small"><?=formatNumberDec($iva_obtenido);?></td> 
-                                  <td class="text-right small"><a href="#" 
+                                  <td class="text-right small">
+                                    <div class="btn-group">
+                                      <a href="#" 
                                     onclick="editarFacturaModalReporte('<?=$cod_factura?>','<?=$nit?>','<?=$nro_factura?>',
                                     '<?=$nro_autorizacion?>','<?=$codigo_control?>','<?=$importe?>','<?=$exento?>',
                                     '<?=$ice?>','<?=$tasa_cero?>','<?=$fechaFac?>','<?=trim($razon_social)?>','<?=$tipo_compra?>')" 
-                                    class="btn btn-fab btn-round btn-success btn-sm"><i class="material-icons">edit</i></a></td>                                      
+                                    class="btn btn-fab btn-success btn-sm"><i class="material-icons">edit</i></a>
+                                      <a title=" Ver Solicitud de Recursos" target="_blank" href="../<?=$urlVer;?>?cod=<?=$codSolicitud;?>&comp=2" class="btn btn-warning btn-fab btn-sm">
+                                          <i class="material-icons">preview</i>
+                                    </a>
+                                 
+                                    </div>
+                                  </td>                                      
                                 </tr>
                                 <?php                                  
                               }?>
                               <tr style="border:2px solid;">                               
-                                  <td class="text-left small" colspan="5" style="border:2px solid;">CI:</td>
-                                  <td class="text-left small" colspan="3" style="border:2px solid;">Nombre del Responsable:</td>
+                                  <td class="text-left small csp" colspan="5" style="border:2px solid;">CI:</td>
+                                  <td class="text-left small csp" colspan="3" style="border:2px solid;">Nombre del Responsable:</td>
                                   <td class="text-center small"><b>SubTotal:</b></td>                                  
                                   <td class="text-right small"><?=formatNumberDec($total_importe);?></td>
                                   <td class="text-right small"><?=formatNumberDec($total_ice);?></td>

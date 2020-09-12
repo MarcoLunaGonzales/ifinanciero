@@ -71,6 +71,12 @@ try {
 		if(trim($codigo_control)==""){
              $codigo_control="0";
         }
+
+        /*$subtotal=$sumadeimporte-$sumadeimporte;
+        $descuento=0;
+        $importeBaseCF=$subtotal-$descuento;
+        $credito_fiscal=$importeBaseCF*0.13;*/
+
         $razon_social=trim($razon_social);
         $nro_autorizacion=trim($nro_autorizacion);
         $codigo_control=trim($codigo_control);
@@ -91,3 +97,4 @@ try {
 	echo "#####0#####";
 }
 ?>
+

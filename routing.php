@@ -1634,6 +1634,10 @@
 			$codModulo=$menuModulo;
 			require_once('layouts/homeModulo.php');
 		}
+		if ($_GET['opcion']=='homeModulo2') {
+			$codModulo=$menuModulo;
+			require_once('layouts/homeModulo2.php');
+		}
 
 		//tipo caja chica
 		if ($_GET['opcion']=='ListaTipoCajaChica') {
