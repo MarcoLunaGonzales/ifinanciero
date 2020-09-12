@@ -3189,9 +3189,15 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   function obtenerBonoAntiguedad($minino_salarial,$ing_contr,$anio_actual){  
     // $anio_actual= date('Y');
     // $anio_actual=2019;
-    $fechaComoEntero = strtotime($ing_contr);
-    $anio_inicio = date("Y", $fechaComoEntero);
-    $diferencia_anios=$anio_actual-$anio_inicio;
+    // $fechaComoEntero = strtotime($ing_contr);
+    // $anio_inicio = date("Y", $fechaComoEntero);
+    // $diferencia_anios=$anio_actual-$anio_inicio;
+    $anio_actual=date('Y-m-d');
+    $date1 = new DateTime($ing_contr);
+    $date2 = new DateTime($anio_actual);
+    $diff = $date1->diff($date2);    
+    $diferencia_anios=$diff->y;
+    // echo $dias;
 
     $total_bono_antiguedad = 0;
     $dbh = new Conexion();
