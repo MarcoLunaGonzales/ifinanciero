@@ -149,7 +149,7 @@ $razon_social=$result['razon_social'];
                       </thead>
                     </table>
 
-                        <table id="tablePaginator" class="table table-bordered table-condensed" style="width:100%">
+                        <table id="tablePaginatorReport" class="table table-bordered table-condensed" style="width:100%">
                             <thead> 
                               <tr>
                                   <th width="2%" style="border:2px solid;"><small><small><b>-</b></small></small></th>   
