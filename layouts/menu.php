@@ -982,8 +982,8 @@ if($menuModulo==0){
                 </li>  -->                               
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reportesSolicitudRecursosSis">
-                    <span class="sidebar-mini"> RSR </span>
-                    <span class="sidebar-normal"> Reportes Solicitud Recursos Sis</span>
+                    <span class="sidebar-mini"> CSR-SIS </span>
+                    <span class="sidebar-normal"> Control SR Proyecto SIS</span>
                   </a>
                 </li>
                 <li class="nav-item ">

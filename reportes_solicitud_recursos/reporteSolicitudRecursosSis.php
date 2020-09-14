@@ -81,7 +81,7 @@ $razon_social=$result['razon_social'];
                   <div class="card-icon bg-blanco">
                     <img class="" width="60" height="60" src="../assets/img/logo_ibnorca_origen.png">
                   </div>                  
-                  <h3 class="card-title text-center" ><b>Reporte Solicitud de Recursos - Proyecto SIS</b>
+                  <h3 class="card-title text-center" ><b>Control Solicitudes de Recursos - Proyecto SIS</b>
                     <span><br><h6>
                     Del Período: <?=$nombre_mes;?>/<?=$nombre_gestion;?><br>
                     Expresado En Bolivianos</h6></span></h3>                  
@@ -101,7 +101,7 @@ $razon_social=$result['razon_social'];
                     <table class="table table-bordered table-condensed" style="width:100%">
                       <thead>
                         <tr style="border:1px solid;">
-                                  <th colspan="8" class="text-left csp"><small> Razón Social : <?=$razon_social?><br>Sucursal : <?=$sucursal?></small></th>   
+                                  <th colspan="8" class="text-left csp"><small> <br>Sucursal : <?=$sucursal?></small></th>   
 
                                   <th colspan="7" class="text-left csp"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
                               </tr>
@@ -148,7 +148,7 @@ $razon_social=$result['razon_social'];
                                     $titulo_estado="bg-warning text-white";
                                   break;
                                   case 5:
-                                    $titulo_estado="bg-primary text-white";
+                                    $titulo_estado="bg-principal text-white";
                                     $estado_sol.=" / ".nombreComprobante($codComprobante);
                                   break;
                                   case 6:
@@ -157,6 +157,9 @@ $razon_social=$result['razon_social'];
                                   case 7:
                                     $titulo_estado="bg-info text-white";
                                    break;
+                                  case 8:
+                                    $titulo_estado="text-success";
+                                   break; 
                                 }
                                 
                                  
@@ -203,7 +206,7 @@ $razon_social=$result['razon_social'];
                                     '<?=$nro_autorizacion?>','<?=$codigo_control?>','<?=$importe?>','<?=$exento?>',
                                     '<?=$ice?>','<?=$tasa_cero?>','<?=$fechaFac?>','<?=trim($razon_social)?>','<?=$tipo_compra?>')" 
                                     class="btn btn-fab btn-success btn-sm"><i class="material-icons">edit</i></a>-->
-                                      <a title=" Ver Solicitud de Recursos" target="_blank" href="../<?=$urlVer;?>?cod=<?=$codSolicitud;?>&comp=2" class="btn btn-warning btn-fab btn-sm">
+                                      <a title=" Ver Solicitud de Recursos" target="_blank" href="../<?=$urlVer;?>?cod=<?=$codigo;?>&comp=2" class="btn btn-warning btn-fab btn-sm">
                                           <i class="material-icons">preview</i>
                                     </a>
                                  

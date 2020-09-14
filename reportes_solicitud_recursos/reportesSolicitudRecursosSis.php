@@ -22,7 +22,7 @@ $dbh = new Conexion();
                   <div class="card-icon" style="background:rgb(116, 24, 153) !important;">
                     <i class="material-icons">content_paste</i>
                   </div>
-                  <h4 class="card-title"><b>Reporte Solicitud de Recursos Sis</b></h4>
+                  <h4 class="card-title"><b>Control Solicitudes de Recursos - Proyecto SIS</b></h4>
                 </div>
                 <form class="" action="<?=$urlReporteForm?>" target="_blank" method="POST">
                 <div class="card-body">
@@ -40,7 +40,7 @@ $dbh = new Conexion();
 										    <?php 
 										    	while ($row = $stmt->fetch()){ 
 											?>
-										      	 <option value="<?=$row["codigo"];?>" <?=($row["codigo"]==5)?"selected":""?>><?=$row["nombre"];?></option>
+										      	 <option value="<?=$row["codigo"];?>" selected><?=$row["nombre"];?></option>
 							    	<?php 
 										 		} 
 								 	?>
