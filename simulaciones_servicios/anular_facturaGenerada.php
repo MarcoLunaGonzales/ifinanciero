@@ -56,7 +56,8 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 	}
 	$tipoComprobante=3;//traspaso
 	$unidad=5;	
-  	$codMes= date("m", strtotime($fecha_factura));
+  	// $codMes= date("m", strtotime($fecha_factura));
+  	$codMes= date("m");
 	$codGestion=$_SESSION['globalGestion'];	
 	
 
