@@ -9797,4 +9797,16 @@ function obtenerEstadoCuentaComprobanteCerrados($codigo){
   }     
   return $porcentaje;
 }
+
+function obtenerCodigoUnidadComprobante($codigo){
+     $dbh = new Conexion();
+     $sqlX="SELECT cod_unidadorganizacional FROM comprobantes where codigo='$codigo'";
+     $stmt = $dbh->prepare($sqlX);
+     $stmt->execute();
+     $nombreX=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $nombreX=$row['cod_unidadorganizacional'];
+     }
+     return($nombreX);
+  }
 ?>
