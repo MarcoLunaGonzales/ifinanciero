@@ -72,7 +72,7 @@ $item_1=2708;
                   </div>
                   <h4 class="card-title"><b><b style="color:#732590;">HISTÓRICO SR CONTABILIDAD</b></h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body table-responsive">
                      <table class="table table-condesed" id="tablePaginator100NoFidexHead">
                       <thead>
                         <tr style="background:#732590;color:white;">

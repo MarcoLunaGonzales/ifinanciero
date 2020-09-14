@@ -78,7 +78,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                   </div>
                   <h4 class="card-title"><b><?=$moduleNamePlural?></b></h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body table-responsive">
                     <table class="table table-condesed" id="tablePaginator">
                       <thead>
                         <tr>
