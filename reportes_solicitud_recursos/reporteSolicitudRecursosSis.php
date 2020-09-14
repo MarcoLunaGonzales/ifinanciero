@@ -11,40 +11,6 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 
-//editar las facturas
-if(isset($_POST['codigo_factura'])){
-    $codigo=$_POST['codigo_factura'];
-    $nit=$_POST['nit_fac'];
-    $nroFac=$_POST['nro_fac'];
-      
-    $fechaFac=$_POST['fecha_fac'];
-    $razonFac=$_POST['razon_fac'];
-    $impFac=$_POST['imp_fac'];            
-    $autFac=$_POST['aut_fac'];
-    $conFac=$_POST['con_fac'];
-            
-    $exeFac=$_POST['exe_fac'];
-    $tipoFac=$_POST['tipo_fac'];
-    $tazaFac=$_POST['taza_fac'];
-    $iceFac=$_POST['ice_fac'];
-    
-    $sqlDetalle="UPDATE facturas_compra SET nit='$nit', nro_factura='$nroFac', fecha='$fechaFac', 
-    razon_social='$razonFac', importe='$impFac', exento='$exeFac', nro_autorizacion='$autFac', codigo_control='$conFac',
-    ice='$iceFac',tasa_cero='$tazaFac',tipo_compra='$tipoFac' WHERE codigo=$codigo";
-    $stmtDetalle = $dbh->prepare($sqlDetalle);
-    $flagSuccessDetalle=$stmtDetalle->execute();
-    //$flagSuccessDetalle=false; 
-    if($flagSuccessDetalle==true){
-      $tituloSuccess="Se Modificó la factura exitosamente!";
-      $txtEstilo="#194519";
-      $bgEstilo="#C2E7C8";
-    }else{
-      $tituloSuccess="Ocurrio un error al editar la factura";
-      $txtEstilo="#8F1707";
-      $bgEstilo="#E7C3C2";
-    }
-  }
-
 //RECIBIMOS LAS VARIABLES
 $gestion = $_POST["gestiones"];
 $cod_mes_x = $_POST["cod_mes_x"];
@@ -66,37 +32,30 @@ $estadoPost=$stringEstadoX;
 
 
 // echo $areaString;
-$sql="SELECT s.codigo as codigo_solicitud,s.cod_comprobante,f.codigo as cod_factura,s.cod_estadosolicitudrecurso as cod_estado_sol,s.numero as numero_sol,e.nombre as estado_sol,f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tasa_cero,f.tipo_compra 
-from facturas_compra f 
-join solicitud_recursosdetalle sd on sd.codigo=f.cod_solicitudrecursodetalle
-join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso
-join estados_solicitudrecursos e on e.codigo =s.cod_estadosolicitudrecurso
-where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_estadoreferencial<>2 and MONTH(f.fecha) in ($stringMesX) and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha,f.nit,f.nro_factura asc";
-
+$sql="SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle 
+  from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in ($stringEstadoX) order by sr.numero desc) l  
+where (l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0) and MONTH(l.fecha) in ($stringMesX) and YEAR(l.fecha)=$nombre_gestion ORDER BY l.fecha,l.numero,l.cod_personal asc";
 //echo $sql;
 $stmt2 = $dbh->prepare($sql);
 // echo $sql;
 // Ejecutamos                        
 $stmt2->execute();
 //resultado
-$stmt2->bindColumn('fecha', $fechaFac);
-$stmt2->bindColumn('cod_factura', $cod_factura);
-$stmt2->bindColumn('fecha_x', $fecha);
-$stmt2->bindColumn('nit', $nit);
-$stmt2->bindColumn('razon_social', $razon_social);
-$stmt2->bindColumn('nro_factura', $nro_factura);
-$stmt2->bindColumn('nro_autorizacion', $nro_autorizacion);
-$stmt2->bindColumn('codigo_control', $codigo_control);
-$stmt2->bindColumn('importe', $importe);
-$stmt2->bindColumn('ice', $ice);
-$stmt2->bindColumn('exento', $exento);          
-$stmt2->bindColumn('tasa_cero', $tasa_cero);          
-$stmt2->bindColumn('tipo_compra', $tipo_compra); 
-$stmt2->bindColumn('estado_sol', $estado_sol); 
-$stmt2->bindColumn('cod_estado_sol', $cod_estado_sol); 
-$stmt2->bindColumn('numero_sol', $numero_sol);  
-$stmt2->bindColumn('cod_comprobante', $cod_comprobante);  
-$stmt2->bindColumn('codigo_solicitud', $codSolicitud); 
+$stmt2->bindColumn('codigo', $codigo);
+$stmt2->bindColumn('unidad', $unidad);
+$stmt2->bindColumn('area', $area);
+$stmt2->bindColumn('fecha', $fecha);
+$stmt2->bindColumn('cod_personal', $codPersonal);
+$stmt2->bindColumn('cod_simulacion', $codSimulacion);
+$stmt2->bindColumn('cod_proveedor', $codProveedor);
+$stmt2->bindColumn('cod_estadosolicitudrecurso', $codEstado);
+$stmt2->bindColumn('estado', $estado_sol);
+$stmt2->bindColumn('cod_comprobante', $codComprobante);
+$stmt2->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
+$stmt2->bindColumn('numero', $numeroSol);
+$stmt2->bindColumn('idServicio', $idServicioX);
+$stmt2->bindColumn('glosa_estado', $glosa_estadoX);
 //datos de la factura
 $stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in (5)");
 $stmtPersonal->execute();
@@ -122,7 +81,7 @@ $razon_social=$result['razon_social'];
                   <div class="card-icon bg-blanco">
                     <img class="" width="60" height="60" src="../assets/img/logo_ibnorca_origen.png">
                   </div>                  
-                  <h3 class="card-title text-center" ><b>Libro de Compras - Edición</b>
+                  <h3 class="card-title text-center" ><b>Reporte Solicitud de Recursos - Proyecto SIS</b>
                     <span><br><h6>
                     Del Período: <?=$nombre_mes;?>/<?=$nombre_gestion;?><br>
                     Expresado En Bolivianos</h6></span></h3>                  
@@ -153,42 +112,29 @@ $razon_social=$result['razon_social'];
                             <thead> 
                               <tr>
                                   <th width="2%" style="border:2px solid;"><small><small><b>-</b></small></small></th>   
-                                  <th style="border:2px solid;" width="6%"><small><small><b>Estado (Sol)</b></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><b>Numero (Sol)</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Estado</b></small></small></th>
+                                  <th style="border:2px solid;" width="3%"><small><small><b>Numero</b></small></small></th>
                                   <th style="border:2px solid;" width="6%"><small><small><b>Fecha</b></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><b>NIT</b></small></small></th>
-                                  <th style="border:2px solid;"><small><small><b>Razón Social </b></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><b>Nro. de<br> FACTURA</b></small></small></th>
-                                  <th style="border:2px solid;" width="10%"><small><small><b>Nro de Autorización</b></small></small></th>
-                                  <th style="border:2px solid;" width="10%"><small><small><b>Código de Control</b></small></small></th>                          
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Total Factura (A)</b></small></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Total I.C.E (B)</b></small></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Importes Exentos (C)</b></small></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Importe Neto Sujeto a IVA <br>(A-B-C)</b></small></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Crédito Fiscal Obtenido</b></small></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Editar</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Of. - Area</b></small></small></th>
+                                  <th style="border:2px solid;" width="4%"><small><small><b>Cod. Servicio </b></small></small></th>
+                                  <th style="border:2px solid;" width="10%"><small><small><b>Proveedor</b></small></small></th>
+                                  <th style="border:2px solid;" width="16%"><small><small><b>Cuenta</b></small></small></th>
+                                  <th style="border:2px solid;" width="16%"><small><small><b>Solicitante</b></small></small></th>                          
+                                  <th style="border:2px solid;" width="16%"><small><small><b>Observaciones</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Total Solicitado</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Opciones</b></small></small></th>
                               </tr>                                  
                             </thead>
                             <tbody>
                               <?php
                               $index=0; 
                               $total_importe=0;
-                              $total_ice=0;
-                              $total_exento=0;
-                              $total_importe_sujeto_iva=0;
-                              $total_iva_obtenido=0;
                               while ($row = $stmt2->fetch()) { 
                                 $index++;
-                                // $importe_sujeto_iva=$importe-$ice-$exento;
-                                $importe_sujeto_iva=$importe-$ice-$exento;
-                                $iva_obtenido=$importe_sujeto_iva*13/100;
-                                $caracter=substr($codigo_control, -1);
-                                if($caracter=='-'){
-                                  $codigo_control=trim($codigo_control, '-');
-                                }
+                                
                                 
                                 $titulo_estado="";
-                                switch ($cod_estado_sol) {
+                                switch ($codEstado) {
                                   case 1:
                                     $titulo_estado="text-muted";
                                   break;
@@ -203,10 +149,10 @@ $razon_social=$result['razon_social'];
                                   break;
                                   case 5:
                                     $titulo_estado="bg-primary text-white";
-                                    $estado_sol.=" / ".nombreComprobante($cod_comprobante);
+                                    $estado_sol.=" / ".nombreComprobante($codComprobante);
                                   break;
                                   case 6:
-                                    $titulo_estado="bg-plomo text-white";
+                                    $titulo_estado="bg-plomo";
                                   break;
                                   case 7:
                                     $titulo_estado="bg-info text-white";
@@ -214,40 +160,49 @@ $razon_social=$result['razon_social'];
                                 }
                                 
                                  
-                                $total_importe+=$importe;
-                                $total_ice+=$ice;
-                                $total_exento+=$exento;
-                                $total_importe_sujeto_iva+=$importe_sujeto_iva;
-                                $total_iva_obtenido+=$iva_obtenido;
-
-                                // $sumadeimporte=$importe+$ice+$exento;
-                                $sumadeimporte=$importe;
-                                if(trim($codigo_control)==""){
-                                  $codigo_control="0";
+                                $solicitante=namePersonal($codPersonal);
+                                $codigoServicio="-";
+                                $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
+                                $stmt1=$dbh->prepare($sql);
+                                $stmt1->execute();
+                                while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                                   $codigoServicio=$row1['codigo'];
                                 }
+                                  
+                                $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);
+                                $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);
+                                $glosaArray=explode("####", $glosa_estadoX);
+                                $glosa_estadoX = str_replace("####", " - ", $glosa_estadoX);
+
+                                $montoImporte=obtenerSumaDetalleSolicitud($codigo);
+                                $total_importe+=$montoImporte
+
                                 ?>
                                 <tr>
                                   <td class="text-center small"><?=$index;?></td>
                                   <td class="text-center small <?=$titulo_estado?>"><?=$estado_sol;?></td>
-                                  <td class="text-center small"><?=$numero_sol;?></td>
-                                  <td class="text-center small"><?=$fecha;?></td>
-                                  <td class="text-right small"><?=$nit;?></td>
-                                  <td class="text-left small"><?=strtoupper($razon_social);?></td>
-                                  <td class="text-right small"><?=$nro_factura;?></td>
-                                  <td class="text-right small"><?=$nro_autorizacion;?></td>
-                                  <td class="text-center small"><?=$codigo_control;?></td>
-                                  <td class="text-right small"><?=formatNumberDec($sumadeimporte);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($ice);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($exento);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($importe_sujeto_iva);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($iva_obtenido);?></td> 
+                                  <td class="text-center small"><?=$numeroSol;?></td>
+                                  <td class="text-center small"><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
+                                  <td class="text-center small"><?=$unidad;?>- <?=$area;?></td>
+                                  <td class="text-left small"><?=strtoupper($codigoServicio);?></td>
+                                  <td class="text-right small"><?=$nombreProveedor;?></td>
+                                  <td class="text-right small"><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></td>
+                                  <td class="text-left small"><img src="../assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?></td>
+                                  <td class="text-right small"><b>
+                                       <?php if(isset($glosaArray[1])){
+                                            echo "".$glosaArray[0].""."<u class='text-muted'> ".$glosaArray[1]."</u>";
+                                        }else{
+                                            echo $glosa_estadoX;
+                                        }?></b>
+                                  </td>
+                                  <td class="text-right small"><?=formatNumberDec($montoImporte);?></td>
                                   <td class="text-right small">
                                     <div class="btn-group">
-                                      <a href="#" 
+                                      <!--<a href="#" 
                                     onclick="editarFacturaModalReporte('<?=$cod_factura?>','<?=$nit?>','<?=$nro_factura?>',
                                     '<?=$nro_autorizacion?>','<?=$codigo_control?>','<?=$importe?>','<?=$exento?>',
                                     '<?=$ice?>','<?=$tasa_cero?>','<?=$fechaFac?>','<?=trim($razon_social)?>','<?=$tipo_compra?>')" 
-                                    class="btn btn-fab btn-success btn-sm"><i class="material-icons">edit</i></a>
+                                    class="btn btn-fab btn-success btn-sm"><i class="material-icons">edit</i></a>-->
                                       <a title=" Ver Solicitud de Recursos" target="_blank" href="../<?=$urlVer;?>?cod=<?=$codSolicitud;?>&comp=2" class="btn btn-warning btn-fab btn-sm">
                                           <i class="material-icons">preview</i>
                                     </a>
@@ -260,12 +215,9 @@ $razon_social=$result['razon_social'];
                               <tr style="border:2px solid;">                               
                                   <td class="text-left small csp" colspan="5" style="border:2px solid;">CI:</td>
                                   <td class="text-left small csp" colspan="3" style="border:2px solid;">Nombre del Responsable:</td>
-                                  <td class="text-center small"><b>SubTotal:</b></td>                                  
+                                  <td class="text-center small"><b>SubTotal:</b></td> 
+                                  <td></td>                                 
                                   <td class="text-right small"><?=formatNumberDec($total_importe);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($total_ice);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($total_exento);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($total_importe_sujeto_iva);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($total_iva_obtenido);?></td>
                                   <td></td>                                      
                                 </tr>
                             </tbody>
