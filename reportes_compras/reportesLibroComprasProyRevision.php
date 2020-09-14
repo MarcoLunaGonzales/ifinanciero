@@ -23,7 +23,7 @@ $dbh = new Conexion();
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Revisión Libro Compras Proyecto</h4>
+                  <h4 class="card-title">Libro Compras Proyecto</h4>
                 </div>
                 <form class="" action="<?=$urlReporteComprasProyRevision?>" target="_blank" method="POST">
                 <div class="card-body">
@@ -95,6 +95,7 @@ $dbh = new Conexion();
                   	
                 <div class="card-footer">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
+                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_comprasProy()">Generar TXT</a>
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
 			  </div>
                </form> 
@@ -105,3 +106,19 @@ $dbh = new Conexion();
         
 </div>
 
+<div class="modal fade" id="modal_descargarTXT" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-sm" role="document">    
+      <div class="modal-content">
+        <div class="modal-header">          
+          <h3 class="modal-title" id="myModalLabel"><b>Correcto</b></h3>
+        </div>
+        <div class="modal-body">                
+              <center><span>El proceso se completó correctamente!</span></center>     
+        </div>    
+        <div id="contenedor_DescargaTxt">
+          
+        </div>    
+      </div>
+    </form>
+  </div>
+</div>

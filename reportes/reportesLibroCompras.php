@@ -129,7 +129,7 @@ $dbh = new Conexion();
 			  		<?php 
 			  	   }
 			  	   ?>
-			  	  <a  href="index.php?opcion=reportesLibroComprasProyRevision" class="btn btn-info btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Revisión Libro Compras - PROYECTO</a>		
+			  	  <a  href="index.php?opcion=reportesLibroComprasProyRevision" class="btn btn-info btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Libro Compras - PROYECTO</a>		
 			  	</div>
 			  </div>
 			  

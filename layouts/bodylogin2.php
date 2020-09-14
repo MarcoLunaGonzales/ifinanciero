@@ -101,6 +101,38 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
+      $('#tablePaginator').DataTable( {
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            }
+        } );
+      
+        $('#example').DataTable({
+          "paging":   false,
+            "info":     false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            fixedHeader: {
+              header: true,
+              footer: true
+            }
+          
+        });
+
+        $('#tablePaginatorReport ').DataTable({
+            "paging":   false,
+            "info":     false,
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+            },
+            fixedHeader: {
+              header: true,
+              footer: true
+            }.
+            "order": false
+
+        } );
 
         // Setup - add a text input to each footer cell
         $('#libreta_bancaria_reporte_modal tfoot th').each( function () {
@@ -137,39 +169,7 @@
             "scrollCollapse": true
         });
         
-      $('#tablePaginator').DataTable( {
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            "ordering": false
-        } );
       
-        $('#example').DataTable({
-          "paging":   false,
-            "info":     false,
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            fixedHeader: {
-              header: true,
-              footer: true
-            }
-          
-        });
-
-        $('#tablePaginatorReport ').DataTable({
-            "paging":   false,
-            "info":     false,
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-            },
-            fixedHeader: {
-              header: true,
-              footer: true
-            }.
-            "order": false
-
-        } );
         if($("#tableCuentasBuscar").length){
           $('#tableCuentasBuscar tfoot th').each( function () {
                var title = $(this).text();
