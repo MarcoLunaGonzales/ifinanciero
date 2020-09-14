@@ -45,6 +45,19 @@ if(isset($_POST['codigo_factura'])){
     }
   }
 
+/*if (isset($_POST["check_sin_sr"])) {
+  $check_sin_sr=$_POST["check_sin_sr"]; 
+  if($check_sin_sr){
+    $razon_social=$_POST["unidad"]; 
+    $sql_rs=" and f.unidad like '%$razon_social%'";
+  }else{
+    $sql_rs="";
+  }
+}else{
+  $sql_rs="";
+}*/
+
+
 //RECIBIMOS LAS VARIABLES
 $gestion = $_POST["gestiones"];
 $cod_mes_x = $_POST["cod_mes_x"];
@@ -66,13 +79,19 @@ $estadoPost=$stringEstadoX;
 
 
 // echo $areaString;
-$sql="SELECT s.codigo as codigo_solicitud,s.cod_comprobante,f.codigo as cod_factura,s.cod_estadosolicitudrecurso as cod_estado_sol,s.numero as numero_sol,e.nombre as estado_sol,f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tasa_cero,f.tipo_compra 
+$sql="(SELECT s.codigo as codigo_solicitud,s.cod_comprobante,f.codigo as cod_factura,s.cod_estadosolicitudrecurso as cod_estado_sol,s.numero as numero_sol,e.nombre as estado_sol,f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tasa_cero,f.tipo_compra 
 from facturas_compra f 
 join solicitud_recursosdetalle sd on sd.codigo=f.cod_solicitudrecursodetalle
 join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso
 join estados_solicitudrecursos e on e.codigo =s.cod_estadosolicitudrecurso
-where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_estadoreferencial<>2 and MONTH(f.fecha) in ($stringMesX) and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha,f.nit,f.nro_factura asc";
+where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_estadoreferencial<>2 and MONTH(f.fecha) in ($stringMesX) and YEAR(f.fecha)=$nombre_gestion ORDER BY f.fecha,f.nit,f.nro_factura asc
+)
+UNION (SELECT -1 as codigo_solicitud,cc.codigo as cod_comprobante,f.codigo as cod_factura,-1 as cod_estado_sol, '' as numero_sol,'Sin SR' as estado_sol,f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tasa_cero,f.tipo_compra 
+  FROM facturas_compra f, comprobantes_detalle c, comprobantes cc 
+  WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and MONTH(cc.fecha) in ($stringMesX) and YEAR(cc.fecha)=$nombre_gestion ORDER BY f.fecha asc)
+";
 
+//and cc.cod_unidadorganizacional in ($stringUnidadesX) 
 //echo $sql;
 $stmt2 = $dbh->prepare($sql);
 // echo $sql;
@@ -189,6 +208,10 @@ $razon_social=$result['razon_social'];
                                 
                                 $titulo_estado="";
                                 switch ($cod_estado_sol) {
+                                  case -1:
+                                    $titulo_estado="bg-danger text-white";
+                                    $estado_sol.=" / ".nombreComprobante($cod_comprobante);
+                                  break;
                                   case 1:
                                     $titulo_estado="text-muted";
                                   break;
@@ -248,15 +271,27 @@ $razon_social=$result['razon_social'];
                                     '<?=$nro_autorizacion?>','<?=$codigo_control?>','<?=$importe?>','<?=$exento?>',
                                     '<?=$ice?>','<?=$tasa_cero?>','<?=$fechaFac?>','<?=trim($razon_social)?>','<?=$tipo_compra?>')" 
                                     class="btn btn-fab btn-success btn-sm"><i class="material-icons">edit</i></a>
-                                      <a title=" Ver Solicitud de Recursos" target="_blank" href="../<?=$urlVer;?>?cod=<?=$codSolicitud;?>&comp=2" class="btn btn-warning btn-fab btn-sm">
+                                    <?php 
+                                    if($codSolicitud>0){
+                                      ?>
+                                     <a title=" Ver Solicitud de Recursos" target="_blank" href="../<?=$urlVer;?>?cod=<?=$codSolicitud;?>&comp=2" class="btn btn-warning btn-fab btn-sm">
                                           <i class="material-icons">preview</i>
                                     </a>
+                                      <?php
+                                    }
+                                    ?>
+                                      
                                  
                                     </div>
                                   </td>                                      
                                 </tr>
                                 <?php                                  
-                              }?>
+                              }
+                              //facturas sin solicitud de recursos relacionados
+                               
+
+
+                              ?>
                               <tr style="border:2px solid;">                               
                                   <td class="text-left small csp" colspan="5" style="border:2px solid;">CI:</td>
                                   <td class="text-left small csp" colspan="3" style="border:2px solid;">Nombre del Responsable:</td>
