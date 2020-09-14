@@ -462,6 +462,9 @@ $stmt->execute();
 			                        <!-- <a href="#"  class="btn btn-round btn-fab btn-sm" onclick="cargarDatosRegistroComprobantes()">
 			                        	<i class="material-icons" title="Add Proveedor">add</i>
 			                        </a> -->
+			                        <a href="#" id="boton_fac_cabecera" class="btn btn-round btn-info btn-fab btn-sm" onclick="mostrarOcultarFacturasComprobante();return false;">
+			                        	<i class="material-icons" title="Mostrar / Ocultar Facturas Secundarias">featured_play_list</i><span class="bg-warning estado"></span> 
+			                        </a>
 			                        <button style="background-color: #0489B1" title="Registrar Cuenta Auxiliar" class="btn btn-round btn-fab btn-sm" type="button" data-toggle="modal" data-target="#modalRegisterCuentasAux">
 	                                    <i class="material-icons text-info">add</i>
 	                                </button>
@@ -712,7 +715,7 @@ $stmt->execute();
 		                         	<a href="#" title="Retenciones" id="boton_ret<?=$idFila;?>" onclick="listRetencion(<?=$idFila;?>);" class="btn btn-warning text-dark btn-sm btn-fab">
                                      <i class="material-icons">ballot</i>
                                    </a>
-		                         	<a title="Facturas" href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab <?=($cod_cuenta_configuracion_iva==$codigoCuenta)?'':'d-none';?>" >
+		                         	<a title="Facturas" href="#" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="facturas-boton btn btn-info btn-sm btn-fab <?=($cod_cuenta_configuracion_iva==$codigoCuenta)?'':'btn-default text-dark d-none';?>" >
                                       <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
                                     </a>
                                     <a title="Actividad Proyecto SIS" id="boton_actividad_proyecto<?=$idFila?>" href="#" onclick="verActividadesProyectosSis(<?=$idFila;?>);" class="btn btn-sm btn-orange btn-fab d-none"><span class="material-icons">assignment</span><span id="nestadoactproy<?=$idFila?>" class="bg-warning <?=$estiloActividadProyecto?>"></span></a>

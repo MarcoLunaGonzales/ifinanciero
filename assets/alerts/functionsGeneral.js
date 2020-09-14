@@ -449,8 +449,32 @@ function facturacomprobante(fila){
   var codigo =$("#cuenta"+fila).val();  
   if(codigo==cod_confi_iva){
       //alert("entro aqui");
-      $("#boton_fac"+fila).removeClass("d-none"); 
-      // $("#boton_fac"+fila).removeClass("d-none"); 
+      //$("#boton_fac"+fila).removeClass("d-none");
+
+      if($("#boton_fac"+fila).hasClass("btn-default")){
+        $("#boton_fac"+fila).removeClass("btn-default");
+        $("#boton_fac"+fila).removeClass("text-dark"); 
+      }
+
+      if($("#boton_fac"+fila).hasClass("d-none")){
+        $("#boton_fac"+fila).removeClass("d-none");
+      }
+ 
+  }else{
+    if(!$("#boton_fac"+fila).hasClass("btn-default")){
+       $("#boton_fac"+fila).addClass("btn-default");
+      $("#boton_fac"+fila).addClass("text-dark");
+    }
+
+    if(!$("#boton_fac_cabecera").hasClass("btn-default")){
+      if(!$("#boton_fac"+fila).hasClass("d-none")){
+        $("#boton_fac"+fila).addClass("d-none");
+      }     
+    }else{
+      if($("#boton_fac"+fila).hasClass("d-none")){
+        $("#boton_fac"+fila).removeClass("d-none");
+      }
+    }
   }
 }
 
@@ -18280,5 +18304,23 @@ function buscarIngresosDashboard(){
   window.location.href="index.php?opcion=homeModulo&anio="+gestion+"&mes="+mes;  
 }
 
-
+function mostrarOcultarFacturasComprobante(){
+  $(".facturas-boton").each(function(){
+    if($(this).hasClass("btn-default")){
+      if($(this).hasClass("d-none")){
+        $(this).removeClass("d-none");
+        if(!$("#boton_fac_cabecera").hasClass("btn-default")){
+          $("#boton_fac_cabecera").addClass("btn-default");
+          $("#boton_fac_cabecera").addClass("text-dark");
+        }
+      }else{
+        $(this).addClass("d-none"); 
+        if($("#boton_fac_cabecera").hasClass("btn-default")){
+          $("#boton_fac_cabecera").removeClass("btn-default");
+          $("#boton_fac_cabecera").removeClass("text-dark");
+        } 
+      }  
+    }
+   });
+}
 

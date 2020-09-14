@@ -31,7 +31,7 @@ $observaciones_solicitud=$_POST["observaciones_solicitud"];
 
 $sqlUpdate="UPDATE solicitud_recursos SET cod_unidadorganizacional=$unidad_solicitud,cod_area=$area_solicitud,observaciones='$observaciones_solicitud' where codigo=$codSolicitud";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
-$stmtUpdate->execute();
+$flagSuccess=$stmtUpdate->execute();
 
 // Preparamos
 $stmtSolicitud = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and sr.codigo=$codSolicitud");
@@ -133,7 +133,7 @@ if(isset($_POST["personal_encargado"])){
       }   
   }
 
-$flagSuccess=true;
+//$flagSuccess=true;
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
     $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];

@@ -76,21 +76,22 @@ $razon_social=$result['razon_social'];
                             <thead>
                               <tr style="border:2px solid;">
                                   <th colspan="6" class="text-left"><small> Razón Social : <?=$razon_social?><br>Sucursal : <?=$sucursal?></small></th>   
-                                  <th colspan="6" class="text-left"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
+                                  <th colspan="7" class="text-left"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
                               </tr>
                               <tr >
                                   <th width="2%" style="border:2px solid;"><small><b>-</b></small></th>   
-                                  <th style="border:2px solid;" width="6%"><small><b>Fecha</b></small></th>                                
-                                  <th style="border:2px solid;" width="6%"><small><b>NIT</b></small></th>
-                                  <th style="border:2px solid;"><small><b>Razón Social </b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Nro. de<br> FACTURA</b></small></th>
-                                  <th style="border:2px solid;" width="10%"><small><b>Nro de Autorización</b></small></th>
-                                  <th style="border:2px solid;" width="10%"><small><b>Código de Control</b></small></th>                                  
-                                  <th style="border:2px solid;" width="6%"><small><b>Total Factura (A)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Total I.C.E (B)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Importes Exentos (C)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Importe Neto Sujeto a IVA <br>(A-B-C)</b></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><b>Crédito Fiscal Obtenido</b></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Fecha</b></small></small></th>                                
+                                  <th style="border:2px solid;" width="6%"><small><small><b>NIT</b></small></small></th>
+                                  <th style="border:2px solid;" width="20%"><small><small><b>Razón Social </b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Nro. FACTURA</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Nro de Autorización</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Código de Control</b></small></small></th>                                  
+                                  <th style="border:2px solid;" width="6%"><small><small><b>Total Factura (A)</b></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Importe N.S.C.F. (B)</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Subtotal (C=A-B)</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Desc, Bon, Reb (D)</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="10%"><small><small><small><b>Importe Base para Crédito Fiscal (E=C-D)</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Crédito Fiscal (F=E*13%)</b></small></small></small></th>
                               </tr>                                  
                             </thead>
                             <tbody>
@@ -101,6 +102,10 @@ $razon_social=$result['razon_social'];
                               $total_exento=0;
                               $total_importe_sujeto_iva=0;
                               $total_iva_obtenido=0;
+                              $total_subtotal=0;
+                              $total_descuento=0;
+                              $total_base=0;
+                              $total_credito_fiscal=0;
                               while ($row = $stmt2->fetch()) { 
                                 $index++;
                                 // $importe_sujeto_iva=$importe-$ice-$exento;
@@ -123,6 +128,16 @@ $razon_social=$result['razon_social'];
                                 if(trim($codigo_control)==""){
                                   $codigo_control="0";
                                 }
+
+                                $subtotal=$sumadeimporte-$sumadeimporte;
+                                $descuento=0;
+                                $importeBaseCF=$subtotal-$descuento;
+                                $credito_fiscal=$importeBaseCF*0.13;
+
+                                $total_subtotal+=$subtotal;
+                                $total_descuento+=$descuento;
+                                $total_base+=$importeBaseCF;
+                                $total_credito_fiscal+=$credito_fiscal;
                                 ?>
                                 <tr>
                                   <td class="text-center small"><?=$index;?></td>
@@ -133,10 +148,11 @@ $razon_social=$result['razon_social'];
                                   <td class="text-right small"><?=$nro_autorizacion;?></td>
                                   <td class="text-center small"><?=$codigo_control;?></td>
                                   <td class="text-right small"><?=formatNumberDec($sumadeimporte);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($ice);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($exento);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($importe_sujeto_iva);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($iva_obtenido);?></td>                                      
+                                  <td class="text-right small"><?=formatNumberDec($sumadeimporte);?></td>
+                                  <td class="text-right small"><?=formatNumberDec($subtotal);?></td>
+                                  <td class="text-right small"><?=formatNumberDec($descuento);?></td>
+                                  <td class="text-right small"><?=formatNumberDec($importeBaseCF);?></td> 
+                                  <td class="text-right small"><?=formatNumberDec($credito_fiscal);?></td>                                      
                                 </tr>
                                 <?php                                  
                               }?>
@@ -145,10 +161,11 @@ $razon_social=$result['razon_social'];
                                   <td class="text-left small" colspan="3" style="border:2px solid;">Nombre del Responsable:</td>
                                   <td class="text-center small"><b>SubTotal:</b></td>                                  
                                   <td class="text-right small"><?=formatNumberDec($total_importe);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($total_ice);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($total_exento);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($total_importe_sujeto_iva);?></td>
-                                  <td class="text-right small"><?=formatNumberDec($total_iva_obtenido);?></td>                                      
+                                  <td class="text-right small"><?=formatNumberDec($total_importe);?></td>
+                                  <td class="text-right small"><?=formatNumberDec($total_subtotal);?></td>
+                                  <td class="text-right small"><?=formatNumberDec($total_descuento);?></td>
+                                  <td class="text-right small"><?=formatNumberDec($total_base);?></td>
+                                  <td class="text-right small"><?=formatNumberDec($total_credito_fiscal);?></td>                                                                            
                                 </tr>
                             </tbody>
                         </table>
