@@ -49,6 +49,7 @@ if ($cod_facturacion > 0){
     $nombre_simulacion = $resultServicio['Descripcion'];
     $name_cliente=nameCliente($cod_cliente);
     $dias_credito=$result['dias_credito'];
+    $correo_contacto=$result['correo_contacto'];
 
 }else {
     $nombre_simulacion = $resultServicio['Descripcion'];
@@ -73,6 +74,9 @@ if ($cod_facturacion > 0){
     $observaciones_2=null;
     $persona_contacto= null;
     $dias_credito=obtenerValorConfiguracion(58);
+    $correo_contacto=obtenerCorreosCliente($cod_cliente);
+    $correo_contacto=trim($correo_contacto,",");
+    
     // echo "aqui";
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);

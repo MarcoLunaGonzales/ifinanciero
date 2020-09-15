@@ -15816,6 +15816,10 @@ function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_compr
               }else{
                 if(estado==5){
                   Swal.fire("ERROR!", "No se pudo generar el comprobante.<br>\n Error en: "+stringRetenciones+"<br>\n No tiene Estado de Cuenta Asociada.", "warning");
+                }else{
+                  if(estado==6){
+                    Swal.fire("ERROR!", "No se pudo generar el comprobante.<br>\n Error en: "+stringRetenciones+"<br>\n Las Fechas de las Facturas no corresponden al mes del comprobante.", "warning");
+                  }
                 }
               }
             }

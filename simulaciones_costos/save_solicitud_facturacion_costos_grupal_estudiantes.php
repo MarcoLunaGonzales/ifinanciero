@@ -33,9 +33,15 @@ try {//recibiendo datos
     $razon_social = $_POST["razon_social"];    
     $nit = $_POST["nit"];
     $observaciones = $_POST["observaciones"];    
-    $observaciones_2 = $_POST["observaciones_2"];        
-    $modal_totalmontos = $_POST["modal_totalmontos"];
-    $modal_numeroservicio = $_POST["modal_numeroservicio"];
+    $observaciones_2 = $_POST["observaciones_2"];   
+    $correo_contacto = $_POST["correo_contacto"];     
+    if(isset($_POST["modal_totalmontos"])){
+        $modal_totalmontos = $_POST["modal_totalmontos"];
+        $modal_numeroservicio = $_POST["modal_numeroservicio"];
+    }else{
+        $modal_totalmontos = 0;
+        $modal_numeroservicio = 0;
+    }
 
     
     if(isset($_POST['persona_contacto'])){
@@ -47,42 +53,19 @@ try {//recibiendo datos
         $cod_personal=$_POST['q'];
     }
     if (isset($_POST["dias_credito"]))$dias_credito = $_POST["dias_credito"];
-    else $dias_credito = '';
-    // $servicioInsert=430;
-    // $CantidadInsert=1;
-    // $importeInsert=$monto_pagar;
-    // $DescricpionInsert=$observaciones;
-    // $estado_ibnorca=0;
+    else $dias_credito = '';    
     if(!isset($_POST["cod_uo"]) && !isset($_POST["cod_area"])){
         $cod_area=0;
         $cod_unidadorganizacional=0;
     }
-    if($cod_area!=null && $cod_area!=0 && $cod_area!="" && $cod_unidadorganizacional!=null && $cod_unidadorganizacional!=0 && $cod_unidadorganizacional!=""){
+    if($cod_area!=null && $cod_area!=0 && $cod_area!="" && $cod_unidadorganizacional!=null && $cod_unidadorganizacional!=0 && $cod_unidadorganizacional!="" && $modal_numeroservicio!=0){
         if ($cod_facturacion == 0){//insertamos       
             $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
-            $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud,dias_credito) 
-            values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo','$persona_contacto',1,'$codigo_alterno',7,'$dias_credito')");//7 tipo capacitacion grupal
+            $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud,dias_credito, correo_contacto) 
+            values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo','$persona_contacto',1,'$codigo_alterno',7,'$dias_credito','$correo_contacto')");//7 tipo capacitacion grupal
             $flagSuccess=$stmt->execute();
+            $cod_facturacion = $dbh->lastInsertId();  
             if($flagSuccess){
-                //antes de insertar sacamos el codigo de la solicitud para el detalle
-                $stmt = $dbh->prepare("SELECT codigo from solicitudes_facturacion where cod_simulacion_servicio=$cod_simulacion ORDER BY codigo desc LIMIT 1");
-                $stmt->execute();
-                while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                      $cod_facturacion=$rowPre['codigo'];
-                }
-                // //insertamos la cadena de estudiantes
-                // $IdCurso = $_POST["IdCurso"];
-                // $ci_estudiante = $_POST["ci_estudiante"];
-                // $array_idcurso = explode(',',$IdCurso);
-                // $array_ci_estudiante = explode(',',$ci_estudiante);
-                // $lan_ci=sizeof($array_idcurso);//filas si lo hubiese
-                // for($p=0;$p<$lan_ci;$p++){
-                //     $id_curso_x=$array_idcurso[$p];
-                //     $ci_estudiante_x=$array_ci_estudiante[$p];
-                //     $stmtGrupal = $dbh->prepare("INSERT INTO solicitudes_facturacion_grupal(cod_solicitudfacturacion,cod_curso,ci_estudiante) 
-                //         values ($cod_facturacion,$id_curso_x,$ci_estudiante_x)");
-                //     $stmtGrupal->execute();
-                // }
                 for ($i=1;$i<=$modal_numeroservicio-1;$i++){
                     $servicioInsert="";
                     $CantidadInsert="";
@@ -124,41 +107,30 @@ try {//recibiendo datos
                 require_once '../simulaciones_servicios/insertar_archivosadjuntos.php';
                         
             
-            }   date_default_timezone_set('America/La_Paz');
-                $fechaHoraActual=date("Y-m-d H:i:s");
-                $idTipoObjeto=2709;
-                $idObjeto=2726; //regristado
-                $obs="Registro de Solicitud Facturación";
-                 if(isset($_POST['q'])){
-                    $q=$_POST['q'];
-                    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$q,$cod_facturacion,$fechaHoraActual,$obs);
-                 }else{
-                   actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_facturacion,$fechaHoraActual,$obs);
-                }
-
-
-                if(isset($_POST['q'])){
-                  $q=$_POST['q'];
-                  $s=$_POST['s'];
-                  $u=$_POST['u'];
-                  $v=$_POST['r'];
-                  showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
-                }else{
-                  showAlertSuccessError($flagSuccess,"../".$urlListSol);
-                }
-
-            
-                // if(isset($_POST['q'])){
-                //   $q=$_POST['q'];
-                //   $r=$_POST['r'];          
-                //   showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&r=".$r);
-                // }else{
-                //   showAlertSuccessError($flagSuccess,"../".$urlListSol);
-                // } 
-            //$stmt->debugDumpParams();
+            }   
+            date_default_timezone_set('America/La_Paz');
+            $fechaHoraActual=date("Y-m-d H:i:s");
+            $idTipoObjeto=2709;
+            $idObjeto=2726; //regristado
+            $obs="Registro de Solicitud Facturación";
+            if(isset($_POST['q'])){
+                $q=$_POST['q'];
+                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$q,$cod_facturacion,$fechaHoraActual,$obs);
+            }else{
+                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$cod_facturacion,$fechaHoraActual,$obs);
+            }
+            if(isset($_POST['q'])){
+              $q=$_POST['q'];
+              $s=$_POST['s'];
+              $u=$_POST['u'];
+              $v=$_POST['r'];
+              showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+            }else{
+              showAlertSuccessError($flagSuccess,"../".$urlListSol);
+            }
         }else {//update
             //actualizamos los campos estaticos
-            $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipoobjeto='$cod_tipoobjeto',cod_tipopago='$cod_tipopago',cod_cliente='$cod_cliente',cod_personal='$cod_personal',razon_social='$razon_social',nit='$nit',observaciones='$observaciones',observaciones_2='$observaciones_2',persona_contacto='$persona_contacto',dias_credito = '$dias_credito'
+            $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipoobjeto='$cod_tipoobjeto',cod_tipopago='$cod_tipopago',cod_cliente='$cod_cliente',cod_personal='$cod_personal',razon_social='$razon_social',nit='$nit',observaciones='$observaciones',observaciones_2='$observaciones_2',persona_contacto='$persona_contacto',dias_credito = '$dias_credito',correo_contacto='$correo_contacto'
             where codigo = $cod_facturacion");      
             $flagSuccess=$stmt->execute();
             if($flagSuccess){
@@ -193,18 +165,10 @@ try {//recibiendo datos
                         $flagSuccess=$stmt->execute();                    
                     }
                 }
-                
-                
                 //======================================
                 //para distribucion de tipo de pagos y areas
                 $tipo_solicitud=7;
                 require_once '../simulaciones_servicios/save_distribucion_montos_solfac.php';
-                //borramos los archivos
-                // $sqlDel="DELETE FROM archivos_adjuntos_solicitud_facturacion where cod_solicitud_facturacion=$cod_facturacion";
-                // $stmtDel = $dbh->prepare($sqlDel);
-                // $stmtDel->execute();
-                //subir archivos al servidor
-                //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
                 require_once '../simulaciones_servicios/insertar_archivosadjuntos.php';
             }
             if(isset($_POST['q'])){
