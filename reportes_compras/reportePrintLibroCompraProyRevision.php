@@ -65,7 +65,7 @@ $razon_social=$result['razon_social'];
                   <div class="card-icon bg-blanco">
                     <img class="" width="60" height="60" src="../assets/img/logo_ibnorca_origen.png">
                   </div>                  
-                  <h3 class="card-title text-center" ><b>Revisión Libro de Compras - Proyecto</b>
+                  <h3 class="card-title text-center" ><b>Libro de Compras - Proyecto</b>
                     <span><br><h6>
                     Del Período: <?=$nombre_mes;?>/<?=$nombre_gestion;?><br>
                     Expresado En Bolivianos</h6></span></h3>                  
@@ -76,9 +76,9 @@ $razon_social=$result['razon_social'];
                             <thead>
                               <tr style="border:2px solid;">
                                   <th colspan="6" class="text-left"><small> Razón Social : <?=$razon_social?><br>Sucursal : <?=$sucursal?></small></th>   
-                                  <th colspan="6" class="text-left"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
+                                  <th colspan="7" class="text-left"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
                               </tr>
-                              <tr >
+                              <tr>
                                   <th width="2%" style="border:2px solid;"><small><b>-</b></small></th>   
                                   <th style="border:2px solid;" width="6%"><small><small><b>Fecha</b></small></small></th>                                
                                   <th style="border:2px solid;" width="6%"><small><small><b>NIT</b></small></small></th>

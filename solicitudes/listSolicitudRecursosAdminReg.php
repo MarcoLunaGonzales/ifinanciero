@@ -106,6 +106,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                   ?>
                 </div>
                 <div class="card-body">
+                  <div class="table-responsive">
                     <table class="table table-condesed" id="tablePaginator">
                       <thead>
                         <tr>
@@ -432,6 +433,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
 ?>
                       </tbody>
                     </table>
+                   </div> 
                 </div>
               </div>
               <div class="card-footer fixed-bottom col-sm-9">

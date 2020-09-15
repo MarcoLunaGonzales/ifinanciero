@@ -166,7 +166,7 @@
             fixedHeader: {
               header: true,
               footer: true
-            }.
+            },
             "order": false
 
         } );

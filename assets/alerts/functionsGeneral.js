@@ -18328,3 +18328,14 @@ function mostrarOcultarFacturasComprobante(){
    });
 }
 
+function filtroFacturasSinSolicitudRecursos(){
+  var contenedor = document.getElementById('contenedor_oficinas_reporte');      
+  var check=document.getElementById("check_sin_sr");
+  if(check.checked){
+    var check_var=1;
+    $("#contenedor_oficinas_reporte").removeClass("d-none");
+  }else{
+    $("#contenedor_oficinas_reporte").addClass("d-none");
+  }
+}
+

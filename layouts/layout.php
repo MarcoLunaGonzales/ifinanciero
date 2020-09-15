@@ -5,8 +5,8 @@
 	include("head.php");
   include("librerias.php");// se debe cambiar a la parte posterior
 ?>    
-    <div class="main-panel">
-      <div class="content">
+    <div class="">
+      <div class="wrapper">
       <?php 
           $tipoLogin=obtenerValorConfiguracion(-10);
 
@@ -28,10 +28,10 @@
               require_once('routing.php');
             }           
           }       
-      ?>
-
-      </div>      
+      ?>  
+      </div><!-- el div que abre se encuentra dentro de cabecera al principio de NavBar Como en la documentación-->    
     </div>
+   </div> 
 <?php 
   //poner aqui librerias
 if(!isset($_GET['opcion'])){
