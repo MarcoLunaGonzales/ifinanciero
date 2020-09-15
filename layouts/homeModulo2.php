@@ -49,7 +49,7 @@ $nombreMes=abrevMes($mes);
 $globalGestion=$_SESSION["globalGestion"];
 $global_mes=$mes;
 
-$ingresoTotal=obtenerPresupuestoEjecucionPorArea($oficina,$area,$anio,$mes);
+$ingresoTotal=obtenerPresupuestoEjecucionPorAreaAcumulado($oficina,$area,$anio,$mes,0);
 $valorIngreso=calcularValorEnPoncentaje($ingresoTotal['ejecutado'],$ingresoTotal['presupuesto']);
 $valorIngresoFormat=number_format($valorIngreso,2,'.','');
 $ingresoTotalMonto=number_format($ingresoTotal['ejecutado'],2,'.',',');
@@ -156,7 +156,7 @@ $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
                                 
                       }
                       //datos para consultar el servicio
-                      $ingresoTotalArea=obtenerPresupuestoEjecucionPorArea($oficina,$codigoX,$anio,$mes);
+                      $ingresoTotalArea=obtenerPresupuestoEjecucionPorAreaAcumulado($oficina,$codigoX,$anio,$mes,0);
                       $valorIngresoArea=calcularValorEnPoncentaje($ingresoTotalArea['ejecutado'],$ingresoTotalArea['presupuesto']);
                       $valorIngresoAreaFormat=number_format($valorIngresoArea,2,'.','');
                       $ingresoTotalMontoArea=number_format($ingresoTotalArea['ejecutado'],2,'.',',');
