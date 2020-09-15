@@ -33,8 +33,10 @@ if (isset($_POST["check_rs_librocompras"])) {
 // echo $areaString;
 $sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra 
   FROM facturas_compra f, comprobantes_detalle c, comprobantes cc 
-  WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($stringUnidadesX) and MONTH(cc.fecha)=$cod_mes_x and YEAR(cc.fecha)=$nombre_gestion $sql_rs ORDER BY f.fecha asc";
+  WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($stringUnidadesX) and MONTH(cc.fecha)=$cod_mes_x and YEAR(cc.fecha)=$nombre_gestion $sql_rs ORDER BY f.fecha asc, f.nit, f.nro_factura";
+
 //echo $sql;
+
 $stmt2 = $dbh->prepare($sql);
 // echo $sql;
 // Ejecutamos                        
