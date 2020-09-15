@@ -32,8 +32,9 @@ try {//recibiendo datos
     $observaciones_2 = $_POST["observaciones_2"];    
     $persona_contacto = $_POST["persona_contacto"];
     $cod_cliente = $_POST["cod_cliente"];
+    $correo_contacto = $_POST["correo_contacto"];
     $modal_totalmontos = $_POST["modal_totalmontos"];
-    $modal_numeroservicio = $_POST["modal_numeroservicio"];
+    $modal_numeroservicio = $_POST["modal_numeroservicio"];    
 
     if(isset($_POST['q'])){
         $cod_personal=$_POST['q'];
@@ -52,8 +53,8 @@ try {//recibiendo datos
     if($cod_area!=null && $cod_area!=0 && $cod_area!="" && $cod_unidadorganizacional!=null && $cod_unidadorganizacional!=0 && $cod_unidadorganizacional!=""){
         if ($cod_facturacion == 0){//insertamos       
             $nro_correlativo=obtenerCorrelativoSolicitud();//correlativo
-            $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud,dias_credito,ci_estudiante) 
-            values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo','$persona_contacto',1,'$codigo_alterno',2,'$dias_credito','$ci_estudiante')");//2 tipo capacitacion
+            $stmt = $dbh->prepare("INSERT INTO solicitudes_facturacion(cod_simulacion_servicio,cod_unidadorganizacional,cod_area,fecha_registro,fecha_solicitudfactura,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,observaciones,observaciones_2,nro_correlativo,persona_contacto,cod_estadosolicitudfacturacion,codigo_alterno,tipo_solicitud,dias_credito,ci_estudiante,correo_contacto) 
+            values ('$cod_simulacion','$cod_unidadorganizacional','$cod_area','$fecha_registro','$fecha_solicitudfactura','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nit','$observaciones','$observaciones_2','$nro_correlativo','$persona_contacto',1,'$codigo_alterno',2,'$dias_credito','$ci_estudiante','$correo_contacto')");//2 tipo capacitacion
             $flagSuccess=$stmt->execute();        
             if($flagSuccess){
                 //antes de insertar sacamos el codigo de la solicitud para el detalle
@@ -135,22 +136,9 @@ try {//recibiendo datos
                 }else{
                   showAlertSuccessError($flagSuccess,"../".$urlListSol);
                 }
-
-            
-                // if(isset($_POST['q'])){
-                //   $q=$_POST['q'];
-                //   $r=$_POST['r'];          
-                //   showAlertSuccessError($flagSuccess,"../".$urlListSol."&q=".$q."&r=".$r);
-                // }else{
-                //   showAlertSuccessError($flagSuccess,"../".$urlListSol);
-                // } 
-
-
-            
-            //$stmt->debugDumpParams();
         }else {//update
             //actualizamos los campos estaticos
-            $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipoobjeto='$cod_tipoobjeto',cod_tipopago='$cod_tipopago',cod_cliente='$cod_cliente',cod_personal='$cod_personal',razon_social='$razon_social',nit='$nit',observaciones='$observaciones',observaciones_2='$observaciones_2',persona_contacto='$persona_contacto',dias_credito = '$dias_credito'
+            $stmt = $dbh->prepare("UPDATE solicitudes_facturacion set cod_unidadorganizacional='$cod_unidadorganizacional',cod_area='$cod_area',fecha_registro='$fecha_registro',fecha_solicitudfactura='$fecha_solicitudfactura',cod_tipoobjeto='$cod_tipoobjeto',cod_tipopago='$cod_tipopago',cod_cliente='$cod_cliente',cod_personal='$cod_personal',razon_social='$razon_social',nit='$nit',observaciones='$observaciones',observaciones_2='$observaciones_2',persona_contacto='$persona_contacto',dias_credito = '$dias_credito',correo_contacto='$correo_contacto'
             where codigo = $cod_facturacion");      
             $flagSuccess=$stmt->execute();
             if($flagSuccess){

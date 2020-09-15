@@ -109,6 +109,7 @@ if ($cod_facturacion > 0){
     $persona_contacto= $result['persona_contacto'];
     $Codigo_alterno=$result['codigo_alterno'];
     $dias_credito=$result['dias_credito'];
+    $correo_contacto=$result['correo_contacto'];
 }else {
     $globalUnidad=$_SESSION['globalUnidad'];
     $cod_area=13;
@@ -132,12 +133,8 @@ if ($cod_facturacion > 0){
     $dias_credito=obtenerValorConfiguracion(58);
     
     $Codigo_alterno=obtenerCodigoExternoCurso($id_curso);
+    $correo_contacto="";
 }
-// $Nombre = $resultSimu['Nombre'];
-
-
-// $Nombre = "curso";
-
 
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
 $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
@@ -412,13 +409,21 @@ $contadorRegistros=0;
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Correo De Contacto <br>Para Envío De Factura.</label>
+                                <div class="col-sm-10">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- fin razon social y nit -->
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Observaciones * 1</label>
                             <div class="col-sm-10">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
+                                    <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
                                 </div>
                             </div>
                         </div>
@@ -430,6 +435,7 @@ $contadorRegistros=0;
                                 </div>
                             </div>
                         </div>
+                       
                         <!-- fin observaciones -->
                          <!-- archivos -->
                         <div class="row">

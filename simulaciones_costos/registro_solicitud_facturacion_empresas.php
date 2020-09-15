@@ -95,6 +95,7 @@ if($cod_facturacion>0){//editar
     $dias_credito=$resultSimuFact['dias_credito'];
     $cod_uo= $resultSimuFact['cod_unidadorganizacional'];
     $cod_area= $resultSimuFact['cod_area'];
+    $correo_contacto=$resultSimuFact['correo_contacto'];
 }else{//registrat
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');
@@ -113,6 +114,8 @@ if($cod_facturacion>0){//editar
     $descuento_por=0;
     $descuento_bob=0;
     $dias_credito=obtenerValorConfiguracion(58);
+    $correo_contacto=obtenerCorreoEstudiante($nit);
+    $correo_contacto=trim($correo_contacto,",");
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
@@ -379,10 +382,18 @@ $descuento_cliente=0;
                         </div>
                         <!-- fin razon social y nit -->
                         <div class="row">
+                            <label class="col-sm-2 col-form-label">Correo De Contacto <br>Para Envío De Factura.</label>
+                            <div class="col-sm-10">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <label class="col-sm-2 col-form-label">Observaciones * 1</label>
                             <div class="col-sm-10">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
+                                    <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
                                 </div>
                             </div>
                         </div>
@@ -394,6 +405,7 @@ $descuento_cliente=0;
                                 </div>
                             </div>
                         </div>
+                        
                         <!-- fin observaciones -->
                          <!-- archivos -->
                         <div class="row">
