@@ -590,6 +590,11 @@
 		if ($_GET['opcion']=='listPagoProveedoresLotes') {
 			require_once('obligaciones_pago/listaLotes.php');
 		}
+
+		//REPORTES
+		if ($_GET['opcion']=='reportesSolicitudRecursosSis') {
+			require_once('reportes_solicitud_recursos/reportesSolicitudRecursosSis.php');
+		}
         
 
         if ($_GET['opcion']=='reporteVentasResumido') {

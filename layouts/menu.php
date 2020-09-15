@@ -981,6 +981,12 @@ if($menuModulo==0){
                   </a>
                 </li>  -->                               
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportesSolicitudRecursosSis">
+                    <span class="sidebar-mini"> CSRS </span>
+                    <span class="sidebar-normal"> Control SR Proyecto SIS</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listObligacionesPago">
                     <span class="sidebar-mini"> OP </span>
                     <span class="sidebar-normal"> Obligaciones de Pago</span>

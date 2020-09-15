@@ -1,2 +1,10 @@
     php_value session.cookie_lifetime 28800
     php_value session.gc_maxlifetime 28800
+   
+    php_value max_input_vars 2000
+	php_value post_max_size 64M
+	php_value memory_limit 256M
+	php_value upload_max_filesize 64M
+	php_value max_execution_time 30000
+	php_value max_input_time 1000
+	

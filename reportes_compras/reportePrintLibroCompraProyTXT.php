@@ -54,9 +54,9 @@ try {
 	while ($row = $stmt2->fetch()) {                             
 	
 		// $nombre_estado=nameEstadoFactura($cod_estadofactura);
-		$importe_no_iva=$ice+$exento;
-		$subtotal=$importe-$importe_no_iva;
-		$rebajas_sujetos_iva=0;		
+		//$importe_no_iva=$ice+$exento;
+		//$subtotal=$importe-$importe_no_iva;
+		//$rebajas_sujetos_iva=0;		
 
 		// $subtotal=$importe-$importe_no_iva-$extento-$ventas_gravadas;
 
@@ -72,17 +72,18 @@ try {
              $codigo_control="0";
         }
 
-        /*$subtotal=$sumadeimporte-$sumadeimporte;
+        $sumadeimporte=$importe;
+        $subtotal=$sumadeimporte-$sumadeimporte;
         $descuento=0;
         $importeBaseCF=$subtotal-$descuento;
-        $credito_fiscal=$importeBaseCF*0.13;*/
+        $credito_fiscal=$importeBaseCF*0.13;
 
         $razon_social=trim($razon_social);
         $nro_autorizacion=trim($nro_autorizacion);
         $codigo_control=trim($codigo_control);
         $tipo_compra=2;
 		//agregamos los items al archivo	
-		$texto="1|".$index."|".$fecha_factura."|".$nit."|".$razon_social."|".$nro_factura."|0|".$nro_autorizacion."|".number_format($importe,2,'.','')."|".number_format($importe_no_iva,2,'.','')."|".number_format($subtotal,2,'.','')."|".number_format($rebajas_sujetos_iva,2,'.','')."|".number_format($importe_credito_fiscal,2,'.','')."|".number_format($credito_fiscal,2,'.','')."|".$codigo_control."|".$tipo_compra;
+		$texto="1|".$index."|".$fecha_factura."|".$nit."|".$razon_social."|".$nro_factura."|0|".$nro_autorizacion."|".number_format($sumadeimporte,2,'.','')."|".number_format($sumadeimporte,2,'.','')."|".number_format($subtotal,2,'.','')."|".number_format($descuento,2,'.','')."|".number_format($importeBaseCF,2,'.','')."|".number_format($credito_fiscal,2,'.','')."|".$codigo_control."|".$tipo_compra;
 		fwrite($archivo, $texto);
 		fwrite($archivo, "".PHP_EOL);
 

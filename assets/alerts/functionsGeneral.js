@@ -15816,6 +15816,10 @@ function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_compr
               }else{
                 if(estado==5){
                   Swal.fire("ERROR!", "No se pudo generar el comprobante.<br>\n Error en: "+stringRetenciones+"<br>\n No tiene Estado de Cuenta Asociada.", "warning");
+                }else{
+                  if(estado==6){
+                    Swal.fire("ERROR!", "No se pudo generar el comprobante.<br>\n Error en: "+stringRetenciones+"<br>\n Las Fechas de las Facturas no corresponden al mes del comprobante.", "warning");
+                  }
                 }
               }
             }
@@ -18322,5 +18326,16 @@ function mostrarOcultarFacturasComprobante(){
       }  
     }
    });
+}
+
+function filtroFacturasSinSolicitudRecursos(){
+  var contenedor = document.getElementById('contenedor_oficinas_reporte');      
+  var check=document.getElementById("check_sin_sr");
+  if(check.checked){
+    var check_var=1;
+    $("#contenedor_oficinas_reporte").removeClass("d-none");
+  }else{
+    $("#contenedor_oficinas_reporte").addClass("d-none");
+  }
 }
 

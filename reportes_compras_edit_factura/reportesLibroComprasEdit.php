@@ -91,6 +91,46 @@ $dbh = new Conexion();
 		                     </div>
 		                  </div>
 		            </div>
+		            <div class="row d-none">
+		            	<label class="col-sm-2 col-form-label">Sin Solicitud</label>
+		                <div class="col-sm-1">
+		                	<div class="form-group">
+								<div class="togglebutton">
+								    <label>
+										<input type="checkbox" name="check_sin_sr" id="check_sin_sr" onChange="filtroFacturasSinSolicitudRecursos()">
+										<span class="toggle"></span>
+								    </label>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-8">
+		                	<div class="form-group d-none" id="contenedor_oficinas_reporte">
+								<div class="row">
+		                	      <label class="col-sm-1 col-form-label">Oficina</label>
+		                	      <div class="col-sm-5">
+		                	      <div class="form-group">
+		                	      	<div id="">		
+		                	      		<?php
+							      		$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
+									    $stmt = $dbh->prepare($sqlUO);
+									    $stmt->execute();
+									    ?>
+										   <select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+										       <?php 
+										       	while ($row = $stmt->fetch()){ 
+										   	?>
+										      	 <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>" <?=($row["codigo"]==$globalUnidad)?"selected":""?> ><?=$row["abreviatura"];?></option>
+							    	         <?php 
+										 		} 
+								 	         ?>
+										</select>
+		                		      </div>
+		                              </div>
+		                         </div>				             
+                  	         </div><!--div row -->
+							</div>
+						</div>
+		            </div>
                   	
                 <div class="card-footer">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>

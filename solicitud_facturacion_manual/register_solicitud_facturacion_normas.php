@@ -92,6 +92,7 @@ if ($cod_facturacion > 0){
     $persona_contacto= $result['persona_contacto'];
     $Codigo_alterno=null;
     $dias_credito=$result['dias_credito'];
+    $correo_contacto=$result['correo_contacto'];
 }else {
     $cod_simulacion=0;
     $cod_facturacion=null;
@@ -111,6 +112,7 @@ if ($cod_facturacion > 0){
     $persona_contacto=null;
     $Codigo_alterno=null;
     $dias_credito=obtenerValorConfiguracion(58);
+    $correo_contacto="";
 }
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
 $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
@@ -386,13 +388,22 @@ $contadorRegistros=0;
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Correo De Contacto <br>Para Envío De Factura.</label>
+                                <div class="col-sm-10">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                       
                         <!-- fin razon social y nit -->
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Observaciones * 1</label>
                             <div class="col-sm-10">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" requerid/>
+                                    <input class="form-control" type="text" name="observaciones" id="observaciones"  value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
                                 </div>
                             </div>
                         </div>
@@ -404,6 +415,7 @@ $contadorRegistros=0;
                                 </div>
                             </div>
                         </div>
+                        
                         <!-- fin observaciones -->
                          <!-- archivos -->
                         <div class="row">

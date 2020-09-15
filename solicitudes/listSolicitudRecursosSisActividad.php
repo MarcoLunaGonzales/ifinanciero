@@ -80,7 +80,7 @@ $item_1=2708;
                   </div>
                   <h4 class="card-title"><b>Lista Solicitudes de Recursos SIS</b></h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body table-responsive">
                      <table class="table table-condesed" id="tablePaginator100NoFidexHead">
                       <thead>
                         <tr class="bg-info text-white">

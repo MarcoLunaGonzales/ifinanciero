@@ -8114,7 +8114,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
   }
   function obtenerCorreosCliente($cod_cliente){
     $dbh = new Conexion();
-    $sqlCorreo="SELECT correo from clientes_contactos where correo!='null' and cod_cliente=$cod_cliente";
+    $sqlCorreo="SELECT correo from clientes_contactos where correo<>'' and cod_cliente=$cod_cliente";
     // echo $sqlCorreo;
     $stmtCorreos = $dbh->prepare($sqlCorreo);
     $stmtCorreos->execute();
@@ -9497,7 +9497,25 @@ function obtenerEstadoComprobante($codigo){
     $string_valor=$contadorRentencion."#####@@@@@".$stringRetenciones;
     return $string_valor;
   }
+function validacion_fechafactura_comprobante($cod_cajachica,$globalmes){
 
+    $dbh = new Conexion();
+    $cod_retencion=obtenerValorConfiguracion(53);//-sum(f.exento)-sum(f.tasa_cero)-sum(f.ice)
+      $sqlVerifRetencion="SELECT ccd.nro_documento FROM caja_chica cc,caja_chicadetalle ccd,facturas_detalle_cajachica f WHERE cc.codigo=ccd.cod_cajachica and ccd.codigo=f.cod_cajachicadetalle and cc.codigo=$cod_cajachica and MONTH(f.fecha) <> $globalmes ";
+      // echo $sqlVerifRetencion;
+    $stmtVerifRetencion = $dbh->prepare($sqlVerifRetencion);
+    $stmtVerifRetencion->execute();
+    $contadorRentencion=0;
+    $stringRetenciones="";
+    while($rowVeriRetencion = $stmtVerifRetencion->fetch()) 
+    {       
+      $nro_documento=$rowVeriRetencion['nro_documento'];      
+      $contadorRentencion++;
+      $stringRetenciones.="Nro. Documento: ".$nro_documento."<br>";
+    }
+    $string_valor=$contadorRentencion."#####@@@@@".$stringRetenciones;
+    return $string_valor;
+}
 function verificarImporteMayorAlPresupuestado($codigo){
       $dbh = new Conexion();
       $sql="SELECT l.importe FROM (SELECT sum(sd.importe_presupuesto) as presupuesto,sum(sd.importe) as importe FROM solicitud_recursosdetalle sd
@@ -9797,4 +9815,16 @@ function obtenerEstadoCuentaComprobanteCerrados($codigo){
   }     
   return $porcentaje;
 }
+
+function obtenerCodigoUnidadComprobante($codigo){
+     $dbh = new Conexion();
+     $sqlX="SELECT cod_unidadorganizacional FROM comprobantes where codigo='$codigo'";
+     $stmt = $dbh->prepare($sqlX);
+     $stmt->execute();
+     $nombreX=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $nombreX=$row['cod_unidadorganizacional'];
+     }
+     return($nombreX);
+  }
 ?>

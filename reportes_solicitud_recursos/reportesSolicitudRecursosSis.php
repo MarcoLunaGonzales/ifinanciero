@@ -9,9 +9,8 @@ $globalUnidad=$_SESSION["globalUnidad"];
 
 $globalGestion=$_SESSION["globalGestion"];
 $global_mes=$_SESSION["globalMes"];
-
+$global_mes_actual=(int)date("m");
 $dbh = new Conexion();
-
 ?>
 
 <div class="content">
@@ -19,13 +18,13 @@ $dbh = new Conexion();
 		<!-- <div style="overflow-y:scroll; ">			 		 -->
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">
-                  <div class="card-icon">
-                    <i class="material-icons"><?=$iconCard;?></i>
+                <div style="color:#E2AF0F !important;font-weight:bold !important;" class="card-header <?=$colorCard;?> card-header-icon">
+                  <div class="card-icon" style="background:rgb(116, 24, 153) !important;">
+                    <i class="material-icons">content_paste</i>
                   </div>
-                  <h4 class="card-title">Libro Compras Proyecto</h4>
+                  <h4 class="card-title"><b>Control Solicitudes de Recursos - Proyecto SIS</b></h4>
                 </div>
-                <form class="" action="<?=$urlReporteComprasProyRevision?>" target="_blank" method="POST">
+                <form class="" action="<?=$urlReporteForm?>" target="_blank" method="POST">
                 <div class="card-body">
                 	<div class="row">
 		                <label class="col-sm-2 col-form-label">Estado SR</label>
@@ -75,14 +74,14 @@ $dbh = new Conexion();
 									$stmtg = $dbh->prepare($sql);
 									$stmtg->execute();
 									?>
-									<select name="cod_mes_x" id="cod_mes_x" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  required data-live-search="true">
+									<select name="cod_mes_x[]" id="cod_mes_x" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" multiple data-actions-box="true" required data-live-search="true">
 									<?php
 									  
 									  while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {    
 									    $cod_mes=$rowg['cod_mes'];    
 									    $nombre_mes=$rowg['nombre_mes'];    
 									  ?>
-									  <option value="<?=$cod_mes;?>" <?=($cod_mes==$global_mes)?"selected":""?> ><?=$nombre_mes;?></option>
+									  <option value="<?=$cod_mes;?>" <?=($cod_mes<=$global_mes_actual)?"selected":""?> ><?=$nombre_mes;?></option>
 									  <?php 
 									  }
 									?>
@@ -95,7 +94,7 @@ $dbh = new Conexion();
                   	
                 <div class="card-footer">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_comprasProy()">Generar TXT</a>
+               
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
 			  </div>
                </form> 
@@ -106,19 +105,4 @@ $dbh = new Conexion();
         
 </div>
 
-<div class="modal fade" id="modal_descargarTXT" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">    
-      <div class="modal-content">
-        <div class="modal-header">          
-          <h3 class="modal-title" id="myModalLabel"><b>Correcto</b></h3>
-        </div>
-        <div class="modal-body">                
-              <center><span>El proceso se completó correctamente!</span></center>     
-        </div>    
-        <div id="contenedor_DescargaTxt">
-          
-        </div>    
-      </div>
-    </form>
-  </div>
-</div>
+
