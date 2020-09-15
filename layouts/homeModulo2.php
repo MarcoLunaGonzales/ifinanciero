@@ -50,10 +50,16 @@ $globalGestion=$_SESSION["globalGestion"];
 $global_mes=$mes;
 
 $ingresoTotal=obtenerPresupuestoEjecucionPorAreaAcumulado($oficina,$area,$anio,$mes,0);
+$ingresoTotalAcumulado=obtenerPresupuestoEjecucionPorAreaAcumulado($oficina,$area,$anio,$mes,1);
 $valorIngreso=calcularValorEnPoncentaje($ingresoTotal['ejecutado'],$ingresoTotal['presupuesto']);
+$valorIngresoAcumulado=calcularValorEnPoncentaje($ingresoTotalAcumulado['ejecutado'],$ingresoTotalAcumulado['presupuesto']);
 $valorIngresoFormat=number_format($valorIngreso,2,'.','');
+$valorIngresoFormatAcumulado=number_format($valorIngresoAcumulado,2,'.','');
+
 $ingresoTotalMonto=number_format($ingresoTotal['ejecutado'],2,'.',',');
 $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
+$ingresoTotalMontoAcumulado=number_format($ingresoTotalAcumulado['ejecutado'],2,'.',',');
+$presupuestoTotalMontoAcumulado=number_format($ingresoTotalAcumulado['presupuesto'],2,'.',',');
 ?>
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
@@ -63,6 +69,7 @@ $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
 </div>
   <div class="container">
     <div class="div-center">
+      <br><br><br><br>
       <!--inicio dashboard-->
       <div class="content">
             <div class="row">
@@ -116,7 +123,7 @@ $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
                   </div>
                   <div class="card-body">
 
-                    <div class="row">
+                    <div class="row" style="background-color: rgba(255, 255, 255, 0.6) !important;">
                           <div class="col-md-4 div-center">
                             <div class="card card-chart text-center">
                               <div class="card-header card-header-rose" data-header-animation="false" style="background:<?=$estiloHome?> !important;">
@@ -126,8 +133,9 @@ $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
                                 <div class="card-actions">
                                   
                                 </div>
-                                <h4 class="card-title"><?=$ingresoTotalMonto?> Bs</h4>
-                                <p class="card-category">Presupuesto <?=$presupuestoTotalMonto?> Bs</p>
+                                <h4 class="card-title">Mes: <?=$ingresoTotalMonto?> Bs</h4>
+                                <h4 class="card-title">Acumulado : <?=$ingresoTotalMontoAcumulado?> Bs</h4>
+                                <p class="card-category">Presupuesto Mes: <?=$presupuestoTotalMonto?> Bs<br> Presupuesto Acumulado: <?=$presupuestoTotalMontoAcumulado?> Bs</p>
                               </div>
                               <div class="card-footer">
                                 <div class="stats">
@@ -141,7 +149,7 @@ $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
         
                     <div class="row" style="background-color: rgba(255, 255, 255, 0.6) !important;">
                     <?php 
-                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 and codigo not in (501,502,1235) order by 2 ");
                     $stmt->execute();
                     $cont=0;
 
@@ -161,8 +169,15 @@ $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
                       $valorIngresoAreaFormat=number_format($valorIngresoArea,2,'.','');
                       $ingresoTotalMontoArea=number_format($ingresoTotalArea['ejecutado'],2,'.',',');
                       $presupuestoTotalMontoArea=number_format($ingresoTotalArea['presupuesto'],2,'.',',');
+
+                      //acumulado
+                      $ingresoTotalAreaAcumulado=obtenerPresupuestoEjecucionPorAreaAcumulado($oficina,$codigoX,$anio,$mes,1);
+                      $valorIngresoAreaAcumulado=calcularValorEnPoncentaje($ingresoTotalAreaAcumulado['ejecutado'],$ingresoTotalAreaAcumulado['presupuesto']);
+                      $valorIngresoAreaFormatAcumulado=number_format($valorIngresoAreaAcumulado,2,'.','');
+                      $ingresoTotalMontoAreaAcumulado=number_format($ingresoTotalAreaAcumulado['ejecutado'],2,'.',',');
+                      $presupuestoTotalMontoAreaAcumulado=number_format($ingresoTotalAreaAcumulado['presupuesto'],2,'.',',');
                       ?>
-                          <div class="col-md-3">
+                          <div class="col-md-4">
                             <div class="card card-chart text-center">
                               <div class="card-header card-header-primary div-center" data-header-animation="false">
                                 <div id="ingreso_general_chart<?=$cont?>"></div>
@@ -172,8 +187,10 @@ $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
                                   
                                 </div>
                                 <h4 class="card-title"><?=$abrevX?></h4>
-                                <p class="card-category text-primary"><?=$ingresoTotalMontoArea?> Bs</p>
-                                <p class="card-category small">Presupuesto <?=$presupuestoTotalMontoArea?> Bs</p>
+                                <p class="card-category text-primary">Mes : <?=$ingresoTotalMontoArea?> Bs</p>
+                                <p class="card-category text-primary">Acumulado : <?=$ingresoTotalMontoAreaAcumulado?> Bs</p>
+                                <p class="card-category small">Presupuesto Mes: <?=$presupuestoTotalMontoArea?> Bs</p>
+                                <p class="card-category small">Presupuesto Acumulado: <?=$presupuestoTotalMontoAreaAcumulado?> Bs</p>
                               </div>
                               <div class="card-footer">
                                 <div class="stats">
@@ -185,6 +202,8 @@ $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
                           <input type="hidden" value="<?=$abrevX?>" id="nombre_area_chart<?=$cont?>">
                           <input type="hidden" value="<?=$valorIngresoAreaFormat?>" id="porcentaje_area_chart<?=$cont?>">
                           <input type="hidden" value="<?=$ingresoTotalMontoArea?>" id="ingreso_area_chart<?=$cont?>">
+                          <input type="hidden" value="<?=$valorIngresoAreaFormatAcumulado?>" id="porcentaje_area_chart_acumulado<?=$cont?>">
+                          <input type="hidden" value="<?=$ingresoTotalMontoAreaAcumulado?>" id="ingreso_area_chart_acumulado<?=$cont?>">
                       <?php                       
                     } 
                     ?>
@@ -222,13 +241,15 @@ $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
 
         var data = google.visualization.arrayToDataTable([
           ['Label', 'Value'],
-          ['IBNORCA', <?=$valorIngresoFormat?>]
+          ['MES', <?=$valorIngresoFormat?>],
+          ['ACUMULADO', <?=$valorIngresoFormatAcumulado?>]
          
         ]);
         var options = {
-          width: 230, height: 230,
-          redFrom: 90, redTo: 100,
-          yellowFrom:75, yellowTo: 90,
+          width: 270, height: 270,
+          redFrom: 0, redTo: 25,
+          yellowFrom:25, yellowTo: 75,
+          greenFrom:75, greenTo: 100,
           minorTicks: 5
         };
 
@@ -238,9 +259,10 @@ $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
         var dataAreas=[];
         var dataChart=[];
         var options_minus = {
-           width: 110, height: 110,
-           redFrom: 90, redTo: 100,
-           yellowFrom:75, yellowTo: 90,
+           width: 250, height: 250,
+           redFrom: 0, redTo: 25,
+           yellowFrom:25, yellowTo: 75,
+           greenFrom:75, greenTo: 100,
            minorTicks: 5
          };
          var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
@@ -253,7 +275,9 @@ $presupuestoTotalMonto=number_format($ingresoTotal['presupuesto'],2,'.',',');
         for (var i = 0; i < cantidad_filas_medidor; i++) {
           var data_i=google.visualization.arrayToDataTable([
                 ['Label', 'Value'],
-                [$('#nombre_area_chart'+(i+1)).val(), parseFloat($("#porcentaje_area_chart"+(i+1)).val())]
+                //[$('#nombre_area_chart'+(i+1)).val(), parseFloat($("#porcentaje_area_chart"+(i+1)).val())]
+                ['MES', parseFloat($("#porcentaje_area_chart"+(i+1)).val())],
+                ['ACUMULADO', parseFloat($("#porcentaje_area_chart_acumulado"+(i+1)).val())],
           ]);
           dataAreas.push(data_i);
           var chart_i=new google.visualization.Gauge(document.getElementById('ingreso_general_chart'+(i+1)));

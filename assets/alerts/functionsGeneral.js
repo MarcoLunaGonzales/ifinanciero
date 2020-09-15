@@ -18305,7 +18305,7 @@ function buscarIngresosDashboard(){
   var gestion=$('#gestiones option:selected').text();
   var mes=$("#cod_mes_x").val();
   iniciarCargaAjax();
-  window.location.href="index.php?opcion=homeModulo&anio="+gestion+"&mes="+mes;  
+  window.location.href="index.php?opcion=homeModulo2&anio="+gestion+"&mes="+mes;  
 }
 
 function mostrarOcultarFacturasComprobante(){
