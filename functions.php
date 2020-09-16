@@ -9847,4 +9847,19 @@ function obtenerCodigoUnidadComprobante($codigo){
      }
      return($nombreX);
   }
+
+  function obtenerCorreoSolicitudFacturacion($codigo){
+    $dbh = new Conexion();
+    $sqlCorreo="SELECT correo_contacto from solicitudes_facturacion where codigo=$codigo";
+    //echo $sqlCorreo;
+    $stmtCorreos = $dbh->prepare($sqlCorreo);
+    $stmtCorreos->execute();
+    $stmtCorreos->bindColumn('correo_contacto', $correo);
+    $correos_string= '';                            
+    while ($row = $stmtCorreos->fetch(PDO::FETCH_BOUND)) {
+        $correos_string=$correo;
+    }
+    return($correos_string);
+  }
+
 ?>

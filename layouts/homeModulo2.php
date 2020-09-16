@@ -1,4 +1,13 @@
 <?php
+session_start();
+require_once '../layouts/bodylogin2.php';
+require_once '../conexion.php';
+require_once '../functions.php';
+$codModulo=3;
+if(isset($_GET["mod"])){
+  $codModulo=$_GET['mod'];  
+}
+
 switch ($codModulo) {
   case 1:
    $nombreModulo="RRHH";
@@ -32,6 +41,7 @@ switch ($codModulo) {
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 
+$dbh=new Conexion();
 
 //datos para consultar el servicio
 $oficina="0";
@@ -67,9 +77,9 @@ $presupuestoTotalMontoAcumulado=number_format($ingresoTotalAcumulado['presupuest
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
+<input type="hidden" id="modulo" value="<?=$codModulo?>">
   <div class="container">
     <div class="div-center">
-      <br><br><br><br>
       <!--inicio dashboard-->
       <div class="content">
             <div class="row">
@@ -81,17 +91,18 @@ $presupuestoTotalMontoAcumulado=number_format($ingresoTotalAcumulado['presupuest
                       <h4 class="card-title"><b>INGRESOS <?=$nombreMes?> <?=$anio?></b></h4>
                       <!---->
                     </div>
-                    <a href="index.php" title="IR A LA PAGINA DE INICIO" class="btn btn-primary btn-sm btn-fab float-right">
+                    <a href="../index.php?opcion=homeModulo" title="IR A LA PAGINA DE INICIO" class="btn btn-primary btn-sm btn-fab float-right">
                       <i class="material-icons">home</i>
                     </a>
                     <a href="#" title="BUSCAR INGRESOS" class="btn btn-warning btn-sm btn-fab float-right" onclick="buscarIngresosDashboard()">
                       <i class="material-icons">search</i>
                     </a>
                       <div class="form-group float-right col-sm-1">
-                        <select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+                        <select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion_reloj(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
                                     <option value=""disabled>--Gestión--</option>
                                     <?php 
                                     $query = "SELECT codigo,nombre from gestiones where cod_estado=1 ORDER BY nombre desc";
+
                                     $stmt = $dbh->query($query);
                                     while ($row = $stmt->fetch()){ ?>
                                         <option value="<?=$row["codigo"];?>" <?=($row["nombre"]==$anio)?"selected":""?> ><?=$row["nombre"];?></option>

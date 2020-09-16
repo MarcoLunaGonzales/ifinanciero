@@ -115,11 +115,18 @@ $globalPersonal=$_SESSION["globalUser"];
                           }
                           $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
                           $cliente=nameCliente($cod_cliente);
+
+                          $correos_string=obtenerCorreoSolicitudFacturacion($cod_solicitudfacturacion);
+
                           //correos de contactos
                           $tipo_solicitud=obtenerTipoSolicitud($cod_solicitudfacturacion);
-                          if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
-                            $correos_string=obtenerCorreoEstudiante($nit);
-                          }else $correos_string=obtenerCorreosCliente($cod_cliente);                            
+                          /*if($correos_string==""){
+                            if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
+                              $correos_string=obtenerCorreoEstudiante($nit);
+                            }else $correos_string=obtenerCorreosCliente($cod_cliente);                            
+                            
+                          }*/
+                          
                           //colores de estados                            
                           $observaciones_solfac="";
                           switch ($cod_estadofactura) {
@@ -444,7 +451,17 @@ $globalPersonal=$_SESSION["globalUser"];
         <!-- <input class="form-control" type="email" name="correo_destino" id="correo_destino" required="true" value="" /> -->
         <div class="row">
           <div class="col-sm-12" >
-            <h6> Correo Destino : </h6>
+            <h6> Correo Destino (SF): </h6>
+          </div>
+          <div class="col-sm-12" style="background-color:#FFFFFF">
+            <div class="form-group" >              
+              <input type="text" class="form-control" name="correo_solicitante" id="correo_solicitante" value="" readonly="true" style="background-color:#e2d2e0"> 
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" >
+            <h6> Agregar Correos : </h6>
           </div>
         </div>
         <div class="row">
@@ -572,10 +589,14 @@ $globalPersonal=$_SESSION["globalUser"];
       interno=document.getElementById("interno_x").value;
       
       correo_copia=$('#correo_copia').val();
+      var correo_solicitante=$('#correo_solicitante').val();
+      if(correo_solicitante.trim()!=""){
+        correo_solicitante=","+correo_solicitante;
+      }
       if(correo_copia!=""){
-        correo_destino=$('#correo_destino').val()+","+correo_copia;        
+        correo_destino=$('#correo_destino').val()+","+correo_copia+correo_solicitante;        
       }else{
-        correo_destino=$('#correo_destino').val();        
+        correo_destino=$('#correo_destino').val()+correo_solicitante;        
       } 
       asunto=null;
       mensaje=null;
