@@ -66,6 +66,7 @@
                     $estado_x=true;
                     if($tipo_solicitud==2){// la solicitud pertence capacitacion estudiantes
                         //echo $ci_estudiante_x."-".$cod_simulacion_servicio."-".$cod_claservicio_x."-".$precio_x."-".$codigo;
+                        $ci_estudiante_x=$ci_estudiante;
                         $datos=resgistrar_pago_curso($ci_estudiante,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$codigo);
                         $estado_x=$datos["estado"];
                         $mensaje_x=$datos["mensaje"];                    
