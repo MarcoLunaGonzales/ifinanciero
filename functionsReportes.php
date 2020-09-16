@@ -53,10 +53,7 @@ function obtenerListaVentasArea($unidades,$areas,$desde,$hasta,$soloCredito){
 
 
 
-function obtenerListaVentasA_servicios($unidades,$cod_area,$servicios,$desde,$hasta){
-    // if(11,12,38,39,40){
-
-    // }
+function obtenerListaVentasA_servicios($unidades,$cod_area,$servicios,$desde,$hasta){   
     if($servicios==0) 
         $sql_aux="";
         // $sql_aux=" and f.cod_area in ($cod_area)"; 
@@ -66,7 +63,7 @@ function obtenerListaVentasA_servicios($unidades,$cod_area,$servicios,$desde,$ha
     $sql="SELECT da.cod_area,(SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area,cs.IdTipo,cs.Codigo,cs.descripcion_n2,SUM(((s.cantidad*s.precio)-s.descuento_bob)*(da.porcentaje/100)*($valorIVA/100)) as importe_real 
     From facturas_venta f,facturas_ventadetalle s,facturas_venta_distribucion da, cla_servicios cs 
     where f.codigo=s.cod_facturaventa and da.cod_factura=f.codigo and s.cod_claservicio=cs.IdClaServicio $sql_aux and f.cod_estadofactura<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($cod_area) GROUP BY cs.Idtipo order by area";
-    echo $sql;
+    //echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return($stmt);
@@ -210,6 +207,17 @@ group by area order by area";
   return($valor);
 }
 
+ function obtenerNombreModulo($codigo){
+  $dbhIBNO = new ConexionIBNORCA();
+  //datos del estudiante y el curso que se encuentra
+  $sqlIBNORCA="SELECT ibnorca.d_clasificador(IdTema)as nombre_tema from ibnorca.modulos  where IdModulo=$codigo";  
+  $stmtIbno = $dbhIBNO->prepare($sqlIBNORCA);
+  $stmtIbno->execute();
+  $resultSimu = $stmtIbno->fetch();
+  $valor = $resultSimu['nombre_tema'];
+  return($valor);
+}
+
 function obtenerListaCuentasEgreso($unidades,$areas,$cuentas,$desde,$hasta){
     $dbh = new Conexion();
     $sql="SELECT da.cod_area,da.cod_cuenta,(SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area,p.nombre as cuenta,p.numero as numero_cuenta,SUM((da.debe-da.haber)) as monto_real 
@@ -270,6 +278,39 @@ f.codigo='$codigoFactura' GROUP BY fd.cod_claservicio;";
     }
     $valor=substr($valor, 2);     
     return($valor);
+}
+
+function obtenerDatosSolicitudFacturacion($codigo,$cod_claservicio){
+    $dbh = new Conexion();
+    $string="0#####0#####0#####0";
+    if($codigo!=-100){
+        $stmt = $dbh->prepare("SELECT f.nro_correlativo,f.cod_personal,f.cod_simulacion_servicio,(select sf.cod_curso from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=f.codigo limit 1)as cod_curso_2,f.tipo_solicitud from solicitudes_facturacion f where f.codigo=$codigo");
+        $stmt->execute();        
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $nro_correlativo=$row['nro_correlativo'];
+          $cod_personal=$row['cod_personal'];
+          $cod_curso_1=$row['cod_simulacion_servicio'];
+          $cod_curso_2=$row['cod_curso_2'];
+          $tipo_solicitud=$row['tipo_solicitud'];
+          if($tipo_solicitud!=7){
+            $string=$nro_correlativo."#####".$cod_personal."#####".$cod_curso_1."#####".$tipo_solicitud;
+          }else{
+            $string=$nro_correlativo."#####".$cod_personal."#####".$cod_curso_2."#####".$tipo_solicitud;
+          }
+        }
+    }else{
+        $sql="SELECT m.curso_id,(select clIdentificacion from dbcliente.cliente_persona_empresa where idCliente=m.usuario_id)as ci_estudiante from ibnorcatienda.pago_curso m where  m.pago_id=$cod_claservicio";
+        // echo $sql;
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();        
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $curso_id=$row['curso_id'];
+          $modulo_id=0;
+          $ci_estudiante=$row['ci_estudiante'];
+          $string=$modulo_id."#####".$ci_estudiante."#####".$curso_id."#####0";    
+        }    
+    }
+    return($string); 
 }
 
 ?>
