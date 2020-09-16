@@ -114,8 +114,7 @@ if($globalAdmin==1){//para personal admin
                     ?>
                     <tr>                    
                       <td><?=$gestion?></td>
-                      <td><?=$mes;?></td>              
-                      
+                      <td><?=$mes;?></td>
                       <td><?=$label.$estadoplanilla."</span>";?><?=$label_uo_aux?></td>
                       <td class="td-actions text-right">
                         <?php
@@ -132,8 +131,7 @@ if($globalAdmin==1){//para personal admin
                                             
                         <button type="button" class="btn" style="background-color:#3b83bd;color:#ffffff;" data-toggle="modal" data-target="#modalreProcesar" onclick="agregaformRP('<?=$datosX;?>')">
                           <i class="material-icons" title="Reprocesar Planilla Sueldos">autorenew</i>                   
-                        </button>                                                                            
-                      
+                        </button>
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalCerrar" onclick="agregaformCP('<?=$datosX;?>')">
                           <i class="material-icons" title="Cerrar Planilla Sueldos">assignment_returned</i>
                         </button>                        
@@ -189,12 +187,13 @@ if($globalAdmin==1){//para personal admin
                             <li role="presentation" class="dropdown-header"><small>OFICINA</small></li>
                             <?php
                             while ($row = $stmtAdmninUO->fetch(PDO::FETCH_BOUND)) {
-                              if($cod_uo_x>0){?>                                                                
-                                  <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a></li>
+                              if($cod_uo_x>0){?>
+                                <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=<?=$cod_uo_x;?>" target="_blank"><small><?=$nombre_uo_x;?></small></a></li>
                                 <?php 
                               }
                             }
-                          ?>                              
+                          ?> 
+                          <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><small>TODOS</small></a></li>
                           </ul>
                         </div>
                         <div class="dropdown">

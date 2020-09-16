@@ -76,7 +76,7 @@ $razon_social=$result['razon_social'];
             <div class="card-icon bg-blanco">
               <img class="" width="40" height="40" src="../assets/img/logoibnorca.png">
             </div>
-            <div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div>
+            
             <h4 class="card-title text-center">Solicitudes de Facturación</h4>                  
             <h6 class="card-title">Unidad: <?=$stringUnidades;?></h6>
             <h6 class="card-title">Area: <?=$stringAreas;?></h6>
@@ -86,7 +86,9 @@ $razon_social=$result['razon_social'];
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table id="reporte_solicitud_facturacion" class="table table-bordered table-condensed" style="width:100%">
+              
+              <!-- reporte_solicitud_facturacion -->
+              <table id="tablePaginatorHeaderFooter" class="table table-bordered table-condensed" style="width:100%">
                 <thead>                              
                   <tr>
                     <th><small><b>-</b></small></th>   

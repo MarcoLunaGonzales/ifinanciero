@@ -32,7 +32,7 @@ foreach ($areas as $valor ) {
 
 $sql="SELECT f.cod_cliente,f.cod_unidadorganizacional,s.cod_claservicio as cod_modulo, ((s.cantidad*s.precio)-s.descuento_bob)*(da.porcentaje/100) as importe_real,s.ci_estudiante,f.nro_factura,f.cod_personal p_factura,f.cod_solicitudfacturacion
     From facturas_venta f,facturas_ventadetalle s,facturas_venta_distribucion da
-    where f.codigo=s.cod_facturaventa and da.cod_factura=f.codigo and f.cod_estadofactura<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($stringUnidadesX) and da.cod_area in ($stringAreasX)";
+    where f.codigo=s.cod_facturaventa and da.cod_factura=f.codigo and f.cod_estadofactura<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($stringUnidadesX) and da.cod_area in ($stringAreasX) order by f.nro_factura,s.ci_estudiante";
 $stmt2 = $dbh->prepare($sql);
 // echo $sql; 
 // Ejecutamos
@@ -67,7 +67,7 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table id="reporte_solicitud_facturacion" class="table table-bordered table-condensed" style="width:100%">
+              <table id="tablePaginatorHeaderFooter" class="table table-bordered table-condensed" style="width:100%">
                 <thead>                              
                   <tr>
                     <th><small><b>-</b></small></th>   
@@ -90,39 +90,42 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
                   $index=0;                   
                   while ($row = $stmt2->fetch()) { 
                     $index++;
-                    $encargado_factura=namePersonal($p_factura);
                     $stringDatos=obtenerDatosSolicitudFacturacion($cod_solicitudfacturacion,$cod_modulo);
-                    // echo $stringDatos."-<br>";
-                    $nombre_estudiante=obtenerNombreEstudiante($ci_estudiante);
+                    // echo $stringDatos."-<br>";                    
                     $datos=explode("#####", $stringDatos);
                     if($cod_solicitudfacturacion==-100){
-                      $nro_correlativo="Tienda Virtual";
+                      $nro_correlativo="-";
                       $cod_modulo=$datos[0];
                       $ci_estudiante=$datos[1]; 
                       $cod_curso=$datos[2];
                       $tipo_solicitud=$datos[3];
-                      $encargado_sf=0;
-
-                    }else{
+                      $encargado_sf="-";
+                      $encargado_factura="Tienda virtual";
+                    }else{//cuando no es de la tienda
+                      $encargado_factura=namePersonal($p_factura);
                       $encargado_sf=namePersonal($datos[1]);//devuelve cod_personal
                       $nro_correlativo=$datos[0];
                       $cod_curso=$datos[2];
                       $tipo_solicitud=$datos[3];                      
                     }
-                    
-                    if($tipo_solicitud==4){
-                      $Codigo_alterno=0;
-                      $nombre_curso="Registro Manual";
-                      $nombre_modulo="Registro Manual";
-                      $ci_estudiante="-";
-                      $nombre_estudiante="-";
-                    }else{
-                      $Codigo_alterno=obtenerCodigoExternoCurso($cod_curso);
-                      $nombre_curso=obtenerNombreCurso($cod_curso);
-                      $nombre_modulo=obtenerNombreModulo($cod_modulo);
-                    }
-                    if($tipo_solicitud==6){
-                      $nombre_estudiante=nameCliente($cod_cliente);
+                    switch ($tipo_solicitud){
+                      case 4:
+                        $Codigo_alterno=0;
+                        $nombre_curso="Registro Manual";
+                        $nombre_modulo="Registro Manual";
+                        $ci_estudiante="-";
+                        $nombre_estudiante="-";
+                        break;
+                      case 6:
+                        $nombre_estudiante=nameCliente($cod_cliente);
+                        break;
+                      
+                      default:
+                        $Codigo_alterno=obtenerCodigoExternoCurso($cod_curso);
+                        $nombre_curso=obtenerNombreCurso($cod_curso);
+                        $nombre_modulo=obtenerNombreModulo($cod_modulo);
+                        $nombre_estudiante=obtenerNombreEstudiante($ci_estudiante);
+                        break;
                     }
                     $nombre_uo=abrevUnidad($cod_unidadorganizacional);
                     $importe_real_total+=$importe_real;
@@ -138,11 +141,11 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
                         <td class="text-left small"><small><?=$encargado_factura;?></small></td>
                         <td class="text-right small"><small><?=$nro_correlativo;?><br></small></td>
                         <td class="text-left small"><small><?=$encargado_sf;?></small></td>                      
-                        <td class="text-left small"><?=$Codigo_alterno;?></td>
-                        <td class="text-left small"><small><?=$nombre_curso;?></small></td>
-                        <td class="text-left small"><small><?=$nombre_modulo;?></small></td>
+                        <td class="text-left small"><?=mb_strtoupper($Codigo_alterno);?></td>
+                        <td class="text-left small"><small><?=mb_strtoupper($nombre_curso);?></small></td>
+                        <td class="text-left small"><small><?=mb_strtoupper($nombre_modulo);?></small></td>
                         <td class="text-right small"><?=$ci_estudiante;?></td>
-                        <td class="text-left small"><?=$nombre_estudiante;?></td>
+                        <td class="text-left small"><?=mb_strtoupper($nombre_estudiante);?></td>
                         <td class="text-right small"><?=formatNumberDec($importe_real);?></td>
                       </tr>
                     <?php //}
