@@ -1,11 +1,11 @@
 <?php //ESTADO FINALIZADO
 
-require_once __DIR__.'/../conexion.php';
+require_once '../conexion.php';
 
-require_once __DIR__.'/../functions.php';
-require_once __DIR__.'/../functionsGeneral.php';
-require_once __DIR__.'/../functionsReportes.php';
-require_once  __DIR__.'/../fpdf_html.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
+require_once '../functionsReportes.php';
+require_once '../fpdf_html.php';
 require_once '../layouts/bodylogin2.php';
 $dbh = new Conexion();
 
@@ -57,8 +57,8 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
             <div class="card-icon bg-blanco">
               <img class="" width="40" height="40" src="../assets/img/logoibnorca.png">
             </div>
-            <div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div>
-            <h4 class="card-title text-center">Capacitación</h4>                  
+            <h4 class="card-title text-center">Recaudaciones Formación</h4>     
+
             <h6 class="card-title">Unidad: <?=$stringUnidades;?></h6>
             <h6 class="card-title">Area: <?=$stringAreas;?></h6>
             <div class="row">
@@ -71,17 +71,17 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
                 <thead>                              
                   <tr>
                     <th><small><b>-</b></small></th>   
-                    <th width="5%"><small><b>Of</b></small></th>                                
-                    <th width="10%"><small><b>Cod Curso</b></small></th>
-                    <th ><small><b>Nom Curso</b></small></th>
-                    <th ><small><b>Nom Módulo</b></small></th>
-                    <th width="5%"><small><b>Monto</b></small></th>
-                    <th><small><b>CI</b></small></th>
+                    <th width="4%"><small><b>Factura</b></small></th>
+                    <th width="5%"><small><b>Of.</b></small></th>                                
+                    <th ><small><b>Facturado por:</b></small></th>
+                    <th width="4%"><small><b>Solicitud</b></small></th>
+                    <th ><small><b>Solicitado por:</b></small></th>
+                    <th width="10%"><small><b>CodigoCurso</b></small></th>
+                    <th ><small><b>Nombre Curso</b></small></th>
+                    <th ><small><b>Nombre Módulo</b></small></th>
+                    <th><small><b>C.I.</b></small></th>
                     <th><small><b>Estudiante</b></small></th>
-                    <th width="4%"><small><b>#Fac</b></small></th>
-                    <th ><small><b>Responsable Fac</b></small></th>
-                    <th width="4%"><small><b>#Sol.</b></small></th>
-                    <th ><small><b>Responsable Sol.</b></small></th>
+                    <th width="5%"><small><b>Monto</b></small></th>
                   </tr>                                  
                 </thead>
                 <tbody>
@@ -133,17 +133,17 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
                       ?>
                       <tr>
                         <td class="text-center small"><?=$index;?></td>
-                        <td class="text-left small"><?=$nombre_uo;?></td>
-                        <td class="text-left small"><?=$Codigo_alterno;?></td>
-                        <td class="text-left small"><small><?=$nombre_curso;?></small></td>
-                        <td class="text-left small"><small><?=$nombre_modulo;?></small></td>
-                        <td class="text-right small"><?=formatNumberDec($importe_real);?></td>
-                        <td class="text-right small"><?=$ci_estudiante;?></td>
-                        <td class="text-left small"><?=$nombre_estudiante;?></td>
                         <td class="text-right small"><small><?=$nro_factura;?></small></td>
+                        <td class="text-left small"><?=$nombre_uo;?></td>
                         <td class="text-left small"><small><?=$encargado_factura;?></small></td>
                         <td class="text-right small"><small><?=$nro_correlativo;?><br></small></td>
                         <td class="text-left small"><small><?=$encargado_sf;?></small></td>                      
+                        <td class="text-left small"><?=$Codigo_alterno;?></td>
+                        <td class="text-left small"><small><?=$nombre_curso;?></small></td>
+                        <td class="text-left small"><small><?=$nombre_modulo;?></small></td>
+                        <td class="text-right small"><?=$ci_estudiante;?></td>
+                        <td class="text-left small"><?=$nombre_estudiante;?></td>
+                        <td class="text-right small"><?=formatNumberDec($importe_real);?></td>
                       </tr>
                     <?php //}
                   }?>
@@ -154,14 +154,14 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
                     <td>-</td>
                     <td></td>
                     <td></td>                      
-                    <td class="text-left small">TOTAL</td>
-                    <td class="text-left small"><?=formatNumberDec($importe_real_total);?></td>
                     <td>-</td>
                     <td>-</td>
                     <td>-</td>
                     <td>-</td>
                     <td>-</td>
                     <td>-</td>                      
+                    <td class="text-left small">TOTAL</td>
+                    <td class="text-left small"><?=formatNumberDec($importe_real_total);?></td>
                   </tr>  
                 </tfoot>
                 

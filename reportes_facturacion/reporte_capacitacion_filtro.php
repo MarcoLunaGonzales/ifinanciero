@@ -32,12 +32,12 @@ $fechaHasta2=$y."-12-31";
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Capacitación</h4>
+                  <h4 class="card-title">Reporte Recaudaciones Formación</h4>
                 </div>
                 <form class="" action="<?=$urlReporte_print_capacitacion?>" target="_blank" method="POST">
                 <div class="card-body">
                   	<div class="row">
-		                <label class="col-sm-1 col-form-label">Unidad</label>
+		                <label class="col-sm-1 col-form-label">Oficina</label>
 		                <div class="col-sm-4">
 		                	<div class="form-group">		                		
 	                			<?php
@@ -53,7 +53,7 @@ $fechaHasta2=$y."-12-31";
 								</select>		                		
 		                     </div>
 		                </div>
-		                <label class="col-sm-2 col-form-label">Area</label>
+		                <label class="col-sm-2 col-form-label">Área</label>
 		                <div class="col-sm-4">
 		                	<div class="form-group">		                		
 	                			<?php
@@ -64,7 +64,7 @@ $fechaHasta2=$y."-12-31";
 								<select class="selectpicker form-control form-control-sm" name="areas[]" id="areas" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
 								    <?php 
 								    while ($row = $stmt->fetch()){ ?>
-								      	<option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>" <?=($row["codigo"]==$globalArea)?"selected":""?> ><?=$row["abreviatura"];?></option><?php 
+								      	<option value="<?=$row["codigo"];?>" selected><?=$row["abreviatura"];?></option><?php 
 								 	} ?>
 								</select>		                		
 		                     </div>

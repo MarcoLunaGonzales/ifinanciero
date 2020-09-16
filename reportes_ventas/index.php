@@ -92,6 +92,12 @@ $dbh = new Conexion();
 
 				  		<div class="col-sm-3">
 							<div class="form-group">
+								<a href="../reportes_facturacion/reporte_capacitacion_filtro.php" class="btn btn-warning"> Recaudaciones Formación</a>
+							</div>
+				  		</div>
+
+				  		<div class="col-sm-3">
+							<div class="form-group">
 								<a href="<?=$urlImpresionFacturas;?>" class="btn btn-default"> Impresión de Facturas </a>
 							</div>
 				  		</div>
