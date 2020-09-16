@@ -35,6 +35,10 @@ if(isset($_GET["codigo"])){
  }
  //CARGAR DIAS PORDEFECTO DE LA TABLA DE CONFIGURACION
  $dias=obtenerValorConfiguracion(40);
+
+
+ //valor por defecto $anios=3
+ $anios=3;
   ?>
   <script>$("#productos_div").addClass("d-none");</script>
   <script>$("#sitios_div").addClass("d-none");</script>
@@ -61,7 +65,7 @@ if(isset($_GET["codigo"])){
                           <label class="col-sm-2 col-form-label">Años:</label>
                            <div class="col-sm-2"> 
                              <div class="form-group">
-                                  <input type="text" class="form-control" value="<?=$anios?>" id="anios" name="anios">
+                                  <input type="text" class="form-control" value="<?=$anios?>" id="anios" readonly name="anios" style="color:#5C5F5D;font-weight:bold;">
                              </div>    
                           </div> 
 
