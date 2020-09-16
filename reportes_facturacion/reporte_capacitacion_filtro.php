@@ -41,7 +41,7 @@ $fechaHasta2=$y."-12-31";
 		                <div class="col-sm-4">
 		                	<div class="form-group">		                		
 	                			<?php
-								$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
+								$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo where centro_costos=1 order by 2";
 								$stmt = $dbh->prepare($sqlUO);
 								$stmt->execute();
 								?>

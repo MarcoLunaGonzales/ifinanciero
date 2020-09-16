@@ -11,16 +11,32 @@
 	$cod_uo = $_GET["codigo_uo"];//
 	
 	$nombre_gestion=nameGestion($cod_gestion);
-	$nombre_uo=nameUnidad($cod_uo);
-
-
-	$stmtArea = $dbh->prepare("SELECT cod_area,(SELECT a.abreviatura from areas a where a.codigo=cod_area) as nombre_area
-	 from personal_area_distribucion
-  where cod_estadoreferencial=1 and cod_uo=$cod_uo
-  GROUP BY cod_area order by nombre_area");
-  $stmtArea->execute();
-  $stmtArea->bindColumn('cod_area', $cod_area_x);
-  $stmtArea->bindColumn('nombre_area', $nombre_area_x);
+	if($cod_uo==-100){		
+		$sql="SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1 and cod_uo<>0 and cod_uo<>'' GROUP BY cod_uo";
+        // echo $sql;
+        $stmtUO=$dbh->prepare($sql);
+		$stmtUO->execute();
+		$nombre_uo="";
+		$string_cod_uo="";
+		while ($row = $stmtUO->fetch()) 
+		{			
+			$nombre_uo.=$row['nombre_uo'].",";
+			$string_cod_uo.=$row['cod_uo'].",";
+		}
+		$nombre_uo=trim($nombre_uo,",");
+		$cod_uo=trim($string_cod_uo,",");
+	}else{
+		$nombre_uo=nameUnidad($cod_uo);
+	}
+	$sqlArea="SELECT cod_area,(SELECT a.abreviatura from areas a where a.codigo=cod_area) as nombre_area
+	from personal_area_distribucion
+	where cod_estadoreferencial=1 and cod_uo in ($cod_uo)
+	GROUP BY cod_area order by nombre_area";
+	// echo $sqlArea;
+	$stmtArea = $dbh->prepare($sqlArea);
+	$stmtArea->execute();
+	$stmtArea->bindColumn('cod_area', $cod_area_x);
+	$stmtArea->bindColumn('nombre_area', $nombre_area_x);
 ?>
 
 <div class="content">
@@ -42,7 +58,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">                  
-				<table class="table table-bordered table-condensed table-hover" id="tablePaginator">
+				<table class="table table-bordered table-condensed table-hover" id="tablePaginatorHeaderFooter">
                 	<thead>
 		                <tr class="bg-dark text-white">                  
 		                    <th><small>#</small></th> 
@@ -59,21 +75,22 @@
 		                    <th class="bg-success text-white"><button id="botonBonos" style="border:none;" class="bg-success text-white small">Otros Bonos</button> </th>
 		                    <?php
 		                    	$swBonosOtro=false;
-		                      $sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
+		                      	$sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
 		                              from bonos_personal_mes 
 		                              where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_bono)
 		                              order by cod_bono ASC";
-		                      $stmtBonos = $dbh->prepare($sqlBonos);
-		                      $stmtBonos->execute();                      
-		                      $stmtBonos->bindColumn('cod_bono',$cod_bono);
-		                      $stmtBonos->bindColumn('nombre_bono',$nombre_bono);
-		                      while ($row = $stmtBonos->fetch()) 
-		                      { ?>
-		                        <th class="bonosDet bg-success text-white" style="display:none"><small><?=$nombre_bono;?></small></th>                      
-		                        <?php
-		                        $arrayBonos[] = $cod_bono;
-		                        $swBonosOtro=true;
-		                      }
+		                        // echo $sqlBonos;
+								$stmtBonos = $dbh->prepare($sqlBonos);
+								$stmtBonos->execute();                      
+								$stmtBonos->bindColumn('cod_bono',$cod_bono);
+								$stmtBonos->bindColumn('nombre_bono',$nombre_bono);
+								while ($row = $stmtBonos->fetch()) 
+								{ ?>
+									<th class="bonosDet bg-success text-white" style="display:none"><small><?=$nombre_bono;?></small></th>                      
+									<?php
+									$arrayBonos[] = $cod_bono;
+									$swBonosOtro=true;
+								}
 		                    ?>
 		                    <th><small>Monto Bonos</small></th>                            
 		                    <th class="bg-primary text-white"><small>Total Ganado</small></th>
@@ -145,9 +162,9 @@
 						        (select p3.identificacion from personal p3 where p3.codigo=ppm.cod_personalcargo) as doc_id,
 						        (select (select pd.abreviatura from personal_departamentos pd where pd.codigo=p3.cod_lugar_emision)
 						             from personal p3 where p3.codigo=ppm.cod_personalcargo) as lug_emision,
-						  		(select p4.lugar_emision_otro from personal p4 where p4.codigo=ppm.cod_personalcargo) as lug_emision_otro
+						  		(select p4.lugar_emision_otro from personal p4 where p4.codigo=ppm.cod_personalcargo) as lug_emision_otro,pad.cod_uo,pad.cod_area
 								from planillas_personal_mes ppm,personal_area_distribucion pad
-								where ppm.cod_personalcargo=pad.cod_personal and cod_planilla=$cod_planilla and pad.cod_uo=$cod_uo and pad.cod_area=$cod_area_x order by paterno";
+								where ppm.cod_personalcargo=pad.cod_personal and cod_planilla=$cod_planilla and pad.cod_uo in($cod_uo) and pad.cod_area=$cod_area_x order by paterno";
 
 							$stmtPersonal = $dbh->prepare($sql);
 							$stmtPersonal->execute();	
@@ -175,6 +192,8 @@
 							$stmtPersonal->bindColumn('afp_2', $afp_2);
 							$stmtPersonal->bindColumn('dotaciones', $dotaciones);
 							$stmtPersonal->bindColumn('porcentaje', $porcentaje);
+							$stmtPersonal->bindColumn('cod_uo', $cod_uo_xy);
+							$stmtPersonal->bindColumn('cod_area', $cod_area_xy);
 							while ($row = $stmtPersonal->fetch()) 
 							{  
 		                        $sql = "SELECT *                              
@@ -197,8 +216,6 @@
 		                          $provivienda=$resultPatronal['provivienda'];
 		                          $a_patronal_sol=$resultPatronal['a_patronal_sol'];
 		                          $total_a_patronal=$resultPatronal['total_a_patronal'];
-
-
 		                          //dividiendo montos a su porcentaje respectivo
 		                          $haber_basico_tp=$haber_basico*$porcentaje/100;
 		                          $bono_antiguedad_tp=$bono_antiguedad*$porcentaje/100;
@@ -213,12 +230,8 @@
 		                          $provivienda_tp=$provivienda*$porcentaje/100;
 		                          $a_patronal_sol_tp=$a_patronal_sol*$porcentaje/100;
 
-
-
 		                          $liquido_pagable_tp=$liquido_pagable*$porcentaje/100;
 		                          $total_a_patronal_tp=$total_a_patronal*$porcentaje/100;
-
-
 		                          $sum_total_basico+=$haber_basico_tp;
 		                          $sum_total_b_antiguedad+=$bono_antiguedad_tp;
 		                          $sum_total_m_bonos+=$monto_bonos_tp;
@@ -231,15 +244,18 @@
 		                          $sum_total_l_pagable+=$liquido_pagable_tp;
 		                          $sum_total_a_patronal+=$total_a_patronal_tp;
 
+		                          $nombreAreaxy=trim(abrevArea($cod_area_xy),",");
+		                          $nombreuoxy=trim(abrevUnidad($cod_uo_xy),",");
+
 		                        ?>
 			                	<tr>                                                        
 				                    <td class="text-center small"><?=$index;?></td>
-				                    <td class="text-left small"><?=$nombre_area_x;?></td>                    
+				                    <td class="text-left small"><?=$nombreAreaxy;?>/<?=$nombreuoxy?></td>                    
 				                    <td class="text-left small"><?=$paterno;?></td>
 				                    <td class="text-left small"><?=$materno;?></td>
 				                    <td class="text-left small"><?=$nombrePersonal;?></td>
-				                    <td class="text-center small"><?=$doc_id;?>-<?=$lug_emision?><?=$lug_emision_otro?></td>                  
-				                    <td class="text-left small"><?=$grado_academico;?></td>                    
+				                    <td class="text-center small"><?=$doc_id;?>-<small><?=$lug_emision?><?=$lug_emision_otro?></small></td>                  
+				                    <td class="text-left small"><small><?=$grado_academico;?></small></td>                    
 				                    <?php if($porcentaje!=100){ ?>
 				                    <td class="text-center small"><span class="badge badge-danger"><?=$porcentaje;?></span></td>
 				                    <?php }else{?>

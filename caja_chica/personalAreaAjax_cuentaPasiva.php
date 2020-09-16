@@ -41,7 +41,7 @@ $stmtComprobant->execute();
 $resultCompro=$stmtComprobant->fetch();
 $cod_area=$resultCompro['cod_area'];
 //finalmente listamos las areas
-$sqlUO="SELECT codigo,nombre,abreviatura from areas where cod_estado=1";
+$sqlUO="SELECT codigo,nombre,abreviatura from areas where cod_estado=1 and centro_costos=1 ORDER BY nombre";
 $stmtArea = $db->prepare($sqlUO);
 $stmtArea->execute();
 ?>

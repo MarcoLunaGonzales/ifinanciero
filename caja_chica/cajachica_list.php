@@ -159,7 +159,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                          <i class="material-icons" title="Comprobante" >input</i>
                                       </button>
                                       <div class="dropdown-menu" style="background-color: #D8CEF6;">                                    
-                                        <button title="Generar en Comprobante Nuevo" class="dropdown-item" type="button" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>')" target="_blank">
+                                        <button title="Generar en Comprobante Nuevo" class="dropdown-item" type="button" onclick="alerts.showSwal('warning-message-and-confirmation-comprobante_cajachica','<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>')" target="_blank">
                                         <i class="material-icons text-danger">input</i>En Comprobante Nuevo
                                         </button>
                                         <button title="Generar en Comprobante Existente" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalComprobanteCajaChica" onclick="agregaDatosComprCajaChica('<?=$datos_ComproCajaChica;?>')">
@@ -217,7 +217,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h3 class="modal-title" id="myModalLabel"><b>Generar Comprobante Existente</b></h3>
+        <h3 class="modal-title" id="myModalLabel"><b>Generar En Comprobante Existente</b></h3>
       </div>
       <div class="modal-body">
         <input type="hidden" name="cod_cajachica" id="cod_cajachica" value="0">
@@ -255,7 +255,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
             <label class="col-sm-4 text-right col-form-label" style="color:#424242">Mes del comprobante</label>
             <div class="col-sm-6">
               <div class="form-group">              
-                <select class="selectpicker form-control form-control-sm" name="mes_comprobante" id="mes_comprobante" data-style="<?=$comboColor;?>">
+                <select class="selectpicker form-control form-control-sm" name="mes_comprobante" id="mes_comprobante" data-style="<?=$comboColor;?>" data-show-subtext="true" data-live-search="true">
                     <option disabled selected value=""></option>                
                     <option value="1">ENERO</option>
                     <option value="2">FEBRERO</option>
@@ -298,22 +298,16 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
           <div class="row">
             <label class="col-sm-4 text-right col-form-label" style="color:#424242">Unidad</label>
             <div class="col-sm-6">
-              <div class="form-group">            
-                <select class="selectpicker form-control form-control-sm" name="unidad" id="unidad" data-style="<?=$comboColor;?>">
-                      <option disabled selected value="">Tipo</option>
-                    <?php
-                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 order by 1");
-                  $stmt->execute();
-                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                    $codigoX=$row['codigo'];
-                    $nombreX=$row['nombre'];
-                    $abrevX=$row['abreviatura'];
-                  ?>
-                  <option value="<?=$codigoX;?>"><?=$nombreX;?> - <?=$abrevX;?></option>  
-                  <?php
-                    }
-                    ?>
-                </select>
+              <div class="form-group">                          
+                <select name="unidad" id="unidad" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">                                        
+                  <option value=""></option>
+                  <?php 
+                  $queryUO1 = "SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 order by nombre";
+                  $statementUO1 = $dbh->query($queryUO1);
+                  while ($row = $statementUO1->fetch()){ ?>
+                      <option value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
+                  <?php } ?>
+              </select>
               </div>
             </div>
           </div>  
@@ -321,7 +315,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
             <label class="col-sm-4 text-right col-form-label" style="color:#424242">Número de Comprobante</label>
             <div class="col-sm-6">
               <div class="form-group">
-                <input type="number"name="nro_comprobante" id="nro_comprobante" class="form-control" onchange="ajaxBuscarComprobanteCajaChica()">
+                <input type="number"name="nro_comprobante" id="nro_comprobante" class="form-control" >
               </div>
             </div>        
           </div>   

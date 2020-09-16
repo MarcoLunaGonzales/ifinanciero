@@ -56,7 +56,6 @@ if($sw==2){//procesar planilla
 	$stmtU->bindParam(':cod_planilla', $cod_planilla);
 	$stmtU->bindParam(':cod_estadoplanilla', $cod_estadoplanilla);
 	$flagSuccess=$stmtU->execute();
-
 	//=========================creando la planilla previa con valores ininciales
 	$dias_trabajados_por_defecto = 30; //por defecto
 	$dias_trabajados_asistencia = 30; //por asistencia
@@ -95,6 +94,7 @@ if($sw==2){//procesar planilla
 
 	$flagSuccessIP=0;
 	$flagSuccessIPMD=0;
+	$procesado_reprocesado=1;//procesado
 	
 	$stmtConfiguracion = $dbh->prepare("SELECT * from configuraciones_planillas where codigo in (1)");
 	$stmtConfiguracion->execute();
@@ -189,10 +189,10 @@ if($sw==2){//procesar planilla
 		//==== insert de panillas de  personal mes
 		$sqlInsertPlanillas="INSERT into planillas_personal_mes(cod_planilla,cod_personalcargo,cod_gradoacademico,dias_trabajados,horas_pagadas,
 		  haber_basico,bono_academico,bono_antiguedad,monto_bonos,total_ganado,monto_descuentos,afp_1,afp_2,dotaciones,
-		  liquido_pagable,cod_estadoreferencial,created_by,modified_by)
+		  liquido_pagable,cod_estadoreferencial,created_by,modified_by,procesado_reprocesado)
 		 values(:cod_planilla,:codigo_personal,:cod_gradoacademico,:dias_trabajados,:horas_pagadas,:haber_basico,:bono_academico,
 		 	:bono_antiguedad,:monto_bonos,:total_ganado,:monto_descuentos,:afp_1,:afp_2,:dotaciones,
-		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by)";
+		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by,:procesado_reprocesado)";
 		$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 		$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
@@ -212,6 +212,8 @@ if($sw==2){//procesar planilla
 		$stmtInsertPlanillas->bindParam(':cod_estadoreferencial',$cod_estadoreferencial);
 		$stmtInsertPlanillas->bindParam(':created_by',$created_by);
 		$stmtInsertPlanillas->bindParam(':modified_by',$modified_by);
+		$stmtInsertPlanillas->bindParam(':procesado_reprocesado',$procesado_reprocesado);
+		
 		$flagSuccessIP=$stmtInsertPlanillas->execute();
 
     
@@ -323,6 +325,7 @@ if($sw==2){//procesar planilla
 
 	$flagSuccessIP=0;
 	$flagSuccessIPMD=0;
+	$procesado_reprocesado=2;//reprocesado
 
 	$stmtConfiguracion = $dbh->prepare("SELECT * from configuraciones_planillas where id_configuracion in (1)");
 	$stmtConfiguracion->execute();
@@ -427,10 +430,10 @@ if($sw==2){//procesar planilla
 		if($cod_personalVerificacion==null){
 			$sqlInsertPlanillas="INSERT into planillas_personal_mes(cod_planilla,cod_personalcargo,cod_gradoacademico,dias_trabajados,horas_pagadas,
 			  haber_basico,bono_academico,bono_antiguedad,monto_bonos,total_ganado,monto_descuentos,afp_1,afp_2,dotaciones,
-			  liquido_pagable,cod_estadoreferencial,created_by,modified_by)
+			  liquido_pagable,cod_estadoreferencial,created_by,modified_by,procesado_reprocesado)
 			 values(:cod_planilla,:codigo_personal,:cod_gradoacademico,:dias_trabajados,:horas_pagadas,:haber_basico,:bono_academico,
 			 	:bono_antiguedad,:monto_bonos,:total_ganado,:monto_descuentos,:afp_1,:afp_2,:dotaciones,
-			  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by)";
+			  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by,:procesado_reprocesado)";
 			$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 			$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 			$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
@@ -450,6 +453,7 @@ if($sw==2){//procesar planilla
 			$stmtInsertPlanillas->bindParam(':cod_estadoreferencial',$cod_estadoreferencial);
 			$stmtInsertPlanillas->bindParam(':created_by',$created_by);
 			$stmtInsertPlanillas->bindParam(':modified_by',$modified_by);
+			$stmtInsertPlanillas->bindParam(':procesado_reprocesado',$procesado_reprocesado);	
 			$flagSuccessIP=$stmtInsertPlanillas->execute();
 
 			$sqlInsertPlanillaDetalle="INSERT into planillas_personal_mes_patronal(cod_planilla,cod_personal_cargo,a_solidario_13000,a_solidario_25000,a_solidario_35000,rc_iva,atrasos,anticipo,
@@ -477,7 +481,7 @@ if($sw==2){//procesar planilla
 			$sqlInsertPlanillas="UPDATE planillas_personal_mes set cod_gradoacademico=:cod_grado_academico,dias_trabajados=:dias_trabajados,
 			horas_pagadas=:horas_pagadas,haber_basico=:haber_basico,bono_academico=:bono_academico,bono_antiguedad=:bono_antiguedad,
 			monto_bonos=:monto_bonos,total_ganado=:total_ganado,monto_descuentos=:monto_descuentos,
-			afp_1=:afp_1,afp_2=:afp_2,dotaciones=:dotaciones,liquido_pagable=:liquido_pagable
+			afp_1=:afp_1,afp_2=:afp_2,dotaciones=:dotaciones,liquido_pagable=:liquido_pagable, procesado_reprocesado=:procesado_reprocesado
 			where cod_planilla=:cod_planilla and cod_personalcargo=:cod_personal_cargo";
 			$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 			$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
@@ -495,6 +499,7 @@ if($sw==2){//procesar planilla
 			$stmtInsertPlanillas->bindParam(':afp_2',$afp_prevision);
 			$stmtInsertPlanillas->bindParam(':dotaciones',$dotaciones);
 			$stmtInsertPlanillas->bindParam(':liquido_pagable',$liquido_pagable);
+			$stmtInsertPlanillas->bindParam(':procesado_reprocesado',$procesado_reprocesado);			 
 			$flagSuccessIP=$stmtInsertPlanillas->execute();
 
 			//==== update de panillas de  personal mes de aporte patronal 
@@ -519,46 +524,11 @@ if($sw==2){//procesar planilla
 			$stmtInsertPlanillaDetalleU->bindParam(':total_a_patronal',$total_a_patronal);
 			$stmtInsertPlanillaDetalleU->bindParam(':dotaciones',$dotaciones);
 			$flagSuccessIPMD=$stmtInsertPlanillaDetalleU->execute();
-			// $sqlInsertPlanillaDetalle="INSERT into planillas_personal_mes_patronal(cod_planilla,cod_personal_cargo,a_solidario_13000,a_solidario_25000,a_solidario_35000,rc_iva,atrasos,anticipo,
-			// seguro_de_salud,riesgo_profesional,provivienda,a_patronal_sol,total_a_patronal,dotaciones)
-			// values(:cod_planilla,:cod_personal_cargo,:a_solidario_13000,:a_solidario_25000,:a_solidario_35000,:rc_iva,:atrasos,:anticipo,
-			// 	:seguro_de_salud,:riesgo_profesional,:provivienda,:a_patronal_sol,:total_a_patronal,:dotaciones)";
-			// $stmtInsertPlanillaDetalle = $dbhIPD->prepare($sqlInsertPlanillaDetalle);
-			// $stmtInsertPlanillaDetalle->bindParam(':cod_planilla', $cod_planilla);
-			// $stmtInsertPlanillaDetalle->bindParam(':cod_personal_cargo',$codigo_personal);
-			// $stmtInsertPlanillaDetalle->bindParam(':a_solidario_13000',$aporte_solidario_13000);
-			// $stmtInsertPlanillaDetalle->bindParam(':a_solidario_25000',$aporte_solidario_25000);
-			// $stmtInsertPlanillaDetalle->bindParam(':a_solidario_35000',$aporte_solidario_35000);
-			// $stmtInsertPlanillaDetalle->bindParam(':rc_iva',$RC_IVA);
-			// $stmtInsertPlanillaDetalle->bindParam(':atrasos',$atrasos);
-			// $stmtInsertPlanillaDetalle->bindParam(':anticipo',$anticipo);
-			// $stmtInsertPlanillaDetalle->bindParam(':seguro_de_salud',$seguro_de_salud);
-			// $stmtInsertPlanillaDetalle->bindParam(':riesgo_profesional',$riesgo_profesional);
-			// $stmtInsertPlanillaDetalle->bindParam(':provivienda',$provivienda);
-			// $stmtInsertPlanillaDetalle->bindParam(':a_patronal_sol',$a_patronal_sol);
-			// $stmtInsertPlanillaDetalle->bindParam(':total_a_patronal',$total_a_patronal);
-			// $stmtInsertPlanillaDetalle->bindParam(':dotaciones',$dotaciones);
-			// $flagSuccessIPMD=$stmtInsertPlanillaDetalle->execute();
+			
+			$sqlDelete="DELETE from planillas_personal_mes where cod_planilla=$cod_planilla and procesado_reprocesado<>2";
+			$stmtDeletePersonal = $dbh->prepare($sqlDelete);			
+			$stmtDeletePersonal->execute();
 		}
-
-		
-
-
-		// echo "cod_planilla: ".$cod_planilla."<br>";
-		// echo "codigo_personal: ".$codigo_personal."<br>";
-		// echo "aporte_solidario_13000: ".$aporte_solidario_13000."<br>";
-		// echo "aporte_solidario_25000: ".$aporte_solidario_25000."<br>";
-		// echo "aporte_solidario_35000: ".$aporte_solidario_35000."<br>";
-		// echo "RC_IVA: ".$RC_IVA."<br>";
-		// echo "atrasos: ".$atrasos."<br>";
-		// echo "anticipo: ".$anticipo."<br>";	
-		
-		// echo "seguro_de_salud: ".$seguro_de_salud."<br>";
-		// echo "riesgo_profesional: ".$riesgo_profesional."<br>";
-		// echo "provivienda: ".$provivienda."<br>";
-		// echo "a_patronal_sol: ".$a_patronal_sol."<br>";
-		// echo "total_a_patronal: ".$total_a_patronal."<br>";
-		// echo "==============<br>";
 	}
 }
 

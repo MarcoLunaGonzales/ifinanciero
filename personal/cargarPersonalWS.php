@@ -81,7 +81,7 @@ foreach ($detalle as $objDet){
     $cod_tipoafp = null;
     $cod_tipoaporteafp = null;	   
     $nro_seguro = null;
-    $cod_estadopersonal = null;	   
+    $cod_estadopersonal = 2;	   
     $persona_contacto = null;
     $created_by = 1;//$_POST["created_by"];
     $modified_by = 1;//$_POST["modified_by"];
