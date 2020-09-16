@@ -73,6 +73,9 @@
    
   <script src="../assets/autocomplete/awesomplete.min.js"></script>
   <script src="../assets/autocomplete/autocomplete/autocomplete-img.js"></script>
+  <!--CHART GOOGLE-->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  
   <script src="../assets/alerts/alerts.js"></script>
   <script src="../assets/alerts/functionsGeneral.js"></script>
 

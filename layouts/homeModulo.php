@@ -42,8 +42,11 @@ switch ($codModulo) {
      <img src="assets/img/logo_ibnorca.png" width="160" height="160" alt="">
       <h3>Modulo <?=$nombreModulo?></h3>
       <p>
-        <a href="index.php" class="btn btn-primary">IR A LA PAGINA DE INICIO</a>
+        <a href="index.php" class="btn btn-primary btn-lg">IR A LA PAGINA DE INICIO</a>
       </p>
+      <!--<p>
+        <a href="layouts/homeModulo2.php?mod=<?=$codModulo?>" target="_blank" class="btn btn-warning"><i class="material-icons">access_time</i> REPORTE DE INGRESOS</a>
+      </p>-->
     </div>
 
 

@@ -11960,10 +11960,11 @@ function agregaformEnviarCorreo(datos){
   document.getElementById("cod_solicitudfacturacion").value=d[1];
   document.getElementById("nro_factura").value=d[2];
   //document.getElementById("correo_destino").value=d[3];
-  $("#correo_destino").tagsinput('removeAll');
-  $("#correo_destino").tagsinput('add', d[3]);
+  /*$("#correo_destino").tagsinput('removeAll');
+  $("#correo_destino").tagsinput('add', d[3]);*/
   document.getElementById("razon_social").value=d[4];
   document.getElementById("interno_x").value=d[5];
+  document.getElementById("correo_solicitante").value=d[3];
 }
 // function agregaformEnviarCorreo_solfac(datos){ 
 
@@ -18304,8 +18305,9 @@ var cantidad=$("#cantidad_registros_detalle_sis").val();
 function buscarIngresosDashboard(){
   var gestion=$('#gestiones option:selected').text();
   var mes=$("#cod_mes_x").val();
+  var mod=$("#modulo").val();
   iniciarCargaAjax();
-  window.location.href="index.php?opcion=homeModulo2&anio="+gestion+"&mes="+mes;  
+  window.location.href="homeModulo2.php?mod="+mod+"&anio="+gestion+"&mes="+mes;  
 }
 
 function mostrarOcultarFacturasComprobante(){
@@ -18339,3 +18341,17 @@ function filtroFacturasSinSolicitudRecursos(){
   }
 }
 
+function ajax_mes_de_gestion_reloj(combo){
+  var contenedor = document.getElementById('div_contenedor_mes');
+  var gestion=combo.value;
+  // console.log(gestion);
+  ajax=nuevoAjax();
+  ajax.open('GET', '../reportes/ajax_mes_gestion.php?cod_gestion='+gestion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null);
+}
