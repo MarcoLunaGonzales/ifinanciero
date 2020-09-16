@@ -96,6 +96,27 @@ alerts = {
             return(false);
           }
         })
+    }if (type == 'warning-message-and-confirmation-comprobante_cajachica') {
+      swal({
+        title: '¿Desea generar en comprobante Nuevo?',
+        text: "No podrá revertir el proceso.",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si, Generar!',
+        cancelButtonText: 'No, Cancelar!',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            // location.href=url;           
+            window.open(url,'_blank');
+            location.reload();
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        })
     }
     else if (type == 'warning-message-and-confirmation-cambiar-estado') {
       swal({

@@ -3,7 +3,11 @@ class Conexion extends PDO {
 
   private $tipo_de_base = 'mysql';
   private $host = 'localhost';  
+<<<<<<< HEAD
   private $nombre_de_base = 'ibnfinanciero100';
+=======
+  private $nombre_de_base = 'ibnfinanciero300';
+>>>>>>> 3cb1b71b208c8f6efe26220bfe3c1f41d1d160ac
   private $usuario = 'root';
   private $contrasena = '';
   private $port = '3306';

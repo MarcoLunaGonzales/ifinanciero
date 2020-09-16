@@ -41,7 +41,7 @@ $fechaHasta2=$y."-12-31";
 		                <div class="col-sm-8">
 		                	<div class="form-group">		                		
 	                			<?php
-								$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
+								$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo  where centro_costos=1 order by 2";
 								$stmt = $dbh->prepare($sqlUO);
 								$stmt->execute();
 								?>
@@ -59,7 +59,7 @@ $fechaHasta2=$y."-12-31";
 		                <div class="col-sm-8">
 		                	<div class="form-group">		                		
 	                			<?php
-								$sqlUO="SELECT a.codigo, a.nombre,a.abreviatura from areas a order by 2";
+								$sqlUO="SELECT a.codigo, a.nombre,a.abreviatura from areas a where centro_costos=1 order by 2";
 								$stmt = $dbh->prepare($sqlUO);
 								$stmt->execute();
 								?>
@@ -99,11 +99,12 @@ $fechaHasta2=$y."-12-31";
 		                <div class="col-sm-8">
 		                	<div class="form-group">
 				                <?php
-								$sql="SELECT s.cod_personal,(select CONCAT('',p.paterno,p.materno,p.primer_nombre) from personal p where s.cod_personal=p.codigo) as nombre_personal from solicitudes_facturacion s GROUP BY s.cod_personal order by nombre_personal asc ";
+								$sql="SELECT s.cod_personal,(select CONCAT(p.paterno,' ',p.materno,' ',p.primer_nombre) from personal p where s.cod_personal=p.codigo) as nombre_personal from solicitudes_facturacion s where s.cod_personal<>0 GROUP BY s.cod_personal order by nombre_personal asc ";
 								$stmtPersonal = $dbh->prepare($sql);
 								$stmtPersonal->execute();
 								?>
 								<select class="selectpicker form-control form-control-sm" name="personal[]" id="personal" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+									<option value="" disabled="true"></option>
 								    <?php 
 								    while ($rowPersonal = $stmtPersonal->fetch()){ ?>
 								      	<option value="<?=$rowPersonal["cod_personal"];?>"  <?=($rowPersonal["cod_personal"]==$globalUser)?"selected":""?> ><?=$rowPersonal["nombre_personal"];?></option><?php 

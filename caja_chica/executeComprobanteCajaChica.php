@@ -18,8 +18,8 @@ try{
 	$stmtVerifComprobante = $dbh->prepare("SELECT cod_comprobante from caja_chica where codigo=$cod_cajachica");
     $stmtVerifComprobante->execute();
     $resultVerifCompro = $stmtVerifComprobante->fetch();
-    $cod_tipocajachica = $resultVerifCompro['cod_comprobante'];
-    if($cod_tipocajachica==null || $cod_tipocajachica==0){//generamos si aun no se registro
+    $cod_comprobante_x = $resultVerifCompro['cod_comprobante'];
+    if($cod_comprobante_x==null || $cod_comprobante_x==0){//generamos si aun no se registro
     	//Verificamos si las retenciones de tipo credito fiscal iva tienen facturas
     	$string_validacion_facturas=validacion_facturas_cajachica($cod_cajachica);
     	$array_validacion_facturas=explode('#####@@@@@', $string_validacion_facturas);

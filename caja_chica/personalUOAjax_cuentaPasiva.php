@@ -40,11 +40,13 @@ $stmtComprobant->execute();
 $resultCompro=$stmtComprobant->fetch();
 $cod_uo=$resultCompro['cod_unidadorganizacional'];
 
-$sqlUO="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1";
+
+$sqlUO="SELECT codigo,nombre,abreviatura from unidades_organizacionales where cod_estado=1 and centro_costos=1";
 $stmtUO = $db->prepare($sqlUO);
 $stmtUO->execute();
 ?>
 <select name="cod_uo" id="cod_uo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" data-show-subtext="true" data-live-search="true" onChange="ajaxAreaUOCAJACHICA(this);">
+	<option value="" disabled=""></option>
     <?php 
     	while ($row = $stmtUO->fetch()){ 
 	?>
