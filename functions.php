@@ -7246,7 +7246,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     if($oficina==0){
       $oficina=0;
     }
-    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "oficina"=>$oficina, "area"=>$area, "anio"=>$anio, "mes"=>$mes, "cuenta"=>$cuenta, "accion"=>"listar"); //
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "oficina"=>$oficina, "area"=>$area, "anio"=>$anio, "mes"=>$mes, "cuenta"=>$cuenta,"acumulado"=>$acumulado, "accion"=>"listar"); //
 
     $parametros=json_encode($parametros);
     $ch = curl_init();
