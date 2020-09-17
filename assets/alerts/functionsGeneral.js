@@ -17402,7 +17402,7 @@ function facturarLibretaBancaria(){
       }
   };
   // alert(saldo_libreta_x+"-"+monto_factura);
-  if(saldo_libreta_x<monto_factura){
+  if(redondeo(saldo_libreta_x)<redondeo(monto_factura)){
     Swal.fire("Informativo", "La Suma del Monto de las Libretas es menor al de la factura (Monto Total Libreta:"+numberFormat(saldo_libreta_x,2)+").", "warning");
   }else{
     seleccionar_libretaBancaria(codDetalle.join(","));
