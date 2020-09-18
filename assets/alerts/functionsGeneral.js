@@ -8860,10 +8860,36 @@ function cambiarDosDivPantallaClase(div,div2,clase){
      }  
     }
   }
-
 }
 
+function cambiarTresDivPantallaClase(div,div2,div3,clase){
+  if(!($("#"+div2).hasClass("d-none"))){
+    $("#"+div2).addClass("d-none");  
+    $("#button_"+div2).removeClass(clase); 
+  }
+  if(!($("#"+div3).hasClass("d-none"))){
+      $("#"+div3).addClass("d-none");
+      $("#button_"+div3).removeClass(clase);  
+    }
+  //boton activo  
+  if(($("#"+div).hasClass("d-none"))){
+    $("#"+div).removeClass("d-none");
+    $("#button_"+div).addClass(clase);
 
+    if($("#boton_generar_comprobante").length>0){
+     if(div=='list_div_2'){
+      if(($("#boton_generar_comprobante").hasClass("d-none"))){
+        $("#boton_generar_comprobante").removeClass("d-none");
+      }
+     }else{
+      if(!($("#boton_generar_comprobante").hasClass("d-none"))){
+        $("#boton_generar_comprobante").addClass("d-none");
+      }
+     }  
+    }
+  }
+  
+}
 //funciones despues de cargar pantalla
 window.onload = detectarCarga;
   function detectarCarga(){
@@ -17402,7 +17428,7 @@ function facturarLibretaBancaria(){
       }
   };
   // alert(saldo_libreta_x+"-"+monto_factura);
-  if(redondeo(saldo_libreta_x)<redondeo(monto_factura)){
+  if(redondeo(saldo_libreta_x+0.5)<redondeo(monto_factura)){ //saldo + 0.5 para la validacion al facturar
     Swal.fire("Informativo", "La Suma del Monto de las Libretas es menor al de la factura (Monto Total Libreta:"+numberFormat(saldo_libreta_x,2)+").", "warning");
   }else{
     seleccionar_libretaBancaria(codDetalle.join(","));
@@ -18307,7 +18333,14 @@ function buscarIngresosDashboard(){
   var mes=$("#cod_mes_x").val();
   var mod=$("#modulo").val();
   iniciarCargaAjax();
-  window.location.href="homeModulo2.php?mod="+mod+"&anio="+gestion+"&mes="+mes;  
+  window.location.href="homeIngresos.php?mod="+mod+"&anio="+gestion+"&mes="+mes;  
+}
+function buscarEgresosDashboard(){
+  var gestion=$('#gestiones option:selected').text();
+  var mes=$("#cod_mes_x").val();
+  var mod=$("#modulo").val();
+  iniciarCargaAjax();
+  window.location.href="homeEgresos.php?mod="+mod+"&anio="+gestion+"&mes="+mes;  
 }
 
 function mostrarOcultarFacturasComprobante(){

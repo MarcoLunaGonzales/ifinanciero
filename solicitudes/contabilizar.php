@@ -637,6 +637,10 @@ if(isset($_GET['q'])){
 }
 
 if(isset($_GET['admin'])){
+  if($_GET['admin']==4){
+    $urlList4=$urlList7;
+  }
+  
   $urlList2=$urlList;
   $urlc="&q=".$q."&s=".$s."&u=".$u."&v=".$v;
   if(isset($_GET['reg'])){

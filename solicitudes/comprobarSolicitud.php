@@ -228,7 +228,11 @@ if(isset($_GET['cod'])){
         if($_GET['admin']==2){
           ?><input type="hidden" name="control_admin" id="control_admin" value="1"><?php 
         }else{
-          ?><input type="hidden" name="control_admin" id="control_admin" value="0"><?php 
+          if($_GET['admin']==4){
+               ?><input type="hidden" name="control_admin" id="control_admin" value="4"><?php 
+          }else{
+            ?><input type="hidden" name="control_admin" id="control_admin" value="0"><?php   
+          }  
         }
        
       }
@@ -601,9 +605,14 @@ if(isset($_GET['cod'])){
                 }
                 
                }else{
+
                 if(isset($_GET['admin'])){
                   if($_GET['admin']==2){
                     $urlList2=$urlList4;
+                  }else{
+                    if($_GET['admin']==4){
+                       $urlList2=$urlList7;
+                     }
                   }
                  ?>
                     <a href="../<?=$urlList2;?>" class="<?=$buttonCancel;?>">Volver</a> 
