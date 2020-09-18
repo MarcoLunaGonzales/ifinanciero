@@ -97,7 +97,7 @@ $valorResultadoFormatAcumulado=number_format($valorResultadoAcumulado,2,'.','');
                     <a href="homeModulo2.php" title="IR A LA PAGINA DE INICIO" class="btn btn-primary btn-sm btn-fab float-right">
                       <i class="material-icons">home</i>
                     </a>
-                    <a href="#" title="BUSCAR RESULTADOS" class="btn btn-warning btn-sm btn-fab float-right" onclick="buscarIngresosDashboard()">
+                    <a href="#" title="BUSCAR RESULTADOS" class="btn btn-warning btn-sm btn-fab float-right" onclick="buscarResultadosDashboard()">
                       <i class="material-icons">search</i>
                     </a>
                       <div class="form-group float-right col-sm-1">

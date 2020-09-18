@@ -18342,6 +18342,13 @@ function buscarEgresosDashboard(){
   iniciarCargaAjax();
   window.location.href="homeEgresos.php?mod="+mod+"&anio="+gestion+"&mes="+mes;  
 }
+function buscarResultadosDashboard(){
+  var gestion=$('#gestiones option:selected').text();
+  var mes=$("#cod_mes_x").val();
+  var mod=$("#modulo").val();
+  iniciarCargaAjax();
+  window.location.href="homeResultados.php?mod="+mod+"&anio="+gestion+"&mes="+mes;  
+}
 
 function mostrarOcultarFacturasComprobante(){
   $(".facturas-boton").each(function(){
