@@ -431,7 +431,8 @@ $contadorRegistros=0;
                             <label class="col-sm-2 col-form-label">Observaciones 2</label>
                             <div class="col-sm-10">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="observaciones_2" id="observaciones_2"  value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                    <!-- <input class="form-control" type="text" name="observaciones_2" id="observaciones_2"  value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
+                                    <textarea class="form-control" type="text" name="observaciones_2" id="observaciones_2" rows="4" placeholder="Solo a requerimiento del cliente, coordinar con Administración para la impresión"><?=$observaciones_2;?></textarea>
                                 </div>
                             </div>
                         </div>
