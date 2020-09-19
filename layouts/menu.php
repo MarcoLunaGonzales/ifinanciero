@@ -571,6 +571,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Procesar Solitudes Recursos</span>
                   </a>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="?opcion=listSolicitudRecursosAdminContaMenores">
+                    <span class="sidebar-mini"> PSR </span>
+                    <span class="sidebar-normal"> Procesar Solitudes Rec. < <?=obtenerValorConfiguracion(85)?></span>
+                  </a>
+                </li>
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listSolicitudRecursosSisActividad">
                     <span class="sidebar-mini"> ASR </span>

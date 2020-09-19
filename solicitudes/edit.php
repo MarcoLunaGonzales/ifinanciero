@@ -22,6 +22,7 @@ if(isset($_GET["conta"])){
   $urlList2=$urlList4;
 }
 
+
 if($estado==10||$estado==11||$estado==12){
   if($estado==12){
     $urlList2=$urlList3;
@@ -176,6 +177,10 @@ if(isset($_GET['admin'])){
 }
 if(isset($_GET["ladmin"])){
   $urlList2=$urlList2Auxiliar;
+}
+
+if(isset($_GET["conta_men"])){
+  $urlList2=$urlList7;
 }
 
 if(isset($_GET['q'])){

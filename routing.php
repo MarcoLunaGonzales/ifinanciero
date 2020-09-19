@@ -481,6 +481,10 @@
 		if ($_GET['opcion']=='listSolicitudRecursosSisActividad') {
 			require_once('solicitudes/listSolicitudRecursosSisActividad.php');
 		}
+        
+        if ($_GET['opcion']=='listSolicitudRecursosAdminContaMenores') {
+			require_once('solicitudes/listSolicitudRecursosAdminContaMenores.php');
+		}
 
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {
