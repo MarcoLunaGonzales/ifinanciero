@@ -58,6 +58,7 @@ try{
             $razon_social = $resultInfo['razon_social'];
             $nitCliente = $resultInfo['nit'];
             $observaciones = $resultInfo['observaciones'];
+            $observaciones_2 = $resultInfo['observaciones_2'];
             $nombre_cliente = $resultInfo['razon_social'];
             $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
             $ci_estudiante = $resultInfo['ci_estudiante'];  
@@ -153,7 +154,7 @@ try{
                                     for($i=$contador_aux_items_y;$i<$contador_aux_items;$i++){
                                         $cadena_cod_facdet_1.=$array_codigo_detalle[$i].",";
                                     }                                
-                                    $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador,$ci_estudiante);
+                                    $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$observaciones_2,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador,$ci_estudiante);
                                     $contador_aux_items_y+=$cantidad_por_defecto;
                                     $variable_controlador++;
                                 }else{

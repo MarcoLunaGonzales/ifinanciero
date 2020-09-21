@@ -30,7 +30,7 @@ foreach ($areas as $valor ) {
     $stringAreas.=" ".abrevArea($valor)." ";
 }
 
-$sql="SELECT f.cod_cliente,f.cod_unidadorganizacional,s.cod_claservicio as cod_modulo, ((s.cantidad*s.precio)-s.descuento_bob)*(da.porcentaje/100) as importe_real,s.ci_estudiante,f.nro_factura,f.cod_personal p_factura,f.cod_solicitudfacturacion
+$sql="SELECT f.cod_cliente,f.cod_unidadorganizacional,s.cod_claservicio as cod_modulo, ((s.cantidad*s.precio)-s.descuento_bob)*(da.porcentaje/100) as importe_real,s.ci_estudiante,f.nro_factura,f.cod_personal p_factura,f.cod_solicitudfacturacion, f.razon_social, f.nit
     From facturas_venta f,facturas_ventadetalle s,facturas_venta_distribucion da
     where f.codigo=s.cod_facturaventa and da.cod_factura=f.codigo and f.cod_estadofactura<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($stringUnidadesX) and da.cod_area in ($stringAreasX) order by f.nro_factura,s.ci_estudiante";
 $stmt2 = $dbh->prepare($sql);
@@ -46,6 +46,8 @@ $stmt2->bindColumn('ci_estudiante', $ci_estudiante);
 $stmt2->bindColumn('nro_factura', $nro_factura);
 $stmt2->bindColumn('p_factura', $p_factura);
 $stmt2->bindColumn('cod_cliente', $cod_cliente);
+$stmt2->bindColumn('razon_social', $razonSocialCliente);
+$stmt2->bindColumn('nit', $nitCliente);
 ?>
 
 <div class="content">
@@ -71,8 +73,10 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
                 <thead>                              
                   <tr>
                     <th><small><b>-</b></small></th>   
-                    <th width="4%"><small><b>Factura</b></small></th>
                     <th width="5%"><small><b>Of.</b></small></th>                                
+                    <th width="4%"><small><b>Factura</b></small></th>
+                    <th width="4%"><small><b>NIT</b></small></th>
+                    <th><small><b>Razón Social</b></small></th>
                     <th ><small><b>Facturado por:</b></small></th>
                     <th width="4%"><small><b>Solicitud</b></small></th>
                     <th ><small><b>Solicitado por:</b></small></th>
@@ -82,6 +86,7 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
                     <th><small><b>C.I.</b></small></th>
                     <th><small><b>Estudiante</b></small></th>
                     <th width="5%"><small><b>Monto</b></small></th>
+                    <th width="5%"><small><b>Monto Neto</b></small></th>
                   </tr>                                  
                 </thead>
                 <tbody>
@@ -136,8 +141,10 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
                       ?>
                       <tr>
                         <td class="text-center small"><?=$index;?></td>
-                        <td class="text-right small"><small><?=$nro_factura;?></small></td>
                         <td class="text-left small"><?=$nombre_uo;?></td>
+                        <td class="text-right small"><small><?=$nro_factura;?></small></td>
+                        <td class="text-right small"><small><?=$nitCliente;?></small></td>
+                        <td class="text-left small"><small><?=mb_strtoupper($razonSocialCliente);?></small></td>
                         <td class="text-left small"><small><?=$encargado_factura;?></small></td>
                         <td class="text-right small"><small><?=$nro_correlativo;?><br></small></td>
                         <td class="text-left small"><small><?=$encargado_sf;?></small></td>                      
@@ -147,6 +154,7 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
                         <td class="text-right small"><?=$ci_estudiante;?></td>
                         <td class="text-left small"><?=mb_strtoupper($nombre_estudiante);?></td>
                         <td class="text-right small"><?=formatNumberDec($importe_real);?></td>
+                        <td class="text-right small"><?=formatNumberDec($importe_real*0.87);?></td>
                       </tr>
                     <?php //}
                   }?>
@@ -163,8 +171,11 @@ $stmt2->bindColumn('cod_cliente', $cod_cliente);
                     <td>-</td>
                     <td>-</td>
                     <td>-</td>                      
-                    <td class="text-left small">TOTAL</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="text-left small">TOTALES</td>
                     <td class="text-left small"><?=formatNumberDec($importe_real_total);?></td>
+                    <td class="text-left small"><?=formatNumberDec($importe_real_total*0.87);?></td>
                   </tr>  
                 </tfoot>
                 
