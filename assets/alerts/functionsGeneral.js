@@ -15665,19 +15665,19 @@ function RegistrarFacturaPagos(cod_solicitudfacturacion,porcentaje_pagar,monto_p
         alerts.showSwal('success-message','index.php?opcion=listFacturasServicios_conta');
       }else{
         if(r==2){
-          Swal.fire("Ocurrio un Error!", "Por favor verifique que los tipos de pago estén asociados a una cuenta.", "warning");
+          Swal.fire("Ocurrio un error", "Por favor verifique que los tipos de pago estén asociados a una cuenta.", "warning");
         }else{
           if(r==3){
-            Swal.fire("Ocurrio un Error!", "Por favor verifique que las areas de ingreso estén asociadas a una cuenta.", "warning");
+            Swal.fire("Ocurrio un error", "Por favor verifique que las areas de ingreso estén asociadas a una cuenta.", "warning");
           }else{
             if(r==4){
               Swal.fire("informativo!", "La factura ya fue generada.", "warning");
             }else{
               if(r==5){
-                Swal.fire("Ocurrio un Error!", "Sucursal no encontrada.", "warning");
+                Swal.fire("Ocurrio un error", "Sucursal no encontrada.", "warning");
               }else{
                 if(r==6){
-                  Swal.fire("Ocurrio un Error!", "No tiene registrado La dosificación para la facturación..", "warning");  
+                  Swal.fire("Ocurrio un error", "No tiene registrado La dosificación para la facturación..", "warning");  
                 }else{
                   alerts.showSwal('error-message','index.php?opcion=listFacturasServicios_conta');
                 }
@@ -15709,19 +15709,19 @@ function RegistrarFacturaManual(cod_solicitudfacturacion,nro_factura,nro_autoriz
         alerts.showSwal('success-message','index.php?opcion=listFacturasServicios_conta');
       }else{
         if(r==2){
-          Swal.fire("Ocurrio un Error!", "Por favor verifique que los tipos de pago estén asociados a una cuenta.", "warning");
+          Swal.fire("Ocurrio un error", "Por favor verifique que los tipos de pago estén asociados a una cuenta.", "warning");
         }else{
           if(r==3){
-            Swal.fire("Ocurrio un Error!", "Por favor verifique que las areas de ingreso estén asociadas a una cuenta.", "warning");
+            Swal.fire("Ocurrio un error", "Por favor verifique que las areas de ingreso estén asociadas a una cuenta.", "warning");
           }else{
             if(r==4){
               Swal.fire("informativo!", "La factura ya fue generada.", "warning");
             }else{
               if(r==5){
-                Swal.fire("Ocurrio un Error!", "Sucursal no encontrada.", "warning");
+                Swal.fire("Ocurrio un error", "Sucursal no encontrada.", "warning");
               }else{
                 if(r==-1){
-                  Swal.fire("Ocurrio un Error!", "No se tiene conexión al servicio de capacitación.", "warning");
+                  Swal.fire("Ocurrio un error", "No se tiene conexión al servicio de capacitación.", "warning");
                 }else{
                   alerts.showSwal('error-message','index.php?opcion=listFacturasServicios_conta');  
                 }
@@ -15830,7 +15830,7 @@ function RegistrarComprobanteCajaChica(cod_cajachica,cod_tipocajachica,nro_compr
         alerts.showSwal('success-message','index.php?opcion=ListaCajaChica&codigo='+cod_tipocajachica);
       }else{
         if(estado==0){
-          Swal.fire("ERROR!", "Ha ocurrido un error inesperado al generar el comprobante!", "warning");
+          Swal.fire("ERROR!", "A ocurrido un error inesperado al generar el comprobante!", "warning");
         }else{
           if(estado==2){
             Swal.fire("Informativo!", "El COMPROBANTE ya fue generado. Actualice el Sistema Por favor!", "warning");
@@ -16535,7 +16535,7 @@ function registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado
           alerts.showSwal('success-message',direccion+'?cod='+cod_solicitudfacturacion+'&estado='+estado+'&admin='+admin+'&q='+q+'&s='+s+'&u='+u+'&v='+v);
         }
       }else{
-        Swal.fire("Ocurrio un Error!", "No se pudo devolver la solicitud.", "warning");        
+        Swal.fire("Ocurrio un error", "No se pudo devolver la solicitud.", "warning");        
       }
     }
   });
@@ -16555,7 +16555,7 @@ function registrarRechazoSolicitud_intranet(cod_solicitudfacturacion,observacion
         }
         
       }else{
-        Swal.fire("Ocurrio un Error!", "No se pudo devolver la solicitud.", "warning");        
+        Swal.fire("Ocurrio un error", "No se pudo devolver la solicitud.", "warning");        
       }
     }
   });
@@ -16575,7 +16575,7 @@ function registrarRechazoSolicitud_intranet(cod_solicitudfacturacion,observacion
 //       if(r==1){        
 //           alerts.showSwal('success-message',direccion);        
 //       }else{
-//         Swal.fire("Ocurrio un Error!", "No se pudo Anular la Factura.", "warning");        
+//         Swal.fire("Ocurrio un error", "No se pudo Anular la Factura.", "warning");        
 //       }
 //     }
 //   });
@@ -17275,7 +17275,7 @@ function eliminarRelacionFactura(codigo,codigo_libreta_detalle){
                     // Swal.fire("satisfecho!", "No se pudo devolver la solicitud.", "success");
                     alerts.showSwal('success-message','index.php?opcion=listLibretasDetalle&codigo='+cod_libreta);
                 }else{
-                  Swal.fire("Ocurrio un Error!", "No se pudo Eliminar la Relación.", "warning");
+                  Swal.fire("Ocurrio un error", "No se pudo Eliminar la Relación.", "warning");
                 }
               }
             });
@@ -17312,7 +17312,7 @@ function seleccionar_Factura_relacion(cod_factura){
           if(r==1){              
               alerts.showSwal('success-message','index.php?opcion=listLibretasDetalle&codigo='+cod_libreta);
           }else{
-            Swal.fire("Ocurrio un Error!", "No se pudo realizar la relación.", "warning");
+            Swal.fire("Ocurrio un error", "No se pudo realizar la relación.", "warning");
           }
         }
       });
@@ -17351,7 +17351,7 @@ function mostrar_listado_facturas(){
 
 function listar_libretaBancaria(codLibretaDetalle,descripcion){
   if(verificarLibretaCodigo(codLibretaDetalle)==true){
-  Swal.fire("Ocurrio un Error!", "La libreta ya está seleccionada", "warning");
+  Swal.fire("Ocurrio un error", "La libreta ya está seleccionada", "warning");
   }else{
    var n= $("#cantidad_filas_libretas").val();
    n++;
