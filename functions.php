@@ -9882,4 +9882,45 @@ function obtenerCodigoUnidadComprobante($codigo){
     return($correos_string);
   }
 
+function enviarCorreoSimple($correo_destino,$asunto,$mensaje){
+  //retornar 2:error de parametros,1:error de envio,0 envio correcto
+  require 'notificaciones_sistema/PHPMailer/send.php';
+  $dbh = new Conexion();
+  $fechaActual=date("Y-m-d H:m:s");
+ if($correo_destino==''||$asunto==''||$mensaje==''){
+    return 1;
+  }else{
+    $mail_username="";//Correo electronico emisor
+    $mail_userpassword="";// contraseña correo emisor
+    $mail_addAddress=$correo_destino;//correo electronico destino
+    $template="../notificaciones_sistema/PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
+    /*Inicio captura de datos enviados por $_POST para enviar el correo */
+    $mail_setFromEmail=$mail_username;
+    $mail_setFromName="IBNORCA";
+    $txt_message=$mensaje;
+    $mail_subject=$asunto; //el subject del mensaje
+
+    $flag=sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject,$template,0);
+    if($flag!=0){//se envio correctamente
+      $sqlInsert="INSERT INTO log_instancias_envios_correo(detalle,fecha,cod_alumno,cod_persona,correo) 
+      VALUES ('$asunto','$fechaActual',0,0,'$correo_destino')";
+      $stmtBInsert = $dbh->prepare($sqlInsert);
+      $stmtBInsert->execute();
+      return 0;  
+    }else{//error al enviar el correo
+      return 1;
+    }
+  }
+ }
+
+ function obtenerDatosSolicitudRecursos($codigo){
+    $dbh = new Conexion();
+    $stmtDatos = $dbh->prepare("SELECT numero,cod_personal FROM solicitud_recursos where codigo=$codigo");
+    $stmtDatos->execute();
+    $resultDatos = $stmtDatos->fetch();    
+    $numero = $resultDatos['numero'];
+    $cod_personal = $resultDatos['cod_personal'];
+    $personal = namePersonalCompleto($resultDatos['cod_personal']);
+    return array('numero' => $numero,'solicitante'=>$personal);
+    }
 ?>
