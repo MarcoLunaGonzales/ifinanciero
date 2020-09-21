@@ -17,7 +17,7 @@ $proveedores=$_POST["proveedores"];
 
 $fecha=$_POST["fecha"];
 $tipo_cp=$_POST["tipo_cp"];
-
+$ver_saldo=$_POST["ver_saldo"];
 
 $proveedoresString=implode(",", $proveedores);
 $StringCuenta=implode(",", $cuenta);
@@ -133,6 +133,7 @@ $totalDebito=0;
                                             $nombreCuentaAuxiliarX=nameCuentaAuxiliar($codPlanCuentaAuxiliarX);
                                             $tipoDebeHaber=verificarTipoEstadoCuenta($codPlanCuentaX);
 
+
                                             if($codPlanCuentaAuxiliarX!=$codPlanCuentaAuxiliarPivotX){
                                                 $saldo=0;
                                                 $codPlanCuentaAuxiliarPivotX=$codPlanCuentaAuxiliarX;
@@ -174,11 +175,24 @@ $totalDebito=0;
                                             $stmtContra->execute();                                    
                                             $saldo+=$montoX;//-$montoContra;                                    
                                             // echo "tipo:".$cod_tipoCuenta;
+                                        $montoEstado=0;$estiloEstados="";
+                                            $stmtSaldo = $dbh->prepare("SELECT sum(e.monto) as monto
+                                                    from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and c.fecha<='$fecha 23:59:59' and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX");
+                                            $stmtSaldo->execute();
+                                            while ($rowSaldo = $stmtSaldo->fetch()) {
+                                                $montoEstado=$rowSaldo['monto'];
+                                            }
+
+                                         if(formatNumberDec($saldo)==formatNumberDec($montoEstado)&&$ver_saldo==1){
+                                             //validacion para saldos 0 si esta filtrado
+                                            $estiloEstados="d-none";
+                                         }   
+
                                             if($tipoDebeHaber==2){//proveedor
                                                 $totalCredito=$totalCredito+$montoX;
                                                 $nombreProveedorX=nameProveedor($codProveedor);
                                                 
-                                                $html.='<tr class="bg-white det-estados">
+                                                $html.='<tr class="bg-white det-estados '.$estiloEstados.'">
                                                     <td class="text-left small">'.$nombreUnidadCabecera.'</td>
                                                     <td class="text-left small">'.$nombreUnidadO.'-'.$nombreAreaCentroCosto.'</td>
                                                     <td class="text-center small">'.$nombreComprobanteX.'</td>
@@ -195,7 +209,7 @@ $totalDebito=0;
                                             }else{ //cliente
                                                 $nombreProveedorX=namecliente($codProveedor);
                                                 $totalDebito=$totalDebito+$montoX;
-                                                 $html.='<tr class="bg-white det-estados">
+                                                 $html.='<tr class="bg-white det-estados '.$estiloEstados.'">
                                                     <td class="text-left small">'.$nombreUnidadCabecera.'</td>
                                                     <td class="text-left small">'.$nombreUnidadO.'-'.$nombreAreaCentroCosto.'</td>
                                                     <td class="text-center small">'.$nombreComprobanteX.'</td>
@@ -251,7 +265,7 @@ $totalDebito=0;
                                                     if($tipoDebeHaber==2){//proveedor
                                                         $nombreProveedorX_d=nameProveedor($codProveedor_d);
                                                         $totalDebito=$totalDebito+$montoX_d;
-                                                        $html.='<tr style="background-color:#ECCEF5;">
+                                                        $html.='<tr style="background-color:#ECCEF5;" class="'.$estiloEstados.'">
                                                             <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;'.$nombreUnidadCabecera_d.'</td>
                                                             <td class="text-left small">'.$nombreUnidadO_d.'-'.$nombreAreaCentroCosto_d.'</td>
                                                             <td class="text-center small">'.$nombreComprobanteY.'</td>
@@ -267,7 +281,7 @@ $totalDebito=0;
                                                         $nombreProveedorX_d=namecliente($codProveedor_d);
                                                         if($nombreProveedorX_d=='0')$nombreProveedorX_d=nameProveedor($codProveedor_d);
                                                         $totalCredito=$totalCredito+$montoX_d;
-                                                        $html.='<tr  style="background-color:#ECCEF5;">
+                                                        $html.='<tr  style="background-color:#ECCEF5;" class="'.$estiloEstados.'">
                                                             <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;'.$nombreUnidadCabecera_d.'</td>
                                                             <td class="text-left small">'.$nombreUnidadO_d.'-'.$nombreAreaCentroCosto_d.'</td>
                                                             <td class="text-center small">'.$nombreComprobanteY.'</td>
@@ -283,9 +297,9 @@ $totalDebito=0;
                                                      }
                                                     
                                                 }
+                                            }    
                                                 $i++;
                                                 $indice++;
-                                        }
                                     }
                                     $totalSaldo=$totalDebito-$totalCredito;
                                     if($totalSaldo<0){
