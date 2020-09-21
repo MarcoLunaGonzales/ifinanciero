@@ -63,7 +63,7 @@ $IdTipo=$_GET['IdTipo'];
    <div class="col-sm-1">
       <div class="form-group">
         
-        <input type="number" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true" onkeyup="cantidad_por_importe_servicio_sf(<?=$idFila?>)">
+        <input type="number" step="0.01" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true" onkeyup="cantidad_por_importe_servicio_sf(<?=$idFila?>)">
       </div>
     </div>
     <div class="col-sm-1">

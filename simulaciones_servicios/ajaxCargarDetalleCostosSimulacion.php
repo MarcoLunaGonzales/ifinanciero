@@ -277,10 +277,10 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                $mesActual=date("m");
                 $valorConfiguracionTCPTCS=obtenerValorConfiguracion(52);
                if($valorConfiguracionTCPTCS!=1){
-                $monto=ejecutadoEgresosMes(0,$anio,12,$grupoArea,0,$row_cuentas['numero']);
+                $monto=ejecutadoEgresosMes(0,$anio,12,$grupoArea,1,$row_cuentas['numero']);
                 //$monto=($monto/12);
                }else{
-                $monto=ejecutadoEgresosMes($grupoUnidad,$anio,$mesActual,$grupoArea,1,$row_cuentas['numero']);
+                $monto=ejecutadoEgresosMes(0,$anio,12,$grupoArea,1,$row_cuentas['numero']);
                 //$monto=ejecutadoEgresosMes($grupoUnidad,((int)$anio-1),$mesActual,$grupoArea,0,$row_cuentas['numero']);
                }
                 $precioRegistradoAux3=$monto;

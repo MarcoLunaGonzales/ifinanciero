@@ -7160,6 +7160,26 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       return array('presupuesto' => $datos->presupuesto, 'ejecutado' => $datos->ejecutado);       
     }
 
+    function obtenerPresupuestoEjecucionEgresosPorAreaAcumulado($oficina,$area,$anio,$mes,$acumulado){
+    $direccion=obtenerValorConfiguracion(45);//direccion del Server del Servicio
+    $sIde = "monitoreo"; 
+    $sKey="101010"; 
+
+  /*PARAMETROS PARA LA OBTENCION DE LISTAS DE PERSONAL*/
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "oficina"=>$oficina, "area"=>$area, "anio"=>$anio, "mes"=>$mes, "accion"=>"listar","acumulado"=>$acumulado); //
+
+    $parametros=json_encode($parametros);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$direccion."ws/wsPresupuestoGastosCuenta.php");
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    $datos=json_decode($remote_server_output);
+      return array('presupuesto' => $datos->presupuesto, 'ejecutado' => $datos->ejecutado);       
+    }
+
   function obtenerPrecioSimulacionCosto($codigo){
     $dbh = new Conexion();
     $sql="";
@@ -7246,7 +7266,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     if($oficina==0){
       $oficina=0;
     }
-    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "oficina"=>$oficina, "area"=>$area, "anio"=>$anio, "mes"=>$mes, "cuenta"=>$cuenta, "accion"=>"listar"); //
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "oficina"=>$oficina, "area"=>$area, "anio"=>$anio, "mes"=>$mes, "cuenta"=>$cuenta,"acumulado"=>$acumulado, "accion"=>"listar"); //
 
     $parametros=json_encode($parametros);
     $ch = curl_init();

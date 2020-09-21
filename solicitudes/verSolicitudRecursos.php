@@ -35,7 +35,11 @@ if(isset($_GET['admin'])){
   if($_GET['admin']==2){
     $urlList=$urlList4;
   }else{
-    $urlList=$urlList2;
+    if($_GET['admin']==4){
+    $urlList=$urlList7;
+    }else{
+      $urlList=$urlList2;  
+    }
   }
 }
 

@@ -277,6 +277,10 @@ if(!isset($_POST['control_admin'])){
 }else{
   if($_POST['control_admin']==1){
     $urlList2=$urlList4;
+  }else{
+    if($_POST['control_admin']==4){
+    $urlList2=$urlList7;
+    }
   }
 }   
 
