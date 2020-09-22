@@ -30,7 +30,7 @@ foreach ($areas as $valor ) {
     $stringAreas.=" ".abrevArea($valor)." ";
 }
 
-$sql="SELECT f.cod_cliente,f.cod_unidadorganizacional,s.cod_claservicio as cod_modulo, ((s.cantidad*s.precio)-s.descuento_bob)*(da.porcentaje/100) as importe_real,s.ci_estudiante,f.nro_factura,f.cod_personal p_factura,f.cod_solicitudfacturacion, f.razon_social, f.nit
+$sql="SELECT f.cod_cliente,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,f.cod_unidadorganizacional,s.cod_claservicio as cod_modulo, ((s.cantidad*s.precio)-s.descuento_bob)*(da.porcentaje/100) as importe_real,s.ci_estudiante,f.nro_factura,f.cod_personal p_factura,f.cod_solicitudfacturacion, f.razon_social, f.nit
     From facturas_venta f,facturas_ventadetalle s,facturas_venta_distribucion da
     where f.codigo=s.cod_facturaventa and da.cod_factura=f.codigo and f.cod_estadofactura<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($stringUnidadesX) and da.cod_area in ($stringAreasX) order by f.nro_factura,s.ci_estudiante";
 $stmt2 = $dbh->prepare($sql);
@@ -48,6 +48,7 @@ $stmt2->bindColumn('p_factura', $p_factura);
 $stmt2->bindColumn('cod_cliente', $cod_cliente);
 $stmt2->bindColumn('razon_social', $razonSocialCliente);
 $stmt2->bindColumn('nit', $nitCliente);
+$stmt2->bindColumn('fecha_factura_x', $fecha_factura);
 ?>
 
 <div class="content">
@@ -75,6 +76,7 @@ $stmt2->bindColumn('nit', $nitCliente);
                     <th><small><b>-</b></small></th>   
                     <th width="5%"><small><b>Of.</b></small></th>                                
                     <th width="4%"><small><b>Factura</b></small></th>
+                    <th width="4%"><small><b>Fecha</b></small></th>
                     <th width="4%"><small><b>NIT</b></small></th>
                     <th><small><b>Razón Social</b></small></th>
                     <th ><small><b>Facturado por:</b></small></th>
@@ -143,6 +145,7 @@ $stmt2->bindColumn('nit', $nitCliente);
                         <td class="text-center small"><?=$index;?></td>
                         <td class="text-left small"><?=$nombre_uo;?></td>
                         <td class="text-right small"><small><?=$nro_factura;?></small></td>
+                        <td class="text-right small"><small><?=$fecha_factura;?></small></td>
                         <td class="text-right small"><small><?=$nitCliente;?></small></td>
                         <td class="text-left small"><small><?=mb_strtoupper($razonSocialCliente);?></small></td>
                         <td class="text-left small"><small><?=$encargado_factura;?></small></td>

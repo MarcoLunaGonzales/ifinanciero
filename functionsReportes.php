@@ -299,7 +299,7 @@ function obtenerDatosSolicitudFacturacion($codigo,$cod_claservicio){
           }
         }
     }else{
-        $sql="SELECT m.curso_id,(select clIdentificacion from dbcliente.cliente_persona_empresa where idCliente=m.usuario_id)as ci_estudiante from ibnorcatienda.pago_curso m where  m.pago_id=$cod_claservicio";
+        $sql="SELECT m.curso_id,(select clIdentificacion from dbcliente.cliente_persona_empresa where idCliente=m.cliente_id)as ci_estudiante from ibnorcatienda.pago_curso m where  m.pago_id=$cod_claservicio";
         // echo $sql;
         $stmt = $dbh->prepare($sql);
         $stmt->execute();        

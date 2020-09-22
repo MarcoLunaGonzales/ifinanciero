@@ -3186,19 +3186,18 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   //================ ========== PARA  planilla sueldos
 
-  function obtenerBonoAntiguedad($minino_salarial,$ing_contr,$anio_actual){  
+  function obtenerBonoAntiguedad($minino_salarial,$ing_contr,$fecha_planilla){  
     // $anio_actual= date('Y');
     // $anio_actual=2019;
     // $fechaComoEntero = strtotime($ing_contr);
     // $anio_inicio = date("Y", $fechaComoEntero);
     // $diferencia_anios=$anio_actual-$anio_inicio;
-    $anio_actual=date('Y-m-d');
+    // $anio_actual=date('Y-m-d');
     $date1 = new DateTime($ing_contr);
-    $date2 = new DateTime($anio_actual);
+    $date2 = new DateTime($fecha_planilla);
     $diff = $date1->diff($date2);    
     $diferencia_anios=$diff->y;
     // echo $dias;
-
     $total_bono_antiguedad = 0;
     $dbh = new Conexion();
     $stmt = $dbh->prepare("SELECT * from escalas_antiguedad where cod_estadoreferencial=1");
@@ -3209,15 +3208,11 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       if($anios_inicio<=$diferencia_anios and $diferencia_anios<$anios_final){
-          $l3 = $minino_salarial*$porcentaje/100;      
-      }else $l3 = 0;
-
-      $total_bono_antiguedad +=$l3;
-    }
-    // $aporte_laboral_aux=$total_ganado*$aporte_laboral_porcentaje_total/100;
-    $total_bono_antiguedad_x=number_format($total_bono_antiguedad,2,'.','');
-    // $stmt = null;
-    // $dbh = null;
+          $total_bono_antiguedad = $minino_salarial*$porcentaje/100;          
+          break;
+      }else $total_bono_antiguedad = 0;
+    }    
+    $total_bono_antiguedad_x=number_format($total_bono_antiguedad,2,'.','');    
     return $total_bono_antiguedad_x;
 
   }
@@ -3275,39 +3270,6 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $dbh = null;
     return $total_bonos;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   function obtenerAporteAFP($total_ganado){

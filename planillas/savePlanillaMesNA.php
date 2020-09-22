@@ -24,14 +24,11 @@ $cod_estadoplanilla=$_POST['sw'];
 $sw=$_POST['sw'];
 $cod_uo_x=$_POST['cod_uo'];
 
+
 if($sw==2){
-  	$nombre_gestion_x=date('Y');
-	$cod_mes_x = date('m');
-	$sqlGestion = "SELECT codigo from gestiones where nombre=$nombre_gestion_x";
-	$stmtGestion = $dbh->prepare($sqlGestion);
-	$stmtGestion->execute();
-	$resultGestion=$stmtGestion->fetch();
-	$cod_gestion_x = $resultGestion['codigo'];
+	$nombre_gestion_x=$_SESSION['globalNombreGestion'];
+	$cod_mes_x=$_SESSION['globalMes'];
+	$cod_gestion_x = $_SESSION['globalGestion'];
 }else{
 	$stmtDatosPlanilla = $dbh->prepare("SELECT cod_gestion,cod_mes from planillas where codigo=$cod_planilla");
 	$stmtDatosPlanilla->execute();
@@ -45,11 +42,28 @@ if($sw==2){
 	$resultGestion=$stmtGestion->fetch();
 	$nombre_gestion_x = $resultGestion['nombre'];
 }
+$date1 = $nombre_gestion_x.'-'.$cod_mes_x; 
+$d = date_create_from_format('Y-m',$date1); 
+$ultimo_dia = date_format($d, 't');
+$fecha_planilla=$nombre_gestion_x."-".$cod_mes_x."-".$ultimo_dia;
+
 
 
 //echo "llega ".$cod_estadoasignacionaf;
 
-if($sw==2){//procesar planilla	
+if($sw==2 || $sw==1){//procesar planilla	
+	if($sw==1){//reprocesar
+		$stmtDelete = $dbh->prepare("DELETE  FROM planillas_personal_mes where cod_planilla=$cod_planilla");
+		$stmtDelete->execute();
+	}else{//procesar
+		//actualizamos estado
+		$stmtU = $dbh->prepare("UPDATE planillas 
+		set cod_estadoplanilla=:cod_estadoplanilla
+		where codigo=:cod_planilla");
+		$stmtU->bindParam(':cod_planilla', $cod_planilla);
+		$stmtU->bindParam(':cod_estadoplanilla', $cod_estadoplanilla);
+		$flagSuccess=$stmtU->execute();	
+	}
 	//actualizamos estado
 	$stmtU = $dbh->prepare("UPDATE planillas_uo_cerrados 
 	set cod_estado_planilla=:cod_estadoplanilla
@@ -57,7 +71,6 @@ if($sw==2){//procesar planilla
 	$stmtU->bindParam(':cod_planilla', $cod_planilla);
 	$stmtU->bindParam(':cod_estadoplanilla', $cod_estadoplanilla);
 	$flagSuccess=$stmtU->execute();
-
 	//=========================creando la planilla previa con valores ininciales
 	$dias_trabajados_por_defecto = 30; //por defecto
 	$dias_trabajados_asistencia = 28; //por asistencia
@@ -99,24 +112,8 @@ if($sw==2){//procesar planilla
 	$flagSuccessIP=0;
 	$flagSuccessIPMD=0;
 	$procesado_reprocesado=1
-	$stmtConfiguracion = $dbh->prepare("SELECT * from configuraciones_planillas where codigo in (1)");
-	$stmtConfiguracion->execute();
-	$stmtConfiguracion->bindColumn('id_configuracion', $codigo_configuracion);
-	$stmtConfiguracion->bindColumn('valor_configuracion',$valor_configuracion);
-
-  //capturando valores de configuracion
-	while ($rowC = $stmtConfiguracion->fetch()) 
-	{
-		switch ($codigo_configuracion) {
-		  case 1:
-		    $minimo_salarial=$valor_configuracion;
-		    break;		  
-		  
-		  default:
-		    
-		    break;
-		}
-	}
+	
+	$minimo_salarial=obtenerValorConfiguracionPlanillas(1);
 	// fin de valores de configruacion
 	$sqlUO="SELECT cpsd.cod_uo
 	from configuraciones_planilla_sueldo cps,configuraciones_planilla_sueldo_detalle cpsd
@@ -131,7 +128,6 @@ if($sw==2){//procesar planilla
 		(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
 		cod_tipoafp,ing_contr
 		from personal where cod_estadoreferencial=1 and cod_unidadorganizacional=$cod_uo_2 and cod_estadopersonal=1";
-
 		$stmtPersonal = $dbh->prepare($sql);
 		$stmtPersonal->execute();
 		$stmtPersonal->bindColumn('codigo', $codigo_personal);
@@ -146,7 +142,7 @@ if($sw==2){//procesar planilla
 			//calculado otros bonos		
 			if($p_grado_academico==0)$bono_academico = 0;
 			else $bono_academico = $p_grado_academico/100*$minimo_salarial;
-			$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr,$nombre_gestion_x);//ok	
+			$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr,$fecha_planilla);//ok	
 
 			//$otros_b = 0 ;//buscar datos
 			//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
@@ -278,7 +274,7 @@ if($sw==2){//procesar planilla
 	$stmtU->bindParam(':created_by', $created_by);
 	$stmtU->bindParam(':modified_by', $modified_by);
 	$flagSuccessIP=$stmtU->execute();
-}elseif($sw==1)
+}elseif($sw==100)
 {//reporcesar planilla
 	//=========================creando la planilla previa
 	$flagSuccessIPMD=0;
