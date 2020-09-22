@@ -159,7 +159,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
-                              <div class="dropdown-menu">
+                              <div class="dropdown-menu menu-fixed-sm-table menu-fixed-sm-table">
                                 <?php 
                                 if(isset($_GET['q'])){
                                  if($codEstado==4){
@@ -227,7 +227,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                     <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" title="Ver Oferta en PDF" aria-expanded="false">
                                       <i class="material-icons text-dark">picture_as_pdf</i>
                                     </button>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu menu-fixed-sm-table menu-fixed-sm-table">
 
                                       <a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="dropdown-item"  target="_blank">
                                          <i class="material-icons text-danger">picture_as_pdf</i> PDF
@@ -253,7 +253,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                     <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" title="Ver Oferta en PDF" aria-expanded="false">
                                       <i class="material-icons text-dark">picture_as_pdf</i>
                                     </button>
-                                    <div class="dropdown-menu">
+                                    <div class="dropdown-menu menu-fixed-sm-table">
                                       <a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="dropdown-item"  target="_blank">
                                          <i class="material-icons text-danger">picture_as_pdf</i> PDF
                                       </a>

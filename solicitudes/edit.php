@@ -40,6 +40,15 @@ if(obtenerUnidadSolicitanteRecursos($codigo)==3000||obtenerAreaSolicitanteRecurs
   if(isset($_GET["reg"])){
    if($estado==4&&$_GET['reg']!=2){
     $estado=7;
+
+    //enviar correos sis
+    $datoInstancia=obtenerCorreosInstanciaEnvio(2);
+    $correos=implode(",",$datoInstancia[0]);
+    $nombres=implode(",",$datoInstancia[1]); 
+
+    $datosSolicitud=obtenerDatosSolicitudRecursos($codigo); 
+    $envioCorreo=enviarCorreoSimple($correos,'NUEVA SOLICITUD DE RECURSOS PARA EL PROYECTO SIS, Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$nombres.', el sistema IFINANCIERO le notifica que tiene una nueva Solicitud de Recursos para ser aprobada por su persona. <br> Solicitante:'.$datosSolicitud['solicitante']."<br>Numero de Solicitud:".$datosSolicitud['numero']."<br><br>Saludos - IFINANCIERO");
+
    }   
   }  
 }

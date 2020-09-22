@@ -151,7 +151,18 @@ $fechaMesUltimoDia=$y."-".$m."-".$d;
                   </div>
                 </div>
             </div><!--fin campo RUBRO -->
-
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Filtrar</label>
+              <div class="col-sm-7">
+              <div class="form-group">
+                  <select name="ver_saldo" id="ver_saldo" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
+                        <option value="1">SOLO SALDOS</option>
+                        <option value="2">TODO</option>
+                        
+                  </select>
+              </div>
+              </div>
+            </div><!--fin tipo tipo -->
           </div>
           <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
