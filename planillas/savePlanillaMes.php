@@ -48,14 +48,20 @@ if($sw==2){
 
 //echo "llega ".$cod_estadoasignacionaf;
 
-if($sw==2){//procesar planilla	
-	//actualizamos estado
-	$stmtU = $dbh->prepare("UPDATE planillas 
-	set cod_estadoplanilla=:cod_estadoplanilla
-	where codigo=:cod_planilla");
-	$stmtU->bindParam(':cod_planilla', $cod_planilla);
-	$stmtU->bindParam(':cod_estadoplanilla', $cod_estadoplanilla);
-	$flagSuccess=$stmtU->execute();
+if($sw==2 || $sw==1){//procesar planilla	
+	if($sw==1){
+		$stmtDelete = $dbh->prepare("DELETE  FROM planillas_personal_mes where cod_planilla=$cod_planilla");
+		$stmtDelete->execute();
+	}else{
+		//actualizamos estado
+		$stmtU = $dbh->prepare("UPDATE planillas 
+		set cod_estadoplanilla=:cod_estadoplanilla
+		where codigo=:cod_planilla");
+		$stmtU->bindParam(':cod_planilla', $cod_planilla);
+		$stmtU->bindParam(':cod_estadoplanilla', $cod_estadoplanilla);
+		$flagSuccess=$stmtU->execute();	
+	}
+	
 	//=========================creando la planilla previa con valores ininciales
 	$dias_trabajados_por_defecto = 30; //por defecto
 	$dias_trabajados_asistencia = 30; //por asistencia
@@ -121,8 +127,6 @@ if($sw==2){//procesar planilla
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,  
 	cod_tipoafp,ing_contr
 	from personal where cod_estadoreferencial=1 and cod_estadopersonal=1";
-	// and codigo in (84,93,183,195,286,32,176,96,68,16,97,14793,168,99,5,9,277,90,89,227,91,34149,72,81,92,241,30072,78,13,177,69,70,12778,40,51,173,182,62,29,8,203)";
-
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
 	$stmtPersonal->bindColumn('codigo', $codigo_personal);
@@ -138,6 +142,7 @@ if($sw==2){//procesar planilla
 		if($p_grado_academico==0)$bono_academico = 0;
 		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
 		$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr,$nombre_gestion_x);//ok	
+		echo $minimo_salarial."--".$ing_contr."--".$nombre_gestion_x;
 
 		//$otros_b = 0 ;//buscar datos
 		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
@@ -273,7 +278,7 @@ if($sw==2){//procesar planilla
 	$stmtU->bindParam(':cod_planilla', $cod_planilla);
 	$stmtU->bindParam(':cod_estadoplanilla', $cod_estadoplanilla);
 	$flagSuccessIP=$stmtU->execute();
-}elseif($sw==1)
+}elseif($sw==10)
 {//reporcesar planilla
 	//=========================creando la planilla previa
 	$flagSuccessIPMD=0;
@@ -339,9 +344,7 @@ if($sw==2){//procesar planilla
 		  case 1:
 		    $minimo_salarial=$valor_configuracion;
 		    break;		  
-		  
 		  default:
-		    
 		    break;
 		}
 	}
@@ -368,7 +371,8 @@ if($sw==2){//procesar planilla
 		//calculado otros bonos		
 		if($p_grado_academico==0)$bono_academico = 0;
 		else $bono_academico = $p_grado_academico/100*$minimo_salarial;
-		$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr,$nombre_gestion_x);//ok	
+
+		$bono_antiguedad = obtenerBonoAntiguedad($minimo_salarial,$ing_contr,$nombre_gestion_x);//ok	
 
 		//$otros_b = 0 ;//buscar datos
 		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
@@ -421,13 +425,15 @@ if($sw==2){//procesar planilla
 		// echo "liquido_pagable ".$liquido_pagable;
 
 
-		$sqlpersonalVerificacion = "SELECT cod_personalcargo from planillas_personal_mes where cod_planilla=$cod_planilla and cod_personalcargo=$codigo_personal";
-		$stmtPersonalVerificacion = $dbh->prepare($sqlpersonalVerificacion);
-		$stmtPersonalVerificacion->execute();
-		$resultPersonalVerificacion=$stmtPersonalVerificacion->fetch();
-		$cod_personalVerificacion=$resultPersonalVerificacion['cod_personalcargo'];
+		// $sqlpersonalVerificacion = "SELECT cod_personalcargo from planillas_personal_mes where cod_planilla=$cod_planilla and cod_personalcargo=$codigo_personal";
+		// $stmtPersonalVerificacion = $dbh->prepare($sqlpersonalVerificacion);
+		// $stmtPersonalVerificacion->execute();
+		// $resultPersonalVerificacion=$stmtPersonalVerificacion->fetch();
+		// $cod_personalVerificacion=$resultPersonalVerificacion['cod_personalcargo'];
 
-		if($cod_personalVerificacion==null){
+		$stmtDelete = $dbh->prepare("DELETE  FROM planillas_personal_mes where cod_planilla=$cod_planilla");
+		$stmtDelete->execute();
+		// if($cod_personalVerificacion==null){
 			$sqlInsertPlanillas="INSERT into planillas_personal_mes(cod_planilla,cod_personalcargo,cod_gradoacademico,dias_trabajados,horas_pagadas,
 			  haber_basico,bono_academico,bono_antiguedad,monto_bonos,total_ganado,monto_descuentos,afp_1,afp_2,dotaciones,
 			  liquido_pagable,cod_estadoreferencial,created_by,modified_by,procesado_reprocesado)
@@ -476,59 +482,63 @@ if($sw==2){//procesar planilla
 			$stmtInsertPlanillaDetalle->bindParam(':total_a_patronal',$total_a_patronal);
 			$flagSuccessIPMD=$stmtInsertPlanillaDetalle->execute();
 
-		}else{
-			//==== update de panillas si personal existe
-			$sqlInsertPlanillas="UPDATE planillas_personal_mes set cod_gradoacademico=:cod_grado_academico,dias_trabajados=:dias_trabajados,
-			horas_pagadas=:horas_pagadas,haber_basico=:haber_basico,bono_academico=:bono_academico,bono_antiguedad=:bono_antiguedad,
-			monto_bonos=:monto_bonos,total_ganado=:total_ganado,monto_descuentos=:monto_descuentos,
-			afp_1=:afp_1,afp_2=:afp_2,dotaciones=:dotaciones,liquido_pagable=:liquido_pagable, procesado_reprocesado=:procesado_reprocesado
-			where cod_planilla=:cod_planilla and cod_personalcargo=:cod_personal_cargo";
-			$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
-			$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
-			$stmtInsertPlanillas->bindParam(':cod_personal_cargo',$codigo_personal);
-			$stmtInsertPlanillas->bindParam(':cod_grado_academico',$cod_gradoacademico);
-			$stmtInsertPlanillas->bindParam(':dias_trabajados',$dias_trabajados_por_defecto);
-			$stmtInsertPlanillas->bindParam(':horas_pagadas',$horas_pagadas);
-			$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);
-			$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);
-			$stmtInsertPlanillas->bindParam(':bono_antiguedad',$bono_antiguedad);
-			$stmtInsertPlanillas->bindParam(':monto_bonos',$total_bonos);
-			$stmtInsertPlanillas->bindParam(':total_ganado',$total_ganado);
-			$stmtInsertPlanillas->bindParam(':monto_descuentos',$total_descuentos);
-			$stmtInsertPlanillas->bindParam(':afp_1',$afp_futuro);  
-			$stmtInsertPlanillas->bindParam(':afp_2',$afp_prevision);
-			$stmtInsertPlanillas->bindParam(':dotaciones',$dotaciones);
-			$stmtInsertPlanillas->bindParam(':liquido_pagable',$liquido_pagable);
-			$stmtInsertPlanillas->bindParam(':procesado_reprocesado',$procesado_reprocesado);			 
-			$flagSuccessIP=$stmtInsertPlanillas->execute();
 
-			//==== update de panillas de  personal mes de aporte patronal 
-			$sqlInsertPlanillaDetalleU="UPDATE planillas_personal_mes_patronal set a_solidario_13000=:a_solidario_13000,a_solidario_25000=:a_solidario_25000,a_solidario_35000=:a_solidario_35000,rc_iva=:rc_iva,
-			atrasos=:atrasos,anticipo=:anticipo,seguro_de_salud=:seguro_de_salud,riesgo_profesional=:riesgo_profesional,
-			provivienda=:provivienda,a_patronal_sol=:a_patronal_sol,total_a_patronal=:total_a_patronal,dotaciones=:dotaciones
-			where cod_planilla=:cod_planilla and cod_personal_cargo=:cod_personal_cargo";
 
-			$stmtInsertPlanillaDetalleU = $dbhIPD->prepare($sqlInsertPlanillaDetalleU);
-			$stmtInsertPlanillaDetalleU->bindParam(':cod_planilla',$cod_planilla);
-			$stmtInsertPlanillaDetalleU->bindParam(':cod_personal_cargo',$codigo_personal);		
-			$stmtInsertPlanillaDetalleU->bindParam(':a_solidario_13000',$aporte_solidario_13000);
-			$stmtInsertPlanillaDetalleU->bindParam(':a_solidario_25000',$aporte_solidario_25000);
-			$stmtInsertPlanillaDetalleU->bindParam(':a_solidario_35000',$aporte_solidario_35000);
-			$stmtInsertPlanillaDetalleU->bindParam(':rc_iva',$RC_IVA);
-			$stmtInsertPlanillaDetalleU->bindParam(':atrasos',$atrasos);
-			$stmtInsertPlanillaDetalleU->bindParam(':anticipo',$anticipo);
-			$stmtInsertPlanillaDetalleU->bindParam(':seguro_de_salud',$seguro_de_salud);
-			$stmtInsertPlanillaDetalleU->bindParam(':riesgo_profesional',$riesgo_profesional);
-			$stmtInsertPlanillaDetalleU->bindParam(':provivienda',$provivienda);
-			$stmtInsertPlanillaDetalleU->bindParam(':a_patronal_sol',$a_patronal_sol);
-			$stmtInsertPlanillaDetalleU->bindParam(':total_a_patronal',$total_a_patronal);
-			$stmtInsertPlanillaDetalleU->bindParam(':dotaciones',$dotaciones);
-			$flagSuccessIPMD=$stmtInsertPlanillaDetalleU->execute();
+
+
+		// }else{
+		// 	//==== update de panillas si personal existe
+		// 	$sqlInsertPlanillas="UPDATE planillas_personal_mes set cod_gradoacademico=:cod_grado_academico,dias_trabajados=:dias_trabajados,
+		// 	horas_pagadas=:horas_pagadas,haber_basico=:haber_basico,bono_academico=:bono_academico,bono_antiguedad=:bono_antiguedad,
+		// 	monto_bonos=:monto_bonos,total_ganado=:total_ganado,monto_descuentos=:monto_descuentos,
+		// 	afp_1=:afp_1,afp_2=:afp_2,dotaciones=:dotaciones,liquido_pagable=:liquido_pagable, procesado_reprocesado=:procesado_reprocesado
+		// 	where cod_planilla=:cod_planilla and cod_personalcargo=:cod_personal_cargo";
+		// 	$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
+		// 	$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
+		// 	$stmtInsertPlanillas->bindParam(':cod_personal_cargo',$codigo_personal);
+		// 	$stmtInsertPlanillas->bindParam(':cod_grado_academico',$cod_gradoacademico);
+		// 	$stmtInsertPlanillas->bindParam(':dias_trabajados',$dias_trabajados_por_defecto);
+		// 	$stmtInsertPlanillas->bindParam(':horas_pagadas',$horas_pagadas);
+		// 	$stmtInsertPlanillas->bindParam(':haber_basico',$haber_basico);
+		// 	$stmtInsertPlanillas->bindParam(':bono_academico',$bono_academico);
+		// 	$stmtInsertPlanillas->bindParam(':bono_antiguedad',$bono_antiguedad);
+		// 	$stmtInsertPlanillas->bindParam(':monto_bonos',$total_bonos);
+		// 	$stmtInsertPlanillas->bindParam(':total_ganado',$total_ganado);
+		// 	$stmtInsertPlanillas->bindParam(':monto_descuentos',$total_descuentos);
+		// 	$stmtInsertPlanillas->bindParam(':afp_1',$afp_futuro);  
+		// 	$stmtInsertPlanillas->bindParam(':afp_2',$afp_prevision);
+		// 	$stmtInsertPlanillas->bindParam(':dotaciones',$dotaciones);
+		// 	$stmtInsertPlanillas->bindParam(':liquido_pagable',$liquido_pagable);
+		// 	$stmtInsertPlanillas->bindParam(':procesado_reprocesado',$procesado_reprocesado);			 
+		// 	$flagSuccessIP=$stmtInsertPlanillas->execute();
+
+		// 	//==== update de panillas de  personal mes de aporte patronal 
+		// 	$sqlInsertPlanillaDetalleU="UPDATE planillas_personal_mes_patronal set a_solidario_13000=:a_solidario_13000,a_solidario_25000=:a_solidario_25000,a_solidario_35000=:a_solidario_35000,rc_iva=:rc_iva,
+		// 	atrasos=:atrasos,anticipo=:anticipo,seguro_de_salud=:seguro_de_salud,riesgo_profesional=:riesgo_profesional,
+		// 	provivienda=:provivienda,a_patronal_sol=:a_patronal_sol,total_a_patronal=:total_a_patronal,dotaciones=:dotaciones
+		// 	where cod_planilla=:cod_planilla and cod_personal_cargo=:cod_personal_cargo";
+
+		// 	$stmtInsertPlanillaDetalleU = $dbhIPD->prepare($sqlInsertPlanillaDetalleU);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':cod_planilla',$cod_planilla);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':cod_personal_cargo',$codigo_personal);		
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':a_solidario_13000',$aporte_solidario_13000);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':a_solidario_25000',$aporte_solidario_25000);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':a_solidario_35000',$aporte_solidario_35000);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':rc_iva',$RC_IVA);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':atrasos',$atrasos);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':anticipo',$anticipo);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':seguro_de_salud',$seguro_de_salud);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':riesgo_profesional',$riesgo_profesional);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':provivienda',$provivienda);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':a_patronal_sol',$a_patronal_sol);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':total_a_patronal',$total_a_patronal);
+		// 	$stmtInsertPlanillaDetalleU->bindParam(':dotaciones',$dotaciones);
+		// 	$flagSuccessIPMD=$stmtInsertPlanillaDetalleU->execute();
 			
-			$sqlDelete="DELETE from planillas_personal_mes where cod_planilla=$cod_planilla and procesado_reprocesado<>2";
-			$stmtDeletePersonal = $dbh->prepare($sqlDelete);			
-			$stmtDeletePersonal->execute();
-		}
+		// 	$sqlDelete="DELETE from planillas_personal_mes where cod_planilla=$cod_planilla and procesado_reprocesado<>2";
+		// 	$stmtDeletePersonal = $dbh->prepare($sqlDelete);			
+		// 	$stmtDeletePersonal->execute();
+		// }
 	}
 }
 
