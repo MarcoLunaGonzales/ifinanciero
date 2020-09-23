@@ -178,6 +178,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
 }
 
 //guardar las ediciones
+$auxServicio=0;
     $fila=0;
 for ($i=1;$i<=$cantidadFilas;$i++){	
   if(isset($_POST["partida_cuenta_id".$i])){      
@@ -200,6 +201,15 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     $data[$fila][16]=$_POST["cod_cuentaBancaria".$i];
     $data[$fila][17]=$_POST["cod_actividadproyecto".$i];
     $data[$fila][18]=$_POST["cod_accproyecto".$i];
+    $data[$fila][19]=$_POST["cod_servicio".$i];
+    $cod_servicio=$_POST["cod_servicio".$i];
+    if(!($cod_servicio==""||$cod_servicio==0)&&$auxServicio==0){
+        $auxServicio=$cod_servicio;
+        $sqlUpdateSol="UPDATE solicitud_recursos SET idServicio=$cod_servicio where codigo=$codSolicitud";
+        $stmtUpdateSol = $dbh->prepare($sqlUpdateSol);
+        $stmtUpdateSol->execute(); 
+      }  
+
     //$dataInsert  
     echo $data[$fila][11];
     $fila++;
@@ -255,6 +265,7 @@ $cab[15]="nro_cuenta_beneficiario";
 $cab[16]="cod_cuentabancaria";
 $cab[17]="cod_actividadproyecto";
 $cab[18]="acc_num";
+$cab[19]="idServicio";
 $solDet=contarSolicitudDetalle($codSolicitud);
 $solDet->bindColumn('total', $contador);
 while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {

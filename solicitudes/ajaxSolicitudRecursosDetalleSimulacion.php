@@ -207,6 +207,10 @@ if(isset($_GET["area"])){
             <a href="#" title="Archivos" id="boton_archivos<?=$idFila;?>" onclick="addArchivos(<?=$idFila;?>);" class="btn btn-default btn-sm btn-fab d-none">
               <i class="material-icons"><?=$iconFile?></i><span id="narch<?=$idFila?>" class="bg-warning"></span>
             </a>
+            <input type="hidden" name="cod_servicio<?=$idFila?>" id="cod_servicio<?=$idFila?>" value=""/>
+            <a  title="Servicio" href="#" class="btn btn-default btn-sm btn-fab" id="boton_servicio<?=$idFila;?>" onclick="agregarServicioDetalleSR(<?=$idFila;?>)">
+                  <i class="material-icons text-dark">flag</i><span id="nserv<?=$idFila?>" class="bg-danger"></span>
+            </a>
             <a  title="Eliminar (alt + q)" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusDetalleSolicitud('<?=$idFila;?>');">
                   <i class="material-icons">remove_circle</i>
             </a>

@@ -9885,4 +9885,28 @@ function enviarCorreoSimple($correo_destino,$asunto,$mensaje){
     $personal = namePersonalCompleto($resultDatos['cod_personal']);
     return array('numero' => $numero,'solicitante'=>$personal);
     }
+
+
+function obtenerServicioCodigoDetalle($codigo){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT idServicio from solicitud_recursosdetalle where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['idServicio'];
+      }
+     return($valor);
+}
+function obtenerDatosServicioCodigo($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT Codigo,Descripcion from servicios where idServicio=$codigo";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $codigoX="";$descripcionX="";                           
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigoX=$row['Codigo'];
+        $descripcionX=$row['Descripcion'];
+    }
+    return array($codigoX,$descripcionX);
+  }    
 ?>

@@ -171,6 +171,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
 
 //guardar las ediciones
     $fila=0;
+    $auxServicio=0;
 for ($i=1;$i<=$cantidadFilas;$i++){	
     if(isset($_POST["habilitar".$i])){ 
 
@@ -194,18 +195,25 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 
       $cod_actividadproyecto=$_POST["cod_actividadproyecto".$i];
       $cod_accproyecto=$_POST["cod_accproyecto".$i];
-
+      $cod_servicio=$_POST["cod_servicio".$i];
 
       $codComprobanteDetalle=obtenerCodigoSolicitudDetalle();
       $sqlDetalle="INSERT INTO solicitud_recursosdetalle (codigo,cod_solicitudrecurso,cod_plancuenta,cod_unidadorganizacional,cod_area,detalle,importe_presupuesto,
         importe,numero_factura,archivo,cod_proveedor,cod_detalleplantilla,cod_servicioauditor,cod_confretencion,cod_tipopagoproveedor,
-        nombre_beneficiario,apellido_beneficiario,nro_cuenta_beneficiario,cod_cuentabancaria,cod_actividadproyecto,acc_num) 
+        nombre_beneficiario,apellido_beneficiario,nro_cuenta_beneficiario,cod_cuentabancaria,cod_actividadproyecto,acc_num,idServicio) 
        VALUES ('$codComprobanteDetalle','$codSolicitud','$cod_plancuenta','$cod_unidadorganizacional','$cod_area','$detalle','$importe_presupuesto','$importe',
         '$numero_factura','$archivo','$cod_proveedor','$cod_detalleplantilla','$cod_servicioauditor','$cod_confretencion','$cod_tipopagoproveedor',
-        '$nombre_beneficiario','$apellido_beneficiario','$nro_cuenta_beneficiario','$cod_cuentabancaria','$cod_actividadproyecto','$cod_accproyecto') ";
+        '$nombre_beneficiario','$apellido_beneficiario','$nro_cuenta_beneficiario','$cod_cuentabancaria','$cod_actividadproyecto','$cod_accproyecto','$cod_servicio') ";
       $stmtDetalle = $dbh->prepare($sqlDetalle);
       $flagSuccessDetalle=$stmtDetalle->execute(); 
-
+      
+      if(!($cod_servicio==""||$cod_servicio==0)&&$auxServicio==0){
+        $auxServicio=$cod_servicio;
+        $sqlUpdateSol="UPDATE solicitud_recursos SET idServicio=$cod_servicio where codigo=$codSolicitud";
+        $stmtUpdateSol = $dbh->prepare($sqlUpdateSol);
+        $stmtUpdateSol->execute(); 
+      }  
+      
        $nF=cantidadF($facturas[$i-1]);
     for($j=0;$j<$nF;$j++){
       $nit=$facturas[$i-1][$j]->nit;

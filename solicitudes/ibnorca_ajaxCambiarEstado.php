@@ -28,7 +28,7 @@ $fechaHoraActual=date("Y-m-d H:i:s");
     //no crear el comprobante
     echo "####none";
   }else{
-    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$iEstado,glosa_estado='' where codigo=$codigo";
+    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado,glosa_estado='' where codigo=$codigo";
     $stmtUpdate = $dbh->prepare($sqlUpdate);
     $flagSuccess=$stmtUpdate->execute();
     //enviar propuestas para la actualizacion de ibnorca
@@ -45,13 +45,13 @@ $fechaHoraActual=date("Y-m-d H:i:s");
          echo "####ok";
     }       
  }else{
-  $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$iEstado where codigo=$codigo";
+  $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado where codigo=$codigo";
     $stmtUpdate = $dbh->prepare($sqlUpdate);
     $flagSuccess=$stmtUpdate->execute();
     //enviar propuestas para la actualizacion de ibnorca
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2708;
-    $idObjeto=$estado; //variable desde get
+    $idObjeto=$iEstado; //variable desde get
     $obs=$_GET['obs']; //$obs="Registro de propuesta";
     if(isset($_GET['u'])){
       $u=$_GET['u'];

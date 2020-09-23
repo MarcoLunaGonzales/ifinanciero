@@ -1,6 +1,6 @@
 <?php 
-/*$direccion='http://ibnored.ibnorca.org/ifinanciero/wsifin/';*/
-$direccion='http://127.0.0.1/ifinanciero/wsifin/';
+$direccion='http://ibnored.ibnorca.org/ifinanciero/wsifin/';
+//$direccion='http://127.0.0.1/ifinanciero/wsifin/';
 $sIde = "libBan";
 $sKey = "89i6u32v7xda12jf96jgi30lh";
 
