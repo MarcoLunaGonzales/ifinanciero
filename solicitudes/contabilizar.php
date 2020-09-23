@@ -20,6 +20,8 @@ $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $fechaHoraActual=date("Y-m-d H:i:s");
 $userAdmin=obtenerValorConfiguracion(74);
 
+
+
 $deven=1;
 $tipoComprobante=3;
 //comprobante devengado o pagado
@@ -602,6 +604,13 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
 /* ACTUALIZAR ESTADOS DE LA SOLICITUD A CONTABILIZADO*/  
 if($flagSuccessCompro==true){
+  $datosSolicitud=obtenerDatosSolicitudRecursos($codigo);
+    $correoPersonal=$datosSolicitud['email_empresa'];
+    $descripcionEstado=obtenerNombreEstadoSol(5);
+    if($correoPersonal!=""){
+      $envioCorreoPersonal=enviarCorreoSimple($correoPersonal,'CAMBIO DE ESTADO - SOLICITUD DE RECURSOS, Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$datosSolicitud['solicitante'].', el sistema IFINANCIERO le notifica que su Solicitud de Recursos cambio del estado <b>'.$datosSolicitud['estado'].'</b> a <b>'.$descripcionEstado.'</b>. <br> Personal que realizo el cambio:'.namePersonalCompleto($globalUser)."<br>Numero de Solicitud:".$datosSolicitud['numero']."<br>Estado Anterior: <b>".$datosSolicitud['estado']."</b><br>Estado Actual: <b>".$descripcionEstado."</b><br><br>Saludos - IFINANCIERO");  
+    }
+
   $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=5,devengado=$deven where codigo=$codigo";
   $stmtUpdate = $dbh->prepare($sqlUpdate);
   $flagSuccess=$stmtUpdate->execute();
@@ -617,11 +626,20 @@ if($flagSuccessCompro==true){
      }else{
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
      }
-  
+    
   if($deven==0){
+    $datosSolicitud=obtenerDatosSolicitudRecursos($codigo);
+    $correoPersonal=$datosSolicitud['email_empresa'];
+    $descripcionEstado=obtenerNombreEstadoSol(8);
+    if($correoPersonal!=""){
+      $envioCorreoPersonal=enviarCorreoSimple($correoPersonal,'CAMBIO DE ESTADO - SOLICITUD DE RECURSOS, Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$datosSolicitud['solicitante'].', el sistema IFINANCIERO le notifica que su Solicitud de Recursos cambio del estado <b>'.$datosSolicitud['estado'].'</b> a <b>'.$descripcionEstado.'</b>. <br> Personal que realizo el cambio:'.namePersonalCompleto($globalUser)."<br>Numero de Solicitud:".$datosSolicitud['numero']."<br>Estado Anterior: <b>".$datosSolicitud['estado']."</b><br>Estado Actual: <b>".$descripcionEstado."</b><br><br>Saludos - IFINANCIERO");  
+    }
+    
     $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=8 where codigo=$codigo";
     $stmtUpdate = $dbh->prepare($sqlUpdate);
     $flagSuccess=$stmtUpdate->execute();
+
+    
   }
   
 }

@@ -16,14 +16,15 @@ $area=$_GET['area'];
 
 ?><option disabled selected value="">--Seleccione--</option><?php   
 //validacion si no retenciones
-$sqlServicios="SELECT IdServicio,Descripcion from servicios where IdOficina=$oficina and IdArea=$area";
+$sqlServicios="SELECT IdServicio,Descripcion,Codigo from servicios where IdOficina=$oficina and IdArea=$area and IdEstado=204";
 $stmt = $dbh->prepare($sqlServicios);
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$codigoX=$row['IdServicio'];
 	$descripcionX=$row['Descripcion'];
+	$codigoDesX=$row['Codigo'];
     ?>
-    <option value="<?=$codigoX?>"><?=$descripcionX?></option>
+    <option value="<?=$codigoX?>"><?=$codigoDesX?> - <?=$descripcionX?></option>
     <?php
 }
 

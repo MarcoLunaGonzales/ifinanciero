@@ -74,7 +74,6 @@ $urmesCurso2="index.php?opcion=mesCurso2";
               </li-->
 <?php
 require_once 'conexion.php';
-require_once 'notificaciones_sistema/PHPMailer/send.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
 

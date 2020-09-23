@@ -25,7 +25,7 @@
 
 <!-- notice modal -->
 <div class="modal fade" id="modalServicioDetalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content card">
       <div class="card-header card-header-primary card-header-text">
           <div class="card-text">
@@ -42,7 +42,7 @@
                 <label class="col-sm-2 col-form-label" style="color: #4a148c;">Servicio</label>
                 <div class="col-sm-10">
                   <div class="form-group">
-                     <select class="selectpicker form-control form-control-sm" name="servicio_detalle_solicitud" id="servicio_detalle_solicitud" data-style="btn btn-primary">                                  
+                     <select class="selectpicker form-control form-control-sm" name="servicio_detalle_solicitud" id="servicio_detalle_solicitud" data-size="6" data-live-search="true" data-style="btn btn-primary">                                  
                         <?php 
                          $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where cod_estadoreferencial=1");
                          $stmt3->execute();

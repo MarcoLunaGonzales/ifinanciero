@@ -18,23 +18,32 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $codigo=$_GET["codigo"];
 $estado=$_GET["estado"];
-
+//iEstado es el estado 3;
+//estado estado 2723;
 $iEstado=obtenerEstadoIfinancieroSolicitudes($estado);
+$datosSolicitud=obtenerDatosSolicitudRecursos($codigo);
+$correoPersonal=$datosSolicitud['email_empresa'];
+$descripcionEstado=obtenerNombreEstadoSol($iEstado);
+if($correoPersonal!=""){
+  $envioCorreoPersonal=enviarCorreoSimple($correoPersonal,'CAMBIO DE ESTADO  - SOLICITUD DE RECURSOS, Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$datosSolicitud['solicitante'].', el sistema IFINANCIERO le notifica que su Solicitud de Recursos cambio del estado <b>'.$datosSolicitud['estado'].'</b> a <b>'.$descripcionEstado.'</b>. <br> Personal que realizo el cambio:'.namePersonalCompleto($globalUser)."<br>Numero de Solicitud:".$datosSolicitud['numero']."<br>Estado Anterior: <b>".$datosSolicitud['estado']."</b><br>Estado Actual: <b>".$descripcionEstado."</b><br><br>Saludos - IFINANCIERO");  
+}
+
+
 $fechaHoraActual=date("Y-m-d H:i:s");
 //////////////////////////////fin cambio estado//////////////////////////777
 
- if($estado=3){
+ if($iEstado=3){
   if(comprobarCuentasPasivasDeSolicitudRecursos($codigo)>0){
     //no crear el comprobante
     echo "####none";
   }else{
-    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado,glosa_estado='' where codigo=$codigo";
+    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$iEstado,glosa_estado='' where codigo=$codigo";
     $stmtUpdate = $dbh->prepare($sqlUpdate);
     $flagSuccess=$stmtUpdate->execute();
     //enviar propuestas para la actualizacion de ibnorca
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2708;
-    $idObjeto=$iEstado; //variable desde get
+    $idObjeto=$estado; //variable desde get
     $obs=$_GET['obs']; //$obs="Registro de propuesta";
     if(isset($_GET['u'])){
       $u=$_GET['u'];
@@ -45,13 +54,13 @@ $fechaHoraActual=date("Y-m-d H:i:s");
          echo "####ok";
     }       
  }else{
-  $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado where codigo=$codigo";
+  $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$iEstado where codigo=$codigo";
     $stmtUpdate = $dbh->prepare($sqlUpdate);
     $flagSuccess=$stmtUpdate->execute();
     //enviar propuestas para la actualizacion de ibnorca
     $fechaHoraActual=date("Y-m-d H:i:s");
     $idTipoObjeto=2708;
-    $idObjeto=$iEstado; //variable desde get
+    $idObjeto=$estado; //variable desde get
     $obs=$_GET['obs']; //$obs="Registro de propuesta";
     if(isset($_GET['u'])){
       $u=$_GET['u'];
