@@ -187,7 +187,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             $codCS=$rowPre['IdClaServicio'];
                                             // $tipoPre=$rowPre['descripcion'];
                                             $cantidadPre=$rowPre['Cantidad'];//cantidad inicial
-                                            $cantidadPre=(int)$cantidadPre;
+                                            $cantidadPre=(double)$cantidadPre;
 
                                             $cantidad_saldo=$cantidadPre;
                                             $cantidad_inicial=$cantidadPre;

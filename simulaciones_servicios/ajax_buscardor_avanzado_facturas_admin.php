@@ -42,8 +42,9 @@ if($fechaBusquedaInicio!="" && $fechaBusquedaFin!=""){
 if($nit_f!="" ){
   $sql.=" and f.nit=$nit_f"; 
 }
-if($nro_f!="" ){
-  $sql.=" and f.nro_factura=$nro_f"; 
+if($nro_f!="" ){  
+  $nro_f=trim($nro_f,",");
+  $sql.=" and f.nro_factura in ($nro_f)"; 
 }
 if($personal_p!=""){  
   $sql.=" and f.cod_personal in ($personal_p)"; 

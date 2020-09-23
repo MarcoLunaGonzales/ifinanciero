@@ -164,7 +164,7 @@
 						             from personal p3 where p3.codigo=ppm.cod_personalcargo) as lug_emision,
 						  		(select p4.lugar_emision_otro from personal p4 where p4.codigo=ppm.cod_personalcargo) as lug_emision_otro,pad.cod_uo,pad.cod_area
 								from planillas_personal_mes ppm,personal_area_distribucion pad
-								where ppm.cod_personalcargo=pad.cod_personal and cod_planilla=$cod_planilla and pad.cod_uo in($cod_uo) and pad.cod_area=$cod_area_x order by paterno";
+								where ppm.cod_personalcargo=pad.cod_personal and cod_planilla=$cod_planilla and pad.cod_uo in($cod_uo) and pad.cod_area=$cod_area_x and pad.cod_estadoreferencial=1  order by paterno";
 
 							$stmtPersonal = $dbh->prepare($sql);
 							$stmtPersonal->execute();	

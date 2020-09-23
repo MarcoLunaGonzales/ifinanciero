@@ -55,7 +55,10 @@ if($razon_social_b!=""){
   $sql.=" and sf.razon_social like '%$razon_social_b%'";  
 }
 if($nro_s!=""){
-  $sql.=" and sf.nro_correlativo = $nro_s";  
+  
+
+  $nro_s=trim($nro_s,",");
+  $sql.=" and sf.nro_correlativo in ($nro_s)";  
 }
 $sql.=" order by sf.codigo desc";
 
