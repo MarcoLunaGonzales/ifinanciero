@@ -1,5 +1,5 @@
 <?php 
-$direccion='http://127.0.0.1:8099/ifinanciero/wsifin/';
+$direccion='http://127.0.0.1/ifinanciero/wsifin/';
 //$direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
 $sIde = "libBan";
 $sKey = "89i6u32v7xda12jf96jgi30lh";
@@ -17,7 +17,7 @@ $sKey = "89i6u32v7xda12jf96jgi30lh";
 
 
 //$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4,"anio"=>2020,"fecha"=>"2020-07-30","monto"=>320.00,"nombre"=>"CHOQUEHUANCA");
-$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4,"anio"=>2020,"monto"=>400);
+$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4,"anio"=>2020);
     //Ej:
 //$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4); 
 
