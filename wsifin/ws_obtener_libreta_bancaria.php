@@ -276,7 +276,7 @@ where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']." and f.cod_estad
 
     $datos['detalle']=$datosDetalle;
     $datos['totalDetalle']=$index;
-    $datosMega[$filaA]=$datos; 
+    //$datosMega[$filaA]=$datos; 
     if($saldoFactura!=0){
      if($codFactura!=null){
        if($index>0){
