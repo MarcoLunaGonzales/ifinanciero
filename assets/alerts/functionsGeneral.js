@@ -4531,6 +4531,12 @@ function minusDetalleSolicitud(idF){
 
        $("#nret"+nuevoId).attr("id","nret"+i);
 
+       $("#cod_servicio"+nuevoId).attr("name","cod_servicio"+i);
+       $("#cod_servicio"+nuevoId).attr("id","cod_servicio"+i);
+       $("#nserv"+nuevoId).attr("id","nserv"+i);
+       $("#boton_servicio"+nuevoId).attr("onclick","agregarServicioDetalleSR('"+i+"')");
+       $("#boton_servicio"+nuevoId).attr("id","boton_servicio"+i);
+
       }
      } 
      itemFacturas.splice((idF-1), 1);
@@ -18412,4 +18418,50 @@ function ajax_mes_de_gestion_reloj(combo){
     }
   }
   ajax.send(null);
+}
+
+
+function agregarServicioDetalleSR(fila){
+  $("#fila_servicio").val(fila);
+  if($("#unidad_fila"+fila).val()>0&&$("#area_fila"+fila).val()>0){
+      var oficina = $("#unidad_fila"+fila).val();
+      var area = $("#area_fila"+fila).val()
+      var parametros={"oficina":oficina,"area":area};
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajax_datos_servicios.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Cargando los servicios..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+          $("#servicio_detalle_solicitud").html(resp);
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos"); 
+
+           $("#servicio_detalle_solicitud").val($("#cod_servicio"+fila).val());
+           $('.selectpicker').selectpicker("refresh");       
+           $("#modalServicioDetalle").modal("show");         
+        }
+      });   
+  }else{
+    Swal.fire("Informativo!", "Debe seleccionar el centro de costo!", "warning");
+  }
+}
+
+function guardarServicioDetalleSolicitud(){
+  var fila = $("#fila_servicio").val();
+
+  if($("#servicio_detalle_solicitud").val()>0){
+  $("#cod_servicio"+fila).val($("#servicio_detalle_solicitud").val());
+  $("#servicio_detalle_solicitud").val("");
+   if(!($("#nserv"+fila).hasClass("estado"))){
+    $("#nserv"+fila).addClass("estado");
+   }
+   $("#modalServicioDetalle").modal("hide");
+  }else{
+   Swal.fire("Informativo!", "Debe llenar los campos requeridos!", "warning"); 
+  }
 }

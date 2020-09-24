@@ -22,6 +22,13 @@ if(isset($_GET["conta"])){
   $urlList2=$urlList4;
 }
 
+$datosSolicitud=obtenerDatosSolicitudRecursos($codigo);
+$correoPersonal=$datosSolicitud['email_empresa'];
+$descripcionEstado=obtenerNombreEstadoSol($estado);
+if($correoPersonal!=""){
+  $envioCorreoPersonal=enviarCorreoSimple($correoPersonal,'CAMBIO DE ESTADO - SOLICITUD DE RECURSOS, Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$datosSolicitud['solicitante'].', el sistema IFINANCIERO le notifica que su Solicitud de Recursos cambio del estado <b>'.$datosSolicitud['estado'].'</b> a <b>'.$descripcionEstado.'</b>. <br> Personal que realizo el cambio:'.namePersonalCompleto($globalUser)."<br>Numero de Solicitud:".$datosSolicitud['numero']."<br>Estado Anterior: <b>".$datosSolicitud['estado']."</b><br>Estado Actual: <b>".$descripcionEstado."</b><br><br>Saludos - IFINANCIERO");  
+}
+
 
 if($estado==10||$estado==11||$estado==12){
   if($estado==12){
@@ -46,7 +53,7 @@ if(obtenerUnidadSolicitanteRecursos($codigo)==3000||obtenerAreaSolicitanteRecurs
     $correos=implode(",",$datoInstancia[0]);
     $nombres=implode(",",$datoInstancia[1]); 
 
-    $datosSolicitud=obtenerDatosSolicitudRecursos($codigo); 
+     
     $envioCorreo=enviarCorreoSimple($correos,'NUEVA SOLICITUD DE RECURSOS PARA EL PROYECTO SIS, Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$nombres.', el sistema IFINANCIERO le notifica que tiene una nueva Solicitud de Recursos para ser aprobada por su persona. <br> Solicitante:'.$datosSolicitud['solicitante']."<br>Numero de Solicitud:".$datosSolicitud['numero']."<br><br>Saludos - IFINANCIERO");
 
    }   

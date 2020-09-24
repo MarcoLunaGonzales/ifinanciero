@@ -1,6 +1,11 @@
   <?php
   require_once 'conexion.php';
   require_once 'conexion_externa.php';
+  //Enviar correo con funcion Enviar
+  require_once 'notificaciones_sistema/PHPMailer/send.php';
+  require_once 'notificaciones_sistema/PHPMailer/PHPMailer/src/Exception.php';
+  require_once 'notificaciones_sistema/PHPMailer/PHPMailer/src/PHPMailer.php';
+  require_once 'notificaciones_sistema/PHPMailer/PHPMailer/src/SMTP.php';
 
   date_default_timezone_set('America/La_Paz');
 
@@ -9846,7 +9851,7 @@ function obtenerCodigoUnidadComprobante($codigo){
 
 function enviarCorreoSimple($correo_destino,$asunto,$mensaje){
   //retornar 2:error de parametros,1:error de envio,0 envio correcto
-  require 'notificaciones_sistema/PHPMailer/send.php';
+  
   $dbh = new Conexion();
   $fechaActual=date("Y-m-d H:m:s");
  if($correo_destino==''||$asunto==''||$mensaje==''){
@@ -9862,7 +9867,7 @@ function enviarCorreoSimple($correo_destino,$asunto,$mensaje){
     $txt_message=$mensaje;
     $mail_subject=$asunto; //el subject del mensaje
 
-    $flag=sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject,$template,0);
+    $flag=sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject,$template,1);
     if($flag!=0){//se envio correctamente
       $sqlInsert="INSERT INTO log_instancias_envios_correo(detalle,fecha,cod_alumno,cod_persona,correo) 
       VALUES ('$asunto','$fechaActual',0,0,'$correo_destino')";
@@ -9877,15 +9882,44 @@ function enviarCorreoSimple($correo_destino,$asunto,$mensaje){
 
  function obtenerDatosSolicitudRecursos($codigo){
     $dbh = new Conexion();
-    $stmtDatos = $dbh->prepare("SELECT numero,cod_personal FROM solicitud_recursos where codigo=$codigo");
+    $stmtDatos = $dbh->prepare("SELECT s.numero,s.cod_personal,e.nombre as estado,p.email_empresa FROM solicitud_recursos s join estados_solicitudrecursos e on e.codigo=s.cod_estadosolicitudrecurso 
+      join personal p on p.codigo=s.cod_personal
+      where s.codigo=$codigo");
     $stmtDatos->execute();
     $resultDatos = $stmtDatos->fetch();    
     $numero = $resultDatos['numero'];
     $cod_personal = $resultDatos['cod_personal'];
+    $estado = $resultDatos['estado'];
+    $correo = $resultDatos['email_empresa'];
     $personal = namePersonalCompleto($resultDatos['cod_personal']);
-    return array('numero' => $numero,'solicitante'=>$personal);
+    return array('numero' => $numero,'solicitante'=>$personal,'cod_personal'=>$cod_personal,'estado'=>$estado,'email_empresa'=>$correo);
     }
-  function insertarMontoNegativoCurso($cod_factura)
+
+
+function obtenerServicioCodigoDetalle($codigo){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT idServicio from solicitud_recursosdetalle where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['idServicio'];
+      }
+     return($valor);
+}
+function obtenerDatosServicioCodigo($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT Codigo,Descripcion from servicios where idServicio=$codigo";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $codigoX="";$descripcionX="";                           
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigoX=$row['Codigo'];
+        $descripcionX=$row['Descripcion'];
+    }
+    return array($codigoX,$descripcionX);
+} 
+
+function insertarMontoNegativoCurso($cod_factura)
   {
     $cod_solicitudFacturacion=obtenerSolicitudFactura($cod_factura);
     $dbh = new Conexion();

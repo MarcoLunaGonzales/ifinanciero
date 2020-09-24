@@ -19,6 +19,56 @@
 <?php }?>
 </select>
 
+
+
+
+
+<!-- notice modal -->
+<div class="modal fade" id="modalServicioDetalle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+      <div class="card-header card-header-primary card-header-text">
+          <div class="card-text">
+            <h5>SERVICIOS DISPONIBLES</h5> 
+          </div>
+          <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+      </div>
+      <input type="hidden" name="fila_servicio" id="fila_servicio"/>
+          <div class="card-body">
+            <div class="col-sm-12">
+              <div class="row">
+                <label class="col-sm-2 col-form-label" style="color: #4a148c;">Servicio</label>
+                <div class="col-sm-10">
+                  <div class="form-group">
+                     <select class="selectpicker form-control form-control-sm" name="servicio_detalle_solicitud" id="servicio_detalle_solicitud" data-size="6" data-live-search="true" data-style="btn btn-primary">                                  
+                        <?php 
+                         $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where cod_estadoreferencial=1");
+                         $stmt3->execute();
+                          while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                           $codigoSel=$rowSel['codigo'];
+                          $nombreSelX=$rowSel['nombre'];
+                          $abrevSelX=$rowSel['abreviaruta'];
+                          ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                          }
+                        ?>
+                    </select>
+                  </div>
+                </div>                       
+              </div>
+                <div class="mensaje"></div>
+             </div>                     
+             <div class="form-group float-right">
+                <button type="button" class="btn btn-warning btn-round" onclick="guardarServicioDetalleSolicitud()">Guardar</button>
+             </div>         
+          </div>
+    </div>
+  </div>
+</div>
+<!-- end notice modal -->
+
+
 <!-- notice modal -->
 <div class="modal fade" id="modalActividadesProyecto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">

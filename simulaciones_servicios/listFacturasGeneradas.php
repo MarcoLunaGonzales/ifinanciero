@@ -188,10 +188,18 @@ $globalPersonal=$_SESSION["globalUser"];
                                 </button>
                                 <div class="dropdown-menu" >
                                   <?php                                
-                                  if(($cod_estadofactura==1)){?>
+                                  if(($cod_estadofactura==1)){
+                                    if($cod_tipopago!=217){
+                                       ?>
                                     <button  rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
                                       <i class="material-icons text-warning" title="Enviar Correo">email</i> Enviar Correo
                                     </button><?php
+                                    }else{
+                                      ?>
+                                    <button  class="dropdown-item">
+                                      <i class="material-icons text-muted" title="Enviar Correo">email</i> Enviar Correo (Desactivado)
+                                    </button><?php
+                                    }  
                                   } 
                                   if($cod_estadofactura!=4){?>  
                                     <a rel="tooltip" class="dropdown-item" href='<?=$urlPrintSolicitud;?>?codigo=<?=$cod_solicitudfacturacion;?>' target="_blank"><i class="material-icons text-primary" title="Imprimir Solicitud Facturación">print</i> Imprimir SF</a>

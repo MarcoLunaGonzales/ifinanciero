@@ -269,15 +269,17 @@ where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']." and f.cod_estad
            /*}else{
             $datosDetalle[$index]['Saldo']=$saldoFactura; 
             $datosDetalle[$index]['DetalleFacturas']=null;
-           }*/  
-           $index++;    
+           }*/ 
+           if($saldoFactura!=0){
+              $index++; 
+           }          
      }
 
 
     $datos['detalle']=$datosDetalle;
     $datos['totalDetalle']=$index;
-    //$datosMega[$filaA]=$datos; 
-    if($saldoFactura!=0){
+    $datosMega[$filaA]=$datos; 
+    //if($saldoFactura!="0.00"){
      if($codFactura!=null){
        if($index>0){
         $datosMega[$filaA]=$datos; 
@@ -287,7 +289,7 @@ where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']." and f.cod_estad
         $datosMega[$filaA]=$datos; 
         $filaA++; 
      }
-    }
+  //  }
     
  }
 

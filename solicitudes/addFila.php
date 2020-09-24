@@ -1,6 +1,7 @@
 <?php
 $cod_actividadproyecto=obtenerCodigoActividadProyecto($codDetalleX);
 $cod_accproyecto=obtenerCodigoAccProyecto($codDetalleX);
+$servicioX=obtenerServicioCodigoDetalle($codDetalleX);
 $des_actividadproyecto="";
 ?>
 <div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
@@ -187,6 +188,11 @@ $des_actividadproyecto="";
                                        }else{
                                          $estadoRet="estado";
                                        }
+                                       if($servicioX==0||$servicioX==""||$servicioX==null){
+                                         $estadoServicio="";
+                                       }else{
+                                         $estadoServicio="estado";
+                                       }
                                        ?>
                                        <a  title="Forma de Pago" href="#" class="btn btn-success btn-sm btn-fab" id="boton_formapago<?=$idFila;?>" onclick="agregarTipoPagoProveedorDetalle(<?=$idFila;?>)">
                                              <i class="material-icons">money</i><span id="nben<?=$idFila?>" class="bg-danger <?=$estadoBen?>"></span>
@@ -202,6 +208,10 @@ $des_actividadproyecto="";
                                             <a href="#" title="Archivos" id="boton_archivos<?=$idFila;?>" onclick="addArchivos(<?=$idFila;?>);" class="btn btn-default btn-sm btn-fab d-none">
                                               <i class="material-icons"><?=$iconFile?></i><span id="narch<?=$idFila?>" class="bg-warning"></span>
                                             </a>
+                                      <input type="hidden" name="cod_servicio<?=$idFila?>" id="cod_servicio<?=$idFila?>" value="<?=$servicioX?>"/>      
+                                      <a  title="Servicio" href="#" class="btn btn-default btn-sm btn-fab" id="boton_servicio<?=$idFila;?>" onclick="agregarServicioDetalleSR(<?=$idFila;?>)">
+                                            <i class="material-icons text-dark">flag</i><span id="nserv<?=$idFila?>" class="bg-danger <?=$estadoServicio?>"></span>
+                                      </a>      
 		                               	  <a  title="Eliminar (alt + q)" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusDetalleSolicitud('<?=$idFila;?>');">
                                            	<i class="material-icons">remove_circle</i>
 	                                       </a>
