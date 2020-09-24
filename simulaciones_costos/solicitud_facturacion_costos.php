@@ -108,27 +108,15 @@ if(isset($_GET['s']))
                       <button type="button" class="btn btn-primary" id="botonBuscarEstudiantes" name="botonBuscarEstudiantes"  title="Buscar" onclick="botonBuscarEstudiantesCapacitacion()">Buscar</button>
                       <?php                                    
                         if(isset($_GET['q'])){?>
-                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$u?>&s=<?=$s?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Ir A Solicitudes de Facturación">keyboard_return</i> IR A SF</a>
+                            <a href='<?=$urlListSol?>&q=<?=$q?>&v=<?=$r?>&u=<?=$u?>&s=<?=$s?>' class="<?=$buttonCancel;?>" title="Ir A Solicitudes de Facturación"><i class="material-icons">keyboard_return</i> IR A SF</a>
                         <?php }else{?>
-                            <a href='<?=$urlListSol?>' class="<?=$buttonCancel;?>"><i class="material-icons"  title="Ir A Solicitudes de Facturación">keyboard_return</i> IR A SF</a>                    
-                        <?php }                     
-                    ?> 
+                            <a href='<?=$urlListSol?>' title="Ir A Solicitudes de Facturación" class="<?=$buttonCancel;?>"><i class="material-icons">keyboard_return</i> IR A SF</a>                    
+                        <?php } ?>                         
+                                                
+                        <button type="button" class="btn btn-info"  title="Facturas Generadas Estudiantes" onclick="botonBuscarFacturasEstudiantes()">Facturas Del Estudiantes</button>
                     </div>
                   </div>
               </div>
           </div>  
     </div>
 </div>
-
-
-<!-- <div class="cargar">
-  <div class="div-loading text-center">
-     <h4 class="text-warning font-weight-bold">Procesando Datos</h4>
-     <p class="text-white">Aguard&aacute; un momento por favor</p>  
-
-
-
-<script type="text/javascript">  
-  $('#modalBuscador').modal('show');
-</script>
-   -->

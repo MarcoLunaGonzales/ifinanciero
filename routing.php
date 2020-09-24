@@ -288,6 +288,9 @@
 		if ($_GET['opcion']=='listFacturasServicios_costos_estudiantes') {
 			require_once('simulaciones_costos/ajax_busqueda_estudiantes.php');
 		}
+		if ($_GET['opcion']=='lista_facturasEstudiantes') {
+			require_once('simulaciones_costos/lista_facturasEstudiantes.php');
+		}
 		if ($_GET['opcion']=='listFacturasServicios_costos_empresas') {
 			require_once('simulaciones_costos/ajax_busqueda_empresas.php');
 		}

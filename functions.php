@@ -7673,7 +7673,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function verificamosFacturaGenerada($codigo){
     $dbh = new Conexion();
-    $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo and cod_estadofactura=1");
+    $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo and cod_estadofactura=2");
     $stmtVerif->execute();
     $valor=0;
     while ($row = $stmtVerif->fetch())    
@@ -9917,5 +9917,40 @@ function obtenerDatosServicioCodigo($codigo){
         $descripcionX=$row['Descripcion'];
     }
     return array($codigoX,$descripcionX);
-  }    
+} 
+
+function insertarMontoNegativoCurso($cod_factura)
+  {
+    $cod_solicitudFacturacion=obtenerSolicitudFactura($cod_factura);
+    $dbh = new Conexion();
+    $sql="SELECT f.tipo_solicitud,f.cod_simulacion_servicio, sfd.cod_claservicio,f.ci_estudiante as ci_2,sfd.cod_curso,sfd.ci_estudiante,sfd.precio from solicitudes_facturacion f, solicitudes_facturaciondetalle sfd where f.codigo=sfd.cod_solicitudfacturacion and f.tipo_solicitud in(2,7) and f.codigo=$cod_solicitudFacturacion";
+    // echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();    
+    $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
+    $stmt->bindColumn('cod_claservicio', $cod_claservicio_x);
+    $stmt->bindColumn('ci_2', $ci_2);
+    $stmt->bindColumn('cod_curso', $cod_curso);
+    $stmt->bindColumn('ci_estudiante', $ci_estudiante);
+    $stmt->bindColumn('precio', $precio_x);
+    $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);    
+    $estado_x=true;                            
+    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+      if($tipo_solicitud==7){
+        $cod_simulacion_servicio=$cod_curso;
+      }
+      if($ci_estudiante==null || $ci_estudiante==""){
+        $ci_estudiante=$ci_2;
+      }
+      $precio_x=$precio_x*(-1);//monto convertimos a negativo;
+      //echo "ci".$ci_estudiante."-Curso".$cod_simulacion_servicio."-modulo".$cod_claservicio_x."-precio".$precio_x."-cod_soli".$cod_solicitudFacturacion;
+      $datos=resgistrar_pago_curso($ci_estudiante,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$cod_solicitudFacturacion);
+      $estado_x=$datos["estado"];
+      $mensaje_x=$datos["mensaje"];  
+      //echo $mensaje_x;
+    }
+    return($estado_x);
+
+  }
+
 ?>
