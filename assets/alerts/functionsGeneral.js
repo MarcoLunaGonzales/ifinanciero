@@ -13645,6 +13645,24 @@ function botonBuscarEstudiantesCapacitacion(){
     location.href=url;     
   }
 }
+function botonBuscarFacturasEstudiantes(){  
+  var valor_ci_cliente=$("#ci").val();
+  if(valor_ci_cliente=="" || valor_ci_cliente==null || valor_ci_cliente==0){
+    document.getElementById("ci").focus();
+    Swal.fire("Informativo!", "Por favor introduzca CI del estudiante.", "warning");
+  }else{
+    var q=$("#q").val();
+    var r=$("#r").val();
+    var u=$("#u").val();
+    var s=$("#s").val();
+    var url='index.php?opcion=lista_facturasEstudiantes&ci='+valor_ci_cliente;
+    if(q!=0){
+      location.href=url+'&q='+q+'&r='+r+'&u='+u+'&s='+s;
+    }else{
+      location.href=url;
+    }  
+  }
+}
 function itemsSeleccionados_capacitacion_estudiantes(){  
   var sumal=0;  
   var total=$("#total_items").val();

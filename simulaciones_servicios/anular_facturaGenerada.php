@@ -8,13 +8,12 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
-$codigos_facturas_x=$_POST['codigo_factura'];//array de facturas
+$codigos_facturas_x=$_POST['codigo_factura'];//codigo de factura
 $observaciones=$_POST['observaciones'];
 $cod_solicitudfacturacion=$_POST['cod_solicitudfacturacion'];
 // $cod_comprobante=$_POST['codigo_comprobante'];
 $estado_factura=$_POST['estado_factura'];//1 normal, 2 devolucion
-$interno_delete=$_POST['interno_delete'];//1 normal, 2 devolucion
-
+$interno_delete=$_POST['interno_delete'];//
 session_start();
 $globalUser=$_SESSION["globalUser"];
 $stmtFActuras = $dbh->prepare("SELECT codigo,fecha_factura,nro_factura,nit,razon_social,cod_comprobante,cod_unidadorganizacional,cod_area from facturas_venta where codigo in ($codigos_facturas_x)");
@@ -27,16 +26,12 @@ $stmtFActuras->bindColumn('razon_social', $rs_factura);
 $stmtFActuras->bindColumn('cod_comprobante', $cod_comprobante); 
 $stmtFActuras->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional); 
 $stmtFActuras->bindColumn('cod_area', $cod_area);
-// $stmtFActuras->bindColumn('cod_solicitudfacturacion', $cod_solicitudfacturacion); 
 $cadenaFacturas="";
 while ($row = $stmtFActuras->fetch()) {
-	$cadenaFacturas.="F ".$nro_factura.", ";
-	// if($estado_factura!=2){
-		$sqlUpdateComprobante="UPDATE comprobantes SET cod_estadocomprobante=2,modified_by=$globalUser,modified_at=NOW() where codigo=$cod_comprobante";
-		$stmtUpdateComprobante = $dbh->prepare($sqlUpdateComprobante);
-		$flagSuccess=$stmtUpdateComprobante->execute();
-		//actualizamos facturas	
-	// }
+	$cadenaFacturas.="F ".$nro_factura.", ";	
+	$sqlUpdateComprobante="UPDATE comprobantes SET cod_estadocomprobante=2,modified_by=$globalUser,modified_at=NOW() where codigo=$cod_comprobante";
+	$stmtUpdateComprobante = $dbh->prepare($sqlUpdateComprobante);
+	$flagSuccess=$stmtUpdateComprobante->execute();		
 }
 $cadenaFacturas=trim($cadenaFacturas,", ");
 if($estado_factura==2){ //tipo devolucion tiene contabilizacion
@@ -59,8 +54,6 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
   	// $codMes= date("m", strtotime($fecha_factura));
   	$codMes= date("m");
 	$codGestion=$_SESSION['globalGestion'];	
-	
-
 	// $numeroComprobante=obtenerCorrelativoComprobante2($tipoComprobante);	
 	$numeroComprobante=numeroCorrelativoComprobante($codGestion,$unidad,$tipoComprobante,$codMes);
 	if($cod_solicitudfacturacion!=-100){
@@ -77,16 +70,7 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 	$concepto_contabilizacion.="/ Detalle: ".$glosa_libreta;
 	$cod_comprobante=obtenerCodigoComprobante();
 	//insertamos cabecera
-	$flagSuccess=insertarCabeceraComprobante($cod_comprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser);	
-
-	// $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante=$cod_comprobante";			
- //    $stmtDelete = $dbh->prepare($sqlDelete);
- //    $stmtDelete->execute();
-
-	// $sqlUpdateCabecera="UPDATE comprobantes set glosa='$concepto_contabilizacion',numero='$numeroComprobante',fecha='$fechaActual',cod_tipocomprobante='$tipoComprobante' where codigo=$cod_comprobante";
- //    $stmtUpdateCAbecera = $dbh->prepare($sqlUpdateCabecera);
- //    $flagSuccess=$stmtUpdateCAbecera->execute();
-
+	$flagSuccess=insertarCabeceraComprobante($cod_comprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser);
 	if($flagSuccess){
 		//listado del detalle tipo pago
 		$monto_tipopago_total=0;
@@ -154,6 +138,8 @@ if($flagSuccess){
 	$stmt = $dbh->prepare($sql);
 	$flagSuccess=$stmt->execute();
 	if($cod_solicitudfacturacion!=-100){
+		//insertamos cursos pagados con monto negativo
+		//$verifica_monto=insertarMontoNegativoCurso($codigos_facturas_x);
 		//volvemos al estado de registro de la sol fac.
 		$sqlUpdate="UPDATE solicitudes_facturacion SET cod_estadosolicitudfacturacion=1,obs_devolucion='$observaciones' where codigo=$cod_solicitudfacturacion";
 		$stmtUpdate = $dbh->prepare($sqlUpdate);
