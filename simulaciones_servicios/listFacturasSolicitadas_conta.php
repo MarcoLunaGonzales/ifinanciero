@@ -202,7 +202,13 @@ $globalAdmin=$_SESSION["globalAdmin"];
                                              <small>Generar</small>
                                           </button>
                                           <div class="dropdown-menu">
-                                            <?php                                                  
+                                            <?php   
+                                            $patron15 = "/[^a-zA-Z0-9]+/";//solo numeros,letras M y m, tildes y la ñ
+                                            $patron1="[\n|\r|\n\r]";
+                                            $razon_social = preg_replace($patron1, ", ", $razon_social);//quitamos salto de linea
+                                            $razon_social = str_replace('"', " ", $razon_social);//quitamos comillas dobles
+                                            $razon_social = str_replace("'", " ", $razon_social);//quitamos comillas simples
+
                                               $cod_tipopago=obtenemosformaPagoSolfact($codigo_facturacion);//fomra pago
                                               $cod_tipopago_deposito_cuenta=obtenerValorConfiguracion(55);
                                               $cod_tipopago_anticipo=obtenerValorConfiguracion(64);

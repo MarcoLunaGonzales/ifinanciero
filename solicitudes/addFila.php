@@ -148,7 +148,7 @@ $des_actividadproyecto="";
                                           </div>
                                        </div> 	
 		                               <div class="col-sm-1">
-		                                 <div class="btn-group">
+		                                 <div class="row">
                                       <input type="hidden" name="cod_cuentaBancaria<?=$idFila?>" id="cod_cuentaBancaria<?=$idFila?>" value="<?=$codCuentaBancaria?>"/>
                                       <input type="hidden" name="cod_tipopago<?=$idFila?>" id="cod_tipopago<?=$idFila?>" value="<?=$codTipoPago?>"/>
                                        <input type="hidden" name="nombre_beneficiario<?=$idFila?>" id="nombre_beneficiario<?=$idFila?>" value="<?=$nombreBen?>"/>
@@ -194,6 +194,7 @@ $des_actividadproyecto="";
                                          $estadoServicio="estado";
                                        }
                                        ?>
+                                     <div class="btn-group col-sm-12">  
                                        <a  title="Forma de Pago" href="#" class="btn btn-success btn-sm btn-fab" id="boton_formapago<?=$idFila;?>" onclick="agregarTipoPagoProveedorDetalle(<?=$idFila;?>)">
                                              <i class="material-icons">money</i><span id="nben<?=$idFila?>" class="bg-danger <?=$estadoBen?>"></span>
                                        </a>
@@ -204,6 +205,8 @@ $des_actividadproyecto="";
 		                                 	<a href="#" title="Facturas" id="boton_fac<?=$idFila;?>" onclick="listFac(<?=$idFila;?>);" class="btn btn-info btn-sm btn-fab">
                                               <i class="material-icons">featured_play_list</i><span id="nfac<?=$idFila;?>" class="count bg-warning">0</span>
                                             </a>
+                                    </div>
+                                   <div class="btn-group col-sm-12" style="top:-15px !important;">        
                                             <!--<span id="archivos_fila<?=$idFila?>" class="d-none"><input type="file" name="archivos<?=$idFila?>[]" id="archivos<?=$idFila?>" multiple="multiple"/></span>-->
                                             <a href="#" title="Archivos" id="boton_archivos<?=$idFila;?>" onclick="addArchivos(<?=$idFila;?>);" class="btn btn-default btn-sm btn-fab d-none">
                                               <i class="material-icons"><?=$iconFile?></i><span id="narch<?=$idFila?>" class="bg-warning"></span>
@@ -215,6 +218,7 @@ $des_actividadproyecto="";
 		                               	  <a  title="Eliminar (alt + q)" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusDetalleSolicitud('<?=$idFila;?>');">
                                            	<i class="material-icons">remove_circle</i>
 	                                       </a>
+                                        </div> 
 	                                     </div>  
 		                               </div>
 
