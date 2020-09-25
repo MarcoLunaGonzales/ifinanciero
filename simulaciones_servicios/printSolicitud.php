@@ -36,6 +36,7 @@ try{
   $dias_credito = $resultInfo['dias_credito'];  
   $persona_contacto = $resultInfo['persona_contacto'];  
   $ci_estudiante = $resultInfo['ci_estudiante'];
+  $correo_contacto_x = $resultInfo['correo_contacto'];
   
   $nombre_unidad=nameUnidad($cod_unidadorganizacional);
   $abrev_area=trim(abrevArea($cod_area),'-');
@@ -285,6 +286,11 @@ $html.=  '<header class="header">'.
                   <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
                   <tr><td>'.mb_strtoupper($observaciones).'.<br>'.mb_strtoupper($observaciones_2).'.<br>'.mb_strtoupper($obs_devolucion).
                   '.</td></tr>
+                </table><br>';
+
+          $html.='<table class="table">
+                  <tr class="td-color-celeste"><td class="text-center"><b>Correo De Contacto Para Envío De Factura</b></td></tr>
+                  <tr><td>'.$correo_contacto_x.'</td></tr>
                 </table><br><br><br>';
           // $cod_tipopago=3;
           //efectivo
