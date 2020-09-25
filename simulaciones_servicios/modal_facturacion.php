@@ -455,8 +455,9 @@
                       ?>
                   </select>
                <input type="date" id="modal_buscar_fecha" min="<?=(int)$_SESSION['globalNombreGestion']?>-01-01" max="<?=(int)$_SESSION['globalNombreGestion']?>-12-31" class="form-control col-sm-2 float-right text-right" value=""/>
-               <input type="text" id="modal_buscar_monto"  class="form-control col-sm-1 float-right" value="" placeholder="Monto"/>                     
-               <input type="text" id="modal_buscar_nombre" class="form-control col-sm-8 float-right" style="margin-top:-30px !important;" value="" placeholder="Descripción"/>
+               
+               <input type="text" id="modal_buscar_nombre" class="form-control row col-sm-5 float-right" style="margin-top:-30px !important;" value="" placeholder="Descripción"/>
+               <input type="text" id="modal_buscar_monto"  class="form-control row col-sm-2 float-right" style="margin-top:-30px !important;" value="" placeholder="Monto"/>                     
       </div>
       <div class="card-body">
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
