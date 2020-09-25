@@ -9925,38 +9925,48 @@ function obtenerDatosServicioCodigo($codigo){
 } 
 
 function insertarMontoNegativoCurso($cod_factura)
-  {
-    $cod_solicitudFacturacion=obtenerSolicitudFactura($cod_factura);
-    $dbh = new Conexion();
-    $sql="SELECT f.tipo_solicitud,f.cod_simulacion_servicio, sfd.cod_claservicio,f.ci_estudiante as ci_2,sfd.cod_curso,sfd.ci_estudiante,sfd.precio from solicitudes_facturacion f, solicitudes_facturaciondetalle sfd where f.codigo=sfd.cod_solicitudfacturacion and f.tipo_solicitud in(2,7) and f.codigo=$cod_solicitudFacturacion";
-    // echo $sql;
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();    
-    $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
-    $stmt->bindColumn('cod_claservicio', $cod_claservicio_x);
-    $stmt->bindColumn('ci_2', $ci_2);
-    $stmt->bindColumn('cod_curso', $cod_curso);
-    $stmt->bindColumn('ci_estudiante', $ci_estudiante);
-    $stmt->bindColumn('precio', $precio_x);
-    $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);    
-    $estado_x=true;                            
-    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-      if($tipo_solicitud==7){
-        $cod_simulacion_servicio=$cod_curso;
-      }
-      if($ci_estudiante==null || $ci_estudiante==""){
-        $ci_estudiante=$ci_2;
-      }
-      $precio_x=$precio_x*(-1);//monto convertimos a negativo;
-      //echo "ci".$ci_estudiante."-Curso".$cod_simulacion_servicio."-modulo".$cod_claservicio_x."-precio".$precio_x."-cod_soli".$cod_solicitudFacturacion;
-      $datos=resgistrar_pago_curso($ci_estudiante,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$cod_solicitudFacturacion);
-      $estado_x=$datos["estado"];
-      $mensaje_x=$datos["mensaje"];  
-      //echo $mensaje_x;
+{
+  $cod_solicitudFacturacion=obtenerSolicitudFactura($cod_factura);
+  $dbh = new Conexion();
+  $sql="SELECT f.tipo_solicitud,f.cod_simulacion_servicio, sfd.cod_claservicio,f.ci_estudiante as ci_2,sfd.cod_curso,sfd.ci_estudiante,sfd.precio from solicitudes_facturacion f, solicitudes_facturaciondetalle sfd where f.codigo=sfd.cod_solicitudfacturacion and f.tipo_solicitud in(2,7) and f.codigo=$cod_solicitudFacturacion";
+  // echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();    
+  $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
+  $stmt->bindColumn('cod_claservicio', $cod_claservicio_x);
+  $stmt->bindColumn('ci_2', $ci_2);
+  $stmt->bindColumn('cod_curso', $cod_curso);
+  $stmt->bindColumn('ci_estudiante', $ci_estudiante);
+  $stmt->bindColumn('precio', $precio_x);
+  $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);    
+  $estado_x=true;                            
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    if($tipo_solicitud==7){
+      $cod_simulacion_servicio=$cod_curso;
     }
-    return($estado_x);
-
+    if($ci_estudiante==null || $ci_estudiante==""){
+      $ci_estudiante=$ci_2;
+    }
+    $precio_x=$precio_x*(-1);//monto convertimos a negativo;
+    //echo "ci".$ci_estudiante."-Curso".$cod_simulacion_servicio."-modulo".$cod_claservicio_x."-precio".$precio_x."-cod_soli".$cod_solicitudFacturacion;
+    $datos=resgistrar_pago_curso($ci_estudiante,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$cod_solicitudFacturacion);
+    $estado_x=$datos["estado"];
+    $mensaje_x=$datos["mensaje"];  
+    //echo $mensaje_x;
   }
+  return($estado_x);
+
+}
+function obtenerCodigoCurso_pagoid($codigo){
+  $dbh = new Conexion();
+  $stmt = $dbh->prepare("SELECT curso_id FROM ibnorcatienda.pago_curso where pago_id=$codigo");
+  $stmt->execute();
+  $valor=0;
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['curso_id'];
+  }
+  return($valor);
+}
 
   function obtenerNumeroReciboCajaChica($codigo){
      $dbh = new Conexion();

@@ -68,6 +68,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
             $stmt->bindColumn('observaciones', $observaciones);
             $stmt->bindColumn('observaciones_2', $observaciones_2);
             $stmt->bindColumn('codigo_alterno', $codigoServicio);
+            $stmt->bindColumn('correo_contacto', $correo_contacto_x);
             
 
 ?>
@@ -189,21 +190,38 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                 </div>
               </div>
               <div class="row">
+                <label class="col-sm-1 col-form-label" style="color:#000000; ">Correo Para Envío De Factura.</label>
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto_x;?>" readonly="true" style="background-color:#E3CEF6;text-align: left"/>
+                    </div>
+                </div>
+            </div>
+              <div class="row">
                 <label class="col-sm-1 col-form-label" style="color:#000000; ">Observaciones 1</label>
-                <div class="col-sm-8">
+                <div class="col-sm-10">
                   <div class="form-group">
                     <input type="text" class="form-control" readonly="true" value="<?=$observaciones?>" style="background-color:#E3CEF6;text-align: left" >
                   </div>
                 </div>                 
               </div>
-              <div class="row">
+
+              <!-- <div class="row">
                 <label class="col-sm-1 col-form-label" style="color:#000000; ">Observaciones 2</label>
                 <div class="col-sm-8">
                   <div class="form-group">
                     <input type="text" class="form-control" readonly="true" value="<?=$observaciones_2?>" style="background-color:#E3CEF6;text-align: left" >
                   </div>
                 </div>                 
-              </div>
+              </div> -->
+              <div class="row">
+                            <label class="col-sm-1 col-form-label" style="color:#000000; ">Concepto para facturación Especial</label>
+                            <div class="col-sm-10">
+                                <div class="form-group">
+                                    <textarea style="background-color:#E3CEF6;text-align: left" class="form-control" type="text" name="observaciones_2" id="observaciones_2" rows="3" readonly="true"><?=$observaciones_2;?></textarea>
+                                </div>
+                            </div>
+                        </div>
 
               <?php
             } ?>
