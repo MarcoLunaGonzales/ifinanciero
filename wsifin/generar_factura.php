@@ -47,9 +47,21 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
         $cod_uo_solicitud = 5;        
         if($normas==0){
             $cod_area_solicitud = 13;//capacitacion
+            foreach ($items as $valor) {
+                $pagoCursoId=$valor['pagoCursoId'];
+            }
+            $curso_id=obtenerCodigoCurso_pagoid($pagoCursoId);
+            if($curso_id==0){
+                $Codigo_alterno="";
+            }else{
+                $Codigo_alterno=obtenerCodigoExternoCurso($curso_id);    
+            }
+            $observaciones = 'Tienda Virtual - Curso: '.$Codigo_alterno.' - RS: '.$razonSocial;
         }else{
             $cod_area_solicitud = 12;//normas
+            $observaciones = 'Tienda Virtual - Venta de Normas - RS: '.$razonSocial;
         }
+
         if($pasarelaId==1){
             $cod_tipoobjeto = 1933;
         }else{
@@ -69,7 +81,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
         $cod_personal = 0;
         $razon_social = $razonSocial;
         $nitCliente = $nitciCliente;
-        $observaciones = 'Tienda virtual - RS: '.$razonSocial;
+        
         $nombre_cliente = $razonSocial;                
         $fechaFactura=$fechaFactura;
         $fecha_actual=date('Y-m-d');
