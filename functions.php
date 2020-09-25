@@ -5378,7 +5378,11 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
  function obtenerCodigoCuentaAuxiliarProveedorClienteCuenta($tipo,$codigo,$cuenta){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_cuenta=$cuenta");
+    $sqlReferencia="";
+    if($codigo==36272){
+      $sqlReferencia="and c.referencia1=".$codigo;
+    }
+     $stmt = $dbh->prepare("SELECT c.codigo from cuentas_auxiliares c where c.cod_proveedorcliente=$codigo and c.cod_tipoauxiliar=$tipo and c.cod_cuenta=$cuenta $sqlReferencia");
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5751,6 +5755,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
          break;
      }
     }
+
     function obtenerEstadoIfinancieroSolicitudesFac($estado){
      switch ($estado) {
        case 2726:
@@ -9953,4 +9958,57 @@ function insertarMontoNegativoCurso($cod_factura)
 
   }
 
+  function obtenerNumeroReciboCajaChica($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT IFNULL(max(nro_recibo)+1,1)as nro_recibo from caja_chicadetalle  where cod_estadoreferencial=1 and cod_cajachica=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['nro_recibo'];
+     }
+     return($valor);
+  }
+function obtenerCodigoReciboCajaChicaDetalle(){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT IFNULL(max(codigo)+1,1)as codigo from caja_chicadetalle");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+     }
+     return($valor);
+  }
+
+function obtenerNumeroDocumentoReciboCajaChica($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT IFNULL(max(nro_documento)+1,1)as nro_documento from caja_chicadetalle  where cod_estadoreferencial=1 and cod_cajachica=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['nro_documento'];
+     }
+     return($valor);
+  }
+function obtenerCantidadTipoPagoCheque($codigo){
+   $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_tipopagoproveedor from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo and cod_tipopagoproveedor=1");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor++;
+      }
+     return($valor);
+}  
+function obtenerEstadoAnteriorEstadoObjeto($tipo,$objeto,$cod_estado){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT e.idEstado
+     FROM ibnorca.estadoobjeto e
+     where e.idtipoobjeto=$tipo and e.idobjeto=$objeto and e.idestadoobjeto<$cod_estado ORDER BY e.fechaestado desc limit 1;");
+     $stmt->execute();
+     $valor="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=obtenerNombreEstadoSol(obtenerEstadoIfinancieroSolicitudes($row["idEstado"]));
+      }
+     return($valor);
+}  
 ?>

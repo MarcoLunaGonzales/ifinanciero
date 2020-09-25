@@ -125,6 +125,7 @@ try {
                     }
                 }                
             }
+            
             //Proceso de la distribucion
             $sqlDel="DELETE FROM distribucion_gastos_caja_chica where cod_cajachica_detalle=$codigo";
             $stmtDel = $dbh->prepare($sqlDel);

@@ -359,9 +359,11 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                   <?php
                 } 
                 ?>
-                <a href="#" onclick="abrirModal('modalListSolSis');moverModal('modalListSolSis');" class="btn btn-default float-right"><small id="cantidad_sis"></small> SIS</a>
-                <a href="#" onclick="abrirModal('modalListSolEliminados');moverModal('modalListSolEliminados');" class="btn btn-danger float-right"><i class="material-icons"><?=$iconDelete;?></i> <small id="cantidad_eliminados"></small> Eliminados</a>
-                <a href="#" onclick="abrirModal('modalListSolHistorial');moverModal('modalListSolHistorial');" class="btn btn-info float-right"><i class="material-icons">history</i> <small id="cantidad_historico"></small> Histórico</a>
+                <div class="btn-group float-right">
+                  <a href="#" onclick="abrirModal('modalListSolHistorial');moverModal('modalListSolHistorial');" class="btn btn-info"><i class="material-icons">history</i> <small id="cantidad_historico"></small> Histórico</a>
+                  <a href="#" onclick="abrirModal('modalListSolEliminados');moverModal('modalListSolEliminados');" class="btn btn-danger"><i class="material-icons"><?=$iconDelete;?></i> <small id="cantidad_eliminados"></small> Eliminados</a>
+                  <a href="#" onclick="abrirModal('modalListSolSis');moverModal('modalListSolSis');" class="btn btn-default"><small id="cantidad_sis"></small> SIS</a>
+                </div>
               </div>      
             </div>
           </div>  
@@ -523,7 +525,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (7,6,4,3,5,2,8)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (7,6,4,3,5,2,8,9)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -602,6 +604,9 @@ $stmt->bindColumn('idServicio', $idServicioX);
                               $btnEstado="btn-info";
                             break;
                             case 8:
+                              $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
+                            break;
+                            case 9:
                               $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
                             break;
                           }

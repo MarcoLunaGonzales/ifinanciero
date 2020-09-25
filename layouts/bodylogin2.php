@@ -746,6 +746,17 @@
              }
            }                  
         }
+        //validacion SERVICIO DETALLE SR
+        for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+           if(parseInt($('#cod_obligar_servicio_registro').val())==1){
+             if($('#cod_servicio'+(i+1)).val()==0||$('#cod_servicio'+(i+1)).val()==""){
+              cont++;
+              mensajeRet="Debe seleccionar un Servicio  en <a href='#' class='btn btn-sm btn-fab btn-default'><i class='material-icons text-dark'>flag</i></a>";
+              break;
+             }     
+           }                  
+        }
+
         if(cont!=0){
            Swal.fire("Informativo!", mensajeRet, "warning"); 
            return false;

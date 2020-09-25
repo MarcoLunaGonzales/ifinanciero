@@ -52,7 +52,7 @@ if(isset($_GET['cod_sim'])){
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (7,6,4,3,5,8) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (7,6,4,3,5,8,9) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -84,7 +84,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                   </div>
                   <h4 class="card-title"><b><?=$moduleNamePlural?> - Aprobación</b></h4>
                   <?php
-                  if(isset($_GET['q'])){
+                   if(isset($_GET['q'])){
                   ?>
                   <select class="selectpicker form-control form-control-sm float-right col-sm-2" name="area_solicitud_lista" id="area_solicitud_lista" data-style="btn btn-rose">
                     <option disabled value="">--Areas--</option>
@@ -151,6 +151,9 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                               $btnEstado="btn-info";
                             break;
                             case 8:
+                              $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
+                            break;
+                            case 9:
                               $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
                             break;
                           }
@@ -244,7 +247,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
 
                            //fin de boton extra de estado
                               
-                              if($codEstado==4||$codEstado==3||$codEstado==5||$codEstado==8){
+                              if($codEstado==4||$codEstado==3||$codEstado==5||$codEstado==8||$codEstado==9){
                             ?>
                             <a title="Imprimir" href='#' onclick="javascript:window.open('<?=$urlImp;?>?sol=<?=$codigo;?>&mon=1')" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconImp;?></i>
