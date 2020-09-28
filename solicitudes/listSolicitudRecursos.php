@@ -43,7 +43,7 @@ if(isset($_GET['cod_sim'])){
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (1)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (1,2,3,6,7,4)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -202,9 +202,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                 <?php 
                             if(isset($_GET['q'])){
                               if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
-                                    <i class="material-icons text-danger">reply</i> Descartar Envío
-                                 </a><?php 
+                                 ?><?php 
                                  }else{
                                    ?>
                                    <!--<a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
@@ -219,9 +217,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                              <?php
                             }else{
                                if($codEstado==4){
-                                 ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
-                                    <i class="material-icons text-danger">reply</i> Descartar Envío
-                                 </a><?php 
+                                 ?><?php 
                                  }else{
                                    ?>
                                    <!--<a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>" class="dropdown-item">
@@ -525,7 +521,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (7,6,4,3,5,2,8,9)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (5,8,9)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
