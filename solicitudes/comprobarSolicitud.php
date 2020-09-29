@@ -352,6 +352,17 @@ if(isset($_GET['cod'])){
       $sqlOficina="";
     }
 
+
+    $stmtAreas = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo $sqlAreas where a.cod_estado=1 order by 2");
+    $stmtAreas->execute();
+    $existeAreas=0;
+    while ($rowAreas = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
+      $existeAreas++;
+    }
+    if($existeAreas==0){
+      $sqlAreas="";
+    }
+
   }
             ?>
             <div class="col-sm-1">
