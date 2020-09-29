@@ -84,13 +84,13 @@ $html.='<table class="table">'.
                                             $level = 'Q'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                                             $frameSize = 1; //marco de qr
                                             // $contenido = $codigoActivoX;
-                                            $contenido = "Cod:".$codigoX."\nRubro:".$nombreRubro."\nDesc:".$activoX."\nRespo.:".$abr_uoX." - ".$nombre_responsableX."\n NC:".$comprobante;
+                                            $contenido = "Cod:".$codigoX."\nRubro:".$nombreRubro."\nDesc:".$activoX."\nRespo.:".$abr_uoX." - ".$nombre_responsableX."\n NC:".$comprobanteX;
                                             //QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                             QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                                             $html.= '<img src="'.$fileName.'"/>';
 
                                         $html.='</td>'.
-                                        '<td style="border: hidden"><small><p align="left">Codigo: '.$codigoActivoX.'<br>Comprobante: '.$nro_coprobante.'</p></small></td>'.
+                                        '<td style="border: hidden"><small><p align="left">Codigo: '.$codigoActivoX.'<br>Comprobante: '.$comprobanteX.'</p></small></td>'.
                                         '<td style="border: hidden"><img src="../assets/img/logo_ibnorca1.fw.png" width="30" /></td>'.
                                         '</tr>'.
                                         '<tr>'.

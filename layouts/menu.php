@@ -406,7 +406,7 @@ if($menuModulo==0){
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=rptactivosfijosxunidad">
                       <span class="sidebar-mini"> RU </span>
-                      <span class="sidebar-normal"> Por Unidad, Area y Responsable</span>
+                      <span class="sidebar-normal"> Por Oficina, Area y Responsable</span>
                     </a>
                 </li>
                 <li class="nav-item ">
