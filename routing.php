@@ -488,6 +488,9 @@
         if ($_GET['opcion']=='listSolicitudRecursosAdminContaMenores') {
 			require_once('solicitudes/listSolicitudRecursosAdminContaMenores.php');
 		}
+		if ($_GET['opcion']=='listSolicitudRecursosAdminRegHistorico') {
+			require_once('solicitudes/listSolicitudRecursosAdminRegHistorico.php');
+		}
 
 		//ESTADOS DE CUENTAS
 		if ($_GET['opcion']=='configuracionEstadosCuenta') {
