@@ -1,4 +1,7 @@
-
+.bg-caja-chica{
+  background-color:#d32f2f !important;
+  color:#37474f;
+}
 /*Para dejar clase despues de presionar tr*/
 .dataTable tbody tr:hover {
        background-color:rgba(70, 67, 67,0.4);/*#D1C0AB !important;*/

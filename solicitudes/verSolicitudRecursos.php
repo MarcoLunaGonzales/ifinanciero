@@ -49,7 +49,7 @@ if(isset($_GET['reg'])){
     $urlList=$urlList5;  
   }
 }
-
+$observacionGlobal="";
 $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as unidad,a.abreviatura as area 
         from solicitud_recursos p,unidades_organizacionales u, areas a,estados_solicitudrecursos e
   where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and e.codigo=p.cod_estadosolicitudrecurso and p.codigo='$codigo' order by codigo");
@@ -67,6 +67,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
             $stmt->bindColumn('cod_simulacion', $codSimulacionX);
             $stmt->bindColumn('cod_proveedor', $codProveedorX);
             $stmt->bindColumn('idServicio', $idServicioX);
+            $stmt->bindColumn('glosa_estado', $glosa_estadoX);
 
 ?>
 <div id="logo_carga" class="logo-carga" style="display:none;"></div>
@@ -91,6 +92,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                                 $codigoServicio=obtenerCodigoServicioPorIdServicio($idServicioX);
                                 $anioSol=strftime('%Y',strtotime($fechaX));
                                 $mesSol=strftime('%m',strtotime($fechaX));
+                                $observacionGlobal=$glosa_estadoX;
                                 ?>
 
                         
@@ -130,6 +132,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 <label class="col-sm-1 col-form-label" style="color:#000000; ">Estado</label>
 <div class="col-sm-1">
   <div class="form-group">
+    <input type="hidden" id="codigo_estado_solicitud" value="<?=$codEstadoX?>">
   	<input type="text" class="form-control" readonly="true" value="<?=$estadoX?>" style="background-color:#E3CEF6;text-align: left" >
   </div>
 </div> 
@@ -150,8 +153,8 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 							<thead>
 								<tr class="text-dark bg-plomo">
 									<th>#</th>
-                  <th>Cod. Servicio</th>
-                  <th>Descripción Servicio</th>
+                  <th>Servicio</th>
+                  <!--<th>Descripción Servicio</th>-->
 									<th>Numero</th>
                   <th class="text-left">Cuenta</th>
                   <th class="text-left">C.C.</th>
@@ -220,7 +223,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                                 <tr>
                                     <td><?=$index?></td>
                                     <td  class="text-left small font-weight-bold"><?=obtenerDatosServicioCodigo($codServicio)[0]?></td>
-                                    <td  class="text-left small"><?=obtenerDatosServicioCodigo($codServicio)[1]?></td>
+                                    <!--<td  class="text-left small"><?=obtenerDatosServicioCodigo($codServicio)[1]?></td>-->
                                 	<td class="text-center small"><?=$numeroCuentaX?></td>
                                     <td class="text-left small font-weight-bold"><?=$nombreCuentaX?></td>
                                     <td class="text-left small font-weight-bold text-primary"><?=$nombreOficinaXX?>-<?=$nombreAreaXX;?></td>
@@ -237,7 +240,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                              }
                         	?>
                         	  <tr class="font-weight-bold bg-white text-dark">
-                        	  	    <td colspan="11" class="text-left">Total</td>
+                        	  	    <td colspan="10" class="text-left">Total</td>
                                     <td class="text-right"><?=number_format($totalImportePres, 2, '.', ',')?></td>
                                     <td class="text-right"><?=number_format($totalImporte, 2, '.', ',')?></td>
                         	  </tr>
@@ -380,6 +383,66 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                       </iframe>
 					</div>	
 					<br>
+          <div class="col-sm-12"><center><h3>HISTORIAL - CAMBIO DE ESTADOS</h3></center></div>
+          <div class="col-sm-12 div-center">
+              <table class="table table-condensed table-bordered">
+                <thead>
+                  <tr class="bg-primary text-white" style="border:none; border: #741899 solid 9px;background:#C10731 !important;border-radius:10px;">
+                    <td>#</td>
+                    <td>DEL ESTADO</td>
+                    <td>AL ESTADO</td>
+                    <td>PERSONAL</td>
+                    <td>FECHA</td> 
+                    <td>OBSERVACIONES</td>  
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                  $observacionGlobal = preg_replace("[\n|\r|\n\r]", ", ", $observacionGlobal);
+                  $glosaArray=explode("####", $observacionGlobal);
+                  $observacionGlobal = str_replace("####", " - ", $observacionGlobal);
+                  
+                  if(isset($glosaArray[1])){
+                      $observacionGlobal= "".$glosaArray[0].""."<u class='text-muted'> ".$glosaArray[1]."</u>";
+                  }
+
+                  $stmtEstado = $dbh->prepare("SELECT e.*,c.Descripcion
+                         FROM ibnorca.estadoobjeto e 
+                         join ibnorca.clasificador c on c.idClasificador=e.idEstado
+                         where e.idtipoobjeto=2708 and e.idobjeto=$codigo ORDER BY e.fechaestado;");
+                  $stmtEstado->execute();
+                  $stmtEstado->bindColumn('IdEstadoObjeto', $idEstadoObjetoX);
+                  $stmtEstado->bindColumn('IdEstado', $idEstadoX);
+                  $stmtEstado->bindColumn('idResponsable', $idResponsableX);
+                  $stmtEstado->bindColumn('FechaEstado', $fechaEstadoX);
+                  $stmtEstado->bindColumn('Descripcion', $observacionesX);
+                  $index=0;
+                  while ($rowEstado = $stmtEstado->fetch(PDO::FETCH_BOUND)) {
+                    $index++;
+                    $responsableX=namePersonal(obtenerPersonaCambioEstado(2708,$codigo,$idEstadoX));
+                    $estadoActualX=obtenerNombreEstadoSol(obtenerEstadoIfinancieroSolicitudes($idEstadoX));
+                    $estadoAnteriorX=obtenerEstadoAnteriorEstadoObjeto(2708,$codigo,$idEstadoObjetoX);
+                    ?>
+                    <tr id="<?=$index?>_fila_estado">
+                      <td><?=$index?></td>
+                      <td class="text-left"><?=$estadoAnteriorX?></td>
+                      <td id="<?=$index?>_nombre_fila_estado" class="text-left font-weight-bold"><?=$estadoActualX?></td>
+                      <td class="text-left font-weight-bold"><?=$responsableX?></td>         
+                      <td><?=strftime('%d/%m/%Y %H:%M:%S',strtotime($fechaEstadoX));?></td>
+                      <td><small><small><?=$observacionGlobal?></small></small></td>
+                    </tr>
+                    <?php
+                  }
+                  ?> 
+                </tbody>
+              </table>
+          </div>  
+          <script>
+            $("#<?=$index?>_fila_estado").addClass("bg-principal text-white");
+            if($("#codigo_estado_solicitud").val()<8){
+              $("#<?=$index?>_nombre_fila_estado").append(" (ACTUAL)");
+            }
+          </script>
 					<br>
 				  	<div class="card-footer fixed-bottom col-sm-12">
 						
@@ -424,6 +487,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
               }  
             }
 						?>
+            
 						<div class="row col-sm-9 float-right">
                     <div class="col-sm-2">
                         <div class="form-group">

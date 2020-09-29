@@ -255,7 +255,7 @@ $tituloImporte="";
             $nombreCuentaX=trim($row['nombre']);
             $datosSeg=obtenerPresupuestoEjecucionDelServicio($codOficinaXX,$codAreaXX,$anioSol,(int)$mesSol,$numeroCuentaX);
             
-            if($datosSeg->presupuesto!=null||$datosSeg->presupuesto!=0){
+            if(!($datosSeg->presupuesto==null||$datosSeg->presupuesto==0||$datosSeg->presupuesto=="")){
                $segPres=$datosSeg->presupuesto;
                $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
             }

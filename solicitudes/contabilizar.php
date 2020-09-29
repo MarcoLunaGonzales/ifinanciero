@@ -498,11 +498,16 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
                    //CREAR CUENTA AUXILIAR SI NO EXISTE 
                    if(obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$codProveedor,$cuentaRetencion)==0){
                      $codEstado="1";
-                     $stmtInsertAux = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente) 
-                     VALUES ('$nomProveedor', $codEstado,$cuentaRetencion, 1, $codProveedor)");
+                     $codReferencia1="0";
+                     if($codProveedor==36272){
+                       $codReferencia1="36272";
+                     }
+                     $stmtInsertAux = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente,referencia1) 
+                     VALUES ('$nomProveedor', $codEstado,$cuentaRetencion, 1, $codProveedor,$codReferencia1)");
                      $stmtInsertAux->execute();
                    }
                    $cuentaAuxiliarProv=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$codProveedor,$cuentaRetencion); 
+
                    $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
                    VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaRetencion', '$debeRet', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaX')";
                    $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
@@ -529,8 +534,12 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
        //CREAR CUENTA AUXILIAR SI NO EXISTE 
           if(obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$codProveedor,$cuentaProv)==0){
             $codEstado="1";
-            $stmtInsertAux = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente) 
-            VALUES ('$nomProveedor', $codEstado,$cuentaProv, 1, $codProveedor)");
+            $codReferencia1="0";
+            if($codProveedor==36272){
+              $codReferencia1="36272";
+            }
+            $stmtInsertAux = $dbh->prepare("INSERT INTO cuentas_auxiliares (nombre, cod_estadoreferencial, cod_cuenta,  cod_tipoauxiliar, cod_proveedorcliente,referencia1) 
+            VALUES ('$nomProveedor', $codEstado,$cuentaProv, 1, $codProveedor,$codReferencia1)");
             $stmtInsertAux->execute();
           }
 
@@ -561,7 +570,8 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             if($deven==0){
               $cuentaProv=obtenerValorConfiguracion(82);
               $cuentaAuxiliarProv=0;
-            }  
+            }
+  
             $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
             $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
             VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaDetalleProv', '$i')";

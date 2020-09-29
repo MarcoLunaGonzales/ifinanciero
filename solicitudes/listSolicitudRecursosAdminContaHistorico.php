@@ -34,7 +34,7 @@ if(isset($_GET['q'])){
 }
 $stmt = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (5,8)) l  
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (5,8,9)) l  
 where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0)  order by l.revisado_contabilidad,l.numero desc");
 // Ejecutamos
 $stmt->execute();
@@ -116,6 +116,9 @@ $item_1=2708;
                               $nEst=55;$barEstado="progress-bar-info";$btnEstado="btn-info";
                             break;
                             case 8:
+                              $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
+                            break;
+                            case 9:
                               $nEst=100;$barEstado="progress-bar-default";$btnEstado="btn-deafult";
                             break;
                           }
@@ -243,6 +246,27 @@ $item_1=2708;
                               </button>
                               <div class="dropdown-menu menu-fixed-sm-table">
                                 <?php
+                                if($codEstado==9){
+                                  $codigoDetalleCajaChica=obtenerCodigosCajaChicaSolicitudRecursos($codigo);
+                                  $sqlCaja="SELECT codigo,cod_cuenta,fecha,DATE_FORMAT(fecha,'%d/%m/%Y')as fecha_x,cod_tipodoccajachica,cod_uo,cod_area,
+                                           (select pc.nombre from plan_cuentas pc where pc.codigo=cod_cuenta) as nombre_cuenta,
+                                           (select td.numero from caja_chica td where td.codigo=cod_cajachica) as nombre_cajachica,
+                                           (select td.abreviatura from configuracion_retenciones td where td.codigo=cod_tipodoccajachica) as nombre_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado,(select c.nombre from af_proveedores c where c.codigo=cod_proveedores)as cod_proveedores,nro_recibo
+                                         from caja_chicadetalle 
+                                         where codigo in ($codigoDetalleCajaChica) and cod_estadoreferencial=1 ORDER BY nro_documento desc";
+                                  $stmtCaja=$dbh->prepare($sqlCaja);
+                                  $stmtCaja->execute();
+                                   while ($rowCaja = $stmtCaja->fetch(PDO::FETCH_ASSOC)) {
+                                     $numeroRecibo=$rowCaja['nro_recibo'];
+                                     $nombre_tipodoccajachica=$rowCaja['nombre_tipodoccajachica'];
+                                     $numeroCaja=$rowCaja['nombre_cajachica'];
+                                     ?><a href="#" target="_blank"  class="dropdown-item">
+                                        <i class="material-icons" style="color:#37474f;">home_work</i> C. CHICA: <?=$nombre_tipodoccajachica?> (<?=$numeroCaja?>)    Recibo:<?=$numeroRecibo?>
+                                       </a>
+                                    <?php 
+                                   }
+                                  
+                                }
                               if(isset($_GET['q'])){
                                 ?><a href="<?=$urlVer;?>?cod=<?=$codigo;?>&admin=2&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>" target="_blank"  class="dropdown-item">
                                     <i class="material-icons text-info">bar_chart</i> Ver Solicitud
@@ -269,7 +293,7 @@ $item_1=2708;
                                     <i class="material-icons text-info">bar_chart</i> Ver Solicitud
                                  </a>
                                  <?php 
-                                if($otrosPagosCuenta>0&&$codEstado!=8){
+                                if($otrosPagosCuenta>0&&($codEstado==5)){
                                  ?>
                                  <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=8')" class="dropdown-item">
                                       <i class="material-icons text-info">dns</i> <b class="text-muted">Cambiar a <u class="text-info">Pagado</u></b>

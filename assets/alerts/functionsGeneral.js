@@ -18465,3 +18465,139 @@ function guardarServicioDetalleSolicitud(){
    Swal.fire("Informativo!", "Debe llenar los campos requeridos!", "warning"); 
   }
 }
+
+function contabilizarSolicitudRecursoModalCajaChica(codigo,tipo,nro,monto,cuentas,url,prov,arry){
+  //var validacion=validarFacturasRetencionesSRAjax(codigo);
+  var validacion=[0,"No hay error"];
+  if(validacion[0]==1){
+    Swal.fire("ERROR!", validacion[1], "warning");
+  }else{
+    var array = arry.split(",");
+    /*if(array.length>0){
+      $("#personal_encargado").val(array[0]);  
+    }else{
+      $("#personal_encargado").val("-1");
+    }*/
+      
+
+    $("#codigo_solicitud_caja").val(codigo);
+    $("#nro_solicitud_contachica").val(nro);
+    $("#monto_nombre_contachica").val(monto);
+    $("#cuenta_contachica").val(cuentas);
+    $("#proveedor_nombre_contachica").val(prov);
+   $("#urlEnvioModalContaChica").val(url);  
+   $("#cod_caja_chica").val("-1");
+   $('.selectpicker').selectpicker('refresh');
+   asignarCajaChijaGastoSR();
+   $("#modalContabilizarSolicitudRecursoCajaChica").modal("show");
+   }
+  }
+
+function asignarCajaChijaGastoSR(){
+  var cod_caja=$("#cod_caja_chica").val();
+  if(cod_caja>0){
+     if(!$("#ncajachica").hasClass("estado")){
+       $("#ncajachica").addClass("estado");
+     }
+     var titulo=$("#cod_caja_chica option:selected").text().toUpperCase();
+     $("#ncajachica").attr("title",titulo);
+     $("#titulo_cajachica").html(titulo);
+  }else{
+     if($("#ncajachica").hasClass("estado")){
+       $("#ncajachica").removeClass("estado");
+     }
+     $("#ncajachica").removeAttr("title");
+     $("#titulo_cajachica").html("");
+  }
+  cargarDetallesSolicitudRecursoModal();
+} 
+function cargarDetallesSolicitudRecursoModal(){
+    var codigo = $("#codigo_solicitud_caja").val();
+    var cod_caja=$("#cod_caja_chica").val();
+    var parametros={"codigo":codigo,"cod_cajachica":cod_caja};
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitudes/ajax_datos_solicitud.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Generando Recibos del Detalle de la Solicitud..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+          $("#modal_contenedor_detalle").html(resp);
+           detectarCargaAjax();
+           $("#texto_ajax_titulo").html("Procesando Datos");         
+        }
+      }); 
+  }
+
+function saveContaSolicitudRecursoModalCajaChica(){
+  var codigo = $("#codigo_solicitud_caja").val();
+  var cod_caja=$("#cod_caja_chica").val();
+  //var cod_personal=$("#cod_personal_modal").val();
+  if(cod_caja==-1){ //||cod_personal==-1
+    Swal.fire("Informativo!", "Debe llenar los campos requeridos!", "warning");     
+  }else{
+    var parametros={"codigo":codigo,"cod_cajachica":cod_caja}; //,"cod_personal":cod_personal
+      $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "solicitudes/ajax_datos_solicitud_save_recibo.php",
+        data: parametros,
+        beforeSend: function () {
+        $("#texto_ajax_titulo").html("Generando Recibos del Detalle de la Solicitud..."); 
+          iniciarCargaAjax();
+        },
+        success:  function (resp) {
+          $("#modal_contenedor_detalle").html(resp);
+           detectarCargaAjax();
+           if(resp.trim()=="1"){
+            Swal.fire("Correcto!", "El proceso se realizó exítosamente!", "success");     
+            actualizarPaginaNuevaP();
+           }else{
+             Swal.fire("Error!", "Se tuvo un problema en el proceso!", "error"); 
+           }    
+        }
+      }); 
+    
+  }
+}
+function asignarCajaChijaGastoSRPersonal(){
+  var cod_personal=$("#cod_personal_modal").val();
+  if(cod_personal>0){
+     if(!$("#ncajachicapersonal").hasClass("estado")){
+       $("#ncajachicapersonal").addClass("estado");
+     }
+  }else{
+     if($("#ncajachicapersonal").hasClass("estado")){
+       $("#ncajachicapersonal").removeClass("estado");
+     }
+  }
+}
+
+function verificarAreaServicioDetalleSolicitud(fila){
+  var tiene = 0;
+
+  var area=$("#area_fila"+fila).val();
+  console.log(area);
+   var parametros={"area":area};
+     $.ajax({
+        async:false,
+        type: "POST",
+        dataType: 'html',
+        url: "ajax_verificar_area_servicio.php",
+        data: parametros,      
+        success:  function (resp) {
+          console.log(resp.trim());
+           if(resp.trim()=="1"){
+            
+            tiene=1;
+           }else{
+            tiene=0;
+           }
+        }
+    });
+
+  return tiene;
+}    

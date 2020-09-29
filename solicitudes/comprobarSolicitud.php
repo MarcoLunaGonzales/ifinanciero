@@ -215,6 +215,7 @@ if(isset($_GET['cod'])){
       <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
       <input type="hidden" name="cod_solicitud" id="cod_solicitud" value="<?=$codigo?>">
       <input type="hidden" name="cod_configuracioniva" id="cod_configuracioniva" value="<?=obtenerValorConfiguracion(35)?>">
+      <input type="hidden" name="cod_obligar_servicio_registro" id="cod_obligar_servicio_registro" value="<?=obtenerValorConfiguracion(86)?>">
       <?php 
       if(isset($_GET['q'])){
         ?><input type="hidden" name="usuario_ibnored" id="usuario_ibnored" value="<?=$q;?>">
@@ -349,6 +350,17 @@ if(isset($_GET['cod'])){
     }
     if($existeOficina==0){
       $sqlOficina="";
+    }
+
+
+    $stmtAreas = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo $sqlAreas where a.cod_estado=1 order by 2");
+    $stmtAreas->execute();
+    $existeAreas=0;
+    while ($rowAreas = $stmtAreas->fetch(PDO::FETCH_ASSOC)) {
+      $existeAreas++;
+    }
+    if($existeAreas==0){
+      $sqlAreas="";
     }
 
   }

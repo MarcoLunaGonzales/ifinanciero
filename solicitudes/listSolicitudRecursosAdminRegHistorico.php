@@ -52,7 +52,7 @@ if(isset($_GET['cod_sim'])){
 // Preparamos
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (6) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3,5,8,9,7,4) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -78,11 +78,11 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
         <div class="row">
             <div class="col-md-12">
               <div class="card">
-                <div style="color:#E2AF0F !important;font-weight:bold !important;" class="card-header card-header-danger card-header-icon" >
-                  <div class="card-icon" style="background:rgb(37, 98, 83) !important;">
-                    <i class="material-icons">content_paste</i>
+                <div class="card-header card-header-primary card-header-icon" >
+                  <div class="card-icon">
+                    <i class="material-icons">history</i>
                   </div>
-                  <h4 class="card-title"><b><?=$moduleNamePlural?> - Aprobación</b></h4>
+                  <h4 class="card-title"><b><b style="color:#732590;">HISTÓRICO SR</b></h4>
                   <?php
                    if(isset($_GET['q'])){
                   ?>
@@ -109,7 +109,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                   <div class="table-responsive">
                     <table class="table table-condesed" id="tablePaginator">
                       <thead>
-                        <tr>
+                        <tr style="background:#732590;color:white;">
                           <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
@@ -450,8 +450,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                   ?><a href="#" target="_blank" class="btn btn-warning float-right"><i class="material-icons">fullscreen</i> Ver Pantalla Completa</a><?php
                 }
 ?>              
-                <a href="#" onclick="abrirModal('modalListSolEliminados');moverModal('modalListSolEliminados');" class="btn btn-danger float-right" style="background:rgb(37, 98, 83) !important; color:#E2AF0F;"><i class="material-icons"><?=$iconDelete;?></i> <small id="cantidad_eliminados"></small> Eliminados</a>
-                <a href="<?=$urlList8?>" target="_blank" class="btn btn-primary float-right"><i class="material-icons">history</i> <small id="cantidad_historico"></small> Histórico</a>
+            
               </div>      
             </div>
           </div>  
@@ -606,9 +605,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 <!--    end small modal -->
 
 <?php
-$stmt = $dbh->prepare("SELECT count(*) as cantidad_historico
-  from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3,5,8,9,7,4) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT count(*) as cantidad_historico from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (5,8)) order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn

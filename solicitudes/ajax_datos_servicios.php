@@ -24,7 +24,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$descripcionX=$row['Descripcion'];
 	$codigoDesX=$row['Codigo'];
     ?>
-    <option value="<?=$codigoX?>"><?=$codigoDesX?> - <?=$descripcionX?></option>
+    <option value="<?=$codigoX?>"><?=$codigoDesX?> - <?=strtoupper($descripcionX)?></option>
     <?php
 }
 
