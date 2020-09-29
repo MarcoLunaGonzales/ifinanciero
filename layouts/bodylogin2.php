@@ -749,7 +749,8 @@
         //validacion SERVICIO DETALLE SR
         for (var i = 0; i < $("#cantidad_filas").val(); i++) {
            if(parseInt($('#cod_obligar_servicio_registro').val())==1){
-             if($('#cod_servicio'+(i+1)).val()==0||$('#cod_servicio'+(i+1)).val()==""){
+            //alert(verificarAreaServicioDetalleSolicitud(i+1));
+             if(($('#cod_servicio'+(i+1)).val()==0||$('#cod_servicio'+(i+1)).val()=="")&&verificarAreaServicioDetalleSolicitud(i+1)==1){
               cont++;
               mensajeRet="Debe seleccionar un Servicio  en <a href='#' class='btn btn-sm btn-fab btn-default'><i class='material-icons text-dark'>flag</i></a>";
               break;

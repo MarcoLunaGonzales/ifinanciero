@@ -144,11 +144,11 @@ $item_1=2708;
                            }
                       $numeroSolTitulo=$numeroSol;
                       $otrosTieneCheque=obtenerCantidadTipoPagoCheque($codigo);
-                       if($otrosTieneCheque==0){
+                       //if($otrosTieneCheque==0){
                         $numeroSolTitulo='<a href="#" title="" class="btn btn-info btn-sm btn-round">'.$numeroSol.'</a>';
-                       }else{
-                        $numeroSolTitulo='<a href="#" title="Solicitud tipo de pago Cheque" class="btn btn-danger btn-sm btn-round">'.$numeroSol.'</a>';
-                       }
+                       //}else{
+                        //$numeroSolTitulo='<a href="#" title="Solicitud tipo de pago Cheque" class="btn btn-danger btn-sm btn-round">'.$numeroSol.'</a>';
+                       //}
 
                        $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);
                        $otrosPagosCuenta=comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo);
@@ -277,19 +277,19 @@ $item_1=2708;
                                     <i class="material-icons text-danger">reply</i> Devolver Solicitud
                                   </a>
                                    <?php 
-                                  if($otrosTieneCheque==0){
+                                  //if($otrosTieneCheque==0){
                                     ?>
                                     <a title="Contabilizar por Caja Chica"  onclick="contabilizarSolicitudRecursoModalCajaChica(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=4&cod=<?=$codigo?>&deven=0','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="dropdown-item">
                                       <i class="material-icons" style="color:#37474f;">home_work</i> Cont. por Caja Chica
                                     </a>
                                     <?php
-                                  }else{
+                                  //}else{
                                     ?>
-                                    <a title="Contabilizar por Caja Chica (CHEQUE)"  onclick="Swal.fire('Informativo!', 'La Solicitud tiene uno o más detalles con el tipo de pago cheque!', 'warning'); return false;" href='#'  class="dropdown-item">
+                                    <!--<a title="Contabilizar por Caja Chica (CHEQUE)"  onclick="Swal.fire('Informativo!', 'La Solicitud tiene uno o más detalles con el tipo de pago cheque!', 'warning'); return false;" href='#'  class="dropdown-item">
                                       <i class="material-icons text-muted">home_work</i> Cont. por Caja Chica <b class="text-danger"> (CHEQUE)</b>
-                                    </a>
+                                    </a>-->
                                     <?php
-                                   }
+                                   //}
                                   }else{
                                   ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
@@ -522,7 +522,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             </div>
           </div>
         </div>
-        <div class="row">
+        <!--<div class="row">
           <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Seleccionar el Personal</small></label> 
            <div class="row col-sm-8">
             <div class="col-sm-12" style="background-color:#f9edf7">
@@ -540,7 +540,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
               </div>
             </div>
            </div>
-        </div>    
+        </div>-->    
         <hr>
         <h4 id="titulo_cajachica" class="text-center text-muted font-weight-bold"></h4>
         <br>

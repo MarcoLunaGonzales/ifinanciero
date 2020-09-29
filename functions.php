@@ -10021,4 +10021,30 @@ function obtenerEstadoAnteriorEstadoObjeto($tipo,$objeto,$cod_estado){
       }
      return($valor);
 }  
+
+function VerificarAreaServicio($codigo){
+     $dbh = new Conexion();
+     $valor=null;
+     $sql="SELECT a.codigo from areas a where a.codigo=$codigo and a.area_servicio=1";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=1;
+    }
+    return $valor;
+  }
+function obtenerCodigosCajaChicaSolicitudRecursos($codigo){
+   $dbh = new Conexion();
+   $codigos=[];
+   $codigos[0]=-100;
+     $sql="SELECT a.cod_cajachicadetalle from solicitud_recursosdetalle a where a.cod_solicitudrecurso=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+       $codigos[$index]=$row['cod_cajachicadetalle'];
+        $index++;
+    }
+    return implode(",", $codigos);
+}  
 ?>

@@ -18535,11 +18535,11 @@ function cargarDetallesSolicitudRecursoModal(){
 function saveContaSolicitudRecursoModalCajaChica(){
   var codigo = $("#codigo_solicitud_caja").val();
   var cod_caja=$("#cod_caja_chica").val();
-  var cod_personal=$("#cod_personal_modal").val();
-  if(cod_caja==-1||cod_personal==-1){
+  //var cod_personal=$("#cod_personal_modal").val();
+  if(cod_caja==-1){ //||cod_personal==-1
     Swal.fire("Informativo!", "Debe llenar los campos requeridos!", "warning");     
   }else{
-    var parametros={"codigo":codigo,"cod_cajachica":cod_caja,"cod_personal":cod_personal};
+    var parametros={"codigo":codigo,"cod_cajachica":cod_caja}; //,"cod_personal":cod_personal
       $.ajax({
         type: "GET",
         dataType: 'html',
@@ -18574,4 +18574,30 @@ function asignarCajaChijaGastoSRPersonal(){
        $("#ncajachicapersonal").removeClass("estado");
      }
   }
+}
+
+function verificarAreaServicioDetalleSolicitud(fila){
+  var tiene = 0;
+
+  var area=$("#area_fila"+fila).val();
+  console.log(area);
+   var parametros={"area":area};
+     $.ajax({
+        async:false,
+        type: "POST",
+        dataType: 'html',
+        url: "ajax_verificar_area_servicio.php",
+        data: parametros,      
+        success:  function (resp) {
+          console.log(resp.trim());
+           if(resp.trim()=="1"){
+            
+            tiene=1;
+           }else{
+            tiene=0;
+           }
+        }
+    });
+
+  return tiene;
 }    

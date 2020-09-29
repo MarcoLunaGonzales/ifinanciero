@@ -153,8 +153,8 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
 							<thead>
 								<tr class="text-dark bg-plomo">
 									<th>#</th>
-                  <th>Cod. Servicio</th>
-                  <th>Descripción Servicio</th>
+                  <th>Servicio</th>
+                  <!--<th>Descripción Servicio</th>-->
 									<th>Numero</th>
                   <th class="text-left">Cuenta</th>
                   <th class="text-left">C.C.</th>
@@ -223,7 +223,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                                 <tr>
                                     <td><?=$index?></td>
                                     <td  class="text-left small font-weight-bold"><?=obtenerDatosServicioCodigo($codServicio)[0]?></td>
-                                    <td  class="text-left small"><?=obtenerDatosServicioCodigo($codServicio)[1]?></td>
+                                    <!--<td  class="text-left small"><?=obtenerDatosServicioCodigo($codServicio)[1]?></td>-->
                                 	<td class="text-center small"><?=$numeroCuentaX?></td>
                                     <td class="text-left small font-weight-bold"><?=$nombreCuentaX?></td>
                                     <td class="text-left small font-weight-bold text-primary"><?=$nombreOficinaXX?>-<?=$nombreAreaXX;?></td>
@@ -240,7 +240,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                              }
                         	?>
                         	  <tr class="font-weight-bold bg-white text-dark">
-                        	  	    <td colspan="11" class="text-left">Total</td>
+                        	  	    <td colspan="10" class="text-left">Total</td>
                                     <td class="text-right"><?=number_format($totalImportePres, 2, '.', ',')?></td>
                                     <td class="text-right"><?=number_format($totalImporte, 2, '.', ',')?></td>
                         	  </tr>

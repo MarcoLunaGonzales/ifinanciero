@@ -1030,13 +1030,13 @@ $item_1=2708;
                                     <i class="material-icons text-danger">reply</i> Devolver Solicitud
                                   </a>
                                    <?php
-                                   if($otrosTieneCheque==0){
+                                   //if($otrosTieneCheque==0){
                                     ?>
-                                    <a title="Contabilizar por Caja Chica"  onclick="contabilizarSolicitudRecursoModalCajaChica(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=4&cod=<?=$codigo?>&deven=0','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="dropdown-item">
+                                    <!--<a title="Contabilizar por Caja Chica"  onclick="contabilizarSolicitudRecursoModalCajaChica(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?admin=4&cod=<?=$codigo?>&deven=0','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="dropdown-item">
                                       <i class="material-icons" style="color:#37474f;">home_work</i> Cont. por Caja Chica
-                                    </a>
+                                    </a>-->
                                     <?php
-                                  }else{
+                                  //}else{
                                   if($otrosPagosCuenta==0){
                                     
                                     ?>
@@ -1059,7 +1059,7 @@ $item_1=2708;
                                     <?php
                                    }
                                     
-                                   }
+                                   //}
 
                                   }else{
                                   ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
@@ -1237,7 +1237,7 @@ $item_1=2708;
             </div>
           </div>
         </div>
-        <div class="row">
+        <!--<div class="row">
           <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Seleccionar el Personal</small></label> 
            <div class="row col-sm-8">
             <div class="col-sm-12" style="background-color:#f9edf7">
@@ -1255,7 +1255,7 @@ $item_1=2708;
               </div>
             </div>
            </div>
-        </div>    
+        </div>-->    
         <hr>
         <h4 id="titulo_cajachica" class="text-center text-muted font-weight-bold"></h4>
         <br>

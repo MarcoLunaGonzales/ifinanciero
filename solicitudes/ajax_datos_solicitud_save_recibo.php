@@ -13,13 +13,14 @@ $globalUser=$_SESSION["globalUser"];
 
 $codigoSolicitud=$_GET['codigo'];
 $codCajaChica=$_GET['cod_cajachica'];
-$codPersonal=$_GET['cod_personal'];
+//$codPersonal=$_GET['cod_personal'];
 $fechaActual=date("d/m/Y");
 
 $fecha=date("Y-m-d");
 $fechaHora=date("Y-m-d H:i:s");
 
 $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigoSolicitud);
+$codPersonal=obtenerPersonalSolicitanteRecursos($codigoSolicitud);
 $numeroRecibo=obtenerNumeroReciboCajaChica($codCajaChica);
 $numeroDocumento=obtenerNumeroDocumentoReciboCajaChica($codCajaChica);
 $index=0;
@@ -68,6 +69,10 @@ $index=0;
       
       $stmtSolicitudDetalle = $dbh->prepare("UPDATE solicitud_recursosdetalle set cod_cajachicadetalle=$codigoDetalle where codigo=$codigoSolicitudDetalle");
       $stmtSolicitudDetalle->execute();
+      
+      $stmtSolicitudFacturas = $dbh->prepare("INSERT INTO facturas_detalle_cajachica (cod_cajachicadetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero) 
+        (SELECT $codigoDetalle as cod_cajachicadetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero  FROM facturas_compra where cod_solicitudrecursodetalle=$codigoSolicitudDetalle)");
+      $stmtSolicitudFacturas->execute();
 
       $index++;
       $numeroRecibo++;
