@@ -181,7 +181,7 @@ $contadorRegistros=0;
                                     <div id="div_contenedor_area">  
                                         <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true"> 
                                             <?php 
-                                            $sqlArea="SELECT codigo,nombre,abreviatura from areas where cod_estado=1 and centro_costos=1 $sqlAreas_x order by nombre";
+                                            $sqlArea="SELECT codigo,nombre,abreviatura from areas where cod_estado=1 and centro_costos=1 $sqlAreas_x or codigo =12 order by nombre";
                                             $stmtArea = $dbh->prepare($sqlArea);
                                             $stmtArea->execute();
                                             while ($rowArea = $stmtArea->fetch()){ ?>
