@@ -126,7 +126,7 @@ if($cod_facturacion>0){//editar
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');    
     // $razon_social=$razon_social;//ya está arriba
-    // $nit = $ci_estudiante;    
+    $nit = $ci_estudiante;    
     $observaciones = $Codigo_alterno." - ".$nombreAlumno;
     $observaciones_2 = null;
     $cod_tipopago=null;

@@ -98,7 +98,7 @@ $razon_social=$result['razon_social'];
                    }
                   ?>
                   <div class="">
-                    <table class="table table-bordered table-condensed" style="width:100%">
+                    <!--<table class="table table-bordered table-condensed" style="width:100%">
                       <thead>
                         <tr style="border:1px solid;">
                                   <th colspan="8" class="text-left csp"><small> <br>Sucursal : <?=$sucursal?></small></th>   
@@ -106,7 +106,7 @@ $razon_social=$result['razon_social'];
                                   <th colspan="7" class="text-left csp"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
                               </tr>
                       </thead>
-                    </table>
+                    </table>-->
 
                         <table id="tablePaginatorReport" class="table table-bordered table-condensed" style="width:100%">
                             <thead> 
@@ -215,14 +215,14 @@ $razon_social=$result['razon_social'];
                                 </tr>
                                 <?php                                  
                               }?>
-                              <tr style="border:2px solid;">                               
+                              <!--<tr style="border:2px solid;">                               
                                   <td class="text-left small csp" colspan="5" style="border:2px solid;">CI:</td>
                                   <td class="text-left small csp" colspan="3" style="border:2px solid;">Nombre del Responsable:</td>
                                   <td class="text-center small"><b>SubTotal:</b></td> 
                                   <td></td>                                 
                                   <td class="text-right small"><?=formatNumberDec($total_importe);?></td>
                                   <td></td>                                      
-                                </tr>
+                                </tr>-->
                             </tbody>
                         </table>
 
