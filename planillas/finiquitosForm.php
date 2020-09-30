@@ -79,7 +79,7 @@ $stmtpersonal->execute();
                       <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar"; else echo "Editar";?>  <?=$nombreSingularfiniquito;?></h4>
                     </div>
                   </div>
-                  <h4 align="center"> Seleccione al personal Retirado Por favor.</h4>
+                  <!-- <h4 align="center"> Seleccione al personal Retirado Por favor.</h4> -->
                   <div class="card-body ">
                     <input type="hidden" name="codigo_contrato" id="codigo_contrato" value="<?=$codigo_contrato?>">
                     <div class="row">

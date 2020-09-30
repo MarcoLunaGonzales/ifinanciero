@@ -17726,9 +17726,9 @@ function botonBuscar_facturas(){
   var nit_f=$("#nit_f").val();
   var nro_f=$("#nro_f").val();
   var personal_p=$("#personal_p").val();
-  // var valor_glosa=$("#glosaBusqueda").val();
+  var cod_factura=$("#cod_factura").val();
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_facturas.php?razon_social_f='+razon_social_f+'&detalle_f='+detalle_f+'&fechaI='+fechaBusquedaInicio+'&fechaF='+fechaBusquedaFin+'&nit_f='+nit_f+'&nro_f='+nro_f+'&personal_p='+personal_p+'&interno='+interno,true);
+  ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_facturas.php?razon_social_f='+razon_social_f+'&detalle_f='+detalle_f+'&fechaI='+fechaBusquedaInicio+'&fechaF='+fechaBusquedaFin+'&nit_f='+nit_f+'&nro_f='+nro_f+'&personal_p='+personal_p+'&interno='+interno+'&cod_factura='+cod_factura,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_facturas_generadas");
