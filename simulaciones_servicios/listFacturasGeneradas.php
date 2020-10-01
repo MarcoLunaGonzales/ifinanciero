@@ -250,7 +250,7 @@ $globalPersonal=$_SESSION["globalUser"];
       <div class="modal-body ">
         <div class="row">        
           <label class="col-sm-6 col-form-label text-center">Razón Social</label> 
-          <label class="col-sm-6 col-form-label text-center">Fechas</label>
+          <label class="col-sm-5 col-form-label text-center">Fechas</label>
         </div> 
         <div class="row">
           <div class="form-group col-sm-6">
@@ -275,13 +275,13 @@ $globalPersonal=$_SESSION["globalUser"];
           <div class="form-group col-sm-3">            
             <input class="form-control input-sm" type="text" name="nit_f" id="nit_f">          
           </div>              
-          <div class="form-group col-sm-2">            
+          <div class="form-group col-sm-3">            
             <input class="form-control input-sm" type="text" name="nro_f" id="nro_f">
           </div>
         </div> 
         <div class="row">                   
-          <label class="col-sm-3 col-form-label text-center">Personal</label> 
-          <div class="form-group col-sm-8">            
+          <label class="col-sm-2 col-form-label text-center">Personal</label>
+          <div class="form-group col-sm-7">            
             <?php
               $sqlUO="SELECT cod_personal from facturas_venta where cod_estadofactura<>2 and cod_personal<>0 GROUP BY cod_personal";
               $stmt = $dbh->prepare($sqlUO);
@@ -297,6 +297,10 @@ $globalPersonal=$_SESSION["globalUser"];
                     <option value="<?=$cod_personal?>" ><?=$nombre_personal?></option><?php 
                   } ?>
                 </select>     
+          </div>
+          <label class="col-sm-1 col-form-label text-center">Cod. Factura</label>
+          <div class="form-group col-sm-2">            
+            <input class="form-control input-sm" type="text" name="cod_factura" id="cod_factura">
           </div>
         </div> 
       </div>
