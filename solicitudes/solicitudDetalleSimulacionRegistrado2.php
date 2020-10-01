@@ -9,6 +9,7 @@
                         $areaXX=$codAreaX;
 						$idFila=1;
 						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;$listaDetalles=[];
+						$desdePropuestas=1;
 					?><div id="detalles_solicitud"><?php
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
 							$cod_plantillauditor="";

@@ -4350,7 +4350,7 @@ function addSolicitudDetalle(obj,tipo) {
   if($("#cod_solicitud").length>0){
     tipoSolicitud=1;
   }
-  if(tipoSolicitud>0){
+  if(tipoSolicitud==1||tipoSolicitud==2||tipoSolicitud==3||tipoSolicitud==4||tipoSolicitud==-1){ //-1 es para tcp tcs
    var codigoSol=$("#cod_solicitud").val();
       numFilas++;
       cantidadItems++;

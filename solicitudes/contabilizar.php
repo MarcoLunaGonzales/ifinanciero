@@ -39,26 +39,6 @@ if(isset($_GET['deven'])){
 $glosaDetalleGeneral="";
 
 
-$codComprobante=obtenerCodigoComprobante();
-if(isset($_GET['existe'])&&verificarEdicionComprobanteUsuario($globalUser)!=0){
-  $codComprobante=$_GET['existe'];  
-}
-
-if(isset($_GET["personal_encargado"])){
- //insertamos la distribucion
-  $sqlDel="DELETE FROM solicitud_recursosencargado where cod_solicitudrecurso=$codigo";
-  $stmtDel = $dbh->prepare($sqlDel);
-  $stmtDel->execute();
-  
-  if($_GET["personal_encargado"]>0){
-  $codEncargado=$_GET["personal_encargado"];
-  $sqlInsert="INSERT INTO solicitud_recursosencargado (cod_solicitudrecurso,cod_personal) 
-        VALUES ('$codigo','$codEncargado')";
-  $stmtInsert = $dbh->prepare($sqlInsert);
-  $stmtInsert->execute();  
-  } 
-}
-
 $fechaHoraActualSitema=date("Y-m-d H:i:s");
 
 //fecha hora actual para el comprobante (SESIONES)
@@ -150,6 +130,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
 //CREACION DEL COMPROBANTE
     if(isset($_GET['existe'])&&verificarEdicionComprobanteUsuario($globalUser)!=0){
+      $codComprobante=$_GET['existe'];   
        $sqlUpdateComprobantes="UPDATE comprobantes SET modified_at='$fechaHoraActualSitema',modified_by=$globalUser where codigo=$codComprobante";
        $stmtUpdateComprobante = $dbh->prepare($sqlUpdateComprobantes);
        $stmtUpdateComprobante->execute();
@@ -165,12 +146,30 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
        }
       
     }else{
+      $codComprobante=obtenerCodigoComprobante();
       $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
       VALUES ('$codComprobante', '1', '$cod_unidadX', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActualSitema', '$globalUser', '$fechaHoraActualSitema', '$globalUser')";
       //echo $sqlInsert;
       $stmtInsert = $dbh->prepare($sqlInsert);
       $flagSuccessComprobante=$stmtInsert->execute();
     }
+
+    if($flagSuccessComprobante==true){
+      if(isset($_GET["personal_encargado"])){
+       //insertamos la distribucion
+        $sqlDel="DELETE FROM solicitud_recursosencargado where cod_solicitudrecurso=$codigo";
+        $stmtDel = $dbh->prepare($sqlDel);
+        $stmtDel->execute();
+  
+        if($_GET["personal_encargado"]>0){
+        $codEncargado=$_GET["personal_encargado"];
+        $sqlInsert="INSERT INTO solicitud_recursosencargado (cod_solicitudrecurso,cod_personal) 
+        VALUES ('$codigo','$codEncargado')";
+        $stmtInsert = $dbh->prepare($sqlInsert);
+        $stmtInsert->execute();  
+        } 
+      }
+
 
     $sqlUpdateSolicitud="UPDATE solicitud_recursos SET cod_comprobante=$codComprobante where codigo=$codigo";
     $stmtUpdateSolicitudRecurso = $dbh->prepare($sqlUpdateSolicitud);
@@ -654,6 +653,9 @@ if($flagSuccessCompro==true){
   
 }
 
+}else{
+  $flagSuccess=false;
+}//fin if($flagSuccessComprobante==true)
 
 //       LINK DE RETORNO ("q" -> DESDE INTRANET)
 if(isset($_GET['q'])){

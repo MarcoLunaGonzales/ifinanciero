@@ -10046,5 +10046,22 @@ function obtenerCodigosCajaChicaSolicitudRecursos($codigo){
         $index++;
     }
     return implode(",", $codigos);
+}
+
+function obtenerDatosDetalleSolicitudRecurso($codigo){
+     $dbh = new Conexion();
+     $sql="SELECT sd.* from solicitud_recursosdetalle sd where sd.codigo=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $cuenta=0;$oficina=0;$area=0;$importe=0;$proveedor=0;$retencion=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+       $cuenta=$row['cod_plancuenta'];
+       $oficina=$row['cod_unidadorganizacional'];
+       $area=$row['cod_area'];
+       $importe=$row['importe'];
+       $proveedor=$row['cod_proveedor'];
+       $retencion=$row['cod_confretencion'];
+    }
+    return array('cod_plancuenta'=>$cuenta,'cod_unidadorganizacional'=>$oficina,'cod_area'=>$area,'importe'=>$importe,'cod_proveedor'=>$proveedor,'cod_confretencion'=>$retencion); 
 }  
 ?>
