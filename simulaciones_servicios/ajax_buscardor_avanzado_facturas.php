@@ -27,6 +27,8 @@ $nit_f=$_GET['nit_f'];
 $nro_f=$_GET['nro_f'];
 $personal_p=$_GET['personal_p'];
 $interno=$_GET['interno'];
+$cod_factura=$_GET['cod_factura'];
+
 
 $sql="SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal
  from facturas_venta f where cod_estadofactura in (1,2,3)";
@@ -48,6 +50,9 @@ if($nro_f!="" ){
 }
 if($personal_p!=""){  
   $sql.=" and f.cod_personal in ($personal_p)"; 
+}
+if($cod_factura!=""){  
+  $sql.=" and f.codigo in ($cod_factura)"; 
 }
 $sql.=" order by f.nro_factura desc;";
 // echo $sql;
