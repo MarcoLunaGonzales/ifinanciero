@@ -35,7 +35,7 @@ if(isset($_GET['q'])){
 $stmt = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (5,8,9)) l  
-where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0)  order by l.revisado_contabilidad,l.numero desc");
+where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0)  order by l.revisado_contabilidad,l.numero desc limit 50");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -61,6 +61,13 @@ $item_1=2708;
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
+
+ <style>
+  #rtablePaginator100NoFidexHead_filter{
+         display: none !important;
+       }      
+</style>
+
 <div class="content">
   <div class="container-fluid">
         <div class="row">
@@ -70,7 +77,11 @@ $item_1=2708;
                   <div class="card-icon">
                     <i class="material-icons">history</i>
                   </div>
-                  <h4 class="card-title"><b><b style="color:#732590;">HISTÓRICO SR CONTABILIDAD</b></h4>
+                  <h4 class="card-title"><b><b style="color:#732590;">HISTÓRICO SR CONTABILIDAD</b>
+                     <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscarSolicitudRecurso">
+                      <i class="material-icons" title="Buscador Avanzado">search</i>
+                    </a>
+                  </h4>
                 </div>
                 <div class="card-body table-responsive">
                      <table class="table table-condesed" id="tablePaginator100NoFidexHead">
@@ -88,7 +99,7 @@ $item_1=2708;
                           <th class="text-right">Actions</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody id="cuerpo_historico">
 <?php
             $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
@@ -498,6 +509,125 @@ $item_1=2708;
       <div class="modal-footer">
         <a href="#" class="btn btn-success" onclick="saveContaSolicitudRecursoModal()">Guardar</a>
         <button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal reenviar solicitud devuelto -->
+
+<!-- modal devolver solicitud -->
+<div class="modal fade" id="modalBuscarSolicitudRecurso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header" id="cabecera_conta" style="background:#732590; !important;color:#fff;">
+        <h4 class="modal-title" id="titulo_conta">Buscar Solicitud Recurso</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> 
+      </div>
+      <div class="modal-body">        
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id=""><small>Nro.<br>Solicitud.</small></span></label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="buscar_nro_solicitud_conta" id="buscar_nro_solicitud_conta" style="background-color:#e2d2e0">              
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id=""><small >Cuentas</small></span></label>
+          <div class="col-sm-8">
+            <div class="form-group" >              
+                <select class="selectpicker form-control form-control-sm" data-live-search="true" title="-- Elija una cuenta --" name="buscar_cuenta[]" id="buscar_cuenta" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true" required>
+                                    <?php
+                                                $cuentaLista=obtenerCuentasListaSolicitud(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+                                              while ($rowCuenta = $cuentaLista->fetch(PDO::FETCH_ASSOC)) {
+                                                $codigoX=$rowCuenta['codigo'];
+                                                $numeroX=$rowCuenta['numero'];
+                                                $nombreX=$rowCuenta['nombre'];
+                                              ?>
+                                              <option value="<?=$codigoX;?>" selected >[<?=$numeroX?>] <?=$nombreX;?></option>  
+                                              <?php
+                                                }
+                                                ?>
+                         </select>
+            </div>
+          </div>
+        </div> 
+        <div class="row">
+                    <div class="col-sm-6">
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Oficina</small></label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                              <select class="selectpicker form-control form-control-sm" name="buscar_unidad_solicitud[]" id="buscar_unidad_solicitud" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+                                      <?php
+                                   $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
+                                   $stmt->execute();
+                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoX=$row['codigo'];
+                                    $nombreX=$row['nombre'];
+                                    $abrevX=$row['abreviatura'];
+                                    ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
+                                       
+                                      }
+                                    ?>
+                                   </select>                           
+                            </div>
+                        </div>
+                   </div>
+                     </div>
+                    <div class="col-sm-6">
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Area</small></label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                                <select class="selectpicker form-control form-control-sm" name="buscar_area_solicitud[]" id="buscar_area_solicitud" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+                                     <?php
+                                                             
+                                           $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo where a.cod_estado=1 order by 2");
+                                         $stmt->execute();
+                                         $cont=0;
+                                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                           $codigoX=$row['codigo'];
+                                           $nombreX=$row['nombre'];
+                                           $abrevX=$row['abreviatura'];
+                                           ?><option selected value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
+                                            
+                                         } 
+                                         ?>
+                                        </select>
+                            </div>
+                        </div>
+                    </div>
+              </div>
+                  </div><!--div row-->
+                
+        <div class="row">
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Solicitante</small></label>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#f9edf7">
+            <div class="form-group" >              
+              <select class="selectpicker form-control form-control-sm" name="buscar_personal[]" id="buscar_personal" data-live-search="true" data-style="select-with-transition" data-size="4" multiple data-actions-box="true" required>  
+               <?php
+             $stmt = $dbh->prepare("SELECT distinct s.cod_personal,UPPER(CONCAT(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno)) as nombre from solicitud_recursos s
+join personal p on p.codigo=s.cod_personal
+where s.cod_estadoreferencial<>2 order by 2;");
+            $stmt->execute();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+              $codigoX=$row['cod_personal'];
+              $nombreX=$row['nombre'];
+            ?>
+            <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option> 
+            <?php
+               }
+               ?>
+            </select>
+            </div>
+          </div>
+        </div>        
+      </div>
+      <br>  
+      <div class="modal-footer">
+        <a href="#" class="btn btn-success" style="background:#732590 !important;" onclick="buscarSolicitudesDeRecursosHistorial()"><i class="material-icons">search</i> BUSCAR SOLICITUDES</a>
+        <!--<button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>-->
       </div>
     </div>
   </div>

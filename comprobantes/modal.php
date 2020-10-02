@@ -437,6 +437,7 @@
   </div>
 </div>
 <!--    end small modal -->
+
 <!-- Classic Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-notice" style="max-width: 90% !important;">

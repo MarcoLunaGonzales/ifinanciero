@@ -18601,3 +18601,23 @@ function verificarAreaServicioDetalleSolicitud(fila){
 
   return tiene;
 }    
+
+function buscarSolicitudesDeRecursosHistorial(){
+  var numero=$("#buscar_nro_solicitud_conta").val();
+  var cuentas=$("#buscar_cuenta").val(); 
+  var oficinas=$("#buscar_unidad_solicitud").val(); 
+  var areas=$("#buscar_area_solicitud").val(); 
+  var personal=$("#buscar_personal").val();
+  
+  var parametros={"numero":numero,"cuentas":cuentas,"oficinas":oficinas,"areas":areas,"personal":personal};
+     $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "solicitudes/ajax_historico.php",
+        data: parametros,      
+        success:  function (resp) {
+          $("#cuerpo_historico").html(resp);
+          $("#modalBuscarSolicitudRecurso").modal("hide");
+        }
+    });
+}
