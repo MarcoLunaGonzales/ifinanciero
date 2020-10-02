@@ -29,6 +29,7 @@ $codigo_detalle=$_GET['codigo_detalle'];
                         $unidadSol=$codUnidadX;
                         $areaSol=$codAreaX;
 						$idFila=1;
+            $desdePropuestas=1;
                        ?><script>numFilas=0;cantidadItems=0;itemFacturas=[];</script><?php
 						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;
 
@@ -60,8 +61,18 @@ $codigo_detalle=$_GET['codigo_detalle'];
                             
 							
 							$entro=0;
+                            $sumaImportePres=0;$sumaImportePropuesta=0;$entro2=0;
                             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
-                            	$entro=1; 							   
+                                $sumaImportePres=$rowDetalles['importe_presupuesto'];
+                                $sumaImportePropuesta+=$rowDetalles['importe'];
+                                $entro2=1;
+                            }
+                            if($entro2==1){
+                              if($sumaImportePropuesta<$sumaImportePres){
+                                 $importeSolX=$sumaImportePres-$sumaImportePropuesta;
+                              }else{
+                                $entro=1;
+                              }
                             }
 							$numeroCuentaX=trim($row['numero']);
 							$nombreCuentaX=trim($row['nombre']);

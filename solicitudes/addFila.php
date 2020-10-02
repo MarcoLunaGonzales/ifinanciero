@@ -24,9 +24,9 @@ $des_actividadproyecto="";
                                     if($codigoX==$unidadXX){
                                        ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                     }else{
-                                      //if($tipoSolicitud==4){
+                                     //if(!isset($desdePropuestas)){
                                         ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                     // }
+                                     //}
                                     }
                                   }
                                     ?>
@@ -48,9 +48,9 @@ $des_actividadproyecto="";
                                            if($codigoX==$areaXX){
                                             ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                            }else{
-                                             //if($tipoSolicitud==4){
+                                             if(!isset($desdePropuestas)){
                                                ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                             //}
+                                             }
                                             }
                                          } 
                                          ?>
@@ -82,9 +82,16 @@ $des_actividadproyecto="";
                                                 $codigoX=$rowCuenta['codigo'];
                                                 $numeroX=$rowCuenta['numero'];
                                                 $nombreX=$rowCuenta['nombre'];
-                                              ?>
-                                              <option value="<?=$codigoX;?>" <?=($codigoX==$codCuentaX)?"selected":"";?> >[<?=$numeroX?>] <?=$nombreX;?></option>  
-                                              <?php
+                                                if ($codigoX==$codCuentaX) {
+                                                  ?>
+                                                    <option value="<?=$codigoX;?>" selected>[<?=$numeroX?>] <?=$nombreX;?></option>  
+                                                  <?php    
+                                                }else{
+                                                  if(!isset($desdePropuestas)){
+                                                  ?><option value="<?=$codigoX;?>">[<?=$numeroX?>] <?=$nombreX;?></option><?php
+                                                  }  
+                                                }
+                                              
                                                 }
                                                 ?>
                                             </select>
