@@ -62,7 +62,8 @@
 							?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
                             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
                                $cuentasCodigos[$conta]=$rowDetalles["codigo"];	
-                               $codDetalleX=$rowDetalles["codigo"];	
+                               $codDetalleX=$rowDetalles["codigo"];
+                               $codCuentaX=$rowDetalles['cod_plancuenta'];	
                                $detalleX=$rowDetalles["detalle"];
                                $importeX=$rowDetalles["importe_presupuesto"];
 							   $importeSolX=$rowDetalles["importe"];

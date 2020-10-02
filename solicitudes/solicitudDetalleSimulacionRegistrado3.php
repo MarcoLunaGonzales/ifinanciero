@@ -64,6 +64,7 @@
                             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
                                $unidadXX=$rowDetalles['cod_unidadorganizacional'];
 							   $areaXX=$rowDetalles['cod_area'];
+							   $codCuentaX=$rowDetalles['cod_plancuenta'];
                                $cuentasCodigos[$conta]=$rowDetalles["codigo"];	
                                $codDetalleX=$rowDetalles["codigo"];	
                                $detalleX=$rowDetalles["detalle"];
