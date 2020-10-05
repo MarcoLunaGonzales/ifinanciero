@@ -16,8 +16,8 @@ $sKey = "89i6u32v7xda12jf96jgi30lh";
 // nombre -> texto (Busca en la descripcion y en informacion complementaria del detalle)
 
 
-//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4,"anio"=>2020,"fecha"=>"2020-07-30","monto"=>320.00,"nombre"=>"CHOQUEHUANCA");
-$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4,"anio"=>2020);
+$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4,"anio"=>null,"fecha"=>null,"monto"=>null,"nombre"=>null);
+//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4,"anio"=>2020);
     //Ej:
 //$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>4); 
 

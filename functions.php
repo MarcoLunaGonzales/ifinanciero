@@ -10064,4 +10064,26 @@ function obtenerDatosDetalleSolicitudRecurso($codigo){
     }
     return array('cod_plancuenta'=>$cuenta,'cod_unidadorganizacional'=>$oficina,'cod_area'=>$area,'importe'=>$importe,'cod_proveedor'=>$proveedor,'cod_confretencion'=>$retencion); 
 }  
+
+function obtenerCodigoUnidadComprobanteDetalle($codigo){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT cod_unidadorganizacional FROM comprobantes_detalle WHERE codigo  = '$codigo'");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+          $valor=$row['cod_unidadorganizacional'];
+      }  
+      return($valor);
+} 
+
+function obtenerCodigoAreaComprobanteDetalle($codigo){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT cod_area FROM comprobantes_detalle WHERE codigo  = '$codigo'");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+          $valor=$row['cod_area'];
+      }  
+      return($valor);
+}
 ?>

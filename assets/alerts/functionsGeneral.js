@@ -7475,6 +7475,14 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
   }
 }
 
+function ponerCentroCostoComprobanteDetalle(oficina,area){
+  var fila=$("#estFila").val();
+  if($("#unidad"+fila).length>0){
+    $("#unidad"+fila).val(oficina);
+    $("#area"+fila).val(area);
+    $('.selectpicker').selectpicker("refresh");          
+  } 
+}
 
 function listarEstadosCuentasCredito(id,saldo){
    var rsaldo = parseFloat(saldo);

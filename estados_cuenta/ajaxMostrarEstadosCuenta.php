@@ -81,7 +81,8 @@ if($codCuentaAuxiliar!=0){
     $glosaAuxiliar=$row['glosa_auxiliar'];
     $codigoComprobante=$row['codigocomprobante'];
     $nombreComprobante=nombreComprobante($codigoComprobante);
-    
+    $codOficinaDetalle=obtenerCodigoUnidadComprobanteDetalle($row['cod_comprobantedetalle']);
+    $codAreaDetalle=obtenerCodigoAreaComprobanteDetalle($row['cod_comprobantedetalle']);
     $glosaMostrar="";
     if($glosaAuxiliar!=""){
       $glosaMostrar=$glosaAuxiliar;
@@ -166,7 +167,7 @@ if($codCuentaAuxiliar!=0){
               if( $cerrarEstadoCuenta==1 ){
                 if($codCuentaAuxiliar!=0){
             ?>
-              <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
+              <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="ponerCentroCostoComprobanteDetalle(<?=$codOficinaDetalle?>,<?=$codAreaDetalle?>);agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
             <?php        
                 }else{
                   $codigoCuentaAux=$codCuentaAuxX;
@@ -175,7 +176,7 @@ if($codCuentaAuxiliar!=0){
                   $numeroCuenta=obtieneNumeroCuenta($codigoCuenta);
                   $nombreCuenta=nameCuenta($codigoCuenta);
             ?>
-              <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="setBusquedaCuenta('<?=$codigoCuenta?>','<?=$numeroCuenta?>','<?=$nombreCuenta?>','<?=$codigoCuentaAux?>','<?=$nombreCuentaAux?>');agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
+              <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="setBusquedaCuenta('<?=$codigoCuenta?>','<?=$numeroCuenta?>','<?=$nombreCuenta?>','<?=$codigoCuentaAux?>','<?=$nombreCuentaAux?>');ponerCentroCostoComprobanteDetalle(<?=$codOficinaDetalle?>,<?=$codAreaDetalle?>);agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
             <?php      
                 }
               }

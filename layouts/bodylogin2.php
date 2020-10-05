@@ -752,7 +752,7 @@
             //alert(verificarAreaServicioDetalleSolicitud(i+1));
              if(($('#cod_servicio'+(i+1)).val()==0||$('#cod_servicio'+(i+1)).val()=="")&&verificarAreaServicioDetalleSolicitud(i+1)==1){
               cont++;
-              mensajeRet="Debe seleccionar un Servicio  en <a href='#' class='btn btn-sm btn-fab btn-default'><i class='material-icons text-dark'>flag</i></a>";
+              mensajeRet="Debe seleccionar un Servicio  Relacionado al Gasto en <a href='#' class='btn btn-sm btn-fab btn-default'><i class='material-icons text-dark'>flag</i></a>";
               break;
              }     
            }                  

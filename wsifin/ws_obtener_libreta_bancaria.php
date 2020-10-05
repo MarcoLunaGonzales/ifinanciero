@@ -270,9 +270,9 @@ where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']." and f.cod_estad
             $datosDetalle[$index]['Saldo']=$saldoFactura; 
             $datosDetalle[$index]['DetalleFacturas']=null;
            }*/ 
-           //if($saldoFactura!=0){
+           if($saldoFactura!=0){
               $index++; 
-           //}          
+           }          
      }
 
 
