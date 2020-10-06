@@ -8579,7 +8579,9 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
 
     function contador_facturas_cajachica($codigo){
       $dbh = new Conexion();
-      $sql="SELECT codigo from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo";    
+      $cod_retencion_factura=obtenerValorConfiguracion(53);
+      $sql="SELECT fc.codigo from facturas_detalle_cajachica fc, caja_chicadetalle cd where fc.cod_cajachicadetalle=cd.codigo and cod_tipodoccajachica=$cod_retencion_factura and fc.cod_cajachicadetalle=$codigo";
+      // $sql="SELECT codigo from facturas_detalle_cajachica where cod_cajachicadetalle=$codigo";    
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
       $valor=0;
@@ -9509,12 +9511,12 @@ function obtenerEstadoComprobante($codigo){
     $string_valor=$contadorRentencion."#####@@@@@".$stringRetenciones;
     return $string_valor;
   }
-function validacion_fechafactura_comprobante($cod_cajachica,$globalmes){
+function validacion_fechafactura_comprobante($cod_cajachica,$globalmes,$globalgestion){
 
     $dbh = new Conexion();
     $cod_retencion=obtenerValorConfiguracion(53);//-sum(f.exento)-sum(f.tasa_cero)-sum(f.ice)
-      $sqlVerifRetencion="SELECT ccd.nro_documento FROM caja_chica cc,caja_chicadetalle ccd,facturas_detalle_cajachica f WHERE cc.codigo=ccd.cod_cajachica and ccd.codigo=f.cod_cajachicadetalle and cc.codigo=$cod_cajachica and MONTH(f.fecha) <> $globalmes ";
-      // echo $sqlVerifRetencion;
+    //$sqlVerifRetencion="SELECT ccd.nro_documento FROM caja_chica cc,caja_chicadetalle ccd,facturas_detalle_cajachica f WHERE cc.codigo=ccd.cod_cajachica and ccd.codigo=f.cod_cajachicadetalle and cc.codigo=$cod_cajachica and MONTH(f.fecha) <> $globalmes and YEAR(f.fecha) <> $globalgestion ";
+    $sqlVerifRetencion="SELECT ccd.nro_documento FROM caja_chica cc,caja_chicadetalle ccd,facturas_detalle_cajachica f WHERE cc.codigo=ccd.cod_cajachica and ccd.codigo=f.cod_cajachicadetalle and ccd.cod_tipodoccajachica=8 and cc.codigo=$cod_cajachica and (MONTH(f.fecha) <> $globalmes or YEAR(f.fecha) <> $globalgestion)";
     $stmtVerifRetencion = $dbh->prepare($sqlVerifRetencion);
     $stmtVerifRetencion->execute();
     $contadorRentencion=0;

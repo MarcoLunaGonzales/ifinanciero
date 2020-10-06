@@ -12,6 +12,7 @@ set_time_limit(3000);
 session_start();
 $globalUser=$_SESSION["globalUser"];
 $globalMes=$_SESSION['globalMes'];
+$globalNombreGestion_x=$_SESSION["globalNombreGestion"];
 $cod_cajachica = $_GET["cod_cajachica"];//codigoactivofijo
 try{
 	//comprobamos si el comprobante ya se generó
@@ -45,7 +46,7 @@ try{
 		        </script>
 		    	<?php				
 			}else{
-				$string_validacion_fechafactura=validacion_fechafactura_comprobante($cod_cajachica,$globalMes);
+				$string_validacion_fechafactura=validacion_fechafactura_comprobante($cod_cajachica,$globalMes,$globalNombreGestion_x);
 		    	$array_validacion_ff=explode('#####@@@@@', $string_validacion_fechafactura);
 				$contadorff=$array_validacion_ff[0];
 				$stringFF_obs=$array_validacion_ff[1];

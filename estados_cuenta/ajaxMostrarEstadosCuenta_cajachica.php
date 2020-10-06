@@ -21,6 +21,14 @@ $fechaActual=date("d/m/Y");
 $codCuenta=$_GET['cod_cuenta'];
 $tipo=$_GET['tipo'];
 $mes=$_GET['mes'];
+
+//desde aqui datos para el buscador
+$datos=$_GET['datos'];//llegan los datos para el filtro
+$array_datos=explode("#####@@@@@", $datos);
+$anio_busqueda=$array_datos[0];
+$fecha_busqueda=$array_datos[1];
+$glosa_buscar=$array_datos[2];
+
 if(isset($_GET['monto_cajachica'])){
   $monto_cajachica=$_GET['monto_cajachica'];
   $codigo_cajachica=$_GET['codigo_cajachica'];
@@ -49,7 +57,29 @@ if(isset($_GET['monto_cajachica'])){
 	</thead>
 	<tbody id="tabla_estadocuenta">
   <?php
-    $stmt = $dbh->prepare("SELECT e.*,e.codigo as codigo_ec,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_comprobante FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0  order by e.fecha");
+    $sql="SELECT e.*,e.codigo as codigo_ec,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_comprobante FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 ";
+
+    if($anio_busqueda!="" && $anio_busqueda!=0 ){
+      $sql.=" and YEAR(e.fecha) = $anio_busqueda"; 
+    }
+
+    if($fecha_busqueda!="" ){
+      $sql.=" and e.fecha like '%$fecha_busqueda%'"; 
+    }
+
+    if($glosa_buscar!="" ){
+      $sql.=" and d.glosa like '%$glosa_buscar%'"; 
+    }
+
+    // if($monto_buscar!="" ){
+    //   $sql.=" and f.nit=$nit_f"; 
+    // }
+
+    $sql.=" order by e.fecha";
+
+    // echo $sql;
+
+    $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $i=0;$saldo=0;
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -151,7 +181,8 @@ if(isset($_GET['monto_cajachica'])){
           <td class="text-center small"><?=$nombreTipoComprobante;?></td>
           <td class="text-left small"><?=$fechaComprobante;?></td>
           <td class="text-left small"><?=$fechaX;?></td>
-          <td class="text-left"><?=$proveedorX?></td><td class="text-left"><?=$glosaX?></td>
+          <td class="text-left"><?=$proveedorX?></td>
+          <td class="text-left"><?=$glosaX?></td>
           <td class="text-right"><?=number_format($credito_padre, 2, '.', ',')?></td>
           <td class="text-right"><?=number_format($montoX, 2, '.', ',')?></td>
           

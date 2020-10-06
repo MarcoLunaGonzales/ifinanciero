@@ -21,14 +21,14 @@ if($_POST["numero_rango"]!="" || $_POST["numero_rango"]!=0){
 	$porcionesnumero_rango = explode("-", $_POST["numero_rango"]);
 	$numero_inicio=$porcionesnumero_rango[0];
 	$numero_fin=$porcionesnumero_rango[1];
-	$sql_rangonumero=" and f.nro_factura BETWEEN $numero_inicio and  $numero_fin";
+	$sql_rangonumero=" and f.nro_factura >= $numero_inicio and f.nro_factura <= $numero_fin";
 }else{
 	$sql_rangonumero="";
 }
 
 $sql="SELECT f.codigo,f.cod_estadofactura
 FROM facturas_venta f 
-WHERE f.cod_unidadorganizacional in ($stringUnidadesX) and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura not in (2,4) $sql_rangonumero  ORDER BY f.nro_factura asc";
+WHERE f.cod_unidadorganizacional in ($stringUnidadesX) and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura not in (2,4) $sql_rangonumero ORDER BY f.nro_factura asc";
 // echo $sql;
 $stmt2 = $dbh->prepare($sql);
 $stmt2->execute();

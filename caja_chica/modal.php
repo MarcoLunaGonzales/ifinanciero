@@ -52,48 +52,57 @@
 <div class="modal fade modal-primary" id="modalEstadosCuentas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content card">
-      <div class="card-header card-header-danger card-header-icon">
-        <div class="card-icon">
-          <i class="material-icons text-dark">ballot</i>
+      <div class="card-header card-header-primary card-header-icon">
+        <div class="card-text">
+          <h4>Estados de cuenta</h4>      
         </div>
-        <h4 class="card-title">Estados de cuenta</h4>
+        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+            <i class="material-icons">close</i>
+          </button>
+
+          <label for="" class="float-right">|</label>
+          <a title="Buscar Estados de Cuenta " href="#" onclick="buscarestadosCuenta_cajachica()" class="btn btn-info btn-sm btn-fab float-right">
+            <i class="material-icons">search</i>
+          </a>
+          <label for="" class="float-right">|</label>
+          <select class="selectpicker form-control form-control-sm col-sm-1 float-right" name="modal_anio_actual" id="modal_anio_actual" data-style="btn btn-default text-dark" onchange="cambiarValorAnioFechaBuscar()">
+            <option disabled value="">--Filtrar Año--</option>
+            <option value="0">Todo</option>
+            <?php 
+              for ($ann=(int)$_SESSION['globalNombreGestion']; $ann >=((int)$_SESSION['globalNombreGestion']-5); $ann--) { 
+                if($ann==(int)$_SESSION['globalNombreGestion']){
+                ?><option value="<?=$ann?>" selected><?=$ann?></option>
+                   <?php 
+                }else{
+                  ?><option value="<?=$ann?>"><?=$ann?></option>
+                   <?php
+                }
+              } ?>
+          </select>           
+          <input type="date" id="modal_buscar_fecha" min="<?=(int)$_SESSION['globalNombreGestion']?>-01-01" max="<?=(int)$_SESSION['globalNombreGestion']?>-12-31" class="form-control col-sm-2 float-right text-right" value=""/><br>
+          <input type="text" id="modal_buscar_nombre" class="form-control row col-sm-5 float-right"  value="" placeholder="Descripción"/>
+               <!-- <input type="text" id="modal_buscar_monto"  class="form-control row col-sm-2 float-right"  value="" placeholder="Monto"/>   -->
       </div>
       <div class="card-body">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-        <i class="material-icons">close</i>
-      </button>
-      <!--<input class="form-control" type="text" name="est_codcuenta" id="est_codcuenta"/>
-      <input class="form-control" type="text" name="est_codcuentaaux" id="est_codcuentaaux"/>-->
-      <input class="form-control" type="hidden" name="estFila" id="estFila"/>
-      <!-- <input class="form-control" type="hidden" name="cuentas_formu" id="cuentas_formu"/> -->
-      <!-- <script>
-        var cod_cuenta_form1=$("#cuenta_auto_id").val();        
-        alert(cod_cuenta_form1);
-      </script> -->  
-      <div class="card-title"><center><h6>Datos de la nueva transaccion</h6></center></div>
+                              
+      <input class="form-control" type="hidden" name="estFila" id="estFila"/>      
+      <input class="form-control" type="hidden" name="controlar_seleccion" id="controlar_seleccion" value="0"/>
+      <!-- <div class="card-title"><center><h6>Datos de la nueva transaccion</h6></center></div> -->
         <div class="row">
           <label class="col-sm-2 col-form-label">Monto</label>
           <div class="col-sm-3">
             <div class="form-group">
               <input class="form-control" type="number" step="0.001" readonly name="monto_estadocuenta" id="monto_estadocuenta"/>
-            
             </div>
           </div>
         </div>
         <div class="row" id="div_cuentasorigen">
               <label class="col-sm-2 col-form-label">Cuenta Origen</label>
-              <div class="col-sm-10">
-                <div class="form-group">
-                  <!-- <?php
-                   // $codigo_cuenta_form="<script> document.write(cod_cuenta_form); </script>";
-                  $codigo_cuenta_form="<script> document.write(cod_cuenta_form); </script>";
-                   ?> -->
-                 <select class="selectpicker form-control form-control-sm" onchange="verEstadosCuentasCred_cc()" name="cuentas_origen" id="cuentas_origen" data-style="<?=$comboColor;?>">
-                   <!-- <option disabled selected value=""><?=$codigo_cuenta_form?></option> -->
+              <div class="col-sm-5">
+                <div class="form-group">                 
+                 <select class="selectpicker form-control form-control-sm" onchange="verEstadosCuentasCred_cc()" name="cuentas_origen" id="cuentas_origen" data-style="<?=$comboColor;?>">                   
                    <option disabled selected value="">Seleccione una Cuenta</option>
                    <?php
-                   
-                   // echo $codigo_cuenta_form;
 
                     $stmt = $dbh->prepare("SELECT p.* FROM plan_cuentas p, configuracion_estadocuentas c where c.cod_plancuenta=p.codigo and c.tipo=2 and c.cod_cuentaaux=0 order by codigo");
                     $stmt->execute();
@@ -127,13 +136,13 @@
         <br>
         <div id="div_estadocuentas"></div>
           <div id="mensaje_estadoscuenta"></div>
-            <div class="form-group float-right">
+            <div class="form-group float-right">              
               <button type="button" class="btn btn-info btn-round" onclick="agregarEstadoCuenta_cajachica()">Agregar</button>
               <button type="button" class="btn btn-danger btn-round" onclick="quitarEstadoCuenta_cajachica()">Quitar</button>
             </div>
           </div>
         </div>  
-  </div>
+      </div>
 </div>
 <!--    end small modal -->
 
