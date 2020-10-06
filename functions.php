@@ -10086,4 +10086,40 @@ function obtenerCodigoAreaComprobanteDetalle($codigo){
       }  
       return($valor);
 }
+
+function obtenerDivisionCodigoDetalle($codigo){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_divisionpago from solicitud_recursosdetalle where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_divisionpago'];
+      }
+     return($valor);
+}
+
+function VerificarCuentaDivisionPago($codigo){
+     $dbh = new Conexion();
+     $valor=0;
+     $sql="SELECT a.division_porcentaje from solicitud_recursoscuentas a where a.cod_cuenta=$codigo and a.division_porcentaje=1";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=1;
+    }
+    return $valor;
+  }
+
+
+function obtenerNombreDivisionPago($codigo){
+    $dbh = new Conexion();
+    // Preparamos
+  $stmt = $dbh->prepare("SELECT c.nombre from solicitud_recursosdivisionpago c where c.codigo='$codigo'");
+  $stmt->execute();
+  $valor="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['nombre'];
+  }         
+  return $valor; 
+}
 ?>

@@ -39,7 +39,7 @@ $urlListCC2="index.php?opcion=listPlanCuentasSolicitudesRecursos";
 $urlDeleteRestart="index.php?opcion=deleteSolicitudRecursosRestart";
 $urlCambiarPasivo="index.php?opcion=cambiarPasivoCuentaSol";
 $urlSavePasivo="solicitudes/savePasivo.php";
-
+$urlCambiarDivision="solicitudes/saveDivision.php";
 $urlConta="solicitudes/contabilizar.php";
 $urlEncargado="solicitudes/encargado.php";
 $urlRegisterCompro="comprobantes/register.php";

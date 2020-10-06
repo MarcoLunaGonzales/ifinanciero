@@ -63,7 +63,7 @@ $item_1=2708;
 </div>
 
  <style>
-  #rtablePaginator100NoFidexHead_filter{
+  #tablePaginator100NoFidexHead_filter{
          display: none !important;
        }      
 </style>

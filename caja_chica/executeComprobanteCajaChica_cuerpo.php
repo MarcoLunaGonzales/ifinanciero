@@ -337,6 +337,19 @@
 		                while ($row_cuentaAux = $stmtContraCuentaAux->fetch()){
 		                	$cod_cuentaaux_x = $row_cuentaAux['cod_cuentaaux']; 
 		                }
+
+		                //ACTUALIZAR ESTADO DE SR PAGADO CON CAJA CHICA
+                        if(!($cod_comprobantedetalleorigen==""||$cod_comprobantedetalleorigen==0)){
+		                   $stmtSolicitudRecursoCodigo = $dbh->prepare("SELECT cod_solicitudrecurso from solicitud_recursosdetalle where cod_estadocuenta=$cod_comprobantedetalleorigen");
+		                   $stmtSolicitudRecursoCodigo->execute();
+		                   $cod_sr_x=0;
+		                   while ($row_sr_codigo = $stmtSolicitudRecursoCodigo->fetch(PDO::FETCH_ASSOC)){
+		                   	   $cod_sr_x = $row_sr_codigo['cod_cuentaaux']; 
+		                   }
+                           $stmtSolicitud = $dbh->prepare("UPDATE solicitud_recursos set cod_estadosolicitudrecurso=9 where codigo=$cod_sr_x");
+                           $stmtSolicitud->execute();  	
+                        } 
+
 	                    //buscamos el nombre y el numero de la contra cuenta                    
 	                    $descripcionIT=$nombre_uo.'/'.$nombre_area.' '.$proveedor.' SF, '.$observaciones_dcc;
 	                    if($debe_haber==1){ //debe=1

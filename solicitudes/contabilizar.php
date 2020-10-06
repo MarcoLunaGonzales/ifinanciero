@@ -267,12 +267,13 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
         if($rowNuevo['cod_confretencion']==0){
           if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
             //detalle comprobante SIN RETENCION ///////////////////////////////////////////////////////////////
-            $sumaDevengado=$debe;
-            $codComprobanteDetalle=obtenerCodigoComprobanteDetalle(); 
-            $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-            VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
-            $stmtDetalle = $dbh->prepare($sqlDetalle);
-            $flagSuccessDetalle=$stmtDetalle->execute();  
+                 $sumaDevengado=$debe;
+                 $codComprobanteDetalle=obtenerCodigoComprobanteDetalle(); 
+                 $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+                 VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+                 $stmtDetalle = $dbh->prepare($sqlDetalle);
+                 $flagSuccessDetalle=$stmtDetalle->execute();    
+             
           }else{
             //distribuir gastos
              include "distribucionComprobanteDevengado.php";
@@ -450,11 +451,12 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
 
           //INSERTAR CUENTA DE GASTO  
            if(verificarListaDistribucionGastoSolicitudRecurso($codigo)==0){
-              $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-              $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-              VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
-              $stmtDetalle = $dbh->prepare($sqlDetalle);
-              $flagSuccessDetalle=$stmtDetalle->execute();
+                 $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+                 $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+                 VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$i')";
+                 $stmtDetalle = $dbh->prepare($sqlDetalle);
+                 $flagSuccessDetalle=$stmtDetalle->execute();    
+
            }else{
               include "distribucionComprobanteDevengado.php";
            }           
@@ -571,27 +573,59 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
               $cuentaAuxiliarProv=0;
             }
   
-            $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-            $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-            VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaDetalleProv', '$i')";
-            $stmtDetalle = $dbh->prepare($sqlDetalle);
-            $flagSuccessDetalle=$stmtDetalle->execute();
-            print_r($sqlDetalle); 
-            $codProveedorEstado=$codProveedor;
-        
-            if($deven==1){
+            $codigoDivision=obtenerDivisionCodigoDetalle($codSolicitudDetalleOrigen);
+            if($codigoDivision!=0&&($deven==1)){
+                 $sqlDivisionPago="SELECT porcentaje from solicitud_recursosdivisionpago_detalle where cod_divisionpago=$codigoDivision";
+                 $stmtDivisionPago = $dbh->prepare($sqlDivisionPago);
+                 $stmtDivisionPago->execute();
+                 while ($rowDivision = $stmtDivisionPago->fetch(PDO::FETCH_ASSOC)) {
+                  $porcentajeDivision=$rowDivision['porcentaje'];
+                  $glosaDetalleDivision=$glosaDetalleProv." (".$porcentajeDivision." %)";
+                  $haberDivision=$haberProv*($porcentajeDivision/100);
+                  $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+                  $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+                  VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberDivision', '$glosaDetalleDivision', '$i')";
+                  $stmtDetalle = $dbh->prepare($sqlDetalle);
+                  $flagSuccessDetalle=$stmtDetalle->execute();
+                  
+                  print_r($sqlDetalle); 
+                  $codProveedorEstado=$codProveedor;
+                  if($deven==1){
+                    //estado de cuentas devengado
+                    $codEstadoCuenta=obtenerCodigoEstadosCuenta();
+                    $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
+                    VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaProv', '$haberDivision', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaDetalleDivision')";
+                    $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
+                    $stmtDetalleEstadoCuenta->execute();             
+                    //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
+                    $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_estadocuenta='$codEstadoCuenta',glosa_comprobantedetalle='$glosaDetalleDivision' where codigo='$codSolicitudDetalleOrigen'";
+                    $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
+                    $stmtUpdateSolicitudRecursoDetalle->execute();
+                  }
+                 }//fin de while division
 
-              //estado de cuentas devengado
-              $codEstadoCuenta=obtenerCodigoEstadosCuenta();
-              $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
-              VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaProv', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaDetalleProv')";
-              $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
-              $stmtDetalleEstadoCuenta->execute();             
-              //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
-              $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_estadocuenta='$codEstadoCuenta',glosa_comprobantedetalle='$glosaDetalleProv' where codigo='$codSolicitudDetalleOrigen'";
-              $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
-              $stmtUpdateSolicitudRecursoDetalle->execute();
-             }
+            }else{
+               $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+               $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+               VALUES ('$codComprobanteDetalle','$codComprobante', '$cuentaProv', '$cuentaAuxiliarProv', '$unidadDetalleProv', '$areaProv', '$debeProv', '$haberProv', '$glosaDetalleProv', '$i')";
+               $stmtDetalle = $dbh->prepare($sqlDetalle);
+               $flagSuccessDetalle=$stmtDetalle->execute();
+
+               print_r($sqlDetalle); 
+               $codProveedorEstado=$codProveedor;
+               if($deven==1){
+                 //estado de cuentas devengado
+                 $codEstadoCuenta=obtenerCodigoEstadosCuenta();
+                 $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
+                 VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaProv', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaDetalleProv')";
+                 $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
+                 $stmtDetalleEstadoCuenta->execute();             
+                 //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
+                 $sqlUpdateSolicitudRecursoDetalle="UPDATE solicitud_recursosdetalle SET cod_estadocuenta='$codEstadoCuenta',glosa_comprobantedetalle='$glosaDetalleProv' where codigo='$codSolicitudDetalleOrigen'";
+                 $stmtUpdateSolicitudRecursoDetalle = $dbh->prepare($sqlUpdateSolicitudRecursoDetalle);
+                 $stmtUpdateSolicitudRecursoDetalle->execute();
+               }
+             }  
 
             }
             // FIN CUENTA PASIVA   

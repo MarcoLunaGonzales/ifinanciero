@@ -135,6 +135,6 @@ if($banderaLogin==1 || $tipoLogin==1){
 	}
 }
 
-header("location:index.php");
+ header("location:index.php");
 
 ?>

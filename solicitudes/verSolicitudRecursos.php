@@ -219,6 +219,14 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                       $detalleActividadFila.="<br><b class='text-dark small'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]." - ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[1]."</b>";
                     }   
                   }
+                  
+                  $codDivisionX=$rowDetalles["cod_divisionpago"];  
+                  $detalleDivisionFila="";
+                  if($codDivisionX>0){
+                    if(obtenerNombreDivisionPago($codDivisionX)!=""){
+                      $detalleDivisionFila.="<b class='text-dark small'>(".obtenerNombreDivisionPago($codDivisionX).")</b>";
+                    }  
+                  }
                                 ?>
                                 <tr>
                                     <td><?=$index?></td>
@@ -227,7 +235,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                                 	<td class="text-center small"><?=$numeroCuentaX?></td>
                                     <td class="text-left small font-weight-bold"><?=$nombreCuentaX?></td>
                                     <td class="text-left small font-weight-bold text-primary"><?=$nombreOficinaXX?>-<?=$nombreAreaXX;?></td>
-                                    <td class="text-left font-weight-bold text-primary"><?=$detalleX?> <?=$detalleActividadFila?></td>
+                                    <td class="text-left font-weight-bold text-primary"><?=$detalleX?> <?=$detalleActividadFila?> <?=$detalleDivisionFila?></td>
                                     <td class="text-left small"><?=$tituloImporte?></td>
                                     <td class="text-left text-primary font-weight-bold"><?=$proveedorX?></td>
                                     <td class="text-right"><?=number_format($importeX, 2, '.', ',')?></td>

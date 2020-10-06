@@ -98,7 +98,7 @@ if(isset($_GET["area"])){
               </div>   	
 			   </div>
          <div class="form-group col-sm-12">
-             <select class="selectpicker form-control form-control-sm"  data-live-search="true" data-size="6" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>" required data-style="btn btn-warning">
+             <select class="selectpicker form-control form-control-sm"  data-live-search="true" data-size="6" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>" required data-style="btn btn-warning" onchange="verificarDivisionPagoFila(<?=$idFila;?>)">
                     <option disabled selected value="">CUENTAS</option>
                   <?php
                   $cuentaLista=obtenerCuentasListaSolicitud(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
@@ -214,6 +214,10 @@ if(isset($_GET["area"])){
             <a  title="Servicio" href="#" class="btn btn-default btn-sm btn-fab" id="boton_servicio<?=$idFila;?>" onclick="agregarServicioDetalleSR(<?=$idFila;?>)">
                   <i class="material-icons text-dark">flag</i><span id="nserv<?=$idFila?>" class="bg-danger"></span>
             </a>
+            <input type="hidden" name="cod_divisionpago<?=$idFila?>" id="cod_divisionpago<?=$idFila?>" value=""/>      
+            <a  title="Distribución del Pago" href="#" class="btn btn-info btn-sm btn-fab d-none" id="boton_division<?=$idFila;?>" onclick="agregarDivisionPagoDetalleSR(<?=$idFila;?>)" style="background:#FF8244;">
+                  <i class="material-icons text-dark">dashboard</i><span id="ndiv<?=$idFila?>" class="bg-white"></span>
+            </a> 
             <a  title="Eliminar (alt + q)" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusDetalleSolicitud('<?=$idFila;?>');">
                   <i class="material-icons">remove_circle</i>
             </a>

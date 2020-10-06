@@ -4437,7 +4437,6 @@ function minusDetalleSolicitud(idF){
       for (var i = parseInt(idF); i < (numFilas+1); i++) {
         var nuevoId=i+1;
        $("#div"+nuevoId).attr("id","div"+i);
-
        $("#unidad_fila"+nuevoId).attr("name","unidad_fila"+i);
        $("#unidad_fila"+nuevoId).attr("id","unidad_fila"+i);
        $("#area_fila"+nuevoId).attr("name","area_fila"+i);
@@ -4451,14 +4450,11 @@ function minusDetalleSolicitud(idF){
        $("#cod_detalleplantilla"+nuevoId).attr("id","cod_detalleplantilla"+i);
        $("#cod_servicioauditor"+nuevoId).attr("name","cod_servicioauditor"+i);
        $("#cod_servicioauditor"+nuevoId).attr("id","cod_servicioauditor"+i);
+       $("#habilitar"+nuevoId).attr("onchange","habilitarFila('"+i+"')");
        $("#habilitar"+nuevoId).attr("name","habilitar"+i);
        $("#habilitar"+nuevoId).attr("id","habilitar"+i);
-       $("#habilitar"+nuevoId).attr("onchange","habilitarFila('"+i+"')");
-       if($("#simulacion").length){
-        
-       }else{
 
-       }
+       $("#partida_cuenta_id"+nuevoId).attr("onclick","verificarDivisionPagoFila('"+i+"')");
        $("#partida_cuenta_id"+nuevoId).attr("name","partida_cuenta_id"+i);
         $("#partida_cuenta_id"+nuevoId).attr("id","partida_cuenta_id"+i);
         $("#partida_cuenta"+nuevoId).attr("name","partida_cuenta"+i);
@@ -4537,6 +4533,12 @@ function minusDetalleSolicitud(idF){
        $("#boton_servicio"+nuevoId).attr("onclick","agregarServicioDetalleSR('"+i+"')");
        $("#boton_servicio"+nuevoId).attr("id","boton_servicio"+i);
 
+       //division pago
+       $("#cod_divisionpago"+nuevoId).attr("name","cod_divisionpago"+i);
+       $("#cod_divisionpago"+nuevoId).attr("id","cod_divisionpago"+i);
+       $("#ndiv"+nuevoId).attr("id","ndiv"+i);
+       $("#boton_division"+nuevoId).attr("onclick","agregarDivisionPagoDetalleSR('"+i+"')");
+       $("#boton_division"+nuevoId).attr("id","boton_division"+i);
       }
      } 
      itemFacturas.splice((idF-1), 1);
@@ -18474,6 +18476,8 @@ function guardarServicioDetalleSolicitud(){
   }
 }
 
+
+
 function contabilizarSolicitudRecursoModalCajaChica(codigo,tipo,nro,monto,cuentas,url,prov,arry){
   //var validacion=validarFacturasRetencionesSRAjax(codigo);
   var validacion=[0,"No hay error"];
@@ -18628,4 +18632,58 @@ function buscarSolicitudesDeRecursosHistorial(){
           $("#modalBuscarSolicitudRecurso").modal("hide");
         }
     });
+}
+
+function validarCuentaDivisionPagoSRAjax(codigo){
+  var validacion = 0;
+  var parametros={"codigo":codigo};
+  $.ajax({
+        async:false,
+        type: "POST",
+        dataType: 'html',
+        url: "ajax_verificar_cuenta_division_pago.php",
+        data: parametros,      
+        success:  function (resp) {
+          validacion=parseInt(resp.trim());
+        }
+    });
+  return validacion;
+}
+
+function verificarDivisionPagoFila(fila){
+  var cuenta = $("#partida_cuenta_id"+fila).val();
+  if(validarCuentaDivisionPagoSRAjax(cuenta)==1){ 
+   if($("#boton_division"+fila).hasClass("d-none")){
+     $("#boton_division"+fila).removeClass("d-none");
+   }
+  }else{
+    if(!($("#boton_division"+fila).hasClass("d-none"))){
+     $("#boton_division"+fila).addClass("d-none");
+    }
+  }
+}
+
+
+
+function agregarDivisionPagoDetalleSR(fila){
+  $("#division_detalle_solicitud").val("");
+  $("#fila_division").val(fila);
+  $("#division_detalle_solicitud").val($("#cod_divisionpago"+fila).val());
+  $('.selectpicker').selectpicker("refresh");       
+  $("#modalDivisionDetalle").modal("show");
+}
+
+function guardarDivisionDetalleSolicitud(){
+  var fila = $("#fila_division").val();
+
+  if($("#division_detalle_solicitud").val()>0){
+  $("#cod_divisionpago"+fila).val($("#division_detalle_solicitud").val());
+  $("#division_detalle_solicitud").val("");
+   if(!($("#ndiv"+fila).hasClass("estado"))){
+    $("#ndiv"+fila).addClass("estado");
+   }
+   $("#modalDivisionDetalle").modal("hide");
+  }else{
+   Swal.fire("Informativo!", "Debe llenar los campos requeridos!", "warning"); 
+  }
 }

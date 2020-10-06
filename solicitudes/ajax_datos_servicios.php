@@ -16,7 +16,7 @@ $area=$_GET['area'];
 
 ?><option disabled selected value="">--Seleccione--</option><?php   
 //validacion si no retenciones
-$sqlServicios="SELECT IdServicio,Descripcion,Codigo,IdCliente from servicios where IdOficina=$oficina and IdArea=$area and IdEstado=204";
+$sqlServicios="SELECT IdServicio,Descripcion,Codigo,IdCliente from servicios where IdOficina=$oficina and IdArea=$area and IdEstado=204 order by Codigo";
 $stmt = $dbh->prepare($sqlServicios);
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
