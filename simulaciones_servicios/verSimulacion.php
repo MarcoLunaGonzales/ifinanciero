@@ -810,6 +810,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                 <?php
             }
             $costoTotalLocal=$costoFijoPrincipalPeriodo+(($totalVariable[2]*$alumnosX)+$costoVariablePersonal);
+            $utilidadBruta=($precioLocalX)-($costoTotalLocal);
            ?> 
           </div>
           <br>

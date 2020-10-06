@@ -799,7 +799,10 @@ for ($an=0; $an<=$anioGeneral; $an++) {
             </table>
                 <?php
             }
-           
+           $costoTotalLocal=$costoFijoPrincipalPeriodo+(($totalVariable[2]*$alumnosX)+$costoVariablePersonal);
+           $utilidadBruta=($precioLocalX)-($costoTotalLocal);
+           $utilidadNetaLocal=$utilidadBruta-((($iva+$it)/100)*($precioLocalX))-($precioAfnorX);
+           $pUtilidadLocal=($utilidadNetaLocal*100)/($precioLocalX);
            ?> 
           </div>
           <br>
