@@ -752,7 +752,7 @@
             //alert(verificarAreaServicioDetalleSolicitud(i+1));
              if(($('#cod_servicio'+(i+1)).val()==0||$('#cod_servicio'+(i+1)).val()=="")&&verificarAreaServicioDetalleSolicitud(i+1)==1){
               cont++;
-              mensajeRet="Debe seleccionar un Servicio  en <a href='#' class='btn btn-sm btn-fab btn-default'><i class='material-icons text-dark'>flag</i></a>";
+              mensajeRet="Debe seleccionar un Servicio  Relacionado al Gasto en <a href='#' class='btn btn-sm btn-fab btn-default'><i class='material-icons text-dark'>flag</i></a>";
               break;
              }     
            }                  
@@ -838,6 +838,11 @@
               $('#cod_retencion'+(i+1)).val($('#cod_configuracioniva').val()); 
               }                        
             }
+             
+            //asignar codigo 0 a division detalle, los que están con el boton oculto
+            if($('#boton_division'+(i+1)).hasClass("d-none")){
+              $('#cod_divisionpago'+(i+1)).val(0); //agregar codigo 0 de division (sin división);
+            } 
            }
 
            $('<input />').attr('type', 'hidden')

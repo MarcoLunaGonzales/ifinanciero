@@ -32,7 +32,7 @@ $dbh = new Conexion();
                 <div class="card-body">
                 	<div class="row">
 		                <label class="col-sm-2 col-form-label">Estado SR</label>
-		                <div class="col-sm-8">
+		                <div class="col-sm-10">
 		                	<div class="form-group">
 		                		<div id="">		
 		                			<?php
@@ -51,11 +51,13 @@ $dbh = new Conexion();
 										</select>
 		                		</div>
 		                     </div>
-		                </div>				             
+		                </div>
+                        	 
                   	</div><!--div row-->
-                	<div class="row">
-		                <label class="col-sm-2 col-form-label">Gestión</label>
-		                <div class="col-sm-6">
+
+              		<div class="row">
+              			<label class="col-sm-2 col-form-label">Gestión</label>
+		                <div class="col-sm-4">
 		                	<div class="form-group">
 		                		<select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
                                     <option value=""></option>
@@ -67,11 +69,9 @@ $dbh = new Conexion();
                                     <?php } ?>
                                 </select>
 		                     </div>
-		                </div>				             
-                  	</div><!--div row-->
-              		<div class="row">
+		                </div>	
 		                 <label class="col-sm-2 col-form-label">Mes</label>
-		                 <div class="col-sm-6">
+		                 <div class="col-sm-4">
 		                	<div class="form-group">
 		                		<div id="div_contenedor_mes">		
 		                			<?php $sql="SELECT c.cod_mes,(select m.nombre from meses m where m.codigo=c.cod_mes) as nombre_mes from meses_trabajo c where c.cod_gestion=$globalGestion";
@@ -95,6 +95,129 @@ $dbh = new Conexion();
 		                     </div>
 		                  </div>
 		            </div>
+		            <div class="row">
+                  	<div class="col-sm-6">
+                  		<div class="row">
+			                 <label class="col-sm-4 col-form-label">Centro de Costos - Oficina</label>
+			                 <div class="col-sm-8">
+			                	<div class="form-group">
+			                		<div id="div_contenedor_oficina_costo">
+				                			<?php
+											$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
+											$stmt = $dbh->prepare($sqlUO);
+											$stmt->execute();
+											?>
+												<select class="selectpicker form-control form-control-sm" name="unidad_costo[]" id="unidad_costo" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+												    <?php 
+												    	while ($row = $stmt->fetch()){ 
+													?>
+												      	 <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>" <?=($row["codigo"]==$globalUnidad)?"selected":""?> ><?=$row["abreviatura"];?></option>
+									    	<?php 
+												 		} 
+										 	?>
+												</select>			                			
+			                		</div>
+	                              <!-- <select class="selectpicker form-control form-control-sm" name="unidad_costo[]" id="unidad_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
+			  	                          <?php
+			  	                          $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
+				                          $stmt->execute();
+				                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				                          	$codigoX=$row['codigo'];
+				                          	$nombreX=$row['nombre'];
+				                          	$abrevX=$row['abreviatura'];
+				                          ?>
+				                           <option value="<?=$codigoX;?>"><?=$abrevX;?></option>	
+				                           <?php
+			  	                           }
+			  	                           ?>
+			                           </select> -->
+			                      </div>
+			                  </div>
+			             </div>
+      	             </div>
+                  	<div class="col-sm-6">
+                  		<div class="row">
+			                 <label class="col-sm-4 col-form-label">Centro de Costos - Area</label>
+			                 <div class="col-sm-8">
+			                	<div class="form-group">
+	                              <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
+			  	                     <?php
+			  	                     $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and (centro_costos=1 or codigo=1235) order by 2");
+				                     $stmt->execute();
+				                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				                     	$codigoX=$row['codigo'];
+				                     	$nombreX=$row['nombre'];
+				                     	$abrevX=$row['abreviatura'];
+				                     ?>
+				                     <option value="<?=$codigoX;?>" selected><?=$abrevX;?></option>	
+				                       <?php
+			  	                       }
+			  	                       ?>
+			                       </select>
+			                      </div>
+			                  </div>
+			              </div>
+				      </div>
+                  </div><!--div row-->
+                  <div class="row">
+					<label class="col-sm-2 col-form-label">Personal</label>
+					<div class="col-sm-4">
+						<div class="form-group">
+						<select class="selectpicker form-control form-control-sm" name="personal[]" id="personal" data-live-search="true" data-style="select-with-transition" data-size="4" multiple data-actions-box="true" required>	
+						   <?php
+						 $stmt = $dbh->prepare("SELECT distinct s.cod_personal,UPPER(CONCAT(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno)) as nombre from solicitud_recursos s
+join personal p on p.codigo=s.cod_personal
+where s.cod_estadoreferencial<>2;");
+						$stmt->execute();
+						while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+							$codigoX=$row['cod_personal'];
+							$nombreX=$row['nombre'];
+						?>
+						<option value="<?=$codigoX;?>" selected><?=$nombreX;?></option>	
+						<?php
+						   }
+						   ?>
+						</select>
+						</div>
+					</div>
+
+	            	<label class="col-sm-2 col-form-label">Sin Filtro</label>
+	                <div class="col-sm-1">
+	                	<div class="form-group">
+							<div class="togglebutton">
+							    <label>
+									<input type="checkbox" name="check_formato2" id="check_formato2">
+									<span class="toggle"></span>
+							    </label>
+							</div>
+						</div>
+					</div>						
+		            
+				</div>
+                <div class="row">
+				    <div class="col-sm-6">
+	                  		<div class="row">
+				                 <label class="col-sm-4 col-form-label">Cuenta</label>
+				                 <div class="col-sm-8">
+				                	<div class="form-group">
+		                              <select class="selectpicker form-control form-control-sm" data-live-search="true" title="-- Elija una cuenta --" name="cuenta[]" id="cuenta" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true" required>
+				  	                        <?php
+                                                $cuentaLista=obtenerCuentasListaSolicitud(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+                                              while ($rowCuenta = $cuentaLista->fetch(PDO::FETCH_ASSOC)) {
+                                                $codigoX=$rowCuenta['codigo'];
+                                                $numeroX=$rowCuenta['numero'];
+                                                $nombreX=$rowCuenta['nombre'];
+                                              ?>
+                                              <option value="<?=$codigoX;?>" selected >[<?=$numeroX?>] <?=$nombreX;?></option>  
+                                              <?php
+                                                }
+                                                ?>
+								         </select>
+				                      </div>
+				                  </div>
+				              </div>
+					      </div>
+                 </div><!--div row-->
                   	
                 <div class="card-footer">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>

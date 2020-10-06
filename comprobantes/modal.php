@@ -60,7 +60,25 @@
           <i class="material-icons">close</i>
         </button>
       </div>
-      <div class="card-body">  
+      <div class="card-body"> 
+        <div class="row">                      
+            <label class="col-sm-4 col-form-label" style="color: #4a148c;">Formato de Excel (Incluir fila de títulos)</label>
+            <div class="col-sm-12">
+                <table class="table table-condensed table-bordered table-sm">
+                   <tr class="bg-primary text-white">
+                     <td><small>REGIONAL</small></td>
+                     <td><small>CÓDIGO</small></td>
+                     <td><small>CUENTA</small></td>
+                     <td><small>AUXILIAR</small></td>
+                     <td><small>DEBE</small></td>
+                     <td><small>HABER</small></td>
+                     <td><small>GLOSA</small></td>
+                   </tr>
+                 </table>  
+             </div>
+        </div>
+      
+       
         <div class="row">                      
             <label class="col-sm-2 col-form-label" style="color: #4a148c;">Pega los datos del EXCEL aquí</label>
             <div class="col-sm-12">
@@ -78,6 +96,7 @@
             <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas" onclick="generarComprobanteExcel()">Generar Filas</a>
             <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a>
       </div>
+      
       <hr>
       <div id="div_datos_excel"></div>
     </div>
@@ -437,6 +456,7 @@
   </div>
 </div>
 <!--    end small modal -->
+
 <!-- Classic Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-notice" style="max-width: 90% !important;">

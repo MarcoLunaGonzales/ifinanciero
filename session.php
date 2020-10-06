@@ -56,7 +56,9 @@ if($banderaLogin==1 || $tipoLogin==1){
 			from personal p 
 			where p.codigo='$idUsuarioSW' ";		
 	}
+
 	//echo $sql;
+
 	$stmt = $dbh->prepare($sql);
 	$stmt->execute();
 	$stmt->bindColumn('codigo', $codigo);
@@ -133,6 +135,6 @@ if($banderaLogin==1 || $tipoLogin==1){
 	}
 }
 
-header("location:index.php");
+ header("location:index.php");
 
 ?>

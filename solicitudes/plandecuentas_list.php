@@ -12,7 +12,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre,pcc.cod_cuentapasivo from solicitud_recursoscuentas pcc,plan_cuentas pc 
+$stmt = $dbh->prepare("SELECT pcc.cod_cuenta,pc.numero,pc.nombre,pcc.cod_cuentapasivo,pcc.division_porcentaje from solicitud_recursoscuentas pcc,plan_cuentas pc 
 where pcc.cod_cuenta=pc.codigo");
 // Ejecutamos
 $stmt->execute();
@@ -21,6 +21,7 @@ $stmt->bindColumn('cod_cuenta', $cod_cuenta);
 $stmt->bindColumn('numero', $numero);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('cod_cuentapasivo', $cod_cuentapasivo);
+$stmt->bindColumn('division_porcentaje', $division_porcentaje);
 ?>
 
 <div class="content">
@@ -42,8 +43,9 @@ $stmt->bindColumn('cod_cuentapasivo', $cod_cuentapasivo);
                           <th class="text-center">#</th>
                           <th>Codigo</th>
                           <th>Nombre</th>
-                          <th>Pasivo</th>                          
-                          <th class="text-right">Actions</th>
+                          <th>Pasivo</th>
+                          <th width="20%">División Registros</th>                           
+                          <th width="8%" class="text-right">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -56,14 +58,34 @@ $stmt->bindColumn('cod_cuentapasivo', $cod_cuentapasivo);
                           }else{
                             $tituloCuentaPasivo="[".obtieneNumeroCuenta($cod_cuentapasivo)."] ".nameCuenta($cod_cuentapasivo);
                           }
-
+                          
+                          $tituloDivision="";
+                          if($division_porcentaje==1){
+                             $tituloDivision="DIVISION HABILITADA";
+                          }
                         ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td class="font-weight-bold">[<?=$numero;?>]</td>
                           <td><?=$nombre;?></td>
                           <td class="font-weight-bold"><?=$tituloCuentaPasivo?></td>
+                          <td class=""><?=$tituloDivision?></td>
                           <td class="td-actions text-right">
+                            <?php
+                            if($division_porcentaje==1){
+                              ?>
+                            <a title="Deshabilitar la División en el Detalle de la Solicitud" href='<?=$urlCambiarDivision?>?cod=<?=$cod_cuenta?>&habilitar=0' class="btn btn-info">
+                              <i class="material-icons">check_box</i>
+                            </a>
+                              <?php
+                            }else{
+                              ?>
+                            <a title="Habilitar la División en el Detalle de la Solicitud" href='<?=$urlCambiarDivision?>?cod=<?=$cod_cuenta?>&habilitar=1' class="btn btn-danger">
+                              <i class="material-icons">check_box_outline_blank</i>
+                            </a>
+                              <?php 
+                            }
+                            ?>
                             <a title="Pasivo" target="_blank" href='<?=$urlCambiarPasivo?>&cod=<?=$cod_cuenta?>' class="btn btn-warning">
                               <i class="material-icons">playlist_add</i>
                             </a>

@@ -9,6 +9,7 @@
                         $areaXX=$codAreaX;
 						$idFila=1;
 						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;$listaDetalles=[];
+						$desdePropuestas=1;
 					?><div id="detalles_solicitud"><?php
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
 							$unidadXX=$codUnidadX;
@@ -63,6 +64,7 @@
                             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
                                $unidadXX=$rowDetalles['cod_unidadorganizacional'];
 							   $areaXX=$rowDetalles['cod_area'];
+							   $codCuentaX=$rowDetalles['cod_plancuenta'];
                                $cuentasCodigos[$conta]=$rowDetalles["codigo"];	
                                $codDetalleX=$rowDetalles["codigo"];	
                                $detalleX=$rowDetalles["detalle"];

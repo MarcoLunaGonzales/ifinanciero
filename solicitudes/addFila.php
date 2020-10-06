@@ -2,6 +2,7 @@
 $cod_actividadproyecto=obtenerCodigoActividadProyecto($codDetalleX);
 $cod_accproyecto=obtenerCodigoAccProyecto($codDetalleX);
 $servicioX=obtenerServicioCodigoDetalle($codDetalleX);
+$divisionX=obtenerDivisionCodigoDetalle($codDetalleX);
 $des_actividadproyecto="";
 ?>
 <div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
@@ -24,9 +25,9 @@ $des_actividadproyecto="";
                                     if($codigoX==$unidadXX){
                                        ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                     }else{
-                                      //if($tipoSolicitud==4){
+                                     //if(!isset($desdePropuestas)){
                                         ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                     // }
+                                     //}
                                     }
                                   }
                                     ?>
@@ -48,9 +49,9 @@ $des_actividadproyecto="";
                                            if($codigoX==$areaXX){
                                             ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                            }else{
-                                             //if($tipoSolicitud==4){
+                                             if(!isset($desdePropuestas)){
                                                ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                             //}
+                                             }
                                             }
                                          } 
                                          ?>
@@ -74,7 +75,7 @@ $des_actividadproyecto="";
                                         </div>   	
 			                               </div>
                                      <div class="form-group col-sm-12">
-                                             <select class="selectpicker form-control form-control-sm"  data-live-search="true" data-size="6" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>" required data-style="btn btn-warning">
+                                             <select class="selectpicker form-control form-control-sm"  data-live-search="true" data-size="6" name="partida_cuenta_id<?=$idFila?>" id="partida_cuenta_id<?=$idFila?>" required data-style="btn btn-warning" onchange="verificarDivisionPagoFila(<?=$idFila;?>)">
                                                   <option disabled selected value="">CUENTAS</option>
                                                 <?php
                                                 $cuentaLista=obtenerCuentasListaSolicitud(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
@@ -82,9 +83,16 @@ $des_actividadproyecto="";
                                                 $codigoX=$rowCuenta['codigo'];
                                                 $numeroX=$rowCuenta['numero'];
                                                 $nombreX=$rowCuenta['nombre'];
-                                              ?>
-                                              <option value="<?=$codigoX;?>" <?=($codigoX==$codCuentaX)?"selected":"";?> >[<?=$numeroX?>] <?=$nombreX;?></option>  
-                                              <?php
+                                                if ($codigoX==$codCuentaX) {
+                                                  ?>
+                                                    <option value="<?=$codigoX;?>" selected>[<?=$numeroX?>] <?=$nombreX;?></option>  
+                                                  <?php    
+                                                }else{
+                                                  if(!isset($desdePropuestas)){
+                                                  ?><option value="<?=$codigoX;?>">[<?=$numeroX?>] <?=$nombreX;?></option><?php
+                                                  }  
+                                                }
+                                              
                                                 }
                                                 ?>
                                             </select>
@@ -193,6 +201,13 @@ $des_actividadproyecto="";
                                        }else{
                                          $estadoServicio="estado";
                                        }
+                                       if($divisionX==0||$divisionX==""||$divisionX==null){
+                                         $estadoDivision="";
+                                         $estadoDivisionBoton="d-none";
+                                       }else{
+                                         $estadoDivision="estado";
+                                         $estadoDivisionBoton="";
+                                       }
                                        ?>
                                      <div class="btn-group col-sm-12">  
                                        <a  title="Forma de Pago" href="#" class="btn btn-success btn-sm btn-fab" id="boton_formapago<?=$idFila;?>" onclick="agregarTipoPagoProveedorDetalle(<?=$idFila;?>)">
@@ -214,6 +229,10 @@ $des_actividadproyecto="";
                                       <input type="hidden" name="cod_servicio<?=$idFila?>" id="cod_servicio<?=$idFila?>" value="<?=$servicioX?>"/>      
                                       <a  title="Servicio" href="#" class="btn btn-default btn-sm btn-fab" id="boton_servicio<?=$idFila;?>" onclick="agregarServicioDetalleSR(<?=$idFila;?>)">
                                             <i class="material-icons text-dark">flag</i><span id="nserv<?=$idFila?>" class="bg-danger <?=$estadoServicio?>"></span>
+                                      </a>
+                                      <input type="hidden" name="cod_divisionpago<?=$idFila?>" id="cod_divisionpago<?=$idFila?>" value="<?=$divisionX?>"/>      
+                                      <a  title="Distribución del Pago" href="#" class="btn btn-info btn-sm btn-fab <?=$estadoDivisionBoton?>" id="boton_division<?=$idFila;?>" onclick="agregarDivisionPagoDetalleSR(<?=$idFila;?>)" style="background:#FF8244;">
+                                            <i class="material-icons text-dark">dashboard</i><span id="ndiv<?=$idFila?>" class="bg-white <?=$estadoDivision?>"></span>
                                       </a>      
 		                               	  <a  title="Eliminar (alt + q)" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="minusDetalleSolicitud('<?=$idFila;?>');">
                                            	<i class="material-icons">remove_circle</i>

@@ -202,6 +202,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     $data[$fila][17]=$_POST["cod_actividadproyecto".$i];
     $data[$fila][18]=$_POST["cod_accproyecto".$i];
     $data[$fila][19]=$_POST["cod_servicio".$i];
+    $data[$fila][20]=$_POST["cod_divisionpago".$i];
     $cod_servicio=$_POST["cod_servicio".$i];
     if(!($cod_servicio==""||$cod_servicio==0)&&$auxServicio==0){
         $auxServicio=$cod_servicio;
@@ -266,6 +267,7 @@ $cab[16]="cod_cuentabancaria";
 $cab[17]="cod_actividadproyecto";
 $cab[18]="acc_num";
 $cab[19]="idServicio";
+$cab[20]="cod_divisionpago";
 $solDet=contarSolicitudDetalle($codSolicitud);
 $solDet->bindColumn('total', $contador);
 while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {

@@ -10048,5 +10048,80 @@ function obtenerCodigosCajaChicaSolicitudRecursos($codigo){
         $index++;
     }
     return implode(",", $codigos);
+}
+
+function obtenerDatosDetalleSolicitudRecurso($codigo){
+     $dbh = new Conexion();
+     $sql="SELECT sd.* from solicitud_recursosdetalle sd where sd.codigo=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $cuenta=0;$oficina=0;$area=0;$importe=0;$proveedor=0;$retencion=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+       $cuenta=$row['cod_plancuenta'];
+       $oficina=$row['cod_unidadorganizacional'];
+       $area=$row['cod_area'];
+       $importe=$row['importe'];
+       $proveedor=$row['cod_proveedor'];
+       $retencion=$row['cod_confretencion'];
+    }
+    return array('cod_plancuenta'=>$cuenta,'cod_unidadorganizacional'=>$oficina,'cod_area'=>$area,'importe'=>$importe,'cod_proveedor'=>$proveedor,'cod_confretencion'=>$retencion); 
 }  
+
+function obtenerCodigoUnidadComprobanteDetalle($codigo){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT cod_unidadorganizacional FROM comprobantes_detalle WHERE codigo  = '$codigo'");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+          $valor=$row['cod_unidadorganizacional'];
+      }  
+      return($valor);
+} 
+
+function obtenerCodigoAreaComprobanteDetalle($codigo){
+      $dbh = new Conexion();
+      $stmt = $dbh->prepare("SELECT cod_area FROM comprobantes_detalle WHERE codigo  = '$codigo'");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {    
+          $valor=$row['cod_area'];
+      }  
+      return($valor);
+}
+
+function obtenerDivisionCodigoDetalle($codigo){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_divisionpago from solicitud_recursosdetalle where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_divisionpago'];
+      }
+     return($valor);
+}
+
+function VerificarCuentaDivisionPago($codigo){
+     $dbh = new Conexion();
+     $valor=0;
+     $sql="SELECT a.division_porcentaje from solicitud_recursoscuentas a where a.cod_cuenta=$codigo and a.division_porcentaje=1";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=1;
+    }
+    return $valor;
+  }
+
+
+function obtenerNombreDivisionPago($codigo){
+    $dbh = new Conexion();
+    // Preparamos
+  $stmt = $dbh->prepare("SELECT c.nombre from solicitud_recursosdivisionpago c where c.codigo='$codigo'");
+  $stmt->execute();
+  $valor="";
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['nombre'];
+  }         
+  return $valor; 
+}
 ?>

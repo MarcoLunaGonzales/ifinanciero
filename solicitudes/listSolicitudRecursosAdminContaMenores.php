@@ -6,6 +6,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalMesActivo=$_SESSION['globalMes'];
+$globalUnidad=$_SESSION["globalUnidad"];
 $userAdmin=obtenerValorConfiguracion(74);
 $montoCaja=obtenerValorConfiguracion(85);
 $dbh = new Conexion();
@@ -39,7 +40,7 @@ $stmtMen = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abr
 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3)) l  
-where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0) and l.monto_importe<=$montoCaja order by l.revisado_contabilidad,l.numero desc");
+where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0) and l.cod_unidadorganizacional=$globalUnidad and l.monto_importe<=$montoCaja order by l.revisado_contabilidad,l.numero desc");
 
 // Ejecutamos
 $stmtMen->execute();
@@ -290,6 +291,28 @@ $item_1=2708;
                                     </a>-->
                                     <?php
                                    //}
+
+                                    if($otrosPagosCuenta==0){
+                                    
+                                    ?>
+                                    <!--onclick="alerts.showSwal('contabilizar-solicitud-recurso','<?=$urlConta?>?admin=0&cod=<?=$codigo?>')"-->
+                                   <a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?&admin=4cod=<?=$codigo?>&deven=1','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="dropdown-item">
+                                      <i class="material-icons text-danger">assignment_turned_in</i> Contabilizar a Devengado
+                                    </a>
+                                    <a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlConta?>?&admin=4cod=<?=$codigo?>&deven=0','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="dropdown-item">
+                                      <i class="material-icons text-info">assignment_turned_in</i> Contabilizar a Pagado
+                                    </a>
+                                    <?php
+                                  }else{
+                                    ?>
+                                   <a title="Contabilizar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta_men=2&estado=5')" class="dropdown-item">
+                                      <i class="material-icons text-dark">dns</i> <b class="text-muted">Cambiar a <u class="text-dark">Contabilizado</u></b>
+                                    </a>
+                                    <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta_men=2&estado=8')" class="dropdown-item">
+                                      <i class="material-icons text-info">dns</i> <b class="text-muted">Cambiar a <u class="text-info">Pagado</u></b>
+                                    </a>
+                                    <?php
+                                   }
                                   }else{
                                   ?><a href="#" onclick="mostrarCambioEstadoObjeto(<?=$codigo?>)" class="dropdown-item">
                                     <i class="material-icons text-warning">dns</i> Cambiar Estado
