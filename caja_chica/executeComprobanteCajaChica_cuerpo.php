@@ -30,12 +30,7 @@
         $stmtRetencionOrigen->execute();
         $resultRetencionOrgine = $stmtRetencionOrigen->fetch();
         $porcentaje_cuentaorigen = $resultRetencionOrgine['porcentaje_cuentaorigen']; 
-        // verificamos si el porcentaje es mayor a 100%
-        if($porcentaje_cuentaorigen>100){
-        	$monto_recalculado=$monto_dcc*$porcentaje_cuentaorigen/100;
-        }else{
-        	$monto_recalculado=$monto_dcc;
-        }			        
+       		        
         //Listamos los gastos que tengan factura y los contabilizamos
         $sw_facturas=contador_facturas_cajachica($codigo_ccdetalle);//contador de facturas
         if($sw_facturas>0){
@@ -282,6 +277,12 @@
 	        $sw_contracuenta=0;
             $porcentaje_retencion_x=0;
             $debe_haber_x=0;
+             // verificamos si el porcentaje es mayor a 100%
+	        if($porcentaje_cuentaorigen>100){
+	        	$monto_recalculado=$monto_dcc*$porcentaje_cuentaorigen/100;
+	        }else{
+	        	$monto_recalculado=$monto_dcc;
+	        }	
 	        $stmtRetenciones = $dbh->prepare("SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica and cod_cuenta=0
 				UNION 
 				SELECT cod_cuenta,porcentaje,debe_haber from configuracion_retencionesdetalle where cod_configuracionretenciones=$cod_retencioncajachica and cod_cuenta<>0");
@@ -289,12 +290,11 @@
 	        $stmtRetenciones->bindColumn('cod_cuenta', $cod_cuenta_retencion);
 	        $stmtRetenciones->bindColumn('porcentaje', $porcentaje_retencion);
 	        $stmtRetenciones->bindColumn('debe_haber', $debe_haber);
-
 	        while ($rowFac = $stmtRetenciones->fetch()) 
 	        {                            
 	            //recalculando monto
 	            $descripcionIT=$nombre_uo.' SF (R-'.$nro_recibo.'),'.$personal.', '.$observaciones_dcc;                                
-	            $monto_it=$monto_recalculado*$porcentaje_retencion/100;            
+	            $monto_it=$monto_recalculado*$porcentaje_retencion/100;
 	            //las retenciones
 	            if($cod_cuenta_retencion>0){
 	                
@@ -320,17 +320,11 @@
 	                $cod_plancuenta = $resultContraCuenta['cod_plancuenta']; 
 	                $cod_comprobantedetalleorigen = $resultContraCuenta['cod_comprobantedetalleorigen'];
 	                //sacamops cuenta aux
-
 	                //echo "SELECT e.cod_cuentaaux from estados_cuenta e where e.codigo=$cod_comprobantedetalleorigen";
-	               
-	                
-	               
-
 	                // $cod_cuentaaux_x=0;
-
 	                // echo "llego: ".$cod_plancuenta;
 	                if($cod_plancuenta>0){
-	                	 $stmtContraCuentaAux = $dbh->prepare("SELECT e.cod_cuentaaux from estados_cuenta e where e.codigo=$cod_comprobantedetalleorigen");
+	                	$stmtContraCuentaAux = $dbh->prepare("SELECT e.cod_cuentaaux from estados_cuenta e where e.codigo=$cod_comprobantedetalleorigen");
 		                $stmtContraCuentaAux->execute();
 		                // $resultContraCuenta_aux = $stmtContraCuentaAux->fetch();
 		                $cod_cuentaaux_x=0;
@@ -361,12 +355,12 @@
 		                //actualizamos el cod_comprobante a pagos_proveedores
 		                $stmtUpdatepagosProveedores = $dbh->prepare("UPDATE pagos_proveedores set cod_estadopago=5,cod_comprobante=$codComprobante where cod_cajachicadetalle=$codigo_ccdetalle");
 		                $stmtUpdatepagosProveedores->execute();
-	                }else{		                	
+	                }else{	
                     	if($porcentaje_cuentaorigen>100){
 				        	$monto_restante=$monto_recalculado;
-				        }else{
-				        	// $monto_restante=$monto_recalculado*$porcentaje_cuentaorigen/100;       
-				        	$monto_restante=$monto_recalculado;
+				        }else{				        	
+				        	//$monto_restante=$monto_recalculado;
+				        	$monto_restante=$monto_recalculado*$porcentaje_cuentaorigen/100;
 				        }
 				        //Desde aqui las distribuciones por area y/o oficina
 						$cont_tipo_distribucion=0;//verificará si se registró alguna distribucion

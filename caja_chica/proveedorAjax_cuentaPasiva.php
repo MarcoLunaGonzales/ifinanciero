@@ -5,6 +5,10 @@ require_once 'configModule.php';
 //header('Content-Type: application/json');
 
 $codigo_proveedor = $_GET["codigo_proveedor"];
+
+if($codigo_proveedor==null || $codigo_proveedor=="" || $codigo_proveedor==0){
+  $codigo_proveedor=36272;//otros proveedores
+}
 //ini_set("display_errors", "1");
 $dbh = new Conexion();
 

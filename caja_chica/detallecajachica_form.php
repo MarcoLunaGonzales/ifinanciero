@@ -47,7 +47,7 @@ while ($rowConfi = $stmtConfiguracionCuenta->fetch(PDO::FETCH_ASSOC)) {
   <?php  
 }
 
-$cod_proveedores=0;
+$cod_proveedores=36272;//otros proveedores
 if ($codigo > 0){
     $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,cod_proveedores,cod_actividad_sw,
         (select c.nombre from plan_cuentas c where c.codigo=cod_cuenta) as nombre_cuenta,
@@ -353,14 +353,14 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                   <?php
                   if($cod_comprobante>0 && $cod_comprobante!=""){?>
                     <div class="retencion_sin_gastos" >
-                      <a  href="#" onclick="verEstadosCuentas_cajachica(1,0,0);" class="btn btn-danger btn-fab btn-round btn-sm">
+                      <a  href="#" onclick="verEstadosCuentas_cajachica_filtro()" class="btn btn-danger btn-fab btn-round btn-sm">
                         <i class="material-icons text-dark" title="Estado de Cuentas">ballot</i>
                         <span id="ec_icon" class="count bg-warning">*</span>
                       </a>
                     </div>
                   <?php }else{?>
                     <div class="retencion_sin_gastos" style="display: none">
-                      <a  href="#" onclick="verEstadosCuentas_cajachica(1,0,0);" class="btn btn-danger btn-fab btn-round btn-sm">
+                      <a  href="#" onclick="verEstadosCuentas_cajachica_filtro()" class="btn btn-danger btn-fab btn-round btn-sm">
                         <i class="material-icons text-dark" title="Estado de Cuentas">ballot</i>
                         <span id="ec_icon" class="count bg-warning"></span>
                       </a>
@@ -504,7 +504,7 @@ $archivos_cajachica=0;//contador de archivos de caja chica
               <div class="col-sm-8">
                 <div class="form-group">                        
                   <div id="div_contenedor_proveedor">
-                    <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor">
+                    <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor" required="true">
                       <option value=""></option>
                       <?php 
                       $query="SELECT * FROM af_proveedores order by nombre";

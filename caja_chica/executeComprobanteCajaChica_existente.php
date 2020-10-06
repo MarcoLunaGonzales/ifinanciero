@@ -32,7 +32,7 @@ try{
 		if($contadorEC!=0){//faltan estados de cuenta
 			echo "5#####".$stringEC_obs;
 		}else{
-			$string_validacion_fechafactura=validacion_fechafactura_comprobante($cod_cajachica,$mes_comprobante);
+			$string_validacion_fechafactura=validacion_fechafactura_comprobante($cod_cajachica,$mes_comprobante,$gestion_cpte);
 	    	$array_validacion_ff=explode('#####@@@@@', $string_validacion_fechafactura);
 			$contadorff=$array_validacion_ff[0];
 			$stringFF_obs=$array_validacion_ff[1];
