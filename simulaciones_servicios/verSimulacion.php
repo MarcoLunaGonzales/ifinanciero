@@ -811,6 +811,9 @@ for ($an=0; $an<=$anioGeneral; $an++) {
             }
             $costoTotalLocal=$costoFijoPrincipalPeriodo+(($totalVariable[2]*$alumnosX)+$costoVariablePersonal);
             $utilidadBruta=($precioLocalX)-($costoTotalLocal);
+            $utilidadBruta=($precioLocalX)-($costoTotalLocal);
+            $utilidadNetaLocal=$utilidadBruta-((($iva+$it)/100)*($precioLocalX))-($precioAfnorX);
+            $pUtilidadLocal=($utilidadNetaLocal*100)/($precioLocalX);
            ?> 
           </div>
           <br>

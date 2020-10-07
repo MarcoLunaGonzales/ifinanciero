@@ -88,9 +88,9 @@ $des_actividadproyecto="";
                                                     <option value="<?=$codigoX;?>" selected>[<?=$numeroX?>] <?=$nombreX;?></option>  
                                                   <?php    
                                                 }else{
-                                                  if(!isset($desdePropuestas)){
+                                                  //if(!isset($desdePropuestas)){
                                                   ?><option value="<?=$codigoX;?>">[<?=$numeroX?>] <?=$nombreX;?></option><?php
-                                                  }  
+                                                  //}  
                                                 }
                                               
                                                 }

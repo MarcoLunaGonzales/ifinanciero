@@ -8362,7 +8362,8 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
             AND sf.idObjeto = $idServicio
             AND (ifnull( d_auxclasificador ( id_estadoobjeto ( 264, sf.idsolicitudfactura )), '' ) NOT IN ( 'N' )) 
           GROUP BY
-            1 ) f ON sp.`IdClaServicio` = f.IdClaServicio
+            1 ) f 
+         ON sp.`IdClaServicio` = f.IdClaServicio
         INNER JOIN cotizaciones co ON sp.`IdCotizacion` = `co`.`IdCotizacion` 
         AND `id_estadoobjeto` ( 196, co.idCotizacion )= 198
         INNER JOIN claservicios cs ON sp.IdClaservicio = cs.idClaServicio 
@@ -10124,4 +10125,17 @@ function obtenerNombreDivisionPago($codigo){
   }         
   return $valor; 
 }
+
+function verificarSiHayFacturasAnuladasSol($codigo){
+    $dbh = new Conexion(); 
+    $stmtFActuras = $dbh->prepare("SELECT codigo from facturas_venta where cod_estadofactura=2 and cod_solicitudfacturacion=$codigo");
+    $stmtFActuras->execute(); 
+    $stmtFActuras->bindColumn('codigo', $codigo_x);
+    $cadenaFacturas=[];  
+    $index=0;
+    while ($row = $stmtFActuras->fetch()) {
+      $cadenaFacturas[$index]=$codigo_x;
+    }
+    return $cadenaFacturas;
+  }
 ?>
