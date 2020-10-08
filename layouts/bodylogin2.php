@@ -730,6 +730,7 @@
         Swal.fire("Informativo!", "Debe registrar al menos un detalle", "warning");
         return false;
       }else{  //    primer else
+
         var cont=0;
         var mensajeRet="La Retencion IVA debe tener al menos una factura registrada";
         for (var i = 0; i < $("#cantidad_filas").val(); i++) {
@@ -757,6 +758,17 @@
              }     
            }                  
         }
+        
+        //verificar descripcion archivos
+           for (var i = 0; i < $("#cantidad_archivosadjuntos").val(); i++) {
+            if($('#nombre_archivo'+(i+1)).length>0){
+              if($('#nombre_archivo'+(i+1)).val()==""){
+                //cont++;
+                //mensajeRet="Todos los archivos adjuntos deben tener una descripción"; 
+                //break;
+               }
+             }                  
+            }
 
         if(cont!=0){
            Swal.fire("Informativo!", mensajeRet, "warning"); 

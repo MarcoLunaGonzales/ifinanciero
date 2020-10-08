@@ -259,6 +259,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 $sw2="";
                                                 $monto_servicio=verificar_pago_servicios_tcp_solfac($IdServicio,$codCS);
                                                 $monto_servicio=number_format($monto_servicio,2,".","");
+
                                                 if(count(verificarSiHayFacturasAnuladasSol($cod_facturacion))>0){
                                                    $monto_servicio=''; 
                                                 }
@@ -274,7 +275,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 // echo $monto_total_pagado;
 
                                                 //parte del controlador de check// los ya registrados
-                                                $sqlControlador2="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS and tipo_solicitud=3 and sf.cod_estadosolicitudfacturacion!=2"; 
+                                                $sqlControlador2="SELECT sf.codigo as cod_solicitud,sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio and sfd.cod_claservicio=$codCS and tipo_solicitud=3 and sf.cod_estadosolicitudfacturacion!=2"; 
                                                 // echo $sqlControlador2;
                                                 $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                 $stmtControlador2->execute();

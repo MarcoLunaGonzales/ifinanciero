@@ -179,7 +179,7 @@ $item_1=2708;
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
 
-                           <a title="Cambiar Actividad Proyecto" onclick="cambiarActividadesProyectoSolicitudRecursoModal(<?=$codigo?>,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$nombreProveedor?>',2);return false;" target="_blank" class="btn btn-orange">
+                           <a title="Cambiar Actividad Proyecto" onclick="cambiarActividadesProyectoSolicitudRecursoModal(<?=$codigo?>,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$nombreProveedor?>',1);return false;" target="_blank" class="btn btn-orange">
                                       <i class="material-icons">assignment</i>
                             </a> 
                             <div class="btn-group dropdown">
