@@ -19,7 +19,7 @@ $fechaActual=date("d/m/Y");
 $fecha=date("Y-m-d");
 $fechaHora=date("Y-m-d H:i:s");
 
-$solicitudDetalle=obtenerSolicitudRecursosDetalle($codigoSolicitud);
+$solicitudDetalle=obtenerSolicitudRecursosDetalleAgrupadas($codigoSolicitud);
 $codPersonal=obtenerPersonalSolicitanteRecursos($codigoSolicitud);
 $numeroRecibo=obtenerNumeroReciboCajaChica($codCajaChica);
 $numeroDocumento=obtenerNumeroDocumentoReciboCajaChica($codCajaChica);
@@ -67,11 +67,11 @@ $index=0;
       $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) values ($codigoDetalle,$numeroDocumento,$retencionX,$importeSolX,$monto_rendicion,'$codPersonal','$detalleX',$cod_estado,$codigoDetalle,$cod_estadoreferencial,'$fecha')");
       $flagSuccess=$stmtrendiciones->execute();
       
-      $stmtSolicitudDetalle = $dbh->prepare("UPDATE solicitud_recursosdetalle set cod_cajachicadetalle=$codigoDetalle where codigo=$codigoSolicitudDetalle");
+      $stmtSolicitudDetalle = $dbh->prepare("UPDATE solicitud_recursosdetalle set cod_cajachicadetalle=$codigoDetalle where codigo in ($codigoSolicitudDetalle)");
       $stmtSolicitudDetalle->execute();
       
       $stmtSolicitudFacturas = $dbh->prepare("INSERT INTO facturas_detalle_cajachica (cod_cajachicadetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero) 
-        (SELECT $codigoDetalle as cod_cajachicadetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero  FROM facturas_compra where cod_solicitudrecursodetalle=$codigoSolicitudDetalle)");
+        (SELECT $codigoDetalle as cod_cajachicadetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero  FROM facturas_compra where cod_solicitudrecursodetalle in ($codigoSolicitudDetalle))");
       $stmtSolicitudFacturas->execute();
 
       $index++;

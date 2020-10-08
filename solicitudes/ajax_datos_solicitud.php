@@ -32,7 +32,7 @@ $fechaActual=date("d/m/Y");
 		</thead>
 		<tbody>
 <?php 
-$solicitudDetalle=obtenerSolicitudRecursosDetalle($codigo);
+$solicitudDetalle=obtenerSolicitudRecursosDetalleAgrupadas($codigo);
 $numeroRecibo=obtenerNumeroReciboCajaChica($codCajaChica);
 $index=1;
     while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
@@ -71,5 +71,5 @@ $index=1;
      ?>
 	 </tbody>
   </table>
-					
+	<center><p class="text-muted"><small>Los Detalles de la Solicitud de Recursos se agrupan por Oficina, Area, Cuenta y Proveedor automáticamente.</small></p></center>				
 </div>					

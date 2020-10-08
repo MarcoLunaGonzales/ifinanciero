@@ -10138,4 +10138,18 @@ function verificarSiHayFacturasAnuladasSol($codigo){
     }
     return $cadenaFacturas;
   }
+
+function obtenerSolicitudRecursosDetalleAgrupadas($codigo){
+     $dbh = new Conexion();
+     $sql="";
+     $sql="SELECT GROUP_CONCAT(sd.codigo) as codigo,sd.cod_solicitudrecurso,sd.cod_unidadorganizacional,sd.cod_area,sd.cod_plancuenta,sum(sd.importe_presupuesto) as importe_presupuesto,
+sum(sd.importe) as importe,sd.cod_proveedor,sd.cod_confretencion,
+GROUP_CONCAT(sd.detalle) as detalle,
+pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo 
+where sd.cod_solicitudrecurso=$codigo
+group by sd.cod_unidadorganizacional,sd.cod_area,sd.cod_proveedor,sd.cod_plancuenta;";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     return $stmt;
+  }  
 ?>

@@ -511,11 +511,16 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
            $stmtCaja->bindColumn('nombre_area', $nombre_area);
 
                   while ($rowCaja = $stmtCaja->fetch(PDO::FETCH_BOUND)) {
-
+                         
+                         $stringCaja="and cod_personal=$globalUser";
+                         if(verificarEdicionComprobanteUsuario($globalUser)!=0){
+                             $stringCaja="";
+                         }
+                         
                          $sql2="SELECT *,date_format(fecha,'%d/%m/%Y') as fecha_x,
                            (select e.nombre from estados_contrato e where e.codigo=cod_estado) as nombre_estado,
                          (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal) as personal
-                          from caja_chica where cod_estadoreferencial=1 and cod_estado=1 and cod_tipocajachica = $codigoTipo order by codigo desc";
+                          from caja_chica where cod_estadoreferencial=1 and cod_estado=1 and cod_tipocajachica = $codigoTipo $stringCaja order by codigo desc";
                          //echo $sql2;
                           $stmtCajaChica = $dbh->prepare($sql2);
                          //ejecutamos
