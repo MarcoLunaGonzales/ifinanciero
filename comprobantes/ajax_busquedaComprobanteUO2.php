@@ -239,14 +239,20 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
               <?php
               if($codigoSol[1]==0){
                 if($existeCuenta==0){
-                    ?>
-                    <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>" title="Editar">
+                   $codCajaChica=existeCajaChicaRelacionado($codigo);
+              if($codCajaChica>0){
+                $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
+                ?><a href='#' rel="tooltip" class="btn btn-primary" title="No Editable Caja Chica :<?=$nombreCaja?>">
                       <i class="material-icons"><?=$iconEdit;?></i>
-                    </a>
-                  <?php
+                    </a><?php
+               }else{
+                ?><a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="<?=$buttonEdit;?>" title="Editar">
+                      <i class="material-icons"><?=$iconEdit;?></i>
+                    </a><?php
+               }
                   }else{
                       ?>
-                      <a href='#' rel="tooltip" class="btn btn-danger" title="No Editable">
+                      <a href='#' rel="tooltip" class="btn btn-danger" title="No Editable <?=obtenerNombresComprobanteCerrados($codigo)?>">
                         <i class="material-icons text-dark"><?=$iconEdit;?></i>
                        </a>
                   <?php

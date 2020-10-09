@@ -9813,8 +9813,12 @@ function obtenerNombreDirectoActividadServicioAccNum($cod_acc_num){
 
 function obtenerEstadoCuentaComprobanteCerrados($codigo){
      $dbh = new Conexion();
+     //cuando el estado de cuentas comprobante detalleorigen se relacionaba al comprobante y no al estado de cuentas
+     //$sql="SELECT count(*) as tiene FROM estados_cuenta where cod_comprobantedetalleorigen in (
+     //SELECT e.codigo from comprobantes_detalle cd join comprobantes c on c.codigo=cd.cod_comprobante join estados_cuenta e on e.cod_comprobantedetalle=cd.codigo where c.codigo=$codigo and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen=0);";
      $sql="SELECT count(*) as tiene FROM estados_cuenta where cod_comprobantedetalleorigen in (
-     SELECT e.codigo from comprobantes_detalle cd join comprobantes c on c.codigo=cd.cod_comprobante join estados_cuenta e on e.cod_comprobantedetalle=cd.codigo where c.codigo=$codigo and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen=0);";
+SELECT e.codigo from estados_cuenta e 
+where e.cod_comprobantedetalleorigen=0 and e.cod_comprobantedetalle in (SELECT cd.codigo from comprobantes_detalle cd join comprobantes c on c.codigo=cd.cod_comprobante where c.codigo=$codigo and c.cod_estadocomprobante<>2))";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor=0;
@@ -10151,5 +10155,42 @@ group by sd.cod_unidadorganizacional,sd.cod_area,sd.cod_proveedor,sd.cod_plancue
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
-  }  
+  }
+
+  function obtenerNombresComprobanteCerrados($codigo){
+     $dbh = new Conexion();
+     $sql="SELECT DISTINCT (SELECT cod_comprobante from comprobantes_detalle where codigo=es.cod_comprobantedetalle)as cod_comprobante FROM estados_cuenta es where es.cod_comprobantedetalleorigen in (
+SELECT e.codigo from estados_cuenta e 
+where e.cod_comprobantedetalleorigen=0 and e.cod_comprobantedetalle in (SELECT cd.codigo from comprobantes_detalle cd join comprobantes c on c.codigo=cd.cod_comprobante where c.codigo=$codigo and c.cod_estadocomprobante<>2))";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=abrevUnidad_solo(obtenerCodigoUnidadComprobante($row['cod_comprobante']))." ".nombreComprobante($row['cod_comprobante']);
+        $index++;
+     }
+     return implode(",",$valor);
+  }
+
+function existeCajaChicaRelacionado($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT codigo from caja_chica  where cod_comprobante=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+     }
+     return($valor);
+  } 
+
+function obtenerObservacionCajaChica($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT observaciones from caja_chica  where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['observaciones'];
+     }
+     return($valor);
+  }    
 ?>

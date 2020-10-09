@@ -187,19 +187,24 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                   $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
                                   if($codigoSol[1]==0){
                                     if($existeCuenta==0){
-                                      ?>
-                                      <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
+                                      $codCajaChica=existeCajaChicaRelacionado($codigo);
+                                       if($codCajaChica>0){
+                                        $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
+                                        ?><a href='#' class="dropdown-item" title="No Editable Caja Chica :<?=$nombreCaja?>">
+                                        <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
+                                         </a><?php
+                                       }else{
+                                        ?><a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
                                         <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
-                                      </a>
-                                    <?php
+                                      </a><?php
+                                       }
                                     }else{
                                       ?>
-                                      <a href='#' class="dropdown-item" title="Editar">
+                                      <a href='#' class="dropdown-item" title="<?=obtenerNombresComprobanteCerrados($codigo)?>">
                                          <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
                                       </a>
                                   <?php
-                                    }
-                                  
+                                    }  
                                   }
                                   ?>
                                   

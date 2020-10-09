@@ -133,7 +133,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
       $codComprobante=$_GET['existe'];   
        $sqlUpdateComprobantes="UPDATE comprobantes SET modified_at='$fechaHoraActualSitema',modified_by=$globalUser where codigo=$codComprobante";
        $stmtUpdateComprobante = $dbh->prepare($sqlUpdateComprobantes);
-       $stmtUpdateComprobante->execute();
+       $flagSuccessComprobante=$stmtUpdateComprobante->execute();
 
        $sqlEstadosCuenta="SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante";
        $stmtEstadosCuenta = $dbh->prepare($sqlEstadosCuenta);
