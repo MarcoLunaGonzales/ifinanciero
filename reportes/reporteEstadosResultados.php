@@ -129,7 +129,12 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                    $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
 
                    //ACA VOLVEMOS TODO POSITIVO PARA LA RESTA FINAL
-                   $montoX=abs($montoX);
+                   //$montoX=abs($montoX);
+                   //OBTENEMOS SI ES CUENTA DE INGRESO O GASTO PARA CAMBIARLE DE SIGNO
+                   $tipoCuentaIngresoGasto=substr($numeroX, 0, 1);  // 
+                   if($tipoCuentaIngresoGasto==4){
+                     $montoX=$montoX*-1;
+                   }
                    
                    if($codigo==5){                    
                     $tBolActivo+=$montoX;
