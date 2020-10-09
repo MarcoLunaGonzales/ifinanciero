@@ -44,6 +44,7 @@ for ($nanio=$inicioAnioReal; $nanio <= $aniosReal; $nanio++) {
   
 
  <h5 class="font-weight-bold"><center><?=$tituloItem?></center></h5>
+ <div class="table-responsive">
   <table class="table table-condensed table-bordered">
     <tr class="text-white bg-info">
         <td colspan="2"><a href="#" onclick="mostrarNuevoPersonalModal(<?=$anio?>,'<?=$tituloItem?>')" class="btn btn-sm btn-default"><i class="material-icons">add</i> AGREGAR</a></td>
@@ -314,6 +315,7 @@ for ($nanio=$inicioAnioReal; $nanio <= $aniosReal; $nanio++) {
       <td class="text-right font-weight-bold fondo-boton" id="total_auditorUSD<?=$anio?>"><?=number_format($totalTabla/$usd, 2, '.', '')?></td>
     </tr>
   </table>
+</div>
   <input type="hidden" id="modal_numeropersonalauditor<?=$anio?>" value="<?=$iii?>">  
   <script>ponerCantidadTotalesVariablesModal(<?=$inicioAnioReal?>,<?=$anio?>);
          $('[data-toggle="tooltip"]').tooltip({'trigger':'focus', 'title': 'Password tooltip'});
