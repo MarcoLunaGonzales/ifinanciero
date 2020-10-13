@@ -16105,7 +16105,14 @@ function descargar_txt_libro_ventas(){
           type:"POST",
           data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad,
           url:"reportes/reportePrintLibroVentasTXT.php",
+          beforeSend:function(){
+               //iniciar carga 
+              $("#texto_ajax_titulo").html("Generando Archivo"); 
+              iniciarCargaAjax();
+          },
           success:function(r){
+            detectarCargaAjax();
+            $("#texto_ajax_titulo").html("Procesando Datos");
             var respu=r.split('#####');
             var estado=respu[1];
             var nombre_ar=respu[2];
@@ -16143,7 +16150,14 @@ function descargar_txt_libro_compras(){
           type:"POST",
           data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad,
           url:"reportes/reportePrintLibroComprasTXT.php",
+          beforeSend:function(){
+               //iniciar carga 
+              $("#texto_ajax_titulo").html("Generando Archivo"); 
+              iniciarCargaAjax();
+          },        
           success:function(r){
+            detectarCargaAjax();
+            $("#texto_ajax_titulo").html("Procesando Datos");
             var respu=r.split('#####');
             var estado=respu[1];
             var nombre_ar=respu[2];
