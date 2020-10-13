@@ -16196,7 +16196,14 @@ function descargar_txt_libro_comprasProy(){
           type:"POST",
           data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&estado="+estado,
           url:"reportes_compras/reportePrintLibroCompraProyTXT.php",
+          beforeSend:function(){
+               //iniciar carga 
+              $("#texto_ajax_titulo").html("Generando Archivo"); 
+              iniciarCargaAjax();
+          },        
           success:function(r){
+            detectarCargaAjax();
+            $("#texto_ajax_titulo").html("Procesando Datos");
             var respu=r.split('#####');
             var estado=respu[1];
             var nombre_ar=respu[2];
