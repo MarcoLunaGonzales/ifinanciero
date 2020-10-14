@@ -13,7 +13,7 @@ $unidadesPersonal=$globalUnidad;
 if(obtenerOficinaPersonalMenores($globalUser)!=""){
   $unidadesPersonal=obtenerOficinaPersonalMenores($globalUser);
 }
-echo $unidadesPersonal;
+//echo $unidadesPersonal;
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];

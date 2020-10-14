@@ -236,7 +236,8 @@ $tituloImporte="";
              $importePorcent=($importeSolX*100)/$importeX;   
             }else{
              $importePorcent=0;
-            }      
+            }  
+
             if($retencionX!=0){
               $tituloImporte=abrevRetencion($retencionX);
               $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
