@@ -77,7 +77,7 @@ if(isset($_GET['monto_cajachica'])){
 
     $sql.=" order by e.fecha";
 
-    // echo $sql;
+    //echo $sql;
 
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -118,12 +118,16 @@ if(isset($_GET['monto_cajachica'])){
      }
      //buscamos al personal correspondiente
      $sqlDetalleX="SELECT s.codigo AS cod_solicitudrecurso from solicitud_recursos s where s.cod_comprobante in ('$cod_comprobante_x')";
-
+     //echo $sqlDetalleX;
      // $sqlDetalleX="SELECT cod_solicitudrecurso from solicitud_recursosdetalle where cod_estadocuenta=$codigoX limit 1";        
       $stmtDetalleX = $dbh->prepare($sqlDetalleX);
-      $stmtDetalleX->execute();                    
-      $resultado=$stmtDetalleX->fetch();      
-      $cod_solicitudrecurso_sr=$resultado['cod_solicitudrecurso'];
+      $stmtDetalleX->execute();
+      $cod_solicitudrecurso_sr=0;
+      while ($row = $stmtDetalleX->fetch(PDO::FETCH_ASSOC)) {
+        $cod_solicitudrecurso_sr=$resultado['cod_solicitudrecurso'];
+      }                    
+      //$resultado=$stmtDetalleX->fetch();      
+      
       $sw_personal=0;
       // echo $codigoX."..";
       // $fechaComoEntero = strtotime($fechaComprobante);

@@ -5198,7 +5198,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   { 
     $saldo=0;
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT SUM(e.monto) as monto FROM estados_cuenta e where e.cod_plancuenta=$codCuenta and cod_comprobantedetalleorigen=$codigo_compDe");
+     $stmt = $dbh->prepare("SELECT SUM(e.monto) as monto FROM estados_cuenta e where cod_comprobantedetalleorigen=$codigo_compDe");
      $stmt->execute();   
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $saldo=$saldo+$row['monto'];
@@ -10192,5 +10192,15 @@ function obtenerObservacionCajaChica($codigo){
         $valor=$row['observaciones'];
      }
      return($valor);
-  }    
+  }
+function obtenerOficinaPersonalMenores($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT oficinas from configuraciones_solicitudes_menores where cod_personal=$codigo and cod_estadoreferencial=1;");
+     $stmt->execute();
+     $valor="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['oficinas'];
+     }
+     return($valor);
+  }        
 ?>
