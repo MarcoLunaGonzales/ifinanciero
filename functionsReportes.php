@@ -248,7 +248,7 @@ function obtenerListaVentasResumidoAdministrativo($unidades,$areas,$formas,$desd
 WHERE f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and f.cod_area in ($areas) 
     and f.cod_personal in ($personal) and f.cod_tipopago in ($formas)
     order by fecha_factura, nro_factura";
-   // echo $sql;
+    //echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return($stmt);
