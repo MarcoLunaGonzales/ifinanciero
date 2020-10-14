@@ -505,7 +505,6 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                 <div class="form-group">                        
                   <div id="div_contenedor_proveedor">
                     <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor" required="true">
-                      <option value=""></option>
                       <?php 
                       $query="SELECT * FROM af_proveedores order by nombre";
                       $stmt = $dbh->prepare($query);
@@ -721,6 +720,10 @@ $archivos_cajachica=0;//contador de archivos de caja chica
           }
         }
       }
+    }
+    if(!(f.elements["proveedores"].value>0)){//comprobamos el primer digito de la cuenta 
+      var msg = "Debe seleccionar un proveedor.'\n";
+      ok = false;
     }
 
     var dato = document.getElementById("cuenta_auto_id").value;
