@@ -56,7 +56,7 @@ $html.='<body>'.
           '}'.
         '</script>';
 $html.=  '<header class="header">'.        
-            '<img class="imagen-logo-izq2" src="../assets/img/ibnorca2.jpg">'.
+            '<img class="imagen-logo-izq2" style="position: absolute;padding-top: -25px;left: 0px;top: 20px;width:70px;height:70px;" src="../assets/img/ibnorca2.jpg">'.
 
              '<div>
               <center><h2>Recibo de Caja Chica</h2></center><center><h3>Of/Area: '.$oficina.'/'.$area.'</h3></center>

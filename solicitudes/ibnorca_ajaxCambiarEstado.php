@@ -32,7 +32,7 @@ if($correoPersonal!=""){
 $fechaHoraActual=date("Y-m-d H:i:s");
 //////////////////////////////fin cambio estado//////////////////////////777
 
- if($iEstado=3){
+ if($iEstado==3){
   if(comprobarCuentasPasivasDeSolicitudRecursos($codigo)>0){
     //no crear el comprobante
     echo "####none";

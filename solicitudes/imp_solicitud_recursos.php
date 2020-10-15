@@ -110,7 +110,16 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
              $personal_SIS=namePersonal($userSIS);    
              $fecha_SIS=obtenerFechaCambioEstado($objeto_sol,$codigoX,3107);
           }
-
+          
+          $useranulado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2724);//contabiliado        
+          $nombreEstado_anulado=obtenerNombreEstadoSol(2);
+          if($useranulado==0){
+             $personal_anulado="";    
+             $fecha_anulado="";
+          }else{
+             $personal_anulado=namePersonal($useranulado);    
+             $fecha_anulado=obtenerFechaCambioEstado($objeto_sol,$codigoX,2724);
+          }
     
     $fechaC=$fechaX;
     $unidadC=$unidadNombreX;
@@ -402,8 +411,12 @@ $tituloImporte="";
                 <td class="s3 text-left"><?=$nombreEstado_aprobacion?>: </td><td class="s3 text-center"><?=$personal_aprobacion?></td><td class="s3 text-center"><?=$fecha_aprobacion?></td>
               </tr>
               <tr>
+                <td class="s3 text-left"><?=$nombreEstado_anulado?>: </td><td class="s3 text-center"><?=$personal_anulado?></td><td class="s3 text-center"><?=$fecha_anulado?></td>
+              </tr>
+              <tr>
                 <td class="s3 text-left"><?=$nombreEstado_procesado?>: </td><td class="s3 text-center"><?=$personal_procesado?></td><td class="s3 text-center"><?=$fecha_procesado?></td>
               </tr>
+              
               
      </table>
      <!--<table class="table">
