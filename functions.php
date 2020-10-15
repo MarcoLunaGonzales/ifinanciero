@@ -3918,6 +3918,23 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf->set_base_path('assets/libraries/plantillaPDFCajaChica.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
+
+  function descargarPDFCajaChicaHorizontal($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    ob_clean();
+    $mydompdf->load_html($html,'UTF-8');
+    $mydompdf->set_paper("A4", "portrait");
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+    $mydompdf->set_base_path('assets/libraries/plantillaPDFCajaChica.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  }
+
   function descargarPDFFacturas($nom,$html,$codFactura){
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");
@@ -10233,5 +10250,34 @@ function obtenerNumeroSolicitudRecursos($codigo){
         $valor=$row['numero'];
       }
      return($valor);
-}     
+}
+function encuentraDatosSolicitudRecursosDesdeCajaChica($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_solicitudrecurso,codigo,cod_confretencion from solicitud_recursosdetalle where cod_cajachicadetalle=$codigo");
+     $stmt->execute();
+     $valor=0;$codigo=0;$retencion=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_solicitudrecurso'];
+        $codigo=$row['codigo'];
+        $retencion=$row['cod_confretencion'];
+      }
+     return array($valor,$codigo,$retencion);
+}
+function encuentraDatosCajaChicaDetalle($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT * from caja_chicadetalle where codigo=$codigo");
+     $stmt->execute();
+     $numero=0;$personal=0;$proveedor=0;$monto=0;$observaciones="";$cod_uo=0;$cod_area=0;$codigo=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigo=$row['codigo'];
+        $numero=$row['nro_recibo'];
+        $personal=$row['cod_personal'];
+        $proveedor=$row['cod_proveedores'];
+        $monto=$row['monto'];
+        $observaciones=$row['observaciones'];
+        $cod_uo=$row['cod_uo'];
+        $cod_area=$row['cod_area'];
+      }
+     return array("codigo"=>$codigo,"nro_recibo"=>$numero,"cod_personal"=>$personal,"cod_proveedores"=>$proveedor,"monto"=>$monto,"observaciones"=>$observaciones,"cod_uo"=>$cod_uo,"cod_area"=>$cod_area);
+}       
 ?>

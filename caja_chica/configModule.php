@@ -54,8 +54,8 @@
 
 	$urlImp="comprobantes/imp.php";
 	$urlSolicitudRecursos="solicitudes/verSolicitudRecursos.php";
-
-
-
+    $urlImpSol="solicitudes/imp.php";
+    $urlVerSol="solicitudes/verSolicitudRecursos.php";
+    $urlImpRecibo="caja_chica/print_recibo.php";
 	
 ?>

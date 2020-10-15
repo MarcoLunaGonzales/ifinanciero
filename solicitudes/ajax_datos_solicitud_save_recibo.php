@@ -93,13 +93,13 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
     $cod_actividad_sw=0;
 
     $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by) 
-    VALUES ($codigoDetalle,$codCajaChica,$codCuentaX,'$fecha',$retencionX,$numeroDocumento,'$codPersonal',$montoImporte,'$detalleX',$cod_estado,$cod_estadoreferencial,'$codAreaXX','$codOficinaXX',$numeroRecibo,'$codProveedor','$cod_actividad_sw',NOW(),$globalUser)");
+    VALUES ($codigoDetalle,$codCajaChica,$codCuentaX,'$fecha',$retencionX,$numeroDocumento,'$codPersonal',$importeSolX,'$detalleX',$cod_estado,$cod_estadoreferencial,'$codAreaXX','$codOficinaXX',$numeroRecibo,'$codProveedor','$cod_actividad_sw',NOW(),$globalUser)");
     $flagSuccess=$stmt->execute();
     if($flagSuccess){//registramos rendiciones
       $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$codCajaChica");
       $stmtReembolso->execute();
 
-      $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) values ($codigoDetalle,$numeroDocumento,$retencionX,$montoImporte,$monto_rendicion,'$codPersonal','$detalleX',$cod_estado,$codigoDetalle,$cod_estadoreferencial,'$fecha')");
+      $stmtrendiciones = $dbh->prepare("INSERT INTO rendiciones(codigo,numero,cod_tipodoc,monto_a_rendir,monto_rendicion,cod_personal,observaciones,cod_estado,cod_cajachicadetalle,cod_estadoreferencial,fecha_dcc) values ($codigoDetalle,$numeroDocumento,$retencionX,$importeSolX,$monto_rendicion,'$codPersonal','$detalleX',$cod_estado,$codigoDetalle,$cod_estadoreferencial,'$fecha')");
       $flagSuccess=$stmtrendiciones->execute();
       
       $stmtSolicitudDetalle = $dbh->prepare("UPDATE solicitud_recursosdetalle set cod_cajachicadetalle=$codigoDetalle where codigo in ($codigoSolicitudDetalle)");

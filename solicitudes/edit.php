@@ -153,7 +153,7 @@ if($estado!=1){
           }
         ///
       }else{
-         if($estado==5){
+         if($estado==3){
              //enviar propuestas para la actualizacion de ibnorca
              $fechaHoraActual=date("Y-m-d H:i:s");
              $idTipoObjeto=2708;
