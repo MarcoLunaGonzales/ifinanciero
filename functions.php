@@ -3927,12 +3927,12 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf = new DOMPDF();
     ob_clean();
     $mydompdf->load_html($html,'UTF-8');
-    $customPaper = array(0,0,360,360);
+    $customPaper = array(0,0,360,460);
     $mydompdf->set_paper($customPaper, 'landscape');
     $mydompdf->render();
     $canvas = $mydompdf->get_canvas();
     $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
-    $mydompdf->set_base_path('assets/libraries/plantillaPDFCajaChica.css');
+    $mydompdf->set_base_path('assets/libraries/plantillaPDFCajaChicaRecibo.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
 
