@@ -24,21 +24,56 @@ $codPersonal=obtenerPersonalSolicitanteRecursos($codigoSolicitud);
 $numeroRecibo=obtenerNumeroReciboCajaChica($codCajaChica);
 $numeroDocumento=obtenerNumeroDocumentoReciboCajaChica($codCajaChica);
 $index=0;
+
+$idServicioX=obtenerServicioCodigoSolicitudRecursos($codigoSolicitud);
+$codSimulacionServicioX=obtenerSimulacionServicioCodigoSolicitudRecursos($codigoSolicitud);
+$IdTipo=0;//obtenerTipoServicioPorIdServicio($idServicioX);
+$codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicioX);
+$datosServicio=obtenerServiciosTipoObjetoNombre($codObjeto)." - ".obtenerServiciosClaServicioTipoNombre($IdTipo);
+$nombreCliente=obtenerNombreClienteSimulacion($codSimulacionServicioX);
+$numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
     while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
     	$numeroCuentaX=trim($rowDetalles['numero']);
 		  $nombreCuentaX=trim($rowDetalles['nombre']);
 		  $proveedorX=nameProveedor($rowDetalles["cod_proveedor"]);
-      $retencionX=$rowDetalles["cod_confretencion"];
-    if($retencionX!=0){
-		  $tituloImporte=nameRetencion($retencionX);
-		}else{
-		  $tituloImporte="Ninguno";	
-		}
+
 		$importeSolX=$rowDetalles["importe"];
+    $retencionX=$rowDetalles["cod_confretencion"];
+        if($retencionX!=0){
+              $tituloImporte=abrevRetencion($retencionX);
+              $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
+              $montoImporte=$importeSolX*($porcentajeRetencion/100);       
+              if(($retencionX==8)||($retencionX==10)){ //validacion del descuento por retencion
+                $montoImporte=$importeSolX;
+              }
+              $montoImporteRes=$importeSolX-$montoImporte;
+            }else{
+             $tituloImporte="Ninguno";
+             $montoImporte=$importeSolX;
+             $montoImporteRes=0; 
+            }
 		$detalleX=$rowDetalles["detalle"];
 		$codAreaXX=$rowDetalles['cod_area'];
     $codOficinaXX=$rowDetalles['cod_unidadorganizacional'];
+    
+    $codActividadX=$rowDetalles["cod_actividadproyecto"];
+            $tituloActividad="";
+            //$tituloActividad=obtenerCodigoActividadesServicioImonitoreo($codActividadX);   
+            $detalleActividadFila="";
+            if($codActividadX>0){
+              if(obtenerNombreDirectoActividadServicio($codActividadX)[0]!=""){
+                $detalleActividadFila.="<br><small class='text-dark small'> Actividad: ".obtenerNombreDirectoActividadServicio($codActividadX)[0]." - ".obtenerNombreDirectoActividadServicio($codActividadX)[1]."</small>";
+             }
+            }
+            $codAccNum=$rowDetalles["acc_num"]; 
+            if($codAccNum>0){
+              if(obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]!=""){
+                $detalleActividadFila.="<br><small class='text-dark small'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]." - ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[1]."</small>";
+              }
+            }
+    $montoImporte=number_format($montoImporte, 2, '.', '');    
 
+    $detalleX="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$detalleActividadFila." ".$numeroSR;  
     $nombreOficinaXX=abrevUnidad_solo($codOficinaXX);
     $nombreAreaXX=abrevArea_solo($codAreaXX);
     $codCuentaX=$rowDetalles['cod_plancuenta']; 
@@ -91,7 +126,7 @@ if($index==0){
   $idTipoObjeto=2708;
   $idObjeto=2725; //regristado
   $obs="Solicitud Contabilizada";
-  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigoSolicitud,$fechaHoraActual,$obs);    
+  //actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigoSolicitud,$fechaHoraActual,$obs);    
 
   echo "1";
 }

@@ -182,6 +182,29 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                         <?php $idFila=1;
                         // listamos gastos
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          $codigoSolicitud=encuentraDatosSolicitudRecursosDesdeCajaChica($codigo_detalle_Cajachica);
+                          $estiloBoton="btn-default";
+                          $descripcionSR="list";
+                          if($codigoSolicitud[0]>0){
+                             $estiloBoton="btn-info";
+                             $descripcionSR="SR";
+                             $importeSolX=$monto;
+                             $retencionX=$codigoSolicitud[2];
+                             if($retencionX!=0){
+                                   $tituloImporte=abrevRetencion($retencionX);
+                                   $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
+                                   $montoImporte=$importeSolX*($porcentajeRetencion/100);       
+                                   if(($retencionX==8)||($retencionX==10)){ //validacion del descuento por retencion
+                                     $montoImporte=$importeSolX;
+                                   }
+                                   $montoImporteRes=$importeSolX-$montoImporte;
+                                 }else{
+                                  $tituloImporte="Ninguno";
+                                  $montoImporte=$importeSolX;
+                                  $montoImporteRes=0; 
+                              }
+                             $monto=$montoImporte; 
+                          }
                           $datos_otros=$codigo_detalle_Cajachica."/";
                           $abrevUnidad=abrevUnidad_solo($cod_uo);
                           $abrevArea=abrevArea_solo($cod_area);
@@ -214,8 +237,8 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                               <td class="td-actions text-right">
                                 <script>var nfac=[];itemFacturasDCC.push(nfac);</script>
                                 <div class="btn-group dropdown">
-                                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                                     <i class="material-icons" >list</i><small><small></small></small>
+                                  <button type="button" class="btn <?=$estiloBoton?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                     <i class="material-icons" ><?=$descripcionSR?></i><small><small></small></small>
                                   </button>
                                   <div class="dropdown-menu" >   
                                   <?php
@@ -251,9 +274,26 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                       <a href='#' title="Distribución de Gastos" class="btn btn-warning" onclick="listDistribuciones_cajachica(<?=$codigo_detalle_Cajachica?>);">
                                         <i class="material-icons">list</i>                                  
                                       </a>
-                                    
-                                      <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                                     <?php
+                                       if($codigoSolicitud[0]==0){
+                                        ?>
+                                        <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                         <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
+                                        </a>
+                                        <?php
+                                       }else{
+                                         ?>
+                                         <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSolicitud[0];?>&mon=1')" class="btn btn-default">
+                                            <i class="material-icons"><?=$iconImp;?></i>
+                                          </a>
+                                          <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigo;?>&reg=1" class="btn btn-default">
+                                                  <i class="material-icons">preview</i>
+                                          </a>
+                                         <?php
+                                       } 
+                                     ?>
+                                      <a title="Imprimir Recibo Caja Chica" href='#' onclick="javascript:window.open('<?=$urlImpRecibo;?>?codigo=<?=$codigo_detalle_Cajachica?>')" class="btn btn-success">
+                                            <i class="material-icons"><?=$iconImp;?></i>
                                       </a>
                                       <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>')">
                                         <i class="material-icons" title="Borrar"><?=$iconDelete;?></i>

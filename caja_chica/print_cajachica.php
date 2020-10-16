@@ -128,6 +128,32 @@ $html.=  '<header class="header">'.
               $nombre_area=abrevArea($row['cod_area']);
               $nro_recibo=$row['nro_recibo'];
               $monto_detalle =$row['monto'];
+
+              //detalle sr
+              $codigoSolicitud=encuentraDatosSolicitudRecursosDesdeCajaChica($cod_cajachicadetalle);
+              $estiloBoton="btn-default";
+              $descripcionSR="list";
+              if($codigoSolicitud[0]>0){
+                  $estiloBoton="btn-info";
+                  $descripcionSR="SR";
+                  $importeSolX=$monto_detalle;
+                  $retencionX=$codigoSolicitud[2];
+                  if($retencionX!=0){
+                        $tituloImporte=abrevRetencion($retencionX);
+                        $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
+                        $montoImporte=$importeSolX*($porcentajeRetencion/100);       
+                        if(($retencionX==8)||($retencionX==10)){ //validacion del descuento por retencion
+                          $montoImporte=$importeSolX;
+                        }
+                        $montoImporteRes=$importeSolX-$montoImporte;
+                  }else{
+                       $tituloImporte="Ninguno";
+                       $montoImporte=$importeSolX;
+                       $montoImporteRes=0; 
+                  }
+                  $monto_detalle=$montoImporte; 
+              }
+
               $cod_estadoreferencial_x=$row['cod_estadoreferencial'];
               $observaciones=$row['observaciones'];
               if($cod_estadoreferencial_x==2){
@@ -155,6 +181,9 @@ $html.=  '<header class="header">'.
                 $saldo_inicial=$saldo_inicial+$monto_detalle;                
                 $nro_recibo='';
               }
+
+              
+
               $html.='<tr>'.                      
                             '<td class="text-center small">'.$row['fecha_x'].'</td>';
                             if(!$sw_rembolso){

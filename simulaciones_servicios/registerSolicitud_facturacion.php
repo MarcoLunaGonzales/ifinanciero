@@ -22,7 +22,7 @@ $cod_simulacion=$cod_s;
 $cod_facturacion=$cod_f;
 $cod_sw=$cod_sw;
 //sacamos datos para la facturacion
-$sql="SELECT sc.nombre,sc.anios,sc.cod_responsable,sc.cod_cliente,ps.cod_area,ps.cod_unidadorganizacional,sc.id_tiposervicio
+$sql="SELECT sc.nombre,sc.anios,sc.cod_responsable,sc.cod_cliente,ps.cod_area,ps.cod_unidadorganizacional,sc.id_tiposervicio,sc.idServicio
 from simulaciones_servicios sc,plantillas_servicios ps
 where sc.cod_plantillaservicio=ps.codigo and sc.cod_estadoreferencial=1 and sc.codigo=$cod_simulacion order by sc.codigo";
 // echo $sql;
@@ -205,10 +205,12 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     //parte del controlador de check
                                                     //para la parte de editar
                                                     $sqlControlador="SELECT sfd.precio,sfd.descuento_por,sfd.descuento_bob,sfd.descripcion_alterna from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$cod_simulacion and sfd.cod_claservicio=$codCS and sf.codigo=$cod_facturacion and tipo_solicitud=1";
+
                                                     // echo $sqlControlador;
                                                     $stmtControlado = $dbh->prepare($sqlControlador);
                                                     $stmtControlado->execute();
                                                     while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
+
                                                         $sw="checked";
                                                         $montoPre=$rowPre['precio'];
                                                         $preciox=$rowPre['precio']*$cantidadPre;
@@ -226,11 +228,13 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
 
                                                 $sw2="";//para registrar nuevos, impedir los ya registrados
                                                 $monto_servicio=verificar_pago_servicios_tcp_solfac($id_servicio,$codCS);
+                                                ?><script>console.log("MONTO SERVICIO: "+<?=$monto_servicio?>+"CLA:"+<?=$codCS?>+"-S:"+<?=$id_servicio?>);</script><?php
                                                 $monto_servicio=number_format($monto_servicio,2,".","");
                                                 if($monto_servicio!=0){
                                                     $saldo=$monto_pagar*$cantidadPre-$monto_servicio;
                                                     $monto_total_pagado=$monto_servicio;    
                                                     if($monto_servicio==$montoPre){
+
                                                         $sw2="readonly style='background-color:#cec6d6;'";
                                                         $saldo=0;
                                                     }
@@ -262,10 +266,12 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     //     $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                                     // }
 
-
+                                                     ?><script>console.log("precio: " + "<?=$precio_total_x?>");</script><?php
                                                     $cont_items_aux++;
                                                     if($sw!="checked"){//si el item  es para  editar
-                                                        if($monto_pagar==$monto_total_pagado){
+                                                         ?><script>console.log("ch: " + "checked - montopagar:"+<?=$monto_pagar?>+"_montopagado:"+<?=$monto_total_pagado?>);</script><?php
+                                                        if(($monto_pagar*$cantidadPre)==$monto_total_pagado){
+
                                                             $sw2="readonly style='background-color:#cec6d6;'";
                                                             $saldo=0;
                                                         }
@@ -284,7 +290,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         $saldo=$preciox;
                                                     }
                                                 }
-                                            
+                                                ?><script>console.log("sw: " + "<?=$sw2?>");</script><?php
                                                 ?>
                                                 <!-- guardamos las varialbles en un input -->
                                                 <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">

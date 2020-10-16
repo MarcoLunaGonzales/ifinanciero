@@ -58,7 +58,14 @@ if(obtenerUnidadSolicitanteRecursos($codigo)==3000||obtenerAreaSolicitanteRecurs
 
    }   
   }  
+}else{
+   $montoCaja=obtenerValorConfiguracion(85);
+   $montoDetalleSoliditud=obtenerSumaDetalleSolicitud($codigo);
+   if($montoDetalleSoliditud<=$montoCaja){
+     $estado=3;
+   }
 }
+  
 
 $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado where codigo=$codigo";
 if($estado==8){
@@ -145,6 +152,21 @@ if($estado!=1){
            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
           }
         ///
+      }else{
+         if($estado==3){
+             //enviar propuestas para la actualizacion de ibnorca
+             $fechaHoraActual=date("Y-m-d H:i:s");
+             $idTipoObjeto=2708;
+             $idObjeto=2723; //regristado
+             $obs="Solicitud Aprobada";
+             if(isset($_GET['u'])){
+              $u=$_GET['u'];
+               actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,90,$codigo,$fechaHoraActual,$obs);    
+              }else{
+               actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,90,$codigo,$fechaHoraActual,$obs);    
+              }
+           ///
+         }
       }
     }
    }   

@@ -259,7 +259,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 $sw2="";
                                                 $monto_servicio=verificar_pago_servicios_tcp_solfac($IdServicio,$codCS);
                                                 $monto_servicio=number_format($monto_servicio,2,".","");
-
+                                                ?><script>console.log("MONTO SERVICIO: "+<?=$monto_servicio?>)</script><?php  
                                                 if(count(verificarSiHayFacturasAnuladasSol($cod_facturacion))>0){
                                                    $monto_servicio=''; 
                                                 }
@@ -307,6 +307,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 }
                                             
                                                 ?>
+
                                                 <!-- guardamos todas las valores en un input -->
                                                 <input type="hidden" id="tipo_item<?=$iii?>" name="tipo_item<?=$iii?>" value="<?=$tipo_item?>">
                                                 <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">

@@ -338,7 +338,7 @@
 		                   $stmtSolicitudRecursoCodigo->execute();
 		                   $cod_sr_x=0;
 		                   while ($row_sr_codigo = $stmtSolicitudRecursoCodigo->fetch(PDO::FETCH_ASSOC)){
-		                   	   $cod_sr_x = $row_sr_codigo['cod_cuentaaux']; 
+		                   	   $cod_sr_x = $row_sr_codigo['cod_solicitudrecurso']; 
 		                   }
                            $stmtSolicitud = $dbh->prepare("UPDATE solicitud_recursos set cod_estadosolicitudrecurso=9 where codigo=$cod_sr_x");
                            $stmtSolicitud->execute();  	

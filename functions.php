@@ -3918,6 +3918,23 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf->set_base_path('assets/libraries/plantillaPDFCajaChica.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
+
+  function descargarPDFCajaChicaHorizontal($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    ob_clean();
+    $mydompdf->load_html($html,'UTF-8');
+    $mydompdf->set_paper("A4", "portrait");
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+    $mydompdf->set_base_path('assets/libraries/plantillaPDFCajaChica.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  }
+
   function descargarPDFFacturas($nom,$html,$codFactura){
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");
@@ -5198,7 +5215,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   { 
     $saldo=0;
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT SUM(e.monto) as monto FROM estados_cuenta e where e.cod_plancuenta=$codCuenta and cod_comprobantedetalleorigen=$codigo_compDe");
+     $stmt = $dbh->prepare("SELECT SUM(e.monto) as monto FROM estados_cuenta e where cod_comprobantedetalleorigen=$codigo_compDe");
      $stmt->execute();   
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $saldo=$saldo+$row['monto'];
@@ -10147,11 +10164,12 @@ function obtenerSolicitudRecursosDetalleAgrupadas($codigo){
      $dbh = new Conexion();
      $sql="";
      $sql="SELECT GROUP_CONCAT(sd.codigo) as codigo,sd.cod_solicitudrecurso,sd.cod_unidadorganizacional,sd.cod_area,sd.cod_plancuenta,sum(sd.importe_presupuesto) as importe_presupuesto,
-sum(sd.importe) as importe,sd.cod_proveedor,sd.cod_confretencion,
+sum(sd.importe) as importe,sd.cod_proveedor,sd.cod_confretencion,sd.cod_actividadproyecto,sd.acc_num,
 GROUP_CONCAT(sd.detalle) as detalle,
 pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo 
 where sd.cod_solicitudrecurso=$codigo
 group by sd.cod_unidadorganizacional,sd.cod_area,sd.cod_proveedor,sd.cod_plancuenta;";
+//echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
@@ -10192,5 +10210,74 @@ function obtenerObservacionCajaChica($codigo){
         $valor=$row['observaciones'];
      }
      return($valor);
-  }    
+  }
+function obtenerOficinaPersonalMenores($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT oficinas from configuraciones_solicitudes_menores where cod_personal=$codigo and cod_estadoreferencial=1;");
+     $stmt->execute();
+     $valor="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['oficinas'];
+     }
+     return($valor);
+  } 
+  function obtenerServicioCodigoSolicitudRecursos($codigo){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT idServicio from solicitud_recursos where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['idServicio'];
+      }
+     return($valor);
+}     
+function obtenerSimulacionServicioCodigoSolicitudRecursos($codigo){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_simulacionservicio from solicitud_recursos where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_simulacionservicio'];
+      }
+     return($valor);
+}
+function obtenerNumeroSolicitudRecursos($codigo){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT numero from solicitud_recursos where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['numero'];
+      }
+     return($valor);
+}
+function encuentraDatosSolicitudRecursosDesdeCajaChica($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_solicitudrecurso,codigo,cod_confretencion from solicitud_recursosdetalle where cod_cajachicadetalle=$codigo");
+     $stmt->execute();
+     $valor=0;$codigo=0;$retencion=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_solicitudrecurso'];
+        $codigo=$row['codigo'];
+        $retencion=$row['cod_confretencion'];
+      }
+     return array($valor,$codigo,$retencion);
+}
+function encuentraDatosCajaChicaDetalle($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT * from caja_chicadetalle where codigo=$codigo");
+     $stmt->execute();
+     $numero=0;$personal=0;$proveedor=0;$monto=0;$observaciones="";$cod_uo=0;$cod_area=0;$codigo=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigo=$row['codigo'];
+        $numero=$row['nro_recibo'];
+        $personal=$row['cod_personal'];
+        $proveedor=$row['cod_proveedores'];
+        $monto=$row['monto'];
+        $observaciones=$row['observaciones'];
+        $cod_uo=$row['cod_uo'];
+        $cod_area=$row['cod_area'];
+      }
+     return array("codigo"=>$codigo,"nro_recibo"=>$numero,"cod_personal"=>$personal,"cod_proveedores"=>$proveedor,"monto"=>$monto,"observaciones"=>$observaciones,"cod_uo"=>$cod_uo,"cod_area"=>$cod_area);
+}       
 ?>
