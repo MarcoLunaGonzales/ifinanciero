@@ -4669,7 +4669,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   function obtenerCantidadTotalSimulacionesServiciosDetalleAuditorPeriodo($codigo,$tipo,$anio){
       $dbh = new Conexion();
      $valor=0;
-     $sql="SELECT p.codigo,p.cantidad,p.dias,p.monto from simulaciones_ssd_ssa p, (select codigo from simulaciones_servicios_auditores where cod_simulacionservicio=$codigo and cod_anio=$anio and habilitado=1) q 
+     $sql="SELECT distinct p.cantidad,p.dias,p.monto,p.cod_anio,p.cod_simulacionservicio,p.cod_simulacionserviciodetalle,p.cod_simulacionservicioauditor from simulaciones_ssd_ssa p, (select codigo from simulaciones_servicios_auditores where cod_simulacionservicio=$codigo and cod_anio=$anio and habilitado=1) q 
   where p.cod_simulacionservicio=$codigo and p.cod_simulacionserviciodetalle=$tipo and p.cod_anio=$anio and p.cod_simulacionservicioauditor=q.codigo";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
@@ -4696,7 +4696,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   function obtenerMontoTotalSimulacionesServiciosDetalleAuditorPeriodo($codigo,$tipo,$anio){
       $dbh = new Conexion();
      $valor=0;
-     $sql="SELECT p.cantidad,p.dias,p.monto,s.cod_externolocal,p.monto_externo from simulaciones_ssd_ssa p join simulaciones_servicios_auditores s on p.cod_simulacionservicioauditor=s.codigo where p.cod_simulacionservicio=$codigo and s.cod_simulacionservicio=$codigo and p.cod_simulacionserviciodetalle=$tipo and p.cod_anio=$anio and s.cod_anio=$anio and s.habilitado=1";
+     $sql="SELECT distinct p.cantidad,p.dias,p.monto,s.cod_externolocal,p.monto_externo,p.cod_anio,p.cod_simulacionservicio,p.cod_simulacionserviciodetalle,p.cod_simulacionservicioauditor from simulaciones_ssd_ssa p join simulaciones_servicios_auditores s on p.cod_simulacionservicioauditor=s.codigo where p.cod_simulacionservicio=$codigo and s.cod_simulacionservicio=$codigo and p.cod_simulacionserviciodetalle=$tipo and p.cod_anio=$anio and s.cod_anio=$anio and s.habilitado=1";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

@@ -19,14 +19,21 @@ $habilitado=$_GET["habilitado"];
 $cantidad=$_GET["cantidad"];
 $anio=$_GET["anio"];
 
-$cantidad=obtenerCantidadTotalSimulacionesServiciosDetalleAuditorPeriodo($simulaciones,$codigo,$anio);
-$monto=obtenerMontoTotalSimulacionesServiciosDetalleAuditorPeriodo($simulaciones,$codigo,$anio);
-$montoEditado=$monto/$cantidad;
 
 
-$sqlUpdateDetalle="UPDATE simulaciones_serviciodetalle SET  monto_unitario='$monto',monto_total='$monto',habilitado=$habilitado,cantidad=$cantidad where codigo=$codigo and cod_anio=$anio";
+
+
+$sqlUpdateDetalle="UPDATE simulaciones_serviciodetalle SET  habilitado=$habilitado where codigo=$codigo and cod_anio=$anio";
 $stmtUpdateDetalle = $dbh->prepare($sqlUpdateDetalle);
 $stmtUpdateDetalle->execute();
+
+//actualizar la cantidad caso gli
+$monto=obtenerMontoTotalSimulacionesServiciosDetalleAuditorPeriodo($simulaciones,$codigo,$anio);
+$montoEditado=$monto/$cantidad;
+$cantidad=obtenerCantidadTotalSimulacionesServiciosDetalleAuditorPeriodo($simulaciones,$codigo,$anio);
+$sqlUpdateDetalleCantidad="UPDATE simulaciones_serviciodetalle SET  monto_unitario='$monto',monto_total='$monto',cantidad=$cantidad where codigo=$codigo and cod_anio=$anio";
+$stmtUpdateDetalleCantidad = $dbh->prepare($sqlUpdateDetalleCantidad);
+$stmtUpdateDetalleCantidad->execute();
 $montoTotal=0;
 $detallesMontos=obtenerMontosCuentasDetalleSimulacionServicioPartidaHabilitadoPeriodo($simulaciones,$partida,$anio);
 while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
