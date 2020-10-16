@@ -3927,7 +3927,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf = new DOMPDF();
     ob_clean();
     $mydompdf->load_html($html,'UTF-8');
-    $mydompdf->set_paper("A4", "portrait");
+    $customPaper = array(0,0,360,360);
+    $mydompdf->set_paper($customPaper, 'landscape');
     $mydompdf->render();
     $canvas = $mydompdf->get_canvas();
     $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 

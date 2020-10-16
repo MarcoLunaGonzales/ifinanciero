@@ -61,7 +61,7 @@ if(obtenerUnidadSolicitanteRecursos($codigo)==3000||obtenerAreaSolicitanteRecurs
 }else{
    $montoCaja=obtenerValorConfiguracion(85);
    $montoDetalleSoliditud=obtenerSumaDetalleSolicitud($codigo);
-   if($montoDetalleSoliditud<=$montoCaja){
+   if($montoDetalleSoliditud<=$montoCaja&&$estado==4){
      $estado=3;
    }
 }

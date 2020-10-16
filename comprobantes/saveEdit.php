@@ -244,6 +244,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       $tipoFac=$facturas[$i-1][$j]->tipoFac;
       $tazaFac=$facturas[$i-1][$j]->tazaFac;
       $iceFac=$facturas[$i-1][$j]->iceFac;
+      
 
       $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tazaFac','$tipoFac')";
       $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
@@ -262,10 +263,14 @@ for ($i=1;$i<=$cantidadFilas;$i++){
           $codProveedor=obtenerCodigoProveedorCuentaAux($codPlanCuentaAux);
           $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
           $fecha=$fecha;
-          $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fechaHoraActual2','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
-          $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
-          $flagSuccessDetalle3=$stmtDetalle3->execute();
-          array_push($SQLDATOSINSTERT,$flagSuccessDetalle3); 
+          $verificaECCerrar=verificarCuentaEstadosCuenta($cuenta);
+          if ($verificaECCerrar>0){
+            $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fechaHoraActual2','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
+            $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
+            $flagSuccessDetalle3=$stmtDetalle3->execute();
+            array_push($SQLDATOSINSTERT,$flagSuccessDetalle3); 
+          }
+          
       }
     }//FIN DE ESTADOS DE CUENTA
 	}

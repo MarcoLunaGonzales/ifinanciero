@@ -410,6 +410,7 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
       contador++;   
       break;  
     }else{
+      
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#estados_cuentas"+fila).addClass("d-none");  
     }

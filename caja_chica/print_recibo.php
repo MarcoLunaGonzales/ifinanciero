@@ -38,6 +38,37 @@ try{
        }
       $monto=$montoImporte; 
   }
+
+          $objeto_sol=2708;
+          $codPersonalX=obtenerPersonalSolicitanteRecursos($codigoSolicitud[0]);
+          $nombreEstado_registro=obtenerNombreEstadoSol(1);
+          $personal_registro=namePersonal($codPersonalX);
+          $fecha_registro=obtenerFechaCambioEstado($objeto_sol,$codigoSolicitud[0],2721);//estado registro
+
+          
+          $userRevisado=obtenerPersonaCambioEstado($objeto_sol,$codigoSolicitud[0],2722);  //autorizado       
+          $nombreEstado_revisado=obtenerNombreEstadoSol(4);
+          if($userRevisado==0){
+             $fecha_revisado="";    
+             $personal_revisado="";    
+          }else{
+             $personal_revisado=namePersonal($userRevisado);
+             $fecha_revisado=obtenerFechaCambioEstado($objeto_sol,$codigoSolicitud[0],2722);
+          }
+
+
+          $userprocesado=obtenerPersonaCambioEstado($objeto_sol,$codigoSolicitud[0],2725);//contabiliado        
+          $nombreEstado_procesado=obtenerNombreEstadoSol(5);
+          if($userprocesado==0){
+             $personal_procesado="";    
+             $fecha_procesado="";
+          }else{
+             $personal_procesado=namePersonal($userprocesado);    
+             $fecha_procesado=obtenerFechaCambioEstado($objeto_sol,$codigoSolicitud[0],2725);
+          }
+
+          
+
 $html = '';
 $html.='<html>'.
             '<head>'.
@@ -60,7 +91,7 @@ $html.=  '<header class="header">'.
 
              '<div>
               <center><h2>Recibo de Caja Chica</h2></center><center><h3>Of/Area: '.$oficina.'/'.$area.'</h3></center>
-              <table width="100%"><tr><td align="center"><h3></h3></td><td align="right"><h3>Nro.: '.$datos['nro_recibo'].'</h3></td></tr></table>'. 
+              <table width="100%"><tr><td align="center"><h3></h3></td><td align="right"><h3 class="text-danger">Nº &nbsp;&nbsp;&nbsp;&nbsp;'.$datos['nro_recibo'].'</h3></td></tr></table>'. 
             '</div>'.
             '</header>';
 
@@ -86,23 +117,23 @@ $html.=  '<header class="header">'.
             '</tr>';
             $html.='</tbody>';
             $html.='</table>';
-            $html.='<br><br><br><table class="" width="100%">'.
+            $html.='<br><br><br><table class="table" width="100%">'.
            '<tbody>';
             $html.='<tr>'.
                 '<td class="text-left " width="20%"><b>Elaborado por:</b></td>'.
-                '<td class="text-left"></td>'.
+                '<td class="text-left">'.$personal_registro.'</td>'.
                 '<td class="text-left " width="20%"><b>Recibido por:</b></td>'.
                 '<td class="text-left"></td>'.
             '</tr>';
             $html.='<tr>'.
                 '<td class="text-left " width="20%"><b>Autorizado por:</b></td>'.
-                '<td class="text-left"></td>'.
+                '<td class="text-left">'.$personal_revisado.'</td>'.
                 '<td class="text-left " width="20%"><b></b></td>'.
                 '<td class="text-left"></td>'.
             '</tr>';
             $html.='<tr>'.
                 '<td class="text-left " width="20%"><b>Pagado por:</b></td>'.
-                '<td class="text-left"></td>'.
+                '<td class="text-left">'.$personal_procesado.'</td>'.
                 '<td class="text-left " width="20%"><b></b></td>'.
                 '<td class="text-left"></td>'.
             '</tr>';
