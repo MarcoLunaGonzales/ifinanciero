@@ -283,7 +283,10 @@ $archivos_cajachica=0;//contador de archivos de caja chica
     				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar Nuevo"; else echo "Editar";?>  Gasto</h4>
     				</div>
   			  </div>
-  			  <div class="card-body ">			           
+  			  <div class="card-body ">		
+         <?php 
+         if(!isset($_GET["sr"])){ 
+         ?> 	           
             <div class="row">
               <label class="col-sm-2 col-form-label">Monto</label>
                 <div class="col-sm-4">
@@ -552,6 +555,9 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                 </div>
                 </div>
             </div> 
+            <?php }else{
+              ?><input type="hidden" name="sr" id="sr" value="1"/><?php
+            } ?>
             <!-- para solicitud de recursos -->             
             <div class="row">              
               <div class="col-sm-12">

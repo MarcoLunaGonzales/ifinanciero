@@ -12,10 +12,10 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar err
 
 try {
     $globalUser=$_SESSION["globalUser"];
-
     $codigo = $_POST["codigo"];
     $cod_tcc = $_POST["cod_tcc"];
     $cod_cc = $_POST["cod_cc"];
+  if(!isset($_POST["sr"])){
 
     $cod_cuenta=trim($_POST["cuenta_auto_id"]);    
     $cod_comprobante_ec=trim($_POST["comprobante"]);
@@ -45,6 +45,9 @@ try {
     $stmtMCC->execute();
     $resultMCC=$stmtMCC->fetch();
     $monto_reembolso_x=$resultMCC['monto_reembolso'];
+
+    }//fin if isset sr
+
     if ($codigo == 0){//insertamos
         $monto_reembolso=$monto_reembolso_x-$monto;
         //para el codigo del detalle
@@ -119,7 +122,7 @@ try {
                         $stmtInsert2 = $dbh->prepare($sqlInsert2);
                         $flagSuccess=$stmtInsert2->execute();
 
-                        $stmtCambioEstadoSR = $dbh->prepare("UPDATE solicitud_recursos set cod_estadosolicitudrecurso=8 where codigo=:codigo");
+                        $stmtCambioEstadoSR = $dbh->prepare("UPDATE solicitud_recursos set cod_estadosolicitudrecurso=9 where codigo=:codigo");
                         $stmtCambioEstadoSR->bindParam(':codigo', $cod_solicitudrecurso_sr);
                         $flagSuccess=$stmtCambioEstadoSR->execute();
                     }
@@ -153,6 +156,7 @@ try {
                 }   
             }
         }
+
         //insertamos archivos adjuntos
         $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
         for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
@@ -191,6 +195,7 @@ try {
 
         showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
     } else {//update
+      if(!isset($_POST["sr"])){  
         //actualizamos monto reeembolso
         //sacamos monto anterior de detalle
         $stmtMontoAnterior = $dbh->prepare("SELECT monto from caja_chicadetalle where codigo=$codigo");
@@ -316,6 +321,10 @@ try {
                 }   
             }
         }
+
+     }else{
+        $flagSuccess=true;
+     }//fin if isset sr
         //insertamos archivos adjuntos
         $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
         for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 

@@ -59,7 +59,7 @@ try{
 
 
           $userprocesado=obtenerPersonaCambioEstado($objeto_sol,$codigoSolicitud[0],2725);//contabiliado        
-          $nombreEstado_procesado=obtenerNombreEstadoSol(5);
+          $nombreEstado_procesado=obtenerNombreEstadoSol(9);
           if($userprocesado==0){
              $personal_procesado="";    
              $fecha_procesado="";
@@ -121,7 +121,7 @@ $html.=  '';
            '<tbody>';
             $html.='<tr>'.
                 '<td class="text-left" width="20%"><b>Proveedor/Beneficiario</b> </td>'.
-                '<td class="text-left">: '.namePersonal($datos['cod_personal']).'</td>'.
+                '<td class="text-left">: '.nameProveedor($datos["cod_proveedores"]).'</td>'.
                 '<td class="text-left " width="20%"><b></b></td>'.
                 '<td class="text-left"></td>'.
             '</tr>';

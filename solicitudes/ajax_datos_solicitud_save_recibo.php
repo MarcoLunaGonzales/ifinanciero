@@ -126,8 +126,7 @@ if($index==0){
   $idTipoObjeto=2708;
   $idObjeto=2725; //regristado
   $obs="Solicitud Contabilizada";
-  //actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigoSolicitud,$fechaHoraActual,$obs);    
-
+  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigoSolicitud,$fechaHoraActual,$obs);    
   echo "1";
 }
      ?>

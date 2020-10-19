@@ -10280,5 +10280,38 @@ function encuentraDatosCajaChicaDetalle($codigo){
         $cod_area=$row['cod_area'];
       }
      return array("codigo"=>$codigo,"nro_recibo"=>$numero,"cod_personal"=>$personal,"cod_proveedores"=>$proveedor,"monto"=>$monto,"observaciones"=>$observaciones,"cod_uo"=>$cod_uo,"cod_area"=>$cod_area);
-}       
+}
+function obtenerEstadoCajaChica($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_estado from caja_chica  where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_estado'];
+     }
+     return($valor);
+  }   
+
+function obtenerSolicitudRecursoPorCajaChica($codigo){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_solicitudrecurso from solicitud_recursosdetalle where cod_cajachicadetalle=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_solicitudrecurso'];
+     }
+     return($valor);
+  } 
+
+  function obtenerCodigoCajaChicaDetalleSolicitud($codigo){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT DISTINCT cod_cajachicadetalle from solicitud_recursosdetalle where cod_solicitudrecurso=$codigo");
+     $stmt->execute();
+     $index=0;$codigos=[];
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $codigos[$index]=$row['cod_cajachicadetalle'];
+        $index++;
+     }
+     return($codigos);
+  }      
 ?>
