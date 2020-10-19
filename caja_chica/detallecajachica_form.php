@@ -119,6 +119,9 @@ if ($codigo > 0){
     $cod_actividad_sw=null;
     $glosa_comprobante="";
 }
+
+$nro_recibo=obtenerNumeroReciboInstancia($cod_tcc);
+
 //sacmos el valor de fechas hacia atrás
 $dias_atras=obtenerValorConfiguracion(31);
 $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);

@@ -5718,7 +5718,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       $dbh = new ConexionIBNORCA();
       //enviar propuestas para la actualizacion de ibnorca
       $sqlUpdateIbnorca="INSERT INTO estadoobjeto (idtipoobjeto,idestado,idresponsable,idobjeto,fechaestado,observaciones)
-     VALUES ('$idTipoObjeto','$idObjeto','$user','$objeto','$fechaHoraActual','$obs')";
+     VALUES ('$idTipoObjeto','$idObjeto','$user','$objeto',NOW(),'$obs')";
      $stmtUpdateIbnorca = $dbh->prepare($sqlUpdateIbnorca);
      $stmtUpdateIbnorca->execute();
     }
@@ -10313,5 +10313,30 @@ function obtenerSolicitudRecursoPorCajaChica($codigo){
         $index++;
      }
      return($codigos);
-  }      
+  } 
+
+function obtenerNumeroReciboInstancia($instancia){
+   $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT IFNULL(max(d.nro_recibo)+1,1)as nro_recibo from caja_chicadetalle d 
+       join caja_chica c on c.codigo=d.cod_cajachica
+       where d.cod_estadoreferencial=1 
+       and c.cod_tipocajachica=$instancia;");
+     $stmt->execute();
+     $numero=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+       $numero=$row["nro_recibo"];
+     }
+     return($numero);
+} 
+
+function obtenerCodigoInstanciaPorCajaChica($codigo){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_tipocajachica from caja_chica where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_tipocajachica'];
+     }
+     return($valor);
+  }       
 ?>

@@ -33,7 +33,8 @@ $fechaActual=date("d/m/Y");
 		<tbody>
 <?php 
 $solicitudDetalle=obtenerSolicitudRecursosDetalleAgrupadas($codigo);
-$numeroRecibo=obtenerNumeroReciboCajaChica($codCajaChica);
+$instancia=obtenerCodigoInstanciaPorCajaChica($codCajaChica);
+$numeroRecibo=obtenerNumeroReciboInstancia($instancia);
 $index=1;
 
 $idServicioX=obtenerServicioCodigoSolicitudRecursos($codigo);

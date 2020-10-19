@@ -19,9 +19,11 @@ $fechaActual=date("d/m/Y");
 $fecha=date("Y-m-d");
 $fechaHora=date("Y-m-d H:i:s");
 
+$instancia=obtenerCodigoInstanciaPorCajaChica($codCajaChica);
+
 $solicitudDetalle=obtenerSolicitudRecursosDetalleAgrupadas($codigoSolicitud);
 $codPersonal=obtenerPersonalSolicitanteRecursos($codigoSolicitud);
-$numeroRecibo=obtenerNumeroReciboCajaChica($codCajaChica);
+$numeroRecibo=obtenerNumeroReciboInstancia($instancia);
 $numeroDocumento=obtenerNumeroDocumentoReciboCajaChica($codCajaChica);
 $index=0;
 
