@@ -6193,6 +6193,18 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      return($valor);
   }
 
+  function obtenerFechaSinHoraCambioEstado($tipo,$objeto,$estado){
+     $dbh = new ConexionIBNORCA();
+     $stmt = $dbh->prepare("SELECT DATE_FORMAT(FechaEstado,'%d/%m/%Y')as fecha_registro_x FROM estadoobjeto where IdTipoObjeto=$tipo and IdObjeto = $objeto and IdEstado=$estado");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['fecha_registro_x'];
+     }
+     return($valor);
+  }
+
+
   function obtenerIdPropuestaServicioIbnorca($idServicio){
      $dbh = new ConexionIBNORCA();
      $stmt = $dbh->prepare("SELECT idPropuesta FROM servicios where idServicio=$idServicio");
@@ -10169,7 +10181,7 @@ sum(sd.importe) as importe,sd.cod_proveedor,sd.cod_confretencion,sd.cod_activida
 GROUP_CONCAT(sd.detalle) as detalle,
 pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo 
 where sd.cod_solicitudrecurso=$codigo
-group by sd.cod_unidadorganizacional,sd.cod_area,sd.cod_proveedor,sd.cod_plancuenta;";
+group by sd.cod_unidadorganizacional,sd.cod_area,sd.cod_proveedor,sd.cod_plancuenta,sd.cod_confretencion;";
 //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
@@ -10338,5 +10350,29 @@ function obtenerCodigoInstanciaPorCajaChica($codigo){
         $valor=$row['cod_tipocajachica'];
      }
      return($valor);
-  }       
+  } 
+
+  function obtenerResumenDistribucionNormalSR($codigo){
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT d.porcentaje,d.tipo_distribucion,d.oficina_area 
+      from distribucion_gastos_solicitud_recursos d 
+      where d.cod_solicitudrecurso=$codigo and d.porcentaje<>0");
+    $stmt->execute();
+    $detalle="";
+    $monto=obtenerSumaDetalleSolicitud($codigo);
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $tipo=$row['tipo_distribucion'];
+    $porcentaje=$row['porcentaje'];
+    $unidad_area=$row['oficina_area'];
+    $detalleHijo="";
+    $montoPadre=$monto*($row['porcentaje']/100);
+    if($tipo==1){
+      $detalle.="<b>".abrevUnidad_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")<br>";
+    }else{
+      $detalle.="<b>".abrevArea_solo($row['oficina_area']).":</b>".$porcentaje."%"."(".number_format(($monto*($porcentaje/100)),2,'.',',').")<br>";
+    }
+
+   }
+    return $detalle;
+  }      
 ?>

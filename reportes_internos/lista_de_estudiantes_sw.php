@@ -9,7 +9,7 @@ require_once '../functionsGeneral.php';
 $dbh = new Conexion();
 $sql="SELECT fd.codigo as cod_detale,f.codigo as cod_factura,f.nro_factura,f.cod_solicitudfacturacion,f.fecha_factura,fd.cod_claservicio,(fd.cantidad*fd.precio-fd.descuento_bob)*(da.porcentaje/100) importe,fd.descripcion_alterna,fd.ci_estudiante
 FROM facturas_venta f,facturas_venta_distribucion da,facturas_ventadetalle fd
-WHERE f.codigo=da.cod_factura and f.codigo=fd.cod_facturaventa and f.cod_estadofactura<>2 and da.cod_area=13 and f.fecha_factura between '2020-08-01 00:00:00' and '2020-08-31 23:59:59' and f.cod_solicitudfacturacion<>-100 order by f.fecha_factura";
+WHERE f.codigo=da.cod_factura and f.codigo=fd.cod_facturaventa and f.cod_estadofactura<>2 and da.cod_area=13 and f.fecha_factura between '2020-09-01 00:00:00' and '2020-10-31 23:59:59' and f.cod_solicitudfacturacion<>-100 order by f.fecha_factura";
 $stmt = $dbh->prepare($sql); /*and sf.cod_estadosolicitudfacturacion!=5*/
 $stmt->execute();
 $stmt->bindColumn('cod_detale', $cod_detale);
@@ -59,7 +59,7 @@ $stmt->bindColumn('ci_estudiante', $ci_estudiante);
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $importe=round($importe,2);
                           if($cod_solicitudfacturacion!=-100){
-                            $sql="SELECT f.Monto, f.CiAlumno,f.IdSolicitudFactura,f.IdCurso,f.IdModulo,f.Fecha from ibnorca.controlpagos f where f.PlataformaPago=13 and  f.IdModulo=$cod_claservicio and  f.CiAlumno like '%$ci_estudiante%' and f.IdSolicitudFactura=$cod_solicitudfacturacion order by f.Fecha desc limit 1";
+                            $sql="SELECT sum(f.Monto) as Monto, f.CiAlumno,f.IdSolicitudFactura,f.IdCurso,f.IdModulo,f.Fecha from ibnorca.controlpagos f where f.PlataformaPago=13 and  f.IdModulo=$cod_claservicio and  f.CiAlumno like '%$ci_estudiante%' order by f.Fecha desc"; //and f.IdSolicitudFactura=$cod_solicitudfacturacion
                             $stmt2 = $dbh->prepare($sql); 
                             // echo $sql;
                             $stmt2->execute();

@@ -44,7 +44,7 @@ try{
           $codPersonalX=obtenerPersonalSolicitanteRecursos($codigoSolicitud[0]);
           $nombreEstado_registro=obtenerNombreEstadoSol(1);
           $personal_registro=namePersonal($codPersonalX);
-          $fecha_registro=obtenerFechaCambioEstado($objeto_sol,$codigoSolicitud[0],2721);//estado registro
+          $fecha_registro=obtenerFechaSinHoraCambioEstado($objeto_sol,$codigoSolicitud[0],2721);//estado registro
 
           
           $userRevisado=obtenerPersonaCambioEstado($objeto_sol,$codigoSolicitud[0],2722);  //autorizado       
@@ -54,7 +54,7 @@ try{
              $personal_revisado="";    
           }else{
              $personal_revisado=namePersonal($userRevisado);
-             $fecha_revisado=obtenerFechaCambioEstado($objeto_sol,$codigoSolicitud[0],2722);
+             $fecha_revisado=obtenerFechaSinHoraCambioEstado($objeto_sol,$codigoSolicitud[0],2722);
           }
 
 
@@ -65,24 +65,10 @@ try{
              $fecha_procesado="";
           }else{
              $personal_procesado=namePersonal($userprocesado);    
-             $fecha_procesado=obtenerFechaCambioEstado($objeto_sol,$codigoSolicitud[0],2725);
+             $fecha_procesado=obtenerFechaSinHoraCambioEstado($objeto_sol,$codigoSolicitud[0],2725);
           }
 
-          if($fecha_registro!=0){
-            $fecha_registro=strftime('%d/%m/%Y',strtotime($fecha_registro));
-          }else{
-            $fecha_registro="";
-          }
-          if($fecha_revisado!=0){
-            $fecha_revisado=strftime('%d/%m/%Y',strtotime($fecha_revisado));
-          }else{
-            $fecha_revisado="";
-          }
-          if($fecha_procesado!=0){
-            $fecha_procesado=strftime('%d/%m/%Y',strtotime($fecha_procesado));
-          }else{
-            $fecha_procesado="";
-          }
+          
       $entero=floor((float)number_format($monto, 2, '.', ''));
       $decimal=(float)number_format($monto, 2, '.', '')-$entero;
       $centavos=round($decimal*100);

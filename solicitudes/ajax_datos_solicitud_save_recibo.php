@@ -87,7 +87,7 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
     $stmtMCC->execute();
     $resultMCC=$stmtMCC->fetch();    
     $monto_reembolso_x=$resultMCC['monto_reembolso'];
-    $monto_reembolso=$monto_reembolso_x-$importeSolX;
+    $monto_reembolso=$monto_reembolso_x-$montoImporte;
     $codigoDetalle=obtenerCodigoReciboCajaChicaDetalle();
     $cod_estado=1;
     $cod_estadoreferencial=1;

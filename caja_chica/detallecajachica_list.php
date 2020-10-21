@@ -280,27 +280,33 @@ $nombre_caja_chica=$resulttb['nombre_caja_chica'];
                                         <i class="material-icons">list</i>                                  
                                       </a>
                                      <?php
-                                      if($cod_estadocajachica==1){
+                                      //if($cod_estadocajachica==1){
                                        if($codigoSolicitud[0]==0){
+                                        if($cod_estadocajachica==1){
                                         ?>
                                         <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>' rel="tooltip" class="<?=$buttonEdit;?>">
                                         <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
                                         </a>
                                         <?php
+                                         }
                                        }else{
+                                        if($cod_estadocajachica==1){
                                          ?>
                                          <a href='<?=$urlFormDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>&sr=1' rel="tooltip" class="btn btn-deafult">
                                         <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
                                         </a>
+                                        <?php 
+                                         }
+                                        ?>
                                          <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSolicitud[0];?>&mon=1')" class="btn btn-default">
                                             <i class="material-icons"><?=$iconImp;?></i>
                                           </a>
-                                          <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigo;?>&reg=1" class="btn btn-default">
+                                          <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSolicitud[0];?>&reg=1" class="btn btn-default">
                                                   <i class="material-icons">preview</i>
                                           </a>
                                          <?php
                                        }     
-                                      }
+                                      //}
                                      ?>
                                       <a title="Imprimir Recibo Caja Chica" href='#' onclick="javascript:window.open('<?=$urlImpRecibo;?>?codigo=<?=$codigo_detalle_Cajachica?>')" class="btn btn-success">
                                             <i class="material-icons"><?=$iconImp;?></i>

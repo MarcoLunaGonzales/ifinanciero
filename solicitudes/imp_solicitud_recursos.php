@@ -44,7 +44,9 @@ $stmt->execute();
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
     
     $distribucionGlosa=obtenerResumenDistribucionSR($codigoX);
-    
+    if(trim($distribucionGlosa)==""){
+      $distribucionGlosa=obtenerResumenDistribucionNormalSR($codigoX);
+    }
     $nombreCliente=obtenerNombreClienteSimulacion($codSimulacionServicioX);
 
     //

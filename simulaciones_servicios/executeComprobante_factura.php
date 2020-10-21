@@ -141,7 +141,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 				}elseif($cod_tipopago==$cod_tipopago_anticipo && $cod_estado_cuenta_x!=0){//tipo de pago anticipo en $cod_estado_cuenta_x viene el codigo de estado de cuenta
 					$cuenta_auxiliar=obtenerValorConfiguracion(63);//cod cuenta auxiliar por defecto de anulacion de facturas
 					$cod_proveedor=obtenerCodigoProveedorCuentaAux($cuenta_auxiliar);
-					$cod_compte_origen=obtenerCod_comprobanteDetalleorigen($cod_estado_cuenta_x);
+					$cod_compte_origen=$cod_estado_cuenta_x;//obtenerCod_comprobanteDetalleorigen($cod_estado_cuenta_x); //codigo estado de cuenta
 					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,$cuenta_auxiliar,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
 					$stmtdetalleCom = $dbh->prepare("SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante and orden=$ordenDetalle");
 					//en este caso insertamos la contra cuenta del estado de cuenta, para ello necesitamos el codigo del comprobnate detalle

@@ -154,6 +154,19 @@ if($estado!=1){
         ///
       }else{
          if($estado==3){
+          //se envia directo costos menores a 1000
+            //enviar propuestas para la actualizacion de ibnorca
+             $fechaHoraActual=date("Y-m-d H:i:s");
+             $idTipoObjeto=2708;
+             $idObjeto=2722; //regristado
+             $obs="En Aprobacion Solicitud";
+             if(isset($_GET['q'])){
+                $u=$_GET['q'];
+                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+              }else{
+                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+              }
+
              //enviar propuestas para la actualizacion de ibnorca
              $fechaHoraActual=date("Y-m-d H:i:s");
              $idTipoObjeto=2708;
