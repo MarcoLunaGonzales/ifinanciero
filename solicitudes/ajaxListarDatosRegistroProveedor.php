@@ -19,7 +19,7 @@ $lista= obtenerPaisesServicioIbrnorca();
       <label class="col-sm-3 col-form-label">Buscar</label>
       <div class="col-sm-7">
         <div class="form-group" >
-            <input type="text" class="form-control" name="nombre_empresa" id="nombre_empresa" value="" required="true" placeholder="Ingrese Nombre Nit ó Identificación...">
+            <input type="text" class="form-control" name="nombre_empresa" id="nombre_empresa" value="" required="true" placeholder="Ingrese Nombre Completo Nit ó Identificación...">
         </div>
       </div>
         <a href="#" id="boton_actualizar_lista" class="btn btn-info btn-sm btn-fab d-none" onclick="actualizarRegistroProveedor()" title="Actualizar Lista Proveedores"><i class="material-icons">find_replace</i></a>

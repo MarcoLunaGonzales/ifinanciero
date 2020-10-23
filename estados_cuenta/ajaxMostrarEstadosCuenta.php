@@ -42,8 +42,8 @@ if($codCuentaAuxiliar!=0){
       <th class="text-left">FechaEC</th>
       <th class="text-left">Proveedor/Cliente</th>
       <th class="text-left">Glosa</th>
-      <th class="text-right">D&eacute;bito</th>
-      <th class="text-right">Cr&eacute;dito</th>
+      <th class="text-right">Debe</th>
+      <th class="text-right">Haber</th>
       <th class="text-right">Saldo</th>
       <th class="text-left">-</th>
     </tr>
@@ -136,6 +136,7 @@ if($codCuentaAuxiliar!=0){
       $edicion=0;
     }
     $saldo=$saldoIndividual;
+    //$saldoFila=$montoContra-$montoX;
     if($montoContra<$montoX){
     ?>
     <tr class="<?=$estiloFila?> det-estados">
@@ -146,7 +147,7 @@ if($codCuentaAuxiliar!=0){
       <td class="text-left small"><?=$nombreCuentaAuxEstadoCuenta?></td>
       <td class="text-left small"><?=$glosaMostrar;?></td>
       <?php
-      if($tipoComprobanteX==1){
+      if($tipoComprobanteX==909090){ //909090 =1 anterior cuando se seleccionaba el tipo
       ?>
         <td class="text-right small"><?=formatNumberDec($montoX)?></td>
         <td class="text-right small"><?=formatNumberDec($montoContra)?></td>
@@ -163,7 +164,7 @@ if($codCuentaAuxiliar!=0){
         <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <div class="form-check">
             <?php
-              $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX."####".$montoX;
+              $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX."####".$montoX."####".$montoContra;
               if( $cerrarEstadoCuenta==1 ){
                 if($codCuentaAuxiliar!=0){
             ?>

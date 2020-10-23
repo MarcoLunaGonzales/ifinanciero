@@ -72,16 +72,18 @@ $html.=  '<header class="header">'.
               </h4> 
             </div>'.
             '</header>';
+            '</header>';
         $html.='<table class="table">'.
             '<thead>'.
             '<tr class="bold table-title text-center">'.
-              '<td colspan="8"><small>'.$nombre_tcc.'</td>
+              '<td colspan="9"><small>'.$nombre_tcc.'</td>
             </tr>'.
             '<tr class="bold table-title text-center">'.
-              '<td colspan="8"><small>'.$contenido.'</td>
+              '<td colspan="9"><small>'.$contenido.'</td>
             </tr>'.
             '<tr class="bold table-title text-center">'.
-              '<td width="10%"><small>Fecha</small</td> 
+              '<td width="2%"><small>Nº</small</td>
+              <td width="10%"><small>Fecha</small</td> 
               <td width="6%"><small>Área</small></td>                   
               <td width="40%"><small>Descripción</small></td>
               <td width="10%"><small>N° Recibo</small></td>
@@ -92,10 +94,10 @@ $html.=  '<header class="header">'.
             </tr>'.
            '</thead>'.
            '<tbody>';
-            $index=1;
+            $index=1;$indexFila=1;
             $saldo_inicial=$monto_inicio_cc;
             $html.='<tr>'.
-                '<td class="text-left small"></td>'.
+                '<td class="text-left small"></td><td class="text-left small"></td>'.
                 '<td class="text-left small"></td>'.
                 '<td class="text-center small"><b>ASIGNACION DE FONDO</b></td>'.
                 '<td class="text-center small"></td>'.
@@ -185,7 +187,7 @@ $html.=  '<header class="header">'.
               
 
               $html.='<tr>'.                      
-                            '<td class="text-center small">'.$row['fecha_x'].'</td>';
+                            '<td class="text-right small">'.$indexFila.'</td><td class="text-center small">'.$row['fecha_x'].'</td>';
                             if(!$sw_rembolso){
                               $html.='<td class="text-left small">'.$nombre_uo.'/'.$nombre_area.'</td>';
                             }else{
@@ -203,9 +205,10 @@ $html.=  '<header class="header">'.
                             }
                             $html.='<td class="text-right small">'.formatNumberDec($saldo_inicial).'</td>
                     </tr>';
+                    $indexFila++;
               }
               $html.='<tr>'.                      
-                            '<td class="text-left small"></td>'.
+                            '<td class="text-left small"></td><td class="text-left small"></td>'.
                             '<td class="text-center small"></td>'.
                             '<td class="text-left small"></td>'.
                             '<td class="text-center small"></td>'.
@@ -251,6 +254,17 @@ $html.=    '</table>';
                         </tr>'.
                        '</tbody>'.                        
                     '</table>'; 
+
+$html.='<br><br><br><br><br><br><table class="table">'.
+             '<tr class="text-center" valign="top">'.
+               '<td width="50%" class="text-center"><br><br><br><br><br></td>'.
+               '<td width="50%" class="text-center"><br><br><br><br><br></td>'.
+             '</tr>'.
+             '<tr class="text-center" valign="top">'.
+               '<td width="50%" class="text-center">RESPONSABLE</td>'.
+               '<td width="50%" class="text-center">AUTORIZADO POR</td>'.
+             '</tr>'.
+           '</table>';
 
 $html.='</body>'.
       '</html>';           

@@ -21,6 +21,7 @@ try {
     $cod_comprobante_ec=trim($_POST["comprobante"]);
     $cuenta_auxiliar1=trim($_POST["cuenta_auxiliar1"]);
     $cod_retencion = trim($_POST["tipo_retencion"]);
+    $cod_tipopago = trim($_POST["tipo_pago"]);
     $numero = trim($_POST["numero"]);
     $monto = trim($_POST["monto"]);
     $fecha = trim($_POST["fecha"]);
@@ -68,8 +69,8 @@ try {
         $monto_rendicion=0;       
         $observaciones = str_replace("'","",$observaciones);
 
-        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by) 
-        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_retencion,$numero,'$cod_personal',$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,'$cod_area','$cod_uo',$nro_recibo,'$cod_proveedores','$cod_actividad_sw',NOW(),$globalUser)");
+        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by,cod_tipopago) 
+        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_retencion,$numero,'$cod_personal',$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,'$cod_area','$cod_uo',$nro_recibo,'$cod_proveedores','$cod_actividad_sw',NOW(),$globalUser,$cod_tipopago)");
         $flagSuccess=$stmt->execute();
         if($flagSuccess){//registramos rendiciones
             $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
@@ -221,7 +222,7 @@ try {
         // echo 'cod_contra_cuenta:'.$cod_contra_cuenta."<br>";
         
 
-        $stmtCCD = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta='$cod_cuenta',fecha='$fecha',cod_tipodoccajachica='$cod_retencion',nro_documento='$numero',cod_personal='$cod_personal',monto='$monto',observaciones='$observaciones',cod_area='$cod_area',cod_uo='$cod_uo',nro_recibo='$nro_recibo',cod_proveedores='$cod_proveedores',cod_actividad_sw='$cod_actividad_sw',modified_by=$globalUser,modified_at=NOW()
+        $stmtCCD = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta='$cod_cuenta',fecha='$fecha',cod_tipodoccajachica='$cod_retencion',nro_documento='$numero',cod_personal='$cod_personal',monto='$monto',observaciones='$observaciones',cod_area='$cod_area',cod_uo='$cod_uo',nro_recibo='$nro_recibo',cod_proveedores='$cod_proveedores',cod_actividad_sw='$cod_actividad_sw',modified_by=$globalUser,modified_at=NOW(),cod_tipopago=$cod_tipopago
          where codigo = $codigo");      
         $flagSuccess=$stmtCCD->execute();        
         
@@ -323,6 +324,7 @@ try {
         }
 
      }else{
+        //desde sr
         $flagSuccess=true;
      }//fin if isset sr
         //insertamos archivos adjuntos

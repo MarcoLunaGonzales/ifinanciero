@@ -95,7 +95,7 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigo);
            <td class="small"><?=$tituloImporte?></td>
            <td class="small"><?=$proveedorX?></td>
            <td class="small"><?=number_format($montoImporte, 2, '.', ',')?></td>
-           <td class="small"><?="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$detalleActividadFila." ".$numeroSR?></td>
+           <td class="small"><?=" ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$detalleActividadFila." ".$numeroSR?></td>
            <td class="small"><?=$nombreOficinaXX?>/<?=$nombreAreaXX?></td>
         </tr>
       <?php 
