@@ -143,7 +143,7 @@ if($cod_facturacion>0){//editar
     $cod_uo=$_SESSION['globalUnidad'];
     $cod_area=13;
     $dias_credito=obtenerValorConfiguracion(58);    
-    $correo_contacto=obtenerCorreoEstudiante($nit);
+    $correo_contacto=obtenerCorreoEstudiante($ci_estudiante);
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
