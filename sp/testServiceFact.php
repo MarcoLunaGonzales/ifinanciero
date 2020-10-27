@@ -30,7 +30,7 @@ $Objeto_detalle4 = new stdClass();
 $Objeto_detalle4->suscripcionId = 0;
 $Objeto_detalle4->pagoCursoId = 3434;
 $Objeto_detalle4->detalle = "Curso OV-PSST-CO-G2-2020 , Mu00f3dulo 2 elaboracion de programas de seguridad y salud en el trabajo - psst";
-$Objeto_detalle4->precioUnitario = "480";
+$Objeto_detalle4->precioUnitario = "0";
 $Objeto_detalle4->cantidad = 1;
 
 $Array= array($Objeto_detalle4);
@@ -39,7 +39,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"GenerarFactura", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
-              "fechaFactura"=>'2020-09-24', // fecha de la factura
+              "fechaFactura"=>'2020-10-17', // fecha de la factura
               "nitciCliente"=>'1712164', //nit o ci de cliente
               "razonSocial"=>'Santiago Mole', //razon social
               "importeTotal"=>"480", //importe total

@@ -126,7 +126,7 @@ if($cod_facturacion>0){//editar
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');    
     // $razon_social=$razon_social;//ya está arriba
-    $nit = $ci_estudiante;    
+    //$nit = $ci_estudiante;    
     $observaciones = $Codigo_alterno." - ".$nombreAlumno;
     $observaciones_2 = null;
     $cod_tipopago=null;
@@ -143,7 +143,7 @@ if($cod_facturacion>0){//editar
     $cod_uo=$_SESSION['globalUnidad'];
     $cod_area=13;
     $dias_credito=obtenerValorConfiguracion(58);    
-    $correo_contacto=obtenerCorreoEstudiante($nit);
+    $correo_contacto=obtenerCorreoEstudiante($ci_estudiante);
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);

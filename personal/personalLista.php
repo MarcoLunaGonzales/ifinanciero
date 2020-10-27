@@ -18,7 +18,7 @@ $stmt = $dbh->prepare("SELECT p.codigo,p.identificacion,p.cod_lugar_emision,p.pa
  (select tp.nombre from tipos_personal tp where tp.codigo=cod_tipopersonal)as xcod_tipopersonal
  
  from personal p
- where p.cod_estadoreferencial=1
+ where p.cod_estadopersonal=1
  order by p.paterno, p.materno, p.primer_nombre
  ");
 //ejecutamos
