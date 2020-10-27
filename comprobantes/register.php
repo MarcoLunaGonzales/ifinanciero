@@ -173,13 +173,16 @@ $diaUltimo = date('d', strtotime("{$aux} - 1 day"));
 if((int)$globalNombreGestion<(int)$anioActual){
   $fechaActual=$globalNombreGestion."-".$codMesActiva."-23";
   $fechaActualModal=$diaUltimo."/".$codMesActiva."/".$globalNombreGestion;
+  $fechaActualVer=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
 }else{
 	if((int)$mesActual==(int)$codMesActiva){
       $fechaActual=date("Y-m-d");
       $fechaActualModal=date("d/m/Y");
+      $fechaActualVer=$fechaActual;
 	}else{
 	  $fechaActual=$globalNombreGestion."-".$codMesActiva."-23";
-      $fechaActualModal=$diaUltimo."/".$codMesActiva."/".$globalNombreGestion;     
+      $fechaActualModal=$diaUltimo."/".$codMesActiva."/".$globalNombreGestion; 
+      $fechaActualVer=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;    
 	}	
 }
 
@@ -222,8 +225,8 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 					<?php
 					$contMonedas=0;
 					while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-					    if($codigoMon!=1){
-					      $valorTipo=obtenerValorTipoCambio($codigoMon,$fechaActual);
+					    if($codigoMon==2||$codigoMon==4){ //PARA VALIDAR SOLO DOLARES Y UFV
+					      $valorTipo=obtenerValorTipoCambio($codigoMon,$fechaActualVer);
 					      if($valorTipo==0){
 					      	$contMonedas++;
 					       }
@@ -232,7 +235,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 
 					if($contMonedas!=0){
 					 	?>
-					     <p>No hay registros del tipo de cambio para hoy <?=strftime('%d de %B del %Y',strtotime($fechaActual))?></p>
+					     <p>No hay registros del tipo de cambio <b>$us</b> / <b>UFV</b> para hoy <?=strftime('%d de %B del %Y',strtotime($fechaActualVer))?></p>
 					     <a href="../index.php?opcion=tipoDeCambio" class="btn btn-warning">registrar</a>
 					 	<?php
 					}else{

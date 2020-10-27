@@ -382,8 +382,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   //$alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
                   $porcentajeIva=($iva+$it)/100;
                   $porcentajeUtil=$utilidadIbnorcaX/100;
-                  $alumnosRecoX=ceil(($totalFijoPlan+$totalVariable[2])/(($precioLocalX)*(1-$porcentajeIva-$porcentajeUtil)));  
-
+                  //$alumnosRecoX=ceil(($totalFijoPlan+$totalVariable[2])/(($precioLocalX)*(1-$porcentajeIva-$porcentajeUtil)));  
+                  
+                  $alumnosRecoX=ceil(($precioRegistrado*$totalVariable[2])/(($precioLocalX) * ( ((1-$porcentajeIva-$porcentajeUtil) * ($precioRegistrado)) - $totalFijo[0])) );  
 
                   //if($alumnosX)
                  /*if($habilitadoNormaX==1){
@@ -393,14 +394,32 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
                 $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
+                $alumnosXAntes=$alumnosX;
                if($alumnosX==0){
                  	$porcentajeFinalLocal=0;$alumnosX=0;$alumnosExternoX=0;$porcentajeFinalExterno=0;
-                 	while ($porcentajeFinalLocal < $utilidadIbnorcaX || $porcentajeFinalExterno<$utilidadFueraX) {
-                 		$alumnosX++;
+                 	while ($porcentajeFinalLocal < $utilidadIbnorcaX) {
+                    $alumnosX++;
                  		include "calculoSimulacion.php";
+                       if($ibnorcaC==1){
+                             $utilidadReferencial=$utilidadIbnorcaX;
+                             $ibnorca_title=""; // EN IBNORCA
+                         }else{
+                             $utilidadReferencial=$utilidadFueraX;
+                             $ibnorca_title=""; //FUERA DE IBNORCA
+                         }
+                         //cambios para la nueva acortar la simulacion 
+                         $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal)-$totalFijoPlan-($totalVariable[2]*$alumnosX);
+                         $utilidadNetaExterno=$ingresoExterno-((($iva+$it)/100)*$ingresoExterno)-$totalFijo[3]-($totalVariable[3]*$alumnosExternoX);
+
+                         $pUtilidadLocal=($utilidadNetaLocal*100)/$ingresoLocal;
+                         $pUtilidadExterno=($utilidadNetaExterno*100)/$ingresoExterno;
+
                         $porcentajeFinalLocal=$pUtilidadLocal;
                         $porcentajeFinalExterno=$pUtilidadExterno;
-                 	}                                 
+                 	}
+                  $alumnosRecoX=$alumnosX;
+                  $alumnosX=$alumnosXAntes;
+
                 }else{
                 	include "calculoSimulacion.php";
                 }
