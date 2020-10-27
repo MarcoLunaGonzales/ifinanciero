@@ -13,8 +13,8 @@ if (empty($_GET["busqueda"])) {
     exit;
 }
 $busqueda = $_GET["busqueda"];
-$stmt = $dbh->prepare("SELECT p.* from v_clientepersonaempresa p where concat(p.NombreCompleto,' ',p.Identificacion,' ',p.Nit) like ?");
-$stmt->execute(["%$busqueda%"]);
+$stmt = $dbh->prepare("SELECT p.* from v_clientepersonaempresa p where p.NombreCompleto like '%$busqueda%' or p.Identificacion like '%$busqueda%' or p.Nit like '%$busqueda%' limit 20");
+$stmt->execute();
 //$stmtProveedor->execute();
 $proveedores=[];$i=0;
    while ($rowProv = $stmt->fetch(PDO::FETCH_ASSOC)) {

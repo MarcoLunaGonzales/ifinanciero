@@ -1714,6 +1714,12 @@
 			$cod_cc=$_GET['cod_cc'];
 			require_once('caja_chica/detallecajachica_delete.php');
 		}
+		if ($_GET['opcion']=='quitarDetalleCajaChica') {
+			$codigo=$_GET['codigo'];
+			$cod_tcc=$_GET['cod_tcc'];
+			$cod_cc=$_GET['cod_cc'];
+			require_once('caja_chica/detallecajachica_quitar.php');
+		}
 		if ($_GET['opcion']=='ReembolsoCajaChicaForm') {
 			$codigo=$_GET['codigo'];
 			$cod_tcc=$_GET['cod_tcc'];

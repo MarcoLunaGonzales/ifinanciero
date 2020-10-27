@@ -140,6 +140,7 @@ if($flagSuccess){
 	if($cod_solicitudfacturacion!=-100){
 		//insertamos cursos pagados con monto negativo
 		//$verifica_monto=insertarMontoNegativoCurso($codigos_facturas_x);
+		$verifica_monto=anularMontoCurso($codigos_facturas_x);
 		//volvemos al estado de registro de la sol fac.
 		$sqlUpdate="UPDATE solicitudes_facturacion SET cod_estadosolicitudfacturacion=1,obs_devolucion='$observaciones' where codigo=$cod_solicitudfacturacion";
 		$stmtUpdate = $dbh->prepare($sqlUpdate);

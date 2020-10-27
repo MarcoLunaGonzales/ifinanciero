@@ -15,6 +15,10 @@ $fechaActual=date("Y-m-d h:m:s");
 $cod_libretabancariaregistro=obtenerCodigoRegistroLibreta();
 $flagSuccess=false;
 $globalUser=$_SESSION["globalUser"];
+
+
+
+
 if (isset($_POST["codigo"])){
 $codigoLibreta=$_POST["codigo"];
 $observaciones=$_POST["observaciones"];
@@ -30,6 +34,12 @@ $filasErroneasFechas=0;
 $filaArchivo=0;
 $listaFilasFechas=[];
 $listaFilasCampos=[];
+
+$urlOficial=$urlList2."&codigo=".$codigoLibreta;
+if(isset($_POST["lista_padre"])){
+  $urlOficial=$urlList;
+}
+
 if($tipo_cargado==2){
   /*$sqlDelete="DELETE FROM  libretas_bancariasdetalle where cod_libretabancaria=$codigoLibreta";
   $stmtDetalle = $dbh->prepare($sqlDelete);
@@ -37,7 +47,7 @@ if($tipo_cargado==2){
 }
 $allowedFileType = ['application/vnd.ms-excel','text/xls','text/xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
   
-$sqlInserts=[];  
+$sqlInserts=[];  $lista_documento=[];
   if(in_array($_FILES["documentos_excel"]["type"],$allowedFileType)){
 
         $targetPath = 'subidas/'.$_FILES['documentos_excel']['name'];
@@ -201,6 +211,7 @@ $sqlInserts=[];
                     if($descripcion=="" && ($monto==""||$monto==0)){
 
                     }else{
+                      $lista_documento[$index]=$nro_documento;
                    $totalFilasCorrectas++; 
                 	$sql="INSERT INTO libretas_bancariasdetalle (cod_libretabancaria,fecha_hora,nro_documento,descripcion,informacion_complementaria,agencia,monto,nro_cheque,cod_libretabancariaregistro,cod_estadoreferencial,canal,nro_referencia,codigo_fila,saldo) 
                     	VALUES ('$codigoLibreta','$fecha_hora','$nro_documento','$descripcion','$informacion_complementaria','$agencia','$monto','$nro_cheque','$cod_libretabancariaregistro','$cod_estadoreferencial','$canal','$nro_referencia','$cod_fila','$saldo')";
@@ -258,19 +269,28 @@ if($filasErroneas>0){
   '<br><i class="material-icons text-danger">clear</i> Filas con errores: <b>'.$filasErroneas.'</b>'.    
   '<br><i class="material-icons text-success">check</i> Filas Correctas: <b>'.$totalFilasCorrectas.'</b>'.
   '<br>Total Filas: <b>'.$index.'</b>';
-  showAlertSuccessErrorFilasLibreta("../".$urlList2."&codigo=".$codigoLibreta,$htmlInforme);  
+  showAlertSuccessErrorFilasLibreta("../".$urlOficial,$htmlInforme);  
 }else{
   if($index>0){ // para registrar solo si hay filas en el archivo
-    $sqlAcumulados=implode(";", $sqlInserts);
-    $stmtAcumulados = $dbh->prepare($sqlAcumulados.";");
-    $flagSuccess=$stmtAcumulados->execute();
+    if(count($lista_documento) > count(array_unique($lista_documento))){
+       $htmlInforme='';
+       $htmlInforme='<b>Filas repetidas: El numero de Referencia / Documento se repite en algunas filas</b>';
+       showAlertSuccessErrorFilasLibreta("../".$urlOficial,$htmlInforme);  
+    }else{
+      $sqlAcumulados=implode(";", $sqlInserts);
+      $stmtAcumulados = $dbh->prepare($sqlAcumulados.";");
+      $flagSuccess=$stmtAcumulados->execute();
+      if($flagSuccess==true){
+      	showAlertSuccessError(true,"../".$urlOficial);	
+      }else{
+	     showAlertSuccessError(false,"../".$urlOficial);
+      }
+    }
+  }else{
+    showAlertSuccessError(false,"../".$urlOficial);
   }
   
-  if($flagSuccess==true){
-  	showAlertSuccessError(true,"../".$urlList2."&codigo=".$codigoLibreta);	
-  }else{
-	  showAlertSuccessError(false,"../".$urlList2."&codigo=".$codigoLibreta);
-  }
+  
 }
 
 function verificarFecha($x) {

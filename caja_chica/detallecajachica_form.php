@@ -49,7 +49,7 @@ while ($rowConfi = $stmtConfiguracionCuenta->fetch(PDO::FETCH_ASSOC)) {
 
 $cod_proveedores=36272;//otros proveedores
 if ($codigo > 0){
-    $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,cod_proveedores,cod_actividad_sw,
+    $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,nro_recibo,cod_area,cod_uo,cod_proveedores,cod_actividad_sw,cod_tipopago,
         (select c.nombre from plan_cuentas c where c.codigo=cod_cuenta) as nombre_cuenta,
         (select c.numero from plan_cuentas c where c.codigo=cod_cuenta) as nro_cuenta
     from caja_chicadetalle
@@ -73,6 +73,7 @@ if ($codigo > 0){
     $cod_uo= $result['cod_uo'];
     $cod_proveedores= $result['cod_proveedores'];
     $cod_actividad_sw= $result['cod_actividad_sw'];
+    $cod_tipopago= $result['cod_tipopago'];
     $cuenta_aux=$nro_cuenta." - ".$nombre_cuenta;
     // sacamos datos del comprobante (estao de cuenta)
     $stmtComprobante = $dbh->prepare("SELECT e.cod_comprobantedetalleorigen,e.cod_plancuenta,e.cod_cuentaaux,(select c.glosa from comprobantes_detalle c where c.codigo in (select ee.cod_comprobantedetalle from estados_cuenta ee where ee.codigo=e.cod_comprobantedetalleorigen))as glosa
@@ -85,7 +86,7 @@ if ($codigo > 0){
     $glosa_comprobante=$resultComprobante['glosa']; 
 }else{
     //para el numero correlativo
-    $stmtCC = $dbh->prepare("SELECT nro_documento,nro_recibo from caja_chicadetalle where cod_estadoreferencial=1 and cod_cajachica=$cod_cc order by codigo desc limit 1");
+    $stmtCC = $dbh->prepare("SELECT nro_documento,nro_recibo from caja_chicadetalle where cod_cajachica=$cod_cc order by codigo desc limit 1");
     $stmtCC->execute();
     $resultCC = $stmtCC->fetch();
     $numero_caja_chica_aux = $resultCC['nro_documento'];
@@ -118,7 +119,11 @@ if ($codigo > 0){
     $cod_cuenta=0;
     $cod_actividad_sw=null;
     $glosa_comprobante="";
+    $cod_tipopago="";
+    $nro_recibo=obtenerNumeroReciboInstancia($cod_tcc);
 }
+
+
 //sacmos el valor de fechas hacia atrás
 $dias_atras=obtenerValorConfiguracion(31);
 $fecha_dias_atras=obtener_diashsbiles_atras($dias_atras,$fecha);
@@ -283,12 +288,15 @@ $archivos_cajachica=0;//contador de archivos de caja chica
     				  <h4 class="card-title"><?php if ($codigo == 0) echo "Registrar Nuevo"; else echo "Editar";?>  Gasto</h4>
     				</div>
   			  </div>
-  			  <div class="card-body ">			           
+  			  <div class="card-body ">		
+         <?php 
+         //if(!isset($_GET["sr"])){ 
+         ?> 	           
             <div class="row">
               <label class="col-sm-2 col-form-label">Monto</label>
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <input class="form-control" type="number" step="any" name="monto" id="monto" value="<?=$monto;?>" required/>
+                        <input class="form-control" <?=(isset($_GET["sr"]))?"readonly":"";?> type="number" step="any" name="monto" id="monto" value="<?=$monto;?>" <?=(!isset($_GET["sr"]))?"required":"";?>/>
                     </div>
                 </div>
                 
@@ -298,7 +306,7 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                 <label class="col-sm-2 col-form-label">Nro. Recibo</label>
                 <div class="col-sm-4">
                 <div class="form-group">
-                    <input class="form-control" type="number" name="nro_recibo" id="nro_recibo" value="<?=$nro_recibo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                    <input class="form-control" <?=(isset($_GET["sr"]))?"readonly":"";?> type="number" name="nro_recibo" id="nro_recibo" value="<?=$nro_recibo;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" <?=(!isset($_GET["sr"]))?"required":"";?>/>
                 </div>
                 </div>
             </div> 
@@ -308,22 +316,25 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                     <div class="form-group">
                       <div id="div_contenedor_tiporetencion">  
                         <?php
+
                         if($codigo>0 && $cod_comprobante>0 && $cod_comprobante!=""){?>
-                          <select name="tipo_retencion" id="tipo_retencion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
+                          <select name="tipo_retencion" id="tipo_retencion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" <?=(!isset($_GET["sr"]))?"required":"";?>>
                             <option value="" disabled selected="selected">-Retenciones-</option>
                               <?php                                     
                               $stmtTipoRet = $dbh->query("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order by 2");
                               while ($row = $stmtTipoRet->fetch()){ ?>
-                                  <option <?=($cod_retencion==$row["codigo"])?"selected":"disabled";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
-                              <?php } ?>
+
+                                  <option <?=($cod_retencion==$row["codigo"])?"selected":"disabled";?> <?=(isset($_GET["sr"]))?"disabled":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                              <?php } 
+                              ?>
                           </select>  
                         <?php }else{?>
-                          <select name="tipo_retencion" id="tipo_retencion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
+                          <select name="tipo_retencion" id="tipo_retencion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" <?=(!isset($_GET["sr"]))?"required":"";?>>
                             <option value="" disabled selected="selected">-Retenciones-</option>
                               <?php                                     
                               $stmtTipoRet = $dbh->query("SELECT * from configuracion_retenciones where cod_estadoreferencial=1 order by 2");
                               while ($row = $stmtTipoRet->fetch()){ ?>
-                                  <option <?=($cod_retencion==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                  <option <?=($cod_retencion==$row["codigo"])?"selected":"";?> <?=(isset($_GET["sr"]))?"disabled":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                               <?php } ?>
                           </select>  
                         <?php }
@@ -336,15 +347,44 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                 <div class="col-sm-4">
                     <div class="form-group">
                         
-                        <input class="form-control" name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha2?>" required="true" value="<?=$fecha?>" />
+                        <input class="form-control" <?=(isset($_GET["sr"]))?"readonly":"";?> name="fecha" id="fecha" type="date" min="<?=$fecha_dias_atras?>" max="<?=$fecha2?>" <?=(!isset($_GET["sr"]))?"required":"";?> value="<?=$fecha?>" />
                     </div>
                 </div>
             </div><!-- monto y fecha -->
+
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Forma Pago</label>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                      <div>  
+                        <select name="tipo_pago" id="tipo_pago" class="selectpicker form-control form-control-sm" data-style="btn btn-warning" <?=(!isset($_GET["sr"]))?"required":"";?>>
+                            <option value="" disabled selected="selected">-Ninguno-</option>
+                              <?php                                     
+                               $stmtPago = $dbh->prepare("SELECT codigo,nombre FROM tipos_pagoproveedor where codigo in (2,3)");//and cod_personal=$globalUser
+                                //ejecutamos
+                                $stmtPago->execute();
+                                //bindColumn
+                                $stmtPago->bindColumn('codigo', $codigoTipo);
+                                $stmtPago->bindColumn('nombre', $nombreTipo);
+
+                                while ($rowPago = $stmtPago->fetch(PDO::FETCH_BOUND)) {         
+                                   ?><option value="<?=$codigoTipo;?>" <?=($codigoTipo==$cod_tipopago)?"selected":"";?> <?=(isset($_GET["sr"]))?"disabled":"";?> ><?=$nombreTipo;?></option><?php 
+                                 }   ?>
+                          </select> 
+                      </div>                                  
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    
+                </div>
+            </div><!-- forma pago -->
+
             <div class="row">
               <label class="col-sm-2 col-form-label">Cuenta</label>
               <div class="col-sm-8">
                 <div class="form-group">
-                    <input class="form-control" type="text" name="cuenta_auto" id="cuenta_auto" value="<?=$cuenta_aux?>" placeholder="[numero] y nombre de cuenta" required />
+                    <input class="form-control" <?=(isset($_GET["sr"]))?"readonly":"";?>  type="text" name="cuenta_auto" id="cuenta_auto" value="<?=$cuenta_aux?>" placeholder="[numero] y nombre de cuenta" <?=(!isset($_GET["sr"]))?"required":"";?> />
                     <input class="form-control" type="hidden" name="cuenta_auto_id" id="cuenta_auto_id" value="<?=$cod_cuenta?>" required/>
                 </div>
               </div>
@@ -387,7 +427,7 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                         $querypersonal = "SELECT codigo,CONCAT_WS(' ',paterno,materno,primer_nombre)AS nombre from personal where cod_estadoreferencial=1 order by nombre";
                         $stmtPersonal = $dbh->query($querypersonal);
                         while ($row = $stmtPersonal->fetch()){ ?>
-                            <option <?=($cod_personal==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=strtoupper($row["nombre"]);?></option>
+                            <option <?=($cod_personal==$row["codigo"])?"selected":"";?> <?=(isset($_GET["sr"]))?"disabled":"";?> value="<?=$row["codigo"];?>"><?=strtoupper($row["nombre"]);?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -408,7 +448,7 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                               <?php 
                                   while ($row = $stmt->fetch()){ 
                               ?>
-                                   <option <?=($cod_uo==$row["codigo"])?"selected":"";?> data-subtext="<?=$row["codigo"];?>" value="<?=$row["codigo"];?>"><?=$row["nombre"];?>(<?=$row["abreviatura"];?>)</option>
+                                   <option <?=($cod_uo==$row["codigo"])?"selected":"";?> <?=(isset($_GET["sr"]))?"disabled":"";?> data-subtext="<?=$row["codigo"];?>" value="<?=$row["codigo"];?>"><?=$row["nombre"];?>(<?=$row["abreviatura"];?>)</option>
                                <?php 
                                   } 
                               ?>
@@ -417,6 +457,9 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                 </div>
               </div>
               <!-- para la distribucion de monto -->
+              <?php
+              if(!isset($_GET["sr"])){
+                ?>
               <div class="col-sm-2">
                 <input type="hidden" name="n_distribucion" id="n_distribucion" value="0">
                 <input type="hidden" name="nueva_distribucion" id="nueva_distribucion" value="0">
@@ -443,7 +486,10 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                           </div>
                       </div>
                   <div id="array_distribucion"></div>    
-              </div>    
+              </div>
+             <?php
+             }
+             ?>     
             </div>
             <div class="row">
               <label class="col-sm-2 col-form-label">Area</label>
@@ -461,7 +507,7 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                                 <?php 
                                     while ($row = $stmt->fetch()){ 
                                 ?>
-                                     <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>" <?=($cod_area==$row["codigo"])?"selected":"";?> ><?=$row["nombre"];?>(<?=$row["abreviatura"];?>)</option>
+                                     <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["codigo"];?>" <?=($cod_area==$row["codigo"])?"selected":"";?> <?=(isset($_GET["sr"]))?"disabled":"";?> ><?=$row["nombre"];?>(<?=$row["abreviatura"];?>)</option>
                                  <?php 
                                     } 
                                 ?>
@@ -486,7 +532,7 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                         <option disabled selected value="">--SELECCIONE--</option>
                          <?php
                               foreach ($lista as $listas) { ?>
-                                <option <?=($cod_actividad_sw==$listas->codigo)?"selected":"";?> value="<?=$listas->codigo?>" class="text-right"><?=substr($listas->nombre, 0, 85)?></option>
+                                <option <?=($cod_actividad_sw==$listas->codigo)?"selected":"";?> <?=(isset($_GET["sr"]))?"disabled":"";?> value="<?=$listas->codigo?>" class="text-right"><?=substr($listas->nombre, 0, 85)?></option>
 
                               <?php }?>
                         </select>        
@@ -504,21 +550,23 @@ $archivos_cajachica=0;//contador de archivos de caja chica
               <div class="col-sm-8">
                 <div class="form-group">                        
                   <div id="div_contenedor_proveedor">
-                    <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor" required="true">
+                    <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor" <?=(!isset($_GET["sr"]))?"required":"";?>>
                       <?php 
                       $query="SELECT * FROM af_proveedores order by nombre";
                       $stmt = $dbh->prepare($query);
                       $stmt->execute();
                       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         $codigoProv=$row['codigo'];    
-                        ?><option <?=($cod_proveedores==$codigoProv)?"selected":"";?> value="<?=$codigoProv?>" class="text-right"><?=$row['nombre']?></option>
+                        ?><option <?=($cod_proveedores==$codigoProv)?"selected":"";?> <?=(isset($_GET["sr"]))?"disabled":"";?> value="<?=$codigoProv?>" class="text-right"><?=$row['nombre']?></option>
                        <?php 
                        } ?> 
                     </select>
                   </div>
                 </div>
-              </div>      
-              <div class="col-sm-2">
+              </div> 
+              <?php 
+              if(!isset($_GET["sr"])){
+                ?><div class="col-sm-2">
                   <div class="form-group">                                
                       <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" onclick="cargarDatosRegistroProveedorCajaChica(<?=$cod_tcc?>,<?=$cod_cc?>,<?=$cod_dcc?>)">
                         <i class="material-icons" title="Add Proveedor">add</i>
@@ -527,7 +575,9 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                         <i class="material-icons" title="Actualizar Proveedor">update</i>
                       </a> 
                   </div>
-              </div>                          
+              </div><?php
+              }?>     
+                                        
             </div>          
             <div id="div_contenedor_glosa_estadocuenta">                    
                 <?php
@@ -536,7 +586,7 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                   <label class="col-sm-2 col-form-label">Glosa Comprobante</label>
                     <div class="col-sm-8">
                       <div class="form-group">
-                        <textarea class="form-control" readonly><?=$glosa_comprobante;?></textarea>
+                        <textarea class="form-control" <?=(isset($_GET["sr"]))?"readonly":"";?> <?=(!isset($_GET["sr"]))?"required":"";?>><?=$glosa_comprobante;?></textarea>
                       </div>
                     </div>
                 </div>
@@ -547,11 +597,18 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                 <label class="col-sm-2 col-form-label">Detalle</label>
                 <div class="col-sm-8">
                 <div class="form-group">
-                    <input class="form-control rounded-0" name="observaciones" id="observaciones" rows="3" onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$observaciones;?>" required/>
+                    <input class="form-control rounded-0" <?=(isset($_GET["sr"]))?"readonly":"";?> name="observaciones" id="observaciones" rows="3" onkeyup="javascript:this.value=this.value.toUpperCase();" value="<?=$observaciones;?>" <?=(!isset($_GET["sr"]))?"required":"";?>/>
                     <!-- <input class="form-control" type="text" name="observaciones" id="observaciones" required="true" value="<?=$observaciones;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
                 </div>
                 </div>
             </div> 
+            <?php //}else{
+              
+            //} 
+              if(isset($_GET["sr"])){
+                ?><input type="hidden" name="sr" id="sr" value="1"/><?php
+              }  
+              ?>
             <!-- para solicitud de recursos -->             
             <div class="row">              
               <div class="col-sm-12">

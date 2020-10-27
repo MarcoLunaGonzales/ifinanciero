@@ -102,9 +102,14 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                   </button>
                                   <div class="dropdown-menu" >
                                 <?php
-                                if($globalAdmin==1 and $cod_estado==1){ ?>
-                                  <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="dropdown-item" style="background-color:#4a4ea2;">
-                                      <i class="material-icons" style="color:#FFF;" title="Agregar Detalle">playlist_add</i>Agregar Gastos
+                                if($globalAdmin==1){ 
+                                  $tituloBoton='<i class="material-icons" style="color:#FFF;" title="Agregar Detalle">playlist_add</i>Agregar Gastos';
+                                   if($cod_estado!=1){
+                                   $tituloBoton='<i class="material-icons" style="color:#FFF;" title="Ver Detalle">list</i>Lista de Gastos';
+                                   }
+                                  ?>
+                                  <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&est=<?=$cod_estado?>' rel="tooltip" class="dropdown-item" style="background-color:#4a4ea2;">
+                                    <?=$tituloBoton?>  
                                   </a>
                                   <!-- <label class="text-danger"> | </label> -->
                                   <a  rel="tooltip" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=1')">

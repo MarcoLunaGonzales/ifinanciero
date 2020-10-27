@@ -493,7 +493,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
         </div> 
         <hr>               
         <div class="row">
-          <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Seleccionar una Caja Chica</small></label>
+          <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Caja Chica</small></label>
           <div class="row col-sm-10">
             <div class="col-sm-12" style="background-color:#f9edf7">
              <div class="btn-group col-sm-12"> 
@@ -548,6 +548,31 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           while ($rowCajaChica = $stmtCajaChica->fetch(PDO::FETCH_BOUND)) {
                           ?><option value="<?=$cod_cajachica;?>"><?=$nombreTipo;?>, Oficina : <?=$nombre_uo?>, Area : <?=$nombre_area?> -<?=$personal?> - <?=$observaciones?> (<?=$nombre_estado?>)</option><?php 
                           }
+                       }   
+                        ?>
+                    </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Forma Pago</small></label>
+          <div class="row col-sm-10">
+            <div class="col-sm-12" style="background-color:#f9edf7">
+             <div class="btn-group col-sm-12"> 
+              <a href="#" class="btn btn-default col-sm-1 btn-fab" onclick="return false;"><i class="material-icons" style="color:#37474f">monetization_on</i><span id="nmoney" class="bg-warning"></span></a>             
+              <select class="selectpicker form-control col-sm-11" name="cod_forma_pago" id="cod_forma_pago" data-live-search="true" data-size="6" data-style="btn btn-default text-white bg-caja-chica" onchange="asignarFormaPagoGastoSR()">
+                         <option value="-1">Ninguno</option>
+             <?php 
+           $stmtPago = $dbh->prepare("SELECT codigo,nombre FROM tipos_pagoproveedor where codigo in (2,3)");//and cod_personal=$globalUser
+           //ejecutamos
+           $stmtPago->execute();
+           //bindColumn
+           $stmtPago->bindColumn('codigo', $codigoTipo);
+           $stmtPago->bindColumn('nombre', $nombreTipo);
+
+                  while ($rowPago = $stmtPago->fetch(PDO::FETCH_BOUND)) {         
+                         ?><option value="<?=$codigoTipo;?>"><?=$nombreTipo;?></option><?php 
                        }   
                         ?>
                     </select>

@@ -15,7 +15,9 @@ date_default_timezone_set('America/La_Paz');
 $globalUser=$_SESSION["globalUser"];
 
 //RECIBIMOS LAS VARIABLES
-$codigo = $_GET["codigo"];?>
+$codigo = $_GET["codigo"];
+$codigoSolicitud=$codigo;
+?>
 <script>
     var confirmar_division_factura=0;
 </script>
@@ -229,6 +231,15 @@ try{
             $stmtCommit = $dbh->prepare($sqlCommit);
             $stmtCommit->execute();
             header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');            
+        }
+
+        //verificar el estado y actualizar a 5
+        $stmtSol = $dbh->prepare("SELECT s.codigo from solicitudes_facturacion s where s.cod_estadosolicitudfacturacion=3 and s.codigo = $codigoSolicitud");
+        $stmtSol->execute();
+        while ($rowSol = $stmtSol->fetch(PDO::FETCH_ASSOC)) {  
+            $sqlUpdateNew="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigoSolicitud";
+            $stmtUpdateNew = $dbh->prepare($sqlUpdateNew);
+            $stmtUpdateNew->execute(); 
         }
     }
 } catch(PDOException $ex){

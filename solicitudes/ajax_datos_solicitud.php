@@ -33,7 +33,8 @@ $fechaActual=date("d/m/Y");
 		<tbody>
 <?php 
 $solicitudDetalle=obtenerSolicitudRecursosDetalleAgrupadas($codigo);
-$numeroRecibo=obtenerNumeroReciboCajaChica($codCajaChica);
+$instancia=obtenerCodigoInstanciaPorCajaChica($codCajaChica);
+$numeroRecibo=obtenerNumeroReciboInstancia($instancia);
 $index=1;
 
 $idServicioX=obtenerServicioCodigoSolicitudRecursos($codigo);
@@ -93,8 +94,8 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigo);
            <td class="small"><?=$fechaActual?></td>
            <td class="small"><?=$tituloImporte?></td>
            <td class="small"><?=$proveedorX?></td>
-           <td class="small"><?=number_format($importeSolX, 2, '.', ',')?></td>
-           <td class="small"><?="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$detalleActividadFila." ".$numeroSR?></td>
+           <td class="small"><?=number_format($montoImporte, 2, '.', ',')?></td>
+           <td class="small"><?=" ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$detalleActividadFila." ".$numeroSR?></td>
            <td class="small"><?=$nombreOficinaXX?>/<?=$nombreAreaXX?></td>
         </tr>
       <?php 

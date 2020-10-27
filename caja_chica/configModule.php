@@ -20,6 +20,7 @@
 	$urlFormDetalleCajaChica="index.php?opcion=DetalleCajaChicaForm";
 	$urlSaveDetalleCajaChica="?opcion=DetalleCajaChicaSave";
 	$urlDeleteDetalleCajaChica="index.php?opcion=deleteDetalleCajaChica";
+	$urlQuitarDetalleCajaChica="index.php?opcion=quitarDetalleCajaChica";
 	//rendiciones
 	$urlListaRendiciones="?opcion=ListaRendiciones";
 

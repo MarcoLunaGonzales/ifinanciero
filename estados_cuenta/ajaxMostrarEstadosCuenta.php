@@ -42,8 +42,8 @@ if($codCuentaAuxiliar!=0){
       <th class="text-left">FechaEC</th>
       <th class="text-left">Proveedor/Cliente</th>
       <th class="text-left">Glosa</th>
-      <th class="text-right">D&eacute;bito</th>
-      <th class="text-right">Cr&eacute;dito</th>
+      <th class="text-right">Debe</th>
+      <th class="text-right">Haber</th>
       <th class="text-right">Saldo</th>
       <th class="text-left">-</th>
     </tr>
@@ -83,6 +83,21 @@ if($codCuentaAuxiliar!=0){
     $nombreComprobante=nombreComprobante($codigoComprobante);
     $codOficinaDetalle=obtenerCodigoUnidadComprobanteDetalle($row['cod_comprobantedetalle']);
     $codAreaDetalle=obtenerCodigoAreaComprobanteDetalle($row['cod_comprobantedetalle']);
+
+    $existeEstado=0;$colorFilaExiste="";
+    if(isset($_GET["estados_cuenta"])){
+      $estados_cuenta=json_decode($_GET["estados_cuenta"]);
+      for ($estado=0; $estado <count($estados_cuenta) ; $estado++) { 
+        for ($nrofila=0; $nrofila <count($estados_cuenta[$estado]) ; $nrofila++) { 
+          if($codigoX==$estados_cuenta[$estado][$nrofila]->cod_comprobantedetalle){
+            $existeEstado=$estado+1;
+            $colorFilaExiste='style="background:#FF3333 !important;color:#fff !important;"';
+          }
+        }
+      }
+    }
+    
+
     $glosaMostrar="";
     if($glosaAuxiliar!=""){
       $glosaMostrar=$glosaAuxiliar;
@@ -136,9 +151,10 @@ if($codCuentaAuxiliar!=0){
       $edicion=0;
     }
     $saldo=$saldoIndividual;
+    //$saldoFila=$montoContra-$montoX;
     if($montoContra<$montoX){
     ?>
-    <tr class="<?=$estiloFila?> det-estados">
+    <tr class="<?=$estiloFila?> det-estados" <?=$colorFilaExiste?>>
       <td class="text-center small"><?=$nombreUnidadO;?></td>
       <td class="text-center small"><?=$nombreComprobante;?></td>
       <td class="text-left small"><?=$fechaComprobante;?></td>
@@ -146,7 +162,7 @@ if($codCuentaAuxiliar!=0){
       <td class="text-left small"><?=$nombreCuentaAuxEstadoCuenta?></td>
       <td class="text-left small"><?=$glosaMostrar;?></td>
       <?php
-      if($tipoComprobanteX==1){
+      if($tipoComprobanteX==909090){ //909090 =1 anterior cuando se seleccionaba el tipo
       ?>
         <td class="text-right small"><?=formatNumberDec($montoX)?></td>
         <td class="text-right small"><?=formatNumberDec($montoContra)?></td>
@@ -163,12 +179,17 @@ if($codCuentaAuxiliar!=0){
         <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <div class="form-check">
             <?php
-              $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX."####".$montoX;
+              $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX."####".$montoX."####".$montoContra;
               if( $cerrarEstadoCuenta==1 ){
                 if($codCuentaAuxiliar!=0){
+                  if($existeEstado==0){
             ?>
               <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="ponerCentroCostoComprobanteDetalle(<?=$codOficinaDetalle?>,<?=$codAreaDetalle?>);agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
             <?php        
+                    
+                  }else{
+                    echo "Fila: ".$existeEstado;
+                  }
                 }else{
                   $codigoCuentaAux=$codCuentaAuxX;
                   $nombreCuentaAux=nameCuentaAuxiliar($codigoCuentaAux);

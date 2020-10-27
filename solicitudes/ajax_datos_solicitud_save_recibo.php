@@ -13,15 +13,18 @@ $globalUser=$_SESSION["globalUser"];
 
 $codigoSolicitud=$_GET['codigo'];
 $codCajaChica=$_GET['cod_cajachica'];
+$codPago=$_GET['cod_pago'];
 //$codPersonal=$_GET['cod_personal'];
 $fechaActual=date("d/m/Y");
 
 $fecha=date("Y-m-d");
 $fechaHora=date("Y-m-d H:i:s");
 
+$instancia=obtenerCodigoInstanciaPorCajaChica($codCajaChica);
+
 $solicitudDetalle=obtenerSolicitudRecursosDetalleAgrupadas($codigoSolicitud);
 $codPersonal=obtenerPersonalSolicitanteRecursos($codigoSolicitud);
-$numeroRecibo=obtenerNumeroReciboCajaChica($codCajaChica);
+$numeroRecibo=obtenerNumeroReciboInstancia($instancia);
 $numeroDocumento=obtenerNumeroDocumentoReciboCajaChica($codCajaChica);
 $index=0;
 
@@ -73,7 +76,7 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
             }
     $montoImporte=number_format($montoImporte, 2, '.', '');    
 
-    $detalleX="Beneficiario: ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$detalleActividadFila." ".$numeroSR;  
+    $detalleX=" ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$detalleActividadFila." ".$numeroSR;  
     $nombreOficinaXX=abrevUnidad_solo($codOficinaXX);
     $nombreAreaXX=abrevArea_solo($codAreaXX);
     $codCuentaX=$rowDetalles['cod_plancuenta']; 
@@ -85,15 +88,15 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
     $stmtMCC->execute();
     $resultMCC=$stmtMCC->fetch();    
     $monto_reembolso_x=$resultMCC['monto_reembolso'];
-    $monto_reembolso=$monto_reembolso_x-$importeSolX;
+    $monto_reembolso=$monto_reembolso_x-$montoImporte;
     $codigoDetalle=obtenerCodigoReciboCajaChicaDetalle();
     $cod_estado=1;
     $cod_estadoreferencial=1;
     $monto_rendicion=0;
     $cod_actividad_sw=0;
 
-    $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by) 
-    VALUES ($codigoDetalle,$codCajaChica,$codCuentaX,'$fecha',$retencionX,$numeroDocumento,'$codPersonal',$importeSolX,'$detalleX',$cod_estado,$cod_estadoreferencial,'$codAreaXX','$codOficinaXX',$numeroRecibo,'$codProveedor','$cod_actividad_sw',NOW(),$globalUser)");
+    $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by,cod_tipopago) 
+    VALUES ($codigoDetalle,$codCajaChica,$codCuentaX,'$fecha',$retencionX,$numeroDocumento,'$codPersonal',$importeSolX,'$detalleX',$cod_estado,$cod_estadoreferencial,'$codAreaXX','$codOficinaXX',$numeroRecibo,'$codProveedor','$cod_actividad_sw',NOW(),$globalUser,$codPago)");
     $flagSuccess=$stmt->execute();
     if($flagSuccess){//registramos rendiciones
       $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$codCajaChica");
@@ -126,8 +129,7 @@ if($index==0){
   $idTipoObjeto=2708;
   $idObjeto=2725; //regristado
   $obs="Solicitud Contabilizada";
-  //actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigoSolicitud,$fechaHoraActual,$obs);    
-
+  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigoSolicitud,$fechaHoraActual,$obs);    
   echo "1";
 }
      ?>

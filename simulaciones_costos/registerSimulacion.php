@@ -379,7 +379,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   $uti=$il-((($iva+$it)/100)*$il)-$totalFijoPlan-($totalVariable[2]);
                   $porl=($uti*100)/$il;*/
                   //
-                  $alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
+                  //$alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
+                  $porcentajeIva=($iva+$it)/100;
+                  $porcentajeUtil=$utilidadIbnorcaX/100;
+                  $alumnosRecoX=ceil(($totalFijoPlan+$totalVariable[2])/(($precioLocalX)*(1-$porcentajeIva-$porcentajeUtil)));  
+
+
                   //if($alumnosX)
                  /*if($habilitadoNormaX==1){
                   $totalVariable[2]=$totalVariable[2]+$montoNormaX;

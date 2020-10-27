@@ -410,6 +410,7 @@ function configuracionEstadosCuenta(fila,codigoCuenta,codigoCuentaAux){
       contador++;   
       break;  
     }else{
+      
       $("#estados_cuentas"+fila).removeClass("d-none"); 
       $("#estados_cuentas"+fila).addClass("d-none");  
     }
@@ -3190,13 +3191,14 @@ function guardarSimulacionCosto(){
          iniciarCargaAjax();      
         },
         success:  function (resp) {
+         // alert(resp);
           detectarCargaAjax();
           if(!($("#codigo_servicioibnorca").length)){
-                 alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp);
+                 alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp.trim());
               }else{
                 var s=$("#codigo_servicioibnorca_s").val();
                 var u=$("#codigo_servicioibnorca_u").val();
-                alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp+'&q='+idServicio+'&s='+s+'&u='+u);
+                alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp.trim()+'&q='+idServicio+'&s='+s+'&u='+u);
         }
        //   alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp);
         }
@@ -7309,9 +7311,9 @@ function verEstadosCuentas(fila,cuenta){
     }
     if(itemEstadosCuentas[fila-1].length>0){   
       var comprobanteOrigen=itemEstadosCuentas[fila-1][0].cod_comprobantedetalle;
-      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen,"cerrar_ec":banderaCerrarEC};
+      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen,"cerrar_ec":banderaCerrarEC,"estados_cuenta":JSON.stringify(itemEstadosCuentas)};
     }else{
-      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"cerrar_ec":banderaCerrarEC};
+      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"cerrar_ec":banderaCerrarEC,"estados_cuenta":JSON.stringify(itemEstadosCuentas)};
     }
     
     //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA    
@@ -7437,8 +7439,25 @@ function verLibretasBancarias(fila){
 }
 function agregarEstadoCuentaCerrar(filaXXX,valor){
   //console.log("entro:"+fila+" "+valor);
+
   $("#mensaje_estadoscuenta").html("");
   
+  var detalle_resp=valor.split('####');
+  console.log("antes: "+detalle_resp);
+  var existeEstadoCuentas=0;var filaEstado=0;var montoMatado=0;
+  for (var i = 0; i < itemEstadosCuentas.length; i++) {
+    var estadosCuenta=itemEstadosCuentas[i];
+    for (var j = 0; j < estadosCuenta.length; j++) {
+      var estado_codigo=estadosCuenta[j].cod_comprobantedetalle;
+      if(estado_codigo==detalle_resp[0]){
+        montoMatado+=estadosCuenta[j].monto;
+          existeEstadoCuentas++; 
+          filaEstado=i+1;
+      }
+    };
+  };
+  if(existeEstadoCuentas==0){// if(existeEstadoCuentas==0)//si existe un estado de cuentas cerrado if((montoMatado+parseFloat($("#monto_estadocuenta").val()))<parseFloat(detalle_resp[4])) //monto sumado es menor al saldo? 
+
   var fila=$("#estFila").val();
   var tipo=$("#tipo_estadocuentas"+fila).val();
   var tipo_proveedorcliente=$("#tipo_proveedorcliente"+fila).val();
@@ -7448,7 +7467,7 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
   console.log(tipo+" "+tipo_proveedorcliente);
   
   //var resp = $("#cuentas_origen").val().split('###');
-  var detalle_resp=valor.split('####');
+
   console.log("antes: "+detalle_resp);
   var codComproDet=detalle_resp[0];
   var cuenta_auxiliar=detalle_resp[1];
@@ -7471,8 +7490,12 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
     $("#nestado"+fila).addClass("estado");
     //verEstadosCuentas(fila,cuenta);
     $('#modalEstadosCuentas').modal('hide');
+   }else{
+    Swal.fire('Estados de Cuenta!','El monto a Cerrar no puede ser mayor al saldo!','warning');  
+   }
   }else{
-    Swal.fire('Estados de Cuenta!','El monto a Cerrar no puede ser mayor al saldo!','warning'); 
+    Swal.fire('Estados de Cuenta!','El estado de cuentas ya se está cerrando en la fila: '+filaEstado,'warning'); 
+
    // $("#mensaje_estadoscuenta").html("<label class='text-danger'>El monto a Cerrar no puede ser mayor al saldo.</label>");
   }
 }
@@ -8117,6 +8140,19 @@ function guardarDatosPlantilla(btn_id){
          }
       }  
     };
+    var cantidadAlumnosDetalle=0;
+    var cantidadExistentes=0;
+    for (var i = 1; i <= parseInt(cantidadFilas); i++) {
+      if($("#cantidad_alumnosAAA"+i).length>0){
+         cantidadAlumnosDetalle+=$("#cantidad_alumnosAAA"+i).val();
+         cantidadExistentes++;
+      }  
+    };
+    if(cantidadAlumnosDetalle!=$("#modal_alibnorca").val()&&cantidadExistentes>0){
+       mensajeError="La cantidad de Estudiantes de la Tabla de Precios no iguala a la cantidad total de estudiantes.";
+       error=1;
+    }
+
    if(error==0){
      $("#"+btn_id).attr("disabled",true); 
   $.ajax({
@@ -18124,7 +18160,7 @@ function contabilizarSolicitudRecursoModal(codigo,tipo,nro,monto,cuentas,url,pro
   //validacion[0]=2;
   //validacion[1]="Error de prueba codigo:"+codigo;
   var validacion=validarFacturasRetencionesSRAjax(codigo);
-  if(validacion[0]==1){
+  if(validacion[0]==1&&tipo==1){
     //validacion error mensaje validacion[1];
     Swal.fire("ERROR!", validacion[1], "warning");
   }else{
@@ -18529,6 +18565,7 @@ function contabilizarSolicitudRecursoModalCajaChica(codigo,tipo,nro,monto,cuenta
    $("#cod_caja_chica").val("-1");
    $('.selectpicker').selectpicker('refresh');
    asignarCajaChijaGastoSR();
+   asignarFormaPagoGastoSR();
    $("#modalContabilizarSolicitudRecursoCajaChica").modal("show");
    }
   }
@@ -18550,6 +18587,21 @@ function asignarCajaChijaGastoSR(){
      $("#titulo_cajachica").html("");
   }
   cargarDetallesSolicitudRecursoModal();
+} 
+function asignarFormaPagoGastoSR(){
+  var cod_pago=$("#cod_forma_pago").val();
+  if(cod_pago>0){
+     if(!$("#nmoney").hasClass("estado")){
+       $("#nmoney").addClass("estado");
+     }
+     var titulo=$("#cod_forma_pago option:selected").text().toUpperCase();
+     $("#nmoney").attr("title",titulo);
+  }else{
+     if($("#nmoney").hasClass("estado")){
+       $("#nmoney").removeClass("estado");
+     }
+     $("#nmoney").removeAttr("title");
+  }
 } 
 function cargarDetallesSolicitudRecursoModal(){
     var codigo = $("#codigo_solicitud_caja").val();
@@ -18575,11 +18627,12 @@ function cargarDetallesSolicitudRecursoModal(){
 function saveContaSolicitudRecursoModalCajaChica(){
   var codigo = $("#codigo_solicitud_caja").val();
   var cod_caja=$("#cod_caja_chica").val();
+  var cod_pago=$("#cod_forma_pago").val();
   //var cod_personal=$("#cod_personal_modal").val();
-  if(cod_caja==-1){ //||cod_personal==-1
+  if(cod_caja==-1||cod_pago==-1){ //||cod_personal==-1
     Swal.fire("Informativo!", "Debe llenar los campos requeridos!", "warning");     
   }else{
-    var parametros={"codigo":codigo,"cod_cajachica":cod_caja}; //,"cod_personal":cod_personal
+    var parametros={"codigo":codigo,"cod_cajachica":cod_caja,"cod_pago":cod_pago}; //,"cod_personal":cod_personal
       $.ajax({
         type: "GET",
         dataType: 'html',
@@ -18714,4 +18767,47 @@ function guardarDivisionDetalleSolicitud(){
   }else{
    Swal.fire("Informativo!", "Debe llenar los campos requeridos!", "warning"); 
   }
+}
+
+
+function llenarDatosTablaCuentas(){
+  $("#llenado_de_cuentas").html("");
+  $("#cuenta option").each(function(){
+    if($(this).is(':selected')){
+      var nombreCuenta=$(this).text().toUpperCase(); 
+      $("#llenado_de_cuentas").append("<tr><td class='small text-left'>"+nombreCuenta.trim()+"</td><td>-</td></tr>");/*<a class='btn btn-default btn-sm btn-fab' onClick='quitarTablaCuentasMayores("+$(this)+")'><i class='material-icons'>remove_circle</i></a>*/
+    }
+  }); 
+}
+
+function quitarTablaCuentasMayores(valor){
+  valor.removeAttr("selected");
+  $('.selectpicker').selectpicker("refresh");
+}
+
+function ponerVariableInput(valor,inp){
+  $("#"+inp).val(valor);
+}
+function ponerHtmlElemento(valor,inp){
+  $("#"+inp).html(valor);
+}
+
+function buscarDetallesLibretasBancarias(){
+  var documento=$("#buscar_nro_documento").val();
+  var monto=$("#buscar_monto").val(); 
+  var desde=$("#buscar_fecha_desde").val();
+  var hasta=$("#buscar_fecha_hasta").val(); 
+  var descripcion=$("#buscar_descripcion").val(); 
+  var codigo_libreta=$("#codigo").val();
+  var parametros={"codigo_libreta":codigo_libreta,"documento":documento,"monto":monto,"desde":desde,"hasta":hasta,"descripcion":descripcion};
+     $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "libretas_bancarias/ajax_buscar_libreta_bancaria_detalle.php",
+        data: parametros,      
+        success:  function (resp) {
+          $("#contenedor_libretas_detalle").html(resp);
+          $("#modalBuscarDetalleLibretas").modal("hide");
+        }
+    });
 }
