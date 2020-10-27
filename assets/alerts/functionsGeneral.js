@@ -7311,9 +7311,9 @@ function verEstadosCuentas(fila,cuenta){
     }
     if(itemEstadosCuentas[fila-1].length>0){   
       var comprobanteOrigen=itemEstadosCuentas[fila-1][0].cod_comprobantedetalle;
-      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen,"cerrar_ec":banderaCerrarEC};
+      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"comprobante_origen":comprobanteOrigen,"cerrar_ec":banderaCerrarEC,"estados_cuenta":JSON.stringify(itemEstadosCuentas)};
     }else{
-      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"cerrar_ec":banderaCerrarEC};
+      var parametros={"codigo_comprobante":codigo_comprobante,"edicion":edicion,"cod_cuenta":cod_cuenta,"cod_cuenta_auxiliar":cod_cuenta_auxiliar,"tipo_comprobante":tipoComprobante,"cerrar_ec":banderaCerrarEC,"estados_cuenta":JSON.stringify(itemEstadosCuentas)};
     }
     
     //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA    
@@ -18783,4 +18783,31 @@ function llenarDatosTablaCuentas(){
 function quitarTablaCuentasMayores(valor){
   valor.removeAttr("selected");
   $('.selectpicker').selectpicker("refresh");
+}
+
+function ponerVariableInput(valor,inp){
+  $("#"+inp).val(valor);
+}
+function ponerHtmlElemento(valor,inp){
+  $("#"+inp).html(valor);
+}
+
+function buscarDetallesLibretasBancarias(){
+  var documento=$("#buscar_nro_documento").val();
+  var monto=$("#buscar_monto").val(); 
+  var desde=$("#buscar_fecha_desde").val();
+  var hasta=$("#buscar_fecha_hasta").val(); 
+  var descripcion=$("#buscar_descripcion").val(); 
+  var codigo_libreta=$("#codigo").val();
+  var parametros={"codigo_libreta":codigo_libreta,"documento":documento,"monto":monto,"desde":desde,"hasta":hasta,"descripcion":descripcion};
+     $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "libretas_bancarias/ajax_buscar_libreta_bancaria_detalle.php",
+        data: parametros,      
+        success:  function (resp) {
+          $("#contenedor_libretas_detalle").html(resp);
+          $("#modalBuscarDetalleLibretas").modal("hide");
+        }
+    });
 }

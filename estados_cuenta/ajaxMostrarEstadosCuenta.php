@@ -83,6 +83,21 @@ if($codCuentaAuxiliar!=0){
     $nombreComprobante=nombreComprobante($codigoComprobante);
     $codOficinaDetalle=obtenerCodigoUnidadComprobanteDetalle($row['cod_comprobantedetalle']);
     $codAreaDetalle=obtenerCodigoAreaComprobanteDetalle($row['cod_comprobantedetalle']);
+
+    $existeEstado=0;$colorFilaExiste="";
+    if(isset($_GET["estados_cuenta"])){
+      $estados_cuenta=json_decode($_GET["estados_cuenta"]);
+      for ($estado=0; $estado <count($estados_cuenta) ; $estado++) { 
+        for ($nrofila=0; $nrofila <count($estados_cuenta[$estado]) ; $nrofila++) { 
+          if($codigoX==$estados_cuenta[$estado][$nrofila]->cod_comprobantedetalle){
+            $existeEstado=$estado+1;
+            $colorFilaExiste='style="background:#FF3333 !important;color:#fff !important;"';
+          }
+        }
+      }
+    }
+    
+
     $glosaMostrar="";
     if($glosaAuxiliar!=""){
       $glosaMostrar=$glosaAuxiliar;
@@ -139,7 +154,7 @@ if($codCuentaAuxiliar!=0){
     //$saldoFila=$montoContra-$montoX;
     if($montoContra<$montoX){
     ?>
-    <tr class="<?=$estiloFila?> det-estados">
+    <tr class="<?=$estiloFila?> det-estados" <?=$colorFilaExiste?>>
       <td class="text-center small"><?=$nombreUnidadO;?></td>
       <td class="text-center small"><?=$nombreComprobante;?></td>
       <td class="text-left small"><?=$fechaComprobante;?></td>
@@ -167,9 +182,14 @@ if($codCuentaAuxiliar!=0){
               $valorCerrarEC=$codigoX."####".$codCuentaAuxX."####".$codProveedorX."####".$montoX."####".$montoContra;
               if( $cerrarEstadoCuenta==1 ){
                 if($codCuentaAuxiliar!=0){
+                  if($existeEstado==0){
             ?>
               <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="ponerCentroCostoComprobanteDetalle(<?=$codOficinaDetalle?>,<?=$codAreaDetalle?>);agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
             <?php        
+                    
+                  }else{
+                    echo "Fila: ".$existeEstado;
+                  }
                 }else{
                   $codigoCuentaAux=$codCuentaAuxX;
                   $nombreCuentaAux=nameCuentaAuxiliar($codigoCuentaAux);

@@ -7383,6 +7383,33 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     return json_decode($remote_server_output, true);
   }
 
+function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac){
+    $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+    $sIde = "ifinanciero";
+    $sKey = "ce94a8dabdf0b112eafa27a5aa475751";  
+    //REGISTRAR CONTROL PAGOS 
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+            "accion"=>"AnulacionDePago", 
+            "Identificacion"=>$ci_estudiante, //ci del alumno
+            "IdCurso"=>$IdCurso,
+            "IdModulo"=>$Idmodulo, 
+            "Monto"=> $monto, 
+            "IdSolicitudFactura"=>$cod_solfac,
+            "Plataforma"=>13, // 13=Sistema Financiero
+            "IdUsuario"=>0
+            );
+    $parametros=json_encode($parametros);
+    $ch = curl_init();
+    // curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/capacitacion/ws-inscribiralumno.php"); //PRUEBA
+    curl_setopt($ch, CURLOPT_URL,$direccion."capacitacion/ws-inscribiralumno.php");
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    return json_decode($remote_server_output, true);
+  }
+
   function nro_correlativo_facturas($cod_sucursal){
     $fecha_actual=date('Y-m-d');
     $dbh = new Conexion();   
@@ -9999,6 +10026,41 @@ function insertarMontoNegativoCurso($cod_factura)
   return($estado_x);
 
 }
+
+function anularMontoCurso($cod_factura)
+{
+  $cod_solicitudFacturacion=obtenerSolicitudFactura($cod_factura);
+  $dbh = new Conexion();
+  $sql="SELECT f.tipo_solicitud,f.cod_simulacion_servicio, sfd.cod_claservicio,f.ci_estudiante as ci_2,sfd.cod_curso,sfd.ci_estudiante,sfd.precio from solicitudes_facturacion f, solicitudes_facturaciondetalle sfd where f.codigo=sfd.cod_solicitudfacturacion and f.tipo_solicitud in(2,7) and f.codigo=$cod_solicitudFacturacion";
+  // echo $sql;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();    
+  $stmt->bindColumn('cod_simulacion_servicio', $cod_simulacion_servicio);
+  $stmt->bindColumn('cod_claservicio', $cod_claservicio_x);
+  $stmt->bindColumn('ci_2', $ci_2);
+  $stmt->bindColumn('cod_curso', $cod_curso);
+  $stmt->bindColumn('ci_estudiante', $ci_estudiante);
+  $stmt->bindColumn('precio', $precio_x);
+  $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);    
+  $estado_x=true;                            
+  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+    if($tipo_solicitud==7){
+      $cod_simulacion_servicio=$cod_curso;
+    }
+    if($ci_estudiante==null || $ci_estudiante==""){
+      $ci_estudiante=$ci_2;
+    }
+    $precio_x=$precio_x*(-1);//monto convertimos a negativo;
+    //echo "ci".$ci_estudiante."-Curso".$cod_simulacion_servicio."-modulo".$cod_claservicio_x."-precio".$precio_x."-cod_soli".$cod_solicitudFacturacion;
+    $datos=anular_pago_curso($ci_estudiante,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$cod_solicitudFacturacion);
+    $estado_x=$datos["estado"];
+    $mensaje_x=$datos["mensaje"];  
+    //echo $mensaje_x;
+  }
+  return($estado_x);
+
+}
+
 function obtenerCodigoCurso_pagoid($codigo){
   $dbh = new Conexion();
   $stmt = $dbh->prepare("SELECT curso_id FROM ibnorcatienda.pago_curso where pago_id=$codigo");

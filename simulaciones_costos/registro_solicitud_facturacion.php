@@ -126,7 +126,7 @@ if($cod_facturacion>0){//editar
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');    
     // $razon_social=$razon_social;//ya está arriba
-    $nit = $ci_estudiante;    
+    //$nit = $ci_estudiante;    
     $observaciones = $Codigo_alterno." - ".$nombreAlumno;
     $observaciones_2 = null;
     $cod_tipopago=null;
@@ -419,14 +419,14 @@ $contadorRegistros=0;
                             <div class="col-sm-5">
                                 <div class="form-group">
                                     <div id="contenedor_razonsocial">
-                                        <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>    
+                                        <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly/>    
                                     </div>
                                 </div>
                             </div>
                             <label class="col-sm-1 col-form-label">Nit</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true"/>
+                                    <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true" readonly/>
                                 </div>
                             </div>
                         </div>
