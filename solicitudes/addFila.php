@@ -121,13 +121,13 @@ $des_actividadproyecto="";
                                   <div class="col-sm-1">
                                           <div class="form-group">
                                             <!--<label for="importe_presupuesto<?=$idFila;?>" class="bmd-label-floating">Imp Pres</label>      -->
-                                            <input class="form-control" type="number" name="importe_presupuesto<?=$idFila;?>" id="importe_presupuesto<?=$idFila;?>" value="<?=$importeX?>" step="0.001" required readonly>  
+                                            <input class="form-control" type="number" name="importe_presupuesto<?=$idFila;?>" id="importe_presupuesto<?=$idFila;?>" value="<?=$importeX?>" step="any" required readonly>  
                                     </div>
                                   </div>
 		                              <div class="col-sm-1">
                                           <div class="form-group">
                                           	<label for="importe<?=$idFila;?>" class="bmd-label-floating d-none" id="importe_label<?=$idFila;?>"><?=$tituloImporte?></label>
-                                        		<input class="form-control" type="number" name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" value="<?=$importeSolX?>" step="0.001" onChange="calcularTotalesSolicitud();" OnKeyUp="calcularTotalesSolicitud();" required>	
+                                        		<input class="form-control" type="number" name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" value="<?=$importeSolX?>" step="any" onChange="calcularTotalesSolicitud();" OnKeyUp="calcularTotalesSolicitud();" required>	
 		                              	</div>
       	                          </div>
       	                              <div class="col-sm-2">

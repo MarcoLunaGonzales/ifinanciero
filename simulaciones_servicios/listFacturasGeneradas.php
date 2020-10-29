@@ -117,7 +117,7 @@ $globalPersonal=$_SESSION["globalUser"];
                           $cliente=nameCliente($cod_cliente);
 
                           $correos_string=obtenerCorreoSolicitudFacturacion($cod_solicitudfacturacion);
-
+                          $correos_string=str_replace(";",",",$correos_string);
                           //correos de contactos
                           $tipo_solicitud=obtenerTipoSolicitud($cod_solicitudfacturacion);
                           /*if($correos_string==""){

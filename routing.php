@@ -171,11 +171,17 @@
         if ($_GET['opcion']=='reportesLibretasBancarias') {
 			require_once('reportes/reportesLibretasBancarias.php');
 		}
+
+		//REPORTES
+		if ($_GET['opcion']=='reporteAdminEstadoCuentas') {
+			require_once('reportes_internos/reportesEstadoCuentasAdmin.php');
+		}
   
         //Contabilizacion de Libretas
         if ($_GET['opcion']=='contabilizarLibretasBancarias') {
 			require_once('libretas_bancarias/contaLibretasBancarias.php');
 		}
+
 		if ($_GET['opcion']=='contabilizarLibretasBancarias_lista') {
 			require_once('libretas_bancarias/contabilizacionLibretasBancarias_lista.php');
 		}

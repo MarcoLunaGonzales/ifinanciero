@@ -2,7 +2,7 @@
 
 // require_once 'layouts/bodylogin2.php';
 require_once 'conexion.php';
-require_once 'estados_cuenta/configModule.php';
+require_once 'configModule.php';
 require_once 'styles.php';
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
@@ -32,9 +32,9 @@ $globalUnidad=$_SESSION["globalUnidad"];
       <div class="col-md-12">
       <form id="form1" class="form-horizontal" action="<?=$rptEstadoCuentasprocesar;?>" method="post" target="_blank">
       <div class="card">
-        <div class="card-header <?=$colorCard;?> card-header-text">
+        <div class="card-header card-header-danger card-header-text">
           <div class="card-text">
-            <h4 class="card-title">Reporte Estado De Cuentas</h4>
+            <h4 class="card-title">Reporte Estado De Cuentas Admin</h4>
           </div>
           </div>
           <div class="card-body ">
@@ -152,7 +152,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
               <label class="col-sm-2 col-form-label">Gestion</label>
               <div class="col-sm-7">
                 <div class="form-group">
-                  <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm" data-style="btn btn-info"
+                  <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"
                       required onChange="AjaxGestionFechaDesde(this)">
                       <?php
                         $sql="SELECT * FROM gestiones order by 2 desc";
@@ -175,7 +175,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
               <label class="col-sm-2 col-form-label">Tipo</label>
               <div class="col-sm-7">
               <div class="form-group">
-                  <select name="tipo_cp" id="tipo_cp" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required onChange="ajax_tipo_filtro_reporte_prove_cliente()">
+                  <select name="tipo_cp" id="tipo_cp" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required onChange="ajax_tipo_filtro_reporte_prove_cliente()">
                         <option value=""></option>
                         <option value="1">PROVEEDOR</option>
                         <option value="2">CLIENTE</option>
@@ -280,8 +280,8 @@ $globalUnidad=$_SESSION["globalUnidad"];
             </div><!--fin tipo tipo -->
           </div>
           <div class="card-footer ml-auto mr-auto">
-          <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
-              <!--<a href="index.php?opcion=reporteAdminEstadoCuentas" target="_blank" class="btn btn-danger">Reporte Administrador</a>-->
+          <button type="submit" class="btn btn-danger">Generar Reporte</button>
+            
             </div>
         </div>
         </form>

@@ -387,6 +387,7 @@
                           }   
                         }
                       }
+                   // echo "TEST";
                    include "cargarDetallePlantillaPartida.php";   
                     }
                     ?>  
