@@ -122,8 +122,22 @@ $areaAbrev=abrevArea($areaCostoArray);
 
                                         </tr>'; 
                                         
-                                        $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' and cc.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and cc.cod_unidadorganizacional in ($StringUnidades) and e.cod_cuentaaux in ($proveedoresString) and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) order by ca.nombre, cc.fecha";
-                                        //echo $sql;
+                                        $sql="SELECT e.*,
+                                        (select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, 
+                                        e.cod_plancuenta as cod_cuenta, ca.nombre,
+                                        (SELECT d.cod_comprobante from comprobantes_detalle d where d.codigo=e.cod_comprobantedetalle) as codigocomprobante, 
+                                        (SELECT cc.cod_unidadorganizacional from comprobantes_detalle d, comprobantes cc where cc.codigo=d.cod_comprobante and d.codigo=e.cod_comprobantedetalle) as cod_unidad_cab,
+                                        (SELECT d.cod_area from comprobantes_detalle d where d.codigo=e.cod_comprobantedetalle) as area_centro_costos,
+                                        (SELECT d.glosa from comprobantes_detalle d where d.codigo=e.cod_comprobantedetalle) as glosa,
+                                        (SELECT d.debe from comprobantes_detalle d where d.codigo=e.cod_comprobantedetalle) as debe,
+                                        (SELECT d.haber from comprobantes_detalle d where d.codigo=e.cod_comprobantedetalle) as haber 
+                                        FROM estados_cuenta e, cuentas_auxiliares ca  
+                                        where e.cod_cuentaaux=ca.codigo
+                                        and e.cod_plancuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 
+                                        and e.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' 
+                                        and e.cod_cuentaaux in ($proveedoresString) 
+                                         order by ca.nombre, e.fecha";
+                                        echo $sql;
                                         $stmtUO = $dbh->prepare($sql);
                                         $stmtUO->execute();
                                         $codPlanCuentaAuxiliarPivotX=-10000;

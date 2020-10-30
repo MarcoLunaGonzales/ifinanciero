@@ -60,6 +60,8 @@ $unidadCostoArray=implode(",", $unidadCosto);
 $areaCostoArray=implode(",", $areaCosto);
 $unidadAbrev=abrevUnidad($unidadCostoArray);
 $areaAbrev=abrevArea($areaCostoArray);
+
+$periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
 ?>
 
 <div class="content">
@@ -76,6 +78,7 @@ $areaAbrev=abrevArea($areaCostoArray);
                           Estado de Cuentas
                       </h4>
                       <!-- <h4 class="card-title text-center">Reporte De Activos Fijos Por Unidad</h4> -->
+                      <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
                       <h6 class="card-title">Gestion: <?= $NombreGestion; ?></h6>                        
                       <h6 class="card-title">Cuenta: <?=$stringGeneraCuentas;?></h6>
                       <h6 class="card-title">Unidad:<?=$stringGeneraUnidades?></h6>             
@@ -122,13 +125,52 @@ $areaAbrev=abrevArea($areaCostoArray);
 
                                         </tr>'; 
                                         
-                                        $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' and cc.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and cc.cod_unidadorganizacional in ($StringUnidades) and e.cod_cuentaaux in ($proveedoresString) and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) order by ca.nombre, cc.fecha";
+                                        $sqlFechaEstadoCuenta="and cc.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59'"; 
+                                            
+                                        if(isset($_POST['cierre_anterior'])){
+                                          $sqlFechaEstadoCuenta=""; 
+                                         }
+
+                                        $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) and e.cod_cuentaaux in ($proveedoresString) and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) order by ca.nombre, cc.fecha";
                                         //echo $sql;
                                         $stmtUO = $dbh->prepare($sql);
                                         $stmtUO->execute();
                                         $codPlanCuentaAuxiliarPivotX=-10000;
                                         while ($row = $stmtUO->fetch()) {
                                             $codigoX=$row['codigo'];
+                                            
+                                            $existeCuentas=0;
+                                            $stmtCantidad = $dbh->prepare("SELECT count(*) as cantidad
+                                                    from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX");
+                                            $stmtCantidad->execute();
+                                            while ($rowCantidad = $stmtCantidad->fetch()) {
+                                                $existeCuentas=$rowCantidad['cantidad'];
+                                            }
+                                            
+                                            $existeCuentas2=0;
+                                              $stmtCantidad = $dbh->prepare("SELECT count(*) as cantidad FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' and cc.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and cc.cod_unidadorganizacional in ($StringUnidades) and e.cod_cuentaaux in ($proveedoresString) and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) and e.codigo=$codigoX order by ca.nombre, cc.fecha");
+                                              $stmtCantidad->execute();
+                                              while ($rowCantidad = $stmtCantidad->fetch()) {
+                                                  $existeCuentas2=$rowCantidad['cantidad'];
+                                              }
+
+                                            $mostrarFilasEstado="";
+                                            $estiloFilasEstado="";
+                                            $estiloFilasEstadoSaldo="";
+                                            if($sqlFechaEstadoCuenta==""){
+                                                if($existeCuentas==0){
+                                                  if($existeCuentas2==0){
+                                                     $mostrarFilasEstado="d-none";
+                                                  }
+                                                }else{
+                                                    if($existeCuentas2==0){
+                                                     $estiloFilasEstado="style='background:#F9F9FC !important;color:#D6D6DA  !important;'";
+                                                     $estiloFilasEstadoSaldo="style='color:red !important;'";
+                                                    }      
+                                                }
+                                                
+                                            }
+
                                             $codCompDetX=$row['cod_comprobantedetalle'];
                                             $codPlanCuentaX=$row['cod_cuenta'];
                                             $codProveedor=$row['cod_proveedor'];
@@ -154,7 +196,7 @@ $areaAbrev=abrevArea($areaCostoArray);
                                                 $saldo=0;
                                                 $codPlanCuentaAuxiliarPivotX=$codPlanCuentaAuxiliarX;
                                             
-                                            $html.='<tr style="background-color:#58D68D">
+                                            $html.='<tr style="background-color:#58D68D" class="'.$mostrarFilasEstado.'">
                                                 <td colspan="10"></td>
                                                 <td style="display: none;"></td>
                                                 <td style="display: none;"></td>
@@ -199,16 +241,19 @@ $areaAbrev=abrevArea($areaCostoArray);
                                                 $montoEstado=$rowSaldo['monto'];
                                             }
 
-                                         if(formatNumberDec($saldo)==formatNumberDec($montoEstado)&&$ver_saldo==1){
+                                         if(formatNumberDec($montoX)==formatNumberDec($montoEstado)&&$ver_saldo==1){
                                              //validacion para saldos 0 si esta filtrado
                                             $estiloEstados="d-none";
                                          }   
 
                                             if($tipoDebeHaber==2){//proveedor
-                                                $totalCredito=$totalCredito+$montoX;
+                                                if($mostrarFilasEstado!="d-none"&&$estiloFilasEstado==""){
+                                                   $totalCredito=$totalCredito+$montoX;
+                                                }
+                                                
                                                 $nombreProveedorX=nameProveedor($codProveedor);
                                                 
-                                                $html.='<tr class="bg-white det-estados '.$estiloEstados.'">
+                                                $html.='<tr class="bg-white det-estados '.$estiloEstados.' '.$mostrarFilasEstado.'" '.$estiloFilasEstado.'>
                                                     <td class="text-left small">'.$nombreUnidadCabecera.'</td>
                                                     <td class="text-left small">'.$nombreUnidadO.'-'.$nombreAreaCentroCosto.'</td>
                                                     <td class="text-center small">'.$nombreComprobanteX.'</td>
@@ -219,13 +264,16 @@ $areaAbrev=abrevArea($areaCostoArray);
                                                     <td class="text-left small">'.$glosaMostrar.'</td>
                                                     <td class="text-right small">'.formatNumberDec(0).'</td>
                                                     <td class="text-right small">'.formatNumberDec($montoX).'</td>
-                                                    <td class="text-right small font-weight-bold">'.formatNumberDec($saldo).'</td>
+                                                    <td class="text-right small font-weight-bold" '.$estiloFilasEstadoSaldo.'>'.formatNumberDec($saldo).'</td>
                                                 </tr>'; 
 
                                             }else{ //cliente
                                                 $nombreProveedorX=namecliente($codProveedor);
-                                                $totalDebito=$totalDebito+$montoX;
-                                                 $html.='<tr class="bg-white det-estados '.$estiloEstados.'">
+                                                if($mostrarFilasEstado!="d-none"&&$estiloFilasEstado==""){
+                                                  $totalDebito=$totalDebito+$montoX;
+                                                 }
+                                                
+                                                 $html.='<tr class="bg-white det-estados '.$estiloEstados.' '.$mostrarFilasEstado.'" '.$estiloFilasEstado.'>
                                                     <td class="text-left small">'.$nombreUnidadCabecera.'</td>
                                                     <td class="text-left small">'.$nombreUnidadO.'-'.$nombreAreaCentroCosto.'</td>
                                                     <td class="text-center small">'.$nombreComprobanteX.'</td>
@@ -236,19 +284,15 @@ $areaAbrev=abrevArea($areaCostoArray);
                                                     <td class="text-left small">'.$glosaMostrar.'</td>
                                                     <td class="text-right small">'.formatNumberDec($montoX).'</td>
                                                     <td class="text-right small">'.formatNumberDec(0).'</td>
-                                                    <td class="text-right small font-weight-bold">'.formatNumberDec($saldo).'</td>
+                                                    <td class="text-right small font-weight-bold" '.$estiloFilasEstadoSaldo.'>'.formatNumberDec($saldo).'</td>
                                                 </tr>';
 
                                             }    
 
-                                            $sqlFechaEstadoCuenta="and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59'"; 
                                             
-                                            if(isset($_POST['cierre_anterior'])){
-                                              $sqlFechaEstadoCuenta=""; 
-                                             }
 
                                                 $stmt_d = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante, c.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos
-                                                    from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 $sqlFechaEstadoCuenta and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX");
+                                                    from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX");
                                                 $stmt_d->execute();
                                                 while ($row_d = $stmt_d->fetch()) {
                                                     $codigoX_d=$row_d['codigo'];
@@ -287,8 +331,11 @@ $areaAbrev=abrevArea($areaCostoArray);
                                                      
                                                     if($tipoDebeHaber==2){//proveedor
                                                         $nombreProveedorX_d=nameProveedor($codProveedor_d);
-                                                        $totalDebito=$totalDebito+$montoX_d;
-                                                        $html.='<tr style="background-color:#ECCEF5;" class="'.$estiloEstados.'">
+                                                        if($mostrarFilasEstado!="d-none"){
+                                                          $totalDebito=$totalDebito+$montoX_d;    
+                                                        }
+                                                        
+                                                        $html.='<tr style="background-color:#ECCEF5;" class="'.$estiloEstados.' '.$mostrarFilasEstado.'">
                                                             <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;'.$nombreUnidadCabecera_d.'</td>
                                                             <td class="text-left small">'.$nombreUnidadO_d.'-'.$nombreAreaCentroCosto_d.'</td>
                                                             <td class="text-center small">'.$nombreComprobanteY.'</td>
@@ -303,8 +350,11 @@ $areaAbrev=abrevArea($areaCostoArray);
                                                     }else{ //cliente
                                                         $nombreProveedorX_d=namecliente($codProveedor_d);
                                                         if($nombreProveedorX_d=='0')$nombreProveedorX_d=nameProveedor($codProveedor_d);
-                                                        $totalCredito=$totalCredito+$montoX_d;
-                                                        $html.='<tr  style="background-color:#ECCEF5;" class="'.$estiloEstados.'">
+                                                        if($mostrarFilasEstado!="d-none"){
+                                                          $totalCredito=$totalCredito+$montoX_d;    
+                                                        }
+                                                        
+                                                        $html.='<tr  style="background-color:#ECCEF5;" class="'.$estiloEstados.' '.$mostrarFilasEstado.'">
                                                             <td class="text-left small">&nbsp;&nbsp;&nbsp;&nbsp;'.$nombreUnidadCabecera_d.'</td>
                                                             <td class="text-left small">'.$nombreUnidadO_d.'-'.$nombreAreaCentroCosto_d.'</td>
                                                             <td class="text-center small">'.$nombreComprobanteY.'</td>

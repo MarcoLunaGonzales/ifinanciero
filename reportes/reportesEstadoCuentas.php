@@ -262,7 +262,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
               </div>
               <div class="col-sm-6">
                       <div class="row">
-                     <label class="col-sm-8 col-form-label">Incluir cierres de cuentas anteriores al perdiodo</label>
+                     <label class="col-sm-8 col-form-label">Incluir cierre de estados de cuenta anteriores al periodo</label>
                            <div class="col-sm-4">
                         <div class="form-group">
                                 <div class="form-check">

@@ -168,7 +168,7 @@ if($estado!=1){
               }
 
              //enviar propuestas para la actualizacion de ibnorca
-             $fechaHoraActual=date("Y-m-d H:i:s");
+             /*$fechaHoraActual=date("Y-m-d H:i:s");
              $idTipoObjeto=2708;
              $idObjeto=2723; //regristado
              $obs="Solicitud Aprobada";
@@ -177,7 +177,7 @@ if($estado!=1){
                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,90,$codigo,$fechaHoraActual,$obs);    
               }else{
                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,90,$codigo,$fechaHoraActual,$obs);    
-              }
+              }*/
            ///
          }
       }
