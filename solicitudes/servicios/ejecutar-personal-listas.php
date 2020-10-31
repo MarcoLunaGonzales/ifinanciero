@@ -28,7 +28,7 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 1622 	Consultor
 1623 	Empleado
 */
-$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonaxAtributo", "IdAtributo"=>2530); 
+$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonal");
 
 
 /*PARAMETROS PARA LA RECUPERACION Y OBTENCION DE DATOS DE PERSONA

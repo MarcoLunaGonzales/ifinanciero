@@ -18811,3 +18811,33 @@ function buscarDetallesLibretasBancarias(){
         }
     });
 }
+
+function asignarCodigoEstadoCuentas(){
+ // alert("hola");
+  //autocompletarAJAXComplementoGeneral("buscar_comprobante","codigo_comprobante_detalle","autocompletar_datos_comprobantes.php");
+}
+
+function autocompletarAJAXComplementoGeneral(inp,inp2,url){
+  array_auto_ajax=[];
+  autocompletarAjaxVariable.list=[];
+ var input = document.getElementById(inp);
+ var valorDelInput = input.value;
+
+      $("#"+inp2).val(valorDelInput.toUpperCase());
+      if (!valorDelInput) return; // Detener si no hay valor
+      // Buscar nombres de la base de datos con PHP
+      fetch(url+"?busqueda=" + valorDelInput)
+            .then(r => r.json())
+            .then(proveedores => {
+                // Mapeamos, ya que se requiere label y value
+                autocompletarAjaxVariable.list = proveedores.map(function(proveedor) {
+                 array_auto_ajax[proveedor.value]={
+                  "imagen":proveedor.imagen,
+                  "nombre":proveedor.nombre
+                 };
+                 
+                    return {label: proveedor.label, // Lo que aparece al buscar
+                    value: proveedor.value};
+                });
+        });           
+}

@@ -38,12 +38,11 @@ $globalUnidad=$_SESSION["globalUnidad"];
           </div>
           </div>
           <div class="card-body ">
-            <div class="row">
+            <!--<div class="row">
               <label class="col-sm-2 col-form-label">Entidad</label>
               <div class="col-sm-7">
                 <div class="form-group">                            
-                          <!-- <select class="selectpicker form-control form-control-sm" name="entidad" id="entidad" data-style="<?=$comboColor;?>" required onChange="ajax_entidad_Oficina(this)"> -->
-                            
+                          
                           <select class="selectpicker form-control form-control-sm" name="entidad[]" id="entidad" required onChange="ajax_entidad_Oficina()" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true">             
                           <?php
                           $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM entidades where cod_estadoreferencial=1 order by 2");
@@ -106,20 +105,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
                       ?>
                         </select>                           
                           </div>
-                                <!-- <select class="selectpicker form-control form-control-sm" name="unidad_costo[]" id="unidad_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
-                                    <?php
-                                    $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
-                                  $stmt->execute();
-                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                    $codigoX=$row['codigo'];
-                                    $nombreX=$row['nombre'];
-                                    $abrevX=$row['abreviatura'];
-                                  ?>
-                                   <option value="<?=$codigoX;?>"><?=$abrevX;?></option>  
-                                   <?php
-                                     }
-                                     ?>
-                                 </select> -->
+
                             </div>
                         </div>
                    </div>
@@ -147,7 +133,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
                         </div>
                     </div>
               </div>
-                  </div><!--div row-->
+                  </div>--><!--div row-->
             <div class="row">
               <label class="col-sm-2 col-form-label">Gestion</label>
               <div class="col-sm-7">
@@ -262,7 +248,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
               </div>
               <div class="col-sm-6">
                       <div class="row">
-                     <label class="col-sm-8 col-form-label">Incluir cierres de cuentas anteriores al perdiodo</label>
+                     <label class="col-sm-8 col-form-label">Solo mostrar estados de cuenta sin relación</label>
                            <div class="col-sm-4">
                         <div class="form-group">
                                 <div class="form-check">
