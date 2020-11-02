@@ -318,9 +318,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
         </div>
      <div class="saltopagina"></div>
      <div class="titulo_texto_inf text-danger s-11" style="color:#AC1904;"><u>ANEXO II</u></div>
+     <br>
      <div class="titulo_texto_inf text-danger s-11" style="color:#AC1904;"><u>CONTRATO DE PRESTACIÓN DE SERVICIO</u></div>  
+     <br>
         <div class="text-justificar">
             <p>Conste por el presente documento privado que al sólo reconocimiento de firmas podrá ser elevado a instrumento público, un Contrato Civil de Servicio que se suscribe al amparo de lo previsto por los Art. 519, 568, 732 del Código Civil, así como otras disposiciones concordantes con la materia al tenor de las siguientes cláusulas</p>
+            <br>
             <p class="s-10 bg-danger text-white">PRIMERA: PARTES</p>
             <p>Constituyen partes integrantes del presente contrato:</p>
             <p class="pl-2"><?=str_replace("\n", "</p><p class='pl-2'>",obtenerValorOferta($codOferta,15,$default,1))?></p>
