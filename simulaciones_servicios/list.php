@@ -262,9 +262,9 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                        ?><a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&of=b" class="dropdown-item"  target="_blank">
                                          <i class="material-icons text-danger">picture_as_pdf</i> PDF B
                                       </a><?php
-                                      ?><a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&of=c" class="dropdown-item"  target="_blank">
+                                      ?><!--<a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&of=c" class="dropdown-item"  target="_blank">
                                          <i class="material-icons text-danger">picture_as_pdf</i> PDF C
-                                      </a><?php
+                                      </a>--><?php
                                       } 
                                       ?>
                                       <a href="<?=$urlOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="dropdown-item"  target="_blank">

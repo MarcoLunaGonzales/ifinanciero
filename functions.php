@@ -10487,4 +10487,18 @@ where codigo in (select cod_comprobantedetalle from estados_cuenta where codigo 
      return($valor); 
 }   
 
+function obtenerCorreoPersonal($codigo){
+    $dbh = new Conexion(); 
+    $sql="SELECT email_empresa from personal where codigo=$codigo";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $correo="";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $correo=$row['email_empresa'];
+    }
+    if($correo==""){
+      $correo="Usuario Sin Correo";
+    }
+    return $correo;
+  }
 ?>

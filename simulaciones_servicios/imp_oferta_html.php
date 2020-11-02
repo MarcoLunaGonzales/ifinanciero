@@ -39,6 +39,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
         $anioLetra=strtolower(CifrasEnLetras::convertirNumeroEnLetras($anioX));
 
         $gestionInicio=(int)strftime('%Y',strtotime($fechaX));
+
+        $correoResponsable=obtenerCorreoPersonal($codResponsableX);
       }
 /*                        archivo HTML                      */
 
@@ -50,7 +52,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
    <header class="header">            
             <div id="header_titulo_texto"><center><label class="text-muted font-weight-bold">
               <small><small><i><u><?=obtenerValorOferta($codOferta,1,$default,1)?></u></i></small></small>
-              <b><br>REGISTRO<br><?=obtenerValorOferta($codOferta,2,$default,1)?></b>
+              <b><br><br><?=obtenerValorOferta($codOferta,2,$default,1)?></b><!--//-->
             </label></center>
           </div>
           <img class="imagen-logo-der" src="../assets/img/ibnorca2.jpg">
@@ -73,21 +75,21 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
          <div class="s-9 text-left"><label class="">Nuestra Fecha</label><br> <?=obtenerValorOferta($codOferta,4,$default,1)?></div>
        </div> 
        <div class="float-left pl-20 pt-2">
-         <div class="s-9 text-left"><label class="">Nuestra Referencia</label><br> <?=obtenerValorOferta($codOferta,5,$default,1)?></div>  
+         <div class="s-9 text-left"><label class="">Nuestra Referencia</label><br> <?=obtenerCodigoServicioPorPropuestaTCPTCS($codigo)?></div><!--<?=obtenerValorOferta($codOferta,5,$default,1)?>-->  
        </div> 
     </div>
 
     <div class="pt-8 s-10 pl-6">
         <div class="">Señores: </div>
         <div class=""><?=$nombreClienteX?></div>
-        <div class="">Ciudad | Bolivia.- </div>
+        <div class=""><?=obtenerValorOferta($codOferta,5,$default,1)?> | BOLIVIA.- </div>
         
     </div>
-    <!--<div class="pt-2 s-10 pl-6 font-weight-bold">
-        <div class="">Atn.: &nbsp;Nombre</div>
-        <div class="pl-6">Cargo</div>
+    <div class="pt-2 s-10 pl-6">
+        <div class="">A/A: &nbsp;<?=obtenerValorOferta($codOferta,8,$default,5)?></div>
+        <div class="pl-6 font-weight-bold"><?=obtenerValorOferta($codOferta,8,$default,6)?></div>
         
-    </div>-->
+    </div>
     <div class="pt-2">
         <div class="s-11 font-weight-bold text-justificar text-right">Ref: <u><?=strtoupper($descripcionServSimulacionX)?></u></div>
     </div>
@@ -95,13 +97,13 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
         <p class="pb-2 s-9">De nuestra consideración:</p>
         <p><?=obtenerValorOferta($codOferta,8,$default,1)?> <?=$descripcionServSimulacionX?>.</p>
         <p><?=obtenerValorOferta($codOferta,8,$default,2)?></p>
-        <p><?=obtenerValorOferta($codOferta,8,$default,3)?></p>
-        <p class="pt-2"><?=obtenerValorOferta($codOferta,8,$default,4)?></p>
-        <p class="pt-2 text-right">Saluda a usted muy atentamente,</p>
+        <p><?=obtenerValorOferta($codOferta,8,$default,3)." <b>".$correoResponsable?></b></p>
+        <p><?=obtenerValorOferta($codOferta,8,$default,4)?></p>
+        <p class="pt-2 text-left">Atentamente,</p>
 
-        <p class="pt-8 text-right"><?=ucfirst(namePersonalCompleto(obtenerValorConfiguracion(68)));?><br>
-           DIRECTOR NACIONAL DE EVALAUCIÓN<br> 
-           DE LA CONFORMIDAD
+        <p class="pt-6 text-left"><?=ucfirst(namePersonalCompleto(obtenerValorConfiguracion(68)));?><br>
+           <b>DIRECTOR NACIONAL DE EVALAUCIÓN<br> 
+           DE LA CONFORMIDAD</b>
         </p>
     </div>
     <div class="saltopagina"></div>
@@ -113,8 +115,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     }
     ?>
     <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold bg-danger text-white">1. &nbsp;&nbsp;<?=$tituloIndex?></p>
-        <p class="font-weight-bold">1.1. &nbsp;&nbsp;Quienes somos</p>
+        <p class="font-weight-bold bg-danger text-white">&nbsp;&nbsp;<?=$tituloIndex?></p>
+        <!--<p class="font-weight-bold">1.1. </p>-->
           <table>
           <tr>
             <td width="30%"><div class="card-imagen"><img src="../assets/img/ibnorca2.jpg" alt="NONE" width="200px" height="150px"></div></td>
@@ -124,82 +126,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     </div>
 
     <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold">1.2. &nbsp;&nbsp;Proceso de Certificación</p>
-        <table>
-          <tr>
-            <td width="38%"><div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/certificacion.jpg" alt="NONE" width="200px" height="100px"></div></td>
-            <td class="text-justificar"><p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,11,$default,1))?></p></td>
-          </tr>
-        </table>
-        <br>
-        <div class="pl-6 pr-6 text-justificar">
-            <p class="text-danger">COMERCIAL</p>
-            <img src="../assets/libraries/img/logos_oferta/cert.jpg" alt="NONE" width="100%" height="150px">
-            <p class="text-danger">CERTIFICACIÓN – Ciclo de certificación (<?=$anioX?> años)</p>
-        </div>
-        <table class="table pt-4">
-                <tr class="s-12 text-white bg-plomo">
-                    <td width="35%">CONCEPTO</td>
-                    <td width="65%">DESCRIPCIÓN</td>
-                </tr>
-                <tr>
-                    <td class="border-b">
-                       <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/1.jpg" alt="NONE"></div>
-                           <div class="card-titulo font-weight-bold">AUDITORIA DE CERTIFICACION DE PRODUCTO CON SELLO IBNORCA / EVALUACION DE CONFORMIDAD DE PRODUCTO SEGÚN REGLAMENTO TÉCNICO </div>
-                       </div>   
-                    </td>
-                    <td class="border-b">
-                        <p>Proceso mediante el cual se evalúa la conformidad del producto y el proceso de producción en base a los criterios establecidos en la norma técnica, Especificación Técnica Disponible o Reglamento Técnico.  Las actividades a realizar son:</p>
-                        <div class="pl-4">
-                            <div>-  Evaluación de materias primas y materiales</div>
-                            <div>-  Evaluación del registro histórico</div>
-                            <div>-  Toma de muestras de planta y mercado</div>
-                            <div>-  Realización de ensayos en laboratorio designado/acreditado</div>
-                            <div>-   Evaluación del Sistema de Gestión conforme a la Especificación    ESP-TCP-04A_00.</div>
-                        </div>
-                        <p>Resultado del proceso:  Informe de auditoría</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border-b">
-                       <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/2.jpg" alt="NONE"></div>
-                           <div class="card-titulo font-weight-bold">DECISIÓN DE LA CERTIFICACION DE PRODUCTO CON SELLO IBNORCA / OTORGAMIENTO DEL DOCUMENTO DE CONFORMIDAD DE PRODUCTO SEGÚN REGLAMENTO TÉCNICO </div>
-                       </div>   
-                    </td>
-                    <td class="border-b">
-                        <p>El informe de auditoría, es presentado al Consejo Rector de Certificación para su evaluación y recomendación a la Dirección Ejecutiva de IBNORCA, instancia que aprueba y otorga:</p>
-                        <div class="pl-4">
-                            <div>-  La certificación de producto con SELLO IBNORCA. Resultado: Certificado, Resolución administrativa y Contrato de Autorización de Uso del Sello.</div>
-                            <div>-  La conformidad del producto según Reglamento Técnico. Resultado: Documento de conformidad de producto. </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border-b">
-                       <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/3.jpg" alt="NONE"></div>
-                           <div class="card-titulo font-weight-bold">MANTENIMIENTO DE LA CERTIFICACION DE PRODUCTO CON SELLO IBNORCA / EVALUACION DE CONFORMIDAD SEGÚN REGLAMENTO TÉCNICO </div>
-                       </div>   
-                    </td>
-                    <td class="border-b">
-                        <p>El certificado de producto con Sello IBNORCA / documento de conformidad de producto es válida por tres años, durante este periodo se realizará auditorias de seguimiento como mínimo una vez al año para asegurar el mantenimiento de la conformidad del producto y del sistema de gestión. Estas auditorías siguen las mismas actividades que una auditoria de <b class="text-danger">certificación/renovación<b>. </p>
-                        <p>Resultado del proceso: Informe de auditoría, y resolución del mantenimiento de la certificación de producto con sello IBNORCA y en caso de la evaluación según Reglamento técnico se emitirá un Documento de mantenimiento de conformidad de Producto</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="border-b">
-                       <div class="card">
-                           <div class="card-imagen"><img src="../assets/libraries/img/logos_oferta/4.jpg" alt="NONE"></div>
-                           <div class="card-titulo font-weight-bold">RENOVACIÓN DE LA CERTIFICACIÓN DE PRODUCTO CON SELLO IBNORCA /DOCUMENTO DE CONFORMIDAD DEL PRODUCTO.</div>
-                       </div>   
-                    </td>
-                    <td class="border-b">
-                        <p>Tres meses antes del vencimiento del certificado de producto con Sello IBNORCA / documento de conformidad de producto, IBNORCA se pone en contacto con la organización para acordar la renovación del mismo.  La auditoría de renovación tiene características similares a la auditoria de certificación.</p>
-                    </td>
-                </tr>
-        </table>
+        <center><p class="font-weight-bold s-11" style="color:#AC1904;;"><u>PROPUESTA TÉCNICA</u></p></center>
     </div>
     <?php 
     $tituloIndex=obtenerValorOferta($codOferta,23,$default,2);
@@ -209,9 +136,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     }
     ?>
     <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold bg-danger text-white">2. &nbsp;&nbsp;<?=$tituloIndex?></p>
+        <p class="font-weight-bold bg-danger text-white">1. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
-            <p class="font-weight-bold">La certificación de producto con SELLO IBNORCA, aplica para los productos: </p>
+            <p class="font-weight-bold">La certificación de producto con SELLO IBNORCA y la emisión de documento de conformidad de producto según Reglamento Técnico RM 261.2018, aplica para los productos:</p>
             <p class="pl-2">
             <?php 
 
@@ -221,17 +148,34 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
              while ($rowAtributo = $stmtAtributos->fetch(PDO::FETCH_ASSOC)) {
                $nombreAtrib=$rowAtributo['nombre'];
                $marcaAtrib=$rowAtributo['marca'];
-               $normaXAtrib=$rowAtributo['norma']; 
+               $normaXAtrib=str_replace(",","",$rowAtributo['norma']); 
                ?>
-               -   <?=$nombreAtrib?>, Marca <?=$marcaAtrib?>, bajo Norma <?=$normaXAtrib?><br>
+               <p class="">•  <?=$nombreAtrib?></p> Marca Comercial: <b><?=$marcaAtrib?></b><br> Segun la Norma: <b><?=$normaXAtrib?></b><br>
                <?php
              }
             ?>
             </p>
+            <p><?=obtenerValorOferta($codOferta,8,$default,8);?></p>
+            <p><?=obtenerValorOferta($codOferta,8,$default,9);?></p>
+            <p><b style=""><?=obtenerValorOferta($codOferta,8,$default,7);?></b></p>
         </div>
     </div>
     <?php 
-    $tituloIndex=obtenerValorOferta($codOferta,23,$default,3);
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,6);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">2. &nbsp;&nbsp;<?=$tituloIndex?></p>
+        <div class="pl-6 pr-6 text-justificar">
+            <p>Todos los miembros del equipo que participan en la auditoria han sido calificados por IBNORCA de acuerdo a sus procedimientos internos.</p>
+            <p>IBNORCA podrá incluir en el equipo auditor, un auditor en formación, a cuyo efecto comunicará a la organización con la oportunidad debida.</p>
+        </div>
+    </div>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,7);
     $estiloTitulo="";
     if(trim($tituloIndex)==""){
       $estiloTitulo="style='display:none;'";
@@ -240,7 +184,21 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     <div class="s-9 "<?=$estiloTitulo?>>
         <p class="font-weight-bold bg-danger text-white">3. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
-            <p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,12,$default,1))?></p>
+            <p>IBNORCA mantiene la confidencialidad de los datos e información a los que pudiera tener acceso como consecuencia de su actividad de certificación. Así mismo, mantiene el compromiso de salvaguardar el nombre de la organización postulante que se encuentra en fase de evaluación hasta que obtenga el correspondiente certificado, momento en el cual se registra y publica su nombre en la lista de empresas certificadas.</p>
+            <p>IBNORCA mantendrá en todo momento absoluta imparcialidad en la prestación del servicio, cumpliendo los lineamientos establecidos en los Reglamentos específicos y Código de Ética.</p>
+        </div>
+    </div>
+    <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,10);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+    <div class="s-9 "<?=$estiloTitulo?>>
+        <p class="font-weight-bold bg-danger text-white">4. &nbsp;&nbsp;<?=$tituloIndex?></p>
+        <div class="pl-6 pr-6 text-justificar">
+            <p>La presente oferta tiene un periodo de validez para su aceptación de <b><?=obtenerValorOferta($codOferta,8,$default,10)?></b> días calendario a partir de la fecha de emisión.</p>
         </div>
     </div>
     <?php 
@@ -251,26 +209,34 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
     }
     ?>
     <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold bg-danger text-white">4. &nbsp;&nbsp;<?=$tituloIndex?></p>
+        <p class="font-weight-bold bg-danger text-white">5. &nbsp;&nbsp;<?=$tituloIndex?></p>
         <div class="pl-6 pr-6 text-justificar">
-            <p>En la tabla siguiente se muestra el presupuesto para <b>los <?=$anioLetra?> años que dura el ciclo de certificación.</b> Dicho presupuesto ha sido elaborado teniendo en cuenta el tamaño de la organización postulante, las recomendaciones que a tal efecto tiene establecidas el IBNORCA por su propia experiencia y las tarifas vigentes del proceso de certificación.</p>
-            <p>Para la certificación, los montos a cancelar son:</p>
+            <p>En la tabla siguiente se muestra la propuesta económica para <b>los <?=$anioLetra?> años del ciclo de certificación.</p>
+            
         </div>
+        <div class="pl-6 pr-6 text-justificar">
         <?php 
          for ($i=1; $i <=$anioX ; $i++) { 
              $ordinal=ordinalSuffix($i);
+             switch ($i) {
+               case 1:$tituloAnio="Para la auditoría de <b>certificación/renovación</b>";break;
+               case 2:$tituloAnio="Para la auditoría de <b>seguimiento I</b>";break;
+               case 3:$tituloAnio="Para la auditoría de <b>seguimiento II</b>";break;
+               default:$tituloAnio=$ordinal." año (GESTIÓN ".$gestionInicio.")";break;
+             }
              ?>
-        <table class="table pt-2 table-bordered">
-                <tr class="s-10 text-white bg-plomo text-center font-weight-bold">
-                    <td width="27%">SERVICIO</td>
-                    <td width="27%">COSTO</td>
-                    <td width="10%">DÍAS</td>
-                    <td width="16%">AUDITORES</td>
-                    <td width="20%">TOTAL COSTO USD</td>
+             
+               <p><?=$tituloAnio?></p>
+        <table class="table table-bordered">
+                <tr class="s-10 text-white bg-danger text-center font-weight-bold">
+                    <td width="27%">CONCEPTO</td>
+                    <!--<td width="27%">COSTO</td>-->
+                    <td width="10%">DÍAS <br>AUDITORES</td>
+                    <td width="20%">COSTO USD</td>
                 </tr>
-                <tr class="bg-plomo-claro">
-                   <td colspan="5"><?=$ordinal?> año (GESTIÓN <?=$gestionInicio?>)</td>  
-                </tr>
+                <!--<tr class="bg-plomo-claro">
+                   <td colspan="4"><?=$tituloAnio?></td>  
+                </tr>-->
                 <?php 
                 $queryPr="SELECT s.*,t.Descripcion as nombre_serv FROM simulaciones_servicios_tiposervicio s, cla_servicios t where s.cod_simulacionservicio=$codigo and s.cod_claservicio=t.IdClaServicio and s.habilitado=1 and s.cod_anio=$i order by t.nro_orden";
                 $stmt = $dbh->prepare($queryPr);
@@ -296,9 +262,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  ?>
                  <tr>
                     <td><?=$tipoPreEdit?></td>
-                    <td><p><?=$montoPreUSD?> USD</p></td>
                     <td class="text-right"><?=$cantidadEPre?></td>
-                    <td></td>
                     <td class="text-right"><?=$montoPreTotalUSD?></td>
                 </tr>
                  <?php
@@ -306,7 +270,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 ?>
                 
                 <tr class="font-weight-bold">
-                   <td colspan="4">Total, Gestión <?=$gestionInicio?></td>
+                   <td colspan="2">Total  (<?=$ordinal?> Año)</td>
                    <td class="text-right"><?=number_format($modal_totalmontopretotal/$usd,2, ',', '')?></td>  
                 </tr>
         </table>
@@ -314,169 +278,107 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
              $gestionInicio++;
          }
         ?>
-        
+        </div>
         <div class="pl-6 pr-6 pt-1 text-justificar">
             <p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,13,$default,1))?></p>
             </p>
-
-            <p><i>AMPLIACIÓN DEL ALCANCE DE LA CERTIFICACIÓN</i></p>
-            <p>Luego de obtener la certificación, la organización puede solicitar la ampliación del alcance de la certificación de productos. Estas ampliaciones deberán realizarse conforme a lo establecido en el Reglamento de Certificación, para ello la organización deberá actualizar los datos remitidos en su solicitud, y el IBNORCA presentará una nueva oferta para el proceso. </p>
-            <p>ACLARACIONES </p>
-            <p>La presenta oferta contempla los servicios de Certificación de producto con SELLO IBNORCA y la evaluación de la conformidad del producto según el Reglamento Técnico. </p>
-            <p>Para la auditoria de certificación y/o evaluación de la conformidad según el Reglamento Técnico RM 261.2018, se requerirá que la planta de producción se encuentre funcionando, a fin de que el equipo auditor pueda evaluar la fabricación del producto solicitado en el alcance, además, la empresa deberá contar con el producto disponible para la toma de muestras.</p>
-            <p>El costo del Derecho de uso del Sello IBNORCA incluye también la emisión del DOCUMENTO DE CONFORMIDAD DE PRODUCTO según Reglamento Técnico.</p>
-            <p>Asimismo, el costo del Derecho de uso de Sello IBNORCA se mantendrá el segundo y tercer año siempre y cuando se mantengan las condiciones declaradas en el contrato de uso de sello y tarifario vigente. </p>
         </div>  
     </div>
-    <?php 
-    $tituloIndex=obtenerValorOferta($codOferta,23,$default,5);
-    $estiloTitulo="";
-    if(trim($tituloIndex)==""){
-      $estiloTitulo="style='display:none;'";
-    }
-    ?>
-    <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold bg-danger text-white">5. &nbsp;&nbsp;<?=$tituloIndex?></p>
-        <div class="pl-6 pr-6 text-justificar">
-            <p>Adicionalmente para el proceso de certificación de producto con Sello IBNORCA o emisión del DOCUMENTO DE CONFORMIDAD DE PRODUCTO, la empresa debe considerar los costos por muestreo y ensayos realizados durante la auditoria a muestras tomadas en la fábrica y en el mercado.</p>
-            <p>Para ello debe considerar lo siguiente:</p>
-              <p class="pl-2">1. Si la empresa cuenta con un laboratorio designado por la entidad regulatoria, debe cubrir el costo de muestreo y ensayos con testigo.<p>
-              <p class="pl-2">2. Si la empresa cuenta con un laboratorio acreditado     por la entidad regulatoria, entonces debe cubrir el costo de muestreo.<p>
-              <p class="pl-2">3. Si la empresa no cuenta con ninguna de las anteriores, entonces debe cubrir con los costos de muestreo y el costo de la ejecución de ensayos en un laboratorio Designado/Acreditado. </p>
-        </div>
-    </div>
-    <?php 
-    $tituloIndex=obtenerValorOferta($codOferta,23,$default,6);
-    $estiloTitulo="";
-    if(trim($tituloIndex)==""){
-      $estiloTitulo="style='display:none;'";
-    }
-    ?>
-    <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold bg-danger text-white">6. &nbsp;&nbsp;<?=$tituloIndex?></p>
-        <div class="pl-6 pr-6 text-justificar">
-            <p>Todos los miembros del equipo que participan en la auditoria han sido calificados por IBNORCA de acuerdo a sus procedimientos internos.</p>
-            <p>Los procedimientos internos de IBNORCA de calificación de auditores satisfacen los requerimientos de la Norma NB/ISO/IEC 17021 "Evaluación de la conformidad-Requisitos para los organismos que realizan la auditoria y certificación de Sistemas de gestión”.</p>
-        </div>
-    </div>
-    <?php 
-    $tituloIndex=obtenerValorOferta($codOferta,23,$default,7);
-    $estiloTitulo="";
-    if(trim($tituloIndex)==""){
-      $estiloTitulo="style='display:none;'";
-    }
-    ?>
-    <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold bg-danger text-white">7. &nbsp;&nbsp;<?=$tituloIndex?></p>
-        <div class="pl-6 pr-6 text-justificar">
-            <p>IBNORCA mantiene la confidencialidad de los datos e información a los que pudiera tener acceso como consecuencia de su actividad de certificación.</p>
-            <p>Además, IBNORCA mantiene el compromiso de salvaguardia del nombre de la organización postulante que se encuentran en fase de evaluación hasta que obtienen el correspondiente certificado, momento en el cual se registra y publica su nombre en la lista de empresas certificadas.</p>
-        </div>
-    </div> 
-    <?php 
-    $tituloIndex=obtenerValorOferta($codOferta,23,$default,8);
-    $estiloTitulo="";
-    if(trim($tituloIndex)==""){
-      $estiloTitulo="style='display:none;'";
-    }
-    ?>
-    <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold bg-danger text-white">8. &nbsp;&nbsp;<?=$tituloIndex?></p>
-        <div class="pl-6 pr-6 text-justificar">
-            <p>En un plazo no superior a 7 días desde la aceptación de la oferta contrato de certificación, IBNORCA se pondrá en contacto con el representante de la organización postulante a objeto de coordinar las fechas de ejecución de la certificación/renovación.</p>
-        </div>
-    </div>  
-      <?php 
-    $tituloIndex=obtenerValorOferta($codOferta,23,$default,9);
-    $estiloTitulo="";
-    if(trim($tituloIndex)==""){
-      $estiloTitulo="style='display:none;'";
-    }
-    ?>
-    <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold bg-danger text-white">9. &nbsp;&nbsp;<?=$tituloIndex?></p>
-        <div class="pl-6 pr-6 text-justificar">
-            <p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,14,$default,1))?></p>
-        </div>
-    </div>
-    <?php 
-    $tituloIndex=obtenerValorOferta($codOferta,23,$default,10);
-    $estiloTitulo="";
-    if(trim($tituloIndex)==""){
-      $estiloTitulo="style='display:none;'";
-    }
-    ?>
-    <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold bg-danger text-white">10. &nbsp;&nbsp;<?=$tituloIndex?></p>
-        <div class="pl-6 pr-6 text-justificar">
-            <p>La presente oferta contrato tiene un periodo de validez para su aceptación de treinta (30) días calendario a partir de la fecha de emisión.</p>
-            <p>La presente oferta contrato estará vigente desde la fecha de su suscripción hasta concluir las etapas del proceso de certificación y sus correspondientes plazos de ejecución que serán coordinados entre <b>IBNORCA</b> y el <b>CLIENTE</b> de acuerdo a lo establecido en el punto 4.</p>
-        </div>
-    </div>  
-    <?php 
-    $tituloIndex=obtenerValorOferta($codOferta,23,$default,11);
-    $estiloTitulo="";
-    if(trim($tituloIndex)==""){
-      $estiloTitulo="style='display:none;'";
-    }
-    ?>
-    <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold bg-danger text-white">11. &nbsp;&nbsp;<?=$tituloIndex?></p>
-        <div class="pl-6 pr-6 text-justificar">
-            <p>Para el caso en que la organización determine modificar la fecha de realización de auditoria ya prevista, deberá comunicar esta determinación con una antelación de <b>10 días</b> calendario, antes de la fecha prevista para la auditoria, si no se comunicase en el tiempo determinado la organización deberá abonar el lucro cesante y todos los costos de programación de esta actividad.</p>
-        </div>
-    </div>    
-    <?php 
-    $tituloIndex=obtenerValorOferta($codOferta,23,$default,12);
-    $estiloTitulo="";
-    if(trim($tituloIndex)==""){
-      $estiloTitulo="style='display:none;'";
-    }
-    ?>
-    <div class="s-9 "<?=$estiloTitulo?>>
-        <p class="font-weight-bold bg-danger text-white">12. &nbsp;&nbsp;<?=$tituloIndex?></p>
-        <div class="pl-6 pr-6 text-justificar">
-            <p>•   La organización postulante deberá cumplir las disposiciones del Reglamento de Certificación de producto RMT-TCP-01 y la Guía de Uso de Marca ESP-TCP-0X, documentos que se encuentran disponibles en su versión vigente en la página web <a href="www.ibnorca.org" target="_blank" class="text-azul">www.ibnorca.org</a>, y que serán proporcionados por el personal de certificación. En ese sentido, en caso de operar alguna sanción que implique suspensión o revocatoria de la Certificación, el <b>CLIENTE</b> no podrá usar las marcas registradas de <b>IBNORCA</b> a partir del momento en el que opere la suspensión o revocatoria de la certificación.</p>
-            <p>•   Excepcionalmente, la organización debe permitir a requerimiento de IBNORCA, la participación de representantes de organismos de acreditación, en calidad de observadores, durante la auditoría.</p>
-            <p>•   Durante los procesos de auditoría, no se permite la intervención del consultor del Sistema de Gestión de la organización. De ser requerida su participación, su rol será únicamente de observador.</p>
-            <p>•   <b>IBNORCA</b> podrá realizar auditorías sea de oficio o por que medie alguna denuncia por parte de terceros. El costo de dichas auditorías será pagado por el CLIENTE de acuerdo a los aranceles vigentes. En caso que la organización no acepte la realización de la auditoría antes referida, IBNORCA procederá a la suspensión de la certificación por el tiempo que establezca.</p>
-            <p>•   El IBNORCA podrá sugerir la modalidad de auditorías remotas.</p>
-        </div>
-    </div>    
+
     <div class="saltopagina"></div>
     <div class="s-9">
-        <div class="titulo_texto_inf text-danger"><u>ANEXO 1</u></div>
+        <div class="titulo_texto_inf text-danger s-11" style="color:#AC1904;"><u>ANEXO I</u></div>
+        <?php 
+    $tituloIndex=obtenerValorOferta($codOferta,23,$default,1);
+    $estiloTitulo="";
+    if(trim($tituloIndex)==""){
+      $estiloTitulo="style='display:none;'";
+    }
+    ?>
+        <div class="s-9 "<?=$estiloTitulo?>>
+            <p class="s-10 bg-danger text-white">PROCESO DE CERTIFICACIÓN</p>
+           <div class="text-justificar">
+            <p>En un mundo competitivo la certificación hace la diferencia, el objetivo principal es proporcionar confianza a todas las partes interesadas de que una certificación de producto cumple con los requisitos especificados. </p>
+            <p>A continuación, se muestra el proceso de certificación IBNORCA.</p>
+           </div>   
+        <br>
+          <div class="text-justificar">
+            <p class="s-11" style="color:#AC1904;"><u>COMERCIAL</u></p>
+            <img src="../assets/libraries/img/logos_oferta/certificacion_new.jpg" alt="NONE" width="100%" height="75px">
+            <p class="s-11" style="color:#AC1904;"><u>CERTIFICACIÓN</u></p>
+            <img src="../assets/libraries/img/logos_oferta/oferta_new.jpg" alt="NONE" width="100%" height="375px">
+          </div>
+
+
+    </div>
+         <div class="text-justificar pt-2">
+            <p class="s-10 bg-danger text-white">DESCRIPCIÓN DE LOS PROCESOS DE CERTIFICACIÓN</p>
+            <p>Las etapas del proceso de certificación se detallan en el RMT-TC-01 Reglamento de Certificación de Producto, documento disponible en la página web www.ibnorca.org.</p>
+            <p><b>NOTA: Si durante los 3 años de vigencia del certificado hubiese algún cambio en la organización que afecte al producto, sistema de gestión o la información brindada al inicio del proceso, es responsabilidad de la organización comunicar de inmediato a IBNORCA para actualizar la propuesta.</b></p>
+        </div>
+     <div class="saltopagina"></div>
+     <div class="titulo_texto_inf text-danger s-11" style="color:#AC1904;"><u>ANEXO II</u></div>
+     <div class="titulo_texto_inf text-danger s-11" style="color:#AC1904;"><u>CONTRATO DE PRESTACIÓN DE SERVICIO</u></div>  
         <div class="text-justificar">
-            <p class="s-10 bg-danger text-white"><u>RESOLUCIÓN DE LA OFERTA CONTRATO</u></p>
-            <p>En caso que cualquiera de las Partes incumpla sus obligaciones sustanciales asumidas en la presente oferta contrato y con lo establecido en el Reglamento de Certificación de Sistemas de Gestión de <b>IBNORCA</b>, la parte afectada con el incumplimiento comunicará dicho aspecto a la otra parte otorgándole un plazo razonable para su debido cumplimiento. Si vencido el plazo otorgado no se cumple la obligación, el presente contrato quedará resuelto de pleno derecho y sin necesidad de comunicación previa ni actuación judicial o extrajudicial alguna.</p>
-            <p class="s-10 bg-danger text-white"><u>IMPOSIBILIDAD SOBREVENIDA</u></p>
-            <p>Ninguna de las Partes será considerada responsable, cuando dicho incumplimiento sea ocasionado por imposibilidad sobreviniente no imputable a la Parte que incumpliere sus obligaciones. Se entiende como imposibilidad sobreviniente a los eventos de caso fortuito y fuerza mayor, sean éstos de cualquier naturaleza, como ser: catástrofes, descargas atmosféricas, incendios, inundaciones, epidemias, y a hechos provocados por los hombres, tales como y de manera enunciativa, actos de terrorismo o de vandalismo, huelgas, bloqueos de caminos, guerra, sabotajes, actos del Gobierno como entidad soberana o persona privada que alteren substancialmente los derechos y/o obligaciones de las Partes, siempre que tales eventos no sean previsibles, o de serlo, sean imposibles de evitar y por tanto, no sean imputables a la Parte afectada e impidan el cumplimiento de sus obligaciones contraídas en virtud al presente Oferta contrato, de manera general, cualquier causal fuera del control de la Parte que incumpla y no atribuible a ella. La Parte afectada deberá comunicar a la otra, en forma escrita, dentro de los dos (2) días hábiles de conocido el evento proporcionando toda la información disponible que permita corroborar la imposibilidad sobreviniente. Si la imposibilidad sobreviniente persiste por más de treinta (30) días, las Partes tendrán la posibilidad de decidir si continúan con el presente Oferta contrato o lo resuelven sin penalidad alguna.</p>
-            <p class="s-10 bg-danger text-white"><u>SOLUCION DE CONTROVERSIAS CERTIFICACIÓN IBNORCA</u></p>
-            <p>Las Partes expresan que los términos de la presente Oferta contrato y las obligaciones que de él emergen, se encuentran bajo la jurisdicción de las leyes y autoridades bolivianas. Todo litigio, discrepancia, cuestión y reclamación resultante de la ejecución o interpretación de la presente Oferta contrato o relacionado con él, directa o indirectamente, se someterá previamente a la negociación directa entre Partes. Si agotada la negociación entre Partes o expirado el plazo máximo de 10 (Diez) días calendario, la controversia no fuese resuelta amigablemente, la misma se resolverá definitivamente mediante arbitraje en el marco de la Ley No. 708 de 25 de junio de 2015 Ley de Conciliación y Arbitraje o de la ley que regule dicho medio alternativo de solución de controversias. El arbitraje se sujetará a las autoridades, reglas y al procedimiento contenido en el Reglamento de Arbitraje del Centro de Conciliación y Arbitraje de la Cámara Nacional de Comercio de la ciudad de La Paz. Igualmente, las Partes hacen constar expresamente su compromiso de cumplir el Laudo Arbitral que se dicte, renunciando en la medida permitida por Ley, a cualquier tipo de recurso contra el mismo. Los costos emergentes del proceso de arbitraje serán asumidos en su totalidad por la parte que resulte perdedora. En caso de que se pudiera llegar a una conciliación antes de emitirse el Laudo Arbitral, los costos en los que se hubieran incurrido serán cubiertos por ambas partes en iguales porcentajes (50%). Las Partes excluyen de la presente cláusula la verificación por parte de la autoridad competente, la comisión de infracciones en las que incurra LA EMPRESA a los derechos de propiedad intelectual de IBNORCA. No obstante, de ello, una vez verificada la infracción, los daños y perjuicios que genere dicha infracción serán calculados en negociación o en arbitraje conforme lo establece la presenta clausula.</p>
-            <p class="s-10 bg-danger text-white"><u>ACEPTACIÓN DE LA OFERTA Y REGLAMENTO DE CERTIFICACIÓN POR PARTE DE LA ORGANIZACIÓN POSTULANTE</u></p>
-            <p><?=str_replace("\n", "</p><p>",obtenerValorOferta($codOferta,15,$default,1))?></p>
+            <p>Conste por el presente documento privado que al sólo reconocimiento de firmas podrá ser elevado a instrumento público, un Contrato Civil de Servicio que se suscribe al amparo de lo previsto por los Art. 519, 568, 732 del Código Civil, así como otras disposiciones concordantes con la materia al tenor de las siguientes cláusulas</p>
+            <p class="s-10 bg-danger text-white">PRIMERA: PARTES</p>
+            <p>Constituyen partes integrantes del presente contrato:</p>
+            <p class="pl-2"><?=str_replace("\n", "</p><p class='pl-2'>",obtenerValorOferta($codOferta,15,$default,1))?></p>
+            <p>A efectos del presente contrato, y según el contexto de cada cláusula se podrá referir como “Partes” a ambos suscribientes cuando actúen de manera conjunta y simplemente como “Parte” cuando la referencia sea a uno solo de ellos.</p>
+            
+            <p class="s-10 bg-danger text-white">SEGUNDA: OBJETO Y ALCANCE</p>
+            <p>El objeto del presente contrato es establecer los términos y condiciones por los que IBNORCA prestará sus servicios para la realización de la auditoría correspondiente para la Certificación de producto en favor del CLIENTE¸ en adelante simplemente los “Servicios”, el resultado de todo el proceso podrá culminar con la otorgación o no de la Certificación o mantenimiento de la certificación, según corresponda.</p>
+            <p>Forman parte del presente contrato:</p>
+            <p>1) La Propuesta Técnica que forma parte del presente documento<br>2)  Reglamento de Certificación de Producto (disponible en la página web www.ibnorca.org)<br>3)  Guía de Uso de Marca (disponible en la página web www.ibnorca.org)</p>
+            <p>El Alcance de la Certificación se encuentra definido en el punto 1 de la propuesta técnica. La modificación de este alcance podrá ser solicitado por el CLIENTE o cuando el resultado de las auditorías así lo determine. El alcance definitivo estará debidamente consensuado y plasmado en el Certificado.</p>
+            
+            <p class="s-10 bg-danger text-white">TERCERA: VIGENCIA Y PLAZOS DE EJECUCIÓN</p>
+            <p>El presente contrato estará vigente desde la fecha de su suscripción hasta concluir las etapas del proceso de certificación y sus correspondientes plazos de ejecución que serán coordinados entre IBNORCA y el CLIENTE de acuerdo a lo establecido en la en la propuesta económica.<br>Para el caso en que el CLIENTE requiera modificar la fecha de inicio de cualquier etapa o auditorías ya previstas y coordinadas, deberá comunicar esta determinación con una antelación de veinte (20) días calendario a la fecha de inicio. En caso de no comunicar dicha modificación dentro del plazo señalado, el CLIENTE deberá abonar a IBNORCA todos los costos y gastos en los que se haya incurrido.</p>    
+            
+            <p class="s-10 bg-danger text-white">CUARTA: CONTRAPRESTACIÓN</p>
+            <p>El CLIENTE se obliga a cancelar en favor de IBNORCA, la contraprestación de acuerdo a los establecido en el punto 5 de la Propuesta Técnica.</p>    
+
+            <p class="s-10 bg-danger text-white">QUINTA: FORMA DE PAGO</p>
+            <p>Concluida la auditoría, IBNORCA emitirá la correspondiente factura, debiendo el CLIENTE realizar el pago correspondiente a más tardar dentro de los siguientes 15 días de recibida la misma.<br>La factura correspondiente por Derecho de uso de Sello IBNORCA, se emitirá cada gestión en el mes aniversario del certificado emitido, debiendo el CLIENTE realizar el pago correspondiente a más tardar dentro de los siguientes 15 días de recibida la misma.<br>En caso que el CLIENTE no pague el monto de la factura en el plazo señalado, el CLIENTE pagará a IBNORCA, el 2 % de interés sobre el monto adeudado.</p>     
+            <p class="s-10 bg-danger text-white">SEXTA: NATURALEZA DEL CONTRATO E INEXISTENCIA DE RELACIÓN LABORAL</p>
+            <p>Se deja plenamente establecido que el presente contrato es de naturaleza estrictamente civil debiendo someterse a las normas del Código Civil, aclarándose en consecuencia que entre el CLIENTE e IBNORCA y entre cada una de las Partes con el personal de la otra no existe absolutamente ninguna relación ni vinculación laboral como tampoco de seguridad social. </p>    
+            <p class="s-10 bg-danger text-white">SEPTIMA: AUTORIZACIÓN DE USO DE MARCA</p>
+            <p>En caso que el CLIENTE obtenga la Certificación por parte de IBNORCA o la renovación de la misma, IBNORCA autoriza al CLIENTE al uso de las marcas y signos distintivos que son propios de IBNORCA.<br>La autorización contenida en el presente documento, solo permanecerá vigente en tanto la Certificación otorgada al CLIENTE se encuentre vigente. <br>El uso de los signos distintivos y marcas de IBNORCA por parte del CLIENTE fuera de las condiciones establecidas en el presente documento y en la Guía de Uso de Marca, será causal de retiro de la Certificación y en su defecto infracción a la normativa legal aplicable.<br>En caso de operar alguna sanción que implique suspensión o retiro de la Certificación, el CLIENTE no podrá usar las marcas registradas de IBNORCA a partir del momento en el que opere la suspensión o retiro de la certificación.</p>    
+            <p class="s-10 bg-danger text-white">OCTAVA: RÉGIMEN SANCIONATORIO</p>
+            <p>El CLIENTE se somete al régimen de suspensión, retiro de la Certificación y de sanciones establecido en el Reglamento de Certificación de Producto de IBNORCA.</p>    
+            <p class="s-10 bg-danger text-white">NOVENA: APLICACIÓN DE REGLAMENTOS DE IBNORCA</p>
+            <p>El CLIENTE declara conocer todas y cada una de las condiciones y estipulaciones del Reglamento de Certificación de Producto de IBNORCA, disponible en la página web www.ibnorca.org.<br>En este sentido, el CLIENTE se obliga a cumplir todas y cada una de las cláusulas, condiciones, artículos, obligaciones y otras establecidas en dicho reglamento. IBNORCA podrá modificar unilateralmente dicho reglamento. En caso de modificaciones, éstas serán comunicadas y se tendrá disponible en la página web www.ibnorca.org para su debido cumplimiento.</p>    
+            <p class="s-10 bg-danger text-white">DÉCIMA: VERIFICACIÓN DE CUMPLIMIENTO</p>
+            <p>Las Partes acuerdan que IBNORCA podrá, en cualquier momento, realizar acciones de verificación de cumplimiento del presente contrato y de los reglamentos de IBNORCA. El CLIENTE se obliga a proporcionar cualquier información que requiera IBNORCA, así como a permitir el acceso a sus instalaciones sin limitación alguna.<br>Entre dichas acciones IBNORCA podrá realizar auditorías sea de oficio o por que medie alguna denuncia por parte de terceros. El costo de dichas auditorías será pagado por el CLIENTE de acuerdo a los aranceles vigentes.<br>En caso que la organización no acepte la realización de la auditoría antes referida, IBNORCA procederá a la suspensión de la certificación por el tiempo que establezca, durante este periodo el CLIENTE deberá someterse a la auditoría de verificación mencionada; pasado este periodo IBNORCA retirará la certificación.</p>    
+            <p class="s-10 bg-danger text-white">DÉCIMA PRIMERA: RESOLUCIÓN DEL CONTRATO</p>
+            <p>En caso que cualquiera de las Partes incumpla sus obligaciones sustanciales asumidas en el presente contrato y con lo establecido en el Reglamento de Certificación de Producto de IBNORCA, la parte afectada con el incumplimiento comunicará dicho aspecto a la otra parte otorgándole un plazo razonable para su debido cumplimiento. Si vencido el plazo otorgado no se cumple la obligación, el presente contrato quedará resuelto de pleno derecho y sin necesidad de comunicación previa ni actuación judicial o extrajudicial alguna. </p>    
+            <p class="s-10 bg-danger text-white">DÉCIMA SEGUNDA: IMPOSIBILIDAD SOBREVENIDA</p>
+            <p>Ninguna de las Partes será considerada responsable, cuando dicho incumplimiento sea ocasionado por imposibilidad sobreviniente no imputable a la Parte que incumpliere sus obligaciones.<br>Se entiende como imposibilidad sobreviniente a los eventos de caso fortuito y fuerza mayor, sean éstos de cualquier naturaleza, como ser: catástrofes, descargas atmosféricas, incendios, inundaciones, epidemias, y a hechos provocados por los hombres, tales como y de manera enunciativa, actos de terrorismo o de vandalismo, huelgas, bloqueos de caminos, guerra, sabotajes, actos del Gobierno como entidad soberana o persona privada que alteren substancialmente los derechos y/o obligaciones de las Partes, siempre que tales eventos no sean previsibles, o de serlo, sean imposibles de evitar y por tanto, no sean imputables a la Parte afectada e impidan el cumplimiento de sus obligaciones contraídas en virtud al presente Contrato o, de manera general, cualquier causal fuera del control de la Parte que incumpla y no atribuible a ella. <br>La Parte afectada deberá comunicar a la otra, en forma escrita, dentro de los dos (2) días hábiles de conocido el evento proporcionando toda la información disponible que permita corroborar la imposibilidad sobreviniente.<br>Si la imposibilidad sobreviniente persiste por más de treinta (30) días, las Partes tendrán la posibilidad de decidir si continúan con el presente Contrato o lo resuelven sin penalidad alguna.</p>    
+            <p class="s-10 bg-danger text-white">DÉCIMA TERCERA: SOLUCIÓN DE CONTROVERSIAS CERTIFICACIÓN IBNORCA</p>
+            <p>Las Partes expresan que los términos del presente Contrato y las obligaciones que de él emergen, se encuentran bajo la jurisdicción de las leyes y autoridades bolivianas. Todo litigio, discrepancia, cuestión y reclamación resultante de la ejecución o interpretación del presente Contrato o relacionado con él, directa o indirectamente, se someterá previamente a la negociación directa entre Partes. <br>Si agotada la negociación entre Partes o expirado el plazo máximo de 10 (Diez) días calendario, la controversia no fuese resuelta amigablemente, la misma se resolverá definitivamente mediante arbitraje en el marco de la Ley No. 708 de 25 de junio de 2015 Ley de Conciliación y Arbitraje o de la ley que regule dicho medio alternativo de solución de controversias. <br>El arbitraje se sujetará a las autoridades, reglas y al procedimiento contenido en el Reglamento de Arbitraje del Centro de Conciliación y Arbitraje de la Cámara Nacional de Comercio de la ciudad de La Paz. Igualmente, las Partes hacen constar expresamente su compromiso de cumplir el Laudo Arbitral que se dicte, renunciando en la medida permitida por Ley, a cualquier tipo de recurso contra el mismo.<br>Los costos emergentes del proceso de arbitraje serán asumidos en su totalidad por la parte que resulte perdedora. En caso de que se pudiera llegar a una conciliación antes de emitirse el Laudo Arbitral, los costos en los que se hubieran incurrido serán cubiertos por ambas partes en iguales porcentajes (50%).<br>Las Partes excluyen de la presente cláusula la verificación por parte de la autoridad competente, la comisión de infracciones en las que incurra EL CLIENTE a los derechos de propiedad intelectual de IBNORCA. No obstante, de ello, una vez verificada la infracción, los daños y perjuicios que genere dicha infracción serán calculados en negociación o en arbitraje conforme lo establece la presenta cláusula.</p>    
+            <p class="s-10 bg-danger text-white">DÉCIMA CUARTA: CONDICIONES GENERALES</p>
+            <p>EL CLIENTE debe permitir a requerimiento de IBNORCA, la participación de representantes de organismos de acreditación, en calidad de observadores, durante la auditoría.<br>Durante los procesos de auditoría, no se permite la intervención del consultor del Sistema de Gestión de la organización. De ser requerida su participación, su rol será únicamente de observador.<br>El IBNORCA podrá sugerir la modalidad de auditorías remotas para evaluar los procesos, cuando corresponda.</p>    
+            <p class="s-10 bg-danger text-white">DÉCIMA QUINTA: ACEPTACIÓN Y CONSENTIMIENTO</p>
+            <p>Las Partes, cuyas generales de ley se encuentran identificadas en la primera cláusula del presente contrato, declaran y reconocen que el mismo ha sido leído y comprendido en su integridad, así como los documentos relacionados al mismo, aceptando el contenido y manifestando su pleno consentimiento, sin que medie vicio alguno del consentimiento.</p>    
+
             
         </div>
     </div>
     
-    <div class="s-9">
-        <table class="table-grande pt-1">
-                <tr class="s-11 font-weight-bold">
-                    <td colspan="2" width="50%">FIRMA</td>
-                    <td colspan="2" width="50%">FIRMA</td>
-                </tr>   
+    <div class="s-9 pt-6">
+      <table class="table-grande pt-1">
                 <tr class="s-11">
-                    <td class="text-left">CLIENTE</td>
-                    <td class="text-right text-info">________________________</td>
-                    <td class="text-left">IBNORCA</td>
-                    <td class="text-right text-info">________________________</td>
+                    <td class="text-center text-info" width="25%">________________________</td>
+                    <td class="text-center text-white" width="25%">________</td>
+                    <td class="text-center text-white" width="25%">________</td>
+                    <td class="text-center text-info" width="25%">________________________</td>
                 </tr>
-                <tr class="s-11 pt-4">
-                    <td class="text-left">FECHA: </td>
-                    <td class="text-right text-info">________________________</td>
-                    <td class="text-left">FECHA: </td>
-                    <td class="text-right text-info">________________________</td>
-                </tr>   
+                <tr class="s-11 font-weight-bold">
+                    <td class="text-center" width="25%">FIRMA<br>CLIENTE</td>
+                    <td class="text-center text-white" width="25%">________</td>
+                    <td class="text-center text-white" width="25%">________</td>
+                    <td class="text-center" width="25%">FIRMA<br>IBNORCA</td>
+                </tr>    
         </table>
     </div>
 
