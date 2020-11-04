@@ -105,7 +105,19 @@ $fechaHasta=$y."-12-31";
                   </div>
                 </div>
             </div><!--fin campo RUBRO -->
-
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Nivel</label>
+              <div class="col-sm-7">
+                <div class="form-group">
+                  <select name="nivel" id="nivel" class="selectpicker form-control form-control-sm " data-style="btn btn-danger"
+                      required>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5" selected>5</option>
+                  </select>
+                </div>
+              </div>
+            </div><!--fin campo gestion -->
           </div>
           <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>

@@ -6551,7 +6551,6 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2
               where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_gestion='$gestion' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.numero like '5%' and p.nivel=5 order by p.numero)";
-      
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
@@ -10243,7 +10242,7 @@ function verificarSiHayFacturasAnuladasSol($codigo){
 function obtenerSolicitudRecursosDetalleAgrupadas($codigo){
      $dbh = new Conexion();
      $sql="";
-     $sql="(SELECT GROUP_CONCAT(sd.codigo) as codigo,sd.cod_solicitudrecurso,sd.cod_unidadorganizacional,sd.cod_area,sd.cod_plancuenta,sum(sd.importe_presupuesto) as importe_presupuesto,
+     $sql="(SELECT 0 as cod_factura,GROUP_CONCAT(sd.codigo) as codigo,sd.cod_solicitudrecurso,sd.cod_unidadorganizacional,sd.cod_area,sd.cod_plancuenta,sum(sd.importe_presupuesto) as importe_presupuesto,
 sum(sd.importe) as importe,sd.cod_proveedor,sd.cod_confretencion,sd.cod_actividadproyecto,sd.acc_num,
 GROUP_CONCAT(sd.detalle) as detalle,
 pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo 
@@ -10251,10 +10250,12 @@ where sd.cod_solicitudrecurso=$codigo and sd.cod_confretencion<>8
 group by sd.cod_unidadorganizacional,sd.cod_area,sd.cod_proveedor,sd.cod_plancuenta,sd.cod_confretencion)
 UNION
 (
-SELECT sd.codigo,sd.cod_solicitudrecurso,sd.cod_unidadorganizacional,sd.cod_area,sd.cod_plancuenta,sd.importe_presupuesto,
+SELECT f.codigo as cod_factura,s.codigo,s.cod_solicitudrecurso,s.cod_unidadorganizacional,s.cod_area,s.cod_plancuenta,s.importe_presupuesto,f.importe,s.cod_proveedor
+,s.cod_confretencion,s.cod_actividadproyecto,s.acc_num,s.detalle,s.numero,s.nombre from facturas_compra f join 
+(SELECT sd.codigo,sd.cod_solicitudrecurso,sd.cod_unidadorganizacional,sd.cod_area,sd.cod_plancuenta,sd.importe_presupuesto,
 sd.importe,sd.cod_proveedor,sd.cod_confretencion,sd.cod_actividadproyecto,sd.acc_num,sd.detalle,
 pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo 
-where sd.cod_solicitudrecurso=$codigo and sd.cod_confretencion=8)
+where sd.cod_solicitudrecurso=$codigo and sd.cod_confretencion=8) s on s.codigo=f.cod_solicitudrecursodetalle)
 ;";
 //echo $sql;
      $stmt = $dbh->prepare($sql);
@@ -10338,15 +10339,26 @@ function obtenerNumeroSolicitudRecursos($codigo){
       }
      return($valor);
 }
-function encuentraDatosSolicitudRecursosDesdeCajaChica($codigo){
+function encuentraDatosSolicitudRecursosDesdeCajaChica($codigoX){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cod_solicitudrecurso,codigo,cod_confretencion from solicitud_recursosdetalle where cod_cajachicadetalle=$codigo");
+     $stmt = $dbh->prepare("SELECT cod_solicitudrecurso,codigo,cod_confretencion from solicitud_recursosdetalle where cod_cajachicadetalle=$codigoX");
      $stmt->execute();
      $valor=0;$codigo=0;$retencion=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row['cod_solicitudrecurso'];
         $codigo=$row['codigo'];
         $retencion=$row['cod_confretencion'];
+      }
+      if($valor==0){
+       $stmt = $dbh->prepare("select d.cod_solicitudrecurso,d.codigo,d.cod_confretencion 
+          from caja_chicadetalle cd join solicitud_recursosdetalle d on d.codigo=cd.cod_solicitudrecursodetalle
+          where cd.codigo=$codigoX");
+       $stmt->execute();
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_solicitudrecurso'];
+        $codigo=$row['codigo'];
+        $retencion=$row['cod_confretencion'];
+        } 
       }
      return array($valor,$codigo,$retencion);
 }

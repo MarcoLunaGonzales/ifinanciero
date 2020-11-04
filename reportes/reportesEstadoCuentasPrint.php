@@ -24,6 +24,14 @@ $tipo_cp=$_POST["tipo_cp"];
 $ver_saldo=$_POST["ver_saldo"];
 
 $proveedoresString=implode(",", $proveedores);
+
+$proveedoresStringAux="and e.cod_cuentaaux in ($proveedoresString)";
+
+if(count($proveedores)==(int)$_POST["numero_proveedores"]){
+  $proveedoresStringAux="";
+}
+
+
 $StringCuenta=implode(",", $cuenta);
 $StringUnidades=implode(",", $unidad);
 
@@ -131,7 +139,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                           $sqlFechaEstadoCuenta=""; 
                                          }
 
-                                        $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) and e.cod_cuentaaux in ($proveedoresString) and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) order by ca.nombre, cc.fecha";
+                                        $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) $proveedoresStringAux and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) order by ca.nombre, cc.fecha";
                                         //echo $sql;
                                         $stmtUO = $dbh->prepare($sql);
                                         $stmtUO->execute();
@@ -310,7 +318,11 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                     $codigoComprobanteY=$row_d['codigocomprobante'];
                                                     $codUnidadCabeceraY=$row_d['cod_unidad_cab'];
                                                     $codAreaCentroCostoY=$row_d['area_centro_costos'];
-
+                                                    
+                                                    $tituloMontoDebe=formatNumberDec($montoX_d);
+                                                    if($montoX_d!=$debeX_d){
+                                                        $tituloMontoDebe=formatNumberDec($montoX_d).' <b class="text-danger">(*'.formatNumberDec($debeX_d).'*)</b>';
+                                                    }
                                                     $nombreComprobanteY=nombreComprobante($codigoComprobanteY);
                                                     $glosaMostrar_d="";
                                                     if($glosaAuxiliar_d!=""){
@@ -343,13 +355,14 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                             <td class="text-left small">'.$fechaX_d.'</td>
                                                             <td class="text-left small">'.$nombreProveedorX_d.'</td>  
                                                             <td class="text-left small">'.$glosaMostrar_d.'</td>
-                                                            <td class="text-right small">'.formatNumberDec($montoX_d).'</td>
+                                                            <td class="text-right small">'.$tituloMontoDebe.'</td>
                                                             <td class="text-right small">'.formatNumberDec(0).'</td>
                                                             <td class="text-right small font-weight-bold">'.formatNumberDec($saldo).'</td>
                                                         </tr>';
                                                     }else{ //cliente
                                                         $nombreProveedorX_d=namecliente($codProveedor_d);
                                                         if($nombreProveedorX_d=='0')$nombreProveedorX_d=nameProveedor($codProveedor_d);
+
                                                         if($mostrarFilasEstado!="d-none"){
                                                           $totalCredito=$totalCredito+$montoX_d;    
                                                         }

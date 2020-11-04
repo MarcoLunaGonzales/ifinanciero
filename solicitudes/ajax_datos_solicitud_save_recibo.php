@@ -39,7 +39,7 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
     	$numeroCuentaX=trim($rowDetalles['numero']);
 		  $nombreCuentaX=trim($rowDetalles['nombre']);
 		  $proveedorX=nameProveedor($rowDetalles["cod_proveedor"]);
-
+    $cod_facturaX=$rowDetalles["cod_factura"]; 
 		$importeSolX=$rowDetalles["importe"];
     $retencionX=$rowDetalles["cod_confretencion"];
         if($retencionX!=0){
@@ -95,8 +95,8 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
     $monto_rendicion=0;
     $cod_actividad_sw=0;
 
-    $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by,cod_tipopago) 
-    VALUES ($codigoDetalle,$codCajaChica,$codCuentaX,'$fecha',$retencionX,$numeroDocumento,'$codPersonal',$importeSolX,'$detalleX',$cod_estado,$cod_estadoreferencial,'$codAreaXX','$codOficinaXX',$numeroRecibo,'$codProveedor','$cod_actividad_sw',NOW(),$globalUser,$codPago)");
+    $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by,cod_tipopago,cod_solicitudrecursodetalle) 
+    VALUES ($codigoDetalle,$codCajaChica,$codCuentaX,'$fecha',$retencionX,$numeroDocumento,'$codPersonal',$importeSolX,'$detalleX',$cod_estado,$cod_estadoreferencial,'$codAreaXX','$codOficinaXX',$numeroRecibo,'$codProveedor','$cod_actividad_sw',NOW(),$globalUser,$codPago,$codigoSolicitudDetalle)");
     $flagSuccess=$stmt->execute();
     if($flagSuccess){//registramos rendiciones
       $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$codCajaChica");
@@ -109,8 +109,47 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
       $stmtSolicitudDetalle->execute();
       
       $stmtSolicitudFacturas = $dbh->prepare("INSERT INTO facturas_detalle_cajachica (cod_cajachicadetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero) 
-        (SELECT $codigoDetalle as cod_cajachicadetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero  FROM facturas_compra where cod_solicitudrecursodetalle in ($codigoSolicitudDetalle))");
-      $stmtSolicitudFacturas->execute();
+        (SELECT $codigoDetalle as cod_cajachicadetalle,nit,nro_factura,fecha,razon_social,importe,exento,nro_autorizacion,codigo_control,ice,tasa_cero  FROM facturas_compra where cod_solicitudrecursodetalle in ($codigoSolicitudDetalle) and codigo=$cod_facturaX)");
+      $facturasOk=$stmtSolicitudFacturas->execute();
+      
+      $stmtCantidad = $dbh->prepare("SELECT count(*) cantidad FROM facturas_detalle_cajachica where cod_cajachicadetalle=$codigoDetalle");
+      $stmtCantidad->execute();
+      $resultado=$stmtCantidad->fetch();
+      $cantidadFacturas=$resultado['cantidad'];
+
+
+      //actualizar datos despues de factura
+      if($facturasOk==true&&$cantidadFacturas>0){
+        $suma_importe_fac=$importeSolX;
+        $stmtCC = $dbh->prepare("SELECT cc.codigo,cc.monto_reembolso,ccd.monto
+      from  caja_chicadetalle ccd,caja_chica cc
+      where ccd.cod_cajachica=cc.codigo and ccd.codigo=$codigoDetalle");
+      $stmtCC->execute();
+      $resultCC=$stmtCC->fetch();
+      $cod_cajachica=$resultCC['codigo'];
+      $monto_reembolso=$resultCC['monto_reembolso'];
+      $monto_a_rendir=$resultCC['monto'];
+      $monto_faltante=$monto_a_rendir-$suma_importe_fac;
+    
+    //  //------
+      
+      $monto_reembolso=$monto_reembolso+$monto_faltante;
+
+      //actualizamos el monto de reeembolso de caja chica
+      $stmtCCUpdate = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$codCajaChica");
+      $stmtCCUpdate->execute();
+
+      //actualizamos estado en cajachjicadetalle
+      $sqlCCD="UPDATE caja_chicadetalle set cod_estado=2,monto_rendicion=$suma_importe_fac where codigo=$codigoDetalle";
+      $stmtCCD = $dbh->prepare($sqlCCD);
+      $stmtCCD->execute();
+      //estado de rendicion 
+      $fecha_recepcion=date("Y-m-d H:i:s");
+      $sql="UPDATE rendiciones set fecha='$fecha_recepcion',cod_estado=2,monto_rendicion=$suma_importe_fac where codigo=$codigoDetalle";
+      $stmtUR = $dbh->prepare($sql);
+      $flagSuccess=$stmtUR->execute();
+
+     }
 
       $index++;
       $numeroRecibo++;
