@@ -148,7 +148,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
     }else{
       $codComprobante=obtenerCodigoComprobante();
       $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by, modified_at, modified_by) 
-      VALUES ('$codComprobante', '1', '$cod_unidadX', '$globalNombreGestion', '1', '1', '$tipoComprobante', NOW(), '$nroCorrelativo', '$glosa', '$fechaHoraActualSitema', '$globalUser', '$fechaHoraActualSitema', '$globalUser')";
+      VALUES ('$codComprobante', '1', '$cod_unidadX', '$globalNombreGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraActualSitema', '$globalUser', '$fechaHoraActualSitema', '$globalUser')";
       //echo $sqlInsert;
       $stmtInsert = $dbh->prepare($sqlInsert);
       $flagSuccessComprobante=$stmtInsert->execute();
