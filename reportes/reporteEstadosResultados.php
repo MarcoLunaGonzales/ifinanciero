@@ -334,12 +334,6 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
  $html.=    '</tbody></table>';
      
-      $entero=floor($tDebeBol);
-      $decimal=$tDebeBol-$entero;
-      $centavos=floor($decimal*100);
-      if($centavos<10){
-        $centavos="0".$decimal;
-      }
       $totalResultado=$tBolPasivo-$tBolActivo;
       if($totalResultado>=0){
         $html.='<br><table class="table">'.
@@ -359,12 +353,6 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
       
       $html.='</thead>'.
            '<tbody>';
-
-    /* $html.='<tr class="">'.
-                  '<td class="bold table-title text-center text-center">Totales:</td>'.
-                  '<td class="text-right">'.number_format($tBolActivo, 2, '.', ',').'</td>'.
-                  '<td class="text-right"></td>'.     
-              '</tr>';*/
   $html.=    '</tbody></table>';
 
 $html.='</body>'.
