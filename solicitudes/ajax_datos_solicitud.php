@@ -10,10 +10,31 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 set_time_limit(300);
+$globalMes=$_SESSION['globalMes'];
+$globalNombreGestion=$_SESSION["globalNombreGestion"];
 
 $codigo=$_GET['codigo'];
 $codCajaChica=$_GET['cod_cajachica'];
 $fechaActual=date("d/m/Y");
+//fecha hora actual para el comprobante (SESIONES)
+$anioActual=date("Y");
+$mesActual=date("m");
+$diaActual=date("d");
+$codMesActiva=$_SESSION['globalMes']; 
+$month = $globalNombreGestion."-".$codMesActiva;
+$aux = date('Y-m-d', strtotime("{$month} + 1 month"));
+$diaUltimo = date('d', strtotime("{$aux} - 1 day"));
+if((int)$globalNombreGestion<(int)$anioActual){
+  $fechaHoraActual=$diaUltimo."/".$codMesActiva."/".$globalNombreGestion;
+}else{
+  if((int)$mesActual==(int)$codMesActiva){
+      $fechaHoraActual=date("d/m/Y");
+  }else{
+    $fechaHoraActual=$diaUltimo."/".$codMesActiva."/".$globalNombreGestion;
+  } 
+}
+
+// FIN DE LA FECHA
 ?>
 <div class="row">
   <table class="table table-bordered table-condensed">
@@ -91,7 +112,7 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigo);
            <td class="small"><?=$index?></td>
            <td class="font-weight-bold"><?=$numeroRecibo?></td>
            <td class="small"><?=$nombreCuentaX?></td>
-           <td class="small"><?=$fechaActual?></td>
+           <td class="small"><?=$fechaHoraActual?></td>
            <td class="small"><?=$tituloImporte?></td>
            <td class="small"><?=$proveedorX?></td>
            <td class="small"><?=number_format($montoImporte, 2, '.', ',')?></td>

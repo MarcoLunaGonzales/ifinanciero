@@ -48,12 +48,15 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   }    
 }
 //validacion montos
-$sqlRetencionFacturas="SELECT sd.codigo,(select count(*) from facturas_compra where cod_solicitudrecursodetalle=sd.codigo) as facturas,(select sum(importe) from facturas_compra where cod_solicitudrecursodetalle=sd.codigo) as monto_facturas,sum(sd.importe) as monto_solicitud from solicitud_recursosdetalle sd  where sd.cod_solicitudrecurso=$codigo and sd.cod_confretencion=8;";
+//$sqlRetencionFacturas="SELECT sd.codigo,(select count(*) from facturas_compra where cod_solicitudrecursodetalle=sd.codigo) as facturas,(select sum(importe) from facturas_compra where cod_solicitudrecursodetalle=sd.codigo) as monto_facturas,sum(sd.importe) as monto_solicitud from solicitud_recursosdetalle sd  where sd.cod_solicitudrecurso=$codigo and sd.cod_confretencion=8;";
+$sqlRetencionFacturas="SELECT sd.codigo,(select count(*) from facturas_compra where cod_solicitudrecursodetalle=sd.codigo) as facturas,sum((select sum(importe) from facturas_compra where cod_solicitudrecursodetalle=sd.codigo)) as monto_facturas,sum(sd.importe) as monto_solicitud from solicitud_recursosdetalle sd  where sd.cod_solicitudrecurso=$codigo and sd.cod_confretencion=8;";
 $stmt = $dbh->prepare($sqlRetencionFacturas);
 $stmt->execute();
 $error_facturas_monto=0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-  if($row['monto_facturas']!=$row['monto_solicitud']&&$error_facturas_fecha==0&&$error_facturas==0){
+  $monto_facturas=number_format($row['monto_facturas'],2,'.','');
+  $monto_solicitud=number_format($row['monto_solicitud'],2,'.','');
+  if($monto_facturas!=$monto_solicitud&&$error_facturas_fecha==0&&$error_facturas==0){
    $error_facturas_monto=1;
   }    
 }
@@ -68,7 +71,7 @@ if($error_facturas_fecha>0){
   $mensajeError.="La fecha de la Factura no corresponde al Mes y Gestión de Trabajo, ";
 }
 if($error_facturas_monto>0){
-  $mensajeError.="El monto de la solicitud no iguala al de las facturas,";
+  $mensajeError.="El monto de la solicitud no iguala al de las facturas, ";
 }
 
 if($error_retencion>0||$error_facturas>0||$error_facturas_fecha>0||$error_facturas_monto>0){

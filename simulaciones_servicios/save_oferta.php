@@ -8,13 +8,13 @@ error_reporting(-1);
 session_start();
 $globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
-
+$simulacion=$_POST['simulacion'];
 //RECIBIMOS LAS VARIABLES
 if(isset($_POST['cantidad_items'])){
   $filas=$_POST['cantidad_items'];
   $por_defecto=$_POST['por_defecto'];
   $oferta=$_POST['oferta'];
-  $simulacion=$_POST['simulacion'];
+  
   if($por_defecto==0){//hay registros de la oferta
     $stmt = $dbh->prepare("DELETE FROM simulaciones_servicios_ofertas_complementos where cod_simulacionoferta in (SELECT codigo from simulaciones_servicios_ofertas where cod_simulacionservicio=$simulacion and codigo=$oferta) ");
     $flagSuccess=$stmt->execute();
@@ -45,9 +45,38 @@ if(isset($_POST['cantidad_items'])){
   } 
 }
 
-if(isset($_POST['url'])){
-  $url=$_POST['url'];
-  showAlertSuccessError($flagSuccess,"../".$urlList.$url);  
+if($_POST['descargar']==0){  
+  if(isset($_POST['url'])){
+   $url=$_POST['url'];
+   showAlertSuccessError($flagSuccess,"../".$urlList.$url);  
+  }else{
+   showAlertSuccessError($flagSuccess,"../".$urlList);
+ }
 }else{
-  showAlertSuccessError($flagSuccess,"../".$urlList);
+  $codAreaX=obtenerCodigoAreaPlantillasServicios(obtenerPlantillaCodigoSimulacionServicio($simulacion));
+  $urlDescargar=$urlImpOferta."?cod=".$simulacion."&cod_area=".$codAreaX."&md=".$_POST['descargar'];
+  $nombreOferta=nameSimulacionServicio($simulacion)." - ".abrevArea_solo($codAreaX);
+  $tituloAlert="VER EN NAVEGADOR (Espere...)";
+  if($_POST['descargar']==1){
+    $tituloAlert="DESCARGAR";
+  }
+  ?>
+  <script>
+swal({
+  title: '<?=$nombreOferta?>',
+  text: 'DOCUMENTO PDF - <?=$tituloAlert?>',
+  showCancelButton: false,
+  showConfirmButton: false
+}).then(
+  function () {},
+  // handling the promise rejection
+  function (dismiss) {
+    if (dismiss === 'timer') {
+      //console.log('I was closed by the timer')
+    }
+  }
+);
+window.location.href='../<?=$urlDescargar?>';</script>
+  <?php
 }
+

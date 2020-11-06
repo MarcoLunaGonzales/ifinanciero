@@ -18841,3 +18841,7 @@ function autocompletarAJAXComplementoGeneral(inp,inp2,url){
                 });
         });           
 }
+
+function descargarOfertaPropuesta(inp){
+  $("#descargar").val(inp);  
+}

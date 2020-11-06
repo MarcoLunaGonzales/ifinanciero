@@ -9,7 +9,8 @@ $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 set_time_limit(300);
 $globalUser=$_SESSION["globalUser"];
-
+$globalMes=$_SESSION['globalMes'];
+$globalNombreGestion=$_SESSION["globalNombreGestion"];
 
 $codigoSolicitud=$_GET['codigo'];
 $codCajaChica=$_GET['cod_cajachica'];
@@ -18,6 +19,28 @@ $codPago=$_GET['cod_pago'];
 $fechaActual=date("d/m/Y");
 
 $fecha=date("Y-m-d");
+
+//fecha hora actual para el comprobante (SESIONES)
+$anioActual=date("Y");
+$mesActual=date("m");
+$diaActual=date("d");
+$codMesActiva=$_SESSION['globalMes']; 
+$month = $globalNombreGestion."-".$codMesActiva;
+$aux = date('Y-m-d', strtotime("{$month} + 1 month"));
+$diaUltimo = date('d', strtotime("{$aux} - 1 day"));
+if((int)$globalNombreGestion<(int)$anioActual){
+  $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
+}else{
+  if((int)$mesActual==(int)$codMesActiva){
+      $fechaHoraActual=date("Y-m-d");
+  }else{
+    $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
+  } 
+}
+$fecha=$fechaHoraActual;
+// FIN DE LA FECHA
+
+
 $fechaHora=date("Y-m-d H:i:s");
 
 $instancia=obtenerCodigoInstanciaPorCajaChica($codCajaChica);
