@@ -42,4 +42,12 @@ if($_GET["cod_area"]==39){
 }
 $html = ob_get_clean();
 //echo $html;
-descargarPDFOfertaPropuesta("IBNORCA - Oferta -TCP",$html);
+if(isset($_GET['md'])){
+  if((int)$_GET['md']==2){
+    descargarPDFOfertaPropuesta("IBNORCA - Oferta -TCP",$html);
+  }else{
+    descargarPDFOfertaPropuestaSinVistaPrevia("IBNORCA - Oferta -TCP",$html);
+  }
+}else{
+  descargarPDFOfertaPropuesta("IBNORCA - Oferta -TCP",$html);  
+}

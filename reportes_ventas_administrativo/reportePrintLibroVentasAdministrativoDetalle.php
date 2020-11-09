@@ -7,7 +7,6 @@
   <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
   <h6 class="card-title">Areas: <?=$areaAbrev;?></h6>
   <h6 class="card-title">Oficinas:<?=$unidadAbrev?></h6>
-  <!-- <h6 class="card-title">Formas Pago:<?=$formas_pago_titulo?></h6>   -->
   
   <?php
   if($sw_check=="0"){

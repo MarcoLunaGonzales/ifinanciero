@@ -73,7 +73,13 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                       </thead>
                       <tbody>
                         <?php $index=1;
-                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {                           
+                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {  
+
+                          if(obtenerEstadoComprobante($cod_comprobante)==2){
+                            $cod_comprobante=0;
+                          }  
+
+                                                 
                           $datos_ComproCajaChica=$cod_cajachica."/".$observaciones."/".$codigo_tipo_caja_Chica."/".$cod_comprobante;                            
                             $monto_total=importe_total_cajachica($cod_cajachica);      
                             $monto_saldo=$monto_inicio-$monto_total;

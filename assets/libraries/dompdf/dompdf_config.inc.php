@@ -321,7 +321,7 @@ def("DOMPDF_AUTOLOAD_PREPEND", false);
 /**
  * Use the more-than-experimental HTML5 Lib parser
  */
-def("DOMPDF_ENABLE_HTML5PARSER", false);
+def("DOMPDF_ENABLE_HTML5PARSER", true);
 require_once(DOMPDF_LIB_DIR . "/html5lib/Parser.php");
 
 // ### End of user-configurable options ###

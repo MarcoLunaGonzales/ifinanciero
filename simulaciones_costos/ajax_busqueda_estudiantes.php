@@ -200,7 +200,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                       <td class="text-left small" ><?=$codigo_curso;?></td>
                       <td class="text-left small" ><?=$nombre_mod;?> / # Modulos = <?=$CantidadModulos?></td>
                       <td class="text-right small"><?=$FechaInscripcion;?></td>
-                      <td><!-- <button class="btn <?=$btnEstado?> btn-sm btn-link"><small><?=$estado;?></small></button> -->
+                      <td>
                         <span <?=$style_s?>><small><?=$estado;?></small></span>                                  
                       </td> 
                       <td class="td-actions text-right">

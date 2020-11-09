@@ -3883,6 +3883,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     // Cargamos DOMPDF
     require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
     $mydompdf = new DOMPDF();
+    $mydompdf->set_paper('A4', 'portrait');
     ob_clean();
     $mydompdf->load_html($html);
     $mydompdf->render();
@@ -3890,6 +3891,22 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $canvas->page_text(490, 753, "PÁGINA {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("helvetica","bold"),7, array(0,0,0,0.4)); 
     $mydompdf->set_base_path('assets/libraries/plantillaPDFOfertaPropuesta.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  }
+
+  function descargarPDFOfertaPropuestaSinVistaPrevia($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    $mydompdf->set_paper('A4', 'portrait');
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(490, 753, "PÁGINA {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("helvetica","bold"),7, array(0,0,0,0.4)); 
+    $mydompdf->set_base_path('assets/libraries/plantillaPDFOfertaPropuesta.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => true));
   }
 
   function descargarPDF1($nom,$html){
@@ -8448,7 +8465,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
       $dbh = new Conexion();
       $sql="SELECT concat(cpe.clPaterno,' ',cpe.clNombreRazon)as nombreAlumno
       FROM dbcliente.cliente_persona_empresa cpe 
-      where cpe.clIdentificacion like '%$ci_estudiante%'";  
+      where cpe.clIdentificacion = '$ci_estudiante'";  
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
       $stmt->bindColumn('nombreAlumno', $nombreAlumno);
@@ -10513,4 +10530,118 @@ function obtenerCorreoPersonal($codigo){
     }
     return $correo;
   }
+
+function obtenerPrimerAtributoSimulacionServicioDatos($codigo){
+       $dbh = new Conexion();
+       $stmt = $dbh->prepare("SELECT cod_ciudad,cod_pais,cod_estado,direccion,nombre FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codigo limit 1");
+       $stmt->execute();
+       $ciudad="";
+       $pais="";
+       $estado="";
+       $direccion="";
+       $nombre="";
+
+       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $cod_ciudad=$row['cod_ciudad'];
+          $cod_pais=$row['cod_pais'];
+          $cod_estado=$row['cod_estado'];
+          $direccion=$row['direccion'];
+          $nombre=$row['nombre'];
+
+          $lista=obtenerPaisesServicioIbrnorca();
+
+   foreach ($lista->lista as $listas) {
+      if($listas->idPais==$cod_pais){
+        $pais=strtoupper($listas->paisNombre);
+        $lista2= obtenerDepartamentoServicioIbrnorca($cod_pais);
+        foreach ($lista2->lista as $listas2) {
+          if($listas2->idEstado==$cod_estado){
+            $estado=strtoupper($listas2->estNombre);
+            $lista3= obtenerCiudadServicioIbrnorca($cod_estado);
+            foreach ($lista3->lista as $listas3) {
+              if($listas3->idCiudad==$cod_ciudad){
+                $ciudad=strtoupper($listas3->nomCiudad);
+                break;
+              }else{
+                $ciudad="SIN REGISTRO";
+              }     
+           }
+           break;
+          }else{
+            $estado="SIN REGISTRO";
+          }
+        }
+       break; 
+      }else{
+       $pais="SIN REGISTRO";
+     }
+    }
+//Estado
+       }
+       return array($ciudad,$pais,$direccion,$nombre);
+  }  
+
+  function obtenerAtributoSimulacionServicioDatos($codigo){
+       $dbh = new Conexion();
+       $stmt = $dbh->prepare("SELECT cod_ciudad,cod_pais,cod_estado,direccion,nombre FROM simulaciones_servicios_atributos where codigo=$codigo");
+       $stmt->execute();
+       $ciudad="";
+       $pais="";
+       $estado="";
+       $direccion="";
+       $nombre="";
+
+       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          $cod_ciudad=$row['cod_ciudad'];
+          $cod_pais=$row['cod_pais'];
+          $cod_estado=$row['cod_estado'];
+          $direccion=$row['direccion'];
+          $nombre=$row['nombre'];
+
+          $lista=obtenerPaisesServicioIbrnorca();
+
+   foreach ($lista->lista as $listas) {
+      if($listas->idPais==$cod_pais){
+        $pais=strtoupper($listas->paisNombre);
+        $lista2= obtenerDepartamentoServicioIbrnorca($cod_pais);
+        foreach ($lista2->lista as $listas2) {
+          if($listas2->idEstado==$cod_estado){
+            $estado=strtoupper($listas2->estNombre);
+            $lista3= obtenerCiudadServicioIbrnorca($cod_estado);
+            foreach ($lista3->lista as $listas3) {
+              if($listas3->idCiudad==$cod_ciudad){
+                $ciudad=strtoupper($listas3->nomCiudad);
+                break;
+              }else{
+                $ciudad="SIN REGISTRO";
+              }     
+           }
+           break;
+          }else{
+            $estado="SIN REGISTRO";
+          }
+        }
+       break; 
+      }else{
+       $pais="SIN REGISTRO";
+     }
+    }
+//Estado
+       }
+       return array($ciudad,$pais,$direccion,$nombre);
+  }  
+
+
+  function verificarOfertaFormatoB($codigo){
+    $dbh = new Conexion();
+     $tipoServicioOfertaB=obtenerValorConfiguracion(87);
+     $sql="SELECT codigo from simulaciones_servicios where codigo=$codigo and id_tiposervicio in ($tipoServicioOfertaB);";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor++;
+    }
+    return $valor;
+  } 
 ?>
