@@ -31,7 +31,7 @@ $totalItem=$_GET['total'];
 
 $sql="SELECT c.cod_tipocomprobante,(select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
   (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
-  (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
+  (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante,c.salvado_temporal
   from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where ";  
   $sql.=" c.codigo = $codigo_comprobante";
 $sql.=" and c.cod_unidadorganizacional='$globalUnidad' ";
@@ -52,6 +52,7 @@ $stmt->bindColumn('glosa', $glosaComprobante);
 $stmt->bindColumn('nombre', $estadoComprobante);
 $stmt->bindColumn('cod_estadocomprobante', $estadoC);
 $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
+$stmt->bindColumn('salvado_temporal', $salvadoC);
 ?>
 <div class="card">
   <div class="card-header <?=$colorCard;?> card-header-icon">
@@ -133,6 +134,11 @@ $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
                           if($cambiosDatos!=""){
                             $cambiosDatos="\n".$cambiosDatos;
                           }
+                          if($salvadoC==1){
+        $btnEstado="btn btn-danger font-weight-bold";
+        $estadoComprobante="Salvado Temporal";
+        $estadoIcon="privacy_tip";
+       } 
           ?>
           <tr>
             

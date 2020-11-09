@@ -109,7 +109,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
                             <label class="col-sm-2 col-form-label">Monto Inicio</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="monto_inicio" id="monto_inicio" value="<?=$monto_inicio;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" required/>
+                                    <input class="form-control" type="number" name="monto_inicio" id="monto_inicio" value="<?=$monto_inicio;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" step="any" required/>
                                 </div>
                             </div>
                             <!-- <label class="col-sm-2 col-form-label">Monto Reembolso</label>

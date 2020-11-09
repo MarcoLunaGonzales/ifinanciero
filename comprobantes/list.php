@@ -17,7 +17,7 @@ $codTipoComprobanteDefault="3";
 
 $sql="SELECT c.cod_tipocomprobante,(select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
-(select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
+(select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante,c.salvado_temporal
 from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_tipocomprobante in ($codTipoComprobanteDefault) and MONTH(c.fecha)='$globalMesTrabajo' ";
 
 //if($globalAdmin!=1){
@@ -44,7 +44,7 @@ $stmt->bindColumn('glosa', $glosaComprobante);
 $stmt->bindColumn('nombre', $estadoComprobante);
 $stmt->bindColumn('cod_estadocomprobante', $estadoC);
 $stmt->bindColumn('cod_tipocomprobante', $codTipoC);
-
+$stmt->bindColumn('salvado_temporal', $salvadoC);
 
 // busquena por Oficina
 $stmtUO = $dbh->prepare("SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad,(select u.codigo from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)as codigo_uo
@@ -133,6 +133,11 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           if($cambiosDatos!=""){
                             $cambiosDatos="\n".$cambiosDatos;
                           }
+                          if($salvadoC==1){
+        $btnEstado="btn btn-danger font-weight-bold";
+        $estadoComprobante="Salvado Temporal";
+        $estadoIcon="privacy_tip";
+       } 
                         ?>
                         <tr>
                           

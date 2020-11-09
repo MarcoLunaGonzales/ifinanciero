@@ -419,14 +419,14 @@ $contadorRegistros=0;
                             <div class="col-sm-5">
                                 <div class="form-group">
                                     <div id="contenedor_razonsocial">
-                                        <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly/>    
+                                        <input class="form-control" type="text" name="razon_social" id="razon_social" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly/>    
                                     </div>
                                 </div>
                             </div>
                             <label class="col-sm-1 col-form-label">Nit</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true" readonly/>
+                                    <input class="form-control" type="number" name="nit" id="nit" value="<?=$nit;?>" readonly/>
                                 </div>
                             </div>
                         </div>
@@ -868,3 +868,18 @@ $contadorRegistros=0;
         ?><script>itemUnidades_facturacion_aux.push(detalle_unidades);</script><?php                    
     }
 ?>
+
+<script>
+ $("#formSoliFactTcp").submit(function(e) {
+      var mensaje="";
+      if($("#razon_social").val()==0||$("#razon_social").val()==""){
+        Swal.fire("Informativo!", "Debe registrar la Razon Social", "warning");
+        return false;
+      }else{
+        if($("#nit").val()==0||$("#nit").val()==""){
+           Swal.fire("Informativo!", "Debe registrar el NIT", "warning");
+           return false;
+         }     
+      }     
+    });
+</script>

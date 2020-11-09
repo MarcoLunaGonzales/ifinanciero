@@ -16,6 +16,11 @@ $nroCorrelativo=$_POST["nro_correlativo"];
 $glosa=$_POST["glosa"];
 $facturas= json_decode($_POST['facturas']);
 $estadosCuentas= json_decode($_POST['estados_cuentas']);
+
+$salvado_temporal=0;
+if(isset($_POST['salvado_temporal'])){
+  $salvado_temporal=1;
+}
 session_start();
 
 $codPadreArchivos=obtenerValorConfiguracion(84);
@@ -35,7 +40,7 @@ $fechaHoraSistema=date("Y-m-d H:i:s");
 $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$_SESSION['globalUnidad'],$tipoComprobante,$globalMes);
 
 $codComprobante=obtenerCodigoComprobante();
-$sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by) VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraSistema', '$globalUser')";
+$sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by,salvado_temporal) VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraSistema', '$globalUser',$salvado_temporal)";
 //echo $sqlInsert;
 
 $stmtInsert = $dbh->prepare($sqlInsert);

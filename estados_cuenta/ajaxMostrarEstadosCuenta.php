@@ -184,7 +184,7 @@ if($codCuentaAuxiliar!=0){
                 if($codCuentaAuxiliar!=0){
                   if($existeEstado==0){
             ?>
-              <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="ponerCentroCostoComprobanteDetalle(<?=$codOficinaDetalle?>,<?=$codAreaDetalle?>);agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
+              <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="ponerCentroCostoComprobanteDetalle(<?=$codOficinaDetalle?>,<?=$codAreaDetalle?>);agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');return false;" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
             <?php        
                     
                   }else{

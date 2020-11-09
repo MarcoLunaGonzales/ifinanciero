@@ -30,6 +30,11 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
+$salvado_temporal=0;
+if(isset($_POST['salvado_temporal'])){
+  $salvado_temporal=1;
+}
+
 $fechaHoraActual=date("Y-m-d H:i:s");
 
 $fechaHoraSistema=date("Y-m-d H:i:s");
@@ -43,7 +48,7 @@ $stmtCommit = $dbh->prepare($sqlCommit);
 $stmtCommit->execute();
 
 
-$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraSistema', modified_by='$globalUser' where codigo=$codComprobante";
+$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraSistema', modified_by='$globalUser',salvado_temporal=$salvado_temporal where codigo=$codComprobante";
 //echo $sqlUpdate;
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();	

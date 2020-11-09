@@ -656,6 +656,12 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> RV </span>
                     <span class="sidebar-normal"> Reportes Ventas</span>
                   </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportesSumasSaldos" target="_blank">
+                    <span class="sidebar-mini"> SS </span>
+                    <span class="sidebar-normal"> Sumas y Saldos</span>
+                  </a>
                 </li>                         
               </ul>
             </div>

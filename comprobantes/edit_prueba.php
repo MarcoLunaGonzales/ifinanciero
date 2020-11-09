@@ -805,7 +805,7 @@ $stmt->execute();
 			             }  
 						?>
 						<div class="row col-sm-12">
-								<div class="col-sm-6">
+								<div class="col-sm-5">
 						      	</div>
 								<div class="col-sm-2">
 						            <div class="form-group">
@@ -824,6 +824,13 @@ $stmt->execute();
 						            	<label class="bmd-label-static fondo-boton">Diferencia</label>	
 						            	<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step="any" placeholder="0" value="<?=$totalesDif?>" id="total_dif_fijo" readonly="true">	
 									</div>
+						      	</div>
+						      	<div class="col-sm-1">
+						      		 <div class="form-group">
+						      		 	<a href="#" class="btn btn-round btn-default btn-fab btn-sm" onclick="salvarComprobante(1);return false;" title="Salvar Comprobante">
+			                        	   <i class="material-icons text-dark">privacy_tip</i> 
+			                            </a>
+									</div>						      		
 						      	</div>
 							</div>
 				  	</div>

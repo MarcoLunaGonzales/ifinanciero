@@ -7344,7 +7344,7 @@ function verEstadosCuentas(fila,cuenta){
           //actualizar tabla 
           //mostrarSelectProveedoresClientes() 
           cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
-          cargar_filtro_datatable_ajax('modalEstadosCuentas');         
+          cargar_filtro_datatable_ajax('modalEstadosCuentas');
         }
     });
     $("#estFila").val(fila);
@@ -7490,6 +7490,7 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
     $("#nestado"+fila).addClass("estado");
     //verEstadosCuentas(fila,cuenta);
     $('#modalEstadosCuentas').modal('hide');
+    $("#debe"+fila).focus();
    }else{
     Swal.fire('Estados de Cuenta!','El monto a Cerrar no puede ser mayor al saldo!','warning');  
    }
@@ -18844,4 +18845,42 @@ function autocompletarAJAXComplementoGeneral(inp,inp2,url){
 
 function descargarOfertaPropuesta(inp){
   $("#descargar").val(inp);  
+}
+
+function salvarComprobante(tipo){
+  if($("#nro_correlativo").val()>0){
+    if($("#cantidad_filas").val()>0){
+       salvarComprobanteProceso(tipo);
+    }else{
+       Swal.fire("Informativo!", "Debe registrar al menos un detalle!", "warning");
+    }
+  }else{
+    Swal.fire("Informativo!", "Comprobante no encontrado!", "warning");
+  }
+}
+
+function salvarComprobanteProceso(tipo){
+  $('<input />').attr('type', 'hidden').attr('name', 'facturas').attr('value', JSON.stringify(itemFacturas)).appendTo('#formRegComp');
+  $('<input />').attr('type', 'hidden').attr('name', 'estados_cuentas').attr('value', JSON.stringify(itemEstadosCuentas)).appendTo('#formRegComp');
+  $('<input />').attr('type', 'hidden').attr('name', 'salvado_temporal').attr('value',0).appendTo('#formRegComp');
+
+  var url = "save.php";
+  if(tipo==1){
+    url="saveEdit.php";
+  }
+        $.ajax({                        
+           type: "POST",                 
+           url: url,                     
+           data: $("#formRegComp").serialize(), 
+           success: function(data)             
+           {
+             window.location.href="../index.php?opcion=listComprobantes";
+             swal.fire({
+               title: "El comprobante de guardó",
+               text: "Guardado Temporal.",
+               timer: 2000,
+               showConfirmButton: false
+               });
+           }
+       });          
 }

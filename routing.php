@@ -621,6 +621,10 @@
 			require_once('reportes_ventas/rptOpIngresoFacturacion.php');
 		}
 
+		if ($_GET['opcion']=='reportesSumasSaldos') {
+			require_once('reportes_sumas_saldos/reportes_sumas_saldos.php');
+		}
+
 		//solicitudes factuacion
 		//  if ($_GET['opcion']=='reporte_solicitudfacturacion_filtro') {
 		// 	require_once('reportes_facturacion/filtro_solicitud_facturacion.php');

@@ -15,7 +15,7 @@ $dbh = new Conexion();
 // Preparamos
 $stmt = $dbh->prepare("SELECT (select u.nombre from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
-(select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,ec.codigo as cod_estado
+(select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,ec.codigo as cod_estado,c.salvado_temporal
 from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where c.cod_estadocomprobante!=2 and c.cod_unidadorganizacional=$globalUnidad");
 // Ejecutamos
 $stmt->execute();
@@ -30,6 +30,7 @@ $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('glosa', $glosaComprobante);
 $stmt->bindColumn('nombre', $estadoComprobante);
 $stmt->bindColumn('cod_estado', $codigoEstado);
+$stmt->bindColumn('salvado_temporal', $salvadoC);
 ?>
 
 <div class="content">
@@ -92,6 +93,11 @@ $stmt->bindColumn('cod_estado', $codigoEstado);
                           if($cambiosDatos!=""){
                             $cambiosDatos="\n".$cambiosDatos;
                           }
+                          if($salvadoC==1){
+        $btnEstado="btn btn-danger font-weight-bold";
+        $estadoComprobante="Salvado Temporal";
+        $estadoIcon="privacy_tip";
+       } 
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
