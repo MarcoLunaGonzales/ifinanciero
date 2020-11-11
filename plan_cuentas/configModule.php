@@ -19,7 +19,7 @@ $urlSolRecursos="index.php?opcion=listPlanCuentasSolicitudesRecursos&codigo=0";
 $urlTiposPago="index.php?opcion=listPlanCuentasSolicitudesFacturacion&codigo=0";
 $urlCajaChica="index.php?opcion=listPlanCuentasCajaChica&codigo=0";
 $urlAreas="index.php?opcion=listPlanCuentasAreas&codigo=0";
-
+$urlFlujoEfectivo="index.php?opcion=listPlanFlujoEfectivo&codigo=0";
 
 
 ?>

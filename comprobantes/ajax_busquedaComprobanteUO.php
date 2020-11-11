@@ -117,7 +117,7 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
        if($salvadoC==1){
         $btnEstado="btn btn-danger font-weight-bold";
         $estadoComprobante="Salvado Temporal";
-        $estadoIcon="privacy_tip";
+        $estadoIcon="save";
        }                   
     ?>
     <tr>

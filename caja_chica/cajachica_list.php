@@ -100,7 +100,6 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                               <td class="text-left"><small><small><?=$observaciones;?></small></small></td>        
                               <td><small><?=$label.$nombre_estado."</span>";?></small></td>
                                 
-                              <!-- href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>' -->
                               <td class="td-actions text-right">
                                 <div class="btn-group dropdown">
                                   <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >

@@ -99,7 +99,7 @@ $html.=  '<header class="header">'.
             $html.='<tr>'.
                 '<td class="text-left small"></td><td class="text-left small"></td>'.
                 '<td class="text-left small"></td>'.
-                '<td class="text-center small"><b>ASIGNACION DE FONDO</b></td>'.
+                '<td class="text-center small"><b>REPOSICIÓN DE FONDO</b></td>'.
                 '<td class="text-center small"></td>'.
                 '<td class="text-center small"></td>'.
                 '<td class="text-center small">'.formatNumberDec($monto_inicio_cc).'</td>'.
@@ -163,6 +163,7 @@ $html.=  '<header class="header">'.
                 $observaciones="***ANULADO***";
               }
               //nro factura
+              $nro_factura='';
               if(!$sw_rembolso){
                 $stmtFactura = $dbh->prepare("SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_cajachicadetalle");
                 $stmtFactura->execute();
@@ -223,8 +224,9 @@ $html.=    '</table>';
             $html.='<table class="table2">'.
                         '<tbody>'.                        
                         '<tr>'.
-                          '<td width="10%"></td> 
-                          <td width="6%"></td>                   
+                          '<td width="2%"></td> 
+                          <td width="6%"></td>
+                          <td width="10%"></td>                   
                           <td width="40%" class="text-left small"><b>SUBTOTALES</b></td>
                           <td width="10%"></td>
                           <td width="10%"></td>                    
@@ -233,8 +235,9 @@ $html.=    '</table>';
                           <td width="8%"></td>
                         </tr>'.
                         '<tr>'.
-                          '<td width="10%"></td> 
-                          <td width="6%"></td>                   
+                          '<td width="2%"></td> 
+                          <td width="6%"></td> 
+                          <td width="10%"></td>                  
                           <td width="40%" class="text-left small"><b>TOTAL RENDICIÓN DE FONDO</b></td>
                           <td width="10%"></td>
                           <td width="10%"></td>                    
@@ -242,8 +245,9 @@ $html.=    '</table>';
                           <td width="8%" class="text-right small"><b>'.formatNumberDec($total_egresos).'</b></td>
                           <td width="8%"></td>
                         </tr>'.
-                        '<tr>'.
+                        /*'<tr>'.
                           '<td width="10%"></td> 
+                          <td width="6%"></td>
                           <td width="6%"></td>                   
                           <td width="40%"><b>SALDO A RESPONDER</b></td>
                           <td width="10%"></td>
@@ -251,7 +255,7 @@ $html.=    '</table>';
                           <td width="8%"></td>
                           <td width="8%" class="text-right small"><b>'.formatNumberDec($saldo_inicial).'</b></td>
                           <td width="8%"></td>
-                        </tr>'.
+                        </tr>'.*/
                        '</tbody>'.                        
                     '</table>'; 
 
@@ -268,7 +272,7 @@ $html.='<br><br><br><br><br><br><table class="table">'.
 
 $html.='</body>'.
       '</html>';           
-descargarPDFCajaChica("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDFCajaChica("IBNORCA - caja chica (".$contenido.")",$html);
 
 ?>
 

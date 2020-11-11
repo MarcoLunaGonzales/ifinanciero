@@ -621,6 +621,9 @@
 			require_once('reportes_ventas/rptOpIngresoFacturacion.php');
 		}
 
+		if ($_GET['opcion']=='reportesFlujoEfectivo') {
+			require_once('reportes_flujos_efectivo/reportes_flujos_efectivo.php');
+		}
 		if ($_GET['opcion']=='reportesSumasSaldos') {
 			require_once('reportes_sumas_saldos/reportes_sumas_saldos.php');
 		}
@@ -1819,6 +1822,16 @@
 		if ($_GET['opcion']=='listPlanCuentasAreas') {
 			require_once('simulaciones_servicios/plandecuentas_list_areas.php');
 		}
+
+		//flujo efectivo
+		if ($_GET['opcion']=='listPlanFlujoEfectivo') {
+			require_once('flujos_efectivo/plandecuentas_list_flujo.php');
+		}
+		if ($_GET['opcion']=='registerPlanCuentaEfectivo') {
+			$fl=$_GET['fl'];
+			require_once('flujos_efectivo/plandecuentas_registrer.php');
+		}
+
 		
 		//abm dosificaciones
 		if ($_GET['opcion']=='listDosificaciones') {

@@ -112,7 +112,8 @@ $stmt->bindColumn('cuenta_auxiliar', $cuentaAuxiliar);
                     <button class="<?=$buttonCeleste;?>" onClick="location.href='<?=$urlSolRecursos;?>'">PC Solicitud Recursos</button>
                     <button class="<?=$buttonCeleste;?>" onClick="location.href='<?=$urlTiposPago;?>'">PC Formas de Pago</button>
                     <button class="<?=$buttonCeleste;?>" onClick="location.href='<?=$urlCajaChica;?>'">PC Caja Chica</button>
-                    <button class="<?=$buttonCeleste;?>" onClick="location.href='<?=$urlAreas;?>'">PC Áreas</button>                    
+                    <button class="<?=$buttonCeleste;?>" onClick="location.href='<?=$urlAreas;?>'">PC Áreas</button>
+                    <button class="<?=$buttonCeleste;?>" onClick="location.href='<?=$urlFlujoEfectivo;?>'">PC Flujo Efectivo</button>                    
               </div>      
             </div>
           </div>  

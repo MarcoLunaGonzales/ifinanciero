@@ -5463,7 +5463,66 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       $stmt->execute();
       return $stmt;
   }
+  function listaSumaMontosDebeHaberComprobantesDetalleCuenta($numeroCuenta,$fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$padre,$gestion,$fechaInicio){
+      $dbh = new Conexion();
+      $sql="";
+      $sqlAreas="";
+      $sqlUnidades="";
+      $fechaFinalMod=explode("/", $fechaFinal);
 
+      $arrayUnidades=implode(",",$arrayUnidades);
+      //formateando fecha
+      if($fechaInicio=="none"){
+        $fi=$fechaFinalMod[2]."-01-01";
+      }else{
+        $fechaFinalModIni=explode("/", $fechaInicio);
+        $fi=$fechaFinalModIni[2]."-".$fechaFinalModIni[1]."-".$fechaFinalModIni[0];
+      }
+    
+      $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
+      $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
+             (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
+              from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+              join areas a on a.codigo=d.cod_area
+              join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
+              join plan_cuentas p on p.codigo=d.cod_cuenta
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>'2' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+          on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre and p.numero= '$numeroCuenta' order by p.numero";
+      //echo $sql;
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      return $stmt;
+  }
+  function listaSumaMontosDebeHaberComprobantesDetalleCuentasString($stringCuenta,$fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$padre,$gestion,$fechaInicio){
+      $dbh = new Conexion();
+      $sql="";
+      $sqlAreas="";
+      $sqlUnidades="";
+      $fechaFinalMod=explode("/", $fechaFinal);
+
+      $arrayUnidades=implode(",",$arrayUnidades);
+      //formateando fecha
+      if($fechaInicio=="none"){
+        $fi=$fechaFinalMod[2]."-01-01";
+      }else{
+        $fechaFinalModIni=explode("/", $fechaInicio);
+        $fi=$fechaFinalModIni[2]."-".$fechaFinalModIni[1]."-".$fechaFinalModIni[0];
+      }
+    
+      $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
+      $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
+             (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
+              from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+              join areas a on a.codigo=d.cod_area
+              join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
+              join plan_cuentas p on p.codigo=d.cod_cuenta
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>'2' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+          on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre $stringCuenta order by p.numero";
+      //echo $sql;
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      return $stmt;
+  }
   function sumaMontosDebeHaberComprobantesDetalleNivel($fechaFinal,$tipoBusqueda,$arrayUnidades,$padre){
     $dbh = new Conexion();
     $sql="";
@@ -10650,4 +10709,56 @@ function obtenerPrimerAtributoSimulacionServicioDatos($codigo){
     }
     return $valor;
   } 
+
+  function obtenerNombreFlujoEfectivoGrupo($codigo){
+    $dbh = new Conexion();
+     $sql="SELECT nombre from flujo_efectivogrupos where codigo=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['nombre'];
+    }
+    return $valor;
+  }
+
+ function obtenerCuentasNivel3FlujoEfectivo($flujo){
+   $dbh = new Conexion();
+     $sql="(SELECT p.codigo from flujo_efectivo_gruposcuentas fc join plan_cuentas p on p.codigo=fc.cod_plancuenta where fc.cod_flujoefectivogrupo=$flujo and p.nivel=3)
+       UNION 
+(SELECT codigo FROM plan_cuentas where codigo in (SELECT cod_padre FROM plan_cuentas where codigo in (select p.cod_padre from flujo_efectivo_gruposcuentas fc join plan_cuentas p on p.codigo=fc.cod_plancuenta  where fc.cod_flujoefectivogrupo=$flujo and p.nivel=5))
+)";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=$row['codigo'];
+        $index++;
+    }
+    return $valor;
+ }
+ function obtenerCuentasNivel4FlujoEfectivo($flujo,$padre3){
+   $dbh = new Conexion();
+     $sql="SELECT l.* from (SELECT p.codigo,(select codigo from plan_cuentas where codigo=p.cod_padre) as codigo_n4,(select cod_padre from plan_cuentas where codigo=p.cod_padre) as codigo_n3 from flujo_efectivo_gruposcuentas fc join plan_cuentas p on p.codigo=fc.cod_plancuenta  where fc.cod_flujoefectivogrupo=$flujo and p.nivel=5) l where l.codigo_n3=$padre3;";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=$row['codigo_n4'];
+        $index++;
+    }
+    return $valor;
+ }
+ function obtenerCuentasNivel5FlujoEfectivo($flujo,$padre4){
+   $dbh = new Conexion();
+     $sql="SELECT l.* from (SELECT p.codigo,(select codigo from plan_cuentas where codigo=p.cod_padre) as codigo_n4,(select cod_padre from plan_cuentas where codigo=p.cod_padre) as codigo_n3 from flujo_efectivo_gruposcuentas fc join plan_cuentas p on p.codigo=fc.cod_plancuenta  where fc.cod_flujoefectivogrupo=$flujo and p.nivel=5) l where l.codigo_n4=$padre4;";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=$row['codigo'];
+        $index++;
+    }
+    return $valor;
+ }  
 ?>

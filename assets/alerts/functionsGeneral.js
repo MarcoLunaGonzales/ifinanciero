@@ -5644,12 +5644,14 @@ function activarInputMontoGenericoPar(matriz,valor){
   if(valor==1){
     $("#monto_mod"+matriz).attr("readonly",true);
     $("#monto_modal"+matriz).attr("readonly",true);
+    
     if(($("#habilitar"+matriz).is("[checked]"))){
         $("#habilitar"+matriz).removeAttr("checked");
       }
   }else{
     $("#monto_mod"+matriz).removeAttr("readonly");
     $("#monto_modal"+matriz).removeAttr("readonly");
+    
     if(!($("#habilitar"+matriz).is("[checked]"))){
       }
   }
@@ -5661,6 +5663,7 @@ function activarInputMontoGenerico(matriz){
   if(!($("#monto_mod"+matriz).is("[readonly]"))){
     $("#monto_mod"+matriz).attr("readonly",true);
     $("#monto_modal"+matriz).attr("readonly",true);
+    $("#cantidad_monto_modal"+matriz).attr("readonly",true);
     if(($("#habilitar"+matriz).is("[checked]"))){
         $("#habilitar"+matriz).removeAttr("checked");
       
@@ -5668,6 +5671,7 @@ function activarInputMontoGenerico(matriz){
   }else{
     $("#monto_mod"+matriz).removeAttr("readonly");
     $("#monto_modal"+matriz).removeAttr("readonly");
+    $("#cantidad_monto_modal"+matriz).removeAttr("readonly");
     if(!($("#habilitar"+matriz).is("[checked]"))){
         $("#habilitar"+matriz).attr("checked",true);
      
@@ -7318,7 +7322,7 @@ function verEstadosCuentas(fila,cuenta){
     
     //PASA Y MOSTRAMOS LOS ESTADOS DE CUENTA    
     $.ajax({
-        type: "GET",
+        type: "POST",
         dataType: 'html',
         url: "../estados_cuenta/ajaxMostrarEstadosCuenta.php",
         data: parametros,
@@ -7456,7 +7460,7 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
       }
     };
   };
-  if(existeEstadoCuentas==0){// if(existeEstadoCuentas==0)//si existe un estado de cuentas cerrado if((montoMatado+parseFloat($("#monto_estadocuenta").val()))<parseFloat(detalle_resp[4])) //monto sumado es menor al saldo? 
+  //if(existeEstadoCuentas==0){// if(existeEstadoCuentas==0)//si existe un estado de cuentas cerrado if((montoMatado+parseFloat($("#monto_estadocuenta").val()))<parseFloat(detalle_resp[4])) //monto sumado es menor al saldo? 
 
   var fila=$("#estFila").val();
   var tipo=$("#tipo_estadocuentas"+fila).val();
@@ -7494,11 +7498,9 @@ function agregarEstadoCuentaCerrar(filaXXX,valor){
    }else{
     Swal.fire('Estados de Cuenta!','El monto a Cerrar no puede ser mayor al saldo!','warning');  
    }
-  }else{
-    Swal.fire('Estados de Cuenta!','El estado de cuentas ya se está cerrando en la fila: '+filaEstado,'warning'); 
-
-   // $("#mensaje_estadoscuenta").html("<label class='text-danger'>El monto a Cerrar no puede ser mayor al saldo.</label>");
-  }
+  //}else{
+    //Swal.fire('Estados de Cuenta!','El estado de cuentas ya se está cerrando en la fila: '+filaEstado,'warning'); 
+  //}
 }
 
 function ponerCentroCostoComprobanteDetalle(oficina,area){
@@ -8110,7 +8112,8 @@ function guardarDatosPlantilla(btn_id){
    var precio_p=$("#modal_importeplan").val();
    var precio_pedit=$("#modal_importeplanedit").val();  
    var precio_alternativo=$("#total_preciosimulacion").val();
-   var parametros={"dias_curso":dias_curso,"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo};
+   var modal_modulos=$("#modal_modulo").val();
+   var parametros={"dias_curso":dias_curso,"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo,"modal_modulos":modal_modulos};
 
   if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){
     var cantidadFilas=$("#cantidad_filasprecios").val();
@@ -8145,11 +8148,11 @@ function guardarDatosPlantilla(btn_id){
     var cantidadExistentes=0;
     for (var i = 1; i <= parseInt(cantidadFilas); i++) {
       if($("#cantidad_alumnosAAA"+i).length>0){
-         cantidadAlumnosDetalle+=$("#cantidad_alumnosAAA"+i).val();
+         cantidadAlumnosDetalle+=parseFloat($("#cantidad_alumnosAAA"+i).val());
          cantidadExistentes++;
       }  
     };
-    if(cantidadAlumnosDetalle!=$("#modal_alibnorca").val()&&cantidadExistentes>0){
+    if(cantidadAlumnosDetalle!=parseFloat($("#modal_alibnorca").val())&&cantidadExistentes>0){
        mensajeError="La cantidad de Estudiantes de la Tabla de Precios no iguala a la cantidad total de estudiantes.";
        error=1;
     }
@@ -8938,6 +8941,41 @@ function cambiarTresDivPantallaClase(div,div2,div3,clase){
       if(!($("#boton_generar_comprobante").hasClass("d-none"))){
         $("#boton_generar_comprobante").addClass("d-none");
       }
+     }  
+    }
+    if($("#boton_registrar_plan").length>0){
+     if(div=='list_div_2'){
+      if(($("#boton_registrar_plan_2").hasClass("d-none"))){
+        $("#boton_registrar_plan_2").removeClass("d-none");
+      }
+      if(!($("#boton_registrar_plan").hasClass("d-none"))){
+        $("#boton_registrar_plan").addClass("d-none");
+      }
+      if(!($("#boton_registrar_plan_3").hasClass("d-none"))){
+        $("#boton_registrar_plan_3").addClass("d-none");
+      }
+     }else{
+       if(div=='list_div_3'){
+        if(($("#boton_registrar_plan_3").hasClass("d-none"))){
+          $("#boton_registrar_plan_3").removeClass("d-none");
+        }
+        if(!($("#boton_registrar_plan").hasClass("d-none"))){
+          $("#boton_registrar_plan").addClass("d-none");
+        }
+        if(!($("#boton_registrar_plan_2").hasClass("d-none"))){
+          $("#boton_registrar_plan_2").addClass("d-none");
+        }
+       }else{
+         if(($("#boton_registrar_plan").hasClass("d-none"))){
+          $("#boton_registrar_plan").removeClass("d-none");
+        }
+        if(!($("#boton_registrar_plan_3").hasClass("d-none"))){
+          $("#boton_registrar_plan_3").addClass("d-none");
+        }
+        if(!($("#boton_registrar_plan_2").hasClass("d-none"))){
+          $("#boton_registrar_plan_2").addClass("d-none");
+        }
+       } 
      }  
     }
   }

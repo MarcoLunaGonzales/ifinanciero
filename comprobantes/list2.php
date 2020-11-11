@@ -161,7 +161,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                           if($salvadoC==1){
         $btnEstado="btn btn-danger font-weight-bold";
         $estadoComprobante="Salvado Temporal";
-        $estadoIcon="privacy_tip";
+        $estadoIcon="save";
        } 
                     ?>
                     <tr>

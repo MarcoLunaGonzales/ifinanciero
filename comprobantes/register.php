@@ -464,7 +464,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 						      	<div class="col-sm-1">
 						      		 <div class="form-group">
 						      		 	<a href="#" class="btn btn-round btn-default btn-fab btn-sm" onclick="salvarComprobante(0);return false;" title="Salvar Comprobante">
-			                        	   <i class="material-icons text-dark">privacy_tip</i> 
+			                        	   <i class="material-icons text-dark">save</i> 
 			                            </a>
 									</div>						      		
 						      	</div>
