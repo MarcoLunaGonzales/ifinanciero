@@ -81,8 +81,8 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
 
                                                  
                           $datos_ComproCajaChica=$cod_cajachica."/".$observaciones."/".$codigo_tipo_caja_Chica."/".$cod_comprobante;                            
-                            $monto_total=importe_total_cajachica($cod_cajachica);      
-                            $monto_saldo=$monto_inicio-$monto_total;
+                            $monto_total=importe_total_cajachica($cod_cajachica);      //aqui se resta el reembolso
+                            $monto_saldo=$monto_inicio+$monto_total;
 
                              if($cod_estado==1)
                                 $label='<span class="badge badge-success">';

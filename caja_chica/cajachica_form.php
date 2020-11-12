@@ -55,7 +55,7 @@ if($cod_estado_aux==2 || $cod_estado_aux==null || $codigo>0){
         }
         //sacamos saldo
         $monto_anterior_x=importe_total_cajachica($cod_cajachica);
-        $monto_anterior=$monto_inicio_anterior-$monto_anterior_x;
+        $monto_anterior=$monto_inicio_anterior+$monto_anterior_x;
         //$codigo=$codigo_caja_chica_aux+1;
         $cod_tipocajachica = 0;
         $fecha = "";

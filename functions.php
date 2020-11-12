@@ -9052,16 +9052,16 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
     $resultCaja = $stmtCaja->fetch();
 
     $sql="SELECT SUM(r.monto) as monto_reembolso from caja_chicareembolsos r where r.cod_cajachica=$cod_cajachica and r.cod_estadoreferencial=1";
-    $stmtCaja = $dbh->prepare($sql);
-    $stmtCaja->execute();
-    $resultCaja = $stmtCaja->fetch();
-
+    $stmtCajaReembolso = $dbh->prepare($sql);
+    $stmtCajaReembolso->execute();
+    $resultCajaReembolso = $stmtCajaReembolso->fetch();
+    $monto_anterior_x_reembolso=$resultCajaReembolso['monto_reembolso']; 
     // $monto_anterior = $resultCaja['monto_total'];
     if($resultCaja['monto_total']!=null || $resultCaja['monto_total']!='')
       $monto_anterior_x=$resultCaja['monto_total'];
     else $monto_anterior_x=0;                        
     // $monto_anterior=$monto_inicio_anterior-$monto_anterior_x;
-    return $monto_anterior_x;
+    return $monto_anterior_x_reembolso-$monto_anterior_x;
   }
 
   function verificarExisteArchivoSolicitud($tipo,$descripcion,$tipoPadre,$codSolicitud){

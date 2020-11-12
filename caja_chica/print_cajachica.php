@@ -246,9 +246,9 @@ $html.=    '</table>';
                           <td width="8%"></td>
                         </tr>'.
                         /*'<tr>'.
-                          '<td width="10%"></td> 
+                          '<td width="2%"></td> 
                           <td width="6%"></td>
-                          <td width="6%"></td>                   
+                          <td width="10%"></td>                   
                           <td width="40%"><b>SALDO A RESPONDER</b></td>
                           <td width="10%"></td>
                           <td width="10%"></td>                    
