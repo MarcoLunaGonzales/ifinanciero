@@ -868,3 +868,18 @@ $contadorRegistros=0;
         ?><script>itemUnidades_facturacion_aux.push(detalle_unidades);</script><?php                    
     }
 ?>
+
+<script>
+ $("#formSoliFactTcp").submit(function(e) {
+      var mensaje="";
+      if($("#razon_social").val()==0||$("#razon_social").val()==""){
+        Swal.fire("Informativo!", "Debe registrar la Razon Social", "warning");
+        return false;
+      }else{
+        if($("#nit").val()==0||$("#nit").val()==""){
+           Swal.fire("Informativo!", "Debe registrar el NIT", "warning");
+           return false;
+         }     
+      }     
+    });
+</script>

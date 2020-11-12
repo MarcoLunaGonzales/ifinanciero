@@ -334,6 +334,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
  $html.=    '</tbody></table>';
      
+      
       $totalResultado=$tBolPasivo-$tBolActivo;
       if($totalResultado>=0){
         $html.='<br><table class="table">'.

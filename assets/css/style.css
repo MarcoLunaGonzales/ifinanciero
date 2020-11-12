@@ -14,8 +14,16 @@
 }
 
 
-
 .btn-orange{
+ background: #11AE81 !important;
+ color: white !important;
+}
+
+.color-orange{
+ color: #11AE81 !important;
+}
+
+.bg-orange{
  background: #11AE81 !important;
  color: white !important;
 }

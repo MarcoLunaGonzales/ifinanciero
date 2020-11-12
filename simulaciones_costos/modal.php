@@ -190,6 +190,14 @@
                   </button>
                 </div>
                 <div class="card-body">
+                    <div class="row">
+                          <label class="col-sm-3 col-form-label">Cantidad Módulos</label>
+                           <div class="col-sm-8">                     
+                             <div class="form-group">
+                               <input type="number" class="form-control" min="1" name="modal_modulo" id="modal_modulo" value="<?=$cantidadModuloX?>" style="background:#7BCDF0;color:#fff;">
+                             </div>
+                           </div>  
+                      </div>
                       <div class="row">
                           <label class="col-sm-3 col-form-label">D&iacute;as Curso</label>
                            <div class="col-sm-8">                     

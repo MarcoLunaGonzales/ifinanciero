@@ -255,7 +255,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                          }   
 
                                             if($tipoDebeHaber==2){//proveedor
-                                                if($mostrarFilasEstado!="d-none"&&$estiloFilasEstado==""){
+                                                if($mostrarFilasEstado!="d-none"&&$estiloFilasEstado==""&&$estiloEstados==""){
                                                    $totalCredito=$totalCredito+$montoX;
                                                 }
                                                 
@@ -277,7 +277,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
 
                                             }else{ //cliente
                                                 $nombreProveedorX=namecliente($codProveedor);
-                                                if($mostrarFilasEstado!="d-none"&&$estiloFilasEstado==""){
+                                                if($mostrarFilasEstado!="d-none"&&$estiloFilasEstado==""&&$estiloEstados==""){
                                                   $totalDebito=$totalDebito+$montoX;
                                                  }
                                                 
@@ -343,7 +343,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                      
                                                     if($tipoDebeHaber==2){//proveedor
                                                         $nombreProveedorX_d=nameProveedor($codProveedor_d);
-                                                        if($mostrarFilasEstado!="d-none"){
+                                                        if($mostrarFilasEstado!="d-none"&&$estiloEstados==""){
                                                           $totalDebito=$totalDebito+$montoX_d;    
                                                         }
                                                         
@@ -363,7 +363,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                         $nombreProveedorX_d=namecliente($codProveedor_d);
                                                         if($nombreProveedorX_d=='0')$nombreProveedorX_d=nameProveedor($codProveedor_d);
 
-                                                        if($mostrarFilasEstado!="d-none"){
+                                                        if($mostrarFilasEstado!="d-none"&&$estiloEstados==""){
                                                           $totalCredito=$totalCredito+$montoX_d;    
                                                         }
                                                         

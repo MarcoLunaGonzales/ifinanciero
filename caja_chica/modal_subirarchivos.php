@@ -21,34 +21,7 @@
                     <th class="small">Descripción</th>                  
                   </tr>
                 </thead>
-                <tbody id="tabla_archivos">
-                  <?php
-                  // $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
-                  // $stmtArchivo->execute();
-                  // $filaA=0;
-                  // while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
-                  //   $filaA++;
-                  //   $codigoX=$rowArchivo['idClaDocumento'];
-                  //   $nombreX=$rowArchivo['Documento'];
-                  //   $ObligatorioX=$rowArchivo['Obligatorio'];
-                  //   $Obli='<i class="material-icons text-danger">clear</i> NO';
-                  //   if($ObligatorioX==1){
-                  //   $Obli='<i class="material-icons text-success">done</i> SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
-                  //   } ?>
-                    <!--  <tr>
-                       <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
-                       <td class="text-center"><?=$Obli?></td>
-                       <td class="text-right">
-                         <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
-                         <span class="input-archivo">
-                           <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
-                         </span>
-                         <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo
-                         </label>
-                       </td>    
-                       <td><?=$nombreX;?></td>
-                     </tr> --> <?php
-                  // }
+                <tbody id="tabla_archivos"><?php
 
                   if(isset($codigo)){
                     $sql="SELECT * From archivos_adjuntos_cajachica where cod_cajachica_detalle=$codigo";

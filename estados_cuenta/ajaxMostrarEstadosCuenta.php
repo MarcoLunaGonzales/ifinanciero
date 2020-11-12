@@ -18,15 +18,15 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 
 $fechaActual=date("d/m/Y");
-$codCuenta=$_GET['cod_cuenta'];
-$codCuentaAuxiliar=$_GET['cod_cuenta_auxiliar'];
-$tipoComprobanteX=$_GET['tipo_comprobante'];
-$cerrarEstadoCuenta=$_GET["cerrar_ec"];
+$codCuenta=$_POST['cod_cuenta'];
+$codCuentaAuxiliar=$_POST['cod_cuenta_auxiliar'];
+$tipoComprobanteX=$_POST['tipo_comprobante'];
+$cerrarEstadoCuenta=$_POST["cerrar_ec"];
 
 if($codCuentaAuxiliar!=0){
-  $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar order by e.fecha";
+  $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar order by c.cod_tipocomprobante,c.fecha,c.numero";
 }else{
-  $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by e.fecha";
+  $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 order by c.cod_tipocomprobante,c.fecha,c.numero";
 }
 
 
@@ -59,8 +59,8 @@ if($codCuentaAuxiliar!=0){
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $codigoX=$row['codigo'];
     $estiloFila="bg-white";$codOrigen=0;
-    if(isset($_GET['comprobante_origen'])){
-      if($_GET['comprobante_origen']==$codigoX){
+    if(isset($_POST['comprobante_origen'])){
+      if($_POST['comprobante_origen']==$codigoX){
        $estiloFila="bg-plomo";$codOrigen=1;
       }
     }
@@ -85,18 +85,21 @@ if($codCuentaAuxiliar!=0){
     $codAreaDetalle=obtenerCodigoAreaComprobanteDetalle($row['cod_comprobantedetalle']);
 
     $existeEstado=0;$colorFilaExiste="";
-    if(isset($_GET["estados_cuenta"])){
-      $estados_cuenta=json_decode($_GET["estados_cuenta"]);
+    $montoContraAjax=0;
+    if(isset($_POST["estados_cuenta"])){
+      $estados_cuenta=json_decode($_POST["estados_cuenta"]);
       for ($estado=0; $estado <count($estados_cuenta) ; $estado++) { 
         for ($nrofila=0; $nrofila <count($estados_cuenta[$estado]) ; $nrofila++) { 
           if($codigoX==$estados_cuenta[$estado][$nrofila]->cod_comprobantedetalle){
             $existeEstado=$estado+1;
+            $montoContraAjax+=(float)$estados_cuenta[$estado][$nrofila]->monto;
             $colorFilaExiste='style="background:#FF3333 !important;color:#fff !important;"';
           }
         }
       }
     }
     
+
 
     $glosaMostrar="";
     if($glosaAuxiliar!=""){
@@ -110,8 +113,8 @@ if($codCuentaAuxiliar!=0){
 
     $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
     //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
-    if(isset($_GET['edicion'])){
-      $codigoComprobante=$_GET['codigo_comprobante'];
+    if(isset($_POST['edicion'])){
+      $codigoComprobante=$_POST['codigo_comprobante'];
       $sqlContra="SELECT sum(e.monto)as monto from estados_cuenta e, comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and c.cod_estadocomprobante<>2 and cd.codigo=e.cod_comprobantedetalle and e.cod_comprobantedetalleorigen='$codigoX' and cd.cod_comprobante!='$codigoComprobante'";
     }else{
       $sqlContra="SELECT sum(monto)as monto from estados_cuenta e, comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen='$codigoX'";
@@ -125,7 +128,12 @@ if($codCuentaAuxiliar!=0){
       $montoContra=$rowContra['monto'];
     }
  
+    if(($montoContra+$montoContraAjax)<$montoX){
+      $existeEstado=0;$colorFilaExiste=""; 
+    }
     $proveedorX="";
+
+
     /*if($tipoComprobanteX==2){
       $proveedorX=obtenerProveedorCuentaAux($codCuentaAuxX);
     }
@@ -145,8 +153,8 @@ if($codCuentaAuxiliar!=0){
     //Filtramos las cuentas que ya esten cerradas.
 
     $saldoIndividual+=$montoX-$montoContra;
-    if(isset($_GET['edicion'])){
-      $edicion=$_GET['edicion'];
+    if(isset($_POST['edicion'])){
+      $edicion=$_POST['edicion'];
     }else{
       $edicion=0;
     }
@@ -174,7 +182,7 @@ if($codCuentaAuxiliar!=0){
       <?php  
       }
       ?>
-      <td class="text-right small font-weight-bold"><?=formatNumberDec($saldoIndividual);?></td>
+      <td class="text-right small font-weight-bold"><?=formatNumberDec($saldoIndividual);?><br><small class="text-danger"><?=formatNumberDec($montoContraAjax);?></small></td>
       <td>
         <input type="hidden" id="codigoCuentaAux<?=$i?>" value="<?=$codCuentaAuxX?>">
           <div class="form-check">
@@ -184,7 +192,7 @@ if($codCuentaAuxiliar!=0){
                 if($codCuentaAuxiliar!=0){
                   if($existeEstado==0){
             ?>
-              <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="ponerCentroCostoComprobanteDetalle(<?=$codOficinaDetalle?>,<?=$codAreaDetalle?>);agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
+              <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="ponerCentroCostoComprobanteDetalle(<?=$codOficinaDetalle?>,<?=$codAreaDetalle?>);agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');return false;" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
             <?php        
                     
                   }else{
@@ -197,7 +205,7 @@ if($codCuentaAuxiliar!=0){
                   $numeroCuenta=obtieneNumeroCuenta($codigoCuenta);
                   $nombreCuenta=nameCuenta($codigoCuenta);
             ?>
-              <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="setBusquedaCuenta('<?=$codigoCuenta?>','<?=$numeroCuenta?>','<?=$nombreCuenta?>','<?=$codigoCuentaAux?>','<?=$nombreCuentaAux?>');ponerCentroCostoComprobanteDetalle(<?=$codOficinaDetalle?>,<?=$codAreaDetalle?>);agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
+              <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="filaActiva=$('#estFila').val();setBusquedaCuenta('<?=$codigoCuenta?>','<?=$numeroCuenta?>','<?=$nombreCuenta?>','<?=$codigoCuentaAux?>','<?=$nombreCuentaAux?>');ponerCentroCostoComprobanteDetalle(<?=$codOficinaDetalle?>,<?=$codAreaDetalle?>);agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');filaActiva=$('#cantidad_filas').val();" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
             <?php      
                 }
               }

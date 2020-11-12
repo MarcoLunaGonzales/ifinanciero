@@ -30,7 +30,7 @@ $codigo_tipo=$_GET['codigo'];
 
 $sql="SELECT (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad, c.cod_gestion, 
   (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, 
-  (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante
+  (select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa,ec.nombre,c.cod_estadocomprobante,c.salvado_temporal
   from comprobantes c join estados_comprobantes ec on c.cod_estadocomprobante=ec.codigo where  MONTH(c.fecha)='$globalMesTrabajo' ";  
 
   $sql.=" and c.cod_tipocomprobante in ($codigo_tipo)";
@@ -51,6 +51,7 @@ $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('glosa', $glosaComprobante);
 $stmt->bindColumn('nombre', $estadoComprobante);
 $stmt->bindColumn('cod_estadocomprobante', $estadoC);
+$stmt->bindColumn('salvado_temporal', $salvadoC);
 ?>
 <table id="tablePaginator" class="table table-condensed">
   <thead>
@@ -93,6 +94,11 @@ $stmt->bindColumn('cod_estadocomprobante', $estadoC);
                           if($cambiosDatos!=""){
                             $cambiosDatos="\n".$cambiosDatos;
                           }
+                          if($salvadoC==1){
+        $btnEstado="btn btn-danger font-weight-bold";
+        $estadoComprobante="Salvado Temporal";
+        $estadoIcon="save";
+       } 
     ?>
     <tr>
       
