@@ -419,14 +419,14 @@ $contadorRegistros=0;
                             <div class="col-sm-5">
                                 <div class="form-group">
                                     <div id="contenedor_razonsocial">
-                                        <input class="form-control" type="text" name="razon_social" id="razon_social" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();" readonly/>    
+                                        <input class="form-control" type="text" name="razon_social" id="razon_social"  value="<?=$razon_social;?>" required />    
                                     </div>
                                 </div>
                             </div>
                             <label class="col-sm-1 col-form-label">Nit</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="number" name="nit" id="nit" value="<?=$nit;?>" readonly/>
+                                    <input  class="form-control" type="number" name="nit" id="nit" value="<?=$nit;?>" required />
                                 </div>
                             </div>
                         </div>
@@ -449,7 +449,7 @@ $contadorRegistros=0;
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-2 col-form-label">Observaciones 2</label>
+                            <label class="col-sm-2 col-form-label">Concepto para Facturación (Solo casos especiales)</label>
                             <div class="col-sm-10">
                                 <div class="form-group">
                                     <!-- <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->

@@ -226,7 +226,7 @@
     </div>
 </div>
 <div class="row">
-    <label class="col-sm-2 col-form-label">Observaciones 2</label>
+    <label class="col-sm-2 col-form-label">Concepto para Facturación (Solo casos especiales)</label>
     <div class="col-sm-10">
         <div class="form-group">
             <!-- <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
