@@ -29,7 +29,7 @@ join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo
 where pc.codigo=$codPlan";
 
 if($tipoCosto==1){
-$query2=$query1." and pgc.cod_tipocosto=1 GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
+$query2=$query1." and pgc.cod_tipocosto in (1,3) GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
 $bgClase="bg-info";
 }else{
   $query2=$query1." and pgc.cod_tipocosto=2 GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
@@ -113,16 +113,24 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $codGrupo=$row['cod_plantillagrupocosto'];
   $grupoUnidad=$row['cod_unidadorganizacional'];
   $grupoArea=$row['cod_area'];
+  $tipoCostoFila=$row['cod_tipocosto'];
 
     
     if($tipoCosto==1){
       if($row['calculado']==$row['local']){
       $montoCalculadoTit=$row['calculado']*($porcentPrecios/100)*$nCursos;
       $montoCalculadoEjecutadoPadre=$row['calculado']*$nCursos;
+      if($tipoCostoFila==3){
+        $montoCalculadoTit=$row['calculado']*$nCursos;
+      }
     }else{
       $montoCalculadoTit=$row['local']*($porcentPrecios/100)*$nCursos;
       $montoCalculadoEjecutadoPadre=$row['local']*$nCursos;
+      if($tipoCostoFila==3){
+        $montoCalculadoTit=$row['local']*$nCursos;
+      }
     }
+       
       $montoTotales+=$montoCalculadoTit;
 
        $html.='<tr class="bg-plomo">'.
@@ -149,16 +157,22 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         
         
-         if($tipoCosto==1){
+         if($tipoCosto==1||$tipoCostoFila==3){
           if($row_partidas['tipo_calculo']!=1){
-          $numeroCuentas="(Manual)";
-          $montoCalculado=$row_partidas['monto_local']*($porcentPrecios/100)*$nCursos;
-          $montoCalculadoEjecutado=$row_partidas['monto_local']*$nCursos;
-        }else{
-          $numeroCuentas="(".$numeroCuentas.")";
-          $montoCalculado=$row_partidas['monto_calculado']*($porcentPrecios/100)*$nCursos;
-          $montoCalculadoEjecutado=$row_partidas['monto_calculado']*$nCursos;
-        }
+             $numeroCuentas="(Manual)";
+             $montoCalculado=$row_partidas['monto_local']*($porcentPrecios/100)*$nCursos;
+             $montoCalculadoEjecutado=$row_partidas['monto_local']*$nCursos;
+             if($tipoCostoFila==3){
+               $montoCalculado=$row_partidas['monto_local']*$nCursos;
+             }             
+          }else{
+             $numeroCuentas="(".$numeroCuentas.")";
+             $montoCalculado=$row_partidas['monto_calculado']*($porcentPrecios/100)*$nCursos;
+             $montoCalculadoEjecutado=$row_partidas['monto_calculado']*$nCursos;
+             if($tipoCostoFila==3){
+               $montoCalculado=$row_partidas['monto_calculado']*$nCursos;
+             }
+          }
            $html.='<tr class="bg-info text-white">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp; '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
                       '<td class="text-right font-weight-bold">'.number_format($montoCalculadoEjecutado, 2, '.', ',').'</td>'.

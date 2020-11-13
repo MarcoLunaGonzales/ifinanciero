@@ -158,6 +158,26 @@ alerts = {
           }
         })
     }
+    else if (type == 'warning-message-and-confirmation-actualizar-plantilla') {
+      swal({
+        title: 'ACTUALIZAR PLANTILLA',
+        text: "¿Está seguro de actualizar los costos de la plantilla?",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+            location.href=url; 
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        })
+    }
     else if (type == 'warning-message-and-confirmationGeneral') {
       swal({
         title: '¿Estás Seguro?',

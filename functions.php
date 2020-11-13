@@ -1911,10 +1911,14 @@
      function obtenerTotalesPlantilla($codigo,$tipo,$mes){
       $anio=date("Y");
       $dbh = new Conexion();
+      $queryTipo="in (".$tipo.")";
+      if($tipo==1){
+        //$queryTipo="in (".$tipo.",3)";
+      }
       $query2="select pgd.cod_plantillagrupocosto,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tipocosto,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado,pgd.tipo_calculo from plantillas_grupocostodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
   join plantillas_gruposcosto pgc on pgd.cod_plantillagrupocosto=pgc.codigo
   join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo 
-  where pc.codigo=$codigo and pgc.cod_tipocosto=$tipo GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
+  where pc.codigo=$codigo and pgc.cod_tipocosto $queryTipo GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
 
 
     $stmt = $dbh->prepare($query2);

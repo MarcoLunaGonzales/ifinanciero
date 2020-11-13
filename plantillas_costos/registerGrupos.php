@@ -223,11 +223,20 @@ if(isset($_GET['cod'])){
                                 if($codTipoCostoX==1){
                                 ?><option value="1" selected>Fijo</option>
                                   <option value="2">Variable</option>
+                                  <option value="3">Manual</option>
                                 <?php
                                 }else{
+                                	if($codTipoCostoX==2){
                                  ?><option value="1">Fijo</option>
                                   <option value="2" selected>Variable</option>
+                                  <option value="3">Manual</option>
                                 <?php
+                                  }else{
+                                  	 ?><option value="1">Fijo</option>
+                                      <option value="2">Variable</option>
+                                      <option value="3" selected>Manual</option>
+                                    <?php
+                                  }
                                 }
 			  	              ?>
 					

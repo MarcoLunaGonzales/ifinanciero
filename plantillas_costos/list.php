@@ -81,18 +81,21 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                             <a href='<?=$urlReporte;?>?cod=<?=$codigo;?>' rel="tooltip" class="btn btn-primary">
                               <i class="material-icons" title="Ver Detalle">list</i>
                             </a>
-                            <?php if($codEstado!=3){
-                              if($globalAdmin==1){
-                              ?>
-                            
                             <a target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
+                            <button title="Duplicar Registro ACTUALIZADO al <?=date("Y")?>" class="btn btn-info" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>&pr=0')">
+                              <i class="material-icons"><?=$iconCopy?></i>
+                            </button>
+                            <?php if($codEstado!=3){
+                              if($globalAdmin==1){
+
+                              ?>
+                              <button title="ACTUALIZAR al <?=date("Y")?>" class="btn btn-warning" onclick="alerts.showSwal('warning-message-and-confirmation-actualizar-plantilla','<?=$urlClonar2;?>&codigo=<?=$codigo;?>&pr=0')">
+                                <i class="material-icons">refresh</i>
+                              </button>                                         
                             <button title="Eliminar Registro" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
-                            </button>
-                            <button title="Duplicar Registro" class="btn btn-primary" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>')">
-                              <i class="material-icons"><?=$iconCopy?></i>
                             </button>
                             <?php
                               }

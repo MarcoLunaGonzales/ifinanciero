@@ -171,7 +171,11 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                         $cantidad_inicial=0;
                                         $saldo_real=0;
 
-                                        $queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario,1 as tipo_item from ibnorca.serviciopresupuesto s where  s.IdServicio=$IdServicio";
+                                        //$queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario,1 as tipo_item from ibnorca.serviciopresupuesto s where  s.IdServicio=$IdServicio";
+                                        $queryPr="SELECT c.IdCotizacion, s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario,1 as tipo_item 
+                                            from ibnorca.serviciopresupuesto s 
+                                            INNER JOIN ibnorca.cotizaciones c ON c.IdCotizacion=s.IdCotizacion
+                                            where  s.IdServicio=$IdServicio AND ibnorca.d_clasificador(ibnorca.id_estadoobjeto(196, c.IdCotizacion))='Adjudicada';";
                                         //echo $queryPr;
                                         if ($cod_facturacion > 0){
                                             $queryPr.=" UNION ";                                            

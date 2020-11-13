@@ -210,6 +210,9 @@
 		if ($_GET['opcion']=='clonarPlantillaCosto') {
 			require_once('plantillas_costos/saveClonar.php');
 		}
+		if ($_GET['opcion']=='clonarPlantillaCosto2') {
+			require_once('plantillas_costos/saveClonar2.php');
+		}
         
         //SIMULACIONES DE COSTO
 		if ($_GET['opcion']=='listSimulacionesCostos') {
@@ -323,6 +326,9 @@
 		}
 		if ($_GET['opcion']=='clonarPlantillaServicio') {
 			require_once('plantillas_servicios/saveClonar.php');
+		}
+		if ($_GET['opcion']=='clonarPlantillaServicio2') {
+			require_once('plantillas_servicios/saveClonar2.php');
 		}
         
         //SIMULACIONES PLANTILLA SERVICIO

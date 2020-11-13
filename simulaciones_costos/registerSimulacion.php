@@ -361,7 +361,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 				//valores de la simulacion
 
                   //total desde la plantilla  
+                 $totalFijoManual=obtenerTotalesPlantilla($codigoPX,3,$mesConf);
                  $totalFijo=obtenerTotalesPlantilla($codigoPX,1,$mesConf); //tipo de costo 1:fijo,2:variable desde la plantilla
+
                   //total variable desde la plantilla
                  //$totalVariable=obtenerTotalesPlantilla($codigoPX,2,18);
                  //total variable desde simulacion cuentas
@@ -371,7 +373,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                // $alumnosX=($utilidadIbnorcaX+($totalFijoPlan+))
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codigoPX);
                  $porcentPrecios=(($precioLocalX*$alumnosX)*100)/$precioRegistrado;
-                 $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
+
+                 $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
+
                  $totalFijoPlanModulos=$totalFijoPlan*$cantidadModuloX;
 
                   //
@@ -384,7 +388,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   $porcentajeUtil=$utilidadIbnorcaX/100;
                   //$alumnosRecoX=ceil(($totalFijoPlan+$totalVariable[2])/(($precioLocalX)*(1-$porcentajeIva-$porcentajeUtil)));  
                   
-                  $alumnosRecoX=ceil(($precioRegistrado*$totalVariable[2])/(($precioLocalX) * ( ((1-$porcentajeIva-$porcentajeUtil) * ($precioRegistrado)) - $totalFijo[0])) );  
+                  $alumnosRecoX=ceil(($precioRegistrado*$totalVariable[2])/(($precioLocalX) * ( ((1-$porcentajeIva-$porcentajeUtil) * ($precioRegistrado)) - $totalFijoPlan)) );  
 
                   //if($alumnosX)
                  /*if($habilitadoNormaX==1){
@@ -556,8 +560,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
              //$precioVentaUnitario=(($costoTotalLocal/$alumnosX)/(1-($utilidadIbnorcaX/100)));
              //;
              //$precioVentaRecomendado=$precioVentaUnitario/(1-(($iva+$it)/100));
-             $precioVentaUnitario=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/(((((0/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijo[0])*$alumnosX);   
-             $precioVentaRecomendado=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/((((($utilidadIbnorcaX/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijo[0])*$alumnosX);   
+             $precioVentaUnitario=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/(((((0/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijoPlan)*$alumnosX);   
+             $precioVentaRecomendado=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/((((($utilidadIbnorcaX/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijoPlan)*$alumnosX);   
 
                 ?>
                 <tr>

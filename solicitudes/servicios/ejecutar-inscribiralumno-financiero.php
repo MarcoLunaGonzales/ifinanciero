@@ -11,10 +11,31 @@
     //         "Identificacion"=>$ci_estudiante, //7666922 ci del alumno
     //         "IdCurso"=>$IdCurso); //1565 
 
-    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+    /*$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+                    "accion"=>"RegistrarControlPago", 
+                    "Identificacion"=>5935110, //ci del alumno
+                    "IdCurso"=>2867,
+                    "IdModulo"=>5275, 
+                    "MontoPago"=> 250, 
+                    "IdSolicitudFactura"=>3053,
+                    "Plataforma"=>13 // 13=Sistema Financiero
+                    );*/
+
+/*$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+                    "accion"=>"AnulacionDePago", 
+                    "Identificacion"=>3028430, //ci del alumno 
+                    "IdCurso"=>2867, 
+                    "IdModulo"=>5275, 
+                    "Monto"=> 250, // valor positivo
+                    "IdSolicitudFactura"=>3053, //si se tiene el dato
+                    "Plataforma"=>13, // 13=Sistema Financiero
+                    "IdUsuario"=>222 // id del usuario del sistema
+                    );*/
+
+    /*$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
             "accion"=>"ObtenerModuloxPagarPagadoySaldo", 
             "Identificacion"=>7191727, //7666922 ci del alumno
-            "IdCurso"=>2833); //1565
+            "IdCurso"=>2833); //1565*/
     $parametros=json_encode($parametros);
     $ch = curl_init();
     // curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/capacitacion/ws-inscribiralumno.php"); //PRUEBA

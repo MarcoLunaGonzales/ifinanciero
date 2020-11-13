@@ -8,8 +8,8 @@ $direccion="http://ibnored.ibnorca.org/wsibno/";
 //LLAVES DE ACCESO AL WS
 /*$sIde = "irrhh";
 $sKey = "c066ffc2a049cf11f9ee159496089a15";*/
-$sIde = "ifinanciero"; 
-$sKey = "ce94a8dabdf0b112eafa27a5aa475751";
+$sIde = "irrhh"; 
+$sKey = "c066ffc2a049cf11f9ee159496089a15";
 
 /*PARAMETROS PARA LA OBTENCION DE LISTAS DE PERSONAL*/
 	//$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonal"); //
@@ -28,7 +28,7 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 1622 	Consultor
 1623 	Empleado
 */
-$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonal");
+$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarProveedor");
 
 
 /*PARAMETROS PARA LA RECUPERACION Y OBTENCION DE DATOS DE PERSONA

@@ -9,8 +9,9 @@ $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
 $plantilla_costo=$_GET['codigo'];
-$codPlanCosto=obtenerCodigoPlanCosto();
 
+$codPlanCosto=obtenerCodigoPlanCosto();
+$anioGestion=date("Y");
 $plantillaAntigua=obtenerPlantillaCostoDatos($plantilla_costo);
   
   while ($row = $plantillaAntigua->fetch(PDO::FETCH_ASSOC)) {
@@ -23,10 +24,10 @@ $plantillaAntigua=obtenerPlantillaCostoDatos($plantilla_costo);
   	$alumnosLocal=$row['cantidad_alumnoslocal'];
   	$alumnosExterno=$row['cantidad_alumnosexterno'];
     $cantidad_cursosmes=$row['cantidad_cursosmes'];
-
+    $ingresoPresupuestado=obtenerPresupuestoEjecucionPorArea($unidad,$area,$anioGestion,12)['presupuesto'];
    $dbh = new Conexion();
-  $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,utilidad_minimalocal,utilidad_minimaexterno,cantidad_alumnoslocal,cantidad_alumnosexterno,cantidad_cursosmes) 
-  VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$utilidadLocal."','".$utilidadExterno."','".$alumnosLocal."','".$alumnosExterno."','".$cantidad_cursosmes."')";
+  $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,utilidad_minimalocal,utilidad_minimaexterno,cantidad_alumnoslocal,cantidad_alumnosexterno,cantidad_cursosmes,ingreso_presupuestado) 
+  VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$utilidadLocal."','".$utilidadExterno."','".$alumnosLocal."','".$alumnosExterno."','".$cantidad_cursosmes."','".$ingresoPresupuestado."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $flagSuccess=$stmtInsert->execute();
    //INSERTAR precios
@@ -63,13 +64,21 @@ $plantillaAntigua=obtenerPlantillaCostoDatos($plantilla_costo);
        $sqlSub="SELECT * FROM plantillas_grupocostodetalle where cod_plantillagrupocosto=$regCodigo";
        $stmtSub = $dbh->prepare($sqlSub);
        $stmtSub->execute();
-       while ($rowSub = $stmtSub->fetch(PDO::FETCH_ASSOC)) {
+       while ($rowSub = $stmtSub->fetch(PDO::FETCH_ASSOC)) {            
+        //cargar Costos con Presupuesto Actual
           $regCS=obtenerCodigoPlantillaGrupoDetalle();
           $reg2S=$rowSub['cod_partidapresupuestaria'];
           $reg3S=$rowSub['tipo_calculo'];
           $reg4S=$rowSub['monto_local'];
           $reg5S=$rowSub['monto_externo'];
           $reg6S=$rowSub['monto_calculado'];
+          if(isset($_GET['pr'])&&$rowSub['tipo_calculo']==1){
+              $anio=date("Y");
+              $montoCalculado = calcularCostosPresupuestariosValor($rowSub['cod_partidapresupuestaria'],$unidad,$area,$anio-1,$cantidad_cursosmes);
+              $reg4S=$montoCalculado;
+              $reg5S=$montoCalculado;
+              $reg6S=$montoCalculado;
+          } 
           $dbh2S = new Conexion();
          $sqlSubInsert="INSERT INTO plantillas_grupocostodetalle (codigo,cod_plantillagrupocosto,cod_partidapresupuestaria,tipo_calculo,monto_local,monto_externo,monto_calculado) 
          VALUES ('".$regCS."','".$regC."','".$reg2S."', '".$reg3S."', '".$reg4S."', '".$reg5S."', '".$reg6S."')";
