@@ -19,7 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           }
           $fechaLibreta=null;
           if(isset($datos['fecha'])){
-            $fechaLibreta=$datos['fecha'];
+            if(!((string)$datos['fecha']==""||$datos['fecha']==null||$datos['fecha']=="dd/mm/aaaa")){
+              $fechaLibreta=$datos['fecha'];  
+            }            
           }
           $nombreLibreta=null;
           if(isset($datos['nombre'])){

@@ -343,7 +343,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 
 
         //valores de la simulacion
-
+                 $totalFijoManual=obtenerTotalesPlantilla($codigoPX,3,$mesConf);
                   //total desde la plantilla  
                  $totalFijo=obtenerTotalesPlantilla($codigoPX,1,$mesConf); //tipo de costo 1:fijo,2:variable desde la plantilla
                   //total variable desde la plantilla
@@ -355,7 +355,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                // $alumnosX=($utilidadIbnorcaX+($totalFijoPlan+))
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codigoPX);
                  $porcentPrecios=(($precioLocalX*$alumnosX)*100)/$precioRegistrado;
-                 $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
+                 $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
                  $totalFijoPlanModulos=$totalFijoPlan*$cantidadModuloX;
 
                   //

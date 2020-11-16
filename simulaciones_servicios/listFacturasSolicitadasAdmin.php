@@ -18,6 +18,10 @@ if(isset($_GET['q'])){
   $q=0;
   // $sqlAreas="";
 }
+$v=0;
+if(isset($_GET['v'])){
+  $v=$_GET['v'];
+}
 // echo $globalUnidad;
 if(isset($_GET['s'])){
   $s=$_GET['s'];
@@ -210,9 +214,7 @@ $item_1=2709;
                                     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalDevolverSolicitud_intranet" onclick="modalDevolverSolicitud_regional('<?=$datos_devolucion;?>')">
                                       <i class="material-icons" title="Devolver Solicitud Facturación">settings_backup_restore</i>
                                     </button>
-                                    <!-- <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral($('#tablasA_registradas'),<?=$index?>,'<?=$stringCabecera?>')">
-                                      <i class="material-icons" title="Ver Detalle Solicitud">settings_applications</i>
-                                    </a> -->
+
                                  <?php                                      
                               }                                  
                               //}

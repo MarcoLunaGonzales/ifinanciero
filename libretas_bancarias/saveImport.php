@@ -129,7 +129,11 @@ $sqlInserts=[];  $lista_documento=[];
                   if(count($hora)>2){
                     $horaFecha=$Row[1];
                   }else{
-                    $horaFecha=$hora[0].":".$hora[1].":00";
+                    if(count($hora)>1){
+                      $horaFecha=$hora[0].":".$hora[1].":00";  
+                    }else{
+                      $horaFecha=$hora[0].":00:00";
+                    }                    
                   }
                 	if(verificarHora($Row[1])==true){
                      $fecha_hora.=" ".$horaFecha;
@@ -148,7 +152,9 @@ $sqlInserts=[];  $lista_documento=[];
                 if(isset($Row[3])&&$tipo_formato==1) {
                     $descripcion = trim($Row[3]);
                 }else{
-                    $descripcion = trim($Row[2]);
+                  if(isset($Row[2])){
+                    $descripcion = trim($Row[2]); 
+                  }                    
                 }
 
                 $monto = "";
@@ -174,14 +180,18 @@ $sqlInserts=[];  $lista_documento=[];
                 if(isset($Row[7])&&$tipo_formato==1) {
                     $agencia = $Row[7];
                 }else{
+                  if(isset($Row[1])){
                     $agencia = $Row[1];
+                  }                    
                 }
 
                 $nro_documento = "";
                 if(isset($Row[3])&&$tipo_formato!=1) {
                     $nro_documento = $Row[3];
                 }else{
+                  if(isset($Row[9])){
                    $nro_documento = $Row[9];
+                  }
                 }
                 
 
