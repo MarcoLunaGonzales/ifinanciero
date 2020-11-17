@@ -209,10 +209,12 @@ if(isset($_GET['q'])){
   $v=$_GET['v'];
 
 }
-
+$urlc="";
 if(isset($_GET['admin'])){
   $urlList2=$urlList;
-  $urlc="&q=".$q."&s=".$s."&u=".$u."&v=".$v;
+  if(isset($_GET['q'])){
+    $urlc="&q=".$q."&s=".$s."&u=".$u."&v=".$v;  
+  }  
   if(isset($_GET['reg'])){
     $urlList2=$urlList3;
     if($_GET['reg']==2){
@@ -221,9 +223,11 @@ if(isset($_GET['admin'])){
     
   }
 }else{
-  $urlc="&q=".$q."&s=".$s."&u=".$u;
-  if(isset($_GET['r'])){
-    $urlc=$urlc."&r=".$_GET['r'];
+  if(isset($_GET['q'])){ 
+    $urlc="&q=".$q."&s=".$s."&u=".$u;
+    if(isset($_GET['r'])){
+       $urlc=$urlc."&r=".$_GET['r'];
+    }
   }
 }
 if(isset($_GET["ladmin"])){

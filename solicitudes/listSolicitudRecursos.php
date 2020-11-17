@@ -477,12 +477,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
-                          <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button> <!--<?=$nEst?> %
-                             <div class="progress">
-                               <div class="progress-bar <?=$barEstado?>" role="progressbar" aria-valuenow="<?=$nEst?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$nEst?>%">
-                                  <span class="sr-only"><?=$nEst?>% Complete</span>
-                               </div>
-                             </div>-->
+                          <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button> 
                           </td> 
                           <td class="td-actions text-right">
                             <?php
@@ -689,9 +684,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                  </a><?php 
                                  }else{
                                    ?>
-                                   <!--<a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
-                                    <i class="material-icons text-success">attach_money</i> PAGOS
-                                   </a>-->
+
                                    <?php 
                                  }
                                  ?>
@@ -706,9 +699,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                  </a><?php 
                                  }else{
                                    ?>
-                                   <!--<a href="<?=$urlPagos;?>&codigo=<?=$codigo;?>" class="dropdown-item">
-                                    <i class="material-icons text-success">attach_money</i> PAGOS
-                                   </a>-->
+
                                    <?php 
                                  }
                                  ?>
@@ -728,19 +719,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                      Enviado
                                     </a><?php
                                 }else{
-                                 /*if(isset($_GET['q'])){
-                                   ?>
-                                    <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>' class="btn btn-default">
-                                      <i class="material-icons">send</i>
-                                    </a>
-                                   <?php
-                                  }else{
-                                    ?>
-                                     <a title="Enviar a Autorización - Solicitud Recursos" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=6&admin=0'  class="btn btn-default">
-                                       <i class="material-icons">send</i>
-                                     </a>
-                                    <?php
-                                  }*/                                   
+                                  
                                 }
                             if(isset($_GET['q'])){
                               ?>

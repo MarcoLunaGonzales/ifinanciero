@@ -672,7 +672,7 @@ $contadorRegistros=0;
                                                 <input type="hidden" id="cantidad_a<?=$iii?>" name="cantidad_a<?=$iii?>">
                                                 <input type="hidden" id="importe_a<?=$iii?>" name="importe_a<?=$iii?>">
                                                 <tr>
-                                                  <!-- <td class="text-left"><?=$cod_anio?> </td> -->
+                                                  
                                                     <td class="text-left" width="35%"><textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" <?=$sw2?>><?=$descripcion_alternaX?></textarea></td>
                                                     <td class="text-right"><?=$cantidadPre?></td>
                                                     <td class="text-right"><input type="hidden" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$Costo?>" step="0.01" <?=$sw2?> readonly="true"><input type="text" step="0.01" id="monto_precio_a<?=$iii?>" name="monto_precio_a<?=$iii?>" class="form-control text-primary text-right"  value="<?=number_format($Costo,2)?>" <?=$sw2?> readonly="true"></td>
@@ -745,11 +745,10 @@ $contadorRegistros=0;
                                     <button title="Agregar Servicios" type="button" id="add_boton" name="add" class="btn btn-warning btn-round btn-fab" onClick="AgregarSeviciosFacturacion2(this)">
                                         <i class="material-icons">add</i>
                                     </button><span style="color:#084B8A;"><b> SERVICIOS ADICIONALES</b></span>
-                                    <div id="div<?=$index;?>">  
+                                    
                                         <div class="h-divider">
                                         
                                         </div>
-                                    </div>
                                     
 
                                 </fieldset> -->

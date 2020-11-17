@@ -421,26 +421,7 @@ $tituloImporte="";
               
               
      </table>
-     <!--<table class="table">
-        <tr>
-            <td class="s3 text-center" height="80px"></td>
-            <td class="s3 text-center" height="80px"></td>
-            <td class="s3 text-center" height="80px"></td>
-            <td class="s3 text-center" height="80px"></td>
-        </tr>
-        <tr>
-            <td class="s3 text-center">Solicitante <?=$solicitante?></td>
-            <td class="s3 text-center">Autorización <?=$nombreEnviado?></td>
-            <td class="s3 text-center">Autorización <?=$nombreAprobado?></td>
-            <td class="s3 text-center">Autorización <?=$nombreAprobado?></td>
-        </tr>
-        <tr>
-            <td class="s3 text-left">Fecha:</td>
-            <td class="s3 text-left">Fecha:</td>
-            <td class="s3 text-left">Fecha:</td>
-            <td class="s3 text-left">Fecha:</td>
-        </tr>
-     </table>-->
+
 
 <!-- PIE DE PAGINA-->     
      <footer class="footer">

@@ -182,38 +182,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 
 $i=0;
-   /*$stmtProveedor = $dbh->prepare("SELECT p.IdCliente,p.NombreCompleto,p.Identificacion,p.Nit,p.Tipo,p.Proveedor from v_clientepersonaempresa p");
-   $stmtProveedor->execute();
-   while ($rowProv = $stmtProveedor->fetch(PDO::FETCH_ASSOC)) {
-    $codigoX=$rowProv['IdCliente'];
-    $nombreX=$rowProv['NombreCompleto'];
-    $labelProveedor=$nombreX;
-    $imagenProveedor="../assets/img/clientes.jpg";
-    if((int)$rowProv['Proveedor']==1){
-      $imagenProveedor="../assets/img/proveedores.png";      
-    }
-
-    if(!($rowProv['Identificacion']==""||$rowProv['Identificacion']==0)){
-      if($rowProv['Identificacion']=="P"){
-        $labelProveedor.=" CI/DNI: ".$rowProv['Identificacion']." ";
-        if(!($rowProv['Nit']==""||$rowProv['Nit']==0)){
-            $labelProveedor.=" NIT: ".$rowProv['Nit']." ";
-        } 
-      }else{
-        $labelProveedor.=" NIT: ".$rowProv['Identificacion']." "; 
-      }  
-    }
-
-    $objetoLista = array('label' => trim($labelProveedor),'value' => $codigoX);
-    $arrayProveedor[$i]=$objetoLista;
-    $arrayImagen[trim($labelProveedor)]=$imagenProveedor;*/
+  
     ?>
-    <script>/*
-     var obtejoLista={
-       label:'<?=trim($labelProveedor)?>',
-       value:'<?=$codigoX?>'};
-       array_proveedor[<?=$i?>]=obtejoLista;
-       imagen_auto['<?=trim($labelProveedor)?>']='<?=$imagenProveedor?>';*/
+    <script>
     </script> 
     <?php
     $i=$i+1;

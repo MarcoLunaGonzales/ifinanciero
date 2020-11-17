@@ -20,6 +20,8 @@ $codigo=$_GET['codigo'];
 
 $stmt = $dbh->prepare("SELECT cod_unidadorganizacional,cod_area from solicitud_recursos where codigo='$codigo'");
 $stmt->execute();
+$unidadSol="";
+$areaSol="";
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $unidadSol=$row['cod_unidadorganizacional'];
   $areaSol=$row['cod_area'];
