@@ -7302,11 +7302,23 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      }
      return($valor);
   }
+
+  function obtenerPrecioOriginalCosto($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT venta_local from precios_simulacioncosto where codigo=$codigo");  
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['venta_local'];
+     }
+     return($valor);
+  }
+
   function obtenerPrecioAlternativoDetalle($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT * from precios_simulacioncostodetalle where cod_preciosimulacion=$codigo");  
      $stmt->execute();
-     $valor=0;
+     $valor=obtenerPrecioOriginalCosto($codigo);
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor+=$row['cantidad']*$row['monto'];
      }
