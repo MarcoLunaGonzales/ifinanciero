@@ -371,8 +371,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   //$alumnosX=round((100*($totalFijoPlan*(0.87+($iva/100))))/((100*(($precioLocalX*(1-($it/100)))-($totalVariable[2]*(1+($iva/100)))))-($utilidadIbnorcaX*$precioLocalX)));  
                 
                // $alumnosX=($utilidadIbnorcaX+($totalFijoPlan+))
+                  //$precioLocalX=$ingresoAlternativo;
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codigoPX);
-                 $porcentPrecios=(($precioLocalX*$alumnosX)*100)/$precioRegistrado;
+                 $porcentPrecios=(($ingresoAlternativo)*100)/$precioRegistrado;
 
                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
 
