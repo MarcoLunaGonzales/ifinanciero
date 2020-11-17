@@ -374,7 +374,6 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   //$precioLocalX=$ingresoAlternativo;
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codigoPX);
                  $porcentPrecios=(($ingresoAlternativo)*100)/$precioRegistrado;
-
                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
 
                  $totalFijoPlanModulos=$totalFijoPlan*$cantidadModuloX;

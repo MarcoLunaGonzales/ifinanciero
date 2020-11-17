@@ -7318,7 +7318,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT * from precios_simulacioncostodetalle where cod_preciosimulacion=$codigo");  
      $stmt->execute();
-     $valor=obtenerPrecioOriginalCosto($codigo);
+     $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor+=$row['cantidad']*$row['monto'];
      }
