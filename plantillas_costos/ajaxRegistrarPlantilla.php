@@ -38,7 +38,7 @@ if(isset($_GET['nombre'])){
   if(obtenerValorConfiguracion(52)==1){
     $codOficina=$unidad;
   }
-  $ingresoPresupuestado=obtenerPresupuestoEjecucionPorArea($codOficina,$area,$globalNombreGestion,12)['presupuesto'];
+  $ingresoPresupuestado=obtenerPresupuestoEjecucionPorAreaAcumulado($codOficina,$area,$globalNombreGestion,12,1)['presupuesto'];
   $dbh = new Conexion();
   $sqlInsert="INSERT INTO plantillas_costo (codigo, nombre, abreviatura, cod_unidadorganizacional, cod_area,utilidad_minimalocal,utilidad_minimaexterno,cantidad_alumnoslocal,cantidad_alumnosexterno,cantidad_cursosmes,ingreso_presupuestado) 
   VALUES ('".$codPlanCosto."','".$nombre."','".$abrev."', '".$unidad."', '".$area."','".$utilidadLocal."','".$utilidadExterno."','".$alumnosLocal."','".$alumnosExterno."','".$cantidadCursosMes."','".$ingresoPresupuestado."')";

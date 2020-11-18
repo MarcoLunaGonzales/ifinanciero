@@ -42,7 +42,7 @@ $plantillaAntigua=obtenerPlantillaServicioDatos($plantilla_costo);
     $utilidadMin=$row['utilidad_minima'];
     $cantidadAuditorias=$row['cantidad_auditorias'];
     //$ingresoPresupuestado=$row['ingreso_presupuestado'];
-    $ingresoPresupuestado=obtenerPresupuestoEjecucionPorArea($unidad,$area,$anioGestion,12)['presupuesto'];
+    $ingresoPresupuestado=obtenerPresupuestoEjecucionPorAreaAcumulado(0,$area,$anioGestion,12,1)['presupuesto'];
     $anios=$row['anios'];
 
    $dbh = new Conexion();

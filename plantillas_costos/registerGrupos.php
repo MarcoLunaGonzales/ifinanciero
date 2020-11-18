@@ -141,8 +141,8 @@ if(isset($_GET['cod'])){
 				      		if(obtenerValorConfiguracion(52)!=1){
 				      			$codOficina=$codUnidadX;
 				      		}
-                           $precioPresupuestado=number_format(obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,12)['presupuesto'], 0, '.', '');
-                           $precioPresupuestadoTabla=number_format(obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,12)['presupuesto'], 0, '.', ',');
+                           $precioPresupuestado=number_format(obtenerPresupuestoEjecucionPorAreaAcumulado($codOficina,$codAreaX,$globalNombreGestion,12,1)['presupuesto'], 0, '.', '');
+                           $precioPresupuestadoTabla=number_format(obtenerPresupuestoEjecucionPorAreaAcumulado($codOficina,$codAreaX,$globalNombreGestion,12,1)['presupuesto'], 0, '.', ',');
                          }else{
                           $precioPresupuestado=0;	
                           $precioPresupuestadoTabla=0;

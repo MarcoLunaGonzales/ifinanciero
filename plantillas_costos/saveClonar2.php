@@ -24,7 +24,7 @@ $plantillaAntigua=obtenerPlantillaCostoDatos($plantilla_costo);
   	$alumnosLocal=$row['cantidad_alumnoslocal'];
   	$alumnosExterno=$row['cantidad_alumnosexterno'];
     $cantidad_cursosmes=$row['cantidad_cursosmes'];
-    $ingresoPresupuestado=obtenerPresupuestoEjecucionPorArea($unidad,$area,$anioGestion,12)['presupuesto'];
+    $ingresoPresupuestado=obtenerPresupuestoEjecucionPorAreaAcumulado(0,$area,$anioGestion,12,1)['presupuesto'];
    $dbh = new Conexion();
    $sqlInsert="UPDATE plantillas_costo SET ingreso_presupuestado=$ingresoPresupuestado where codigo=$codPlanCosto";
    $stmtInsert = $dbh->prepare($sqlInsert);
