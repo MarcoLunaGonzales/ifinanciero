@@ -633,6 +633,9 @@
 		if ($_GET['opcion']=='reportesSumasSaldos') {
 			require_once('reportes_sumas_saldos/reportes_sumas_saldos.php');
 		}
+		if ($_GET['opcion']=='reportesAnalisisFinanciero') {
+			require_once('reportes_analisis_financiero/reportes_analisis_financiero.php');
+		}
 
 		//solicitudes factuacion
 		//  if ($_GET['opcion']=='reporte_solicitudfacturacion_filtro') {

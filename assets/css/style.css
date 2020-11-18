@@ -18,6 +18,12 @@
  background: #11AE81 !important;
  color: white !important;
 }
+.bg-amarillo{
+ background:#F2CE01;
+}
+.bg-celeste{
+ background:#2F5284; 
+}
 
 .color-orange{
  color: #11AE81 !important;

@@ -668,7 +668,13 @@ if($menuModulo==0){
                     <span class="sidebar-mini"> SS </span>
                     <span class="sidebar-normal"> Sumas y Saldos</span>
                   </a>
-                </li>                         
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportesAnalisisFinanciero" target="_blank">
+                    <span class="sidebar-mini"> AF </span>
+                    <span class="sidebar-normal"> Analisis Financiero</span>
+                  </a>
+                </li>                          
               </ul>
             </div>
           </li>
