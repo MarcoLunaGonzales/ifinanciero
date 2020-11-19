@@ -180,7 +180,7 @@ $dbh = new Conexion();
           <?php 
           if(isset($_GET['q'])){
             ?><button type="button" class="<?=$buttonNormal;?>" onclick="guardarSimulacionCosto()">Guardar</button>
-              <a href="<?=$urlList?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="<?=$buttonCancel;?>">Volver</a><?php
+              <!--<a href="<?=$urlList?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="<?=$buttonCancel;?>">Volver</a>--><?php
           }else{
             ?><button type="button" class="<?=$buttonNormal;?>" onclick="guardarSimulacionCosto()">Guardar</button>
               <a href="<?=$urlList?>" class="<?=$buttonCancel;?>">Volver</a><?php

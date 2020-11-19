@@ -639,7 +639,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
             }else{
             ?>
-            <a href="../<?=$urlList;?>&q=<?=$idServicioX?>&s=<?=$s?>&u=<?=$u?><?=$urlR?>" class="btn btn-danger">Volver</a><?php
+            <!--<a href="../<?=$urlList;?>&q=<?=$idServicioX?>&s=<?=$s?>&u=<?=$u?><?=$urlR?>" class="btn btn-danger">Volver</a>--><?php
             }
             ?>
 
