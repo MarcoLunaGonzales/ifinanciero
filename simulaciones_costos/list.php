@@ -11,17 +11,17 @@ if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
   $u=$_GET['u'];
+  $sqlModulos="";
   if(isset($_GET['s'])){
     $s=$_GET['s'];
     $u=$_GET['u'];
-    $arraySql=explode("IdArea=",$_GET['s']);
-    $codigoArea=trim($arraySql[1]);
-
-    $sqlAreas="and p.cod_area=".$codigoArea;
+    if($u>0){
+      $sqlModulos="and sc.IdModulo=".$u;      
+    }
   }
   $globalUser=$q;
   // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc");
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser $sqlModulos order by sc.codigo desc");
 }else{
   $s=0;
   $u=0;

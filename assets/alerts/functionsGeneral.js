@@ -3163,6 +3163,16 @@ function guardarSimulacionCosto(){
   }else{
     var idServicio=$("#codigo_servicioibnorca").val();
   }
+  if(!($("#codigo_servicioibnorca_s").length)){
+    var idCurso="";
+  }else{
+    var idCurso=$("#codigo_servicioibnorca_s").val();
+  }
+  if(!($("#codigo_servicioibnorca_u").length)){
+    var idModulo="";
+  }else{
+    var idModulo=$("#codigo_servicioibnorca_u").val();
+  }
   var nombre=$("#nombre").val();
   var precio=$("#precio_venta").val();
   var plantilla_costo=$("#plantilla_costo").val();
@@ -3181,7 +3191,7 @@ function guardarSimulacionCosto(){
   if(nombre==""||!(plantilla_costo>0)||cantidad_modulos==""||monto_norma==""){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"normas":normas,"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos};
+     var parametros={"normas":normas,"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos,"IdCurso":idCurso,"IdModulo":idModulo};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -3195,7 +3205,7 @@ function guardarSimulacionCosto(){
           detectarCargaAjax();
           if(!($("#codigo_servicioibnorca").length)){
                  alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp.trim());
-              }else{
+            }else{
                 var s=$("#codigo_servicioibnorca_s").val();
                 var u=$("#codigo_servicioibnorca_u").val();
                 alerts.showSwal('success-message','simulaciones_costos/registerSimulacion.php?cod='+resp.trim()+'&q='+idServicio+'&s='+s+'&u='+u);
