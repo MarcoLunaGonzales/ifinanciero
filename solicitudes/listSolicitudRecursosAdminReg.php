@@ -32,8 +32,8 @@ if(isset($_GET['q'])){
       $sqlAreas="and (sr.cod_area=0)";// or sr.cod_area=".obtenerValorConfiguracion(65).")             
       $sqlAreasLista="and (a.codigo=0)";// or a.codigo=".obtenerValorConfiguracion(65).")"             
     }else{
-      $sqlAreas="and (sr.cod_area ".$codigoArea.")";
-      $sqlAreasLista="and (a.codigo ".$codigoArea.")";               
+      $sqlAreas="and (sr.cod_area ".$codigoArea." or sr.cod_area=".obtenerValorConfiguracion(65).")";
+      $sqlAreasLista="and (a.codigo ".$codigoArea." or a.codigo=".obtenerValorConfiguracion(65).")";               
     }
     //echo $s."<br>";
     //echo var_dump($arraySql);

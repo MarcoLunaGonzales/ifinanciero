@@ -32,25 +32,42 @@ for ($i=0; $i < count($unidades); $i++) {
 }
 
 //CONSTANTES
+//ACTIVO CORRIENTE
 $datosCalculables['AC']=1000;
+//PASIVO CORRIENTE
 $datosCalculables['PC']=2;
+//ACTIVO TOTAL
 $datosCalculables['AT']=12345;
+//INVENTARIO
 $datosCalculables['I']=12345;
+//PATRIMONIO NETO
 $datosCalculables['PN']=12345;
+//PASIVO TOTAL
 $datosCalculables['PT']=12345;
+//DISPONIBLE
 $datosCalculables['DISP']=12345;
+//PASIVO A LARGO PLAZO
 $datosCalculables['PLP']=12345;
+//ACTIVO NO CORRIENTE
 $datosCalculables['ANC']=12345;
+//VENTAS
 $datosCalculables['V']=12345;
+//VENTAS AL CRÉDITO
 $datosCalculables['Vcr']=12345;
+//COSTO MERCADERÍA VENDIDA
 $datosCalculables['CMV']=12345;
+//COMPRAS AL CRÉDITO
 $datosCalculables['Ccr']=12345;
+//UTILIDAD NETA
 $datosCalculables['UN']=12345;
+//UTILIDAD OPERATIVA
 $datosCalculables['UO']=12345;
+//UTILIDAD BRUTA
 $datosCalculables['UB']=12345;
+//CLIENTES
 $datosCalculables['CL']=12345;
+//PROVEEDORES
 $datosCalculables['P']=12345;
-
 
 
 function evaluarDatos($monto,$rango){
@@ -100,7 +117,7 @@ function evaluarDatos($monto,$rango){
                           <table class="table table-sm table-condensed table-bordered">
                               <thead>
                                 <tr>
-                                   <th colspan="7" class="bg-dark text-white" height="70px">ANALISIS FINANCIERO</th>
+                                   <th colspan="6" class="bg-dark text-white" height="70px">ANALISIS FINANCIERO</th>
                                 </tr>
                               </thead>                      
                               <tbody>
@@ -146,7 +163,7 @@ function evaluarDatos($monto,$rango){
                                          <td class="font-weight-bold"><?=$gestion?></td>
                                          <td class="font-weight-bold">PROMEDIO</td>
                                          <td class="font-weight-bold">EVALUACIÓN VERTICAL</td>
-                                         <td class="font-weight-bold">RECOMENDACIÓN</td>
+                                         <!--<td class="font-weight-bold">RECOMENDACIÓN</td>-->
                                   </tr>
                                      <?php 
                                     }else{
@@ -158,7 +175,7 @@ function evaluarDatos($monto,$rango){
                                          <td class="font-weight-bold"></td>
                                          <td class="font-weight-bold"></td>
                                          <td class="font-weight-bold"></td>
-                                         <td class="font-weight-bold"></td>
+                                         <!--<td class="font-weight-bold"></td>-->
                                     </tr>
                                       <?php
                                     }
@@ -171,7 +188,7 @@ function evaluarDatos($monto,$rango){
                                          <td class="font-weight-bold text-right"></td>
                                          <td class="font-weight-bold text-center"></td>
                                          <td class="font-weight-bold text-center"></td>
-                                         <td class="font-weight-bold text-left"></td>
+                                         <!--<td class="font-weight-bold text-left"></td>-->
                                   </tr>
                                     <?php
                                   }
@@ -183,7 +200,7 @@ function evaluarDatos($monto,$rango){
                                          <td class="text-right"><?=$datosCalculables[$rowg['abreviatura']]?></td>
                                          <td class="text-center"><?=$descripcionPromedio?></td>
                                          <td class="text-center"><?=$evaluacion_vertical?></td>
-                                         <td class="text-left"><?=$recomendacion?></td>
+                                         <!--<td class="text-left"><?=$recomendacion?></td>-->
                                   </tr>
                                   <?php    
                                   $codigo_razon=$cod_razon;
