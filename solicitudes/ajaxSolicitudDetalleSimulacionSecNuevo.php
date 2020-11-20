@@ -57,6 +57,11 @@ $tipoSolicitud =$_GET['tipo'];
                               $importeX=$row['monto_externo'];
                               $importeSolX=$row['monto_externo'];
 							        }
+                      
+                      if($codCuentaX==obtenerValorConfiguracion(88)){
+                        $importeSolX=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[0];
+                      }
+
                      //
                       $tituloAnio="";
                      /*if($row['cod_anio']<=1&&$areaXX==38){

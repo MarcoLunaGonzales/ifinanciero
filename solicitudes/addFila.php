@@ -4,6 +4,7 @@ $cod_accproyecto=obtenerCodigoAccProyecto($codDetalleX);
 $servicioX=obtenerServicioCodigoDetalle($codDetalleX);
 $divisionX=obtenerDivisionCodigoDetalle($codDetalleX);
 $des_actividadproyecto="";
+
 ?>
 <div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
   <input class="form-control" type="number" name="nit_fac" id="nit_fac" onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',<?=$importeSolX?>);">

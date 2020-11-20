@@ -97,6 +97,7 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
                 $detalleActividadFila.="<br><small class='text-dark small'> Acc Num: ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[0]." - ".obtenerNombreDirectoActividadServicioAccNum($codAccNum)[1]."</small>";
               }
             }
+
     $montoImporte=number_format($montoImporte, 2, '.', '');    
 
     $detalleX=" ".$proveedorX." ".str_replace("-", "", $detalleX)." ".$datosServicio." ".$nombreCliente." ".$detalleActividadFila." ".$numeroSR;  
@@ -117,9 +118,18 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
     $cod_estadoreferencial=1;
     $monto_rendicion=0;
     $cod_actividad_sw=0;
+    
+    $codigosDetalleVarios=[];
+    $codigosDetalleVarios=explode(",",$codigoSolicitudDetalle);
+    if(count($codigosDetalleVarios)>1){
+       $codigoSolicitudDetallePoner= $codigosDetalleVarios[0];
+    }else{
+      $codigoSolicitudDetallePoner=$codigoSolicitudDetalle;
+    } 
 
-    $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by,cod_tipopago,cod_solicitudrecursodetalle) 
-    VALUES ($codigoDetalle,$codCajaChica,$codCuentaX,'$fecha',$retencionX,$numeroDocumento,'$codPersonal',$importeSolX,'$detalleX',$cod_estado,$cod_estadoreferencial,'$codAreaXX','$codOficinaXX',$numeroRecibo,'$codProveedor','$cod_actividad_sw',NOW(),$globalUser,$codPago,$codigoSolicitudDetalle)");
+    $sqlInsertar="INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by,cod_tipopago,cod_solicitudrecursodetalle) 
+    VALUES ($codigoDetalle,$codCajaChica,$codCuentaX,'$fecha',$retencionX,$numeroDocumento,'$codPersonal',$importeSolX,'$detalleX',$cod_estado,$cod_estadoreferencial,'$codAreaXX','$codOficinaXX',$numeroRecibo,'$codProveedor','$cod_actividad_sw',NOW(),$globalUser,$codPago,$codigoSolicitudDetallePoner)";
+    $stmt = $dbh->prepare($sqlInsertar);
     $flagSuccess=$stmt->execute();
     if($flagSuccess){//registramos rendiciones
       $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$codCajaChica");

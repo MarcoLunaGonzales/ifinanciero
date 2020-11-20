@@ -403,7 +403,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 		    	                //$index=1;
 		                      	//while ($rowLista = $stmtLista->fetch(PDO::FETCH_BOUND)) {
 			                    ?>
-								<div id="div<?=$index;?>">	
+								<div id="div">	
 									
 									<div class="h-divider">
 			        				</div>

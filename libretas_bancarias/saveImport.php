@@ -158,16 +158,12 @@ $sqlInserts=[];  $lista_documento=[];
                 }
 
                 $monto = "";
-                if(isset($Row[4])&&$tipo_formato==1) {
-                    $monto = trim($Row[4]);
-                }else{
+                if(isset($Row[4])){//&&$tipo_formato==1
                     $monto = trim($Row[4]);
                 }
 
                 $saldo = "";
-                if(isset($Row[5])&&$tipo_formato==1) {
-                    $saldo = trim($Row[5]);
-                }else{
+                if(isset($Row[5])) { //&&$tipo_formato==1
                     $saldo = trim($Row[5]);
                 }
 

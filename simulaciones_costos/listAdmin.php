@@ -27,7 +27,7 @@ if(isset($_GET['q'])){
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion=4 order by codigo desc");
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion in (4,3) order by codigo desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -139,9 +139,9 @@ $stmt->bindColumn('estado', $estado);
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a><?php 
                                 }else{
-                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                ?><!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
                                     <i class="material-icons text-dark">reply</i> Deshacer Cambios
-                                 </a>
+                                 </a>-->
                                  <?php 
                                 }
                                 ?>
@@ -163,9 +163,9 @@ $stmt->bindColumn('estado', $estado);
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a><?php 
                                 }else{
-                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4" class="dropdown-item">
+                                ?><!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4" class="dropdown-item">
                                     <i class="material-icons text-dark">reply</i> Deshacer Cambios
-                                 </a>
+                                 </a>-->
                                  <?php 
                                 }
                                 ?> 

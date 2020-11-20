@@ -46,7 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $accion=NULL;
     if(isset($datos['accion']))
         $accion=$datos['accion']; //recibimos la accion
-        $codigo_proyecto=$datos['codigo_proyecto'];//recibimos el codigo del proyecto
+        $codigo_proyecto=0;
+        if(isset($datos['codigo_proyecto'])){
+          $codigo_proyecto=$datos['codigo_proyecto'];//recibimos el codigo del proyecto            
+        }
         $estado=false;
         $mensaje="";
         $total=0;

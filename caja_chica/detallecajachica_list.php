@@ -77,6 +77,8 @@ $stmtb = $dbh->prepare("SELECT (select a.nombre from tipos_caja_chica a where a.
 $stmtb->execute();
 $resulttb=$stmtb->fetch();
 $nombre_caja_chica=$resulttb['nombre_caja_chica'];
+
+$fechaActualModal=date("Y-m-d");
 ?>
 
 <div class="content">

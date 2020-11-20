@@ -198,6 +198,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
                             $stmtDetalleSol->bindColumn('precio', $precio_unitario);
                             $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna);                
+                            $ci_estudiante_x="";
                             $concepto_contabilizacion="";                            
                             while ($row_det = $stmtDetalleSol->fetch()){
                               if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){                              
@@ -221,7 +222,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
 
                             
                             $sumaTotalImporte=obtenerSumaTotal_solicitudFacturacion($codigo_facturacion);
-                            $cont[$index-1]=$nc;
+                            //$cont[$index-1]=$nc;
                       
                             
 

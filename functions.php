@@ -2432,7 +2432,7 @@
   FROM (SELECT pc.codigo,pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,sc.monto_local,sc.monto_externo from cuentas_simulacion sc 
   join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
   join plan_cuentas pc on sc.cod_plancuenta=pc.codigo where sc.cod_simulacioncostos=$codigo order by pp.codigo) tabla_uno,
-  simulaciones_detalle tablap where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=$codigoPlan and tablap.cod_simulacioncosto=$codigo and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo;";
+  simulaciones_detalle tablap where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=$codigoPlan and tablap.cod_simulacioncosto=$codigo and tablap.habilitado=1 order by tabla_uno.codigo;";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
@@ -2525,7 +2525,7 @@
   join simulaciones_costos s on s.codigo=tablap.cod_simulacioncosto
   join plantillas_costo plan on plan.codigo=s.cod_plantillacosto
   where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=3 
-  and tablap.cod_simulacioncosto=tabla_uno.cod_simulacioncostos and tablap.habilitado=1 and tablap.cod_estadoreferencial=1  
+  and tablap.cod_simulacioncosto=tabla_uno.cod_simulacioncostos and tablap.habilitado=1  
   and tablap.cod_cuenta=$codigo and s.cod_responsable=$codUsuario and s.fecha BETWEEN '$fechai' and '$fechaf'
   order by tabla_uno.codigo) sec )";
      $stmt = $dbh->prepare($sql);
@@ -7332,7 +7332,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   FROM (SELECT pc.codigo,pc.numero,pc.nombre,pp.nombre as partida, pp.codigo as cod_partida,sc.monto_local,sc.monto_externo from cuentas_simulacion sc 
   join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
   join plan_cuentas pc on sc.cod_plancuenta=pc.codigo where sc.cod_simulacioncostos=$codigo order by pp.codigo) tabla_uno,
-  simulaciones_detalle tablap where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=$codigoPlan and tablap.cod_simulacioncosto=$codigo and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo;";
+  simulaciones_detalle tablap where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=$codigoPlan and tablap.cod_simulacioncosto=$codigo and tablap.habilitado=1 order by tabla_uno.codigo;";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
@@ -7351,7 +7351,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   join partidas_presupuestarias pp on pp.codigo=sc.cod_partidapresupuestaria 
   join plan_cuentas pc on sc.cod_plancuenta=pc.codigo 
   where sc.cod_simulacioncostos=$codigo order by pp.codigo) tabla_uno,simulaciones_detalle tablap 
-  where $item_detalleSQL1 tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=$codigoPlan and tablap.cod_simulacioncosto=$codigo and tablap.habilitado=1 and tablap.cod_estadoreferencial=1 order by tabla_uno.codigo;";
+  where $item_detalleSQL1 tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=$codigoPlan and tablap.cod_simulacioncosto=$codigo and tablap.habilitado=1 order by tabla_uno.codigo;";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
@@ -10776,5 +10776,20 @@ function obtenerPrimerAtributoSimulacionServicioDatos($codigo){
         $index++;
     }
     return $valor;
- }  
+ }
+
+ function obtenerDatosContratoSolicitudCapacitacion($codigo){
+   $dbh = new Conexion();
+     $sql="SELECT c.Monto,c.IdFirmante from simulaciones_costos sc join ibnorca.contratos c on c.IdObjeto=sc.IdModulo where sc.codigo=$codigo;";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor[0]=0;
+     $valor[1]=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[0]=$row['Monto'];
+        $valor[1]=$row['IdFirmante'];
+    }
+    return $valor;
+ }
+
 ?>

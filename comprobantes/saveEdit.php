@@ -154,9 +154,11 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
        //BORRAMOS LA TABLA
 		/**/
 
-for ($i=1;$i<=$cantidadFilas;$i++){ 	    	
-	$cuenta=$_POST["cuenta".$i];
-
+for ($i=1;$i<=$cantidadFilas;$i++){
+    $cuenta="";
+  if(isset($_POST["cuenta".$i])){
+	  $cuenta=$_POST["cuenta".$i];
+  }         
 	if($cuenta!=0 || $cuenta!=""){
     
 		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];

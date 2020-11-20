@@ -123,8 +123,8 @@ if(isset($_GET['monto_cajachica'])){
       $stmtDetalleX = $dbh->prepare($sqlDetalleX);
       $stmtDetalleX->execute();
       $cod_solicitudrecurso_sr=0;
-      while ($row = $stmtDetalleX->fetch(PDO::FETCH_ASSOC)) {
-        $cod_solicitudrecurso_sr=$resultado['cod_solicitudrecurso'];
+      while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_ASSOC)) {
+        $cod_solicitudrecurso_sr=$rowDetalleX['cod_solicitudrecurso'];
       }                    
       //$resultado=$stmtDetalleX->fetch();      
       

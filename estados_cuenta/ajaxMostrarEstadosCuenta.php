@@ -90,10 +90,12 @@ if($codCuentaAuxiliar!=0){
       $estados_cuenta=json_decode($_POST["estados_cuenta"]);
       for ($estado=0; $estado <count($estados_cuenta) ; $estado++) { 
         for ($nrofila=0; $nrofila <count($estados_cuenta[$estado]) ; $nrofila++) { 
-          if($codigoX==$estados_cuenta[$estado][$nrofila]->cod_comprobantedetalle){
-            $existeEstado=$estado+1;
-            $montoContraAjax+=(float)$estados_cuenta[$estado][$nrofila]->monto;
-            $colorFilaExiste='style="background:#FF3333 !important;color:#fff !important;"';
+          if(isset($estados_cuenta[$estado][$nrofila]->cod_comprobantedetalle)){
+            if($codigoX==$estados_cuenta[$estado][$nrofila]->cod_comprobantedetalle){
+              $existeEstado=$estado+1;
+              $montoContraAjax+=(float)$estados_cuenta[$estado][$nrofila]->monto;
+              $colorFilaExiste='style="background:#FF3333 !important;color:#fff !important;"';
+            }
           }
         }
       }

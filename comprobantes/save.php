@@ -221,6 +221,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
           $nC=cantidadF($estadosCuentas[$i-1]);
           for($j=0;$j<$nC;$j++){
               $fecha=date("Y-m-d H:i:s");
+            if(isset($estadosCuentas[$i-1][$j]->cod_plancuenta)){
               $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
               $codPlanCuentaAux=$estadosCuentas[$i-1][$j]->cod_plancuentaaux;
               $monto=$estadosCuentas[$i-1][$j]->monto;
@@ -230,6 +231,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
               $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fechaHoraActual','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
               $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
               $flagSuccessDetalle3=$stmtDetalle3->execute();
+             }
           }    
          }
          //FIN DE ESTADOS DE CUENTA

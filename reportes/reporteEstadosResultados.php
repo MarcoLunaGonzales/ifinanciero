@@ -359,5 +359,5 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 $html.='</body>'.
       '</html>';
                     
-descargarPDF("IBNORCA - Estado de Resultados ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDF("IBNORCA - Estado de Resultados (".$tituloOficinas.")",$html);
 ?>
