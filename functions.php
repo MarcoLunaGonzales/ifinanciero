@@ -1963,6 +1963,7 @@
               $stmt_cuentas->execute();
               while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
                   $monto=obtenerMontoPorCuenta($row_cuentas['numero'],$grupoUnidad,$grupoArea,((int)$anio-1));
+                //$monto=ejecutadoPresupuestadoEgresosMes(0,(int)$anio-1,12,$grupoArea,1,$row_cuentas['numero'])[0];
                   if($monto==null){$monto=0;}
                   $montoCal=costoModulo($monto,$mes);
               }
@@ -7376,6 +7377,26 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     curl_close ($ch);
     $datos=json_decode($remote_server_output);
       return $datos->presupuesto; 
+  }
+  function ejecutadoPresupuestadoEgresosMes($oficina, $anio, $mes, $area, $acumulado, $cuenta){
+    $direccion=obtenerValorConfiguracion(45);//direccion del Server del Servicio
+    $sIde = "monitoreo"; 
+    $sKey="101010"; 
+    if($oficina==0){
+      $oficina=0;
+    }
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "oficina"=>$oficina, "area"=>$area, "anio"=>$anio, "mes"=>$mes, "cuenta"=>$cuenta,"acumulado"=>$acumulado, "accion"=>"listar"); //
+
+    $parametros=json_encode($parametros);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$direccion."ws/wsPresupuestoGastosCuenta.php");
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    $datos=json_decode($remote_server_output);
+      return array($datos->ejecutado,$datos->presupuesto); 
   }
   function presupuestadoEgresosMes($oficina, $anio, $mes, $area, $acumulado, $cuenta){
     $direccion=obtenerValorConfiguracion(45);//direccion del Server del Servicio

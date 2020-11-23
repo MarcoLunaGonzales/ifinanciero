@@ -198,7 +198,7 @@ $stmt->bindColumn('estado', $estado);
               <div class="card-footer fixed-bottom">
                 <?php
                 if(isset($_GET['q'])){
-                  ?><a href="<?=$urlRegister2;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
+                  ?><!--<a href="<?=$urlRegister2;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a>--><?php
                 }else{
                   ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
                 } 

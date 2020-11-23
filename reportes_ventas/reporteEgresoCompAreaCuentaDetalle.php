@@ -31,7 +31,8 @@
         $numeroX=$rowComp['numero_cuenta'];
         $importe_realX=abs($rowComp['monto_real']);
         $totalImporte+=$importe_realX;
-        $html.='<tr>'.
+        $funcionOnclick='filasPresupuesto('.$codigo_cuenta.')';
+        $html.='<tr onclick="'.$funcionOnclick.'">'.
                       '<td class="text-left font-weight-bold">'.$nombreAreaX.'</td>'.
                       '<td class="text-left font-weight-bold">'.$numeroX.'</td>'.
                       '<td class="text-left font-weight-bold">'.mb_strtoupper($cuentaX).'</td>'.
@@ -45,7 +46,7 @@
           while ($rowCompUnidades = $listaDetalleUnidades4->fetch(PDO::FETCH_ASSOC)) {
             $importe_realY=abs($rowCompUnidades['monto_real']);
             if($importe_realY>0){
-              $html.='<tr">'.
+              $html.='<tr class="cuenta'.$codigo_cuenta.'" style="display:none">'.
                     '<td class="text-center">-</td>'.  
                     '<td class="text-center">-</td>'.  
                     '<td class="text-center">'.$unidadDetAbrevY.'</td>'.  
