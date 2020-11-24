@@ -427,7 +427,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                   $index=0;
                   while ($rowEstado = $stmtEstado->fetch(PDO::FETCH_BOUND)) {
                     $index++;
-                    $responsableX=namePersonal(obtenerPersonaCambioEstado(2708,$codigo,$idEstadoX));
+                    $responsableX=namePersonal(obtenerPersonaClienteCambioEstado($idResponsableX));
                     $estadoActualX=obtenerNombreEstadoSol(obtenerEstadoIfinancieroSolicitudes($idEstadoX));
                     $estadoAnteriorX=obtenerEstadoAnteriorEstadoObjeto(2708,$codigo,$idEstadoObjetoX);
                     ?>
@@ -437,7 +437,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                       <td id="<?=$index?>_nombre_fila_estado" class="text-left font-weight-bold"><?=$estadoActualX?></td>
                       <td class="text-left font-weight-bold"><?=$responsableX?></td>         
                       <td><?=strftime('%d/%m/%Y %H:%M:%S',strtotime($fechaEstadoX));?></td>
-                      <td><small><small><?=$observacionGlobal?></small></small></td>
+                      <td id="<?=$index?>_nombre_observacion"></td>
                     </tr>
                     <?php
                   }
@@ -449,6 +449,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
             $("#<?=$index?>_fila_estado").addClass("bg-principal text-white");
             if($("#codigo_estado_solicitud").val()<8){
               $("#<?=$index?>_nombre_fila_estado").append(" (ACTUAL)");
+              $("#<?=$index?>_nombre_observacion").append("<small><small><?=$observacionGlobal?></small></small>");
             }
           </script>
 					<br>

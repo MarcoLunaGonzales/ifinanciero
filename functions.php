@@ -6268,6 +6268,21 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      }
      return($valor);
   }
+  function obtenerPersonaClienteCambioEstado($id){
+    $valor=$id;
+    $dbh = new ConexionIBNORCA();
+   $sql="SELECT cpe.IdCliente
+        FROM persona p
+        INNER JOIN dbcliente.gu_usuario gu ON gu.idUsuario=p.IdNuevoUsuario
+        INNER JOIN dbcliente.cliente_persona_empresa cpe ON gu.uIdClienteContacto=cpe.idCliente
+      WHERE p.IdPersona=$id";
+      $stmtPerfil = $dbh->prepare($sql);
+      $stmtPerfil->execute();
+      while ($row = $stmtPerfil->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['IdCliente'];
+      }
+      return $valor;
+  }
   function obtenerFechaCambioEstado($tipo,$objeto,$estado){
      $dbh = new ConexionIBNORCA();
      $stmt = $dbh->prepare("SELECT DATE_FORMAT(FechaEstado,'%d/%m/%Y %H:%i:%s')as fecha_registro_x FROM estadoobjeto where IdTipoObjeto=$tipo and IdObjeto = $objeto and IdEstado=$estado");

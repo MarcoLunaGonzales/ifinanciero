@@ -32,6 +32,6 @@ $urlReporteIngresoFacturacion="reportes/reporteIngresoFacturacion.php";
 
 $urlVerSol="solicitudes/verSolicitudRecursos.php";
 $urlImpSol="solicitudes/imp.php";
-
+$urlListAdminSol="index.php?opcion=listSolicitudRecursosAdminConta";
 ?>
 

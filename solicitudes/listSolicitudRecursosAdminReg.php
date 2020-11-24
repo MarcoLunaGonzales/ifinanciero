@@ -83,6 +83,9 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                     <i class="material-icons">content_paste</i>
                   </div>
                   <h4 class="card-title"><b><?=$moduleNamePlural?> - Aprobación</b></h4>
+                  
+                </div>
+                <div class="card-body">
                   <?php
                    if(isset($_GET['q'])){
                   ?>
@@ -104,8 +107,6 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                     <?php
                     }
                   ?>
-                </div>
-                <div class="card-body">
                   <div class="table-responsive">
                     <table class="table table-condesed" id="tablePaginator">
                       <thead>

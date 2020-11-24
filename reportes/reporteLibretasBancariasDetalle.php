@@ -98,6 +98,11 @@ tfoot input {
               }  
             }
           }
+          if($codComprobanteDetalle==""||$codComprobanteDetalle==0){
+           $entro=1;  
+          }else{
+            $entro=0;
+          }
           $saldo=obtenerSaldoLibretaBancariaDetalle($codigo);
           if($entro==1){?>
             <tr>

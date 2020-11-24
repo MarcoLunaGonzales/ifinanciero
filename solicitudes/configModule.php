@@ -44,4 +44,6 @@ $urlConta="solicitudes/contabilizar.php";
 $urlEncargado="solicitudes/encargado.php";
 $urlRegisterCompro="comprobantes/register.php";
 
+$urlComprobante="comprobantes/register.php";
+
 ?>

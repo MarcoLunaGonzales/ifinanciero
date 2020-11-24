@@ -5,7 +5,7 @@ require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
-
+session_start();
 $dbh = new Conexion();
 
 $codGestion=$_POST["gestion"];
@@ -21,7 +21,15 @@ $salvado_temporal=0;
 if(isset($_POST['salvado_temporal'])){
   $salvado_temporal=1;
 }
-session_start();
+
+$desdeSR=0;
+if(isset($_POST['codigo_sr'])&&isset($_POST['codigo_personal'])){
+  $desdeSR=1;
+  $codigoSR=$_POST['codigo_sr'];
+  $codigoSRPER=$_POST['codigo_personal'];
+}
+
+
 
 $codPadreArchivos=obtenerValorConfiguracion(84);
 
@@ -46,6 +54,38 @@ $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacio
 $stmtInsert = $dbh->prepare($sqlInsert);
 $flagSuccess=$stmtInsert->execute();	
 
+if($flagSuccess==true){
+  //ACTUALIZAR SOLICITUD DE RECURSOS
+  $datosSolicitud=obtenerDatosSolicitudRecursos($codigoSR);
+  $correoPersonal=$datosSolicitud['email_empresa'];
+  $descripcionEstado=obtenerNombreEstadoSol(5);
+  if($correoPersonal!=""){
+    $envioCorreoPersonal=enviarCorreoSimple($correoPersonal,'CAMBIO DE ESTADO - SOLICITUD DE RECURSOS, Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$datosSolicitud['solicitante'].', el sistema IFINANCIERO le notifica que su Solicitud de Recursos cambio del estado <b>'.$datosSolicitud['estado'].'</b> a <b>'.$descripcionEstado.'</b>. <br> Personal que realizo el cambio:'.namePersonalCompleto($globalUser)."<br>Numero de Solicitud:".$datosSolicitud['numero']."<br>Estado Anterior: <b>".$datosSolicitud['estado']."</b><br>Estado Actual: <b>".$descripcionEstado."</b><br><br>Saludos - IFINANCIERO");  
+  }
+
+  $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=5,cod_comprobante=$codComprobante,devengado=1 where codigo=$codigoSR";
+  $stmtUpdate = $dbh->prepare($sqlUpdate);
+  $flagSuccessSolicitud=$stmtUpdate->execute();
+  if($flagSuccessSolicitud==true){
+    //insertamos la distribucion
+        $sqlDel="DELETE FROM solicitud_recursosencargado where cod_solicitudrecurso=$codigoSR";
+        $stmtDel = $dbh->prepare($sqlDel);
+        $stmtDel->execute();
+  
+        if($codigoSRPER>0){
+        $sqlInsert="INSERT INTO solicitud_recursosencargado (cod_solicitudrecurso,cod_personal) 
+        VALUES ('$codigoSR','$codigoSRPER')";
+        $stmtInsert = $dbh->prepare($sqlInsert);
+        $stmtInsert->execute();  
+        } 
+     //enviar propuestas para la actualizacion de ibnorca
+     $fechaHoraActual=date("Y-m-d H:i:s");
+     $idTipoObjeto=2708;
+     $idObjeto=2725; //regristado
+     $obs="Solicitud Contabilizada";
+     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigoSR,$fechaHoraActual,$obs); 
+  }
+}
 //subir archivos al servidor
 //borramos los archivos
   $sqlDel="DELETE FROM archivos_adjuntos where cod_objeto=$codComprobante and cod_tipopadre=$codPadreArchivos"; //codigo del padre para comprobantes
@@ -238,6 +278,10 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 	}
 } 
 
-echo "<script>window.opener.location.reload();window.close();</script>";
+if($desdeSR==0){
+  echo "<script>window.opener.location.reload();window.close();</script>";  
+}else{
+  showAlertSuccessError($flagSuccessSolicitud,"../".$urlListAdminSol);   
+}
 
 ?>

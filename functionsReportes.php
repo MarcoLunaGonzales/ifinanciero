@@ -219,6 +219,10 @@ group by area order by area";
 }
 
 function obtenerListaCuentasEgreso($unidades,$areas,$cuentas,$desde,$hasta){
+    $stringCuentas="";
+    if($cuentas!=""){
+        $stringCuentas="and p.codigo in (".$cuentas.")";
+    }
     $dbh = new Conexion();
     $sql="SELECT da.cod_area,da.cod_cuenta,(SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area,p.nombre as cuenta,p.numero as numero_cuenta,SUM((da.debe-da.haber)) as monto_real 
     From comprobantes_detalle da
@@ -227,7 +231,7 @@ function obtenerListaCuentasEgreso($unidades,$areas,$cuentas,$desde,$hasta){
     join areas a on a.codigo=da.cod_area
     join plan_cuentas p on p.codigo=da.cod_cuenta
     where da.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and p.numero like '5%'
-    and p.codigo in ($cuentas)
+    $stringCuentas
     GROUP BY p.codigo order by da.cod_area";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();

@@ -31,6 +31,14 @@ $codMesActiva=$_SESSION['globalMes'];
 $globalMesActivo=$_SESSION['globalMes'];
 $contadorRegistros=0;
 $nombreCompletoUnidad=nameUnidad($globalUnidad);
+
+$desdeSR=0;
+if(isset($_GET['cod'])&&isset($_GET['deven'])&&isset($_GET['personal_encargado'])){
+	$desdeSR=1;
+	$codigoSR=$_GET['cod'];
+	$codigoSRPER=$_GET['personal_encargado'];
+	$numeroSR=obtenerNumeroSolicitudRecursos($_GET['cod']);
+}
 ?>
 <script>
 	numFilas=<?=$contadorRegistros;?>;
@@ -204,6 +212,10 @@ $cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
 $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 ?>
 <form id="formRegComp" class="form-horizontal" action="save.php" method="post" enctype="multipart/form-data">
+
+	<?php if($desdeSR==1){ 
+      ?><input type="hidden" name="codigo_sr" value="<?=$codigoSR?>"><input type="hidden" name="codigo_personal" value="<?=$codigoSRPER?>"><?php
+	}?>
 	<div class="content">
 		<div class="container-fluid">
 			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;
@@ -216,9 +228,9 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 			<input type="hidden" name="global_mes" id="global_mes" value="<?=$globalMesActivo;?>">
 			
 			<div class="card" id="cabecera_scroll">
-				<div class="card-header <?=$colorCard;?> card-header-text">
+				<div class="card-header <?php if($desdeSR==1){ echo "card-header-warning";}else{ echo "card-header-primary";}?> card-header-text">
 					<div class="card-text">
-					  <h4 class="card-title">Registrar <?=$moduleNameSingular;?></h4>
+					  <h4 class="card-title">Registrar <?=$moduleNameSingular;?> <?php if($desdeSR==1){ echo " - SR: ".$numeroSR;}?></h4>
 					</div>
 				</div>
 				<div class="card-body ">
@@ -326,7 +338,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 			</div>	
 
 			<div class="card">
-				<div class="card-header <?=$colorCard;?> card-header-text">
+				<div class="card-header <?php if($desdeSR==1){ echo "card-header-warning";}else{ echo "card-header-primary";}?> card-header-text">
 					<div class="card-text">
 					  <h6 class="card-title">Detalle</h6>
 					</div>
@@ -438,7 +450,8 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 	                  	</div>
 
 					  	<div class="card-footer fixed-bottom">
-							<button type="submit" class="<?=$buttonMorado;?>">Guardar</button>						
+							<button type="submit" class="<?php if($desdeSR==1){ echo "btn btn-warning";}else{ echo "btn btn-primary";}?>">Guardar</button>	
+							<?php if($desdeSR==1){$urlList=$urlListAdminSol;}?>					
 							<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
 							<div class="row col-sm-12">
 								<div class="col-sm-5">
@@ -462,11 +475,17 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 									</div>
 						      	</div>
 						      	<div class="col-sm-1">
+						      		<?php 
+                                   if($desdeSR==0){
+                                   	?>
 						      		 <div class="form-group">
 						      		 	<a href="#" class="btn btn-round btn-default btn-fab btn-sm" onclick="salvarComprobante(0);return false;" title="Salvar Comprobante">
 			                        	   <i class="material-icons text-dark">save</i> 
 			                            </a>
 									</div>						      		
+                                   	<?php
+                                   } 
+						      		?>
 						      	</div>
 							</div>
 					  	</div>

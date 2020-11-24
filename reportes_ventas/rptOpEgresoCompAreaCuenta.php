@@ -117,6 +117,7 @@ $i=0;
 			                	<div class="form-group">
 			                		<div id="div_contenedor_oficina_costo">
 				                			<?php
+				                			//$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
 											$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
 											$stmt = $dbh->prepare($sqlUO);
 											$stmt->execute();
@@ -156,7 +157,8 @@ $i=0;
 			                	<div class="form-group">
 	                              <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
 			  	                     <?php
-			  	                     $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 order by 2");
+			  	                     //$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 order by 2");
+			  	                     $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
 				                     $stmt->execute();
 				                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				                     	$codigoX=$row['codigo'];
@@ -173,7 +175,7 @@ $i=0;
 			              </div>
 				      </div>
                   </div><!--div row-->
-                <div class="row">
+                <!--<div class="row">
                 	<div class="col-sm-6">
                   		<div class="row">
 			                 <label class="col-sm-4 col-form-label">Cuenta</label>
@@ -197,7 +199,7 @@ $i=0;
 			                  </div>
 			              </div>
 				      </div>
-                  </div><!--div row-->
+                  </div>--><!--div row-->
                 </div><!--card body-->
                 <div class="card-footer ">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
