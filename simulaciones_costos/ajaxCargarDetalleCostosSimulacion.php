@@ -115,11 +115,11 @@ $bgClase="bg-info";
             <?php
             if($mesesProrrateo>0){
               ?><tr>
-              <td class="bg-plomo">Ejecutado a <?=$stringMeses?></td>
+              <td class="bg-plomo">Ejecutado <?=$stringMeses?></td>
               <td class="text-right"></td>
               <td class="bg-plomo"></td>
               <td class="text-right"></td>
-              <td class="bg-plomo">Porcentaje</td>
+              <td class="bg-plomo">Porcentaje Ejecutado</td>
               <td class="text-right"><?=number_format($porcentPreciosEnMeses, 2, '.', ',')?> %</td>
             </tr><?php
             }
