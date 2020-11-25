@@ -16133,6 +16133,20 @@ function ajax_mes_de_gestion(combo){
   }
   ajax.send(null);
 }
+function ajax_mes_de_gestion_mutiple(combo){
+  var contenedor = document.getElementById('div_contenedor_mes');
+  var gestion=combo.value;
+  // console.log(gestion);
+  ajax=nuevoAjax();
+  ajax.open('GET', 'reportes/ajax_mes_gestion_multiple.php?cod_gestion='+gestion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;      
+      $('.selectpicker').selectpicker(["refresh"]);
+    }
+  }
+  ajax.send(null);
+}
 function ajax_razon_social_filtro_compras(){
   var contenedor = document.getElementById('contenedor_razos_social_librocompras');      
 

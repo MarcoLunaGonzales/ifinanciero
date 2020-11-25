@@ -13,7 +13,17 @@ tfoot input {
   <h6 class="card-title">Periodo Libretas: <?=$periodoTitle?></h6>
   <h6 class="card-title">Periodo Facturas: <?=$periodoTitleFac?></h6>
   <h6 class="card-title">Libretas Bancarias: <?=$stringEntidades;?></h6>
-  <div class="table-responsive col-sm-12">
+  <div class="col-sm-4 float-right">
+    <div class="row">
+        <label class="col-sm-4 col-form-label">Total Monto</label>
+        <div class="col-sm-8">
+          <div class="form-group">
+             <input class="form-control" placeholder="Calculando..." readonly value="" id="total_reporte">                   
+          </div>  
+        </div>     
+      </div>  
+    </div>
+  <div class="table-responsive col-sm-12"> 
     <table id="libreta_bancaria_reporte" class="table table-condensed small" style="width:100% !important;">
       <thead>
         <tr style="background:#21618C; color:#fff;">
@@ -76,11 +86,10 @@ tfoot input {
           $montoFac=$resultFacturas['monto_fac'];
           if($filtro==2){
             if($montoFac<$monto){
-              $totalMonto+=$monto;
+              
               $entro=1;
             }                       
           }else{
-            $totalMonto+=$monto;
             $entro=1;
           }
           if($filtro==1||$filtro==2){
@@ -95,16 +104,18 @@ tfoot input {
               $entro=0;
               if($filtro==2){
                 $entro=1; //deposito a facturar
+                if($codComprobanteDetalle>0){
+                 $entro=0;  
+                }
+               
               }  
             }
           }
-          if($codComprobanteDetalle==""||$codComprobanteDetalle==0){
-           $entro=1;  
-          }else{
-            $entro=0;
-          }
+          
           $saldo=obtenerSaldoLibretaBancariaDetalle($codigo);
-          if($entro==1){?>
+          if($entro==1){
+            $totalMonto+=$monto;
+            ?>
             <tr>
               <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
               <td class="text-center"><?=strftime('%H:%M:%S',strtotime($fecha))?></td>
@@ -186,6 +197,7 @@ tfoot input {
           }
         }
       }?>
+      <script>$("#total_reporte").val("<?=number_format($totalMonto,2,'.',',')?>");</script>
       <tr class="font-weight-bold" style="background:#21618C; color:#fff;">
         <td align="center" colspan="5" class="csp">Totales</td>
         <td class="text-right"><?=number_format($totalMonto,2,".",",")?></td>

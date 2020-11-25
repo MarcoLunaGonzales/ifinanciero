@@ -975,6 +975,12 @@ if($menuModulo==0){
             <div class="collapse" id="reportesPresupuestoSol">
               <ul class="nav">
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportePlanificacionCursos">
+                    <span class="sidebar-mini"> RPC </span>
+                    <span class="sidebar-normal"> Reportes Planificacion Por Cursos</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=reportePlanificacion">
                     <span class="sidebar-mini"> RP </span>
                     <span class="sidebar-normal"> Reportes Planificacion SEC</span>

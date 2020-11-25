@@ -8,10 +8,9 @@ require_once 'functionsGeneral.php';
 $globalUser=$_SESSION["globalUser"];
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUnidad=$_SESSION["globalUnidad"];
-
 $globalGestion=$_SESSION["globalGestion"];
 $global_mes=$_SESSION["globalMes"];
-
+$global_mes_actual=(int)date("m");
 $dbh = new Conexion();
 
 ?>
@@ -61,7 +60,7 @@ $dbh = new Conexion();
 		                <label class="col-sm-2 col-form-label">Gestión</label>
 		                <div class="col-sm-4">
 		                	<div class="form-group">
-		                		<select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+		                		<select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion_mutiple(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
                                     <option value=""></option>
                                     <?php 
                                     $query = "SELECT codigo,nombre from gestiones where cod_estado=1 ORDER BY nombre desc";
@@ -80,14 +79,14 @@ $dbh = new Conexion();
 									$stmtg = $dbh->prepare($sql);
 									$stmtg->execute();
 									?>
-									<select name="cod_mes_x" id="cod_mes_x" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  required data-live-search="true">
+									<select name="cod_mes_x[]" id="cod_mes_x" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" multiple data-actions-box="true" required data-live-search="true">
 									<?php
 									  
 									  while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {    
 									    $cod_mes=$rowg['cod_mes'];    
 									    $nombre_mes=$rowg['nombre_mes'];    
 									  ?>
-									  <option value="<?=$cod_mes;?>" <?=($cod_mes==$global_mes)?"selected":""?> ><?=$nombre_mes;?></option>
+									  <option value="<?=$cod_mes;?>" <?=($cod_mes==$global_mes_actual)?"selected":""?> ><?=$nombre_mes;?></option>
 									  <?php 
 									  }
 									?>
