@@ -69,12 +69,10 @@ tfoot input {
       $index=1;$totalMonto=0;$totalMontoFac=0;
       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
         $entro=0; 
-
         $verificar=1;
-        if($filtro==1){          
-          $verificar=verificarCodFactura($codigo);
-        }
-
+        //if($filtro==1){          
+          //$verificar=verificarCodFactura($codigo);
+        //}
         if($verificar==1){          
           // echo $verificar;
           $sqlFacturas="SELECT lf.cod_facturaventa,(SELECT sum(f.importe) from facturas_venta f where f.codigo=lf.cod_facturaventa and f.cod_estadofactura!=2 $sqlFiltro2)as monto_fac From libretas_bancariasdetalle_facturas lf join facturas_venta f on f.codigo=lf.cod_facturaventa where lf.cod_libretabancariadetalle=$codigo and f.cod_estadofactura<>2 limit 1";
@@ -84,32 +82,20 @@ tfoot input {
           $resultFacturas=$stmtFacturas->fetch();
           $codFactura=$resultFacturas['cod_facturaventa'];
           $montoFac=$resultFacturas['monto_fac'];
-          if($filtro==2){
-            if($montoFac<$monto){
-              
+          
+          $cant=obtenerCantidadFacturasLibretaBancariaDetalle($codigo,$sqlFiltro2);
+          $cant2=obtenerCantidadComprobanteLibretaBancariaDetalle($codigo,$sqlFiltroComp);
+          $saldoAux=$monto-$montoFac;
+          if($filtro==1){ //solo relacionados
+             if($cant>0||$cant2>0){
               $entro=1;
-            }                       
-          }else{
+             }   
+          }else if($filtro==2){//solo pendientes
+             if(($cant==0)&&$cant2==0){
+              $entro=1;
+             }
+          }else{ //filtro Mostrar TODO
             $entro=1;
-          }
-          if($filtro==1||$filtro==2){
-            $cant=obtenerCantidadFacturasLibretaBancariaDetalle($codigo,$sqlFiltro2);
-            // echo $cant;
-            if($cant>0){            
-              $entro=1;
-              if($filtro==2){
-                $entro=0;
-              }
-            }else{
-              $entro=0;
-              if($filtro==2){
-                $entro=1; //deposito a facturar
-                if($codComprobanteDetalle>0){
-                 $entro=0;  
-                }
-               
-              }  
-            }
           }
           
           $saldo=obtenerSaldoLibretaBancariaDetalle($codigo);
@@ -136,7 +122,7 @@ tfoot input {
                 $facturaMonto="";
                 $totalMontoFac+=0;
                 if(!($codComprobante==""||$codComprobante==0)){
-                  $datosDetalle=obtenerDatosComprobanteDetalle($codComprobanteDetalle);
+                  $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);
                   $facturaFecha="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
                   $facturaNumero="<b class='text-success'>".nombreComprobante($codComprobante)."</b>";
                   $facturaNit="<b class='text-success'>-</b>";

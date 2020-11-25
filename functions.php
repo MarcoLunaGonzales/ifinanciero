@@ -8661,6 +8661,22 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
       }
       return $contador;
     }
+
+    function obtenerCantidadComprobanteLibretaBancariaDetalle($codigo,$sqlFiltro2){
+      $dbh = new Conexion();
+      $stmtVerif = $dbh->prepare("SELECT (SELECT c.codigo from comprobantes c where c.codigo=lf.cod_comprobante and c.cod_estadocomprobante<>2 $sqlFiltro2)as codigo 
+From libretas_bancariasdetalle lf where lf.codigo=$codigo");
+      $stmtVerif->execute();
+      $contador=0;
+      while ($row = $stmtVerif->fetch(PDO::FETCH_ASSOC)) {    
+          $valor=$row['codigo'];
+          if($valor!=null || $valor!=0 || $valor!=''){
+            $contador++;
+          }
+      }
+      return $contador;
+    }
+
     function obtnerCadenaFacturas($codigo){
       $dbh = new Conexion();
       $sql="SELECT ld.cod_facturaventa from libretas_bancariasdetalle_facturas  ld where ld.cod_libretabancariadetalle=$codigo";    
@@ -9015,6 +9031,16 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
   function obtenerDatosComprobanteDetalle($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT cd.glosa,cd.debe,cd.haber,(cd.debe+cd.haber) as monto,cd.cod_area,cd.cod_unidadorganizacional,p.nombre,p.numero,(SELECT nombre FROM cuentas_auxiliares where codigo=cd.cod_cuentaauxiliar) as nombre_auxiliar from comprobantes_detalle cd join plan_cuentas p on p.codigo=cd.cod_cuenta where cd.codigo=$codigo");
+     $stmt->execute();
+     $valor=array('','','','','');
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=array($row['glosa'],$row['monto'],$row['nombre'],$row['numero'],$row['nombre_auxiliar']);
+     }
+     return($valor);
+  }
+  function obtenerDatosComprobanteDetalleFechas($codigo,$sqlFiltro){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cd.glosa,cd.debe,cd.haber,(cd.debe+cd.haber) as monto,cd.cod_area,cd.cod_unidadorganizacional,p.nombre,p.numero,(SELECT nombre FROM cuentas_auxiliares where codigo=cd.cod_cuentaauxiliar) as nombre_auxiliar from comprobantes_detalle cd join plan_cuentas p on p.codigo=cd.cod_cuenta join comprobantes c on c.codigo=cd.cod_comprobante where cd.codigo=$codigo and c.cod_estadocomprobante<>2 $sqlFiltro");
      $stmt->execute();
      $valor=array('','','','','');
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
