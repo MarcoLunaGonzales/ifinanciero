@@ -212,6 +212,7 @@ if(isset($_GET['cod'])){
   <input type="hidden" value="-100" id="tipo_documento_otro" name="tipo_documento_otro">
 <div class="content">
   <div id="contListaGrupos" class="container-fluid">
+    <input type="hidden" name="cuenta_honorarios_docente" id="cuenta_honorarios_docente" value="<?=obtenerValorConfiguracion(88);?>">      
       <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
       <input type="hidden" name="cod_solicitud" id="cod_solicitud" value="<?=$codigo?>">
       <input type="hidden" name="cod_configuracioniva" id="cod_configuracioniva" value="<?=obtenerValorConfiguracion(35)?>">
@@ -492,7 +493,8 @@ if(isset($_GET['cod'])){
           </div>
           <?php } //fin del while de la cabecera?>
           <div class="row">
-            
+       <input type="hidden" name="simulaciones" value="<?=$codSimulacionX?>" id="simulaciones"/>
+       <input type="hidden" name="tipo_solicitud" value="<?=$tipoSolicitud?>" id="tipo_solicitud"/>       
             <div class="col-sm-3">
               
               <?php

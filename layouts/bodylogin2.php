@@ -725,6 +725,9 @@
         alertaModal('Debe registrar al menos un grupo','bg-secondary','text-white');
         return false;*/
       //}else{
+      var tipoSolicitudRecurso=$("#tipo_solicitud").val();
+      var cuentaHonorarios=$("#cuenta_honorarios_docente").val();
+
     if($("#cantidad_filas").val()==0){
         mensaje+="<p></p>";
         Swal.fire("Informativo!", "Debe registrar al menos un detalle", "warning");
@@ -840,7 +843,26 @@
            if(contArchOblig!=0){
              Swal.fire("Informativo!", "Debe cargar los archivos obligatorios", "warning"); 
              return false;
-           }else{       //quinto else
+           }else{  
+                //quinto else
+            var hayContraro=0;  var mensajeContrato="";
+            if(tipoSolicitudRecurso==1){
+              var simulacionCodigo=$("#simulaciones").val().split("$$$")[0];
+             for (var i = 0; i < $("#cantidad_filas").val(); i++) {
+              if($('#partida_cuenta_id'+(i+1)).val()==cuentaHonorarios){
+                var proveedorFila=$("#proveedor"+(i+1)).val();
+                var montoFila=$("#importe"+(i+1)).val();
+                var datosResp=verificarContratoDatosDesdeSolicitud(simulacionCodigo,proveedorFila,montoFila).split("#####");
+                hayContraro=parseInt(datosResp[0]);
+                mensajeContrato=datosResp[1];
+                break;
+              }
+             }     
+            }//fin tipo solicitud  
+            if(hayContraro>0){
+              Swal.fire("Informativo!", mensajeContrato, "warning"); 
+             return false; 
+            }else{
                //para poner la retencion iva si tiene al menos una factura..
            for (var i = 0; i < $("#cantidad_filas").val(); i++) {
             if($('#cod_retencion'+(i+1)).val()==0||$('#cod_retencion'+(i+1)).val()==""){
@@ -889,7 +911,7 @@
             .attr('name', 'archivos_detalle')
             .attr('value', JSON.stringify(itemDocumentosDetalle))
             .appendTo('#formSolDet');
-
+             }//else
           } 
          }      
         }

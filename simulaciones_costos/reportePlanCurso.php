@@ -46,11 +46,11 @@ $i=0;
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Planificacion - Ejecución</h4>
+                  <h4 class="card-title">Reporte Planificacion - Ejecución Cursos</h4>
                 </div>
-                <form class="" action="<?=$urlReportePlan?>" target="_blank" method="POST">
+                <form class="" action="<?=$urlReportePlanCurso?>" target="_blank" method="POST">
                 <div class="card-body">
-	                <div class="row">
+	                <!--<div class="row">
 	                  	<div class="col-sm-6">
 	                  		<div class="row">
 				                 <label class="col-sm-4 col-form-label">Desde</label>
@@ -76,11 +76,11 @@ $i=0;
 				                  </div>
 				              </div>
 					      </div>
-	                </div><!--div row-->
+	                </div>--><!--div row-->
                   <div class="row">
                   	<div class="col-sm-6">
                   		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Tipo Curso</label>
+			                 <label class="col-sm-4 col-form-label">Curso</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
 			                		<div id="div_contenedor_oficina_costo">

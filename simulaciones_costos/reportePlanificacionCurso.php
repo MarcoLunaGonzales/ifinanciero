@@ -19,29 +19,19 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $fechaActual=date("Y-m-d");
-$desdeInicioAnio="";
-if($_POST["fecha_desde"]==""){
-  $y=$globalNombreGestion;
-  $desde=$y."-01-01";
-  $hasta=$y."-12-31";
-  $desdeInicioAnio=$y."-01-01";
-}else{
-  $porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
-  $porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
-  $desdeInicioAnio=$porcionesFechaDesde[0]."-01-01";
-  $desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
-  $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
-}
+
 
 $moneda=1;//$_POST["moneda"]
 $nombreMoneda=nameMoneda($moneda);
-$tipoCurso=$_POST['tipo_curso'];
+$tipoCurso=123;//$_POST['tipo_curso'];
+
+$desdeInicioAnio=$globalNombreGestion."-01-01";
 
 if(isset($_POST['resumido'])){
  $resumido=1; 
  $rowSpan=4;
- $sqlSolicitadosInicio="SELECT 1 as codigo,1 as cod_simulacion,'<i class=\'material-icons bg-primary\'>insert_chart</i>' as nombre,'$hasta' as fecha_curso,l.cod_cuenta,GROUP_CONCAT(CONCAT(l.glosa,' ',l.nombre_proveedor)) as glosa,sum(l.presupuestado)as presupuestado,sum(l.ejecutado) as ejecutado,null as proveedor,1 as codigo_ejecutado FROM (";
- $sqlSolicitadosFin=") l where l.codigo_ejecutado!='' group by l.cod_cuenta";
+ $sqlSolicitadosInicio="SELECT 1 as codigo,1 as cod_simulacion,'<i class=\'material-icons bg-primary\'>insert_chart</i>' as nombre,'2020-01-01' as fecha_curso,l.cod_cuenta,GROUP_CONCAT(CONCAT(l.glosa,' ',l.nombre_proveedor)) as glosa,sum(l.presupuestado)as presupuestado,sum(l.ejecutado) as ejecutado,null as proveedor,1 as codigo_ejecutado FROM (";
+ $sqlSolicitadosFin=") l where l.codigo_ejecutado!='' group by l.IdCurso,l.cod_cuenta";
  $solicitados=0;
  $anchoPartida="3%";
 }else{
@@ -61,11 +51,11 @@ if(isset($_POST['resumido'])){
 }
 
 
-$tipoCursoArray=implode(",", $tipoCurso);
+$tipoCursoArray=$tipoCurso;
 $tipoCursoAbrev="";
 $tipoCursoAbrev=abrevTipoCurso($tipoCursoArray);
 
-$periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
+$periodoTitle="";
 
 ?>
 <div class="cargar">
@@ -117,13 +107,13 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
           <tbody>
 <?php
 
-  $query1=$sqlSolicitadosInicio."select s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,
+  $query1=$sqlSolicitadosInicio."select s.IdCurso,s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,
 (SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as ejecutado, 
 (SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as proveedor,
 (SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as nombre_proveedor, 
 (SELECT d.cod_detalleplantilla from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as codigo_ejecutado 
 from simulaciones_detalle sd join simulaciones_costos s on s.codigo=sd.cod_simulacioncosto 
-WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulacion=3 and s.fecha_curso BETWEEN '$desde' and '$hasta' order by s.nombre,sd.cod_cuenta".$sqlSolicitadosFin;
+WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulacion=3 order by s.nombre,sd.cod_cuenta".$sqlSolicitadosFin;
 
   $stmt = $dbh->prepare($query1);
   // Ejecutamos
@@ -229,7 +219,7 @@ WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosi
                   }
                   if($montoFijo>0){
                  $htmlFijos.='<tr class="" style="background:#E4E4E4">'.
-                    '<td class="font-weight-bold small text-left">'.$nombreX.' '.$fechaCurso.'</td>'.
+                    '<td class="font-weight-bold small text-left">'.$cursoNombre.' '.$fechaCurso.'</td>'.
                     '<td class="font-weight-bold small text-left">'.$nombreCuentaFijo.' '.$glosaFijo.'</td>';
                   if($solicitados==1){
                       $htmlFijos.= '<td class="font-weight-bold small">'.$estadoFijo.'</td>';

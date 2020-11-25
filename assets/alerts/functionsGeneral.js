@@ -18946,3 +18946,19 @@ function salvarComprobanteProceso(tipo){
            }
        });          
 }
+
+function verificarContratoDatosDesdeSolicitud(codSim,codProv,montoContrato){
+  var tiene = "1#####ErrorContrato";
+   var parametros={"codigo":codSim,"cod_prov":codProv,"monto":montoContrato};
+     $.ajax({
+        async:false,
+        type: "POST",
+        dataType: 'html',
+        url: "ajax_verificar_contrato_propuesta.php",
+        data: parametros,      
+        success:  function (resp) {
+           tiene=resp;
+        }
+    });
+  return tiene;
+}

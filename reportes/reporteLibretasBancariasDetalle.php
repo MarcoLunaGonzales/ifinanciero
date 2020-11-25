@@ -9,10 +9,19 @@ tfoot input {
         box-sizing: border-box;
     }
 </style>
+<?php
+switch ($filtro) {
+  case 0:$tituloFiltros="Ver Todo";break;
+  case 1:$tituloFiltros="Ver Solo Registros Relacionados";break;
+  case 2:$tituloFiltros="Ver Solo Registros Pendientes de Identificación";break;
+  default:$tituloFiltros="Ver Todo";break;
+}
+ ?>
 <div class="card-body">
   <h6 class="card-title">Periodo Libretas: <?=$periodoTitle?></h6>
-  <h6 class="card-title">Periodo Facturas: <?=$periodoTitleFac?></h6>
+  <h6 class="card-title">Periodo Facturas y/o Comprobantes: <?=$periodoTitleFac?></h6>
   <h6 class="card-title">Libretas Bancarias: <?=$stringEntidades;?></h6>
+  <h6 class="card-title">Filtro: <?=$tituloFiltros;?></h6>
   <div class="col-sm-4 float-right">
     <div class="row">
         <label class="col-sm-4 col-form-label">Total Monto</label>
@@ -91,7 +100,7 @@ tfoot input {
               $entro=1;
              }   
           }else if($filtro==2){//solo pendientes
-             if(($cant==0)&&$cant2==0){
+             if($cant==0&&$cant2==0){
               $entro=1;
              }
           }else{ //filtro Mostrar TODO
@@ -122,13 +131,19 @@ tfoot input {
                 $facturaMonto="";
                 $totalMontoFac+=0;
                 if(!($codComprobante==""||$codComprobante==0)){
-                  $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);
-                  $facturaFecha="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
-                  $facturaNumero="<b class='text-success'>".nombreComprobante($codComprobante)."</b>";
-                  $facturaNit="<b class='text-success'>-</b>";
-                  $facturaDetalle="<b class='text-success'>".$datosDetalle[0]."</b>";
-                  $facturaRazonSocial="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
-                  $facturaMonto="<b class='text-success'>".$datosDetalle[1]."</b>";
+                  if($filtro==0){
+                    $datosDetalle=obtenerDatosComprobanteDetalle($codComprobanteDetalle);                    
+                  }else{
+                    $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);                    
+                  }
+                  if($datosDetalle[1]!=''){
+                     $facturaFecha="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
+                     $facturaNumero="<b class='text-success'>".nombreComprobante($codComprobante)."</b>";
+                     $facturaNit="<b class='text-success'>-</b>";
+                     $facturaDetalle="<b class='text-success'>".$datosDetalle[0]."</b>";
+                     $facturaRazonSocial="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
+                     $facturaMonto="<b class='text-success'>".$datosDetalle[1]."</b>";     
+                  }
                   $totalMontoFac+=0;
                 }
                 
@@ -142,7 +157,12 @@ tfoot input {
                <?php                          
               }else{
                 $cadena_facturas=obtnerCadenaFacturas($codigo);
-                $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 $sqlFiltro2 order by codigo desc";
+                if($filtro==0){
+                  $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 order by codigo desc";
+                }else{
+                    $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 $sqlFiltro2 order by codigo desc";
+                }
+                
                 // echo $sqlDetalleX;                                   
                 $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                 $stmtDetalleX->execute();

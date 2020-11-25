@@ -10842,14 +10842,14 @@ function obtenerPrimerAtributoSimulacionServicioDatos($codigo){
 
  function obtenerDatosContratoSolicitudCapacitacion($codigo){
    $dbh = new Conexion();
-     $sql="SELECT c.Monto,c.IdFirmante from simulaciones_costos sc join ibnorca.contratos c on c.IdObjeto=sc.IdModulo where sc.codigo=$codigo;";
+     $sql="SELECT c.Monto,m.idDocente from simulaciones_costos sc join ibnorca.contratos c on c.IdObjeto=sc.IdModulo join ibnorca.modulos m on m.IdModulo=sc.IdModulo where sc.codigo=$codigo;";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor[0]=0;
      $valor[1]=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor[0]=$row['Monto'];
-        $valor[1]=$row['IdFirmante'];
+        $valor[1]=$row['idDocente'];
     }
     return $valor;
  }
