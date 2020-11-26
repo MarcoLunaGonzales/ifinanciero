@@ -22,19 +22,7 @@ if(isset($_GET["simulacion"])){
  $anioSimulacion=$fechaSim[0];
  $mesSimulacion=$fechaSim[1];
  $stringMeses="";
- if($mesesProrrateo>0){
-  $arrayMeses=[];$ejecutadoEnMeses=0;$presupuestoEnMeses=0;$presupuestoEnMeses=100;
-  for ($mm=((int)$mesSimulacion-((int)$mesesProrrateo-1)); $mm <= (int)$mesSimulacion ; $mm++) { 
-    $arrayMeses[$mm]=abrevMes($mm);
-    $datosIngresos=ejecutadoPresupuestadoEgresosMes(0,$anioSimulacion,$mm,13,1,"");
-    $ejecutadoEnMeses+=$datosIngresos[0];
-    $presupuestoEnMeses+=$datosIngresos[1];
-  }
-  if($presupuestoEnMeses>0){
-    $porcentPreciosEnMeses=number_format(($ejecutadoEnMeses/$presupuestoEnMeses)*100,2,'.','');
-  }
-  $stringMeses=implode("-",$arrayMeses);
- }
+ 
 
  $montoNorma=obtenerMontoNormaSimulacion($codigo);
  $habNorma=obtenerHabilitadoNormaSimulacion($codigo);
@@ -50,6 +38,20 @@ join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo
 where pc.codigo=$codPlan";
 
 if($tipoCosto==1){
+  if($mesesProrrateo>0){
+  $arrayMeses=[];$ejecutadoEnMeses=0;$presupuestoEnMeses=0;$presupuestoEnMeses=100;
+  //for ($mm=((int)$mesSimulacion-((int)$mesesProrrateo-1)); $mm <= (int)$mesSimulacion ; $mm++) { 
+  //  $arrayMeses[$mm]=abrevMes($mm);
+  //  $datosIngresos=ejecutadoPresupuestadoEgresosMes(0,$anioSimulacion,$mm,13,1,"");
+  //  $ejecutadoEnMeses+=$datosIngresos[0];
+  //  $presupuestoEnMeses+=$datosIngresos[1];
+  //}
+  //if($presupuestoEnMeses>0){
+  //  $porcentPreciosEnMeses=number_format(($ejecutadoEnMeses/$presupuestoEnMeses)*100,2,'.','');
+  //}
+  $porcentPreciosEnMeses=80;
+  $stringMeses=implode("-",$arrayMeses);
+ }
 $query2=$query1." and pgc.cod_tipocosto in (1,3) GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
 $bgClase="bg-info";
 }else{

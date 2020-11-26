@@ -85,7 +85,7 @@ $i=0;
 			                	<div class="form-group">
 			                		<div id="div_contenedor_oficina_costo">
 				                			<?php
-											$sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from tipos_cursos uo order by 2";
+											$sqlUO="SELECT DISTINCT s.IdCurso,ibnorca.codigo_curso(s.IdCurso) as CodigoCurso from simulaciones_costos s WHERE s.cod_estadosimulacion=3;";
 											$stmt = $dbh->prepare($sqlUO);
 											$stmt->execute();
 											?>
@@ -93,7 +93,7 @@ $i=0;
 												    <?php 
 												    	while ($row = $stmt->fetch()){ 
 													?>
-												      	 <option value="<?=$row["codigo"];?>" data-subtext="<?=$row["nombre"];?>" ><?=$row["abreviatura"];?></option>
+												      	 <option value="<?=$row["IdCurso"];?>"><?=$row["CodigoCurso"];?></option>
 									    	<?php 
 												 		} 
 										 	?>

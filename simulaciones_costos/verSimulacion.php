@@ -45,15 +45,16 @@ $mesesProrrateo=obtenerValorConfiguracion(89);
  $stringMeses="";
  if($mesesProrrateo>0){
   $arrayMeses=[];$ejecutadoEnMeses=0;$presupuestoEnMeses=0;$presupuestoEnMeses=100;
-  for ($mm=((int)$mesSimulacion-((int)$mesesProrrateo-1)); $mm <= (int)$mesSimulacion ; $mm++) { 
-    $arrayMeses[$mm]=abrevMes($mm);
-    $datosIngresos=ejecutadoPresupuestadoEgresosMes(0,$anioSimulacion,$mm,13,1,"");
-    $ejecutadoEnMeses+=$datosIngresos[0];
-    $presupuestoEnMeses+=$datosIngresos[1];
-  }
-  if($presupuestoEnMeses>0){
-    $porcentPreciosEnMeses=number_format(($ejecutadoEnMeses/$presupuestoEnMeses)*100,2,'.','');
-  }
+  //for ($mm=((int)$mesSimulacion-((int)$mesesProrrateo-1)); $mm <= (int)$mesSimulacion ; $mm++) { 
+  //  $arrayMeses[$mm]=abrevMes($mm);
+  //  $datosIngresos=ejecutadoPresupuestadoEgresosMes(0,$anioSimulacion,$mm,13,1,"");
+  //  $ejecutadoEnMeses+=$datosIngresos[0];
+  //  $presupuestoEnMeses+=$datosIngresos[1];
+  //}
+  //if($presupuestoEnMeses>0){
+  //  $porcentPreciosEnMeses=number_format(($ejecutadoEnMeses/$presupuestoEnMeses)*100,2,'.','');
+  //}
+  $porcentPreciosEnMeses=80;
   $stringMeses=implode("-",$arrayMeses);
  }
 if(isset($_GET['q'])){

@@ -234,7 +234,7 @@ try{
         }
 
         //verificar el estado y actualizar a 5
-        $stmtSol = $dbh->prepare("SELECT s.codigo from solicitudes_facturacion s where s.cod_estadosolicitudfacturacion=3 and s.codigo = $codigoSolicitud");
+        $stmtSol = $dbh->prepare("SELECT s.codigo from solicitudes_facturacion s where s.cod_estadosolicitudfacturacion in (3,4) and s.codigo = $codigoSolicitud");
         $stmtSol->execute();
         while ($rowSol = $stmtSol->fetch(PDO::FETCH_ASSOC)) {  
             $sqlUpdateNew="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigoSolicitud";

@@ -14,7 +14,7 @@ $dbh = new Conexion();
 	<div class="container-fluid">
 		<div class="col-md-12">
 			<div class="card">
-			  	<div class="card-header <?=$colorCard;?> card-header-text">
+			  	<div class="card-header card-success card-header-text">
 					<div class="card-text">
 				  		<h4 class="card-title">Reportes Facturación</h4>
 					</div>
@@ -94,6 +94,27 @@ $dbh = new Conexion();
 				                </a>
 							</div>
 				  		</div>
+					</div>
+
+					
+			  	</div>
+			</div>
+			<div class="card">
+			  	<div class="card-header card-success card-header-text">
+					<div class="card-text">
+				  		<h4 class="card-title">Libretas Bancarias</h4>
+					</div>
+			  	</div>
+
+			  	<div class="card-body ">
+					<div class="row">				
+						<div class="col-sm-4">
+							<div class="form-group">								
+								<a class="btn btn-primary" href="reporte_verif_reportes_libretas_relacion.php">				                
+				                    <span class="sidebar-normal"> libretas vs facturas (fechas)</span>
+				                </a>
+							</div>
+				  		</div>  	
 					</div>
 
 					

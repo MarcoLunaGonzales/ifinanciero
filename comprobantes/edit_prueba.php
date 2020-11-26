@@ -30,6 +30,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalMesActivo=$_SESSION['globalMes'];
 
 $codPadreArchivos=obtenerValorConfiguracion(84);
+$validacionLibretas=obtenerValorConfiguracion(90);
 
 $data = obtenerComprobante($_GET['codigo']);
 // bindColumn
@@ -256,7 +257,7 @@ $stmt->execute();
 		    ?>
 
 <form id="formRegComp" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
-	
+	<input type="hidden" name="validacion_libretas" id="validacion_libretas" value="<?=$validacionLibretas;?>">
 	<input type="hidden" name="edicion" id="edicion" value="1">
 	<input type="hidden" name="cod_cuenta_configuracion_iva" id="cod_cuenta_configuracion_iva" value="<?=$cod_cuenta_configuracion_iva;?>">
 	<input type="hidden" name="cod_sis_configuracion" id="cod_sis_configuracion" value="<?=$cod_sis_configuracion;?>">

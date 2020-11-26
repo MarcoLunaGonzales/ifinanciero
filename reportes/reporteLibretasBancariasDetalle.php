@@ -107,9 +107,9 @@ switch ($filtro) {
             $entro=1;
           }
           
-          $saldo=obtenerSaldoLibretaBancariaDetalle($codigo);
+          $saldo=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,$sqlFiltroSaldo,$monto);
           if($entro==1){
-            $totalMonto+=$monto;
+            $totalMonto+=$saldo;
             ?>
             <tr>
               <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
@@ -131,11 +131,12 @@ switch ($filtro) {
                 $facturaMonto="";
                 $totalMontoFac+=0;
                 if(!($codComprobante==""||$codComprobante==0)){
-                  if($filtro==0){
+                  $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);                    
+                  /*if($filtro==0){
                     $datosDetalle=obtenerDatosComprobanteDetalle($codComprobanteDetalle);                    
                   }else{
                     $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);                    
-                  }
+                  }*/
                   if($datosDetalle[1]!=''){
                      $facturaFecha="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
                      $facturaNumero="<b class='text-success'>".nombreComprobante($codComprobante)."</b>";
@@ -157,11 +158,12 @@ switch ($filtro) {
                <?php                          
               }else{
                 $cadena_facturas=obtnerCadenaFacturas($codigo);
-                if($filtro==0){
+                $sqlDetalleX="SELECT * FROM facturas_venta f where f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 $sqlFiltro2 order by f.codigo desc";
+                /*if($filtro==0){
                   $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 order by codigo desc";
                 }else{
                     $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 $sqlFiltro2 order by codigo desc";
-                }
+                }*/
                 
                 // echo $sqlDetalleX;                                   
                 $stmtDetalleX = $dbh->prepare($sqlDetalleX);

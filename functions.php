@@ -9279,6 +9279,79 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
      }
      return $saldo; 
   }
+  
+  function obtenerSaldoLibretaBancariaDetalleFiltro($codigo,$sqlFiltro,$montoLib){
+    $dbh = new Conexion();
+    $sql="SELECT ld.codigo,ld.monto,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf 
+    join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
+    where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta f  where lbdf.cod_libretabancariadetalle='$codigo' 
+      and f.codigo=lbdf.cod_facturaventa and f.cod_estadofactura<>2) order by fecha_hora";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    
+    $montoFactura=obtenerMontoTotalLibretaBancariaDetalleFiltro($codigo,$sqlFiltro);
+    $montoFacturaAux=$montoFactura;
+    $saldo=$montoLib;$montoAux=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+       if($row['codigo']!=$codigo){
+        $montoAux=obtenerSaldoLibretaBancariaDetalleFiltroAux($row['codigo'],$codigo,$sqlFiltro);
+       }else{
+        if($montoAux>0&&$montoFacturaAux<($row['monto']+$montoAux)){ //validacion para libretas detalle que tienen dos o más facturas asociadas
+          $montoFactura=$montoAux;
+        }   
+       }  
+        if($montoFactura>=$row['monto']){
+          $saldo=0;
+          $montoFactura=$montoFactura-$row['monto'];
+        }else{
+          $saldo=$row['monto']-$montoFactura;
+          $montoFactura=0;
+        }  
+        if($row["codigo"]==$codigo){
+         break;
+        }
+     }
+     return $saldo; 
+  }
+  function obtenerSaldoLibretaBancariaDetalleFiltroAux($codigo,$codigoAux,$sqlFiltro){
+    $dbh = new Conexion();
+    $sql="SELECT ld.monto,ld.codigo,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
+    where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta f  where lbdf.cod_libretabancariadetalle='$codigo' 
+      and f.codigo=lbdf.cod_facturaventa and f.cod_estadofactura<>2) and ld.codigo!=$codigoAux order by fecha_hora";
+    //echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $montoFactura=obtenerMontoTotalLibretaBancariaDetalleFiltro($codigo,$sqlFiltro);
+    //echo $montoFactura;
+    $saldo=0;$montoAux=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+        if($montoFactura>=$row['monto']){
+          $saldo=0;
+          $montoFactura=$montoFactura-$row['monto'];
+        }else{
+          $saldo=$row['monto']-$montoFactura;
+          $montoFactura=0;
+        }
+        if($row["codigo"]==$codigo){
+         break;
+        }
+     }
+     return $montoFactura; 
+  }
+
+  function obtenerMontoTotalLibretaBancariaDetalleFiltro($codigo,$sqlFiltro){
+    $dbh = new Conexion();
+    $sql="SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as monto_factura from facturas_venta fv, facturas_ventadetalle fd, libretas_bancariasdetalle_facturas lf  
+      where lf.cod_facturaventa=fv.codigo and fv.codigo=fd.cod_facturaventa and fv.cod_estadofactura<>2 and lf.cod_libretabancariadetalle=$codigo $sqlFiltro";
+     //echo $sql;
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row["monto_factura"];
+     }
+     return $valor; 
+  }
 
   function obtenerBancoBeneficiarioSolicitudRecursos($codCuentaBanco,$codigo){
   $bancos=obtenerDatosCuentaBancoProveedorWS($codigo,$codCuentaBanco);
@@ -10854,4 +10927,14 @@ function obtenerPrimerAtributoSimulacionServicioDatos($codigo){
     return $valor;
  }
 
+function obtenerCantidadCuentaCodigoComprobante($codigo,$cuenta){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cd.cod_cuenta,cd.glosa,cd.debe,cd.haber,(cd.debe+cd.haber) as monto,cd.cod_area,cd.cod_unidadorganizacional,p.nombre,p.numero,(SELECT nombre FROM cuentas_auxiliares where codigo=cd.cod_cuentaauxiliar) as nombre_auxiliar from comprobantes_detalle cd join plan_cuentas p on p.codigo=cd.cod_cuenta where cd.cod_comprobante=$codigo and cd.cod_cuenta=$cuenta");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_cuenta'];
+     }
+     return($valor);
+  }
 ?>

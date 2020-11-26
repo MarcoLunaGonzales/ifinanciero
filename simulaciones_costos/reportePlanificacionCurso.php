@@ -23,7 +23,7 @@ $fechaActual=date("Y-m-d");
 
 $moneda=1;//$_POST["moneda"]
 $nombreMoneda=nameMoneda($moneda);
-$tipoCurso=123;//$_POST['tipo_curso'];
+$tipoCurso=$_POST['tipo_curso'];//$_POST['tipo_curso'];
 
 $desdeInicioAnio=$globalNombreGestion."-01-01";
 

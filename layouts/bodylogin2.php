@@ -549,7 +549,7 @@
                           var d = new Date();
                           var mesActual = 7;//parseInt($("#global_mes").val());//d.getMonth()+1;
                           var anioActual = 2020;//parseInt($("#global_gestion").val());//d.getFullYear();
-                          
+                          var habilitarValidacionLibreta=$("#validacion_libretas").val(); 
                         if($("#debe"+(i+1)).length>0){
                           //VALIDAMOS CUANDO LA CUENTA TENGA EC LA CUENTA AUXILIAR SIEMPRE ESTE SELECCIONADA.
                           if(tipoEstadoCuenta>0 && cuentaAuxiliar==0){  
@@ -577,11 +577,13 @@
                               }
                             }  
                           }
-                          //LA LIBRETA DEBE ESTAR RELACIONADA A LA CUENTA DE LA LIBRETA BANCARIA 
-                          if(detalleLibretaSelect==false && libretasBancarias==false && $("#tipo_comprobante").val()!=4 && parseInt(fechaComprobante[1])>=parseInt(mesActual)&&parseInt(fechaComprobante[0])>=parseInt(anioActual)){
+                          if(parseInt(habilitarValidacionLibreta)>0){
+                            //LA LIBRETA DEBE ESTAR RELACIONADA A LA CUENTA DE LA LIBRETA BANCARIA 
+                            if(detalleLibretaSelect==false && libretasBancarias==false && $("#tipo_comprobante").val()!=4 && parseInt(fechaComprobante[1])>=parseInt(mesActual)&&parseInt(fechaComprobante[0])>=parseInt(anioActual)){
                                 $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un detalle de la Libreta Bancaria para Cerrar.");
                                 $('#modalAlert').modal('show');
                                 return false;
+                            }        
                           }
                           if( (tipoEstadoCuenta==2 && debeZ>0) ){
                             for (var f = 0; f < itemEstadosCuentas[i].length; f++) {
