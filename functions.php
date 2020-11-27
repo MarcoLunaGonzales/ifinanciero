@@ -10937,4 +10937,14 @@ function obtenerCantidadCuentaCodigoComprobante($codigo,$cuenta){
      }
      return($valor);
   }
+  function obtenerNivelCuenta($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT nivel from plan_cuentas where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['nivel'];
+     }
+     return($valor);
+  }
 ?>

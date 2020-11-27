@@ -317,5 +317,38 @@ function obtenerDatosSolicitudFacturacion($codigo,$cod_claservicio){
     return($string); 
 }
 
+
+ function obtenerBalanceHijosCuenta($cuenta,$nivel,$fi,$fa,$arrayUnidades){
+    $dbh = new Conexion();
+    $queryCuentas="";
+    switch ($nivel) {
+        case 5: $queryCuentas="($cuenta)";break;
+        case 4: $queryCuentas="(select codigo from plan_cuentas where cod_padre=$cuenta)";break;
+        case 3: $queryCuentas="(select codigo from plan_cuentas where cod_padre in (select codigo from plan_cuentas where cod_padre=$cuenta))";break;
+        case 2: $queryCuentas="(select codigo from plan_cuentas where cod_padre in (select codigo from plan_cuentas where cod_padre in (select codigo from plan_cuentas where cod_padre=$cuenta)))";break;
+        case 1: $queryCuentas="(select codigo from plan_cuentas where cod_padre in (select codigo from plan_cuentas where cod_padre in (select codigo from plan_cuentas where cod_padre in (select codigo from plan_cuentas where cod_padre=$cuenta))))";break;
+    }
+    
+    $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
+             (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
+              from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+              join areas a on a.codigo=d.cod_area
+              join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
+              join plan_cuentas p on p.codigo=d.cod_cuenta
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>'2' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+          on p.codigo=cuentas_monto.cod_cuenta where p.codigo in ($queryCuentas) order by p.numero";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $numeroX=$row['numero'];
+        if($numeroX[0]=="1"){
+          $valor+=($row['total_debe']-$row['total_haber']);        
+        }else{
+          $valor+=abs($row['total_debe']-$row['total_haber']);       
+        }
+    }        
+    return($valor);
+ }
 ?>
 

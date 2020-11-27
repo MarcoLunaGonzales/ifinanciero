@@ -2,6 +2,7 @@
 require_once '../conexion.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
+require_once '../functionsReportes.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
 require_once '../layouts/bodylogin2.php';
 $dbh = new Conexion();
@@ -10,7 +11,7 @@ $fechaActual=date("Y-m-d");
 $gestion=nameGestion($_POST['gestion']);
 $fecha=$_POST['fecha'];
 $fechaTitulo= explode("-",$fecha);
-
+$fechaDesde=$fechaTitulo[0]."-01-01";
 $fechaFormateada=$fechaTitulo[2].'/'.$fechaTitulo[1].'/'.$fechaTitulo[0];
 
 
@@ -30,26 +31,35 @@ $tituloOficinas="";
 for ($i=0; $i < count($unidades); $i++) { 
   $tituloOficinas.=abrevUnidad_solo($unidades[$i]).",";
 }
-
+$arrayUnidades=implode(",", $unidades);
 //CONSTANTES
 //ACTIVO CORRIENTE
-$datosCalculables['AC']=1000;
+$cuentaActivoCorriente=6;
+$datosCalculables['AC']=number_format(obtenerBalanceHijosCuenta($cuentaActivoCorriente,obtenerNivelCuenta($cuentaActivoCorriente),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PASIVO CORRIENTE
-$datosCalculables['PC']=2;
+$cuentaPasivoCorriente=107;
+$datosCalculables['PC']=number_format(obtenerBalanceHijosCuenta($cuentaPasivoCorriente,obtenerNivelCuenta($cuentaPasivoCorriente),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //ACTIVO TOTAL
-$datosCalculables['AT']=12345;
+$cuentaActivoTotal=1;
+$datosCalculables['AT']=number_format(obtenerBalanceHijosCuenta($cuentaActivoTotal,obtenerNivelCuenta($cuentaActivoTotal),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //INVENTARIO
-$datosCalculables['I']=12345;
+$cuentaInventarios=70;
+$datosCalculables['I']=number_format(obtenerBalanceHijosCuenta($cuentaInventarios,obtenerNivelCuenta($cuentaInventarios),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PATRIMONIO NETO
-$datosCalculables['PN']=12345;
+$cuentaPatrimonioNeto=70;
+$datosCalculables['PN']=number_format(obtenerBalanceHijosCuenta($cuentaPatrimonioNeto,obtenerNivelCuenta($cuentaPatrimonioNeto),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PASIVO TOTAL
-$datosCalculables['PT']=12345;
+$cuentaPasivoTotal=2;
+$datosCalculables['PT']=number_format(obtenerBalanceHijosCuenta($cuentaPasivoTotal,obtenerNivelCuenta($cuentaPasivoTotal),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //DISPONIBLE
-$datosCalculables['DISP']=12345;
+$cuentaDisponible=7;
+$datosCalculables['DISP']=number_format(obtenerBalanceHijosCuenta($cuentaDisponible,obtenerNivelCuenta($cuentaDisponible),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PASIVO A LARGO PLAZO
-$datosCalculables['PLP']=12345;
+$cuentaObligacionesLargo=171;
+$datosCalculables['PLP']=number_format(obtenerBalanceHijosCuenta($cuentaObligacionesLargo,obtenerNivelCuenta($cuentaObligacionesLargo),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //ACTIVO NO CORRIENTE
-$datosCalculables['ANC']=12345;
+$cuentaActivoNoCorriente=88;
+$datosCalculables['ANC']=number_format(obtenerBalanceHijosCuenta($cuentaActivoNoCorriente,obtenerNivelCuenta($cuentaActivoNoCorriente),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //VENTAS
 $datosCalculables['V']=12345;
 //VENTAS AL CRÉDITO
@@ -197,7 +207,7 @@ function evaluarDatos($monto,$rango){
                                          <td class="text-left"><?=$nombreRazonDetalle?></td>
                                          <td class="text-left"><?=$descripcionFormula?></td>
                                          <td class="text-center"><?=$descripcionCalculoTitle?></td>
-                                         <td class="text-right"><?=$datosCalculables[$rowg['abreviatura']]?></td>
+                                         <td class="text-right"><?=number_format($datosCalculables[$rowg['abreviatura']],2,'.','')?></td>
                                          <td class="text-center"><?=$descripcionPromedio?></td>
                                          <td class="text-center"><?=$evaluacion_vertical?></td>
                                          <!--<td class="text-left"><?=$recomendacion?></td>-->

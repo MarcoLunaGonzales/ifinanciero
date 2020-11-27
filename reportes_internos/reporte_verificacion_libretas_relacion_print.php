@@ -78,6 +78,7 @@ $stmt2->execute();
       <thead>
         <tr style="background:#21618C; color:#fff;">
           <td>Cuenta</td>
+          <td>Comprobante</td>
           <td>Fecha</td>
           <td>Hora</td>
           <td width="35%">Descripción</td>
@@ -122,6 +123,7 @@ $stmt2->execute();
             ?>
             <tr class="">
               <td class="text-center font-weight-bold"><?=nameCuenta($entroLib)?></td>
+              <td class="text-center font-weight-bold"><?=nombreComprobante($codComprobanteFactura)." CODIGO: <a href='../comprobantes/edit_prueba.php?codigo=".$codComprobanteFactura."' target='_blank'>".$codComprobanteFactura?></a></td>
               <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
               <td class="text-center"><?=strftime('%H:%M:%S',strtotime($fecha))?></td>
               <td class="text-left">
