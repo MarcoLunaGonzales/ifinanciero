@@ -22,7 +22,7 @@ $saldo_inicial=0;
 
 // Preparamos
 $stmt = $dbh->prepare("SELECT ce.*
-FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.fecha_hora desc"); // limit 50
+FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.fecha_hora desc limit 50"); // limit 50
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -280,7 +280,7 @@ $stmtb->bindColumn('nombre', $nombre);
 
                             <td class="td-actions text-right">
                             <?php
-                              if($globalAdmin==1){
+                             // if($globalAdmin==1){
                               ?>                             
                               <!-- <button type="button"  title="Relacionar Con Factura" class="btn btn-warning" data-toggle="modal" data-target="#modallista_facturas" onclick="relacionar_factura_libreta(<?=$codigo?>)">
                                 <i class="material-icons">add_circle_outline</i>
@@ -299,7 +299,7 @@ $stmtb->bindColumn('nombre', $nombre);
                               ?>
                               
                               <?php
-                              }
+                              //}
                               ?>
                               
                             </td>

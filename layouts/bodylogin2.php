@@ -419,6 +419,8 @@
       var debeIVA=0;
       var haberIVA=0;
       var banderaDebeHaberIVA=0;
+      $("#boton_enviar_formulario").attr("disabled",true);
+      $("#boton_enviar_formulario").html("Enviando...");
       numFilas=$("#cantidad_filas").val();
       if(numFilas==0){
         mensaje+="<p>Debe tener registrado al menos una cuenta en detalle</p>";
@@ -615,6 +617,8 @@
           }
         }
         if(envio==1){
+          $("#boton_enviar_formulario").removeAttr("disabled");
+          $("#boton_enviar_formulario").html("Guardar");
           return false;
         }else{
           //verificar archivos obligatorios

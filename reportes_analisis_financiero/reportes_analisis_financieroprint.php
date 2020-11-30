@@ -46,7 +46,7 @@ $datosCalculables['AT']=number_format(obtenerBalanceHijosCuenta($cuentaActivoTot
 $cuentaInventarios=70;
 $datosCalculables['I']=number_format(obtenerBalanceHijosCuenta($cuentaInventarios,obtenerNivelCuenta($cuentaInventarios),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PATRIMONIO NETO
-$cuentaPatrimonioNeto=70;
+$cuentaPatrimonioNeto=3;
 $datosCalculables['PN']=number_format(obtenerBalanceHijosCuenta($cuentaPatrimonioNeto,obtenerNivelCuenta($cuentaPatrimonioNeto),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PASIVO TOTAL
 $cuentaPasivoTotal=2;
@@ -61,23 +61,42 @@ $datosCalculables['PLP']=number_format(obtenerBalanceHijosCuenta($cuentaObligaci
 $cuentaActivoNoCorriente=88;
 $datosCalculables['ANC']=number_format(obtenerBalanceHijosCuenta($cuentaActivoNoCorriente,obtenerNivelCuenta($cuentaActivoNoCorriente),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //VENTAS
-$datosCalculables['V']=12345;
+$cuentaVentas=4;
+$datosCalculables['V']=number_format(obtenerBalanceHijosCuenta($cuentaVentas,obtenerNivelCuenta($cuentaVentas),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //VENTAS AL CRÉDITO
 $datosCalculables['Vcr']=12345;
 //COSTO MERCADERÍA VENDIDA
 $datosCalculables['CMV']=12345;
 //COMPRAS AL CRÉDITO
 $datosCalculables['Ccr']=12345;
+
+//datos Extra
+$cuentaEgresos=5;
+$montoEgresos=obtenerBalanceHijosCuenta($cuentaEgresos,obtenerNivelCuenta($cuentaEgresos),$fechaDesde,$fecha,$arrayUnidades);
+$cuentaImpuesto=141;
+$montoImpuesto=obtenerBalanceHijosCuenta($cuentaImpuesto,obtenerNivelCuenta($cuentaImpuesto),$fechaDesde,$fecha,$arrayUnidades);
+$cuentaDepre=256;
+$montoDepre=obtenerBalanceHijosCuenta($cuentaDepre,obtenerNivelCuenta($cuentaDepre),$fechaDesde,$fecha,$arrayUnidades);
 //UTILIDAD NETA
-$datosCalculables['UN']=12345;
+$datosCalculables['UN']=number_format($datosCalculables['V']-$montoEgresos-$montoImpuesto,2,'.','');
 //UTILIDAD OPERATIVA
-$datosCalculables['UO']=12345;
+$datosCalculables['UO']=number_format($datosCalculables['V']-$montoEgresos-$montoImpuesto-$montoDepre,2,'.','');
 //UTILIDAD BRUTA
-$datosCalculables['UB']=12345;
+$datosCalculables['UB']=number_format($datosCalculables['V']-$montoEgresos,2,'.','');
 //CLIENTES
-$datosCalculables['CL']=12345;
+$cuentaClientes=67;
+$datosCalculables['CL']=number_format(obtenerBalanceHijosCuenta($cuentaClientes,obtenerNivelCuenta($cuentaClientes),$fechaDesde,$fecha,$arrayUnidades),2,'.','');
 //PROVEEDORES
-$datosCalculables['P']=12345;
+$cuentaProveedoresServicio=153;
+$cuentaOtrosProveedores=154;
+$cuentaHonorariosProfesionales=235;
+$cuentaHonorariosDocencia=217;
+
+$montoPS=obtenerBalanceHijosCuenta($cuentaProveedoresServicio,obtenerNivelCuenta($cuentaProveedoresServicio),$fechaDesde,$fecha,$arrayUnidades);
+$montoOP=obtenerBalanceHijosCuenta($cuentaOtrosProveedores,obtenerNivelCuenta($cuentaOtrosProveedores),$fechaDesde,$fecha,$arrayUnidades);
+$montoHP=obtenerBalanceHijosCuenta($cuentaHonorariosProfesionales,obtenerNivelCuenta($cuentaHonorariosProfesionales),$fechaDesde,$fecha,$arrayUnidades);
+$montoHD=obtenerBalanceHijosCuenta($cuentaHonorariosDocencia,obtenerNivelCuenta($cuentaHonorariosDocencia),$fechaDesde,$fecha,$arrayUnidades);
+$datosCalculables['P']=number_format($montoPS+$montoOP+$montoHP+$montoHD,2,'.','');
 
 
 function evaluarDatos($monto,$rango){
@@ -122,6 +141,38 @@ function evaluarDatos($monto,$rango){
                       <h6 class="card-title">Oficina:<?=$tituloOficinas?></h6>             
                     </div>
                     <div class="card-body">
+                      <br>
+                      <div class="col-sm-12">
+                        <div class="table-responsive div-center col-sm-6">
+                          <table class="table table-sm table-condensed table-bordered">
+                               <thead>
+                                <tr class="bg-dark text-white"><th width="30%">VARIABLE</th><th width="40%">DESCRIPCION</th><th width="30%">MONTO</th></tr>
+                               </thead>
+                               <tbody>                               
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">AC</td><td width="40%" class="font-weight-bold">ACTIVO CORRIENTE</td><td width="30%" class="text-right"><?=$datosCalculables['AC']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">PC</td><td width="40%" class="font-weight-bold">PASIVO CORRIENTE</td><td width="30%" class="text-right"><?=$datosCalculables['PC']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">AT</td><td width="40%" class="font-weight-bold">ACTIVO TOTAL</td><td width="30%" class="text-right"><?=$datosCalculables['AT']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">I</td><td width="40%" class="font-weight-bold">INVENTARIO</td><td width="30%" class="text-right"><?=$datosCalculables['I']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">PN</td><td width="40%" class="font-weight-bold">PATRIMONIO NETO</td><td width="30%" class="text-right"><?=$datosCalculables['PN']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">PT</td><td width="40%" class="font-weight-bold">PASIVO TOTAL</td><td width="30%" class="text-right"><?=$datosCalculables['PT']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">DISP</td><td width="40%" class="font-weight-bold">DISPONIBLE</td><td width="30%" class="text-right"><?=$datosCalculables['DISP']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">PLP</td><td width="40%" class="font-weight-bold">PASIVO A LARGO PLAZO</td><td width="30%" class="text-right"><?=$datosCalculables['PLP']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">ANC</td><td width="40%" class="font-weight-bold">ACTIVO NO CORRIENTE</td><td width="30%" class="text-right"><?=$datosCalculables['ANC']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">V</td><td width="40%" class="font-weight-bold">VENTAS</td><td width="30%" class="text-right"><?=$datosCalculables['V']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">Vcr</td><td width="40%" class="font-weight-bold">VENTAS AL CRÉDITO</td><td width="30%" class="text-right"><?=$datosCalculables['Vcr']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">CMV</td><td width="40%" class="font-weight-bold">COSTO MERCADERÍA VENDIDA</td><td width="30%" class="text-right"><?=$datosCalculables['CMV']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">Ccr</td><td width="40%" class="font-weight-bold">COMPRAS AL CRÉDITO</td><td width="30%" class="text-right"><?=$datosCalculables['Ccr']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">UN</td><td width="40%" class="font-weight-bold">UTILIDAD NETA</td><td width="30%" class="text-right"><?=$datosCalculables['UN']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">UO</td><td width="40%" class="font-weight-bold">UTILIDAD OPERATIVA</td><td width="30%" class="text-right"><?=$datosCalculables['UO']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">UB</td><td width="40%" class="font-weight-bold">UTILIDAD BRUTA</td><td width="30%" class="text-right"><?=$datosCalculables['UB']?> (<?=$montoEgresos?>)</td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">CL</td><td width="40%" class="font-weight-bold">CLIENTES</td><td width="30%" class="text-right"><?=$datosCalculables['CL']?></td></tr>
+                                 <tr><td class="bg-amarillo font-weight-bold" width="30%">P</td><td width="40%" class="font-weight-bold">PROVEEDORES</td><td width="30%" class="text-right"><?=$datosCalculables['P']?></td></tr>
+                                </tbody> 
+                          </table>                          
+                        </div>
+                      </div>
+                      <br><br>
+                      <hr>
                       <div class="col-sm-12">
                         <div class="table-responsive div-center col-sm-12">
                           <table class="table table-sm table-condensed table-bordered">
@@ -158,7 +209,7 @@ function evaluarDatos($monto,$rango){
                                   eval("\$descripcionCalculoTitle='".$descripcionCalculo2."';");
                                    
                                   $evaluacion_vertical=evaluarDatos($datosCalculables[$rowg['abreviatura']],$rangoMonto);
-                                  
+                                  $evaluacion_vertical="-";
                                   $recomendacion="NINGUNA"; 
                                   if($evaluacion_vertical=="MALA"){
                                     $recomendacion="AUMENTAR LA ".strtoupper($nombreRazon);
@@ -221,32 +272,7 @@ function evaluarDatos($monto,$rango){
                         </div>
                       </div>
                       <br><br><br>
-                      <hr>
-
-                      <div class="col-sm-12">
-                        <div class="table-responsive div-center col-sm-6">
-                          <table class="table table-sm table-condensed table-bordered">
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">AC</td><td width="55%" class="font-weight-bold">ACTIVO CORRIENTE</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">PC</td><td width="55%" class="font-weight-bold">PASIVO CORRIENTE</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">AT</td><td width="55%" class="font-weight-bold">ACTIVO TOTAL</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">I</td><td width="55%" class="font-weight-bold">INVENTARIO</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">PN</td><td width="55%" class="font-weight-bold">PATRIMONIO NETO</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">PT</td><td width="55%" class="font-weight-bold">PASIVO TOTAL</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">DISP</td><td width="55%" class="font-weight-bold">DISPONIBLE</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">PLP</td><td width="55%" class="font-weight-bold">PASIVO A LARGO PLAZO</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">ANC</td><td width="55%" class="font-weight-bold">ACTIVO NO CORRIENTE</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">V</td><td width="55%" class="font-weight-bold">VENTAS</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">Vcr</td><td width="55%" class="font-weight-bold">VENTAS AL CRÉDITO</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">CMV</td><td width="55%" class="font-weight-bold">COSTO MERCADERÍA VENDIDA</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">Ccr</td><td width="55%" class="font-weight-bold">COMPRAS AL CRÉDITO</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">UN</td><td width="55%" class="font-weight-bold">UTILIDAD NETA</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">UO</td><td width="55%" class="font-weight-bold">UTILIDAD OPERATIVA</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">UB</td><td width="55%" class="font-weight-bold">UTILIDAD BRUTA</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">CL</td><td width="55%" class="font-weight-bold">CLIENTES</td></tr>
-                                 <tr><td class="bg-amarillo font-weight-bold" width="45%">P</td><td width="55%" class="font-weight-bold">PROVEEDORES</td></tr>
-                          </table>                          
-                        </div>
-                      </div>
+                      
                     </div>
                 </div>
             </div>

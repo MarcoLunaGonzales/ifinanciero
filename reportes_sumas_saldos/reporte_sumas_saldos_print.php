@@ -202,8 +202,10 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   $nombreResultado=nameCuenta($cuentaResultado);
                   $numeroResultado=obtieneNumeroCuenta($cuentaResultado);
                   $datosResultados=sumaMontosDebeHaberComprobantesDetalleResultados($fechaFormateada,1,$unidades,$areas,$gestion,"none");
+                  $sumaDebe=0;$sumaHaber=0;
                   while ($rowRes = $datosResultados->fetch(PDO::FETCH_ASSOC)) {
-
+                     $sumaDebe=$rowRes['t_debe'];
+                     $sumaHaber=$rowRes['t_haber'];
                      if($rowRes['tipo']==1){
                       $montoResultadoIngreso=$rowRes['t_debe']-$rowRes['t_haber'];
                       $montoResultadoIngreso=$montoResultadoIngreso*(-1);
@@ -213,7 +215,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   }
                   //$montoResultado=$tbob
                   $montoResultado=$montoResultadoIngreso-$montoResultadoEgreso;
-                  $sumaDebeNivel4+=$rowRes['t_debe'];$sumaHaberNivel4+=$rowRes['t_haber'];
+                  $sumaDebeNivel4+=$montoResultadoIngreso;$sumaHaberNivel4+=$montoResultadoEgreso;
                   $sumaNivel4+=$montoResultado;
                   $nombreResultado=formateaPlanCuenta($nombreResultado, 5);
                   if($montoResultado>0){
@@ -221,8 +223,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                       $html4.='<tr class="'.$mostrarNivel[5].'">'.
                            '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroResultado).'</td>'.
                            '<td class="td-border-none text-left">'.$nombreResultado.'</td>'.
-                           '<td class="td-border-none text-right">'.number_format($rowRes['t_debe'], 2, '.', ',').'</td>'.
-                           '<td class="td-border-none text-right">'.number_format($rowRes['t_haber'], 2, '.', ',').'</td>'.
+                           '<td class="td-border-none text-right">'.number_format($montoResultadoIngreso, 2, '.', ',').'</td>'.
+                           '<td class="td-border-none text-right">'.number_format($montoResultadoEgreso, 2, '.', ',').'</td>'.
                            '<td class="td-border-none text-right">'.number_format($montoResultado, 2, '.', ',').'</td>'.
                            '<td class="td-border-none text-right"></td>';   
                       $html4.='</tr>';      
@@ -231,8 +233,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                       $html4.='<tr class="'.$mostrarNivel[5].'">'.
                            '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroResultado).'</td>'.
                            '<td class="td-border-none text-left">'.$nombreResultado.'</td>'.
-                           '<td class="td-border-none text-right">'.number_format($rowRes['t_debe'], 2, '.', ',').'</td>'.
-                           '<td class="td-border-none text-right">'.number_format($rowRes['t_haber'], 2, '.', ',').'</td>'.
+                           '<td class="td-border-none text-right">'.number_format($montoResultadoIngreso, 2, '.', ',').'</td>'.
+                           '<td class="td-border-none text-right">'.number_format($montoResultadoEgreso, 2, '.', ',').'</td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right">'.number_format(abs($numeroResultado), 2, '.', ',').'</td>';   
                       $html4.='</tr>';      
@@ -240,8 +242,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                       $html4.='<tr class="'.$mostrarNivel[5].'">'.
                            '<td class="td-border-none text-left">'.formatoNumeroCuenta($numeroResultado).'</td>'.
                            '<td class="td-border-none text-left">'.$nombreResultado.'</td>'.
-                           '<td class="td-border-none text-right">'.number_format($rowRes['t_debe'], 2, '.', ',').'</td>'.
-                           '<td class="td-border-none text-right">'.number_format($rowRes['t_haber'], 2, '.', ',').'</td>'.
+                           '<td class="td-border-none text-right">'.number_format($montoResultadoIngreso, 2, '.', ',').'</td>'.
+                           '<td class="td-border-none text-right">'.number_format($montoResultadoEgreso, 2, '.', ',').'</td>'.
                            '<td class="td-border-none text-right"></td>'.
                            '<td class="td-border-none text-right"></td>';   
                       $html4.='</tr>';      

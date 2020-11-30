@@ -451,7 +451,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 	                  	</div>
 
 					  	<div class="card-footer fixed-bottom">
-							<button type="submit" class="<?php if($desdeSR==1){ echo "btn btn-warning";}else{ echo "btn btn-primary";}?>">Guardar</button>	
+							<button id="boton_enviar_formulario" type="submit" class="<?php if($desdeSR==1){ echo "btn btn-warning";}else{ echo "btn btn-primary";}?>">Guardar</button>	
 							<?php if($desdeSR==1){$urlList=$urlListAdminSol;}?>					
 							<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
 							<div class="row col-sm-12">
