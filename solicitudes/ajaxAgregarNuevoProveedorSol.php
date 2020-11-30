@@ -18,7 +18,7 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
 $ciudad=(int)$_GET['ciudad'];
 $otra=NULL;
 if($_GET['ciudad']==""){
-	$ciudad=NULL;
+	$ciudad="0";
 	$otra=$_GET['otra'];
 }
 

@@ -9515,7 +9515,7 @@ function guardarDatosProveedor(){
     if($("#nacional_empresa").val()=="I"&&(nit==""||nit==0)){
       nit=99001;
     }
-    if(nombre!=""&&(pais>0)&&(estado>0)&&(ciudad>0)&&nit!="")
+    if(nombre!=""&&(pais>0)&&(estado>0)&&nit!="")
       var sw=true;
     else{
       var sw=false;
@@ -9528,22 +9528,23 @@ function guardarDatosProveedor(){
       identificacion=99001;
     }
 
-    if(nombre!=""&&paterno_p!=""&&identificacion!=""&&(pais>0)&&(estado>0)&&(ciudad>0)&&nit!="")
+    if(nombre!=""&&paterno_p!=""&&identificacion!=""&&(pais>0)&&(estado>0)&&nit!=""){
       var sw=true;
-    else{
+    }else{
       var sw=false;
     }
   }
 
    if(sw){
-     /*if(ciudad>0){
+     if(ciudad>0){
        ciudad_true=1;
      }else{
+      ciudad_true=1;
       if(ciudad=="NN"){
          ciudad_true=2;
          ciudad="";
       }
-     }*/
+     }
      ciudad_true=1;
      if(ciudad_true>0){
         if(ciudad_true==1){
