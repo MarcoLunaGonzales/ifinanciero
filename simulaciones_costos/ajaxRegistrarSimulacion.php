@@ -48,9 +48,9 @@ if(isset($_GET['nombre'])){
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 
-  //$sqlIbnorca="UPDATE ibnorca.modulos set idPropuesta=$codSimCosto where IdModulo=$IdModulo";
-  //$stmtIbnorca = $dbh->prepare($sqlIbnorca);
-  //$stmtIbnorca->execute();
+  $sqlIbnorca="UPDATE ibnorca.modulos set idPropuesta=$codSimCosto where IdModulo=$IdModulo";
+  $stmtIbnorca = $dbh->prepare($sqlIbnorca);
+  $stmtIbnorca->execute();
 
   $dbhD = new Conexion();
   $sqlD="DELETE FROM simulaciones_detalle where cod_simulacioncosto=$codSimCosto";

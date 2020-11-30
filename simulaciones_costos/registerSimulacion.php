@@ -61,7 +61,7 @@ $mesesProrrateo=obtenerValorConfiguracion(89);
   //if($presupuestoEnMeses>0){
   //  $porcentPreciosEnMeses=number_format(($ejecutadoEnMeses/$presupuestoEnMeses)*100,2,'.','');
   //}
-  $porcentPreciosEnMeses=80;
+  $porcentPreciosEnMeses=obtenerValorConfiguracion(91);
   $stringMeses=implode("-",$arrayMeses);
  }
 if(isset($_GET['q'])){
@@ -83,12 +83,14 @@ if(isset($_GET['q'])){
   $idServicioX=0; 
 }
 
+$codEstadoSimulacionXX=3;
 $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_externo from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join precios_simulacioncosto pa on sc.cod_precioplantilla=pa.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
 			$stmt1->execute();
 			$stmt1->bindColumn('codigo', $codigoX);
             $stmt1->bindColumn('nombre', $nombreX);
             $stmt1->bindColumn('fecha', $fechaX);
             $stmt1->bindColumn('cod_responsable', $codResponsableX);
+            $stmt1->bindColumn('cod_estadosimulacion', $codEstadoSimulacionX);
             $stmt1->bindColumn('estado', $estadoX);
             $stmt1->bindColumn('cod_plantillacosto', $codigoPlan);
             $stmt1->bindColumn('venta_local', $precioLocalX);
@@ -129,6 +131,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
            $ingresoAlternativo=obtenerPrecioAlternativoDetalle($codigoPrecioSimulacion);
            $codigoSimulacionSuper=$codigoX;
            $diasCursoXX=$diasCursoX;
+           $codEstadoSimulacionXX=$codEstadoSimulacionX;
            if($diasCursoX==0){
              $diasCursoXX=1; 
            }
@@ -140,7 +143,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
   }else{
   	$checkIbnorca="";
   	$simulacionEn="FUERA DE IBNORCA";
-  }     
+  } 
+if($codEstadoSimulacionXX==3){
+  ?><center><h5>Propuesta Aprobada (Sin Edición)</h5></center><?php
+}else{
+
 ?>
 <div class="cargar">
   <div class="div-loading text-center">
@@ -722,8 +729,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 </div>
 
 <?php
-require_once 'modal.php';
 
+require_once 'modal.php';
+}
 ?>
 
 

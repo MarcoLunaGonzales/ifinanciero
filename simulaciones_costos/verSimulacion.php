@@ -54,7 +54,7 @@ $mesesProrrateo=obtenerValorConfiguracion(89);
   //if($presupuestoEnMeses>0){
   //  $porcentPreciosEnMeses=number_format(($ejecutadoEnMeses/$presupuestoEnMeses)*100,2,'.','');
   //}
-  $porcentPreciosEnMeses=80;
+  $porcentPreciosEnMeses=obtenerValorConfiguracion(91);
   $stringMeses=implode("-",$arrayMeses);
  }
 if(isset($_GET['q'])){

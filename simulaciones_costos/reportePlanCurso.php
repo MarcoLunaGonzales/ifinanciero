@@ -85,16 +85,20 @@ $i=0;
 			                	<div class="form-group">
 			                		<div id="div_contenedor_oficina_costo">
 				                			<?php
-											$sqlUO="SELECT DISTINCT s.IdCurso,ibnorca.codigo_curso(s.IdCurso) as CodigoCurso from simulaciones_costos s WHERE s.cod_estadosimulacion=3;";
+											$sqlUO="SELECT DISTINCT s.IdCurso,ibnorca.codigo_curso(s.IdCurso) as CodigoCurso from simulaciones_costos s WHERE s.cod_estadosimulacion=3 and s.IdCurso>0;";
 											$stmt = $dbh->prepare($sqlUO);
 											$stmt->execute();
 											?>
 												<select class="selectpicker form-control form-control-sm" name="tipo_curso[]" id="tipo_curso" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
 												    <?php 
 												    	while ($row = $stmt->fetch()){ 
-													?>
-												      	 <option value="<?=$row["IdCurso"];?>"><?=$row["CodigoCurso"];?></option>
-									    	<?php 
+												    		if(isset($_GET['s'])){
+												    			if($row["IdCurso"]==$_GET['s']){
+												    			  ?><option value="<?=$row["IdCurso"];?>"><?=$row["CodigoCurso"];?></option><?php 	
+												    			}                                                               
+												    		}else{
+      															?><option value="<?=$row["IdCurso"];?>"><?=$row["CodigoCurso"];?></option><?php 
+												    		}													      
 												 		} 
 										 	?>
 												</select>			                			

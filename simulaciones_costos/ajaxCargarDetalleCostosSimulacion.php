@@ -49,7 +49,7 @@ if($tipoCosto==1){
   //if($presupuestoEnMeses>0){
   //  $porcentPreciosEnMeses=number_format(($ejecutadoEnMeses/$presupuestoEnMeses)*100,2,'.','');
   //}
-  $porcentPreciosEnMeses=80;
+  $porcentPreciosEnMeses=obtenerValorConfiguracion(91);
   $stringMeses=implode("-",$arrayMeses);
  }
 $query2=$query1." and pgc.cod_tipocosto in (1,3) GROUP BY pgd.cod_plantillagrupocosto order by pgd.cod_plantillagrupocosto";
@@ -121,7 +121,7 @@ $bgClase="bg-info";
               <td class="text-right"></td>
               <td class="bg-plomo"></td>
               <td class="text-right"></td>
-              <td class="bg-plomo">Porcentaje Ejecutado</td>
+              <td class="bg-plomo">Porcentaje de Ajuste</td>
               <td class="text-right"><?=number_format($porcentPreciosEnMeses, 2, '.', ',')?> %</td>
             </tr><?php
             }
