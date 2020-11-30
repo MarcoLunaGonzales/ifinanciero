@@ -29,9 +29,9 @@ $dbh = new Conexion();
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Libro Compras</h4>
+                  <h4 class="card-title">Reporte Control Compras (Varios meses)</h4>
                 </div>
-                <form class="" action="<?=$urlReporteCompras?>" target="_blank" method="POST">
+                <form class="" action="<?=$urlReporteComprasMeses?>" target="_blank" method="POST">
                 <div class="card-body">
                 	<div class="row">
 		                <label class="col-sm-2 col-form-label">Oficina</label>
@@ -60,7 +60,7 @@ $dbh = new Conexion();
 		                <label class="col-sm-2 col-form-label">Gestión</label>
 		                <div class="col-sm-4">
 		                	<div class="form-group">
-		                		<select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+		                		<select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion_mutiple(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
                                     <option value=""></option>
                                     <?php 
                                     $query = "SELECT codigo,nombre from gestiones where cod_estado=1 ORDER BY nombre desc";
@@ -79,7 +79,7 @@ $dbh = new Conexion();
 									$stmtg = $dbh->prepare($sql);
 									$stmtg->execute();
 									?>
-									<select name="cod_mes_x" id="cod_mes_x" class="selectpicker form-control form-control-sm" data-style="btn btn-primary">
+									<select name="cod_mes_x[]" id="cod_mes_x" class="selectpicker form-control form-control-sm" data-style="btn btn-info" multiple data-actions-box="true" required data-live-search="true">
 									<?php
 									  
 									  while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {    
@@ -118,24 +118,7 @@ $dbh = new Conexion();
 		   
                   	
                 <div class="card-footer">
-                	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_compras()">Generar TXT</a>
-                	<a href="index.php?opcion=reportesLibroComprasMeses" target="_blank" class="btn btn-info float-right"><i class="material-icons">open_in_new</i> Control Libro Compras</a>
-				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
-			  </div>
-			  <hr>
-			  <div class="col-sm-12">
-			  	<div class="float-right">
-			  		<a  href="index.php?opcion=reportesLibroComprasProy" class="btn btn-success btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Reporte Libro Compras - PROYECTO</a>		
-			  		<?php 
-			  		if(verificarEdicionComprobanteUsuario($globalUser)!=0){
-			  			?>
-			  		<a  href="index.php?opcion=reportesLibroComprasEdit" class="btn btn-danger btn-sm text-center" target="_blank"><i class="material-icons">edit</i> Editar Facturas</a>		
-			  		<?php 
-			  	   }
-			  	   ?>
-			  	  <a  href="index.php?opcion=reportesLibroComprasProyRevision" class="btn btn-info btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Libro Compras - PROYECTO</a>		
-			  	</div>
+                	<button type="submit" class="btn btn-info">Ver Reporte</button>
 			  </div>
 			  
                </form> 

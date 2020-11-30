@@ -69,8 +69,9 @@ $stmt->bindColumn('cod_comprobantedetalle', $codComprobanteDetalle);
                           <td>Información C.</td>
                           <td>Sucursal</td>
                           <td>Monto</td>
-                          <td style="background:#B91E0B;">Saldo según Banco</td>
-                          <td style="background:#B91E0B;">Saldo</td>
+                          <td style="background:#A4E082;">Saldo Acumulado</td>
+                          <td style="background:#B91E0B;">Saldo según Banco <br>(Cargado)</td>
+                          <td style="background:#B91E0B;">Saldo del Registro</td>
                           <td>Nro Doc / Nro Ref</td>
 
                           <th class="small bg-success" width="4%"><small>Fecha Fac.</small></th>
@@ -85,6 +86,7 @@ $stmt->bindColumn('cod_comprobantedetalle', $codComprobanteDetalle);
                       <tbody>
                         <?php
                         $index=1;
+                        $saldo_acumulado=0;
                         //codigo temporal para cuadrar cierto monto  el saldo inicial es de la fecha 1/7/2020
                         $fecha_temporal="2020-07-01 00:00:00";
                         if($codigoLibreta==4){
@@ -105,8 +107,9 @@ $stmt->bindColumn('cod_comprobantedetalle', $codComprobanteDetalle);
                           <?php }
 
                           //$saldo_inicial=$saldo_inicial+$monto;
-                            $saldo_inicial=obtenerSaldoLibretaBancariaDetalle($codigo);
-
+                            //$saldo_inicial=obtenerSaldoLibretaBancariaDetalle($codigo);
+                            $saldo_inicial=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,"",$monto);
+                            $saldo_acumulado+=$saldo_inicial;
                           //==termina el codigom temporal
 
                           ?>
@@ -117,6 +120,7 @@ $stmt->bindColumn('cod_comprobantedetalle', $codComprobanteDetalle);
                             <td class="text-left"><?=$informacion_complementaria?></td>      
                             <td class="text-left"><?=$agencia?></td>
                             <td class="text-right"><?=number_format($monto,2,".",",")?></td>
+                            <td class="text-right" style="background:#A4E082;"><?=number_format($saldo_acumulado,2,".",",")?></td>
                             <td class="text-right" style="background:#F7684F;"><?=number_format($saldo,2,".",",")?></td>
                             <td class="text-right" style="background:#F7684F;"><?=number_format($saldo_inicial,2,".",",")?></td>                                                  
                             <td class="text-left"><?=$nro_documento?></td>
