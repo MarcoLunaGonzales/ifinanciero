@@ -10947,4 +10947,50 @@ function obtenerCantidadCuentaCodigoComprobante($codigo,$cuenta){
      }
      return($valor);
   }
+
+  function obtenerCodigoLibretaBancaria($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_libretabancaria from libretas_bancariasdetalle where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_libretabancaria'];
+     }
+     return($valor);
+  }
+  function obtenerFechaLibretaBancariaDetalle($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT fecha_hora from libretas_bancariasdetalle where codigo=$codigo");
+     $stmt->execute();
+     $valor='';
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['fecha_hora'];
+     }
+     return($valor);
+  }
+  function obtenerNumeroDocumentoLibretaBancariaDetalle($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT nro_documento from libretas_bancariasdetalle where codigo=$codigo");
+     $stmt->execute();
+     $valor='';
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['nro_documento'];
+     }
+     return($valor);
+  }
+  function obtenerSaldoAcumuladoFilaLibretaBancaria($codigo){
+     $codLibreta=obtenerCodigoLibretaBancaria($codigo);
+     $fechaHora=obtenerFechaLibretaBancariaDetalle($codigo);
+     //$numeroDocumento=obtenerNumeroDocumentoLibretaBancariaDetalle($codigo);
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT sum(monto) as saldo_fila 
+      from libretas_bancariasdetalle 
+      where cod_libretabancaria=$codLibreta and fecha_hora<='$fechaHora' and codigo!=$codigo order by fecha_hora");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['saldo_fila'];
+     }
+     return($valor);
+  }
 ?>

@@ -199,7 +199,8 @@ $stmtb->bindColumn('nombre', $nombre);
                           //$saldo_inicial=$saldo_inicial+$monto;
                             //$saldo_inicial=obtenerSaldoLibretaBancariaDetalle($codigo);
                             $saldo_inicial=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,"",$monto);
-                            $saldo_acumulado+=$saldo_inicial;
+                            //$saldo_acumulado+=$saldo_inicial;
+                            $saldo_acumulado=obtenerSaldoAcumuladoFilaLibretaBancaria($codigo);
                           //==termina el codigom temporal
 
                           ?>
