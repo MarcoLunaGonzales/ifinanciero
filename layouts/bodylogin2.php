@@ -918,6 +918,14 @@
             .attr('value', JSON.stringify(itemDocumentosDetalle))
             .appendTo('#formSolDet');
              }//else
+             
+             //para subir archivos adjuntos a ibnorca
+             for (var file=1; file<=parseInt($("#cantidad_archivosadjuntos").val()); file++) {
+              if($('#documentos_cabecera'+file).length>0){
+                //subirArchivosLibreriaInborca("documentos_cabecera"+file); 
+              }               
+             };
+             //formSolDet
           } 
          }      
         }

@@ -18963,3 +18963,20 @@ function verificarContratoDatosDesdeSolicitud(codSim,codProv,montoContrato){
     });
   return tiene;
 }
+
+
+//CON ESTE PROCESO ENVIAMSO LOS ARCHIVOS AJAX A LA LIBRERIA DEL ING. WILLY input name archivito
+function subirArchivosLibreriaInborca(inpFile){
+    var formData = new FormData(document.getElementById(inpFile));
+    $.ajax({
+       url: "http://ibnored.ibnorca.org/itranet/documentos/guardar_archivo.php",
+       type: "post",
+       dataType: "html",
+       data: formData,
+       cache: false,
+       contentType: false,
+       processData: false
+     }).done(function(res){
+        console.log("transferencia satisfactoria");
+    });
+}

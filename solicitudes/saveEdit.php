@@ -162,6 +162,24 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         $stmtInsert = $dbh->prepare($sqlInsert);
         $stmtInsert->execute();    
         print_r($sqlInsert);
+
+        //sibir archivos al servidor de documentos
+        $urlLocal=obtenerValorConfiguracion(92).'/assets/archivos-respaldo/archivos_solicitudes/SOL-'.$codSolicitud.'/'.$filename;
+        $fullfilepath=$urlLocal;
+        $parametros=array(
+            "idD" => 13,
+            "idR" => $codSolicitud,
+            "idusr" => $globalUser,
+            "Tipodoc" => 176,
+            "descripcion" => $descripcion,
+            "codigo" => "",
+            "observacion" => "-",
+            "r" => "http://www.google.com",
+            "v" => true,
+            "archivito" => "@$fullfilepath"
+            );
+        $parametros=json_encode($parametros);
+        print_r(callServiceFiles($parametros,"http://200.105.199.164:8008/itranet/documentos/guardar_archivo.php"));
       } else {    
           echo "error";
       } 
@@ -355,15 +373,15 @@ if(isset($_POST['usuario_ibnored'])){
     $u=$_POST['usuario_ibnored_u'];
     $v=$_POST['usuario_ibnored_v'];
   if($flagSuccess==true){
-    showAlertSuccessError(true,"../".$urlList."&q=".$q."&s=".$s."&u=".$u."&v=".$v); 
+    //showAlertSuccessError(true,"../".$urlList."&q=".$q."&s=".$s."&u=".$u."&v=".$v); 
   }else{
-    showAlertSuccessError(false,"../".$urlList."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
+    //showAlertSuccessError(false,"../".$urlList."&q=".$q."&s=".$s."&u=".$u."&v=".$v);
   }
 }else{
   if($flagSuccess==true){
-    showAlertSuccessError(true,"../".$urlList); 
+    //showAlertSuccessError(true,"../".$urlList); 
   }else{
-    showAlertSuccessError(false,"../".$urlList);
+    //showAlertSuccessError(false,"../".$urlList);
   }
 }
 

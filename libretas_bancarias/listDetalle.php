@@ -212,7 +212,7 @@ $stmtb->bindColumn('nombre', $nombre);
                             <td class="text-left"><?=$agencia?></td>
                             <td class="text-right"><?=number_format($monto,2,".",",")?></td>
                             <td class="text-right" style="background:#A4E082;"><?=number_format($saldo_acumulado,2,".",",")?></td>
-                            <td class="text-right" style="background:#F7684F;"><?=number_format($saldo_inicial,2,".",",")?></td>
+                            <td class="text-right" style="background:#F7684F;"><?=number_format($saldo,2,".",",")?></td>
                             <td class="text-right" style="background:#F7684F;"><?=number_format($saldo_inicial,2,".",",")?></td>                        
                             <td class="text-left"><?=$nro_documento?></td>
 

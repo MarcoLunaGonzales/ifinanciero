@@ -35,6 +35,7 @@ $i=0;
 	 $arrayNuevo[$i][3]=$nivelX;
 		$i++;
 	}
+	$mensajeAlerta="";
 ?>
 
 <div class="content">
@@ -88,18 +89,26 @@ $i=0;
 											$sqlUO="SELECT DISTINCT s.IdCurso,ibnorca.codigo_curso(s.IdCurso) as CodigoCurso from simulaciones_costos s WHERE s.cod_estadosimulacion=3 and s.IdCurso>0;";
 											$stmt = $dbh->prepare($sqlUO);
 											$stmt->execute();
+											$indexCurso=0;
 											?>
 												<select class="selectpicker form-control form-control-sm" name="tipo_curso[]" id="tipo_curso" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
 												    <?php 
 												    	while ($row = $stmt->fetch()){ 
+												    		$indexCurso++;												   
 												    		if(isset($_GET['s'])){
 												    			if($row["IdCurso"]==$_GET['s']){
 												    			  ?><option value="<?=$row["IdCurso"];?>"><?=$row["CodigoCurso"];?></option><?php 	
+												    			}else{
+												    				$mensajeAlerta="No hay propuestas con modulos relacionados al curso!";
 												    			}                                                               
 												    		}else{
       															?><option value="<?=$row["IdCurso"];?>"><?=$row["CodigoCurso"];?></option><?php 
 												    		}													      
 												 		} 
+
+										  if($indexCurso==0&&isset($_GET['s'])){
+										  	$mensajeAlerta="No hay propuestas con modulos relacionados al curso!";
+										  }		 		
 										 	?>
 												</select>			                			
 			                		</div>
@@ -164,32 +173,13 @@ $i=0;
       	             </div>
       	           </div><!--div row-->
       	           <br>
-                  <!--<div class="row">
+                  <div class="row">
                   	<div class="col-sm-6">
                   		<div class="row">
-			                 <label class="col-sm-4 col-form-label">Moneda Adicional</label>
-			                 <div class="col-sm-8">
-			                	<div class="form-group">
-	                              <select class="selectpicker form-control form-control-sm" name="moneda" id="moneda" data-style="<?=$comboColor;?>" required>
-			  	                 
-			  	                        <?php
-			  	                        $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM monedas where cod_estadoreferencial=1 order by 2");
-				                         $stmt->execute();
-				                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				                          	$codigoX=$row['codigo'];
-				                          	$nombreX=$row['nombre'];
-				                          	$abrevX=$row['abreviatura'];
-                                              ?>
-				                                 <option value="<?=$codigoX;?>"><?=$nombreX?> (<?=$abrevX;?>)</option>	
-				                             <?php
-			  	                         }
-			  	                         ?>
-			                         </select>
-			                      </div>
-			                  </div>
+			                 <label class="col-sm-12 col-form-label text-warning font-weight-bold"><?=$mensajeAlerta?></label>
 			             </div>
       	             </div>
-      	           </div>--><!--div row-->
+      	           </div>
                 </div><!--card body-->
                 <div class="card-footer fixed-bottom">
                 	<button type="submit" class="<?=$buttonNormal;?> bg-table-primary">VER REPORTE</button>
