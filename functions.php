@@ -21,18 +21,6 @@
     }
   }*/
 
- function callServiceFiles($parametros, $url){
-    $parametros=json_encode($parametros);
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_VERBOSE, 1);
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
-    $remote_server_output = curl_exec($ch);
-    curl_close($ch); 
-    return $remote_server_output;   
-  }
-
   function callService($parametros, $url){
     $parametros=json_encode($parametros);
     $ch = curl_init();
@@ -11000,6 +10988,45 @@ function obtenerCantidadCuentaCodigoComprobante($codigo,$cuenta){
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row['saldo_fila'];
+     }
+     return($valor);
+  }
+
+  function enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, obtenerValorConfiguracion(92));
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if(function_exists('curl_file_create')){
+           $target_path = curl_file_create(realpath($target_path));
+        } else{
+           $target_path = '@' . realpath($target_path);
+           curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
+        }  
+        $parametros['archivito']=$target_path;
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+        $result = curl_exec($ch);
+        curl_close($ch); 
+        return $result; 
+  }
+  function obtenerCodigoUltimoTabla($tabla){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from $tabla c");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+     }
+     return($valor);
+  }
+
+  function obtenerBanderaArchivoIbnorca($tabla,$codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_archivoibnorca from $tabla where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_archivoibnorca'];
      }
      return($valor);
   }

@@ -91,7 +91,7 @@ $i=0;
 											$stmt->execute();
 											$indexCurso=0;
 											?>
-												<select class="selectpicker form-control form-control-sm" name="tipo_curso[]" id="tipo_curso" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+												<select class="selectpicker form-control form-control-sm" name="tipo_curso" id="tipo_curso" data-style="btn btn-info" required>
 												    <?php 
 												    	while ($row = $stmt->fetch()){ 
 												    		$indexCurso++;												   

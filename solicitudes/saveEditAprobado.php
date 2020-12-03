@@ -164,12 +164,36 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
           $stmtDel->execute();
           //borrar de la carpeta
           unlink($linkArchivo);
+          if(obtenerValorConfiguracion(93)==1){
+            $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivo);
+            if($banderaArchivo>0){
+              $globalServerDelete=obtenerValorConfiguracion(94);
+              ?><script>ajaxDeleteArchivo("<?=$globalServerDelete;?>","<?=$banderaArchivo?>","divArchivo",13,"<?=$codigoArchivo;?>");</script><?php   
+            }          
+          }
         }
-        $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
-        VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
-        $stmtInsert = $dbh->prepare($sqlInsert);
-        $stmtInsert->execute();    
-        print_r($sqlInsert);
+        $codArchivoAdjunto=obtenerCodigoUltimoTabla('archivos_adjuntos');
+        $sqlInsert="INSERT INTO archivos_adjuntos (codigo,cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+        VALUES ($codArchivoAdjunto,'$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
+        $stmtInsert = $dbh->prepare($sqlInsert);   
+        $flagArchivo=$stmtInsert->execute();            
+        if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+          //sibir archivos al servidor de documentos
+          $parametros=array(
+            "idD" => 13,
+            "idR" => $codArchivoAdjunto,
+            "idusr" => $globalUser,
+            "Tipodoc" => 176,
+            "descripcion" => $descripcion,
+            "codigo" => "",
+            "observacion" => "-",
+            "r" => "http://www.google.com",
+            "v" => true
+            );
+           $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+           unlink($target_path);
+           print_r($resultado);        
+        }
       } else {    
           echo "error";
       } 

@@ -18967,6 +18967,12 @@ function verificarContratoDatosDesdeSolicitud(codSim,codProv,montoContrato){
 
 //CON ESTE PROCESO ENVIAMSO LOS ARCHIVOS AJAX A LA LIBRERIA DEL ING. WILLY input name archivito
 function subirArchivosLibreriaInborca(inpFile){
+   var x = $("#documentos_cabecera");
+      var y = x.clone();
+      y.attr("id", "archivos"+fila);
+      y.attr("name", "archivos"+fila+"[]");
+      $("#archivos_fila"+fila).html(y);
+
     var formData = new FormData(document.getElementById(inpFile));
     $.ajax({
        url: "http://ibnored.ibnorca.org/itranet/documentos/guardar_archivo.php",
@@ -18979,4 +18985,18 @@ function subirArchivosLibreriaInborca(inpFile){
      }).done(function(res){
         console.log("transferencia satisfactoria");
     });
+}
+
+//FUNCION QUE LLAMA A BORRAR ARCHIVOS DEL ING. WILLY
+function ajaxDeleteArchivo(urlServer, idArchivo, divContenedor, idDir, id){
+  var contenedor;
+  contenedor = document.getElementById(divContenedor);
+  ajax=nuevoAjax();
+  ajax.open('GET', urlServer+'eliminar.php?idD='+idDir+'&idR='+idArchivo+'&r=http://www.google.com&idRe='+id,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = "ArchivoBorrado"
+    }
+  }
+  ajax.send(null)
 }

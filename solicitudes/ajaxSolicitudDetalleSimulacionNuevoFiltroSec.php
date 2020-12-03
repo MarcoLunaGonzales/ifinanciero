@@ -75,7 +75,8 @@ $codigo_detalle=$_GET['codigo_detalle'];
                               }
                             }
               if($codCuentaX==obtenerValorConfiguracion(88)){
-                $importeSolXContrato=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[0];
+                $importeSolX=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[0];
+                $proveedorX=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[1];
               }              
 							$numeroCuentaX=trim($row['numero']);
 							$nombreCuentaX=trim($row['nombre']);
