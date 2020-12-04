@@ -154,7 +154,7 @@
   }
 
   .body-wrap {
-    width: 505px;
+    width: 700px;
     margin: 0 auto;
     background-color: #ffffff;
   }
@@ -303,13 +303,13 @@
 
   .container {
     display: block !important;
-    max-width: 505px !important;
+    max-width: 700 !important;
     clear: both !important;
   }
 
   .content {
     padding: 0;
-    max-width: 505px;
+    max-width: 700;
     margin: 0 auto;
     display: block;
   }
@@ -346,7 +346,7 @@
 
   }
 
-  @media only screen and (max-width: 505px) {
+  @media only screen and (max-width: 700) {
 
     *[class*="w320"] {
       width: 320px !important;
@@ -364,29 +364,16 @@
 
   <div align="center">
     <table class="head-wrap w320 full-width-gmail-android" bgcolor="#f9f8f8" cellpadding="0" cellspacing="0" border="0">
-      <tr>
-        <!--<td background="https://www.filepicker.io/api/file/UOesoVZTFObSHCgUDygC" bgcolor="#ffffff" width="100%" height="8" valign="top">-->
-          <!--[if gte mso 9]>
-          <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="mso-width-percent:1000;height:8px;">
-            <v:fill type="tile" src="https://www.filepicker.io/api/file/UOesoVZTFObSHCgUDygC" color="#ffffff" />
-            <v:textbox inset="0,0,0,0">
-          <![endif]-->
-          <div height="8">
-          </div>
-          <!--[if gte mso 9]>
-            </v:textbox>
-          </v:rect>
-          <![endif]-->
-        </td>
-      </tr>
       <tr class="header-background">
-        <td class="header container" align="center">
-          <div class="content">
+        <td class="header container" align="center" width="100%">
+          <div class="content" style="width:100%">
+            <center>
             <span class="brand">
               <a href="#">
                 {{first_name}}
               </a>
             </span>
+          </center>
           </div>
         </td>
       </tr>
@@ -394,12 +381,11 @@
 
     <table class="body-wrap w320">
       <tr>
-        <td></td>
         <td class="container">
           <div class="content">
-            <table cellspacing="0">
+            <table cellspacing="0" width="100%">
               <tr>
-                <td>
+                <td width="100%">
                   <table class="soapbox">
                     <tr>
                       <td class="soapbox-title">{{titulo_men}}</td>
@@ -410,8 +396,8 @@
                       <td class="body-padded">                 
                         <table class="body-signature-block">
                           <tr>
-                            <td height="200" width="30%"><img src="https://lh3.googleusercontent.com/h-a2I80yEKrIWchzx9Bgc6e24tRqBu8bUeXQtuiX1HbpkGvdy_LlZqr-Rwl5z4T1x7ZTrRBW5gN2thhVVbNXn7lFY8eLcacYB5m0uYFV9b76Pt6b5WXckwI9HwR0=w970" alt="img"></td>
-                            <td height="200" width="70%">
+                            <td height="200" width="40%"><img width="200" height="200" src="https://lh3.googleusercontent.com/h-a2I80yEKrIWchzx9Bgc6e24tRqBu8bUeXQtuiX1HbpkGvdy_LlZqr-Rwl5z4T1x7ZTrRBW5gN2thhVVbNXn7lFY8eLcacYB5m0uYFV9b76Pt6b5WXckwI9HwR0=w970" alt="img"></td>
+                            <td height="200" width="60%">
                               <p style="text-align: justify; text-justify: inter-word;">{{message}}</p>  
                             </td>
                           </tr>
@@ -424,7 +410,6 @@
             </table>
           </div>
         </td>
-        <td></td>
       </tr>
     </table>
 

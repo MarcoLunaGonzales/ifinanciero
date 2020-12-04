@@ -61,6 +61,9 @@ $tipoSolicitud =$_GET['tipo'];
                       if($codCuentaX==obtenerValorConfiguracion(88)){
                         $importeSolX=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[0];
                         $proveedorX=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[1];
+                        if($proveedorX>0){
+                         $conContrato=1;  
+                        }                        
                       }
 
                      //

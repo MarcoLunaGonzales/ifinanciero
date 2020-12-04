@@ -19,8 +19,7 @@ $monto=$_POST['monto'];
 $mensajeError="";
 $datosContrato=obtenerDatosContratoSolicitudCapacitacion($codigo);
 
-
-if($datosContrato[0]!=$monto){
+if($datosContrato[0]>$monto){
   $error_monto=1;
 }
 if($datosContrato[1]!=$cod_prov){

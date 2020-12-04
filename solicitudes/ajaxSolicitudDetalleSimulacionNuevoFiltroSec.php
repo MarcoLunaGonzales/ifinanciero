@@ -77,6 +77,9 @@ $codigo_detalle=$_GET['codigo_detalle'];
               if($codCuentaX==obtenerValorConfiguracion(88)){
                 $importeSolX=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[0];
                 $proveedorX=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[1];
+                if($proveedorX>0){
+                  $conContrato=1;  
+                }
               }              
 							$numeroCuentaX=trim($row['numero']);
 							$nombreCuentaX=trim($row['nombre']);
