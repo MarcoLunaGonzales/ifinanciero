@@ -228,28 +228,9 @@ $i=0;
   </div>
 </div>
 <form id="formSolDet" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
-
-  <!--DATOS REQUERIDOS PARA ARCHIVOS ING WILLY-->
-<input type="hidden" name="id" id="id" value="<?=$id;?>">
-<input type="hidden" name="divContenedor" id="divContenedor" value="<?=$divContenedor;?>">
-<input type="hidden" name="url_server" id="url_server" value="<?=$urlServer;?>">
-
-
-<input type="hidden" name="idD" id="idD" value="13">
-<input type="hidden" name="idR" id="idR" value="<?=$id;?>">
-<input type="hidden" name="idusr" id="idusr" value="<?=$globalUsuario;?>">
-<input type="hidden" name="Tipodoc" id="Tipodoc" value="176">
-<input type="hidden" name="descripcion" id="descripcion" value="archivosis">
-<input type="hidden" name="codigo" id="codigo" value="<?=$idSIS;?>">
-<input type="hidden" name="observacion" id="observacion" value="-">
-<input type="hidden" name="r" id="r" value="http://www.google.com">
-<input type="hidden" name="v" id="v" value="true">
-
-
-
-  
 <div class="content">
   <div id="contListaGrupos" class="container-fluid">
+    <input type="hidden" name="validacion_contrato" id="validacion_contrato" value="<?=obtenerValorConfiguracion(96)?>">
       <input type="hidden" name="cuenta_honorarios_docente" id="cuenta_honorarios_docente" value="<?=obtenerValorConfiguracion(88);?>">      
       <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">      
       <input type="hidden" name="cod_configuracioniva" id="cod_configuracioniva" value="<?=obtenerValorConfiguracion(35)?>">

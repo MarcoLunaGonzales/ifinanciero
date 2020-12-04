@@ -870,7 +870,7 @@
            }else{  
                 //quinto else
             var hayContraro=0;  var mensajeContrato="";
-            if(tipoSolicitudRecurso==1){
+            if(tipoSolicitudRecurso==1&&$("#validacion_contrato").val()==1){
               var simulacionCodigo=$("#simulaciones").val().split("$$$")[0];
              for (var i = 0; i < $("#cantidad_filas").val(); i++) {
               if($('#partida_cuenta_id'+(i+1)).val()==cuentaHonorarios){

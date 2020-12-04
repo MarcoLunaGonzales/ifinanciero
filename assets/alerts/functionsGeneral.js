@@ -18992,7 +18992,7 @@ function ajaxDeleteArchivo(urlServer, idArchivo, divContenedor, idDir, id){
   var contenedor;
   contenedor = document.getElementById(divContenedor);
   ajax=nuevoAjax();
-  ajax.open('GET', urlServer+'eliminar.php?idD='+idDir+'&idR='+idArchivo+'&r=http://www.google.com&idRe='+id,true);
+  ajax.open('GET', urlServer+'?idD='+idDir+'&idR='+idArchivo+'&r=http://www.google.com&idRe='+id,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = "ArchivoBorrado"

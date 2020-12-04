@@ -15,7 +15,7 @@ $listaCorreos=explode(",", $correo_destino);
 
 $fechaActual=date("Y-m-d H:m:s");
 $asunto="Envio De Factura";
-$mensaje="Estimado Cliente ".$razon_social.",<br>\n<br>\n Adjunto la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
+$mensaje="Estimado Cliente ".$razon_social.",<br>\n<br>\n Adjuntamos la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
 // echo $correo_destino."<br>";
 // echo $asunto."<br>";
 // echo $mensaje."<br>";
@@ -44,7 +44,7 @@ if($correo_destino==''||$asunto==''||$mensaje==''){
 		$mail_username="";//Correo electronico emisor
 		$mail_userpassword="";// contraseña correo emisor
 		$mail_addAddress=$correo_destino;//correo electronico destino
-		$template="../notificaciones_sistema/PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
+		$template="../notificaciones_sistema/PHPMailer/email_template_factura.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
 		/*Inicio captura de datos enviados por $_POST para enviar el correo */
 		$mail_setFromEmail=$mail_username;
 		$mail_setFromName="IBNORCA";

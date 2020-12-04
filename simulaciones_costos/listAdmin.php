@@ -57,7 +57,8 @@ $stmt->bindColumn('estado', $estado);
                     <table class="table" id="tablePaginator">
                       <thead>
                         <tr>
-                          <th class="text-center">#</th>
+                          <!--<th class="text-center">#</th>-->
+                          <th>Codigo</th>
                           <th>Nombre</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
@@ -86,7 +87,8 @@ $stmt->bindColumn('estado', $estado);
                           }
 ?>
                         <tr>
-                          <td align="center"><?=$index;?></td>
+                          <!---<td align="center"><?=$index;?></td>-->
+                          <td><?=$codigo;?></td>
                           <td><?=$nombre;?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
