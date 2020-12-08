@@ -366,6 +366,7 @@ if(isset($_GET['cod'])){
     }
 
   }
+
             ?>
             <div class="col-sm-1">
               <div class="form-group">

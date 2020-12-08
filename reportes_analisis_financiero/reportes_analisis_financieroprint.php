@@ -66,9 +66,9 @@ $datosCalculables['V']=number_format(obtenerBalanceHijosCuenta($cuentaVentas,obt
 //VENTAS AL CRÉDITO
 $datosCalculables['Vcr']=12345;
 //COSTO MERCADERÍA VENDIDA
-$datosCalculables['CMV']=12345;
+$datosCalculables['CMV']=1;
 //COMPRAS AL CRÉDITO
-$datosCalculables['Ccr']=12345;
+$datosCalculables['Ccr']=1;
 
 //datos Extra
 $cuentaEgresos=5;

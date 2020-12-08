@@ -12652,11 +12652,9 @@ function guardarDatoscontacto(){
               Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
               $("#modalAgregarProveedor").modal("hide");
               actualizar_contacto_cliente(cod_cliente);
-
             }else{              
                 Swal.fire("Error!", "Ocurrio un error de envio. <br>"+resp.trim(), "warning");
             }
-
          }
        });  
   }else{

@@ -12,20 +12,44 @@ if(isset($_GET['q'])){
   $q=$_GET['q'];
   $u=$_GET['u'];
   $s="";
+  $idArea=0;
   if(isset($_GET['s'])){
     $s=$_GET['s'];
+    $datosS=explode("IdArea",$s);
+    if(isset($datosS[1])){
+     $idArea=$datosS[1];
+     $idArea=str_replace("=","",$idArea);
+     $idArea=str_replace("in","",$idArea);
+     $idArea=str_replace("(","",$idArea);
+     $idArea=str_replace(")","",$idArea);
+    }
   }
-  if(gestorDeCursosFormacion($q)>0){
-    $queryTipoCurso=" and sc.cod_tipocurso!=3";
-    $tituloPropuestaFiltro="<h4 style='color:#C70039;'>LISTA: FORMACIÓN</h4>";
-    $estiloFormacion='style="background:#C70039;color:white;"';
-   }else if(gestorDeCursosComercializacion($q)>0){
-    $queryTipoCurso=" and sc.cod_tipocurso=3";
-    $tituloPropuestaFiltro="<h4 style='color:#FF5733;'>LISTA: COMERCIALIZACIÓN</h4>";
-    $estiloFormacion='style="background:#FF5733;color:white;"';
+  if((int)$idArea>0){
+    if((int)$idArea==2978){ //comercializacion
+      $queryTipoCurso=" and sc.cod_tipocurso=3";
+      $tituloPropuestaFiltro="<h4 style='color:#FF5733;'>LISTA: COMERCIALIZACIÓN</h4>";
+      $estiloFormacion='style="background:#FF5733;color:white;"'; 
+    }else if((int)$idArea==13){ // formacion
+      $queryTipoCurso=" and sc.cod_tipocurso!=3";
+      $tituloPropuestaFiltro="<h4 style='color:#C70039;'>LISTA: FORMACIÓN</h4>";
+      $estiloFormacion='style="background:#C70039;color:white;"';
+    }else{
+      $queryTipoCurso=" and sc.cod_tipocurso=9999"; //9999 -> para que no encuentre ningun registro
+      $tituloPropuestaFiltro="USTED NO PUEDE GESTIONAR LAS PROPUESTAS";
+    }
   }else{
-    $queryTipoCurso=" and sc.cod_tipocurso=9999"; //9999 -> para que no encuentre ningun registro
-    $tituloPropuestaFiltro="USTED NO PUEDE GESTIONAR LAS PROPUESTAS";
+   if(gestorDeCursosFormacion($q)>0){
+     $queryTipoCurso=" and sc.cod_tipocurso!=3";
+     $tituloPropuestaFiltro="<h4 style='color:#C70039;'>LISTA: FORMACIÓN</h4>";
+     $estiloFormacion='style="background:#C70039;color:white;"';
+    }else if(gestorDeCursosComercializacion($q)>0){
+     $queryTipoCurso=" and sc.cod_tipocurso=3";
+     $tituloPropuestaFiltro="<h4 style='color:#FF5733;'>LISTA: COMERCIALIZACIÓN</h4>";
+     $estiloFormacion='style="background:#FF5733;color:white;"';
+    }else{
+     $queryTipoCurso=" and sc.cod_tipocurso=9999"; //9999 -> para que no encuentre ningun registro
+     $tituloPropuestaFiltro="USTED NO PUEDE GESTIONAR LAS PROPUESTAS";
+    }   
   }
   ?>
   <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>

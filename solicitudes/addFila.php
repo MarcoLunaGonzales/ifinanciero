@@ -26,9 +26,9 @@ $des_actividadproyecto="";
                                     if($codigoX==$unidadXX){
                                        ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                     }else{
-                                     //if(!isset($desdePropuestas)){
+                                     if(!isset($conContrato)){
                                         ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                     //}
+                                     }
                                     }
                                   }
                                     ?>

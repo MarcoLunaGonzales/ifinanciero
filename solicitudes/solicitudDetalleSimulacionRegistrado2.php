@@ -12,6 +12,7 @@
 						$desdePropuestas=1;
 					?><div id="detalles_solicitud"><?php
 						while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
+							  
 							$cod_plantillauditor="";
 							//$cod_plantilladetalle=$row['codigo_detalle'];
 							/*$codigo_fila=explode("###",$row['codigo_detalle']);
@@ -80,6 +81,13 @@
                                    $tituloImporte=substr($tituloImporte,0,13)."...";
                                  }
 							   }
+
+							      if($codCuentaX==obtenerValorConfiguracion(88)){                      
+                    $proveedorNuevoX=obtenerDatosContratoSolicitudCapacitacion($codSimulacionX)[1];
+                    if($proveedorNuevoX>0){
+                      $conContrato=1;  
+                    }                        
+                  }
 							 $conta++;
 							 $nombrePartidaX="<b class='text-success'>".$row['partida']."</b>";
 							$nombrePartidaDetalleX="<b class='text-success'>Cuenta</b> - <b class='text-primary'>Año ".$row['cod_anio']."</b>";
@@ -125,9 +133,17 @@
 							   $nombreCuentaX=trim($rowDetalles['nombre']);
 							   $nombrePartidaX="PARTIDA PRESUPUESTARIA";
 							   $nombrePartidaDetalleX="Cuenta";
+                 if($codCuentaX==obtenerValorConfiguracion(88)){                      
+                    $proveedorNuevoX=obtenerDatosContratoSolicitudCapacitacion($codSimulacionX)[1];
+                    if($proveedorNuevoX>0){
+                      $conContrato=1;  
+                    }                        
+                  }
+
 							   include "addFila.php";
                          			 
 						       $idFila=$idFila+1;
+						       
 						 } 
                        }
 						
