@@ -11065,4 +11065,49 @@ function obtenerCantidadCuentaCodigoComprobante($codigo,$cuenta){
      }
      return($admin);
   } 
+
+  function abrevCodigoCursoIbnorca($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT ibnorca.codigo_curso($codigo) as codigo");
+     $stmt->execute();
+     $nombreX="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $nombreX=$row['codigo'];
+     }
+     return($nombreX);
+  }
+  function obtenerModuloIbnorcaPropuesta($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT m.NroModulo from ibnorca.modulos m join simulaciones_costos s on s.IdModulo=m.IdModulo where s.codigo=$codigo");
+     $stmt->execute();
+     $nombreX="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $nombreX="Mod. ".$row['NroModulo'];
+     }
+     return($nombreX);
+  }
+  function obtenerMontoPresupuestadoIngresosSF($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT SUM(((sd.cantidad*sd.precio)-((sd.descuento_por*sd.cantidad*sd.precio)/100))) as precio from solicitudes_facturaciondetalle sd 
+               join solicitudes_facturacion s on s.codigo=sd.cod_solicitudfacturacion where s.cod_estadosolicitudfacturacion<>2
+                and sd.cod_claservicio=$codigo;");
+     $stmt->execute();
+     $valorX=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valorX=$row['precio'];
+     }
+     return($valorX);
+  }
+  function obtenerMontoEjecutadoIngresosSF($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("select SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as precio from facturas_ventadetalle fd 
+              join facturas_venta f on f.codigo=fd.cod_facturaventa where f.cod_estadofactura<>2
+              and fd.cod_claservicio=$codigo;");
+     $stmt->execute();
+     $valorX=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valorX=$row['precio'];
+     }
+     return($valorX);
+  }
 ?>

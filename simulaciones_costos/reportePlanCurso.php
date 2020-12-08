@@ -49,35 +49,8 @@ $i=0;
                   </div>
                   <h4 class="card-title">Reporte Planificacion - Ejecución Cursos</h4>
                 </div>
-                <form class="" action="<?=$urlReportePlanCurso?>" target="_blank" method="POST">
+                <form id="reporte_cursos" class="" action="<?=$urlReportePlanCurso?>" method="POST">
                 <div class="card-body">
-	                <!--<div class="row">
-	                  	<div class="col-sm-6">
-	                  		<div class="row">
-				                 <label class="col-sm-4 col-form-label">Desde</label>
-				                 <div class="col-sm-8">
-				                	<div class="form-group">
-				                		<div id="div_contenedor_fechaI">				                			
-				                			<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaDesde?>">	
-				                		</div>		                                
-				                     </div>
-				                  </div>
-				             </div>
-	      	             </div>
-	                  	<div class="col-sm-6">
-	                  		<div class="row">
-				                 <label class="col-sm-4 col-form-label">Hasta</label>
-				                 <div class="col-sm-8">
-				                	<div class="form-group">
-				                		<div id="div_contenedor_fechaH">				                			
-				                			<input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaHasta?>">
-				                		</div>
-		                               
-				                    </div>
-				                  </div>
-				              </div>
-					      </div>
-	                </div>--><!--div row-->
                   <div class="row">
                   	<div class="col-sm-6">
                   		<div class="row">
@@ -86,7 +59,11 @@ $i=0;
 			                	<div class="form-group">
 			                		<div id="div_contenedor_oficina_costo">
 				                			<?php
-											$sqlUO="SELECT DISTINCT s.IdCurso,ibnorca.codigo_curso(s.IdCurso) as CodigoCurso from simulaciones_costos s WHERE s.cod_estadosimulacion=3 and s.IdCurso>0;";
+				                			$queryCurso="and s.IdCurso>0";
+				                			if(isset($_GET['s'])){
+                                             $queryCurso="and s.IdCurso=".$_GET['s'];
+				                			}
+											$sqlUO="SELECT DISTINCT s.IdCurso,ibnorca.codigo_curso(s.IdCurso) as CodigoCurso from simulaciones_costos s WHERE s.cod_estadosimulacion=3 $queryCurso;";
 											$stmt = $dbh->prepare($sqlUO);
 											$stmt->execute();
 											$indexCurso=0;
@@ -98,8 +75,6 @@ $i=0;
 												    		if(isset($_GET['s'])){
 												    			if($row["IdCurso"]==$_GET['s']){
 												    			  ?><option value="<?=$row["IdCurso"];?>"><?=$row["CodigoCurso"];?></option><?php 	
-												    			}else{
-												    				$mensajeAlerta="No hay propuestas con modulos relacionados al curso!";
 												    			}                                                               
 												    		}else{
       															?><option value="<?=$row["IdCurso"];?>"><?=$row["CodigoCurso"];?></option><?php 
@@ -181,9 +156,15 @@ $i=0;
       	             </div>
       	           </div>
                 </div><!--card body-->
-                <div class="card-footer fixed-bottom">
+                <?php 
+                if($mensajeAlerta==""){
+                  ?>
+                 <div class="card-footer fixed-bottom">
                 	<button type="submit" class="<?=$buttonNormal;?> bg-table-primary">VER REPORTE</button>
 			  </div>
+                  <?php  
+                }
+                ?>                
                </form> 
               </div>	  
             </div>         
@@ -192,3 +173,15 @@ $i=0;
         
 </div>
 
+<?php 
+if($mensajeAlerta==""&&isset($_GET['s'])){
+	?>
+    <script>
+    $(document).ready(function() {
+      $( "#resumido" ).prop( "checked", false );
+      $("#reporte_cursos").submit();
+    });
+  </script>
+	<?php
+}
+?>
