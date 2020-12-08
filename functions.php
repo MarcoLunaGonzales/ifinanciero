@@ -10920,12 +10920,25 @@ function obtenerPrimerAtributoSimulacionServicioDatos($codigo){
      $valor[1]=0;
      $valor[2]="";
      $valor[3]="";
+     $valor[4]=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor[0]=$row['Monto'];
         $valor[1]=$row['idDocente'];
         $valor[2]="Mod. ".$row['NroModulo'];
         $valor[3]="Curso ".$row['CodigoCurso'];
+        $valor[4]=$row['Monto'];
     }
+     $sumaImporteEjec=0;
+     $codigoPlantillaXX=obtenerPlantillaCodigoSimulacion($codigo);
+     $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantilla($codigo,$codigoPlantillaXX);
+     while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
+       $cod_plantilladetalle=$row['codigo_detalle'];
+       $solicitudDetalle=obtenerSolicitudRecursosDetallePlantilla(false,$cod_plantilladetalle);       
+          while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+              $sumaImporteEjec+=$rowDetalles['importe'];
+          }
+     }
+     $valor[4]=$valor[4]-$sumaImporteEjec;
     return $valor;
  }
 
