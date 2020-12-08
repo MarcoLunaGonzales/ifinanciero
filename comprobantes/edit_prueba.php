@@ -797,7 +797,7 @@ $stmt->execute();
 							</div>
 					  </div>		
 				  	<div class="card-footer fixed-bottom">
-						<button type="submit" id="boton_enviar_formulario" class="<?=$buttonMorado;?>">Guardar</button>
+						<button type="submit" id="boton_enviar_formulario" class="<?=$buttonMorado;?> d-none" >Guardar</button>
 						<?php 
                         if(isset($_GET['cuentas'])){
                          ?><a href="../<?=$urlEdit3;?>?codigo=<?=$globalCode;?>" class="<?=$buttonCancel;?>"> Volver a la Seleccion</a><?php
@@ -1069,4 +1069,8 @@ require_once 'modal.php';?>
 
  $("#totaldeb_restante").val(<?=$totalesDebeHaber[0]-$totaldebDet?>);
  $("#totalhab_restante").val(<?=$totalesDebeHaber[1]-$totalhabDet?>);
+
+  $(document).ready(function() {
+    $("#boton_enviar_formulario").removeClass("d-none");
+  });
  </script>
