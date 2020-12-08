@@ -441,6 +441,10 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
            <tbody>
             
 <?php 
+$query1=$sqlSolicitadosInicio."select s.IdModulo,s.IdCurso,s.codigo as cod_simulacion,s.nombre,s.fecha_curso
+from simulaciones_costos s
+WHERE s.IdCurso in($tipoCursoArray) and s.cod_estadosimulacion=3 order by s.nombre".$sqlSolicitadosFin;
+
 $stmt = $dbh->prepare($query1);
   // Ejecutamos
   $stmt->execute();
