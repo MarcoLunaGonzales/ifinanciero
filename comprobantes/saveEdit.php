@@ -42,21 +42,6 @@ $fechaHoraSistema=date("Y-m-d H:i:s");
 $SQLDATOSINSTERT=[];
 $codComprobante=$_POST['codigo_comprobante'];
 
-// 
-$sqlCommit="SET AUTOCOMMIT=0;";
-$stmtCommit = $dbh->prepare($sqlCommit);
-$stmtCommit->execute();
-
-
-$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraSistema', modified_by='$globalUser',salvado_temporal=$salvado_temporal where codigo=$codComprobante";
-//echo $sqlUpdate;
-$stmtUpdate = $dbh->prepare($sqlUpdate);
-$flagSuccess=$stmtUpdate->execute();	
-array_push($SQLDATOSINSTERT,$flagSuccess);
-$sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=0, cod_comprobantedetalle=0,cod_estado=0 where cod_comprobante=$codComprobante";
-$stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
-$flagsuccess=$stmtDetalleUpdate->execute(); 
-array_push($SQLDATOSINSTERT,$flagsuccess);
 
 
 //subir archivos al servidor
@@ -137,7 +122,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
             "idD" => 15,
             "idR" => $codArchivoAdjunto,
             "idusr" => $globalUser,
-            "Tipodoc" => 176,
+            "Tipodoc" => 3596,
             "descripcion" => $descripcion,
             "codigo" => "",
             "observacion" => "-",
@@ -154,6 +139,23 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
     }
   }
 }
+
+// 
+$sqlCommit="SET AUTOCOMMIT=0;";
+$stmtCommit = $dbh->prepare($sqlCommit);
+$stmtCommit->execute();
+
+
+$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraSistema', modified_by='$globalUser',salvado_temporal=$salvado_temporal where codigo=$codComprobante";
+//echo $sqlUpdate;
+$stmtUpdate = $dbh->prepare($sqlUpdate);
+$flagSuccess=$stmtUpdate->execute();  
+array_push($SQLDATOSINSTERT,$flagSuccess);
+$sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=0, cod_comprobantedetalle=0,cod_estado=0 where cod_comprobante=$codComprobante";
+$stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
+$flagsuccess=$stmtDetalleUpdate->execute(); 
+array_push($SQLDATOSINSTERT,$flagsuccess);
+
 
     $stmt1 = obtenerComprobantesDet($codComprobante);
     while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {

@@ -75,7 +75,7 @@ if($correo_destino==''||$asunto==''||$mensaje==''){
 
 function obtenerFechaFacturaVenta($codigo){
     $dbh = new Conexion();
-    $stmtVerif = $dbh->prepare("SELECT * FROM facturas_venta where codigo=$codigo");
+    $stmtVerif = $dbh->prepare("SELECT fecha_factura FROM facturas_venta where codigo=$codigo");
     $stmtVerif->execute();
     $resultVerif = $stmtVerif->fetch();    
     $fecha = $resultVerif['fecha_factura'];

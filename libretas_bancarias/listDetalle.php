@@ -493,11 +493,17 @@ $stmtb->bindColumn('nombre', $nombre);
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
         </button>
+        <style>
+          #libreta_bancaria_reporte_modal_filter{
+            display: none !important;
+         }      
+        </style>
         <input type="hidden" name="cod_libretabancariadetalle" id="cod_libretabancariadetalle" value="0">
-        <div class="table-responsive">
-          <table id="tablePaginator50" class="table table-condensed small">          
+        <input type="hidden" name="primer_cargadofacturas" id="primer_cargadofacturas" value="0">
+        <div class="table-responsive" id="listado_facturas_detalle">
+          <table class="table table-condensed small">          
             <thead>
-              <tr style="background:#21618C; color:#fff;">
+              <tr style="background:#DAF7A6; color:#000;">
                 <th>#</th>
                 <th>Fecha</th>
                 <th>N°</th>            
@@ -508,34 +514,9 @@ $stmtb->bindColumn('nombre', $nombre);
               </tr>
             </thead>
             <tbody>
-              <?php
-              $stmt = $dbh->prepare("SELECT codigo,fecha_factura,date_format(fecha_factura,'%d/%m/%Y') as fecha_x,razon_social,nit,nro_factura,importe,cod_libretabancariadetalle from facturas_venta where cod_estadofactura!=2 order by codigo desc");
-              $stmt->execute();
-              $stmt->bindColumn('codigo', $codigo_x);
-              $stmt->bindColumn('fecha_x', $fecha_factura_x);
-              $stmt->bindColumn('razon_social', $razon_social_x);
-              $stmt->bindColumn('nit', $nit_x);
-              $stmt->bindColumn('nro_factura', $nro_factura_x);
-              $stmt->bindColumn('importe', $importe_x);
-              // $stmt->bindColumn('cod_libretabancariadetalle', $cod_libretabancariadetalle_x);
-              $index=1;
-              while ($rowTC = $stmt->fetch(PDO::FETCH_BOUND)) {
-                $cod_libretabancariadetalle_x=verificar_cod_libretadetalle($codigo_x);
-                $color_tr="";$label="btn btn-fab btn-success btn-sm";
-                if($cod_libretabancariadetalle_x>0){$color_tr="background-color:#f6ddcc;";$label="btn btn-fab btn-warning btn-sm";}
-                ?>
-                <tr style="<?=$color_tr?>">
-                  <td align="text-center small"><?=$index;?></td>
-                  <td align="text-center small"><?=$fecha_factura_x;?></td>
-                  <td align="text-right small"><?=$nro_factura_x;?></td>
-                  <td align="text-left small"><?=$razon_social_x;?></td>
-                  <td align="text-right small"><?=$nit_x;?></td>
-                  <td align="text-right small"><?=number_format($importe_x,2);?></td>
-                  <td class="td-actions text-right"><a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_Factura_relacion(<?=$codigo_x?>)" class="<?=$label?>" title="Seleccionar Factura"><i class="material-icons">done</i></a></td>
-                </tr>
-              <?php $index++;} ?>
+               <tr><td colspan="7">CARGANDO FACTURAS...</td></tr> 
             </tbody>
-          </table>
+          </table>      
         </div>
       </div>
       <div class="modal-footer">

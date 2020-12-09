@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 require_once 'conexion.php';
 
     $dbh = new Conexion();
@@ -16,7 +17,7 @@ require_once 'conexion.php';
     $cod_archivos=[];
     $cod_archivos_copiados=[];
     //archivos solicitudes de recursos
-    $sql="SELECT codigo,direccion_archivo as origen,cod_solicitud_facturacion,descripcion  from archivos_adjuntos_solicitud_facturacion;";		
+    $sql="SELECT codigo,direccion_archivo as origen,cod_solicitud_facturacion,descripcion  from archivos_adjuntos_solicitud_facturacion where (cod_archivoibnorca=0 or cod_archivoibnorca is null);";		
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     

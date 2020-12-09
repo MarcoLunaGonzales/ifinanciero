@@ -17,7 +17,7 @@ require_once 'conexion.php';
     $cod_archivos=[];
     $cod_archivos_copiados=[];
     //archivos solicitudes de recursos
-    $sql="SELECT codigo,direccion_archivo as origen,cod_objeto,descripcion  from archivos_adjuntos where cod_tipopadre!=-2020 and (cod_archivoibnorca=0 or cod_archivoibnorca is null);";		
+    $sql="SELECT codigo,direccion_archivo as origen,cod_cajachica_detalle,descripcion  from archivos_adjuntos_cajachica where (cod_archivoibnorca=0 or cod_archivoibnorca is null);";		
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     
@@ -25,7 +25,7 @@ require_once 'conexion.php';
        $cod_archivo=$rowDetalle['codigo'];
        $dir=$rowDetalle['origen'];
        $dirCorrecto=str_replace("../","",$dir);
-       $codigo=$rowDetalle['cod_objeto'];
+       $codigo=$rowDetalle['cod_cajachica_detalle'];
        $array1=explode("/",$dir);
        $descripcion=$rowDetalle['descripcion'];
        $codigoArchivo=$cod_archivo;       
@@ -57,7 +57,7 @@ require_once 'conexion.php';
             $stmtDocumento = $dbh->prepare($sqlDocumento);
             $flagSuccess=$stmtDocumento->execute();
             if($flagSuccess){
-              $sqlDocumentoAlter="UPDATE archivos_adjuntos set cod_archivoibnorca=$codigoFila where codigo=$codigoArchivo";    
+              $sqlDocumentoAlter="UPDATE archivos_adjuntos_cajachica set cod_archivoibnorca=$codigoFila where codigo=$codigoArchivo";    
               $stmtDocumentoAlter = $dbh->prepare($sqlDocumentoAlter);
               $stmtDocumentoAlter->execute();
              if(copy($dirCorrecto,$ubicacionDestino)) { 

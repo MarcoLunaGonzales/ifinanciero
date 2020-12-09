@@ -17447,6 +17447,7 @@ function eliminarRelacionFactura(codigo,codigo_libreta_detalle){
 }
 function relacionar_factura_libreta(codigo){  
   document.getElementById("cod_libretabancariadetalle").value=codigo;
+  cargarFacturasModalLibretas("listado_facturas_detalle");
   $('#modallista_facturas').modal('show');  
 }
 function seleccionar_Factura_relacion(cod_factura){
@@ -19065,4 +19066,22 @@ function ajaxDeleteArchivoIbnorcaFacturacion(urlServer, idArchivo, divContenedor
             return(false);
           }
         });
+}
+
+function cargarFacturasModalLibretas(div){
+ if($("#primer_cargadofacturas").val()==0){
+  var parametros={"codigo_libreta":1};
+     $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "libretas_bancarias/ajax_listar_facturas_seleccionar.php",
+        data: parametros,      
+        success:  function (resp) {
+          $("#primer_cargadofacturas").val(1);
+          $("#"+div).html(resp);
+          cargar_dataTable_ajax('libreta_bancaria_reporte_modal');
+          cargar_filtro_datatable_ajax('modallista_facturas');
+        }
+    });    
+  }
 }
