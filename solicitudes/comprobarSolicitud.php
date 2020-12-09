@@ -787,7 +787,7 @@ if(isset($_GET['cod'])){
                          $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
                          $downloadFile='target="_blank"';
                          $globalServerDelete=obtenerValorConfiguracion(94);
-                         $onClick='onClick="ajaxDeleteArchivo(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',13,\''.$codigoArchivoX.'\')"';
+                         $onClick='onClick="ajaxDeleteArchivoIbnorca(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',15,\''.$codigoArchivoX.'\','.$filaA.','.$codigoArchivoX.',0);"';
                       }                      
                      }                     
                   ?>
@@ -850,7 +850,8 @@ if(isset($_GET['cod'])){
                       if($banderaArchivo>0){
                          $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
                          $downloadFile='target="_blank"';
-                         $onClick='onClick="ajaxDeleteArchivo(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',13,\''.$codigoArchivoX.'\')"';
+                         $globalServerDelete=obtenerValorConfiguracion(94);
+                         $onClick='onClick="ajaxDeleteArchivoIbnorca(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',15,\''.$codigoArchivoX.'\','.$filaA.','.$codigoArchivoX.',1);"';
                       }                      
                      }
 

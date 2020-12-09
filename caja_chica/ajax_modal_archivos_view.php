@@ -30,22 +30,30 @@ $codigo=$_GET['codigo'];
     $urlArchivo=$rowArchivo['direccion_archivo'];
     $ObligatorioX=0;    
     $Obli='<i class="material-icons text-danger">clear</i> NO';
+    $downloadFile='download="Doc - IFINANCIERO ('.$nombreX.')"';
+                     if(obtenerValorConfiguracion(93)==1){
+                      $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos_cajachica',$codigoArchivoX);
+                      if($banderaArchivo>0){
+                         $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
+                         $downloadFile='target="_blank"';                                            
+                      }                      
+                     }
     ?>
-    <tr>
-      <td class="text-left"><input type="hidden" name="codigo_archivoregistrado<?=$filaE?>" id="codigo_archivoregistrado<?=$filaE?>" value="<?=$codigoArchivoX;?>">Otros Documentos</td>      
-      <td class="text-right">
-        <div class="div-center">
-          <?php           
-          obtenerDirectoriosCajaChica("assets/archivos-respaldo/archivos_cajachicadetalle/GASTO_CC-".$codigo,$urlArchivo);
-          ?>
-        </div>
-        <!-- <div class="btn-group">
-          <a href="#" class="btn btn-button btn-sm">Registrado</a>  
-          <a class="btn btn-button btn-danger btn-sm" href="ifinanciero/<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
-        </div>    -->  
-      </td>    
-      <td><?=$nombreX;?></td>
-    </tr> 
+    <tr id="fila_archivo<?=$filaE?>">
+                    <td class="text-left"><input type="hidden" name="codigo_archivoregistrado<?=$filaE?>" id="codigo_archivoregistrado<?=$filaE?>" value="<?=$codigoArchivoX;?>">Otros Documentos</td>                
+                    <td class="text-right">
+                        <small id="existe_archivo_cabecera<?=$filaE?>"></small>
+                          <small id="label_txt_documentos_cabecera<?=$filaE?>"></small> 
+                          <span class="input-archivo">
+                            <input type="file" class="archivo" name="documentos_cabecera<?=$filaE?>" id="documentos_cabecera<?=$filaE?>"/>
+                          </span>                         
+                        <div class="btn-group">
+                          <a href="#" class="btn btn-button btn-sm" >Registrado</a>  
+                          <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" <?=$downloadFile?>><i class="material-icons">get_app</i></a>  
+                        </div>     
+                      </td>    
+                    <td><?=$nombreX;?></td>
+                  </tr> 
       <?php                   
   }
   ?>       

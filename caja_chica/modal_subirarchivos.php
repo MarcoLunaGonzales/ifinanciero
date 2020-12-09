@@ -39,6 +39,17 @@
                       $urlArchivo=$rowArchivo['direccion_archivo'];
                       $ObligatorioX=0;
                       $Obli='<i class="material-icons text-danger">clear</i> NO';
+                       $onClick='onClick="quitarArchivoSistemaAdjunto_solfac('.$filaA.','.$codigoArchivoX.',1,2)"';
+                     $downloadFile='download="Doc - IFINANCIERO ('.$nombreX.')"';
+                     if(obtenerValorConfiguracion(93)==1){
+                      $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos_cajachica',$codigoArchivoX);
+                      if($banderaArchivo>0){
+                         $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
+                         $downloadFile='target="_blank"';
+                         $globalServerDelete=obtenerValorConfiguracion(94);
+                         $onClick='onClick="ajaxDeleteArchivoIbnorcaFacturacion(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',17,\''.$codigoArchivoX.'\','.$filaA.','.$codigoArchivoX.',1,2);"';
+                      }                      
+                     }
                       ?>
                       <tr id="fila_archivo<?=$filaA?>">
                         <td class="text-left"><input type="hidden" name="codigo_archivoregistrado<?=$filaE?>" id="codigo_archivoregistrado<?=$filaE?>" value="<?=$codigoArchivoX;?>">Otros Documentos</td>
@@ -51,8 +62,8 @@
                               </span>                         
                             <div class="btn-group">
                               <a href="#" class="btn btn-button btn-sm" >Registrado</a>  
-                              <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
-                              <a href="#" title="Quitar" class="btn btn-danger btn-sm" onClick="quitarArchivoSistemaAdjunto_solfac(<?=$filaA?>,<?=$codigoArchivoX;?>,1,2)"><i class="material-icons">delete_outline</i></a>
+                              <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" <?=$downloadFile?>><i class="material-icons">get_app</i></a>  
+                              <a href="#" title="Quitar" class="btn btn-danger btn-sm" <?=$onClick?>><i class="material-icons">delete_outline</i></a>
                             </div>     
                           </td>    
                         <td><?=$nombreX;?></td>

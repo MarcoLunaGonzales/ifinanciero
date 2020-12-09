@@ -95,7 +95,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
     if($_FILES['documentos_cabecera'.$ar]["name"]){
       $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
       $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
-      $directorio = '../assets/archivos-respaldo/COMP-'.$codComprobante.'/'; //Declaramos un  variable con la ruta donde guardaremos los archivoss
+      $directorio = '../assets/archivos-respaldo/COMP-'.$codComprobante.''; //Declaramos un  variable con la ruta donde guardaremos los archivoss
       //Validamos si la ruta de destino existe, en caso de no existir la creamos
       if(!file_exists($directorio)){
                 mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
@@ -117,12 +117,37 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
           $stmtDel->execute();
           //borrar de la carpeta
           unlink($linkArchivo);
+          if(obtenerValorConfiguracion(93)==1){
+            $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivo);
+            if($banderaArchivo>0){
+              $globalServerDelete=obtenerValorConfiguracion(94);
+              ?><script>ajaxDeleteArchivo("<?=$globalServerDelete;?>","<?=$banderaArchivo?>","divArchivo",15,"<?=$codigoArchivo;?>");</script><?php   
+            }          
+          }
         }
-        $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
-        VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codComprobante')";
+        $codArchivoAdjunto=obtenerCodigoUltimoTabla('archivos_adjuntos');
+        $sqlInsert="INSERT INTO archivos_adjuntos (codigo,cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+        VALUES ($codArchivoAdjunto,'$tipo','$descripcion','$target_path','$tipoPadre',0,'$codComprobante')";
         $stmtInsert = $dbh->prepare($sqlInsert);
-        $stmtInsert->execute();    
-        print_r($sqlInsert);
+        $flagArchivo=$stmtInsert->execute();    
+        //print_r($sqlInsert);
+        if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+          //sibir archivos al servidor de documentos
+          $parametros=array(
+            "idD" => 15,
+            "idR" => $codArchivoAdjunto,
+            "idusr" => $globalUser,
+            "Tipodoc" => 176,
+            "descripcion" => $descripcion,
+            "codigo" => "",
+            "observacion" => "-",
+            "r" => "http://www.google.com",
+            "v" => true
+            );
+           $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+           //unlink($target_path);
+           //print_r($resultado);        
+        }
       } else {    
           echo "error";
       } 

@@ -2708,6 +2708,15 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      $stmt->execute();
      return $stmt;
   }
+  function obtenerSolicitudRecursosDetallePlantillaSinSol($codSol,$codigo){
+     $dbh = new Conexion();
+     $sql="";
+     $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_detalleplantilla=$codigo and sd.cod_solicitudrecurso!=$codSol"; // 
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     return $stmt;
+  }
+
   function obtenerSolicitudRecursosDetallePlantillaAud($codSol,$codigo){
      $dbh = new Conexion();
      $sql="";
@@ -10911,6 +10920,18 @@ function obtenerPrimerAtributoSimulacionServicioDatos($codigo){
     return $valor;
  }
 
+function obtenerSolicitudPropuestaCapacitacion($codigo){
+   $dbh = new Conexion();
+     $sql="SELECT codigo from solicitud_recursos where cod_simulacion=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+    }
+    return $valor;
+ }
+
  function obtenerDatosContratoSolicitudCapacitacion($codigo){
    $dbh = new Conexion();
      $sql="SELECT c.Monto,m.idDocente,m.NroModulo,ibnorca.codigo_curso(m.IdCurso) as CodigoCurso from simulaciones_costos sc join ibnorca.contratos c on c.IdObjeto=sc.IdModulo join ibnorca.modulos m on m.IdModulo=sc.IdModulo where sc.codigo=$codigo;";
@@ -10933,7 +10954,8 @@ function obtenerPrimerAtributoSimulacionServicioDatos($codigo){
      $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantilla($codigo,$codigoPlantillaXX);
      while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
        $cod_plantilladetalle=$row['codigo_detalle'];
-       $solicitudDetalle=obtenerSolicitudRecursosDetallePlantilla(false,$cod_plantilladetalle);       
+       $codSol=obtenerSolicitudPropuestaCapacitacion($codigo);
+       $solicitudDetalle=obtenerSolicitudRecursosDetallePlantillaSinSol($codSol,$cod_plantilladetalle);       
           while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
               $sumaImporteEjec+=$rowDetalles['importe'];
           }
@@ -11139,5 +11161,14 @@ function obtenerMontoEjecutadoEgresoSR($codigo){
      }
      return($valorX);
   }
-
+function obtenerPathArchivoIbnorca($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT d.path from dbdocumentos.documentos d where d.idDocumento=$codigo");
+     $stmt->execute();
+     $valorX="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valorX=$row['path'];
+     }
+     return($valorX);
+}
 ?>

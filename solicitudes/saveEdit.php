@@ -166,7 +166,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
           //sibir archivos al servidor de documentos
           $parametros=array(
-            "idD" => 13,
+            "idD" => 15,
             "idR" => $codArchivoAdjunto,
             "idusr" => $globalUser,
             "Tipodoc" => 176,
@@ -177,8 +177,8 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
             "v" => true
             );
            $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
-           unlink($target_path);
-           print_r($resultado);        
+           //unlink($target_path);
+           //print_r($resultado);        
         }
         
       } else {    

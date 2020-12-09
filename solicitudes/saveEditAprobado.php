@@ -168,7 +168,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
             $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivo);
             if($banderaArchivo>0){
               $globalServerDelete=obtenerValorConfiguracion(94);
-              ?><script>ajaxDeleteArchivo("<?=$globalServerDelete;?>","<?=$banderaArchivo?>","divArchivo",13,"<?=$codigoArchivo;?>");</script><?php   
+              ?><script>ajaxDeleteArchivo("<?=$globalServerDelete;?>","<?=$banderaArchivo?>","divArchivo",15,"<?=$codigoArchivo;?>");</script><?php   
             }          
           }
         }
@@ -180,19 +180,19 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
           //sibir archivos al servidor de documentos
           $parametros=array(
-            "idD" => 13,
+            "idD" => 15,
             "idR" => $codArchivoAdjunto,
             "idusr" => $globalUser,
             "Tipodoc" => 176,
             "descripcion" => $descripcion,
             "codigo" => "",
             "observacion" => "-",
-            "r" => "http://www.google.com",
+            "r" => "/",
             "v" => true
             );
            $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
-           unlink($target_path);
-           print_r($resultado);        
+           //unlink($target_path);
+           //print_r($resultado);        
         }
       } else {    
           echo "error";
