@@ -172,14 +172,22 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                         $saldo_real=0;
 
                                         //$queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario,1 as tipo_item from ibnorca.serviciopresupuesto s where  s.IdServicio=$IdServicio";
-                                        $queryPr="SELECT c.IdCotizacion, s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario,1 as tipo_item 
+                                        /*$queryPr="SELECT c.IdCotizacion, s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario,1 as tipo_item 
                                             from ibnorca.serviciopresupuesto s 
                                             INNER JOIN ibnorca.cotizaciones c ON c.IdCotizacion=s.IdCotizacion
-                                            where  s.IdServicio=$IdServicio AND ibnorca.d_clasificador(ibnorca.id_estadoobjeto(196, c.IdCotizacion))='Adjudicada';";
+                                            where  s.IdServicio=$IdServicio AND ibnorca.d_clasificador(ibnorca.id_estadoobjeto(196, c.IdCotizacion))='Adjudicada';";*/
+                                  $queryPr="SELECT c.IdCotizacion,c.Descuento,s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario, 1 AS tipo_item 
+                                           FROM
+                                               ibnorca.serviciopresupuesto s
+                                               INNER JOIN ibnorca.cotizaciones c ON c.IdCotizacion = s.IdCotizacion 
+                                           WHERE
+                                               s.IdServicio = $IdServicio
+                                               AND ibnorca.d_clasificador (
+                                               ibnorca.id_estadoobjeto ( 196, c.IdCotizacion ))= 'Adjudicada';";
                                         //echo $queryPr;
                                         if ($cod_facturacion > 0){
                                             $queryPr.=" UNION ";                                            
-                                            $queryPr.="SELECT d.codigo,d.cod_claservicio,d.cantidad,d.precio,tipo_item from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
+                                            $queryPr.="SELECT d.codigo,0 as Descuento,d.cod_claservicio,d.cantidad,d.precio,tipo_item from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
                                         }
                                         // echo $queryPr;
                                         $stmt = $dbh->prepare($queryPr);
@@ -191,6 +199,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             $codCS=$rowPre['IdClaServicio'];
                                             // $tipoPre=$rowPre['descripcion'];
                                             $cantidadPre=$rowPre['Cantidad'];//cantidad inicial
+                                            $descuentoFila=$rowPre['Descuento'];//descuento
                                             $cantidadPre=(double)$cantidadPre;
 
                                             $cantidad_saldo=$cantidadPre;
@@ -199,7 +208,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             $montoPre=$rowPre['PrecioUnitario'];
                                             $montoPre=number_format($montoPre,2,".","");                                            
                                             $tipoPre=$Codigo_alterno." - ".descripcionClaServicio($codCS);
-                                            $montoPreTotal=$montoPre*$cantidadPre;
+                                            $montoPreTotal=($montoPre*$cantidadPre);
+                                            //$montoPreTotal=($montoPre*$cantidadPre)-((($montoPre*$cantidadPre)*$descuentoFila)/100);
                                             $banderaHab=1;
                                             $codTipoUnidad=0;
 
@@ -308,6 +318,10 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         $saldo=$preciox;
                                                         $saldo_real=$saldo;
                                                     }
+                                                }
+                                                if($descuentoFila>0){
+                                                    $descuento_bobX=(($montoPre*$cantidadPre)*$descuentoFila)/100;
+                                                    $descuento_porX=$descuentoFila;
                                                 }
                                             
                                                 ?>

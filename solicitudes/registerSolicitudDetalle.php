@@ -228,9 +228,9 @@ $i=0;
   </div>
 </div>
 <form id="formSolDet" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
-  
 <div class="content">
   <div id="contListaGrupos" class="container-fluid">
+    <input type="hidden" name="validacion_contrato" id="validacion_contrato" value="<?=obtenerValorConfiguracion(96)?>">
       <input type="hidden" name="cuenta_honorarios_docente" id="cuenta_honorarios_docente" value="<?=obtenerValorConfiguracion(88);?>">      
       <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">      
       <input type="hidden" name="cod_configuracioniva" id="cod_configuracioniva" value="<?=obtenerValorConfiguracion(35)?>">

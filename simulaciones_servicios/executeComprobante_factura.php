@@ -542,13 +542,13 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 						}
 					}				
 					if($monto_libreta_total<$monto_total){	
-						$sw=1;				
+						$sw=1;		
+						$sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$codComprobante";
+                        $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
+                        $flagSuccess=$stmtDeleteComprobanteDet->execute();		
 						$sqldeletecomprobante="DELETE from comprobantes where codigo=$codComprobante";
                         $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
-                        $flagSuccess=$stmtDeleteCopmprobante->execute();
-                        $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$codComprobante";
-                        $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
-                        $flagSuccess=$stmtDeleteComprobanteDet->execute();
+                        $flagSuccess=$stmtDeleteCopmprobante->execute();  
                         $sw_controlador="1";//hubo algun error
 		                $sqlRolBack="ROLLBACK;";
 		                $stmtRolBack = $dbh->prepare($sqlRolBack);

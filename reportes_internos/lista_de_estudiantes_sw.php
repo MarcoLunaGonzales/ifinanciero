@@ -6,12 +6,16 @@ require_once '../functions.php';
 require_once '../functionsReportes.php';
 require_once '../functionsGeneral.php';
 
+$ciQuery="";
+if(isset($_GET['ci'])){
+  $ciQuery="and fd.ci_estudiante like '%".$_GET['ci']."%'";
+}
 $dbh = new Conexion();
 $sql="SELECT fd.codigo as cod_detale,f.codigo as cod_factura,f.nro_factura,f.cod_solicitudfacturacion,f.fecha_factura,fd.cod_claservicio,(fd.cantidad*fd.precio-fd.descuento_bob)*(da.porcentaje/100) importe,fd.descripcion_alterna,fd.ci_estudiante,
 (select SUM((ffd.cantidad*ffd.precio-ffd.descuento_bob)) from facturas_venta ff, facturas_ventadetalle ffd where 
 ffd.cod_claservicio=fd.cod_claservicio and ffd.ci_estudiante=fd.ci_estudiante and ff.codigo=ffd.cod_facturaventa and ff.cod_estadofactura<>2) as importe_acumulado
 FROM facturas_venta f,facturas_venta_distribucion da,facturas_ventadetalle fd
-WHERE f.codigo=da.cod_factura and f.codigo=fd.cod_facturaventa and f.cod_estadofactura<>2 and da.cod_area=13 and f.fecha_factura between '2020-07-01 00:00:00' and '2020-11-04 23:59:59' and f.cod_solicitudfacturacion<>-100 order by f.fecha_factura";
+WHERE f.codigo=da.cod_factura and f.codigo=fd.cod_facturaventa and f.cod_estadofactura<>2 and da.cod_area=13 and f.fecha_factura between '2020-07-01 00:00:00' and '2020-11-04 23:59:59' and f.cod_solicitudfacturacion<>-100 $ciQuery order by f.fecha_factura";
 $stmt = $dbh->prepare($sql); /*and sf.cod_estadosolicitudfacturacion!=5*/
 $stmt->execute();
 $stmt->bindColumn('cod_detale', $cod_detale);

@@ -26,9 +26,9 @@ $des_actividadproyecto="";
                                     if($codigoX==$unidadXX){
                                        ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                     }else{
-                                     //if(!isset($desdePropuestas)){
+                                     if(!isset($conContrato)){
                                         ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                     //}
+                                     }
                                     }
                                   }
                                     ?>
@@ -89,9 +89,9 @@ $des_actividadproyecto="";
                                                     <option value="<?=$codigoX;?>" selected>[<?=$numeroX?>] <?=$nombreX;?></option>  
                                                   <?php    
                                                 }else{
-                                                  //if(!isset($desdePropuestas)){
+                                                  if(!isset($conContrato)){ //$desdePropuestas
                                                   ?><option value="<?=$codigoX;?>">[<?=$numeroX?>] <?=$nombreX;?></option><?php
-                                                  //}  
+                                                  }  
                                                 }
                                               
                                                 }
@@ -146,9 +146,11 @@ $des_actividadproyecto="";
                                                  <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option>  
                                                  <?php
                                                    }else{
+                                                    if(!isset($conContrato)){
                                                    	?>
                                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
                                                  <?php
+                                                    }
                                                    }
                                                  
                                                    }

@@ -104,7 +104,7 @@ $dbh = new Conexion();
                            <label class="col-sm-2 col-form-label">Cantidad de M&oacute;dulos:</label>
                            <div class="col-sm-2"> 
                              <div class="form-group">
-                                 <input class="form-control" type="number" id="cantidad_modulos" name="cantidad_modulos" min="1" max="12" value="1">
+                                 <input class="form-control" type="number" id="cantidad_modulos" readonly name="cantidad_modulos" min="1" max="12" value="1">
                                </div>
                              </div>
                              <label class="col-sm-2 col-form-label">Cantidad de d&iacute;as:</label>
@@ -155,7 +155,7 @@ $dbh = new Conexion();
                        <label class="col-sm-2 col-form-label">Normas:</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                                <select class="selectpicker form-control" name="normas[]" id="normas" multiple data-style="btn btn-warning" data-live-search="true" data-size="6" required>
+                                <select class="selectpicker form-control" name="normas[]" id="normas" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
                                 <?php
                                  $stmt = $dbh->prepare("SELECT * from normas where cod_estado=1 order by abreviatura");
                                  $stmt->execute();

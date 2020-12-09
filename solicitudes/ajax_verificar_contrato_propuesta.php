@@ -19,8 +19,7 @@ $monto=$_POST['monto'];
 $mensajeError="";
 $datosContrato=obtenerDatosContratoSolicitudCapacitacion($codigo);
 
-
-if($datosContrato[0]!=$monto){
+if($datosContrato[4]<$monto){
   $error_monto=1;
 }
 if($datosContrato[1]!=$cod_prov){
@@ -28,7 +27,7 @@ if($datosContrato[1]!=$cod_prov){
 }
 
 if($error_monto>0){
-  $mensajeError.="El monto del contrato es diferente al monto de la solicitud, ";
+  $mensajeError.="El monto del contrato ".number_format($datosContrato[0],2,'.',',')." (Saldo: ".number_format($datosContrato[4],2,'.',',').") es menor al monto de la solicitud, ";
 }
 if($error_proveedor>0){
   $mensajeError.="El proveedor seleccionado no es igual al Docente del contrato, ";

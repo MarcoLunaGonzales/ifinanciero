@@ -12652,11 +12652,9 @@ function guardarDatoscontacto(){
               Swal.fire("Correcto!", "Los datos se actualizaron de forma correcta.", "success");
               $("#modalAgregarProveedor").modal("hide");
               actualizar_contacto_cliente(cod_cliente);
-
             }else{              
                 Swal.fire("Error!", "Ocurrio un error de envio. <br>"+resp.trim(), "warning");
             }
-
          }
        });  
   }else{
@@ -18962,4 +18960,109 @@ function verificarContratoDatosDesdeSolicitud(codSim,codProv,montoContrato){
         }
     });
   return tiene;
+}
+
+
+//CON ESTE PROCESO ENVIAMSO LOS ARCHIVOS AJAX A LA LIBRERIA DEL ING. WILLY input name archivito
+function subirArchivosLibreriaInborca(inpFile){
+   var x = $("#documentos_cabecera");
+      var y = x.clone();
+      y.attr("id", "archivos"+fila);
+      y.attr("name", "archivos"+fila+"[]");
+      $("#archivos_fila"+fila).html(y);
+
+    var formData = new FormData(document.getElementById(inpFile));
+    $.ajax({
+       url: "http://ibnored.ibnorca.org/itranet/documentos/guardar_archivo.php",
+       type: "post",
+       dataType: "html",
+       data: formData,
+       cache: false,
+       contentType: false,
+       processData: false
+     }).done(function(res){
+        console.log("transferencia satisfactoria");
+    });
+}
+
+//FUNCION QUE LLAMA A BORRAR ARCHIVOS DEL ING. WILLY
+function ajaxDeleteArchivo(urlServer, idArchivo, divContenedor, idDir, id){
+  var contenedor;
+  contenedor = document.getElementById(divContenedor);
+  ajax=nuevoAjax();
+  ajax.open('GET', urlServer+'?idD='+idDir+'&idR='+idArchivo+'&r=http://www.google.com&idRe='+id,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = "ArchivoBorrado"
+    }
+  }
+  ajax.send(null)
+}
+
+function ajaxDeleteArchivoIbnorca(urlServer, idArchivo, divContenedor, idDir, id,fila,codigo,tipo){
+  Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Se borrará el Archivo Adjunto de la base de datos!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            if(tipo==1){
+              quitarElementoAdjunto(fila);
+            }else{
+              $("#existe_div_archivo_cabecera"+fila).remove();
+              $("#existe_archivo_cabecera"+fila).remove();
+              $("#label_documentos_cabecera"+fila).removeClass("btn-success");
+              $("#label_documentos_cabecera"+fila).removeClass("btn-fab");
+              $("#label_documentos_cabecera"+fila).addClass("btn-warning");
+              $("#label_documentos_cabecera"+fila).html('<i class="material-icons">publish</i> Subir Archivo');
+            }
+            quitarArchivoAdjuntoRecursos(codigo); 
+            ajaxDeleteArchivo(urlServer, idArchivo, divContenedor, idDir, id);                  
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
+}
+
+function ajaxDeleteArchivoIbnorcaFacturacion(urlServer, idArchivo, divContenedor, idDir, id,fila,codigo,tipo,indice){
+  Swal.fire({
+        title: '¿Esta Seguro?',
+        text: "Se borrará el Archivo Adjunto de la base de datos!",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+            if(tipo==1){
+              quitarElementoAdjunto(fila);
+            }else{
+              // $("#existe_div_archivo_cabecera"+fila).remove();
+              $("#existe_archivo_cabecera"+fila).remove();
+              $("#label_documentos_cabecera"+fila).removeClass("btn-success");
+              $("#label_documentos_cabecera"+fila).removeClass("btn-fab");
+              $("#label_documentos_cabecera"+fila).addClass("btn-warning");
+              $("#label_documentos_cabecera"+fila).html('<i class="material-icons">publish</i> Subir Archivo');
+            }
+            if(indice==1){
+              quitarArchivoAdjuntoSolicitud_facturacion(codigo);
+            }else{
+              quitarArchivoAdjuntoCajaChica(codigo);
+            }
+            ajaxDeleteArchivo(urlServer, idArchivo, divContenedor, idDir, id);                  
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
 }

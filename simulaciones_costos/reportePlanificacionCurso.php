@@ -53,7 +53,7 @@ if(isset($_POST['resumido'])){
 
 $tipoCursoArray=$tipoCurso;
 $tipoCursoAbrev="";
-$tipoCursoAbrev=abrevTipoCurso($tipoCursoArray);
+$tipoCursoAbrev=abrevCodigoCursoIbnorca($tipoCursoArray);
 
 $periodoTitle="";
 
@@ -80,15 +80,16 @@ $periodoTitle="";
  </script>
 
                 <div class="card-body">
-                  <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
+                  <!--<h6 class="card-title">Periodo: <?=$periodoTitle?></h6>-->
                   <h6 class="card-title">Cursos: <?=$tipoCursoAbrev;?></h6>
-                  <h6 class="card-title">Capacitación</h6>
+                  <!--<h6 class="card-title">Capacitación</h6>-->
+                  <center><h4><b>EGRESOS</b></h4></center>
                   <div class="table-responsive">
     <table id="libro_mayor_rep" class="table table-bordered table-condensed" style="width:100%">
            <thead >
            <tr class="text-center">
-             <th colspan="<?=$rowSpan?>" class=""></th>
-             <th colspan="3" class=""><?=$nombreMoneda?></th>
+             <th colspan="<?=$rowSpan-2?>" class=""></th>
+             <th colspan="4" class=""><?=$nombreMoneda?></th>
            </tr>
            <tr class="text-center">
              <th width="$anchoPartida?>">Propuesta</th>
@@ -98,16 +99,18 @@ $periodoTitle="";
            ?><th width="5%">Estado</th>
         <?php   
         }?>      
-       <th class="bg-blanco2" width="8%">% EJECUCION PRESUPUESTARIA CUENTA</th>
-             <th width="6%">% EJECUCION DE PROPUESTA</th>
+       <!--<th class="bg-blanco2" width="8%">% EJECUCION PRESUPUESTARIA CUENTA</th>
+             <th width="6%">% EJECUCION DE PROPUESTA</th>-->
              <th width="5%">Presupuesto</th>
+             <th width="5%">Contrato/Ajuste</th>
              <th width="5%">Ejecutado</th>
+             <th width="5%">Saldo</th>
            </tr>
           </thead>
           <tbody>
 <?php
 
-  $query1=$sqlSolicitadosInicio."select s.IdCurso,s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,
+  $query1=$sqlSolicitadosInicio."select s.IdModulo,s.IdCurso,s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,
 (SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as ejecutado, 
 (SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as proveedor,
 (SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as nombre_proveedor, 
@@ -129,8 +132,8 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
   if($tc==0){$tc=1;}
 
   $index=1; 
-  $tPresupuesto=0;$tEjecutado=0;$tsaldo=0;
-  $tPresupuestoS=0;$tEjecutadoS=0;$tsaldoS=0;    
+  $tPresupuesto=0;$tContrato=0;$tEjecutado=0;$tsaldo=0;
+  $tPresupuestoS=0;$tContratoS=0;$tEjecutadoS=0;$tsaldoS=0;    
   $cursoNombre="";
   $codPlan=0;
   $codigoSimulacion=0;
@@ -150,13 +153,15 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
     $numeroCuentaX=trim(obtieneNumeroCuenta($codCuenta));
     $anioSim=strftime('%Y',strtotime($fechaX));
     $mesSim=strftime('%m',strtotime($fechaX));
-    $datosSeg=obtenerPresupuestoEjecucionDelServicio($globalUnidad,13,$anioSim,(int)$mesSim,$numeroCuentaX);           
+    $porcentSegPres="";
+    $nombreX.=" ".obtenerModuloIbnorcaPropuesta($codigoSimulacionX);
+    /*$datosSeg=obtenerPresupuestoEjecucionDelServicio($globalUnidad,13,$anioSim,(int)$mesSim,$numeroCuentaX);           
     if($datosSeg->presupuesto!=0){
                $segPres=$datosSeg->presupuesto;
                $porcentSegPres=formatNumberDec(($datosSeg->ejecutado*100)/$datosSeg->presupuesto)." %"; 
     }else{
       $porcentSegPres="SIN PRESUPUESTO"; 
-    }
+    }*/
 
     $estado="EJECUTADO";
     $claseEstado="";
@@ -207,16 +212,17 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto(obtenerPlantillaCodigoSimulacion($codigoSimulacion));
                  $nCursos=obtenerCantidadCursosPlantillaCosto(obtenerPlantillaCodigoSimulacion($codigoSimulacion)); 
                  $porcentPrecios=($precioLocalX)/($precioRegistrado);
-                 $datosSeg=obtenerPresupuestoEjecucionDelServicio($globalUnidad,13,$anioSim,(int)$mesSim,$numeroCuentaFijo);             
+                 //$datosSeg=obtenerPresupuestoEjecucionDelServicio($globalUnidad,13,$anioSim,(int)$mesSim,$numeroCuentaFijo);             
                  $tipoSim=obtenerValorConfiguracion(13);
                  //$monto=ejecutadoEgresosMes($globalUnidad,((int)$anioSim-1),(int)$mesSim,13,2,$numeroCuentaFijo);
                  $glosaFijo="<br><b>Precio Curso:</b> ".formatNumberDec($precioLocalX)." Bs. <b>Seguimiento Presupuestal:</b> ".formatNumberDec($precioRegistrado)." Bs. <b>Porcent. :</b> ".formatNumberDec(($porcentPrecios*100))." <b>%</b> ";
                  $estadoFijo="Monto:".formatNumberDec(($montoFijo*100)/$porcentPrecios);
-                 if($datosSeg->presupuesto!=0){
+                 $porcentSegPres="";
+                 /*if($datosSeg->presupuesto!=0){
                     $porcentSegPres=formatNumberDec((($datosSeg->ejecutado)*100)/($datosSeg->presupuesto))." %"; 
                   }else{
                      $porcentSegPres="SIN PRESUPUESTO"; 
-                  }
+                  }*/
                   if($montoFijo>0){
                  $htmlFijos.='<tr class="" style="background:#E4E4E4">'.
                     '<td class="font-weight-bold small text-left">'.$cursoNombre.' '.$fechaCurso.'</td>'.
@@ -224,10 +230,10 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
                   if($solicitados==1){
                       $htmlFijos.= '<td class="font-weight-bold small">'.$estadoFijo.'</td>';
                   }                
-                 $htmlFijos.='<td class="font-weight-bold small bg-blanco2 text-right">'.$porcentSegPres.'</td>'.
-                    '<td class="font-weight-bold small text-right">'.formatNumberDec(100).' %</td>'.
-                    '<td class="font-weight-bold small text-right">'.formatNumberDec($montoFijo).'</td>'.
-                    '<td class="font-weight-bold small text-right">'.formatNumberDec(0).'</td>';
+                 $htmlFijos.='<td class="font-weight-bold small bg-blanco2 text-right">'.formatNumberDec($montoFijo).'</td>'.
+                 '<td class="font-weight-bold small text-right">'.formatNumberDec($montoFijo).'</td>'.
+                    '<td class="font-weight-bold small text-right">'.formatNumberDec(0).'</td>'.
+                    '<td class="font-weight-bold small text-right">'.formatNumberDec($montoFijo).'</td>';
                    $htmlFijos.='</tr>';          
                   }
          
@@ -248,13 +254,14 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
       }
       ?>
        <tr class="bg-plomo">
-                <td colspan="<?=($rowSpan-1)?>" class="text-left font-weight-bold">Totales Curso <?=$cursoNombre?> </td>
-                <td class="text-right font-weight-bold <?=$claseSubTotal?>"><?=formatNumberDec(($tEjecutadoS/$tPresupuestoS)*100)?> %</td>      
-                <td class="text-right font-weight-bold"><?=formatNumberDec($tPresupuestoS)?></td>      
-                <td class="text-right font-weight-bold"><?=formatNumberDec($tEjecutadoS)?></td> 
+                <td colspan="<?=($rowSpan-2)?>" class="text-left font-weight-bold">Totales Curso <?=$cursoNombre?> </td>
+                <td class="text-right font-weight-bold"><?=formatNumberDec($tPresupuestoS)?></td>
+                <td class="text-right font-weight-bold"><?=formatNumberDec($tContratoS)?></td>
+                <td class="text-right font-weight-bold"><?=formatNumberDec($tEjecutadoS)?></td>
+                <td class="text-right font-weight-bold"><?=formatNumberDec($tPresupuestoS-$tEjecutadoS)?></td>
             </tr>
       <?php      
-        $tPresupuestoS=0;$tEjecutadoS=0;$tsaldoS=0;  
+        $tPresupuestoS=0;$tContratoS=0;$tEjecutadoS=0;$tsaldoS=0;  
     }
 
     if($cursoNombre!=$nombreX&&$resumido==0){
@@ -270,13 +277,27 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
     }
     $porcentajePresX=($ejecutadoX/$presupuestadoX)*100;
     $saldoX=$presupuestadoX-$ejecutadoX;
-
+    $contratoX=$presupuestadoX;
+    $tieneContra=0;
+    if($codCuenta==obtenerValorConfiguracion(88)){      
+      $contratoX=obtenerDatosContratoSolicitudCapacitacion($codigoSimulacionX)[0];  
+      if($contratoX>0){
+       $tieneContra=1;
+      }                     
+    } 
+    
     $tPresupuesto+=$presupuestadoX;
     $tEjecutado+=$ejecutadoX;
     $tsaldo+=$saldoX;
+    $tContrato+=$contratoX;
+    $tContratoS+=$contratoX;
     $tPresupuestoS+=$presupuestadoX;
     $tEjecutadoS+=$ejecutadoX;
     $tsaldoS+=$saldoX;
+    $montoSaldoX=$presupuestadoX-$ejecutadoX;
+    if($tieneContra>0){
+     $montoSaldoX=$contratoX-$ejecutadoX;
+    }
     ?>      
         <tr class="<?=$claseEstado?>">
                     <td class="font-weight-bold small text-left"><?=$nombreX?> <?=$fechaCurso?></td>
@@ -286,10 +307,10 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
        <?php  
         }   
         ?>             
-               <td class="font-weight-bold small text-right bg-blanco2 text-dark"><?=$porcentSegPres?></td>
-                    <td class="font-weight-bold small text-right <?=$estadoEjecutado?>"><?=formatNumberDec($porcentajePresX)?> %</td>
-                    <td class="font-weight-bold small text-right"><?=formatNumberDec($presupuestadoX)?></td>
-                    <td class="font-weight-bold small text-right"><?=formatNumberDec($ejecutadoX)?></td>
+               <td class="font-weight-bold small text-right"><?=formatNumberDec($presupuestadoX)?></td>
+               <td class="font-weight-bold small text-right"><?=formatNumberDec($contratoX)?></td>
+               <td class="font-weight-bold small text-right"><?=formatNumberDec($ejecutadoX)?></td>
+               <td class="font-weight-bold small text-right"><?=formatNumberDec($montoSaldoX)?></td>
                     
         </tr>
     <?php    
@@ -318,16 +339,17 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto(obtenerPlantillaCodigoSimulacion($codigoSimulacion));
                  $nCursos=obtenerCantidadCursosPlantillaCosto(obtenerPlantillaCodigoSimulacion($codigoSimulacion)); 
                  $porcentPrecios=($precioLocalX)/($precioRegistrado);
-                 $datosSeg=obtenerPresupuestoEjecucionDelServicio($globalUnidad,13,$anioSim,(int)$mesSim,$numeroCuentaFijo);             
+                 //$datosSeg=obtenerPresupuestoEjecucionDelServicio($globalUnidad,13,$anioSim,(int)$mesSim,$numeroCuentaFijo);             
                  $tipoSim=obtenerValorConfiguracion(13);
                  //$monto=ejecutadoEgresosMes($globalUnidad,((int)$anioSim-1),(int)$mesSim,13,2,$numeroCuentaFijo);
                  $glosaFijo="<br><b>Precio Curso:</b> ".formatNumberDec($precioLocalX)." Bs. <b>Seguimiento Presupuestal:</b> ".formatNumberDec($precioRegistrado)." Bs. <b>Porcent. :</b> ".formatNumberDec(($porcentPrecios*100))." <b>%</b> ";
                  $estadoFijo="Monto:".formatNumberDec(($montoFijo*100)/$porcentPrecios);
-                 if($datosSeg->presupuesto!=0){
+                 $porcentSegPres="";
+                 /*if($datosSeg->presupuesto!=0){
                     $porcentSegPres=formatNumberDec((($datosSeg->ejecutado)*100)/($datosSeg->presupuesto))." %"; 
                   }else{
                      $porcentSegPres="SIN PRESUPUESTO"; 
-                  }
+                  }*/
                   if($montoFijo>0){
                  $htmlFijos.='<tr class="" style="background:#E4E4E4">'.
                     '<td class="font-weight-bold small text-left">'.$nombreX.' '.$fechaCurso.'</td>'.
@@ -335,10 +357,10 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
                   if($solicitados==1){
                       $htmlFijos.= '<td class="font-weight-bold small">'.$estadoFijo.'</td>';
                   }                
-                 $htmlFijos.='<td class="font-weight-bold small bg-blanco2 text-right">'.$porcentSegPres.'</td>'.
-                    '<td class="font-weight-bold small text-right">'.formatNumberDec(100).' %</td>'.
+                 $htmlFijos.='<td class="font-weight-bold small text-right">'.formatNumberDec($montoFijo).'</td>'.
                     '<td class="font-weight-bold small text-right">'.formatNumberDec($montoFijo).'</td>'.
-                    '<td class="font-weight-bold small text-right">'.formatNumberDec(0).'</td>';
+                    '<td class="font-weight-bold small text-right">'.formatNumberDec(0).'</td>'.
+                    '<td class="font-weight-bold small text-right">'.formatNumberDec($montoFijo).'</td>';
                    $htmlFijos.='</tr>';          
                   }
          
@@ -356,12 +378,18 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
           $claseSubTotal="bg-success";
         }        
       }
+      $saldoPropuestaX=$tPresupuestoS-$tEjecutadoS;
+      if($tContratoS>0){
+        $saldoPropuestaX=$tContratoS-$tEjecutadoS;
+      }
       ?>
        <tr class="bg-plomo">
-                <td colspan="<?=($rowSpan-1)?>" class="text-left font-weight-bold">Totales Curso <?=$cursoNombre?> </td>
-                <td class="text-right font-weight-bold <?=$claseSubTotal?>"><?=formatNumberDec(($tEjecutadoS/$tPresupuestoS)*100)?> %</td>      
+                <td colspan="<?=($rowSpan-2)?>" class="text-left font-weight-bold">Totales Curso <?=$cursoNombre?> </td>
                 <td class="text-right font-weight-bold"><?=formatNumberDec($tPresupuestoS)?></td>      
+                <td class="text-right font-weight-bold"><?=formatNumberDec($tContratoS)?></td>      
                 <td class="text-right font-weight-bold"><?=formatNumberDec($tEjecutadoS)?></td> 
+                <td class="text-right font-weight-bold"><?=formatNumberDec($saldoPropuestaX)?></td>      
+                
                        
             </tr>    
  <?php
@@ -376,16 +404,114 @@ WHERE s.IdCurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulaci
           $claseSubTotal="bg-success";
         }        
       }
+     $saldoFinal=$tPresupuesto-$tEjecutado; 
+     if($tContrato>0){
+        $saldoFinal=$tContrato-$tEjecutado; 
+     } 
      ?>
       <tr class="bg-secondary text-white">
-                <td colspan="<?=($rowSpan-1)?>" class="text-center">Totales:</td>
-                <td class="text-right font-weight-bold small <?=$claseSubTotal?>"><?=formatNumberDec(($tEjecutado/$tPresupuesto)*100)?> %</td>
+                <td colspan="<?=($rowSpan-2)?>" class="text-center">Totales:</td>
                 <td class="text-right font-weight-bold small"><?=formatNumberDec($tPresupuesto)?></td> 
-                <td class="text-right font-weight-bold small"><?=formatNumberDec($tEjecutado)?></td>    
+                <td class="text-right font-weight-bold small <?=$claseSubTotal?>"><?=formatNumberDec($tContrato)?></td>
+                <td class="text-right font-weight-bold small"><?=formatNumberDec($tEjecutado)?></td> 
+                <td class="text-right font-weight-bold small"><?=formatNumberDec($saldoFinal)?></td>                
+                   
             </tr>
 <?php    } ?>
 
  </tbody></table>
+
+                   </div>
+    <br><br><br>
+    <center><h4><b>INGRESOS</b></h4></center>
+    <div class="table-responsive">
+     <table id="" class="table table-bordered table-condensed" style="width:100%">
+           <thead >
+           <tr class="text-center" style="background:#FF5733;color:white;">
+             <th colspan="<?=$rowSpan-4?>" class=""></th>
+             <th colspan="4" class=""><?=$nombreMoneda?></th>
+           </tr>
+           <tr class="text-center" style="background:#FF5733;color:white;">
+             <th width="$anchoPartida?>">Propuesta</th>   
+             <th width="5%">Presupuesto</th>
+             <th width="5%">Ejecutado</th>
+             <th width="5%">Saldo</th>
+           </tr>
+          </thead>
+           <tbody>
+            
+<?php 
+$query1=$sqlSolicitadosInicio."select s.IdModulo,s.IdCurso,s.codigo as cod_simulacion,s.nombre,s.fecha_curso
+from simulaciones_costos s
+WHERE s.IdCurso in($tipoCursoArray) and s.cod_estadosimulacion=3 order by s.nombre".$sqlSolicitadosFin;
+
+$stmt = $dbh->prepare($query1);
+  // Ejecutamos
+  $stmt->execute();
+  $stmtCount = $dbh->prepare($query1);
+  $stmtCount->execute();
+  $contador=0;
+  while ($rowCount = $stmtCount->fetch(PDO::FETCH_ASSOC)) {
+    $contador++;
+  }
+
+
+  $index=1; 
+  $tPresupuesto=0;$tContrato=0;$tEjecutado=0;$tsaldo=0;
+  $tPresupuestoS=0;$tContratoS=0;$tEjecutadoS=0;$tsaldoS=0;    
+  $cursoNombre="";
+  $codPlan=0;
+  $codigoSimulacion=0;
+  $htmlFijos="";
+  while ($rowComp = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $codigoX=$rowComp['codigo'];
+    $codigoSimulacionX=$rowComp['cod_simulacion'];
+    $nombreX=$rowComp['nombre'];
+    $fechaX=$rowComp['fecha_curso'];
+    $codCuenta=$rowComp['cod_cuenta'];  
+    $glosaX=$rowComp['glosa'];
+    $proveedorX=$rowComp['proveedor'];
+    $IdModuloX=$rowComp['IdModulo'];
+    $presupuestadoX=$rowComp['presupuestado']/$tc;
+    $ejecutadoX=$rowComp['ejecutado']/$tc;
+    $nombreCuenta=nameCuenta($codCuenta);
+    $numeroCuentaX=trim(obtieneNumeroCuenta($codCuenta));
+    $anioSim=strftime('%Y',strtotime($fechaX));
+    $mesSim=strftime('%m',strtotime($fechaX));
+    $porcentSegPres="";
+    $nombreX.=" ".obtenerModuloIbnorcaPropuesta($codigoSimulacionX);
+    $presupuestadoX=obtenerMontoPresupuestadoIngresosSF($IdModuloX);
+    $ejecutadoX=obtenerMontoEjecutadoIngresosSF($IdModuloX);
+    $tPresupuesto+=$presupuestadoX;
+    $tEjecutado+=$ejecutadoX;
+    if($cursoNombre!=$nombreX&&$resumido==0){
+       ?><tr class="bg-info text-white">
+                <td colspan="<?=(($rowSpan-1)+3)?>" class="text-center font-weight-bold">INGRESOS <?=$nombreX?></td>
+            </tr>
+     <?php       
+    }
+    $cursoNombre=$nombreX;
+   ?>
+    <tr class="">
+               <td class="font-weight-bold small text-left"><?=$nombreX?> <?=$fechaCurso?></td>         
+               <td class="font-weight-bold small text-right"><?=formatNumberDec($presupuestadoX)?></td>
+               <td class="font-weight-bold small text-right"><?=formatNumberDec($ejecutadoX)?></td>
+               <td class="font-weight-bold small text-right"><?=formatNumberDec($presupuestadoX-$ejecutadoX)?></td>
+                    
+        </tr>
+   <?php
+}
+
+?>       
+          <tr class="bg-secondary text-white">
+                <td colspan="<?=($rowSpan-4)?>" class="text-center">Totales:</td>
+                <td class="text-right font-weight-bold small"><?=formatNumberDec($tPresupuesto)?></td> 
+                <td class="text-right font-weight-bold small"><?=formatNumberDec($tEjecutado)?></td> 
+                <td class="text-right font-weight-bold small"><?=formatNumberDec($tPresupuesto-$tEjecutado)?></td>                
+                   
+            </tr>   
+          </tbody>
+        </table>
 
                    </div>
                 </div>

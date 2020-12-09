@@ -12,10 +12,10 @@ $razon_social=$_POST['razon_social'];
 $correo_destino=$_POST['correo_destino'];
 $listaCorreos=explode(",", $correo_destino);
 //$correo_destino=trim($correo_destino,',');
-
+$fechaFactura=strftime('%d/%m/%Y',strtotime(obtenerFechaFacturaVenta($codigo_facturacion)));
 $fechaActual=date("Y-m-d H:m:s");
 $asunto="Envio De Factura";
-$mensaje="Estimado Cliente ".$razon_social.",<br>\n<br>\n Adjunto la Factura Nro. ".$nro_factura.".<br>\n<br>\nSaludos.";
+$mensaje="Estimado Cliente ".$razon_social.",<br>\n<br>\n Adjuntamos la Factura Nro. ".$nro_factura." de fecha ".$fechaFactura.".<br>\n<br>\nSaludos.";
 // echo $correo_destino."<br>";
 // echo $asunto."<br>";
 // echo $mensaje."<br>";
@@ -44,7 +44,7 @@ if($correo_destino==''||$asunto==''||$mensaje==''){
 		$mail_username="";//Correo electronico emisor
 		$mail_userpassword="";// contraseña correo emisor
 		$mail_addAddress=$correo_destino;//correo electronico destino
-		$template="../notificaciones_sistema/PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
+		$template="../notificaciones_sistema/PHPMailer/email_template_factura.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
 		/*Inicio captura de datos enviados por $_POST para enviar el correo */
 		$mail_setFromEmail=$mail_username;
 		$mail_setFromName="IBNORCA";
@@ -72,4 +72,13 @@ if($correo_destino==''||$asunto==''||$mensaje==''){
 		echo "3$$$";
 	}
 }
+
+function obtenerFechaFacturaVenta($codigo){
+    $dbh = new Conexion();
+    $stmtVerif = $dbh->prepare("SELECT * FROM facturas_venta where codigo=$codigo");
+    $stmtVerif->execute();
+    $resultVerif = $stmtVerif->fetch();    
+    $fecha = $resultVerif['fecha_factura'];
+    return $fecha;
+    }
 ?>

@@ -44,7 +44,7 @@ if(isset($_GET["sim"])){
            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               $nomArea=abrevArea_solo($row['cod_area']);
               $codigoSim=$row['codigo'];    
-              ?><option value="<?=$codigoSim?>$$$SIM" class="text-right"><?=$row['nombre']?> - <?=$nomArea?></option>
+              ?><option value="<?=$codigoSim?>$$$SIM" class="text-right">(<?=$codigoSim?> - <?=$nomArea?>) <?=$row['nombre']?></option>
              <?php 
              } 
           $stmt2 = $dbh->prepare($query2);

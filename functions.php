@@ -21,7 +21,6 @@
     }
   }*/
 
-
   function callService($parametros, $url){
     $parametros=json_encode($parametros);
     $ch = curl_init();
@@ -31,7 +30,6 @@
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $remote_server_output = curl_exec ($ch);
     curl_close ($ch);
-    
     return $remote_server_output;   
   }
 
@@ -2710,6 +2708,15 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      $stmt->execute();
      return $stmt;
   }
+  function obtenerSolicitudRecursosDetallePlantillaSinSol($codSol,$codigo){
+     $dbh = new Conexion();
+     $sql="";
+     $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_detalleplantilla=$codigo and sd.cod_solicitudrecurso!=$codSol"; // 
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     return $stmt;
+  }
+
   function obtenerSolicitudRecursosDetallePlantillaAud($codSol,$codigo){
      $dbh = new Conexion();
      $sql="";
@@ -10913,17 +10920,47 @@ function obtenerPrimerAtributoSimulacionServicioDatos($codigo){
     return $valor;
  }
 
+function obtenerSolicitudPropuestaCapacitacion($codigo){
+   $dbh = new Conexion();
+     $sql="SELECT codigo from solicitud_recursos where cod_simulacion=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+    }
+    return $valor;
+ }
+
  function obtenerDatosContratoSolicitudCapacitacion($codigo){
    $dbh = new Conexion();
-     $sql="SELECT c.Monto,m.idDocente from simulaciones_costos sc join ibnorca.contratos c on c.IdObjeto=sc.IdModulo join ibnorca.modulos m on m.IdModulo=sc.IdModulo where sc.codigo=$codigo;";
+     $sql="SELECT c.Monto,m.idDocente,m.NroModulo,ibnorca.codigo_curso(m.IdCurso) as CodigoCurso from simulaciones_costos sc join ibnorca.contratos c on c.IdObjeto=sc.IdModulo join ibnorca.modulos m on m.IdModulo=sc.IdModulo where sc.codigo=$codigo;";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor[0]=0;
      $valor[1]=0;
+     $valor[2]="";
+     $valor[3]="";
+     $valor[4]=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor[0]=$row['Monto'];
         $valor[1]=$row['idDocente'];
+        $valor[2]="Mod. ".$row['NroModulo'];
+        $valor[3]="Curso ".$row['CodigoCurso'];
+        $valor[4]=$row['Monto'];
     }
+     $sumaImporteEjec=0;
+     $codigoPlantillaXX=obtenerPlantillaCodigoSimulacion($codigo);
+     $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantilla($codigo,$codigoPlantillaXX);
+     while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
+       $cod_plantilladetalle=$row['codigo_detalle'];
+       $codSol=obtenerSolicitudPropuestaCapacitacion($codigo);
+       $solicitudDetalle=obtenerSolicitudRecursosDetallePlantillaSinSol($codSol,$cod_plantilladetalle);       
+          while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+              $sumaImporteEjec+=$rowDetalles['importe'];
+          }
+     }
+     $valor[4]=$valor[4]-$sumaImporteEjec;
     return $valor;
  }
 
@@ -10947,4 +10984,191 @@ function obtenerCantidadCuentaCodigoComprobante($codigo,$cuenta){
      }
      return($valor);
   }
+
+  function obtenerCodigoLibretaBancaria($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_libretabancaria from libretas_bancariasdetalle where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_libretabancaria'];
+     }
+     return($valor);
+  }
+  function obtenerFechaLibretaBancariaDetalle($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT fecha_hora from libretas_bancariasdetalle where codigo=$codigo");
+     $stmt->execute();
+     $valor='';
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['fecha_hora'];
+     }
+     return($valor);
+  }
+  function obtenerNumeroDocumentoLibretaBancariaDetalle($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT nro_documento from libretas_bancariasdetalle where codigo=$codigo");
+     $stmt->execute();
+     $valor='';
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['nro_documento'];
+     }
+     return($valor);
+  }
+  function obtenerSaldoAcumuladoFilaLibretaBancaria($codigo){
+     $codLibreta=obtenerCodigoLibretaBancaria($codigo);
+     $fechaHora=obtenerFechaLibretaBancariaDetalle($codigo);
+     //$numeroDocumento=obtenerNumeroDocumentoLibretaBancariaDetalle($codigo);
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT sum(monto) as saldo_fila 
+      from libretas_bancariasdetalle 
+      where cod_libretabancaria=$codLibreta and fecha_hora<='$fechaHora' and codigo!=$codigo order by fecha_hora");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['saldo_fila'];
+     }
+     return($valor);
+  }
+
+  function enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, obtenerValorConfiguracion(92));
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        if(function_exists('curl_file_create')){
+           $target_path = curl_file_create(realpath($target_path));
+        } else{
+           $target_path = '@' . realpath($target_path);
+           curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);
+        }  
+        $parametros['archivito']=$target_path;
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+        $result = curl_exec($ch);
+        curl_close($ch); 
+        return $result; 
+  }
+  function obtenerCodigoUltimoTabla($tabla){
+    $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from $tabla c");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+     }
+     return($valor);
+  }
+
+  function obtenerBanderaArchivoIbnorca($tabla,$codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_archivoibnorca from $tabla where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_archivoibnorca'];
+     }
+     return($valor);
+  }
+ 
+  function gestorDeCursosFormacion($codigo){
+     $codigosAdmin=obtenerValorConfiguracion(97);
+     $dbh = new Conexion();
+     $sql="SELECT codigo from personal where codigo in ($codigosAdmin)";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;$admin=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+        if($valor==$codigo){
+          $admin=1;
+        }
+     }
+     return($admin);
+  } 
+  function gestorDeCursosComercializacion($codigo){
+     $codigosAdmin=obtenerValorConfiguracion(98);
+     $dbh = new Conexion();
+     $sql="SELECT codigo from personal where codigo in ($codigosAdmin)";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;$admin=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+        if($valor==$codigo){
+          $admin=1;
+        }
+     }
+     return($admin);
+  } 
+
+  function abrevCodigoCursoIbnorca($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT ibnorca.codigo_curso($codigo) as codigo");
+     $stmt->execute();
+     $nombreX="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $nombreX=$row['codigo'];
+     }
+     return($nombreX);
+  }
+  function obtenerModuloIbnorcaPropuesta($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT m.NroModulo from ibnorca.modulos m join simulaciones_costos s on s.IdModulo=m.IdModulo where s.codigo=$codigo");
+     $stmt->execute();
+     $nombreX="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $nombreX="Mod. ".$row['NroModulo'];
+     }
+     return($nombreX);
+  }
+  function obtenerMontoPresupuestadoIngresosSF($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT SUM(((sd.cantidad*sd.precio)-((sd.descuento_por*sd.cantidad*sd.precio)/100))) as precio from solicitudes_facturaciondetalle sd 
+               join solicitudes_facturacion s on s.codigo=sd.cod_solicitudfacturacion where s.cod_estadosolicitudfacturacion<>2
+                and sd.cod_claservicio=$codigo;");
+     $stmt->execute();
+     $valorX=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valorX=$row['precio'];
+     }
+     return($valorX);
+  }
+  function obtenerMontoEjecutadoIngresosSF($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("select SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as precio from facturas_ventadetalle fd 
+              join facturas_venta f on f.codigo=fd.cod_facturaventa where f.cod_estadofactura<>2
+              and fd.cod_claservicio=$codigo;");
+     $stmt->execute();
+     $valorX=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valorX=$row['precio'];
+     }
+     return($valorX);
+  }
+function obtenerMontoEjecutadoEgresoSR($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("select s.IdModulo,s.IdCurso,s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,
+        (SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as ejecutado, 
+        (SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as proveedor,
+        (SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as nombre_proveedor, 
+        (SELECT d.cod_detalleplantilla from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as codigo_ejecutado 
+        from simulaciones_detalle sd join simulaciones_costos s on s.codigo=sd.cod_simulacioncosto 
+        WHERE s.IdModulo in ($codigo) and sd.habilitado=1 and s.cod_estadosimulacion=3 order by s.nombre,sd.cod_cuenta");
+     $stmt->execute();
+     $valorX=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valorX+=$row['ejecutado'];
+     }
+     return($valorX);
+  }
+function obtenerPathArchivoIbnorca($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT d.path from dbdocumentos.documentos d where d.idDocumento=$codigo");
+     $stmt->execute();
+     $valorX="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valorX=$row['path'];
+     }
+     return($valorX);
+}
 ?>

@@ -1,5 +1,5 @@
 <?php
-
+$globalUser=$_SESSION["globalUser"];
 //subir archivos al servidor
 //Como el elemento es un arreglos utilizamos foreach para extraer todos los valores
 $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
@@ -23,12 +23,31 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
             echo "Archivo guargado.";
             $tipo=$_POST['codigo_archivo'.$ar];
             $descripcion=$_POST['nombre_archivo'.$ar];
+            $codArchivoAdjunto=obtenerCodigoUltimoTabla('archivos_adjuntos_solicitud_facturacion');
             // $tipoPadre=2708;
-            $sqlInsert="INSERT INTO archivos_adjuntos_solicitud_facturacion(cod_tipoarchivo,descripcion,direccion_archivo,cod_solicitud_facturacion) 
-            VALUES ('$tipo','$descripcion','$target_path','$cod_facturacion')";
+            $sqlInsert="INSERT INTO archivos_adjuntos_solicitud_facturacion(codigo,cod_tipoarchivo,descripcion,direccion_archivo,cod_solicitud_facturacion) 
+            VALUES ($codArchivoAdjunto,'$tipo','$descripcion','$target_path','$cod_facturacion')";
             $stmtInsert = $dbh->prepare($sqlInsert);
-            $stmtInsert->execute();    
-            // print_r($sqlInsert);
+            $flagArchivo=$stmtInsert->execute();    
+            
+            if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+            //sibir archivos al servidor de documentos
+            $parametros=array(
+            "idD" => 16,
+            "idR" => $codArchivoAdjunto,
+            "idusr" => $globalUser,
+            "Tipodoc" => 3596,
+            "descripcion" => $descripcion,
+            "codigo" => "",
+            "observacion" => "-",
+            "r" => "http://www.google.com",
+            "v" => true
+            );
+            $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+           //unlink($target_path);
+           //print_r($resultado);        
+          }
+
           }else {    
               echo "Error al guardar archivo.";
           } 

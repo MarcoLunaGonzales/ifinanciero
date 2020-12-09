@@ -6,11 +6,11 @@ $dbhB = new Conexion();
 
 $fechaActual=date("Y-m-d H:m:s");
 $asunto="TEST";
-$mensaje="TEST DE ENVIO";
+$mensaje="Lorem ";
 		$mail_username="";//Correo electronico emisor
 		$mail_userpassword="";// contraseña correo emisor
 		$mail_addAddress="davidhuarina25@gmail.com";//correo electronico destino
-		$template="../notificaciones_sistema/PHPMailer/email_template.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
+		$template="../notificaciones_sistema/PHPMailer/email_template_factura.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
 		/*Inicio captura de datos enviados por $_POST para enviar el correo */
 		$mail_setFromEmail=$mail_username;
 		$mail_setFromName="IBNORCA";

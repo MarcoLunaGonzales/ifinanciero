@@ -557,6 +557,8 @@
                           if(tipoEstadoCuenta>0 && cuentaAuxiliar==0){  
                             $('#msgError').html("La fila "+(i+1)+" debe estar asociada a una CUENTA AUXILIAR, ya que está configurada para llevar Estados de Cuenta.");
                             $('#modalAlert').modal('show');
+                            $("#boton_enviar_formulario").removeAttr("disabled");
+                            $("#boton_enviar_formulario").html("Guardar");
                             return false;
                             //CONSULTAMOS SI EN EL CASO ESPECIAL ESTA MATANDO LA CUENTA
                           }else{
@@ -564,17 +566,27 @@
                               if( estadoCuentaSelect==false ){
                                 $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un Estado de Cuenta para Cerrar.");
                                 $('#modalAlert').modal('show');
+                                $("#boton_enviar_formulario").removeAttr("disabled");
+                                $("#boton_enviar_formulario").html("Guardar");
                                 return false;
                               }
                             }
                           }
-                          
+                          if($("#debe"+(i+1)).val()>0&&$("#haber"+(i+1)).val()>0){
+                                  $('#msgError').html("No puede existir montos en DEBE y en HABER en la Fila "+(i+1)+"!");
+                                  $('#modalAlert').modal('show');
+                                  $("#boton_enviar_formulario").removeAttr("disabled");
+                                  $("#boton_enviar_formulario").html("Guardar");
+                                  return false;
+                          }
                           //Validar las cuentas que esten relacionadads al estado de cuentas los montos deben ser iguales
                           if( (tipoEstadoCuenta==1 && haberZ>0) ){
                             for (var f = 0; f < itemEstadosCuentas[i].length; f++) {
                               if(itemEstadosCuentas[i][f].monto!=haberZ){
                                  $('#msgError').html("Fila "+(i+1)+" El Monto del Estado de Cuenta no iguala al Haber.");
                                  $('#modalAlert').modal('show');
+                                 $("#boton_enviar_formulario").removeAttr("disabled");
+                                 $("#boton_enviar_formulario").html("Guardar");
                                  return false;
                               }
                             }  
@@ -584,6 +596,8 @@
                             if(detalleLibretaSelect==false && libretasBancarias==false && $("#tipo_comprobante").val()!=4 && parseInt(fechaComprobante[1])>=parseInt(mesActual)&&parseInt(fechaComprobante[0])>=parseInt(anioActual)){
                                 $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un detalle de la Libreta Bancaria para Cerrar.");
                                 $('#modalAlert').modal('show');
+                                $("#boton_enviar_formulario").removeAttr("disabled");
+                                $("#boton_enviar_formulario").html("Guardar");
                                 return false;
                             }        
                           }
@@ -592,6 +606,8 @@
                               if(itemEstadosCuentas[i][f].monto!=debeZ){
                                  $('#msgError').html("Fila "+(i+1)+" El Monto del Estado de Cuenta no iguala al Debe.");
                                  $('#modalAlert').modal('show');
+                                 $("#boton_enviar_formulario").removeAttr("disabled");
+                                 $("#boton_enviar_formulario").html("Guardar");
                                  return false;
                               }
                             }  
@@ -638,6 +654,8 @@
            if(contArchOblig!=0){
               $('#msgError').html("Debe cargar los archivos obligatorios");
               $('#modalAlert').modal('show');
+              $("#boton_enviar_formulario").removeAttr("disabled");
+              $("#boton_enviar_formulario").html("Guardar");
              return false;
            }else{ 
             $('<input />').attr('type', 'hidden')
@@ -852,7 +870,7 @@
            }else{  
                 //quinto else
             var hayContraro=0;  var mensajeContrato="";
-            if(tipoSolicitudRecurso==1){
+            if(tipoSolicitudRecurso==1&&$("#validacion_contrato").val()==1){
               var simulacionCodigo=$("#simulaciones").val().split("$$$")[0];
              for (var i = 0; i < $("#cantidad_filas").val(); i++) {
               if($('#partida_cuenta_id'+(i+1)).val()==cuentaHonorarios){
@@ -918,6 +936,14 @@
             .attr('value', JSON.stringify(itemDocumentosDetalle))
             .appendTo('#formSolDet');
              }//else
+             
+             //para subir archivos adjuntos a ibnorca
+             for (var file=1; file<=parseInt($("#cantidad_archivosadjuntos").val()); file++) {
+              if($('#documentos_cabecera'+file).length>0){
+                //subirArchivosLibreriaInborca("documentos_cabecera"+file); 
+              }               
+             };
+             //formSolDet
           } 
          }      
         }

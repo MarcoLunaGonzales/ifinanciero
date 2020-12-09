@@ -9,7 +9,7 @@ ini_set('display_errors',1);
 $dbh = new Conexion();
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
-
+$globalUser=$_SESSION["globalUser"];
 try {
     $globalUser=$_SESSION["globalUser"];
     $codigo = $_POST["codigo"];
@@ -181,11 +181,30 @@ try {
 
                 // $sqlInsert="INSERT INTO archivos_adjuntos_cajachica (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
                 // VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
-                $sqlInsert="INSERT INTO archivos_adjuntos_cajachica(cod_tipoarchivo,descripcion,direccion_archivo,cod_cajachica_detalle) 
-                VALUES ('$tipo','$descripcion','$target_path','$codigo')";
+                $codArchivoAdjunto=obtenerCodigoUltimoTabla('archivos_adjuntos_cajachica');
+                $sqlInsert="INSERT INTO archivos_adjuntos_cajachica(codigo,cod_tipoarchivo,descripcion,direccion_archivo,cod_cajachica_detalle) 
+                VALUES ($codArchivoAdjunto,'$tipo','$descripcion','$target_path','$codigo')";
+
                 $stmtInsert = $dbh->prepare($sqlInsert);
-                $stmtInsert->execute();    
+                $flagArchivo=$stmtInsert->execute();    
                 // print_r($sqlInsert);
+                if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+                  //sibir archivos al servidor de documentos
+                  $parametros=array(
+                   "idD" => 17,
+                   "idR" => $codArchivoAdjunto,
+                   "idusr" => $globalUser,
+                   "Tipodoc" => 176,
+                   "descripcion" => $descripcion,
+                   "codigo" => "",
+                   "observacion" => "-",
+                   "r" => "http://www.google.com",
+                   "v" => true
+                   );
+                  $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+                 //unlink($target_path);
+                 //print_r($resultado);        
+                }
               } else {    
                   echo "error";
               } 
@@ -350,11 +369,29 @@ try {
 
                 // $sqlInsert="INSERT INTO archivos_adjuntos_cajachica (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
                 // VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
-                $sqlInsert="INSERT INTO archivos_adjuntos_cajachica(cod_tipoarchivo,descripcion,direccion_archivo,cod_cajachica_detalle) 
-                VALUES ('$tipo','$descripcion','$target_path','$codigo')";
+                $codArchivoAdjunto=obtenerCodigoUltimoTabla('archivos_adjuntos_cajachica');
+                $sqlInsert="INSERT INTO archivos_adjuntos_cajachica(codigo,cod_tipoarchivo,descripcion,direccion_archivo,cod_cajachica_detalle) 
+                VALUES ($codArchivoAdjunto,'$tipo','$descripcion','$target_path','$codigo')";
                 $stmtInsert = $dbh->prepare($sqlInsert);
-                $stmtInsert->execute();    
+                $flagArchivo=$stmtInsert->execute();    
                 // print_r($sqlInsert);
+                if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+                  //sibir archivos al servidor de documentos
+                  $parametros=array(
+                   "idD" => 17,
+                   "idR" => $codArchivoAdjunto,
+                   "idusr" => $globalUser,
+                   "Tipodoc" => 176,
+                   "descripcion" => $descripcion,
+                   "codigo" => "",
+                   "observacion" => "-",
+                   "r" => "http://www.google.com",
+                   "v" => true
+                   );
+                  $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+                 //unlink($target_path);
+                 //print_r($resultado);        
+                }
               } else {    
                   echo "error";
               } 

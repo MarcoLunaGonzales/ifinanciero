@@ -136,6 +136,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
              $diasCursoXX=1; 
            }
            $fechaCurso=strftime('%d/%m/%Y',strtotime($fechaCursoX));
+           $codigoPropuesta=$codigoX;
       }
   if($ibnorcaC==1){
   	$checkIbnorca="checked";
@@ -169,7 +170,7 @@ if($codEstadoSimulacionXX==3){
             <div class="row"><div class="card col-sm-5">
 				<div class="card-header card-header-success card-header-text">
 					<div class="card-text">
-					  <h4 class="card-title">Datos de la Propuesta</h4>
+					  <h4 class="card-title">Datos de la Propuesta <?=$codigoPropuesta?></h4>
 					</div>
           <button type="button" onclick="editarDatosSimulacion()" class="btn btn-success btn-sm btn-fab float-right">
              <i class="material-icons" title="Editar Propuesta">edit</i>
