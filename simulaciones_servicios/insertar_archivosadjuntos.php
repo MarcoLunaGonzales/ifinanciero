@@ -36,7 +36,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
             "idD" => 16,
             "idR" => $codArchivoAdjunto,
             "idusr" => $globalUser,
-            "Tipodoc" => 176,
+            "Tipodoc" => 3596,
             "descripcion" => $descripcion,
             "codigo" => "",
             "observacion" => "-",
