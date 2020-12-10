@@ -80,7 +80,7 @@ try
                         $descuento_por_Insert=$_POST["descuento_por".$i];
                         $descuento_bob_Insert=$_POST["descuento_bob".$i]; 
                         $importe_a_pagar_Insert=$_POST["importe_a_pagar".$i]/$CantidadInsert;
-                        $importe_a_pagar_Insert=round($importe_a_pagar_Insert,2);
+                        $importe_a_pagar_Insert=number_format($importe_a_pagar_Insert,3,'.','');
                     }
                     if($servicioInsert!=0 || $servicioInsert!=""){
                         // echo " servicio:".$servicioInsert."<br>";
@@ -104,7 +104,7 @@ try
                     $DescricpionInsert_ajax=$_POST["descripcion".$i];  
                     // $importeInsert_ajax=$_POST["modal_importe_add".$i];
                     $importeInsert_ajax=$_POST["modal_importe_add".$i]/$CantidadInsert_ajax;
-                    $importeInsert_ajax=round($importeInsert_ajax,2);
+                    $importeInsert_ajax=number_format($importeInsert_ajax,3,'.','');
                     $descuento_por_Insert_ajax=$_POST["descuento_por_add".$i];
                     $descuento_bob_Insert_ajax=$_POST["descuento_bob_add".$i]; 
                     $sql="INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
@@ -172,7 +172,7 @@ try
                         $descuento_por_Insert=$_POST["descuento_por".$i];
                         $descuento_bob_Insert=$_POST["descuento_bob".$i];
                         $importe_a_pagar_Insert=$_POST["importe_a_pagar".$i]/$CantidadInsert;
-                        $importe_a_pagar_Insert=round($importe_a_pagar_Insert,2);
+                        $importe_a_pagar_Insert=number_format($importe_a_pagar_Insert,3,'.','');
                         $insertTipo_item=$_POST["tipo_item".$i];
                         // if($insertTipo_item==2){
                         //     $importe_a_pagar_Insert=$_POST["importe_a_pagar".$i];
@@ -195,7 +195,7 @@ try
                     $DescricpionInsert_ajax=$_POST["descripcion".$i];  
                     // $importeInsert_ajax=$_POST["modal_importe_add".$i];                
                     $importeInsert_ajax=$_POST["modal_importe_add".$i]/$CantidadInsert_ajax;
-                    $importeInsert_ajax=round($importeInsert_ajax,2);
+                    $importeInsert_ajax=number_format($importeInsert_ajax,3,'.','');
                     $descuento_por_Insert_ajax=$_POST["descuento_por_add".$i];
                     $descuento_bob_Insert_ajax=$_POST["descuento_bob_add".$i]; 
                     $sql="INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 

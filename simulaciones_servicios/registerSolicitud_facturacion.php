@@ -310,9 +310,9 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     <td class="text-left"><?=$cod_anio?> </td>
                                                     <td class="text-left"><?=$tipoPre?></td>
                                                     <td class="text-right"><?=$cantidadPre?></td>
-                                                    <td class="text-right"><input type="number" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control"  value="<?=$monto_pagar?>" onkeyup="activarInputMontoFilaServicio2()" <?=$sw2?> readonly="true"></td>
+                                                    <td class="text-right"><input type="number" step="any" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control"  value="<?=$monto_pagar?>" onkeyup="activarInputMontoFilaServicio2()" <?=$sw2?> readonly="true"></td>
                                                     <!--  descuentos -->
-                                                    <td class="text-right"><input type="number" step="0.01" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" min="0" max="<?=$descuento_cliente?>" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)" <?=$sw2?>></td>                                             
+                                                    <td class="text-right"><input type="number" step="any" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" min="0" max="<?=$descuento_cliente?>" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)" <?=$sw2?>></td>                                             
                                                     <td class="text-right"><input type="number" class="form-control" name="descuento_bob<?=$iii?>" id="descuento_bob<?=$iii?>" value="<?=$descuento_bobX?>" min="0" max="<?=$descuento_bob_cliente?>" onkeyup="descuento_convertir_a_porcentaje(<?=$iii?>)" <?=$sw2?>></td>                                        
                                                     <!-- total -->
                                                     <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
@@ -321,7 +321,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         <input type="text" class="form-control" name="modal_importe_pagado_dos<?=$iii?>" id="modal_importe_pagado_dos<?=$iii?>" readonly value="<?=number_format($monto_total_pagado,2);?>">
                                                     </td>
                                                     <td>
-                                                        <input type="number" step="0.01" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="0.01" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?>>
+                                                        <input type="number" step="any" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="any" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?>>
                                                     </td>
 
 
@@ -380,7 +380,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">                                        
-                                            <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" step="0.01" readonly="true" />                                            
+                                            <input style="background:#ffffff" class="form-control" type="text" value="0" name="modal_totalmontoserv" id="modal_totalmontoserv" step="any" readonly="true" />                                            
                                         </div>
                                     </div>
                                 </div> -->
@@ -412,7 +412,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     <label class="col-sm-5 col-form-label" style="color:#000000">Monto Total + Servicios Adicionales</label>
                                     <div class="col-sm-4">
                                         <div class="form-group">                                            
-                                            <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" step="0.01" />
+                                            <input style="background:#ffffff" class="form-control"  name="monto_total" id="monto_total"  readonly="readonly" value="0" step="any" />
                                             <input  class="form-control" type="hidden" name="monto_total_a" id="monto_total_a"  readonly="readonly" value="0"  />
                                         </div>
                                     </div>

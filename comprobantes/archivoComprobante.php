@@ -94,13 +94,14 @@ $codPadreArchivos=obtenerValorConfiguracion(84);
                      $codigoArchivoX=$verificarArchivo[3];
                      $arrayArchivo=explode("/",$urlArchivo);
                      $nombreArchivo=$arrayArchivo[count($arrayArchivo)-1];
-
+                     $urlArchivoMostrar=$urlArchivo;
                      $downloadFile='download="Doc - IFINANCIERO ('.$nombreX.')"';
                      $onClick='onClick="quitarArchivoSistemaAdjunto('.$filaA.','.$codigoArchivoX.',0)"';
                      if(obtenerValorConfiguracion(93)==1){
                       $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivoX);
                       if($banderaArchivo>0){
                          $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
+                         $urlArchivoMostrar="../mostrarArchivos.php?name=".obtenerPathArchivoIbnorca($banderaArchivo);
                          $downloadFile='target="_blank"';
                          $globalServerDelete=obtenerValorConfiguracion(94);
                          $onClick='onClick="ajaxDeleteArchivoIbnorca(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',15,\''.$codigoArchivoX.'\','.$filaA.','.$codigoArchivoX.',0);"';
@@ -128,7 +129,7 @@ $codPadreArchivos=obtenerValorConfiguracion(84);
                           <div class='btn-group'>
                             <a class='btn btn-sm btn-info btn-block' href='<?=$urlArchivo?>' target='_blank'><?=$nombreX?></a>
                             <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' <?=$downloadFile?>><i class='material-icons'>vertical_align_bottom</i></a>           
-                            <a class='btn btn-sm btn-primary' id="boton_previo<?=$filaA?>" href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivo?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
+                            <a class='btn btn-sm btn-primary' id="boton_previo<?=$filaA?>" href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivoMostrar?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
                             <script>
                                /* if ( navigator.userAgent.indexOf("MSIE")>0|| navigator.userAgent.indexOf("Firefox")>0){
                                     $("#boton_previo"+<?=$filaA?>).prepend("X").addClass("btn-danger").attr("title","Puede que su navegador no muestre las firmas digitales en PDF, Recomendamos usar Chrome");    
@@ -166,13 +167,14 @@ $codPadreArchivos=obtenerValorConfiguracion(84);
                      }
                      $arrayArchivo=explode("/",$urlArchivo);
                      $nombreArchivo=$arrayArchivo[count($arrayArchivo)-1];
-
+                     $urlArchivoMostrar=$urlArchivo;
                      $onClick='onClick="quitarArchivoSistemaAdjunto('.$filaA.','.$codigoArchivoX.',1)"';
                      $downloadFile='download="Doc - IFINANCIERO ('.$nombreX.')"';
                      if(obtenerValorConfiguracion(93)==1){
                       $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivoX);
                       if($banderaArchivo>0){
                          $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
+                         $urlArchivoMostrar="../mostrarArchivos.php?name=".obtenerPathArchivoIbnorca($banderaArchivo);
                          $downloadFile='target="_blank"';
                          $globalServerDelete=obtenerValorConfiguracion(94);
                          $onClick='onClick="ajaxDeleteArchivoIbnorca(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',15,\''.$codigoArchivoX.'\','.$filaA.','.$codigoArchivoX.',1);"';
@@ -194,7 +196,7 @@ $codPadreArchivos=obtenerValorConfiguracion(84);
                         <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  -->
                         <a class='btn btn-sm btn-info btn-block' href='<?=$urlArchivo?>' target='_blank'><?=$nombreX?></a>
                         <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' <?=$downloadFile?>><i class='material-icons'>vertical_align_bottom</i></a>
-                        <a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivo?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
+                        <a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivoMostrar?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
                       
                       </div>     
                     </td>    
