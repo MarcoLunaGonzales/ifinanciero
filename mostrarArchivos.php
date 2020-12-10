@@ -8,7 +8,15 @@ if(isset($_GET['name'])){
     if($extencionArchivo=="pdf"){
       Header("Content-Type: application/pdf"); // se envia la cabecera...
     }else{
-      Header("Content-Type: image/".$extencionArchivo);
+    	if(strtolower($extencionArchivo)=="jpg"||strtolower($extencionArchivo)=="png"||strtolower($extencionArchivo)=="gif"||strtolower($extencionArchivo)=="sgv"||strtolower($extencionArchivo)=="tif"||strtolower($extencionArchivo)=="jpeg"||strtolower($extencionArchivo)=="ai"){
+           Header("Content-Type: image/".$extencionArchivo);
+     	}else{
+     		header('Content-Type: application/force-download');
+            header('Content-Disposition: attachment; filename='.$nombreArchivo);
+            header('Content-Transfer-Encoding: binary');
+            header('Content-Length: '.filesize($url));
+     	}
+      
     }	
     @readfile($url);	
 }else{
