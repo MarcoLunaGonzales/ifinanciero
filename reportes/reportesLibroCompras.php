@@ -118,15 +118,16 @@ $dbh = new Conexion();
 		   
                   	
                 <div class="card-footer">
-                	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
+                	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte Oficial</button>
                 	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_compras()">Generar TXT</a>
-                	<a href="index.php?opcion=reportesLibroComprasMeses" target="_blank" class="btn btn-info float-right"><i class="material-icons">open_in_new</i> Control Libro Compras</a>
+                	<a  href="index.php?opcion=reportesLibroComprasProy" class="btn btn-success text-center" target="_blank"><i class="material-icons">open_in_new</i> Reporte Libro Compras - PROYECTO</a>		
+                	
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
 			  </div>
 			  <hr>
 			  <div class="col-sm-12">
 			  	<div class="float-right">
-			  		<a  href="index.php?opcion=reportesLibroComprasProy" class="btn btn-success btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Reporte Libro Compras - PROYECTO</a>		
+			  		<a href="index.php?opcion=reportesLibroComprasMeses" target="_blank" class="btn btn-info btn-sm"><i class="material-icons">open_in_new</i> Control Libro Compras</a>		
 			  		<?php 
 			  		if(verificarEdicionComprobanteUsuario($globalUser)!=0){
 			  			?>
@@ -134,7 +135,7 @@ $dbh = new Conexion();
 			  		<?php 
 			  	   }
 			  	   ?>
-			  	  <a  href="index.php?opcion=reportesLibroComprasProyRevision" class="btn btn-info btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Libro Compras - PROYECTO</a>		
+			  	  <a  href="index.php?opcion=reportesLibroComprasProyRevision" class="btn btn-info btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Control Libro Compras - PROYECTO</a>		
 			  	</div>
 			  </div>
 			  
