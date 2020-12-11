@@ -27,28 +27,28 @@ if(isset($_GET['q'])){
   }
   if((int)$idArea>0){
     if((int)$idArea==2978){ //comercializacion
-      $queryTipoCurso=" and sc.cod_tipocurso=3";
+      $queryTipoCurso=" and sc.cod_area_registro=".$idArea;
       $tituloPropuestaFiltro="<h4 style='color:#FF5733;'>LISTA: COMERCIALIZACIÓN</h4>";
       $estiloFormacion='style="background:#FF5733;color:white;"'; 
     }else if((int)$idArea==13){ // formacion
-      $queryTipoCurso=" and sc.cod_tipocurso!=3";
+      $queryTipoCurso=" and sc.cod_area_registro=".$idArea;
       $tituloPropuestaFiltro="<h4 style='color:#C70039;'>LISTA: FORMACIÓN</h4>";
       $estiloFormacion='style="background:#C70039;color:white;"';
     }else{
-      $queryTipoCurso=" and sc.cod_tipocurso=9999"; //9999 -> para que no encuentre ningun registro
+      $queryTipoCurso=" and sc.cod_area_registro=".$idArea; //99999 -> para que no encuentre ningun registro
       $tituloPropuestaFiltro="USTED NO PUEDE GESTIONAR LAS PROPUESTAS";
     }
   }else{
    if(gestorDeCursosFormacion($q)>0){
-     $queryTipoCurso=" and sc.cod_tipocurso!=3";
+     $queryTipoCurso=" and sc.cod_area_registro=".$idArea;
      $tituloPropuestaFiltro="<h4 style='color:#C70039;'>LISTA: FORMACIÓN</h4>";
      $estiloFormacion='style="background:#C70039;color:white;"';
     }else if(gestorDeCursosComercializacion($q)>0){
-     $queryTipoCurso=" and sc.cod_tipocurso=3";
+     $queryTipoCurso=" and sc.cod_area_registro=".$idArea;
      $tituloPropuestaFiltro="<h4 style='color:#FF5733;'>LISTA: COMERCIALIZACIÓN</h4>";
      $estiloFormacion='style="background:#FF5733;color:white;"';
     }else{
-     $queryTipoCurso=" and sc.cod_tipocurso=9999"; //9999 -> para que no encuentre ningun registro
+     $queryTipoCurso=" and sc.cod_area_registro=99999"; //99999 -> para que no encuentre ningun registro
      $tituloPropuestaFiltro="USTED NO PUEDE GESTIONAR LAS PROPUESTAS";
     }   
   }
@@ -64,7 +64,7 @@ if(isset($_GET['q'])){
 }
 
 $dbh = new Conexion();
-$queryTipoCurso="";
+//$queryTipoCurso="";
 // Preparamos
 $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion in (4,3) $queryTipoCurso order by codigo desc");
 // Ejecutamos
@@ -76,6 +76,7 @@ $stmt->bindColumn('observacion', $observacion);
 $stmt->bindColumn('fecha', $fecha);
 $stmt->bindColumn('cod_plantillacosto', $codPlantilla);
 $stmt->bindColumn('cod_estadosimulacion', $codEstado);
+$stmt->bindColumn('cod_tipocurso', $codTipoCurso);
 $stmt->bindColumn('cod_responsable', $codResponsable);
 $stmt->bindColumn('estado', $estado);
 ?>
@@ -97,6 +98,7 @@ $stmt->bindColumn('estado', $estado);
                         <tr <?=$estiloFormacion?>>
                           <!--<th class="text-center">#</th>-->
                           <th>Codigo</th>
+                          <th>Tipo</th>
                           <th>Nombre</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
@@ -109,6 +111,7 @@ $stmt->bindColumn('estado', $estado);
             $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $responsable=namePersonal($codResponsable);
+                          $tipoCurso=nameTipoCurso($codTipoCurso);
                           switch ($codEstado) {
                             case 1:
                               $nEst=40;$barEstado="progress-bar-default";$btnEstado="btn-default";
@@ -127,6 +130,7 @@ $stmt->bindColumn('estado', $estado);
                         <tr>
                           <!---<td align="center"><?=$index;?></td>-->
                           <td><?=$codigo;?></td>
+                          <td><?=$tipoCurso;?></td>
                           <td><?=$nombre;?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>

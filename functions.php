@@ -11189,4 +11189,5 @@ function obtenerPathArchivoIbnorca($codigo){
      }
      return($valorX);
 }
+
 ?>
