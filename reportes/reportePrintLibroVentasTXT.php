@@ -4,7 +4,7 @@ require_once __DIR__.'/../conexion.php';
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
 require_once  __DIR__.'/../fpdf_html.php';
-require_once '../layouts/bodylogin2.php';
+//require_once '../layouts/bodylogin2.php';
 $dbh = new Conexion();
 //creamos el archivo txt
 $fecha=date('Y-m-d');

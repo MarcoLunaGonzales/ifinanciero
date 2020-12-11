@@ -78,7 +78,6 @@ $stmt->bindColumn('cod_plantillacosto', $codPlantilla);
 $stmt->bindColumn('cod_estadosimulacion', $codEstado);
 $stmt->bindColumn('cod_responsable', $codResponsable);
 $stmt->bindColumn('estado', $estado);
-
 ?>
 
 <div class="content">
