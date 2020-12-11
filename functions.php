@@ -10485,8 +10485,9 @@ function obtenerSolicitudRecursosDetalleAgrupadas($codigo){
      $sql="(SELECT 0 as cod_factura,GROUP_CONCAT(sd.codigo) as codigo,sd.cod_solicitudrecurso,sd.cod_unidadorganizacional,sd.cod_area,sd.cod_plancuenta,sum(sd.importe_presupuesto) as importe_presupuesto,
 sum(sd.importe) as importe,sd.cod_proveedor,sd.cod_confretencion,sd.cod_actividadproyecto,sd.acc_num,
 GROUP_CONCAT(sd.detalle) as detalle,
-pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo 
-where sd.cod_solicitudrecurso=$codigo and sd.cod_confretencion<>8
+pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo
+join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso 
+where sd.cod_solicitudrecurso=$codigo and sd.cod_confretencion<>8 and s.cod_estadosolicitudrecurso<>9
 group by sd.cod_unidadorganizacional,sd.cod_area,sd.cod_proveedor,sd.cod_plancuenta,sd.cod_confretencion)
 UNION
 (
@@ -10494,8 +10495,9 @@ SELECT f.codigo as cod_factura,s.codigo,s.cod_solicitudrecurso,s.cod_unidadorgan
 ,s.cod_confretencion,s.cod_actividadproyecto,s.acc_num,s.detalle,s.numero,s.nombre from facturas_compra f join 
 (SELECT sd.codigo,sd.cod_solicitudrecurso,sd.cod_unidadorganizacional,sd.cod_area,sd.cod_plancuenta,sd.importe_presupuesto,
 sd.importe,sd.cod_proveedor,sd.cod_confretencion,sd.cod_actividadproyecto,sd.acc_num,sd.detalle,
-pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo 
-where sd.cod_solicitudrecurso=$codigo and sd.cod_confretencion=8) s on s.codigo=f.cod_solicitudrecursodetalle)
+pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo
+join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso 
+where sd.cod_solicitudrecurso=$codigo and sd.cod_confretencion=8 and s.cod_estadosolicitudrecurso<>9) s on s.codigo=f.cod_solicitudrecursodetalle)
 ;";
 //echo $sql;
      $stmt = $dbh->prepare($sql);

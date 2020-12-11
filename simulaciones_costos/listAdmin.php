@@ -15,7 +15,8 @@ if(isset($_GET['q'])){
   $idArea=0;
   if(isset($_GET['s'])){
     $s=$_GET['s'];
-    $datosS=explode("IdArea",$s);
+    $s=strtolower($s);
+    $datosS=explode("idarea",$s);
     if(isset($datosS[1])){
      $idArea=$datosS[1];
      $idArea=str_replace("=","",$idArea);
