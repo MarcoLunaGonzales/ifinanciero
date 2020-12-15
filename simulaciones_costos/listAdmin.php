@@ -65,6 +65,8 @@ if(isset($_GET['q'])){
 
 $dbh = new Conexion();
 
+
+$queryTipoCurso="";
 // Preparamos
 $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion in (4,3) $queryTipoCurso order by codigo desc");
 // Ejecutamos
