@@ -60,8 +60,9 @@
 							}
                          		
 							$detalleAux=$detalleX;
-							?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
+							
                             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+                              ?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
                                $cuentasCodigos[$conta]=$rowDetalles["codigo"];	
                                $codDetalleX=$rowDetalles["codigo"];
                                $codCuentaX=$rowDetalles['cod_plancuenta'];	
@@ -112,6 +113,7 @@
                             }	  
 						  }
 						 if($encontrar==0){
+              ?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
                                $codDetalleX=$rowDetalles["codigo"];	
                                $detalleX=$rowDetalles["detalle"];
                                $importeX=$rowDetalles["importe_presupuesto"];

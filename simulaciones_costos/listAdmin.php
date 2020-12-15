@@ -78,6 +78,7 @@ $stmt->bindColumn('cod_plantillacosto', $codPlantilla);
 $stmt->bindColumn('cod_estadosimulacion', $codEstado);
 $stmt->bindColumn('cod_tipocurso', $codTipoCurso);
 $stmt->bindColumn('cod_responsable', $codResponsable);
+$stmt->bindColumn('cod_area_registro', $codArea);
 $stmt->bindColumn('estado', $estado);
 ?>
 
@@ -99,6 +100,7 @@ $stmt->bindColumn('estado', $estado);
                           <!--<th class="text-center">#</th>-->
                           <th>Codigo</th>
                           <th>Tipo</th>
+                          <th>Origen</th>
                           <th>Nombre</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
@@ -131,6 +133,7 @@ $stmt->bindColumn('estado', $estado);
                           <!---<td align="center"><?=$index;?></td>-->
                           <td><?=$codigo;?></td>
                           <td><?=$tipoCurso;?></td>
+                          <td><?=abrevArea_solo($codArea);?></td>
                           <td><?=$nombre;?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
