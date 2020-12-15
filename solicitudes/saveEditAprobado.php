@@ -300,7 +300,6 @@ while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {
 
 $stmt1 = obtenerSolicitudesDet($codSolicitud);
 editarComprobanteDetalle($codSolicitud,'cod_solicitudrecurso',$cont1,$fila,$stmt1,'solicitud_recursosdetalle',$cab,$data,$facturas);
-
 if($flagSuccess==true){
 
 if(!isset($_POST['control_admin'])){

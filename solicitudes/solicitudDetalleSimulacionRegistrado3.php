@@ -60,8 +60,9 @@
 							}
                          		
 							$detalleAux=$detalleX;
-							?><script>var nfac=[];itemFacturas.push(nfac);</script><?php
+							
                             while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+                            	?><script>var nfac=[];itemFacturas.push(nfac);console.log("Se creo la factura con datos"+ cantidadItems);</script><?php
                                $unidadXX=$rowDetalles['cod_unidadorganizacional'];
 							   $areaXX=$rowDetalles['cod_area'];
 							   $codCuentaX=$rowDetalles['cod_plancuenta'];
@@ -93,9 +94,10 @@
 						 
 						}
                         
-                         
+                        
                        $solicitudDetalle=obtenerSolicitudRecursosDetalle($codigo);
                        while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+                       	?><script>console.log("Entro fila vacia");</script><?php 
                           $tituloImporte="Importe";
                           $codCuentaX=$rowDetalles['cod_plancuenta'];
                           $cod_plantilladetalle=$rowDetalles['cod_detalleplantilla'];
@@ -107,6 +109,8 @@
                             }	  
 						  }
 						 if($encontrar==0){
+						 	?><script>console.log("ENCONTRÓ");</script><?php 
+						 	?><script>var nfac=[];itemFacturas.push(nfac);console.log("Se creo la factura vacia");</script><?php 
                                $codDetalleX=$rowDetalles["codigo"];	
                                $detalleX=$rowDetalles["detalle"];
                                $importeX=$rowDetalles["importe_presupuesto"];
@@ -146,4 +150,4 @@ for ($i=0; $i < count($resultado); $i++) {
 }
 ?>
                    </div>
-	<script>$("#cantidad_filas").val(<?=($idFila-1)?>)</script>					
+	<script>$("#cantidad_filas").val(<?=($idFila-1)?>);console.log(<?=($idFila-1)?>);</script>					
