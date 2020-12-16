@@ -19085,3 +19085,28 @@ function cargarFacturasModalLibretas(div){
     });    
   }
 }
+function editarTarifarioServicios(valor){
+ if(valor==1){
+   $("input").each(function(){
+       if(($(this).is("[readonly]"))){
+          $(this).removeAttr("readonly");
+       }
+    });
+   if(!$("#boton_editar").hasClass("d-none")){
+     $("#boton_editar").addClass("d-none");
+     $("#boton_editar_cancelar").removeClass("d-none");
+     $("#boton_guardar").removeClass("d-none");
+   }
+ }else{
+   $("input").each(function(){
+       if(!($(this).is("[readonly]"))){
+          $(this).attr("readonly",true);
+       }
+    });
+   if($("#boton_editar").hasClass("d-none")){
+     $("#boton_editar").removeClass("d-none");
+     $("#boton_editar_cancelar").addClass("d-none");
+     $("#boton_guardar").addClass("d-none");
+   }
+ }
+}
