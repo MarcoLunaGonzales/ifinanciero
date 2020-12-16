@@ -30,8 +30,8 @@ if(isset($_GET['q'])){
       $queryTipoCurso=" and sc.cod_area_registro=".$idArea;
       $tituloPropuestaFiltro="<h4 style='color:#FF5733;'>LISTA: COMERCIALIZACIÓN</h4>";
       $estiloFormacion='style="background:#FF5733;color:white;"'; 
-    }else if((int)$idArea==13){ // formacion
-      $queryTipoCurso=" and sc.cod_area_registro=".$idArea;
+    }else if((int)$idArea==13||(int)$idArea==2956){ // formacion
+      $queryTipoCurso=" and (sc.cod_area_registro=2956 or sc.cod_area_registro=13)";
       $tituloPropuestaFiltro="<h4 style='color:#C70039;'>LISTA: FORMACIÓN</h4>";
       $estiloFormacion='style="background:#C70039;color:white;"';
     }else{
