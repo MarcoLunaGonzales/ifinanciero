@@ -20,6 +20,7 @@
 	$urlFormDetalleCajaChica="index.php?opcion=DetalleCajaChicaForm";
 	$urlSaveDetalleCajaChica="?opcion=DetalleCajaChicaSave";
 	$urlDeleteDetalleCajaChica="index.php?opcion=deleteDetalleCajaChica";
+	$urlQuitarDetalleCajaChica="index.php?opcion=quitarDetalleCajaChica";
 	//rendiciones
 	$urlListaRendiciones="?opcion=ListaRendiciones";
 
@@ -54,8 +55,8 @@
 
 	$urlImp="comprobantes/imp.php";
 	$urlSolicitudRecursos="solicitudes/verSolicitudRecursos.php";
-
-
-
+    $urlImpSol="solicitudes/imp.php";
+    $urlVerSol="solicitudes/verSolicitudRecursos.php";
+    $urlImpRecibo="caja_chica/print_recibo.php";
 	
 ?>

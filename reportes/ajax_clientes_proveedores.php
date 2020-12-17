@@ -21,6 +21,7 @@ if($codigo==1){//proveedores
 // echo $sql;
 $stmt = $db->prepare($sql);
 $stmt->execute();
+$indexPr=0;
 ?>
 	
 <select class="selectpicker form-control" data-show-subtext="true" data-live-search="true" title="Seleccione una opcion" name="proveedores[]" id="proveedores" data-style="select-with-transition" data-size="5"  data-actions-box="true" multiple required data-live-search="true">
@@ -31,6 +32,8 @@ $stmt->execute();
     ?>
     <option value="<?=$codigoX;?>"><?=$nombreX;?></option>
     <?php 
+    $indexPr++;
     }
   ?>
 </select>
+<input type="hidden" id="numero_proveedores" name="numero_proveedores" value="<?=$indexPr?>">

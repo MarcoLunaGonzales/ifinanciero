@@ -141,8 +141,10 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 				}elseif($cod_tipopago==$cod_tipopago_anticipo && $cod_estado_cuenta_x!=0){//tipo de pago anticipo en $cod_estado_cuenta_x viene el codigo de estado de cuenta
 					$cuenta_auxiliar=obtenerValorConfiguracion(63);//cod cuenta auxiliar por defecto de anulacion de facturas
 					$cod_proveedor=obtenerCodigoProveedorCuentaAux($cuenta_auxiliar);
-					$cod_compte_origen=obtenerCod_comprobanteDetalleorigen($cod_estado_cuenta_x);
-					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,$cuenta_auxiliar,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago,0,$descripcion,$ordenDetalle);
+					$cod_uo_estado=obtenerDatosComprobanteEstadoCuentas($cod_estado_cuenta_x,$cod_uo_solicitud,$cod_area_solicitud)[0]; //para cambiar el area y oficina del estado de cuentas a cerrar
+					$cod_area_estado=obtenerDatosComprobanteEstadoCuentas($cod_estado_cuenta_x,$cod_uo_solicitud,$cod_area_solicitud)[1];
+					$cod_compte_origen=$cod_estado_cuenta_x;//obtenerCod_comprobanteDetalleorigen($cod_estado_cuenta_x); //codigo estado de cuenta
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,$cuenta_auxiliar,$cod_uo_estado,$cod_area_estado,$monto_tipopago,0,$descripcion,$ordenDetalle);
 					$stmtdetalleCom = $dbh->prepare("SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante and orden=$ordenDetalle");
 					//en este caso insertamos la contra cuenta del estado de cuenta, para ello necesitamos el codigo del comprobnate detalle
 					$stmtdetalleCom->execute();			
@@ -540,13 +542,13 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 						}
 					}				
 					if($monto_libreta_total<$monto_total){	
-						$sw=1;				
+						$sw=1;		
+						$sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$codComprobante";
+                        $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
+                        $flagSuccess=$stmtDeleteComprobanteDet->execute();		
 						$sqldeletecomprobante="DELETE from comprobantes where codigo=$codComprobante";
                         $stmtDeleteCopmprobante = $dbh->prepare($sqldeletecomprobante);
-                        $flagSuccess=$stmtDeleteCopmprobante->execute();
-                        $sqldeletecomprobanteDet="DELETE from comprobantes_detalle where cod_comprobante=$codComprobante";
-                        $stmtDeleteComprobanteDet = $dbh->prepare($sqldeletecomprobanteDet);
-                        $flagSuccess=$stmtDeleteComprobanteDet->execute();
+                        $flagSuccess=$stmtDeleteCopmprobante->execute();  
                         $sw_controlador="1";//hubo algun error
 		                $sqlRolBack="ROLLBACK;";
 		                $stmtRolBack = $dbh->prepare($sqlRolBack);

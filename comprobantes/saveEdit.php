@@ -30,6 +30,11 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
+$salvado_temporal=0;
+if(isset($_POST['salvado_temporal'])){
+  $salvado_temporal=1;
+}
+
 $fechaHoraActual=date("Y-m-d H:i:s");
 
 $fechaHoraSistema=date("Y-m-d H:i:s");
@@ -37,21 +42,6 @@ $fechaHoraSistema=date("Y-m-d H:i:s");
 $SQLDATOSINSTERT=[];
 $codComprobante=$_POST['codigo_comprobante'];
 
-// 
-$sqlCommit="SET AUTOCOMMIT=0;";
-$stmtCommit = $dbh->prepare($sqlCommit);
-$stmtCommit->execute();
-
-
-$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraSistema', modified_by='$globalUser' where codigo=$codComprobante";
-//echo $sqlUpdate;
-$stmtUpdate = $dbh->prepare($sqlUpdate);
-$flagSuccess=$stmtUpdate->execute();	
-array_push($SQLDATOSINSTERT,$flagSuccess);
-$sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=0, cod_comprobantedetalle=0,cod_estado=0 where cod_comprobante=$codComprobante";
-$stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
-$flagsuccess=$stmtDetalleUpdate->execute(); 
-array_push($SQLDATOSINSTERT,$flagsuccess);
 
 
 //subir archivos al servidor
@@ -90,7 +80,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
     if($_FILES['documentos_cabecera'.$ar]["name"]){
       $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
       $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
-      $directorio = '../assets/archivos-respaldo/COMP-'.$codComprobante.'/'; //Declaramos un  variable con la ruta donde guardaremos los archivoss
+      $directorio = '../assets/archivos-respaldo/COMP-'.$codComprobante.''; //Declaramos un  variable con la ruta donde guardaremos los archivoss
       //Validamos si la ruta de destino existe, en caso de no existir la creamos
       if(!file_exists($directorio)){
                 mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
@@ -112,18 +102,60 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
           $stmtDel->execute();
           //borrar de la carpeta
           unlink($linkArchivo);
+          if(obtenerValorConfiguracion(93)==1){
+            $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivo);
+            if($banderaArchivo>0){
+              $globalServerDelete=obtenerValorConfiguracion(94);
+              ?><script>ajaxDeleteArchivo("<?=$globalServerDelete;?>","<?=$banderaArchivo?>","divArchivo",15,"<?=$codigoArchivo;?>");</script><?php   
+            }          
+          }
         }
-        $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
-        VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codComprobante')";
+        $codArchivoAdjunto=obtenerCodigoUltimoTabla('archivos_adjuntos');
+        $sqlInsert="INSERT INTO archivos_adjuntos (codigo,cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+        VALUES ($codArchivoAdjunto,'$tipo','$descripcion','$target_path','$tipoPadre',0,'$codComprobante')";
         $stmtInsert = $dbh->prepare($sqlInsert);
-        $stmtInsert->execute();    
-        print_r($sqlInsert);
+        $flagArchivo=$stmtInsert->execute();    
+        //print_r($sqlInsert);
+        if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+          //sibir archivos al servidor de documentos
+          $parametros=array(
+            "idD" => 15,
+            "idR" => $codArchivoAdjunto,
+            "idusr" => $globalUser,
+            "Tipodoc" => 3596,
+            "descripcion" => $descripcion,
+            "codigo" => "",
+            "observacion" => "-",
+            "r" => "http://www.google.com",
+            "v" => true
+            );
+           $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+           //unlink($target_path);
+           //print_r($resultado);        
+        }
       } else {    
           echo "error";
       } 
     }
   }
 }
+
+// 
+$sqlCommit="SET AUTOCOMMIT=0;";
+$stmtCommit = $dbh->prepare($sqlCommit);
+$stmtCommit->execute();
+
+
+$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraSistema', modified_by='$globalUser',salvado_temporal=$salvado_temporal where codigo=$codComprobante";
+//echo $sqlUpdate;
+$stmtUpdate = $dbh->prepare($sqlUpdate);
+$flagSuccess=$stmtUpdate->execute();  
+array_push($SQLDATOSINSTERT,$flagSuccess);
+$sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=0, cod_comprobantedetalle=0,cod_estado=0 where cod_comprobante=$codComprobante";
+$stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
+$flagsuccess=$stmtDetalleUpdate->execute(); 
+array_push($SQLDATOSINSTERT,$flagsuccess);
+
 
     $stmt1 = obtenerComprobantesDet($codComprobante);
     while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
@@ -149,9 +181,11 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
        //BORRAMOS LA TABLA
 		/**/
 
-for ($i=1;$i<=$cantidadFilas;$i++){ 	    	
-	$cuenta=$_POST["cuenta".$i];
-
+for ($i=1;$i<=$cantidadFilas;$i++){
+    $cuenta="";
+  if(isset($_POST["cuenta".$i])){
+	  $cuenta=$_POST["cuenta".$i];
+  }         
 	if($cuenta!=0 || $cuenta!=""){
     
 		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];
@@ -244,6 +278,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       $tipoFac=$facturas[$i-1][$j]->tipoFac;
       $tazaFac=$facturas[$i-1][$j]->tazaFac;
       $iceFac=$facturas[$i-1][$j]->iceFac;
+      
 
       $sqlDetalle2="INSERT INTO facturas_compra (cod_comprobantedetalle, nit, nro_factura, fecha, razon_social, importe, exento, nro_autorizacion, codigo_control,ice,tasa_cero,tipo_compra) VALUES ('$codComprobanteDetalle', '$nit', '$nroFac', '$fechaFac', '$razonFac', '$impFac', '$exeFac', '$autFac', '$conFac','$iceFac','$tazaFac','$tipoFac')";
       $stmtDetalle2 = $dbh->prepare($sqlDetalle2);
@@ -262,10 +297,14 @@ for ($i=1;$i<=$cantidadFilas;$i++){
           $codProveedor=obtenerCodigoProveedorCuentaAux($codPlanCuentaAux);
           $codComprobanteDetalleOrigen=$estadosCuentas[$i-1][$j]->cod_comprobantedetalle;
           $fecha=$fecha;
-          $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fechaHoraActual2','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
-          $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
-          $flagSuccessDetalle3=$stmtDetalle3->execute();
-          array_push($SQLDATOSINSTERT,$flagSuccessDetalle3); 
+          $verificaECCerrar=verificarCuentaEstadosCuenta($cuenta);
+          if ($verificaECCerrar>0){
+            $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fechaHoraActual2','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
+            $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
+            $flagSuccessDetalle3=$stmtDetalle3->execute();
+            array_push($SQLDATOSINSTERT,$flagSuccessDetalle3); 
+          }
+          
       }
     }//FIN DE ESTADOS DE CUENTA
 	}

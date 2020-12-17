@@ -30,6 +30,8 @@ if(isset($_GET['nombre'])){
   $codPrecio=$_GET['precio'];
   $tipoCurso=$_GET['tipo_curso'];
   $normas=$_GET['normas'];
+  $IdModulo=$_GET['IdModulo'];
+  $IdCurso=$_GET['IdCurso'];
 
   $festimada=explode("/", $_GET['fecha_estimada']);
   $fecha_estimada=$festimada[2]."-".$festimada[1]."-".$festimada[0];
@@ -41,10 +43,14 @@ if(isset($_GET['nombre'])){
   $fecha= date("Y-m-d");
   $codSimCosto=obtenerCodigoSimCosto();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO simulaciones_costos (codigo, nombre, fecha, cod_plantillacosto, cod_responsable,cod_precioplantilla,ibnorca,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos,monto_norma,habilitado_norma,cod_tipocurso,fecha_curso,dias_curso) 
-  VALUES ('".$codSimCosto."','".$nombre."','".$fecha."', '".$plantilla_costo."', '".$globalUser."','".$codPrecio."','".$ibnorca."','".$cantidadAlumnos."','".$utilidadMin."','".$cantidadCursosMes."','".$cantidad_modulos."','".$monto_norma."',1,'".$tipoCurso."','".$fecha_estimada."','".$cantidad_dias."')";
+  $sqlInsert="INSERT INTO simulaciones_costos (codigo, nombre, fecha, cod_plantillacosto, cod_responsable,cod_precioplantilla,ibnorca,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos,monto_norma,habilitado_norma,cod_tipocurso,fecha_curso,dias_curso,IdModulo,IdCurso,cod_area_registro) 
+  VALUES ('".$codSimCosto."','".$nombre."','".$fecha."', '".$plantilla_costo."', '".$globalUser."','".$codPrecio."','".$ibnorca."','".$cantidadAlumnos."','".$utilidadMin."','".$cantidadCursosMes."','".$cantidad_modulos."','".$monto_norma."',0,'".$tipoCurso."','".$fecha_estimada."','".$cantidad_dias."','".$IdModulo."','".$IdCurso."','".$globalArea."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
+
+  $sqlIbnorca="UPDATE ibnorca.modulos set idPropuesta=$codSimCosto where IdModulo=$IdModulo";
+  $stmtIbnorca = $dbh->prepare($sqlIbnorca);
+  $stmtIbnorca->execute();
 
   $dbhD = new Conexion();
   $sqlD="DELETE FROM simulaciones_detalle where cod_simulacioncosto=$codSimCosto";
@@ -98,7 +104,7 @@ if(isset($_GET['nombre'])){
       $montoFuera=($porcentaje*$montoExterno)/100;*/
 
       $sqlInsertPorcentaje="INSERT INTO cuentas_simulacion (cod_plancuenta, monto_local, monto_externo, porcentaje,cod_partidapresupuestaria,cod_simulacioncostos) 
-      VALUES ('".$codCuenta."','".$montoCuenta."','".$montoCuenta."', '".$porcentaje."', '".$idp."','".$codSimCosto."')";
+      VALUES ('".$codCuenta."',0,'".$montoCuenta."', '".$porcentaje."', '".$idp."','".$codSimCosto."')";
       $stmtInsertPorcentaje = $dbh->prepare($sqlInsertPorcentaje);
       $stmtInsertPorcentaje->execute();
      }
@@ -120,8 +126,8 @@ if(isset($_GET['nombre'])){
         $codTipoD=1;
       }
       $dbhID = new Conexion();
-      $sqlID="INSERT INTO simulaciones_detalle (cod_simulacioncosto,cod_plantillacosto, cod_partidapresupuestaria, cod_cuenta,cod_tipo,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_alumno) 
-      VALUES ('".$codSimCosto."','".$codPC."','".$codPP."','".$codC."','".$codTipoD."', '".$glosaD."','".$montoD."','".$cantidadAlumnosAux."','".$montoD."',1,'".$editD."')";
+      $sqlID="INSERT INTO simulaciones_detalle (cod_simulacioncosto,cod_plantillacosto, cod_partidapresupuestaria, cod_cuenta,cod_tipo,glosa,monto_unitario,cantidad,monto_total,cod_estadoreferencial,editado_alumno,habilitado) 
+      VALUES ('".$codSimCosto."','".$codPC."','".$codPP."','".$codC."','".$codTipoD."', '".$glosaD."','".$montoD."','".$cantidadAlumnosAux."','".$montoD."',0,'".$editD."',0)";
       $stmtID = $dbhID->prepare($sqlID);
       $stmtID->execute();
      }
@@ -197,7 +203,7 @@ if(isset($_GET['nombre'])){
          $montoUnidad=$monto*$porcentPrecios; 
          $dbh = new Conexion();
          $sqlFijos="INSERT INTO simulaciones_cf (cod_simulacionservicio, cod_simulacioncosto,cod_partidapresupuestaria,cod_cuenta,monto,cantidad,monto_total) 
-         VALUES (0,'".$codSimCosto."','".$codPartidaFijo."','".$codCuentaFijo."','".$montoUnidad."',1,'".$montoUnidad."')";
+         VALUES (0,'".$codSimCosto."','".$codPartidaFijo."','".$codCuentaFijo."','".$montoUnidad."',0,'".$montoUnidad."')";
          $stmtFijos = $dbh->prepare($sqlFijos);
          $stmtFijos->execute();
       } 

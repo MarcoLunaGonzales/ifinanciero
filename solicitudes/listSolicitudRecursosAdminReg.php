@@ -32,8 +32,8 @@ if(isset($_GET['q'])){
       $sqlAreas="and (sr.cod_area=0)";// or sr.cod_area=".obtenerValorConfiguracion(65).")             
       $sqlAreasLista="and (a.codigo=0)";// or a.codigo=".obtenerValorConfiguracion(65).")"             
     }else{
-      $sqlAreas="and (sr.cod_area ".$codigoArea.")";
-      $sqlAreasLista="and (a.codigo ".$codigoArea.")";               
+      $sqlAreas="and (sr.cod_area ".$codigoArea." or sr.cod_area=".obtenerValorConfiguracion(65).")";
+      $sqlAreasLista="and (a.codigo ".$codigoArea." or a.codigo=".obtenerValorConfiguracion(65).")";               
     }
     //echo $s."<br>";
     //echo var_dump($arraySql);
@@ -83,6 +83,9 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                     <i class="material-icons">content_paste</i>
                   </div>
                   <h4 class="card-title"><b><?=$moduleNamePlural?> - Aprobación</b></h4>
+                  
+                </div>
+                <div class="card-body">
                   <?php
                    if(isset($_GET['q'])){
                   ?>
@@ -104,8 +107,6 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                     <?php
                     }
                   ?>
-                </div>
-                <div class="card-body">
                   <div class="table-responsive">
                     <table class="table table-condesed" id="tablePaginator">
                       <thead>
@@ -120,6 +121,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                           <th>Fecha</th>
                           <!--<th>Estado</th>-->
                           <th>Observaciones</th>
+                          <td><small>Monto</small></td>
                           <th class="text-right" width="18%">Actions</th>
                         </tr>
                       </thead>
@@ -180,7 +182,8 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                        $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);
                        $glosaArray=explode("####", $glosa_estadoX);
                        $glosa_estadoX = str_replace("####", " - ", $glosa_estadoX);
-?>
+                       $montoDetalleSoliditud=number_format(obtenerSumaDetalleSolicitud($codigo),2,'.',',');
+?>                     
                         <tr>
                           <td><?=$unidad;?>- <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSolTitulo?></td>
@@ -199,7 +202,10 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                                 echo "".$glosaArray[0].""."<u class='text-muted'> ".$glosaArray[1]."</u>";
                             }else{
                                 echo $glosa_estadoX;
-                            }?></b></small></td>
+                            }?></small></b></td>
+                            <td class="text-right small font-weight-bold">
+                              <small><?=$montoDetalleSoliditud?></small>
+                            </td>
                           <td class="td-actions text-right">
                             <?php 
                             if(($codEstado==4||$codEstado==6)&&verificarComprobanteUsuarioRevisor($globalUser)!=0){

@@ -13,7 +13,8 @@ $stmtX->execute();
 
 if(isset($_GET['codigo'])){
 	$codigo=$_GET['codigo'];
-  $direccion=obtenerLinkDirectoArchivoAdjunto_sf($codigo);
+	$direccion="";
+  //$direccion=obtenerLinkDirectoArchivoAdjunto_sf($codigo);
   $sqlInsert4="DELETE FROM archivos_adjuntos_cajachica where codigo=$codigo";
   $stmtInsert4 = $dbh->prepare($sqlInsert4);
   $stmtInsert4->execute();

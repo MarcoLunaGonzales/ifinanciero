@@ -8,14 +8,18 @@ require_once 'functionsGeneral.php';
 $globalUser=$_SESSION["globalUser"];
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUnidad=$_SESSION["globalUnidad"];
-
 $globalGestion=$_SESSION["globalGestion"];
 $global_mes=$_SESSION["globalMes"];
-
+$global_mes_actual=(int)date("m");
 $dbh = new Conexion();
 
 ?>
-
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 <div class="content">
 	<div class="container-fluid">
 		<!-- <div style="overflow-y:scroll; ">			 		 -->
@@ -75,14 +79,14 @@ $dbh = new Conexion();
 									$stmtg = $dbh->prepare($sql);
 									$stmtg->execute();
 									?>
-									<select name="cod_mes_x" id="cod_mes_x" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  required data-live-search="true">
+									<select name="cod_mes_x" id="cod_mes_x" class="selectpicker form-control form-control-sm" data-style="btn btn-primary">
 									<?php
 									  
 									  while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {    
 									    $cod_mes=$rowg['cod_mes'];    
 									    $nombre_mes=$rowg['nombre_mes'];    
 									  ?>
-									  <option value="<?=$cod_mes;?>" <?=($cod_mes==$global_mes)?"selected":""?> ><?=$nombre_mes;?></option>
+									  <option value="<?=$cod_mes;?>" <?=($cod_mes==$global_mes_actual)?"selected":""?> ><?=$nombre_mes;?></option>
 									  <?php 
 									  }
 									?>
@@ -114,14 +118,16 @@ $dbh = new Conexion();
 		   
                   	
                 <div class="card-footer">
-                	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
+                	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte Oficial</button>
                 	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_compras()">Generar TXT</a>
+                	<a  href="index.php?opcion=reportesLibroComprasProy" class="btn btn-success text-center" target="_blank"><i class="material-icons">open_in_new</i> Reporte Libro Compras - PROYECTO</a>		
+                	
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
 			  </div>
 			  <hr>
 			  <div class="col-sm-12">
 			  	<div class="float-right">
-			  		<a  href="index.php?opcion=reportesLibroComprasProy" class="btn btn-success btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Reporte Libro Compras - PROYECTO</a>		
+			  		<a href="index.php?opcion=reportesLibroComprasMeses" target="_blank" class="btn btn-info btn-sm"><i class="material-icons">open_in_new</i> Control Libro Compras</a>		
 			  		<?php 
 			  		if(verificarEdicionComprobanteUsuario($globalUser)!=0){
 			  			?>
@@ -129,7 +135,7 @@ $dbh = new Conexion();
 			  		<?php 
 			  	   }
 			  	   ?>
-			  	  <a  href="index.php?opcion=reportesLibroComprasProyRevision" class="btn btn-info btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Libro Compras - PROYECTO</a>		
+			  	  <a  href="index.php?opcion=reportesLibroComprasProyRevision" class="btn btn-info btn-sm text-center" target="_blank"><i class="material-icons">open_in_new</i> Control Libro Compras - PROYECTO</a>		
 			  	</div>
 			  </div>
 			  

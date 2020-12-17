@@ -22,7 +22,7 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $codigoPlan=$_GET['codigo'];
-
+$cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);
 $data=obtenerPlantilla($codigoPlan);
 // bindColumn
 $data->bindColumn('codigo', $codigo);

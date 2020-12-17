@@ -19,6 +19,7 @@ $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
 $codPadreArchivos=obtenerValorConfiguracion(84);
+$validacionLibretas=obtenerValorConfiguracion(90);
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalUser=$_SESSION["globalUser"];
@@ -31,6 +32,14 @@ $codMesActiva=$_SESSION['globalMes'];
 $globalMesActivo=$_SESSION['globalMes'];
 $contadorRegistros=0;
 $nombreCompletoUnidad=nameUnidad($globalUnidad);
+
+$desdeSR=0;
+if(isset($_GET['cod'])&&isset($_GET['deven'])&&isset($_GET['personal_encargado'])){
+	$desdeSR=1;
+	$codigoSR=$_GET['cod'];
+	$codigoSRPER=$_GET['personal_encargado'];
+	$numeroSR=obtenerNumeroSolicitudRecursos($_GET['cod']);
+}
 ?>
 <script>
 	numFilas=<?=$contadorRegistros;?>;
@@ -173,13 +182,16 @@ $diaUltimo = date('d', strtotime("{$aux} - 1 day"));
 if((int)$globalNombreGestion<(int)$anioActual){
   $fechaActual=$globalNombreGestion."-".$codMesActiva."-23";
   $fechaActualModal=$diaUltimo."/".$codMesActiva."/".$globalNombreGestion;
+  $fechaActualVer=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
 }else{
 	if((int)$mesActual==(int)$codMesActiva){
       $fechaActual=date("Y-m-d");
       $fechaActualModal=date("d/m/Y");
+      $fechaActualVer=$fechaActual;
 	}else{
 	  $fechaActual=$globalNombreGestion."-".$codMesActiva."-23";
-      $fechaActualModal=$diaUltimo."/".$codMesActiva."/".$globalNombreGestion;     
+      $fechaActualModal=$diaUltimo."/".$codMesActiva."/".$globalNombreGestion; 
+      $fechaActualVer=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;    
 	}	
 }
 
@@ -201,10 +213,14 @@ $cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);//cuenta iva
 $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 ?>
 <form id="formRegComp" class="form-horizontal" action="save.php" method="post" enctype="multipart/form-data">
+
+	<?php if($desdeSR==1){ 
+      ?><input type="hidden" name="codigo_sr" value="<?=$codigoSR?>"><input type="hidden" name="codigo_personal" value="<?=$codigoSRPER?>"><?php
+	}?>
 	<div class="content">
 		<div class="container-fluid">
-			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;
-			?>">
+			<input type="hidden" name="validacion_libretas" id="validacion_libretas" value="<?=$validacionLibretas;?>">
+			<input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
 			<input type="hidden" name="codigo_iva_direfido" id="codigo_iva_direfido" value="<?=obtenerValorConfiguracion(67)?>">
 			<input type="hidden" name="cod_cuenta_configuracion_iva" id="cod_cuenta_configuracion_iva" value="<?=$cod_cuenta_configuracion_iva;?>">
 			<input type="hidden" name="cod_sis_configuracion" id="cod_sis_configuracion" value="<?=$cod_sis_configuracion;?>">
@@ -213,17 +229,17 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 			<input type="hidden" name="global_mes" id="global_mes" value="<?=$globalMesActivo;?>">
 			
 			<div class="card" id="cabecera_scroll">
-				<div class="card-header <?=$colorCard;?> card-header-text">
+				<div class="card-header <?php if($desdeSR==1){ echo "card-header-warning";}else{ echo "card-header-primary";}?> card-header-text">
 					<div class="card-text">
-					  <h4 class="card-title">Registrar <?=$moduleNameSingular;?></h4>
+					  <h4 class="card-title">Registrar <?=$moduleNameSingular;?> <?php if($desdeSR==1){ echo " - SR: ".$numeroSR;}?></h4>
 					</div>
 				</div>
 				<div class="card-body ">
 					<?php
 					$contMonedas=0;
 					while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-					    if($codigoMon!=1){
-					      $valorTipo=obtenerValorTipoCambio($codigoMon,$fechaActual);
+					    if($codigoMon==2||$codigoMon==4){ //PARA VALIDAR SOLO DOLARES Y UFV
+					      $valorTipo=obtenerValorTipoCambio($codigoMon,$fechaActualVer);
 					      if($valorTipo==0){
 					      	$contMonedas++;
 					       }
@@ -232,7 +248,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 
 					if($contMonedas!=0){
 					 	?>
-					     <p>No hay registros del tipo de cambio para hoy <?=strftime('%d de %B del %Y',strtotime($fechaActual))?></p>
+					     <p>No hay registros del tipo de cambio <b>$us</b> / <b>UFV</b> para hoy <?=strftime('%d de %B del %Y',strtotime($fechaActualVer))?></p>
 					     <a href="../index.php?opcion=tipoDeCambio" class="btn btn-warning">registrar</a>
 					 	<?php
 					}else{
@@ -323,7 +339,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 			</div>	
 
 			<div class="card">
-				<div class="card-header <?=$colorCard;?> card-header-text">
+				<div class="card-header <?php if($desdeSR==1){ echo "card-header-warning";}else{ echo "card-header-primary";}?> card-header-text">
 					<div class="card-text">
 					  <h6 class="card-title">Detalle</h6>
 					</div>
@@ -400,7 +416,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 		    	                //$index=1;
 		                      	//while ($rowLista = $stmtLista->fetch(PDO::FETCH_BOUND)) {
 			                    ?>
-								<div id="div<?=$index;?>">	
+								<div id="div">	
 									
 									<div class="h-divider">
 			        				</div>
@@ -435,10 +451,11 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 	                  	</div>
 
 					  	<div class="card-footer fixed-bottom">
-							<button type="submit" class="<?=$buttonMorado;?>">Guardar</button>
+							<button id="boton_enviar_formulario" type="submit" class="<?php if($desdeSR==1){ echo "btn btn-warning";}else{ echo "btn btn-primary";}?>">Guardar</button>	
+							<?php if($desdeSR==1){$urlList=$urlListAdminSol;}?>					
 							<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>">Volver</a>
 							<div class="row col-sm-12">
-								<div class="col-sm-6">
+								<div class="col-sm-5">
 						      	</div>
 								<div class="col-sm-2">
 						            <div class="form-group">
@@ -457,6 +474,19 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
 						            	<label class="bmd-label-static fondo-boton">Diferencia</label>	
 						            	<input class="form-control fondo-boton-active text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="0" id="total_dif_fijo" readonly="true">	
 									</div>
+						      	</div>
+						      	<div class="col-sm-1">
+						      		<?php 
+                                   if($desdeSR==0){
+                                   	?>
+						      		 <div class="form-group">
+						      		 	<a href="#" class="btn btn-round btn-default btn-fab btn-sm" onclick="salvarComprobante(0);return false;" title="Salvar Comprobante">
+			                        	   <i class="material-icons text-dark">save</i> 
+			                            </a>
+									</div>						      		
+                                   	<?php
+                                   } 
+						      		?>
 						      	</div>
 							</div>
 					  	</div>

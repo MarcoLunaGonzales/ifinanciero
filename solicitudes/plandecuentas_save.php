@@ -58,8 +58,8 @@ for ($i=0;$i<count($cuentasX);$i++){
 }
 
 if($flagSuccessDetail==true){
-	//showAlertSuccessError(true,"../".$urlListCC2);	
+	showAlertSuccessError(true,"../".$urlListCC2);	
 }else{
-	//showAlertSuccessError(false,"../".$urlListCC2);
+	showAlertSuccessError(false,"../".$urlListCC2);
 }
 ?>

@@ -73,10 +73,16 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                       </thead>
                       <tbody>
                         <?php $index=1;
-                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {                           
+                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {  
+
+                          if(obtenerEstadoComprobante($cod_comprobante)==2){
+                            $cod_comprobante=0;
+                          }  
+
+                                                 
                           $datos_ComproCajaChica=$cod_cajachica."/".$observaciones."/".$codigo_tipo_caja_Chica."/".$cod_comprobante;                            
-                            $monto_total=importe_total_cajachica($cod_cajachica);      
-                            $monto_saldo=$monto_inicio-$monto_total;
+                            $monto_total=importe_total_cajachica($cod_cajachica);      //aqui se resta el reembolso
+                            $monto_saldo=$monto_inicio+$monto_total;
 
                              if($cod_estado==1)
                                 $label='<span class="badge badge-success">';
@@ -94,7 +100,6 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                               <td class="text-left"><small><small><?=$observaciones;?></small></small></td>        
                               <td><small><?=$label.$nombre_estado."</span>";?></small></td>
                                 
-                              <!-- href='<?=$urlprintFiniquitosOficial;?>?codigo=<?=$codigo;?>' -->
                               <td class="td-actions text-right">
                                 <div class="btn-group dropdown">
                                   <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
@@ -102,9 +107,14 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                   </button>
                                   <div class="dropdown-menu" >
                                 <?php
-                                if($globalAdmin==1 and $cod_estado==1){ ?>
-                                  <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>' rel="tooltip" class="dropdown-item" style="background-color:#4a4ea2;">
-                                      <i class="material-icons" style="color:#FFF;" title="Agregar Detalle">playlist_add</i>Agregar Gastos
+                                if($globalAdmin==1){ 
+                                  $tituloBoton='<i class="material-icons" style="color:#FFF;" title="Agregar Detalle">playlist_add</i>Agregar Gastos';
+                                   if($cod_estado!=1){
+                                   $tituloBoton='<i class="material-icons" style="color:#FFF;" title="Ver Detalle">list</i>Lista de Gastos';
+                                   }
+                                  ?>
+                                  <a href='<?=$urlListDetalleCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&est=<?=$cod_estado?>' rel="tooltip" class="dropdown-item" style="background-color:#4a4ea2;">
+                                    <?=$tituloBoton?>  
                                   </a>
                                   <!-- <label class="text-danger"> | </label> -->
                                   <a  rel="tooltip" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=1')">

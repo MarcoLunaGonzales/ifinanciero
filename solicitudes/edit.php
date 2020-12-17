@@ -58,7 +58,14 @@ if(obtenerUnidadSolicitanteRecursos($codigo)==3000||obtenerAreaSolicitanteRecurs
 
    }   
   }  
+}else{
+   $montoCaja=obtenerValorConfiguracion(85);
+   $montoDetalleSoliditud=obtenerSumaDetalleSolicitud($codigo);
+   if($montoDetalleSoliditud<=$montoCaja&&$estado==4){
+     $estado=3;
+   }
 }
+  
 
 $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado where codigo=$codigo";
 if($estado==8){
@@ -145,6 +152,34 @@ if($estado!=1){
            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
           }
         ///
+      }else{
+         if($estado==3){
+          //se envia directo costos menores a 1000
+            //enviar propuestas para la actualizacion de ibnorca
+             $fechaHoraActual=date("Y-m-d H:i:s");
+             $idTipoObjeto=2708;
+             $idObjeto=2722; //regristado
+             $obs="En Aprobacion Solicitud";
+             if(isset($_GET['q'])){
+                $u=$_GET['q'];
+                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+              }else{
+                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+              }
+
+             //enviar propuestas para la actualizacion de ibnorca
+             /*$fechaHoraActual=date("Y-m-d H:i:s");
+             $idTipoObjeto=2708;
+             $idObjeto=2723; //regristado
+             $obs="Solicitud Aprobada";
+             if(isset($_GET['u'])){
+              $u=$_GET['u'];
+               actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,90,$codigo,$fechaHoraActual,$obs);    
+              }else{
+               actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,90,$codigo,$fechaHoraActual,$obs);    
+              }*/
+           ///
+         }
       }
     }
    }   
@@ -174,10 +209,12 @@ if(isset($_GET['q'])){
   $v=$_GET['v'];
 
 }
-
+$urlc="";
 if(isset($_GET['admin'])){
   $urlList2=$urlList;
-  $urlc="&q=".$q."&s=".$s."&u=".$u."&v=".$v;
+  if(isset($_GET['q'])){
+    $urlc="&q=".$q."&s=".$s."&u=".$u."&v=".$v;  
+  }  
   if(isset($_GET['reg'])){
     $urlList2=$urlList3;
     if($_GET['reg']==2){
@@ -186,9 +223,11 @@ if(isset($_GET['admin'])){
     
   }
 }else{
-  $urlc="&q=".$q."&s=".$s."&u=".$u;
-  if(isset($_GET['r'])){
-    $urlc=$urlc."&r=".$_GET['r'];
+  if(isset($_GET['q'])){ 
+    $urlc="&q=".$q."&s=".$s."&u=".$u;
+    if(isset($_GET['r'])){
+       $urlc=$urlc."&r=".$_GET['r'];
+    }
   }
 }
 if(isset($_GET["ladmin"])){

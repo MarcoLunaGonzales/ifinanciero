@@ -9,6 +9,11 @@ $globalMesActivo=$_SESSION['globalMes'];
 $globalUnidad=$_SESSION["globalUnidad"];
 $userAdmin=obtenerValorConfiguracion(74);
 $montoCaja=obtenerValorConfiguracion(85);
+$unidadesPersonal=$globalUnidad;
+if(obtenerOficinaPersonalMenores($globalUser)!=""){
+  $unidadesPersonal=obtenerOficinaPersonalMenores($globalUser);
+}
+//echo $unidadesPersonal;
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
@@ -35,12 +40,19 @@ if(isset($_GET['q'])){
   $sqlAreas="";
 }
 // Preparamos
-$stmtMen = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle,
+/*$stmtMen = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle,
   (select sum(importe) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo) as monto_importe
 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3)) l  
-where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0) and l.cod_unidadorganizacional=$globalUnidad and l.monto_importe<=$montoCaja order by l.revisado_contabilidad,l.numero desc");
+where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0) and l.cod_unidadorganizacional in ($unidadesPersonal) and l.monto_importe<=$montoCaja order by l.revisado_contabilidad,l.numero desc");*/
+
+
+$stmtMen = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle,
+  (select sum(IF(sd.cod_confretencion = 0 or sd.cod_confretencion = 8 or sd.cod_confretencion = 10,sd.importe,(sd.importe)*((100-(SELECT IFNULL(SUM(porcentaje),0) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=sd.cod_confretencion and cod_cuenta!=0))/100))) from solicitud_recursosdetalle sd where sd.cod_solicitudrecurso=sr.codigo) as monto_importe
+  from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3)) l  
+where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0) and l.cod_unidadorganizacional in ($unidadesPersonal) and l.monto_importe<=$montoCaja order by l.revisado_contabilidad,l.numero desc");
 
 // Ejecutamos
 $stmtMen->execute();
@@ -488,7 +500,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
         </div> 
         <hr>               
         <div class="row">
-          <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Seleccionar una Caja Chica</small></label>
+          <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Caja Chica</small></label>
           <div class="row col-sm-10">
             <div class="col-sm-12" style="background-color:#f9edf7">
              <div class="btn-group col-sm-12"> 
@@ -543,6 +555,31 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           while ($rowCajaChica = $stmtCajaChica->fetch(PDO::FETCH_BOUND)) {
                           ?><option value="<?=$cod_cajachica;?>"><?=$nombreTipo;?>, Oficina : <?=$nombre_uo?>, Area : <?=$nombre_area?> -<?=$personal?> - <?=$observaciones?> (<?=$nombre_estado?>)</option><?php 
                           }
+                       }   
+                        ?>
+                    </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Forma Pago</small></label>
+          <div class="row col-sm-10">
+            <div class="col-sm-12" style="background-color:#f9edf7">
+             <div class="btn-group col-sm-12"> 
+              <a href="#" class="btn btn-default col-sm-1 btn-fab" onclick="return false;"><i class="material-icons" style="color:#37474f">monetization_on</i><span id="nmoney" class="bg-warning"></span></a>             
+              <select class="selectpicker form-control col-sm-11" name="cod_forma_pago" id="cod_forma_pago" data-live-search="true" data-size="6" data-style="btn btn-default text-white bg-caja-chica" onchange="asignarFormaPagoGastoSR()">
+                         <option value="-1">Ninguno</option>
+             <?php 
+           $stmtPago = $dbh->prepare("SELECT codigo,nombre FROM tipos_pagoproveedor where codigo in (2,3)");//and cod_personal=$globalUser
+           //ejecutamos
+           $stmtPago->execute();
+           //bindColumn
+           $stmtPago->bindColumn('codigo', $codigoTipo);
+           $stmtPago->bindColumn('nombre', $nombreTipo);
+
+                  while ($rowPago = $stmtPago->fetch(PDO::FETCH_BOUND)) {         
+                         ?><option value="<?=$codigoTipo;?>"><?=$nombreTipo;?></option><?php 
                        }   
                         ?>
                     </select>

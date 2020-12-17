@@ -107,24 +107,46 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                               </a>
                               <?php 
                             }
+
+                            if(isset($_GET['q'])){
+                              ?>
+                              <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                                 <i class="material-icons"><?=$iconEdit;?></i>
+                               </a>
+                               <button title="Duplicar Registro ACTUALIZADO al <?=date("Y")?>" class="btn btn-info" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>&pr=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
+                                <i class="material-icons"><?=$iconCopy?></i>
+                              </button>
+                              <?php
+                            }else{
+                              ?>
+                              <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
+                                <i class="material-icons"><?=$iconEdit;?></i>
+                              </a>
+                              <button title="Duplicar Registro ACTUALIZADO al <?=date("Y")?>" class="btn btn-info" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>&pr=0')">
+                                <i class="material-icons"><?=$iconCopy?></i>
+                              </button>
+                              <?php
+                            }
                             ?>
                             
                             <?php if($codEstado!=3){
                               if($globalAdmin==1){
                                 if(isset($_GET['q'])){
                                   ?>
-                            <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
+                            
+                            <button title="ACTUALIZAR al <?=date("Y")?>" class="btn btn-warning" onclick="alerts.showSwal('warning-message-and-confirmation-actualizar-plantilla','<?=$urlClonar2;?>&codigo=<?=$codigo;?>&pr=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
+                                <i class="material-icons">refresh</i>
+                              </button> 
                             <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
                                   <?php
                                 }else{
                                   ?>
-                            <a href='<?=$urlRegister;?>?cod=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                              <i class="material-icons"><?=$iconEdit;?></i>
-                            </a>
+                            
+                            <button title="ACTUALIZAR al <?=date("Y")?>" class="btn btn-warning" onclick="alerts.showSwal('warning-message-and-confirmation-actualizar-plantilla','<?=$urlClonar2;?>&codigo=<?=$codigo;?>&pr=0')">
+                                <i class="material-icons">refresh</i>
+                              </button> 
                             <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
@@ -132,19 +154,6 @@ $stmt->bindColumn('estado_plantilla', $estadoPlantilla);
                                 }
                               }
                             }
-                          if(isset($_GET['q'])){
-                            ?>
-                             <button title="Duplicar Registro" class="btn btn-primary" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')">
-                              <i class="material-icons"><?=$iconCopy?></i>
-                            </button>
-                            <?php
-                          }else{
-                            ?>
-                            <button title="Duplicar Registro" class="btn btn-primary" onclick="alerts.showSwal('warning-message-and-confirmation-clonar','<?=$urlClonar;?>&codigo=<?=$codigo;?>')">
-                              <i class="material-icons"><?=$iconCopy?></i>
-                            </button> 
-                            <?php
-                          }
                             ?>
                             
                           </td>

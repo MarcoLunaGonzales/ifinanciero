@@ -24,9 +24,10 @@ $idFila=$_GET['idFila'];
         	<div class="form-group">
 	        <select class="selectpicker form-control form-control-sm" name="tipo_costo<?=$idFila;?>" id="tipo_costo<?=$idFila;?>" data-style="<?=$comboColor;?>" required>
 			  	
-			  	<option disabled selected="selected" value="">Tipo</option>
+			  	<option disabled selected="selected" value="">Tipo</option>			  	
 				<option value="1">Fijo</option>
 				<option value="2">Variable</option>	
+				<option value="3">Manual</option>
 			</select>
 			</div>
       	</div>

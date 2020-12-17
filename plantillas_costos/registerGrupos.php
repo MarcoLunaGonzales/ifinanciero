@@ -141,8 +141,8 @@ if(isset($_GET['cod'])){
 				      		if(obtenerValorConfiguracion(52)!=1){
 				      			$codOficina=$codUnidadX;
 				      		}
-                           $precioPresupuestado=number_format(obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,12)['presupuesto'], 0, '.', '');
-                           $precioPresupuestadoTabla=number_format(obtenerPresupuestoEjecucionPorArea($codOficina,$codAreaX,$globalNombreGestion,12)['presupuesto'], 0, '.', ',');
+                           $precioPresupuestado=number_format(obtenerPresupuestoEjecucionPorAreaAcumulado($codOficina,$codAreaX,$globalNombreGestion,12,1)['presupuesto'], 0, '.', '');
+                           $precioPresupuestadoTabla=number_format(obtenerPresupuestoEjecucionPorAreaAcumulado($codOficina,$codAreaX,$globalNombreGestion,12,1)['presupuesto'], 0, '.', ',');
                          }else{
                           $precioPresupuestado=0;	
                           $precioPresupuestadoTabla=0;
@@ -223,11 +223,20 @@ if(isset($_GET['cod'])){
                                 if($codTipoCostoX==1){
                                 ?><option value="1" selected>Fijo</option>
                                   <option value="2">Variable</option>
+                                  <option value="3">Manual</option>
                                 <?php
                                 }else{
+                                	if($codTipoCostoX==2){
                                  ?><option value="1">Fijo</option>
                                   <option value="2" selected>Variable</option>
+                                  <option value="3">Manual</option>
                                 <?php
+                                  }else{
+                                  	 ?><option value="1">Fijo</option>
+                                      <option value="2">Variable</option>
+                                      <option value="3" selected>Manual</option>
+                                    <?php
+                                  }
                                 }
 			  	              ?>
 					

@@ -52,7 +52,9 @@ $filtro=$_POST['filtro'];
   }
 }*/
 $sqlFiltro="";
-$sqlFiltro2="and fecha_factura BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59'";
+$sqlFiltroSaldo="and fv.fecha_factura BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59'";
+$sqlFiltro2="and f.fecha_factura BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59'";
+$sqlFiltroComp="and c.fecha BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59'";
 // if($filtro==1){
 //   $sqlFiltro="and (ce.cod_factura IS NOT NULL or ce.cod_factura!=0)";
 // }

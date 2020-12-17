@@ -212,6 +212,8 @@ if(isset($_GET['cod'])){
   <input type="hidden" value="-100" id="tipo_documento_otro" name="tipo_documento_otro">
 <div class="content">
   <div id="contListaGrupos" class="container-fluid">
+    <input type="hidden" name="validacion_contrato" id="validacion_contrato" value="<?=obtenerValorConfiguracion(96)?>">
+    <input type="hidden" name="cuenta_honorarios_docente" id="cuenta_honorarios_docente" value="<?=obtenerValorConfiguracion(88);?>">      
       <input type="hidden" name="cantidad_filas" id="cantidad_filas" value="<?=$contadorRegistros;?>">
       <input type="hidden" name="cod_solicitud" id="cod_solicitud" value="<?=$codigo?>">
       <input type="hidden" name="cod_configuracioniva" id="cod_configuracioniva" value="<?=obtenerValorConfiguracion(35)?>">
@@ -364,6 +366,7 @@ if(isset($_GET['cod'])){
     }
 
   }
+
             ?>
             <div class="col-sm-1">
               <div class="form-group">
@@ -492,7 +495,8 @@ if(isset($_GET['cod'])){
           </div>
           <?php } //fin del while de la cabecera?>
           <div class="row">
-            
+       <input type="hidden" name="simulaciones" value="<?=$codSimulacionX?>" id="simulaciones"/>
+       <input type="hidden" name="tipo_solicitud" value="<?=$tipoSolicitud?>" id="tipo_solicitud"/>       
             <div class="col-sm-3">
               
               <?php
@@ -772,8 +776,20 @@ if(isset($_GET['cod'])){
                      //2708 cabecera //27080 detalle
                      $verificarArchivo=verificarArchivoAdjuntoExistente(2708,$codigoSolicitud,0,$codigoX);
                      //$nombreX=$verificarArchivo[1];
-                     $urlArchivo=$verificarArchivo[2];
                      $codigoArchivoX=$verificarArchivo[3];
+
+                     $urlArchivo=$verificarArchivo[2];
+                     $downloadFile='download="Doc - IFINANCIERO ('.$nombreX.')"';
+                     $onClick='onClick="quitarArchivoSistemaAdjunto('.$filaA.','.$codigoArchivoX.',0)"';
+                     if(obtenerValorConfiguracion(93)==1){
+                      $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivoX);
+                      if($banderaArchivo>0){
+                         $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
+                         $downloadFile='target="_blank"';
+                         $globalServerDelete=obtenerValorConfiguracion(94);
+                         $onClick='onClick="ajaxDeleteArchivoIbnorca(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',15,\''.$codigoArchivoX.'\','.$filaA.','.$codigoArchivoX.',0);"';
+                      }                      
+                     }                     
                   ?>
                   <tr>
                     <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
@@ -801,8 +817,8 @@ if(isset($_GET['cod'])){
                         </label>
                         <div class="btn-group" id="existe_div_archivo_cabecera<?=$filaA?>">
                         <a href="#" class="btn btn-button btn-sm">Registrado</a>
-                        <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
-                        <a href="#" title="Quitar" class="btn btn-danger btn-sm" onClick="quitarArchivoSistemaAdjunto(<?=$filaA?>,<?=$codigoArchivoX;?>,0)"><i class="material-icons">delete_outline</i></a>
+                        <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" <?=$downloadFile?>><i class="material-icons">get_app</i></a>  
+                        <a href="#" title="Quitar" class="btn btn-danger btn-sm" <?=$onClick?>><i class="material-icons">delete_outline</i></a>
                         </div> 
                         <?php
                       }
@@ -827,6 +843,17 @@ if(isset($_GET['cod'])){
                      if($ObligatorioX==1){
                       $Obli='<i class="material-icons text-success">done</i> SI';
                      }
+                     $onClick='onClick="quitarArchivoSistemaAdjunto('.$filaA.','.$codigoArchivoX.',1)"';
+                     $downloadFile='download="Doc - IFINANCIERO ('.$nombreX.')"';
+                     if(obtenerValorConfiguracion(93)==1){
+                      $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivoX);
+                      if($banderaArchivo>0){
+                         $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
+                         $downloadFile='target="_blank"';
+                         $globalServerDelete=obtenerValorConfiguracion(94);
+                         $onClick='onClick="ajaxDeleteArchivoIbnorca(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',15,\''.$codigoArchivoX.'\','.$filaA.','.$codigoArchivoX.',1);"';
+                      }                      
+                     }
 
                   ?>
                   <tr id="fila_archivo<?=$filaA?>">
@@ -843,8 +870,8 @@ if(isset($_GET['cod'])){
                         </label>
                       <div class="btn-group">
                         <a href="#" class="btn btn-button btn-sm" >Registrado</a>  
-                        <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
-                        <a href="#" title="Quitar" class="btn btn-danger btn-sm" onClick="quitarArchivoSistemaAdjunto(<?=$filaA?>,<?=$codigoArchivoX;?>,1)"><i class="material-icons">delete_outline</i></a>
+                        <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" <?=$downloadFile?>><i class="material-icons">get_app</i></a>  
+                        <a href="#" title="Quitar" class="btn btn-danger btn-sm" <?=$onClick?>><i class="material-icons">delete_outline</i></a>
                       </div>     
                     </td>    
                     <td><?=$nombreX;?></td>

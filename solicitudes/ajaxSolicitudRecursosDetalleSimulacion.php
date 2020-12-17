@@ -20,6 +20,8 @@ $codigo=$_GET['codigo'];
 
 $stmt = $dbh->prepare("SELECT cod_unidadorganizacional,cod_area from solicitud_recursos where codigo='$codigo'");
 $stmt->execute();
+$unidadSol="";
+$areaSol="";
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $unidadSol=$row['cod_unidadorganizacional'];
   $areaSol=$row['cod_area'];
@@ -135,13 +137,13 @@ if(isset($_GET["area"])){
     <div class="col-sm-1">
             <div class="form-group">
                <!--<label for="importe_presupuesto<?=$idFila;?>" class="bmd-label-floating">Imp Pres</label>      -->
-               <input class="form-control" type="number" required name="importe_presupuesto<?=$idFila;?>" id="importe_presupuesto<?=$idFila;?>" step="0.001" value="0" readonly>  
+               <input class="form-control" type="number" required name="importe_presupuesto<?=$idFila;?>" id="importe_presupuesto<?=$idFila;?>" step="any" value="0" readonly>  
       </div>
     </div>
 		<div class="col-sm-1">
             <div class="form-group">
             	<label for="importe<?=$idFila;?>" class="bmd-label-floating d-none" id="importe_label<?=$idFila;?>">Importe</label>     
-          		<input class="form-control" value="0" type="number" required name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" step="0.01" onChange="calcularTotalesSolicitud();" OnKeyUp="calcularTotalesSolicitud();">	
+          		<input class="form-control" value="0" type="number" required name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" step="any" onChange="calcularTotalesSolicitud();" OnKeyUp="calcularTotalesSolicitud();">	
 			</div>
       	</div>
       	<div class="col-sm-2">

@@ -1,6 +1,8 @@
  <?php
  $listaActividad= obtenerActividadesServicioImonitoreo(1); 
  $listaAcc= obtenerAccServicioImonitoreo(1); 
+ $fechaActualModal=date("Y-m-d");
+ $valorNoValido="";
 ?>
  <select class="selectpicker form-control form-control-sm d-none" name="actividades_detalle" id="actividades_detalle" data-style="btn btn-success">                                  
  <option disabled selected value="">--SELECCIONE ACTIVIDAD--</option>
@@ -92,7 +94,6 @@
                           while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                            $codigoSel=$rowSel['codigo'];
                           $nombreSelX=$rowSel['nombre'];
-                          $abrevSelX=$rowSel['abreviaruta'];
                           ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
                           }
                         ?>
@@ -186,7 +187,6 @@
                           while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                            $codigoSel=$rowSel['codigo'];
                           $nombreSelX=$rowSel['nombre'];
-                          $abrevSelX=$rowSel['abreviaruta'];
                           ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
                           }
                         ?>
@@ -251,7 +251,6 @@
                           while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                            $codigoSel=$rowSel['codigo'];
                           $nombreSelX=$rowSel['nombre'];
-                          $abrevSelX=$rowSel['abreviaruta'];
                           ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
                           }
                         ?>

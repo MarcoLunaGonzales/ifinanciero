@@ -74,7 +74,7 @@ if((int)$globalNombreGestion<(int)$anioActual){
       $datosServicio.=obtenerServiciosClaServicioTipoNombre($IdTipo);  
     }
 //
-    $glosa="Beneficiario: ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosServicio."  F/".$facturaCabecera." ".$nombreCliente." SR ".$numeroSol;
+    $glosa=" ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosServicio."  F/".$facturaCabecera." ".$nombreCliente." SR ".$numeroSol;
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codigo);
     $unidadSol=$cod_unidadX;
     $areaSol=$cod_areaX;
@@ -226,8 +226,8 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
           }
           $tituloFactura="F/ ".implode($numerosFacturasDetalle,',')." - ";
         }
-        $glosaDetalle="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
-        $glosaDetalleRetencion="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$datosServicio." ".$glosa;
+        $glosaDetalle=" ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
+        $glosaDetalleRetencion=" ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$datosServicio." ".$glosa;
         
 
         if($codProveedor!=$rowNuevo['cod_proveedor']){
@@ -510,7 +510,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
                    $cuentaAuxiliarProv=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$codProveedor,$cuentaRetencion); 
 
                    $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
-                   VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaRetencion', '$debeRet', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaX')";
+                   VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaRetencion', '$debeRet', '$codProveedorEstado', NOW(),'0','$cuentaAuxiliarProv','$glosaX')";
                    $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
                    $stmtDetalleEstadoCuenta->execute();  
 
@@ -563,7 +563,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
               $tituloFactura="F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ";
             }
 
-            $glosaDetalleProv="Beneficiario: ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
+            $glosaDetalleProv=" ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
 
             //validacion si la solicitud es agrupada
             if($numeroRetencionFactura!=1){ 
@@ -594,7 +594,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
                     //estado de cuentas devengado
                     $codEstadoCuenta=obtenerCodigoEstadosCuenta();
                     $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
-                    VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaProv', '$haberDivision', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaDetalleDivision')";
+                    VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaProv', '$haberDivision', '$codProveedorEstado', NOW(),'0','$cuentaAuxiliarProv','$glosaDetalleDivision')";
                     $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
                     $stmtDetalleEstadoCuenta->execute();             
                     //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 
@@ -617,7 +617,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
                  //estado de cuentas devengado
                  $codEstadoCuenta=obtenerCodigoEstadosCuenta();
                  $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (codigo,cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
-                 VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaProv', '$haberProv', '$codProveedorEstado', '$fechaHoraActual','0','$cuentaAuxiliarProv','$glosaDetalleProv')";
+                 VALUES ('$codEstadoCuenta','$codComprobanteDetalle', '$cuentaProv', '$haberProv', '$codProveedorEstado', NOW(),'0','$cuentaAuxiliarProv','$glosaDetalleProv')";
                  $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
                  $stmtDetalleEstadoCuenta->execute();             
                  //actualizamos con el codigo de comprobante detalle la solicitud recursos detalle 

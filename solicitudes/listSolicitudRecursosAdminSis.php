@@ -159,12 +159,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
-                          <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button> <!--<?=$nEst?> %
-                             <div class="progress">
-                               <div class="progress-bar <?=$barEstado?>" role="progressbar" aria-valuenow="<?=$nEst?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$nEst?>%">
-                                  <span class="sr-only"><?=$nEst?>% Complete</span>
-                               </div>
-                             </div>-->
+                          <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button>
                           </td> 
                           <td class="text-warning font-weight-bold"><small><b><?php if(isset($glosaArray[1])){
                                 echo "".$glosaArray[0].""."<u class='text-muted'> ".$glosaArray[1]."</u>";
@@ -468,12 +463,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$solicitante;?>
                           </td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
-                          <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button> <!--<?=$nEst?> %
-                             <div class="progress">
-                               <div class="progress-bar <?=$barEstado?>" role="progressbar" aria-valuenow="<?=$nEst?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$nEst?>%">
-                                  <span class="sr-only"><?=$nEst?>% Complete</span>
-                               </div>
-                             </div>-->
+                          <td><button class="btn <?=$btnEstado?> btn-sm btn-link"><?=$estado;?></button>
                           </td> 
                           <td class="td-actions text-right">
                             <?php

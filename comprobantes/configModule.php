@@ -23,6 +23,7 @@ $urlReporteMayor="reportes/reporteMayor.php";
 $urlReporteBalance="reportes/reporteBalance.php";
 $urlReporteEstadosResultados="reportes/reporteEstadosResultados.php";
 $urlReporteCompras="reportes/reportePrintLibroCompra.php";
+$urlReporteComprasMeses="reportes/reportePrintLibroCompraControl.php";
 $urlReporteVentas="reportes/reportePrintLibroVentas.php";
 
 $urlReporteLibretasBancarias="reportes/reporteLibretasBancarias.php";
@@ -32,6 +33,6 @@ $urlReporteIngresoFacturacion="reportes/reporteIngresoFacturacion.php";
 
 $urlVerSol="solicitudes/verSolicitudRecursos.php";
 $urlImpSol="solicitudes/imp.php";
-
+$urlListAdminSol="index.php?opcion=listSolicitudRecursosAdminConta";
 ?>
 

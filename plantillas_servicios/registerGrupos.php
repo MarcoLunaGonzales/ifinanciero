@@ -321,10 +321,10 @@ if(isset($_GET['cod'])){
 			  	              		$codigoAreaServ=0;
 			  	              	}
 			  	              }
-                           $stmt3 = $dbh->prepare("SELECT IdClaservicio,Descripcion,Codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
+                           $stmt3 = $dbh->prepare("SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ");
                          $stmt3->execute();
                          while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                          $codigoServX=$rowServ['IdClaservicio'];
+                          $codigoServX=$rowServ['IdClaServicio'];
                           $nombreServX=$rowServ['Descripcion'];
                           $abrevServX=$rowServ['Codigo'];
                           ?><option value="<?=$codigoServX;?>"><?=$abrevServX?> - <?=$nombreServX?></option><?php 

@@ -24,7 +24,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $filas=$_POST['filas'];
 $datos=json_decode($_POST['datos']);
 
-
+$cod_cuenta_configuracion_iva=obtenerValorConfiguracion(3);
 for ($fila=0; $fila < count($datos); $fila++) { 
 
   $totaldebDet=0;$totalhabDet=0;

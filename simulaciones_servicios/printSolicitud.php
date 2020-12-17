@@ -157,7 +157,7 @@ $html.=  '<header class="header">'.
                 <td  class="text-left" width="15%">'.$codigo_alterno_detalle.'</td>
                 <td  class="text-left"><small>'.$row2["descripcion_alterna"].'</small></td>
                 <td  class="text-right">'.formatNumberDec($row2["cantidad"]).'</td>
-                <td  class="text-right">'.formatNumberDec($precio_unitario).'</td>
+                <td  class="text-right">'.number_format($precio_unitario,2).'</td>
                 <td  class="text-right">'.formatNumberDec($precio_unitario*$row2["cantidad"]).'</td>
                 <td  class="text-right">'.formatNumberDec($precio_sus).'</td>
               </tr>';

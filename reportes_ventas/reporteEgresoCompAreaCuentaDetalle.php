@@ -18,10 +18,9 @@
            '</thead>'.
            '<tbody>';
 
- 
-
-    $listaDetalleUnidades=obtenerListaCuentasEgreso($unidadCostoArray,$areasArray,$cuentasArray,$desde,$hasta);
-    $totalImporte=0;
+    $totalImporte=0;$indexCuenta=0;
+    foreach ($areas as $key => $areasX) {
+      $listaDetalleUnidades=obtenerListaCuentasEgreso($unidadCostoArray,$areasX,$cuentasArray,$desde,$hasta);      
     while ($rowComp = $listaDetalleUnidades->fetch(PDO::FETCH_ASSOC)) {
         //$codigo_alterno=$rowComp['Codigo'];
         $cuentaX=$rowComp['cuenta'];
@@ -29,9 +28,14 @@
         $codAreaX=$rowComp['cod_area'];
         $nombreAreaX=$rowComp['area'];
         $numeroX=$rowComp['numero_cuenta'];
-        $importe_realX=abs($rowComp['monto_real']);
+        $importe_realX=0;
+        $listaDetalleUnidadesAreas=obtenerListaCuentasEgreso($unidadCostoArray,$codAreaX,$codigo_cuenta,$desde,$hasta);
+        $rowCompAreas = $listaDetalleUnidadesAreas->fetch();    
+        $importe_realX=abs($rowCompAreas['monto_real']);  
+        
         $totalImporte+=$importe_realX;
-        $html.='<tr>'.
+        $funcionOnclick='filasPresupuesto('.$indexCuenta.')';
+        $html.='<tr onclick="'.$funcionOnclick.'">'.
                       '<td class="text-left font-weight-bold">'.$nombreAreaX.'</td>'.
                       '<td class="text-left font-weight-bold">'.$numeroX.'</td>'.
                       '<td class="text-left font-weight-bold">'.mb_strtoupper($cuentaX).'</td>'.
@@ -41,20 +45,22 @@
         $longitudUnidades = count($unidadCosto);
         for($i=0; $i<$longitudUnidades; $i++){
           $unidadDetAbrevY=abrevUnidad($unidadCosto[$i]);
-          $listaDetalleUnidades4=obtenerListaCuentasEgreso($unidadCosto[$i],$areasArray,$codigo_cuenta,$desde,$hasta);
-          while ($rowCompUnidades = $listaDetalleUnidades4->fetch(PDO::FETCH_ASSOC)) {
-            $importe_realY=abs($rowCompUnidades['monto_real']);
-            if($importe_realY>0){
-              $html.='<tr">'.
+          $listaDetalleUnidades4=obtenerListaCuentasEgreso($unidadCosto[$i],$codAreaX,$codigo_cuenta,$desde,$hasta);
+          $rowCompUnidades = $listaDetalleUnidades4->fetch();    
+          $importe_realY=abs($rowCompUnidades['monto_real']);
+          if($importe_realY>0){
+              $html.='<tr class="cuenta'.$indexCuenta.'" style="display:none">'.
                     '<td class="text-center">-</td>'.  
                     '<td class="text-center">-</td>'.  
                     '<td class="text-center">'.$unidadDetAbrevY.'</td>'.  
                     '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
                 '</tr>';              
-            }        
-          }
+          } 
         }
+        $indexCuenta++;
     } 
+  }//FIN
+
 
 
     $html.='<tr class="bg-secondary text-white">'.

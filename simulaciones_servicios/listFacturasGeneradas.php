@@ -117,7 +117,7 @@ $globalPersonal=$_SESSION["globalUser"];
                           $cliente=nameCliente($cod_cliente);
 
                           $correos_string=obtenerCorreoSolicitudFacturacion($cod_solicitudfacturacion);
-
+                          $correos_string=str_replace(";",",",$correos_string);
                           //correos de contactos
                           $tipo_solicitud=obtenerTipoSolicitud($cod_solicitudfacturacion);
                           /*if($correos_string==""){
@@ -610,13 +610,14 @@ $globalPersonal=$_SESSION["globalUser"];
       }else{
         correo_destino=$('#correo_destino').val()+correo_solicitante;        
       } 
+      //console.log(correo_destino);
       asunto=null;
       mensaje=null;
       if(correo_destino==null || correo_destino == "" ||correo_destino == 0){
         // alert("Por Favor Agregue Un correo para el envío de la Factura!");
         Swal.fire("Informativo!", "Por Favor Agregue Un correo válido para el envío de la Factura!", "warning");
       }else{
-        EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social,interno);  
+       EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social,interno);  
       }
     });
 

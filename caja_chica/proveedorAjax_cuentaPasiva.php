@@ -21,8 +21,8 @@ $dbh = new Conexion();
 
 ?>
 
-<!--  <input class="form-control" type="text" value="<?=$nombre?>" readonly="true" />
- <input  name="proveedores" id="proveedores" type="hidden"  required="true" value="<?=$codigo?>" />-->
+<!--  <input class="form-control" type="text" value="" readonly="true" />
+ <input  name="proveedores" id="proveedores" type="hidden"  required="true" value="" />-->
 
  <select class="selectpicker form-control form-control-sm" name="proveedores" id="proveedores" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Proveedor">
   <option value=""></option>

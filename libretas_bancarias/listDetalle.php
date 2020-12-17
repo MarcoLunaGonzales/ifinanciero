@@ -22,7 +22,7 @@ $saldo_inicial=0;
 
 // Preparamos
 $stmt = $dbh->prepare("SELECT ce.*
-FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.fecha_hora desc");
+FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.fecha_hora desc limit 50"); // limit 50
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -72,12 +72,18 @@ $stmtb->bindColumn('nombre', $nombre);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title"><?=$moduleNamePluralDetalle?></h4>
-                  
+                  <h4 class="card-title"><b style="color:#732590;"><?=$moduleNamePluralDetalle?></b>
+                     
+                  </h4>
+
                   <?php
                   while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
                     ?>
-                  <h4 class="card-title" align="center"><?=$nombreBanco?> <b>NRO. CUENTA: <?=$cuenta?></b> / <?=$nombre?></b></h4>
+                  <h4 class="card-title" align="center"><?=$nombreBanco?> <b>NRO. CUENTA: <?=$cuenta?></b> / <?=$nombre?></b>
+                      <a href="#" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscarDetalleLibretas">
+                        <i class="material-icons" title="Buscador Avanzado">search</i>
+                      </a>
+                  </h4>
                   <?php
                   }
                   ?>
@@ -128,7 +134,7 @@ $stmtb->bindColumn('nombre', $nombre);
                    </script>
                 </div>
                 <div class="card-body">
-                  <div class="row">
+                  <div class="row d-none"> <!-- ocultar porque ya hay un buscador-->
                      <div class="input-group mb-3">
                        <div class="input-group-prepend">
                          <span class="input-group-text text-muted" id="basic-addon1"><small>Buscar Fecha Desde</small></span>
@@ -143,8 +149,8 @@ $stmtb->bindColumn('nombre', $nombre);
                      </div>
                   </div>
                   <hr>
-                  <div class="table-responsive">
-                    <table id="tablePaginatorLibretas" class="table table-condensed small">
+                  <div class="table-responsive" id="contenedor_libretas_detalle">
+                    <table class="table table-condensed small table-bordered">
                       <thead>
                         <tr style="background:#21618C; color:#fff;">
                           <td class="text-center">#</td>
@@ -153,7 +159,9 @@ $stmtb->bindColumn('nombre', $nombre);
                           <td>Información C.</td>
                           <td>Sucursal</td>
                           <td>Monto</td>
-                          <td>Saldo</td>
+                          <td style="background:#A4E082;">Saldo Acumulado</td>
+                          <td style="background:#B91E0B;">Saldo según Banco <br>(Cargado)</td>
+                          <td style="background:#B91E0B;">Saldo del Registro</td>
                           <td>Nro Doc / Nro Ref</td>
 
                           <th class="small bg-success" width="4%"><small>Fecha Fac.</small></th>
@@ -168,6 +176,7 @@ $stmtb->bindColumn('nombre', $nombre);
                       <tbody>
                         <?php
                         $index=1;
+                        $saldo_acumulado=0;
                         //codigo temporal para cuadrar cierto monto  el saldo inicial es de la fecha 1/7/2020
                         $fecha_temporal="2020-07-01 00:00:00";
                         if($codigoLibreta==4){
@@ -183,13 +192,15 @@ $stmtb->bindColumn('nombre', $nombre);
                             $sw_temporal=false;
                             $saldo_inicial_temporal=157510.15;
                             $saldo_inicial=$saldo_inicial_temporal;?>
-                            <tr style="background:#21618C; color:#fff;"><td></td><td></td><td></td><td></td><td></td><td></td><td><?=$saldo_inicial_temporal?></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <!--<tr style="background:#21618C; color:#fff;"><td></td><td></td><td></td><td></td><td></td><td></td><td><?=$saldo_inicial_temporal?></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>-->
 
                           <?php }
 
                           //$saldo_inicial=$saldo_inicial+$monto;
-                            $saldo_inicial=obtenerSaldoLibretaBancariaDetalle($codigo);
-
+                            //$saldo_inicial=obtenerSaldoLibretaBancariaDetalle($codigo);
+                            $saldo_inicial=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,"",$monto);
+                            //$saldo_acumulado+=$saldo_inicial;
+                            $saldo_acumulado=obtenerSaldoAcumuladoFilaLibretaBancaria($codigo);
                           //==termina el codigom temporal
 
                           ?>
@@ -200,8 +211,9 @@ $stmtb->bindColumn('nombre', $nombre);
                             <td class="text-left"><?=$informacion_complementaria?></td>      
                             <td class="text-left"><?=$agencia?></td>
                             <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-                            <!-- <td class="text-right"><?=number_format($saldo,2,".",",")?></td> -->
-                            <td class="text-right"><?=number_format($saldo_inicial,2,".",",")?></td>                          
+                            <td class="text-right" style="background:#A4E082;"><?=number_format($saldo_acumulado,2,".",",")?></td>
+                            <td class="text-right" style="background:#F7684F;"><?=number_format($saldo,2,".",",")?></td>
+                            <td class="text-right" style="background:#F7684F;"><?=number_format($saldo_inicial,2,".",",")?></td>                        
                             <td class="text-left"><?=$nro_documento?></td>
 
                             <?php
@@ -269,7 +281,7 @@ $stmtb->bindColumn('nombre', $nombre);
 
                             <td class="td-actions text-right">
                             <?php
-                              if($globalAdmin==1){
+                             // if($globalAdmin==1){
                               ?>                             
                               <!-- <button type="button"  title="Relacionar Con Factura" class="btn btn-warning" data-toggle="modal" data-target="#modallista_facturas" onclick="relacionar_factura_libreta(<?=$codigo?>)">
                                 <i class="material-icons">add_circle_outline</i>
@@ -288,7 +300,7 @@ $stmtb->bindColumn('nombre', $nombre);
                               ?>
                               
                               <?php
-                              }
+                              //}
                               ?>
                               
                             </td>
@@ -332,7 +344,8 @@ $stmtb->bindColumn('nombre', $nombre);
 
         </div>
     </div>
-    <!-- small modal -->
+
+    <!-- small modal -->  
 <div class="modal fade modal-arriba modal-primary" id="modalSubirArchivoExcel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
     <div class="modal-content card">
@@ -480,11 +493,17 @@ $stmtb->bindColumn('nombre', $nombre);
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
         </button>
+        <style>
+          #libreta_bancaria_reporte_modal_filter{
+            display: none !important;
+         }      
+        </style>
         <input type="hidden" name="cod_libretabancariadetalle" id="cod_libretabancariadetalle" value="0">
-        <div class="table-responsive">
-          <table id="tablePaginator50" class="table table-condensed small">          
+        <input type="hidden" name="primer_cargadofacturas" id="primer_cargadofacturas" value="0">
+        <div class="table-responsive" id="listado_facturas_detalle">
+          <table class="table table-condensed small">          
             <thead>
-              <tr style="background:#21618C; color:#fff;">
+              <tr style="background:#DAF7A6; color:#000;">
                 <th>#</th>
                 <th>Fecha</th>
                 <th>N°</th>            
@@ -495,34 +514,9 @@ $stmtb->bindColumn('nombre', $nombre);
               </tr>
             </thead>
             <tbody>
-              <?php
-              $stmt = $dbh->prepare("SELECT codigo,fecha_factura,date_format(fecha_factura,'%d/%m/%Y') as fecha_x,razon_social,nit,nro_factura,importe,cod_libretabancariadetalle from facturas_venta where cod_estadofactura!=2 order by codigo desc");
-              $stmt->execute();
-              $stmt->bindColumn('codigo', $codigo_x);
-              $stmt->bindColumn('fecha_x', $fecha_factura_x);
-              $stmt->bindColumn('razon_social', $razon_social_x);
-              $stmt->bindColumn('nit', $nit_x);
-              $stmt->bindColumn('nro_factura', $nro_factura_x);
-              $stmt->bindColumn('importe', $importe_x);
-              // $stmt->bindColumn('cod_libretabancariadetalle', $cod_libretabancariadetalle_x);
-              $index=1;
-              while ($rowTC = $stmt->fetch(PDO::FETCH_BOUND)) {
-                $cod_libretabancariadetalle_x=verificar_cod_libretadetalle($codigo_x);
-                $color_tr="";$label="btn btn-fab btn-success btn-sm";
-                if($cod_libretabancariadetalle_x>0){$color_tr="background-color:#f6ddcc;";$label="btn btn-fab btn-warning btn-sm";}
-                ?>
-                <tr style="<?=$color_tr?>">
-                  <td align="text-center small"><?=$index;?></td>
-                  <td align="text-center small"><?=$fecha_factura_x;?></td>
-                  <td align="text-right small"><?=$nro_factura_x;?></td>
-                  <td align="text-left small"><?=$razon_social_x;?></td>
-                  <td align="text-right small"><?=$nit_x;?></td>
-                  <td align="text-right small"><?=number_format($importe_x,2);?></td>
-                  <td class="td-actions text-right"><a href="#" style="padding: 0;font-size:10px;width:25px;height:25px;" onclick="seleccionar_Factura_relacion(<?=$codigo_x?>)" class="<?=$label?>" title="Seleccionar Factura"><i class="material-icons">done</i></a></td>
-                </tr>
-              <?php $index++;} ?>
+               <tr><td colspan="7">CARGANDO FACTURAS...</td></tr> 
             </tbody>
-          </table>
+          </table>      
         </div>
       </div>
       <div class="modal-footer">
@@ -530,5 +524,71 @@ $stmtb->bindColumn('nombre', $nombre);
          <!-- <span ><i class="material-icons">check_box</i> Facturas No Relacionadas</span><br> -->
       </div>
     </div>  
+  </div>
+</div>
+
+<!-- modal devolver solicitud -->
+<div class="modal fade" id="modalBuscarDetalleLibretas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header" id="cabecera_conta" style="background:#732590; !important;color:#fff;">
+        <h4 class="modal-title" id="titulo_conta">Buscar registro Libreta Bancaria</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> 
+      </div>
+      <div class="modal-body">        
+        <div class="row">
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id=""><small>Doc/Ref</small></span></label>
+          <div class="col-sm-5">
+            <div class="form-group" >
+              <input type="text" class="form-control" name="buscar_nro_documento" id="buscar_nro_documento" style="background-color:#e2d2e0;">              
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#7e7e7e"><span id=""><small >Monto</small></span></label>
+          <div class="col-sm-5">
+            <div class="form-group" >  
+                <input type="number" step="any" class="form-control" name="buscar_monto" id="buscar_monto" style="background-color:#e2d2e0;">                          
+            </div>
+          </div>
+        </div> 
+        <div class="row">
+                    <div class="col-sm-6">
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Desde</small></label>
+                       <div class="col-sm-10">
+                           <div class="form-group">
+                            <input type="date" class="form-control" name="buscar_fecha_desde" id="buscar_fecha_desde" style="background-color:#e2d2e0">                                                     
+                           </div>
+                        </div>
+                   </div>
+                     </div>
+                    <div class="col-sm-6">
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Hasta</small></label>
+                       <div class="col-sm-10">
+                        <div class="form-group">
+                              <input type="date" class="form-control" name="buscar_fecha_hasta" id="buscar_fecha_hasta" style="background-color:#e2d2e0">                                                     
+                            </div>
+                        </div>
+                    </div>
+              </div>
+                  </div><!--div row-->
+                
+        <div class="row">
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Descripción / Informacion C.</small></label>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#f9edf7">
+            <div class="form-group" >              
+              <textarea class="form-control" name="buscar_descripcion" id="buscar_descripcion" style="background-color:#e2d2e0"></textarea>
+            </div>
+          </div>
+        </div>        
+      </div>
+      <br>  
+      <div class="modal-footer">
+        <a href="#" class="btn btn-success" style="background:#732590 !important;" onclick="buscarDetallesLibretasBancarias()"><i class="material-icons">search</i> BUSCAR</a>
+        <!--<button type="button" class="btn btn-danger" data-dismiss="modal"> Volver </button>-->
+      </div>
+    </div>
   </div>
 </div>

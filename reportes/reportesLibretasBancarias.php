@@ -77,7 +77,7 @@ $fechaHasta=date("Y-m-d");
                 </div>
             </div><!--fin campo RUBRO -->
             <br>
-            <center><h4 class="text-muted">Fecha de Factura</h4></center>
+            <center><h4 class="text-muted">Fecha de Factura y/o Comprobante</h4></center>
             <div class="row">
                 <label class="col-sm-2 col-form-label">Del:</label>
                 <div class="col-sm-3">

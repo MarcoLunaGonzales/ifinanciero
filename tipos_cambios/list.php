@@ -18,6 +18,8 @@ $stmt->bindColumn('cod_estadoreferencial', $codEstadoRef);
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('abreviatura', $abreviatura);
 $stmt->bindColumn('nombre', $nombre);
+
+setlocale(LC_TIME, "Spanish");
 ?>
 
 <div class="content">
@@ -32,10 +34,11 @@ $stmt->bindColumn('nombre', $nombre);
                   <h4 class="card-title"><?=$moduleNameSingular?></h4>
                 </div>
                 <div class="card-body">
+                  <center><h4 class="text-warning font-weight-bold"><?=strftime('%d de %B del %Y',strtotime($fechaActual))?></h4></center>
                   <div class="table-responsive" id="data_comprobantes">
                     <table id="tablePaginator" class="table table-condensed">
                       <thead>
-                        <tr>
+                        <tr style="background:#732590;color:white;">
                           <th class="text-center">#</th>
                           <th class="text-left">Nombre</th>
                           <th>Abrev</th>
@@ -64,7 +67,7 @@ $stmt->bindColumn('nombre', $nombre);
                         <tr>
                           <td align="center"><?=$index;?></td>
                           <td class="text-left"><?=$nombre;?></td>
-                          <td><?=$abreviatura;?></td>
+                          <td class="font-weight-bold"><?=$abreviatura;?></td>
                           <td class="<?=$estiloTipo?>"><b><?=$valor;?></b><br><?=$html?></td>
                           <td><?=$codEstadoRef;?>                 
                           </td>

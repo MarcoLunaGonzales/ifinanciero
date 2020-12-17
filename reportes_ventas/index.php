@@ -103,6 +103,11 @@ $dbh = new Conexion();
 				  		</div>
 				  		<div class="col-sm-3">
 							<div class="form-group">
+								<a href="<?=$urlImpresionRecibos;?>" class="btn btn-default" target="_blank"> Impresión de Recibos </a>
+							</div>
+				  		</div>
+				  		<div class="col-sm-3">
+							<div class="form-group">
 								<a href="<?=$urlImpresionComprobantes;?>" class="btn btn-info" target="_blank"> Impresión de Comprobantes </a>
 							</div>
 				  		</div>

@@ -72,16 +72,18 @@ $html.=  '<header class="header">'.
               </h4> 
             </div>'.
             '</header>';
+            '</header>';
         $html.='<table class="table">'.
             '<thead>'.
             '<tr class="bold table-title text-center">'.
-              '<td colspan="8"><small>'.$nombre_tcc.'</td>
+              '<td colspan="9"><small>'.$nombre_tcc.'</td>
             </tr>'.
             '<tr class="bold table-title text-center">'.
-              '<td colspan="8"><small>'.$contenido.'</td>
+              '<td colspan="9"><small>'.$contenido.'</td>
             </tr>'.
             '<tr class="bold table-title text-center">'.
-              '<td width="10%"><small>Fecha</small</td> 
+              '<td width="2%"><small>Nº</small</td>
+              <td width="10%"><small>Fecha</small</td> 
               <td width="6%"><small>Área</small></td>                   
               <td width="40%"><small>Descripción</small></td>
               <td width="10%"><small>N° Recibo</small></td>
@@ -92,12 +94,12 @@ $html.=  '<header class="header">'.
             </tr>'.
            '</thead>'.
            '<tbody>';
-            $index=1;
+            $index=1;$indexFila=1;
             $saldo_inicial=$monto_inicio_cc;
             $html.='<tr>'.
+                '<td class="text-left small"></td><td class="text-left small"></td>'.
                 '<td class="text-left small"></td>'.
-                '<td class="text-left small"></td>'.
-                '<td class="text-center small"><b>ASIGNACION DE FONDO</b></td>'.
+                '<td class="text-center small"><b>REPOSICIÓN DE FONDO</b></td>'.
                 '<td class="text-center small"></td>'.
                 '<td class="text-center small"></td>'.
                 '<td class="text-center small">'.formatNumberDec($monto_inicio_cc).'</td>'.
@@ -128,6 +130,32 @@ $html.=  '<header class="header">'.
               $nombre_area=abrevArea($row['cod_area']);
               $nro_recibo=$row['nro_recibo'];
               $monto_detalle =$row['monto'];
+
+              //detalle sr
+              $codigoSolicitud=encuentraDatosSolicitudRecursosDesdeCajaChica($cod_cajachicadetalle);
+              $estiloBoton="btn-default";
+              $descripcionSR="list";
+              if($codigoSolicitud[0]>0){
+                  $estiloBoton="btn-info";
+                  $descripcionSR="SR";
+                  $importeSolX=$monto_detalle;
+                  $retencionX=$codigoSolicitud[2];
+                  if($retencionX!=0){
+                        $tituloImporte=abrevRetencion($retencionX);
+                        $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
+                        $montoImporte=$importeSolX*($porcentajeRetencion/100);       
+                        if(($retencionX==8)||($retencionX==10)){ //validacion del descuento por retencion
+                          $montoImporte=$importeSolX;
+                        }
+                        $montoImporteRes=$importeSolX-$montoImporte;
+                  }else{
+                       $tituloImporte="Ninguno";
+                       $montoImporte=$importeSolX;
+                       $montoImporteRes=0; 
+                  }
+                  $monto_detalle=$montoImporte; 
+              }
+
               $cod_estadoreferencial_x=$row['cod_estadoreferencial'];
               $observaciones=$row['observaciones'];
               if($cod_estadoreferencial_x==2){
@@ -135,6 +163,7 @@ $html.=  '<header class="header">'.
                 $observaciones="***ANULADO***";
               }
               //nro factura
+              $nro_factura='';
               if(!$sw_rembolso){
                 $stmtFactura = $dbh->prepare("SELECT nro_factura from facturas_detalle_cajachica where cod_cajachicadetalle=$cod_cajachicadetalle");
                 $stmtFactura->execute();
@@ -155,8 +184,11 @@ $html.=  '<header class="header">'.
                 $saldo_inicial=$saldo_inicial+$monto_detalle;                
                 $nro_recibo='';
               }
+
+              
+
               $html.='<tr>'.                      
-                            '<td class="text-center small">'.$row['fecha_x'].'</td>';
+                            '<td class="text-right small">'.$indexFila.'</td><td class="text-center small">'.$row['fecha_x'].'</td>';
                             if(!$sw_rembolso){
                               $html.='<td class="text-left small">'.$nombre_uo.'/'.$nombre_area.'</td>';
                             }else{
@@ -174,9 +206,10 @@ $html.=  '<header class="header">'.
                             }
                             $html.='<td class="text-right small">'.formatNumberDec($saldo_inicial).'</td>
                     </tr>';
+                    $indexFila++;
               }
               $html.='<tr>'.                      
-                            '<td class="text-left small"></td>'.
+                            '<td class="text-left small"></td><td class="text-left small"></td>'.
                             '<td class="text-center small"></td>'.
                             '<td class="text-left small"></td>'.
                             '<td class="text-center small"></td>'.
@@ -191,8 +224,9 @@ $html.=    '</table>';
             $html.='<table class="table2">'.
                         '<tbody>'.                        
                         '<tr>'.
-                          '<td width="10%"></td> 
-                          <td width="6%"></td>                   
+                          '<td width="2%"></td> 
+                          <td width="6%"></td>
+                          <td width="10%"></td>                   
                           <td width="40%" class="text-left small"><b>SUBTOTALES</b></td>
                           <td width="10%"></td>
                           <td width="10%"></td>                    
@@ -201,8 +235,9 @@ $html.=    '</table>';
                           <td width="8%"></td>
                         </tr>'.
                         '<tr>'.
-                          '<td width="10%"></td> 
-                          <td width="6%"></td>                   
+                          '<td width="2%"></td> 
+                          <td width="6%"></td> 
+                          <td width="10%"></td>                  
                           <td width="40%" class="text-left small"><b>TOTAL RENDICIÓN DE FONDO</b></td>
                           <td width="10%"></td>
                           <td width="10%"></td>                    
@@ -210,22 +245,34 @@ $html.=    '</table>';
                           <td width="8%" class="text-right small"><b>'.formatNumberDec($total_egresos).'</b></td>
                           <td width="8%"></td>
                         </tr>'.
-                        '<tr>'.
-                          '<td width="10%"></td> 
-                          <td width="6%"></td>                   
+                        /*'<tr>'.
+                          '<td width="2%"></td> 
+                          <td width="6%"></td>
+                          <td width="10%"></td>                   
                           <td width="40%"><b>SALDO A RESPONDER</b></td>
                           <td width="10%"></td>
                           <td width="10%"></td>                    
                           <td width="8%"></td>
                           <td width="8%" class="text-right small"><b>'.formatNumberDec($saldo_inicial).'</b></td>
                           <td width="8%"></td>
-                        </tr>'.
+                        </tr>'.*/
                        '</tbody>'.                        
                     '</table>'; 
 
+$html.='<br><br><br><br><br><br><table class="table">'.
+             '<tr class="text-center" valign="top">'.
+               '<td width="50%" class="text-center"><br><br><br><br><br></td>'.
+               '<td width="50%" class="text-center"><br><br><br><br><br></td>'.
+             '</tr>'.
+             '<tr class="text-center" valign="top">'.
+               '<td width="50%" class="text-center">RESPONSABLE</td>'.
+               '<td width="50%" class="text-center">AUTORIZADO POR</td>'.
+             '</tr>'.
+           '</table>';
+
 $html.='</body>'.
       '</html>';           
-descargarPDFCajaChica("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDFCajaChica("IBNORCA - caja chica (".$contenido.")",$html);
 
 ?>
 

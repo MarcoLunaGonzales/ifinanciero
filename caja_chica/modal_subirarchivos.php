@@ -21,34 +21,7 @@
                     <th class="small">Descripción</th>                  
                   </tr>
                 </thead>
-                <tbody id="tabla_archivos">
-                  <?php
-                  // $stmtArchivo = $dbh->prepare("SELECT * from ibnorca.vw_plantillaDocumentos where idTipoServicio=2708"); //2708 //2708 localhost
-                  // $stmtArchivo->execute();
-                  // $filaA=0;
-                  // while ($rowArchivo = $stmtArchivo->fetch(PDO::FETCH_ASSOC)) {
-                  //   $filaA++;
-                  //   $codigoX=$rowArchivo['idClaDocumento'];
-                  //   $nombreX=$rowArchivo['Documento'];
-                  //   $ObligatorioX=$rowArchivo['Obligatorio'];
-                  //   $Obli='<i class="material-icons text-danger">clear</i> NO';
-                  //   if($ObligatorioX==1){
-                  //   $Obli='<i class="material-icons text-success">done</i> SI<input type="hidden" id="obligatorio_file'.$filaA.'" value="1">';
-                  //   } ?>
-                    <!--  <tr>
-                       <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
-                       <td class="text-center"><?=$Obli?></td>
-                       <td class="text-right">
-                         <small id="label_txt_documentos_cabecera<?=$filaA?>"></small> 
-                         <span class="input-archivo">
-                           <input type="file" class="archivo" name="documentos_cabecera<?=$filaA?>" id="documentos_cabecera<?=$filaA?>"/>
-                         </span>
-                         <label title="Ningún archivo" for="documentos_cabecera<?=$filaA?>" id="label_documentos_cabecera<?=$filaA?>" class="label-archivo btn btn-warning btn-sm"><i class="material-icons">publish</i> Subir Archivo
-                         </label>
-                       </td>    
-                       <td><?=$nombreX;?></td>
-                     </tr> --> <?php
-                  // }
+                <tbody id="tabla_archivos"><?php
 
                   if(isset($codigo)){
                     $sql="SELECT * From archivos_adjuntos_cajachica where cod_cajachica_detalle=$codigo";
@@ -66,6 +39,17 @@
                       $urlArchivo=$rowArchivo['direccion_archivo'];
                       $ObligatorioX=0;
                       $Obli='<i class="material-icons text-danger">clear</i> NO';
+                       $onClick='onClick="quitarArchivoSistemaAdjunto_solfac('.$filaA.','.$codigoArchivoX.',1,2)"';
+                     $downloadFile='download="Doc - IFINANCIERO ('.$nombreX.')"';
+                     if(obtenerValorConfiguracion(93)==1){
+                      $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos_cajachica',$codigoArchivoX);
+                      if($banderaArchivo>0){
+                         $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
+                         $downloadFile='target="_blank"';
+                         $globalServerDelete=obtenerValorConfiguracion(94);
+                         $onClick='onClick="ajaxDeleteArchivoIbnorcaFacturacion(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',17,\''.$codigoArchivoX.'\','.$filaA.','.$codigoArchivoX.',1,2);"';
+                      }                      
+                     }
                       ?>
                       <tr id="fila_archivo<?=$filaA?>">
                         <td class="text-left"><input type="hidden" name="codigo_archivoregistrado<?=$filaE?>" id="codigo_archivoregistrado<?=$filaE?>" value="<?=$codigoArchivoX;?>">Otros Documentos</td>
@@ -78,8 +62,8 @@
                               </span>                         
                             <div class="btn-group">
                               <a href="#" class="btn btn-button btn-sm" >Registrado</a>  
-                              <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  
-                              <a href="#" title="Quitar" class="btn btn-danger btn-sm" onClick="quitarArchivoSistemaAdjunto_solfac(<?=$filaA?>,<?=$codigoArchivoX;?>,1,2)"><i class="material-icons">delete_outline</i></a>
+                              <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" <?=$downloadFile?>><i class="material-icons">get_app</i></a>  
+                              <a href="#" title="Quitar" class="btn btn-danger btn-sm" <?=$onClick?>><i class="material-icons">delete_outline</i></a>
                             </div>     
                           </td>    
                         <td><?=$nombreX;?></td>

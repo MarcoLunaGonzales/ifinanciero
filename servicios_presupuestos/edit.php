@@ -21,10 +21,21 @@ $globalAdmin=$_SESSION["globalAdmin"];
 date_default_timezone_set('America/La_Paz');
 $fechaHoraActual=date("Y-m-d H:i:s");
 
+//SI LA SOLICITUD YA SE ENCUENTRA FACTURADA
+$stmtSolicitud = $dbh->prepare("SELECT cod_estadosolicitudfacturacion from solicitudes_facturacion where codigo=$codigo");
+$stmtSolicitud->execute();
+$estadoAnteriorX=0;
+while ($rowSolicitud = $stmtSolicitud->fetch(PDO::FETCH_ASSOC)) {
+   $estadoAnteriorX=$rowSolicitud['cod_estadosolicitudfacturacion'];
+}
 
-$sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=$estado where codigo=$codigo";
-$stmtUpdate = $dbh->prepare($sqlUpdate);
-$flagSuccess=$stmtUpdate->execute();
+if($estadoAnteriorX!=5){
+  $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=$estado where codigo=$codigo";
+  $stmtUpdate = $dbh->prepare($sqlUpdate);
+  $flagSuccess=$stmtUpdate->execute();
+}else{
+  $flagSuccess=false;
+}
 
 if($estado!=1){
 	//actualziar los estados del servidor ibnorca

@@ -34,6 +34,16 @@ footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 0px; }
   width:70px;
   height:70px;
 }
+.imagen-logo-izq2{
+  position: absolute;
+  /*float: right;*/
+  
+  padding-top: -25px;
+  left: 0px;
+  top: 20px;
+  width:70px;
+  height:70px;
+}
 #header_titulo_texto{text-align: center; font-size: 16px; font-weight: bold;}
 
 #info_izq{

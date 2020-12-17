@@ -32,6 +32,9 @@ if(isset($_GET['cod'])){
 }else{
 	$codigo=0;
 }
+$codAreaX=obtenerCodigoAreaPlantillasServicios(obtenerPlantillaCodigoSimulacionServicio($codigo));
+$areaX=abrevArea_solo($codAreaX);
+
 ?>
 
 <div class="cargar">
@@ -51,9 +54,9 @@ if(isset($_GET['cod'])){
 			<input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$codigo?>">
       <div class="row">
         <div class="card col-sm-12">
-				<div class="card-header card-header-primary card-header-text">
+				<div class="card-header card-header-warning card-header-text">
 					<div class="card-text">
-					  <h4 class="card-title">OFERTA EDICIÓN</h4>
+					  <h4 class="card-title text-dark">FORMULARIO DE IMPRESIÓN, OFERTA: <b><?=nameSimulacionServicio($codigo)?> - <?=$areaX?></b></h4>
 					</div>
 				</div>
 				<div class="card-body ">

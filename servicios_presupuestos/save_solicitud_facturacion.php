@@ -73,6 +73,9 @@ try {
                     if(isset($_POST["servicio".$i])){
                         $servicioInsert=$_POST["servicio_a".$i];
                         $CantidadInsert=$_POST["cantidad_a".$i];
+                        if($CantidadInsert==""||$CantidadInsert==0){
+                            $CantidadInsert=1;
+                        }
                         // $importeInsert=$_POST["modal_importe".$i]/$CantidadInsert;;
                         $DescricpionInsert=$_POST["descripcion_alterna".$i];
                         $descuento_por_Insert=$_POST["descuento_por".$i];
@@ -164,6 +167,9 @@ try {
                     if(isset($_POST["servicio".$i])){
                         $servicioInsert=$_POST["servicio_a".$i];
                         $CantidadInsert=$_POST["cantidad_a".$i];
+                        if($CantidadInsert==""||$CantidadInsert==0){
+                            $CantidadInsert=1;
+                        }
                         // $importe_a_pagar_Insert=$_POST["modal_importe".$i]/$CantidadInsert;;
                         $DescricpionInsert=$_POST["descripcion_alterna".$i];
                         $descuento_por_Insert=$_POST["descuento_por".$i];

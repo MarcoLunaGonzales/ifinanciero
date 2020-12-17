@@ -16,6 +16,28 @@ $stmtX->execute();
    </head><body>
 <?php
 
+$mesesProrrateo=obtenerValorConfiguracion(89);
+ //obtener datos fecha de la propuesta
+ $fechaSimulacion=obtenerFechaSimulacionCosto($codigo);
+ $fechaSim=explode("-", $fechaSimulacion);
+ $anioSimulacion=$fechaSim[0];
+ $mesSimulacion=$fechaSim[1];
+ $stringMeses="";
+ if($mesesProrrateo>0){
+  $arrayMeses=[];$ejecutadoEnMeses=0;$presupuestoEnMeses=0;$presupuestoEnMeses=100;
+  //for ($mm=((int)$mesSimulacion-((int)$mesesProrrateo-1)); $mm <= (int)$mesSimulacion ; $mm++) { 
+  //  $arrayMeses[$mm]=abrevMes($mm);
+  //  $datosIngresos=ejecutadoPresupuestadoEgresosMes(0,$anioSimulacion,$mm,13,1,"");
+  //  $ejecutadoEnMeses+=$datosIngresos[0];
+  //  $presupuestoEnMeses+=$datosIngresos[1];
+  //}
+  //if($presupuestoEnMeses>0){
+  //  $porcentPreciosEnMeses=number_format(($ejecutadoEnMeses/$presupuestoEnMeses)*100,2,'.','');
+  //}
+  $porcentPreciosEnMeses=obtenerValorConfiguracion(91);
+  $stringMeses=implode("-",$arrayMeses);
+ }
+
 
 $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_externo from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join precios_simulacioncosto pa on sc.cod_precioplantilla=pa.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
       $stmt1->execute();
@@ -134,13 +156,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
         </div>
         <div class="card-body" id="div_simulacion">
       <?php
-        //IVA y IT
+       //IVA y IT
         $iva=obtenerValorConfiguracion(1);
         $it=obtenerValorConfiguracion(2);
         $alumnosExternoX=1; 
         //modificar costos por alumnos
-        //valores de la simulacion
 
+
+        //valores de la simulacion
+                 $totalFijoManual=obtenerTotalesPlantilla($codigoPX,3,$mesConf);
                   //total desde la plantilla  
                  $totalFijo=obtenerTotalesPlantilla($codigoPX,1,$mesConf); //tipo de costo 1:fijo,2:variable desde la plantilla
                   //total variable desde la plantilla
@@ -151,8 +175,18 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 
                // $alumnosX=($utilidadIbnorcaX+($totalFijoPlan+))
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codigoPX);
-                 $porcentPrecios=(($precioLocalX*$alumnosX)*100)/$precioRegistrado;
-                 $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
+                 if($ingresoAlternativo!=0){
+                  $porcentPrecios=(($ingresoAlternativo)*100)/$precioRegistrado; 
+                 }else{
+                  $porcentPrecios=(($precioLocalX*$alumnosX)*100)/$precioRegistrado;
+                 }
+                 
+                 if($mesesProrrateo>0){
+                  $totalFijoPlan=($totalFijo[0]*($porcentPreciosEnMeses/100))*($porcentPrecios/100)+$totalFijoManual[0]; 
+                 }else{
+                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
+                 }
+
                  $totalFijoPlanModulos=$totalFijoPlan*$cantidadModuloX;
 
                   //
@@ -198,7 +232,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 
                  $codEstadoSimulacion=4; 
                  if($pUtilidadLocal>=$utilidadIbnorcaX&&$pUtilidadExterno>=$utilidadFueraX){
-                    $estiloUtilidadIbnorca="bg-success text-white";
+                    $estiloUtilidad="bg-success text-white";
                     $mensajeText="La Propuesta SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
                     $estiloMensaje="text-success font-weight-bold";
                     $codEstadoSimulacion=3;  
@@ -232,6 +266,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                         }                      
                     }
                  }
+
 
         ?>  
 
@@ -318,7 +353,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 </tr>
             </table>
            </div>
-           <br><br><br><br><br><br><br>
+           
           <div class="col-sm-5 bg-blanco2">
             <p class="font-weight-bold float-left">DATOS DEL CALCULO x MODULO</p>
             <table class="table table-bordered " style="font-size:11px;">

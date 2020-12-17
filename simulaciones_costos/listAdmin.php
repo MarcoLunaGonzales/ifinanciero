@@ -5,14 +5,53 @@ require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $item_3=0;
+$queryTipoCurso="";
+$tituloPropuestaFiltro="";
+$estiloFormacion='';
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $u=$_GET['u'];
   $s="";
+  $idArea=0;
   if(isset($_GET['s'])){
     $s=$_GET['s'];
+    $s=strtolower($s);
+    $datosS=explode("idarea",$s);
+    if(isset($datosS[1])){
+     $idArea=$datosS[1];
+     $idArea=str_replace("=","",$idArea);
+     $idArea=str_replace("in","",$idArea);
+     $idArea=str_replace("(","",$idArea);
+     $idArea=str_replace(")","",$idArea);
+    }
   }
-
+  if((int)$idArea>0){
+    if((int)$idArea==2978){ //comercializacion
+      $queryTipoCurso=" and sc.cod_area_registro=".$idArea;
+      $tituloPropuestaFiltro="<h4 style='color:#FF5733;'>LISTA: COMERCIALIZACIÓN</h4>";
+      $estiloFormacion='style="background:#FF5733;color:white;"'; 
+    }else if((int)$idArea==13||(int)$idArea==2956){ // formacion
+      $queryTipoCurso=" and (sc.cod_area_registro=2956 or sc.cod_area_registro=13)";
+      $tituloPropuestaFiltro="<h4 style='color:#C70039;'>LISTA: FORMACIÓN</h4>";
+      $estiloFormacion='style="background:#C70039;color:white;"';
+    }else{
+      $queryTipoCurso=" and sc.cod_area_registro=".$idArea; //99999 -> para que no encuentre ningun registro
+      $tituloPropuestaFiltro="USTED NO PUEDE GESTIONAR LAS PROPUESTAS";
+    }
+  }else{
+   if(gestorDeCursosFormacion($q)>0){
+     $queryTipoCurso=" and sc.cod_area_registro=".$idArea;
+     $tituloPropuestaFiltro="<h4 style='color:#C70039;'>LISTA: FORMACIÓN</h4>";
+     $estiloFormacion='style="background:#C70039;color:white;"';
+    }else if(gestorDeCursosComercializacion($q)>0){
+     $queryTipoCurso=" and sc.cod_area_registro=".$idArea;
+     $tituloPropuestaFiltro="<h4 style='color:#FF5733;'>LISTA: COMERCIALIZACIÓN</h4>";
+     $estiloFormacion='style="background:#FF5733;color:white;"';
+    }else{
+     $queryTipoCurso=" and sc.cod_area_registro=99999"; //99999 -> para que no encuentre ningun registro
+     $tituloPropuestaFiltro="USTED NO PUEDE GESTIONAR LAS PROPUESTAS";
+    }   
+  }
   ?>
   <input type="hidden" name="id_servicioibnored" value="<?=$q?>" id="id_servicioibnored"/>
   <input type="hidden" name="idPerfil" value="<?=$u?>" id="idPerfil"/>
@@ -26,8 +65,9 @@ if(isset($_GET['q'])){
 
 $dbh = new Conexion();
 
+
 // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion=4 order by codigo desc");
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion in (4,3) $queryTipoCurso order by codigo desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -37,9 +77,10 @@ $stmt->bindColumn('observacion', $observacion);
 $stmt->bindColumn('fecha', $fecha);
 $stmt->bindColumn('cod_plantillacosto', $codPlantilla);
 $stmt->bindColumn('cod_estadosimulacion', $codEstado);
+$stmt->bindColumn('cod_tipocurso', $codTipoCurso);
 $stmt->bindColumn('cod_responsable', $codResponsable);
+$stmt->bindColumn('cod_area_registro', $codArea);
 $stmt->bindColumn('estado', $estado);
-
 ?>
 
 <div class="content">
@@ -51,13 +92,16 @@ $stmt->bindColumn('estado', $estado);
                   <div class="card-icon">
                     <i class="material-icons">polymer</i>
                   </div>
-                  <h4 class="card-title"><b> Gestionar <?=$moduleNamePlural?></b></h4>
+                  <h4 class="card-title"><b> Gestionar <?=$moduleNamePlural?> <small class="text-muted"><?=$tituloPropuestaFiltro?></small></b></h4>
                 </div>
                 <div class="card-body">
                     <table class="table" id="tablePaginator">
                       <thead>
-                        <tr>
-                          <th class="text-center">#</th>
+                        <tr <?=$estiloFormacion?>>
+                          <!--<th class="text-center">#</th>-->
+                          <th>Codigo</th>
+                          <th>Tipo</th>
+                          <th>Origen</th>
                           <th>Nombre</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
@@ -70,6 +114,7 @@ $stmt->bindColumn('estado', $estado);
             $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $responsable=namePersonal($codResponsable);
+                          $tipoCurso=nameTipoCurso($codTipoCurso);
                           switch ($codEstado) {
                             case 1:
                               $nEst=40;$barEstado="progress-bar-default";$btnEstado="btn-default";
@@ -86,7 +131,10 @@ $stmt->bindColumn('estado', $estado);
                           }
 ?>
                         <tr>
-                          <td align="center"><?=$index;?></td>
+                          <!---<td align="center"><?=$index;?></td>-->
+                          <td><?=$codigo;?></td>
+                          <td><?=$tipoCurso;?></td>
+                          <td><?=abrevArea_solo($codArea);?></td>
                           <td><?=$nombre;?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
@@ -139,9 +187,9 @@ $stmt->bindColumn('estado', $estado);
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a><?php 
                                 }else{
-                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
+                                ?><!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
                                     <i class="material-icons text-dark">reply</i> Deshacer Cambios
-                                 </a>
+                                 </a>-->
                                  <?php 
                                 }
                                 ?>
@@ -163,9 +211,9 @@ $stmt->bindColumn('estado', $estado);
                                     <i class="material-icons text-danger">clear</i> Anular Solicitud
                                  </a><?php 
                                 }else{
-                                ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4" class="dropdown-item">
+                                ?><!--<a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=4" class="dropdown-item">
                                     <i class="material-icons text-dark">reply</i> Deshacer Cambios
-                                 </a>
+                                 </a>-->
                                  <?php 
                                 }
                                 ?> 

@@ -9,7 +9,7 @@ $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
 $plantilla_costo=$_GET['codigo'];
-
+$anioGestion=date("Y");
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
@@ -41,7 +41,8 @@ $plantillaAntigua=obtenerPlantillaServicioDatos($plantilla_costo);
     $codEstadoRef=$row['cod_estadoreferencial'];
     $utilidadMin=$row['utilidad_minima'];
     $cantidadAuditorias=$row['cantidad_auditorias'];
-    $ingresoPresupuestado=$row['ingreso_presupuestado'];
+    //$ingresoPresupuestado=$row['ingreso_presupuestado'];
+    $ingresoPresupuestado=obtenerPresupuestoEjecucionPorAreaAcumulado(0,$area,$anioGestion,12,1)['presupuesto'];
     $anios=$row['anios'];
 
    $dbh = new Conexion();
@@ -78,6 +79,18 @@ $plantillaAntigua=obtenerPlantillaServicioDatos($plantilla_costo);
           $reg4S=$rowSub['monto_local'];
           $reg5S=$rowSub['monto_externo'];
           $reg6S=$rowSub['monto_calculado'];
+
+          if(isset($_GET['pr'])&&$rowSub['tipo_calculo']==1){
+              $anio=date("Y");
+              $cantidad_cursosmes=17;
+              if($area==38){
+                $cantidad_cursosmes=18; 
+              }
+              $montoCalculado = calcularCostosPresupuestariosAuditoria($rowSub['cod_partidapresupuestaria'],$unidad,$area,$anio,$cantidad_cursosmes);
+              $reg4S=$montoCalculado;
+              $reg5S=$montoCalculado;
+              $reg6S=$montoCalculado;
+          }
           $dbh2S = new Conexion();
          $sqlSubInsert="INSERT INTO plantillas_gruposerviciodetalle (codigo,cod_plantillagruposervicio,cod_partidapresupuestaria,tipo_calculo,monto_local,monto_externo,monto_calculado) 
          VALUES ('".$regCS."','".$regC."','".$reg2S."', '".$reg3S."', '".$reg4S."', '".$reg5S."', '".$reg6S."')";

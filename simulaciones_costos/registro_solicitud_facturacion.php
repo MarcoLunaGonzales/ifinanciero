@@ -126,7 +126,7 @@ if($cod_facturacion>0){//editar
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');    
     // $razon_social=$razon_social;//ya está arriba
-    $nit = $ci_estudiante;    
+    //$nit = $ci_estudiante;    
     $observaciones = $Codigo_alterno." - ".$nombreAlumno;
     $observaciones_2 = null;
     $cod_tipopago=null;
@@ -143,7 +143,7 @@ if($cod_facturacion>0){//editar
     $cod_uo=$_SESSION['globalUnidad'];
     $cod_area=13;
     $dias_credito=obtenerValorConfiguracion(58);    
-    $correo_contacto=obtenerCorreoEstudiante($nit);
+    $correo_contacto=obtenerCorreoEstudiante($ci_estudiante);
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
@@ -419,14 +419,14 @@ $contadorRegistros=0;
                             <div class="col-sm-5">
                                 <div class="form-group">
                                     <div id="contenedor_razonsocial">
-                                        <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>    
+                                        <input class="form-control" type="text" name="razon_social" id="razon_social"  value="<?=$razon_social;?>" required />    
                                     </div>
                                 </div>
                             </div>
                             <label class="col-sm-1 col-form-label">Nit</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true"/>
+                                    <input  class="form-control" type="number" name="nit" id="nit" value="<?=$nit;?>" required />
                                 </div>
                             </div>
                         </div>
@@ -449,7 +449,7 @@ $contadorRegistros=0;
                             </div>
                         </div>
                         <div class="row">
-                            <label class="col-sm-2 col-form-label">Observaciones 2</label>
+                            <label class="col-sm-2 col-form-label">Concepto para Facturación (Solo casos especiales)</label>
                             <div class="col-sm-10">
                                 <div class="form-group">
                                     <!-- <input class="form-control" type="text" name="observaciones_2" id="observaciones_2" value="<?=$observaciones_2;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/> -->
@@ -868,3 +868,18 @@ $contadorRegistros=0;
         ?><script>itemUnidades_facturacion_aux.push(detalle_unidades);</script><?php                    
     }
 ?>
+
+<script>
+ $("#formSoliFactTcp").submit(function(e) {
+      var mensaje="";
+      if($("#razon_social").val()==0||$("#razon_social").val()==""){
+        Swal.fire("Informativo!", "Debe registrar la Razon Social", "warning");
+        return false;
+      }else{
+        if($("#nit").val()==0||$("#nit").val()==""){
+           Swal.fire("Informativo!", "Debe registrar el NIT", "warning");
+           return false;
+         }     
+      }     
+    });
+</script>

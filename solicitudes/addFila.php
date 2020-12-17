@@ -4,6 +4,7 @@ $cod_accproyecto=obtenerCodigoAccProyecto($codDetalleX);
 $servicioX=obtenerServicioCodigoDetalle($codDetalleX);
 $divisionX=obtenerDivisionCodigoDetalle($codDetalleX);
 $des_actividadproyecto="";
+
 ?>
 <div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
   <input class="form-control" type="number" name="nit_fac" id="nit_fac" onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',<?=$importeSolX?>);">
@@ -25,9 +26,9 @@ $des_actividadproyecto="";
                                     if($codigoX==$unidadXX){
                                        ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                     }else{
-                                     //if(!isset($desdePropuestas)){
+                                     if(!isset($conContrato)){
                                         ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                     //}
+                                     }
                                     }
                                   }
                                     ?>
@@ -88,9 +89,9 @@ $des_actividadproyecto="";
                                                     <option value="<?=$codigoX;?>" selected>[<?=$numeroX?>] <?=$nombreX;?></option>  
                                                   <?php    
                                                 }else{
-                                                  //if(!isset($desdePropuestas)){
+                                                  if(!isset($conContrato)){ //$desdePropuestas
                                                   ?><option value="<?=$codigoX;?>">[<?=$numeroX?>] <?=$nombreX;?></option><?php
-                                                  //}  
+                                                  }  
                                                 }
                                               
                                                 }
@@ -121,13 +122,13 @@ $des_actividadproyecto="";
                                   <div class="col-sm-1">
                                           <div class="form-group">
                                             <!--<label for="importe_presupuesto<?=$idFila;?>" class="bmd-label-floating">Imp Pres</label>      -->
-                                            <input class="form-control" type="number" name="importe_presupuesto<?=$idFila;?>" id="importe_presupuesto<?=$idFila;?>" value="<?=$importeX?>" step="0.001" required readonly>  
+                                            <input class="form-control" type="number" name="importe_presupuesto<?=$idFila;?>" id="importe_presupuesto<?=$idFila;?>" value="<?=$importeX?>" step="any" required readonly>  
                                     </div>
                                   </div>
 		                              <div class="col-sm-1">
                                           <div class="form-group">
                                           	<label for="importe<?=$idFila;?>" class="bmd-label-floating d-none" id="importe_label<?=$idFila;?>"><?=$tituloImporte?></label>
-                                        		<input class="form-control" type="number" name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" value="<?=$importeSolX?>" step="0.001" onChange="calcularTotalesSolicitud();" OnKeyUp="calcularTotalesSolicitud();" required>	
+                                        		<input class="form-control" type="number" name="importe<?=$idFila;?>" id="importe<?=$idFila;?>" value="<?=$importeSolX?>" step="any" onChange="calcularTotalesSolicitud();" OnKeyUp="calcularTotalesSolicitud();" required>	
 		                              	</div>
       	                          </div>
       	                              <div class="col-sm-2">
@@ -145,9 +146,11 @@ $des_actividadproyecto="";
                                                  <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option>  
                                                  <?php
                                                    }else{
+                                                    if(!isset($conContrato)){
                                                    	?>
                                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
                                                  <?php
+                                                    }
                                                    }
                                                  
                                                    }

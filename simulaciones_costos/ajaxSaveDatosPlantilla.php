@@ -18,12 +18,13 @@ $al_f=$_GET['al_f'];
 $precio_p=$_GET['precio_p'];
 $dias_curso=$_GET['dias_curso'];
 $precio_pedit=$_GET['precio_pedit'];
+$modal_modulos=$_GET['modal_modulos'];
 
 $sqlUpdate="UPDATE precios_simulacioncosto SET  venta_local='$precio_pedit' where codigo=$precio_p";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();
 
-$sqlUpdatePlantilla="UPDATE simulaciones_costos SET  dias_curso=$dias_curso,cod_precioplantilla='$precio_p',utilidad_minimalocal='$ut_i',cantidad_alumnoslocal='$al_i' where codigo=$codSimulacion";
+$sqlUpdatePlantilla="UPDATE simulaciones_costos SET  dias_curso=$dias_curso,cod_precioplantilla='$precio_p',utilidad_minimalocal='$ut_i',cantidad_alumnoslocal='$al_i',cantidad_modulos=$modal_modulos where codigo=$codSimulacion";
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();
 

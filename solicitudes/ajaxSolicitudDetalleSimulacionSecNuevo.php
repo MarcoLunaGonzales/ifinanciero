@@ -56,7 +56,8 @@ $tipoSolicitud =$_GET['tipo'];
 							        }else{
                               $importeX=$row['monto_externo'];
                               $importeSolX=$row['monto_externo'];
-							        }
+							        }                  
+
                      //
                       $tituloAnio="";
                      /*if($row['cod_anio']<=1&&$areaXX==38){
@@ -73,13 +74,28 @@ $tipoSolicitud =$_GET['tipo'];
                         $sumaImportePropuesta+=$rowDetalles['importe'];
                         $entro2=1;
                     }
+                    if($codCuentaX==obtenerValorConfiguracion(88)){
+                       $sumaImportePres=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[0];
+                       $proveedorX=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[1];
+                       if($proveedorX>0){
+                           $conContrato=1;
+                           $glosaContrato=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[2]." ".obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[3];
+                           $detalleX.=" ".$glosaContrato;  
+                       }
+                    }
+
                     if($entro2==1){
                       if($sumaImportePropuesta<$sumaImportePres){
                          $importeSolX=$sumaImportePres-$sumaImportePropuesta;
                       }else{
                         $entro=1;
                       }
+                    }else{
+                      if($codCuentaX==obtenerValorConfiguracion(88)){
+                          $importeSolX=obtenerDatosContratoSolicitudCapacitacion($codSimulacionServX)[0];
+                      } 
                     }
+
 
                     
 						      	$numeroCuentaX=trim($row['numero']);

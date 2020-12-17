@@ -610,7 +610,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                         <label class="col-sm-3 col-form-label" style="color:#ff9c14;text-align: center;">Glosa</label>
                                         <label class="col-sm-1 col-form-label" style="color:#ff9c14;text-align: center">Eliminar</label>
                                     </div>
-                                    <div id="div<?=$index;?>">  
+                                    <div id="div">  
                                         <div class="h-divider">
                                         
                                         </div>

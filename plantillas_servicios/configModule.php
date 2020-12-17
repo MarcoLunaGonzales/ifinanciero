@@ -21,6 +21,7 @@ $urlSave="plantillas_servicios/save.php";
 $urlSaveEdit="comprobantes/saveEdit.php";
 $urlSaveDelete="";
 $urlClonar="index.php?opcion=clonarPlantillaServicio";
+$urlClonar2="index.php?opcion=clonarPlantillaServicio2";
 $urlReporteDiario="reportes/reporteDiario.php";
 $urlReporteMayor="reportes/reporteMayor.php";
 ?>

@@ -129,7 +129,7 @@ $i=0;
 				                 <label class="col-sm-4 col-form-label">Cuenta</label>
 				                 <div class="col-sm-8">
 				                	<div class="form-group">
-		                              <select class="selectpicker form-control form-control-sm" data-live-search="true" title="-- Elija una cuenta --" name="cuenta[]" id="cuenta" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true" required>
+		                              <select class="selectpicker form-control form-control-sm" data-live-search="true" title="-- Elija una cuenta --" name="cuenta[]" id="cuenta" multiple data-actions-box="true" data-style="select-with-transition" data-actions-box="true" onchange="llenarDatosTablaCuentas()" required>
 				  	                        <?php
 				  	                        for ($i=0; $i < count($arrayNuevo); $i++) { 
 				  	                        	?><option value="<?=$arrayNuevo[$i][0];?>@normal"><?=$arrayNuevo[$i][2]?></option>	<?php
@@ -291,6 +291,29 @@ $i=0;
                                       </span>
                                     </label>
                                   </div>
+                                </div>  
+                             </div>     
+                        </div>  
+      	             </div>
+      	           </div><!--div row-->
+      	           <br><br>
+      	          <div class="row">
+      	          	<div class="col-sm-2"></div>
+      	           <div class="col-sm-10">
+      	             	<div class="row">
+			               <label class="col-sm-4 col-form-label">Detalle de cuentas seleccionadas</label>
+                           <div class="col-sm-8">
+			                  <div class="form-group">
+                                      <table class="table table-sm table-bordered table-condensed">
+                                      	<thead>
+ 											<tr class="bg-primary text-white">
+                                                <th>Cuenta</th>
+                                                <th>-</th> 
+ 											</tr>
+                                      	</thead>
+                                      	<tbody id="llenado_de_cuentas">
+                                      	</tbody>
+                                      </table>	
                                 </div>  
                              </div>     
                         </div>  

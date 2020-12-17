@@ -106,7 +106,6 @@ $stmt->execute();
                                         <input type="hidden" id="idVentaNormas_a<?=$iii?>" name="idVentaNormas_a<?=$iii?>">
                                         <tr>
                                           <td><?=$iii?></td>
-                                          <!-- <td class="text-left"><?=$cod_anio?> </td> -->
                                           <td class="text-left small"><?=$nombre_oficina?></td>
                                           <td class="text-righ small"><?=$Fecha?></td>
                                           <td class="text-left small"><?=$NombreCliente?></td>

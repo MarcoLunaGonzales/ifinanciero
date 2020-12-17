@@ -7,11 +7,11 @@ $direccion=obtenerValorConfiguracion(45);//direccion del Server del Servicio
 
 /*PARAMETROS PARA LA OBTENCION DE LISTAS DE PERSONAL*/
 	$oficina="0";
-	$area="0";
+	$area="13";
 	$anio="2020";
-	$mes="08";
+	$mes="10";
 	$cuenta="";
-    $acumulado=0;
+    $acumulado="0";
 	$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "oficina"=>$oficina, "area"=>$area, "anio"=>$anio, "mes"=>$mes, "cuenta"=>$cuenta,"acumulado"=>$acumulado,"accion"=>"listar"); //
 
 	$parametros=json_encode($parametros);

@@ -8,6 +8,7 @@ if(!isset($_GET['sol'])){
     header("location:listSolicitudRecursos.php");
 }else{
     $codigo=$_GET['sol'];
+    $codigoGeneral=$codigo;
     $moneda=2;
     $abrevMon=abrevMoneda($moneda);
     $nombreMonedaG=nameMoneda($moneda);
@@ -40,11 +41,14 @@ $stmt->execute();
             $stmt->bindColumn('cod_proveedor', $codProveedorX);
             $stmt->bindColumn('idServicio', $idServicioX);
             $stmt->bindColumn('observaciones', $observacionesX);
+            $stmt->bindColumn('glosa_estado', $glosa_estadoX);
 
 while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
-    
+    $observacionGlobal=$glosa_estadoX;
     $distribucionGlosa=obtenerResumenDistribucionSR($codigoX);
-    
+    if(trim($distribucionGlosa)==""){
+      $distribucionGlosa=obtenerResumenDistribucionNormalSR($codigoX);
+    }
     $nombreCliente=obtenerNombreClienteSimulacion($codSimulacionServicioX);
 
     //
@@ -110,7 +114,16 @@ while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
              $personal_SIS=namePersonal($userSIS);    
              $fecha_SIS=obtenerFechaCambioEstado($objeto_sol,$codigoX,3107);
           }
-
+          
+          $useranulado=obtenerPersonaCambioEstado($objeto_sol,$codigoX,2724);//contabiliado        
+          $nombreEstado_anulado=obtenerNombreEstadoSol(2);
+          if($useranulado==0){
+             $personal_anulado="";    
+             $fecha_anulado="";
+          }else{
+             $personal_anulado=namePersonal($useranulado);    
+             $fecha_anulado=obtenerFechaCambioEstado($objeto_sol,$codigoX,2724);
+          }
     
     $fechaC=$fechaX;
     $unidadC=$unidadNombreX;
@@ -236,7 +249,8 @@ $tituloImporte="";
              $importePorcent=($importeSolX*100)/$importeX;   
             }else{
              $importePorcent=0;
-            }      
+            }  
+
             if($retencionX!=0){
               $tituloImporte=abrevRetencion($retencionX);
               $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
@@ -380,51 +394,76 @@ $tituloImporte="";
    }
   ?>
   <table class="table">
-        <tr>
-            <td class="s3 text-center"><b>Estado</b></td>
-            <td class="s3 text-center"><b>Personal</b></td>
-            <td class="s3 text-center"><b>Fecha</b></td>
-        </tr>
-       <tr>
-                <td class="s3 text-left"><?=$nombreEstado_registro?>: </td><td class="s3 text-center"> <?=$personal_registro?></td><td class="s3 text-center"><?=$fecha_registro?></td>
-              </tr>
-              <tr>
-                <td class="s3 text-left"><?=$nombreEstado_revision?>: </td><td class="s3 text-center"><?=$personal_registro?></td><td class="s3 text-center"><?=$fecha_revision?></td>
-              </tr>
-              <tr>
-                <td class="s3 text-left"><?=$nombreEstado_SIS?>: </td><td class="s3 text-center"><?=$personal_SIS?></td><td class="s3 text-center"><?=$fecha_SIS?></td>
-              </tr>            
-              <tr>
-                <td class="s3 text-left"><?=$nombreEstado_revisado?>: </td><td class="s3 text-center"><?=$personal_revisado?></td><td class="s3 text-center"><?=$fecha_revisado?></td>
-              </tr>
-              <tr>
-                <td class="s3 text-left"><?=$nombreEstado_aprobacion?>: </td><td class="s3 text-center"><?=$personal_aprobacion?></td><td class="s3 text-center"><?=$fecha_aprobacion?></td>
-              </tr>
-              <tr>
-                <td class="s3 text-left"><?=$nombreEstado_procesado?>: </td><td class="s3 text-center"><?=$personal_procesado?></td><td class="s3 text-center"><?=$fecha_procesado?></td>
-              </tr>
-              
-     </table>
-     <!--<table class="table">
-        <tr>
-            <td class="s3 text-center" height="80px"></td>
-            <td class="s3 text-center" height="80px"></td>
-            <td class="s3 text-center" height="80px"></td>
-            <td class="s3 text-center" height="80px"></td>
-        </tr>
-        <tr>
-            <td class="s3 text-center">Solicitante <?=$solicitante?></td>
-            <td class="s3 text-center">Autorización <?=$nombreEnviado?></td>
-            <td class="s3 text-center">Autorización <?=$nombreAprobado?></td>
-            <td class="s3 text-center">Autorización <?=$nombreAprobado?></td>
-        </tr>
-        <tr>
-            <td class="s3 text-left">Fecha:</td>
-            <td class="s3 text-left">Fecha:</td>
-            <td class="s3 text-left">Fecha:</td>
-            <td class="s3 text-left">Fecha:</td>
-        </tr>
-     </table>-->
+                <thead>
+                  <tr class="bg-celeste s3 text-center">
+                    <td colspan="6">HISTORIAL DE ESTADOS</td> 
+                  </tr>
+                  <tr class="bg-celeste s3 text-center">
+                    <td><small>#</small></td>
+                    <td><small>DEL ESTADO</small></td>
+                    <td><small>AL ESTADO</small></td>
+                    <td><small>PERSONAL</small></td>
+                    <td><small>FECHA</small></td> 
+                    <td><small>OBSERVACIONES</small></td>  
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                  $observacionGlobal = preg_replace("[\n|\r|\n\r]", ", ", $observacionGlobal);
+                  $glosaArray=explode("####", $observacionGlobal);
+                  $observacionGlobal = str_replace("####", " - ", $observacionGlobal);
+                  
+                  if(isset($glosaArray[1])){
+                      $observacionGlobal= "".$glosaArray[0].""."<u class='text-muted'> ".$glosaArray[1]."</u>";
+                  }
+                  
+                  $stmtEstadoCantidad = $dbh->prepare("SELECT count(*) as cantidad
+                         FROM ibnorca.estadoobjeto e 
+                         join ibnorca.clasificador c on c.idClasificador=e.idEstado
+                         where e.idtipoobjeto=2708 and e.idobjeto=$codigoGeneral ORDER BY e.fechaestado;");
+                  $stmtEstadoCantidad->execute();
+                  $stmtEstadoCantidad->bindColumn('cantidad', $cantidadEstados);
+                  $cantidadEstadosGlobal=0;
+                  while ($rowEstadoCantidad = $stmtEstadoCantidad->fetch(PDO::FETCH_BOUND)) {
+                      $cantidadEstadosGlobal=$cantidadEstados;
+                  }
+
+                  $stmtEstado = $dbh->prepare("SELECT e.*,c.Descripcion
+                         FROM ibnorca.estadoobjeto e 
+                         join ibnorca.clasificador c on c.idClasificador=e.idEstado
+                         where e.idtipoobjeto=2708 and e.idobjeto=$codigoGeneral ORDER BY e.fechaestado;");
+                  $stmtEstado->execute();
+                  $stmtEstado->bindColumn('IdEstadoObjeto', $idEstadoObjetoX);
+                  $stmtEstado->bindColumn('IdEstado', $idEstadoX);
+                  $stmtEstado->bindColumn('idResponsable', $idResponsableX);
+                  $stmtEstado->bindColumn('FechaEstado', $fechaEstadoX);
+                  $stmtEstado->bindColumn('Descripcion', $observacionesX);
+                  $index=0;
+                  while ($rowEstado = $stmtEstado->fetch(PDO::FETCH_BOUND)) {
+                    $index++;
+                    $responsableX=namePersonal(obtenerPersonaClienteCambioEstado($idResponsableX));
+                    $estadoActualX=obtenerNombreEstadoSol(obtenerEstadoIfinancieroSolicitudes($idEstadoX));
+                    $estadoAnteriorX=obtenerEstadoAnteriorEstadoObjeto(2708,$codigoGeneral,$idEstadoObjetoX);
+                    $observacionGlobalFila=""; 
+                    if($index==$cantidadEstadosGlobal){
+                      $estadoActualX.=" (Actual)";
+                      $observacionGlobalFila=$observacionGlobal;
+                    }
+                    ?>
+                    <tr id="<?=$index?>_fila_estado" class="s3 text-left">
+                      <td><?=$index?></td>
+                      <td><?=$estadoAnteriorX?></td>
+                      <td id="<?=$index?>_nombre_fila_estado"><?=$estadoActualX?></td>
+                      <td><?=$responsableX?></td>         
+                      <td><?=strftime('%d/%m/%Y %H:%M:%S',strtotime($fechaEstadoX));?></td>
+                      <td><small><small><?=$observacionGlobalFila?></small></small></td>
+                    </tr>
+                    <?php
+                  }
+                  ?> 
+                </tbody>
+              </table>
+
 
 <!-- PIE DE PAGINA-->     
      <footer class="footer">

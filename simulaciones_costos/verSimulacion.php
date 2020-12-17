@@ -35,6 +35,28 @@ if(isset($_GET['cod'])){
 }else{
   $codigo=0;
 }
+
+$mesesProrrateo=obtenerValorConfiguracion(89);
+ //obtener datos fecha de la propuesta
+ $fechaSimulacion=obtenerFechaSimulacionCosto($codigo);
+ $fechaSim=explode("-", $fechaSimulacion);
+ $anioSimulacion=$fechaSim[0];
+ $mesSimulacion=$fechaSim[1];
+ $stringMeses="";
+ if($mesesProrrateo>0){
+  $arrayMeses=[];$ejecutadoEnMeses=0;$presupuestoEnMeses=0;$presupuestoEnMeses=100;
+  //for ($mm=((int)$mesSimulacion-((int)$mesesProrrateo-1)); $mm <= (int)$mesSimulacion ; $mm++) { 
+  //  $arrayMeses[$mm]=abrevMes($mm);
+  //  $datosIngresos=ejecutadoPresupuestadoEgresosMes(0,$anioSimulacion,$mm,13,1,"");
+  //  $ejecutadoEnMeses+=$datosIngresos[0];
+  //  $presupuestoEnMeses+=$datosIngresos[1];
+  //}
+  //if($presupuestoEnMeses>0){
+  //  $porcentPreciosEnMeses=number_format(($ejecutadoEnMeses/$presupuestoEnMeses)*100,2,'.','');
+  //}
+  $porcentPreciosEnMeses=obtenerValorConfiguracion(91);
+  $stringMeses=implode("-",$arrayMeses);
+ }
 if(isset($_GET['q'])){
  $idServicioX=$_GET['q'];
  $s=$_GET['s'];
@@ -104,6 +126,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
              $diasCursoXX=1; 
            }
            $fechaCurso=strftime('%d/%m/%Y',strtotime($fechaCursoX));
+           $codigoPropuesta=$codigoX;
       }
   if($ibnorcaC==1){
     $checkIbnorca="checked";
@@ -133,7 +156,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             <div class="row"><div class="card col-sm-5">
         <div class="card-header card-header-success card-header-text">
           <div class="card-text">
-            <h4 class="card-title">Datos de la Propuesta</h4>
+            <h4 class="card-title">Datos de la Propuesta <?=$codigoPropuesta?></h4>
           </div>
         </div>
         <div class="card-body ">
@@ -343,7 +366,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 
 
         //valores de la simulacion
-
+                 $totalFijoManual=obtenerTotalesPlantilla($codigoPX,3,$mesConf);
                   //total desde la plantilla  
                  $totalFijo=obtenerTotalesPlantilla($codigoPX,1,$mesConf); //tipo de costo 1:fijo,2:variable desde la plantilla
                   //total variable desde la plantilla
@@ -354,8 +377,18 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 
                // $alumnosX=($utilidadIbnorcaX+($totalFijoPlan+))
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codigoPX);
-                 $porcentPrecios=(($precioLocalX*$alumnosX)*100)/$precioRegistrado;
-                 $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
+                 if($ingresoAlternativo!=0){
+                  $porcentPrecios=(($ingresoAlternativo)*100)/$precioRegistrado; 
+                 }else{
+                  $porcentPrecios=(($precioLocalX*$alumnosX)*100)/$precioRegistrado;
+                 }
+                 
+                 if($mesesProrrateo>0){
+                  $totalFijoPlan=($totalFijo[0]*($porcentPreciosEnMeses/100))*($porcentPrecios/100)+$totalFijoManual[0]; 
+                 }else{
+                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
+                 }
+
                  $totalFijoPlanModulos=$totalFijoPlan*$cantidadModuloX;
 
                   //
@@ -639,7 +672,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
             }else{
             ?>
-            <a href="../<?=$urlList;?>&q=<?=$idServicioX?>&s=<?=$s?>&u=<?=$u?><?=$urlR?>" class="btn btn-danger">Volver</a><?php
+            <!--<a href="../<?=$urlList;?>&q=<?=$idServicioX?>&s=<?=$s?>&u=<?=$u?><?=$urlR?>" class="btn btn-danger">Volver</a>--><?php
             }
             ?>
 

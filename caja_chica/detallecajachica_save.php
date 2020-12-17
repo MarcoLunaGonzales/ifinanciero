@@ -9,18 +9,19 @@ ini_set('display_errors',1);
 $dbh = new Conexion();
 
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
-
+$globalUser=$_SESSION["globalUser"];
 try {
     $globalUser=$_SESSION["globalUser"];
-
     $codigo = $_POST["codigo"];
     $cod_tcc = $_POST["cod_tcc"];
     $cod_cc = $_POST["cod_cc"];
+  if(!isset($_POST["sr"])){
 
     $cod_cuenta=trim($_POST["cuenta_auto_id"]);    
     $cod_comprobante_ec=trim($_POST["comprobante"]);
     $cuenta_auxiliar1=trim($_POST["cuenta_auxiliar1"]);
     $cod_retencion = trim($_POST["tipo_retencion"]);
+    $cod_tipopago = trim($_POST["tipo_pago"]);
     $numero = trim($_POST["numero"]);
     $monto = trim($_POST["monto"]);
     $fecha = trim($_POST["fecha"]);
@@ -45,6 +46,9 @@ try {
     $stmtMCC->execute();
     $resultMCC=$stmtMCC->fetch();
     $monto_reembolso_x=$resultMCC['monto_reembolso'];
+
+    }//fin if isset sr
+
     if ($codigo == 0){//insertamos
         $monto_reembolso=$monto_reembolso_x-$monto;
         //para el codigo del detalle
@@ -65,8 +69,8 @@ try {
         $monto_rendicion=0;       
         $observaciones = str_replace("'","",$observaciones);
 
-        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by) 
-        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_retencion,$numero,'$cod_personal',$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,'$cod_area','$cod_uo',$nro_recibo,'$cod_proveedores','$cod_actividad_sw',NOW(),$globalUser)");
+        $stmt = $dbh->prepare("INSERT INTO caja_chicadetalle(codigo,cod_cajachica,cod_cuenta,fecha,cod_tipodoccajachica,nro_documento,cod_personal,monto,observaciones,cod_estado,cod_estadoreferencial,cod_area,cod_uo,nro_recibo,cod_proveedores,cod_actividad_sw,created_at,created_by,cod_tipopago) 
+        values ($codigo,$cod_cc,$cod_cuenta,'$fecha',$cod_retencion,$numero,'$cod_personal',$monto,'$observaciones',$cod_estado,$cod_estadoreferencial,'$cod_area','$cod_uo',$nro_recibo,'$cod_proveedores','$cod_actividad_sw',NOW(),$globalUser,$cod_tipopago)");
         $flagSuccess=$stmt->execute();
         if($flagSuccess){//registramos rendiciones
             $stmtReembolso = $dbh->prepare("UPDATE caja_chica set monto_reembolso=$monto_reembolso where codigo=$cod_cc");
@@ -119,7 +123,7 @@ try {
                         $stmtInsert2 = $dbh->prepare($sqlInsert2);
                         $flagSuccess=$stmtInsert2->execute();
 
-                        $stmtCambioEstadoSR = $dbh->prepare("UPDATE solicitud_recursos set cod_estadosolicitudrecurso=8 where codigo=:codigo");
+                        $stmtCambioEstadoSR = $dbh->prepare("UPDATE solicitud_recursos set cod_estadosolicitudrecurso=9 where codigo=:codigo");
                         $stmtCambioEstadoSR->bindParam(':codigo', $cod_solicitudrecurso_sr);
                         $flagSuccess=$stmtCambioEstadoSR->execute();
                     }
@@ -153,6 +157,7 @@ try {
                 }   
             }
         }
+
         //insertamos archivos adjuntos
         $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
         for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
@@ -176,11 +181,30 @@ try {
 
                 // $sqlInsert="INSERT INTO archivos_adjuntos_cajachica (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
                 // VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
-                $sqlInsert="INSERT INTO archivos_adjuntos_cajachica(cod_tipoarchivo,descripcion,direccion_archivo,cod_cajachica_detalle) 
-                VALUES ('$tipo','$descripcion','$target_path','$codigo')";
+                $codArchivoAdjunto=obtenerCodigoUltimoTabla('archivos_adjuntos_cajachica');
+                $sqlInsert="INSERT INTO archivos_adjuntos_cajachica(codigo,cod_tipoarchivo,descripcion,direccion_archivo,cod_cajachica_detalle) 
+                VALUES ($codArchivoAdjunto,'$tipo','$descripcion','$target_path','$codigo')";
+
                 $stmtInsert = $dbh->prepare($sqlInsert);
-                $stmtInsert->execute();    
+                $flagArchivo=$stmtInsert->execute();    
                 // print_r($sqlInsert);
+                if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+                  //sibir archivos al servidor de documentos
+                  $parametros=array(
+                   "idD" => 17,
+                   "idR" => $codArchivoAdjunto,
+                   "idusr" => $globalUser,
+                   "Tipodoc" => 3596,
+                   "descripcion" => $descripcion,
+                   "codigo" => "",
+                   "observacion" => "-",
+                   "r" => "http://www.google.com",
+                   "v" => true
+                   );
+                  $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+                 //unlink($target_path);
+                 //print_r($resultado);        
+                }
               } else {    
                   echo "error";
               } 
@@ -191,6 +215,7 @@ try {
 
         showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
     } else {//update
+      if(!isset($_POST["sr"])){  
         //actualizamos monto reeembolso
         //sacamos monto anterior de detalle
         $stmtMontoAnterior = $dbh->prepare("SELECT monto from caja_chicadetalle where codigo=$codigo");
@@ -216,7 +241,7 @@ try {
         // echo 'cod_contra_cuenta:'.$cod_contra_cuenta."<br>";
         
 
-        $stmtCCD = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta='$cod_cuenta',fecha='$fecha',cod_tipodoccajachica='$cod_retencion',nro_documento='$numero',cod_personal='$cod_personal',monto='$monto',observaciones='$observaciones',cod_area='$cod_area',cod_uo='$cod_uo',nro_recibo='$nro_recibo',cod_proveedores='$cod_proveedores',cod_actividad_sw='$cod_actividad_sw',modified_by=$globalUser,modified_at=NOW()
+        $stmtCCD = $dbh->prepare("UPDATE caja_chicadetalle set cod_cuenta='$cod_cuenta',fecha='$fecha',cod_tipodoccajachica='$cod_retencion',nro_documento='$numero',cod_personal='$cod_personal',monto='$monto',observaciones='$observaciones',cod_area='$cod_area',cod_uo='$cod_uo',nro_recibo='$nro_recibo',cod_proveedores='$cod_proveedores',cod_actividad_sw='$cod_actividad_sw',modified_by=$globalUser,modified_at=NOW(),cod_tipopago=$cod_tipopago
          where codigo = $codigo");      
         $flagSuccess=$stmtCCD->execute();        
         
@@ -316,6 +341,11 @@ try {
                 }   
             }
         }
+
+     }else{
+        //desde sr
+        $flagSuccess=true;
+     }//fin if isset sr
         //insertamos archivos adjuntos
         $nArchivosCabecera=$_POST["cantidad_archivosadjuntos"];
         for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) { 
@@ -339,11 +369,29 @@ try {
 
                 // $sqlInsert="INSERT INTO archivos_adjuntos_cajachica (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
                 // VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
-                $sqlInsert="INSERT INTO archivos_adjuntos_cajachica(cod_tipoarchivo,descripcion,direccion_archivo,cod_cajachica_detalle) 
-                VALUES ('$tipo','$descripcion','$target_path','$codigo')";
+                $codArchivoAdjunto=obtenerCodigoUltimoTabla('archivos_adjuntos_cajachica');
+                $sqlInsert="INSERT INTO archivos_adjuntos_cajachica(codigo,cod_tipoarchivo,descripcion,direccion_archivo,cod_cajachica_detalle) 
+                VALUES ($codArchivoAdjunto,'$tipo','$descripcion','$target_path','$codigo')";
                 $stmtInsert = $dbh->prepare($sqlInsert);
-                $stmtInsert->execute();    
+                $flagArchivo=$stmtInsert->execute();    
                 // print_r($sqlInsert);
+                if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+                  //sibir archivos al servidor de documentos
+                  $parametros=array(
+                   "idD" => 17,
+                   "idR" => $codArchivoAdjunto,
+                   "idusr" => $globalUser,
+                   "Tipodoc" => 3596,
+                   "descripcion" => $descripcion,
+                   "codigo" => "",
+                   "observacion" => "-",
+                   "r" => "http://www.google.com",
+                   "v" => true
+                   );
+                  $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+                 //unlink($target_path);
+                 //print_r($resultado);        
+                }
               } else {    
                   echo "error";
               } 

@@ -53,7 +53,7 @@ $dbh = new Conexion();
 		                <label class="col-sm-2 col-form-label">Gestión</label>
 		                <div class="col-sm-6">
 		                	<div class="form-group">
-		                		<select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+		                		<select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion_mutiple(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
                                     <option value=""></option>
                                     <?php 
                                     $query = "SELECT codigo,nombre from gestiones where cod_estado=1 ORDER BY nombre desc";

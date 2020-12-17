@@ -42,6 +42,28 @@ if(isset($_GET['cod'])){
 }else{
 	$codigo=0;
 }
+
+$mesesProrrateo=obtenerValorConfiguracion(89);
+ //obtener datos fecha de la propuesta
+ $fechaSimulacion=obtenerFechaSimulacionCosto($codigo);
+ $fechaSim=explode("-", $fechaSimulacion);
+ $anioSimulacion=$fechaSim[0];
+ $mesSimulacion=$fechaSim[1];
+ $stringMeses="";
+ if($mesesProrrateo>0){
+  $arrayMeses=[];$ejecutadoEnMeses=0;$presupuestoEnMeses=0;$presupuestoEnMeses=100;
+  //for ($mm=((int)$mesSimulacion-((int)$mesesProrrateo-1)); $mm <= (int)$mesSimulacion ; $mm++) { 
+  //  $arrayMeses[$mm]=abrevMes($mm);
+  //  $datosIngresos=ejecutadoPresupuestadoEgresosMes(0,$anioSimulacion,$mm,13,1,"");
+  //  $ejecutadoEnMeses+=$datosIngresos[0];
+  //  $presupuestoEnMeses+=$datosIngresos[1];
+  //}
+  //if($presupuestoEnMeses>0){
+  //  $porcentPreciosEnMeses=number_format(($ejecutadoEnMeses/$presupuestoEnMeses)*100,2,'.','');
+  //}
+  $porcentPreciosEnMeses=obtenerValorConfiguracion(91);
+  $stringMeses=implode("-",$arrayMeses);
+ }
 if(isset($_GET['q'])){
  $idServicioX=$_GET['q'];
  $s=$_GET['s'];
@@ -61,12 +83,14 @@ if(isset($_GET['q'])){
   $idServicioX=0; 
 }
 
+$codEstadoSimulacionXX=3;
 $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_externo from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo join precios_simulacioncosto pa on sc.cod_precioplantilla=pa.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
 			$stmt1->execute();
 			$stmt1->bindColumn('codigo', $codigoX);
             $stmt1->bindColumn('nombre', $nombreX);
             $stmt1->bindColumn('fecha', $fechaX);
             $stmt1->bindColumn('cod_responsable', $codResponsableX);
+            $stmt1->bindColumn('cod_estadosimulacion', $codEstadoSimulacionX);
             $stmt1->bindColumn('estado', $estadoX);
             $stmt1->bindColumn('cod_plantillacosto', $codigoPlan);
             $stmt1->bindColumn('venta_local', $precioLocalX);
@@ -107,10 +131,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
            $ingresoAlternativo=obtenerPrecioAlternativoDetalle($codigoPrecioSimulacion);
            $codigoSimulacionSuper=$codigoX;
            $diasCursoXX=$diasCursoX;
+           $codEstadoSimulacionXX=$codEstadoSimulacionX;
            if($diasCursoX==0){
              $diasCursoXX=1; 
            }
            $fechaCurso=strftime('%d/%m/%Y',strtotime($fechaCursoX));
+           $codigoPropuesta=$codigoX;
       }
   if($ibnorcaC==1){
   	$checkIbnorca="checked";
@@ -118,7 +144,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
   }else{
   	$checkIbnorca="";
   	$simulacionEn="FUERA DE IBNORCA";
-  }     
+  } 
+if($codEstadoSimulacionXX==3){
+  ?><center><h5>Propuesta Aprobada (Sin Edición)</h5></center><?php
+}else{
+
 ?>
 <div class="cargar">
   <div class="div-loading text-center">
@@ -140,7 +170,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             <div class="row"><div class="card col-sm-5">
 				<div class="card-header card-header-success card-header-text">
 					<div class="card-text">
-					  <h4 class="card-title">Datos de la Propuesta</h4>
+					  <h4 class="card-title">Datos de la Propuesta <?=$codigoPropuesta?></h4>
 					</div>
           <button type="button" onclick="editarDatosSimulacion()" class="btn btn-success btn-sm btn-fab float-right">
              <i class="material-icons" title="Editar Propuesta">edit</i>
@@ -361,7 +391,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 				//valores de la simulacion
 
                   //total desde la plantilla  
+                 $totalFijoManual=obtenerTotalesPlantilla($codigoPX,3,$mesConf);
                  $totalFijo=obtenerTotalesPlantilla($codigoPX,1,$mesConf); //tipo de costo 1:fijo,2:variable desde la plantilla
+
                   //total variable desde la plantilla
                  //$totalVariable=obtenerTotalesPlantilla($codigoPX,2,18);
                  //total variable desde simulacion cuentas
@@ -369,9 +401,22 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   //$alumnosX=round((100*($totalFijoPlan*(0.87+($iva/100))))/((100*(($precioLocalX*(1-($it/100)))-($totalVariable[2]*(1+($iva/100)))))-($utilidadIbnorcaX*$precioLocalX)));  
                 
                // $alumnosX=($utilidadIbnorcaX+($totalFijoPlan+))
+                  //$precioLocalX=$ingresoAlternativo;
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codigoPX);
-                 $porcentPrecios=(($precioLocalX*$alumnosX)*100)/$precioRegistrado;
-                 $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
+                 if($ingresoAlternativo!=0){
+                  $porcentPrecios=(($ingresoAlternativo)*100)/$precioRegistrado; 
+                 }else{
+                  $porcentPrecios=(($precioLocalX*$alumnosX)*100)/$precioRegistrado;
+                 }
+                 
+                 if($mesesProrrateo>0){
+                  $totalFijoPlan=($totalFijo[0]*($porcentPreciosEnMeses/100))*($porcentPrecios/100)+$totalFijoManual[0]; 
+                 }else{
+                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
+                 }
+
+                 
+
                  $totalFijoPlanModulos=$totalFijoPlan*$cantidadModuloX;
 
                   //
@@ -379,7 +424,13 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   $uti=$il-((($iva+$it)/100)*$il)-$totalFijoPlan-($totalVariable[2]);
                   $porl=($uti*100)/$il;*/
                   //
-                  $alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
+                  //$alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
+                  $porcentajeIva=($iva+$it)/100;
+                  $porcentajeUtil=$utilidadIbnorcaX/100;
+                  //$alumnosRecoX=ceil(($totalFijoPlan+$totalVariable[2])/(($precioLocalX)*(1-$porcentajeIva-$porcentajeUtil)));  
+                  
+                  $alumnosRecoX=ceil(($precioRegistrado*$totalVariable[2])/(($precioLocalX) * ( ((1-$porcentajeIva-$porcentajeUtil) * ($precioRegistrado)) - $totalFijoPlan)) );  
+
                   //if($alumnosX)
                  /*if($habilitadoNormaX==1){
                   $totalVariable[2]=$totalVariable[2]+$montoNormaX;
@@ -388,14 +439,32 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
                 $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
+                $alumnosXAntes=$alumnosX;
                if($alumnosX==0){
                  	$porcentajeFinalLocal=0;$alumnosX=0;$alumnosExternoX=0;$porcentajeFinalExterno=0;
-                 	while ($porcentajeFinalLocal < $utilidadIbnorcaX || $porcentajeFinalExterno<$utilidadFueraX) {
-                 		$alumnosX++;
+                 	while ($porcentajeFinalLocal < $utilidadIbnorcaX) {
+                    $alumnosX++;
                  		include "calculoSimulacion.php";
+                       if($ibnorcaC==1){
+                             $utilidadReferencial=$utilidadIbnorcaX;
+                             $ibnorca_title=""; // EN IBNORCA
+                         }else{
+                             $utilidadReferencial=$utilidadFueraX;
+                             $ibnorca_title=""; //FUERA DE IBNORCA
+                         }
+                         //cambios para la nueva acortar la simulacion 
+                         $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal)-$totalFijoPlan-($totalVariable[2]*$alumnosX);
+                         $utilidadNetaExterno=$ingresoExterno-((($iva+$it)/100)*$ingresoExterno)-$totalFijo[3]-($totalVariable[3]*$alumnosExternoX);
+
+                         $pUtilidadLocal=($utilidadNetaLocal*100)/$ingresoLocal;
+                         $pUtilidadExterno=($utilidadNetaExterno*100)/$ingresoExterno;
+
                         $porcentajeFinalLocal=$pUtilidadLocal;
                         $porcentajeFinalExterno=$pUtilidadExterno;
-                 	}                                 
+                 	}
+                  $alumnosRecoX=$alumnosX;
+                  $alumnosX=$alumnosXAntes;
+
                 }else{
                 	include "calculoSimulacion.php";
                 }
@@ -532,8 +601,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
              //$precioVentaUnitario=(($costoTotalLocal/$alumnosX)/(1-($utilidadIbnorcaX/100)));
              //;
              //$precioVentaRecomendado=$precioVentaUnitario/(1-(($iva+$it)/100));
-             $precioVentaUnitario=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/(((((0/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijo[0])*$alumnosX);   
-             $precioVentaRecomendado=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/((((($utilidadIbnorcaX/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijo[0])*$alumnosX);   
+             $precioVentaUnitario=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/(((((0/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijoPlan)*$alumnosX);   
+             $precioVentaRecomendado=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/((((($utilidadIbnorcaX/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijoPlan)*$alumnosX);   
 
                 ?>
                 <tr>
@@ -643,21 +712,13 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             <div class="card-footer fixed-bottom">
               <?php 
             if(!(isset($_GET['q']))){
-              if($pUtilidadLocal>0){
               ?><a onclick="guardarSimulacion()" class="btn btn-warning text-white"><i class="material-icons">send</i> Enviar Propuesta UT <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php    
-              }else{
-                ?><a href="#" title="No se puede enviar Propuesta" class="btn btn-danger text-white"><i class="material-icons">warning</i> UTILIDAD NETA <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php
-              }
              ?>   
             <a href="../<?=$urlList;?>" class="btn btn-danger">Volver</a><?php
             }else{
-              if($pUtilidadLocal>0){
               ?><a onclick="guardarSimulacion()" class="btn btn-success text-white"><i class="material-icons">send</i> Enviar Propuesta UT <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php    
-              }else{
-                ?><a href="#" title="No se puede enviar Propuesta" class="btn btn-danger text-white"><i class="material-icons">warning</i> UTILIDAD NETA <?=number_format($pUtilidadLocal, 2, '.', ',')?> %</a><?php
-              }
             ?>
-            <a href="../<?=$urlList;?>&q=<?=$idServicioX?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a><?php
+            <!--<a href="../<?=$urlList;?>&q=<?=$idServicioX?>&s=<?=$s?>&u=<?=$u?>" class="btn btn-danger">Volver</a>--><?php
             }
             ?>
 
@@ -669,8 +730,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
 </div>
 
 <?php
-require_once 'modal.php';
 
+require_once 'modal.php';
+}
 ?>
 
 

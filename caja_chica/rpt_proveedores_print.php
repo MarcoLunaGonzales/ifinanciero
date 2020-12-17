@@ -43,7 +43,7 @@ $stmtProveedor->bindColumn('email_personacontacto', $email_personalcontacto);
               
 
               <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">
+                <div class="card-header card-header-primary card-header-icon">
                   <div class="float-right col-sm-2">
                     <!-- <h6 class="card-title">Exportar como:</h6> -->
                   </div>

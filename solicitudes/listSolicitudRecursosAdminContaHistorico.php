@@ -581,7 +581,7 @@ $item_1=2708;
                                 <select class="selectpicker form-control form-control-sm" name="buscar_area_solicitud[]" id="buscar_area_solicitud" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
                                      <?php
                                                              
-                                           $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo where a.cod_estado=1 order by 2");
+                                           $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a where a.cod_estado=1 order by 2");
                                          $stmt->execute();
                                          $cont=0;
                                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

@@ -164,12 +164,36 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
           $stmtDel->execute();
           //borrar de la carpeta
           unlink($linkArchivo);
+          if(obtenerValorConfiguracion(93)==1){
+            $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivo);
+            if($banderaArchivo>0){
+              $globalServerDelete=obtenerValorConfiguracion(94);
+              ?><script>ajaxDeleteArchivo("<?=$globalServerDelete;?>","<?=$banderaArchivo?>","divArchivo",15,"<?=$codigoArchivo;?>");</script><?php   
+            }          
+          }
         }
-        $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
-        VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
-        $stmtInsert = $dbh->prepare($sqlInsert);
-        $stmtInsert->execute();    
-        print_r($sqlInsert);
+        $codArchivoAdjunto=obtenerCodigoUltimoTabla('archivos_adjuntos');
+        $sqlInsert="INSERT INTO archivos_adjuntos (codigo,cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+        VALUES ($codArchivoAdjunto,'$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
+        $stmtInsert = $dbh->prepare($sqlInsert);   
+        $flagArchivo=$stmtInsert->execute();            
+        if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+          //sibir archivos al servidor de documentos
+          $parametros=array(
+            "idD" => 15,
+            "idR" => $codArchivoAdjunto,
+            "idusr" => $globalUser,
+            "Tipodoc" => 3596,
+            "descripcion" => $descripcion,
+            "codigo" => "",
+            "observacion" => "-",
+            "r" => "/",
+            "v" => true
+            );
+           $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+           //unlink($target_path);
+           //print_r($resultado);        
+        }
       } else {    
           echo "error";
       } 
@@ -276,7 +300,6 @@ while ($row = $solDet->fetch(PDO::FETCH_BOUND)) {
 
 $stmt1 = obtenerSolicitudesDet($codSolicitud);
 editarComprobanteDetalle($codSolicitud,'cod_solicitudrecurso',$cont1,$fila,$stmt1,'solicitud_recursosdetalle',$cab,$data,$facturas);
-
 if($flagSuccess==true){
 
 if(!isset($_POST['control_admin'])){

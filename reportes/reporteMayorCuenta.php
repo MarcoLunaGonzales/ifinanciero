@@ -70,7 +70,8 @@
           join comprobantes c on d.cod_comprobante=c.codigo
           where c.cod_gestion=$NombreGestion and p.codigo=$cuenta and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) and c.cod_unidadorganizacional in ($unidadArray) order by c.fecha";
       }
-
+      
+      $funcionOnclick='filasPresupuesto('.$cuenta.')';
       //echo $query1;
 
       $stmt = $dbh->prepare($query1);
@@ -113,7 +114,7 @@
       //FIN SALDO ANTERIOR
 
       if($contador!=0){
-        $html.='<tr class="bg-plomo">'.
+        $html.='<tr class="bg-plomo" onclick="'.$funcionOnclick.'">'.
                       '<td style="display: none;"></td>'.
                       '<td style="display: none;"></td>'.
                       '<td style="display: none;"></td>'.
@@ -161,7 +162,7 @@
           $saldoXFormato=formatNumberDec($saldoX/$tc);
         }
         
-       $html.='<tr>'.
+       $html.='<tr class="cuenta'.$cuenta.'" style="display:none">'.
                 '<td class="font-weight-bold small">'.$nombreUnidad.'</td>'.
                 '<td class="font-weight-bold small">'.$nombreComprobanteX.'</td>'.
                 '<td class="font-weight-bold small">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.

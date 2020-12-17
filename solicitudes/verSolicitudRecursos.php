@@ -287,9 +287,24 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                      $verificarArchivo=verificarArchivoAdjuntoExistente(2708,$codigo,0,$codigoX);
                      //$nombreX=$verificarArchivo[1];
                      $urlArchivo=$verificarArchivo[2];
+                     $urlArchivoMostrar=$verificarArchivo[2];
                      $codigoArchivoX=$verificarArchivo[3];
+                     $downloadFile='download="Doc - IFINANCIERO ('.$nombreX.')"';
+                     $onClick='onClick="quitarArchivoSistemaAdjunto('.$filaA.','.$codigoArchivoX.',0)"';
+                     
                      $arrayArchivo=explode("/",$urlArchivo);
                      $nombreArchivo=$arrayArchivo[count($arrayArchivo)-1];
+                     if(obtenerValorConfiguracion(93)==1){
+                      $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivoX);
+                      if($banderaArchivo>0){
+                         $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
+                         //$urlArchivoMostrar="file:///C:".obtenerPathArchivoIbnorca($banderaArchivo);
+                         $urlArchivoMostrar="../mostrarArchivos.php?name=".obtenerPathArchivoIbnorca($banderaArchivo);
+                         $downloadFile='target="_blank"';
+                         $globalServerDelete=obtenerValorConfiguracion(94);
+                         $onClick='onClick="ajaxDeleteArchivo(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',15,\''.$codigoArchivoX.'\')"';
+                      }                      
+                     } 
                   ?>
                   <tr>
                     <td class="text-left"><input type="hidden" name="codigo_archivo<?=$filaA?>" id="codigo_archivo<?=$filaA?>" value="<?=$codigoX;?>"><input type="hidden" name="nombre_archivo<?=$filaA?>" id="nombre_archivo<?=$filaA?>" value="<?=$nombreX;?>"><?=$nombreX;?></td>
@@ -311,8 +326,8 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                         <div class="btn-group" id="existe_div_archivo_cabecera<?=$filaA?>">
                           <div class='btn-group'>
                             <a class='btn btn-sm btn-info btn-block' href='<?=$urlArchivo?>' target='_blank'><?=$nombreX?></a>
-                            <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' download='Descargar: Doc - IFINANCIERO (<?=$nombreX?>)<?=$nombreArchivo?>'><i class='material-icons'>vertical_align_bottom</i></a>           
-                            <a class='btn btn-sm btn-primary' id="boton_previo<?=$filaA?>" href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivo?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
+                            <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' <?=$downloadFile?>><i class='material-icons'>vertical_align_bottom</i></a>           
+                            <a class='btn btn-sm btn-primary' id="boton_previo<?=$filaA?>" href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivoMostrar?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
                             <script>
                                >/* if ( navigator.userAgent.indexOf("MSIE")>0|| navigator.userAgent.indexOf("Firefox")>0){
                                     $("#boton_previo"+<?=$filaA?>).prepend("X").addClass("btn-danger").attr("title","Puede que su navegador no muestre las firmas digitales en PDF, Recomendamos usar Chrome");    
@@ -340,6 +355,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                      $codigoX=$rowArchivo['cod_tipoarchivo'];
                      $nombreX=$rowArchivo['descripcion'];
                      $urlArchivo=$rowArchivo['direccion_archivo'];
+                     $urlArchivoMostrar=$rowArchivo['direccion_archivo'];
                      $ObligatorioX=0;
                      $Obli='NO';
                      if($ObligatorioX==1){
@@ -350,6 +366,18 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                      }
                      $arrayArchivo=explode("/",$urlArchivo);
                      $nombreArchivo=$arrayArchivo[count($arrayArchivo)-1];
+                     
+                     $onClick='onClick="quitarArchivoSistemaAdjunto('.$filaA.','.$codigoArchivoX.',1)"';
+                     $downloadFile='download="Doc - IFINANCIERO ('.$nombreX.')"';
+                     if(obtenerValorConfiguracion(93)==1){
+                      $banderaArchivo=obtenerBanderaArchivoIbnorca('archivos_adjuntos',$codigoArchivoX);
+                      if($banderaArchivo>0){
+                         $urlArchivo=obtenerValorConfiguracion(95)."?idR=".$banderaArchivo;
+                         $urlArchivoMostrar="../mostrarArchivos.php?name=".obtenerPathArchivoIbnorca($banderaArchivo);
+                         $downloadFile='target="_blank"';
+                         $onClick='onClick="ajaxDeleteArchivo(\''.$globalServerDelete.'\',\''.$banderaArchivo.'\',\'divArchivo\',15,\''.$codigoArchivoX.'\')"';
+                      }                      
+                     }
                   ?>
                   <tr id="fila_archivo<?=$filaA?>">
                     <td class="text-left"><input type="hidden" name="codigo_archivoregistrado<?=$filaE?>" id="codigo_archivoregistrado<?=$filaE?>" value="<?=$codigoArchivoX;?>">Otros Documentos</td>
@@ -365,8 +393,8 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                         <!--<a href="#" class="btn btn-button btn-sm" >Registrado</a>  
                         <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" download="Doc - IFINANCIERO (<?=$nombreX?>)"><i class="material-icons">get_app</i></a>  -->
                         <a class='btn btn-sm btn-info btn-block' href='<?=$urlArchivo?>' target='_blank'><?=$nombreX?></a>
-                        <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' download='Descargar: Doc - IFINANCIERO (<?=$nombreX?>)<?=$nombreArchivo?>'><i class='material-icons'>vertical_align_bottom</i></a>
-                        <a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivo?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
+                        <a class='btn btn-sm btn-default' href='<?=$urlArchivo?>' <?=$downloadFile?>><i class='material-icons'>vertical_align_bottom</i></a>
+                        <a class='btn btn-sm btn-primary' href='#' onclick='vistaPreviaArchivoSol("<?=$urlArchivoMostrar?>","Descargar: Doc - IFINANCIERO (<?=$nombreX?>)"); return false;'><i class='material-icons'>remove_red_eye</i></a>
                       
                       </div>     
                     </td>    
@@ -427,7 +455,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                   $index=0;
                   while ($rowEstado = $stmtEstado->fetch(PDO::FETCH_BOUND)) {
                     $index++;
-                    $responsableX=namePersonal(obtenerPersonaCambioEstado(2708,$codigo,$idEstadoX));
+                    $responsableX=namePersonal(obtenerPersonaClienteCambioEstado($idResponsableX));
                     $estadoActualX=obtenerNombreEstadoSol(obtenerEstadoIfinancieroSolicitudes($idEstadoX));
                     $estadoAnteriorX=obtenerEstadoAnteriorEstadoObjeto(2708,$codigo,$idEstadoObjetoX);
                     ?>
@@ -437,7 +465,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
                       <td id="<?=$index?>_nombre_fila_estado" class="text-left font-weight-bold"><?=$estadoActualX?></td>
                       <td class="text-left font-weight-bold"><?=$responsableX?></td>         
                       <td><?=strftime('%d/%m/%Y %H:%M:%S',strtotime($fechaEstadoX));?></td>
-                      <td><small><small><?=$observacionGlobal?></small></small></td>
+                      <td id="<?=$index?>_nombre_observacion"></td>
                     </tr>
                     <?php
                   }
@@ -449,6 +477,7 @@ $stmt = $dbh->prepare("SELECT p.*,e.nombre as estado_solicitud, u.abreviatura as
             $("#<?=$index?>_fila_estado").addClass("bg-principal text-white");
             if($("#codigo_estado_solicitud").val()<8){
               $("#<?=$index?>_nombre_fila_estado").append(" (ACTUAL)");
+              $("#<?=$index?>_nombre_observacion").append("<small><small><?=$observacionGlobal?></small></small>");
             }
           </script>
 					<br>

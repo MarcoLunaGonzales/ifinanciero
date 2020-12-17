@@ -134,6 +134,10 @@
 		if ($_GET['opcion']=='reportesLibroCompras') {
 			require_once('reportes/reportesLibroCompras.php');
 		}
+		if ($_GET['opcion']=='reportesLibroComprasMeses') {
+			require_once('reportes/reportesLibroComprasMeses.php');
+		}
+		
 		//REPORTES
 		if ($_GET['opcion']=='reportesLibroComprasProy') {
 			require_once('reportes_compras/reportesLibroComprasProy.php');
@@ -171,11 +175,17 @@
         if ($_GET['opcion']=='reportesLibretasBancarias') {
 			require_once('reportes/reportesLibretasBancarias.php');
 		}
+
+		//REPORTES
+		if ($_GET['opcion']=='reporteAdminEstadoCuentas') {
+			require_once('reportes_internos/reportesEstadoCuentasAdmin.php');
+		}
   
         //Contabilizacion de Libretas
         if ($_GET['opcion']=='contabilizarLibretasBancarias') {
 			require_once('libretas_bancarias/contaLibretasBancarias.php');
 		}
+
 		if ($_GET['opcion']=='contabilizarLibretasBancarias_lista') {
 			require_once('libretas_bancarias/contabilizacionLibretasBancarias_lista.php');
 		}
@@ -203,6 +213,9 @@
 		}
 		if ($_GET['opcion']=='clonarPlantillaCosto') {
 			require_once('plantillas_costos/saveClonar.php');
+		}
+		if ($_GET['opcion']=='clonarPlantillaCosto2') {
+			require_once('plantillas_costos/saveClonar2.php');
 		}
         
         //SIMULACIONES DE COSTO
@@ -317,6 +330,9 @@
 		}
 		if ($_GET['opcion']=='clonarPlantillaServicio') {
 			require_once('plantillas_servicios/saveClonar.php');
+		}
+		if ($_GET['opcion']=='clonarPlantillaServicio2') {
+			require_once('plantillas_servicios/saveClonar2.php');
 		}
         
         //SIMULACIONES PLANTILLA SERVICIO
@@ -590,6 +606,9 @@
 		if ($_GET['opcion']=='reportePlanificacion') {
 			require_once('simulaciones_costos/reportePlan.php');
 		}
+		if ($_GET['opcion']=='reportePlanificacionCursos') {
+			require_once('simulaciones_costos/reportePlanCurso.php');
+		}
 		if ($_GET['opcion']=='reportePlanificacionEC') {
 			require_once('simulaciones_servicios/reportePlan.php');
 		}
@@ -613,6 +632,16 @@
 
 		if ($_GET['opcion']=='reporteIngresosPorFacturacion') {
 			require_once('reportes_ventas/rptOpIngresoFacturacion.php');
+		}
+
+		if ($_GET['opcion']=='reportesFlujoEfectivo') {
+			require_once('reportes_flujos_efectivo/reportes_flujos_efectivo.php');
+		}
+		if ($_GET['opcion']=='reportesSumasSaldos') {
+			require_once('reportes_sumas_saldos/reportes_sumas_saldos.php');
+		}
+		if ($_GET['opcion']=='reportesAnalisisFinanciero') {
+			require_once('reportes_analisis_financiero/reportes_analisis_financiero.php');
 		}
 
 		//solicitudes factuacion
@@ -1714,6 +1743,12 @@
 			$cod_cc=$_GET['cod_cc'];
 			require_once('caja_chica/detallecajachica_delete.php');
 		}
+		if ($_GET['opcion']=='quitarDetalleCajaChica') {
+			$codigo=$_GET['codigo'];
+			$cod_tcc=$_GET['cod_tcc'];
+			$cod_cc=$_GET['cod_cc'];
+			require_once('caja_chica/detallecajachica_quitar.php');
+		}
 		if ($_GET['opcion']=='ReembolsoCajaChicaForm') {
 			$codigo=$_GET['codigo'];
 			$cod_tcc=$_GET['cod_tcc'];
@@ -1803,6 +1838,16 @@
 		if ($_GET['opcion']=='listPlanCuentasAreas') {
 			require_once('simulaciones_servicios/plandecuentas_list_areas.php');
 		}
+
+		//flujo efectivo
+		if ($_GET['opcion']=='listPlanFlujoEfectivo') {
+			require_once('flujos_efectivo/plandecuentas_list_flujo.php');
+		}
+		if ($_GET['opcion']=='registerPlanCuentaEfectivo') {
+			$fl=$_GET['fl'];
+			require_once('flujos_efectivo/plandecuentas_registrer.php');
+		}
+
 		
 		//abm dosificaciones
 		if ($_GET['opcion']=='listDosificaciones') {

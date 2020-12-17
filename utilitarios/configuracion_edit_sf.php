@@ -9,7 +9,7 @@ $dbh = new Conexion();
 
 $valor_forma_pago=obtenerValorConfiguracion(76);
 $valor_razon_social=obtenerValorConfiguracion(77);
-
+$valor_validacion=obtenerValorConfiguracion(90);
 if($valor_forma_pago==1)
   $sw_sf_fp="checked";
 else $sw_sf_fp="";
@@ -17,6 +17,10 @@ else $sw_sf_fp="";
 if($valor_razon_social==1)
   $sw_f_rs="checked";
 else $sw_f_rs="";
+
+if($valor_validacion==1)
+  $sw_v_lc="checked";
+else $sw_v_lc="";
 ?>
 <div class="content">
   <div class="container-fluid">
@@ -57,6 +61,17 @@ else $sw_f_rs="";
                             <div class="togglebutton">
                                <label>
                                  <input type="checkbox"  id="modal_check_f" name="modal_check_f" <?=$sw_f_rs?> >
+                                 <span class="toggle"></span>
+                               </label>
+                           </div>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="text-left">Validación de Libretas Bancarias en Comprobantes</td>
+                          <td>
+                            <div class="togglebutton">
+                               <label>
+                                 <input type="checkbox"  id="modal_check_lb" name="modal_check_lb" <?=$sw_v_lc?> >
                                  <span class="toggle"></span>
                                </label>
                            </div>

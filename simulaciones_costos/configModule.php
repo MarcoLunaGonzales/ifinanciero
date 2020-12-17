@@ -41,6 +41,7 @@ $urlGenerarFacturasPrint="simulaciones_servicios/generarFacturasPrint.php";
 $urlPrintSolicitud="simulaciones_servicios/printSolicitud.php";
 $urlregistro_solicitud_facturacion_empresas="?opcion=registro_solicitud_facturacion_empresas";
 $urlReportePlan="simulaciones_costos/reportePlanificacion.php";
+$urlReportePlanCurso="simulaciones_costos/reportePlanificacionCurso.php";
 // $urlSolicitudfactura_grupal_estudiantes="?opcion=solicitudfactura_grupal_estudiantes";
 // $urlSolicitudfactura_grupal_estudiantes="?opcion=solicitudfactura_grupal_estudiantes";
 $urlListFacturasServicios_costos_estudiantes="?opcion=listFacturasServicios_costos_estudiantes";

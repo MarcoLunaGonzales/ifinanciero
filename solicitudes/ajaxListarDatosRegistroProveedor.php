@@ -19,7 +19,7 @@ $lista= obtenerPaisesServicioIbrnorca();
       <label class="col-sm-3 col-form-label">Buscar</label>
       <div class="col-sm-7">
         <div class="form-group" >
-            <input type="text" class="form-control" name="nombre_empresa" id="nombre_empresa" value="" required="true" placeholder="Ingrese Nombre Nit ó Identificación...">
+            <input type="text" class="form-control" name="nombre_empresa" id="nombre_empresa" value="" required="true" placeholder="Ingrese Nombre Completo Nit ó Identificación...">
         </div>
       </div>
         <a href="#" id="boton_actualizar_lista" class="btn btn-info btn-sm btn-fab d-none" onclick="actualizarRegistroProveedor()" title="Actualizar Lista Proveedores"><i class="material-icons">find_replace</i></a>
@@ -119,7 +119,7 @@ $lista= obtenerPaisesServicioIbrnorca();
    </div>
   </div>
   <div class="row">
-   <label class="col-sm-3 col-form-label">Ciudad <b class="text-danger">*</b></label>
+   <label class="col-sm-3 col-form-label">Ciudad</label>
    <div class="col-sm-8">
     <div class="form-group">
       <select name="ciudad_empresa" onchange="mostrarOtraCiudadServicio()" id="ciudad_empresa" class="form-control  selectpicker" data-style="btn btn-warning" >
@@ -128,7 +128,7 @@ $lista= obtenerPaisesServicioIbrnorca();
    </div>
   </div>
   <div class="row d-none" id="otra_ciudad_div">
-   <label class="col-sm-3 col-form-label">Otra ciudad <b class="text-danger">*</b></label>
+   <label class="col-sm-3 col-form-label">Otra ciudad</label>
    <div class="col-sm-8">
     <div class="form-group">
       <input type="text" class="form-control" name="otra_ciudad" id="otra_ciudad" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">

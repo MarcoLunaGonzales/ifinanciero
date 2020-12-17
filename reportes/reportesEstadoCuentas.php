@@ -17,6 +17,9 @@ $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
 $fechaDesde=$y."-01-01";
 $fechaHasta=$y."-12-31";
 
+$fechaDesde2=$y."-01-01";
+$fechaHasta2=$y."-12-31";
+
 $fechaMesUltimoDia=$y."-".$m."-".$d;
 
 $globalAdmin=$_SESSION["globalAdmin"];
@@ -150,7 +153,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
               <div class="col-sm-7">
                 <div class="form-group">
                   <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm" data-style="btn btn-info"
-                      required onChange="AjaxGestionFechaDesdeBG(this)">
+                      required onChange="AjaxGestionFechaDesde(this)">
                       <?php
                         $sql="SELECT * FROM gestiones order by 2 desc";
                         $stmtg = $dbh->prepare($sql);
@@ -206,32 +209,79 @@ $globalUnidad=$_SESSION["globalUnidad"];
             </div>
             <!--  fin de seleccion unidad organizacional-->
 
-            <div class="row">
+            <!--<div class="row">
                 <label class="col-sm-2 col-form-label">A Fecha:</label>
                 <div class="col-sm-7">
                   <div class="form-group">
                     <div id="div_contenedor_fechaH">                    
-                      <!-- <input type="text" class="form-control datepicker " autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>" value="<?=$fechaHasta?>">   -->
+                
                       <input type="date" name="fecha" id="fecha" class="form-control" min="<?=$fechaDesde?>" max="<?=$fechaHasta?>" value="<?=$fechaMesUltimoDia;?>">
                     </div>                    
                   </div>
                 </div>
-            </div><!--fin campo RUBRO -->
+            </div>--><!--fin campo RUBRO -->
+
+            <div class="row">
+                      <div class="col-sm-6">
+                        <div class="row">
+                         <label class="col-sm-4 col-form-label">Desde</label>
+                         <div class="col-sm-8">
+                          <div class="form-group">
+                            <div id="div_contenedor_fechaI">                              
+                              <input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaDesde?>">  
+                            </div>                                    
+                             </div>
+                          </div>
+                     </div>
+                       </div>
+                      <div class="col-sm-6">
+                        <div class="row">
+                         <label class="col-sm-4 col-form-label">Hasta</label>
+                         <div class="col-sm-8">
+                          <div class="form-group">
+                            <div id="div_contenedor_fechaH">                              
+                              <input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaHasta?>">
+                            </div>
+                                   
+                            </div>
+                          </div>
+                      </div>
+                </div>
+                  </div><!--div row-->
+
             <div class="row">
               <label class="col-sm-2 col-form-label">Filtrar</label>
-              <div class="col-sm-7">
+              <div class="col-sm-4">
               <div class="form-group">
-                  <select name="ver_saldo" id="ver_saldo" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
+                  <select name="ver_saldo" id="ver_saldo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required>
                         <option value="1">SOLO SALDOS</option>
                         <option value="2">TODO</option>
                         
                   </select>
               </div>
               </div>
+              <div class="col-sm-6">
+                      <div class="row">
+                     <label class="col-sm-8 col-form-label">Incluir cierre de estados de cuenta anteriores al periodo</label>
+                           <div class="col-sm-4">
+                        <div class="form-group">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox" id="cierre_anterior" name="cierre_anterior[]" checked value="1">
+                                      <span class="form-check-sign">
+                                        <span class="check"></span>
+                                      </span>
+                                    </label>
+                                  </div>
+                                </div>  
+                             </div>     
+                        </div>  
+                     </div>
             </div><!--fin tipo tipo -->
           </div>
           <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
+              <!--<a href="index.php?opcion=reporteAdminEstadoCuentas" target="_blank" class="btn btn-danger">Reporte Administrador</a>-->
             </div>
         </div>
         </form>

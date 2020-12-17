@@ -11,17 +11,17 @@ if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
   $u=$_GET['u'];
+  $sqlModulos="";
   if(isset($_GET['s'])){
     $s=$_GET['s'];
     $u=$_GET['u'];
-    $arraySql=explode("IdArea=",$_GET['s']);
-    $codigoArea=trim($arraySql[1]);
-
-    $sqlAreas="and p.cod_area=".$codigoArea;
+    if($u>0){
+      $sqlModulos="and sc.IdModulo=".$u;      
+    }
   }
   $globalUser=$q;
   // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc");
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser $sqlModulos order by sc.codigo desc");
 }else{
   $s=0;
   $u=0;
@@ -38,9 +38,11 @@ $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('observacion', $observacion);
 $stmt->bindColumn('fecha', $fecha);
+$stmt->bindColumn('cod_tipocurso', $codTipoCurso);
 $stmt->bindColumn('cod_plantillacosto', $codPlantilla);
 $stmt->bindColumn('cod_estadosimulacion', $codEstado);
 $stmt->bindColumn('cod_responsable', $codResponsable);
+$stmt->bindColumn('cod_area_registro', $codArea);
 $stmt->bindColumn('estado', $estado);
 
 ?>
@@ -60,7 +62,10 @@ $stmt->bindColumn('estado', $estado);
                     <table class="table" id="tablePaginator">
                       <thead>
                         <tr>
-                          <th class="text-center">#</th>
+                          <!--<th class="text-center">#</th>-->
+                          <th>Codigo</th>
+                          <th>Tipo</th>
+                          <th>Origen</th>
                           <th>Nombre</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
@@ -73,6 +78,7 @@ $stmt->bindColumn('estado', $estado);
             $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $responsable=namePersonal($codResponsable);
+                          $tipoCurso=nameTipoCurso($codTipoCurso);
                           switch ($codEstado) {
                             case 1:
                               $nEst=40;$barEstado="progress-bar-default";$btnEstado="btn-default";
@@ -89,7 +95,10 @@ $stmt->bindColumn('estado', $estado);
                           }
 ?>
                         <tr>
-                          <td align="center"><?=$index;?></td>
+                          <!--<td align="center"><?=$index;?></td>-->
+                          <td><?=$codigo;?></td>
+                          <td><?=$tipoCurso;?></td>
+                          <td><?=abrevArea_solo($codArea);?></td>
                           <td><?=$nombre;?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
@@ -197,7 +206,7 @@ $stmt->bindColumn('estado', $estado);
               </div>
               <div class="card-footer fixed-bottom">
                 <?php
-                if(isset($_GET['q'])){
+                if(isset($_GET['q'])){                  
                   ?><a href="<?=$urlRegister2;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
                 }else{
                   ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php

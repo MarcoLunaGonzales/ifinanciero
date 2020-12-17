@@ -3,6 +3,10 @@ session_start();
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../styles.php';
+function string_sanitize($s) {
+       $result = preg_replace("/[^a-zA-Z0-9]+/", "", html_entity_decode($s, ENT_QUOTES));
+       return $result;
+}
 //require_once '../layouts/librerias.php';
 $dbh = new Conexion();
 $saldo_solfac=0; //desde comprobantes
@@ -97,8 +101,8 @@ if(isset($_GET['anio'])){
               else $color_aux="background-color:#f6ddcc;";
               
               $datosEnviarModal="";
-              if($saldo!=0){//todo  $tipo_listado==1 || 
-              $datosEnviarModal=$Fecha."####".$Descripcion." ".$InformacionComplementaria."####".number_format($monto,2)."####".number_format($saldo,2)."####".$saldo; 
+              if($saldo!=0&&($codComprobanteDetalle==""||$codComprobanteDetalle==0)){//todo  $tipo_listado==1 || 
+              $datosEnviarModal=$Fecha."####".string_sanitize($Descripcion)." ".string_sanitize($InformacionComplementaria)."####".number_format($monto,2)."####".number_format($saldo,2)."####".$saldo; 
                 ?>
 
                 <tr style="<?=$color_aux?>">

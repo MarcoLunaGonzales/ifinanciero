@@ -5,7 +5,7 @@ require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
-
+session_start();
 $dbh = new Conexion();
 
 $codGestion=$_POST["gestion"];
@@ -16,7 +16,20 @@ $nroCorrelativo=$_POST["nro_correlativo"];
 $glosa=$_POST["glosa"];
 $facturas= json_decode($_POST['facturas']);
 $estadosCuentas= json_decode($_POST['estados_cuentas']);
-session_start();
+
+$salvado_temporal=0;
+if(isset($_POST['salvado_temporal'])){
+  $salvado_temporal=1;
+}
+
+$desdeSR=0;
+if(isset($_POST['codigo_sr'])&&isset($_POST['codigo_personal'])){
+  $desdeSR=1;
+  $codigoSR=$_POST['codigo_sr'];
+  $codigoSRPER=$_POST['codigo_personal'];
+}
+
+
 
 $codPadreArchivos=obtenerValorConfiguracion(84);
 
@@ -35,12 +48,44 @@ $fechaHoraSistema=date("Y-m-d H:i:s");
 $nroCorrelativo=numeroCorrelativoComprobante($globalGestion,$_SESSION['globalUnidad'],$tipoComprobante,$globalMes);
 
 $codComprobante=obtenerCodigoComprobante();
-$sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by) VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraSistema', '$globalUser')";
+$sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa, created_at, created_by,salvado_temporal) VALUES ('$codComprobante', '1', '$globalUnidad', '$codGestion', '1', '1', '$tipoComprobante', '$fechaHoraActual', '$nroCorrelativo', '$glosa', '$fechaHoraSistema', '$globalUser',$salvado_temporal)";
 //echo $sqlInsert;
 
 $stmtInsert = $dbh->prepare($sqlInsert);
 $flagSuccess=$stmtInsert->execute();	
 
+if($flagSuccess==true){
+  //ACTUALIZAR SOLICITUD DE RECURSOS
+  $datosSolicitud=obtenerDatosSolicitudRecursos($codigoSR);
+  $correoPersonal=$datosSolicitud['email_empresa'];
+  $descripcionEstado=obtenerNombreEstadoSol(5);
+  if($correoPersonal!=""){
+    $envioCorreoPersonal=enviarCorreoSimple($correoPersonal,'CAMBIO DE ESTADO - SOLICITUD DE RECURSOS, Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$datosSolicitud['solicitante'].', el sistema IFINANCIERO le notifica que su Solicitud de Recursos cambio del estado <b>'.$datosSolicitud['estado'].'</b> a <b>'.$descripcionEstado.'</b>. <br> Personal que realizo el cambio:'.namePersonalCompleto($globalUser)."<br>Numero de Solicitud:".$datosSolicitud['numero']."<br>Estado Anterior: <b>".$datosSolicitud['estado']."</b><br>Estado Actual: <b>".$descripcionEstado."</b><br><br>Saludos - IFINANCIERO");  
+  }
+
+  $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=5,cod_comprobante=$codComprobante,devengado=1 where codigo=$codigoSR";
+  $stmtUpdate = $dbh->prepare($sqlUpdate);
+  $flagSuccessSolicitud=$stmtUpdate->execute();
+  if($flagSuccessSolicitud==true){
+    //insertamos la distribucion
+        $sqlDel="DELETE FROM solicitud_recursosencargado where cod_solicitudrecurso=$codigoSR";
+        $stmtDel = $dbh->prepare($sqlDel);
+        $stmtDel->execute();
+  
+        if($codigoSRPER>0){
+        $sqlInsert="INSERT INTO solicitud_recursosencargado (cod_solicitudrecurso,cod_personal) 
+        VALUES ('$codigoSR','$codigoSRPER')";
+        $stmtInsert = $dbh->prepare($sqlInsert);
+        $stmtInsert->execute();  
+        } 
+     //enviar propuestas para la actualizacion de ibnorca
+     $fechaHoraActual=date("Y-m-d H:i:s");
+     $idTipoObjeto=2708;
+     $idObjeto=2725; //regristado
+     $obs="Solicitud Contabilizada";
+     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigoSR,$fechaHoraActual,$obs); 
+  }
+}
 //subir archivos al servidor
 //borramos los archivos
   $sqlDel="DELETE FROM archivos_adjuntos where cod_objeto=$codComprobante and cod_tipopadre=$codPadreArchivos"; //codigo del padre para comprobantes
@@ -78,7 +123,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
     if($_FILES['documentos_cabecera'.$ar]["name"]){
       $filename = $_FILES['documentos_cabecera'.$ar]["name"]; //Obtenemos el nombre original del archivos
       $source = $_FILES['documentos_cabecera'.$ar]["tmp_name"]; //Obtenemos un nombre temporal del archivos    
-      $directorio = '../assets/archivos-respaldo/COMP-'.$codComprobante.'/';
+      $directorio = '../assets/archivos-respaldo/COMP-'.$codComprobante.'';
       //Validamos si la ruta de destino existe, en caso de no existir la creamos
       if(!file_exists($directorio)){
                 mkdir($directorio, 0777,true) or die("No se puede crear el directorio de extracci&oacute;n");    
@@ -91,11 +136,30 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         $tipo=$_POST['codigo_archivo'.$ar];
         $descripcion=$_POST['nombre_archivo'.$ar];
         $tipoPadre=$codPadreArchivos;
-        $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
-        VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codComprobante')";
+        $codArchivoAdjunto=obtenerCodigoUltimoTabla('archivos_adjuntos');
+        $sqlInsert="INSERT INTO archivos_adjuntos (codigo,cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+        VALUES ($codArchivoAdjunto,'$tipo','$descripcion','$target_path','$tipoPadre',0,'$codComprobante')";
         $stmtInsert = $dbh->prepare($sqlInsert);
-        $stmtInsert->execute();    
-        print_r($sqlInsert);
+        $flagArchivo=$stmtInsert->execute();    
+        //print_r($sqlInsert);
+        if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+            //sibir archivos al servidor de documentos
+            $parametros=array(
+            "idD" => 15,
+            "idR" => $codArchivoAdjunto,
+            "idusr" => $globalUser,
+            "Tipodoc" => 3596,
+            "descripcion" => $descripcion,
+            "codigo" => "",
+            "observacion" => "-",
+            "r" => "http://www.google.com",
+            "v" => true
+            );
+            $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+           //unlink($target_path);
+           //print_r($resultado);        
+          }
+
       } else {    
           echo "error";
       } 
@@ -216,6 +280,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
           $nC=cantidadF($estadosCuentas[$i-1]);
           for($j=0;$j<$nC;$j++){
               $fecha=date("Y-m-d H:i:s");
+            if(isset($estadosCuentas[$i-1][$j]->cod_plancuenta)){
               $codPlanCuenta=$estadosCuentas[$i-1][$j]->cod_plancuenta;
               $codPlanCuentaAux=$estadosCuentas[$i-1][$j]->cod_plancuentaaux;
               $monto=$estadosCuentas[$i-1][$j]->monto;
@@ -225,12 +290,17 @@ for ($i=1;$i<=$cantidadFilas;$i++){
               $sqlDetalle3="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) VALUES ('$codComprobanteDetalle', '$codPlanCuenta', '$monto', '$codProveedor', '$fechaHoraActual','$codComprobanteDetalleOrigen','$codPlanCuentaAux')";
               $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
               $flagSuccessDetalle3=$stmtDetalle3->execute();
+             }
           }    
          }
          //FIN DE ESTADOS DE CUENTA
 	}
 } 
 
-echo "<script>window.opener.location.reload();window.close();</script>";
+if($desdeSR==0){
+  echo "<script>window.opener.location.reload();window.close();</script>";  
+}else{
+  showAlertSuccessError($flagSuccessSolicitud,"../".$urlListAdminSol);   
+}
 
 ?>

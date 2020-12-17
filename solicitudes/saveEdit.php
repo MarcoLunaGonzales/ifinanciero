@@ -157,11 +157,30 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
         $tipo=$_POST['codigo_archivo'.$ar];
         $descripcion=$_POST['nombre_archivo'.$ar];
         $tipoPadre=2708;
-        $sqlInsert="INSERT INTO archivos_adjuntos (cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
-        VALUES ('$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
+        $codArchivoAdjunto=obtenerCodigoUltimoTabla('archivos_adjuntos');
+        $sqlInsert="INSERT INTO archivos_adjuntos (codigo,cod_tipoarchivo,descripcion,direccion_archivo,cod_tipopadre,cod_padre,cod_objeto) 
+        VALUES ($codArchivoAdjunto,'$tipo','$descripcion','$target_path','$tipoPadre',0,'$codSolicitud')";
         $stmtInsert = $dbh->prepare($sqlInsert);
-        $stmtInsert->execute();    
-        print_r($sqlInsert);
+        $flagArchivo=$stmtInsert->execute();    
+        
+        if(obtenerValorConfiguracion(93)==1&&$flagArchivo){ //registrar en documentos de ibnorca al final se borra en documento del ifinanciero
+          //sibir archivos al servidor de documentos
+          $parametros=array(
+            "idD" => 15,
+            "idR" => $codArchivoAdjunto,
+            "idusr" => $globalUser,
+            "Tipodoc" => 3596,
+            "descripcion" => $descripcion,
+            "codigo" => "",
+            "observacion" => "-",
+            "r" => "http://www.google.com",
+            "v" => true
+            );
+           $resultado=enviarArchivoAdjuntoServidorIbnorca($parametros,$target_path);
+           //unlink($target_path);
+           //print_r($resultado);        
+        }
+        
       } else {    
           echo "error";
       } 

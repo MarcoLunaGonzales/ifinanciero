@@ -171,11 +171,23 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                         $cantidad_inicial=0;
                                         $saldo_real=0;
 
-                                        $queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario,1 as tipo_item from ibnorca.serviciopresupuesto s where  s.IdServicio=$IdServicio";
+                                        //$queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario,1 as tipo_item from ibnorca.serviciopresupuesto s where  s.IdServicio=$IdServicio";
+                                        /*$queryPr="SELECT c.IdCotizacion, s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario,1 as tipo_item 
+                                            from ibnorca.serviciopresupuesto s 
+                                            INNER JOIN ibnorca.cotizaciones c ON c.IdCotizacion=s.IdCotizacion
+                                            where  s.IdServicio=$IdServicio AND ibnorca.d_clasificador(ibnorca.id_estadoobjeto(196, c.IdCotizacion))='Adjudicada';";*/
+                                  $queryPr="SELECT c.IdCotizacion,c.Descuento,s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario, 1 AS tipo_item 
+                                           FROM
+                                               ibnorca.serviciopresupuesto s
+                                               INNER JOIN ibnorca.cotizaciones c ON c.IdCotizacion = s.IdCotizacion 
+                                           WHERE
+                                               s.IdServicio = $IdServicio
+                                               AND ibnorca.d_clasificador (
+                                               ibnorca.id_estadoobjeto ( 196, c.IdCotizacion ))= 'Adjudicada';";
                                         //echo $queryPr;
                                         if ($cod_facturacion > 0){
                                             $queryPr.=" UNION ";                                            
-                                            $queryPr.="SELECT d.codigo,d.cod_claservicio,d.cantidad,d.precio,tipo_item from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
+                                            $queryPr.="SELECT d.codigo,0 as Descuento,d.cod_claservicio,d.cantidad,d.precio,tipo_item from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
                                         }
                                         // echo $queryPr;
                                         $stmt = $dbh->prepare($queryPr);
@@ -187,6 +199,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             $codCS=$rowPre['IdClaServicio'];
                                             // $tipoPre=$rowPre['descripcion'];
                                             $cantidadPre=$rowPre['Cantidad'];//cantidad inicial
+                                            $descuentoFila=$rowPre['Descuento'];//descuento
                                             $cantidadPre=(double)$cantidadPre;
 
                                             $cantidad_saldo=$cantidadPre;
@@ -195,7 +208,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             $montoPre=$rowPre['PrecioUnitario'];
                                             $montoPre=number_format($montoPre,2,".","");                                            
                                             $tipoPre=$Codigo_alterno." - ".descripcionClaServicio($codCS);
-                                            $montoPreTotal=$montoPre*$cantidadPre;
+                                            $montoPreTotal=($montoPre*$cantidadPre);
+                                            //$montoPreTotal=($montoPre*$cantidadPre)-((($montoPre*$cantidadPre)*$descuentoFila)/100);
                                             $banderaHab=1;
                                             $codTipoUnidad=0;
 
@@ -259,7 +273,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 $sw2="";
                                                 $monto_servicio=verificar_pago_servicios_tcp_solfac($IdServicio,$codCS);
                                                 $monto_servicio=number_format($monto_servicio,2,".","");
-
+                                                ?><script>console.log("MONTO SERVICIO: "+<?=$monto_servicio?>)</script><?php  
                                                 if(count(verificarSiHayFacturasAnuladasSol($cod_facturacion))>0){
                                                    $monto_servicio=''; 
                                                 }
@@ -305,8 +319,13 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         $saldo_real=$saldo;
                                                     }
                                                 }
+                                                if($descuentoFila>0){
+                                                    $descuento_bobX=(($montoPre*$cantidadPre)*$descuentoFila)/100;
+                                                    $descuento_porX=$descuentoFila;
+                                                }
                                             
                                                 ?>
+
                                                 <!-- guardamos todas las valores en un input -->
                                                 <input type="hidden" id="tipo_item<?=$iii?>" name="tipo_item<?=$iii?>" value="<?=$tipo_item?>">
                                                 <input type="hidden" id="cod_serv_tiposerv<?=$iii?>" name="cod_serv_tiposerv<?=$iii?>" value="<?=$codigoPre?>">
@@ -339,7 +358,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         <input type="text" class="form-control" name="modal_importe_pagado_dos<?=$iii?>" id="modal_importe_pagado_dos<?=$iii?>" readonly value="<?=number_format($monto_total_pagado,2);?>">
                                                     </td>
                                                     <td>
-                                                        <input type="number" step="0.01" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="0.01" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?> min="0.1">
+                                                        <input type="number" step="any" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="any" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?> min="0.1">
                                                     </td>
 
                                                                                               

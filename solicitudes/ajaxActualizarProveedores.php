@@ -197,4 +197,3 @@ foreach ($detalle as $objDet){
      $contador++;
 }
 
-

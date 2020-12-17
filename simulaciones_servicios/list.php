@@ -229,21 +229,8 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                     </button>
                                     <div class="dropdown-menu menu-fixed-sm-table menu-fixed-sm-table">
 
-                                      <a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF
-                                      </a>
-                                      <?php 
-                                      if($codAreaX==38){
-                                       ?><a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&of=b" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF B
-                                      </a><?php
-                                      ?><a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&of=c" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF C
-                                      </a><?php
-                                      } 
-                                      ?>
                                       <a href="<?=$urlOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-success">edit</i> Editar PDF
+                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF
                                       </a> 
                                     </div>
                                   </div>
@@ -254,21 +241,8 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                       <i class="material-icons text-dark">picture_as_pdf</i>
                                     </button>
                                     <div class="dropdown-menu menu-fixed-sm-table">
-                                      <a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF
-                                      </a>
-                                      <?php 
-                                      if($codAreaX==38){
-                                       ?><a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&of=b" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF B
-                                      </a><?php
-                                      ?><a href="<?=$urlImpOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&of=c" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF C
-                                      </a><?php
-                                      } 
-                                      ?>
                                       <a href="<?=$urlOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="dropdown-item"  target="_blank">
-                                         <i class="material-icons text-success">edit</i> Editar PDF
+                                         <i class="material-icons text-danger">picture_as_pdf</i> PDF
                                       </a> 
                                     </div>
                                   </div><?php
