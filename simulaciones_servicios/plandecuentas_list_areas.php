@@ -107,7 +107,7 @@ $stmt->bindColumn('cod_cuenta_ingreso', $cod_cuenta);
         <input type="hidden" name="cod_area" id="cod_area" value="0">   
 
         <div class="row">
-          <label class="col-sm-2 col-form-label" style="color:#424242"> Tipo de Pago: </label>
+          <label class="col-sm-2 col-form-label" style="color:#424242"> Área: </label>
           <div class="col-sm-8">
             <div class="form-group">
               <input class="form-control" type="text" name="tipo_pago" id="tipo_pago"  readonly="true" style="background-color:#E3CEF6;text-align: left"/>

@@ -118,10 +118,10 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
 <?php
 
   $query1=$sqlSolicitadosInicio."select s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,
-(SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as ejecutado, 
-(SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as proveedor,
-(SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as nombre_proveedor, 
-(SELECT d.cod_detalleplantilla from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as codigo_ejecutado 
+(SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo Limit 1) as ejecutado, 
+(SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo Limit 1) as proveedor,
+(SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo Limit 1) as nombre_proveedor, 
+(SELECT d.cod_detalleplantilla from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo Limit 1) as codigo_ejecutado 
 from simulaciones_detalle sd join simulaciones_costos s on s.codigo=sd.cod_simulacioncosto 
 WHERE s.cod_tipocurso in($tipoCursoArray) and sd.habilitado=1 and s.cod_estadosimulacion=3 and s.fecha_curso BETWEEN '$desde' and '$hasta' order by s.nombre,sd.cod_cuenta".$sqlSolicitadosFin;
 
