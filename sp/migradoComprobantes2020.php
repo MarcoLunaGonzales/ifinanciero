@@ -32,18 +32,18 @@ $dbh = new Conexion();
 echo "<h6>Hora Inicio Proceso: " . date("Y-m-d H:i:s")."</h6>";
 
 //conexion modificado IBNORCA- INGE
-$dsn = "conta";
-$usuario = "sa";
-$clave = "minka@2018";
+//$dsn = "conta";
+//$usuario = "sa";
+//$clave = "minka@2018";
   //debe ser de sistema no de usuario
   //realizamos la conexion mediante odbc
 //end modificado
 
   //CONEXION EXTERNA TIPO 2
-/*  $dsn = "conta"; 
+  $dsn = "conta"; 
   $usuario = "consultadb";
   $clave="consultaibno1$";
-*/ 
+ 
   //FIN CONEXION EXTERNA TIPO 2
 
 
@@ -55,6 +55,20 @@ if (!$conexión) {
 }else{
 
     echo "CONEXION ESTABLECIDA!!!!";
+    //eliminar comprobantes
+    $sqlDelete="DELETE from estados_cuenta where cod_comprobantedetalle in (
+select c.codigo from comprobantes_detalle c where c.cod_comprobante in
+(select cc.codigo from comprobantes cc where cc.cod_gestion=2020 and MONTH(cc.fecha) in (1,2,3,4,5,6) and cc.cod_unidadorganizacional!=3000));";
+    $stmtDelete = $dbh->prepare($sqlDelete);
+    $sqlDelete="DELETE from facturas_compra where cod_comprobantedetalle in (
+select c.codigo from comprobantes_detalle c where c.cod_comprobante in
+(select cc.codigo from comprobantes cc where cc.cod_gestion=2020 and MONTH(cc.fecha) in (1,2,3,4,5,6) and cc.cod_unidadorganizacional!=3000)) and cod_solicitudrecursodetalle is null;";
+    $stmtDelete = $dbh->prepare($sqlDelete);
+    $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante in
+(select cc.codigo from comprobantes cc where cc.cod_gestion=2020 and MONTH(cc.fecha) in (1,2,3,4,5,6) and cc.cod_unidadorganizacional!=3000);";
+    $stmtDelete = $dbh->prepare($sqlDelete);
+    $sqlDelete="DELETE from comprobantes where cod_gestion=2020 and MONTH(fecha) in (1,2,3,4,5,6) and cc.cod_unidadorganizacional!=3000;";
+    $stmtDelete = $dbh->prepare($sqlDelete);
 
     //maximo codigo tabla po_mayores
     $flagSuccess=TRUE;
