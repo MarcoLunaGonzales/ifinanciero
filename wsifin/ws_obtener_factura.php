@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                            $mensaje = "No existen registros";
                            $resultado=array("estado"=>$estado, 
                             "mensaje"=>$mensaje, 
-                            "Pagos"=>$facturasEncontradas,
+                            "pagos"=>$facturasEncontradas,
                             "totalComponentes"=>0);
                         }else{
                           $estado=8;

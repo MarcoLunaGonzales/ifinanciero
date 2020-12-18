@@ -5,7 +5,7 @@ $sIde = "facifin";
 $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 
 //$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"VerificacionPagosCurso");
-$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"VerificacionPagosCurso","IdCurso"=>2572,"Ci"=>"11498699");
+$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"VerificacionPagosCurso","IdCurso"=>2572,"Ci"=>"1149564568699");
 		
 		$parametros=json_encode($parametros);
 		// abrimos la sesión cURL
