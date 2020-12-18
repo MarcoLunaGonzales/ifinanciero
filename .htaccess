@@ -2,8 +2,8 @@
     php_value session.cookie_lifetime 28800
     php_value session.gc_maxlifetime 28800
     # CAMBIAR EL PATH DE LAS SESIONES PARA EL IFINANCIERO
-    php_value session.save_path C:\xampp\htdocs\ifinanciero\session\storage
-    #php_value session.save_path C:\xamppNew\htdocs\ifinanciero\session\storage
+    #php_value session.save_path C:\xampp\htdocs\ifinanciero\session\storage
+    php_value session.save_path C:\xamppNew\htdocs\ifinanciero\session\storage
    
     php_value max_input_vars 2000
 	php_value post_max_size 64M

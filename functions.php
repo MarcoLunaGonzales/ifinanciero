@@ -5309,9 +5309,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      return($codigoX);
   }
 
-  function buscarCuentaAuxiliarAnterior($cuentaaux){
+  function buscarCuentaAuxiliarAnterior($cuentaaux,$cuenta){
      $dbh = new Conexion();
-     $sqlX="SELECT codigo FROM cuentas_auxiliares where codigo_anterior='$cuentaaux'";
+     $sqlX="SELECT codigo FROM cuentas_auxiliares where codigo_anterior='$cuentaaux' and cod_cuenta='$cuenta'";
      //echo $sqlX;
      $stmt = $dbh->prepare($sqlX);
      $stmt->execute();
