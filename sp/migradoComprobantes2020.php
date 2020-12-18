@@ -56,27 +56,11 @@ if (!$conexión) {
 
     echo "CONEXION ESTABLECIDA!!!!";
 
-    /*$sqlDelete = "DELETE from comprobantes_detalle";
-    $stmtDelete = $dbh->prepare($sqlDelete);
-    $flagSuccess=$stmtDelete->execute();
-
-    $sqlDelete = "DELETE from comprobantes";
-    $stmtDelete = $dbh->prepare($sqlDelete);
-    $flagSuccess=$stmtDelete->execute();
-    */
-
     //maximo codigo tabla po_mayores
     $flagSuccess=TRUE;
     $flagSuccess2=TRUE;
 
     $sqlInserta="";
-
-    /*$sqlMaxCod = 'SELECT IFNULL(max(indice),0)maximo from po_mayores';
-    $stmtMaxCod = $dbh->prepare($sqlMaxCod);
-    $stmtMaxCod->execute();
-    while ($rowMaxCod = $stmtMaxCod->fetch(PDO::FETCH_ASSOC)) {
-      $indiceMax=$rowMaxCod['maximo'];
-    }*/
 
     $sql = "SELECT forma.fondo, forma.clase, forma.numero, forma.fecha, forma.moneda, forma.glosa, forma.estado 
     FROM ibnorca2020.dbo.forma where forma.clase not in ('I-ADM', 'POA', 'POA99', 'POE', 'POE99', 'PPC', '4') 
