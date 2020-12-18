@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                   $resultado=array(
                             "estado"=>$estado,
                             "mensaje"=>"Fecha Obtenida Correctamente", 
-                            "datos"=>$fechaActual, 
+                            "fecha"=>$fechaActual, 
                             "totalComponentes"=>1     
                             );
                 }
