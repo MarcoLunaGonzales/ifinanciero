@@ -8,20 +8,15 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 
 //la ufv tengo q obtener de la funcion 
-
-//TENGO Q AVERIGUAR EL PRIMER Y ULTIMO DIA DEL MES
-//$fecha = '2010-02-04';
-$fecha = $_POST["gestion"].'-'.$_POST["mes"].'-01';//ARMO UNA FECHA
-
-// First day of the month.
-$fecha_primerdia = date('Y-m-01', strtotime($fecha));
-// Last day of the month.
-$fecha_ultimodia = date('Y-m-t', strtotime($fecha));
-
-
 //$cod_empresa=$_POST["cod_empresa"];
 $mes=$_POST["mes"];
 $gestion=$_POST["gestion"];
+
+
+$ufvinicio=$_POST["ufv_inicio"];
+$ufvfinal=$_POST["ufv_fin"];
+
+
 //verificamos si esa fecha no se registro aun
 
 $sql="SELECT count(codigo)as contador from mesdepreciaciones where gestion=$gestion and mes=$mes";
@@ -38,7 +33,6 @@ $stmt = $dbh->prepare($sql);
 	if($codigo_aux==0)
 	{
 		//echo "entro correcto 1";
-		//verificamos si se salta algun mes
 		$stmt2 = $dbh->prepare("SELECT mes,gestion from mesdepreciaciones  order by codigo desc limit 1");
 		$stmt2->execute();
 		$result2=$stmt2->fetch();
@@ -47,16 +41,30 @@ $stmt = $dbh->prepare($sql);
 		
 		if($mes_aux==12){
 			$mes_aux=1;
+			// $mes_aux+=$mes;
 		}else{
-			if($mes_aux==null || $mes_aux=="")
+			if($mes_aux==null || $mes_aux==""){
 				$mes_aux=0;
-			else $mes_aux=$mes_aux+1;
+				// $fecha_depre = $_POST["gestion"].'-'.$_POST["mes"].'-01';//ARMO UNA FECHA
+				// $fecha_depre_ant = $_POST["gestion"].'-'.$_POST["mes"].'-01';//ARMO UNA FECHA
+			}else{ 
+				$mes_aux=$mes_aux;
+				// $fecha_depre = $_POST["gestion"].'-'.$_POST["mes"].'-01';//ARMO UNA FECHA
+				// $fecha_depre_ant = $gestion_aux.'-'.$mes_aux.'-01';//ARMO UNA FECHA
+			};
 		}
 		// echo "mesAux: ".$mes_aux;
-		if($mes_aux==$mes || $mes_aux==0){//no se salto ningun mes
-			echo "entra";
-			$ufvinicio=obtenerUFV($fecha_primerdia);
-			$ufvfinal=obtenerUFV($fecha_ultimodia);
+		if($mes>$mes_aux || $mes_aux==0){//no se salto ningun mes
+			//TENGO Q AVERIGUAR EL PRIMER Y ULTIMO DIA DEL MES
+			//$fecha = '2010-02-04';
+			
+			// First day of the month.			
+			// $fecha_primerdia = date('Y-m-t', strtotime($fecha_depre_ant));
+			// // Last day of the month.
+			// $fecha_ultimodia = date('Y-m-t', strtotime($fecha_depre));
+
+			// $ufvinicio=obtenerUFV($fecha_primerdia);
+			// $ufvfinal=obtenerUFV($fecha_ultimodia);
 			$estado=1;
 			//Prepare
 			$stmt = $dbh->prepare("call crear_depreciacion_mensual(:mes, :gestion, :ufvinicio, :ufvfinal)");
