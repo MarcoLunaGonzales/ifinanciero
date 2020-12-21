@@ -17,7 +17,7 @@ require_once 'conexion.php';
     $cod_archivos=[];
     $cod_archivos_copiados=[];
     //archivos solicitudes de recursos
-    $sql="SELECT codigo,direccion_archivo as origen,cod_solicitud_facturacion,descripcion  from archivos_adjuntos_solicitud_facturacion where (cod_archivoibnorca=0 or cod_archivoibnorca is null);";		
+    $sql="SELECT codigo,direccion_archivo as origen,cod_solicitud_facturacion,descripcion  from archivos_adjuntos_solicitud_facturacion where (cod_archivoibnorca=0 or cod_archivoibnorca is null) and cod_solicitud_facturacion in (5027,5019);";		
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     
