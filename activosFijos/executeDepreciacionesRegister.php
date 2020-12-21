@@ -24,7 +24,7 @@ $stmtGestiones = $dbh->query($sql);
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
   				<div class="card-text">
-  				  <h4 class="card-title">Registrar <?=$moduleNameSingular7;?></h4>
+  				  <h4 class="card-title">Registrar Depreciación</h4>
   				</div>
 			  </div>
 			  <div class="card-body ">

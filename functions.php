@@ -803,7 +803,8 @@
   function obtenerUFV($date){
     $dbh = new Conexion();
     $sql="";
-    $sql="SELECT u.valor from ufvs u where u.fecha='$date'";
+    $sql="SELECT t.valor from tipo_cambiomonedas t where t.cod_moneda=4 and t.fecha='$date'";
+    //echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $valor="0";
