@@ -46,8 +46,8 @@ if(isset($_GET['cod_sw'])){//para la parte de editar
             $array_curso[$i-1]=$id_curso;
         }    
     }    
-    $stringCi=implode(",", $array_ci);
-    $stringCi=trim($stringCi,',');
+    $stringCi=implode("','", $array_ci);
+    $stringCi="'".trim($stringCi,"','")."'";
     $stringCurso=implode(",", $array_curso);
     $stringCurso=trim($stringCurso,',');
 }

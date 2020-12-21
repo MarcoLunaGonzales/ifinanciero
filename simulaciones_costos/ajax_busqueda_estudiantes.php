@@ -135,6 +135,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                   $stmtIBNO->bindColumn('Nombre', $nombre_mod);                                    
                   $stmtIBNO->bindColumn('FechaInscripcion_x', $FechaInscripcion);
                   while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
+                    $CiAlumno=preg_replace("[\n|\r|\n\r]", "", $CiAlumno);
                     $codigo_curso=obtenerCodigoExternoCurso($IdCurso);
                     $descuento=trim($descuento,'%');
                     $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 

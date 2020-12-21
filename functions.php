@@ -803,7 +803,8 @@
   function obtenerUFV($date){
     $dbh = new Conexion();
     $sql="";
-    $sql="SELECT u.valor from ufvs u where u.fecha='$date'";
+    $sql="SELECT t.valor from tipo_cambiomonedas t where t.cod_moneda=4 and t.fecha='$date'";
+    //echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $valor="0";
@@ -5309,9 +5310,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      return($codigoX);
   }
 
-  function buscarCuentaAuxiliarAnterior($cuentaaux){
+  function buscarCuentaAuxiliarAnterior($cuentaaux,$cuenta){
      $dbh = new Conexion();
-     $sqlX="SELECT codigo FROM cuentas_auxiliares where codigo_anterior='$cuentaaux'";
+     $sqlX="SELECT codigo FROM cuentas_auxiliares where codigo_anterior='$cuentaaux' and cod_cuenta='$cuenta'";
      //echo $sqlX;
      $stmt = $dbh->prepare($sqlX);
      $stmt->execute();
