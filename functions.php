@@ -5545,7 +5545,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
               join areas a on a.codigo=d.cod_area
               join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
               join plan_cuentas p on p.codigo=d.cod_cuenta
-              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>'2' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and .cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>'2' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre $stringCuenta order by p.numero";
       //echo $sql;
       $stmt = $dbh->prepare($sql);
@@ -6654,22 +6654,22 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
           $sqlUnidades.="and (";
         }
         if($i==(count($arrayUnidades)-1)){
-          $sqlUnidades.="c.cod_unidadorganizacional='".$arrayUnidades[$i]."')";
+          $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."')";
          }else{
-          $sqlUnidades.="c.cod_unidadorganizacional='".$arrayUnidades[$i]."' or ";
+          $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."' or ";
          }  
      }
      
      $sql="(SELECT sum(total_debe) as t_debe,sum(total_haber) as t_haber,1 as tipo from plan_cuentas p join 
              (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
-              where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_gestion='$gestion' and c.cod_estadocomprobante<>2  group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+              where (c.fecha between '$fi 00:00:00' and '$fa 23:59:59') $sqlUnidades and c.cod_gestion='$gestion' and c.cod_estadocomprobante<>2  group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.numero like '4%' and p.nivel=5 order by p.numero)
            UNION
            (SELECT sum(total_debe) as t_debe,sum(total_haber) as t_haber,2 as tipo from plan_cuentas p join 
              (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante
-              where (c.fecha between '$fi' and '$fa') $sqlUnidades and c.cod_gestion='$gestion' and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+              where (c.fecha between '$fi 00:00:00' and '$fa 23:59:59') $sqlUnidades and c.cod_gestion='$gestion' and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.numero like '5%' and p.nivel=5 order by p.numero)";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
