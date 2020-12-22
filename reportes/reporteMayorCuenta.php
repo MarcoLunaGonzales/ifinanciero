@@ -27,6 +27,8 @@
             //   '<th style="display: none;"></th>'.
             // '</tr>'.
             '<tr class="text-center">'.
+              '<th>COD_COMPROBANTE</th>'.
+              '<th>COD_CUENTAAUX</th>'.
               '<th>Oficina Origen</th>'.
               '<th width="5%">Cbte</th>'.
               '<th width="7%">Fecha</th>'.
@@ -163,6 +165,8 @@
         }
         
        $html.='<tr class="cuenta'.$cuenta.'" style="display:none">'.
+                '<td class="font-weight-bold small">'.$codigoX.'</td>'.
+                '<td class="font-weight-bold small">'.$codCuentaAuxiliar.'</td>'.
                 '<td class="font-weight-bold small">'.$nombreUnidad.'</td>'.
                 '<td class="font-weight-bold small">'.$nombreComprobanteX.'</td>'.
                 '<td class="font-weight-bold small">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.

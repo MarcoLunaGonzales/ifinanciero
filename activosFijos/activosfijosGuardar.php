@@ -78,11 +78,11 @@ try {
         $stmt = $dbh->prepare("INSERT INTO activosfijos(codigoactivo,tipoalta,fechalta,indiceufv,tipocambio,moneda,valorinicial,
         depreciacionacumulada,valorresidual,cod_depreciaciones,cod_tiposbienes,vidautilmeses, vidautilmeses_restante,estadobien,otrodato,cod_ubicaciones,
         cod_empresa,activo,cod_responsables_responsable,cod_responsables_autorizadopor, cod_af_proveedores, numerofactura,
-        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo,cod_proy_financiacion,reevaluo,tipo_af) values
+        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo,cod_proy_financiacion,reevaluo,tipo_af,fecha_iniciodepreciacion) values
         (:codigoactivo, :tipoalta, :fechalta, :indiceufv, :tipocambio, :moneda, :valorinicial, :depreciacionacumulada, :valorresidual,
         :cod_depreciaciones, :cod_tiposbienes, :vidautilmeses, :vidautilmeses_restante, :estadobien, :otrodato, :cod_ubicaciones, :cod_empresa, :activo,
         :cod_responsables_responsable, :cod_responsables_autorizadopor, :cod_af_proveedores, :numerofactura,
-        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo,:cod_proy_financiacion,:reevaluo,:cod_tiposactivos)");
+        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo,:cod_proy_financiacion,:reevaluo,:cod_tiposactivos,:fecha_iniciodepreciacion)");
 
         //necesito guardar en una segunda tabla: activofijos_asignaciones
 
@@ -124,6 +124,7 @@ try {
         $stmt->bindParam(':cod_proy_financiacion', $cod_proy_finan);
         $stmt->bindParam(':reevaluo', $reevaluo);
         $stmt->bindParam(':cod_tiposactivos', $cod_tiposactivos);
+        $stmt->bindParam(':fecha_iniciodepreciacion', $fechalta);
         
         
         //$stmt->bindParam(':created_at', $created_at);
