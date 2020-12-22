@@ -50,7 +50,7 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                         Depreciación De Activos Fijos Por Mes Y Gestión
                     </h4>
                     <h6 class="card-title">Mes: <?php echo nameMes($mes); ?><br>
-                                Gestion: <?php echo $gestion; ?><br>
+                        Gestion: <?php echo $gestion; ?>
                     </h6> 
                 </div>
                 <div class="card-body">
@@ -97,7 +97,7 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                         $stmt2->bindColumn('nombre_depreciaciones', $nombre_depreciaciones);//rubros
                         $stmt2->bindColumn('nombre_uo2', $nombre_uo);//unidades organizacionales
                     ?>
-                    <table class="table table-bordered table-condensed" id="tablePaginatorFixed">
+                    <table class="table table-bordered table-condensed" >
                         <thead>
                         <?php  
                                 $ultimouo = "";//control
@@ -125,11 +125,11 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                                             <tr class="bg-info text-white">
                                                 <th colspan="2">Total :</th>
                                                 <td class="text-center small"><?=formatNumberDec($sumRubroValorAnterior); ?></td>
-                                                <td class="text-center small"><?=formatNumberDec($sumRubroActualizacion); ?></td>
+                                                <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActualizacion); ?></td>
                                                 <td class="text-center small"><?=formatNumberDec($sumRubroValorActualizado); ?></td>
                                     <td class="text-center small"><?=formatNumberDec($sumRubroDepreciacionAcumulada); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($sumRubroActDepreciacionAcumulada); ?></td>
-                                                <td class="text-center small"><?=formatNumberDec($sumrubro_depreciacionPeriodo); ?></td>
+                                    <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActDepreciacionAcumulada); ?></td>
+                                                <td class="text-center small bg-success"><?=formatNumberDec($sumrubro_depreciacionPeriodo); ?></td>
                                                 <td class="text-center small"><?=formatNumberDec($sumrubro_depreciacion); ?></td>
                                                 <td class="text-center small"><?=formatNumberDec($sumRubroValorNeto); ?></td>
                                                 <td>-</td>
@@ -167,18 +167,18 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                                             <th colspan="11">Rubro : <?php echo $nombre_depreciaciones; ?></th>
                                         </tr>
                                         <tr >
-                                            <th class="font-weight-bold">Codigo Activo</th>
-                                            <th class="font-weight-bold">Activo</th>
-                                            <th class="font-weight-bold">Valor<br>Anterior</th>
-                                            <!--th class="font-weight-bold">Factor Actual.</th-->
-                                            <th class="font-weight-bold">Actualizacion</th>
-                                            <th class="font-weight-bold">Valor<br>Actualizado</th>
-                                            <th class="font-weight-bold">Depreciacion<br>Acumulada Anterior</th>
-                                            <th class="font-weight-bold">Actualizacion<br>Depreciacion Acumulada</th>
-                                            <th class="font-weight-bold">Depreciacion Periodo</th>
-                                            <th class="font-weight-bold">Depreciacion Acumulada</th>
-                                            <th class="font-weight-bold">Valor Neto</th>
-                                            <th class="font-weight-bold">Vida Util Restante</th>            
+                                            <th ><small>Cod.<br>Activo</small></th>
+                                            <th ><small>Activo</small></th>
+                                            <th ><small>Valor<br>Anterior</small></th>
+                                            <!--th >Factor Actual.</th-->
+                                            <th ><small>Actualización</small></th>
+                                            <th ><small>Valor<br>Actualizado</small></th>
+                                            <th ><small>Depreciación<br>Acumulada Anterior</small></th>
+                                            <th ><small>Actualización<br>Depreciación Acumulada</small></th>
+                                            <th ><small>Depreciación Periodo</small></th>
+                                            <th ><small>Depreciacion Acumulada</small></th>
+                                            <th ><small>Valor Neto</small></th>
+                                            <th ><small>Vida útil Restante</small></th>            
                                         </tr>
                                         <?php
                                     }
@@ -198,30 +198,29 @@ $stmt1->bindColumn('nombre_unidadO', $nombre_unidadO);
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td class="text-center small"><?php echo  $codigoactivo; ?></td>
-                                    <td class="text-left small"><?php echo  $activo; ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($d2_valorresidual); ?></td>
-                                    <!--td class="text-center small"><?php echo  $d3_factoractualizacion; ?></td-->
-                                    <td class="text-center small"><?=formatNumberDec($d5_incrementoporcentual); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($d4_valoractualizado); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($d6_depreciacionacumuladaanterior); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($d7_incrementodepreciacionacumulada); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($d8_depreciacionperiodo); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($d9_depreciacionacumuladaactual); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($d10_valornetobs); ?></td>
-                                    <td class="text-center small"><?=$d11_vidarestante; ?></td>
+                                    <td class="text-center small"><small><?=$codigoactivo;?></td>
+                                    <td class="text-left small"><small><?=$activo; ?></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d2_valorresidual); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d5_incrementoporcentual); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d4_valoractualizado); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d6_depreciacionacumuladaanterior); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d7_incrementodepreciacionacumulada);?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d8_depreciacionperiodo); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d9_depreciacionacumuladaactual); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d10_valornetobs); ?></small></td>
+                                    <td class="text-center small"><small><?=$d11_vidarestante; ?></small></td>
                                 </tr>
                         <?php } ?>
                                   <!-- el ultimo no sale -->
                                 <tr class="bg-info text-white">
                                     <th colspan="2">Total :</th>
                                     <td class="text-center small"><?=formatNumberDec($sumRubroValorAnterior); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($sumRubroActualizacion); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($sumRubroValorActualizado); ?></td>
+                                    <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActualizacion); ?></td>
+                                    <td class="text-center small "><?=formatNumberDec($sumRubroValorActualizado); ?></td>
                                     <td class="text-center small"><?=formatNumberDec($sumRubroDepreciacionAcumulada); ?></td>
                                     <td class="text-center small"><?=formatNumberDec($sumRubroActDepreciacionAcumulada); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($sumrubro_depreciacionPeriodo); ?></td>
-                                    <td class="text-center small"><?=formatNumberDec($sumrubro_depreciacion); ?></td>
+                                    <td class="text-center small bg-success"><?=formatNumberDec($sumrubro_depreciacionPeriodo); ?></td>
+                                    <td class="text-center small bg-success"><?=formatNumberDec($sumrubro_depreciacion); ?></td>
                                     <td class="text-center small"><?=formatNumberDec($sumRubroValorNeto); ?></td>
                                     <td>-</td>
                                 </tr>
