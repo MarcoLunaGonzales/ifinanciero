@@ -37,7 +37,7 @@ if(isset($_GET['deven'])){
 
 //INICIO DE VARIABLES
 $glosaDetalleGeneral="";
-
+$glosaFacturas="";
 
 $fechaHoraActualSitema=date("Y-m-d H:i:s");
 
@@ -225,6 +225,7 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             $numerosFacturasDetalle[$y]=$numeroFacturas[$y][1];
           }
           $tituloFactura="F/ ".implode($numerosFacturasDetalle,',')." - ";
+          //$glosaFacturas.=implode($numerosFacturasDetalle,',');
         }
         $glosaDetalle=" ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
         $glosaDetalleRetencion=" ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$datosServicio." ".$glosa;
@@ -560,11 +561,15 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             
             $tituloFactura="";
             if(obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])!=""){
+              if($glosaFacturas!=""){
+                $glosaFacturas.=",";
+              }
+              $glosaFacturas.=obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo']);
               $tituloFactura="F/".obtenerNumeroFacturaSolicitudRecursoDetalle($rowNuevo['codigo'])." - ";
             }
 
             $glosaDetalleProv=" ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$tituloFactura." ".$datosServicio." ".$glosa;
-
+            $glosaDetalleProvSinFacturas=" ".nameProveedor($rowNuevo['cod_proveedor'])." ".str_replace("-", "",$rowNuevo['glosa'])." ".$datosServicio." ".$glosa;
             //validacion si la solicitud es agrupada
             if($numeroRetencionFactura!=1){ 
             
@@ -630,12 +635,14 @@ $facturaCabecera=obtenerNumeroFacturaSolicitudRecursos($codigo);
             }
             // FIN CUENTA PASIVA   
 
-             $glosaDetalleGeneral=" ".$glosaDetalleProv;
+             $glosaDetalleGeneral=" ".$glosaDetalleProvSinFacturas;
   
     }//FIN WHILE DETALLES DE SOLICITUD
 
 
-
+    if($glosaFacturas!=""){
+      $glosaDetalleGeneral.=" F/ ".$glosaFacturas;
+    }
     //ACTUALIZAR LA GLOSA DEL COMPROBANTE CABECERA 
     $sqlUpdate="UPDATE comprobantes SET glosa='$glosaDetalleGeneral' WHERE codigo=$codComprobante";
     $stmtUpdate = $dbh->prepare($sqlUpdate);
