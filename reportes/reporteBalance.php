@@ -184,7 +184,6 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   $numeroResultado=obtieneNumeroCuenta($cuentaResultado);
                   $datosResultados=sumaMontosDebeHaberComprobantesDetalleResultados($fechaFormateada,1,$unidades,$areas,$gestion,"none");
                   while ($rowRes = $datosResultados->fetch(PDO::FETCH_ASSOC)) {
-
                      if($rowRes['tipo']==1){
                       $montoResultadoIngreso=$rowRes['t_debe']-$rowRes['t_haber'];
                       $montoResultadoIngreso=abs($montoResultadoIngreso);
