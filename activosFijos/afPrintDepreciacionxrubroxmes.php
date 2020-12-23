@@ -117,7 +117,6 @@ $total_valorNeto=0;
                                         $stmt2->bindColumn('valorActualizado', $valorActualizado);
                                         $stmt2->bindColumn('depreAcumAnt', $depreAcumAnt);
                                         
-
                                         $stmt2->bindColumn('actDepAcum', $actDepAcum);
                                         $stmt2->bindColumn('deprePeriodo', $deprePeriodo);
                                         $stmt2->bindColumn('totalDepreAcumu', $totalDepreAcumu);
