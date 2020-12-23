@@ -253,7 +253,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
                     <td  colspan="3">';
                     	$html.='<table class="table">'.
 	             			'<tr ><td style="padding: 0px;margin: 0px;border-right: hidden;border-bottom: hidden;border-top: hidden;border-left: hidden;" valign="top">';
-							$entero=floor($importe);
+							$entero=floor(round($importe,2));
 							$decimal=$importe-$entero;
 							$centavos=round($decimal*100);
 							if($centavos<10){

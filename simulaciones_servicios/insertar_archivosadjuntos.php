@@ -35,7 +35,7 @@ for ($ar=1; $ar <= $nArchivosCabecera ; $ar++) {
             $parametros=array(
             "idD" => 16,
             "idR" => $codArchivoAdjunto,
-            "idusr" => $globalUser,
+            "idusr" => 90,
             "Tipodoc" => 3596,
             "descripcion" => $descripcion,
             "codigo" => "",

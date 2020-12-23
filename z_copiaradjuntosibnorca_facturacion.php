@@ -17,7 +17,7 @@ require_once 'conexion.php';
     $cod_archivos=[];
     $cod_archivos_copiados=[];
     //archivos solicitudes de recursos
-    $sql="SELECT codigo,direccion_archivo as origen,cod_solicitud_facturacion,descripcion  from archivos_adjuntos_solicitud_facturacion where (cod_archivoibnorca=0 or cod_archivoibnorca is null);";		
+    $sql="SELECT codigo,direccion_archivo as origen,cod_solicitud_facturacion,descripcion  from archivos_adjuntos_solicitud_facturacion where (cod_archivoibnorca=0 or cod_archivoibnorca is null)";		
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     
@@ -33,7 +33,7 @@ require_once 'conexion.php';
        
        $usuarioRegistro=90;  /////////////////////////////////////////////////////////////USUARIO QUE REGISTRARA EL CAMBIO
        $ubicacionDestinoNoLeido="ibn_archivos_no_leidos/3596/".$nombreArchivo;
-       $carpeta="ibn_archivos/3596/";
+       $carpeta="ibn_archivos_encontrados/3596/";
        $carpeta_no_leidos = "ibn_archivos_no_leidos/";
        $todos++; 
        if (file_exists($dirCorrecto)) {
@@ -51,7 +51,7 @@ require_once 'conexion.php';
             $tamanioArchivo=filesize($dirCorrecto);
             $codigoFila=obtenerCodigoUltimoTabla("dbdocumentos.documentos");
             $codigoPrevio=$codigoFila.$codigoArchivo;
-            $ubicacionDestino="ibn_archivos/3596/".$codigoPrevio.$nombreArchivo;
+            $ubicacionDestino="ibn_archivos_encontrados/3596/".$codigoPrevio.$nombreArchivo;
             $sqlDocumento="INSERT INTO dbdocumentos.documentos (idDocumento,IdTipo,Descripcion,NombreCodigo,NombreArchivo,Tipo,Tamanio,FechaRegistro,IdUsuarioRegistro,Observaciones,path) 
             VALUES('$codigoFila',3596,'$descripcion','','$nombreArchivo','$tipoArchivo','$tamanioArchivo',NOW(),$usuarioRegistro,'-','/$ubicacionDestino')";    
             $stmtDocumento = $dbh->prepare($sqlDocumento);

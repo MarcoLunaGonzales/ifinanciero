@@ -56,7 +56,7 @@ if (!$conexión) {
 
     echo "CONEXION ESTABLECIDA!!!!";
     //eliminar comprobantes
-    $sqlDelete="DELETE from estados_cuenta where cod_comprobantedetalle in (
+    /*$sqlDelete="DELETE from estados_cuenta where cod_comprobantedetalle in (
 select c.codigo from comprobantes_detalle c where c.cod_comprobante in
 (select cc.codigo from comprobantes cc where cc.cod_gestion=2020 and MONTH(cc.fecha) in (1,2,3,4,5,6) and cc.cod_unidadorganizacional!=3000));";
     $stmtDelete = $dbh->prepare($sqlDelete);
@@ -67,8 +67,24 @@ select c.codigo from comprobantes_detalle c where c.cod_comprobante in
     $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante in
 (select cc.codigo from comprobantes cc where cc.cod_gestion=2020 and MONTH(cc.fecha) in (1,2,3,4,5,6) and cc.cod_unidadorganizacional!=3000);";
     $stmtDelete = $dbh->prepare($sqlDelete);
-    $sqlDelete="DELETE from comprobantes where cod_gestion=2020 and MONTH(fecha) in (1,2,3,4,5,6) and cc.cod_unidadorganizacional!=3000;";
+    $sqlDelete="DELETE from comprobantes where cod_gestion=2020 and MONTH(fecha) in (1,2,3,4,5,6) and cod_unidadorganizacional!=3000;";
     $stmtDelete = $dbh->prepare($sqlDelete);
+
+   ---- ELIMINACION
+DELETE from estados_cuenta where cod_comprobantedetalle in (
+select c.codigo from comprobantes_detalle c where c.cod_comprobante in
+(select cc.codigo from comprobantes cc where cc.cod_gestion=2020 and MONTH(cc.fecha) in (1,2,3,4,5,6) and cc.cod_unidadorganizacional!=3000));
+
+DELETE from facturas_compra where cod_comprobantedetalle in (
+select c.codigo from comprobantes_detalle c where c.cod_comprobante in
+(select cc.codigo from comprobantes cc where cc.cod_gestion=2020 and MONTH(cc.fecha) in (1,2,3,4,5,6) and cc.cod_unidadorganizacional!=3000)) and cod_solicitudrecursodetalle is null;
+
+DELETE from comprobantes_detalle where cod_comprobante in
+(select cc.codigo from comprobantes cc where cc.cod_gestion=2020 and MONTH(cc.fecha) in (1,2,3,4,5,6) and cc.cod_unidadorganizacional!=3000);
+
+DELETE from comprobantes where cod_gestion=2020 and MONTH(fecha) in (1,2,3,4,5,6) and cod_unidadorganizacional!=3000;
+
+   */
 
     //maximo codigo tabla po_mayores
     $flagSuccess=TRUE;
@@ -80,7 +96,7 @@ select c.codigo from comprobantes_detalle c where c.cod_comprobante in
     FROM ibnorca2020.dbo.forma where forma.clase not in ('I-ADM', 'POA', 'POA99', 'POE', 'POE99', 'PPC', '4') 
     and forma.fondo not in (2000,2001) and MONTH(forma.fecha) in (1,2,3,4,5,6) order by forma.fecha,
          forma.clase, forma.numero;";
-    // end modificado
+    // end modificado ,2,3,4,5,6
 
     $rs = odbc_exec( $conexión, $sql );
     if ( !$rs ) { 
@@ -139,8 +155,21 @@ select c.codigo from comprobantes_detalle c where c.cod_comprobante in
         $unidadInsertar=$fondo;
       }
 
-      list($tipoComprobante, $mesComprobante) = explode('-',$clase);
-      if($tipoComprobante=="T"){
+
+      $pos = strpos($clase,'-');
+      if(count(explode('-', $clase))==2) {
+        list($tipoComprobante, $mesComprobante) = explode('-',$clase);
+      }else{
+        if(trim($clase)=="FAC"){
+          $tipoComprobante="FAC";
+          $tipoComprobanteInsertar=4;
+        }
+        echo "COMPROBANTE DE FACTURA<br>"; 
+      }
+        
+        
+
+        if($tipoComprobante=="T"){
         $tipoComprobanteInsertar=3;
       }elseif ($tipoComprobante=="I") {
         $tipoComprobanteInsertar=1;
@@ -159,8 +188,8 @@ select c.codigo from comprobantes_detalle c where c.cod_comprobante in
       $codComprobante=obtenerCodigoComprobante();
       $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) values ('$codComprobante','$codEmpresa','$unidadInsertar','2020','$codMoneda','$codEstadoComprobante','$tipoComprobanteInsertar','$fecha','$numeroComprobante','$glosa')";
       $stmtInsertCab = $dbh->prepare($sqlInsertCab);
-      
-      //$flagSuccess=$stmtInsertCab->execute();
+      //echo $sqlInsertCab;
+      $flagSuccess=$stmtInsertCab->execute();
       if($flagSuccess==FALSE){
         exit("ERROR EN LA INSERCION ".$sqlInsertCab);
       }
@@ -253,11 +282,14 @@ select c.codigo from comprobantes_detalle c where c.cod_comprobante in
       $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
       //echo $sqlInsertDet;
       $stmtInsertDet=$dbh->prepare($sqlInsertDet);
-      //$flagSuccess2=$stmtInsertDet->execute();
+      $flagSuccess2=$stmtInsertDet->execute();
 
-      if($flagSuccess2==FALSE){
+       if($flagSuccess2==FALSE){
         exit("ERROR EN LA INSERCION DETALLE ".$sqlInsertDet);
-      }
+       }
+      
+      
+      
 
     }
 }//FIN RECORRIDO GESTION

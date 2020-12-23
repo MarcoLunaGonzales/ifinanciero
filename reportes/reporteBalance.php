@@ -187,7 +187,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
                      if($rowRes['tipo']==1){
                       $montoResultadoIngreso=$rowRes['t_debe']-$rowRes['t_haber'];
-                      $montoResultadoIngreso=$montoResultadoIngreso*(-1);
+                      $montoResultadoIngreso=abs($montoResultadoIngreso);
                      }else{
                       $montoResultadoEgreso=$rowRes['t_debe']-$rowRes['t_haber'];
                      } 
@@ -387,7 +387,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
  $html.=    '</tbody></table>';
      
-      $entero=floor($tDebeBol);
+      $entero=floor($tDebeBolActivo);
       $decimal=$tDebeBol-$entero;
       $centavos=floor($decimal*100);
       if($centavos<10){

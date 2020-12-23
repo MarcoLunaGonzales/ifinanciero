@@ -193,7 +193,7 @@ try {
                   $parametros=array(
                    "idD" => 17,
                    "idR" => $codArchivoAdjunto,
-                   "idusr" => $globalUser,
+                   "idusr" => 90,
                    "Tipodoc" => 3596,
                    "descripcion" => $descripcion,
                    "codigo" => "",
@@ -380,7 +380,7 @@ try {
                   $parametros=array(
                    "idD" => 17,
                    "idR" => $codArchivoAdjunto,
-                   "idusr" => $globalUser,
+                   "idusr" => 90,
                    "Tipodoc" => 3596,
                    "descripcion" => $descripcion,
                    "codigo" => "",
