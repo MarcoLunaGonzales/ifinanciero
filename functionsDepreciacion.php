@@ -84,12 +84,10 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
         $valorIncrementoPorcentual_5 = 0;
     }
 
-
-
+    
     $sqlInsertDet="INSERT INTO mesdepreciaciones_detalle (cod_mesdepreciaciones, cod_activosfijos, d2_valorresidual, d3_factoractualizacion, d4_valoractualizado, d5_incrementoporcentual, d6_depreciacionacumuladaanterior, d7_incrementodepreciacionacumulada, d8_depreciacionperiodo, d9_depreciacionacumuladaactual, d10_valornetobs, fecha_inicio, fecha_fin,d11_vidarestante) values ('$ultimoIdInsertado', '$codActivo', '$valorResidual_2', '$factorActualizacion_3', '$valorActivoActualizado_4', '$valorIncrementoPorcentual_5', '$depreciacionAcumulada_6', '$incrementoDepreciacionAcumulada_7', '$depreciacionPeriodo_8', '$depreciacionActualAcumulada_9','$valorNetoActivo_10', '$fechaInicioDepreciacion', '$fechaFinalDepreciacion','$vida_util_restante')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-    $stmtInsertDet -> execute();
-    
+    $stmtInsertDet -> execute();    
     return(1);
 
 }

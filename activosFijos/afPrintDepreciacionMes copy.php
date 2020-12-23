@@ -1,112 +1,242 @@
-<?php
+<?php //ESTADO FINALIZADO
 
 require_once __DIR__.'/../conexion.php';
-require_once __DIR__.'/../conexion.php';
+require_once __DIR__.'/../functions.php';
+require_once __DIR__.'/../functionsGeneral.php';
+
+require_once '../layouts/bodylogin2.php';
+
 //require_once 'styles.php';
 //require_once 'configModule.php';
 
-//require_once  __DIR__.'/../fpdf.php';
-require_once  __DIR__.'/../fpdf_html.php';
-
-
-
 
 $dbh = new Conexion();
+$sqlX="SET NAMES 'utf8'";
+$stmtX = $dbh->prepare($sqlX);
+$stmtX->execute();
 
 //RECIBIMOS LAS VARIABLES
-$codigo=$_GET["codigo"];
 
-//echo "n".$codigo."n";
-
-$stmt2 = $dbh->prepare("select * from mesdepreciaciones WHERE codigo=:codigo");
-// Ejecutamos
-$stmt2->bindParam(':codigo',$codigo);
-$stmt2->execute();
-$result2 = $stmt2->fetch();
-$codigo2 = $result2['codigo'];
+$id = $_GET["codigo"];
+$stmt = $dbh->prepare("select * from mesdepreciaciones WHERE codigo=:codigo");
+$stmt->bindParam(':codigo',$id);
+$stmt->execute();
+$result2 = $stmt->fetch();
 $mes = $result2['mes'];
 $gestion = $result2['gestion'];
-$ufvinicio = $result2['ufvinicio'];
-$ufvfinal = $result2['ufvfinal'];
-$estado2 = $result2['estado'];
-
-//echo $mes;
-
-$query = "select * from mesdepreciaciones_detalle, activosfijos where activosfijos.codigo = mesdepreciaciones_detalle.cod_activosfijos and mesdepreciaciones_detalle.cod_mesdepreciaciones=".$codigo;
-$statement = $dbh->query($query);
-
-//echo $codigoactivo;
-$pdf = new PDF_HTML();
-$pdf->AddPage();
-$pdf->SetFont('Arial','B',10);
-
-    $pdf->SetFont('Arial', 'B', 15); //arial bold
-    $pdf->SetFillColor(0); 
-    $pdf->SetTextColor(225); 
-    $pdf->Cell(0, 10, "Depreciacion de Activos Fijos Total por Mes", 0, 1, 'C', true); //de la linea 1 a la 20
-    
-    //otra fila
-    /*
-    $pdf->SetFont(Arial, '',10);
-    
-    $pdf->Cell(50, 13, "Rubro:"); 
-    $pdf->Cell(50, 13, $nombre2);
-    */
-    //otra fila
-    $pdf->SetTextColor(0);//verde
-    $pdf->Ln();
-    $pdf->Cell(50, 13, "Mes");//ancho, alto, valor
-    $pdf->Cell(50, 13, $mes);
-    $pdf->Cell(50, 13, "Gestion");
-    $pdf->Cell(50, 13, $gestion);
-    
-    $pdf->Ln();
-    $pdf->SetFillColor(0); 
-    //$pdf->SetTextColor(225); 
-    $pdf->Cell(0, 0.2, "", 0, 1, 'C', true); //de la linea 1 a la 20
-
-    $pdf->SetFont(Arial, '',7)  ;
-    //tabla
-    $ancho = 20;
-    $alto = 10;
-    $pdf->Ln();
-    $pdf->Cell($ancho, $alto, "Activo");
-    $pdf->Cell($ancho, $alto, "Valor Residual");
-    $pdf->Cell($ancho, $alto, "Factor Actual.");
-    $pdf->Cell($ancho, $alto, "Valor Actual.");
-    $pdf->Cell($ancho, $alto, "Inc. %");
-    $pdf->Cell($ancho, $alto, "Depr Acm. Ant.");
-    $pdf->Cell($ancho, $alto, "Incr. Depr. Acum.");
-    $pdf->Cell($ancho, $alto, "Depr. Acum. Act."); 
-    $pdf->Cell($ancho, $alto, "Valor Neto Bs");
-    $pdf->Cell($ancho, $alto, "Rest. Meses");
-
-    
-    $index=1;
-    while ($row = $statement->fetch()){ 
-        $pdf->Ln();
-        $pdf->Cell(50, $alto, $codigoactivo);
-        $pdf->Cell(50, $alto, $activo);
-        
-     
-        $pdf->Ln();
-        $pdf->Cell($ancho, $alto, $row["codigoactivo"]);
-        $pdf->Cell($ancho, $alto, $row["d2_valorresidual"]);
-        $pdf->Cell($ancho, $alto, $row["d3_factoractualizacion"]);
-        $pdf->Cell($ancho, $alto, $row["d4_valoractualizado"]);
-        $pdf->Cell($ancho, $alto, $row["d5_incrementoporcentual"]);
-        $pdf->Cell($ancho, $alto, $row["d6_depreciacionacumuladaanterior"]);
-        $pdf->Cell($ancho, $alto, $row["d7_incrementodepreciacionacumulada"]);
-        $pdf->Cell($ancho, $alto, $row["d9_depreciacionacumuladaactual"]);
-        $pdf->Cell($ancho, $alto, $row["d10_valornetobs"]);
-        $pdf->Cell($ancho, $alto, $row["d11_vidarestante"]);
-    }
 
 
-//$html = "<h1>Activo>:".$codigoactivo."</h1></br>";
-//$html += "<h2>Vida Util (Meses):".$vidautilmeses."</h2>";
+// $sql="SELECT af.cod_unidadorganizacional
+//     from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
+//     WHERE m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+//     and m.codigo =".$id." GROUP BY (af.cod_unidadorganizacional)";
 
-//$pdf->WriteHTML2($html);
-$pdf->Output();
+$sql="SELECT af.cod_unidadorganizacional,(select uo.nombre from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)nombre_uo
+    from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
+    WHERE m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+    and m.codigo =$id GROUP BY (af.cod_unidadorganizacional) ORDER BY 2 asc";
+//echo $sql;
+
+$stmt1 = $dbh->prepare($sql);
+$stmt1->execute();
+$stmt1->bindColumn('nombre_uo', $nombre_unidadO);
+$stmt1->bindColumn('cod_unidadorganizacional', $cod_unidad);
 
 ?>
+
+<div class="content">
+  <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+              <div class="card" >
+                <div class="card-header <?=$colorCard;?> card-header-icon">
+                    <h4 class="card-title"> 
+                        <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
+                        Depreciación De Activos Fijos Por Mes Y Gestión
+                    </h4>
+                    <h6 class="card-title">Mes: <?php echo nameMes($mes); ?><br>
+                        Gestion: <?php echo $gestion; ?>
+                    </h6> 
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <?php
+                    while ($row = $stmt1->fetch()) {        
+                    ?>
+                    <?php
+                        //echo $nombre_unidadO;
+                        //$gestion2 = $_POST["gestion"];
+                        $sqlActivos="SELECT * 
+                                from mesdepreciaciones m, mesdepreciaciones_detalle md, v_activosfijos af
+                                WHERE m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+                                 and af.cod_unidadorganizacional=:cod_unidad and m.codigo = ".$id." order by af.nombre_depreciaciones, af.activo";
+                        //echo $sqlActivos;
+                        $stmt2 = $dbh->prepare($sqlActivos);//nombre_depreciaciones es rubro
+                        // Ejecutamos
+                        $stmt2->bindParam(':cod_unidad',$cod_unidad);
+                        $stmt2->execute();
+                        //resultado
+                        $stmt2->bindColumn('codigoactivo', $codigoactivo);
+                        $stmt2->bindColumn('activo', $activo);
+
+
+                        $stmt2->bindColumn('mes', $mes3);
+                        $stmt2->bindColumn('gestion', $gestion3);
+                        $stmt2->bindColumn('ufvinicio', $ufvinicio);
+                        $stmt2->bindColumn('ufvfinal', $ufvfinal);
+                        //$stmt2->bindColumn('estado', $estado);
+                        //$stmt2->bindColumn('codigo1', $codigo1);
+                        $stmt2->bindColumn('cod_mesdepreciaciones', $cod_mesdepreciaciones);
+                        $stmt2->bindColumn('cod_activosfijos', $cod_activosfijos);
+                        $stmt2->bindColumn('d2_valorresidual', $d2_valorresidual);
+                        $stmt2->bindColumn('d3_factoractualizacion', $d3_factoractualizacion);
+                        $stmt2->bindColumn('d4_valoractualizado', $d4_valoractualizado);
+                        $stmt2->bindColumn('d5_incrementoporcentual', $d5_incrementoporcentual);
+                        $stmt2->bindColumn('d6_depreciacionacumuladaanterior', $d6_depreciacionacumuladaanterior);
+                        $stmt2->bindColumn('d7_incrementodepreciacionacumulada', $d7_incrementodepreciacionacumulada);
+                        $stmt2->bindColumn('d8_depreciacionperiodo', $d8_depreciacionperiodo);
+                        $stmt2->bindColumn('d9_depreciacionacumuladaactual', $d9_depreciacionacumuladaactual);
+                        $stmt2->bindColumn('d10_valornetobs', $d10_valornetobs);
+                        $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
+
+                        $stmt2->bindColumn('nombre_depreciaciones', $nombre_depreciaciones);//rubros
+                        $stmt2->bindColumn('nombre_uo2', $nombre_uo);//unidades organizacionales
+                    ?>
+                    <table class="table table-bordered table-condensed" >
+                        <thead>
+                        <?php  
+                                $ultimouo = "";//control
+                                $ultimorubro = "";//control
+                                $sumrubro_depreciacion = 0;
+
+                                $sumRubroValorAnterior=0;
+                                $sumRubroActualizacion=0;
+                                $sumRubroValorActualizado=0;
+                                
+                                $sumRubroDepreciacionAcumulada=0;
+                                $sumRubroActDepreciacionAcumulada=0;
+                                $sumRubroValorNeto=0;
+    
+
+                                $contador = 0; //control
+                                while ($row = $stmt2->fetch()) { //?>    
+                            
+                                <?php
+                                    $contador++;               
+                                    if ($ultimorubro != $nombre_depreciaciones) { //crea una fila mas , no hay else... pero ademas crea una nueva fila
+                                        //1. mostrar totales del anterior
+                                        if ($contador != 1)
+                                            {?>
+                                            <tr class="bg-info text-white">
+                                                <th colspan="2">Total :</th>
+                                                <td class="text-center small"><?=formatNumberDec($sumRubroValorAnterior); ?></td>
+                                                <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActualizacion); ?></td>
+                                                <td class="text-center small"><?=formatNumberDec($sumRubroValorActualizado); ?></td>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroDepreciacionAcumulada); ?></td>
+                                    <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActDepreciacionAcumulada); ?></td>
+                                                <td class="text-center small bg-success"><?=formatNumberDec($sumrubro_depreciacionPeriodo); ?></td>
+                                                <td class="text-center small"><?=formatNumberDec($sumrubro_depreciacion); ?></td>
+                                                <td class="text-center small"><?=formatNumberDec($sumRubroValorNeto); ?></td>
+                                                <td>-</td>
+                                            </tr>
+                                               <?php    
+                                        }
+                                        if ($ultimouo != $nombre_uo) {
+                                            //mostrar nueva cabecera
+                                            $ultimouo = $nombre_uo;
+                                            //si cambia, tengo q obligar q cambie rubro... porque se da la paz, edif: cambia tarija y el primer es edif
+                                            //ya no sale
+                                            $ultimorubro = "";
+                                            ?>
+                                            <tr class="bg-dark text-white">
+                                                <th colspan="11" >Oficina : <?php echo $ultimouo; ?></th>
+                                            </tr>
+                                            <?php
+                                        }
+                                        //2.mostrar nueva cabecera
+                                        $ultimorubro = $nombre_depreciaciones;
+                                        $sumrubro_depreciacion = 0;
+                                        $sumrubro_actualizacion=0;
+                                        $sumrubro_actDepreciacionAcum=0;
+                                        $sumrubro_depreciacionPeriodo=0;
+                                        
+                                        $sumRubroValorAnterior=0;
+                                        $sumRubroActualizacion=0;
+                                        $sumRubroValorActualizado=0;
+                                        $sumRubroDepreciacionAcumulada=0;
+                                        $sumRubroActDepreciacionAcumulada=0;
+                                        $sumRubroValorNeto=0;
+        
+                                        ?>
+                                        <tr class="bg-secondary text-white">
+                                            <th colspan="11">Rubro : <?php echo $nombre_depreciaciones; ?></th>
+                                        </tr>
+                                        <tr >
+                                            <th ><small>Cod.<br>Activo</small></th>
+                                            <th ><small>Activo</small></th>
+                                            <th ><small>Valor<br>Anterior</small></th>
+                                            <!--th >Factor Actual.</th-->
+                                            <th ><small>Actualización</small></th>
+                                            <th ><small>Valor<br>Actualizado</small></th>
+                                            <th ><small>Depreciación<br>Acumulada Anterior</small></th>
+                                            <th ><small>Actualización<br>Depreciación Acumulada</small></th>
+                                            <th ><small>Depreciación Periodo</small></th>
+                                            <th ><small>Depreciacion Acumulada</small></th>
+                                            <th ><small>Valor Neto</small></th>
+                                            <th ><small>Vida útil Restante</small></th>            
+                                        </tr>
+                                        <?php
+                                    }
+                                    $sumrubro_depreciacion =  $sumrubro_depreciacion + $d9_depreciacionacumuladaactual;
+                                    $sumrubro_actualizacion = $sumrubro_actualizacion + $d5_incrementoporcentual;
+                                    $sumrubro_actDepreciacionAcum += $d7_incrementodepreciacionacumulada;
+                                    $sumrubro_depreciacionPeriodo += $d8_depreciacionperiodo;
+                                    $sumRubroValorAnterior+=$d2_valorresidual;
+                                    $sumRubroActualizacion+=$d5_incrementoporcentual;
+                                    $sumRubroValorActualizado+=$d4_valoractualizado;
+
+                                    $sumRubroDepreciacionAcumulada+=$d6_depreciacionacumuladaanterior;
+                                    $sumRubroActDepreciacionAcumulada+=$d7_incrementodepreciacionacumulada;
+                                    $sumRubroValorNeto+=$d10_valornetobs;
+
+                                    ?>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="text-center small"><small><?=$codigoactivo;?></td>
+                                    <td class="text-left small"><small><?=$activo; ?></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d2_valorresidual); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d5_incrementoporcentual); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d4_valoractualizado); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d6_depreciacionacumuladaanterior); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d7_incrementodepreciacionacumulada);?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d8_depreciacionperiodo); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d9_depreciacionacumuladaactual); ?></small></td>
+                                    <td class="text-center small"><small><?=formatNumberDec($d10_valornetobs); ?></small></td>
+                                    <td class="text-center small"><small><?=$d11_vidarestante; ?></small></td>
+                                </tr>
+                        <?php } ?>
+                                  <!-- el ultimo no sale -->
+                                <tr class="bg-info text-white">
+                                    <th colspan="2">Total :</th>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroValorAnterior); ?></td>
+                                    <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActualizacion); ?></td>
+                                    <td class="text-center small "><?=formatNumberDec($sumRubroValorActualizado); ?></td>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroDepreciacionAcumulada); ?></td>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroActDepreciacionAcumulada); ?></td>
+                                    <td class="text-center small bg-success"><?=formatNumberDec($sumrubro_depreciacionPeriodo); ?></td>
+                                    <td class="text-center small bg-success"><?=formatNumberDec($sumrubro_depreciacion); ?></td>
+                                    <td class="text-center small"><?=formatNumberDec($sumRubroValorNeto); ?></td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                    </table>
+
+                    <?php } ?>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>  
+        </div>
+    </div>
