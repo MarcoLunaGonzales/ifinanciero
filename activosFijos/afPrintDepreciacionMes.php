@@ -144,12 +144,12 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                                                 <td class="text-center small"><small><?=$codigoactivo;?></td>
                                                 <td class="text-left small"><small><?=$activo; ?></td>
                                                 <td class="text-center small"><small><?=formatNumberDec($d2_valorresidual); ?></small></td>
-                                                <td class="text-center small"><small><?=formatNumberDec($d5_incrementoporcentual); ?></small></td>
+                                                <td class="text-center small bg-success"><small><?=formatNumberDec($d5_incrementoporcentual); ?></small></td>
                                                 <td class="text-center small"><small><?=formatNumberDec($d4_valoractualizado); ?></small></td>
                                                 <td class="text-center small"><small><?=formatNumberDec($d6_depreciacionacumuladaanterior); ?></small></td>
                                                 <td class="text-center small"><small><?=formatNumberDec($d7_incrementodepreciacionacumulada);?></small></td>
-                                                <td class="text-center small"><small><?=formatNumberDec($d8_depreciacionperiodo); ?></small></td>
-                                                <td class="text-center small"><small><?=formatNumberDec($d9_depreciacionacumuladaactual); ?></small></td>
+                                                <td class="text-center small bg-success"><small><?=formatNumberDec($d8_depreciacionperiodo); ?></small></td>
+                                                <td class="text-center small bg-success"><small><?=formatNumberDec($d9_depreciacionacumuladaactual); ?></small></td>
                                                 <td class="text-center small"><small><?=formatNumberDec($d10_valornetobs); ?></small></td>
                                                 <td class="text-center small"><small><?=$d11_vidarestante; ?></small></td>
                                             </tr>
