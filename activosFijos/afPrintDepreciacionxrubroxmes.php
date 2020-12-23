@@ -12,27 +12,28 @@ $dbh = new Conexion();
 $gestion = $_POST["gestion"];
 $mes2 = $_POST["mes"];
 $unidadOrganizacional=$_POST["unidad_organizacional"];
-$cod_depreciaciones=$_POST["cod_depreciaciones"];
+// $cod_depreciaciones=$_POST["cod_depreciaciones"];
 
 $unidadOrgString=implode(",", $unidadOrganizacional);
-$depreciacionesString=implode(",", $cod_depreciaciones);
+// $depreciacionesString=implode(",", $cod_depreciaciones);
 
 // echo $areaString;
 $stringUnidades="";
 foreach ($unidadOrganizacional as $valor ) {    
     $stringUnidades.=" ".abrevUnidad($valor)." ";
 }
-$stringDepreciaciones="";
-foreach ($cod_depreciaciones as $valor ) {    
-    $stringDepreciaciones.=" ".abrevDepreciacion($valor)." ";
-}
+// $stringDepreciaciones="";
+// foreach ($cod_depreciaciones as $valor ) {    
+//     $stringDepreciaciones.=" ".abrevDepreciacion($valor)." ";
+// }
 
 
-$stmtG = $dbh->prepare("SELECT * from gestiones WHERE codigo=:codigo");
-$stmtG->bindParam(':codigo',$gestion);
-$stmtG->execute();
-$resultG = $stmtG->fetch();
-$gestion = $resultG['nombre'];
+// $stmtG = $dbh->prepare("SELECT * from gestiones WHERE codigo=:codigo");
+// $stmtG->bindParam(':codigo',$gestion);
+// $stmtG->execute();
+// $resultG = $stmtG->fetch();
+// $gestion = $resultG['nombre'];
+$gestion=nameGestion($gestion);
 
 
 $sql="SELECT (select nombre from unidades_organizacionales where codigo=af.cod_unidadorganizacional) as nombre_unidadO,

@@ -402,6 +402,12 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> Por Rubro por Mes</span>
                     </a>
                 </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptDepreciacionesDetalladoFiltro">
+                      <span class="sidebar-mini"> RMD </span>
+                      <span class="sidebar-normal"> Por Rubro, por Mes Detallado</span>
+                    </a>
+                </li>
 
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=rptactivosfijosxunidad">

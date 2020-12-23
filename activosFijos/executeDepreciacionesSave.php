@@ -20,7 +20,7 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $result=$stmt->fetch();
 $codigo_aux=$result['contador'];
-//$codigo_aux=0;//codigo temporal**********
+// $codigo_aux=0;//codigo temporal**********
 if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
 
 	//INSERTAMOS LA CABECERA DEL EJERCICIO
@@ -31,7 +31,7 @@ if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
 	$ultimoIdInsertado = $dbh->lastInsertId();
 	//*****
 
-	// $ultimoIdInsertado=71;
+	// $ultimoIdInsertado=22;
 
 	$sqlActivos="SELECT a.codigo, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion  from activosfijos a where a.tipo_af=1 ";
 	//829,9,10,5,8,270//,271,272,2692 //and cod_unidadorganizacional in (271,272,2692)

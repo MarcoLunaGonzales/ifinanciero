@@ -3,7 +3,7 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'configModule.php';
-
+//opcion para llamar rptDepreciacionesDetalladoFiltro
 $dbh = new Conexion();
 $query = "select * from depreciaciones";
 $statement = $dbh->query($query);
@@ -14,16 +14,16 @@ $statement = $dbh->query($query);
 	<div class="container-fluid">
 
 		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$rpt01procesar;?>" method="post" target="_blank">
+		  <form id="form1" class="form-horizontal" action="activosFijos/reporteDepreciacionesDetallado_print.php" method="post" target="_blank">
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
 				<div class="card-text">
-				  <h4 class="card-title">Reporte por Rubros por Mes</h4>
+				  <h4 class="card-title">Depreciación Activos Fijos Detallada</h4>
 				</div>
 			  </div>
 			  <div class="card-body ">
           <div class="row">
-            <label class="col-sm-2 col-form-label">Gestion</label>
+            <label class="col-sm-2 col-form-label">Gestión</label>
             <div class="col-sm-7">
               <div class="form-group">
                 <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
@@ -92,7 +92,21 @@ $statement = $dbh->query($query);
           </div>
           <!--  fin de seleccion unidad organizacional-->
 
-          
+          <div class="row">
+              <label class="col-sm-2 col-form-label">Rubro</label>
+              <div class="col-sm-7">
+                <div class="form-group">
+                    <select name="cod_depreciaciones[]" id="cod_depreciaciones" class="selectpicker form-control"
+                     title="Seleccione una opcion" data-style="select-with-transition" data-size="5" 
+                      data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true">
+                    <?php while ($row = $statement->fetch()){ ?>
+                        <option value="<?=$row["codigo"];?>"><?=$row['abreviatura']?> - <?=$row["nombre"];?></option>
+                    <?php } ?> 
+                    </select>
+                </div>
+              </div>
+          </div><!--fin campo RUBRO -->
+
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Generar</button>
