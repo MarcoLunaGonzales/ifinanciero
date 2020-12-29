@@ -9148,10 +9148,11 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
   }
   function importe_total_cajachica($cod_cajachica){
     $dbh = new Conexion();
-    $sql="SELECT SUM(c.monto) as monto_total from caja_chicadetalle c where c.cod_cajachica=$cod_cajachica and c.cod_estadoreferencial=1";
+    //$sql="SELECT SUM(c.monto) as monto_total from caja_chicadetalle c where c.cod_cajachica=$cod_cajachica and c.cod_estadoreferencial=1";
+    $sql="SELECT c.* from caja_chicadetalle c where c.cod_cajachica=$cod_cajachica and c.cod_estadoreferencial=1";
     $stmtCaja = $dbh->prepare($sql);
     $stmtCaja->execute();
-    $resultCaja = $stmtCaja->fetch();
+    //$resultCaja = $stmtCaja->fetch();
 
     $sql="SELECT SUM(r.monto) as monto_reembolso from caja_chicareembolsos r where r.cod_cajachica=$cod_cajachica and r.cod_estadoreferencial=1";
     $stmtCajaReembolso = $dbh->prepare($sql);
@@ -9159,9 +9160,33 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
     $resultCajaReembolso = $stmtCajaReembolso->fetch();
     $monto_anterior_x_reembolso=$resultCajaReembolso['monto_reembolso']; 
     // $monto_anterior = $resultCaja['monto_total'];
-    if($resultCaja['monto_total']!=null || $resultCaja['monto_total']!='')
-      $monto_anterior_x=$resultCaja['monto_total'];
-    else $monto_anterior_x=0;                        
+    $monto_anterior_x=0;
+    while ($row = $stmtCaja->fetch(PDO::FETCH_ASSOC)) {
+        $cod_cajachicadetalle=$row["codigo"];
+        $monto_anterior_x_fila=$row["monto"];
+        $codigoSolicitud=encuentraDatosSolicitudRecursosDesdeCajaChica($cod_cajachicadetalle);
+        if($codigoSolicitud[0]>0){
+            $importeSolX=$monto_anterior_x_fila;
+            $retencionX=$codigoSolicitud[2];
+            if($retencionX!=0){
+              $tituloImporte=abrevRetencion($retencionX);
+              $porcentajeRetencion=100-porcentRetencionSolicitud($retencionX);
+              $montoImporte=$importeSolX*($porcentajeRetencion/100);       
+              if(($retencionX==8)||($retencionX==10)){ //validacion del descuento por retencion
+                $montoImporte=$importeSolX;
+              }
+              $montoImporteRes=$importeSolX-$montoImporte;
+            }else{
+                 $montoImporte=$importeSolX;
+                 $montoImporteRes=0; 
+            }
+            $monto_anterior_x_fila=$montoImporte; 
+        }
+        $monto_anterior_x+=$monto_anterior_x_fila;
+     }
+    //if($resultCaja['monto_total']!=null || $resultCaja['monto_total']!='')
+     // $monto_anterior_x=$resultCaja['monto_total'];
+    //else $monto_anterior_x=0;                        
     // $monto_anterior=$monto_inicio_anterior-$monto_anterior_x;
     return $monto_anterior_x_reembolso-$monto_anterior_x;
   }
