@@ -71,7 +71,7 @@ $total_valorNeto=0;
                   </h4>
                   <h6 class="card-title">
                     Gestion: <?php echo $gestion; ?> - Mes: <?php echo nameMes($mes2);?><br>
-                    Oficinas: <?=$stringUnidades; ?> <br>Rubros: <?=$stringDepreciaciones?>
+                    Oficinas: <?=$stringUnidades; ?>
                   </h6>
                 </div>
                 <div class="card-body">

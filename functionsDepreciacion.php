@@ -21,34 +21,56 @@ return($intervalMeses);
 
 }
 
-function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicial,$depreciacionAcum,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante){
+function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicial,$depreciacionAcum,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante,$cod_depreciaciones){
 
     $dbh = new Conexion();
     $numeroMesesDepreciacion++;
 
     $ufvInicio=obtenerUFV($fechaInicioDepreciacion);
     $ufvFinal=obtenerUFV($fechaFinalDepreciacion);
+    //echo $fechaInicioDepreciacion."__".$fechaFinalDepreciacion."<br>";
     if($ufvInicio==0 || $ufvFinal==0){
         $banderaUFVError=1;
     }
     $valorUFVActualizacion=0;
     if($ufvInicio>0){
-        $valorUFVActualizacion=($ufvFinal/$ufvInicio);
+        // $valorUFVActualizacion=($ufvFinal/$ufvInicio);
+        $valorUFVActualizacion=(2.34086/2.33187);
+
+        
+
     }
 
     //echo "valorActualizacion: ".$valorUFVActualizacion;
-    $valorResidual_2=$valorInicial;
-    $factorActualizacion_3=$valorUFVActualizacion;
-    $valorActivoActualizado_4=$valorInicial*$valorUFVActualizacion;
-    $valorIncrementoPorcentual_5=$valorActivoActualizado_4-$valorInicial;
-    $depreciacionAcumulada_6=$depreciacionAcum;
-    $incrementoDepreciacionAcumulada_7=$depreciacionAcumulada_6*($valorUFVActualizacion-1);
-    // echo "vidautil:".$vidautil."-nromesesdepre".$numeroMesesDepreciacion;
-    // if($vidautil>0){
-    //     $depreciacionPeriodo_8=($valorActivoActualizado_4/$vidautil)*$numeroMesesDepreciacion;
-    // }else{
-    //     $depreciacionPeriodo_8=0;
-    // }
+    // $valorResidual_2=$valorInicial;
+    // $factorActualizacion_3=$valorUFVActualizacion;
+    // $valorActivoActualizado_4=$valorInicial*$valorUFVActualizacion;
+    // $valorIncrementoPorcentual_5=$valorActivoActualizado_4-$valorInicial;
+    // $depreciacionAcumulada_6=$depreciacionAcum;
+    // $incrementoDepreciacionAcumulada_7=$depreciacionAcumulada_6*($valorUFVActualizacion-1);
+
+    //diferente proceso para terrenos
+    $cod_depreciaciones_configuracion=17;//codigo por defecto de terrenos; 
+    if($cod_depreciaciones==$cod_depreciaciones_configuracion){
+        $valorResidual_2=$valorInicial;
+        // $factorActualizacion_3=$valorUFVActualizacion;
+        $factorActualizacion_3=$valorInicial*($valorUFVActualizacion-1);
+        $valorActivoActualizado_4=$factorActualizacion_3+$valorInicial;
+        $valorIncrementoPorcentual_5=$factorActualizacion_3;
+        $depreciacionAcumulada_6=0;
+        $incrementoDepreciacionAcumulada_7=0;
+        $depreciacionPeriodo_8=0;
+        $depreciacionActualAcumulada_9=0;        
+    }else{
+        $valorResidual_2=$valorInicial;
+        $factorActualizacion_3=$valorUFVActualizacion;
+        $valorActivoActualizado_4=$valorInicial*$valorUFVActualizacion;
+        $valorIncrementoPorcentual_5=$valorActivoActualizado_4-$valorInicial;
+        $depreciacionAcumulada_6=$depreciacionAcum;
+        $incrementoDepreciacionAcumulada_7=$depreciacionAcumulada_6*($valorUFVActualizacion-1);
+    }
+
+
     // $depreciacionActualAcumulada_9=$depreciacionAcumulada_6+$incrementoDepreciacionAcumulada_7+$depreciacionPeriodo_8;
     // $valorNetoActivo_10=$valorActivoActualizado_4-$depreciacionActualAcumulada_9;
 
@@ -72,16 +94,20 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
         $vida_util_restante=0;
         $valorNetoActivo_10=1;
     }
-    $depreciacionActualAcumulada_9=$depreciacionAcumulada_6+$incrementoDepreciacionAcumulada_7+$depreciacionPeriodo_8;
-    $valorNetoActivo_10=$valorActivoActualizado_4-$depreciacionActualAcumulada_9;
-
-    if($vidautilmeses_restante==0){     
-        $valorNetoActivo_10=1;
-        $depreciacionActualAcumulada_9=$depreciacionAcum;
-        $valorActivoActualizado_4=$valorInicial;
-        $depreciacionPeriodo_8=0;
-        $incrementoDepreciacionAcumulada_7=0;
-        $valorIncrementoPorcentual_5 = 0;
+    //si es terreno tiene diferente proceso
+    if($cod_depreciaciones!=$cod_depreciaciones_configuracion){
+        $depreciacionActualAcumulada_9=$depreciacionAcumulada_6+$incrementoDepreciacionAcumulada_7+$depreciacionPeriodo_8;
+        $valorNetoActivo_10=$valorActivoActualizado_4-$depreciacionActualAcumulada_9; 
+        if($vidautilmeses_restante==0){
+            $valorNetoActivo_10=1;
+            $depreciacionActualAcumulada_9=$depreciacionAcum;
+            $valorActivoActualizado_4=$valorInicial;
+            $depreciacionPeriodo_8=0;
+            $incrementoDepreciacionAcumulada_7=0;
+            $valorIncrementoPorcentual_5 = 0;
+        }
+    }else{
+        $valorNetoActivo_10=$valorActivoActualizado_4;
     }
 
     
