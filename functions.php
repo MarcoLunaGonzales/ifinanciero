@@ -6654,9 +6654,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
           $sqlUnidades.="and (";
         }
         if($i==(count($arrayUnidades)-1)){
-          $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."')";
+          $sqlUnidades.="c.cod_unidadorganizacional='".$arrayUnidades[$i]."')";
          }else{
-          $sqlUnidades.="d.cod_unidadorganizacional='".$arrayUnidades[$i]."' or ";
+          $sqlUnidades.="c.cod_unidadorganizacional='".$arrayUnidades[$i]."' or ";
          }  
      }
      

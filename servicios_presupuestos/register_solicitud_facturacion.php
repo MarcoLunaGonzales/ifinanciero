@@ -170,6 +170,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                         $cantidad_saldo=0;
                                         $cantidad_inicial=0;
                                         $saldo_real=0;
+                                        $items_repetidos=0;
 
                                         //$queryPr="SELECT s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario,1 as tipo_item from ibnorca.serviciopresupuesto s where  s.IdServicio=$IdServicio";
                                         /*$queryPr="SELECT c.IdCotizacion, s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario,1 as tipo_item 
@@ -234,6 +235,12 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     $precio_total_x+=$rowPre['precio']*$rowPre['cantidad'];
                                                     $cantidad_total_registrado+=$rowPre['cantidad'];
                                                 }
+                                                if($itemServicioAux==$IdServicio&&$codSC==$itemServicioFilaAux){
+                                                    $precio_total_x=0;
+                                                    $cantidad_total_registrado=0;
+                                                }
+                                                
+                                                
                                                 // $resultMontoTotal=$stmtControladorTotal->fetch();
                                                 if($precio_total_x>0){
                                                     $saldo=$monto_pagar*$cantidad_saldo-$precio_total_x;
@@ -252,6 +259,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     // echo $sqlControlador;
                                                     $stmtControlado = $dbh->prepare($sqlControlador);
                                                     $stmtControlado->execute();
+                                                    if($itemServicioAux==$IdServicio&&$codSC==$itemServicioFilaAux){
                                                     while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
                                                         $sw="checked";
                                                         $montoPre=$rowPre['precio'];
@@ -268,6 +276,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         }
                                                         $cantidad_total_registrado=$cantidad_total_registrado-$cantidad_saldo;
                                                     }
+                                                  }
                                                 }
                                                 // echo $IdServicio."--".$codCS;
                                                 $sw2="";
@@ -294,6 +303,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                 $stmtControlador2->execute();
                                                 $cont_items_aux=0;
+                                                if($itemServicioAux==$IdServicio&&$codSC==$itemServicioFilaAux){
                                                 while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
                                                     $cont_items_aux++;
                                                     if($sw!="checked"){//si el item  no es  editar
@@ -318,7 +328,11 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         $saldo=$preciox;
                                                         $saldo_real=$saldo;
                                                     }
+                                                 } 
                                                 }
+                                                $itemServicioAux=$IdServicio;
+                                                $itemServicioFilaAux=$codSC;
+
                                                 if($descuentoFila>0){
                                                     $descuento_bobX=(($montoPre*$cantidadPre)*$descuentoFila)/100;
                                                     $descuento_porX=$descuentoFila;
