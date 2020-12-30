@@ -12,29 +12,30 @@ $dbh = new Conexion();
 //$cod_empresa=$_POST["cod_empresa"];
 $mes=$_POST["mes"];
 $gestion=$_POST["gestion"];
+
+$fecha_actual=date($gestion."-".$mes."-t");//
 //verificamos si esa fecha no se registro aun
-
-
+set_time_limit(300);
 $sql="SELECT count(codigo)as contador from mesdepreciaciones where gestion=$gestion and mes=$mes";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $result=$stmt->fetch();
 $codigo_aux=$result['contador'];
-$codigo_aux=0;//codigo temporal**********
+// $codigo_aux=0;//codigo temporal**********
 if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
 
 	//INSERTAMOS LA CABECERA DEL EJERCICIO
 	//*****borrado temporalmente
-	// $sqlInsertCab="INSERT into mesdepreciaciones (mes, gestion, estado) values ('$mes', '$gestion', '1')";
-	// $stmtInsertCab = $dbh->prepare($sqlInsertCab);
-	// $stmtInsertCab -> execute();
-	// $ultimoIdInsertado = $dbh->lastInsertId();
+	$sqlInsertCab="INSERT into mesdepreciaciones (mes, gestion, estado) values ('$mes', '$gestion', '1')";
+	$stmtInsertCab = $dbh->prepare($sqlInsertCab);
+	$stmtInsertCab -> execute();
+	$ultimoIdInsertado = $dbh->lastInsertId();
+
 	//*****
+	 // $ultimoIdInsertado=71;
 
-	 $ultimoIdInsertado=71;
-
-	$sqlActivos="SELECT a.codigo,a.cod_depreciaciones, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion  from activosfijos a where a.tipo_af=1 and cod_unidadorganizacional in (829)";
-	//829,9,10,5,8,270//,271,272,2692 //and cod_unidadorganizacional in (271,272,2692)
+	$sqlActivos="SELECT a.codigo,a.cod_depreciaciones, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion  from activosfijos a where a.tipo_af=1";
+	//829,9,10,5,8,270//,271,272,2692 // and cod_unidadorganizacional in (10) and a.codigo=1795
 	//echo $sqlActivos;
 	$stmtActivos = $dbh->prepare($sqlActivos);
 	$stmtActivos->execute();
@@ -64,36 +65,36 @@ if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
 		$depreciacionAcumDepreciado=$resultValidacion['d9_depreciacionacumuladaactual'];
 		$vidarestante=$resultValidacion['d11_vidarestante'];
 		
-
+		$sw_nuevo=0;//identificador de ACtivo nuevo //1 nuevo 0 no;
 		if($contadorValidacion==0){
-			//DEPRECIAMOS DESDE LA FECHA DE INICIO DE DEPRECIACION //nuevos
+			//DEPRECIAMOS DESDE LA FECHA DE INICIO DE DEPRECIACION //para nuevos desde la fecha que se introdujo
 			list($yearIni, $mesIni, $dayIni) = explode('-', $fechaIniDepreciacionBD);
+			$sw_nuevo=verificar_si_nuevo($codActivo);//1 si 0 no;
 			$fechaIniComparacion=$yearIni."-".$mesIni."-01";//enero
 			$fechaFinComparacion=$gestion."-".$mes."-01";
-
-			$numeroMesesDepreciacion=diferenciaMeses($fechaIniComparacion,$fechaFinComparacion);
-
 			
-			//echo "    *** NRO MESES: ".$numeroMesesDepreciacion."<br>";
-
 			//SACAMOS EL INICIO DE LA DEPRECIACION Y EL ULTIMO DIA DEL MES SELECCIONADO EN EL FILTRO
-			$fechaInicioDepreciacion=date('Y-m-d',strtotime($fechaIniDepreciacionBD.'-1 day'));//31 de dic
+			if($sw_nuevo==1){
+				$fechaInicioDepreciacion=$fechaIniDepreciacionBD;//se deprecia desde que se insertó el activo
+				$numeroMesesDepreciacion=diferenciaMeses($fechaIniComparacion,$fechaFinComparacion);
+			//echo "    *** NRO MESES: ".$numeroMesesDepreciacion."<br>";
+			}else{
+				$fechaInicioDepreciacion=date('Y-m-d',strtotime($fechaIniDepreciacionBD.'-1 day'));//
+				$numeroMesesDepreciacion=diferenciaMeses($fechaIniDepreciacionBD,$fechaFinComparacion);
+				//echo "    *** NRO MESES: ".$numeroMesesDepreciacion."<br>";
+			}
 			$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinComparacion.'+1 month'));//para el dia final a la fecha
-			$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinalDepreciacion.'-1 day')); //31 de enero
-
+			$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinalDepreciacion.'-1 day')); //
 			// $vidautilmeses_restante_af=$vidautilmeses_restante_af;
-			if($vidautilmeses_restante_af<($numeroMesesDepreciacion+1)){//saca  hasta la fecha que llega
-				$fechaIniComparacion_x = strtotime($fechaIniComparacion);//1 enero 
+			if($vidautilmeses_restante_af<($numeroMesesDepreciacion+1)){//saca  hasta la fecha que llega 
+				$fechaIniComparacion_x = strtotime($fechaInicioDepreciacion);
   				$fechaFinalDepreciacion = date("Y-m-01", strtotime("+$vidautilmeses_restante_af month", $fechaIniComparacion_x));//31 de febrero
   				$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinalDepreciacion.'-1 day'));	//31 de enero
 			}
-
-
 			//echo "fechas depre: ".$fechaInicioDepreciacion." ".$fechaFinalDepreciacion;			
-			$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicial,$depreciacionAcum,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones);
+			$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicial,$depreciacionAcum,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);
 		}else{
-			//DEPRECIAMOS DESDE LA ULTIMA DEPRECIACION
-			$fechaIniComparacion=$gestionDepreciacion."-".$mesDepreciacion."-01";
+			//DEPRECIAMOS DESDE LA ULTIMA DEPRECIACION			
 			$fechaIniComparacion=date('Y-m-d',strtotime($fechaIniComparacion.'+1 month'));
 			$fechaFinComparacion=$gestion."-".$mes."-01";
 
@@ -114,14 +115,14 @@ if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
   				$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinalDepreciacion.'-1 day'));				
 			}
 			//echo "fechas depre: ".$fechaInicioDepreciacion." ".$fechaFinalDepreciacion;
-			$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicialDepreciado,$depreciacionAcumDepreciado,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones);
+			$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicialDepreciado,$depreciacionAcumDepreciado,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);
 		}
 	}
 	$flagSuccess=true;
 	showAlertSuccessErrorDepreciaciones($flagSuccess,$urlList7);
-	if($banderaUFVError==1){
-		echo "DATOS DE UFV INCOMPLETOS.";
-	}
+	// if($banderaUFVError==1){
+	// 	echo "DATOS DE UFV INCOMPLETOS.";
+	// }
 
 }else{
 	$flagSuccess=false;

@@ -4,6 +4,7 @@
 require_once 'conexion.php';
 require_once 'functions.php';
 require_once 'configModule.php';
+require_once 'functionsDepreciacion.php';
 ini_set('display_errors',1);
 
 $dbh = new Conexion();
@@ -43,6 +44,8 @@ try {
     $cod_responsables_responsable=0;
     $cod_responsables_autorizadopor=0;
     $reevaluo=0;
+    $fechalta_depreciacion=obtener_cantidad_meses_depreciacion($cod_depreciaciones);
+    
 
     if(isset($_POST["cod_responsables_responsable"])){
         $cod_responsables_responsable=$_POST["cod_responsables_responsable"];
@@ -78,11 +81,11 @@ try {
         $stmt = $dbh->prepare("INSERT INTO activosfijos(codigoactivo,tipoalta,fechalta,indiceufv,tipocambio,moneda,valorinicial,
         depreciacionacumulada,valorresidual,cod_depreciaciones,cod_tiposbienes,vidautilmeses, vidautilmeses_restante,estadobien,otrodato,cod_ubicaciones,
         cod_empresa,activo,cod_responsables_responsable,cod_responsables_autorizadopor, cod_af_proveedores, numerofactura,
-        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo,cod_proy_financiacion,reevaluo,tipo_af,fecha_iniciodepreciacion) values
+        bandera_depreciar, cod_unidadorganizacional,cod_area, cod_estadoactivofijo,cod_proy_financiacion,reevaluo,tipo_af,fecha_iniciodepreciacion,cantidad_meses_depreciacion) values
         (:codigoactivo, :tipoalta, :fechalta, :indiceufv, :tipocambio, :moneda, :valorinicial, :depreciacionacumulada, :valorresidual,
         :cod_depreciaciones, :cod_tiposbienes, :vidautilmeses, :vidautilmeses_restante, :estadobien, :otrodato, :cod_ubicaciones, :cod_empresa, :activo,
         :cod_responsables_responsable, :cod_responsables_autorizadopor, :cod_af_proveedores, :numerofactura,
-        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo,:cod_proy_financiacion,:reevaluo,:cod_tiposactivos,:fecha_iniciodepreciacion)");
+        :bandera_depreciar, :cod_unidadorganizacional, :cod_area ,:cod_estadoactivofijo,:cod_proy_financiacion,:reevaluo,:cod_tiposactivos,:fecha_iniciodepreciacion,:cantidad_meses_depreciacion)");
 
         //necesito guardar en una segunda tabla: activofijos_asignaciones
 
@@ -125,6 +128,7 @@ try {
         $stmt->bindParam(':reevaluo', $reevaluo);
         $stmt->bindParam(':cod_tiposactivos', $cod_tiposactivos);
         $stmt->bindParam(':fecha_iniciodepreciacion', $fechalta);
+        $stmt->bindParam(':cantidad_meses_depreciacion', $fechalta_depreciacion);
         
         
         //$stmt->bindParam(':created_at', $created_at);
@@ -140,12 +144,13 @@ try {
         //LA PRIMERA ASIGNACION INGRESA POR ACA.
         $ultimo = $dbh->lastInsertId();
         //echo $ultimo;
-        $stmt2 = $dbh->prepare("INSERT INTO activofijos_asignaciones(cod_activosfijos,fechaasignacion,
+        $stmt2 = $dbh->prepare("INSERT INTO activofijos_asignaciones(codigo,cod_activosfijos,fechaasignacion,
             cod_ubicaciones,cod_personal, estadobien_asig, cod_unidadorganizacional, cod_area, cod_estadoasignacionaf)
-            values (:cod_activosfijos, now(),
+            values (:codigo,:cod_activosfijos, now(),
             :cod_ubicaciones, :cod_personal, :estadobien_asig, :cod_unidadorganizacional, :cod_area, :cod_estadoasignacionaf)");
 
         $codEstadoAsignacionAF="1";
+        $stmt2->bindParam(':codigo', $ultimo);
         $stmt2->bindParam(':cod_activosfijos', $ultimo);
         //$stmt2->bindParam(':fechaasignacion', $fechalta);
         $stmt2->bindParam(':cod_ubicaciones', $cod_ubicaciones);

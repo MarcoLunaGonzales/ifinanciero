@@ -3,6 +3,7 @@
 require_once 'conexion.php';
 require_once 'configModule.php'; //configuraciones
 require_once 'styles.php';
+require_once 'functionsDepreciacion.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
 
@@ -37,36 +38,45 @@ $stmt->bindColumn('estado', $estado);
                 <div class="card-body">
                   <div class="table-responsive">
                     <table class="table"  id="tablePaginator">
-<thead>
-    <tr>
-        <th>Mes</th>
-        <th>Gestion</th>
-        <!-- <th>Ufv Inicio</th>
-        <th>Ufv Final</th> -->
-        <th class="text-center">Detalle</th>
-        <th class="text-center">Generar Comprobante</th>
-    </tr>
-</thead>
-<tbody>
-<?php $index=1;
-while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
-    <tr>
-        <td><?=nombreMes($mes);?></td>
-        <td><?=$gestion;?></td>
-        <!-- <td><?=$ufvinicio;?></td>
-        <td><?=$ufvfinal;?></td> -->
-        <td class="text-center">
-          <a target="_blank" href="<?=$printDepreciacionMes;?>?codigo=<?=$codigo;?>">
-            <i class="material-icons" title='Ver Detalle' style="color:blue">assignment</i></a>
-        </td>
-        <td class="text-center">
-          <a href="<?=$urlGenerarCompDepreciacion;?>&codigo=<?=$codigo;?>">
-            <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
-          </a>
-        </td>
-    </tr>
-<?php $index++; } ?>
-</tbody>
+                      <thead>
+                        <tr>
+                          <th>Mes</th>
+                          <th>Gestion</th>
+                          <!-- <th>Ufv Inicio</th>
+                          <th>Ufv Final</th> -->
+                          <th class="text-center">Detalle</th>
+                          <th class="text-center">Generar Comprobante</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php $index=1;
+                        while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+                          $sw_depreciacion=verificarContabilizacion($codigo);
+                          ?>
+                          <tr>
+                              <td><?=nombreMes($mes);?></td>
+                              <td><?=$gestion;?></td>                              
+                              <td class="text-center">
+                                <a target="_blank" href="<?=$printDepreciacionMes;?>?codigo=<?=$codigo;?>">
+                                  <i class="material-icons" title='Ver Detalle' style="color:blue">assignment</i></a>
+                              </td>
+                              <?php
+                              if($sw_depreciacion>0){?>
+                                <td class="text-center">
+                                  <span style="color: #00afaa"><b>Comprobante Generado</b></span>
+                                </td>
+                              <?php }else{?>
+                                <td class="text-center">
+                                  <a href="<?=$urlGenerarCompDepreciacion;?>&codigo=<?=$codigo;?>">
+                                    <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
+                                  </a>
+                                </td>
+                              <?php }
+                              ?>
+                          </tr><?php 
+                          $index++; 
+                        } ?>
+                      </tbody>
                     </table>
                   </div>
                 </div>

@@ -147,9 +147,9 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                                                 <td class="text-center small bg-success"><small><?=formatNumberDec($d5_incrementoporcentual); ?></small></td>
                                                 <td class="text-center small"><small><?=formatNumberDec($d4_valoractualizado); ?></small></td>
                                                 <td class="text-center small"><small><?=formatNumberDec($d6_depreciacionacumuladaanterior); ?></small></td>
-                                                <td class="text-center small"><small><?=formatNumberDec($d7_incrementodepreciacionacumulada);?></small></td>
+                                                <td class="text-center small bg-success"><small><?=formatNumberDec($d7_incrementodepreciacionacumulada);?></small></td>
                                                 <td class="text-center small bg-success"><small><?=formatNumberDec($d8_depreciacionperiodo); ?></small></td>
-                                                <td class="text-center small bg-success"><small><?=formatNumberDec($d9_depreciacionacumuladaactual); ?></small></td>
+                                                <td class="text-center small"><small><?=formatNumberDec($d9_depreciacionacumuladaactual); ?></small></td>
                                                 <td class="text-center small"><small><?=formatNumberDec($d10_valornetobs); ?></small></td>
                                                 <td class="text-center small"><small><?=$d11_vidarestante; ?></small></td>
                                             </tr>
@@ -159,11 +159,11 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                                             <th colspan="2">Total :</th>
                                             <td class="text-center small"><?=formatNumberDec($sumRubroValorAnterior); ?></td>
                                             <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActualizacion); ?></td>
-                                            <td class="text-center small "><?=formatNumberDec($sumRubroValorActualizado); ?></td>
+                                            <td class="text-center small"><?=formatNumberDec($sumRubroValorActualizado); ?></td>
                                             <td class="text-center small"><?=formatNumberDec($sumRubroDepreciacionAcumulada); ?></td>
-                                            <td class="text-center small"><?=formatNumberDec($sumRubroActDepreciacionAcumulada); ?></td>
+                                            <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActDepreciacionAcumulada); ?></td>
                                             <td class="text-center small bg-success"><?=formatNumberDec($sumrubro_depreciacionPeriodo); ?></td>
-                                            <td class="text-center small bg-success"><?=formatNumberDec($sumrubro_depreciacion); ?></td>
+                                            <td class="text-center small"><?=formatNumberDec($sumrubro_depreciacion); ?></td>
                                             <td class="text-center small"><?=formatNumberDec($sumRubroValorNeto); ?></td>
                                             <td>-</td>
                                         </tr>

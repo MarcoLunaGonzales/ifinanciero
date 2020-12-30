@@ -14,13 +14,35 @@ $codDepreciacion=$codigo;
 $codCuentaDepreciacion=298;
 $codCuentaDepreciacionAF=256;
 
-$sqlMes="SELECT m.mes from mesdepreciaciones m where m.codigo='$codDepreciacion'";
+$sqlMes="SELECT m.mes,m.gestion from mesdepreciaciones m where m.codigo='$codDepreciacion'";
 $stmtMes = $dbh->prepare($sqlMes);
 $stmtMes -> execute();
-$codMes=0;
 while ($rowMes = $stmtMes->fetch(PDO::FETCH_ASSOC)) {
   $codMes=$rowMes['mes'];
+  $codGestion=$rowMes['gestion'];
 }
+$abrevMes=abrevMes($codMes);
+
+$sqlMesAnt="SELECT mes,gestion from mesdepreciaciones where codigo<$codDepreciacion order by gestion,mes desc limit 1";
+$stmtMesAnt = $dbh->prepare($sqlMesAnt);
+$stmtMesAnt -> execute();
+$codMesAnt=0;$codGestionAnt=0;
+while ($rowMesAnt = $stmtMesAnt->fetch(PDO::FETCH_ASSOC)) {
+   $codMesAnt=$rowMesAnt['mes'];
+   $codGestionAnt=$rowMesAnt['gestion'];
+}
+//***
+if($codGestionAnt==0){
+   $nameFechasComprobante="ene-".$abrevMes."/".$codGestion;
+}else{
+   $abrevMesAnt=abrevMes($codMesAnt+1);
+   if($codGestion==$codGestionAnt){
+      $nameFechasComprobante=$abrevMesAnt."-".$abrevMes."/".$codGestion;
+   }else{
+      $nameFechasComprobante=$abrevMesAnt."/".$codGestionAnt."-".$abrevMes."/".$codGestion;
+   }   
+}
+
 
 //PARTE QUE REALIZA UN COMPROBANTE POR UNIDAD ORG.
 $sqlUnidades="SELECT a.cod_unidadorganizacional, 
@@ -65,7 +87,7 @@ while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_BOUND)) {
       //aca insertamos la cabecera del comprobante
       // $globalUnidadX=$_SESSION["globalUnidad"];
 
-      $globalUnidadX=829;//se contabilizara en la DN 
+      $globalUnidadX=$codUnidadCabecera;//se contabilizara en la DN 
 
       $codAreaSA="502";//area oara todas las oficinas
       $tipoComprobante=3;
@@ -89,7 +111,8 @@ while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_BOUND)) {
 
       $numeroComprobante=obtenerCorrelativoComprobante($tipoComprobante, $codUnidadCabecera, $gestionTrabajo, $mesTrabajo);
 
-      $glosaCabecera="Actualizacion y Depreciacion de Activos Fijos Mes: ".$mesTrabajo." ".$gestionTrabajo." Unidad: ".$nombreUnidadCabecera;
+      //$glosaCabecera="Actualizacion y Depreciacion de Activos Fijos Mes: ".$mesTrabajo." ".$gestionTrabajo." Unidad: ".$nombreUnidadCabecera;
+      $glosaCabecera="Actualización y Depreciación de Bienes de Uso y Activos Fijo corresp ".$nameFechasComprobante." Unidad: ".$nombreUnidadCabecera;
       $codComprobante=obtenerCodigoComprobante();
       //insertamos cabecera
       $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) values ('$codComprobante','$codEmpresa','$globalUnidadX','$gestionTrabajo','$codMoneda','$codEstadoComprobante','$tipoComprobante','$fecha_contabilizacion','$numeroComprobante','$glosaCabecera')";
@@ -128,9 +151,13 @@ while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_BOUND)) {
                $indice++;
             }
             
-            $glosaDetalle1="Actualización Valor Anterior ".$nombreUnidadCabecera." ".$nombreRubro." ".$mesTrabajo."/".$gestionTrabajo;
-            $glosaDetalle2="Actualización Dep. Acumulada ".$nombreUnidadCabecera." ".$nombreRubro." ".$mesTrabajo."/".$gestionTrabajo;
-            $glosaDetalle3="Depreciación Periodo ".$nombreUnidadCabecera." ".$nombreRubro." ".$mesTrabajo."/".$gestionTrabajo;
+            // $glosaDetalle1="Actualización Valor Anterior ".$nombreUnidadCabecera." ".$nombreRubro." ".$mesTrabajo."/".$gestionTrabajo;
+            // $glosaDetalle2="Actualización Dep. Acumulada ".$nombreUnidadCabecera." ".$nombreRubro." ".$mesTrabajo."/".$gestionTrabajo;
+            // $glosaDetalle3="Depreciación Periodo ".$nombreUnidadCabecera." ".$nombreRubro." ".$mesTrabajo."/".$gestionTrabajo;
+            $glosaDetalle1="Actualización Valor Anterior ".$nombreUnidadCabecera." ".$nombreRubro." ".$nameFechasComprobante;
+            $glosaDetalle2="Actualización Dep. Acumulada ".$nombreUnidadCabecera." ".$nombreRubro." ".$nameFechasComprobante;
+            $glosaDetalle3="Depreciación Periodo ".$nombreUnidadCabecera." ".$nombreRubro." ".$nameFechasComprobante;
+
 
             $ordenDetalle=$ordenComprobanteDetalle;
 
