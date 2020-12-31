@@ -47,12 +47,13 @@ $codMoneda=1;
 $codEstadoComprobante=1;
 $tipoComprobanteInsertar=3;
 $cod_gestion=1206;
+$gestionInsertar=2021;
 $mes_gestion=1;
 $codComprobante=obtenerCodigoComprobante();
 $numeroComprobante=numeroCorrelativoComprobanteFijo($cod_gestion,$unidadInsertar,$tipoComprobanteInsertar,$mes_gestion); //datos gestion 1206 "2021" y 1 "ENERO"
 $glosa="BALANCE INICIAL 2021";
 $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) 
-values ('$codComprobante','$codEmpresa','$unidadInsertar','$cod_gestion','$codMoneda','$codEstadoComprobante','$tipoComprobanteInsertar','$fechaActual','$numeroComprobante','$glosa')";
+values ('$codComprobante','$codEmpresa','$unidadInsertar','$gestionInsertar','$codMoneda','$codEstadoComprobante','$tipoComprobanteInsertar','$fechaActual','$numeroComprobante','$glosa')";
 $stmtInsertCab = $dbh->prepare($sqlInsertCab);
 $flagSuccess=$stmtInsertCab->execute();
 $areas=array("prueba","prueba");
@@ -128,14 +129,15 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                     if($montoX>0){
                       $insert_str .= "('$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosa','$index'),"; 
                     }elseif ($montoX<0) {
+                      $montoX=$montoX*(-1);
                       $insert_str .= "('$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','0','$montoX','$glosa','$index'),";   
                     }
                   }else{                    
-                    //LE CAMBIAMOS EL SIGNO AL PASIVO Y PATRIMONIO
-                    $montoX=$montoX*(-1);
-                    if($montoX>0){
+                    //LE CAMBIAMOS EL SIGNO AL PASIVO Y PATRIMONIO                    
+                    if($montoX<0){
+                      $montoX=$montoX*(-1);
                       $insert_str .= "('$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','0','$montoX','$glosa','$index'),"; 
-                    }elseif ($montoX<0) {
+                    }elseif ($montoX>0) {
                       $insert_str .= "('$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosa','$index'),";   
                     }
                   }
