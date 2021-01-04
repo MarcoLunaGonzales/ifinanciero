@@ -55,6 +55,7 @@ $i=0;
                   <h4 class="card-title">Reporte Ingresos por Servicios</h4>
                 </div>
                 <form class="" action="<?=$urlReporteIngresoFacturacion_servicio?>" target="_blank" method="POST">
+                	<input type="hidden" id="reporteIngreso" value="1">
                 <div class="card-body">
                   	<div class="row">
 	                  	<div class="col-sm-6">
