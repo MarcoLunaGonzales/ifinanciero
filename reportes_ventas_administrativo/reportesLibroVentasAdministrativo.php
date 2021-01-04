@@ -53,6 +53,7 @@ $i=0;
                   <h4 class="card-title">Detalle de Recaudaciones</h4>
                 </div>
                 <form class="" action="<?=$urlReporteVentasAdministrativo?>" target="_blank" method="POST">
+                	<input type="hidden" id="reporteIngreso" value="1">
                 <div class="card-body">
                   	<div class="row">
 	                  	<div class="col-sm-6">

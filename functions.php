@@ -2610,7 +2610,7 @@
     return ($nroCorrelativo);
   }
 
-function obtenerCorrelativoComprobante2($cod_tipocomprobante){
+function obtenerCorrelativoComprobante2($cod_tipocomprobante){  
     $dbh = new Conexion(); 
     $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00'"; //and c.cod_estadocomprobante<>2
     //echo $sql;
@@ -2622,7 +2622,19 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     }
     return ($nroCorrelativo);
   }
-
+  function obtenerCorrelativoComprobante3($cod_tipocomprobante,$gestion){  
+    $gestion=$_SESSION['globalNombreGestion'];
+    $dbh = new Conexion(); 
+    $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00' and year(c.fecha)=$gestion"; //and c.cod_estadocomprobante<>2
+    //echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $nroCorrelativo=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $nroCorrelativo=$row['codigo'];
+    }
+    return ($nroCorrelativo);
+  }
   function obtenerCorrelativoSolicitud(){
     $dbh = new Conexion(); 
     $sql="SELECT IFNULL(max(c.nro_correlativo)+1,7000)as correlativo from solicitudes_facturacion c";
