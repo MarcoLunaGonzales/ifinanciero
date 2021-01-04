@@ -235,10 +235,10 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     $precio_total_x+=$rowPre['precio']*$rowPre['cantidad'];
                                                     $cantidad_total_registrado+=$rowPre['cantidad'];
                                                 }
-                                                if($itemServicioAux==$IdServicio&&$codSC==$itemServicioFilaAux){
+                                                /*if($itemServicioAux==$IdServicio&&$codSC==$itemServicioFilaAux){
                                                     $precio_total_x=0;
                                                     $cantidad_total_registrado=0;
-                                                }
+                                                }*/
                                                 
                                                 
                                                 // $resultMontoTotal=$stmtControladorTotal->fetch();
@@ -259,7 +259,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     // echo $sqlControlador;
                                                     $stmtControlado = $dbh->prepare($sqlControlador);
                                                     $stmtControlado->execute();
-                                                    if($itemServicioAux==$IdServicio&&$codSC==$itemServicioFilaAux){
+                                                    //if($itemServicioAux==$IdServicio&&$codSC==$itemServicioFilaAux){
                                                     while ($rowPre = $stmtControlado->fetch(PDO::FETCH_ASSOC)) {
                                                         $sw="checked";
                                                         $montoPre=$rowPre['precio'];
@@ -276,7 +276,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         }
                                                         $cantidad_total_registrado=$cantidad_total_registrado-$cantidad_saldo;
                                                     }
-                                                  }
+                                                  //}
                                                 }
                                                 // echo $IdServicio."--".$codCS;
                                                 $sw2="";
@@ -303,7 +303,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 $stmtControlador2 = $dbh->prepare($sqlControlador2);
                                                 $stmtControlador2->execute();
                                                 $cont_items_aux=0;
-                                                if($itemServicioAux==$IdServicio&&$codSC==$itemServicioFilaAux){
+                                                //if($itemServicioAux==$IdServicio&&$codSC==$itemServicioFilaAux){
                                                 while ($rowPre = $stmtControlador2->fetch(PDO::FETCH_ASSOC)) {
                                                     $cont_items_aux++;
                                                     if($sw!="checked"){//si el item  no es  editar
@@ -329,7 +329,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         $saldo_real=$saldo;
                                                     }
                                                  } 
-                                                }
+                                                //}
                                                 $itemServicioAux=$IdServicio;
                                                 $itemServicioFilaAux=$codSC;
 
