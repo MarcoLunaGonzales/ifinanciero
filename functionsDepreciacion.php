@@ -77,6 +77,7 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
     //rubro terreno tiene diferente proceso
     if($cod_depreciaciones!=$cod_depreciaciones_configuracion){
         $depreciacionActualAcumulada_9=$depreciacionAcumulada_6+$incrementoDepreciacionAcumulada_7+$depreciacionPeriodo_8;
+        //echo $depreciacionAcumulada_6."-".$incrementoDepreciacionAcumulada_7."-".$depreciacionPeriodo_8."=".$depreciacionActualAcumulada_9."<br>";
         $valorNetoActivo_10=$valorActivoActualizado_4-$depreciacionActualAcumulada_9; 
         if($vidautilmeses_restante==0){
             $valorNetoActivo_10=1;
@@ -85,6 +86,10 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
             $depreciacionPeriodo_8=0;
             $incrementoDepreciacionAcumulada_7=0;
             $valorIncrementoPorcentual_5 = 0;
+        }
+        if($vidautilmeses_restante<$numeroMesesDepreciacion+1){
+            $vida_util_restante=0;
+            $valorNetoActivo_10=1;
         }
     }else{
         $valorNetoActivo_10=$valorActivoActualizado_4;
