@@ -8,7 +8,7 @@ $codigo = $_GET["codigo"];
 //ini_set("display_errors", "1");
 $db = new Conexion();
 
-$sql="SELECT p.codigo,p.nombre,p.numero from configuracion_estadocuentas c,plan_cuentas p where c.cod_plancuenta=p.codigo and c.cod_tipoestadocuenta in ($codigo) order by nombre";
+$sql="SELECT p.codigo,p.nombre,p.numero from configuracion_estadocuentas c,plan_cuentas p where c.cod_plancuenta=p.codigo and c.cod_tipoestadocuenta in ($codigo) order by p.numero";
 $stmtg = $db->prepare($sql);
 $stmtg->execute();
 ?>
