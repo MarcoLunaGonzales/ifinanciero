@@ -79,17 +79,23 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
         $depreciacionActualAcumulada_9=$depreciacionAcumulada_6+$incrementoDepreciacionAcumulada_7+$depreciacionPeriodo_8;
         //echo $depreciacionAcumulada_6."-".$incrementoDepreciacionAcumulada_7."-".$depreciacionPeriodo_8."=".$depreciacionActualAcumulada_9."<br>";
         $valorNetoActivo_10=$valorActivoActualizado_4-$depreciacionActualAcumulada_9; 
-        if($vidautilmeses_restante==0){
-            $valorNetoActivo_10=1;
-            $depreciacionActualAcumulada_9=$depreciacionAcum;
+        if($vidautilmeses_restante<=0){        
             $valorActivoActualizado_4=$valorInicial;
-            $depreciacionPeriodo_8=0;
-            $incrementoDepreciacionAcumulada_7=0;
             $valorIncrementoPorcentual_5 = 0;
+            $incrementoDepreciacionAcumulada_7=0;
+            $depreciacionPeriodo_8=0;
+            $depreciacionActualAcumulada_9=$depreciacionAcum;
+            $valorNetoActivo_10=1;
         }
-        if($vidautilmeses_restante<$numeroMesesDepreciacion+1){
+        if($vidautilmeses_restante<$numeroMesesDepreciacion+1 ){
             $vida_util_restante=0;
             $valorNetoActivo_10=1;
+        }
+        if($sw_nuevo==1795){//caso especial af a.codigo=1795 llegará en variable $sw_nuevo
+            $valorInicial=59.16;
+            $depreciacionAcumulada_6=58.16;
+            $valorActivoActualizado_4=59.16;            
+            $depreciacionActualAcumulada_9=58.16;
         }
     }else{
         $valorNetoActivo_10=$valorActivoActualizado_4;
