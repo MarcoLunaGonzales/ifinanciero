@@ -12289,7 +12289,7 @@ function AjaxGestionFechaDesde(combo){
   var cod_gestion=combo.value;
   contenedor= document.getElementById('div_contenedor_fechaI');
   ajax=nuevoAjax();
-  if($("#reporteEgreso").length>0){
+  if($("#reporteEgreso").length>0||$("#reporteIngreso").length>0){
     ajax.open('GET', '../reportes/GestionDesdeAjax.php?cod_gestion='+cod_gestion,true);
   }else{
     ajax.open('GET', 'reportes/GestionDesdeAjax.php?cod_gestion='+cod_gestion,true);
@@ -12310,7 +12310,7 @@ function AjaxGestionFechaHasta(cod_gestion){
   var contenedor; 
   contenedor = document.getElementById('div_contenedor_fechaH');
   ajax=nuevoAjax();
-  if($("#reporteEgreso").length>0){
+  if($("#reporteEgreso").length>0||$("#reporteIngreso").length>0){
     ajax.open('GET', '../reportes/GestionhastaAjax.php?cod_gestion='+cod_gestion,true);
   }else{
     ajax.open('GET', 'reportes/GestionhastaAjax.php?cod_gestion='+cod_gestion,true);

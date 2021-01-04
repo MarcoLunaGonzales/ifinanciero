@@ -46,11 +46,11 @@ $codEmpresa=1;
 $codMoneda=1;
 $codEstadoComprobante=1;
 $tipoComprobanteInsertar=3;
-$cod_gestion=1206;
+$cod_gestion=3584;
 $gestionInsertar=2021;
 $mes_gestion=1;
 $codComprobante=obtenerCodigoComprobante();
-$numeroComprobante=numeroCorrelativoComprobanteFijo($cod_gestion,$unidadInsertar,$tipoComprobanteInsertar,$mes_gestion); //datos gestion 1206 "2021" y 1 "ENERO"
+$numeroComprobante=numeroCorrelativoComprobanteFijo($cod_gestion,$unidadInsertar,$tipoComprobanteInsertar,$mes_gestion); //datos gestion 3584 "2021" y 1 "ENERO"
 $glosa="BALANCE INICIAL 2021";
 $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) 
 values ('$codComprobante','$codEmpresa','$unidadInsertar','$gestionInsertar','$codMoneda','$codEstadoComprobante','$tipoComprobanteInsertar','$fechaActual','$numeroComprobante','$glosa')";
