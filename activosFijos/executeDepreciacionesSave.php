@@ -33,7 +33,7 @@ if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
 
 	//*****
 	 // $ultimoIdInsertado=71;
-	$sqlActivos="SELECT a.codigo,a.cod_depreciaciones, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion  from activosfijos a where a.tipo_af=1 ";
+	$sqlActivos="SELECT a.codigo,a.cod_depreciaciones, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion  from activosfijos a where a.tipo_af=1 and cod_unidadorganizacional in (829)";
 	//829,9,10,5,8,270//,271,272,2692 // and cod_unidadorganizacional in (10) and a.codigo=1795
 	//echo $sqlActivos;
 	$stmtActivos = $dbh->prepare($sqlActivos);
@@ -75,22 +75,27 @@ if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
 			//SACAMOS EL INICIO DE LA DEPRECIACION Y EL ULTIMO DIA DEL MES SELECCIONADO EN EL FILTRO
 
 			if($sw_nuevo==1){
-				echo $sw_nuevo;
+				// echo $sw_nuevo;
 				$fechaInicioDepreciacion=$fechaIniDepreciacionBD;//se deprecia desde que se insertó el activo
 				$numeroMesesDepreciacion=diferenciaMeses($fechaIniComparacion,$fechaFinComparacion);
 			//echo "    *** NRO MESES: ".$numeroMesesDepreciacion."<br>";
 			}else{
 				$fechaInicioDepreciacion=date('Y-m-d',strtotime($fechaIniDepreciacionBD.'-1 day'));//
 				$numeroMesesDepreciacion=diferenciaMeses($fechaIniDepreciacionBD,$fechaFinComparacion);
-				//echo "    *** NRO MESES: ".$numeroMesesDepreciacion."<br>";
+				//echo "    *** NRO MESES: ".$numeroMesesDepreciacion."<br>".$fechaFinComparacion;
 			}
 			$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinComparacion.'+1 month'));//para el dia final a la fecha
 			$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinalDepreciacion.'-1 day')); //
 			// $vidautilmeses_restante_af=$vidautilmeses_restante_af;
+			// echo $vidautilmeses_restante_af."**";
 			if($vidautilmeses_restante_af<($numeroMesesDepreciacion+1)){//saca  hasta la fecha que llega 
-				$fechaIniComparacion_x = strtotime($fechaInicioDepreciacion);
-  				$fechaFinalDepreciacion = date("Y-m-01", strtotime("+$vidautilmeses_restante_af month", $fechaIniComparacion_x));//31 de febrero
+				$vidautilmeses_restante_af=$vidautilmeses_restante_af+1;//aumenamos 1 ya que descontaremos un dia
+				$fechaInicioDepreciacion_x=date('Y-m-01',strtotime($fechaInicioDepreciacion));				
+				$fechaIniComparacion_x = strtotime($fechaInicioDepreciacion_x);
+  				$fechaFinalDepreciacion = date("Y-m-01", strtotime("+$vidautilmeses_restante_af month", $fechaIniComparacion_x));  	
   				$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinalDepreciacion.'-1 day'));	//31 de enero
+  				$vidautilmeses_restante_af=$vidautilmeses_restante_af-1;//ponemos en estado normal
+  				// echo $fechaFinalDepreciacion."<br>";
 			}
 			//echo "fechas depre: ".$fechaInicioDepreciacion." ".$fechaFinalDepreciacion;			
 			$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicial,$depreciacionAcum,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);
@@ -111,9 +116,12 @@ if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
 			
 			$vidautilmeses_restante_af=$vidarestante;
 			if($vidautilmeses_restante_af<($numeroMesesDepreciacion+1)){//
-				$fechaIniComparacion_x = strtotime($fechaIniComparacion);
+				$vidautilmeses_restante_af=$vidautilmeses_restante_af+1;//aumenamos 1 ya que descontaremos un dia
+				$fechaInicioDepreciacion_x=date('Y-m-01',strtotime($fechaInicioDepreciacion));				
+				$fechaIniComparacion_x = strtotime($fechaInicioDepreciacion_x);
   				$fechaFinalDepreciacion = date("Y-m-d", strtotime("+$vidautilmeses_restante_af month", $fechaIniComparacion_x));
-  				$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinalDepreciacion.'-1 day'));				
+  				$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinalDepreciacion.'-1 day'));	
+  				$vidautilmeses_restante_af=$vidautilmeses_restante_af-1;//ponemos en estado normal			
 			}
 			//echo "fechas depre: ".$fechaInicioDepreciacion." ".$fechaFinalDepreciacion;
 			$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicialDepreciado,$depreciacionAcumDepreciado,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);
