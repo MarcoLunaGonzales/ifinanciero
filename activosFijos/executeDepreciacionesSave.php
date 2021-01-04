@@ -15,7 +15,7 @@ $gestion=$_POST["gestion"];
 
 $fecha_actual=date($gestion."-".$mes."-t");//
 //verificamos si esa fecha no se registro aun
-set_time_limit(300);
+set_time_limit(3000);
 $sql="SELECT count(codigo)as contador from mesdepreciaciones where gestion=$gestion and mes=$mes";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
@@ -33,8 +33,7 @@ if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
 
 	//*****
 	 // $ultimoIdInsertado=71;
-
-	$sqlActivos="SELECT a.codigo,a.cod_depreciaciones, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion  from activosfijos a where a.tipo_af=1";
+	$sqlActivos="SELECT a.codigo,a.cod_depreciaciones, a.valorinicial, ifnull(a.depreciacionacumulada,0)as depreciacionacumulada, a.cantidad_meses_depreciacion as vidautil,a.vidautilmeses_restante, a.fecha_iniciodepreciacion  from activosfijos a where a.tipo_af=1 and cod_unidadorganizacional in (829) and a.codigo<=431 and a.vidautilmeses_restante<>0";
 	//829,9,10,5,8,270//,271,272,2692 // and cod_unidadorganizacional in (10) and a.codigo=1795
 	//echo $sqlActivos;
 	$stmtActivos = $dbh->prepare($sqlActivos);
@@ -74,7 +73,9 @@ if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
 			$fechaFinComparacion=$gestion."-".$mes."-01";
 			
 			//SACAMOS EL INICIO DE LA DEPRECIACION Y EL ULTIMO DIA DEL MES SELECCIONADO EN EL FILTRO
+
 			if($sw_nuevo==1){
+				echo $sw_nuevo;
 				$fechaInicioDepreciacion=$fechaIniDepreciacionBD;//se deprecia desde que se insertó el activo
 				$numeroMesesDepreciacion=diferenciaMeses($fechaIniComparacion,$fechaFinComparacion);
 			//echo "    *** NRO MESES: ".$numeroMesesDepreciacion."<br>";
@@ -118,8 +119,8 @@ if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
 			$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicialDepreciado,$depreciacionAcumDepreciado,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);
 		}
 	}
-	$flagSuccess=true;
-	showAlertSuccessErrorDepreciaciones($flagSuccess,$urlList7);
+	// $flagSuccess=true;
+	// showAlertSuccessErrorDepreciaciones($flagSuccess,$urlList7);
 	// if($banderaUFVError==1){
 	// 	echo "DATOS DE UFV INCOMPLETOS.";
 	// }
