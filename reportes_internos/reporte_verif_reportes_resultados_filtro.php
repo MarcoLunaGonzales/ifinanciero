@@ -47,7 +47,7 @@ $fechaHasta2=$y."-12-31";
 				                 <div class="col-sm-8">
 				                	<div class="form-group">
 				                		<div id="div_contenedor_fechaI">				                			
-				                			<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaDesde?>">	
+				                			<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde"  value="<?=$fechaDesde?>">	
 				                		</div>		                                
 				                     </div>
 				                  </div>
@@ -59,7 +59,7 @@ $fechaHasta2=$y."-12-31";
 				                 <div class="col-sm-8">
 				                	<div class="form-group">
 				                		<div id="div_contenedor_fechaH">				                			
-				                			<input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaHasta?>">
+				                			<input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta"  value="<?=$fechaHasta?>">
 				                		</div>
 		                               
 				                    </div>
