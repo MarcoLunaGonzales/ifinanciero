@@ -97,6 +97,9 @@ if($codigo_aux==0){ // REALIZAR PROCESO DE DEPRECIACION INDIVIDUAL POR CADA ITEM
   				$vidautilmeses_restante_af=$vidautilmeses_restante_af-1;//ponemos en estado normal
   				// echo $fechaFinalDepreciacion."<br>";
 			}
+			if($codActivo==1795){//caso especial af a.codigo=1795 llegará en variable $sw_nuevo
+	            $sw_nuevo=$codActivo;
+	        }
 			//echo "fechas depre: ".$fechaInicioDepreciacion." ".$fechaFinalDepreciacion;			
 			$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicial,$depreciacionAcum,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);
 		}else{
