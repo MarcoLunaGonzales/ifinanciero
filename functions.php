@@ -2623,7 +2623,6 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     return ($nroCorrelativo);
   }
   function obtenerCorrelativoComprobante3($cod_tipocomprobante,$gestion){  
-    $gestion=$_SESSION['globalNombreGestion'];
     $dbh = new Conexion(); 
     $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00' and year(c.fecha)=$gestion"; //and c.cod_estadocomprobante<>2
     //echo $sql;
