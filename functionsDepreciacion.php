@@ -34,11 +34,10 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
     $cod_depreciaciones_configuracion=17;//codigo por defecto de terrenos; 
     if($cod_depreciaciones==$cod_depreciaciones_configuracion){//rubro terreno tiene un proceso diferente
         $valorResidual_2=$valorInicial;
-        // echo $fechaInicioDepreciacion."$$".$fecha_actual;
+         //echo $fechaInicioDepreciacion."$$".$fecha_actual;
         $ufvInicio=obtenerUFV($fechaInicioDepreciacion);
         $ufvFinal=obtenerUFV($fecha_actual);
         $valorUFVActualizacion=($ufvFinal/$ufvInicio);
-
         $factorActualizacion_3=$valorInicial*($valorUFVActualizacion-1);
         $valorActivoActualizado_4=$factorActualizacion_3+$valorInicial;
         $valorIncrementoPorcentual_5=$factorActualizacion_3;
@@ -46,6 +45,8 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
         $incrementoDepreciacionAcumulada_7=0;
         $depreciacionPeriodo_8=0;
         $depreciacionActualAcumulada_9=0;        
+        $valorNetoActivo_10=$valorActivoActualizado_4;
+        $vida_util_restante=0;
     }else{
         $valorResidual_2=$valorInicial;
         $factorActualizacion_3=$valorUFVActualizacion;
@@ -57,29 +58,38 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
     if($sw_nuevo==1){//es nuevo
         $d2_valorresidual=0;
     }
-
-    if($vidautilmeses_restante>=$numeroMesesDepreciacion){//vida util mayor a la cantidad de meses a depreciar
-        if($vidautil>0){
-            $depreciacionPeriodo_8=($valorActivoActualizado_4/$vidautil)*$numeroMesesDepreciacion;
-        }else{
-            $depreciacionPeriodo_8=0;
-        }
-        $vida_util_restante=$vidautilmeses_restante-$numeroMesesDepreciacion;
-    }else{//vida restante menor a la cantidad de meses a depreciara
-        if($vidautil>0){
-            $depreciacionPeriodo_8=($valorActivoActualizado_4/$vidautil)*$vidautilmeses_restante;//depreciar con los meses restantes
-        }else{
-            $depreciacionPeriodo_8=0;
-        }
-        $vida_util_restante=0;
-        $valorNetoActivo_10=1;
-    }
     //rubro terreno tiene diferente proceso
     if($cod_depreciaciones!=$cod_depreciaciones_configuracion){
+        if($vidautilmeses_restante>=$numeroMesesDepreciacion){//vida util mayor a la cantidad de meses a depreciar
+            if($vidautil>0){
+                $depreciacionPeriodo_8=($valorActivoActualizado_4/$vidautil)*$numeroMesesDepreciacion;
+            }else{
+                $depreciacionPeriodo_8=0;
+            }
+            $vida_util_restante=$vidautilmeses_restante-$numeroMesesDepreciacion;
+        }else{//vida restante menor a la cantidad de meses a depreciara
+            if($vidautilmeses_restante==1){
+                if($vidautil>0){
+                    $depreciacionPeriodo_8=$valorActivoActualizado_4-$depreciacionAcum-$incrementoDepreciacionAcumulada_7-1;//depreciar con los meses restantes
+                }else{
+                    $depreciacionPeriodo_8=0;
+                }
+            }else{
+                if($vidautil>0){
+                    $depreciacionPeriodo_8=($valorActivoActualizado_4/$vidautil)*$vidautilmeses_restante;//depreciar con los meses restantes
+                }else{
+                    $depreciacionPeriodo_8=0;
+                }
+            }
+
+            
+            $vida_util_restante=0;
+            //$valorNetoActivo_10=1;
+        }
         $depreciacionActualAcumulada_9=$depreciacionAcumulada_6+$incrementoDepreciacionAcumulada_7+$depreciacionPeriodo_8;
         //echo $depreciacionAcumulada_6."-".$incrementoDepreciacionAcumulada_7."-".$depreciacionPeriodo_8."=".$depreciacionActualAcumulada_9."<br>";
         $valorNetoActivo_10=$valorActivoActualizado_4-$depreciacionActualAcumulada_9; 
-        if($vidautilmeses_restante<=0){        
+        if($vidautilmeses_restante<=0){
             $valorActivoActualizado_4=$valorInicial;
             $valorIncrementoPorcentual_5 = 0;
             $incrementoDepreciacionAcumulada_7=0;
@@ -89,7 +99,7 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
         }
         if($vidautilmeses_restante<$numeroMesesDepreciacion+1 ){
             $vida_util_restante=0;
-            $valorNetoActivo_10=1;
+            //$valorNetoActivo_10=1;
         }
         if($sw_nuevo==1795){//caso especial af a.codigo=1795 llegará en variable $sw_nuevo
             $valorInicial=59.16;
@@ -97,8 +107,6 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
             $valorActivoActualizado_4=59.16;            
             $depreciacionActualAcumulada_9=58.16;
         }
-    }else{
-        $valorNetoActivo_10=$valorActivoActualizado_4;
     }
     $sqlInsertDet="INSERT INTO mesdepreciaciones_detalle (cod_mesdepreciaciones, cod_activosfijos, d2_valorresidual, d3_factoractualizacion, d4_valoractualizado, d5_incrementoporcentual, d6_depreciacionacumuladaanterior, d7_incrementodepreciacionacumulada, d8_depreciacionperiodo, d9_depreciacionacumuladaactual, d10_valornetobs, fecha_inicio, fecha_fin,d11_vidarestante) values ('$ultimoIdInsertado', '$codActivo', '$valorResidual_2', '$factorActualizacion_3', '$valorActivoActualizado_4', '$valorIncrementoPorcentual_5', '$depreciacionAcumulada_6', '$incrementoDepreciacionAcumulada_7', '$depreciacionPeriodo_8', '$depreciacionActualAcumulada_9','$valorNetoActivo_10', '$fechaInicioDepreciacion', '$fechaFinalDepreciacion','$vida_util_restante')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);
