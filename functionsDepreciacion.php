@@ -19,7 +19,17 @@ $intervalMeses=$interval->format("%m");
 
 return($intervalMeses);
 }
-
+function obtenerContraCuentaDepreciacion($codigo)
+{
+    $dbh = new Conexion();
+    $stmt = $dbh->prepare("SELECT cod_cuentacontable2 from depreciaciones where codigo=$codigo");     
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_cuentacontable2'];
+    }
+    return($valor);
+}
 function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicial,$depreciacionAcum,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante,$cod_depreciaciones,$fecha_actual,$sw_nuevo){
     $dbh = new Conexion();
     $numeroMesesDepreciacion++;

@@ -32,7 +32,7 @@ $stmtGestiones = $dbh->query($sql);
             <label class="col-sm-2 col-form-label">Gestion</label>
             <div class="col-sm-3">
               <div class="form-group">                  
-                  <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="sacandoUFVDepreAF()">
+                  <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
                     <?php
                       while ($row = $stmtGestiones->fetch()) { ?>
                         <option value="<?=$row["nombre"];?>"><?=$row["nombre"];?></option>
@@ -47,7 +47,7 @@ $stmtGestiones = $dbh->query($sql);
             <label class="col-sm-2 col-form-label">Mes</label>
             <div class="col-sm-3">
               <div class="form-group">
-                  <select name="mes" id="mes" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="sacandoUFVDepreAF()">
+                  <select name="mes" id="mes" class="selectpicker form-control form-control-sm" data-style="btn btn-info" >
                           <!--<select name="tipoalta" id="tipoalta" class="selectpicker " data-style="select-with-transition">-->
                     <option value="1">ENERO</option>
                     <option value="2">FEBRERO</option>
@@ -66,24 +66,7 @@ $stmtGestiones = $dbh->query($sql);
             </div>
           </div><!--fin campo gestion y mes-->
 
-          <div class="row">
-            <label class="col-sm-2 col-form-label">UFV Inicio</label>
-            <div class="col-sm-3">
-              <div class="form-group">       
-                <div id="div_contenedor_ufv_inicio">
-                  <input type="text"  readonly="readonly" style="padding-left:20px" class="form-control" name="ufv_inicio" id="ufv_inicio" />    
-                </div>         
-              </div>
-            </div>
-            <label class="col-sm-2 col-form-label">UFV Final</label>
-            <div class="col-sm-3">
-              <div class="form-group">
-                <div id="div_contenedor_ufv_fin">
-                  <input type="text"  readonly="readonly" style="padding-left:20px" class="form-control" name="ufv_fin" id="ufv_fin" />
-                </div>         
-              </div>
-            </div>
-          </div><!--fin campo ufv -->
+      
 
           
         </div>
