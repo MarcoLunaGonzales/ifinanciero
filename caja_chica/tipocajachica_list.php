@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 $stmt = $dbh->prepare("SELECT *,
-  (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo)as uo,( select a.abreviatura from areas a where a.codigo=cod_area) as area from tipos_caja_chica where cod_estadoreferencial=1");
+  (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo)as uo,( select a.abreviatura from areas a where a.codigo=cod_area) as area from tipos_caja_chica where cod_estadoreferencial=1 order by cod_estado");
 //ejecutamos
 $stmt->execute();
 //bindColumn
