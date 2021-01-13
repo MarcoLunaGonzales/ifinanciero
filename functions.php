@@ -9065,7 +9065,7 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
 
   function obtenerDatosComprobanteDetalle($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cd.glosa,cd.debe,cd.haber,(cd.debe+cd.haber) as monto,cd.cod_area,cd.cod_unidadorganizacional,p.nombre,p.numero,(SELECT nombre FROM cuentas_auxiliares where codigo=cd.cod_cuentaauxiliar) as nombre_auxiliar from comprobantes_detalle cd join plan_cuentas p on p.codigo=cd.cod_cuenta where cd.codigo=$codigo");
+     $stmt = $dbh->prepare("SELECT cd.glosa,cd.debe,cd.haber,(cd.debe+cd.haber) as monto,cd.cod_area,cd.cod_unidadorganizacional,p.nombre,p.numero,(SELECT nombre FROM cuentas_auxiliares where codigo=cd.cod_cuentaauxiliar) as nombre_auxiliar from comprobantes_detalle cd join plan_cuentas p on p.codigo=cd.cod_cuenta join comprobantes c on c.codigo=cd.cod_comprobante where cd.codigo=$codigo and c.cod_estadocomprobante<>2");
      $stmt->execute();
      $valor=array('','','','','');
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

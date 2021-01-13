@@ -23,7 +23,7 @@ $sql="SELECT l.* from ((SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x
 from facturas_compra f 
 join solicitud_recursosdetalle sd on sd.codigo=f.cod_solicitudrecursodetalle
 join solicitud_recursos s on s.codigo=sd.cod_solicitudrecurso
-where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_estadoreferencial<>2 and (sd.cod_area=1235 or sd.cod_unidadorganizacional=3000) and MONTH(f.fecha)=$cod_mes_x and YEAR(f.fecha)=$nombre_gestion)
+where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_comprobante<>0 and s.cod_estadoreferencial<>2 and (sd.cod_area=1235 or sd.cod_unidadorganizacional=3000) and MONTH(f.fecha)=$cod_mes_x and YEAR(f.fecha)=$nombre_gestion)
 
 UNION (SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra
   FROM facturas_compra f, comprobantes_detalle c, comprobantes cc 
