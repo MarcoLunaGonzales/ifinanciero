@@ -112,7 +112,17 @@ $stmt->bindColumn('cod_comprobantedetalle', $codComprobanteDetalle);
                             //$saldo_acumulado+=$saldo_inicial;
                             $saldo_acumulado=obtenerSaldoAcumuladoFilaLibretaBancaria($codigo);
                           //==termina el codigom temporal
-
+                           $codComprobanteAux=0;
+                            $codComprobanteDetalleAux=0;
+                            $sqlExisteComprobante="SELECT codigo from comprobantes where codigo=$codComprobante and cod_estadocomprobante<>2";
+                            $stmtExisteComprobante = $dbh->prepare($sqlExisteComprobante);
+                            $stmtExisteComprobante->execute();
+                            while ($rowExisteCompro = $stmtExisteComprobante->fetch(PDO::FETCH_ASSOC)) {
+                              $codComprobanteAux=$codComprobante;
+                              $codComprobanteDetalleAux=$codComprobanteDetalle;
+                            }
+                            $codComprobante=$codComprobanteAux;
+                            $codComprobanteDetalle=$codComprobanteDetalleAux;
                           ?>
                           <tr>
                             <td align="center"><?=$index;?></td>

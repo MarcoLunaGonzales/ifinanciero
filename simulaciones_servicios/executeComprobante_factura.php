@@ -27,14 +27,14 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 		$mesTrabajo=$_SESSION['globalMes'];
 		$gestionTrabajo=$_SESSION['globalNombreGestion'];
 		$codEmpresa=1;
-		$codAnio=$_SESSION["globalNombreGestion"];
+		$codAnio=date("Y");
 		$codMoneda=1;
 		$codEstadoComprobante=1;
 
 		$fechaActual=date("Y-m-d H:i:s");		
 		$tipoComprobante=4;//facturas
 		$nombreTipoComprobante=abrevTipoComprobante($tipoComprobante);
-		$numeroComprobante=obtenerCorrelativoComprobante3($tipoComprobante,$gestionTrabajo);
+		$numeroComprobante=obtenerCorrelativoComprobante3($tipoComprobante,$codAnio);
 		$numeroX=str_pad($numeroComprobante, 5, "0", STR_PAD_LEFT);	
 		$nombreComprobante=$nombreTipoComprobante."-".$numeroX;
 		//sacamos nombre de los detalles
@@ -446,7 +446,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 		$fechaActual=date("Y-m-d H:i:s");		
 		$tipoComprobante=4;//facturas
 		$nombreTipoComprobante=abrevTipoComprobante($tipoComprobante);
-		$numeroComprobante=obtenerCorrelativoComprobante3($tipoComprobante,$gestionTrabajo);
+		$numeroComprobante=obtenerCorrelativoComprobante3($tipoComprobante,$codAnio);
 		$numeroX=str_pad($numeroComprobante, 5, "0", STR_PAD_LEFT);	
 		$nombreComprobante=$nombreTipoComprobante."-".$numeroX;
 		//sacamos nombre de los detalles

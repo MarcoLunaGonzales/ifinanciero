@@ -18,10 +18,10 @@ $fechaActual=date("m/d/Y");
 $m=date("m");
 $y=date("Y");
 $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
-$fechaDesde=$y."-01-01";
+$fechaDesde="2020-01-01";
 $fechaHasta=$y."-".$m."-".$d;
 
-$fechaDesde2=$y."-01-01";
+$fechaDesde2="2020-01-01";
 $fechaHasta2=$y."-12-31";
 
 $dbh = new Conexion();

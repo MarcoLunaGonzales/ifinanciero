@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 $stmt = $dbh->prepare("SELECT *,
-  (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo)as uo,( select a.abreviatura from areas a where a.codigo=cod_area) as area from tipos_caja_chica where cod_estadoreferencial=1");
+  (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo)as uo,( select a.abreviatura from areas a where a.codigo=cod_area) as area from tipos_caja_chica where cod_estadoreferencial=1 order by cod_estado");
 //ejecutamos
 $stmt->execute();
 //bindColumn
@@ -20,7 +20,7 @@ $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('uo', $uo);
 $stmt->bindColumn('area', $area);
 $stmt->bindColumn('personal', $personal);
-
+$stmt->bindColumn('cod_estado', $codEstado);
 ?>
 
 <div class="content">
@@ -47,7 +47,7 @@ $stmt->bindColumn('personal', $personal);
                           <th>Responsable</th>
                           <th>Nombre Cuenta</th>
                           <th>Nro Cuenta</th>
-
+                          <th>Estado</th>
                           <th></th>
                         </tr>
                       </thead>
@@ -57,6 +57,10 @@ $stmt->bindColumn('personal', $personal);
                           $cod_cuenta=obtenerCodigoCuentaCajaChica($codigo);
                           $nombre_cuenta=nameCuenta($cod_cuenta);
                           $numero_cuenta=obtieneNumeroCuenta($cod_cuenta);
+                          $tituloEstado="<a class='btn btn-sm btn-success'>VIGENTE</a>";
+                          if($codEstado==2){
+                             $tituloEstado="<a class='btn btn-sm btn-warning'>CERRADO</a>";
+                          }
                           ?>
                           <tr>
                             <td><?=$index;?></td>                            
@@ -65,8 +69,8 @@ $stmt->bindColumn('personal', $personal);
                               <td><?=$area;?></td>        
                               <td><?=$personal;?></td>        
                               <td><?=$nombre_cuenta;?></td> 
-                              <td><?=$numero_cuenta;?></td> 
-                              
+                              <td><?=$numero_cuenta;?></td>
+                              <td><?=$tituloEstado;?></td>                               
                               <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){

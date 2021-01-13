@@ -2623,7 +2623,6 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     return ($nroCorrelativo);
   }
   function obtenerCorrelativoComprobante3($cod_tipocomprobante,$gestion){  
-    $gestion=$_SESSION['globalNombreGestion'];
     $dbh = new Conexion(); 
     $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from comprobantes c where c.cod_tipocomprobante=$cod_tipocomprobante and c.fecha>='2020-07-01 00:00:00' and year(c.fecha)=$gestion"; //and c.cod_estadocomprobante<>2
     //echo $sql;
@@ -9066,7 +9065,7 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
 
   function obtenerDatosComprobanteDetalle($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cd.glosa,cd.debe,cd.haber,(cd.debe+cd.haber) as monto,cd.cod_area,cd.cod_unidadorganizacional,p.nombre,p.numero,(SELECT nombre FROM cuentas_auxiliares where codigo=cd.cod_cuentaauxiliar) as nombre_auxiliar from comprobantes_detalle cd join plan_cuentas p on p.codigo=cd.cod_cuenta where cd.codigo=$codigo");
+     $stmt = $dbh->prepare("SELECT cd.glosa,cd.debe,cd.haber,(cd.debe+cd.haber) as monto,cd.cod_area,cd.cod_unidadorganizacional,p.nombre,p.numero,(SELECT nombre FROM cuentas_auxiliares where codigo=cd.cod_cuentaauxiliar) as nombre_auxiliar from comprobantes_detalle cd join plan_cuentas p on p.codigo=cd.cod_cuenta join comprobantes c on c.codigo=cd.cod_comprobante where cd.codigo=$codigo and c.cod_estadocomprobante<>2");
      $stmt->execute();
      $valor=array('','','','','');
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

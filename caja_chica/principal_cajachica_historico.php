@@ -15,8 +15,7 @@ $dbh = new Conexion();
 
 $stmt = $dbh->prepare("SELECT *,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo,
   (select a.abreviatura from areas a where a.codigo=cod_area)as nombre_area
-  from tipos_caja_chica where cod_estadoreferencial=1 and cod_uo=$globalUnidad and cod_estado is null");//and cod_personal=$globalUser
-
+  from tipos_caja_chica where cod_estadoreferencial=1 and cod_uo=$globalUnidad and cod_estado=2");//and cod_personal=$globalUser
 //ejecutamos
 $stmt->execute();
 //bindColumn
@@ -35,21 +34,20 @@ $stmt->bindColumn('nombre_area', $nombre_area);
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header <?=$colorCard;?> card-header-icon">
-                  <div class="card-icon">
+                  <div class="card-icon" style="background:#707B7C !important;">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
                   <!-- <h4 class="card-title">Cajas chicas</h4>
                   <h4>Seleccione un Caja Chica</h4> -->
                 </div>
                 <div class="card-body">
-                  <h4 class="text-center">Seleccionar una Caja Chica</h4>
-                  <a href="index.php?opcion=principal_CajaChica_historico" target="_blank" class="btn btn-primary btn-sm float-right" style="background-color:#707B7C;">Ir Al Histórico</a>
+                  <h4 class="text-center"><b>Histórico</b></h4>
                   <div class="row div-center text-center">
                   <?php
                   while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                     $nombre_personal=namePersonal($cod_personal);
                     ?>
-                       <div class="card text-white mx-auto" style="background-color:#d32f2f; width: 18rem;">
+                       <div class="card text-white mx-auto" style="background-color:#707B7C; width: 18rem;">
                          <a href="?opcion=ListaCajaChica&codigo=<?=$codigo?>" >
                             <div class="card-body ">
                                <h5 class="card-title" style="color:#ffffff;"><?=$nombre;?></h5>

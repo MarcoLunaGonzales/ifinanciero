@@ -218,8 +218,17 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
            $datosDetalle[$index]['FechaHoraCompleta']=$datosDetalle[$index]['Fecha']." ".$datosDetalle[$index]['Hora'];
            $datosDetalle[$index]['monto']=$rowLibDetalle['monto'];
            $datosDetalle[$index]['CodEstado']=$rowLibDetalle['cod_estado'];
-           $datosDetalle[$index]['CodComprobante']=$codComprobante;
-           $datosDetalle[$index]['CodComprobanteDetalle']=$codComprobanteDetalle;
+           $datosDetalle[$index]['CodComprobante']=0;
+           $datosDetalle[$index]['CodComprobanteDetalle']=0;
+           
+           $sqlExisteComprobante="SELECT codigo from comprobantes where codigo=$codComprobante and cod_estadocomprobante<>2";
+           $stmtExisteComprobante = $dbh->prepare($sqlExisteComprobante);
+           $stmtExisteComprobante->execute();
+           while ($rowExisteCompro = $stmtExisteComprobante->fetch(PDO::FETCH_ASSOC)) {
+             $datosDetalle[$index]['CodComprobante']=$codComprobante;
+             $datosDetalle[$index]['CodComprobanteDetalle']=$codComprobanteDetalle;
+           }
+           
            /*$datosDetalle[$index]['FechaFactura']=null;
            $datosDetalle[$index]['NumeroFactura']=null;
            $datosDetalle[$index]['NitFactura']=null;

@@ -88,9 +88,12 @@ switch ($filtro) {
           $stmtFacturas = $dbh->prepare($sqlFacturas);
           // echo $sqlFacturas;
           $stmtFacturas->execute();        
-          $resultFacturas=$stmtFacturas->fetch();
-          $codFactura=$resultFacturas['cod_facturaventa'];
-          $montoFac=$resultFacturas['monto_fac'];
+          $codFactura=0;
+          $montoFac=0;
+          while ($resultFacturas = $stmtFacturas->fetch(PDO::FETCH_ASSOC)) {
+              $codFactura=$resultFacturas['cod_facturaventa'];
+              $montoFac=$resultFacturas['monto_fac'];
+          }
           
           $cant=obtenerCantidadFacturasLibretaBancariaDetalle($codigo,$sqlFiltro2);
           $cant2=obtenerCantidadComprobanteLibretaBancariaDetalle($codigo,$sqlFiltroComp);
@@ -122,7 +125,7 @@ switch ($filtro) {
               <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
               <td class="text-right"><?=$nro_documento?></td>
               <?php 
-              if($codFactura==""||$codFactura==0){
+              if($codFactura==""||$codFactura==0||$codFactura==null){
                 $facturaFecha="";
                 $facturaNumero="";
                 $facturaNit="";

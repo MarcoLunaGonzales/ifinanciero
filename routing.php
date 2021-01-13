@@ -1705,6 +1705,9 @@
 		if ($_GET['opcion']=='principal_CajaChica') {
 			require_once('caja_chica/principal_cajachica.php');
 		}
+		if ($_GET['opcion']=='principal_CajaChica_historico') {
+			require_once('caja_chica/principal_cajachica_historico.php');
+		}
 		if ($_GET['opcion']=='ListaCajaChica') {
 			$codigo=$_GET['codigo'];
 			require_once('caja_chica/cajachica_list.php');

@@ -12055,16 +12055,25 @@ function filtrarCuentaComprobanteDetalle(){
   var codigos=[];
   var indice=0;
   var items = document.getElementsByName('lista_check');
+  var cantidadCuentas=0;
+  var cantidadCuentasSeleccionadas=0;
     for (var i = 0; i < items.length; i++) {
-        if (items[i].type == 'checkbox')
+        if (items[i].type == 'checkbox'){
+          cantidadCuentas++;
           if(items[i].checked==true){
+            cantidadCuentasSeleccionadas++;
             codigos[indice]=items[i].value;
             indice++;
           }
+        }  
     }
   //var cod_cuenta=$("#cuenta_decomprobante").val();
   var cod_comprobante=$("#codigo_comprobante").val();
-  window.location.href="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos);
+  if(cantidadCuentas==cantidadCuentasSeleccionadas){
+   window.location.href="edit_prueba.php?codigo="+cod_comprobante;
+  }else{
+    window.location.href="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos);
+  }
 }
 
 
