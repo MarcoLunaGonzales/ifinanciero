@@ -112,6 +112,14 @@ switch ($filtro) {
           
           $saldo=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,$sqlFiltroSaldo,$monto);
           if($entro==1){
+            if($codFactura==""||$codFactura==0||$codFactura==null){
+              if(!($codComprobante==""||$codComprobante==0)){
+                  $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);                    
+                  if($datosDetalle[1]!=''){
+                      $saldo=0;
+                   }
+               }
+            }   
             $totalMonto+=$saldo;
             ?>
             <tr>

@@ -55,7 +55,26 @@ $distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para toda
       </script>  
       <?php
    }
-
+$distribucionArea=obtenerDistribucionCentroCostosAreaActivo($globalUnidad); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+   while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
+    $codigoD=$rowArea['codigo'];
+    $codDistD=$rowArea['cod_distribucionarea'];
+    $codAreaD=$rowArea['cod_area'];
+    $porcentajeD=$rowArea['porcentaje'];
+    $nombreD=$rowArea['nombre'];
+     ?>
+      <script>
+        var distri = {
+          codigo:<?=$codigoD?>,
+          cod_dis:<?=$codDistD?>,
+          area:<?=$codAreaD?>,
+          nombre:'<?=$nombreD?>',
+          porcentaje:<?=$porcentajeD?>
+        }
+        itemDistArea.push(distri);
+      </script>  
+      <?php
+   }
 
    $indexArea=0;
      $stmtAreas = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
