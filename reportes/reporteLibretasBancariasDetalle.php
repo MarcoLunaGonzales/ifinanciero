@@ -75,7 +75,7 @@ switch ($filtro) {
       $stmt->bindColumn('cod_comprobantedetalle', $codComprobanteDetalle);
       // $stmt->bindColumn('cod_factura', $codFactura);
       // $stmt->bindColumn('monto_fac', $montoFac);
-      $index=1;$totalMonto=0;$totalMontoFac=0;
+      $index=1;$totalMonto=0;$totalMontoFac=0;$montoMonto=0;
       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
         $entro=0; 
         $verificar=1;
@@ -120,7 +120,8 @@ switch ($filtro) {
                    }
                }
             }   
-            $totalMonto+=float($saldo);
+            $totalMonto+=(float)$saldo;
+            $montoMonto+=(float)$monto;
             ?>
             <tr>
               <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
@@ -193,6 +194,7 @@ switch ($filtro) {
                 $facturaMonto=[];
                 $filaFac=0;  
                 while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)) {
+                  if($nroDetalle!=""){
                   $totalMontoFac+=$impDetalle;
                   $facturaFecha[$filaFac]=strftime('%d/%m/%Y',strtotime($fechaDetalle));
                   $facturaNumero[$filaFac]=$nroDetalle;
@@ -201,6 +203,7 @@ switch ($filtro) {
                   $facturaDetalle[$filaFac]=$obsDetalle;
                   $facturaMonto[$filaFac]=number_format($impDetalle,2,".",",");
                   $filaFac++;
+                  }
                 }?>
                 <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaFecha)?></td>
                 <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNumero)?></td>
@@ -218,7 +221,8 @@ switch ($filtro) {
       }?>
       <script>$("#total_reporte").val("<?=number_format($totalMonto,2,'.',',')?>");</script>
       <tr class="font-weight-bold" style="background:#21618C; color:#fff;">
-        <td align="center" colspan="5" class="csp">Totales</td>
+        <td align="center" colspan="4" class="csp">Totales</td>
+        <td class="text-right"><?=number_format($montoMonto,2,".",",")?></td>
         <td class="text-right"><?=number_format($totalMonto,2,".",",")?></td>
         <td class="text-left"></td>
         <td class="text-left"></td>
