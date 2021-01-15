@@ -120,7 +120,7 @@ switch ($filtro) {
                    }
                }
             }   
-            $totalMonto+=$saldo;
+            $totalMonto+=float($saldo);
             ?>
             <tr>
               <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
@@ -156,7 +156,7 @@ switch ($filtro) {
                      $facturaRazonSocial="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
                      $facturaMonto="<b class='text-success'>".$datosDetalle[1]."</b>";     
                   }
-                  $totalMontoFac+=0;
+                  $totalMontoFac+=$datosDetalle[1];
                 }
                 
                ?>
@@ -169,7 +169,7 @@ switch ($filtro) {
                <?php                          
               }else{
                 $cadena_facturas=obtnerCadenaFacturas($codigo);
-                $sqlDetalleX="SELECT * FROM facturas_venta f where f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 $sqlFiltro2 order by f.codigo desc";
+                $sqlDetalleX="SELECT f.fecha_factura,f.nro_factura,f.nit,f.razon_social,f.observaciones,SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as importe FROM facturas_venta f, facturas_ventadetalle fd where f.codigo=fd.cod_facturaventa and f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 $sqlFiltro2 order by f.codigo desc";
                 /*if($filtro==0){
                   $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 order by codigo desc";
                 }else{
