@@ -335,6 +335,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
 
                                                 if($descuentoFila>0){
                                                     $descuento_bobX=(($montoPre*$cantidadPre)*$descuentoFila)/100;
+                                                    //$descuento_bobX=(($monto_pagar*$cantidad_saldo)*$descuentoFila)/100;
                                                     $descuento_porX=$descuentoFila;
                                                 }
                                             
@@ -354,6 +355,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 <input type="hidden" id="servicio_a<?=$iii?>" name="servicio_a<?=$iii?>">
                                                 <input type="hidden" id="cantidad_a<?=$iii?>" name="cantidad_a<?=$iii?>">
                                                 <input type="hidden" id="importe_a<?=$iii?>" name="importe_a<?=$iii?>">
+                                                <input type="hidden" id="cantidad_real<?=$iii?>" name="cantidad_real<?=$iii?>" value="<?=$cantidadPre?>">
                                                 <tr>
                                                     <td><small><?=$iii?></small></td>
                                                     <td class="text-left" ><small><?=$tipoPre?></small></td>
