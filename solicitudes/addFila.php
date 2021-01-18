@@ -250,6 +250,7 @@ $des_actividadproyecto="";
                          </div>
                          <script>numFilas++;
                                cantidadItems++;
+                               verificarDivisionPagoFila(<?=$idFila?>);
                                //autocompletar("partida_cuenta"+<?=$idFila;?>,"partida_cuenta_id"+<?=$idFila;?>,array_cuenta);
                             </script>
              <?php  

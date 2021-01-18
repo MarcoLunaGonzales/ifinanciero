@@ -101,4 +101,4 @@ $codigo_detalle=$_GET['codigo_detalle'];
 						
 
 ?>
-	<script>$("#cantidad_filas").val(<?=($idFila-1)?>)</script>					
+	<script>$("#cantidad_filas").val(<?=($idFila-1)?>);</script>					
