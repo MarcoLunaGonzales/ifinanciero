@@ -243,7 +243,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 
                                                 // $resultMontoTotal=$stmtControladorTotal->fetch();
                                                 if($precio_total_x>0){
-                                                    $saldo=$monto_pagar*$cantidad_saldo-$precio_total_x;
+                                                    //$saldo=$monto_pagar*$cantidad_saldo-$precio_total_x;
+                                                    $saldo=($monto_pagar*$cantidadPre)-$precio_total_x;
                                                     $saldo_real=$saldo;
                                                     if($cod_facturacion==0){
                                                         $cantidad_saldo=$cantidad_inicial-$cantidad_total_registrado;    
@@ -287,7 +288,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                    $monto_servicio=''; 
                                                 }
                                                 if($monto_servicio!=0 && $monto_servicio!='' && $monto_servicio!=null){
-                                                    $saldo=$monto_pagar*$cantidad_saldo-$monto_servicio;
+                                                    //$saldo=$monto_pagar*$cantidad_saldo-$monto_servicio;
+                                                    $saldo=($monto_pagar*$cantidadPre)-$monto_servicio;
                                                     $monto_total_pagado=$monto_servicio;                                                    
                                                     if($monto_servicio==$montoPre){
                                                         $sw2="readonly style='background-color:#cec6d6;'";
@@ -316,7 +318,9 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         }else{
                                                             // $monto_total_pagado-=$rowPre['descuento_bob'];
                                                             // echo $monto_pagar."-".$monto_total_pagados;
-                                                            $saldo=$monto_pagar*$cantidad_saldo-$monto_total_pagado;    
+                                                            //$saldo=$monto_pagar*$cantidad_saldo-$monto_total_pagado;  
+                                                            $descuento_bobX=(($montoPre*$cantidadPre)*$descuentoFila)/100;  
+                                                            $saldo=($monto_pagar*$cantidadPre)-$monto_total_pagado-$descuento_bobX;    
                                                             $saldo_real=$saldo;
                                                         }
                                                         // $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];

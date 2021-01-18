@@ -881,7 +881,7 @@
                         </div>
                         <?php
 
-                       }else{
+                       }
                         ?>
                        <div class="row">
                        <label class="col-sm-2 col-form-label">IAF</label>
@@ -935,7 +935,7 @@
                        </div>
                       </div>  
                         <?php
-                       }
+                       //}
                       ?>
                       <!--<div class="row">
                           <label class="col-sm-3 col-form-label">N&uacute;mero de Personal</label>

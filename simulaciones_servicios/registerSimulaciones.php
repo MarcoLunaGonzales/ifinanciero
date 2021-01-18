@@ -419,6 +419,56 @@ $dbh = new Conexion();
                              </div>     
                         </div> 
                       <div class="row">
+                       <label class="col-sm-2 col-form-label">IAF</label>
+                       <div class="col-sm-3">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_primario_tcs" id="iaf_primario_tcs" data-style="btn btn-info"  required>
+                                  <option value="0" select>NINGUNO</option> 
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $abreviaturaX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                       <label class="col-sm-1 col-form-label">IAF Sec.</label>
+                       <div class="col-sm-3">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_secundario_tcs" id="iaf_secundario_tcs" data-style="btn btn-default"  required>
+                                 <option value="0" select>NINGUNO</option> 
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $abreviaturaX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                      </div>  
+                      <div class="row">
                        <label class="col-sm-2 col-form-label">Descripción del Servicio:</label>
                        <div class="col-sm-7">
                         <div class="form-group">
