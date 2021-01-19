@@ -278,6 +278,30 @@ $globalUnidad=$_SESSION["globalUnidad"];
                         </div>  
                      </div>
             </div><!--fin tipo tipo -->
+            <!--<div class="row">
+              <label class="col-sm-2 col-form-label"></label>
+              <div class="col-sm-4">
+              <div class="form-group">
+              </div>
+              </div>
+              <div class="col-sm-6">
+                      <div class="row">
+                     <label class="col-sm-8 col-form-label">Incluir cierre de estados de cuenta posteriores al periodo</label>
+                           <div class="col-sm-4">
+                        <div class="form-group">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox" id="cierre_posterior" name="cierre_posterior[]" checked value="1">
+                                      <span class="form-check-sign">
+                                        <span class="check"></span>
+                                      </span>
+                                    </label>
+                                  </div>
+                                </div>  
+                             </div>     
+                        </div>  
+                     </div>
+            </div>--><!--fin tipo tipo -->
           </div>
           <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>

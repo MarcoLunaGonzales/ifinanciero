@@ -10291,7 +10291,11 @@ function calcularTotalFilaServicio2(){
   for (var i=1;i<=(total-1);i++){          
     var monto_precio=$("#monto_precio"+i).val();    
     var descuento_bob=$("#descuento_bob"+i).val();
-    var cantidad_x=document.getElementById("cantidad_real"+i).value;    // PARA EL MONTO GENERAL 
+    if($("#desde_servicio").length>0){
+     var cantidad_x=document.getElementById("cantidad_real"+i).value;    // PARA EL MONTO GENERAL   
+    }else{
+      var cantidad_x=document.getElementById("cantidad"+i).value;    // PARA EL MONTO GENERAL 
+    }    
     if(descuento_bob==null ||descuento_bob=='NaN'||descuento_bob==' '||descuento_bob==''){descuento_bob=0;}
     var monto_importe_total=(parseFloat(monto_precio)*parseFloat(cantidad_x))-parseFloat(descuento_bob);
     //alert(monto_importe_total);

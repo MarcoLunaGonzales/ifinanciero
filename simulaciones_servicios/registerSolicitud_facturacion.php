@@ -233,7 +233,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 if($monto_servicio!=0){
                                                     $saldo=$monto_pagar*$cantidadPre-$monto_servicio;
                                                     $monto_total_pagado=$monto_servicio;    
-                                                    if($monto_servicio==$montoPre){
+                                                    if(number_format($monto_servicio,2,".","")==number_format($montoPre,2,".","")){
 
                                                         $sw2="readonly style='background-color:#cec6d6;'";
                                                         $saldo=0;
