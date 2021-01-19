@@ -82,7 +82,7 @@ $stmt->bindColumn('estado', $estado);
                 </div>
               </div>
               <?php
-              if($globalAdmin==1){
+              // if($globalAdmin==1){
               ?>
       				<div class="card-footer ml-auto mr-auto">
                     <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
@@ -90,7 +90,7 @@ $stmt->bindColumn('estado', $estado);
 
               </div>
               <?php
-              }
+              //}
               ?>
 		  
             </div>
