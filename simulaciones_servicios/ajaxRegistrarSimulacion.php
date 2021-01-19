@@ -63,8 +63,8 @@ if(isset($_POST['nombre'])){
     $iafsecundario=$_POST['iaf_secundario'];
   }else{
     $regionCliente=1;
-    $iafprimario=0;
-    $iafsecundario=0;
+    $iafprimario=$_POST['iaf_primario'];
+    $iafsecundario=$_POST['iaf_secundario'];
   }
   $areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
   $unidadGeneralPlantilla=obtenerCodigoUnidadPlantillasServicios($plantilla_servicio);

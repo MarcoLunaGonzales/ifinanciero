@@ -3259,7 +3259,9 @@ function guardarSimulacionServicio(){
     var normas_tiposerviciotext=$("#normas_tiposerviciotext").val();
     alcance=$("#alcance").val();
     var des_serv=$("#d_servicio").val();
-     var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
+    var iaf_primario=$("#iaf_primario_tcs").val();
+      var iaf_secundario=$("#iaf_secundario_tcs").val();
+     var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
      $.ajax({
         type: "POST",
         dataType: 'html',
@@ -10289,7 +10291,7 @@ function calcularTotalFilaServicio2(){
   for (var i=1;i<=(total-1);i++){          
     var monto_precio=$("#monto_precio"+i).val();    
     var descuento_bob=$("#descuento_bob"+i).val();
-    var cantidad_x=document.getElementById("cantidad"+i).value;    
+    var cantidad_x=document.getElementById("cantidad_real"+i).value;    // PARA EL MONTO GENERAL 
     if(descuento_bob==null ||descuento_bob=='NaN'||descuento_bob==' '||descuento_bob==''){descuento_bob=0;}
     var monto_importe_total=(parseFloat(monto_precio)*parseFloat(cantidad_x))-parseFloat(descuento_bob);
     //alert(monto_importe_total);

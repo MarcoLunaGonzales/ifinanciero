@@ -9344,8 +9344,8 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
     $dbh = new Conexion();
     $sql="SELECT ld.codigo,ld.monto,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf 
     join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
-    where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta f  where lbdf.cod_libretabancariadetalle='$codigo' 
-      and f.codigo=lbdf.cod_facturaventa and f.cod_estadofactura<>2) order by fecha_hora";
+    where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta fv  where lbdf.cod_libretabancariadetalle='$codigo' 
+      and fv.codigo=lbdf.cod_facturaventa and fv.cod_estadofactura<>2 $sqlFiltro) order by fecha_hora";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     
@@ -9376,8 +9376,8 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
   function obtenerSaldoLibretaBancariaDetalleFiltroAux($codigo,$codigoAux,$sqlFiltro){
     $dbh = new Conexion();
     $sql="SELECT ld.monto,ld.codigo,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
-    where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta f  where lbdf.cod_libretabancariadetalle='$codigo' 
-      and f.codigo=lbdf.cod_facturaventa and f.cod_estadofactura<>2) and ld.codigo!=$codigoAux order by fecha_hora";
+    where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta fv  where lbdf.cod_libretabancariadetalle='$codigo' 
+      and fv.codigo=lbdf.cod_facturaventa and fv.cod_estadofactura<>2 $sqlFiltro) and ld.codigo!=$codigoAux order by fecha_hora";
     //echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
