@@ -204,7 +204,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                 $saldo=0;
                                                 $codPlanCuentaAuxiliarPivotX=$codPlanCuentaAuxiliarX;
                                             
-                                            $html.='<tr style="background-color:#58D68D" class="'.$mostrarFilasEstado.'">
+                                            /*$html.='<tr style="background-color:#58D68D" class="'.$mostrarFilasEstado.'">
                                                 <td colspan="10"></td>
                                                 <td style="display: none;"></td>
                                                 <td style="display: none;"></td>
@@ -215,7 +215,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                 <td style="display: none;"></td>
                                                 <td style="display: none;"></td>
                                                 <td style="display: none;"></td>
-                                            </tr>';
+                                            </tr>';*/
                                             
                                             }
                                             // $cod_tipoCuenta=$row['cod_tipoestadocuenta'];
