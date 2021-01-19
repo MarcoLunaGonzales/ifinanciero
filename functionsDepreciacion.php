@@ -35,7 +35,8 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
     $numeroMesesDepreciacion++;
     $ufvInicio=obtenerUFV($fechaInicioDepreciacion);
     $ufvFinal=obtenerUFV($fechaFinalDepreciacion);
-    //echo $fechaInicioDepreciacion."__".$fechaFinalDepreciacion."<br>";
+    echo $fechaInicioDepreciacion."__".$fechaFinalDepreciacion."<br>";
+    echo $ufvInicio."-".$ufvFinal."<br>";
     $valorUFVActualizacion=0;
     if($ufvInicio>0){
         $valorUFVActualizacion=($ufvFinal/$ufvInicio);//cuando no està registrado la ufv
@@ -70,7 +71,7 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
     }
     //rubro terreno tiene diferente proceso
     if($cod_depreciaciones!=$cod_depreciaciones_configuracion){
-        if($vidautilmeses_restante>=$numeroMesesDepreciacion){//vida util mayor a la cantidad de meses a depreciar
+        if($vidautilmeses_restante>=$numeroMesesDepreciacion){//vida util mayor a la cantidad de meses a depreciar            
             if($vidautil>0){
                 $depreciacionPeriodo_8=($valorActivoActualizado_4/$vidautil)*$numeroMesesDepreciacion;
             }else{
@@ -97,7 +98,7 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
             //$valorNetoActivo_10=1;
         }
         $depreciacionActualAcumulada_9=$depreciacionAcumulada_6+$incrementoDepreciacionAcumulada_7+$depreciacionPeriodo_8;
-        //echo $depreciacionAcumulada_6."-".$incrementoDepreciacionAcumulada_7."-".$depreciacionPeriodo_8."=".$depreciacionActualAcumulada_9."<br>";
+        
         $valorNetoActivo_10=$valorActivoActualizado_4-$depreciacionActualAcumulada_9; 
         if($vidautilmeses_restante<=0){
             $valorActivoActualizado_4=$valorInicial;
@@ -113,11 +114,13 @@ function correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepre
         }
         if($sw_nuevo==1795){//caso especial af a.codigo=1795 llegará en variable $sw_nuevo
             $valorInicial=59.16;
+            $valorResidual_2=$valorInicial;
             $depreciacionAcumulada_6=58.16;
             $valorActivoActualizado_4=59.16;            
             $depreciacionActualAcumulada_9=58.16;
         }
     }
+    echo "ValorAnt:".$valorResidual_2."depreAcum:".$depreciacionAcumulada_6."-incremeDepreAc:".$incrementoDepreciacionAcumulada_7."-DeprePeriodo".$depreciacionPeriodo_8."=DepreActualAcum:".$depreciacionActualAcumulada_9." NEto:".$valorNetoActivo_10."<br>";
     $sqlInsertDet="INSERT INTO mesdepreciaciones_detalle (cod_mesdepreciaciones, cod_activosfijos, d2_valorresidual, d3_factoractualizacion, d4_valoractualizado, d5_incrementoporcentual, d6_depreciacionacumuladaanterior, d7_incrementodepreciacionacumulada, d8_depreciacionperiodo, d9_depreciacionacumuladaactual, d10_valornetobs, fecha_inicio, fecha_fin,d11_vidarestante) values ('$ultimoIdInsertado', '$codActivo', '$valorResidual_2', '$factorActualizacion_3', '$valorActivoActualizado_4', '$valorIncrementoPorcentual_5', '$depreciacionAcumulada_6', '$incrementoDepreciacionAcumulada_7', '$depreciacionPeriodo_8', '$depreciacionActualAcumulada_9','$valorNetoActivo_10', '$fechaInicioDepreciacion', '$fechaFinalDepreciacion','$vida_util_restante')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);
     $stmtInsertDet -> execute();    
