@@ -84,7 +84,7 @@ switch ($filtro) {
         //}
         if($verificar==1){          
           // echo $verificar;
-          $sqlFacturas="SELECT lf.cod_facturaventa,(SELECT sum(f.importe) from facturas_venta f where f.codigo=lf.cod_facturaventa and f.cod_estadofactura!=2 $sqlFiltro2)as monto_fac From libretas_bancariasdetalle_facturas lf join facturas_venta f on f.codigo=lf.cod_facturaventa where lf.cod_libretabancariadetalle=$codigo and f.cod_estadofactura<>2 limit 1";
+          $sqlFacturas="SELECT lf.cod_facturaventa,(SELECT sum((SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) from facturas_ventadetalle fd where fd.cod_facturaventa=f.codigo)) from facturas_venta f where f.codigo=lf.cod_facturaventa and f.cod_estadofactura!=2 $sqlFiltro2)as monto_fac From libretas_bancariasdetalle_facturas lf join facturas_venta f on f.codigo=lf.cod_facturaventa where lf.cod_libretabancariadetalle=$codigo and f.cod_estadofactura<>2 limit 1";
           $stmtFacturas = $dbh->prepare($sqlFacturas);
           // echo $sqlFacturas;
           $stmtFacturas->execute();        
@@ -170,7 +170,8 @@ switch ($filtro) {
                <?php                          
               }else{
                 $cadena_facturas=obtnerCadenaFacturas($codigo);
-                $sqlDetalleX="SELECT f.fecha_factura,f.nro_factura,f.nit,f.razon_social,f.observaciones,SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as importe FROM facturas_venta f, facturas_ventadetalle fd where f.codigo=fd.cod_facturaventa and f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 $sqlFiltro2 order by f.codigo desc";
+                $sqlDetalleX="SELECT f.fecha_factura,f.nro_factura,f.nit,f.razon_social,f.observaciones,(SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) from facturas_ventadetalle fd where fd.cod_facturaventa=f.codigo)as importe FROM facturas_venta f where f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 $sqlFiltro2 order by f.codigo desc";
+                //$sqlDetalleX="SELECT f.fecha_factura,f.nro_factura,f.nit,f.razon_social,f.observaciones,SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as importe FROM facturas_venta f, facturas_ventadetalle fd where f.codigo=fd.cod_facturaventa and f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 $sqlFiltro2 order by f.codigo desc";
                 /*if($filtro==0){
                   $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 order by codigo desc";
                 }else{
