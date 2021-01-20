@@ -260,9 +260,12 @@ $globalUnidad=$_SESSION["globalUnidad"];
                   </select>
               </div>
               </div>
-              <div class="col-sm-6">
+              
+            </div><!--fin tipo tipo -->
+            <div class="row">
+              <div class="col-sm-12">
                       <div class="row">
-                     <label class="col-sm-8 col-form-label">Incluir cierre de estados de cuenta anteriores al periodo</label>
+                     <label class="col-sm-8 col-form-label">Incluir aperturas de estados de cuenta ANTERIORES al periodo</label>
                            <div class="col-sm-4">
                         <div class="form-group">
                                 <div class="form-check">
@@ -277,16 +280,9 @@ $globalUnidad=$_SESSION["globalUnidad"];
                              </div>     
                         </div>  
                      </div>
-            </div><!--fin tipo tipo -->
-            <!--<div class="row">
-              <label class="col-sm-2 col-form-label"></label>
-              <div class="col-sm-4">
-              <div class="form-group">
-              </div>
-              </div>
-              <div class="col-sm-6">
+              <div class="col-sm-12">
                       <div class="row">
-                     <label class="col-sm-8 col-form-label">Incluir cierre de estados de cuenta posteriores al periodo</label>
+                     <label class="col-sm-8 col-form-label">Incluir cierres de estados de cuenta POSTERIORES al periodo</label>
                            <div class="col-sm-4">
                         <div class="form-group">
                                 <div class="form-check">
@@ -301,7 +297,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
                              </div>     
                         </div>  
                      </div>
-            </div>--><!--fin tipo tipo -->
+            </div><!--fin tipo tipo -->
           </div>
           <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
