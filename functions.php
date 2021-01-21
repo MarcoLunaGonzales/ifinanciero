@@ -5382,7 +5382,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerCuentasComprobantesDet($codigo){
      $dbh = new Conexion();
-    $sql="select p.codigo,p.nombre,p.numero,count(*) as cantidad from comprobantes_detalle d join plan_cuentas p on d.cod_cuenta=p.codigo WHERE cod_comprobante=$codigo group by cod_cuenta";
+    $sql="SELECT p.codigo,p.nombre,p.numero,count(*) as cantidad,sum(d.debe) as debe,sum(d.haber) as haber,group_concat(d.codigo) as codigos from comprobantes_detalle d join plan_cuentas p on d.cod_cuenta=p.codigo WHERE cod_comprobante=$codigo group by cod_cuenta";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;

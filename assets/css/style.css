@@ -1,3 +1,15 @@
+.buttons-default{
+  background:#C8D0D1 !important;
+  color:#34495E !important;
+  border:1px solid #34495E !important;
+  text-decoration: none;
+}
+.buttons-default:hover{
+  background:#34495E !important;
+  color:#C8D0D1 !important;
+  border:1px solid #C8D0D1 !important;
+}
+
 .bg-caja-chica{
   background-color:#d32f2f !important;
   color:#37474f;
