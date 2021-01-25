@@ -151,7 +151,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   }
                   $sqlInsertDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
                   $stmtInsertDet=$dbh->prepare($sqlInsertDet);                  
-                  if($cuentaX==obtenerValorConfiguracion(78)){
+                  if($cuentaX==obtenerValorConfiguracion(78)&&number_format($montoX,2,'.','')>0){
                       $sqlEstados="INSERT into estados_cuenta(cod_comprobantedetalle, cod_plancuenta, monto,  cod_proveedor, fecha, cod_comprobantedetalleorigen, cod_cuentaaux, cod_cajachicadetalle, cod_tipoestadocuenta, glosa_auxiliar) 
                       values ('$codigoDetalleComprobante','$cuentaX','$montoX','0','$fechaActual','0','$cuentaAuxiliarX','0','1','$glosa')";
                       $stmtInsertEstados = $dbh->prepare($sqlEstados);
