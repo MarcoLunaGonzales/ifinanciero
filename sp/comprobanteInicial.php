@@ -131,23 +131,32 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                    $unidadX=$rowComp['cod_unidadorganizacional'];
                    $areaX=$rowComp['cod_area'];
                    $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
+                   $codigoDetalleComprobante=obtenerCodigoComprobanteDetalle();
                    if($codigo==1){
                     if(number_format($montoX,2,'.','')>0){
-                      $insert_str .= "('$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosa','$index'),"; 
+                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosa','$index')"; 
                     }elseif (number_format($montoX,2,'.','')<0) {
                       $montoX=$montoX*(-1);
-                      $insert_str .= "('$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','0','$montoX','$glosa','$index'),";   
+                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','0','$montoX','$glosa','$index')";   
                     }
                   }else{                    
                     //LE CAMBIAMOS EL SIGNO AL PASIVO Y PATRIMONIO                    
                     if(number_format($montoX,2,'.','')<0){
                       $montoX=$montoX*(-1);
-                      $insert_str .= "('$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','0','$montoX','$glosa','$index'),"; 
+                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','0','$montoX','$glosa','$index')"; 
                     }elseif (number_format($montoX,2,'.','')>0) {
-                      $insert_str .= "('$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosa','$index'),";   
+                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosa','$index')";   
                     }
                     $vacio++;
                   }
+                  $sqlInsertDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
+                  $stmtInsertDet=$dbh->prepare($sqlInsertDet);                  
+                  if($cuentaX==obtenerValorConfiguracion(78)){
+                      $sqlEstados="INSERT into estados_cuenta(cod_comprobantedetalle, cod_plancuenta, monto,  cod_proveedor, fecha, cod_comprobantedetalleorigen, cod_cuentaaux, cod_cajachicadetalle, cod_tipoestadocuenta, glosa_auxiliar) 
+                      values ('$codigoDetalleComprobante','$cuentaX','$montoX','0','$fechaActual','0','$cuentaAuxiliarX','0','1','$glosa')";
+                      $stmtInsertEstados = $dbh->prepare($sqlEstados);
+                  }
+                  
                $index++;         
                }/* Fin del primer while*/
 
@@ -166,15 +175,18 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                       $montoResultadoEgreso=$rowRes['t_debe']-$rowRes['t_haber'];
                      } 
                   }
+                  $codigoDetalleComprobante=obtenerCodigoComprobanteDetalle();
                   $index++;
                   //$montoResultado=$tbob
                   $montoResultado=$montoResultadoIngreso-$montoResultadoEgreso;
                   if(number_format($montoResultado,2,'.','')<0){
                       $montoResultado=$montoResultado*(-1);
-                      $insert_str .= "('$codComprobante','$cuentaResultado','0','$unidadX','$areaX','0','$montoResultado','$glosa','$index'),"; 
+                      $insert_str = "('$codComprobante','$cuentaResultado','0','$unidadX','$areaX','0','$montoResultado','$glosa','$index')"; 
                   }elseif (number_format($montoResultado,2,'.','')>0) {
-                      $insert_str .= "('$codComprobante','$cuentaResultado','0','$unidadX','$areaX','0','$montoResultado','$glosa','$index'),";   
+                      $insert_str = "('$codComprobante','$cuentaResultado','0','$unidadX','$areaX','0','$montoResultado','$glosa','$index')";   
                   }
+                  $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
+                  $stmtInsertDet=$dbh->prepare($sqlInsertDet);
                }
 
 
@@ -185,10 +197,10 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 //FIN PROCESO
 
 
-    $insert_str = substr_replace($insert_str, '', -1, 1);
-    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
+    //$insert_str = substr_replace($insert_str, '', -1, 1);
+    /*$sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
     $stmtInsertDet=$dbh->prepare($sqlInsertDet);
-    $flagSuccess2=$stmtInsertDet->execute();
+    $flagSuccess2=$stmtInsertDet->execute();*/
 
 echo "<h6>HORA FIN PROCESO CARGADO INICIAL COMPROBANTES: " . date("Y-m-d H:i:s")."</h6>";
 ?>
