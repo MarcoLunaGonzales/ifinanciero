@@ -9349,22 +9349,23 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     
-    $montoFactura=obtenerMontoTotalLibretaBancariaDetalleFiltro($codigo,$sqlFiltro);
+    $montoFactura=obtenerMontoTotalLibretaBancariaDetalleFiltro($codigo,$sqlFiltro);//450
     $montoFacturaAux=$montoFactura;
     $saldo=$montoLib;$montoAux=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
        if($row['codigo']!=$codigo){
-        $montoAux=obtenerSaldoLibretaBancariaDetalleFiltroAux($row['codigo'],$codigo,$sqlFiltro);
+        $montoAux=obtenerSaldoLibretaBancariaDetalleFiltroAux($row['codigo'],$codigo,$sqlFiltro); //100  -> 1015
        }else{
-        if($montoAux>0&&$montoFacturaAux<($row['monto']+$montoAux)){ //validacion para libretas detalle que tienen dos o más facturas asociadas
+        if($montoAux>0&&$montoAux<=$row['monto']){
+        //if($montoAux>0&&$montoFacturaAux<($row['monto']+$montoAux)){ //validacion para libretas detalle que tienen dos o más facturas asociadas
           $montoFactura=$montoAux;
         }   
        }  
-        if($montoFactura>=$row['monto']){
-          $saldo=0;
+        if($montoFactura>=$row['monto']){ //450>=1015
+          $saldo=0; 
           $montoFactura=$montoFactura-$row['monto'];
         }else{
-          $saldo=$row['monto']-$montoFactura;
+          $saldo=$row['monto']-$montoFactura; //1015-450= 565 //segundo bucle  100-0 = 100
           $montoFactura=0;
         }  
         if($row["codigo"]==$codigo){
