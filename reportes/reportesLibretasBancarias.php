@@ -79,19 +79,19 @@ $fechaHasta=date("Y-m-d");
             <br>
             
             <div class="row">
-                  <label class="col-sm-2 col-form-label">Fechas en Fac. / Comp.</label>
-                    <div class="col-sm-1">
+                  <label class="col-sm-2 col-form-label d-none">Fechas en Fac. / Comp.</label>
+                    <div class="col-sm-1 d-none">
                       <div class="form-group">
                 <div class="togglebutton">
                     <label>
-                    <input type="checkbox" name="check_periodo" id="check_periodo" onChange="ajax_mostrar_periodo_fechas()">
+                    <input type="checkbox" name="check_periodo" id="check_periodo" onChange="ajax_mostrar_periodo_fechas()" checked>
                     <span class="toggle"></span>
                     </label>
                 </div>
               </div>
             </div>
             <div class="col-sm-12">              
-               <div class="d-none" id="contenedor_periodo_fechas">
+               <div class="" id="contenedor_periodo_fechas">
                 <center><h4 class="text-muted">Fecha de Factura y/o Comprobante</h4></center>
                 <div class="row">
                 <label class="col-sm-2 col-form-label">Del:</label>

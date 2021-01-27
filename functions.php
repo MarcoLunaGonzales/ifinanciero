@@ -9355,6 +9355,7 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
        if($row['codigo']!=$codigo){
         $montoAux=obtenerSaldoLibretaBancariaDetalleFiltroAux($row['codigo'],$codigo,$sqlFiltro); //100  -> 1015
+
        }else{
         if($montoAux>0&&$montoAux<=$row['monto']){
         //if($montoAux>0&&$montoFacturaAux<($row['monto']+$montoAux)){ //validacion para libretas detalle que tienen dos o más facturas asociadas
@@ -9375,6 +9376,7 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
      return $saldo; 
   }
   function obtenerSaldoLibretaBancariaDetalleFiltroAux($codigo,$codigoAux,$sqlFiltro){
+    $sqlFiltro=""; //PARA NO FILTRAR LOS ANTERIORES
     $dbh = new Conexion();
     $sql="SELECT ld.monto,ld.codigo,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
     where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta fv  where lbdf.cod_libretabancariadetalle='$codigo' 
