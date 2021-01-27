@@ -19174,3 +19174,12 @@ function editarTarifarioServicios(valor){
    }
  }
 }
+
+function ajax_mostrar_periodo_fechas(){
+  var check=document.getElementById("check_periodo");
+  if(check.checked){
+    $("#contenedor_periodo_fechas").removeClass("d-none");
+  }else{
+    $("#contenedor_periodo_fechas").addClass("d-none");
+  }
+}

@@ -77,8 +77,23 @@ $fechaHasta=date("Y-m-d");
                 </div>
             </div><!--fin campo RUBRO -->
             <br>
-            <center><h4 class="text-muted">Fecha de Factura y/o Comprobante</h4></center>
+            
             <div class="row">
+                  <label class="col-sm-2 col-form-label">Fechas en Fac. / Comp.</label>
+                    <div class="col-sm-1">
+                      <div class="form-group">
+                <div class="togglebutton">
+                    <label>
+                    <input type="checkbox" name="check_periodo" id="check_periodo" onChange="ajax_mostrar_periodo_fechas()">
+                    <span class="toggle"></span>
+                    </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12">              
+               <div class="d-none" id="contenedor_periodo_fechas">
+                <center><h4 class="text-muted">Fecha de Factura y/o Comprobante</h4></center>
+                <div class="row">
                 <label class="col-sm-2 col-form-label">Del:</label>
                 <div class="col-sm-3">
                   <div class="form-group">
@@ -96,13 +111,19 @@ $fechaHasta=date("Y-m-d");
                     </div>
                   </div>
                 </div>
-            </div><!--fin campo RUBRO -->
+            </div><!--fin campo RUBRO -->  
+              </div>
+            </div>
+            </div>
+
+            
+            
             <div class="row">
               <label class="col-sm-2 col-form-label">Filtro</label>
               <div class="col-sm-7">
                 <div class="form-group">                            
                     <select class="selectpicker form-control form-control-sm" name="filtro" id="filtro" data-style="<?=$comboColor;?>" required>                           
-                       <option value="0">Ver Todo</option>
+                       <option value="0">VER TODO (Registros Relacionados y No Relacionados)</option>
                        <option value="1">Ver Solo Registros Relacionados</option>
                        <option value="2">Ver Solo Registros Pendientes de Identificación</option>  
                       </select>
