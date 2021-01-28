@@ -11247,7 +11247,7 @@ function obtenerComprobanteCajaChicaRelacionado($codigo){
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $valor=$row['codigo'];
+        $valor=$row['cod_comprobante'];
      }
      return($valor);
   }
