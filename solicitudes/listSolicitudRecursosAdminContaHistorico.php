@@ -184,6 +184,12 @@ $item_1=2708;
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
                             <?php 
+                                   $codCajaChica=0;                              
+                                   $codigoDetalleCajaChica=obtenerCodigosCajaChicaSolicitudRecursos($codigo);
+                                   if($codEstado==9){
+                                     $codCajaChica=obtenerCodigoCajaChicaString($codigoDetalleCajaChica);  
+                                     $codComprobante=obtenerComprobanteCajaChicaRelacionado($codCajaChica);
+                                   }
                             
                                    if($codComprobante!=0&&($codEstado==5||$codEstado==8)){
                                    ?>

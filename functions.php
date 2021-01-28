@@ -11230,4 +11230,25 @@ function obtenerPathArchivoIbnorca($codigo){
      return($valorX);
 }
 
+function obtenerCodigoCajaChicaString($codigoString){
+   $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_cajachica from caja_chicadetalle where codigo in ($codigoString)");
+     $stmt->execute();
+     $valorX=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valorX=$row['cod_cajachica'];
+     }
+     return $valorX;
+}
+
+function obtenerComprobanteCajaChicaRelacionado($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_comprobante from caja_chica  where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+     }
+     return($valor);
+  }
 ?>

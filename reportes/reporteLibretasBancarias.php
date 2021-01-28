@@ -11,7 +11,6 @@ require_once '../assets/libraries/CifrasEnLetras.php';
 setlocale(LC_TIME, "Spanish");
 
 $dbh = new Conexion();
-set_time_limit(300);
 $fechaActual=date("Y-m-d");
 
 $fecha=$_POST['fecha_desde'];
