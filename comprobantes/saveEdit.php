@@ -338,7 +338,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
             $codigoComprobanteOrigen=obtenerComprobanteDetalleRelacionado(obtenerCod_comprobanteDetalleorigen($codComprobanteDetalleOrigen));
             if($codigoComprobanteOrigen>0){
               $tituloEstadoOrigen="Cierre de ".nombreComprobante($codigoComprobanteOrigen)." ";    
-              $sqlDetalleOrigen="UPDATE comprobantes_detalle set glosa=CONCAT('$tituloEstadoOrigen',glosa) WHERE codigo=$codComprobanteDetalle";
+              $sqlDetalleOrigen="UPDATE comprobantes_detalle set glosa=CONCAT('$tituloEstadoOrigen',glosa) WHERE codigo=$codComprobanteDetalle and glosa NOT LIKE '$tituloEstadoOrigen%'";
               $stmtDetalleOrigen = $dbh->prepare($sqlDetalleOrigen);
               $stmtDetalleOrigen->execute();
             }   
