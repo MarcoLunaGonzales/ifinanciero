@@ -11251,4 +11251,14 @@ function obtenerComprobanteCajaChicaRelacionado($codigo){
      }
      return($valor);
   }
+  function obtenerComprobanteDetalleRelacionado($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_comprobante from comprobantes_detalle  where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_comprobante'];
+     }
+     return($valor);
+  }
 ?>

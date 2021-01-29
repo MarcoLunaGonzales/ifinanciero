@@ -54,7 +54,7 @@ $sqlInsert="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacio
 $stmtInsert = $dbh->prepare($sqlInsert);
 $flagSuccess=$stmtInsert->execute();	
 
-if($flagSuccess==true){
+if($flagSuccess==true&&isset($codigoSR)){
   //ACTUALIZAR SOLICITUD DE RECURSOS
   $datosSolicitud=obtenerDatosSolicitudRecursos($codigoSR);
   $correoPersonal=$datosSolicitud['email_empresa'];
@@ -277,6 +277,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
 
          //itemEstadosCuenta
          if($flagSuccessInsertEC==false){
+          $codComprobanteDetalleOrigen=0;
           $nC=cantidadF($estadosCuentas[$i-1]);
           for($j=0;$j<$nC;$j++){
               $fecha=date("Y-m-d H:i:s");
@@ -291,7 +292,18 @@ for ($i=1;$i<=$cantidadFilas;$i++){
               $stmtDetalle3 = $dbh->prepare($sqlDetalle3);
               $flagSuccessDetalle3=$stmtDetalle3->execute();
              }
-          }    
+          }  
+
+          $tituloEstadoOrigen="";
+          if(isset($codComprobanteDetalleOrigen)&&$codComprobanteDetalleOrigen>0){
+            $codigoComprobanteOrigen=obtenerComprobanteDetalleRelacionado(obtenerCod_comprobanteDetalleorigen($codComprobanteDetalleOrigen));
+            if($codigoComprobanteOrigen>0){
+              $tituloEstadoOrigen="Cierre de ".nombreComprobante($codigoComprobanteOrigen)." ";  
+              $sqlDetalleOrigen="UPDATE comprobantes_detalle set glosa=CONCAT('$tituloEstadoOrigen',glosa) WHERE codigo=$codComprobanteDetalle";
+              $stmtDetalleOrigen = $dbh->prepare($sqlDetalleOrigen);
+              $stmtDetalleOrigen->execute();
+            }   
+          }  
          }
          //FIN DE ESTADOS DE CUENTA
 	}
