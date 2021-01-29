@@ -216,7 +216,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             $codTipoUnidad=0;
 
                                             $monto_pagar=$montoPre;
-                                            $saldo=$montoPre*$cantidadPre;//saldo inicial monto
+                                            $saldo=($montoPre-(($descuentoFila/100)*$montoPre))*$cantidadPre;//saldo inicial monto$descuentoFila
                                             $saldo_real=$saldo;
                                             $monto_total_pagado=0;
                                             if($banderaHab!=0){

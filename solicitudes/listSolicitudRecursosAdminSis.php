@@ -346,7 +346,9 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                   ?><a href="#" target="_blank" class="btn btn-warning float-right"><i class="material-icons">fullscreen</i> Ver Pantalla Completa</a><?php
                 }
 ?>              
+                
                 <a href="#" onclick="abrirModal('modalListSolEliminados');moverModal('modalListSolEliminados');" class="btn btn-danger float-right" style="background:rgb(116, 24, 153) !important; color:#E2AF0F;"><i class="material-icons"><?=$iconDelete;?></i> <small id="cantidad_eliminados"></small> Eliminados</a>
+                <a href="index.php?opcion=reportesSolicitudRecursosSis" class="btn btn-danger float-right" style="background:rgb(116, 24, 153) !important; color:#E2AF0F;">Reporte Solicitudes SIS</a>
               </div>      
             </div>
           </div>  
