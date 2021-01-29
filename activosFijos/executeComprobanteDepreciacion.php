@@ -26,25 +26,32 @@ while ($rowMes = $stmtMes->fetch(PDO::FETCH_ASSOC)) {
 }
 $abrevMes=abrevMes($codMes);
 
-$sqlMesAnt="SELECT mes,gestion from mesdepreciaciones where codigo<$codDepreciacion order by gestion,mes desc limit 1";
-$stmtMesAnt = $dbh->prepare($sqlMesAnt);
-$stmtMesAnt -> execute();
-$codMesAnt=0;$codGestionAnt=0;
-while ($rowMesAnt = $stmtMesAnt->fetch(PDO::FETCH_ASSOC)) {
-   $codMesAnt=$rowMesAnt['mes'];
-   $codGestionAnt=$rowMesAnt['gestion'];
-}
+// $sqlMesAnt="SELECT mes,gestion from mesdepreciaciones where codigo<$codDepreciacion order by gestion,mes desc limit 1";
+// $stmtMesAnt = $dbh->prepare($sqlMesAnt);
+// $stmtMesAnt -> execute();
+// $codMesAnt=0;$codGestionAnt=0;
+// while ($rowMesAnt = $stmtMesAnt->fetch(PDO::FETCH_ASSOC)) {
+//    $codMesAnt=$rowMesAnt['mes'];
+//    $codGestionAnt=$rowMesAnt['gestion'];
+// }
 //***
-if($codGestionAnt==0){
-   $nameFechasComprobante="ene-".$abrevMes."/".$codGestion;
-}else{
-   $abrevMesAnt=abrevMes($codMesAnt+1);
-   if($codGestion==$codGestionAnt){
-      $nameFechasComprobante=$abrevMesAnt."-".$abrevMes."/".$codGestion;
-   }else{
-      $nameFechasComprobante=$abrevMesAnt."/".$codGestionAnt."-".$abrevMes."/".$codGestion;
-   }   
-}
+// if($codGestionAnt==0){
+//    $nameFechasComprobante="ene-".$abrevMes."/".$codGestion;
+// }else{
+//    if($codMesAnt<12){
+//       $abrevMesAnt=abrevMes($codMesAnt+1);
+//    }else{
+//       $abrevMesAnt=abrevMes(1);
+//    }
+   
+//    if($codGestion==$codGestionAnt){
+//       $nameFechasComprobante=$abrevMesAnt."-".$abrevMes."/".$codGestion;
+//    }else{
+//       $nameFechasComprobante=$abrevMesAnt."/".$codGestionAnt."-".$abrevMes."/".$codGestion;
+//    }
+// }
+//******depreciacion mes a mes
+$nameFechasComprobante=$abrevMes."/".$codGestion;
 //***insertamos cabecera
       $codAreaSA="501";//area para todas las oficinas DN
       $tipoComprobante=3;
