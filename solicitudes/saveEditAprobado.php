@@ -208,8 +208,9 @@ for ($i=1;$i<=$cantidadFilas;$i++){
   if(isset($_POST["partida_cuenta_id".$i])){      
     $data[$fila][0]=$_POST["partida_cuenta_id".$i];
     $data[$fila][1]=$_POST["unidad_fila".$i]; 
-    $data[$fila][2]=$_POST["area_fila".$i];  
+    $data[$fila][2]=$_POST["area_fila".$i];     
     $data[$fila][3]=$_POST["detalle_detalle".$i]; 
+    $data[$fila][3] = str_replace("'", '\\\'',$data[$fila][3]);
     $data[$fila][4]=$_POST["importe_presupuesto".$i]; 
     $data[$fila][5]=$_POST["importe".$i];           
     $data[$fila][6]=0; 

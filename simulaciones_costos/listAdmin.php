@@ -35,16 +35,26 @@ if(isset($_GET['q'])){
       $tituloPropuestaFiltro="<h4 style='color:#C70039;'>LISTA: FORMACIÓN</h4>";
       $estiloFormacion='style="background:#C70039;color:white;"';
     }else{
-      $queryTipoCurso=" and sc.cod_area_registro=".$idArea; //99999 -> para que no encuentre ningun registro
-      $tituloPropuestaFiltro="USTED NO PUEDE GESTIONAR LAS PROPUESTAS";
+      if(gestorDeCursosFormacion($q)>0){
+         $queryTipoCurso=" and (sc.cod_area_registro=2956 or sc.cod_area_registro=13)";
+         $tituloPropuestaFiltro="<h4 style='color:#C70039;'>LISTA: FORMACIÓN</h4>";
+         $estiloFormacion='style="background:#C70039;color:white;"';
+       }else if(gestorDeCursosComercializacion($q)>0){
+        $queryTipoCurso=" and sc.cod_area_registro=2978";
+        $tituloPropuestaFiltro="<h4 style='color:#FF5733;'>LISTA: COMERCIALIZACIÓN</h4>";
+        $estiloFormacion='style="background:#FF5733;color:white;"';
+       }else{
+        $queryTipoCurso=" and sc.cod_area_registro=".$idArea; //99999 -> para que no encuentre ningun registro
+        $tituloPropuestaFiltro="USTED NO PUEDE GESTIONAR LAS PROPUESTAS";
+       } 
     }
   }else{
    if(gestorDeCursosFormacion($q)>0){
-     $queryTipoCurso=" and sc.cod_area_registro=".$idArea;
+     $queryTipoCurso=" and (sc.cod_area_registro=2956 or sc.cod_area_registro=13)";
      $tituloPropuestaFiltro="<h4 style='color:#C70039;'>LISTA: FORMACIÓN</h4>";
      $estiloFormacion='style="background:#C70039;color:white;"';
     }else if(gestorDeCursosComercializacion($q)>0){
-     $queryTipoCurso=" and sc.cod_area_registro=".$idArea;
+     $queryTipoCurso=" and sc.cod_area_registro=2978";
      $tituloPropuestaFiltro="<h4 style='color:#FF5733;'>LISTA: COMERCIALIZACIÓN</h4>";
      $estiloFormacion='style="background:#FF5733;color:white;"';
     }else{

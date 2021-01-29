@@ -11,7 +11,6 @@ require_once '../assets/libraries/CifrasEnLetras.php';
 setlocale(LC_TIME, "Spanish");
 
 $dbh = new Conexion();
-set_time_limit(300);
 $fechaActual=date("Y-m-d");
 
 $fecha=$_POST['fecha_desde'];
@@ -55,6 +54,14 @@ $sqlFiltro="";
 $sqlFiltroSaldo="and fv.fecha_factura BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59'";
 $sqlFiltro2="and f.fecha_factura BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59'";
 $sqlFiltroComp="and c.fecha BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59'";
+
+if (!isset($_POST["check_periodo"])) {
+  $sqlFiltroSaldo="";
+  $sqlFiltro2="";
+  $sqlFiltroComp="";
+}
+
+
 // if($filtro==1){
 //   $sqlFiltro="and (ce.cod_factura IS NOT NULL or ce.cod_factura!=0)";
 // }

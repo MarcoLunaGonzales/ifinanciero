@@ -10291,7 +10291,11 @@ function calcularTotalFilaServicio2(){
   for (var i=1;i<=(total-1);i++){          
     var monto_precio=$("#monto_precio"+i).val();    
     var descuento_bob=$("#descuento_bob"+i).val();
-    var cantidad_x=document.getElementById("cantidad_real"+i).value;    // PARA EL MONTO GENERAL 
+    if($("#desde_servicio").length>0){
+     var cantidad_x=document.getElementById("cantidad_real"+i).value;    // PARA EL MONTO GENERAL   
+    }else{
+      var cantidad_x=document.getElementById("cantidad"+i).value;    // PARA EL MONTO GENERAL 
+    }    
     if(descuento_bob==null ||descuento_bob=='NaN'||descuento_bob==' '||descuento_bob==''){descuento_bob=0;}
     var monto_importe_total=(parseFloat(monto_precio)*parseFloat(cantidad_x))-parseFloat(descuento_bob);
     //alert(monto_importe_total);
@@ -12059,11 +12063,13 @@ function filtrarCuentaComprobanteDetalle(){
   var items = document.getElementsByName('lista_check');
   var cantidadCuentas=0;
   var cantidadCuentasSeleccionadas=0;
+  var cantidadesSeleccionadas=0;
     for (var i = 0; i < items.length; i++) {
         if (items[i].type == 'checkbox'){
           cantidadCuentas++;
           if(items[i].checked==true){
             cantidadCuentasSeleccionadas++;
+            cantidadesSeleccionadas+=parseInt($("#cantidad"+(i+1)).html());
             codigos[indice]=items[i].value;
             indice++;
           }
@@ -12071,14 +12077,59 @@ function filtrarCuentaComprobanteDetalle(){
     }
   //var cod_cuenta=$("#cuenta_decomprobante").val();
   var cod_comprobante=$("#codigo_comprobante").val();
-  if(cantidadCuentas==cantidadCuentasSeleccionadas){
-   window.location.href="edit_prueba.php?codigo="+cod_comprobante;
+  if(cantidadesSeleccionadas>50){
+    Swal.fire({
+        title: 'Max. 50 Registros!',
+        text: "Se recomienda que la cantidad no debe superar los 50 registros! ¿Desea Continuar?",
+         type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-default',
+        cancelButtonClass: 'btn btn-success',
+        confirmButtonText: 'SI',
+        cancelButtonText: 'NO',
+        buttonsStyling: false
+       }).then((result) => {
+          if (result.value) {
+              if(cantidadCuentas==cantidadCuentasSeleccionadas){
+                var urlEditar="edit_prueba.php?codigo="+cod_comprobante;
+              }else{
+                var urlEditar="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos)+"&codigos_seleccionados="+$("#codigos_seleccionados").val();
+              }
+               window.open(urlEditar, '_blank');           
+            return(true);
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            return(false);
+          }
+        });
   }else{
-    window.location.href="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos);
+    if(cantidadCuentas==cantidadCuentasSeleccionadas){
+      var urlEditar="edit_prueba.php?codigo="+cod_comprobante;
+    }else{
+      var urlEditar="edit_prueba.php?codigo="+cod_comprobante+"&cuentas="+JSON.stringify(codigos)+"&codigos_seleccionados="+$("#codigos_seleccionados").val();
+    }
+     window.open(urlEditar, '_blank');    
   }
 }
 
-
+function cambiarCantidadSeleccionados(tagName){
+   var items = document.getElementsByName(tagName);
+   var cantidad=0;
+   var arrayCodigos=[];var j=0;
+   for (var i = 0; i < items.length; i++) {
+      if (items[i].type == 'checkbox'){
+        if(items[i].checked==true){
+          cantidad+=parseInt($("#cantidad"+(i+1)).html());
+          arrayCodigos[j]=$("#codigos_seleccionados"+(i+1)).val()+"";
+          j++;
+        }
+      }
+   }
+   $("#cantidad_seleccionados").html(cantidad);
+   $("#codigos_seleccionados").val("");
+   if(arrayCodigos.length>0){
+     $("#codigos_seleccionados").val(arrayCodigos.join(',')); 
+   }   
+}
 
 function seleccionarTodosChecks(tagName) {
         var items = document.getElementsByName(tagName);
@@ -12086,6 +12137,7 @@ function seleccionarTodosChecks(tagName) {
             if (items[i].type == 'checkbox')
                 items[i].checked = true;
         }
+        cambiarCantidadSeleccionados(tagName);
     }
 
 function noSeleccionarTodosChecks(tagName) {
@@ -12094,6 +12146,7 @@ function noSeleccionarTodosChecks(tagName) {
             if (items[i].type == 'checkbox')
                 items[i].checked = false;
         }
+        cambiarCantidadSeleccionados(tagName);
     }   
 
 
@@ -19120,4 +19173,13 @@ function editarTarifarioServicios(valor){
      $("#boton_guardar").addClass("d-none");
    }
  }
+}
+
+function ajax_mostrar_periodo_fechas(){
+  var check=document.getElementById("check_periodo");
+  if(check.checked){
+    $("#contenedor_periodo_fechas").removeClass("d-none");
+  }else{
+    $("#contenedor_periodo_fechas").addClass("d-none");
+  }
 }

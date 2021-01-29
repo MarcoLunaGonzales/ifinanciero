@@ -54,8 +54,8 @@ if($contadorRegistros<=50){
 	<div class="container-fluid">
 			<div class="card">
 				<div class="card-header <?=$colorCard;?> card-header-text">
-					<div class="card-text">
-					  <h4 class="card-title">Edici&oacute;n del comprobante</h4>
+					<div class="card-text" style="background:#1BCEDF">
+					  <h4 class="card-title">Lista de registros</h4>
 					</div>
 				</div>
 				<div class="card-body ">
@@ -116,23 +116,21 @@ if($contadorRegistros<=50){
 			</div>	
 
 			<div class="card">
-				<div class="card-header <?=$colorCard;?> card-header-text">
-					<div class="card-text">
-					  <h6 class="card-title">Registros (<?=$contadorRegistros?>)</h6>
-					</div>
-				</div>
-				<div class="card-body ">
+				<div class="card-body">
+					<p class="text-muted">El comprobante tiene más de 50 registros, para no tener problemas con la edición debe seleccionar solo los registros necesarios a editar(máx. 50). <a class="" href="../<?=$urlList;?>">regresar al listado</a></p>
                    <div class="col-sm-8 div-center">
                    	  <table id="tablePaginatorReport" class="table table-bordered table-condensed table-striped table-sm">
                              <thead>
-                                  <tr class="fondo-boton">
+                                  <tr style="background:#707B7C;color:#E2E9EA;">
                                     <td>#</td>
                                     <td>Cuenta</td>
                                     <td>Numero</td>
                                     <td>Cantidad</td>
+                                    <td>Debe</td>
+                                    <td>Haber</td>
                                     <td class="small">
-                                    	<button class="btn btn-success btn-sm"onclick="seleccionarTodosChecks('lista_check')">TODOS</button>
-                                    	<button class="btn btn-danger btn-sm"onclick="noSeleccionarTodosChecks('lista_check')">NINGUNO</button> 
+                                    	<button class="btn btn-success btn-sm buttons-default" onclick="seleccionarTodosChecks('lista_check')">T</button>
+                                    	<button class="btn btn-danger btn-sm buttons-default" onclick="noSeleccionarTodosChecks('lista_check')">N</button> 
                                     </td>
                                   </tr>
                               </thead>
@@ -140,24 +138,35 @@ if($contadorRegistros<=50){
                                 
                                 <?php 
                                 $iii=1;
+                                $sumaCantidad=0;
+                                $sumaDebe=0;
+                                $sumaHaber=0;
                                $detalle=obtenerCuentasComprobantesDet($globalCode);
 							  	while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
                                     $codigoX=$row['codigo'];
 									$nombreX=trim($row['nombre']);
 									$numeroX=trim($row['numero']);
 									$cantidadX=$row['cantidad'];
+									$debeX=$row['debe'];
+									$haberX=$row['haber'];
+									$codigosDetalleX=$row['codigos'];
 									$banderaHab=0;
-
+									$sumaCantidad+=$cantidadX;
+									$sumaDebe+=$debeX;
+									$sumaHaber+=$haberX;
                                    ?>
                                    <tr>
                                      <td><?=$iii?></td>
                                      <td class="text-left"><?=$nombreX?></td>
                                      <td class="text-left"><?=$numeroX?></td>
-                                     <td class="text-right font-weight-bold"><?=$cantidadX?></td>
-                                     <td>
+                                     <td id="cantidad<?=$iii?>" class="text-right font-weight-bold"><?=$cantidadX?></td>
+                                     <td class="text-right"><?=number_format($debeX,2,'.',',')?></td>
+                                     <td class="text-right"><?=number_format($haberX,2,'.',',')?></td>
+                                     <td>  
+                                     <input type="hidden" id="codigos_seleccionados<?=$iii?>" value="<?=$codigosDetalleX?>">             
                                        <div class="togglebutton" title="Habilitar/Deshabilitar">
                                                <label>
-                                                 <input type="checkbox" value="<?=$codigoX?>" name="lista_check" <?=($banderaHab==1)?"checked":"";?>>
+                                                 <input type="checkbox" value="<?=$codigoX?>" name="lista_check" <?=($banderaHab==1)?"checked":"";?> onclick="cambiarCantidadSeleccionados('lista_check')">
                                                  <span class="toggle"></span>
                                                </label>
                                        </div>
@@ -167,12 +176,21 @@ if($contadorRegistros<=50){
                                   $iii++; 
                                   } ?>
                               </tbody>
-                           </table>
+                              <tfoot>
+                              	<tr class="font-weight-bold small" style="background:#707B7C;color:#E2E9EA;">
+                              		<td colspan="3">Totales</td>
+                              		<td><?=number_format($sumaCantidad,0)?></td>
+                              		<td><?=number_format($sumaDebe,2,'.',',')?></td>
+                              		<td><?=number_format($sumaHaber,2,'.',',')?></td>
+                              		<td></td>
+                              	</tr>
+                              </tfoot>
+                           </table>                           
                    </div>
+                   <input type="hidden" id="codigos_seleccionados" value="">
 				  	<div class="card-footer fixed-bottom">
-						<button onclick="filtrarCuentaComprobanteDetalle()" class="<?=$buttonMorado;?>">Listar</button>
+						<button onclick="filtrarCuentaComprobanteDetalle()" class="btn btn-warning" style="background:#1BCEDF"><i class="material-icons">list</i> Editar Seleccionados (<label id="cantidad_seleccionados" class="text-dark">0</label>)</button>
 						<a href="../<?=$urlList;?>" class="<?=$buttonCancel;?>"> Volver </a>
-
 				  	</div>
 
 				</div>
@@ -180,4 +198,5 @@ if($contadorRegistros<=50){
 		
 	</div>
 </div>
+<?php
 

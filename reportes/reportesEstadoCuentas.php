@@ -260,14 +260,34 @@ $globalUnidad=$_SESSION["globalUnidad"];
                   </select>
               </div>
               </div>
-              <div class="col-sm-6">
+              
+            </div><!--fin tipo tipo -->
+            <div class="row">
+              <div class="col-sm-12">
                       <div class="row">
-                     <label class="col-sm-8 col-form-label">Incluir cierre de estados de cuenta anteriores al periodo</label>
+                     <label class="col-sm-8 col-form-label">Incluir aperturas de estados de cuenta ANTERIORES al periodo</label>
                            <div class="col-sm-4">
                         <div class="form-group">
                                 <div class="form-check">
                                     <label class="form-check-label">
                                       <input class="form-check-input" type="checkbox" id="cierre_anterior" name="cierre_anterior[]" checked value="1">
+                                      <span class="form-check-sign">
+                                        <span class="check"></span>
+                                      </span>
+                                    </label>
+                                  </div>
+                                </div>  
+                             </div>     
+                        </div>  
+                     </div>
+              <div class="col-sm-12">
+                      <div class="row">
+                     <label class="col-sm-8 col-form-label">Incluir cierres de estados de cuenta POSTERIORES al periodo</label>
+                           <div class="col-sm-4">
+                        <div class="form-group">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox" id="cierre_posterior" name="cierre_posterior[]" checked value="1">
                                       <span class="form-check-sign">
                                         <span class="check"></span>
                                       </span>

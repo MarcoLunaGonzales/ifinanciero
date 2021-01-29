@@ -198,6 +198,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
       $cod_unidadorganizacional=$_POST["unidad_fila".$i];
       $cod_area=$_POST["area_fila".$i];
       $detalle=$_POST["detalle_detalle".$i];
+      $detalle = str_replace("'", '\\\'',$detalle);
       $importe_presupuesto=$_POST["importe_presupuesto".$i];
       $importe=$_POST["importe".$i];
       $numero_factura=0;

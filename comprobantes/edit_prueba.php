@@ -53,10 +53,14 @@ if(isset($_GET['codigo'])){
 	$globalCode=0;
 }
 
+$stringCodigosSeleccionados="";
 if(isset($_GET['cuentas'])){
    $cuenta_get=json_decode($_GET['cuentas']);
-
    $cont=contarComprobantesDetalleCuenta($globalCode,$cuenta_get);
+   if(isset($_GET['codigos_seleccionados'])){
+     $stringCodigosSeleccionados=$_GET['codigos_seleccionados'];	
+   }
+   
 }else{
  $cont=contarComprobantesDetalle($globalCode);
 }
@@ -257,6 +261,7 @@ $stmt->execute();
 		    ?>
 
 <form id="formRegComp" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
+	<input type="hidden" id="codigos_seleccionados" name="codigos_seleccionados" value="<?=$stringCodigosSeleccionados?>">
 	<input type="hidden" name="validacion_libretas" id="validacion_libretas" value="<?=$validacionLibretas;?>">
 	<input type="hidden" name="edicion" id="edicion" value="1">
 	<input type="hidden" name="cod_cuenta_configuracion_iva" id="cod_cuenta_configuracion_iva" value="<?=$cod_cuenta_configuracion_iva;?>">

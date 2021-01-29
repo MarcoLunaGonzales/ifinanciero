@@ -5382,7 +5382,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerCuentasComprobantesDet($codigo){
      $dbh = new Conexion();
-    $sql="select p.codigo,p.nombre,p.numero,count(*) as cantidad from comprobantes_detalle d join plan_cuentas p on d.cod_cuenta=p.codigo WHERE cod_comprobante=$codigo group by cod_cuenta";
+    $sql="SELECT p.codigo,p.nombre,p.numero,count(*) as cantidad,sum(d.debe) as debe,sum(d.haber) as haber,group_concat(d.codigo) as codigos from comprobantes_detalle d join plan_cuentas p on d.cod_cuenta=p.codigo WHERE cod_comprobante=$codigo group by cod_cuenta";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -9349,22 +9349,24 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     
-    $montoFactura=obtenerMontoTotalLibretaBancariaDetalleFiltro($codigo,$sqlFiltro);
+    $montoFactura=obtenerMontoTotalLibretaBancariaDetalleFiltro($codigo,$sqlFiltro);//450
     $montoFacturaAux=$montoFactura;
     $saldo=$montoLib;$montoAux=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
        if($row['codigo']!=$codigo){
-        $montoAux=obtenerSaldoLibretaBancariaDetalleFiltroAux($row['codigo'],$codigo,$sqlFiltro);
+        $montoAux=obtenerSaldoLibretaBancariaDetalleFiltroAux($row['codigo'],$codigo,$sqlFiltro); //100  -> 1015
+
        }else{
-        if($montoAux>0&&$montoFacturaAux<($row['monto']+$montoAux)){ //validacion para libretas detalle que tienen dos o más facturas asociadas
+        if($montoAux>0&&$montoAux<=$row['monto']){
+        //if($montoAux>0&&$montoFacturaAux<($row['monto']+$montoAux)){ //validacion para libretas detalle que tienen dos o más facturas asociadas
           $montoFactura=$montoAux;
         }   
        }  
-        if($montoFactura>=$row['monto']){
-          $saldo=0;
+        if($montoFactura>=$row['monto']){ //450>=1015
+          $saldo=0; 
           $montoFactura=$montoFactura-$row['monto'];
         }else{
-          $saldo=$row['monto']-$montoFactura;
+          $saldo=$row['monto']-$montoFactura; //1015-450= 565 //segundo bucle  100-0 = 100
           $montoFactura=0;
         }  
         if($row["codigo"]==$codigo){
@@ -9374,6 +9376,7 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
      return $saldo; 
   }
   function obtenerSaldoLibretaBancariaDetalleFiltroAux($codigo,$codigoAux,$sqlFiltro){
+    $sqlFiltro=""; //PARA NO FILTRAR LOS ANTERIORES
     $dbh = new Conexion();
     $sql="SELECT ld.monto,ld.codigo,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
     where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta fv  where lbdf.cod_libretabancariadetalle='$codigo' 
@@ -11227,4 +11230,35 @@ function obtenerPathArchivoIbnorca($codigo){
      return($valorX);
 }
 
+function obtenerCodigoCajaChicaString($codigoString){
+   $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_cajachica from caja_chicadetalle where codigo in ($codigoString)");
+     $stmt->execute();
+     $valorX=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valorX=$row['cod_cajachica'];
+     }
+     return $valorX;
+}
+
+function obtenerComprobanteCajaChicaRelacionado($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_comprobante from caja_chica  where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_comprobante'];
+     }
+     return($valor);
+  }
+  function obtenerComprobanteDetalleRelacionado($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_comprobante from comprobantes_detalle  where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_comprobante'];
+     }
+     return($valor);
+  }
 ?>

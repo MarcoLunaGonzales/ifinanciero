@@ -142,7 +142,7 @@ $stmt->bindColumn('cod_comprobantedetalle', $codComprobanteDetalle);
                               // if($cont_facturas>0){
                                 $cadena_facturas=obtnerCadenaFacturas($codigo);
                                 // $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 order by codigo desc";
-                                $sqlDetalleX="SELECT * FROM facturas_venta where codigo in ($cadena_facturas) and cod_estadofactura!=2 order by codigo desc";
+                                $sqlDetalleX="SELECT f.codigo,f.fecha_factura,f.nro_factura,f.nit,f.razon_social,f.observaciones,(SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) from facturas_ventadetalle fd where fd.cod_facturaventa=f.codigo)as importe FROM facturas_venta f where f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 order by f.codigo desc";
                                 $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                                 $stmtDetalleX->execute();
                                 $stmtDetalleX->bindColumn('codigo', $codigo_factura);

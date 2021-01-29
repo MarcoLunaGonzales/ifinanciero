@@ -165,6 +165,14 @@ $item_1=2708;
                        if(obtenerUnidadSolicitanteRecursos($codigo)==3000||obtenerAreaSolicitanteRecursos($codigo)==obtenerValorConfiguracion(65)||obtenerDetalleRecursosSIS($codigo)>0){
                         $numeroSolTitulo='<a href="#" title="SOLICITUD DE RECURSOS SIS" class="btn btn-rose btn-sm btn-round">'.$numeroSol.'</a>';
                        }
+                       $codCajaChica=0;                              
+                       $codigoDetalleCajaChica=obtenerCodigosCajaChicaSolicitudRecursos($codigo);
+                       $tituloComprobanteDev="COMPROBANTE - DEVENGADO";
+                       if($codEstado==9){
+                         $codCajaChica=obtenerCodigoCajaChicaString($codigoDetalleCajaChica);  
+                         $codComprobante=obtenerComprobanteCajaChicaRelacionado($codCajaChica);
+                         $tituloComprobanteDev="COMPROBANTE - CAJA CHICA";
+                       }
 
 ?>
                         <tr>
@@ -184,11 +192,15 @@ $item_1=2708;
                               <i class="material-icons"><?=$iconImp;?></i>
                             </a>
                             <?php 
-                            
-                                   if($codComprobante!=0&&($codEstado==5||$codEstado==8)){
+                            if($codEstado==9&&$codCajaChica>0){
+                              ?><a title="Imprimir Caja Chica" href='#' onclick="javascript:window.open('<?=$urlImpCaja;?>?codigo=<?=$codCajaChica;?>')" class="btn btn-default">
+                                  <i class="material-icons"><?=$iconImp;?></i>
+                               </a><?php                               
+                            }                                                                
+                                   if($codComprobante!=0&&($codEstado==5||$codEstado==8||$codEstado==9)){
                                    ?>
                                    <div class="btn-group dropdown">
-                                     <button type="button" class="btn <?=$estiloComprobante?> dropdown-toggle" title="COMPROBANTE - DEVENGADO" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                     <button type="button" class="btn <?=$estiloComprobante?> dropdown-toggle" title="<?=$tituloComprobanteDev?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                        <i class="material-icons"><?=$iconImp;?></i>
                                      </button>
                                     <div class="dropdown-menu menu-fixed-sm-table">
@@ -214,7 +226,7 @@ $item_1=2708;
                                   </div> 
                                    <?php 
                                    //opciones Admin
-                                    if(verificarEdicionComprobanteUsuario($globalUser)!=0){
+                                    if(verificarEdicionComprobanteUsuario($globalUser)!=0&&$codEstado!=9){
                                     ?>
                                     <a title="Editar Personal Procesar Pago" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,2,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlEncargado?>?admin=0&cod=<?=$codigo?>','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" target="_blank" class="btn btn-default">
                                       <i class="material-icons text-dark">people_alt</i>

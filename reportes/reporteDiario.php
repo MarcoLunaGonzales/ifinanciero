@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 session_start();
 require_once '../conexion.php';
 require_once '../styles.php';
@@ -26,7 +27,7 @@ $stringUnidades="";
 foreach ($unidad as $unidadx) {
   // $nombreUnidad=nameUnidad($unidadx);
   // echo $nombreUnidad;
-  $stringUnidades.=AbrevUnidad($unidadx);
+  $stringUnidades.=AbrevUnidad($unidadx)."-";
 }
 
 

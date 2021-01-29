@@ -177,6 +177,33 @@ array_push($SQLDATOSINSTERT,$flagsuccess);
       $stmtDel = $dbh->prepare($sqlDelete);
       $flagSuccess=$stmtDel->execute();
       array_push($SQLDATOSINSTERT,$flagsuccess);
+    }else{
+      //BORRAMOS LOS REGISTROS ELIMINADOS EN EL COMPROBANTE DETALLE
+     if(isset($_POST["codigos_seleccionados"])){
+      if($_POST["codigos_seleccionados"]!=""){
+        $arrayCodigosDetalle=explode(",",$_POST["codigos_seleccionados"]);        
+        //echo implode(",", $arrayCodigosDetalle).":PRIMERO<br>";
+        for ($filas=1; $filas<=$cantidadFilas ; $filas++) { 
+          if(isset($_POST['codigo_detalle'.$filas])){
+            $clave=array_search($_POST["codigo_detalle".$filas],$arrayCodigosDetalle);
+            //echo $_POST['codigo_detalle'.$filas].":BUSCAR...<br>";
+            if(!$clave>=0){
+              //echo $_POST['codigo_detalle'.$filas].":ENCONTRADO [".$clave."]!<br>";
+             unset($arrayCodigosDetalle[$clave]);
+            }
+          }
+        } 
+
+        if(count($arrayCodigosDetalle)>0){
+          echo implode(",", $arrayCodigosDetalle)."<br>";
+           $stringCodigosBorrables=implode(",",$arrayCodigosDetalle);
+           $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante='$codComprobante' and codigo in ($stringCodigosBorrables)";
+           $stmtDel = $dbh->prepare($sqlDelete);
+           print_r("<br>Ultimo Delete : ".$sqlDelete."<br>");
+           $flagBorrar=$stmtDel->execute();
+        }
+      }  
+     }
     }
        //BORRAMOS LA TABLA
 		/**/
@@ -186,8 +213,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
   if(isset($_POST["cuenta".$i])){
 	  $cuenta=$_POST["cuenta".$i];
   }         
-	if($cuenta!=0 || $cuenta!=""){
-    
+	if($cuenta!=0 || $cuenta!=""){    
 		$cuentaAuxiliar=$_POST["cuenta_auxiliar".$i];
 		$unidadDetalle=$_POST["unidad".$i];
 		$area=$_POST["area".$i];
@@ -288,6 +314,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     
      //itemEstadosCuenta
     if($flagSuccessInsertEC==false){
+      $codComprobanteDetalleOrigen=0;
       $nC=cantidadF($estadosCuentas[$i-1]);
       for($j=0;$j<$nC;$j++){
           $fecha=date("Y-m-d H:i:s");
@@ -306,6 +333,16 @@ for ($i=1;$i<=$cantidadFilas;$i++){
           }
           
       }
+      $tituloEstadoOrigen="";
+          if(isset($codComprobanteDetalleOrigen)&&$codComprobanteDetalleOrigen>0){
+            $codigoComprobanteOrigen=obtenerComprobanteDetalleRelacionado(obtenerCod_comprobanteDetalleorigen($codComprobanteDetalleOrigen));
+            if($codigoComprobanteOrigen>0){
+              $tituloEstadoOrigen="Cierre de ".nombreComprobante($codigoComprobanteOrigen)." ";    
+              $sqlDetalleOrigen="UPDATE comprobantes_detalle set glosa=CONCAT('$tituloEstadoOrigen',glosa) WHERE codigo=$codComprobanteDetalle and glosa NOT LIKE '$tituloEstadoOrigen%'";
+              $stmtDetalleOrigen = $dbh->prepare($sqlDetalleOrigen);
+              $stmtDetalleOrigen->execute();
+            }   
+          }
     }//FIN DE ESTADOS DE CUENTA
 	}
 } 
@@ -335,6 +372,3 @@ if($flagSuccessDetalle==true){
 }else{
 	showAlertSuccessError(false,"../".$urlList);
 }
-
-
-?>
