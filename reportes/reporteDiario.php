@@ -53,7 +53,7 @@ $query1="SELECT (select u.nombre from unidades_organizacionales u where u.codigo
 (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)cod_unidad,c.cod_gestion, 
 (select m.nombre from monedas m where m.codigo=c.cod_moneda)moneda, (select m.codigo from monedas m where m.codigo=c.cod_moneda)cod_moneda,
 (select t.nombre from tipos_comprobante t where t.codigo=c.cod_tipocomprobante)tipo_comprobante, c.fecha, c.numero,c.codigo, c.glosa
-from comprobantes c where c.cod_unidadorganizacional in ($stringUnidadesX) and c.fecha BETWEEN '$desde' and '$hasta' and(";
+from comprobantes c where c.cod_unidadorganizacional in ($stringUnidadesX) and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:50' and(";
 for ($i=0; $i < cantidadF($tipo); $i++) { 
   
   if($i==(cantidadF($tipo)-1)){

@@ -79,6 +79,8 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
              $montoImporteRes=0; 
             }
 		$detalleX=$rowDetalles["detalle"];
+    $detalleX = str_replace("'", '\\\'',$detalleX);
+
 		$codAreaXX=$rowDetalles['cod_area'];
     $codOficinaXX=$rowDetalles['cod_unidadorganizacional'];
     
