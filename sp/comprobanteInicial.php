@@ -40,7 +40,7 @@ $fechaFormateada=$fechaTitulo[2].'/'.$fechaTitulo[1].'/'.$fechaTitulo[0];
 $moneda=1;
 //$unidades=array(829,9,5,8,272,10,270,271,2692,3000);
 //$entidades=array(2,3); 
-$unidades=array(5);
+$unidades=array(829,9,5,8,272,10,270,271,2692);
 $entidades=array(2);   
 $unidadInsertar=5;
 $insert_str="";
@@ -51,9 +51,10 @@ $tipoComprobanteInsertar=3;
 $cod_gestion=3584;
 $gestionInsertar=2021;
 $mes_gestion=1;
-$codComprobante=39084;//obtenerCodigoComprobante(); //comprobante INICIAL LA PAZ
-/*$numeroComprobante=numeroCorrelativoComprobanteFijo($cod_gestion,$unidadInsertar,$tipoComprobanteInsertar,$mes_gestion); //datos gestion 3584 "2021" y 1 "ENERO"
 $glosa="BALANCE INICIAL 2021";
+$codComprobante=39843;//obtenerCodigoComprobante(); //comprobante INICIAL LA PAZ
+/*$numeroComprobante=numeroCorrelativoComprobanteFijo($cod_gestion,$unidadInsertar,$tipoComprobanteInsertar,$mes_gestion); //datos gestion 3584 "2021" y 1 "ENERO"
+
 $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) 
 values ('$codComprobante','$codEmpresa','$unidadInsertar','$gestionInsertar','$codMoneda','$codEstadoComprobante','$tipoComprobanteInsertar','$fechaActual','$numeroComprobante','$glosa')";
 $stmtInsertCab = $dbh->prepare($sqlInsertCab);
@@ -65,6 +66,10 @@ $tBolActivo=0;$tBolPasivo=0;
 $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante=$codComprobante;";
 $stmtDelete=$dbh->prepare($sqlDelete);
 $flagSuccessDelete=$stmtDelete->execute();
+
+$sqlDelete="DELETE from estados_cuenta where cod_comprobantedetalle in (SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante)";
+$stmtDelete=$dbh->prepare($sqlDelete);
+$flag=$stmtDelete->execute();
 
 // Preparamos
 $stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.cod_padre, p.nivel, 
@@ -122,10 +127,12 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
             $index_4=1;
             while ($row = $stmt4->fetch(PDO::FETCH_BOUND)) {
                $sumaNivel4=0;$html4="";           
+               echo "Entro<br>";
               //listar los montos
               $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalleInsert($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion,"none");
                $vacio=0;
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
+                   echo "Cuenta:".$rowComp['cod_cuenta']."<br>";  
                    $cuentaX=$rowComp['cod_cuenta'];
                    $cuentaAuxiliarX=$rowComp['cod_cuentaauxiliar'];
                    $unidadX=$rowComp['cod_unidadorganizacional'];
@@ -151,10 +158,12 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   }
                   $sqlInsertDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
                   $stmtInsertDet=$dbh->prepare($sqlInsertDet);                  
+                  $flagSuccess2=$stmtInsertDet->execute();
                   if($cuentaX==obtenerValorConfiguracion(78)&&number_format($montoX,2,'.','')>0){
                       $sqlEstados="INSERT into estados_cuenta(cod_comprobantedetalle, cod_plancuenta, monto,  cod_proveedor, fecha, cod_comprobantedetalleorigen, cod_cuentaaux, cod_cajachicadetalle, cod_tipoestadocuenta, glosa_auxiliar) 
                       values ('$codigoDetalleComprobante','$cuentaX','$montoX','0','$fechaActual','0','$cuentaAuxiliarX','0','1','$glosa')";
                       $stmtInsertEstados = $dbh->prepare($sqlEstados);
+                      $flagSuccess2=$stmtInsertEstados->execute();
                   }
                   
                $index++;         
@@ -187,6 +196,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   }
                   $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
                   $stmtInsertDet=$dbh->prepare($sqlInsertDet);
+                  $flagSuccess2=$stmtInsertDet->execute();
                }
 
 
@@ -235,7 +245,7 @@ function listaSumaMontosDebeHaberComprobantesDetalleInsert($fechaFinal,$tipoBusq
               join areas a on a.codigo=d.cod_area
               join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
               join plan_cuentas p on p.codigo=d.cod_cuenta
-              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 group by d.cod_cuenta,d.cod_cuentaauxiliar order by d.cod_cuenta) cuentas_monto
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 and d.cod_cuenta=67 group by d.cod_cuenta,d.cod_cuentaauxiliar order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
       $stmt = $dbh->prepare($sql);
       $stmt->execute();

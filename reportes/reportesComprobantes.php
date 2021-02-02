@@ -11,7 +11,8 @@ $m=date("m");
 $y=date("Y");
 $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
 
-$fechaDesde=$y."-".$m."-01";
+//$fechaDesde=$y."-".$m."-01";
+$fechaDesde=$y."-01-01";
 $fechaHasta=$y."-".$m."-".$d;
 $dbh = new Conexion();
 ?>
