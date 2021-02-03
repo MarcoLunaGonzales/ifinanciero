@@ -6,6 +6,7 @@ require_once 'functions.php';
 require_once 'styles.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
+$globalUser=$_SESSION["globalUser"];
 $globalUnidad=$_SESSION['globalUnidad'];
 $globalGestion=$_SESSION['globalNombreGestion'];
 $globalMesTrabajo=$_SESSION['globalMes'];
@@ -189,6 +190,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                     <i class="material-icons text-default">attachment</i> Adjuntos
                                   </a>
                                   <?php
+                            if(verificarEdicionComprobanteFacturasUsuario($globalUser,$codigo)!=0){  //para verificar personal edicion facturas 
                                   $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
                                   if($codigoSol[1]==0){
                                     if($existeCuenta==0){
@@ -211,6 +213,10 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                   <?php
                                     }  
                                   }
+                                 ?><a href="#" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
+                                    <i class="material-icons text-danger"><?=$iconDelete;?></i> Eliminar
+                                  </a><?php
+                              }//fin de editable Facturas
                                   ?>
                                   
                                   <?php 
@@ -225,9 +231,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                   </a><?php
                                   }
                                   ?>
-                                  <a href="#" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
-                                    <i class="material-icons text-danger"><?=$iconDelete;?></i> Eliminar
-                                  </a>
+                                  
                                 </div>
                               </div>
                               <?php }?>

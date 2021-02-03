@@ -11272,4 +11272,34 @@ function obtenerComprobanteCajaChicaRelacionado($codigo){
      return $fechaUltimoDia;
    }
   }
+
+function obtenerCodigoTipoComprobante($codigo){
+    $dbh = new Conexion();
+     $sql="SELECT cod_tipocomprobante from comprobantes where codigo=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_tipocomprobante'];
+    }
+    return $valor;
+  }
+
+  function verificarEdicionComprobanteFacturasUsuario($codigo,$codComprobante){
+     $codigosAdmin=obtenerValorConfiguracion(99);
+     $dbh = new Conexion();
+     $sql="SELECT codigo from personal where codigo in ($codigosAdmin)";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=1;$admin=1;
+     if(obtenerCodigoTipoComprobante($codComprobante)==4){
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+        if($valor==$codigo){
+          $admin=0;
+        }
+      }   
+     }
+     return($admin);
+  } 
 ?>

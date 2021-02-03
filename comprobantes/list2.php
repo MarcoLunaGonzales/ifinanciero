@@ -4,6 +4,7 @@ require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
+$globalUser=$_SESSION["globalUser"];
 $globalUnidad=$_SESSION['globalUnidad'];
 $globalGestion=$_SESSION['globalNombreGestion'];
 $globalMesTrabajo=$_SESSION['globalMes'];
@@ -220,6 +221,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
           }
           ?>
                         <?php
+               if(verificarEdicionComprobanteFacturasUsuario($globalUser,$codigo)!=0){  //para verificar personal edicion facturas           
                         if($codigoSol[1]==0){
                           if($existeCuenta==0){
                                       $codCajaChica=existeCajaChicaRelacionado($codigo);
@@ -245,7 +247,9 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                         <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
                           <i class="material-icons"><?=$iconDelete;?></i>
                         </button>                        
-                        <?php }?>
+                        <?php }
+                      }//fin de editable verificar  
+                      ?>
                       </td>
                     </tr>
                     <?php

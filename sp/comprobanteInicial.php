@@ -129,11 +129,17 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                $sumaNivel4=0;$html4="";           
                echo "Entro<br>";
               //listar los montos
-              $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalleInsert($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion,"none");
+               if($codigo_4==66){//CODIGO PADRE PARA CLIENTES AGRUPARLOS POR CUENTA AUXILIAR
+                 $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalleInsertAux($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion,"none");  
+               }else{
+                 $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalleInsertAux($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion,"none");
+               }
+              
                $vacio=0;
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
                    echo "Cuenta:".$rowComp['cod_cuenta']."<br>";  
                    $cuentaX=$rowComp['cod_cuenta'];
+                   $glosaX=$rowComp['glosa'];
                    $cuentaAuxiliarX=$rowComp['cod_cuentaauxiliar'];
                    $unidadX=$rowComp['cod_unidadorganizacional'];
                    $areaX=$rowComp['cod_area'];
@@ -141,18 +147,18 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                    $codigoDetalleComprobante=obtenerCodigoComprobanteDetalle();
                    if($codigo==1){
                     if(number_format($montoX,2,'.','')>0){
-                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosa','$index')"; 
+                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosaX','$index')"; 
                     }elseif (number_format($montoX,2,'.','')<0) {
                       $montoX=$montoX*(-1);
-                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','0','$montoX','$glosa','$index')";   
+                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','0','$montoX','$glosaX','$index')";   
                     }
                   }else{                    
                     //LE CAMBIAMOS EL SIGNO AL PASIVO Y PATRIMONIO                    
                     if(number_format($montoX,2,'.','')<0){
                       $montoX=$montoX*(-1);
-                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','0','$montoX','$glosa','$index')"; 
+                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','0','$montoX','$glosaX','$index')"; 
                     }elseif (number_format($montoX,2,'.','')>0) {
-                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosa','$index')";   
+                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosaX','$index')";   
                     }
                     $vacio++;
                   }
@@ -161,7 +167,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   $flagSuccess2=$stmtInsertDet->execute();
                   if($cuentaX==obtenerValorConfiguracion(78)&&number_format($montoX,2,'.','')>0){
                       $sqlEstados="INSERT into estados_cuenta(cod_comprobantedetalle, cod_plancuenta, monto,  cod_proveedor, fecha, cod_comprobantedetalleorigen, cod_cuentaaux, cod_cajachicadetalle, cod_tipoestadocuenta, glosa_auxiliar) 
-                      values ('$codigoDetalleComprobante','$cuentaX','$montoX','0','$fechaActual','0','$cuentaAuxiliarX','0','1','$glosa')";
+                      values ('$codigoDetalleComprobante','$cuentaX','$montoX','0','$fechaActual','0','$cuentaAuxiliarX','0','1','$glosaX')";
                       $stmtInsertEstados = $dbh->prepare($sqlEstados);
                       $flagSuccess2=$stmtInsertEstados->execute();
                   }
@@ -222,6 +228,36 @@ echo "<h6>HORA FIN PROCESO CARGADO INICIAL COMPROBANTES: " . date("Y-m-d H:i:s")
 </div>
 
 <?php 
+function listaSumaMontosDebeHaberComprobantesDetalleInsertAux($fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$padre,$gestion,$fechaInicio){
+      $dbh = new Conexion();
+      $sql="";
+      $sqlAreas="";
+      $sqlUnidades="";
+      $fechaFinalMod=explode("/", $fechaFinal);
+
+      $arrayUnidades=implode(",",$arrayUnidades);
+      //formateando fecha
+      if($fechaInicio=="none"){
+        $fi=$fechaFinalMod[2]."-01-01";
+      }else{
+        $fechaFinalModIni=explode("/", $fechaInicio);
+        $fi=$fechaFinalModIni[2]."-".$fechaFinalModIni[1]."-".$fechaFinalModIni[0];
+      }
+    
+      $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
+      $sql="SELECT cuentas_monto.* from plan_cuentas p join 
+             (select group_concat(d.glosa) as glosa,d.cod_cuenta,d.cod_cuentaauxiliar,d.cod_unidadorganizacional,d.cod_area,sum(debe) as total_debe,sum(haber) as total_haber 
+              from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
+              join areas a on a.codigo=d.cod_area
+              join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
+              join plan_cuentas p on p.codigo=d.cod_cuenta
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 and d.cod_cuenta=67 group by d.cod_cuenta,d.cod_cuentaauxiliar order by d.cod_cuenta) cuentas_monto
+          on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      return $stmt;
+  }
+
 function listaSumaMontosDebeHaberComprobantesDetalleInsert($fechaFinal,$tipoBusqueda,$arrayUnidades,$arrayAreas,$padre,$gestion,$fechaInicio){
       $dbh = new Conexion();
       $sql="";
@@ -240,12 +276,12 @@ function listaSumaMontosDebeHaberComprobantesDetalleInsert($fechaFinal,$tipoBusq
     
       $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
       $sql="SELECT cuentas_monto.* from plan_cuentas p join 
-             (select d.cod_cuenta,d.cod_cuentaauxiliar,d.cod_unidadorganizacional,d.cod_area,sum(debe) as total_debe,sum(haber) as total_haber 
+             (select group_concat(d.glosa) as glosa,d.cod_cuenta,d.cod_cuentaauxiliar,d.cod_unidadorganizacional,d.cod_area,sum(debe) as total_debe,sum(haber) as total_haber 
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
               join areas a on a.codigo=d.cod_area
               join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
               join plan_cuentas p on p.codigo=d.cod_cuenta
-              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 and d.cod_cuenta=67 group by d.cod_cuenta,d.cod_cuentaauxiliar order by d.cod_cuenta) cuentas_monto
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 group by d.cod_cuenta order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
