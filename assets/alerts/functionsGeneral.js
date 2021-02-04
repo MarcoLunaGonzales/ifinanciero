@@ -19183,3 +19183,29 @@ function ajax_mostrar_periodo_fechas(){
     $("#contenedor_periodo_fechas").addClass("d-none");
   }
 }
+
+function verificarMontoLibretaBancaria(cod,debe,haber){
+  var saldo=0;
+  if(Math.round(debe)==0||debe==''){
+    var monto=haber;
+  }else{
+    var monto=debe;
+  }
+ var parametros={"codigo":cod};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajax_validar_monto_libreta.php",
+        data: parametros,
+        async:false,
+        success:  function (resp) {
+          saldo=resp;  
+        }
+    });
+  var validacion=0;
+    if(saldo<monto&&cod>0){
+      validacion=1;
+    }
+    //alert(saldo);
+    return validacion; 
+}
