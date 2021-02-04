@@ -10,11 +10,25 @@ $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
 $gestion = $_POST["gestiones"];
-$cod_mes_x = $_POST["cod_mes_x"];
+//$cod_mes_x = $_POST["cod_mes_x"];
 $unidad=$_POST["unidad"];
 $stringUnidadesX=implode(",", $unidad);
 $nombre_gestion=nameGestion($gestion);
-$nombre_mes=nombreMes($cod_mes_x);
+//$nombre_mes=nombreMes($cod_mes_x);
+$desdeInicioAnio="";
+if($_POST["fecha_desde"]==""){
+  $y=$globalNombreGestion;
+  $desde=$y."-01-01";
+  $hasta=$y."-12-31";
+  $desdeInicioAnio=$y."-01-01";
+}else{
+  $porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
+  $porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
+
+  $desdeInicioAnio=$porcionesFechaDesde[0]."-01-01";
+  $desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
+  $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
+}
 //para la razon social
 if (isset($_POST["check_rs_librocompras"])) {
   $check_rs_librocompras=$_POST["check_rs_librocompras"]; 
@@ -28,7 +42,7 @@ if (isset($_POST["check_rs_librocompras"])) {
   $sql_rs="";
 }
 
-$stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion and cod_unidadorganizacional in ($stringUnidadesX) $sql_rs ORDER BY nro_factura asc");
+$stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and cod_unidadorganizacional in ($stringUnidadesX) $sql_rs ORDER BY nro_factura asc");
 $stmt2->execute();
 //resultado
 $stmt2->bindColumn('codigo', $codigo);
@@ -59,6 +73,8 @@ $sucursal=$result['sucursal'];
 $direccion=$result['direccion'];
 $nit=$result['nit'];
 $razon_social_titulo=$result['razon_social'];
+$nombre_mes="";
+$periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
 ?>
 <script> 
           gestion_reporte='<?=$nombre_gestion;?>';
@@ -75,7 +91,7 @@ $razon_social_titulo=$result['razon_social'];
                   </div>                  
                   <h3 class="card-title text-center" ><b>Libro de Ventas</b>
                     <span><br><h6>
-                    Del Período: <?=$nombre_mes;?>/<?=$nombre_gestion;?><br>
+                    Período: <?=$periodoTitle;?><br>
                     Expresado En Bolivianos</h6></span></h3>                  
                   <!-- <h6 class="card-title">Unidad: <?=$stringUnidades;?></h6> -->
                 </div>

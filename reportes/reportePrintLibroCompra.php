@@ -10,13 +10,28 @@ $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
 $gestion = $_POST["gestiones"];
-$cod_mes_x = $_POST["cod_mes_x"];
+//$cod_mes_x = $_POST["cod_mes_x"];
 
 $unidad=$_POST["unidad"];
 $stringUnidadesX=implode(",", $unidad);
 
 $nombre_gestion=nameGestion($gestion);
-$nombre_mes=nombreMes($cod_mes_x);
+//$nombre_mes=nombreMes($cod_mes_x);
+
+$desdeInicioAnio="";
+if($_POST["fecha_desde"]==""){
+  $y=$globalNombreGestion;
+  $desde=$y."-01-01";
+  $hasta=$y."-12-31";
+  $desdeInicioAnio=$y."-01-01";
+}else{
+  $porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
+  $porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
+
+  $desdeInicioAnio=$porcionesFechaDesde[0]."-01-01";
+  $desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
+  $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
+}
 
 if (isset($_POST["check_rs_librocompras"])) {
   $check_rs_librocompras=$_POST["check_rs_librocompras"]; 
@@ -33,7 +48,7 @@ if (isset($_POST["check_rs_librocompras"])) {
 // echo $areaString;
 $sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra,cc.codigo as cod_comprobante
   FROM facturas_compra f, comprobantes_detalle c, comprobantes cc 
-  WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($stringUnidadesX) and MONTH(cc.fecha)=$cod_mes_x and YEAR(cc.fecha)=$nombre_gestion $sql_rs ORDER BY f.fecha asc, f.nit, f.nro_factura";
+  WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($stringUnidadesX) and cc.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' $sql_rs ORDER BY f.fecha asc, f.nit, f.nro_factura"; //and MONTH(cc.fecha)=$cod_mes_x and YEAR(cc.fecha)=$nombre_gestion
 
 //echo $sql;
 
@@ -76,6 +91,7 @@ $direccion=$result['direccion'];
 $nit=$result['nit'];
 $razon_social=$result['razon_social'];
 
+$periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
 ?>
  <script> 
           gestion_reporte='<?=$nombre_gestion;?>';
@@ -92,7 +108,7 @@ $razon_social=$result['razon_social'];
                   </div>                  
                   <h3 class="card-title text-center" ><b>Libro de Compras IVA</b>
                     <span><br><h6>
-                    Del Periodo: <?=$nombre_mes;?>/<?=$nombre_gestion;?><br>
+                    Periodo: <?=$periodoTitle;?><br>
                     Expresado En Bolivianos</h6></span></h3>                                    
                 </div>
                 <div class="card-body">

@@ -10,7 +10,7 @@ require_once __DIR__.'/../conexion.php';
 $dbh = new Conexion();
 //creamos el archivo txt
 $gestion = $_POST["cod_gestion"];
-$cod_mes_x = $_POST["cod_mes"];
+//$cod_mes_x = $_POST["cod_mes"];
 $unidad=$_POST["unidad"];
 // $unidad_x = str_replace(",", "_", $unidad);
 $fecha=date('Y-m-d');
@@ -23,10 +23,23 @@ fclose($arch);
 $archivo=fopen("archivos_txt_compras/".$nombre_archivo, "a") or die ("#####0#####");//a de apertura de archivo
 //RECIBIMOS LAS VARIABLES
 $nombre_gestion=nameGestion($gestion);
-$nombre_mes=nombreMes($cod_mes_x);
+//$nombre_mes=nombreMes($cod_mes_x);
+$desdeInicioAnio="";
+if($_POST["fecha_desde"]==""){
+  $y=$globalNombreGestion;
+  $desde=$y."-01-01";
+  $hasta=$y."-12-31";
+  $desdeInicioAnio=$y."-01-01";
+}else{
+  $porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
+  $porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
 
+  $desdeInicioAnio=$porcionesFechaDesde[0]."-01-01";
+  $desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
+  $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
+}
 
-$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c, comprobantes cc where cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo  and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($unidad) and MONTH(cc.fecha)=$cod_mes_x and YEAR(cc.fecha)=$nombre_gestion ORDER BY f.fecha asc, f.nit, f.nro_factura";
+$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra from facturas_compra f, comprobantes_detalle c, comprobantes cc where cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo  and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($unidad) and cc.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' ORDER BY f.fecha asc, f.nit, f.nro_factura";
 
 //echo $sql;
 

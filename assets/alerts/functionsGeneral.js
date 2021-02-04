@@ -16251,7 +16251,10 @@ function ajax_razon_social_filtro_ventas(){
 
 function descargar_txt_libro_ventas(){
     var cod_gestion=$("#gestiones").val();
-    var cod_mes=$("#cod_mes_x").val();
+    //var cod_mes=$("#cod_mes_x").val();
+    var cod_mes=12;
+    var fecha_desde=$("#fecha_desde").val();
+    var fecha_hasta=$("#fecha_hasta").val();
     var unidad=$("#unidad").val();
     if(cod_gestion==null || cod_gestion==''){
       Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
@@ -16265,7 +16268,7 @@ function descargar_txt_libro_ventas(){
           // alert("llegue");
           $.ajax({
           type:"POST",
-          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad,
+          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta,
           url:"reportes/reportePrintLibroVentasTXT.php",
           beforeSend:function(){
                //iniciar carga 
@@ -16297,7 +16300,10 @@ function descargar_txt_libro_ventas(){
 }
 function descargar_txt_libro_compras(){
     var cod_gestion=$("#gestiones").val();
-    var cod_mes=$("#cod_mes_x").val();
+    //var cod_mes=$("#cod_mes_x").val();
+    var cod_mes=12;
+    var fecha_desde=$("#fecha_desde").val();
+    var fecha_hasta=$("#fecha_hasta").val();
     var unidad=$("#unidad").val();
     if(cod_gestion==null || cod_gestion==''){
       Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
@@ -16310,7 +16316,7 @@ function descargar_txt_libro_compras(){
         }else{     
           $.ajax({
           type:"POST",
-          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad,
+          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta,
           url:"reportes/reportePrintLibroComprasTXT.php",
           beforeSend:function(){
                //iniciar carga 

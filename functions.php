@@ -11302,4 +11302,16 @@ function obtenerCodigoTipoComprobante($codigo){
      }
      return($admin);
   } 
+
+function obtenerNombreInstanciaCajaChica($codCaja){
+    $dbh = new Conexion();
+     $sql="SELECT t.nombre from tipos_caja_chica t join caja_chica c on c.cod_tipocajachica=t.codigo where  c.codigo=$codCaja limit 1";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['nombre'];
+    }
+    return $valor;
+  }  
 ?>
