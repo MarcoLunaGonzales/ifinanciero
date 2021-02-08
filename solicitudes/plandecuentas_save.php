@@ -15,7 +15,7 @@ session_start();
 
 $cuentasX=json_decode($_POST["cuentas2"]);
 // $codPartida=$_POST["cod_partida"];
-$stmtPasivo = $dbh->prepare("SELECT * from solicitud_recursoscuentas where cod_cuentapasivo!=null or cod_cuentapasivo!=''");
+$stmtPasivo = $dbh->prepare("SELECT cod_cuenta,cod_cuentapasivo from solicitud_recursoscuentas where cod_cuentapasivo!=null or cod_cuentapasivo!=''");
 // Ejecutamos
 $stmtPasivo->execute();
 $index=0;
@@ -23,6 +23,16 @@ while ($rowPasivo = $stmtPasivo->fetch(PDO::FETCH_ASSOC)) {
 	$cuentaCodigo[$index]=$rowPasivo['cod_cuenta'];
 	$cuentaCodigoPasivo[$index]=$rowPasivo['cod_cuentapasivo'];
 	$index++;
+}
+
+//Cuentas que tienen configurada division pago
+$stmtPasivo = $dbh->prepare("SELECT cod_cuenta from solicitud_recursoscuentas where division_porcentaje=1");
+// Ejecutamos
+$stmtPasivo->execute();
+$indexDiv=0;
+while ($rowPasivo = $stmtPasivo->fetch(PDO::FETCH_ASSOC)) {
+	$cuentaCodigoDiv[$indexDiv]=$rowPasivo['cod_cuenta'];
+	$indexDiv++;
 }
 
 
@@ -55,6 +65,11 @@ for ($i=0;$i<count($cuentasX);$i++){
 	if($flagSuccess2==false){
 		$flagSuccessDetail=false;
 	}
+}
+for ($i=0; $i < count($cuentaCodigoDiv) ; $i++) { 
+	$codigoCuenta=$cuentaCodigoDiv[$i];
+	$stmtActDiv = $dbh->prepare("UPDATE solicitud_recursoscuentas SET division_porcentaje=1 where cod_cuenta=$codigoCuenta");
+	$stmtActDiv->execute();
 }
 
 if($flagSuccessDetail==true){

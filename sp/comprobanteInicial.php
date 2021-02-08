@@ -33,6 +33,7 @@ echo "CONEXION ESTABLECIDA!!!!";
 //INICIO PROCESO
 $fechaActual="2021-01-01"; //registro de comprobante
 $gestion=2020;
+$fechaDesde="2020-01-01";
 $fecha="2020-12-31";
 $fechaTitulo= explode("-",$fecha);
 $fechaFormateada=$fechaTitulo[2].'/'.$fechaTitulo[1].'/'.$fechaTitulo[0];
@@ -48,18 +49,19 @@ $codEmpresa=1;
 $codMoneda=1;
 $codEstadoComprobante=1;
 $tipoComprobanteInsertar=3;
+$cod_gestionAnterior=1205;
 $cod_gestion=3584;
 $gestionInsertar=2021;
 $mes_gestion=1;
 $glosa="BALANCE INICIAL 2021";
-$codComprobante=39843;//obtenerCodigoComprobante(); //comprobante INICIAL LA PAZ
+$codComprobante=39084;//obtenerCodigoComprobante(); // 39843 comprobante INICIAL LA PAZ 
 /*$numeroComprobante=numeroCorrelativoComprobanteFijo($cod_gestion,$unidadInsertar,$tipoComprobanteInsertar,$mes_gestion); //datos gestion 3584 "2021" y 1 "ENERO"
 
 $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) 
 values ('$codComprobante','$codEmpresa','$unidadInsertar','$gestionInsertar','$codMoneda','$codEstadoComprobante','$tipoComprobanteInsertar','$fechaActual','$numeroComprobante','$glosa')";
 $stmtInsertCab = $dbh->prepare($sqlInsertCab);
 $flagSuccess=$stmtInsertCab->execute();*/
-$areas=array("prueba","prueba");
+$areas=array(11,12,13,38,39,40,501,502,1235);
 $html = ''; 
 $index=1;
 $tBolActivo=0;$tBolPasivo=0;
@@ -129,12 +131,36 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                $sumaNivel4=0;$html4="";           
                echo "Entro<br>";
               //listar los montos
-               if($codigo_4==66){//CODIGO PADRE PARA CLIENTES AGRUPARLOS POR CUENTA AUXILIAR
-                 $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalleInsertAux($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion,"none");  
-               }else{
-                 $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalleInsertAux($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion,"none");
-               }
-              
+              if($codigo_4==66){//CODIGO PADRE PARA CLIENTES AGRUPARLOS POR CUENTA AUXILIAR
+                 $detallesReporte=listaMontosDebeHaberEstadosCuentasComprobantesDetalleInsert($cod_gestionAnterior,67,$unidades,$areas,$fechaDesde,$fecha,2); //2 CLIENTE; 1 PROVEEDOR
+                 //$detallesReporte=listaSumaMontosDebeHaberComprobantesDetalleInsertAux($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion,"none");  
+                 $jindex=0;
+                 if($detallesReporte!=null){
+                  echo "Entro detalle cuenta Clientes<br>";
+                  foreach ($detallesReporte as $datosEstadoReporte) {
+                      $codigoDetalleComprobante=obtenerCodigoComprobanteDetalle();
+                      $cuentaX=$datosEstadoReporte->codPlanCuentaEnvio;
+                      $cuentaAuxiliarX=$datosEstadoReporte->codPlanCuentaAuxiliarEnvio;
+                      $unidadX=$datosEstadoReporte->codUnidadOrganizacionalEnvio;
+                      $areaX=$datosEstadoReporte->codAreaCentroCostoEnvio;
+                      $montoX=$datosEstadoReporte->montoEnvio;
+                      $glosaX=$datosEstadoReporte->glosaMostrarEnvio;
+                      $codProveedorX=$datosEstadoReporte->codProveedorEnvio;
+                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosaX','$index')"; 
+                      $sqlInsertDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
+                      $stmtInsertDet=$dbh->prepare($sqlInsertDet);                  
+                      $flagSuccess2=$stmtInsertDet->execute();
+                      if($montoX!=0){
+                          $sqlEstados="INSERT into estados_cuenta(cod_comprobantedetalle, cod_plancuenta, monto,  cod_proveedor, fecha, cod_comprobantedetalleorigen, cod_cuentaaux, cod_cajachicadetalle, cod_tipoestadocuenta, glosa_auxiliar) 
+                          values ('$codigoDetalleComprobante','$cuentaX','$montoX','$codProveedorX','$fechaActual','0','$cuentaAuxiliarX','0','1','$glosaX')";
+                          $stmtInsertEstados = $dbh->prepare($sqlEstados);
+                          $flagSuccess2=$stmtInsertEstados->execute();
+                      }
+                      $jindex++;                      
+                    }
+                 }
+              }else{
+               $detallesReporte=listaSumaMontosDebeHaberComprobantesDetalleInsertAux($fechaFormateada,1,$unidades,$areas,$codigo_4,$gestion,"none");
                $vacio=0;
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
                    echo "Cuenta:".$rowComp['cod_cuenta']."<br>";  
@@ -174,7 +200,6 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   
                $index++;         
                }/* Fin del primer while*/
-
                $cuentaResultado=obtenerValorConfiguracion(47);
                if($codigo_4==obtieneCuentaPadre($cuentaResultado)&&$vacio==0){                  
                   $nombreResultado=nameCuenta($cuentaResultado);
@@ -204,6 +229,11 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   $stmtInsertDet=$dbh->prepare($sqlInsertDet);
                   $flagSuccess2=$stmtInsertDet->execute();
                }
+
+               
+            }
+              
+
 
 
             }//FIN NIVEL 4
@@ -332,17 +362,6 @@ function numeroCorrelativoComprobanteFijo($codGestion,$unidad,$tipoComprobante,$
     
     $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
     //$fi=$fechaFinalMod[2]."-01-01";
-
-     for ($i=0; $i < count($arrayAreas); $i++) {
-        if($i==0){
-          $sqlAreas.="and (";
-        }
-        if($i==(count($arrayAreas)-1)){
-          $sqlAreas.="d.cod_area='".$arrayAreas[$i]."')";
-         }else{
-          $sqlAreas.="d.cod_area='".$arrayAreas[$i]."' or ";
-         }  
-     }
      //busqueda de unidades
      for ($i=0; $i < count($arrayUnidades); $i++) {
         if($i==0){
@@ -369,5 +388,174 @@ function numeroCorrelativoComprobanteFijo($codGestion,$unidad,$tipoComprobante,$
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
-  }  
+  } 
+
+function listaMontosDebeHaberEstadosCuentasComprobantesDetalleInsert($gestion,$cuentaIn,$unidad,$area,$fecha_desde,$fecha,$tipo_cp){
+ $dbh = new Conexion();
+//RECIBIMOS LAS VARIABLES
+$cuenta[0]=$cuentaIn;
+$desde=$fecha_desde;
+$hasta=$fecha;
+$ver_saldo=1; //1 SOLO SALDOS 2 //VER TODO
+$proveedoresStringAux="";
+$StringCuenta=implode(",", $cuenta);
+$StringUnidades=implode(",", $unidad);
+$stringGeneraCuentas="";
+$stmtG = $dbh->prepare("SELECT * from gestiones WHERE codigo=:codigo");
+$stmtG->bindParam(':codigo',$gestion);
+$stmtG->execute();
+$resultG = $stmtG->fetch();
+$NombreGestion = $resultG['nombre'];
+$i=0;$saldo=0;
+$indice=0;
+$totalCredito=0;
+$totalDebito=0;
+$unidadCosto=$unidad;
+$areaCosto=$area;
+$unidadCostoArray=implode(",", $unidadCosto);
+$areaCostoArray=implode(",", $areaCosto);
+
+$cierre_anterior=1; //1 SI; 2 NO
+$datosEstadosCuenta=null;
+$jindex=0;
+//INICIO QUERY DE ESTADOS DE CUENTAS
+  foreach ($cuenta as $cuentai ) {
+     $sqlFechaEstadoCuenta="and e.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59'"; 
+                                            
+     if($cierre_anterior==1){
+       $sqlFechaEstadoCuenta="and e.fecha<='$hasta 23:59:59'";  
+      }
+
+      $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) $proveedoresStringAux and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) order by e.fecha"; //ca.nombre, 
+      //echo $sql;
+      $stmtUO = $dbh->prepare($sql);
+      $stmtUO->execute();
+      $codPlanCuentaAuxiliarPivotX=-10000;
+      
+      $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) $proveedoresStringAux and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) order by e.fecha"; //ca.nombre, 
+                                        //echo $sql;
+                                        $stmtUO = $dbh->prepare($sql);
+                                        $stmtUO->execute();
+                                        $codPlanCuentaAuxiliarPivotX=-10000;
+                                        while ($row = $stmtUO->fetch()) {
+                                            $codigoX=$row['codigo'];
+                                            
+                                            $existeCuentas=0;
+                                            $stmtCantidad = $dbh->prepare("SELECT count(*) as cantidad
+                                                    from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX");
+                                            $stmtCantidad->execute();
+                                            while ($rowCantidad = $stmtCantidad->fetch()) {
+                                                $existeCuentas=$rowCantidad['cantidad'];
+                                            }
+                                            
+                                            $existeCuentas2=0;
+                                              $stmtCantidad = $dbh->prepare("SELECT count(*) as cantidad FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' and cc.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and cc.cod_unidadorganizacional in ($StringUnidades) and $proveedoresStringAux and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) and e.codigo=$codigoX order by ca.nombre, cc.fecha");
+                                              $stmtCantidad->execute();
+                                              while ($rowCantidad = $stmtCantidad->fetch()) {
+                                                  $existeCuentas2=$rowCantidad['cantidad'];
+                                              }
+
+                                            $mostrarFilasEstado="";
+                                            $estiloFilasEstado="";
+                                            $estiloFilasEstadoSaldo="";
+                                            if($sqlFechaEstadoCuenta==""){
+                                                if($existeCuentas==0){
+                                                  if($existeCuentas2==0){
+                                                     $mostrarFilasEstado="d-none";
+                                                  }
+                                                }else{
+                                                    if($existeCuentas2==0){
+                                                     $estiloFilasEstado="style='background:#F9F9FC !important;color:#D6D6DA  !important;'";
+                                                     $estiloFilasEstadoSaldo="style='color:red !important;'";
+                                                    }      
+                                                }
+                                                
+                                            }
+
+                                            $codCompDetX=$row['cod_comprobantedetalle'];
+                                            $codPlanCuentaX=$row['cod_cuenta'];
+                                            $codProveedor=$row['cod_proveedor'];
+                                            $montoX=$row['monto'];
+                                            $fechaX=$row['fecha'];
+                                            $fechaX=strftime('%d/%m/%Y',strtotime($fechaX));
+                                            $glosaAuxiliar=$row['glosa_auxiliar'];
+                                            $glosaX=$row['glosa'];
+                                            $debeX=$row['debe'];
+                                            $haberX=$row['haber'];
+                                            $codigoExtra=$row['extra'];
+                                            $codPlanCuentaAuxiliarX=$row['cod_cuentaaux'];
+                                            $codigoComprobanteX=$row['codigocomprobante'];
+                                            $codUnidadCabecera=$row['cod_unidad_cab'];
+                                            $codAreaCentroCosto=$row['area_centro_costos'];
+
+                                            $nombreComprobanteX=nombreComprobante($codigoComprobanteX);
+                                            $nombreCuentaAuxiliarX=nameCuentaAuxiliar($codPlanCuentaAuxiliarX);
+                                            $tipoDebeHaber=verificarTipoEstadoCuenta($codPlanCuentaX);
+
+
+                                            if($codPlanCuentaAuxiliarX!=$codPlanCuentaAuxiliarPivotX){
+                                                $saldo=0;
+                                                $codPlanCuentaAuxiliarPivotX=$codPlanCuentaAuxiliarX;
+                                            
+                                            }
+                                            
+                                            $glosaMostrar="";
+                                            if($glosaAuxiliar!=""){
+                                                $glosaMostrar=$glosaAuxiliar;
+                                            }else{
+                                                $glosaMostrar=$glosaX;
+                                            }
+                                            list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
+                                            $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
+
+                                            $nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);
+                                            $nombreUnidadCabecera=abrevUnidad_solo($codUnidadCabecera);
+                                            $nombreAreaCentroCosto=abrevArea_solo($codAreaCentroCosto);
+
+                                            $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
+                                            $sqlFechaEstadoCuentaPosterior="and e.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59'"; 
+                                            
+                                            if(isset($cierre_posterior)){
+                                              $sqlFechaEstadoCuentaPosterior="and e.fecha >= '$desde 00:00:00'";  
+                                             }
+                                            //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
+                                            $sqlContra="SELECT sum(e.monto)as monto from estados_cuenta e, comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen='$codigoX'";
+                                            //echo $sqlContra;
+                                            $stmtContra = $dbh->prepare($sqlContra);
+                                            $stmtContra->execute();                                    
+                                            $saldo+=$montoX;//-$montoContra;                                    
+                                            // echo "tipo:".$cod_tipoCuenta;
+                                            $montoEstado=0;$estiloEstados="";
+                                            $stmtSaldo = $dbh->prepare("SELECT sum(e.monto) as monto
+                                                    from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 $sqlFechaEstadoCuentaPosterior and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX");
+                                            $stmtSaldo->execute();
+                                            while ($rowSaldo = $stmtSaldo->fetch()) {
+                                                $montoEstado=$rowSaldo['monto'];
+                                            }
+
+                                          if(formatNumberDec($montoX)==formatNumberDec($montoEstado)&&$ver_saldo==1){
+                                              //validacion para saldos 0 si esta filtrado
+                                             $estiloEstados="d-none";
+                                           }
+                                          
+                                          if($mostrarFilasEstado!="d-none"&&$estiloEstados!="d-none"){
+                                           $datosEstadosCuenta[$jindex]=(object)array(
+                                              'montoEnvio' => formatNumberDec($montoX-$montoEstado),
+                                              'codProveedorEnvio' =>$codProveedor,
+                                              'codPlanCuentaAuxiliarEnvio' =>$codPlanCuentaAuxiliarX,
+                                              'codPlanCuentaEnvio' =>$codPlanCuentaX,
+                                              'glosaMostrarEnvio' =>$glosaMostrar,
+                                              'codAreaCentroCostoEnvio' =>$codAreaCentroCosto,
+                                              'codUnidadOrganizacionalEnvio' =>$codUnidadOrganizacional
+                                              );                                       
+                                            $jindex++;
+                                            
+                                          }
+                                          //FIN DATOS
+                                        } //FIN WHILE    
+                 $i++;
+                 $indice++;
+  }
+  return $datosEstadosCuenta;
+}   
 ?>

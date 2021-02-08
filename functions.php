@@ -11314,4 +11314,15 @@ function obtenerNombreInstanciaCajaChica($codCaja){
     }
     return $valor;
   }  
+  function obtenerMontoLibretasBancariasDetalle($codigo){
+    $dbh = new Conexion();
+     $sql="SELECT monto from libretas_bancariasdetalle where codigo=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['monto'];
+    }
+    return $valor;
+  } 
 ?>
