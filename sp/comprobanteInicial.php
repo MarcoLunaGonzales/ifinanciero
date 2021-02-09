@@ -54,7 +54,7 @@ $cod_gestion=3584;
 $gestionInsertar=2021;
 $mes_gestion=1;
 $glosa="BALANCE INICIAL 2021";
-$codComprobante=39084;//obtenerCodigoComprobante(); // 39843 comprobante INICIAL LA PAZ 
+$codComprobante=39843;//obtenerCodigoComprobante(); // IBNORCA: 39843 LOCALHOST: 39084 comprobante INICIAL LA PAZ 
 /*$numeroComprobante=numeroCorrelativoComprobanteFijo($cod_gestion,$unidadInsertar,$tipoComprobanteInsertar,$mes_gestion); //datos gestion 3584 "2021" y 1 "ENERO"
 
 $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) 
@@ -146,15 +146,25 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                       $montoX=$datosEstadoReporte->montoEnvio;
                       $glosaX=$datosEstadoReporte->glosaMostrarEnvio;
                       $codProveedorX=$datosEstadoReporte->codProveedorEnvio;
-                      $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosaX','$index')"; 
-                      $sqlInsertDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
-                      $stmtInsertDet=$dbh->prepare($sqlInsertDet);                  
-                      $flagSuccess2=$stmtInsertDet->execute();
                       if($montoX!=0){
-                          $sqlEstados="INSERT into estados_cuenta(cod_comprobantedetalle, cod_plancuenta, monto,  cod_proveedor, fecha, cod_comprobantedetalleorigen, cod_cuentaaux, cod_cajachicadetalle, cod_tipoestadocuenta, glosa_auxiliar) 
-                          values ('$codigoDetalleComprobante','$cuentaX','$montoX','$codProveedorX','$fechaActual','0','$cuentaAuxiliarX','0','1','$glosaX')";
+                          $insert_str = "($codigoDetalleComprobante,'$codComprobante','$cuentaX','$cuentaAuxiliarX','$unidadX','$areaX','$montoX','0','$glosaX','$index')"; 
+                          $sqlInsertDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
+                          $stmtInsertDet=$dbh->prepare($sqlInsertDet);                  
+                          $flagSuccess2=$stmtInsertDet->execute();
+
+                          $codigoEstadoCuenta=obtenerCodigoEstadosCuenta();
+                          $sqlEstados="INSERT into estados_cuenta(codigo,cod_comprobantedetalle, cod_plancuenta, monto,  cod_proveedor, fecha, cod_comprobantedetalleorigen, cod_cuentaaux, cod_cajachicadetalle, cod_tipoestadocuenta, glosa_auxiliar) 
+                          values ('$codigoEstadoCuenta','$codigoDetalleComprobante','$cuentaX','$montoX','$codProveedorX','$fechaActual','0','$cuentaAuxiliarX','0','1','$glosaX')";
                           $stmtInsertEstados = $dbh->prepare($sqlEstados);
-                          $flagSuccess2=$stmtInsertEstados->execute();
+                          $flagSuccessEstado=$stmtInsertEstados->execute();
+                          //cambiar estados relacionados 2021 al nuevo. ********************************************************************************************************************************************************************
+                          if($flagSuccessEstado==true){
+                            $codEstadoX=$datosEstadoReporte->codigo;
+                            $sqlEstadosCambiar="UPDATE estados_cuenta SET cod_comprobantedetalleorigen=$codigoEstadoCuenta where fecha > '2021-01-01' and cod_comprobantedetalleorigen<>0 and cod_comprobantedetalleorigen=$codEstadoX";
+                            $stmtCambiarEstados = $dbh->prepare($sqlEstadosCambiar);
+                            echo 'SQL-CAMBIAR:'.$sqlEstadosCambiar;
+                            $stmtCambiarEstados->execute();
+                          }
                       }
                       $jindex++;                      
                     }
@@ -540,7 +550,8 @@ $jindex=0;
                                           
                                           if($mostrarFilasEstado!="d-none"&&$estiloEstados!="d-none"){
                                            $datosEstadosCuenta[$jindex]=(object)array(
-                                              'montoEnvio' => formatNumberDec($montoX-$montoEstado),
+                                              'codigo' => $codigoX,
+                                              'montoEnvio' => ($montoX-$montoEstado),
                                               'codProveedorEnvio' =>$codProveedor,
                                               'codPlanCuentaAuxiliarEnvio' =>$codPlanCuentaAuxiliarX,
                                               'codPlanCuentaEnvio' =>$codPlanCuentaX,
