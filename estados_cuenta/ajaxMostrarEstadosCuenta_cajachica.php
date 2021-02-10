@@ -16,7 +16,7 @@ $globalUser=$_SESSION["globalUser"];
 $globalGestion=$_SESSION["globalGestion"];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
-
+$anioActual=nameGestion($globalGestion);
 $fechaActual=date("d/m/Y");
 $codCuenta=$_GET['cod_cuenta'];
 $tipo=$_GET['tipo'];
@@ -57,7 +57,7 @@ if(isset($_GET['monto_cajachica'])){
 	</thead>
 	<tbody id="tabla_estadocuenta">
   <?php
-    $sql="SELECT e.*,e.codigo as codigo_ec,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_comprobante FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 ";
+    $sql="SELECT e.*,e.codigo as codigo_ec,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_comprobante FROM estados_cuenta e,comprobantes_detalle d where e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0  "; //year(e.fecha)=$anioActual
 
     if($anio_busqueda!="" && $anio_busqueda!=0 ){
       $sql.=" and YEAR(e.fecha) = $anio_busqueda"; 
