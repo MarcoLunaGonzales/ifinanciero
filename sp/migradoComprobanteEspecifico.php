@@ -53,7 +53,7 @@ echo "<h6>Hora Inicio Proceso: " . date("Y-m-d H:i:s")."</h6>";
 if (!$conexión) { 
   exit( "Error al conectar: " . $conexión);
 }else{
- $codComprobante=33922;
+ $codComprobante=37118; /*CODIGO COMPROBANTE A IMPORTAR (REEMPLARÁ EL COMPROBANTE DETALLE)*/
     echo "CONEXION ESTABLECIDA!!!!";
 
     $sqlDelete="DELETE from estados_cuenta where cod_comprobantedetalle in (
@@ -74,7 +74,7 @@ select c.codigo from comprobantes_detalle c where c.cod_comprobante in
 
     $sql = "SELECT forma.fondo, forma.clase, forma.numero, forma.fecha, forma.moneda, forma.glosa, forma.estado 
     FROM ibnorca2020.dbo.forma where forma.clase not in ('I-ADM', 'POA', 'POA99', 'POE', 'POE99', 'PPC', '4') 
-    and forma.fondo not in (2000,2001) and MONTH(forma.fecha) in (1) order by forma.fecha,
+    and forma.fondo not in (2000,2001) and MONTH(forma.fecha) in (5) order by forma.fecha,
          forma.clase, forma.numero;";
     // end modificado ,2,3,4,5,6
 
@@ -241,7 +241,7 @@ select c.codigo from comprobantes_detalle c where c.cod_comprobante in
           }else{
             $organismoInsert=502;
           }
-          //echo $organismoInsert."<br>";
+          echo $numeroComprobante."<br>";
           $insert_str = "('$codComprobante','$cuentaInsertar','$cuentaAuxiliarInsertar','$unidadInsertar','$organismoInsert','$debebs','$haberbs','$glosaDetalle','$ordenDetalle')"; 
           $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
           $stmtInsertDet=$dbh->prepare($sqlInsertDet);
