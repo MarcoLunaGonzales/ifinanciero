@@ -121,7 +121,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                       <i class="material-icons text-danger"  title="Cerrar Caja Chica">lock</i>Cerrar
                                     </a>
                                 <?php }
-                                if(($globalUser==90 || $globalUser==89) && $cod_estado==2){?>
+                                if(($globalUser==90 || $globalUser==89 || $globalUser==58) && $cod_estado==2){?>
                                   <a  rel="tooltip" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlDeleteCajaChica;?>&codigo=<?=$cod_cajachica;?>&cod_tcc=<?=$codigo_tipo_caja_Chica?>&cod_a=3')">
                                     <i class="material-icons text-success"  title="Abrir Caja Chica">lock_open</i>Abrir
                                   </a>

@@ -11291,8 +11291,9 @@ function obtenerCodigoTipoComprobante($codigo){
      $sql="SELECT codigo from personal where codigo in ($codigosAdmin)";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
-     $valor=1;$admin=1;
+     $valor=1;$admin=1; 
      if(obtenerCodigoTipoComprobante($codComprobante)==4){
+      $admin=0; // 0 PARA NO EDITAR FACTURA
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row['codigo'];
         if($valor==$codigo){

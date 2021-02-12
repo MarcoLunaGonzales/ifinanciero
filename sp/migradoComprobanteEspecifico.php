@@ -167,7 +167,8 @@ select c.codigo from comprobantes_detalle c where c.cod_comprobante in
       $codEmpresa=1;
       $codMoneda=1;
       $codEstadoComprobante=1;
-      $sqlDetalle="SELECT detalle.cuenta, detalle.partida, detalle.debebs, detalle.haberbs, detalle.glosa AS glosa_detalle, detalle.organismo, detalle.categoria AS ml_partida, detalle.auxiliar FROM ibnorca2020.dbo.detalle WHERE detalle.fondo = '1020' AND detalle.clase like '%T-01%' AND detalle.numero like '%82%'";
+      //$sqlDetalle="SELECT detalle.cuenta, detalle.partida, detalle.debebs, detalle.haberbs, detalle.glosa AS glosa_detalle, detalle.organismo, detalle.categoria AS ml_partida, detalle.auxiliar FROM ibnorca2020.dbo.detalle WHERE detalle.fondo = '1020' AND detalle.clase like '%T-05%' AND detalle.numero like '%3$'";
+      $sqlDetalle="SELECT detalle.fondo,detalle.clase,detalle.numero,detalle.cuenta, detalle.partida, detalle.debebs, detalle.haberbs, detalle.glosa AS glosa_detalle, detalle.organismo, detalle.categoria AS ml_partida, detalle.auxiliar FROM ibnorca2020.dbo.detalle WHERE detalle.fondo='1030' and detalle.clase like '%T-05%' AND detalle.numero ='000003'";
       $rsDetalle = odbc_exec($conexión, $sqlDetalle);
 
       if ( !$rsDetalle ) { 
@@ -241,7 +242,7 @@ select c.codigo from comprobantes_detalle c where c.cod_comprobante in
           }else{
             $organismoInsert=502;
           }
-          echo $numeroComprobante."<br>";
+          echo $numeroComprobante."-".$unidadInsertar."<br>";
           $insert_str = "('$codComprobante','$cuentaInsertar','$cuentaAuxiliarInsertar','$unidadInsertar','$organismoInsert','$debebs','$haberbs','$glosaDetalle','$ordenDetalle')"; 
           $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
           $stmtInsertDet=$dbh->prepare($sqlInsertDet);

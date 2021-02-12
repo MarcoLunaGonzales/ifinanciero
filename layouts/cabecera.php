@@ -127,6 +127,12 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                   <?=$html?>
+                  <?php 
+                  if(isset($_SESSION['globalUser'])&&$_SESSION['globalUser']==227){ //IDPERSONA IVONNE 227
+
+                    echo '<div class="dropdown-divider"></div><a class="dropdown-item" href="index.php?opcion=reportesSolicitudRecursosSis">REPORTE CONTROL SR - PROY SIS</a>';
+                  }
+                  ?>
                 </div>
               </li>
               <li class="nav-item dropdown">

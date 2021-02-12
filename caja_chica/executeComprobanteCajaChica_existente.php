@@ -120,7 +120,7 @@ try{
 	}
 } catch(PDOException $ex){
     // echo "Un error ocurrio".$ex->getMessage();
-    echo "0#####";
+    echo "0#####".$ex->getMessage();
 }
 ?>
 

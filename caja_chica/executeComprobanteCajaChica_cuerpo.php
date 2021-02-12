@@ -24,7 +24,7 @@
     $ordenDetalle=1;//<--
     while ($rowCajaChicaDet = $stmtCajaChicaDet->fetch()) 
     {
-
+        $observaciones_dcc = str_replace("'", '\\\'',$observaciones_dcc);
     	//el porcentaje origen de tipo de retencion
         $stmtRetencionOrigen = $dbh->prepare("SELECT porcentaje_cuentaorigen from configuracion_retenciones where codigo=$cod_retencioncajachica");
         $stmtRetencionOrigen->execute();

@@ -13559,7 +13559,7 @@ function agregarNuevoPersonalSimulacionModal(inicioAnio,ibnorcaC){
   var monto=1;
   var dias=$("#modal_diaspersonalhonorario").val();
   
-  if(!(cod_cla>0)||dias==""||dias==0){
+  if(!(cod_cla>-101)||dias==""||dias==0){
    Swal.fire("Informativo!", "Debe llenar los campos requeridos", "warning");
   }else{
   var parametros={"cod_sim":cod_sim,"cod_cla":cod_cla,"cantidad":cantidad,"monto":monto,"dias":dias,"anio":anio};
