@@ -130,7 +130,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                   <?php 
                   if(isset($_SESSION['globalUser'])&&$_SESSION['globalUser']==227){ //IDPERSONA IVONNE 227
 
-                    echo '<div class="dropdown-divider"></div><a class="dropdown-item" href="index.php?opcion=reportesSolicitudRecursosSis">REPORTE CONTROL SR - PROY SIS</a>';
+                    echo '<div class="dropdown-divider"></div><a class="dropdown-item" href="index.php?opcion=reportesSolicitudRecursosSis"><small>REPORTE CONTROL SR - PROY SIS</small></a>';
+                    echo '<a class="dropdown-item" href="index.php?opcion=listComprobantesSis"><small>COMPROBANTES - PROY SIS</small></a>';
                   }
                   ?>
                 </div>

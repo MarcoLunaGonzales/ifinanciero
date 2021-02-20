@@ -68,11 +68,11 @@ $index=1;
 $tBolActivo=0;$tBolPasivo=0;
 $sqlDelete="DELETE from comprobantes_detalle where cod_comprobante=$codComprobante;";
 $stmtDelete=$dbh->prepare($sqlDelete);
-$flagSuccessDelete=$stmtDelete->execute();
+//$flagSuccessDelete=$stmtDelete->execute();
 
 $sqlDelete="DELETE from estados_cuenta where cod_comprobantedetalle in (SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante)";
 $stmtDelete=$dbh->prepare($sqlDelete);
-$flag=$stmtDelete->execute();
+//$flag=$stmtDelete->execute();
 
 // Preparamos
 $stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.cod_padre, p.nivel, 
@@ -137,7 +137,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                while ($rowComp = $detallesReporte->fetch(PDO::FETCH_ASSOC)) {
                    $cuentaX=$rowComp['cod_cuenta'];
                    //$glosaX=$rowComp['glosa'];
-                   $glosaX="COMPROBANTE INICIAL 2021";*/
+                   $glosaX="COMPROBANTE INICIAL 2021";
                    $cuentaAuxiliarX=0;
                    $datosExplode=explode(",",$rowComp['cod_unidadorganizacional']);
                    if(isset($datosExplode[1])){
@@ -152,6 +152,9 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                      $areaX=$datosExplode[0];
                    }else{
                      $areaX=$rowComp['cod_area'];
+                   }
+                   if($areaX==null||$areaX==""||$areaX==0){
+                    $areaX=502;
                    }
 
                    $montoX=(float)($rowComp['total_debe']-$rowComp['total_haber']);
@@ -173,9 +176,12 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                     }
                     $vacio++;
                   }
-                  $sqlInsertDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
-                  $stmtInsertDet=$dbh->prepare($sqlInsertDet);                  
-                  $flagSuccess2=$stmtInsertDet->execute();
+                  if(!($cuentaX==67||$cuentaX==113||$cuentaX==118||$cuentaX==153||$cuentaX==154)){
+                    $sqlInsertDet="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ".$insert_str.";";
+                    $stmtInsertDet=$dbh->prepare($sqlInsertDet);                  
+                    $flagSuccess2=$stmtInsertDet->execute();
+                  }
+                  
                   
                $index++;         
                }/* Fin del primer while*/
@@ -249,7 +255,7 @@ function listaSumaMontosDebeHaberComprobantesDetalleInsertAux($fechaFinal,$tipoB
     
       $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
       $sql="SELECT cuentas_monto.* from plan_cuentas p join 
-             (select group_concat(d.glosa) as glosa,d.cod_cuenta,d.cod_cuentaauxiliar,d.cod_unidadorganizacional,d.cod_area,sum(debe) as total_debe,sum(haber) as total_haber 
+             (select d.cod_cuenta,d.cod_cuentaauxiliar,d.cod_unidadorganizacional,d.cod_area,sum(debe) as total_debe,sum(haber) as total_haber 
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
               join areas a on a.codigo=d.cod_area
               join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
@@ -279,9 +285,8 @@ function listaSumaMontosDebeHaberComprobantesDetalleInsert($fechaFinal,$tipoBusq
     
       $fa=$fechaFinalMod[2]."-".$fechaFinalMod[1]."-".$fechaFinalMod[0];
       $sql="SELECT cuentas_monto.* from plan_cuentas p join 
-             (select d.cod_cuenta,group_concat(d.glosa) as glosa,GROUP_CONCAT(d.cod_unidadorganizacional) as cod_unidadorganizacional,GROUP_CONCAT(d.cod_area) AS cod_area,sum(debe) as total_debe,sum(haber) as total_haber 
+             (select d.cod_cuenta,GROUP_CONCAT(d.cod_unidadorganizacional) as cod_unidadorganizacional,GROUP_CONCAT(d.cod_area) AS cod_area,sum(debe) as total_debe,sum(haber) as total_haber 
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
-              join areas a on a.codigo=d.cod_area
               join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
               join plan_cuentas p on p.codigo=d.cod_cuenta
               where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 group by d.cod_cuenta order by d.cod_cuenta) cuentas_monto

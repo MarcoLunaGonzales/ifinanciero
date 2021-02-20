@@ -5493,10 +5493,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
              (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
-              join areas a on a.codigo=d.cod_area
               join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
               join plan_cuentas p on p.codigo=d.cod_cuenta
-              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and c.cod_gestion=$gestion and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
       //echo $sql;
       $stmt = $dbh->prepare($sql);
