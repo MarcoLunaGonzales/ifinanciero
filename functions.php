@@ -11300,9 +11300,30 @@ function obtenerCodigoTipoComprobante($codigo){
         }
       }   
      }
+
+     //validacion para comprobantes con el mes cerrado
+     if(!isset($_SESSION['globalMes'])&&!isset($_SESSION['globalGestion'])){
+       session_start();       
+     }
+     $estadoMes=obtenerEstadoMesCurso($_SESSION['globalGestion'],$_SESSION['globalMes']);  
+     if($estadoMes==2){
+      $admin=0;
+     }
+
      return($admin);
   } 
 
+function obtenerEstadoMesCurso($gestion,$mes){
+     $dbh = new Conexion();
+     $sql="SELECT cod_estadomesestrabajo from meses_trabajo where cod_gestion='$gestion' and cod_mes='$mes'";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_estadomesestrabajo'];
+    }
+    return $valor;
+}
 function obtenerNombreInstanciaCajaChica($codCaja){
     $dbh = new Conexion();
      $sql="SELECT t.nombre from tipos_caja_chica t join caja_chica c on c.cod_tipocajachica=t.codigo where  c.codigo=$codCaja limit 1";
