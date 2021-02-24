@@ -23,7 +23,7 @@
     <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Oficina: </b> <small><?=$unidadAbrev?></small></h6></div>
     <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Area: </b> <small><?=$areaAbrev?></small></h6></div>
   </div>
-<table class="table table-sm text-dark">
+<table class="table table-sm text-dark" id="libro_mayor_rep">
   <thead >
             <tr class="text-center">
               <th>Oficina Origen</th>
