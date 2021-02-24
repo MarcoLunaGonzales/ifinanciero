@@ -1,5 +1,7 @@
-<h4 class="card-title text-center">Reporte Libro Mayor</h4>
 <?php
+//header("Content-Type: application/vnd.ms-excel");
+
+//header("Content-Disposition: attachment; filename=mayordatos.xls");
     $codcuenta=array_unique($codcuenta);
     $cuentasTotal=[];
      
@@ -22,24 +24,17 @@
            and d.cod_cuenta in (".$stringSoloCuentas.") and c.cod_estadocomprobante<>2 
           and d.cod_unidadorganizacional in (".$unidadCostoArray.") 
           and d.cod_area in (".$areaCostoArray.") 
-          and c.cod_unidadorganizacional in (".$unidadArray.") and (c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59')order by c.fecha;";
+          and c.cod_unidadorganizacional in (".$unidadArray.") and (c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59')order by c.fecha limit 50000;";
 
    //echo $solaConsulta;
    $query1="CALL listarMayorCuentasSoloAux(\"".$solaConsulta."\");";
-   echo $query1;
-   $stmt = $dbh->prepare($query1);
+   //echo $query1;
+   $stmt = $dbh2->prepare($solaConsulta);
    $stmt->execute();   
    ?>
-   <div class="card-body">
-  <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
-  <h6 class="card-title">Cuenta: <?=$nombreCuentaTitle;?></h6>
-  <h6 class="card-title">Oficina Origen Comprobante:<?=$unidadGeneral?></h6>
-  <div class="row">
-    <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Oficina: </b> <small><?=$unidadAbrev?></small></h6></div>
-    <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Area: </b> <small><?=$areaAbrev?></small></h6></div>
-  </div>
-<table class="table table-sm text-dark" id="libro_mayor_rep">
-  <thead >
+
+<table class="table table-sm text-dark" id="">
+  <thead>
             <tr class="text-center">
               <th>Oficina Origen</th>
               <th width="5%">Cbte</th>
@@ -106,13 +101,3 @@
 ?>
   </tbody></table>
 
-  </div>
-</div>
-
-<script>
-$(document).ready(function() {
-  //exportTableToExcel('libro_mayor_rep');
-});
-</script>
-
-     
