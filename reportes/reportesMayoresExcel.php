@@ -6,8 +6,6 @@ require_once 'functions.php';
 require_once 'functionsGeneral.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUnidad=$_SESSION["globalUnidad"];
-
-
 $fechaActual=date("m/d/Y");
 $m=date("m");
 $y=date("Y");
@@ -42,17 +40,18 @@ $i=0;
 		<div style="overflow-y:scroll; ">			 		
             <div class="col-md-12">
               <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">
+                <div class="card-header card-header-rose card-header-icon">
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Reporte Libro Mayor</h4>
+                  <h4 class="card-title">Reporte Libro Mayor Datos</h4>
                 </div>
                 <form class="" action="<?=$urlReporteMayor?>" target="_blank" method="POST">
                 <div class="card-body">
                   	<div class="row">
 	                  	<div class="col-sm-6">
 	                  		<div class="row">
+	                  			<input type="hidden" value="1" id="reporte_datos" name="reporte_datos">
 				                <label class="col-sm-4 col-form-label">Entidad</label>
 				                <div class="col-sm-8">
 				                	<div class="form-group">				                		
@@ -79,7 +78,7 @@ $i=0;
 				                 <label class="col-sm-4 col-form-label">Gestion</label>
 				                 <div class="col-sm-8">
 				                	<div class="form-group">
-		                               <select class="selectpicker form-control form-control-sm" name="gestion" id="gestion" data-style="<?=$comboColor;?>" required onChange="AjaxGestionFechaDesde(this)">				  	   
+		                               <select class="selectpicker form-control form-control-sm" name="gestion" id="gestion" data-style="btn btn-rose" required onChange="AjaxGestionFechaDesde(this)">				  	   
 				  	                        <?php
 				  	                        $stmt = $dbh->prepare("SELECT codigo, nombre FROM gestiones where cod_estado=1 order by 2 desc");
 					                         $stmt->execute();
@@ -191,20 +190,6 @@ $i=0;
 										 	?>
 												</select>			                			
 			                		</div>
-	                              <!-- <select class="selectpicker form-control form-control-sm" name="unidad_costo[]" id="unidad_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
-			  	                          <?php
-			  	                          $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
-				                          $stmt->execute();
-				                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				                          	$codigoX=$row['codigo'];
-				                          	$nombreX=$row['nombre'];
-				                          	$abrevX=$row['abreviatura'];
-				                          ?>
-				                           <option value="<?=$codigoX;?>"><?=$abrevX;?></option>	
-				                           <?php
-			  	                           }
-			  	                           ?>
-			                           </select> -->
 			                      </div>
 			                  </div>
 			             </div>
@@ -233,25 +218,6 @@ $i=0;
 			              </div>
 				      </div>
                   </div><!--div row-->
-                  <div class="row">
-      	             <div class="col-sm-6">
-      	             	<div class="row">
-			               <label class="col-sm-4 col-form-label">Cuentas Auxiliares</label>
-                           <div class="col-sm-8">
-			                  <div class="form-group">
-      	             	          <div class="form-check">
-                                    <label class="form-check-label">
-                                      <input class="form-check-input" type="checkbox" id="cuentas_auxiliares" name="cuentas_auxiliares[]" value="1">
-                                      <span class="form-check-sign">
-                                        <span class="check"></span>
-                                      </span>
-                                    </label>
-                                  </div>
-                                </div>  
-                             </div>     
-                        </div>  
-      	             </div>
-      	           </div><!--div row-->
       	           <br>
                   <div class="row">
                   	<div class="col-sm-6">
@@ -259,7 +225,7 @@ $i=0;
 			                 <label class="col-sm-4 col-form-label">Moneda Adicional</label>
 			                 <div class="col-sm-8">
 			                	<div class="form-group">
-	                              <select class="selectpicker form-control form-control-sm" name="moneda" id="moneda" data-style="<?=$comboColor;?>" required>
+	                              <select class="selectpicker form-control form-control-sm" name="moneda" id="moneda" data-style="btn btn-rose" required>
 			  	                 
 			  	                        <?php
 			  	                        $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM monedas where cod_estadoreferencial=1 order by 2");
@@ -322,7 +288,7 @@ $i=0;
                 </div><!--card body-->
                 <div class="card-footer fixed-bottom">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>
-				    <a href="?opcion=reportesMayoresDatos" class="btn btn-warning">Reporte Datos</a>
+				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
 			  </div>
                </form> 
               </div>	  

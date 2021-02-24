@@ -11346,4 +11346,76 @@ function obtenerNombreInstanciaCajaChica($codCaja){
     }
     return $valor;
   } 
+
+ function listarNivelesCuentaPadre($listaCuentas){
+   for ($xx=0; $xx < count($listaCuentas); $xx++) { 
+      $porciones = explode("@", $listaCuentas[$xx]);
+      $cuenta=$porciones[0];
+      switch (obtenerNivelCuenta($cuenta)) {
+        case 1:
+        $listaCuentas=array_merge($listaCuentas,cuentasArrayNivel1($cuenta,"@normal"));
+        break;
+        case 2:
+        $listaCuentas=array_merge($listaCuentas,cuentasArrayNivel2($cuenta,"@normal"));
+        break;
+        case 3:
+        $listaCuentas=array_merge($listaCuentas,cuentasArrayNivel3($cuenta,"@normal"));
+        break;
+        case 4:
+        $listaCuentas=array_merge($listaCuentas,cuentasArrayNivel4($cuenta,"@normal"));
+        break;
+      }
+      
+    }
+    return $listaCuentas;
+ }
+ function cuentasArrayNivel4($cuenta,$texto){
+   $dbh = new Conexion();
+     $sql="select codigo from plan_cuentas where nivel=5 and cod_padre=$cuenta;";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=$row['codigo'].$texto;
+        $index++;
+    }
+    return $valor;
+ }
+
+ function cuentasArrayNivel3($cuenta,$texto){
+   $dbh = new Conexion();
+     $sql="select codigo from plan_cuentas where nivel=5 and cod_padre in (SELECT codigo from plan_cuentas where cod_padre=$cuenta);";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=$row['codigo'].$texto;
+        $index++;
+    }
+    return $valor;
+ }
+ function cuentasArrayNivel2($cuenta,$texto){
+   $dbh = new Conexion();
+     $sql="select codigo from plan_cuentas where nivel=5 and cod_padre in (SELECT codigo from plan_cuentas where cod_padre in (SELECT codigo from plan_cuentas where cod_padre=$cuenta));";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=$row['codigo'].$texto;
+        $index++;
+    }
+    return $valor;
+ }
+ function cuentasArrayNivel1($cuenta,$texto){
+   $dbh = new Conexion();
+     $sql="select codigo from plan_cuentas where nivel=5 and cod_padre in (SELECT codigo from plan_cuentas where cod_padre in (SELECT codigo from plan_cuentas where cod_padre in ((SELECT codigo from plan_cuentas where cod_padre=$cuenta))));";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=$row['codigo'].$texto;
+        $index++;
+    }
+    return $valor;
+ }
 ?>

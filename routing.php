@@ -131,6 +131,9 @@
 		if ($_GET['opcion']=='reportesMayores') {
 			require_once('reportes/reportesMayores.php');
 		}
+		if ($_GET['opcion']=='reportesMayoresDatos') {
+			require_once('reportes/reportesMayoresExcel.php');
+		}
 		if ($_GET['opcion']=='reportesMayoresVerificacion') {
 			require_once('reportes/reportesMayoresVerificacion.php');
 		}
@@ -169,6 +172,10 @@
         
         //REPORTES
 		if ($_GET['opcion']=='reportesBalanceGeneral') {
+			require_once('reportes/reportesBalanceGeneral.php');
+		}
+		if ($_GET['opcion']=='reportesBalanceGeneralBK') {
+			$bkLink=1;
 			require_once('reportes/reportesBalanceGeneral.php');
 		}
         

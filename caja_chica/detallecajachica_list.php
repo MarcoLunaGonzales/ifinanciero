@@ -35,11 +35,13 @@ $sql_rendicion="SELECT SUM(c.monto)-IFNULL((select SUM(r.monto) from caja_chicar
 $stmtSaldo = $dbh->prepare($sql_rendicion);
 $stmtSaldo->execute();
 $resultSaldo=$stmtSaldo->fetch();
-
-if($resultSaldo['monto_total']!=null || $resultSaldo['monto_total']!='')
-  $monto_total=$resultSaldo['monto_total'];
-else $monto_total=0;                        
-$monto_saldo=$monto_cajachica-$monto_total;
+//monto arreglado
+if($resultSaldo['monto_total']!=null || $resultSaldo['monto_total']!=''){
+       $monto_total=$resultSaldo['monto_total'];
+}else{
+   $monto_total=0;    
+}
+$monto_saldo=$monto_cajachica+importe_total_cajachica($cod_cajachica);//importe_total_cajachica($cod_cajachica)
 
 //listamos los gastos de caja chica
 $stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,DATE_FORMAT(fecha,'%d/%m/%Y')as fecha_x,cod_tipodoccajachica,cod_uo,cod_area,
