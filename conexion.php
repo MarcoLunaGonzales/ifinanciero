@@ -1,20 +1,19 @@
 <?php 
 class Conexion extends PDO {    
 
-    private $tipo_de_base = 'mysql';
-    private $host = 'localhost';  
-    private $nombre_de_base = 'ibnfinanciero4000';
-    private $usuario = 'root';
-    private $contrasena = '';
-    private $port = '3306';
-    
-    //private $tipo_de_base = 'mysql';
-    //private $host = '192.168.20.12';  
-    //private $nombre_de_base = 'bdifinanciero';
-    //private $usuario = 'ingresobd';
-    //private $contrasena = 'ingresoibno';
-    //private $port = '3306';
+    // private $tipo_de_base = 'mysql';
+    // private $host = 'localhost';  
+    // private $nombre_de_base = 'ibnfinanciero4000';
+    // private $usuario = 'root';
+    // private $contrasena = '';
+    // private $port = '3306';
 
+   private $tipo_de_base = 'mysql';
+   private $host = '200.105.199.166';
+   private $nombre_de_base = 'bdifinanciero';
+   private $usuario = 'ingresofm';
+   private $contrasena = 'minka123';
+   private $port = '4606';
     
 
 
