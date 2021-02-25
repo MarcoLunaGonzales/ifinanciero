@@ -10,8 +10,21 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalGestion=$_SESSION["globalGestion"];
 $global_mes=$_SESSION["globalMes"];
+
+$globalGestion_actual=date("Y");
 $global_mes_actual=(int)date("m");
 $dbh = new Conexion();
+
+
+$fechaActual=date("m/d/Y");
+$m=date("m");
+$y=date("Y");
+$d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
+$fechaDesde=$y."-".$m."-01";
+$fechaHasta=$y."-".$m."-".$d;
+
+$fechaDesde2=$y."-01-01";
+$fechaHasta2=$y."-12-31";
 
 ?>
 <div class="cargar-ajax d-none">
@@ -60,18 +73,19 @@ $dbh = new Conexion();
 		                <label class="col-sm-2 col-form-label">Gestión</label>
 		                <div class="col-sm-4">
 		                	<div class="form-group">
-		                		<select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+		                		<!--<select name="gestiones" id="gestiones" onChange="ajax_mes_de_gestion(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">-->
+		                		<select class="selectpicker form-control form-control-sm" name="gestiones" id="gestiones" data-style="<?=$comboColor;?>" required onChange="AjaxGestionFechaDesde(this)">				  	   
                                     <option value=""></option>
                                     <?php 
                                     $query = "SELECT codigo,nombre from gestiones where cod_estado=1 ORDER BY nombre desc";
                                     $stmt = $dbh->query($query);
                                     while ($row = $stmt->fetch()){ ?>
-                                        <option value="<?=$row["codigo"];?>" <?=($row["codigo"]==$globalGestion)?"selected":""?> ><?=$row["nombre"];?></option>
+                                        <option value="<?=$row["codigo"];?>" <?=($row["nombre"]==$globalGestion_actual)?"selected":""?> ><?=$row["nombre"];?></option>
                                     <?php } ?>
                                 </select>
 		                     </div>
 		                </div>	
-		                <label class="col-sm-1 col-form-label">Mes</label>
+		                <!--<label class="col-sm-1 col-form-label">Mes</label>
 		                <div class="col-sm-4">
 		                	<div class="form-group">
 		                		<div id="div_contenedor_mes">		
@@ -94,9 +108,35 @@ $dbh = new Conexion();
 		                			
 		                		</div>		                                
 		                     </div>
-		                </div>			             
+		                </div>-->			             
                   	</div><!--div row-->
-              	
+              	    <div class="row">
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                 <label class="col-sm-4 col-form-label">Desde</label>
+				                 <div class="col-sm-8">
+				                	<div class="form-group">
+				                		<div id="div_contenedor_fechaI">				                			
+				                			<input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaDesde?>">	
+				                		</div>		                                
+				                     </div>
+				                  </div>
+				             </div>
+	      	             </div>
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                 <label class="col-sm-4 col-form-label">Hasta</label>
+				                 <div class="col-sm-8">
+				                	<div class="form-group">
+				                		<div id="div_contenedor_fechaH">				                			
+				                			<input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaHasta?>">
+				                		</div>
+		                               
+				                    </div>
+				                  </div>
+				              </div>
+					      </div>
+	                </div><!--div row-->
 		            <div class="row">
 		            	<label class="col-sm-2 col-form-label">Razón Social</label>
 		                <div class="col-sm-1">

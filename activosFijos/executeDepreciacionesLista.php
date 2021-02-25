@@ -40,18 +40,20 @@ $stmt->bindColumn('estado', $estado);
                     <table class="table"  id="tablePaginator">
                       <thead>
                         <tr>
-                          <th>Mes</th>
-                          <th>Gestion</th>
-                          <!-- <th>Ufv Inicio</th>
-                          <th>Ufv Final</th> -->
-                          <th class="text-center">Detalle</th>
-                          <th class="text-center">Generar Comprobante</th>
+                          <th width="20%">Mes</th>
+                          <th width="20%">Gestion</th>                          
+                          <th width="20%" class="text-center">Detalle</th>
+                          <th width="20%" class="text-center">Comprobante</th>
+                          <th width="20%" class="text-center"></th>
+
                         </tr>
                       </thead>
                       <tbody>
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                           $sw_depreciacion=verificarContabilizacion($codigo);
+                          $cod_comprobante=obtenerComprobanteDepreciacion($codigo);
+
                           ?>
                           <tr>
                               <td><?=nombreMes($mes);?></td>
@@ -62,10 +64,19 @@ $stmt->bindColumn('estado', $estado);
                               </td>
                               <?php
                               if($sw_depreciacion>0){?>
-                                <td class="text-center">
+                                <td class="text-left">
                                   <span style="color: #00afaa"><b>Comprobante Generado</b></span>
                                 </td>
+                                <td class="text-left"><?php
+                                  if($cod_comprobante!=0){?>
+                                    <a target="_blank" href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1">
+                                      <i class="material-icons" title='Imprimir Comprobante' style="color:red">assignment</i>
+                                    </a>
+                                  <?php }
+                                  ?>
+                                </td>
                               <?php }else{?>
+                                <td></td>
                                 <td class="text-center">
                                   <a href="<?=$urlGenerarCompDepreciacion;?>&codigo=<?=$codigo;?>">
                                     <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>

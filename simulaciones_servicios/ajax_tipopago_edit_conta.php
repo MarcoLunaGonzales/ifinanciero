@@ -45,10 +45,10 @@ $dbh = new Conexion();
 			    	$sw_monto = obtener_monto_formapago($cod_solicitud,$cod_tipopago_x);
 			    	$sw_porcentaje = obtener_porcentaje_formapago($cod_solicitud,$cod_tipopago_x);
 			    	if($sw_monto>0 && $sw_porcentaje>0){?>
-			    		<td><input type="number" step="0.01" class="form-control" name="monto_porcentaje_tipopago<?=$index?>" id="monto_porcentaje_tipopago<?=$index?>" onkeyup="convertir_a_bolivianos_tipopago(<?=$index?>)" value="<?=$sw_porcentaje?>"></td>
+			    		<td><input type="number" step="any" class="form-control" name="monto_porcentaje_tipopago<?=$index?>" id="monto_porcentaje_tipopago<?=$index?>" onkeyup="convertir_a_bolivianos_tipopago(<?=$index?>)" value="<?=$sw_porcentaje?>"></td>
 			    		<td><input type="number" class="form-control" name="monto_bob_tipopago<?=$index?>" id="monto_bob_tipopago<?=$index?>" onkeyup="convertir_a_porcentaje_tipopago(<?=$index?>)" value="<?=$sw_monto?>"></td>
 			    	<?php }else{?>
-			    		<td><input type="number" step="0.01" class="form-control" name="monto_porcentaje_tipopago<?=$index?>" id="monto_porcentaje_tipopago<?=$index?>" onkeyup="convertir_a_bolivianos_tipopago(<?=$index?>)" ></td>
+			    		<td><input type="number" step="any" class="form-control" name="monto_porcentaje_tipopago<?=$index?>" id="monto_porcentaje_tipopago<?=$index?>" onkeyup="convertir_a_bolivianos_tipopago(<?=$index?>)" ></td>
 			    		<td><input type="number" class="form-control" name="monto_bob_tipopago<?=$index?>" id="monto_bob_tipopago<?=$index?>" onkeyup="convertir_a_porcentaje_tipopago(<?=$index?>)"></td>
 			    	<?php }
 			    	?>
@@ -61,14 +61,14 @@ $dbh = new Conexion();
 			<tr>
 				<td></td>
 				<td>TOTAL</td>
-				<td><input type="hidden" class="form-control" name="total_monto_porcentaje_a_tipopago" id="total_monto_porcentaje_a_tipopago" value="0"><input type="text" step="0.01" class="form-control" name="total_monto_porcentaje_tipopago" id="total_monto_porcentaje_tipopago" value="<?=number_format(0,2)?>" readonly="true"></td>
-				<td><input type="hidden" step="0.01" class="form-control" name="total_monto_bob_a_tipopago" id="total_monto_bob_a_tipopago" value="0"><input type="text" step="0.01" class="form-control" name="total_monto_bob_tipopago" id="total_monto_bob_tipopago" value="<?=number_format(0,2)?>" readonly="true"></td>
+				<td><input type="hidden" class="form-control" name="total_monto_porcentaje_a_tipopago" id="total_monto_porcentaje_a_tipopago" value="0"><input type="text" step="any" class="form-control" name="total_monto_porcentaje_tipopago" id="total_monto_porcentaje_tipopago" value="<?=number_format(0,2)?>" readonly="true"></td>
+				<td><input type="hidden" step="any" class="form-control" name="total_monto_bob_a_tipopago" id="total_monto_bob_a_tipopago" value="0"><input type="text" step="any" class="form-control" name="total_monto_bob_tipopago" id="total_monto_bob_tipopago" value="<?=number_format(0,2)?>" readonly="true"></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td>DIFERENCIA</td>
-				<td><input  type="text" step="0.01" class="form-control" name="total_diferencia_porcentaje_tipopago" id="total_diferencia_porcentaje_tipopago" value="<?=number_format(0,2)?>" readonly="true"></td>
-				<td><input  type="text" step="0.01" class="form-control" name="total_diferencia_bob_tipopago" id="total_diferencia_bob_tipopago" value="<?=number_format(0,2)?>" readonly="true"> </td>
+				<td><input  type="text" step="any" class="form-control" name="total_diferencia_porcentaje_tipopago" id="total_diferencia_porcentaje_tipopago" value="<?=number_format(0,2)?>" readonly="true"></td>
+				<td><input  type="text" step="any" class="form-control" name="total_diferencia_bob_tipopago" id="total_diferencia_bob_tipopago" value="<?=number_format(0,2)?>" readonly="true"> </td>
 			</tr>
 		</table>
 		<!-- <div class="row">

@@ -208,8 +208,11 @@ if(isset($_GET['interno'])){
                   <i class="material-icons text-warning" title="Enviar Correo">email</i> Enviar Correo
                 </button><?php
               } 
-              if($cod_estadofactura!=4){?>  
+              if($cod_estadofactura!=4&&$cod_solicitudfacturacion!=-100){?>  
                 <a rel="tooltip" class="dropdown-item" href='<?=$urlPrintSolicitud;?>?codigo=<?=$cod_solicitudfacturacion;?>' target="_blank"><i class="material-icons text-primary" title="Imprimir Solicitud Facturación">print</i> Imprimir SF</a>
+                <a rel="tooltip" class="dropdown-item" href="<?=$urlVer_SF;?>?codigo=<?=$cod_solicitudfacturacion;?>" target="_blank">
+                  <i class="material-icons text-default" title="Ver Solicitud Facturación">print</i> Ver SF
+                </a>
                 <?php                               
               }
               $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux."###".$interno;                                

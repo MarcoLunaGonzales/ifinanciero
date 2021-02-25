@@ -19,6 +19,7 @@ $globalGestion=$_SESSION['globalNombreGestion'];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalMesTrabajo=$_SESSION['globalMes'];
+$globalUser=$_SESSION["globalUser"];
 
 
 $codigo_tipo=$_GET['codigo'];
@@ -154,6 +155,7 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
             <i class="material-icons"><?=$iconImp;?></i>
           </a><?php
           }
+       if(verificarEdicionComprobanteFacturasUsuario($globalUser,$codigo)!=0){  //para verificar personal edicion facturas     
         if($codigoSol[1]==0){
           if($existeCuenta==0){
                     $codCajaChica=existeCajaChicaRelacionado($codigo);
@@ -174,14 +176,15 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
                        </a>
                   <?php
                     }  
-         }  
+         } 
           ?>
         
         
         <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
           <i class="material-icons"><?=$iconDelete;?></i>
         </button>
-        <?php }?>
+        <?php }
+        }  ?>
       </td>
     </tr>
     <?php

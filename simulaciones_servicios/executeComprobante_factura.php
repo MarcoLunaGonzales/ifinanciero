@@ -157,6 +157,20 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 					// echo $sqlEstadoCuenta;
 		            $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
 		            $flagSuccess=$stmtEstadoCuenta->execute(); 
+
+
+		            //actualizar glosa comprobante
+		            $codComprobanteDetalleOrigen=$cod_compte_origen;
+		            $tituloEstadoOrigen="";
+                    if(isset($codComprobanteDetalleOrigen)&&$codComprobanteDetalleOrigen>0){
+                      $codigoComprobanteOrigen=obtenerComprobanteDetalleRelacionado(obtenerCod_comprobanteDetalleorigen($codComprobanteDetalleOrigen));
+                      if($codigoComprobanteOrigen>0){
+                        $tituloEstadoOrigen="Cierre de ".nombreComprobante($codigoComprobanteOrigen)." ";  
+                        $sqlDetalleOrigen="UPDATE comprobantes_detalle set glosa=CONCAT('$tituloEstadoOrigen',glosa) WHERE codigo=$cod_comprobante_detalle and glosa NOT LIKE '$tituloEstadoOrigen%'";
+                        $stmtDetalleOrigen = $dbh->prepare($sqlDetalleOrigen);
+                        $stmtDetalleOrigen->execute();
+                      }   
+                    } 
 				}elseif($cod_tipopago==$cod_tipopago_credito){
 					// $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(2,$cod_cliente);//tipo cliente
 					$cuenta_defecto_cliente=obtenerValorConfiguracion(78);//creidto

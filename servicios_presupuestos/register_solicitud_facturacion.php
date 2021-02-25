@@ -216,7 +216,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             $codTipoUnidad=0;
 
                                             $monto_pagar=$montoPre;
-                                            $saldo=$montoPre*$cantidadPre;//saldo inicial monto
+                                            $saldo=($montoPre-(($descuentoFila/100)*$montoPre))*$cantidadPre;//saldo inicial monto$descuentoFila
                                             $saldo_real=$saldo;
                                             $monto_total_pagado=0;
                                             if($banderaHab!=0){
@@ -379,7 +379,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         <input type="text" class="form-control" name="modal_importe_pagado_dos<?=$iii?>" id="modal_importe_pagado_dos<?=$iii?>" readonly value="<?=number_format($monto_total_pagado,2);?>">
                                                     </td>
                                                     <td>
-                                                        <input type="number" step="any" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="any" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?> min="0.1">
+                                                        <input type="number" step="any" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="any" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?>>
                                                     </td>
 
                                                                                               

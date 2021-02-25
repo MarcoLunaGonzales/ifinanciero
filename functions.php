@@ -5493,10 +5493,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       $sql="SELECT cuentas_monto.*,p.nombre,p.numero,p.nivel,p.cod_padre from plan_cuentas p join 
              (select d.cod_cuenta,sum(debe) as total_debe,sum(haber) as total_haber 
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
-              join areas a on a.codigo=d.cod_area
               join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
               join plan_cuentas p on p.codigo=d.cod_cuenta
-              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and c.cod_gestion=$gestion and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
       //echo $sql;
       $stmt = $dbh->prepare($sql);
@@ -11230,4 +11229,193 @@ function obtenerPathArchivoIbnorca($codigo){
      return($valorX);
 }
 
+function obtenerCodigoCajaChicaString($codigoString){
+   $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_cajachica from caja_chicadetalle where codigo in ($codigoString)");
+     $stmt->execute();
+     $valorX=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valorX=$row['cod_cajachica'];
+     }
+     return $valorX;
+}
+
+function obtenerComprobanteCajaChicaRelacionado($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_comprobante from caja_chica  where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_comprobante'];
+     }
+     return($valor);
+  }
+  function obtenerComprobanteDetalleRelacionado($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_comprobante from comprobantes_detalle  where codigo=$codigo");
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_comprobante'];
+     }
+     return($valor);
+  }
+
+  function convertirAUltimoDiaHabil($fechaUltimoDia){
+   $diaComprobar = date('w',strtotime($fechaUltimoDia));
+   if((int)$diaComprobar==0){
+     return date('Y-m-d', strtotime("{$fechaUltimoDia} - 2 day"));
+   }elseif ((int)$diaComprobar==6) {
+     return date('Y-m-d', strtotime("{$fechaUltimoDia} - 1 day"));
+   }else{
+     return $fechaUltimoDia;
+   }
+  }
+
+function obtenerCodigoTipoComprobante($codigo){
+    $dbh = new Conexion();
+     $sql="SELECT cod_tipocomprobante from comprobantes where codigo=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_tipocomprobante'];
+    }
+    return $valor;
+  }
+
+  function verificarEdicionComprobanteFacturasUsuario($codigo,$codComprobante){
+     $codigosAdmin=obtenerValorConfiguracion(99);
+     $dbh = new Conexion();
+     $sql="SELECT codigo from personal where codigo in ($codigosAdmin)";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=1;$admin=1; 
+     if(obtenerCodigoTipoComprobante($codComprobante)==4){
+      $admin=0; // 0 PARA NO EDITAR FACTURA
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'];
+        if($valor==$codigo){
+          $admin=0;
+        }
+      }   
+     }
+
+     //validacion para comprobantes con el mes cerrado
+     if(!isset($_SESSION['globalMes'])&&!isset($_SESSION['globalGestion'])){
+       session_start();       
+     }
+     $estadoMes=obtenerEstadoMesCurso($_SESSION['globalGestion'],$_SESSION['globalMes']);  
+     if($estadoMes==2){
+      $admin=0;
+     }
+
+     return($admin);
+  } 
+
+function obtenerEstadoMesCurso($gestion,$mes){
+     $dbh = new Conexion();
+     $sql="SELECT cod_estadomesestrabajo from meses_trabajo where cod_gestion='$gestion' and cod_mes='$mes'";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['cod_estadomesestrabajo'];
+    }
+    return $valor;
+}
+function obtenerNombreInstanciaCajaChica($codCaja){
+    $dbh = new Conexion();
+     $sql="SELECT t.nombre from tipos_caja_chica t join caja_chica c on c.cod_tipocajachica=t.codigo where  c.codigo=$codCaja limit 1";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['nombre'];
+    }
+    return $valor;
+  }  
+  function obtenerMontoLibretasBancariasDetalle($codigo){
+    $dbh = new Conexion();
+     $sql="SELECT monto from libretas_bancariasdetalle where codigo=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['monto'];
+    }
+    return $valor;
+  } 
+
+ function listarNivelesCuentaPadre($listaCuentas){
+   for ($xx=0; $xx < count($listaCuentas); $xx++) { 
+      $porciones = explode("@", $listaCuentas[$xx]);
+      $cuenta=$porciones[0];
+      switch (obtenerNivelCuenta($cuenta)) {
+        case 1:
+        $listaCuentas=array_merge($listaCuentas,cuentasArrayNivel1($cuenta,"@normal"));
+        break;
+        case 2:
+        $listaCuentas=array_merge($listaCuentas,cuentasArrayNivel2($cuenta,"@normal"));
+        break;
+        case 3:
+        $listaCuentas=array_merge($listaCuentas,cuentasArrayNivel3($cuenta,"@normal"));
+        break;
+        case 4:
+        $listaCuentas=array_merge($listaCuentas,cuentasArrayNivel4($cuenta,"@normal"));
+        break;
+      }
+      
+    }
+    return $listaCuentas;
+ }
+ function cuentasArrayNivel4($cuenta,$texto){
+   $dbh = new Conexion();
+     $sql="select codigo from plan_cuentas where nivel=5 and cod_padre=$cuenta;";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=$row['codigo'].$texto;
+        $index++;
+    }
+    return $valor;
+ }
+
+ function cuentasArrayNivel3($cuenta,$texto){
+   $dbh = new Conexion();
+     $sql="select codigo from plan_cuentas where nivel=5 and cod_padre in (SELECT codigo from plan_cuentas where cod_padre=$cuenta);";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=$row['codigo'].$texto;
+        $index++;
+    }
+    return $valor;
+ }
+ function cuentasArrayNivel2($cuenta,$texto){
+   $dbh = new Conexion();
+     $sql="select codigo from plan_cuentas where nivel=5 and cod_padre in (SELECT codigo from plan_cuentas where cod_padre in (SELECT codigo from plan_cuentas where cod_padre=$cuenta));";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=$row['codigo'].$texto;
+        $index++;
+    }
+    return $valor;
+ }
+ function cuentasArrayNivel1($cuenta,$texto){
+   $dbh = new Conexion();
+     $sql="select codigo from plan_cuentas where nivel=5 and cod_padre in (SELECT codigo from plan_cuentas where cod_padre in (SELECT codigo from plan_cuentas where cod_padre in ((SELECT codigo from plan_cuentas where cod_padre=$cuenta))));";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=[];$index=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[$index]=$row['codigo'].$texto;
+        $index++;
+    }
+    return $valor;
+ }
 ?>

@@ -94,7 +94,7 @@ try{
 
 					$tipoComprobante=3;
 					$numeroComprobante=obtenerCorrelativoComprobante($tipoComprobante, $cod_uo_tcc, $gestionTrabajo, $mesTrabajo);
-					$concepto_contabilizacion="CONTABILIZACIÓN CAJA CHICA N° ".$numeroCC." DE ".$nombre_uo_tcc;
+					$concepto_contabilizacion="CONTABILIZACIÓN ".obtenerNombreInstanciaCajaChica($cod_cajachica).", CAJA CHICA N° ".$numeroCC." DE ".$nombre_uo_tcc;
 
 					$codComprobante=obtenerCodigoComprobante();
 					

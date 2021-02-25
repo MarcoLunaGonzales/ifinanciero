@@ -19,6 +19,7 @@ $urlList8="index.php?opcion=listSolicitudRecursosAdminRegHistorico";
 
 $urlImp="solicitudes/imp.php";
 $urlImpComp="comprobantes/imp.php";
+$urlImpCaja="caja_chica/print_cajachica.php";
 $urlRegister="solicitudes/registerSolicitud.php";
 $urlRegister3="solicitudes/registerSolicitudDetalle.php";
 

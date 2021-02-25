@@ -46,12 +46,12 @@ $month = $globalNombreGestion."-".$codMesActiva;
 $aux = date('Y-m-d', strtotime("{$month} + 1 month"));
 $diaUltimo = date('d', strtotime("{$aux} - 1 day"));
 if((int)$globalNombreGestion<(int)$anioActual){
-  $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
+  $fechaHoraActual=convertirAUltimoDiaHabil($globalNombreGestion."-".$codMesActiva."-".$diaUltimo);
 }else{
   if((int)$mesActual==(int)$codMesActiva){
       $fechaHoraActual=date("Y-m-d");
   }else{
-    $fechaHoraActual=$globalNombreGestion."-".$codMesActiva."-".$diaUltimo;
+    $fechaHoraActual=convertirAUltimoDiaHabil($globalNombreGestion."-".$codMesActiva."-".$diaUltimo);
   } 
 }
 // FIN DE LA FECHA

@@ -104,6 +104,10 @@
 		if ($_GET['opcion']=='listComprobantes2') {
 			require_once('comprobantes/list2.php');
 		}
+		if ($_GET['opcion']=='listComprobantesSis') {
+			require_once('comprobantes/listComproSis.php');
+		}
+
 		if ($_GET['opcion']=='listComprobantesRegistrados') {
 			require_once('comprobantes/listRegistrados.php');
 		}
@@ -126,6 +130,9 @@
 		//REPORTES
 		if ($_GET['opcion']=='reportesMayores') {
 			require_once('reportes/reportesMayores.php');
+		}
+		if ($_GET['opcion']=='reportesMayoresDatos') {
+			require_once('reportes/reportesMayoresExcel.php');
 		}
 		if ($_GET['opcion']=='reportesMayoresVerificacion') {
 			require_once('reportes/reportesMayoresVerificacion.php');
@@ -165,6 +172,10 @@
         
         //REPORTES
 		if ($_GET['opcion']=='reportesBalanceGeneral') {
+			require_once('reportes/reportesBalanceGeneral.php');
+		}
+		if ($_GET['opcion']=='reportesBalanceGeneralBK') {
+			$bkLink=1;
 			require_once('reportes/reportesBalanceGeneral.php');
 		}
         

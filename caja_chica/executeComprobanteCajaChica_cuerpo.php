@@ -24,7 +24,7 @@
     $ordenDetalle=1;//<--
     while ($rowCajaChicaDet = $stmtCajaChicaDet->fetch()) 
     {
-
+        $observaciones_dcc = str_replace("'", '\\\'',$observaciones_dcc);
     	//el porcentaje origen de tipo de retencion
         $stmtRetencionOrigen = $dbh->prepare("SELECT porcentaje_cuentaorigen from configuracion_retenciones where codigo=$cod_retencioncajachica");
         $stmtRetencionOrigen->execute();
@@ -365,6 +365,24 @@
 		                //actualizamos el campo comporbante del estado_cuentas 
 		                $stmtUpdateEstadoCuenta = $dbh->prepare("UPDATE estados_cuenta set cod_comprobantedetalle=$cod_compro_det,cod_cuentaaux=$cod_cuentaaux_x where cod_cajachicadetalle=$codigo_ccdetalle");
 		                $stmtUpdateEstadoCuenta->execute();
+
+                        //sacamos comprobante origen estados de cuenta
+                        $stmtEstadoCuentaOrigen = $dbh->prepare("SELECT cod_comprobantedetalleorigen from estados_cuenta where cod_cajachicadetalle=$codigo_ccdetalle");
+		                $stmtEstadoCuentaOrigen->execute();
+		                $resultEstadoCuentaOrigen = $stmtEstadoCuentaOrigen->fetch();
+		                $codComprobanteDetalleOrigen = $resultEstadoCuentaOrigen['cod_comprobantedetalleorigen'];
+
+		                $tituloEstadoOrigen="";
+                        if(isset($codComprobanteDetalleOrigen)&&$codComprobanteDetalleOrigen>0){
+                          $codigoComprobanteOrigen=obtenerComprobanteDetalleRelacionado(obtenerCod_comprobanteDetalleorigen($codComprobanteDetalleOrigen));
+                          if($codigoComprobanteOrigen>0){
+                            $tituloEstadoOrigen="Cierre de ".nombreComprobante($codigoComprobanteOrigen)." ";    
+                            $sqlDetalleOrigen="UPDATE comprobantes_detalle set glosa=CONCAT('$tituloEstadoOrigen',glosa) WHERE codigo=$cod_compro_det and glosa NOT LIKE '$tituloEstadoOrigen%'";
+                            $stmtDetalleOrigen = $dbh->prepare($sqlDetalleOrigen);
+                            $stmtDetalleOrigen->execute();
+                          }   
+                        }
+
 		                //actualizamos el cod_comprobante a pagos_proveedores
 		                $stmtUpdatepagosProveedores = $dbh->prepare("UPDATE pagos_proveedores set cod_estadopago=5,cod_comprobante=$codComprobante where cod_cajachicadetalle=$codigo_ccdetalle");
 		                $stmtUpdatepagosProveedores->execute();
