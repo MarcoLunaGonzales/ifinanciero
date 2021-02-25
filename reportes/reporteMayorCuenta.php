@@ -29,9 +29,9 @@
             '<tr class="text-center">'.
               '<th>Oficina Origen</th>'.
               '<th width="5%">Cbte</th>'.
-              '<th width="5%">CompDetalle</th>'.
+              /*'<th width="5%">CompDetalle</th>'.
               '<th width="5%">Auxiliar</th>'.
-              '<th width="5%">Proveedor</th>'.
+              '<th width="5%">Proveedor</th>'.*/
               '<th width="7%">Fecha</th>'.
               '<th width="5%">Centro de Costos</th>'.
               '<th width="60%">Concepto</th>'.
@@ -168,9 +168,9 @@
        $html.='<tr class="cuenta'.$cuenta.'" style="display:none">'.
                 '<td class="font-weight-bold small">'.$nombreUnidad.'</td>'.
                 '<td class="font-weight-bold small">'.$nombreComprobanteX.'</td>'.
-                '<td class="font-weight-bold small">'.$codigoX.'</td>'.
+                /*'<td class="font-weight-bold small">'.$codigoX.'</td>'.
                 '<td class="font-weight-bold small">'.$codCuentaAuxiliar.'</td>'.
-                '<td class="font-weight-bold small">'.obtenerCodigoProveedorCuentaAux($codCuentaAuxiliar).'</td>'.
+                '<td class="font-weight-bold small">'.obtenerCodigoProveedorCuentaAux($codCuentaAuxiliar).'</td>'.*/
                 '<td class="font-weight-bold small">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.
                 '<td class="font-weight-bold small">'.$unidadX.'-'.$areaX.'</td>'.
                 '<td class="text-left small">['.$cuenta_auxiliarX."] - ".$glosaX.'</td>'.

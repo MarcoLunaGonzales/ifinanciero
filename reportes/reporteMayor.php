@@ -1,76 +1,6 @@
 <?php
 session_start();
 set_time_limit(0);
-if(isset($_POST['reporte_datos'])){
-  require_once '../conexion.php';
-require_once '../styles.php';
-require_once '../functionsGeneral.php';
-require_once '../functions.php';
-  $dbh2 = new Conexion();
-$fechaActual=date("Y-m-d");
-$desdeInicioAnio="";
-if($_POST["fecha_desde"]==""){
-  $y=$globalNombreGestion;
-  $desde=$y."-01-01";
-  $hasta=$y."-12-31";
-  $desdeInicioAnio=$y."-01-01";
-}else{
-  $porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
-  $porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
-
-  $desdeInicioAnio=$porcionesFechaDesde[0]."-01-01";
-  $desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
-  $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
-  //$desde=strftime('%Y-%m-%d',strtotime($_POST["fecha_desde"]));
-  //$hasta=strftime('%Y-%m-%d',strtotime($_POST["fecha_hasta"]));
-}
-
-$moneda=$_POST["moneda"];
-
-$codcuenta=$_POST["cuenta"];
-$codcuentaMayor=$_POST["cuenta"];
-$nombreMoneda=nameMoneda($moneda);
-$unidadCosto=$_POST['unidad_costo'];
-$areaCosto=$_POST['area_costo'];
-$unidad=$_POST['unidad'];
-
-//echo "VARIABLES: ".$unidadCosto." ".$areaCosto." ".$unidad;
-
-
-$gestion= $_POST["gestion"];
-$entidad = $_POST["entidad"];
-
-//PONEMOS LAS VARIABLES PARA CUANDO LLAMEMOS AL REPORTE DESDE LOS MAYORES
-if($gestion==null){
-  $gestion=$globalGestion;
-  $unidadCosto=explode(",",obtenerUnidadesReport(0));
-  $unidad=explode(",",obtenerUnidadesReport(0));
-  $areaCosto=explode(",",obtenerAreasReport(0));
-}
-$NombreGestion = nameGestion($gestion);
-$unidadCostoArray=implode(",", $unidadCosto);
-$areaCostoArray=implode(",", $areaCosto);
-$unidadArray=implode(",", $unidad);
-if(isset($_POST['glosa_len'])){
- $glosaLen=1; 
-}else{
-  $glosaLen=0;
-}
-if(isset($_POST['cuentas_auxiliares'])){
- $cuentas_auxiliares=1; 
-}else{
-  $cuentas_auxiliares=0;
-}
-
-if(isset($_POST['cuenta_especifica'])){
-  $codcuenta=[];
-  $codcuenta[0]=$_POST['cuenta_especifica']."@normal";
-}
-
-$codcuenta=listarNivelesCuentaPadre($codcuenta);
-
-   include "reporteMayorCuentaDatosExcel.php";
-}else{
 require_once '../layouts/bodylogin2.php';
 require_once '../conexion.php';
 require_once '../styles.php';
@@ -180,7 +110,9 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                   <div class="card-icon bg-blanco">
                     <img class="" width="40" height="40" src="../assets/img/logoibnorca.png">
                   </div><?php
-
+if(isset($_POST['reporte_datos'])){
+   include "reporteMayorCuentaDatos.php";
+}else{
   
 
 ?>
@@ -242,12 +174,11 @@ z-index: 20;
                  }    
                  ?>
               
-
+<?php
+}
+?>
               </div>
             </div>
           </div>  
         </div>
     </div>
-    <?php
-}
-?>
