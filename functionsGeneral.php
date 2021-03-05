@@ -113,6 +113,30 @@ function showAlertSuccessErrorDepreciaciones2($bandera, $url){
       </script>";
    }
 }
+function showAlertSuccessErrorDepreciaciones3($bandera, $url){
+   if($bandera==true){
+      echo "<script>
+         alerts.showSwal('success-message','$url');
+      </script>";
+   }
+   if ($bandera==false){
+      echo "<script>
+         alerts.showSwal('error-messageDepreciaciones3','$url');
+      </script>";
+   }
+}
+function showAlertSuccessErrorDepreciaciones4($bandera, $url){
+   if($bandera==true){
+      echo "<script>
+         alerts.showSwal('success-message','$url');
+      </script>";
+   }
+   if ($bandera==false){
+      echo "<script>
+         alerts.showSwal('error-messageDepreciaciones4','$url');
+      </script>";
+   }
+}
 function showAlertSuccessErrorFacturas($bandera, $url){
    if($bandera==true){
       echo "<script>

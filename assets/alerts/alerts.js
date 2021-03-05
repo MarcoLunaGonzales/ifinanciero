@@ -240,6 +240,18 @@ alerts = {
           location.href=url;
       });
     }
+    else if(type == 'error-messageDepreciaciones3'){
+      swal("INFORMACIÓN!", "Hubo un error en el proceso, verifique que las UFVs estén cargadas. Gracias!.", "warning")
+          .then((value) => {
+          location.href=url;
+      });
+    }
+    else if(type == 'error-messageDepreciaciones4'){
+      swal("INFORMACIÓN!", "Hubo un error en el proceso, verifique que todas las UFVs estén cargadas. Gracias!.", "warning")
+          .then((value) => {
+          location.href=url;
+      });
+    }
     else if(type == 'error-messageFacturas'){
       swal("LO SIENTO! :(", "Al parecer No registraste Ninguna Factura. Por favor Registre faturas. Gracias!.", "warning")
           .then((value) => {
