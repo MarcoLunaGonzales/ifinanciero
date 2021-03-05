@@ -78,6 +78,7 @@ if(isset($_POST['cuenta_especifica'])){
   $codcuenta[0]=$_POST['cuenta_especifica']."@normal";
 }
 
+$codcuenta=listarNivelesCuentaPadre($codcuenta);
 $unidadGeneral="";$unidadAbrev="";$areaAbrev="";
 
 $unidadGeneral=abrevUnidad($unidadArray);
@@ -99,6 +100,21 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
      if(strlen($nombreCuentaTitle)>190){
         $nombreCuentaTitle=substr($nombreCuentaTitle,0,190)."...";
       }
+
+?><div class="content">
+  <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header <?=$colorCard;?> card-header-icon">
+                  <div class="card-icon bg-blanco">
+                    <img class="" width="40" height="40" src="../assets/img/logoibnorca.png">
+                  </div><?php
+if(isset($_POST['reporte_datos'])){
+   include "reporteMayorCuentaDatos.php";
+}else{
+  
+
 ?>
 <!--<style>
 .dt-buttons{
@@ -108,15 +124,7 @@ top:-20px !important;
 z-index: 20;
 }
 </style>-->
- <div class="content">
-  <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">
-                  <div class="card-icon bg-blanco">
-                    <img class="" width="40" height="40" src="../assets/img/logoibnorca.png">
-                  </div>
+ 
                 <?php
                 if($cuentas_auxiliares==0){
                  ?><div class="float-right col-sm-2"><h6 class="card-title">Exportar como:</h6></div><?php
@@ -165,6 +173,10 @@ z-index: 20;
                    
                  }    
                  ?>
+              
+<?php
+}
+?>
               </div>
             </div>
           </div>  

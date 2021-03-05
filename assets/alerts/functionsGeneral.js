@@ -13559,7 +13559,7 @@ function agregarNuevoPersonalSimulacionModal(inicioAnio,ibnorcaC){
   var monto=1;
   var dias=$("#modal_diaspersonalhonorario").val();
   
-  if(!(cod_cla>0)||dias==""||dias==0){
+  if(!(cod_cla>-101)||dias==""||dias==0){
    Swal.fire("Informativo!", "Debe llenar los campos requeridos", "warning");
   }else{
   var parametros={"cod_sim":cod_sim,"cod_cla":cod_cla,"cantidad":cantidad,"monto":monto,"dias":dias,"anio":anio};
@@ -16251,7 +16251,10 @@ function ajax_razon_social_filtro_ventas(){
 
 function descargar_txt_libro_ventas(){
     var cod_gestion=$("#gestiones").val();
-    var cod_mes=$("#cod_mes_x").val();
+    //var cod_mes=$("#cod_mes_x").val();
+    var cod_mes=12;
+    var fecha_desde=$("#fecha_desde").val();
+    var fecha_hasta=$("#fecha_hasta").val();
     var unidad=$("#unidad").val();
     if(cod_gestion==null || cod_gestion==''){
       Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
@@ -16265,7 +16268,7 @@ function descargar_txt_libro_ventas(){
           // alert("llegue");
           $.ajax({
           type:"POST",
-          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad,
+          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta,
           url:"reportes/reportePrintLibroVentasTXT.php",
           beforeSend:function(){
                //iniciar carga 
@@ -16297,7 +16300,10 @@ function descargar_txt_libro_ventas(){
 }
 function descargar_txt_libro_compras(){
     var cod_gestion=$("#gestiones").val();
-    var cod_mes=$("#cod_mes_x").val();
+    //var cod_mes=$("#cod_mes_x").val();
+    var cod_mes=12;
+    var fecha_desde=$("#fecha_desde").val();
+    var fecha_hasta=$("#fecha_hasta").val();
     var unidad=$("#unidad").val();
     if(cod_gestion==null || cod_gestion==''){
       Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
@@ -16310,7 +16316,7 @@ function descargar_txt_libro_compras(){
         }else{     
           $.ajax({
           type:"POST",
-          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad,
+          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta,
           url:"reportes/reportePrintLibroComprasTXT.php",
           beforeSend:function(){
                //iniciar carga 
@@ -19182,4 +19188,61 @@ function ajax_mostrar_periodo_fechas(){
   }else{
     $("#contenedor_periodo_fechas").addClass("d-none");
   }
+}
+
+function verificarMontoLibretaBancaria(cod,debe,haber){
+  var saldo=0;
+  if(Math.round(debe)==0||debe==''){
+    var monto=haber;
+  }else{
+    var monto=debe;
+  }
+ var parametros={"codigo":cod};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "ajax_validar_monto_libreta.php",
+        data: parametros,
+        async:false,
+        success:  function (resp) {
+          saldo=resp;  
+        }
+    });
+  var validacion=0;
+    if(saldo<monto&&cod>0){
+      validacion=1;
+    }
+    //alert(saldo);
+    return validacion; 
+}
+
+function exportTableToExcel(tableID, filename = ''){
+    var downloadLink;
+    var dataType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById(tableID);
+    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+    // Specify file name
+    filename = filename?filename+'.xls':'excel_data.xls';
+    
+    // Create download link element
+    downloadLink = document.createElement("a");
+    
+    document.body.appendChild(downloadLink);
+    
+    if(navigator.msSaveOrOpenBlob){
+        var blob = new Blob(['ufeff', tableHTML], {
+            type: dataType
+        });
+        navigator.msSaveOrOpenBlob( blob, filename);
+    }else{
+        // Create a link to the file
+        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+    
+        // Setting the file name
+        downloadLink.download = filename;
+        
+        //triggering the function
+        downloadLink.click();
+    }
 }

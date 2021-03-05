@@ -45,7 +45,7 @@
             '</tr>'.
            '</thead>'.
            '<tbody>';
-
+    $codcuenta=array_unique($codcuenta);
     for ($xx=0; $xx < cantidadF($codcuenta); $xx++) { 
       $porciones = explode("@", $codcuenta[$xx]);
       $cuenta=$porciones[0];

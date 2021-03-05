@@ -536,6 +536,12 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listComprobantesSis">
+                    <span class="sidebar-mini"> CS </span>
+                    <span class="sidebar-normal"> Comprobantes SIS </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=listComprobantesRegistrados">
                     <span class="sidebar-mini"> A </span>
                     <span class="sidebar-normal"> Aprobaciones de comprobantes </span>

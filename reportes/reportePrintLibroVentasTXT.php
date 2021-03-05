@@ -17,11 +17,25 @@ fclose($arch);
 $archivo=fopen("archivos_txt/".$nombre_archivo, "a") or die ("#####0#####");//a de apertura de archivo
 //RECIBIMOS LAS VARIABLES
 $gestion = $_POST["cod_gestion"];
-$cod_mes_x = $_POST["cod_mes"];
+//$cod_mes_x = $_POST["cod_mes"];
 $unidad=$_POST["unidad"];
+$desdeInicioAnio="";
+if($_POST["fecha_desde"]==""){
+  $y=$globalNombreGestion;
+  $desde=$y."-01-01";
+  $hasta=$y."-12-31";
+  $desdeInicioAnio=$y."-01-01";
+}else{
+  $porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
+  $porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
+
+  $desdeInicioAnio=$porcionesFechaDesde[0]."-01-01";
+  $desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
+  $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
+}
 
 $nombre_gestion=nameGestion($gestion);
-$sql="SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion and cod_unidadorganizacional in ($unidad) ORDER BY nro_factura asc";
+$sql="SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and cod_unidadorganizacional in ($unidad) ORDER BY nro_factura asc"; //MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion
 $stmt2 = $dbh->prepare($sql);
 $stmt2->execute();
 //resultado

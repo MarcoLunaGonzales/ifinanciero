@@ -552,6 +552,7 @@
                           var mesActual = 7;//parseInt($("#global_mes").val());//d.getMonth()+1;
                           var anioActual = 2020;//parseInt($("#global_gestion").val());//d.getFullYear();
                           var habilitarValidacionLibreta=$("#validacion_libretas").val(); 
+                          var codigoLibretaBancaria=$("#cod_detallelibreta"+(i+1)).val(); 
                         if($("#debe"+(i+1)).length>0){
                           //VALIDAMOS CUANDO LA CUENTA TENGA EC LA CUENTA AUXILIAR SIEMPRE ESTE SELECCIONADA.
                           if(tipoEstadoCuenta>0 && cuentaAuxiliar==0){  
@@ -593,12 +594,18 @@
                           }
                           if(parseInt(habilitarValidacionLibreta)>0){
                             //LA LIBRETA DEBE ESTAR RELACIONADA A LA CUENTA DE LA LIBRETA BANCARIA 
-                            if(detalleLibretaSelect==false && libretasBancarias==false && $("#tipo_comprobante").val()!=4 && parseInt(fechaComprobante[1])>=parseInt(mesActual)&&parseInt(fechaComprobante[0])>=parseInt(anioActual)){
+                            if(detalleLibretaSelect==false && libretasBancarias==false && $("#tipo_comprobante").val()!=4 &&parseInt(fechaComprobante[0])>=parseInt(anioActual)){ //parseInt(fechaComprobante[1])>=parseInt(mesActual)
                                 $('#msgError').html("Fila "+(i+1)+" Debe seleccionar un detalle de la Libreta Bancaria para Cerrar.");
                                 $('#modalAlert').modal('show');
                                 $("#boton_enviar_formulario").removeAttr("disabled");
                                 $("#boton_enviar_formulario").html("Guardar");
                                 return false;
+                            }else if(verificarMontoLibretaBancaria(codigoLibretaBancaria,debeZ,haberZ)==1&&$("#tipo_comprobante").val()!=4 && parseInt(fechaComprobante[0])>=parseInt(anioActual)){ //parseInt(fechaComprobante[1])>=parseInt(mesActual)&&
+                                $('#msgError').html("Fila "+(i+1)+" El saldo del deposito debe ser mayor o igual al monto");
+                                $('#modalAlert').modal('show');
+                                $("#boton_enviar_formulario").removeAttr("disabled");
+                                $("#boton_enviar_formulario").html("Guardar");
+                                return false;    
                             }        
                           }
                           if( (tipoEstadoCuenta==2 && debeZ>0) ){

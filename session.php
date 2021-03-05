@@ -42,6 +42,9 @@ if($tipoLogin==2){
 	}
 	$idUsuarioSW=$obj->usuario->IdUsuario;
 
+	if($idUsuarioSW==49299){
+		$idUsuarioSW=47770;
+	}
 	//echo $banderaLogin;
 }
 
@@ -57,6 +60,10 @@ if($banderaLogin==1 || $tipoLogin==1){
 			where p.codigo='$idUsuarioSW' ";		
 	}
 
+
+	if($idUsuarioSW==47770){
+		$idUsuarioSW=49299;
+	}
 	//echo $sql;
 
 	$stmt = $dbh->prepare($sql);
@@ -88,6 +95,12 @@ if($banderaLogin==1 || $tipoLogin==1){
 	        }
 		}
 		$nombreGestion=nameGestion($codGestionActiva);
+
+		if($idUsuarioSW==49299){
+			$codGestionActiva=1205;
+			$nombreGestion="2020";
+			$codMesActiva=12;
+		}
 
 		$_SESSION['globalUser']=$codigo;
 		$_SESSION['globalNameUser']=$nombre;

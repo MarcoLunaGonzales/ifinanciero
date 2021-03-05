@@ -76,7 +76,7 @@ try{
 				$tipoComprobante=3;
 				// $numeroComprobante=obtenerCorrelativoComprobante($tipoComprobante, $cod_uo_tcc, $gestionTrabajo, $mesTrabajo);
 				$numeroComprobante=$nro_comprobante;
-				$concepto_contabilizacion="CONTABILIZACIÓN CAJA CHICA N° ".$numeroCC." DE ".$nombre_uo_tcc;
+				$concepto_contabilizacion="CONTABILIZACIÓN ".obtenerNombreInstanciaCajaChica($cod_cajachica).", CAJA CHICA N° ".$numeroCC." DE ".$nombre_uo_tcc;
 
 				$codComprobante=obtenerCodigoComprobanteExistente($cod_tipocomprobante,$nro_comprobante,$mes_comprobante,$unidad_cpte,$gestion_cpte);
 				
@@ -120,7 +120,7 @@ try{
 	}
 } catch(PDOException $ex){
     // echo "Un error ocurrio".$ex->getMessage();
-    echo "0#####";
+    echo "0#####".$ex->getMessage();
 }
 ?>
 

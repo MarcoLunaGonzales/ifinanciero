@@ -133,7 +133,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                    //OBTENEMOS SI ES CUENTA DE INGRESO O GASTO PARA CAMBIARLE DE SIGNO
                    $tipoCuentaIngresoGasto=substr($numeroX, 0, 1);  // 
                    if($tipoCuentaIngresoGasto==4){
-                     $montoX=$montoX*-1;
+                     $montoX=abs($montoX);
                    }
                    
                    if($codigo==5){                    

@@ -119,6 +119,11 @@ switch ($filtro) {
                       $saldo=0;
                    }
                }
+            }elseif (!($codComprobante==""||$codComprobante==0)){
+              $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);    
+              if($datosDetalle[1]!=''){
+                      $saldo=$saldo-(float)$datosDetalle[1];
+              }
             }   
             $totalMonto+=(float)$saldo;
             $montoMonto+=(float)$monto;
@@ -134,13 +139,22 @@ switch ($filtro) {
               <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
               <td class="text-right"><?=$nro_documento?></td>
               <?php 
-              if($codFactura==""||$codFactura==0||$codFactura==null){
-                $facturaFecha="";
+                $facturaFecha=[];
+                $facturaNumero=[];
+                $facturaNit=[];
+                $facturaRazonSocial=[];
+                $facturaDetalle=[];
+                $facturaMonto=[];
+                $indexComprobante=0;
+
+                /*$facturaFecha="";
                 $facturaNumero="";
                 $facturaNit="";
                 $facturaRazonSocial="";
                 $facturaDetalle="";
                 $facturaMonto="";
+                */
+
                 $totalMontoFac+=0;
                 if(!($codComprobante==""||$codComprobante==0)){
                   $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);                    
@@ -150,25 +164,31 @@ switch ($filtro) {
                     $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);                    
                   }*/
                   if($datosDetalle[1]!=''){
-                     $facturaFecha="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
-                     $facturaNumero="<b class='text-success'>".nombreComprobante($codComprobante)."</b>";
-                     $facturaNit="<b class='text-success'>-</b>";
-                     $facturaDetalle="<b class='text-success'>".$datosDetalle[0]."</b>";
-                     $facturaRazonSocial="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
-                     $facturaMonto="<b class='text-success'>".$datosDetalle[1]."</b>";     
+                     $facturaFecha[0]="<b class='text-success'>".strftime('%d/%m/%Y',strtotime(obtenerFechaComprobante($codComprobante)))."<b>";
+                     $facturaNumero[0]="<b class='text-success'>".nombreComprobante($codComprobante)."</b>";
+                     $facturaNit[0]="<b class='text-success'>-</b>";
+                     $facturaDetalle[0]="<b class='text-success'>".$datosDetalle[0]."</b>";
+                     $facturaRazonSocial[0]="<b class='text-success'>".$datosDetalle[2]." [".$datosDetalle[3]."] - ".$datosDetalle[4]."</b>";
+                     $facturaMonto[0]="<b class='text-success'>".$datosDetalle[1]."</b>";  
+                     $indexComprobante=1;   
                   }
                   $totalMontoFac+=$datosDetalle[1];
                 }
-                
+              //FIN si tiene comprobante
+              
+
+
+              //if($codFactura==""||$codFactura==0||$codFactura==null){ 
+
                ?>
-                <td class="text-right font-weight-bold"><?=$facturaFecha?></td>
+                <!--<td class="text-right font-weight-bold"><?=$facturaFecha?></td>
                 <td class="text-right font-weight-bold"><?=$facturaNumero?></td>
                 <td class="text-right font-weight-bold"><?=$facturaNit?></td>
                 <td class="text-right font-weight-bold"><?=$facturaRazonSocial?></td>
                 <td class="text-right font-weight-bold"><?=$facturaDetalle?></td>
-                <td class="text-right font-weight-bold"><?=$facturaMonto?></td> 
+                <td class="text-right font-weight-bold"><?=$facturaMonto?></td>--> 
                <?php                          
-              }else{
+              //}else{
                 $cadena_facturas=obtnerCadenaFacturas($codigo);
                 $sqlDetalleX="SELECT f.fecha_factura,f.nro_factura,f.nit,f.razon_social,f.observaciones,(SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) from facturas_ventadetalle fd where fd.cod_facturaventa=f.codigo)as importe FROM facturas_venta f where f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 $sqlFiltro2 order by f.codigo desc";
                 //$sqlDetalleX="SELECT f.fecha_factura,f.nro_factura,f.nit,f.razon_social,f.observaciones,SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as importe FROM facturas_venta f, facturas_ventadetalle fd where f.codigo=fd.cod_facturaventa and f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 $sqlFiltro2 order by f.codigo desc";
@@ -187,13 +207,8 @@ switch ($filtro) {
                 $stmtDetalleX->bindColumn('razon_social', $rsDetalle);
                 $stmtDetalleX->bindColumn('observaciones', $obsDetalle);
                 $stmtDetalleX->bindColumn('importe', $impDetalle);
-                $facturaFecha=[];
-                $facturaNumero=[];
-                $facturaNit=[];
-                $facturaRazonSocial=[];
-                $facturaDetalle=[];
-                $facturaMonto=[];
-                $filaFac=0;  
+                
+                $filaFac=$indexComprobante;  
                 while ($rowDetalleX = $stmtDetalleX->fetch(PDO::FETCH_BOUND)) {
                   if($nroDetalle!=""){
                   $totalMontoFac+=$impDetalle;
@@ -213,7 +228,9 @@ switch ($filtro) {
                 <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaDetalle)?></td>
                 <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaMonto)?></td> 
                 <?php
-              }
+
+                
+              //}
               ?>
             </tr><?php 
             $index++;

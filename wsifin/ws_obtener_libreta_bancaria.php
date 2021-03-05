@@ -272,6 +272,7 @@ where lf.cod_libretabancariadetalle=".$rowLibDetalle['codigo']." and f.cod_estad
                   $datosDetalleFac[$indexAux]['DetalleFactura']=$datosDetalleCompro[0];
                   $datosDetalleFac[$indexAux]['RSFactura']=$datosDetalleCompro[2]." [".$datosDetalleCompro[3]."] - ".$datosDetalleCompro[4];
                   $datosDetalleFac[$indexAux]['MontoFactura']=$datosDetalleCompro[1];
+                  $saldoFactura=$saldoFactura-$datosDetalleCompro[1]; //monto de la union con comprobantes
                 }
              }
             
