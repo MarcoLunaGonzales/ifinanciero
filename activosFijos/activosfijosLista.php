@@ -174,14 +174,14 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
           </div>
         </div>
         <?php
-        if($globalAdmin==1){
+        // if($globalAdmin==1){
         ?>
 				<div class="card-footer fixed-bottom">
               <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
           <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegistrar_activosfijos;?>&codigo=0'">Registrar</button>
         </div>
         <?php
-        }
+        // }
         ?>
       </div>
     </div>  

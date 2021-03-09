@@ -25,9 +25,11 @@
           and c.cod_unidadorganizacional in (".$unidadArray.") and (c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59')order by c.fecha;";
 
    //echo $solaConsulta;
+   
    $query1="CALL listarMayorCuentasSoloAux(\"".$solaConsulta."\");";
-   echo $query1;
-   $stmt = $dbh->prepare($query1);
+   //echo $query1;
+   //$stmt = $dbh->prepare($query1);
+   $stmt = $dbh->prepare($solaConsulta);
    $stmt->execute();   
    ?>
    <div class="card-body">
@@ -43,13 +45,14 @@
             <tr class="text-center">
               <th>Oficina Origen</th>
               <th width="5%">Cbte</th>
-              <th width="5%">CompDetalle</th>
+              <th width="5%">CodCuenta</th>
+              <th width="5%">NombreCuenta</th>
+              <!--th width="5%">CompDetalle</th>
               <th width="5%">Auxiliar</th>
-              <th width="5%">Proveedor</th>
+              <th width="5%">Prov!eedor</th-->
               <th width="7%">Fecha</th>
               <th width="5%">Centro de Costos</th>
               <th width="60%">Concepto</th>
-              <th width="3%">t/c</th>
               <th width="5%">Debe</th>
               <th width="5%">Haber</th>
               <!--<th width="5%">Saldos</th>-->
@@ -70,6 +73,9 @@
         $nombreUnidad=abrevUnidad_solo($rowComp['unidad']);
         $codComprobanteX=$rowComp['codigo_comprobante'];
         $nombreComprobanteX=nombreComprobante($codComprobanteX);
+        $codigoCuenta=$rowComp['numero'];
+        $nombreCuenta=$rowComp['nombre'];
+        
         //INICIAR valores de las sumas
         if($glosaLen==0){      
           if(strlen($glosaX)>obtenerValorConfiguracion(72)){
@@ -89,13 +95,14 @@
     <tr class="">
        <td class="font-weight-bold small"><?=$nombreUnidad?></td>
        <td class="font-weight-bold small"><?=$nombreComprobanteX?></td>
-       <td class="font-weight-bold small"><?=$codigoX?></td>
+       <td class="font-weight-bold small"><?=$codigoCuenta?></td>
+       <td class="font-weight-bold small"><?=$nombreCuenta?></td>
+       <!--td class="font-weight-bold small"><?=$codigoX?></td>
        <td class="font-weight-bold small"><?=$codCuentaAuxiliar?></td>
-       <td class="font-weight-bold small"><?=obtenerCodigoProveedorCuentaAux($codCuentaAuxiliar)?></td>
+       <td class="font-weight-bold small"><?=obtenerCodigoProveedorCuentaAux($codCuentaAuxiliar)?></td-->
        <td class="font-weight-bold small"><?=strftime('%d/%m/%Y',strtotime($fechaX))?></td>
        <td class="font-weight-bold small"><?=$unidadX?>-<?=$areaX?></td>
        <td class="text-left small">[<?=$cuenta_auxiliarX?>] - <?=$glosaX?></td>
-       <td class="font-weight-bold small"><?=$tc?></td>                
        <td class="text-right font-weight-bold small"><?=formatNumberDec($debeX/$tc)?></td>
        <td class="text-right font-weight-bold small"><?=formatNumberDec($haberX/$tc)?></td>
        <!--<td class="text-right font-weight-bold small"><?=$saldoXFormato?></td>-->
@@ -111,7 +118,7 @@
 
 <script>
 $(document).ready(function() {
-  //exportTableToExcel('libro_mayor_rep');
+  exportTableToExcel('libro_mayor_rep');
 });
 </script>
 
