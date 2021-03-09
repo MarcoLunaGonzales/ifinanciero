@@ -146,11 +146,11 @@ $des_actividadproyecto="";
                                                  <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option>  
                                                  <?php
                                                    }else{
-                                                    if(!isset($conContrato)){
+                                                    //if(!isset($conContrato)){
                                                    	?>
                                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
                                                  <?php
-                                                    }
+                                                    //}
                                                    }
                                                  
                                                    }
