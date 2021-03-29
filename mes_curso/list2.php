@@ -36,7 +36,7 @@ $mes=$_SESSION['globalMes'];
                             <select class="selectpicker" title="Seleccione una opcion" name="mes" id="mes" data-style="<?=$comboColor;?>" required>
                               <option disabled selected value=""></option>
                               <?php
-                              $stmt = $dbh->prepare("SELECT cod_mes,(select m.nombre from meses m where m.codigo=cod_mes)as nombre_mes from meses_trabajo where cod_gestion=$codGestionGlobal and cod_estadomesestrabajo<>2 order by cod_mes");
+                              $stmt = $dbh->prepare("SELECT cod_mes,(select m.nombre from meses m where m.codigo=cod_mes)as nombre_mes from meses_trabajo where cod_gestion=$codGestionGlobal order by cod_mes");
                               $stmt->execute();
                               while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {                                
                                 $cod_mes=$row['cod_mes'];                                

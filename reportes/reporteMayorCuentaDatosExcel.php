@@ -24,11 +24,11 @@
            and d.cod_cuenta in (".$stringSoloCuentas.") and c.cod_estadocomprobante<>2 
           and d.cod_unidadorganizacional in (".$unidadCostoArray.") 
           and d.cod_area in (".$areaCostoArray.") 
-          and c.cod_unidadorganizacional in (".$unidadArray.") and (c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59')order by c.fecha limit 50000;";
+          and c.cod_unidadorganizacional in (".$unidadArray.") and (c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59')order by c.fecha";
 
    //echo $solaConsulta;
    $query1="CALL listarMayorCuentasSoloAux(\"".$solaConsulta."\");";
-   //echo $query1;
+   echo $query1;
    $stmt = $dbh2->prepare($solaConsulta);
    $stmt->execute();   
    ?>

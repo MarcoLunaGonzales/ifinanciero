@@ -15,9 +15,11 @@ $usuario=$_SESSION['globalUser'];
 $sqlAreas="";
 if(isset($_GET['s'])){
   $arraySql=explode("IdArea=",$_GET['s']);
-  $codigoArea=trim($arraySql[1]);
 
-  $sqlAreas="and p.cod_area=".$codigoArea;
+  if(isset($arraySql[1])){
+    $codigoArea=trim($arraySql[1]);
+    $sqlAreas="and p.cod_area=".$codigoArea;
+  }
 }
 
 if(isset($_GET["sim"])){
