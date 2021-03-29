@@ -868,6 +868,10 @@
         if ($_GET['opcion']=='rptxrubrosxmes') {
             require_once('activosFijos/rptxrubrosxmes.php');
 		}
+		if ($_GET['opcion']=='rptxrubrosxmesTotal') {
+            require_once('activosFijos/rptxrubrosxmesTotal.php');
+		}	
+		
 		if ($_GET['opcion']=='rptDepreciacionesDetalladoFiltro') {
             require_once('activosFijos/reporteDepreciacionesDetallado_filtro.php');
 		}

@@ -125,6 +125,7 @@ $urlRegistrarProv="index.php?opcion=provForm";
 
 $rpt01 = "?opcion=rptxrubrosxmes";
 $rpt01procesar="activosFijos/afPrintDepreciacionxrubroxmes.php";
+$rpt01procesarTotalPrint="activosFijos/rptxrubrosxmesTotal_print.php";
 //devolver AF all
 //$urldevolver_af_all="activosFijos/saveAsignacionAll.php";
 

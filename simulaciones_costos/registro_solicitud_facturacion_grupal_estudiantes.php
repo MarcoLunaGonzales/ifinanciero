@@ -373,7 +373,7 @@ $contadorRegistros=0;
                                           $stmt->execute();
                                           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                             $codigo_contacto=$row['codigo'];    
-                                            $nombre_conatacto=$row['nombre']." ".$row['paterno']." ".$row['materno'];
+                                            $nombre_conatacto=$row['nombre']." ".$row['paterno'];
                                             ?><option <?=($persona_contacto==$codigo_contacto)?"selected":"";?> value="<?=$codigo_contacto?>" class="text-right"><?=$nombre_conatacto?></option>
                                            <?php 
                                            } ?> 

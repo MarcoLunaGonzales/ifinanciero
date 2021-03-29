@@ -12681,7 +12681,7 @@ function guardarDatoscontacto(){
   var cod_personal=$("#cod_personal").val(); 
   var nombre_contacto =$("#nombre_contacto").val();
   var paterno_contacto =$("#paterno_contacto").val();
-  var materno_contacto =$("#materno_contacto").val();
+  // var materno_contacto =$("#materno_contacto").val();
   var identificacion_contacto =$("#identificacion_contacto").val();
   var pais_contacto =$("#pais_contacto").val();
   var departamento_contacto =$("#departamento_contacto").val();
@@ -12699,7 +12699,7 @@ function guardarDatoscontacto(){
   }
   if(sw){
     //proceso de guardado de informacion
-     var parametros={"cod_personal":cod_personal,"cod_cliente":cod_cliente,"nombre_contacto":nombre_contacto,"paterno_contacto":paterno_contacto,"materno_contacto":materno_contacto,"identificacion_contacto":identificacion_contacto,"departamento_contacto":departamento_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto,"telefono_contacto":telefono_contacto};
+     var parametros={"cod_personal":cod_personal,"cod_cliente":cod_cliente,"nombre_contacto":nombre_contacto,"paterno_contacto":paterno_contacto,"identificacion_contacto":identificacion_contacto,"departamento_contacto":departamento_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto,"telefono_contacto":telefono_contacto};
       $.ajax({
          type: "GET",
          dataType: 'html',
@@ -12798,7 +12798,7 @@ function guardarDatoscontactoNormas(){
   var cod_personal=$("#cod_personal").val(); 
   var nombre_contacto =$("#nombre_contacto").val();
   var paterno_contacto =$("#paterno_contacto").val();
-  var materno_contacto =$("#materno_contacto").val();
+  // var materno_contacto =$("#materno_contacto").val();
   var identificacion_contacto =$("#identificacion_contacto").val();
   var pais_contacto =$("#pais_contacto").val();
   var departamento_contacto =$("#departamento_contacto").val();
@@ -12816,7 +12816,7 @@ function guardarDatoscontactoNormas(){
   }
   if(sw){
     //proceso de guardado de informacion
-     var parametros={"cod_personal":cod_personal,"cod_cliente":cod_cliente,"nombre_contacto":nombre_contacto,"paterno_contacto":paterno_contacto,"materno_contacto":materno_contacto,"identificacion_contacto":identificacion_contacto,"departamento_contacto":departamento_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto,"telefono_contacto":telefono_contacto};
+     var parametros={"cod_personal":cod_personal,"cod_cliente":cod_cliente,"nombre_contacto":nombre_contacto,"paterno_contacto":paterno_contacto,"identificacion_contacto":identificacion_contacto,"departamento_contacto":departamento_contacto,"cargo_contacto":cargo_contacto,"correo_contacto":correo_contacto,"telefono_contacto":telefono_contacto};
       $.ajax({
          type: "GET",
          dataType: 'html',

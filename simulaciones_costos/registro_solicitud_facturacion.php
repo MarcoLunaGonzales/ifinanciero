@@ -55,6 +55,7 @@ $monto_pagar=($Costo - $descuento_bob_cliente); //formula para sacar el monto a 
 // echo $monto_pagar;
 
 $Codigo_alterno=obtenerCodigoExternoCurso($IdCurso);
+$estado_ws=false;
 
 
 if(isset($_GET['q'])){
@@ -393,7 +394,7 @@ $contadorRegistros=0;
                                           $stmt->execute();
                                           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                             $codigo_contacto=$row['codigo'];    
-                                            $nombre_conatacto=$row['nombre']." ".$row['paterno']." ".$row['materno'];
+                                            $nombre_conatacto=$row['nombre']." ".$row['paterno'];
                                             ?><option <?=($persona_contacto==$codigo_contacto)?"selected":"";?> value="<?=$codigo_contacto?>" class="text-right"><?=$nombre_conatacto?></option>
                                            <?php 
                                            } ?> 
@@ -502,7 +503,13 @@ $contadorRegistros=0;
                                             where cpe.clIdentificacion=aa.CiAlumno 
                                             and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
                                             m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion like '%$ci_estudiante%' and aa.IdCurso=$IdCurso";    
-                                        // echo $queryPr;
+                                        // $queryPr="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
+                                        //     pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema,(0)as nombre_tema
+                                        //     FROM ibnorca.asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, ibnorca.alumnocurso ac, ibnorca.clasificador c, ibnorca.programas_cursos pc, ibnorca.modulos m 
+                                        //     where cpe.clIdentificacion=aa.CiAlumno 
+                                        //     and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
+                                        //     m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion like '%$ci_estudiante%' and aa.IdCurso=$IdCurso";    
+                                         //echo $queryPr;
                                         $stmt = $dbhIBNO->prepare($queryPr);
                                         $stmt->execute();
                                         $modal_totalmontopre=0;

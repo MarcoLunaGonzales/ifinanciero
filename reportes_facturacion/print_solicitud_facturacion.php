@@ -96,6 +96,7 @@ $razon_social=$result['razon_social'];
                     <th width="4%"><small><b>#Sol.</b></small></th>
                     <th width="10%"><small><b>Responsable</b></small></th>
                     <th width="10%"><small><b>Código Servicio</b></small></th>
+                    <th width="10%"><small><b>Cliente</b></small></th>
                     <th width="5%"><small><b>Fecha</b></small></th>
                     <th width="5%"><small><b>Importe</b></small></th>                                  
                     <th><small><b>Razón Social</b></small></th>
@@ -156,9 +157,10 @@ $razon_social=$result['razon_social'];
                     <tr>
                       <td class="text-center small"><?=$index;?></td>
                       <td class="text-center small"><?=$nombre_uo;?>/<?=$nombre_area;?></td>
-                      <td class="text-right small"><?=$nro_correlativo;?></td>
+                      <td class="text-right small"><?=$nro_correlativo;?></td>                      
                       <td class="text-left small"><?=$nombre_personal;?></td>
                       <td class="text-center small"><?=$codigo_alterno;?></td>
+                      <td class="text-right small"><?=$cliente_x;?></td>
                       <td class="text-center small"><?=$fecha;?></td>
                       <td class="text-right small"><?=formatNumberDec($sumaTotalImporte);?></td>
                       <td class="text-left small"><small><?=$razon_social;?></small></td>

@@ -169,7 +169,7 @@
                       $stmt->execute();
                       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         $codigo=$row['codigo'];    
-                        $nombre_conatacto=$row['nombre']." ".$row['paterno']." ".$row['materno'];
+                        $nombre_conatacto=$row['nombre']." ".$row['paterno'];
                         ?><option <?=($persona_contacto==$row["codigo"])?"selected":"";?> value="<?=$codigo?>" class="text-right"><?=$nombre_conatacto?></option>
                        <?php 
                        } ?> 

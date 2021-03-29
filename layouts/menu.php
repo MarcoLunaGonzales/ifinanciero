@@ -408,6 +408,12 @@ if($menuModulo==0){
                       <span class="sidebar-normal"> Por Rubro, por Mes Detallado</span>
                     </a>
                 </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=rptxrubrosxmesTotal">
+                      <span class="sidebar-mini"> RMT </span>
+                      <span class="sidebar-normal"> Por Rubro por Mes Totales</span>
+                    </a>
+                </li>
 
                 <li class="nav-item ">
                     <a class="nav-link" href="?opcion=rptactivosfijosxunidad">

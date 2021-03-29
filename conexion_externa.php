@@ -14,6 +14,13 @@ class ConexionIBNORCA extends PDO {
   // private $usuario = 'ingresobd';
   // private $contrasena = 'ingresoibno';
   // private $port = '3306';
+  
+   // private $tipo_de_base = 'mysql';
+   // private $host = '200.105.199.166';
+   // private $nombre_de_base = 'ibnorca';
+   // private $usuario = 'ingresofm';
+   // private $contrasena = 'minka123';
+   // private $port = '4606';
   public function __construct() {
     //Sobreescribo el método constructor de la clase PDO.
     try{
