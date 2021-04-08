@@ -355,7 +355,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                           $stmt->execute();
                                           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                             $codigo_contacto=$row['codigo'];    
-                                            $nombre_conatacto=$row['nombre']." ".$row['paterno']." ".$row['materno'];
+                                            $nombre_conatacto=$row['nombre']." ".$row['paterno'];
                                             ?><option <?=($persona_contacto==$codigo_contacto)?"selected":"";?> value="<?=$codigo_contacto?>" class="text-right"><?=$nombre_conatacto?></option>
                                            <?php 
                                            } ?> 
@@ -394,7 +394,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 <label class="col-sm-2 col-form-label">Correo De Contacto <br>Para Envío De Factura.</label>
                                 <div class="col-sm-10">
                                     <div class="form-group">
-                                        <input class="form-control" type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required/>
+                                        <input class="form-control" type="email" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required/>
                                     </div>
                                 </div>
                             </div>

@@ -113,7 +113,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                           <th>Of. - Area</th>
                           <th>Nº Sol.</th>
                           <th>Cod. Servicio</th>
-                          <!--<th>Cliente</th>-->
+                          <th>Cliente</th>
                           <th>Proveedor</th>
                           <th>Cuenta</th>
                           <th>Solicitante</th>
@@ -185,7 +185,7 @@ $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
                           <td><?=$unidad;?>- <?=$area;?></td>
                           <td class="font-weight-bold"><?=$numeroSolTitulo?></td>
                           <td><?=$codigoServicio;?></td>
-                          <!--<td><?=$nombreCliente;?></td>-->
+                          <td><small><?=$nombreCliente;?></small></td>
                           <td><small><?=$nombreProveedor?></small></td>
                           <td><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td>

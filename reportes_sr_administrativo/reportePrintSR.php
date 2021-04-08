@@ -115,7 +115,8 @@ if($sw_check=="0"){
                               <th style="border:2px solid;"><small><b>Comprobante</b></small></th>
                               <th style="border:2px solid;"><small><b>Fecha</b></small></th>
                               <th style="border:2px solid;" width="22%"><small><b>Glosa</b></small></th>
-                              <!--<th style="border:2px solid;"><small><b>Cod. Servicio</b></small></th>-->
+                              <th style="border:2px solid;"><small><b>Cod. Servicio</b></small></th>
+                              <th style="border:2px solid;"><small><b>Cliente</b></small></th>
                               <th style="border:2px solid;" width="12%"><small><b>Proveedor</b></small></th>
                               <th style="border:2px solid;"><small><b>Cuenta</b></small></th>
                               <th style="border:2px solid;" width="12%"><small><b>Solicitante</b></small></th>
@@ -243,7 +244,9 @@ if($sw_check=="0"){
                           <td class="font-weight-bold"><small><?=$nombreComprobante;?></small></td>
                           <td class=""><small><?=$fechaComprobante;?></small></td>
                           <td class=""><small><?=$glosaComprobante;?></small></td>
-                          <!--<td><?=$codigoServicio;?></td>-->
+                          <td><small><?=$codigoServicio;?></small></td>
+                          <td><small><?=$nombreCliente;?></small></td>
+                          
                           <td class="text-left"><small><?=$nombreProveedor?></small></td>
                           <td class="text-left"><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td class="text-left"><small><?=$solicitante;?></small></td>
@@ -271,7 +274,8 @@ if($sw_check=="0"){
                               <th class="small" style="border:2px solid;"><small><small><b>Comprobante</b></small></small></th>
                               <th class="small" style="border:2px solid;"><small><small><b>Fecha</b></small></small></th>
                               <th class="small" style="border:2px solid;" width="22%"><small><small><b>Glosa</b></small></small></th>
-                              <!--<th class="small" style="border:2px solid;"><small><small><b>Cod. Servicio</b></small></small></th>-->
+                              <th class="small" style="border:2px solid;"><small><small><b>Cod. Servicio</b></small></small></th>
+                              <th style="border:2px solid;"><small><b>Cliente</b></small></th>
                               <th class="small" style="border:2px solid;" width="12%"><small><small><b>Proveedor</b></small></small></th>
                               <th class="small" style="border:2px solid;"><small><small><b>Cuenta</b></small></small></th>
                               <th class="small" style="border:2px solid;" width="12%"><small><small><b>Solicitante</b></small></small></th>

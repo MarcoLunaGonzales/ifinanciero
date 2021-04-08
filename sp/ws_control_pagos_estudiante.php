@@ -57,30 +57,19 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
 					"IdCurso"=>1775);
 */
 
-// OBTENER MODULOS PAGADOS x CURSO
+//OBTENER MODULOS PAGADOS x CURSO
 // $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 // 					"accion"=>"ObtenerModulosPagados", 
-// 					"Identificacion"=>6089959, //7666922 ci del alumno
-// 					"IdCurso"=>232); //1565 
+// 					"Identificacion"=>1001871028, //7666922 ci del alumno
+// 					"IdCurso"=>1775); //1565 
 
 
 /* OBTENER MODULOS  X PAGAR, PAGADO Y SALDO DE UN CURSO*/
 $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 					"accion"=>"ObtenerModuloxPagarPagadoySaldo", 
-					"Identificacion"=>6089959, //7666922 ci del alumno
-					"IdCurso"=>2322); //1565
+					"Identificacion"=>1001871028, //7666922 ci del alumno
+					"IdCurso"=>1775); //1565
 
-
-//s REGISTRAR CONTROL PAGOS 
-// $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
-// 					"accion"=>"RegistrarControlPago", 
-// 					"Identificacion"=>1001871028, //ci del alumno
-// 					"IdCurso"=>1775,
-// 					"IdModulo"=>1715, 
-// 					"MontoPago"=> 200, 
-// 					"IdSolicitudFactura"=>1234,
-// 					"Plataforma"=>13 // 13=Sistema Financiero
-// 					);
 
 		$parametros=json_encode($parametros);
 		// abrimos la sesión cURL
@@ -98,8 +87,8 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
 		// cerramos la sesión cURL
 		curl_close ($ch);
 		
-		// imprimir en formato JSON
 		header('Content-type: application/json'); 	
-		print_r($remote_server_output); 
+		print_r($remote_server_output);
+
 
 ?>

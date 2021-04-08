@@ -39,14 +39,6 @@ $lista= obtenerDepartamentoServicioIbrnorca(26);
  </div>
 </div>
 <div class="row">
- <label class="col-sm-3 col-form-label">Materno *</label>
- <div class="col-sm-9">
-  <div class="form-group">
-    <input type="text" class="form-control" name="materno_contacto" id="materno_contacto" value="" required="true" onkeyup="javascript:this.value=this.value.toUpperCase();">
-  </div>
- </div>
-</div>
-<div class="row">
  <label class="col-sm-3 col-form-label">CI o Identificación </label>
  <div class="col-sm-9">
   <div class="form-group">
@@ -54,8 +46,6 @@ $lista= obtenerDepartamentoServicioIbrnorca(26);
   </div>
  </div>
 </div>
-
-
 
 <div class="row">
    <label class="col-sm-3 col-form-label">Lugar Emisión </label>
@@ -73,10 +63,6 @@ $lista= obtenerDepartamentoServicioIbrnorca(26);
    </div>
   </div>
   
-
-
-
-
 <!-- <div class="row"> -->
   <input type="hidden" name="pais_contacto" id="pais_contacto" value="26" ><!-- 26 para bolivia -->
   

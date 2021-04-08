@@ -218,62 +218,38 @@ $html.=  '<header class="header">'.
           while ($rowTipoPago = $stmtTipoPago->fetch(PDO::FETCH_ASSOC)) {
               $cod_tipopago=$rowTipoPago['cod_tipopago'];
               $porcentaje=$rowTipoPago['porcentaje'];
+              if($persona_contacto!=''){
+                $datosContacto=obtenerDatosContactoSolFac($persona_contacto);  
+              }else{
+                $datosContacto='';
+              }
+              
+              if($datosContacto!=''){                  
+                $array_datos = explode("#####", $datosContacto);
+                $nombre_contacto=$array_datos[0];
+                $telefono_contacto=$array_datos[1];
+                $Correo_contacto=$array_datos[2];
+              }else{
+                $nombre_contacto='';
+                $telefono_contacto='';
+                $Correo_contacto='';
+              }
               if($cod_tipopago==48){
                 $html.='<tr><td class="text-left"><b>EN EFECTIVO('.$porcentaje.' %)</b></td></tr>';
               }elseif($cod_tipopago==47){//cheque
                 $html.='<tr><td class="text-left"><b>CHEQUE('.$porcentaje.' %)</b></td></tr>';
               }elseif($cod_tipopago==$cod_tipopago_credito){//credito
-                $datosContacto=obtenerDatosContactoSolFac($persona_contacto);                
-                if($datosContacto!=''){                  
-                  $array_datos = explode("#####", $datosContacto);
-                  $nombre_contacto=$array_datos[0];
-                  $telefono_contacto=$array_datos[1];
-                  $Correo_contacto=$array_datos[2];
-                }else{
-                  $nombre_contacto='';
-                  $telefono_contacto='';
-                  $Correo_contacto='';
-                }
                 $html.='<tr>
                   <td>
                     <table class="table">
                       <tr>
                         <td class="td-border-none" colspan="2"><b>CRÉDITO('.$porcentaje.' %)</b></td>
                         <td class="td-border-none" colspan="2" align="right"><b>Días de Crédito : '.$dias_credito.'</b></td>
-                      </tr>
-                      <tr><td class="td-border-none" colspan="4"><br>Nota: El siguiente espacio se debe llenar en caso de que la factura sea solicitada con crédito.</td></tr>
-                      <tr><td class="td-border-none" colspan="4"><b>DATOS DE LA EMPRESA A LA CUAL SE OTORGA EL CRÉDITO</b></td></tr>
-                      <tr>
-                        <td colspan="4">
-                        <table class="table">
-                          <tr>
-                            <td width="30%"><b>Nombre Persona de Contacto:</b></td>
-                            <td>'.$nombre_contacto.'</td>
-                          </tr>
-                          <tr>
-                            <td><b>Nombre contacto Personal Administrativo:</b></td>
-                            <td></td>
-                          </tr>
-                          <tr>
-                            <td><b>Teléfono:</b></td>
-                            <td>'.$telefono_contacto.'</td>
-                          </tr>
-                          <tr>
-                            <td><b>Dirección:</b></td>
-                            <td></td>
-                          </tr>
-                          <tr>
-                            <td><b>Correo Electrónico:</b></td>
-                            <td>'.$Correo_contacto.'</td>
-                          </tr>
-                        </table>
-                        </td>
-                      </tr>
+                      </tr>                      
                     </table>
                   </td>
                 </tr>';
               }elseif($cod_tipopago==$cod_tipopago_deposito_cuenta){
-
                 $html.='<tr><td class="text-left"><b>DEPOSITO EN CUENTA('.$porcentaje.' %)</b></td></tr>';
               }elseif($cod_tipopago==$cod_tipopago_anticipo){
                 $html.='<tr><td class="text-left"><b>ANTICIPO CLIENTE('.$porcentaje.' %)</b></td></tr>';
@@ -282,24 +258,45 @@ $html.=  '<header class="header">'.
               }    
           }
           $html.='</table><br>';
-
           $html.='<table class="table">
                   <tr class="td-color-celeste"><td class="text-center"><b>Observaciones</b></td></tr>
                   <tr><td>'.mb_strtoupper($observaciones).'.<br>'.mb_strtoupper($observaciones_2).'.<br>'.mb_strtoupper($obs_devolucion).
                   '.</td></tr>
                 </table><br>';
 
+          // datos del contacto del cliente
+          $html.='<table class="table">            
+            <tr class="td-color-celeste"><td  colspan="2" class="text-center"><b>DATOS CONTACTO DEL CLIENTE</b></td></tr>
+            <tr>
+              <td width="30%"><b>Nombre Persona de Contacto:</b></td>
+              <td>'.$nombre_contacto.'</td>
+            </tr>
+            <tr>
+              <td><b>Nombre contacto Personal Administrativo:</b></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><b>Teléfono:</b></td>
+              <td>'.$telefono_contacto.'</td>
+            </tr>
+            <tr>
+              <td><b>Dirección:</b></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><b>Correo Electrónico:</b></td>
+              <td>'.$Correo_contacto.'</td>
+            </tr>
+          </table><BR><BR>';
           $html.='<table class="table">
                   <tr class="td-color-celeste"><td class="text-center"><b>Correo De Contacto Para Envío De Factura</b></td></tr>
                   <tr><td>'.$correo_contacto_x.'</td></tr>
                 </table><br><br><br>';
           // $cod_tipopago=3;
           //efectivo
-          
           $objeto_solfac=2709;
           $personal_registro=namePersonal($cod_personal);
           $fecha_registro=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2726);//estado registro
-
           $nombreEstado_registro=obtenerNombreEstadoSolFac(1);
           $cod_tipopago_cred=obtenerValorConfiguracion(48);
           $userRevisado=obtenerPersonaCambioEstado($objeto_solfac,$codigo_facturacion,2727);  //En revisado        

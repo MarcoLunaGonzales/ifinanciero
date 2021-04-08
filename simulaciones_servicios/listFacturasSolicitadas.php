@@ -64,8 +64,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
   $stmtUO->bindColumn('cod_unidadorganizacional', $codigo_uo_b);
   $stmtUO->bindColumn('nombre', $nombre_uo_b);
   $stmtUO->bindColumn('abreviatura', $abreviatura_uo_b);
-  $stmtCliente = $dbh->prepare("
-  SELECT cod_cliente,(SELECT c.nombre from  clientes c where c.codigo=cod_cliente) as nombre from solicitudes_facturacion GROUP BY nombre");
+  $stmtCliente = $dbh->prepare("SELECT cod_cliente,(SELECT c.nombre from  clientes c where c.codigo=cod_cliente) as nombre from solicitudes_facturacion GROUP BY nombre");
   $stmtCliente->execute();
   $stmtCliente->bindColumn('cod_cliente', $codigo_cli_b);
   $stmtCliente->bindColumn('nombre', $nombre_cli_b);
@@ -97,7 +96,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <th><small>Of - Area</small></th>
                             <th><small>#Sol.</small></th>
                             <th><small>Responsable</small></th>
-                            <th><small>Codigo<br>Servicio</small></th>                            
+                            <th><small>Codigo<br>Servicio</small></th>
+                            <th><small>Cliente</small></th>
                             <th><small>Fecha<br>Registro</small></th>
                             <th><small>Importe<br>(BOB)</small></th>                              
                             <th width="15%"><small>Razón Social</small></th>
@@ -113,7 +113,9 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                           $index=1;
                           $codigo_fact_x=0;
                           $cont= array();
-                          while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {                            
+                          while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                            $cliente_x=nameCliente($cod_cliente);
+
                             $observaciones_string=obtener_string_observaciones($obs_devolucion,$observaciones,$observaciones_2);
                             $datos_otros=$codigo_facturacion."/0/0/0/".$nit."/".$razon_social;//dato 
                             switch ($codEstado) {
@@ -161,7 +163,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               $label='<span class="badge badge-warning">';
                               $estado="FACTURA MANUAL";
 
-                              $cliente_x=nameCliente($cod_cliente);                              
+                              
                               $datos_FacManual=$cliente_x."/".$razon_social_x."/".$nit_x."/".$nro_fact_x."/".$nro_autorizacion_x."/".$importe_x;
                             }
 
@@ -226,11 +228,18 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               }
                               // $cadenaFacturasM=trim($cadenaFacturasM,',');
                               //datos para el envio de facturas
+
+                              // echo "--".$codigo_facturacion;
                               $cod_factura=verificamosFacturaDuplicada($codigo_facturacion);//codigo de factura
                               if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
                                 $correos_string=obtenerCorreoEstudiante($cod_cliente);
                               }else $correos_string=obtenerCorreosCliente($cod_cliente);
-                              $nro_factura=obtenerNroFactura($cod_factura);
+                              if($cod_factura!=''){
+                                $nro_factura=obtenerNroFactura($cod_factura);
+                              }else{
+                                $nro_factura="";
+                              }
+                              
                               $datos_factura_envio=$cod_factura.'/'.$codigo_facturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
                             ?>
                             <tr>
@@ -239,6 +248,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               <td class="text-right"><small><?=$nro_correlativo;?></small></td>
                               <td><small><?=$responsable;?></small></td>
                               <td><small><?=$codigo_alterno?></small></td>
+                              <td><small><small><?=$cliente_x?></small></small></td>
                               <td><small><?=$fecha_registro;?></small></td>
                               <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
                               <td><small><small><?=$razon_social;?></small></small></td>

@@ -8344,7 +8344,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
     $dbh = new Conexion();
     $stmt = $dbh->prepare("SELECT CONCAT_WS(' ',nombre,paterno,materno)as nombre_cliente, telefono,correo from clientes_contactos where codigo=$codigo");
     $stmt->execute();
-    $valor='';
+    $valor='##### #####';
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $valor=$row['nombre_cliente'].'#####'.$row['telefono'].'#####'.$row['correo'];
     }

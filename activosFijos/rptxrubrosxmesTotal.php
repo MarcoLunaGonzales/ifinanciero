@@ -14,16 +14,16 @@ $statement = $dbh->query($query);
 	<div class="container-fluid">
 
 		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$rpt01procesar;?>" method="post" target="_blank">
+		  <form id="form1" class="form-horizontal" action="<?=$rpt01procesarTotalPrint;?>" method="post" target="_blank">
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
 				<div class="card-text">
-				  <h4 class="card-title">Reporte por Rubros por Mes</h4>
+				  <h4 class="card-title">Reporte por Rubros por Mes Totales</h4>
 				</div>
 			  </div>
 			  <div class="card-body ">
           <div class="row">
-            <label class="col-sm-2 col-form-label">Gestion</label>
+            <label class="col-sm-2 col-form-label">Gestión</label>
             <div class="col-sm-7">
               <div class="form-group">
                 <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>

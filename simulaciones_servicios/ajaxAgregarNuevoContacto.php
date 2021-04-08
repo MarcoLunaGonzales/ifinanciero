@@ -23,7 +23,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
 						  "IdUsuarioReg"=>$_GET['cod_personal'], //ID del usuario que crea el registro; 0 (cero) en caso de no tenerlo
 						  "NombreContacto"=>$_GET['nombre_contacto'], //Nombre del contacto de la empresa
 						  "Paterno"=>$_GET['paterno_contacto'], //Apellido del contacto de la empresa
-						  "Materno"=>$_GET['materno_contacto'], //Apellido del contacto de la empresa
+						  // "Materno"=>$_GET['materno_contacto'], //Apellido del contacto de la empresa
 						  "CargoContacto"=>$_GET['cargo_contacto'], //Cargo que ocupa el contacto dentro la empresa
 						  "Telefono"=>$_GET['telefono_contacto'], //Telefono o celular de contacto
 						  "CorreoContacto"=>$_GET['correo_contacto'], //correo se usa como nombre de usuario para acceso a la cuenta (Usuario Visor)
@@ -52,11 +52,9 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
 		// imprimir en formato JSON
 		// header('Content-type: application/json'); 	
 		// print_r($respuesta); 	
-
 		$mensaje_error=$respuesta->mensaje;
 		if($respuesta->estado==true){
-				echo "1";		
-          
+				echo "1";
 		}else{
           echo $mensaje_error;
 		}

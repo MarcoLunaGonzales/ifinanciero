@@ -342,7 +342,7 @@ $descuento_cliente=0;
                                         $stmt->execute();
                                         while ($rowContacto = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                         $codigo_contacto=$rowContacto['codigo'];    
-                                        $nombre_conatacto=$rowContacto['nombre']." ".$rowContacto['paterno']." ".$rowContacto['materno'];
+                                        $nombre_conatacto=$rowContacto['nombre']." ".$rowContacto['paterno'];
                                         ?><option <?=($persona_contacto==$codigo_contacto)?"selected":"";?> value="<?=$codigo_contacto?>" class="text-right"><?=$nombre_conatacto?></option>
                                         <?php 
                                         } ?> 
@@ -385,7 +385,7 @@ $descuento_cliente=0;
                             <label class="col-sm-2 col-form-label">Correo De Contacto <br>Para Envío De Factura.</label>
                             <div class="col-sm-10">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required/>
+                                    <input class="form-control" type="email" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required/>
                                 </div>
                             </div>
                         </div>

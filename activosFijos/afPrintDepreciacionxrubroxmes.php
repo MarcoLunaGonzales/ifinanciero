@@ -12,27 +12,20 @@ $dbh = new Conexion();
 $gestion = $_POST["gestion"];
 $mes2 = $_POST["mes"];
 $unidadOrganizacional=$_POST["unidad_organizacional"];
-// $cod_depreciaciones=$_POST["cod_depreciaciones"];
+$cod_depreciaciones=$_POST["cod_depreciaciones"];
 
 $unidadOrgString=implode(",", $unidadOrganizacional);
-// $depreciacionesString=implode(",", $cod_depreciaciones);
-
+$depreciacionesString=implode(",", $cod_depreciaciones);
 // echo $areaString;
 $stringUnidades="";
 foreach ($unidadOrganizacional as $valor ) {    
     $stringUnidades.=" ".abrevUnidad($valor)." ";
 }
-// $stringDepreciaciones="";
-// foreach ($cod_depreciaciones as $valor ) {    
-//     $stringDepreciaciones.=" ".abrevDepreciacion($valor)." ";
-// }
+$stringDepreciaciones="";
+foreach ($cod_depreciaciones as $valor ) {    
+    $stringDepreciaciones.=" ".abrevDepreciacion($valor)." ";
+}
 
-
-// $stmtG = $dbh->prepare("SELECT * from gestiones WHERE codigo=:codigo");
-// $stmtG->bindParam(':codigo',$gestion);
-// $stmtG->execute();
-// $resultG = $stmtG->fetch();
-// $gestion = $resultG['nombre'];
 $gestion=nameGestion($gestion);
 
 
@@ -71,7 +64,8 @@ $total_valorNeto=0;
                   </h4>
                   <h6 class="card-title">
                     Gestion: <?php echo $gestion; ?> - Mes: <?php echo nameMes($mes2);?><br>
-                    Oficinas: <?=$stringUnidades; ?>
+                    Oficinas: <?=$stringUnidades; ?><br>
+                    Rubros: <?=$stringDepreciaciones; ?>
                   </h6>
                 </div>
                 <div class="card-body">
@@ -97,7 +91,7 @@ $total_valorNeto=0;
                                 </tr>
                                 <?php
                                     $sql="SELECT af.cod_depreciaciones from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
-                                             and af.cod_unidadorganizacional=$cod_unidadorganizacional and m.mes = $mes2 and m.gestion=$gestion GROUP BY af.cod_depreciaciones";
+                                             and af.cod_unidadorganizacional=$cod_unidadorganizacional and m.mes = $mes2 and m.gestion=$gestion and af.cod_depreciaciones in ($depreciacionesString) GROUP BY af.cod_depreciaciones";
                                     $stmt_rubro = $dbh->prepare($sql);
                                     $stmt_rubro->execute();
                                     $stmt_rubro->bindColumn('cod_depreciaciones', $cod_depreciaciones_rubros);
