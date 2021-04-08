@@ -18,13 +18,13 @@ $nombre_cargo=$result['nombre'];
 //SELECT
 $stmt = $dbh->prepare("SELECT *
 from cargos_funciones
-where cod_estadoreferencial=1 and cod_cargo=$cod_cargo
+where cod_estado=1 and cod_cargo=$cod_cargo
 ORDER BY nombre_funcion" );
 $stmt->bindParam(':codigo',$cod_personal);
 //ejecutamos
 $stmt->execute();
 //bindColumn
-$stmt->bindColumn('codigo', $cod_cargo_funcion);
+$stmt->bindColumn('cod_funcion', $cod_cargo_funcion);
 $stmt->bindColumn('nombre_funcion', $nombre_funcion);
 $stmt->bindColumn('peso', $peso);
 
@@ -39,7 +39,7 @@ $stmt->bindColumn('peso', $peso);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Funciones Cargo</h4>
+                  <h4 class="card-title">Funciones del Cargo</h4>
                   <h4 class="card-title" align="center"><?=$nombre_cargo;?></h4>                  
                   
                 </div>
@@ -111,11 +111,11 @@ $stmt->bindColumn('peso', $peso);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Registrar Función a Cargo</h4>
+        <h4 class="modal-title" id="myModalLabel">Registrar Función del Cargo</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="cod_cargoA" id="cod_cargoA" value="0">                      
-        <h6> Nombre Función </h6>
+        <h6> Función </h6>
         <!-- <input class="form-control" type="text" name="nombre_funcionA" id="nombre_funcionA" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true" /> -->
         <textarea rows="4" class="form-control" name="nombre_funcionA" id="nombre_funcionA" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true">
         </textarea>
@@ -137,12 +137,12 @@ $stmt->bindColumn('peso', $peso);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Editar Función a Cargo </h4>
+        <h4 class="modal-title" id="myModalLabel">Editar Función del Cargo </h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="cod_cargo_funcionE" id="cod_cargo_funcionE" value="0">
         <input type="hidden" name="cod_cargoE" id="cod_cargoE" value="0">        
-        <h6> Nombre Función </h6>
+        <h6> Función </h6>
         <textarea rows="4"  class="form-control" name="nombre_funcionE" id="nombre_funcionE" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true">
         </textarea>
 

@@ -105,7 +105,7 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                                                  <i class="material-icons text-dark">note</i> Descargar Archivo
                                              </a>
                                              <a href="<?=$urlGenerarEbisaLote;?>?cod=<?=$codigo;?>&a=1" class="dropdown-item">
-                                                 <i class="material-icons text-success">offline_pin</i> Aprobar Ebisa
+                                                 <i class="material-icons text-success">offline_pin</i> Marcar Cargado en eBisa
                                              </a> 
                                     </div>
                                   </div>   

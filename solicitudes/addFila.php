@@ -50,9 +50,9 @@ $des_actividadproyecto="";
                                            if($codigoX==$areaXX){
                                             ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                            }else{
-                                             if(!isset($desdePropuestas)){
+                                             //if(!isset($desdePropuestas)){
                                                ?><option value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                             }
+                                             //}
                                             }
                                          } 
                                          ?>

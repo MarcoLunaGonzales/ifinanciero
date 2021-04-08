@@ -44,11 +44,13 @@ if($resultSaldo['monto_total']!=null || $resultSaldo['monto_total']!=''){
 $monto_saldo=$monto_cajachica+importe_total_cajachica($cod_cajachica);//importe_total_cajachica($cod_cajachica)
 
 //listamos los gastos de caja chica
-$stmt = $dbh->prepare("SELECT codigo,cod_cuenta,fecha,DATE_FORMAT(fecha,'%d/%m/%Y')as fecha_x,cod_tipodoccajachica,cod_uo,cod_area,
+$sql="SELECT codigo,cod_cuenta,fecha,DATE_FORMAT(fecha,'%d/%m/%Y')as fecha_x,cod_tipodoccajachica,cod_uo,cod_area,
   (select pc.nombre from plan_cuentas pc where pc.codigo=cod_cuenta) as nombre_cuenta,
   (select td.abreviatura from configuracion_retenciones td where td.codigo=cod_tipodoccajachica) as nombre_tipodoccajachica,nro_documento,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal,monto,monto_rendicion,observaciones,cod_estado,(select c.nombre from af_proveedores c where c.codigo=cod_proveedores)as cod_proveedores,nro_recibo
 from caja_chicadetalle
-where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY nro_documento desc");
+where cod_cajachica=$cod_cajachica and cod_estadoreferencial=1 ORDER BY nro_documento desc";
+
+$stmt = $dbh->prepare($sql);
 $stmt->execute();
 $stmt->bindColumn('codigo', $codigo_detalle_Cajachica);
 $stmt->bindColumn('cod_cuenta', $cod_cuenta);

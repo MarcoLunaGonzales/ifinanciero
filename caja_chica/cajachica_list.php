@@ -345,6 +345,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
 <script type="text/javascript">
   $(document).ready(function(){
     $('#guardarDatosModalComprobante').click(function(){    
+      //alert(document.getElementById("cod_cajachica").value);
       cod_cajachica=document.getElementById("cod_cajachica").value;
       detalle_cajachica=document.getElementById("detalle_cajachica").value;
       cod_tipocajachica=document.getElementById("cod_tipocajachica").value;
