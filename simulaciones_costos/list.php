@@ -21,7 +21,10 @@ if(isset($_GET['q'])){
   }
   $globalUser=$q;
   // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser $sqlModulos order by sc.codigo desc");
+  /*$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser $sqlModulos order by sc.codigo desc");*/
+  /* modificacion realizada para que puedan ver lo de otros usuarios y realizar SR */
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 $sqlModulos order by sc.codigo desc");
+
 }else{
   $s=0;
   $u=0;
@@ -116,7 +119,7 @@ $stmt->bindColumn('estado', $estado);
                                      <i class="material-icons"><?=$iconImp;?></i>
                                  </a>
                             <?php
-                              if($codEstado==4||$codEstado==3){
+                              if( ($codEstado==4||$codEstado==3) ){
                                 if($codEstado==3){
                                  $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(1,$codigo);
                                  if(isset($_GET['q'])){
@@ -136,13 +139,16 @@ $stmt->bindColumn('estado', $estado);
                                  } 
                                 }
                             ?>
+
+
                             <div class="btn-group dropdown">
                               <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
+
                               <div class="dropdown-menu">
                                 <?php 
-                                if(isset($_GET['q'])){
+                                if(isset($_GET['q']) && $codResponsable==$globalUser ){
                                  if($codEstado==4){
                                  ?><a href="<?=$urlEdit2?>?cod=<?=$codigo?>&estado=1&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" class="dropdown-item">
                                     <i class="material-icons text-danger">clear</i> Cancelar solicitud
@@ -172,7 +178,7 @@ $stmt->bindColumn('estado', $estado);
                             <?php    
                               }else{
 
-                             if(isset($_GET['q'])){
+                             if(isset($_GET['q']) && $codResponsable==$globalUser){
                                  ?> 
                             <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>
@@ -181,7 +187,7 @@ $stmt->bindColumn('estado', $estado);
                               <i class="material-icons"><?=$iconDelete;?></i>
                             </button>
                               <?php 
-                             } else{
+                             } elseif ($codResponsable==$globalUser) {
                                ?> 
                             <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>' class="btn btn-info">
                               <i class="material-icons"><?=$iconEdit;?></i>

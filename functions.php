@@ -2723,7 +2723,10 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   function obtenerSolicitudRecursosDetallePlantillaSinSol($codSol,$codigo){
      $dbh = new Conexion();
      $sql="";
-     $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_detalleplantilla=$codigo and sd.cod_solicitudrecurso!=$codSol"; // 
+     //SACAMOS TODAS LAS SOLICITUDES DE RECURSOS ADICIONALES PARA ESE ITEM QUE ESTAN ACTIVAS
+     $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd, plan_cuentas pc, solicitud_recursos sr where sd.cod_plancuenta=pc.codigo and sd.cod_detalleplantilla=$codigo and 
+       sd.cod_solicitudrecurso=sr.codigo and sr.cod_estadoreferencial<>2 ";
+     //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
@@ -9905,9 +9908,11 @@ WHERE l.presupuesto>=l.importe;";
     }
 function verificarSolicitudRecursosManual($codigo){
    $dbh = new Conexion();
+      //CAMBIAMOS EL QUERY PARA QUE NO HAYA PROBLEMAS CON LO QUE SE ENVIA EN FORMACION 
+      //QUITAMOS EL or s.cod_simulacion!=0
       $sql="SELECT s.codigo FROM solicitud_recursos s  where
       s.codigo=$codigo
-      and (s.cod_simulacionservicio!=0 or s.cod_simulacion!=0 or s.cod_proveedor!=0);";  
+      and (s.cod_simulacionservicio!=0 or s.cod_proveedor!=0);";  
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
       $valor=0;
@@ -11012,13 +11017,15 @@ function obtenerSolicitudPropuestaCapacitacion($codigo){
      while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
        $cod_plantilladetalle=$row['codigo_detalle'];
        $codSol=obtenerSolicitudPropuestaCapacitacion($codigo);
+       //ACA SUMAMOS TODO LO RELACIONADO A LA PLANTILLA
        $solicitudDetalle=obtenerSolicitudRecursosDetallePlantillaSinSol($codSol,$cod_plantilladetalle);       
           while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
               $sumaImporteEjec+=$rowDetalles['importe'];
           }
      }
-     $valor[4]=$valor[4]-$sumaImporteEjec;
-    return $valor;
+     //$valor[4]=$valor[4]-$sumaImporteEjec;
+     $valor[4]=$sumaImporteEjec;
+      return $valor;
  }
 
 function obtenerCantidadCuentaCodigoComprobante($codigo,$cuenta){
@@ -11190,18 +11197,27 @@ function obtenerCantidadCuentaCodigoComprobante($codigo,$cuenta){
      }
      return($valorX);
   }
+
   function obtenerMontoEjecutadoIngresosSF($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("select SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as precio from facturas_ventadetalle fd 
-              join facturas_venta f on f.codigo=fd.cod_facturaventa where f.cod_estadofactura<>2
-              and fd.cod_claservicio=$codigo;");
+     $sql="SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as precio
+      from facturas_ventadetalle fd, facturas_venta f 
+         where f.codigo=fd.cod_facturaventa and f.cod_estadofactura<>2
+        and fd.cod_claservicio=$codigo and f.cod_solicitudfacturacion<>-100 
+      UNION 
+      SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as precio
+      from facturas_ventadetalle fd, facturas_venta f, v_facturacion_tienda vft
+              where f.codigo=fd.cod_facturaventa and f.cod_estadofactura<>2
+              and f.cod_solicitudfacturacion=-100 and vft.pago_id=fd.cod_claservicio and vft.pcm_modulo_id=$codigo";
+     $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valorX=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $valorX=$row['precio'];
+        $valorX+=$row['precio'];
      }
      return($valorX);
   }
+
 function obtenerMontoEjecutadoEgresoSR($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("select s.IdModulo,s.IdCurso,s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,

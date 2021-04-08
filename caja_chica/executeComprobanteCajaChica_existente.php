@@ -40,12 +40,17 @@ try{
 				echo "6#####".$stringFF_obs;
 			}else{
 
-				$stmtCajaChica = $dbh->prepare("SELECT *,(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=cod_personal) as name_personal,
+				$sqlCajaChica="SELECT *,(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=cod_personal) as name_personal,
 		        (select tc.nombre from tipos_caja_chica tc where tc.codigo=cod_tipocajachica) as name_tipocc,
 		        (select (select uo.nombre from unidades_organizacionales uo where uo.codigo= tc2.cod_uo) from tipos_caja_chica tc2 where tc2.codigo=cod_tipocajachica)as nombre_uo_tcc,
 		        (select  tc3.cod_uo from tipos_caja_chica tc3 where tc3.codigo=cod_tipocajachica)as cod_uo_tcc,
 		        (select  tc4.cod_area from tipos_caja_chica tc4 where tc4.codigo=cod_tipocajachica)as cod_area_tcc
-		        FROM caja_chica where codigo=$cod_cajachica");
+		        FROM caja_chica where codigo=$cod_cajachica";
+
+				$stmtCajaChica = $dbh->prepare($sqlCajaChica);
+			    
+			    //echo $sqlCajaChica;
+
 			    $stmtCajaChica->execute();
 			    $resultCCD = $stmtCajaChica->fetch();
 			    $cod_tipocajachica = $resultCCD['cod_tipocajachica'];    

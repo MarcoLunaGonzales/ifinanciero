@@ -243,11 +243,11 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                     </a><?php
                                 }else{
                                   $estadoSiguiente=6;
-                                 if(verificarSolicitudRecursosManual($codigo)!=0){
-                                     if(verificarImporteMayorAlPresupuestado($codigo)!=0){
+                                  if(verificarSolicitudRecursosManual($codigo)!=0){
+                                    if(verificarImporteMayorAlPresupuestado($codigo)!=0){
                                           $estadoSiguiente=4;
-                                     }
-                                 }
+                                    }
+                                  }
 
                                  if($glosa_estadoX!=""){
                                     if(isset($_GET['q'])){

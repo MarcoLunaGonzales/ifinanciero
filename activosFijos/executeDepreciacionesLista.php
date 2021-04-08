@@ -34,6 +34,9 @@ $stmt->bindColumn('estado', $estado);
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
                   <h4 class="card-title"><?=$moduleNamePlural7?></h4>
+                    <a target="_blank" href="activosFijos/respaldoCargadoInicialAF.php">
+                      <i class="material-icons" title='Inicial AF' style="color:red">history</i>
+                    </a>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">

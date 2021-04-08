@@ -1,5 +1,6 @@
 <?php //ESTADO FINALIZADO
 
+
 require_once __DIR__.'/../conexion.php';
 require '../assets/phpqrcode/qrlib.php';
 

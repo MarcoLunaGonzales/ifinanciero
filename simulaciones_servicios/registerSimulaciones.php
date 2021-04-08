@@ -10,11 +10,17 @@ if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
   $u=$_GET['u'];
+  
+  //echo "s:".$s."<br>";
+
   //$numeroServicio=(int)obtenerCantidadSimulacionServicio($q)+1;
   $nombreServicioIbnorca="";
   $nombreInputPropuesta=$nombreServicioIbnorca."PROPUESTA";
   if(isset($_GET['s'])){
     $arraySql=explode("IdArea=",$_GET['s']);
+
+    //echo "arraysql: ".$arraySql[1]."<br>";
+
     $codigoArea=trim($arraySql[1]);
 
     $sqlAreas="and p.cod_area=".$codigoArea;
@@ -136,7 +142,9 @@ $dbh = new Conexion();
                         <div class="form-group">
                                 <select class="selectpicker form-control" name="plantilla_servicio" onchange="listarDatosPlantillaSim(this.value)" id="plantilla_servicio" data-style="<?=$comboColor;?>"  data-live-search="true" title="-- Elija una plantilla --" data-style="select-with-transition" data-actions-box="true"required>
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.cod_estadoreferencial!=2 and p.cod_estadoplantilla=3 $sqlAreas order by codigo");
+                                $sql="SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.cod_estadoreferencial!=2 and p.cod_estadoplantilla=3 $sqlAreas order by codigo";
+                                echo $sql;
+                                 $stmt = $dbh->prepare($sql);
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];

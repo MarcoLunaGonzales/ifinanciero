@@ -10,6 +10,8 @@ $dbh = new Conexion();
 $valor_forma_pago=obtenerValorConfiguracion(76);
 $valor_razon_social=obtenerValorConfiguracion(77);
 $valor_validacion=obtenerValorConfiguracion(90);
+$montoLimiteCajaChica=obtenerValorConfiguracion(85);
+
 if($valor_forma_pago==1)
   $sw_sf_fp="checked";
 else $sw_sf_fp="";
@@ -77,6 +79,18 @@ else $sw_v_lc="";
                            </div>
                           </td>
                         </tr>
+
+                        <tr>
+                          <td class="text-left">Monto Limite para contabilizar por Caja Chica</td>
+                          <td>
+                            <div class="togglebutton">
+                               <label>
+                                 <input type="text" id="txt_montocajachica" name="txt_montocajachica" value="<?=$montoLimiteCajaChica;?>" class="form-control">
+                               </label>
+                           </div>
+                          </td>
+                        </tr>
+
                       </tbody>
                     </table>
                   </div>
