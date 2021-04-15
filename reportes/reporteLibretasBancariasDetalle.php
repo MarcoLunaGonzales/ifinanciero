@@ -14,6 +14,7 @@ switch ($filtro) {
   case 0:$tituloFiltros="Ver Todo";break;
   case 1:$tituloFiltros="Ver Solo Registros Relacionados";break;
   case 2:$tituloFiltros="Ver Solo Registros Pendientes de Identificación";break;
+  case 2:$tituloFiltros="Ver Solo Registros Pendientes de Identificación + Saldos";break;
   default:$tituloFiltros="Ver Todo";break;
 }
  ?>
@@ -106,11 +107,22 @@ switch ($filtro) {
              if($cant==0&&$cant2==0){
               $entro=1;
              }
+          }else if($filtro==3){//solo pendientes + saldos
+            if($cant==0&&$cant2==0){
+              $entro=1;
+            }
           }else{ //filtro Mostrar TODO
             $entro=1;
           }
           
           $saldo=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,$sqlFiltroSaldo,$monto);
+          
+          if($filtro==3){//solo pendientes + saldos
+            if($saldo>0){
+              $entro=1; 
+            }
+          }
+          
           if($entro==1){
             if($codFactura==""||$codFactura==0||$codFactura==null){
               if(!($codComprobante==""||$codComprobante==0)){

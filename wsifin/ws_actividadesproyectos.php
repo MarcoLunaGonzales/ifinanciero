@@ -22,7 +22,7 @@ function listarComponentes($codigo_proyecto){
     require_once '../conexion.php';
     $dbh = new Conexion();
     // Preparamos
-    $stmt = $dbh->prepare("SELECT c.codigo, c.nombre, c.abreviatura from ibnmonitoreo.componentessis c where c.cod_estado=1 and c.cod_proyecto='$codigo_proyecto' and c.cod_gestion in (select max(cc.cod_gestion) from ibnmonitoreo.componentessis cc where cc.cod_proyecto='$codigo_proyecto') and c.nivel=3 order by c.abreviatura");
+    $stmt = $dbh->prepare("SELECT c.codigo, c.nombre, c.abreviatura from ibnmonitoreo.componentessis c where c.cod_estado=1 and c.cod_proyecto='$codigo_proyecto' and c.cod_gestion in (1205) and c.nivel=3 order by c.abreviatura");
 
     $resp = false;
     $filas = array();

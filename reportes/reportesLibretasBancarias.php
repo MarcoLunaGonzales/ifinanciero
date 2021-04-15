@@ -115,9 +115,6 @@ $fechaHasta=date("Y-m-d");
               </div>
             </div>
             </div>
-
-            
-            
             <div class="row">
               <label class="col-sm-2 col-form-label">Filtro</label>
               <div class="col-sm-7">
@@ -126,6 +123,7 @@ $fechaHasta=date("Y-m-d");
                        <option value="0">VER TODO (Registros Relacionados y No Relacionados)</option>
                        <option value="1">Ver Solo Registros Relacionados</option>
                        <option value="2">Ver Solo Registros Pendientes de Identificación</option>  
+                       <option value="3">Ver Solo Registros Pendientes de Identificacion + saldos</option>  
                       </select>
                   </div>
               </div> 

@@ -1,6 +1,13 @@
 <?php 
 class Conexion extends PDO {    
 
+  // private $tipo_de_base = 'mysql';
+  // private $host = 'localhost';
+  // private $nombre_de_base = 'ibnfinanciero2000';
+  // private $usuario = 'root';
+  // private $contrasena = '';
+  // private $port = '3306'; 
+
    private $tipo_de_base = 'mysql';
    private $host = '200.105.199.166';
    private $nombre_de_base = 'bdifinanciero';
