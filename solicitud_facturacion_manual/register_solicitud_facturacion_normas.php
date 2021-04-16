@@ -657,17 +657,14 @@ $contadorRegistros=0;
     function valida(f) {
         var ok = true;
         var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-        // if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
+        if(f.elements["modal_totalmontos"].value == 0 || f.elements["modal_totalmontos"].value < 0 || f.elements["modal_totalmontos"].value == '')
+        {    
+            ok = false;
+        }
+        // if(f.elements["monto_total"].value<=0)
         // {    
         //     ok = false;
         // }
-        if(f.elements["monto_total"].value>0)
-        {    
-            ok = true;
-        }else{
-            //alert("aqui");
-            ok = false;
-        }
         var cod_tipopago=f.elements["cod_tipopago"].value;
         var cod_defecto_deposito_cuenta=$("#cod_defecto_deposito_cuenta").val();
         if(cod_tipopago==cod_defecto_deposito_cuenta){

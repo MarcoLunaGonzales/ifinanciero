@@ -34,10 +34,13 @@ if(isset($_POST['tiposPago_facturacion'])){
     }
 }
 if($sw_auxiliar_tp==0){//cuando no haya objeto tipo de pago
+    echo "aqui";
     $codigo_tipopago=$cod_tipopago;
     $monto_porcentaje=100;
     if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
     	$monto_bob=$_POST["modal_totalmontoserv_costo_a"];
+    }elseif($tipo_solicitud==5){
+        $monto_bob=$_POST["modal_totalmontos"]; 
     }else{
     	$monto_bob=$_POST["monto_total_a"];	
     } 
@@ -118,6 +121,8 @@ if($sw_auxiliar_areas==0){
     $monto_porcentaje=100;
     if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
     	$monto_bob=$_POST["modal_totalmontoserv_costo_a"];
+    }elseif($tipo_solicitud==5){
+        $monto_bob=$_POST["modal_totalmontos"]; 
     }else{
     	$monto_bob=$_POST["monto_total_a"];
     }
