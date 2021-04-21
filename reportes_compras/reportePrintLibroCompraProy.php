@@ -27,7 +27,14 @@ where s.cod_estadosolicitudrecurso in ($stringEstadoX) and s.cod_comprobante<>0 
 
 UNION (SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra
   FROM facturas_compra f, comprobantes_detalle c, comprobantes cc 
-  WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in (3000) and MONTH(cc.fecha)=$cod_mes_x and YEAR(cc.fecha)=$nombre_gestion)) l ORDER BY l.fecha asc, l.nit, l.nro_factura";
+  WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in (3000) and MONTH(cc.fecha)=$cod_mes_x and YEAR(cc.fecha)=$nombre_gestion and cc.codigo<>40921 ) ";
+//ESTA PARTE ES UNA EXCEPCION AL PROCESO
+if($nombre_gestion==2021 && $cod_mes_x==3){
+  $sql.=" UNION (SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra
+  FROM facturas_compra f, comprobantes_detalle c, comprobantes cc 
+  WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in (3000) and cc.codigo=40921) ";
+}
+$sql.=") l ORDER BY l.fecha asc, l.nit, l.nro_factura";
 
 //echo $sql;
 $stmt2 = $dbh->prepare($sql);

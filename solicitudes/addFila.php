@@ -5,6 +5,16 @@ $servicioX=obtenerServicioCodigoDetalle($codDetalleX);
 $divisionX=obtenerDivisionCodigoDetalle($codDetalleX);
 $des_actividadproyecto="";
 
+$sqlAreaDetalle="SELECT s.cod_area from solicitud_recursosdetalle s where s.codigo='$codDetalleX'";
+//echo $sqlAreaDetalle;
+$stmtAreaDetalle = $dbh->prepare($sqlAreaDetalle);
+$stmtAreaDetalle->execute();
+$areaXX=0;
+while ($rowAreaDetalle = $stmtAreaDetalle->fetch(PDO::FETCH_ASSOC)) {
+    $areaXX=$rowAreaDetalle['cod_area'];
+}
+//echo $areaXX;
+
 ?>
 <div class="form-group d-none" id="divNitFactura<?=$idFila;?>">  
   <input class="form-control" type="number" name="nit_fac" id="nit_fac" onkeyup="llenarFacturaAutomaticamente(this.value,'<?=$idFila;?>',<?=$importeSolX?>);">

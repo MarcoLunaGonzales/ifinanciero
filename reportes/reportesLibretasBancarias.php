@@ -126,6 +126,7 @@ $fechaHasta=date("Y-m-d");
                        <option value="0">VER TODO (Registros Relacionados y No Relacionados)</option>
                        <option value="1">Ver Solo Registros Relacionados</option>
                        <option value="2">Ver Solo Registros Pendientes de Identificación</option>  
+                       <option value="3">Ver Pendientes de Identificación + Saldos</option>  
                       </select>
                   </div>
               </div> 

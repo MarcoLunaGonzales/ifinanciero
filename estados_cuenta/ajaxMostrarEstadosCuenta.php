@@ -162,7 +162,7 @@ if($codCuentaAuxiliar!=0){
     }
     $saldo=$saldoIndividual;
     //$saldoFila=$montoContra-$montoX;
-    if($montoContra<$montoX){
+    if(abs($montoContra-$montoX)>0.1){
     ?>
     <tr class="<?=$estiloFila?> det-estados" <?=$colorFilaExiste?>>
       <td class="text-center small"><?=$nombreUnidadO;?></td>

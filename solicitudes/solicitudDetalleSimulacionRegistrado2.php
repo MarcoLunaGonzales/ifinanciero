@@ -7,6 +7,8 @@
                         $areaSol=$codAreaX;
                         $unidadXX=$codUnidadX;
                         $areaXX=$codAreaX;
+
+                        //echo $areaXX;
 						$idFila=1;
 						$cuentasCodigos=[];$conta=0;$auxAnio=0;$detalleAux="";$contAux=0;$listaDetalles=[];
 						$desdePropuestas=1;

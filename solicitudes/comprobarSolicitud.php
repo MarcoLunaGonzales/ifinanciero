@@ -55,6 +55,8 @@ $distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para toda
       </script>  
       <?php
    }
+
+//echo $globalUnidad;
 $distribucionArea=obtenerDistribucionCentroCostosAreaActivo($globalUnidad); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
    while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
     $codigoD=$rowArea['codigo'];
@@ -279,7 +281,7 @@ if(isset($_GET['cod'])){
             $observaciones_solicitud=$observaciones_solicitudX;
             $solicitante=namePersonal($codPersonalX);
             $fechaSolicitud=strftime('%d/%m/%Y',strtotime($fechaX));
-            $distribucionArea=obtenerDistribucionCentroCostosAreaActivo($unidadX); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
+            $distribucionArea=obtenerDistribucionCentroCostosAreaActivo($globalUnidad); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
    while ($rowArea = $distribucionArea->fetch(PDO::FETCH_ASSOC)) {
     $codigoD=$rowArea['codigo'];
     $codDistD=$rowArea['cod_distribucionarea'];
@@ -604,6 +606,7 @@ if(isset($_GET['cod'])){
                 }    
               }
             }
+            //echo "********* ".$tipoSolicitud." **********";
             ?>
             
           </fieldset>

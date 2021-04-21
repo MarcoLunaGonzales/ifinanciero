@@ -327,7 +327,7 @@ $fechaActualModal=date("Y-m-d");
                                         <?php
                                       }else{
                                          ?>
-                                      <button rel="tooltip" class="btn btn-info" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlQuitarDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>')">
+                                      <button rel="tooltip" class="btn btn-danger" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlQuitarDetalleCajaChica;?>&codigo=<?=$codigo_detalle_Cajachica;?>&cod_tcc=<?=$cod_tcc?>&cod_cc=<?=$cod_cajachica?>')">
                                         <i class="material-icons" title="Quitar el gasto y cambiar la solicitud">delete_forever</i>
                                       </button> 
                                         <?php 
