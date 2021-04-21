@@ -540,7 +540,7 @@ $contadorRegistros=0;
                                                   <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
                                                                                               
                                                   <td>
-                                                    <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();"><?=$descripcion_alternaX?></textarea>                                                     <!-- <input type="text" > -->
+                                                    <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" required><?=$descripcion_alternaX?></textarea>
                                                   </td>
                                                   <!-- checkbox -->
                                                   <td>                                                    
@@ -657,14 +657,14 @@ $contadorRegistros=0;
     function valida(f) {
         var ok = true;
         var msg = "El monto Total no debe ser '0' o 'negativo', Habilite los Items que desee facturar...\n";  
-        if(f.elements["comprobante_auxiliar"].value == 0 || f.elements["comprobante_auxiliar"].value < 0 || f.elements["comprobante_auxiliar"].value == '')
+        if(f.elements["modal_totalmontos"].value == 0 || f.elements["modal_totalmontos"].value < 0 || f.elements["modal_totalmontos"].value == '')
         {    
             ok = false;
         }
-        if(f.elements["monto_total"].value>0)
-        {    
-            ok = true;
-        }
+        // if(f.elements["monto_total"].value<=0)
+        // {    
+        //     ok = false;
+        // }
         var cod_tipopago=f.elements["cod_tipopago"].value;
         var cod_defecto_deposito_cuenta=$("#cod_defecto_deposito_cuenta").val();
         if(cod_tipopago==cod_defecto_deposito_cuenta){
@@ -672,7 +672,8 @@ $contadorRegistros=0;
                  var msg = "Por favor agregue Archivo Adjunto.";        
                 ok = false;
             }
-        }
+        }        
+
         if(ok == false)    
             Swal.fire("Informativo!",msg, "warning");
         return ok;

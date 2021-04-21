@@ -15982,7 +15982,7 @@ function filaTablaAGeneral(tabla,index,stringCabecera){
 
 
 function agregaDatosComprCajaChica(datos){  
-  var d=datos.split('/');  
+  var d=datos.split('##');  
   document.getElementById("cod_cajachica").value=d[0];  
   document.getElementById("detalle_cajachica").value=d[1];  
   document.getElementById("cod_tipocajachica").value=d[2];
