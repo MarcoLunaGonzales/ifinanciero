@@ -3,17 +3,23 @@ require_once 'conexion.php';
 require_once 'conexion_externa.php';
 require_once 'configModule.php';
 require_once 'styles.php';
+
 $codigo_simulacion=0;//codigo de simulacion
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
+
+/*
 $sql="SELECT nombre,cod_area,cod_uo from simulaciones_costos where codigo=$codigo_simulacion";
+//echo $sql;
 $stmtSimu = $dbh->prepare($sql);
 $stmtSimu->execute();
 $resultSimu = $stmtSimu->fetch();
 $nombre_simulacion = $resultSimu['nombre'];
 $cod_area = $resultSimu['cod_area'];
 $cod_uo = $resultSimu['cod_uo'];
+*/
+
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $r=$_GET['r'];
