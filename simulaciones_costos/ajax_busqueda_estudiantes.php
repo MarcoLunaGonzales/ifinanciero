@@ -72,7 +72,8 @@ if($codigo_curso!=""){
 
 
 $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
-// echo $sql;
+
+//echo $sql;
 
 
 ?>

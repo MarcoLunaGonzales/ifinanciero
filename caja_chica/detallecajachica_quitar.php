@@ -12,7 +12,6 @@ $cod_tcc=$cod_tcc;
 $cod_dcc=$codigo;
 
 $cod_solicitud=obtenerSolicitudRecursoPorCajaChica($cod_dcc);
-
 $detalleCajaChica=obtenerCodigoCajaChicaDetalleSolicitud($cod_solicitud);
 
 for ($dcc=0; $dcc < count($detalleCajaChica); $dcc++) { 
@@ -33,23 +32,28 @@ for ($dcc=0; $dcc < count($detalleCajaChica); $dcc++) {
 
 
    // Prepare
-   $stmt = $dbh->prepare("UPDATE caja_chicadetalle set cod_estadoreferencial=2,modified_by=$globalUser,modified_at=NOW() where codigo=$cod_dcc");
+   $sqlDelCajaChica="UPDATE caja_chicadetalle set cod_estadoreferencial=2,modified_by=$globalUser,modified_at=NOW() where codigo=$cod_dcc";
+   //echo $sqlDelCajaChica;
+   $stmt = $dbh->prepare($sqlDelCajaChica);
    $flagSuccess=$stmt->execute();
    if($flagSuccess){
-	$stmtRendicion = $dbh->prepare("UPDATE rendiciones set cod_estadoreferencial=2 where codigo=$cod_dcc");
-	$flagSuccess=$stmtRendicion->execute();
+  	 
+      $stmtRendicion = $dbh->prepare("UPDATE rendiciones set cod_estadoreferencial=2 where codigo=$cod_dcc");
+	    $flagSuccess=$stmtRendicion->execute();
 	
 
-    //revertir el pago de SR
-    $stmtCambioEstadoSR = $dbh->prepare("UPDATE solicitud_recursos set cod_estadosolicitudrecurso=3 where codigo=:codigo");
-    $stmtCambioEstadoSR->bindParam(':codigo', $cod_solicitud);
-    $flagSuccess=$stmtCambioEstadoSR->execute();
+      //revertir el pago de SR
+      $stmtCambioEstadoSR = $dbh->prepare("UPDATE solicitud_recursos set cod_estadosolicitudrecurso=3 where codigo=:codigo");
+      $stmtCambioEstadoSR->bindParam(':codigo', $cod_solicitud);
+      $flagSuccess=$stmtCambioEstadoSR->execute();
 
    }
     
 }
 
-showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
+
+ showAlertSuccessError($flagSuccess,$urlListDetalleCajaChica.'&codigo='.$cod_cc.'&cod_tcc='.$cod_tcc);
+
 
   $fechaHoraActual=date("Y-m-d H:i:s");
   $idTipoObjeto=2708;
