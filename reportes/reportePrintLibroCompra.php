@@ -37,6 +37,7 @@ if (isset($_POST["check_rs_librocompras"])) {
   $check_rs_librocompras=$_POST["check_rs_librocompras"]; 
   if($check_rs_librocompras){
     $razon_social=$_POST["razon_social"]; 
+    $razon_social=trim($razon_social);
     $sql_rs=" and f.razon_social like '%$razon_social%'";
   }else{
     $sql_rs="";
