@@ -28,9 +28,9 @@ $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
 
 $Objeto_detalle4 = new stdClass();
 $Objeto_detalle4->suscripcionId = 0;
-$Objeto_detalle4->pagoCursoId = 3434;
-$Objeto_detalle4->detalle = "Curso OV-PSST-CO-G2-2020 , Mu00f3dulo 2 elaboracion de programas de seguridad y salud en el trabajo - psst";
-$Objeto_detalle4->precioUnitario = "0";
+$Objeto_detalle4->pagoCursoId = 5595;
+$Objeto_detalle4->detalle = "test CRM";
+$Objeto_detalle4->precioUnitario = "600";
 $Objeto_detalle4->cantidad = 1;
 
 $Array= array($Objeto_detalle4);
@@ -43,10 +43,12 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "nitciCliente"=>'1712164', //nit o ci de cliente
               "razonSocial"=>'Santiago Mole', //razon social
               "importeTotal"=>"480", //importe total
-              "tipoPago"=>4, // array con el detalle    
-              "codLibretaDetalle"=>'0', // array con el detalle
+              "tipoPago"=>4, // codigo tipo de pago
+              "codLibretaDetalle"=>'0', // codigo de libreta bancaria
               "items"=>$Array // array con el detalle    
               );
+/*$tipoPago=5 Y $tipoPago=6;//deposito en cuenta
+$tipoPago=4;//tarjetas*/
 $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
 // $direccion="200.105.199.164:8008/ifinanciero/wsifin/";
     $parametros=json_encode($parametros);
@@ -68,3 +70,6 @@ $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinancier
     header('Content-type: application/json');   
     print_r($remote_server_output);   
 ?>
+
+
+

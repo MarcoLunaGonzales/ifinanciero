@@ -14,7 +14,7 @@ function GenerarComprobanteExistente($codigo_factura){
 	try{
 		$dbh = new Conexion();
 
-		$sql="SELECT f.codigo,f.cod_solicitudfacturacion,f.cod_unidadorganizacional,f.cod_area,f.cod_tipopago,f.razon_social,f.nit,f.nro_factura,f.cod_comprobante,f.cod_libretabancariadetalle from facturas_venta f where f.nro_factura=$codigo_factura";		
+		$sql="SELECT f.codigo,f.cod_solicitudfacturacion,f.cod_unidadorganizacional,f.cod_area,f.cod_tipopago,f.razon_social,f.nit,f.nro_factura,f.cod_comprobante,f.cod_libretabancariadetalle from facturas_venta f where f.codigo=$codigo_factura";		
 		$stmtFactura = $dbh->prepare($sql);
 		$stmtFactura->execute();
 		$result=$stmtFactura->fetch();
