@@ -5227,6 +5227,18 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $stmt->execute();
     return $stmt;
   }
+  function listaObligacionesPagoDetalleSolicitudRecursosProveedor_seleccionados($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT s.cod_comprobante,p.nombre as proveedor,u.nombre as nombre_unidad,u.abreviatura as unidad,a.nombre as nombre_area,a.abreviatura as area,
+  s.cod_personal,s.cod_unidadorganizacional,s.cod_area,s.fecha,s.numero,s.cod_estadosolicitudrecurso,sd.* 
+    from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
+  join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
+  join areas a on s.cod_area=a.codigo
+  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=5 and sd.codigo in ($codigo)";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return $stmt;
+  }
   function listaObligacionesPagoDetalleSolicitudRecursosProveedorPagos($codigo,$codigoPago){
     $dbh = new Conexion();
     $sql="SELECT pd.codigo as cod_detallepago,pd.monto as monto_pagado,pd.cod_tipopagoproveedor as tipo_pagado,pd.fecha as fecha_pagado,s.cod_comprobante,p.nombre as proveedor,u.nombre as nombre_unidad,u.abreviatura as unidad,a.nombre as nombre_area,a.abreviatura as area,
