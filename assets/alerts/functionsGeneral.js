@@ -16817,10 +16817,11 @@ function registrarRechazoFactura(estado_factura){
 function cargarLotesPago(){
   $("#modalLotesPago").modal("show");
 }
-function seleccionar_proveedor_pagos(combo){
+function seleccionar_proveedor_pagos(){
   var contenedor = document.getElementById('contenedor_proveedor');
-  var cod_cuenta=combo.value;
-  if(cod_cuenta=="####"){
+  var cod_cuenta=$("#cuentas_proveedor").val();
+
+  if(cod_cuenta==""){
     Swal.fire("Informativo!", "Seleccione un Cuenta Por favor", "warning");
   }else{
     ajax=nuevoAjax();
@@ -16836,23 +16837,24 @@ function seleccionar_proveedor_pagos(combo){
 
   
 }
-function cargarDatosProveedorPagosLote(fila){
-  var prov = $("#proveedor").val().split("####");
-  var cantidad_proveedores_modal = $("#cantidad_proveedores_modal").val();
-  var proveedor = prov[0];//codigo de proveedor, nombre
+function cargarDatosProveedorPagosLote(){
+  var cuentas = $("#cuentas_proveedor").val();
+  var prov = $("#proveedor").val();
+  //var cantidad_proveedores_modal = $("#cantidad_proveedores_modal").val();
+  //var proveedor = prov[0];//codigo de proveedor, nombre
   if($("#cod_pagoloteedit").length>0){
     var url ="ajaxListPagosLote.php";
   }else{
     var url ="obligaciones_pago/ajaxListPagosLote.php";
   } 
-  var parametros={"proveedor":proveedor,"proveedor_nombre":prov[1],"fila":fila,"cantidad_modal":cantidad_proveedores_modal};
+  var parametros={"proveedor":prov,"cuentas":cuentas};
    $.ajax({
       type: "GET",
       dataType: 'html',
       url: url,
       data: parametros,
       beforeSend: function () {
-      $("#texto_ajax_titulo").html("Listando Pagos  de "+prov[1]); 
+      $("#texto_ajax_titulo").html("Listando Pagos  de proveedores..."); 
         iniciarCargaAjax();
       },        
       success:  function (resp) {
@@ -16864,12 +16866,13 @@ function cargarDatosProveedorPagosLote(fila){
       }
     });
 }
-function agregarLotePago(){
-  if($("#proveedor").val()!="####"){  
+
+
+function agregarLotePago(){//borrar
+  var array_proveedor=$("#proveedor").val();
+  if(array_proveedor!=""){  
     var codigo= $("#proveedor").val().split("####");
-    //var cant= parseInt($("#cantidad_proveedores").val());
     var cant= parseInt($("#cantidad_proveedores_modal").val());
-    
     var existe=0;
     for (var i = 1; i <= cant; i++) {
       var codFila=$("#codigo_proveedor_modal"+i).val();
@@ -16879,7 +16882,7 @@ function agregarLotePago(){
     };
     cant++;
     if(existe==0){
-      cargarDatosProveedorPagosLote(cant);   
+      cargarDatosProveedorPagosLote(cant);
     }else{
      Swal.fire("Informativo!", "Ya existe el proveedor en la lista.", "warning");         
     }
@@ -16890,16 +16893,17 @@ function agregarLotePago(){
 
 function agregarLotePago_seleccionados(){
   var cant= parseInt($("#cantidad_proveedores_modal").val());
+  var cuentas = $("#cuentas_proveedor").val();
+  var prov = $("#proveedor").val();
   var contador_check=0;
-  var codigos_sr="";//ira concatenado los codigos de SR detalle
+  var codigos_aux="";//iran concatenados todos los codigos
   for (var i = 1; i <= cant; i++) {
     if(typeof($("#pagos_seleccionados"+i)) != "undefined"){      
       var check=document.getElementById("pagos_seleccionados"+i);
-      if(check.checked){        
-        contador_check++;
-        // var codSolDet=document.getElementById("codigo_solicitudDetalle"+i);
-        var codSolDet =$("#codigo_solicitudDetalle"+i).val();
-        codigos_sr+=codSolDet+"PPPPP";
+      if(check.checked){
+        contador_check++;        
+        var codigo_auxiliar =$("#codigo_auxiliar"+i).val();
+        codigos_aux+=codigo_auxiliar+"PPPPP";
       }
     }
   }
@@ -16910,7 +16914,7 @@ function agregarLotePago_seleccionados(){
     }else{
       var url ="obligaciones_pago/ajaxListPagosLote_seleccionados.php";
     } 
-    var parametros={"contador_check":contador_check,"codigos_sr":codigos_sr};
+    var parametros={"contador_check":contador_check,"codigos_aux":codigos_aux,"cuentas":cuentas,"prov":prov};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -16929,7 +16933,6 @@ function agregarLotePago_seleccionados(){
            $('.selectpicker').selectpicker("refresh");
         }
       });
-
   }else{
     Swal.fire("Informativo!", "Debe seleccionar al menos un pago.", "warning");        
   }
