@@ -275,13 +275,20 @@ $responsable=namePersonal($codResponsableX);
         $precioVentaRecomendado=(-($totalVariable[2]*$alumnosX)*$precioRegistrado)/((((($utilidadIbnorcaX/100)-1+(($iva+$it)/100))*$precioRegistrado)+$totalFijo[0])*$alumnosX);   
         $puntoEquilibrio=($totalFijoPlan/($precioLocalX-$totalVariable[2]));
 
-        $utilidadNetaEjecutado=$ejecutadoIngresoX-$totalFijoPlan-$ejecutadoEgresoX-((($iva+$it)/100)*$ejecutadoIngresoX);
+        //SACAMOS EL PORCENTAJE DE EJECUCION
+        $porcentajeEjecucion=$ejecutadoIngresoX/$ingresoLocal;
+        //aplicamos el porcentaje al GASTO FIJO
+        $totalFijoEjecutado=$totalFijoPlan*$porcentajeEjecucion;
+
+
+        $utilidadNetaEjecutado=$ejecutadoIngresoX-$totalFijoEjecutado-$ejecutadoEgresoX-((($iva+$it)/100)*$ejecutadoIngresoX);
         
         $sumaIngresosPropuesta+=$ingresoLocal;
         $sumaIngresosPropuestaEjecutado+=$ejecutadoIngresoX;
 
+
         $sumaCostoFijo+=$totalFijoPlan;
-        $sumaCostoFijoEjecutado+=$totalFijoPlan;
+        $sumaCostoFijoEjecutado+=$totalFijoEjecutado;
 
         $sumaCostoVariable+=$totalVariable[2]*$alumnosX;
         $sumaCostoVariableEjecutado+=$ejecutadoEgresoX;
@@ -318,8 +325,8 @@ $responsable=namePersonal($codResponsableX);
                   <td class="text-left small  text-white" style="background:#C70039">TOTAL COSTO FIJO</td>
                   <td class="text-right font-weight-bold"><?=number_format($totalFijoPlan, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format(($totalFijoPlan/$ingresoLocal)*100, 2, '.', ',')?> %</td>
-                  <td class="text-right font-weight-bold"><?=number_format($totalFijoPlan, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format(($totalFijoPlan/$ejecutadoIngresoX)*100, 2, '.', ',')?> %</td>
+                  <td class="text-right font-weight-bold"><?=number_format($totalFijoEjecutado, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format(($totalFijoEjecutado/$ejecutadoIngresoX)*100, 2, '.', ',')?> %</td>
                 </tr>
                 <tr>
                   <td class="text-left small  text-white" style="background:#C70039">TOTAL COSTO VARIABLE</td>

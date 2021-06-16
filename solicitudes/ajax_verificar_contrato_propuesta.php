@@ -24,6 +24,9 @@ $datosContrato=obtenerDatosContratoSolicitudCapacitacion($codigo);
 if($datosContrato[4]>$monto){
   $error_monto=1;
 }
+
+//echo $datosContrato[1]." ".$cod_prov;
+
 if($datosContrato[1]!=$cod_prov){
   $error_proveedor=1;
 }
@@ -32,7 +35,7 @@ if($error_monto>0){
   $mensajeError.="El monto total de las solicitudes ".number_format($datosContrato[4],2,'.',',')." (Monto Contrato: ".number_format($datosContrato[0],2,'.',',').") es mayor al monto del Contrato.";
 }
 if($error_proveedor>0){
-  $mensajeError.="El proveedor seleccionado es diferente al registrado en el contrato, ";
+  $mensajeError.="El proveedor seleccionado es diferente al registrado en el contrato, ".$datosContrato[1]." ".$cod_prov;
 }
 
 

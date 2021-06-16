@@ -9604,7 +9604,9 @@ function obtenerEstadoComprobante($codigo){
   }
  function obtenerCodigoSolicitudRecursosComprobante($codigo){
      $dbh = new Conexion();
-     $sql="SELECT s.codigo,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=s.codigo and cod_confretencion=8) as iva from solicitud_recursos s where s.cod_comprobante=$codigo and s.devengado=1;";
+     //$sql="SELECT s.codigo,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=s.codigo and cod_confretencion=8) as iva from solicitud_recursos s where s.cod_comprobante=$codigo and s.devengado=1;";
+      $sql="SELECT s.codigo,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=s.codigo) as iva from solicitud_recursos s where s.cod_comprobante=$codigo";
+
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor=0;$iva=0;
@@ -11233,13 +11235,14 @@ function obtenerCantidadCuentaCodigoComprobante($codigo,$cuenta){
 
 function obtenerMontoEjecutadoEgresoSR($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("select s.IdModulo,s.IdCurso,s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,
-        (SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as ejecutado, 
-        (SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as proveedor,
-        (SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as nombre_proveedor, 
-        (SELECT d.cod_detalleplantilla from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo) as codigo_ejecutado 
+     $sql="SELECT s.IdModulo,s.IdCurso,s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,
+        (SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo and so.cod_estadosolicitudrecurso in (3,5,8,9,6,7)) as ejecutado, 
+        (SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo and so.cod_estadosolicitudrecurso in (3,5,8,9,6,7)) as proveedor,
+        (SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo and so.cod_estadosolicitudrecurso in (3,5,8,9)) as nombre_proveedor, 
+        (SELECT d.cod_detalleplantilla from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo and so.cod_estadosolicitudrecurso in (3,5,8,9,6,7)) as codigo_ejecutado 
         from simulaciones_detalle sd join simulaciones_costos s on s.codigo=sd.cod_simulacioncosto 
-        WHERE s.IdModulo in ($codigo) and sd.habilitado=1 and s.cod_estadosimulacion=3 order by s.nombre,sd.cod_cuenta");
+        WHERE s.IdModulo in ($codigo) and sd.habilitado=1 and s.cod_estadosimulacion=3 order by s.nombre,sd.cod_cuenta";
+     $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valorX=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
