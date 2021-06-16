@@ -11374,6 +11374,18 @@ function obtenerNombreInstanciaCajaChica($codCaja){
         $valor=$row['monto'];
     }
     return $valor;
+  }
+  function obtener_sr_relacionado($codigo){
+    $dbh = new Conexion();
+     $sql="SELECT codigo from solicitud_recursos where cod_comprobante in ($codigo);";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor="";
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row['codigo'].",";
+    }
+    $valor=trim($valor,",");
+    return $valor;
   } 
 
  function listarNivelesCuentaPadre($listaCuentas){
@@ -11447,4 +11459,6 @@ function obtenerNombreInstanciaCajaChica($codCaja){
     }
     return $valor;
  }
+
+ 
 ?>
