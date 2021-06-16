@@ -6,26 +6,19 @@ require_once '../functions.php';
 require_once '../styles.php';
 
 $dbh = new Conexion();
-
-$sqlX="SET NAMES 'utf8'";
-$stmtX = $dbh->prepare($sqlX);
-$stmtX->execute();
 $cod_cuenta=$_GET['cod_cuenta'];
-
-
 ?>
 
-<select class="selectpicker form-control form-control-sm"  data-live-search="true" name="proveedor" id="proveedor" data-style="btn btn-primary">
-	<option selected="selected" value="####">--PROVEEDOR--</option>
+<select class="selectpicker form-control" data-show-subtext="true" data-live-search="true" title="Seleccione una opcion" name="proveedor[]" id="proveedor" data-style="select-with-transition" data-size="5"  data-actions-box="true" multiple required data-live-search="true">
 	<?php 
-		//$sql="SELECT e.cod_proveedor,(select p.nombre from af_proveedores p where p.codigo=e.cod_proveedor)as nombre_proveedor from estados_cuenta e where e.cod_plancuenta=$cod_cuenta and e.cod_proveedor<>0 GROUP BY e.cod_proveedor ORDER BY nombre_proveedor";
-		$sql="SELECT DISTINCT p.codigo,p.nombre FROM solicitud_recursosdetalle s join af_proveedores p on s.cod_proveedor=p.codigo where s.cod_plancuenta = $cod_cuenta order by p.nombre";
+	$sql="SELECT distinct(ca.codigo)as codigo, ca.nombre from estados_cuenta ec, cuentas_auxiliares ca  where ca.codigo=ec.cod_cuentaaux and ca.cod_cuenta in ($cod_cuenta) order by ca.nombre";  
+
 	 $stmt3 = $dbh->prepare($sql);
 	 $stmt3->execute();
 	 while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
 	  $codigoSel=$rowSel['codigo'];
 	  $nombreSelX=$rowSel['nombre'];
-	  ?><option value="<?=$codigoSel;?>####<?=$nombreSelX?>"><?=$nombreSelX?></option><?php 
+	  ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
 	 }
 	?>
 </select>

@@ -5215,14 +5215,9 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      return array($valor1,$valor2);
   }
 
-  function listaObligacionesPagoDetalleSolicitudRecursosProveedor($codigo){
+  function listaObligacionesPagoDetalleSolicitudRecursosProveedor($proveedor,$cuentas){
     $dbh = new Conexion();
-    $sql="SELECT s.cod_comprobante,p.nombre as proveedor,u.nombre as nombre_unidad,u.abreviatura as unidad,a.nombre as nombre_area,a.abreviatura as area,
-  s.cod_personal,s.cod_unidadorganizacional,s.cod_area,s.fecha,s.numero,s.cod_estadosolicitudrecurso,sd.* 
-    from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
-  join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
-  join areas a on s.cod_area=a.codigo
-  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=5 and sd.cod_proveedor=$codigo";
+    $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentas) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux in ($proveedor) order by e.fecha";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;

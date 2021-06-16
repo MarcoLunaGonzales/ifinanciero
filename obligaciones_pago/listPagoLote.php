@@ -41,7 +41,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
-     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+     <p class="text-white">Aguarde un momento por favor</p>  
   </div>
 </div>
 <div class="content">
@@ -87,7 +87,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                   	   <div class="col-sm-12">
                     <table id="" class="table table-condensed small">
                       <thead>
-                        <tr>
+                        <!-- <tr>
                           <th width="20%">Proveedor</th>
                           <th width="20%">Detalle</th>
                           <th>F. Sol</th>     
@@ -104,6 +104,26 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                           <th width="10%">Cheques</th>
                           <th width="10%">Nº Cheque</th>
                           <th width="10%">Beneficiario</th>
+                        </tr> -->
+                        <tr style="background:#21618C; color:#fff;">                           
+                          <td class="text-left">Of</td>
+                          <td class="text-left">CC</td>
+                          <td class="text-left">Tipo/#</td>
+                          <td class="text-left">F Comp.</td>
+                          <td class="text-left">F.EC</td>
+                          <td class="text-left">Proveedor</td>
+                          <td class="text-left">Glosa</td>
+                          <td class="text-left">Debe</td>
+                          <td class="text-left">Haber</td>
+                          <td class="text-left">Saldo</td>
+                          <td class="text-left">Monto</td>
+                          <!-- <td width="10%">Tipo</td>
+                          <td width="10%">Bancos</td>
+                          <td width="10%">Cheques</td>
+                          <td width="10%">Nº Cheque</td>
+                          <td width="10%">Beneficiario</td> -->
+                          <td width="4%" class="text-right">Actions</td>
+
                         </tr>
                       </thead>
                       <tbody id="data_pagosproveedores">
@@ -129,7 +149,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
 
 <!-- small modal -->
 <div class="modal fade modal-arriba modal-primary" id="modalLotesPago" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
+  <div class="modal-dialog modal-notice" style="max-width: 90% !important;">
     <div class="modal-content card">
       <div class="card-header card-header-info card-header-text">
         <div class="card-text">
@@ -144,17 +164,16 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
           <label class="col-sm-2 col-form-label">Cuentas</label>
           <div class="col-sm-6">
             <div class="form-group">
-              <select class="selectpicker form-control form-control-sm"  data-live-search="true" name="cuentas_proveedor" id="cuentas_proveedor" data-style="btn btn-primary" onchange="seleccionar_proveedor_pagos(this)">
-                <option selected="selected" value="####">--CUENTAS--</option>
-                <?php 
-                  //$sql="SELECT e.cod_plancuenta,(select p.nombre from plan_cuentas p where p.codigo=e.cod_plancuenta) as nombre_cuenta from estados_cuenta e where e.cod_plancuenta<>0 GROUP BY e.cod_plancuenta order by nombre_cuenta";//con estado de cuenta
-                  $sql="SELECT DISTINCT s.cod_plancuenta,(select p.nombre from plan_cuentas p where p.codigo=s.cod_plancuenta)as nombre_cuenta FROM solicitud_recursosdetalle s join af_proveedores p on s.cod_proveedor=p.codigo order by p.nombre";
+              <select class="selectpicker form-control form-control-sm"  name="cuentas_proveedor[]" id="cuentas_proveedor" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-live-search="true" onchange="seleccionar_proveedor_pagos()">
+                <?php                   
+                  $sql="SELECT p.codigo,p.nombre,p.numero from configuracion_estadocuentas c,plan_cuentas p where c.cod_plancuenta=p.codigo and c.cod_tipoestadocuenta in (1) order by p.numero";
                    $stmt3 = $dbh->prepare($sql);
                    $stmt3->execute();
                  while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                  $codigoSel=$rowSel['cod_plancuenta'];
-                  $nombreSelX=$rowSel['nombre_cuenta'];
-                  ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                  $codigoSel=$rowSel['codigo'];
+                  $nombreSelX=$rowSel['nombre'];
+                  $numeroSelX=$rowSel['numero'];
+                  ?><option value="<?=$codigoSel;?>"><?=$numeroSelX?> - <?=$nombreSelX?></option><?php 
                  }
                 ?>
               </select>
@@ -166,36 +185,29 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
           <div class="col-sm-6">
             <div class="form-group" id="contenedor_proveedor">
               <select class="selectpicker form-control form-control-sm"  data-live-search="true" name="proveedor" id="proveedor" data-style="btn btn-primary">
-                <option selected="selected" value="####">--PROVEEDOR--</option>
-                <!-- <?php 
-                 $stmt3 = $dbh->prepare("SELECT DISTINCT p.codigo,p.nombre FROM solicitud_recursosdetalle s join af_proveedores p on s.cod_proveedor=p.codigo order by p.nombre");
-                 $stmt3->execute();
-                 while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                  $codigoSel=$rowSel['codigo'];
-                  $nombreSelX=$rowSel['nombre'];
-                  ?><option value="<?=$codigoSel;?>####<?=$nombreSelX?>"><?=$nombreSelX?></option><?php 
-                 }
-                ?> -->
+                <option  value="">--PROVEEDOR--</option>
+                
               </select>
             </div>
           </div> 
           <!--select onchange="cargarDatosProveedorPagos()" -->
           <div class="col-sm-1">
-            <a href="#" onclick="agregarLotePago()" class="btn btn-white btn-sm" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">add</i> Agregar</a>
+            <a href="#" onclick="cargarDatosProveedorPagosLote()" class="btn btn-white btn-sm" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">search</i> Buscar</a>
           </div>    
         </div>
         <br>
         <table class="table table-bordered table-condensed small">
           <thead>
             <tr style="background:#21618C; color:#fff;">                           
-              <td class="text-left">Proveedor</td>
-              <td class="text-left">Detalle</td>
-              <td class="text-left">F.Sol</td>
-              <td class="text-left">N.Sol</td>
-              <td class="text-left">N.Comp</td>
               <td class="text-left">Of</td>
-              <td class="text-left">Importe</td>
-              <td class="text-left">Pagado</td>
+              <td class="text-left">CC</td>
+              <td class="text-left">Tipo/#</td>
+              <td class="text-left">F Comp.</td>
+              <td class="text-left">F.EC</td>
+              <td class="text-left">Proveedor</td>
+              <td class="text-left">Glosa</td>
+              <td class="text-left">Debe</td>
+              <td class="text-left">Haber</td>
               <td class="text-left">Saldo</td>
               <td width="4%" class="text-right">Actions</td>
             </tr> 
@@ -205,9 +217,8 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
           </tbody>
         </table>
       </div>
-      <input type="hidden" id="cantidad_proveedores_modal" name="cantidad_proveedores_modal"  value="0">
-      <input type="hidden" id="contador_filas_pagos" name="contador_filas_pagos"  value="0">
-      
+      <input type="hidden" id="cantidad_proveedores_modal" name="cantidad_proveedores_modal"value="0">
+      <input type="hidden" id="cantidad_proveedores" name="cantidad_proveedores"value="0">
       <div class="card-footer d-flex">
         <a href="#" onclick="agregarLotePago_seleccionados()" class="btn btn-white btn-sm mx-auto" style="background:#07B46D; color:#F7FF5A;">SELECCIONAR</a>
       </div>
@@ -232,105 +243,90 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                 <input type="hidden" readonly class="form-control" name="codigo_detalle" id="codigo_detalle" value="">
                 <div class="card-body">
                   <div class="row">
-                           <label class="col-sm-2 col-form-label">Saldo de la Solicitud</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="number" readonly class="form-control" name="saldo_pago" id="saldo_pago" value="<?=$saldoXInput?>">
-                             </div>
-                           </div>
-                           <label class="col-sm-2 col-form-label">Proveedor</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-                              <input type="text" readonly class="form-control" name="nombre_proveedor" id="nombre_proveedor" value="">
-                              <input type="hidden" readonly class="form-control" name="proveedores_pago" id="proveedores_pago" value="">
-                               <!--<select class="selectpicker form-control form-control-sm" data-live-search="true" name="proveedores_pago" id="proveedores_pago" data-style="btn btn-danger">
-                                    <option disabled selected="selected" value="">--PROVEEDOR--</option>
-                                    <?php 
-                                     $stmt4 = $dbh->prepare("SELECT DISTINCT p.nombre as proveedor,sd.cod_proveedor 
-                                              from solicitud_recursosdetalle sd
-                                              join af_proveedores p on sd.cod_proveedor=p.codigo where sd.cod_solicitudrecurso=$codSol");
-                                     $stmt4->execute();
-                                     while ($row2 = $stmt4->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoSel2=$row2['cod_proveedor'];
-                                      $proveedorSel2=$row2['proveedor'];
-                                      ?><option value="<?=$codigoSel2;?>"><?=$proveedorSel2?></option><?php 
-                                     }
-                                    ?>
-                                  </select>-->
-                             </div>
-                           </div>
-                      </div>
-                      <div class="row">
-                          <label class="col-sm-2 col-form-label">Tipo de Pago</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-
-                               <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosCheque()" data-live-search="true" name="tipo_pago" id="tipo_pago" data-style="btn btn-danger">
-                                    <option disabled selected="selected" value="">--TIPO--</option>
-                                    <?php 
-                                     $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where cod_estadoreferencial=1");
-                                     $stmt3->execute();
-                                     while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoSel=$rowSel['codigo'];
-                                      $nombreSelX=$rowSel['nombre'];
-                                      $abrevSelX=$rowSel['abreviaruta'];
-                                      ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
-                                     }
-                                    ?>
-                                  </select>
-                             </div>
-                           </div>  
-                      <div class="d-none col-sm-6" id="div_cheques">
-                        <div class="row">
-                          <label class="col-sm-4 col-form-label">Bancos</label>
-                           <div class="col-sm-8">                     
-                             <div class="form-group">
-                               <select class="selectpicker form-control form-control-sm" onchange="cargarChequesPago()" data-live-search="true" name="banco_pago" id="banco_pago" data-style="btn btn-danger">
-                                    <option disabled selected="selected" value="">--BANCOS--</option>
-                                    <?php 
-                                     $stmt3 = $dbh->prepare("SELECT * from bancos where cod_estadoreferencial=1");
-                                     $stmt3->execute();
-                                     while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoSel=$rowSel['codigo'];
-                                      $nombreSelX=$rowSel['nombre'];
-                                      $abrevSelX=$rowSel['abreviaruta'];
-                                      ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
-                                     }
-                                    ?>
-                                  </select>
-                             </div>
-                           </div>     
-                        </div>
-                      </div>
-                      </div>
-                    <div class="row" id="div_chequesemitidos">
-                      
+                     <label class="col-sm-2 col-form-label">Saldo de la Solicitud</label>
+                     <div class="col-sm-4">                     
+                       <div class="form-group">
+                         <input type="number" readonly class="form-control" name="saldo_pago" id="saldo_pago" value="<?=$saldoXInput?>">
+                       </div>
+                     </div>
+                     <label class="col-sm-2 col-form-label">Proveedor</label>
+                     <div class="col-sm-4">                     
+                       <div class="form-group">
+                        <input type="text" readonly class="form-control" name="nombre_proveedor" id="nombre_proveedor" value="">
+                        <input type="hidden" readonly class="form-control" name="proveedores_pago" id="proveedores_pago" value="">                               
+                       </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-sm-2 col-form-label">Tipo de Pago</label>
+                    <div class="col-sm-4">                     
+                       <div class="form-group">
+                         <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosCheque()" data-live-search="true" name="tipo_pago" id="tipo_pago" data-style="btn btn-danger">
+                              <option disabled selected="selected" value="">--TIPO--</option>
+                              <?php 
+                               $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where cod_estadoreferencial=1");
+                               $stmt3->execute();
+                               while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                                $codigoSel=$rowSel['codigo'];
+                                $nombreSelX=$rowSel['nombre'];
+                                $abrevSelX=$rowSel['abreviaruta'];
+                                ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                               }
+                              ?>
+                            </select>
+                       </div>
                     </div>  
-                    <div class="row">
-                          <label class="col-sm-2 col-form-label">Monto</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="number" step="0.01" class="form-control" value="0" onkeyup="mandarValorTitulo()" onkeydown="mandarValorTitulo()" onchange="mandarValorTitulo()" name="monto_pago" id="monto_pago">
-                             </div>
-                           </div>  
-                           <label class="col-sm-2 col-form-label">Observaciones</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <textarea type="text" class="form-control" name="observaciones_pago" id="observaciones_pago"></textarea>
-                             </div>
+                    <div class="d-none col-sm-6" id="div_cheques">
+                      <div class="row">
+                        <label class="col-sm-4 col-form-label">Bancos</label>
+                        <div class="col-sm-8">                     
+                           <div class="form-group">
+                             <select class="selectpicker form-control form-control-sm" onchange="cargarChequesPago()" data-live-search="true" name="banco_pago" id="banco_pago" data-style="btn btn-danger">
+                                  <option disabled selected="selected" value="">--BANCOS--</option>
+                                  <?php 
+                                   $stmt3 = $dbh->prepare("SELECT * from bancos where cod_estadoreferencial=1");
+                                   $stmt3->execute();
+                                   while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoSel=$rowSel['codigo'];
+                                    $nombreSelX=$rowSel['nombre'];
+                                    $abrevSelX=$rowSel['abreviaruta'];
+                                    ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                                   }
+                                  ?>
+                                </select>
                            </div>
+                        </div>     
                       </div>
-                      <hr>
+                    </div>
+                  </div>
+                  <div class="row" id="div_chequesemitidos">
+                      
+                  </div>  
+                  <div class="row">
+                    <label class="col-sm-2 col-form-label">Monto</label>
+                    <div class="col-sm-4">                     
+                      <div class="form-group">
+                        <input type="number" step="0.01" class="form-control" value="0" onkeyup="mandarValorTitulo()" onkeydown="mandarValorTitulo()" onchange="mandarValorTitulo()" name="monto_pago" id="monto_pago">
+                      </div>
+                    </div>  
+                    <label class="col-sm-2 col-form-label">Observaciones</label>
+                    <div class="col-sm-4">                     
+                       <div class="form-group">
+                         <textarea type="text" class="form-control" name="observaciones_pago" id="observaciones_pago"></textarea>
+                       </div>
+                    </div>
+                  </div>
+                  <hr>
                       <div style="background:#07B46D; color:#F7FF5A; border-radius:10px;">
                         <br><br>
                        <center>
                         <p class="">Monto a Pagar</p>
                         <h1 class="font-weight-bold" id="montoTitulo">0</h1>
                         <br>
-                          <div class="form-group">
-                              <a href="#" onclick="pagarSolicitudRecursos()" class="btn btn-white btn-lg" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">attach_money</i> PAGAR</a>
-                          </div>
-                         </center>
+                        <div class="form-group">
+                            <a href="#" onclick="pagarSolicitudRecursos()" class="btn btn-white btn-lg" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">attach_money</i> PAGAR</a>
+                        </div>
+                        </center>
                        <br><br>
                       </div>
                           
