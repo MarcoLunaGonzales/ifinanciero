@@ -16,7 +16,8 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
 //datos de cabecera
-$cantidadProveedores=$_POST['cantidad_proveedores'];
+$cantidadProveedores=$_POST['cantidad_proveedores'];//total de intems
+
 $nombre_lote=$_POST['nombre_lote'];
 $porFecha = explode("/", $_POST['fecha_pago']);
 $fecha_pago=$porFecha[2]."-".$porFecha[1]."-".$porFecha[0];
@@ -27,11 +28,16 @@ $sqlInsert="INSERT INTO pagos_lotes (codigo,nombre,abreviatura, fecha,cod_compro
 VALUES ('".$cod_pagolote."','".$nombre_lote."','','".$fecha_pago."','0',1,0,1)";
 $stmtInsert = $dbh->prepare($sqlInsert);
 $stmtInsert->execute();
+//ya se insertó la cebecera
 $totalPago=0;
 $contadorCheque=0;$contadorChequeFilas=0;
 for ($pro=1; $pro <= $cantidadProveedores ; $pro++){
   $codigo_auxiliar_s=$_POST["codigo_auxiliar_s".$pro];
+  $monto_pago_s=$_POST["monto_pago_s".$pro];
+
+
   $sql="SELECT cod_comprobantedetalle,cod_plancuenta,cod_proveedor,cod_cuentaaux from estados_cuenta where codigo='$codigo_auxiliar_s'";
+  //echo "<br>..".$sql;
   $stmtEstaCueSele = $dbh->prepare($sql);
   $stmtEstaCueSele->execute();                    
   $stmtEstaCueSele->bindColumn('cod_comprobantedetalle', $cod_comprobantedetalle);
@@ -48,15 +54,14 @@ for ($pro=1; $pro <= $cantidadProveedores ; $pro++){
       $cod_proveedor=$cod_proveedor;
       $cod_cuentaaux=$cod_cuentaaux;
   }
-
-  $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle,glosa_auxiliar)values('0','$cod_plancuenta','$monto','$cod_proveedor','$fecha','$codigo_auxiliar_s','$cod_cuentaaux',0,'$observaciones_pago')");
+  //insertamos los estados de cuenta
+  $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle,glosa_auxiliar)values('0','$cod_plancuenta','$monto_pago_s','$cod_proveedor','$fecha_pago','$codigo_auxiliar_s','$cod_cuentaaux',0,'$observaciones_pago')");
   $flagSuccess=$stmtContraCuenta->execute();
   if($flagSuccess){
       $codigo_sr=0;
       $sqlDetalleX="SELECT sd.codigo,sd.cod_solicitudrecurso,sd.cod_proveedor,sd.cod_tipopagoproveedor 
       FROM solicitud_recursos s,solicitud_recursosdetalle sd
-      WHERE s.codigo=sd.cod_solicitudrecurso and s.cod_comprobante in (select cd.cod_comprobante from estados_cuenta e,comprobantes_detalle cd where e.cod_comprobantedetalle=cd.codigo and e.codigo=$cod_comprobante_ec)";
-
+      WHERE s.codigo=sd.cod_solicitudrecurso and s.cod_comprobante in (select cd.cod_comprobante from estados_cuenta e,comprobantes_detalle cd where e.cod_comprobantedetalle=cd.codigo and e.codigo=$codigo_auxiliar_s)";
       $stmtDetalleX = $dbh->prepare($sqlDetalleX);
       $stmtDetalleX->execute();                    
       $stmtDetalleX->bindColumn('codigo', $codigo_sr);
@@ -72,15 +77,14 @@ for ($pro=1; $pro <= $cantidadProveedores ; $pro++){
       if($codigo_sr>0){
           $cod_pagoproveedor=obtenerCodigoPagoProveedor();
           $sqlInsert="INSERT INTO pagos_proveedores (codigo, fecha,observaciones,cod_comprobante,cod_estadopago,cod_ebisa,cod_cajachicadetalle) 
-          VALUES ('".$cod_pagoproveedor."','".$fecha."','".$observaciones_pago."','0',3,0,'$codigo')";
+          VALUES ('".$cod_pagoproveedor."','".$fecha_pago."','".$observaciones_pago."','0',3,0,0)";
           $stmtInsert = $dbh->prepare($sqlInsert);
           $stmtInsert->execute();
           $cod_pagoproveedordetalle=obtenerCodigoPagoProveedorDetalle();
           $sqlInsert2="INSERT INTO pagos_proveedoresdetalle (codigo,cod_pagoproveedor,cod_proveedor,cod_solicitudrecursos,cod_solicitudrecursosdetalle,cod_tipopagoproveedor,monto,observaciones,fecha) 
-           VALUES ('".$cod_pagoproveedordetalle."','".$cod_pagoproveedor."','".$cod_proveedor_sr."','".$cod_solicitudrecurso_sr."','".$codigo_sr."','".$cod_tipopagoproveedor_sr."','".$monto."','".$observaciones_pago."','".$fecha."')";
+           VALUES ('".$cod_pagoproveedordetalle."','".$cod_pagoproveedor."','".$cod_proveedor_sr."','".$cod_solicitudrecurso_sr."','".$codigo_sr."','".$cod_tipopagoproveedor_sr."','".$monto_pago_s."','".$observaciones_pago."','".$fecha_pago."')";
           $stmtInsert2 = $dbh->prepare($sqlInsert2);
           $flagSuccess=$stmtInsert2->execute();
-
           $stmtCambioEstadoSR = $dbh->prepare("UPDATE solicitud_recursos set cod_estadosolicitudrecurso=9 where codigo=:codigo");
           $stmtCambioEstadoSR->bindParam(':codigo', $cod_solicitudrecurso_sr);
           $flagSuccess=$stmtCambioEstadoSR->execute();

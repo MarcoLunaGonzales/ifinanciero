@@ -113,8 +113,10 @@ while ($row = $stmt->fetch()) {
   $stmtContra->execute();                                    
   $saldo+=$montoX;                                            
   $montoEstado=0;$estiloEstados="";
-  $stmtSaldo = $dbh->prepare("SELECT sum(e.monto) as monto
-          from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX");
+  $sql="SELECT sum(e.monto) as monto
+          from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX";
+          //echo $sql;
+  $stmtSaldo = $dbh->prepare($sql);
   $stmtSaldo->execute();
   while ($rowSaldo = $stmtSaldo->fetch()) {
       $montoEstado=$rowSaldo['monto'];
@@ -212,12 +214,12 @@ while ($row = $stmt->fetch()) {
             <td class="text-right small"><?=formatNumberDec(0)?></td>
             <td class="text-right small font-weight-bold"></td>
             <td class="text-right">
-              <div class="togglebutton">
+              <!-- <div class="togglebutton">
                  <label>
                    <input type="checkbox"  id="pagos_seleccionados2_<?=$contador_items?>" name="pagos_seleccionados_2<?=$contador_items?> ">
                    <span class="toggle"></span>
                  </label>
-             </div>
+             </div> -->
             </td>
           </tr><?php 
       }

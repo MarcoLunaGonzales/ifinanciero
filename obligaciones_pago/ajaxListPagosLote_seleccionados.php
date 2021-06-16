@@ -103,7 +103,7 @@ while ($row = $stmt->fetch()) {
   $nombreAreaCentroCosto=abrevArea_solo($codAreaCentroCosto);
 
   $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
-  //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
+  //SACAMOS CUANdO SE PAGO DEL ESTADO DE CUENTA.
   $sqlContra="SELECT sum(e.monto)as monto from estados_cuenta e, comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen='$codigoX'";
   //echo $sqlContra;
   $stmtContra = $dbh->prepare($sqlContra);
@@ -144,18 +144,59 @@ while ($row = $stmt->fetch()) {
           <?php 
           if(($montoX-$montoEstado)>0){
             ?>
-            <input type="number" step="any" required class="form-control text-right text-success" value="0" id="monto_pago_s<?=$index?>" name="monto_pago_s<?=$index?>"><?php
+            <input type="number" step="any" required class="form-control text-right text-success" value="0" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"><?php
           }else{ ?>
-            <input type="number" step="any" required class="form-control text-right text-success" readonly value="0" id="monto_pago_s<?=$index?>" name="monto_pago_s<?=$index?>"> <?php
+            <input type="number" step="any" required class="form-control text-right text-success" readonly value="0" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"> <?php
           } ?>
         </td>
-        <td class="text-right">
-          <!-- <div class="togglebutton">
-             <label>
-               <input type="checkbox"  id="pagos_seleccionados<?=$contador_items?>" name="pagos_seleccionados<?=$contador_items?> ">
-               <span class="toggle"></span>
-             </label>
-         </div> -->
+    <!--     <td>
+              <div class="form-group">
+                <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosChequeDetalle('<?=$contador_items?>')" data-live-search="true" name="tipo_pago_s<?=$contador_items?>" id="tipo_pago_s<?=$contador_items?>" data-style="btn btn-danger" required>
+                      <option disabled value="">--TIPO--</option>
+                      <?php 
+                       $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where codigo=2 and cod_estadoreferencial=1");
+                       $stmt3->execute();
+                       while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                        $codigoSel=$rowSel['codigo'];
+                        $nombreSelX=$rowSel['nombre'];
+                        $abrevSelX=$rowSel['abreviatura'];
+                        ?><option selected value="<?=$codigoSel;?>"><?=$abrevSelX?></option>
+                        <?php
+                       }
+                      ?>
+                    </select>
+               </div>
+        </td> -->
+        <!-- <td>
+          <div class="d-none" id="div_cheques_s<?=$contador_items?>">                    
+              <div class="form-group">
+                   <select class="selectpicker form-control form-control-sm" onchange="cargarChequesPagoDetalle('<?=$contador_items?>')" data-live-search="true" name="banco_pago_s<?=$contador_items?>" id="banco_pago_s<?=$contador_items?>" data-style="btn btn-danger">
+                  <option disabled selected="selected" value="">--BANCOS--</option>
+                  <?php 
+                   $stmt3 = $dbh->prepare("SELECT * from bancos where cod_estadoreferencial=1");
+                   $stmt3->execute();
+                   while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                    $codigoSel=$rowSel['codigo'];
+                    $nombreSelX=$rowSel['nombre'];
+                    $abrevSelX=$rowSel['abreviatura'];
+                     ?><option value="<?=$codigoSel;?>"><?=$abrevSelX?></option><?php
+                   }
+                  ?>
+                    </select>
+                </div>
+           </div>
+        </td> -->
+    <!--     <td>
+          <div id="div_chequesemitidos_s<?=$contador_items?>">                    
+          </div>
+        </td>
+        <td>
+          <input type="number" readonly class="form-control text-right" readonly value="0" id="numero_cheque_s<?=$contador_items?>" name="numero_cheque_s<?=$contador_items?>">
+        </td>
+        <td>
+          <input type="text" readonly class="form-control" readonly value="" id="beneficiario_s<?=$contador_items?>" name="beneficiario_s<?=$contador_items?>">
+        </td> -->
+        <td class="text-right">          
         </td>
     </tr>
     <?php 
@@ -214,7 +255,7 @@ while ($row = $stmt->fetch()) {
             <td class="text-right small"><?=$tituloMontoDebe?></td>
             <td class="text-right small"><?=formatNumberDec(0)?></td>
             <td class="text-right small font-weight-bold"></td>
-            <td class="text-right">}
+            <td class="text-right">
 
             </td>
           </tr><?php 

@@ -11156,22 +11156,22 @@ function cambiarComboProveedor(valor){
   cargarDatosProveedorPagos();
 }
 function mostrarDatosChequeDetalle(fila){
-  var tipo =$("#tipo_pago"+fila).val();
+  var tipo =$("#tipo_pago_s"+fila).val();
   if(tipo==1){
-     if(($("#div_cheques"+fila).hasClass("d-none"))){
-       $("#div_cheques"+fila).removeClass("d-none");
+     if(($("#div_cheques_s"+fila).hasClass("d-none"))){
+       $("#div_cheques_s"+fila).removeClass("d-none");
     } 
   }else{
-    if(!($("#div_cheques"+fila).hasClass("d-none"))){
-      $("#div_cheques"+fila).addClass("d-none"); 
+    if(!($("#div_cheques_s"+fila).hasClass("d-none"))){
+      $("#div_cheques_s"+fila).addClass("d-none"); 
     }
-    if(!($("#div_chequesemitidos"+fila).hasClass("d-none"))){
-      $("#div_chequesemitidos"+fila).addClass("d-none");
+    if(!($("#div_chequesemitidos_s"+fila).hasClass("d-none"))){
+      $("#div_chequesemitidos_s"+fila).addClass("d-none");
     }
-    if(!($("#numero_cheque"+fila).is("[readonly]"))){
-      $("#numero_cheque"+fila).attr("readonly",true);
-      $("#numero_cheque"+fila).val("0");
-      $("#beneficiario"+fila).attr("readonly",true);
+    if(!($("#numero_cheque_s"+fila).is("[readonly]"))){
+      $("#numero_cheque_s"+fila).attr("readonly",true);
+      $("#numero_cheque_s"+fila).val("0");
+      $("#beneficiario_s"+fila).attr("readonly",true);
     }
   }
 }
@@ -16842,13 +16842,14 @@ function cargarDatosProveedorPagosLote(){
   var prov = $("#proveedor").val();
   //var cantidad_proveedores_modal = $("#cantidad_proveedores_modal").val();
   //var proveedor = prov[0];//codigo de proveedor, nombre
-  if($("#cod_pagoloteedit").length>0){
-    var url ="ajaxListPagosLote.php";
-  }else{
-    var url ="obligaciones_pago/ajaxListPagosLote.php";
-  } 
-  var parametros={"proveedor":prov,"cuentas":cuentas};
-   $.ajax({
+  if(cuentas!="" && prov !=""){
+    if($("#cod_pagoloteedit").length>0){
+      var url ="ajaxListPagosLote.php";
+    }else{
+      var url ="obligaciones_pago/ajaxListPagosLote.php";
+    } 
+    var parametros={"proveedor":prov,"cuentas":cuentas};
+    $.ajax({
       type: "GET",
       dataType: 'html',
       url: url,
@@ -16865,6 +16866,9 @@ function cargarDatosProveedorPagosLote(){
          $('.selectpicker').selectpicker("refresh");
       }
     });
+  }else{
+    Swal.fire("Informativo!", "Debe seleccionar un proveedor.", "warning");
+  }
 }
 
 
@@ -16887,7 +16891,7 @@ function agregarLotePago(){//borrar
      Swal.fire("Informativo!", "Ya existe el proveedor en la lista.", "warning");         
     }
   }else{
-   Swal.fire("Informativo!", "Debe seleccionar un proveedor.", "warning");        
+   
   }
 }
 

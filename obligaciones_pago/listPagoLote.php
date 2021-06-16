@@ -41,7 +41,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
-     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+     <p class="text-white">Aguarde un momento por favor</p>  
   </div>
 </div>
 <div class="content">
@@ -117,8 +117,14 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                           <td class="text-left">Haber</td>
                           <td class="text-left">Saldo</td>
                           <td class="text-left">Monto</td>
+                          <!-- <td width="10%">Tipo</td>
+                          <td width="10%">Bancos</td>
+                          <td width="10%">Cheques</td>
+                          <td width="10%">Nº Cheque</td>
+                          <td width="10%">Beneficiario</td> -->
                           <td width="4%" class="text-right">Actions</td>
-                        </tr> 
+
+                        </tr>
                       </thead>
                       <tbody id="data_pagosproveedores">
                       </tbody>
@@ -237,91 +243,90 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                 <input type="hidden" readonly class="form-control" name="codigo_detalle" id="codigo_detalle" value="">
                 <div class="card-body">
                   <div class="row">
-                           <label class="col-sm-2 col-form-label">Saldo de la Solicitud</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="number" readonly class="form-control" name="saldo_pago" id="saldo_pago" value="<?=$saldoXInput?>">
-                             </div>
-                           </div>
-                           <label class="col-sm-2 col-form-label">Proveedor</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-                              <input type="text" readonly class="form-control" name="nombre_proveedor" id="nombre_proveedor" value="">
-                              <input type="hidden" readonly class="form-control" name="proveedores_pago" id="proveedores_pago" value="">                               
-                             </div>
-                           </div>
-                      </div>
-                      <div class="row">
-                          <label class="col-sm-2 col-form-label">Tipo de Pago</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-
-                               <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosCheque()" data-live-search="true" name="tipo_pago" id="tipo_pago" data-style="btn btn-danger">
-                                    <option disabled selected="selected" value="">--TIPO--</option>
-                                    <?php 
-                                     $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where cod_estadoreferencial=1");
-                                     $stmt3->execute();
-                                     while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoSel=$rowSel['codigo'];
-                                      $nombreSelX=$rowSel['nombre'];
-                                      $abrevSelX=$rowSel['abreviaruta'];
-                                      ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
-                                     }
-                                    ?>
-                                  </select>
-                             </div>
-                           </div>  
-                      <div class="d-none col-sm-6" id="div_cheques">
-                        <div class="row">
-                          <label class="col-sm-4 col-form-label">Bancos</label>
-                           <div class="col-sm-8">                     
-                             <div class="form-group">
-                               <select class="selectpicker form-control form-control-sm" onchange="cargarChequesPago()" data-live-search="true" name="banco_pago" id="banco_pago" data-style="btn btn-danger">
-                                    <option disabled selected="selected" value="">--BANCOS--</option>
-                                    <?php 
-                                     $stmt3 = $dbh->prepare("SELECT * from bancos where cod_estadoreferencial=1");
-                                     $stmt3->execute();
-                                     while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoSel=$rowSel['codigo'];
-                                      $nombreSelX=$rowSel['nombre'];
-                                      $abrevSelX=$rowSel['abreviaruta'];
-                                      ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
-                                     }
-                                    ?>
-                                  </select>
-                             </div>
-                           </div>     
-                        </div>
-                      </div>
-                      </div>
-                    <div class="row" id="div_chequesemitidos">
-                      
+                     <label class="col-sm-2 col-form-label">Saldo de la Solicitud</label>
+                     <div class="col-sm-4">                     
+                       <div class="form-group">
+                         <input type="number" readonly class="form-control" name="saldo_pago" id="saldo_pago" value="<?=$saldoXInput?>">
+                       </div>
+                     </div>
+                     <label class="col-sm-2 col-form-label">Proveedor</label>
+                     <div class="col-sm-4">                     
+                       <div class="form-group">
+                        <input type="text" readonly class="form-control" name="nombre_proveedor" id="nombre_proveedor" value="">
+                        <input type="hidden" readonly class="form-control" name="proveedores_pago" id="proveedores_pago" value="">                               
+                       </div>
+                     </div>
+                  </div>
+                  <div class="row">
+                    <label class="col-sm-2 col-form-label">Tipo de Pago</label>
+                    <div class="col-sm-4">                     
+                       <div class="form-group">
+                         <select class="selectpicker form-control form-control-sm" onchange="mostrarDatosCheque()" data-live-search="true" name="tipo_pago" id="tipo_pago" data-style="btn btn-danger">
+                              <option disabled selected="selected" value="">--TIPO--</option>
+                              <?php 
+                               $stmt3 = $dbh->prepare("SELECT * from tipos_pagoproveedor where cod_estadoreferencial=1");
+                               $stmt3->execute();
+                               while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                                $codigoSel=$rowSel['codigo'];
+                                $nombreSelX=$rowSel['nombre'];
+                                $abrevSelX=$rowSel['abreviaruta'];
+                                ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                               }
+                              ?>
+                            </select>
+                       </div>
                     </div>  
-                    <div class="row">
-                          <label class="col-sm-2 col-form-label">Monto</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="number" step="0.01" class="form-control" value="0" onkeyup="mandarValorTitulo()" onkeydown="mandarValorTitulo()" onchange="mandarValorTitulo()" name="monto_pago" id="monto_pago">
-                             </div>
-                           </div>  
-                           <label class="col-sm-2 col-form-label">Observaciones</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <textarea type="text" class="form-control" name="observaciones_pago" id="observaciones_pago"></textarea>
-                             </div>
+                    <div class="d-none col-sm-6" id="div_cheques">
+                      <div class="row">
+                        <label class="col-sm-4 col-form-label">Bancos</label>
+                        <div class="col-sm-8">                     
+                           <div class="form-group">
+                             <select class="selectpicker form-control form-control-sm" onchange="cargarChequesPago()" data-live-search="true" name="banco_pago" id="banco_pago" data-style="btn btn-danger">
+                                  <option disabled selected="selected" value="">--BANCOS--</option>
+                                  <?php 
+                                   $stmt3 = $dbh->prepare("SELECT * from bancos where cod_estadoreferencial=1");
+                                   $stmt3->execute();
+                                   while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoSel=$rowSel['codigo'];
+                                    $nombreSelX=$rowSel['nombre'];
+                                    $abrevSelX=$rowSel['abreviaruta'];
+                                    ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                                   }
+                                  ?>
+                                </select>
                            </div>
+                        </div>     
                       </div>
-                      <hr>
+                    </div>
+                  </div>
+                  <div class="row" id="div_chequesemitidos">
+                      
+                  </div>  
+                  <div class="row">
+                    <label class="col-sm-2 col-form-label">Monto</label>
+                    <div class="col-sm-4">                     
+                      <div class="form-group">
+                        <input type="number" step="0.01" class="form-control" value="0" onkeyup="mandarValorTitulo()" onkeydown="mandarValorTitulo()" onchange="mandarValorTitulo()" name="monto_pago" id="monto_pago">
+                      </div>
+                    </div>  
+                    <label class="col-sm-2 col-form-label">Observaciones</label>
+                    <div class="col-sm-4">                     
+                       <div class="form-group">
+                         <textarea type="text" class="form-control" name="observaciones_pago" id="observaciones_pago"></textarea>
+                       </div>
+                    </div>
+                  </div>
+                  <hr>
                       <div style="background:#07B46D; color:#F7FF5A; border-radius:10px;">
                         <br><br>
                        <center>
                         <p class="">Monto a Pagar</p>
                         <h1 class="font-weight-bold" id="montoTitulo">0</h1>
                         <br>
-                          <div class="form-group">
-                              <a href="#" onclick="pagarSolicitudRecursos()" class="btn btn-white btn-lg" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">attach_money</i> PAGAR</a>
-                          </div>
-                         </center>
+                        <div class="form-group">
+                            <a href="#" onclick="pagarSolicitudRecursos()" class="btn btn-white btn-lg" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">attach_money</i> PAGAR</a>
+                        </div>
+                        </center>
                        <br><br>
                       </div>
                           
