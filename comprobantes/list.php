@@ -108,9 +108,6 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                       <?php
 						            $index=1;
                       	while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
-                          $string_sr=obtener_sr_relacionado($codigo);
-                          $array_cantidad_sr=explode(",", $string_sr);
-
                           $nombreComprobante=nombreComprobante($codigo);
                           $existeCuenta=0;
                           $existeCuenta=obtenerEstadoCuentaSaldoComprobante($codigo);
@@ -138,10 +135,10 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                             $cambiosDatos="\n".$cambiosDatos;
                           }
                           if($salvadoC==1){
-                            $btnEstado="btn btn-danger font-weight-bold";
-                            $estadoComprobante="Salvado Temporal";
-                            $estadoIcon="save";
-                           } 
+        $btnEstado="btn btn-danger font-weight-bold";
+        $estadoComprobante="Salvado Temporal";
+        $estadoIcon="save";
+       } 
                         ?>
                         <tr>
                           
@@ -162,9 +159,9 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                 </button>
                                 <div class="dropdown-menu">
                                   <a href="#" onclick="javascript:window.open('<?=$urlImp;?>?comp=<?=$codigo;?>&mon=-1')" class="dropdown-item">
-                                    <i class="material-icons text-muted">monetization_on</i> BIMONETARIO (Bs - Usd)
-                                  </a>
-                                  <div class="dropdown-divider"></div>
+                                                 <i class="material-icons text-muted">monetization_on</i> BIMONETARIO (Bs - Usd)
+                                      </a>
+                                      <div class="dropdown-divider"></div>
                                   <?php
                                     $stmtMoneda = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM monedas where cod_estadoreferencial=1 order by 2");
                                    $stmtMoneda->execute();
@@ -193,33 +190,33 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                     <i class="material-icons text-default">attachment</i> Adjuntos
                                   </a>
                                   <?php
-                                if(verificarEdicionComprobanteFacturasUsuario($globalUser,$codigo)!=0){  //para verificar personal edicion facturas 
-                                      $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
-                                      if($codigoSol[1]==0){
-                                        if($existeCuenta==0){
-                                          $codCajaChica=existeCajaChicaRelacionado($codigo);
-                                           if($codCajaChica>0){
-                                            $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
-                                            ?><a href='#' class="dropdown-item" title="No Editable Caja Chica :<?=$nombreCaja?>">
-                                            <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
-                                             </a><?php
-                                           }else{
-                                            ?><a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
-                                            <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
-                                          </a><?php
-                                           }
-                                        }else{
-                                          ?>
-                                          <a href='#' class="dropdown-item" title="<?=obtenerNombresComprobanteCerrados($codigo)?>">
-                                             <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
-                                          </a>
-                                      <?php
-                                        }  
-                                      }
-                                     ?><a href="#" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
-                                        <i class="material-icons text-danger"><?=$iconDelete;?></i> Eliminar
+                            if(verificarEdicionComprobanteFacturasUsuario($globalUser,$codigo)!=0){  //para verificar personal edicion facturas 
+                                  $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
+                                  if($codigoSol[1]==0){
+                                    if($existeCuenta==0){
+                                      $codCajaChica=existeCajaChicaRelacionado($codigo);
+                                       if($codCajaChica>0){
+                                        $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
+                                        ?><a href='#' class="dropdown-item" title="No Editable Caja Chica :<?=$nombreCaja?>">
+                                        <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
+                                         </a><?php
+                                       }else{
+                                        ?><a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
+                                        <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
                                       </a><?php
-                                  }//fin de editable Facturas
+                                       }
+                                    }else{
+                                      ?>
+                                      <a href='#' class="dropdown-item" title="<?=obtenerNombresComprobanteCerrados($codigo)?>">
+                                         <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
+                                      </a>
+                                  <?php
+                                    }  
+                                  }
+                                 ?><a href="#" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
+                                    <i class="material-icons text-danger"><?=$iconDelete;?></i> Eliminar
+                                  </a><?php
+                              }//fin de editable Facturas
                                   ?>
                                   
                                   <?php 
@@ -238,26 +235,6 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                 </div>
                               </div>
                               <?php }?>
-                              <div class="dropdown">
-                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Solicitudes de Recurso">
-                                  <i class="material-icons"><?=$iconImp;?></i>
-                                </button>
-                                <div class="dropdown-menu">                                  
-                                  <?php
-                                    $stmtMoneda = $dbh->prepare("SELECT codigo,numero FROM solicitud_recursos where cod_comprobante=$codigo and cod_estadoreferencial=1");
-                                   $stmtMoneda->execute();
-                                    while ($row = $stmtMoneda->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoX=$row['codigo'];
-                                      $numeroX=$row['numero']; ?>
-                                      <a href="#" onclick="javascript:window.open('<?=$urlImp;?>?comp=<?=$codigo;?>&mon=<?=$codigoX?>')" class="dropdown-item">
-                                        <i class="material-icons">keyboard_arrow_right</i> <?=$abrevX?>
-                                      </a> 
-                                       <?php                                      
-                                     }
-                                     ?>
-                                </div>
-                              </div>
-
                             </div> 
                             
                           </td>

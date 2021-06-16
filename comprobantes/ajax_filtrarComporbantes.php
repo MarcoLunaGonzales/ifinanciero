@@ -148,12 +148,32 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
           $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
           if($codigoSol[0]!=0){
            ?>
-           <a title=" Ver Solicitud de Recursos" target="_blank" href="<?=$urlVerSol;?>?cod=<?=$codigoSol[0];?>&comp=1" target="_blank" class="btn btn-success">
-             <i class="material-icons">preview</i>
-          </a>
-          <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigoSol[0];?>&mon=1')" class="btn btn-info">
-            <i class="material-icons"><?=$iconImp;?></i>
-          </a><?php
+          <div class="dropdown">
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Ver Solicitudes de Recursos">
+              <i class="material-icons">preview</i>
+            </button>
+            <div class="dropdown-menu">                                  
+              <?php
+                $stmtMoneda = $dbh->prepare("SELECT codigo,numero FROM solicitud_recursos where cod_comprobante=$codigo and cod_estadoreferencial=1 order by numero");
+               $stmtMoneda->execute();
+               $contador_SR=0;
+                while ($row = $stmtMoneda->fetch(PDO::FETCH_ASSOC)) {
+                  $contador_SR++;
+                  $codigo_SR=$row['codigo'];
+                  $numero_SR=$row['numero']; ?>
+                  <div class="dropdown-item">
+                    <a title="Solicitud de Recursos N: <?=$numero_SR?>" href="<?=$urlVerSol;?>?cod=<?=$codigo_SR;?>&comp=1" target="_blank" class="btn btn-success">
+                    <i class="material-icons">preview</i> SR <?=$numero_SR?></a>
+                    <a title="Imprimir Solicitud de Recursos" href='#' onclick="javascript:window.open('<?=$urlImpSol;?>?sol=<?=$codigo_SR;?>&mon=1')" class="btn btn-info">
+                      <i class="material-icons"><?=$iconImp;?></i></a>  
+                  </div>
+                  
+                   <?php                                      
+                 }
+                 ?>
+            </div>
+          </div>
+          <?php 
           }
        if(verificarEdicionComprobanteFacturasUsuario($globalUser,$codigo)!=0){  //para verificar personal edicion facturas     
         if($codigoSol[1]==0){
