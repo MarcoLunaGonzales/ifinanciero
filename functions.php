@@ -5227,6 +5227,18 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $stmt->execute();
     return $stmt;
   }
+  function listaObligacionesPagoDetalleSolicitudRecursosProveedor_seleccionados($codigo){
+    $dbh = new Conexion();
+    $sql="SELECT s.cod_comprobante,p.nombre as proveedor,u.nombre as nombre_unidad,u.abreviatura as unidad,a.nombre as nombre_area,a.abreviatura as area,
+  s.cod_personal,s.cod_unidadorganizacional,s.cod_area,s.fecha,s.numero,s.cod_estadosolicitudrecurso,sd.* 
+    from solicitud_recursosdetalle sd join solicitud_recursos s on sd.cod_solicitudrecurso=s.codigo  
+  join unidades_organizacionales u on s.cod_unidadorganizacional=u.codigo
+  join areas a on s.cod_area=a.codigo
+  join af_proveedores p on sd.cod_proveedor=p.codigo where s.cod_estadosolicitudrecurso=5 and sd.codigo in ($codigo)";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    return $stmt;
+  }
   function listaObligacionesPagoDetalleSolicitudRecursosProveedorPagos($codigo,$codigoPago){
     $dbh = new Conexion();
     $sql="SELECT pd.codigo as cod_detallepago,pd.monto as monto_pagado,pd.cod_tipopagoproveedor as tipo_pagado,pd.fecha as fecha_pagado,s.cod_comprobante,p.nombre as proveedor,u.nombre as nombre_unidad,u.abreviatura as unidad,a.nombre as nombre_area,a.abreviatura as area,
@@ -9597,7 +9609,9 @@ function obtenerEstadoComprobante($codigo){
   }
  function obtenerCodigoSolicitudRecursosComprobante($codigo){
      $dbh = new Conexion();
-     $sql="SELECT s.codigo,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=s.codigo and cod_confretencion=8) as iva from solicitud_recursos s where s.cod_comprobante=$codigo and s.devengado=1;";
+     //$sql="SELECT s.codigo,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=s.codigo and cod_confretencion=8) as iva from solicitud_recursos s where s.cod_comprobante=$codigo and s.devengado=1;";
+      $sql="SELECT s.codigo,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=s.codigo) as iva from solicitud_recursos s where s.cod_comprobante=$codigo";
+
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor=0;$iva=0;
@@ -11227,10 +11241,10 @@ function obtenerCantidadCuentaCodigoComprobante($codigo,$cuenta){
 function obtenerMontoEjecutadoEgresoSR($codigo){
      $dbh = new Conexion();
      $sql="SELECT s.IdModulo,s.IdCurso,s.codigo as cod_simulacion,s.nombre,s.fecha_curso,sd.codigo,sd.cod_cuenta,sd.glosa,sd.monto_total as presupuestado,
-        (SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo and so.cod_estadosolicitudrecurso in (3,5,8,9)) as ejecutado, 
-        (SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo and so.cod_estadosolicitudrecurso in (3,5,8,9)) as proveedor,
+        (SELECT d.importe from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo and so.cod_estadosolicitudrecurso in (3,5,8,9,6,7)) as ejecutado, 
+        (SELECT d.cod_proveedor from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo and so.cod_estadosolicitudrecurso in (3,5,8,9,6,7)) as proveedor,
         (SELECT pro.nombre from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso join af_proveedores pro on pro.codigo=d.cod_proveedor where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo and so.cod_estadosolicitudrecurso in (3,5,8,9)) as nombre_proveedor, 
-        (SELECT d.cod_detalleplantilla from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo and so.cod_estadosolicitudrecurso in (3,5,8,9)) as codigo_ejecutado 
+        (SELECT d.cod_detalleplantilla from solicitud_recursosdetalle d join solicitud_recursos so on so.codigo=d.cod_solicitudrecurso where so.cod_simulacion=s.codigo and d.cod_detalleplantilla=sd.codigo and so.cod_estadosolicitudrecurso in (3,5,8,9,6,7)) as codigo_ejecutado 
         from simulaciones_detalle sd join simulaciones_costos s on s.codigo=sd.cod_simulacioncosto 
         WHERE s.IdModulo in ($codigo) and sd.habilitado=1 and s.cod_estadosimulacion=3 order by s.nombre,sd.cod_cuenta";
      $stmt = $dbh->prepare($sql);

@@ -13,8 +13,7 @@ class Conexion extends PDO {
    private $nombre_de_base = 'bdifinanciero';
    private $usuario = 'ingresofm';
    private $contrasena = 'minka123';
-   private $port = '4606';
-    
+   private $port = '4606';    
 
 
 public function __construct() {

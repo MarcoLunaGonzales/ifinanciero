@@ -1,6 +1,8 @@
 <?php
 $j=1;
-   $stmtUpdate = $dbh->prepare("SELECT distinct c.cod_partidapresupuestaria as codPartida, p.nombre from cuentas_simulacion c,partidas_presupuestarias p where p.codigo=c.cod_partidapresupuestaria and c.cod_simulacionservicios=$codigo and c.cod_anio=$ann");
+  $sqlX="SELECT distinct c.cod_partidapresupuestaria as codPartida, p.nombre from cuentas_simulacion c,partidas_presupuestarias p where p.codigo=c.cod_partidapresupuestaria and c.cod_simulacionservicios=$codigo and c.cod_anio=$ann";
+   //echo $sqlX;
+   $stmtUpdate = $dbh->prepare($sqlX);
    $stmtUpdate->execute();
     while ($rowUpdate = $stmtUpdate->fetch(PDO::FETCH_ASSOC)) {
         $codigoPartida=$rowUpdate['codPartida'];
@@ -13,6 +15,7 @@ $j=1;
 
 
  $query="SELECT p.nombre,p.numero,c.* FROM cuentas_simulacion c, plan_cuentas p where c.cod_plancuenta=p.codigo and c.cod_simulacionservicios=$codigo and c.cod_partidapresupuestaria=$codigoPartida and c.cod_anio=$ann order by codigo";
+    //echo $query;
     $stmt = $dbh->prepare($query);
     $stmt->execute();
     $i=1;

@@ -61,10 +61,10 @@ if($banderaLogin==1 || $tipoLogin==1){
 	}
 
 
-	if($idUsuarioSW==47770){
+	/*if($idUsuarioSW==47770){
 		$idUsuarioSW=49299;
-	}
-	//echo $sql;
+	}*/
+	//echo $idUsuarioSW;
 
 	$stmt = $dbh->prepare($sql);
 	$stmt->execute();
@@ -74,10 +74,21 @@ if($banderaLogin==1 || $tipoLogin==1){
 	$stmt->bindColumn('cod_unidadorganizacional', $codUnidad);
 	$stmt->bindColumn('perfil', $perfil);
 
+
+	if($idUsuarioSW==47770){
+		$idUsuarioSW=49299;
+		$codUnidad=3000;
+	}
 	while ($rowDetalle = $stmt->fetch(PDO::FETCH_BOUND)) {
 		//echo "ENTRO A DETALLE";
-		$nombreUnidad=abrevUnidad($codUnidad);
-		$nombreArea=abrevArea($codArea);
+		
+		//echo "usuario: ".$idUsuarioSW." unidad: ".$codUnidad;
+		if($codUnidad>0){
+			$nombreUnidad=abrevUnidad($codUnidad);
+		}
+		if($codArea>0){
+			$nombreArea=abrevArea($codArea);
+		}
 
 		//echo $nombreArea;
 		//SACAMOS LA GESTION ACTIVA
@@ -100,6 +111,8 @@ if($banderaLogin==1 || $tipoLogin==1){
 			$codGestionActiva=1205;
 			$nombreGestion="2020";
 			$codMesActiva=12;
+			$codUnidad=3000;
+			$nombreUnidad="SIS";
 		}
 
 		$_SESSION['globalUser']=$codigo;

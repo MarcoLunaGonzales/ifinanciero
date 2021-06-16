@@ -1127,7 +1127,8 @@
                                   $montoPreTotal=number_format($montoPreTotal,2,".","");
                                   
                                   $estiloFilaTextoSol="";
-                                  $verificarFacturadoServicio=obtenerServicioSolicitadoPropuestaTCPTCS($codigoSimulacionSuper,$codCS);
+                                  //$verificarFacturadoServicio=obtenerServicioSolicitadoPropuestaTCPTCS($codigoSimulacionSuper,$codCS);
+                                  $verificarFacturadoServicio=0;
                                   if($verificarFacturadoServicio>0){
                                      $estiloFilaTextoSol=' title="SOLICITUD DE FACTURACIÓN" disabled';
                                   }

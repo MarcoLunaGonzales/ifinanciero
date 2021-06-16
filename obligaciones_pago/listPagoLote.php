@@ -110,23 +110,14 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                       </tbody>
                     </table>
                   </div>
-
                    <input type="hidden" id="cantidad_proveedores" name="cantidad_proveedores"  value="0">
                   </div>
                 </div>
               </div>
-               <?php
-              //if($globalAdmin==1){
-              ?>
               <div class="card-footer fixed-bottom">
                 <button type="submit" class="btn btn-white" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">attach_money</i> PAGAR</button>
-                
               </div>
-              
-              </form>  
-              <?php
-             // }
-              ?>
+              </form> 
             </div>
           </div>  
         </div>
@@ -140,57 +131,89 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
 <div class="modal fade modal-arriba modal-primary" id="modalLotesPago" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-notice" style="max-width: 80% !important;">
     <div class="modal-content card">
-               <div class="card-header card-header-info card-header-text">
-                  <div class="card-text">
-                    <h4>Lotes Pago - Proveedores</h4>
-                  </div>
-                  <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">close</i>
-                  </button>
-                </div>
-                <div class="card-body">
-                  <div>
-                    <div class="row">
-                       <label class="col-sm-2 col-form-label">Proveedor</label>
-                         <div class="col-sm-6">
-                             <div class="form-group">
-                               <select class="selectpicker form-control form-control-sm"  data-live-search="true" name="proveedor" id="proveedor" data-style="btn btn-primary">
-                                    <option selected="selected" value="####">--PROVEEDOR--</option>
-                                    <?php 
-                                     $stmt3 = $dbh->prepare("SELECT DISTINCT p.codigo,p.nombre FROM solicitud_recursosdetalle s join af_proveedores p on s.cod_proveedor=p.codigo order by p.nombre");
-                                     $stmt3->execute();
-                                     while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
-                                      $codigoSel=$rowSel['codigo'];
-                                      $nombreSelX=$rowSel['nombre'];
-                                      ?><option value="<?=$codigoSel;?>####<?=$nombreSelX?>"><?=$nombreSelX?></option><?php 
-                                     }
-                                    ?>
-                                  </select>
-                                </div>
-                          </div> 
-                          <!--select onchange="cargarDatosProveedorPagos()" -->
-                          <div class="col-sm-1">
-                            <a href="#" onclick="agregarLotePago()" class="btn btn-white btn-sm" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">add</i> Agregar</a>
-                          </div>    
-                    </div>
-                    <br>
-
-                       <table class="table table-bordered table-condensed small">
-                        <thead>
-                         <tr style="background:#21618C; color:#fff;">
-                           <td class="text-left">PROVEEDOR</td>
-                           <td width="8%" class="text-right">ACTIONS</td>
-                         </tr> 
-                        </thead>
-                        <tbody id="tabla_proveedor">
-                         
-                         </tbody>
-                       </table>
-                       
-                </div>
-      </div>  
-    </div>
+      <div class="card-header card-header-info card-header-text">
+        <div class="card-text">
+          <h4>Lotes Pago - Proveedores</h4>
+        </div>
+        <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Cuentas</label>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <select class="selectpicker form-control form-control-sm"  data-live-search="true" name="cuentas_proveedor" id="cuentas_proveedor" data-style="btn btn-primary" onchange="seleccionar_proveedor_pagos(this)">
+                <option selected="selected" value="####">--CUENTAS--</option>
+                <?php 
+                  //$sql="SELECT e.cod_plancuenta,(select p.nombre from plan_cuentas p where p.codigo=e.cod_plancuenta) as nombre_cuenta from estados_cuenta e where e.cod_plancuenta<>0 GROUP BY e.cod_plancuenta order by nombre_cuenta";//con estado de cuenta
+                  $sql="SELECT DISTINCT s.cod_plancuenta,(select p.nombre from plan_cuentas p where p.codigo=s.cod_plancuenta)as nombre_cuenta FROM solicitud_recursosdetalle s join af_proveedores p on s.cod_proveedor=p.codigo order by p.nombre";
+                   $stmt3 = $dbh->prepare($sql);
+                   $stmt3->execute();
+                 while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoSel=$rowSel['cod_plancuenta'];
+                  $nombreSelX=$rowSel['nombre_cuenta'];
+                  ?><option value="<?=$codigoSel;?>"><?=$nombreSelX?></option><?php 
+                 }
+                ?>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Proveedor</label>
+          <div class="col-sm-6">
+            <div class="form-group" id="contenedor_proveedor">
+              <select class="selectpicker form-control form-control-sm"  data-live-search="true" name="proveedor" id="proveedor" data-style="btn btn-primary">
+                <option selected="selected" value="####">--PROVEEDOR--</option>
+                <!-- <?php 
+                 $stmt3 = $dbh->prepare("SELECT DISTINCT p.codigo,p.nombre FROM solicitud_recursosdetalle s join af_proveedores p on s.cod_proveedor=p.codigo order by p.nombre");
+                 $stmt3->execute();
+                 while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                  $codigoSel=$rowSel['codigo'];
+                  $nombreSelX=$rowSel['nombre'];
+                  ?><option value="<?=$codigoSel;?>####<?=$nombreSelX?>"><?=$nombreSelX?></option><?php 
+                 }
+                ?> -->
+              </select>
+            </div>
+          </div> 
+          <!--select onchange="cargarDatosProveedorPagos()" -->
+          <div class="col-sm-1">
+            <a href="#" onclick="agregarLotePago()" class="btn btn-white btn-sm" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">add</i> Agregar</a>
+          </div>    
+        </div>
+        <br>
+        <table class="table table-bordered table-condensed small">
+          <thead>
+            <tr style="background:#21618C; color:#fff;">                           
+              <td class="text-left">Proveedor</td>
+              <td class="text-left">Detalle</td>
+              <td class="text-left">F.Sol</td>
+              <td class="text-left">N.Sol</td>
+              <td class="text-left">N.Comp</td>
+              <td class="text-left">Of</td>
+              <td class="text-left">Importe</td>
+              <td class="text-left">Pagado</td>
+              <td class="text-left">Saldo</td>
+              <td width="4%" class="text-right">Actions</td>
+            </tr> 
+          </thead>
+          <tbody id="tabla_proveedor">
+           
+          </tbody>
+        </table>
+      </div>
+      <input type="hidden" id="cantidad_proveedores_modal" name="cantidad_proveedores_modal"  value="0">
+      <input type="hidden" id="contador_filas_pagos" name="contador_filas_pagos"  value="0">
+      
+      <div class="card-footer d-flex">
+        <a href="#" onclick="agregarLotePago_seleccionados()" class="btn btn-white btn-sm mx-auto" style="background:#07B46D; color:#F7FF5A;">SELECCIONAR</a>
+      </div>
+    </div>  
   </div>
+</div>
 <!--    end small modal -->
 
 

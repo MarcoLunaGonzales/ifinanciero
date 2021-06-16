@@ -16817,54 +16817,124 @@ function registrarRechazoFactura(estado_factura){
 function cargarLotesPago(){
   $("#modalLotesPago").modal("show");
 }
+function seleccionar_proveedor_pagos(combo){
+  var contenedor = document.getElementById('contenedor_proveedor');
+  var cod_cuenta=combo.value;
+  if(cod_cuenta=="####"){
+    Swal.fire("Informativo!", "Seleccione un Cuenta Por favor", "warning");
+  }else{
+    ajax=nuevoAjax();
+    ajax.open('GET', 'obligaciones_pago/ajax_selectproveedor_cuentas.php?cod_cuenta='+cod_cuenta,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;      
+        $('.selectpicker').selectpicker(["refresh"]);
+      }
+    }
+    ajax.send(null)  
+  }
 
+  
+}
 function cargarDatosProveedorPagosLote(fila){
   var prov = $("#proveedor").val().split("####");
-  var proveedor = prov[0];
+  var cantidad_proveedores_modal = $("#cantidad_proveedores_modal").val();
+  var proveedor = prov[0];//codigo de proveedor, nombre
   if($("#cod_pagoloteedit").length>0){
-      var url ="ajaxListPagosLote.php";
+    var url ="ajaxListPagosLote.php";
+  }else{
+    var url ="obligaciones_pago/ajaxListPagosLote.php";
+  } 
+  var parametros={"proveedor":proveedor,"proveedor_nombre":prov[1],"fila":fila,"cantidad_modal":cantidad_proveedores_modal};
+   $.ajax({
+      type: "GET",
+      dataType: 'html',
+      url: url,
+      data: parametros,
+      beforeSend: function () {
+      $("#texto_ajax_titulo").html("Listando Pagos  de "+prov[1]); 
+        iniciarCargaAjax();
+      },        
+      success:  function (resp) {
+        detectarCargaAjax();
+         $("#texto_ajax_titulo").html("Procesando Datos");
+         //$("#data_pagosproveedores").append(resp);
+         $("#tabla_proveedor").append(resp);
+         $('.selectpicker').selectpicker("refresh");
+      }
+    });
+}
+function agregarLotePago(){
+  if($("#proveedor").val()!="####"){  
+    var codigo= $("#proveedor").val().split("####");
+    //var cant= parseInt($("#cantidad_proveedores").val());
+    var cant= parseInt($("#cantidad_proveedores_modal").val());
+    
+    var existe=0;
+    for (var i = 1; i <= cant; i++) {
+      var codFila=$("#codigo_proveedor_modal"+i).val();
+      if(codFila==codigo[0]){
+        existe++;
+      }
+    };
+    cant++;
+    if(existe==0){
+      cargarDatosProveedorPagosLote(cant);   
     }else{
-      var url ="obligaciones_pago/ajaxListPagosLote.php";
+     Swal.fire("Informativo!", "Ya existe el proveedor en la lista.", "warning");         
+    }
+  }else{
+   Swal.fire("Informativo!", "Debe seleccionar un proveedor.", "warning");        
+  }
+}
+
+function agregarLotePago_seleccionados(){
+  var cant= parseInt($("#cantidad_proveedores_modal").val());
+  var contador_check=0;
+  var codigos_sr="";//ira concatenado los codigos de SR detalle
+  for (var i = 1; i <= cant; i++) {
+    if(typeof($("#pagos_seleccionados"+i)) != "undefined"){      
+      var check=document.getElementById("pagos_seleccionados"+i);
+      if(check.checked){        
+        contador_check++;
+        // var codSolDet=document.getElementById("codigo_solicitudDetalle"+i);
+        var codSolDet =$("#codigo_solicitudDetalle"+i).val();
+        codigos_sr+=codSolDet+"PPPPP";
+      }
+    }
+  }
+  //alert("activos:"+contador_check);
+  if(contador_check>0){        
+    if($("#cod_pagoloteedit").length>0){
+      var url ="ajaxListPagosLote_seleccionados.php";
+    }else{
+      var url ="obligaciones_pago/ajaxListPagosLote_seleccionados.php";
     } 
-  var parametros={"proveedor":proveedor,"proveedor_nombre":prov[1],"fila":fila};
+    var parametros={"contador_check":contador_check,"codigos_sr":codigos_sr};
      $.ajax({
         type: "GET",
         dataType: 'html',
         url: url,
         data: parametros,
         beforeSend: function () {
-        $("#texto_ajax_titulo").html("Listando Pagos  de "+prov[1]); 
+        $("#texto_ajax_titulo").html("Listando Pagos  Seleccionados..."); 
           iniciarCargaAjax();
+          $("#modalLotesPago").modal("hide");
         },        
         success:  function (resp) {
           detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
            $("#data_pagosproveedores").append(resp);
+           //$("#tabla_proveedor").append(resp);
            $('.selectpicker').selectpicker("refresh");
         }
       });
-}
-function agregarLotePago(){
 
- if($("#proveedor").val()!="####"){
-  var codigo= $("#proveedor").val().split("####");
-  var cant= parseInt($("#cantidad_proveedores").val());
-  var existe=0;
-  for (var i = 1; i <= cant; i++) {
-    var codFila=$("#codigo_proveedor_modal"+i).val();
-    if(codFila==codigo[0]){
-      existe++;
-    }
-  };
-cant++;
-  if(existe==0){
-    cargarDatosProveedorPagosLote(cant);   
   }else{
-   Swal.fire("Informativo!", "Ya existe el proveedor en la lista.", "warning");         
+    Swal.fire("Informativo!", "Debe seleccionar al menos un pago.", "warning");        
   }
- }else{
-   Swal.fire("Informativo!", "Debe seleccionar un proveedor.", "warning");        
- }
+  
+
 }
 
 function removeListaPago(codigo){
