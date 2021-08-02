@@ -276,6 +276,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Ingresos & Descuentos </span>
                   </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=rptPersonal_from">
+                    <span class="sidebar-mini"> R </span>
+                    <span class="sidebar-normal">Personal </span>
+                  </a>
+                </li>
 
               </ul>
             </div>

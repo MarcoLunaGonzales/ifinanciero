@@ -1,0 +1,13 @@
+
+isull..
+#H0yC0m1m0sChun10#123
+
+Clonar repositorio 
+$ cd /Users/MiUsuarioEnMac/Desktop/github_folder
+$ git clone https://github.com/juancadh/basicoding.git
+$ cd basicoding
+
+$ git config --global user.name  = [NOMBRE DE USUARIO DE GITHUB]
+$ git config --global user.email = [EMAIL DE GITHUB]
+$ git commit -m "Enviando el archivo de prueba"
+$ git push origin master

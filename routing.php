@@ -1006,6 +1006,11 @@
 			require_once('personal/rptrptIngresosDescuentosFiltro.php');
 		}
 
+		//reporte info del personal
+		if ($_GET['opcion']=='rptPersonal_from') {
+			require_once('personal/rptPersonal_from.php');
+		}
+
 
 		// if ($_GET['opcion']=='saveTiposContrato') {
 		// 	require_once('personal/tipos_contratosSave.php');

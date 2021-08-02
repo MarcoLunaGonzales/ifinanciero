@@ -181,10 +181,14 @@ try{
                                     $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
                                     $flagSuccess=$stmtUpdateLibreta->execute();
                                     array_push($SQLDATOSINSTERT,$flagSuccess);
-                                    $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
-                                    $stmtUpdate = $dbh->prepare($sqlUpdate);
-                                    $flagSuccess=$stmtUpdate->execute(); 
-                                    array_push($SQLDATOSINSTERT,$flagSuccess);
+                                    $codigo_facturacion=verificamosFacturaDuplicada($codigo);
+                                    if($codigo_facturacion!=null){
+                                        $sqlUpdate="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigo";
+                                        $stmtUpdate = $dbh->prepare($sqlUpdate);
+                                        $flagSuccess=$stmtUpdate->execute(); 
+                                        array_push($SQLDATOSINSTERT,$flagSuccess);
+                                    }
+                                    
                                     //enviar propuestas para la actualizacion de ibnorca
                                     $fechaHoraActual=date("Y-m-d H:i:s");
                                     $idTipoObjeto=2709;
@@ -232,14 +236,16 @@ try{
             $stmtCommit->execute();
             header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');            
         }
-
-        //verificar el estado y actualizar a 5
-        $stmtSol = $dbh->prepare("SELECT s.codigo from solicitudes_facturacion s where s.cod_estadosolicitudfacturacion in (3,4) and s.codigo = $codigoSolicitud");
-        $stmtSol->execute();
-        while ($rowSol = $stmtSol->fetch(PDO::FETCH_ASSOC)) {  
-            $sqlUpdateNew="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigoSolicitud";
-            $stmtUpdateNew = $dbh->prepare($sqlUpdateNew);
-            $stmtUpdateNew->execute(); 
+        $codigo_facturacion=verificamosFacturaDuplicada($codigo);
+        if($codigo_facturacion!=null){
+            //verificar el estado y actualizar a 5
+            $stmtSol = $dbh->prepare("SELECT s.codigo from solicitudes_facturacion s where s.cod_estadosolicitudfacturacion in (3,4) and s.codigo = $codigoSolicitud");
+            $stmtSol->execute();
+            while ($rowSol = $stmtSol->fetch(PDO::FETCH_ASSOC)) {  
+                $sqlUpdateNew="UPDATE solicitudes_facturacion SET  cod_estadosolicitudfacturacion=5 where codigo=$codigoSolicitud";
+                $stmtUpdateNew = $dbh->prepare($sqlUpdateNew);
+                $stmtUpdateNew->execute(); 
+            }
         }
     }
 } catch(PDOException $ex){
