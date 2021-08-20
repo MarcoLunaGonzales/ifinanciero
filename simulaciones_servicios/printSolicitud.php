@@ -54,16 +54,19 @@ $html.='<html>'.
                 '<link rel="icon" type="image/png" href="../assets/img/favicon.png">'.
                 '<link href="../assets/libraries/plantillaPDFCajaChica.css" rel="stylesheet" />'.
            '</head>';
-$html.='<body>'.
+/*$html.='<body>'.
         '<script type="text/php">'.
           'if ( isset($pdf) ) {'. 
             '$font = Font_Metrics::get_font("helvetica", "normal");'.
             '$size = 9;'.
             '$y = $pdf->get_height() - 24;'.
-            '$x = $pdf->get_width() - 15 - Font_Metrics::get_text_width("1/1", $font, $size);'.
-            '$pdf->page_text($x, $y, "{PAGE_NUM}/{PAGE_COUNT}", $font, $size);'.
+            '$x = $pdf->get_width() - 15 - Font_Metrics::get_text_width("1/1", $font, $size);'.            
           '}'.
+        '</script>';*/
+$html.='<body>'.
+        '<script type="text/php">'.
         '</script>';
+      //'$pdf->page_text($x, $y, "{PAGE_NUM}/{PAGE_COUNT}", $font, $size);'.
 $html.=  '<header class="header">'.        
             '<table class="table">
               <tr>
@@ -379,11 +382,18 @@ $html.=  '<header class="header">'.
           </table>';
         
 
-          $html.='<footer>          
-          
-
-
+          $html.='<footer class="footer">
+            <table class="table">
+              <tr>
+                <td class="s4 text-center" width="25%"><b>IBNORCA &#169;<b></td>
+                <td class="s4 text-center" width="25%"><b>Código:</b> REG-PRO-AF-05-01.02</td>
+                <td class="s4 text-center" width="25%"><b>V:</b> 2021-06-17</td>
+              <td class="s4 text-center" width="25%"><b>Página 1 de 1</b></td>
+            </tr>
+            </table>
           </footer>';
+
+
 
 
 

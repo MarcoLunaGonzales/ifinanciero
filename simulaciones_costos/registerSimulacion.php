@@ -415,7 +415,10 @@ if($codEstadoSimulacionXX==3){
                   $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
                  }
 
-                 
+                
+                 //CALCULAMOS EL VALOR DE LAS NORMAS
+                 $valorNormas=(precioNormasPropuesta($codigo)*$alumnosX);
+                //echo "XXXXXXXXXXXXXXXXXX: ".$valorNormas;
 
                  $totalFijoPlanModulos=$totalFijoPlan*$cantidadModuloX;
 
@@ -453,8 +456,8 @@ if($codEstadoSimulacionXX==3){
                              $ibnorca_title=""; //FUERA DE IBNORCA
                          }
                          //cambios para la nueva acortar la simulacion 
-                         $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal)-$totalFijoPlan-($totalVariable[2]*$alumnosX);
-                         $utilidadNetaExterno=$ingresoExterno-((($iva+$it)/100)*$ingresoExterno)-$totalFijo[3]-($totalVariable[3]*$alumnosExternoX);
+                         $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal)-$totalFijoPlan-($totalVariable[2]*$alumnosX)-$valorNormas;
+                         $utilidadNetaExterno=$ingresoExterno-((($iva+$it)/100)*$ingresoExterno)-$totalFijo[3]-($totalVariable[3]*$alumnosExternoX)-$valorNormas;
 
                          $pUtilidadLocal=($utilidadNetaLocal*100)/$ingresoLocal;
                          $pUtilidadExterno=($utilidadNetaExterno*100)/$ingresoExterno;
@@ -478,8 +481,8 @@ if($codEstadoSimulacionXX==3){
                  }
 
                  //cambios para la nueva acortar la simulacion 
-                 $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal)-$totalFijoPlan-($totalVariable[2]*$alumnosX);
-                 $utilidadNetaExterno=$ingresoExterno-((($iva+$it)/100)*$ingresoExterno)-$totalFijo[3]-($totalVariable[3]*$alumnosExternoX);
+                 $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal)-$totalFijoPlan-($totalVariable[2]*$alumnosX)-$valorNormas;
+                 $utilidadNetaExterno=$ingresoExterno-((($iva+$it)/100)*$ingresoExterno)-$totalFijo[3]-($totalVariable[3]*$alumnosExternoX)-$valorNormas;
 
                  $pUtilidadLocal=($utilidadNetaLocal*100)/$ingresoLocal;
                  $pUtilidadExterno=($utilidadNetaExterno*100)/$ingresoExterno;
@@ -520,6 +523,7 @@ if($codEstadoSimulacionXX==3){
                         }                      
                     }
                  }
+
 
 				?>	
 				<input type="hidden" id="cantidad_alibnorca" name="cantidad_alibnorca" readonly value="<?=$alumnosX?>">
@@ -589,6 +593,10 @@ if($codEstadoSimulacionXX==3){
                   <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
                 </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary text-white">COSTO NORMAS</td>
+                  <td class="text-right font-weight-bold"><?=number_format(($valorNormas), 2, '.', ',')?></td>
+                </tr>
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">COSTO TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal, 2, '.', ',')?></td>
@@ -646,6 +654,12 @@ if($codEstadoSimulacionXX==3){
                   <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($pCostoLocal, 2, '.', ',')?> %</td>
                 </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary2 text-white">TOTAL NORMAS</td>
+                  <td class="text-right font-weight-bold"><?=number_format(($valorNormas), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($pNormasLocal, 2, '.', ',')?> %</td>
+                </tr>
+
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">PAGO IMPUESTOS (IVA  <?=$iva?> % + IT <?=$it?> % = <?=$iva+$it?> %)</td>
                   <td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*$ingresoLocal, 2, '.', ',')?></td>

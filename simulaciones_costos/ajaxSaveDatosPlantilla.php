@@ -19,6 +19,9 @@ $precio_p=$_GET['precio_p'];
 $dias_curso=$_GET['dias_curso'];
 $precio_pedit=$_GET['precio_pedit'];
 $modal_modulos=$_GET['modal_modulos'];
+$normas=$_GET['normas'];
+
+//echo $normas;
 
 $sqlUpdate="UPDATE precios_simulacioncosto SET  venta_local='$precio_pedit' where codigo=$precio_p";
 $stmtUpdate = $dbh->prepare($sqlUpdate);
@@ -111,6 +114,19 @@ while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
          $stmtFijos = $dbh->prepare($sqlFijos);
          $stmtFijos->execute();
       }    
+
+
+$sqlDelNorma="DELETE FROM simulaciones_costosnormas WHERE cod_simulacion='$codSimulacion'";
+$stmtDelNorma = $dbh->prepare($sqlDelNorma);
+$stmtDelNorma->execute();
+
+for ($i=0; $i < count($normas); $i++) { 
+     $codNorma=$normas[$i];
+     $sqlInsertNorma="INSERT INTO simulaciones_costosnormas (cod_simulacion, cod_norma,cantidad,precio) 
+     VALUES ('".$codSimulacion."','".$codNorma."',1,10)";
+     $stmtInsertNorma = $dbh->prepare($sqlInsertNorma);
+     $stmtInsertNorma->execute();
+}
 
 
 $precios=obtenerPreciosPorCodigo($precio_p);

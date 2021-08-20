@@ -336,6 +336,13 @@ $responsable=namePersonal($codResponsableX);
                   <td class="text-right font-weight-bold"><?=number_format(($ejecutadoEgresoX/$ejecutadoIngresoX)*100, 2, '.', ',')?> %</td>
                 </tr>
                 <tr>
+                  <td class="text-left small  text-white" style="background:#C70039">TOTAL COSTO NORMAS</td>
+                  <td class="text-right font-weight-bold"><?=number_format((41*$alumnosX), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format(0, 2, '.', ',')?> %</td>
+                  <td class="text-right font-weight-bold"><?=number_format((0), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format(0, 2, '.', ',')?> %</td>
+                </tr>
+                <tr>
                   <td class="text-left small  text-white" style="background:#C70039">PAGO IMPUESTOS (IVA  <?=$iva?> % + IT <?=$it?> % = <?=$iva+$it?> %)</td>
                   <td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*$ingresoLocal, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>

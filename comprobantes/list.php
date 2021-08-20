@@ -190,10 +190,10 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                     <i class="material-icons text-default">attachment</i> Adjuntos
                                   </a>
                                   <?php
-                            if(verificarEdicionComprobanteFacturasUsuario($globalUser,$codigo)!=0){  //para verificar personal edicion facturas 
+                            if(verificarEdicionComprobanteFacturasUsuario($globalUser,$codigo)!=0 || $globalUnidad==3000){  //para verificar personal edicion facturas 
                                   $codigoSol=obtenerCodigoSolicitudRecursosComprobante($codigo);
-                                  if($codigoSol[1]==0){
-                                    if($existeCuenta==0){
+                                  if($codigoSol[1]==0 || $globalUnidad==3000){
+                                    if($existeCuenta==0 || $globalUnidad==3000){
                                       $codCajaChica=existeCajaChicaRelacionado($codigo);
                                        if($codCajaChica>0){
                                         $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
@@ -201,9 +201,11 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                         <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
                                          </a><?php
                                        }else{
-                                        ?><a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
+                                        ?>
+                                        <a href='<?=$urlEdit3;?>?codigo=<?=$codigo;?>' target="_blank" class="dropdown-item" title="Editar">
                                         <i class="material-icons text-success"><?=$iconEdit;?></i> Editar
-                                      </a><?php
+                                      </a>
+                                      <?php
                                        }
                                     }else{
                                       ?>

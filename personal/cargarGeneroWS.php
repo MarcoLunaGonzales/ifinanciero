@@ -1,8 +1,13 @@
 <?php 
 set_time_limit(0);
+
 require_once 'conexion.php';
 require_once 'functions.php';
 require_once 'rrhh/configModule.php';
+
+// require_once '../conexion.php';
+// require_once '../functions.php';
+// require_once '../rrhh/configModule.php';
 $dbh = new Conexion();
 $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
 $sIde = "monitoreo"; 
