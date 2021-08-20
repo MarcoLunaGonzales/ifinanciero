@@ -9963,17 +9963,31 @@ function obtenerNombreGeneroPersona($cod_genero){
 }
 function obtenerNombreIdentificacionPersona($codigo,$indice){
   $dbh = new Conexion();
-  if($indice==1){
-    $sql="SELECT nombre FROM tipos_identificacion_personal where codigo=$codigo;";  
-  }else{
-    $sql="SELECT nombre FROM tipos_identificacion_personal where codigo=$codigo;";
-  } 
-  
-  $stmt = $dbh->prepare($sql);
-  $stmt->execute();
   $valor="";
+  $sql="SELECT abreviatura,nombre FROM tipos_identificacion_personal where codigo=$codigo;";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();  
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
-    $valor=$row['nombre'];
+    if($indice==1){
+      $valor=$row['abreviatura'];
+    }else{
+      $valor=$row['nombre'];     
+    }
+  }  
+  return $valor;
+}
+function obtenerNameAfp($codigo,$indice){
+  $dbh = new Conexion();
+  $valor="";
+  $sql="SELECT abreviatura,nombre FROM tipos_afp where codigo=$codigo;";  
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();  
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+    if($indice==1){
+      $valor=$row['abreviatura'];
+    }else{
+      $valor=$row['nombre'];     
+    }
   }  
   return $valor;
 }

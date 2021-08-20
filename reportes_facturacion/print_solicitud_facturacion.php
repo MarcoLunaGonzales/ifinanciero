@@ -6,6 +6,8 @@ require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
 require_once  __DIR__.'/../fpdf_html.php';
 require_once '../layouts/bodylogin2.php';
+
+require_once 'configModule.php';
 $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
@@ -104,6 +106,7 @@ $razon_social=$result['razon_social'];
                     <th width="3%"><small><b>Nro.<br>Factura</b></small></th>
                     <th width="8%"><small><b>Forma Pago</b></small></th>
                     <th width="5%"><small><b>Estado</b></small></th>
+                    <th ></th>
                   </tr>                                  
                 </thead>
                 <tbody>
@@ -168,6 +171,11 @@ $razon_social=$result['razon_social'];
                       <td class="text-right small"><small><?=$nro_fact_x;?><br></small></td>
                       <td class="text-left small"><small><?=$string_formaspago;?></small></td>
                       <td class="text-right small"><?=$label."<small>".$estado_x;?></small></span></td>
+                      <td class="td-actions text-right">    
+                        <a href="<?=$urlVer_SF;?>?codigo=<?=$codigo_facturacion;?>" target="_blank" class="btn btn-info" title="Ver Solicitud">
+                          <i class="material-icons">remove_red_eye</i>
+                        </a>
+                      </td>
                     </tr>
                     <?php                                  
                   }?>

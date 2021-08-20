@@ -23,6 +23,14 @@ try {
     $cod_cliente = $_POST["cod_cliente"];
     $cod_personal = $_POST["cod_personal"];
     $razon_social = $_POST["razon_social"];
+
+    $patron15 = "[a-zA-Z áéíóúÁÉÍÓÚñÑ]";//solo numeros,letras M y m, tildes y la ñ
+    $patron1="[\n|\r|\n\r]";//quitamos salto de linea
+    $razon_social = preg_replace($patron1, " ", $razon_social);
+    $razon_social = preg_replace($patron15, "", $razon_social);
+    $razon_social = str_replace('"', " ", $razon_social);//quitamos comillas dobles
+    $razon_social = str_replace("'", " ", $razon_social);//quitamos comillas simples
+
     $nit = $_POST["nit"];
     $observaciones = $_POST["observaciones"];
     $observaciones_2 = $_POST["observaciones_2"];

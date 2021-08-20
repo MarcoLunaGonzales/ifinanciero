@@ -6,6 +6,7 @@ require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
 require_once  __DIR__.'/../fpdf_html.php';
 require_once '../layouts/bodylogin2.php';
+require_once 'configModule.php';
 $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
@@ -128,6 +129,7 @@ if($sw_check=="0"){
                               <th style="border:2px solid;"><small><b>Retención</b></small></th>
                               <th style="border:2px solid;"><small><b>Monto</b></small></th>
                               <th style="border:2px solid;"><small><b>Estado</b></small></th>
+                              <th style="border:2px solid;"><small><b>Actions</b></small></th>
                             </tr>
                           </thead>
                             <tbody>
@@ -258,7 +260,12 @@ if($sw_check=="0"){
                           <td><small><?=implode("<br>",$arrayRetencion)?></small></td>
                           <td><small><?=number_format(obtenerSumaDetalleSolicitud($codigo),2,'.',',')?></small></td>
                           <td class="td-actions text-right"><small><button class="btn <?=$btnEstado?> btn-sm btn-round btn-block"><?=$estado;?></button></small>
-                          </td> 
+                          </td>
+                          <td class="td-actions text-right">                                
+                            <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" target="_blank" class="btn btn-info" title="Ver Solicitud R.">
+                              <i class="material-icons">remove_red_eye</i>
+                            </a>
+                          </td>
                         </tr>
 <?php
               $index++;
@@ -287,6 +294,7 @@ if($sw_check=="0"){
                               <th class="small" style="border:2px solid;"><small><small><b>Retención</b></small></small></th>
                               <th class="small" style="border:2px solid;"><small><small><b>Monto</b></small></small></th>
                               <th class="small" style="border:2px solid;"><small><small><b>Estado</b></small></small></th>
+                              <th class="small" style="border:2px solid;"><small><small><b>Actions</b></small></small></th>
                             </tr>
                            </tfoot>
                            <?php }?> 
