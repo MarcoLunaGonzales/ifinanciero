@@ -3950,6 +3950,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
+
   function descargarPDFCajaChica($nom,$html){
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");
@@ -3962,7 +3963,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf->render();
     $canvas = $mydompdf->get_canvas();
     $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
-    $canvas->page_text(500, 795, "Página:            {PAGE_NUM}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+    //$canvas->page_text(500, 795, "Página:            {PAGE_NUM}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
 
     $mydompdf->set_base_path('assets/libraries/plantillaPDFCajaChica.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
@@ -6852,7 +6853,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       $codTipoComprobanteX=$row['cod_tipocomprobante'];
       $tipoComprobanteX=$row['tipoComprobante'];
       $mesComprobanteX=str_pad($row['mes'], 2, "0", STR_PAD_LEFT);
-      $numeroX=str_pad($row['numero'], 5, "0", STR_PAD_LEFT);;
+      $numeroX=str_pad($row['numero'], 5, "0", STR_PAD_LEFT);
 
       if($codTipoComprobanteX<>4){
         $nombreComprobante=$tipoComprobanteX.$mesComprobanteX."-".$numeroX;
@@ -11475,6 +11476,17 @@ function obtenerNombreInstanciaCajaChica($codCaja){
         $index++;
     }
     return $valor;
+ }
+ function precioNormasPropuesta($idPropuesta){
+   $dbh = new Conexion();
+   $sql="select (sum(v.precio)*0.15)as montonorma from ibnorca.vw_catalogonormas v, simulaciones_costosnormas s where s.cod_norma=v.IdNorma and s.cod_simulacion=$idPropuesta;";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['montonorma'];
+   }
+   return $valor; 
  }
 
  

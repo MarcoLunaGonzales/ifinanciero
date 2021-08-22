@@ -69,10 +69,14 @@
         $debeX=$rowComp['debe'];
         $haberX=$rowComp['haber'];
         $codCuentaAuxiliar=$rowComp['cod_cuentaauxiliar'];
-        $cuenta_auxiliarX=nameCuentaAuxiliar($codCuentaAuxiliar);
-        $nombreUnidad=abrevUnidad_solo($rowComp['unidad']);
+        //$cuenta_auxiliarX=nameCuentaAuxiliar($codCuentaAuxiliar);
+        //$nombreUnidad=abrevUnidad_solo($rowComp['unidad']);
+        $cuenta_auxiliarX="-";
+        $nombreUnidad="-";
+        
         $codComprobanteX=$rowComp['codigo_comprobante'];
-        $nombreComprobanteX=nombreComprobante($codComprobanteX);
+        //$nombreComprobanteX=nombreComprobante($codComprobanteX);
+        $nombreComprobanteX="xxx"
         $codigoCuenta=$rowComp['numero'];
         $nombreCuenta=$rowComp['nombre'];
         
@@ -82,7 +86,8 @@
             $glosaX=substr($glosaX,0,obtenerValorConfiguracion(72))."...";
           }
         }
-        $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
+        //$tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
+        $tc=1
         if($tc==0){$tc=1;}
         
         $saldoX=0;
@@ -99,7 +104,7 @@
        <td class="font-weight-bold small"><?=$nombreCuenta?></td>
        <!--td class="font-weight-bold small"><?=$codigoX?></td>
        <td class="font-weight-bold small"><?=$codCuentaAuxiliar?></td>
-       <td class="font-weight-bold small"><?=obtenerCodigoProveedorCuentaAux($codCuentaAuxiliar)?></td-->
+       <td class="font-weight-bold small"><?=0/*obtenerCodigoProveedorCuentaAux($codCuentaAuxiliar)*/?></td-->
        <td class="font-weight-bold small"><?=strftime('%d/%m/%Y',strtotime($fechaX))?></td>
        <td class="font-weight-bold small"><?=$unidadX?>-<?=$areaX?></td>
        <td class="text-left small">[<?=$cuenta_auxiliarX?>] - <?=$glosaX?></td>

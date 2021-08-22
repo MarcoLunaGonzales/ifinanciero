@@ -52,7 +52,8 @@
       if($porciones[1]=="aux"){
         $nombreCuenta=nameCuentaAux($cuenta);
 
-        $query1="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,d.glosa,d.debe,d.haber, p.codigo,p.nro_cuenta,p.nombre,d.cod_cuentaauxiliar, u.abreviatura,a.abreviatura as areaAbrev, c.cod_unidadorganizacional as unidad,c.fecha, (c.codigo) as codigo_comprobante
+        $query1="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,d.glosa,d.debe,d.haber, p.codigo,p.nro_cuenta,p.nombre,d.cod_cuentaauxiliar, u.abreviatura,a.abreviatura as areaAbrev, c.cod_unidadorganizacional as unidad,c.fecha, (c.codigo) as codigo_comprobante, p.nombre as nombre_cuenta_auxiliar, (select tc.abreviatura from tipos_comprobante tc where tc.codigo=c.cod_tipocomprobante)as tipoComprobante, MONTH(c.fecha)as mes_comprobante, c.numero as numerocomprobante,
+          (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)as unidad_cabecera
         FROM cuentas_auxiliares p 
         join comprobantes_detalle d on p.codigo=d.cod_cuentaauxiliar 
         join areas a on d.cod_area=a.codigo 
@@ -65,7 +66,8 @@
         $query1="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,d.glosa,d.debe,d.haber,
           p.codigo,p.numero,p.nombre,d.cod_cuentaauxiliar,
           u.abreviatura,a.abreviatura as areaAbrev,
-          c.cod_unidadorganizacional as unidad,c.fecha, (c.codigo) as codigo_comprobante
+          c.cod_unidadorganizacional as unidad,c.fecha, (c.codigo) as codigo_comprobante, p.nombre as nombre_cuenta_auxiliar, (select tc.abreviatura from tipos_comprobante tc where tc.codigo=c.cod_tipocomprobante)as tipoComprobante, MONTH(c.fecha)as mes_comprobante, c.numero as numerocomprobante,
+          (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)as unidad_cabecera
           FROM plan_cuentas p 
           join comprobantes_detalle d on p.codigo=d.cod_cuenta 
           join areas a on d.cod_area=a.codigo 
@@ -88,7 +90,8 @@
       }
 
       //OBTENEMOS LOS SALDOS ANTERIORES
-      $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($desdeInicioAnio)));
+      //$tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($desdeInicioAnio)));
+      $tc=1;
       if($tc==0){$tc=1;}
       //echo "desde: ".$desde." desdeInicioAnio: ".$desdeInicioAnio;
       if($desde==$desdeInicioAnio){
@@ -142,17 +145,35 @@
         $debeX=$rowComp['debe'];
         $haberX=$rowComp['haber'];
         $codCuentaAuxiliar=$rowComp['cod_cuentaauxiliar'];
-        $cuenta_auxiliarX=nameCuentaAuxiliar($codCuentaAuxiliar);
-        $nombreUnidad=abrevUnidad_solo($rowComp['unidad']);
+        //$cuenta_auxiliarX=nameCuentaAuxiliar($codCuentaAuxiliar);
+        //$nombreUnidad=abrevUnidad_solo($rowComp['unidad']);
+        $cuenta_auxiliarX=$rowComp['nombre_cuenta_auxiliar'];
+        $tipoComprobanteX=$rowComp['tipoComprobante'];
+        $mesComprobante=$rowComp['mes_comprobante'];
+        $numeroComprobante=$rowComp['numerocomprobante'];
+        $nombreUnidad=$rowComp['unidad_cabecera'];
+
+        /*NOMBRE COMPROBANTE*/
+        $mesComprobanteX=str_pad($mesComprobante, 2, "0", STR_PAD_LEFT);
+        $numeroX=str_pad($numeroComprobante, 5, "0", STR_PAD_LEFT);
+        $nombreComprobanteX="";
+        if($tipoComprobanteX<>'FAC'){
+          $nombreComprobanteX=$tipoComprobanteX.$mesComprobanteX."-".$numeroX;
+        }else{
+          $nombreComprobanteX=$tipoComprobanteX."-".$numeroX;
+        }
+        /*FIN NOMBRE COMPROBANTE*/
+        
         $codComprobanteX=$rowComp['codigo_comprobante'];
-        $nombreComprobanteX=nombreComprobante($codComprobanteX);
+
         //INICIAR valores de las sumas
         if($glosaLen==0){      
           if(strlen($glosaX)>obtenerValorConfiguracion(72)){
             $glosaX=substr($glosaX,0,obtenerValorConfiguracion(72))."...";
           }
         }
-        $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
+        //$tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
+        $tc=1;
         if($tc==0){$tc=1;}
 
         $tDebeBol+=$debeX;$tHaberBol+=$haberX;

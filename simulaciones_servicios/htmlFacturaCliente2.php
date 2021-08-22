@@ -198,7 +198,7 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 	                  	</td>
 	                </tr>
             </table>';
-            $nombre_cliente = str_replace("­","",$nombre_cliente);
+            //$nombre_cliente = str_replace("­","",$nombre_cliente);
             $html.='<table class="table">'.
               '<tr class="bold table-title text-left">'.
                   '<td  class="td-border-none text-right" width="12%"><b>Señor(es):</b></td>'.

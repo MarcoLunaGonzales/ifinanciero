@@ -12,7 +12,7 @@ $sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from entidades_uo e, unidades
 $stmt = $db->prepare($sqlUO);
 $stmt->execute();
 ?>
-	<select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+	<select class="selectpicker form-control form-control-sm" name="unidad[]" id="unidad" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true" data-container="body"">
 	    <?php 
 	    	while ($row = $stmt->fetch()){ 
 		?>

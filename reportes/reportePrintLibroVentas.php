@@ -42,7 +42,7 @@ if (isset($_POST["check_rs_librocompras"])) {
   $sql_rs="";
 }
 
-$stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and cod_unidadorganizacional in ($stringUnidadesX) $sql_rs ORDER BY nro_factura asc");
+$stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and cod_unidadorganizacional in ($stringUnidadesX) $sql_rs ORDER BY fecha_factura, nro_factura asc");
 $stmt2->execute();
 //resultado
 $stmt2->bindColumn('codigo', $codigo);

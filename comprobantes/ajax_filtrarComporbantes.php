@@ -175,9 +175,9 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
           </div>
           <?php 
           }
-       if(verificarEdicionComprobanteFacturasUsuario($globalUser,$codigo)!=0){  //para verificar personal edicion facturas     
-        if($codigoSol[1]==0){
-          if($existeCuenta==0){
+       if(verificarEdicionComprobanteFacturasUsuario($globalUser,$codigo)!=0 || $globalUnidad==3000){  //para verificar personal edicion facturas     
+        if($codigoSol[1]==0 || $globalUnidad==3000){
+          if($existeCuenta==0 || $globalUnidad==3000){
                     $codCajaChica=existeCajaChicaRelacionado($codigo);
               if($codCajaChica>0){
                 $nombreCaja=obtenerObservacionCajaChica($codCajaChica);

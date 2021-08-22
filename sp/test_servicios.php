@@ -1,21 +1,28 @@
 <?php
 require_once '../conexion.php';
 require_once '../functions.php';
+//require_once '../personal/cargarDatosWS.php';//tipos identificacion personal
+//require_once '../personal/cargarGeneroWS.php';
+//require_once '../personal/cargarEstadoCivilWS.php';
 
-    $sIde = "ifinanciero";
-    $sKey="ce94a8dabdf0b112eafa27a5aa475751";    
+    $sIde = "monitoreo";
+    $sKey="837b8d9aa8bb73d773f5ef3d160c9b17";    
 
-    $ci_estudiante="7919645";
-    $IdCurso="3114";
-   
-     $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
-            "accion"=>"ObtenerModuloxPagarPagadoySaldo", 
-            "Identificacion"=>$ci_estudiante, //7666922 ci del alumno
-            "IdCurso"=>$IdCurso); //1565
+//SERVICIOS TLQ
+    /*$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonal");
+    $url=$direccion."rrhh/ws-personal-listas.php"; */  
+
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarPersonal");
+    $url="http://ibnored.ibnorca.org/wsibno/rrhh/ws-personal-listas.php";
+    
+    $json=callService($parametros, $url);
+
+    $obj=json_decode($json);//decodificando json
+
     $parametros=json_encode($parametros);
     $ch = curl_init();
     // curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/capacitacion/ws-inscribiralumno.php"); //PRUEBA
-    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/capacitacion/ws-inscribiralumno.php");
+    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/rrhh/ws-personal-listas.php");
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

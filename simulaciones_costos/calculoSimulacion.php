@@ -27,9 +27,15 @@
                  $utilidadLocal=$ingresoLocal-($totalVariable[2]*$alumnosX)-$costoOperLocal;
                  $utilidadExterno=$ingresoExterno-($totalVariable[3]*$alumnosExternoX)-$costoOperExterno;
 
+
+                 //valor normas
+                $valorNormasX=precioNormasPropuesta($codigo)*$alumnosX;
+                //echo $valorNormasX;
+                $pNormasLocal=($valorNormasX/$ingresoLocal);
+
                  // impuesto iva
-                 $costoTotalLocal=$totalFijoPlan+($totalVariable[2]*$alumnosX);
-                 $costoTotalExterno=$totalFijo[3]+($totalVariable[3]*$alumnosExternoX);
+                 $costoTotalLocal=$totalFijoPlan+($totalVariable[2]*$alumnosX)+$valorNormasX;
+                 $costoTotalExterno=$totalFijo[3]+($totalVariable[3]*$alumnosExternoX+$valorNormasX);
 
                  $impuestoIvaLocal=$costoTotalLocal*($iva/100);
                  $impuestoIvaExterno=$costoTotalExterno*($iva/100);
@@ -45,7 +51,9 @@
                  $pImpItExterno=($impuestoITExterno/$ingresoExterno)*100;
                   
                  //UTILIDAD NETA 
-                 $utilidadNetaLocal=$utilidadLocal-$impuestoIvaLocal-$impuestoITLocal;
-                 $utilidadNetaExterno=$utilidadExterno-$impuestoIvaExterno-$impuestoITExterno;
+                 $utilidadNetaLocal=$utilidadLocal-$impuestoIvaLocal-$impuestoITLocal-$valorNormasX;
+                 //echo "ZZZ:".$utilidadNetaLocal." ".$impuestoIvaLocal." ".$impuestoITLocal." ".$valorNormasX;
+                 //echo "XXXXXXXXXXXXX:".$utilidadNetaLocal;
+                 $utilidadNetaExterno=$utilidadExterno-$impuestoIvaExterno-$impuestoITExterno-$valorNormasX;
                  $pUtilidadLocal=($utilidadNetaLocal/$ingresoLocal)*100;
                  $pUtilidadExterno=($utilidadNetaExterno/$ingresoExterno)*100;

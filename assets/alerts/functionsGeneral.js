@@ -8125,7 +8125,9 @@ function guardarDatosPlantilla(btn_id){
    var precio_pedit=$("#modal_importeplanedit").val();  
    var precio_alternativo=$("#total_preciosimulacion").val();
    var modal_modulos=$("#modal_modulo").val();
-   var parametros={"dias_curso":dias_curso,"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo,"modal_modulos":modal_modulos};
+   var normas=$("#normas").val();
+   alert(normas);
+   var parametros={"dias_curso":dias_curso,"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo,"modal_modulos":modal_modulos,"normas":normas};
 
   if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){
     var cantidadFilas=$("#cantidad_filasprecios").val();
@@ -8444,7 +8446,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       $.ajax({
         type:"POST",
         data:parametros,
-        url:"ajaxSaveDatosPlantilla2.php",
+        url:"d2.php",
         beforeSend: function () { 
           iniciarCargaAjax();
         },
