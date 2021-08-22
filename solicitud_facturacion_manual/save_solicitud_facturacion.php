@@ -70,7 +70,7 @@ try {
                $stmt = $dbh->prepare("SELECT codigo from solicitudes_facturacion where cod_simulacion_servicio=$cod_simulacion ORDER BY codigo desc LIMIT 1");
                $stmt->execute();           
                while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                      $cod_facturacion=$rowPre['codigo'];
+                    $cod_facturacion=$rowPre['codigo'];
                 }           
                 //los agregados con  ajax
                 $cantidad_filas = $_POST["cantidad_filas"];

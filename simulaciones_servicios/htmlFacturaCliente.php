@@ -12,9 +12,9 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	$dbh = new Conexion();
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 
-	$sqlX="SET NAMES 'utf8'";
-	$stmtX = $dbh->prepare($sqlX);
-	$stmtX->execute();
+	// $sqlX="SET NAMES 'utf8'"; 
+	// $stmtX = $dbh->prepare($sqlX);
+	// $stmtX->execute();
 
 	
 	set_time_limit(300);
@@ -191,7 +191,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
               '<tr class="bold table-title text-left">'.
                   '<td  class="td-border-none text-right" width="12%"><b>Señor(es):</b></td>'.
                   '<td  class="td-border-none" ><b>'.mb_strtoupper($nombre_cliente).'</b></td>'.
-                  '<td  class="td-border-none" width="18%"><b>NIT/CI:</b>&nbsp;'.$nit.'</td>'.
+                  '<td  class="td-border-none" width="20%"><b>NIT/CI:</b>&nbsp;'.$nit.'</td>'.
                 '</tr>'.
             '</table>';
     		$html.='<table class="table2">'.
@@ -204,8 +204,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
               	$html.='<tr><td></td><td colspan="2"></td><td></td></tr>';
           	        $contador_items=0;
           	        // $cantidad_por_defecto=20;//cantidad de items por defecto
-          	        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defect
-          	        // $cantidad_por_defecto=obtenerValorConiguracion(66);//cantidad de items por defectoo
+          	        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defect          	        
 
                		while ($row = $stmtDesCli->fetch()) 
 					{
@@ -230,7 +229,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 					}
 					for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
 						// $html.='&nbsp;<br>';
-						$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td></tr>';
+						$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 7px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 7px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 7px;border-bottom: hidden; border-top: hidden;"></td></tr>';
 					}
 
 					$importe=$suma_total;						
