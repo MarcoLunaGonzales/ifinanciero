@@ -202,8 +202,8 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
             $html.='<table class="table">'.
               '<tr class="bold table-title text-left">'.
                   '<td  class="td-border-none text-right" width="12%"><b>Señor(es):</b></td>'.
-                  '<td  class="td-border-none" ><b>'.mb_strtoupper($nombre_cliente,'UTF-8').'</b></td>'.
-                  '<td  class="td-border-none" width="18%"><b>NIT/CI:</b>&nbsp;'.$nit.'</td>'.
+                  '<td  class="td-border-none" ><b>'.mb_strtoupper($nombre_cliente).'</b></td>'.
+                  '<td  class="td-border-none" width="20%"><b>NIT/CI:</b>&nbsp;'.$nit.'</td>'.
                 '</tr>'.
             '</table>';
     		$html.='<table class="table2">'.              
@@ -265,7 +265,7 @@ function generarHTMLFacCliente2($codigo,$auxiliar,$tipo_admin){
 	               		
 						for($i=$contador_items;$i<$cantidad_por_defecto;$i++){
 							// $html.='&nbsp;<br>';
-							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px;border-bottom: hidden; border-top: hidden;"></td></tr>';
+							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 7px; border-bottom: hidden; border-top: hidden;">&nbsp;</td><td colspan="2" style="padding-top: 0px;padding-bottom: 0px;font-size: 7px;border-bottom: hidden; border-top: hidden;"></td><td style="padding-top: 0px;padding-bottom: 0px;font-size: 7px;border-bottom: hidden; border-top: hidden;"></td></tr>';
 						}	
                			
 							$importe=$suma_total;

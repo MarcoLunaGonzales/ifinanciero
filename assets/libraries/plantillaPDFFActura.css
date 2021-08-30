@@ -1,6 +1,5 @@
 body{font-family:Arial, sans-serif; font-size: 10px;}
-@page { margin-top: 15px; margin-left: 60px; margin-right: 40px; margin-bottom: 15px;}
-
+/*body{font-family:"DejaVu Sans", "Times New Roman", Times, serif;font-size: 8px;}*/
 
 header { position: fixed; top: -125px; left: 0px; right: 0px; height: 70px;}
 footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }

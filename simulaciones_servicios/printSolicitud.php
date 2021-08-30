@@ -53,6 +53,7 @@ $html.='<html>'.
                 '<!-- CSS Files -->'.
                 '<link rel="icon" type="image/png" href="../assets/img/favicon.png">'.
                 '<link href="../assets/libraries/plantillaPDFCajaChica.css" rel="stylesheet" />'.
+                '<meta charset="utf-8" />'.
            '</head>';
 /*$html.='<body>'.
         '<script type="text/php">'.

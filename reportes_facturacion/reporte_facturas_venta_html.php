@@ -39,6 +39,8 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin,$estado_factura){
 		    $importe = $resultInfo['importe'];
 		    $cod_dosificacionfactura = $resultInfo['cod_dosificacionfactura'];
 		    $observaciones = $resultInfo['observaciones'];
+		    
+		    $glosa_factura3 = $resultInfo['glosa_factura3'];
 		    $cod_tipopago = $resultInfo['cod_tipopago'];
 		    $nombre_cliente = $razon_social;
 		}	
@@ -156,28 +158,45 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin,$estado_factura){
               	        // $cantidad_por_defecto=20;//cantidad de items por defecto
               	        $cantidad_por_defecto=obtenerValorConfiguracion(66);//cantidad de items por defect
               	        // $cantidad_por_defecto=obtenerValorConiguracion(66);//cantidad de items por defectoo
+						if($glosa_factura3==null){
+						        	while ($row = $stmtDesCli->fetch()) 							
+								{
+									$html.='<tr>';
+									$html.='<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden;border-top: hidden; font-size: 8px;">';
+									$html.=formatNumberDec($row["cantidad"]);
+									$html.='</td> 
+									<td valign="top" colspan="2" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
+									$html.=mb_strtoupper($row["descripcion_alterna"]);
+									$html.='</td>                   
+									<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
+									$precio=$row["precio"];
+									$descuento_bob=$row["descuento_bob"];
+									$cantidad=$row["cantidad"];
+									$precio=$precio*$cantidad-$descuento_bob;
 
-	               		while ($row = $stmtDesCli->fetch()) 
-						{
-							$html.='<tr>';
-							$html.='<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden;border-top: hidden; font-size: 8px;">';
-							$html.=formatNumberDec($row["cantidad"]);
-							$html.='</td> 
-							<td valign="top" colspan="2" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
-							$html.=mb_strtoupper($row["descripcion_alterna"]);
-							$html.='</td>                   
-							<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
-							$precio=$row["precio"];
-							$descuento_bob=$row["descuento_bob"];
-							$cantidad=$row["cantidad"];
-							$precio=$precio*$cantidad-$descuento_bob;
-
-							$html.=formatNumberDec($precio);
-							$suma_total+=$precio;
-							$html.='</td>';
-							$html.='</tr>';
-							$contador_items++;
-						}
+									$html.=formatNumberDec($precio);
+									$suma_total+=$precio;
+									$html.='</td>';
+									$html.='</tr>';
+									$contador_items++;
+								}
+								
+						        }else{
+						        	$html.='<tr>';
+								$html.='<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden;border-top: hidden; font-size: 8px;">';
+								$html.=formatNumberDec(1);
+								$html.='</td> 
+								<td valign="top" colspan="2" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
+								$html.=mb_strtoupper($glosa_factura3);
+								$html.='</td>                   
+								<td class="text-right" valign="top" style="padding-top: 0px;padding-bottom: 0px; border-bottom: hidden; border-top: hidden; font-size: 8px;">';
+								$precio=$importe;
+								$html.=formatNumberDec($precio);
+								$suma_total=$precio;
+								$html.='</td>';
+								$html.='</tr>';
+								$contador_items++;
+						        }
 						// $estado_factura=1;
 						if($estado_factura==2){	
 							$html.='<tr><td style="padding-top: 0px;padding-bottom: 0px;font-size: 8px; border-bottom: hidden; border-top: hidden;">&nbsp;
