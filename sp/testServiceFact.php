@@ -49,8 +49,10 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               );
 /*$tipoPago=5 Y $tipoPago=6;//deposito en cuenta
 $tipoPago=4;//tarjetas*/
-$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
-// $direccion="200.105.199.164:8008/ifinanciero/wsifin/";
+//$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+    
+
+    $direccion="200.105.199.164:8008/ifinanciero/wsifin/";
     $parametros=json_encode($parametros);
     // abrimos la sesiรณn cURL
     $ch = curl_init();
