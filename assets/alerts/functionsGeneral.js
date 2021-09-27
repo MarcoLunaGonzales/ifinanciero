@@ -19336,16 +19336,41 @@ function exportTableToExcel(tableID, filename = ''){
 var itemDatosProductosPlantilla=[];
 
 function cargarDatosExel_tcp(){
-  // var data = $("input[name=archivo_tcp]")[0].files;  
-  var data = $('textarea[name=archivo_tcp]').val();
-  console.log(data);
+   
+  var paqueteDeDatos = new FormData();
 
+  paqueteDeDatos.append('file_excel', $('#archivo_tcp')[0].files[0]);
+  // paqueteDeDatos.append('file_txt', $('#documentos_cabecera_txt')[0].files[0]);
+  // paqueteDeDatos.append('file_csv', $('#archivo_tcp')[0].files[0]);
+  
+  var destino = "simulaciones_servicios/ajax_subirdatosexcel_tcp.php"; 
+  $.ajax({
+      url: destino,
+      type: 'POST', // Siempre que se envíen ficheros, por POST, no por GET.
+    contentType: false,
+    data: paqueteDeDatos, // Al atributo data se le asigna el objeto FormData.
+    processData: false,
+    cache: false, 
+    beforeSend: function () {
+      $("#texto_boton").html("Cargando...");
+      $("#texto_boton").attr("disabled",true);
+         
+        },     
+    success: function(resultado){ // En caso de que todo salga bien.
+      $("#texto_boton").html("Cargar Datos");
+      $("#texto_boton").attr("disabled",false);
+      $("#datos_body").html(resultado);
+      //console.log(resultado);
+    },
+    error: function (){ // Si hay algún error.
+      $("#texto_boton").html("Cargar Datos");
+      $("#texto_boton").attr("disabled",false);
+      alert("Ocurrio un error Contactese con el Administrador!");
+    }
+  });
+    
+    
 
-
-    
-    
-    
-    
 
 
     // var rows = data.split("\n");    

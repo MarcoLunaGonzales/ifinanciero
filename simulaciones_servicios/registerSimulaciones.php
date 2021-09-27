@@ -820,13 +820,15 @@ $dbh = new Conexion();
         <div class="row">
           <label class="col-sm-2 col-form-label">Excel Formato .csv</label>
           <div class="col-sm-7">
-            <input class="form-control" type="file" name="archivo_tcp" id="archivo_tcp" accept="csv" required="true" />
+            <input class="form-control" type="file" name="archivo_tcp" id="archivo_tcp" accept=".xls,.xlsx" required="true" />
+            
           </div>
         </div>
       </div>
 
       <div class="modal-footer">
-            <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos" onclick="cargarDatosExel_tcp()">Cargar Datos</a>            
+            <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos" onclick="cargarDatosExel_tcp();return false;"><span id='texto_boton'>CARGAR DATOS</span></a>
+
             <!-- <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a> -->
       </div>
       
