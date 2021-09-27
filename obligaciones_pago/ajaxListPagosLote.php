@@ -14,11 +14,7 @@ $proveedoresString=implode(",", $proveedoresString);
 
 $cuentas=$_GET['cuentas'];
 $cuentas=implode(",", $cuentas);
-// $fila=$_GET['fila'];
-// $cantidad_modal=$_GET['cantidad_modal'];
-//$contador_items=$cantidad_modal+1;//contador de todos los intems
 
-//$lista=listaObligacionesPagoDetalleSolicitudRecursosProveedor($proveedoresString,$cuentas);
 $contador_items=0;
 
 ///
@@ -64,7 +60,6 @@ while ($row = $stmt->fetch()) {
            $estiloFilasEstadoSaldo="style='color:red !important;'";
           }      
       }
-      
   }
 
   $codCompDetX=$row['cod_comprobantedetalle'];
@@ -130,7 +125,6 @@ while ($row = $stmt->fetch()) {
        $totalCredito=$totalCredito+$montoX;
        $contador_items++;
     }
-    
     $nombreProveedorX=nameProveedor($codProveedor);
     
     ?>  
@@ -214,12 +208,7 @@ while ($row = $stmt->fetch()) {
             <td class="text-right small"><?=formatNumberDec(0)?></td>
             <td class="text-right small font-weight-bold"></td>
             <td class="text-right">
-              <!-- <div class="togglebutton">
-                 <label>
-                   <input type="checkbox"  id="pagos_seleccionados2_<?=$contador_items?>" name="pagos_seleccionados_2<?=$contador_items?> ">
-                   <span class="toggle"></span>
-                 </label>
-             </div> -->
+              
             </td>
           </tr><?php 
       }

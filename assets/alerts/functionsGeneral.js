@@ -19332,11 +19332,50 @@ function exportTableToExcel(tableID, filename = ''){
     }
 }
 
+//****** comie<a cargado de excel***
 var itemDatosProductosPlantilla=[];
+
+function cargarDatosExel_tcp(){
+  // var data = $("input[name=archivo_tcp]")[0].files;  
+  var data = $('textarea[name=archivo_tcp]').val();
+  console.log(data);
+
+
+
+    
+    
+    
+    
+
+
+    // var rows = data.split("\n");    
+    // var index=0;
+    // for(var y in rows) {
+    //   var cells = rows[y].split("\t");      
+    //   var coli=0;
+    //   var itemsFila=[];
+    //   for(var x in cells) {
+    //     // if(!(coli==1||coli==3||coli==7||coli==8)){
+    //       itemsFila.push(cells[x]);            
+    //     // }
+    //     coli++;
+    //   }
+    //   if(itemsFila.length>0&&itemsFila[0]!=""&&itemsFila[1]!=""&&itemsFila[4]!=""){ //validacion para mas de una fila
+    //     itemDatosProductosPlantilla.push(itemsFila);
+    //   }
+    //   index++;
+    // }
+
+    // generarComprobanteExcel_TCP_TCS();
+}
+
+
+
+
 function cargarComprobanteExcel_TCP_TCS() {
   $('#div_datos_excel').html("");
     var data = $('textarea[name=data_excel]').val();
-    console.log(data);
+    // console.log(data);
     var rows = data.split("\n");
     var table = $('<table />');
     table.addClass("table").addClass("table-condensed").addClass("table-bordered").addClass("table-sm");
@@ -19446,7 +19485,7 @@ function generarComprobanteExcel_TCP_TCS(){
 }
 function obtieneCodigoNorma_TCP(nombre_norma){
   var dato="";
- var parametros={"nombre_norma":nombre_norma};
+  var parametros={"nombre_norma":nombre_norma};
     $.ajax({
         type: "GET",
         dataType: 'html',
@@ -19494,7 +19533,7 @@ function generarComprobanteExcel_TCS(){
   $("#modalPegarDatosComprobante_tcs").modal("hide");     
 
 }
-
+ //****** termina cargado
 
 
 function guardarAtributoItem_prueba(){
