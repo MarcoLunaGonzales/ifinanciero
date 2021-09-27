@@ -192,10 +192,36 @@ where s.cod_estadoreferencial<>2;");
 							    </label>
 							</div>
 						</div>
-					</div>						
-		            
+					</div>
 				</div>
-                <div class="row">
+				  <div class="row">
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                 <label class="col-sm-4 col-form-label">Del</label>
+				                 <div class="col-sm-8">
+				                	<div class="form-group">
+				                		<div id="div_contenedor_fechaI">				                			
+				                			<input type="number" class="form-control"  name="desde" id="desde">	
+				                		</div>		                                
+				                     </div>
+				                  </div>
+				             </div>
+	      	             </div>
+	                  	<div class="col-sm-6">
+	                  		<div class="row">
+				                 <label class="col-sm-4 col-form-label">Al</label>
+				                 <div class="col-sm-8">
+				                	<div class="form-group">
+				                		<div id="div_contenedor_fechaH">				                			
+				                			<input type="number" class="form-control" name="hasta" id="hasta" >
+				                		</div>
+		                               
+				                    </div>
+				                  </div>
+				              </div>
+					      </div>
+	                </div><!--div row-->
+                <!-- <div class="row">
 				    <div class="col-sm-6">
 	                  		<div class="row">
 				                 <label class="col-sm-4 col-form-label">Cuenta</label>
@@ -218,7 +244,8 @@ where s.cod_estadoreferencial<>2;");
 				                  </div>
 				              </div>
 					      </div>
-                 </div><!--div row-->
+                 </div> -->
+                 <!--div row-->
                   	
                 <div class="card-footer">
                 	<button type="submit" class="<?=$buttonNormal;?>">Ver Reporte</button>

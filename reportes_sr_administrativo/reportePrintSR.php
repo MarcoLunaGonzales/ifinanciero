@@ -28,17 +28,24 @@ $stringAreaX=implode(",", $areaPost);
 $personalPost=$_POST["personal"];
 $stringPersonalX=implode(",", $personalPost);
 
-$cuentaPost=$_POST["cuenta"];
-$stringCuentaX=implode(",", $cuentaPost);
+
+$desde=$_POST["desde"];
+$hasta=$_POST["hasta"];
+$sql_rangos="";
+if($desde!="" && $hasta!=""){
+  $sql_rangos=" and l.numero between $desde and $hasta ";
+}
+
+// $cuentaPost=$_POST["cuenta"];
+// $stringCuentaX=implode(",", $cuentaPost);
 
 // Preparamos
-$sql="SELECT l.* from (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(SELECT count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo AND cod_plancuenta in ($stringCuentaX) and cod_unidadorganizacional in ($stringOficinaX) and cod_area in ($stringAreaX)) as detalle_sr,
-  (SELECT group_concat(codigo) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo AND cod_plancuenta in ($stringCuentaX) and cod_unidadorganizacional in ($stringOficinaX) and cod_area in ($stringAreaX)) as grupo_detalles
+$sql="SELECT l.* from (SELECT sr.*,es.nombre as estado,(SELECT count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo  and cod_unidadorganizacional in ($stringOficinaX) and cod_area in ($stringAreaX)) as detalle_sr,
+  (SELECT group_concat(codigo) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo  and cod_unidadorganizacional in ($stringOficinaX) and cod_area in ($stringAreaX)) as grupo_detalles
   from solicitud_recursos sr 
   join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo 
-  join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo 
-  join areas a on sr.cod_area=a.codigo) l 
-  where l.cod_estadoreferencial=1 and (l.cod_estadosolicitudrecurso in ($stringEstadoX)) and l.cod_personal in ($stringPersonalX) and year(l.fecha)=$nombre_gestion and month(l.fecha)=$cod_mes_x and l.detalle_sr>0
+  ) l 
+  where l.cod_estadoreferencial=1 and (l.cod_estadosolicitudrecurso in ($stringEstadoX)) and l.cod_personal in ($stringPersonalX) and year(l.fecha)=$nombre_gestion and month(l.fecha)=$cod_mes_x and l.detalle_sr>0 $sql_rangos
   order by l.numero desc";
 //  echo $sql;
 $stmt = $dbh->prepare($sql);
@@ -46,8 +53,8 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 // bindColumn
 $stmt->bindColumn('codigo', $codigo);
-$stmt->bindColumn('unidad', $unidad);
-$stmt->bindColumn('area', $area);
+// $stmt->bindColumn('unidad', $unidad);
+// $stmt->bindColumn('area', $area);
 $stmt->bindColumn('fecha', $fecha);
 $stmt->bindColumn('cod_personal', $codPersonal);
 $stmt->bindColumn('cod_simulacion', $codSimulacion);
@@ -110,22 +117,24 @@ if($sw_check=="0"){
                         <table id="<?=$idTabla?>" class="table table-bordered table-condensed" style="width:100%">
                           <thead>
                             <tr>
-                              <th style="border:2px solid;" width="2%"><small><b>#</b></small></th>
-                              <th style="border:2px solid;"><small><b>Of. - Area</b></small></th>
+                              <!-- <th style="border:2px solid;" width="2%"><small><b>#</b></small></th> -->
+                              <!-- <th style="border:2px solid;"><small><b>Of. - Area</b></small></th> -->
                               <th style="border:2px solid;"><small><b>Nº Sol.</b></small></th>
                               <th style="border:2px solid;"><small><b>Comprobante</b></small></th>
-                              <th style="border:2px solid;"><small><b>Fecha</b></small></th>
+                              
+                              <!-- <th style="border:2px solid;"><small><b>Fecha</b></small></th> -->
                               <th style="border:2px solid;" width="22%"><small><b>Glosa</b></small></th>
-                              <th style="border:2px solid;"><small><b>Cod. Servicio</b></small></th>
-                              <th style="border:2px solid;"><small><b>Cliente</b></small></th>
                               <th style="border:2px solid;" width="12%"><small><b>Proveedor</b></small></th>
+                              <!-- <th style="border:2px solid;"><small><b>Cod. Servicio</b></small></th> -->
+                              <!-- <th style="border:2px solid;"><small><b>Cliente</b></small></th> -->
+                              
                               <th style="border:2px solid;"><small><b>Cuenta</b></small></th>
                               <th style="border:2px solid;" width="12%"><small><b>Solicitante</b></small></th>
                               <th style="border:2px solid;"><small><b>Fecha</b></small></th>
                               <!--<th style="border:2px solid;" width="16%"><small><b>Observaciones</b></small></th>-->
                               <th style="border:2px solid;" width="12%"><small><b>Personal Pago</b></small></th>
                               <th style="border:2px solid;" width="12%"><small><b>Observaciones</b></small></th>
-                              <th style="border:2px solid;"><small><b>Presupuesto</b></small></th>
+                              <!-- <th style="border:2px solid;"><small><b>Presupuesto</b></small></th> -->
                               <th style="border:2px solid;"><small><b>Retención</b></small></th>
                               <th style="border:2px solid;"><small><b>Monto</b></small></th>
                               <th style="border:2px solid;"><small><b>Estado</b></small></th>
@@ -166,7 +175,7 @@ if($sw_check=="0"){
                           $glosaComprobante="";
                           if($codEstado==5||$codEstado==8){
                             $nombreComprobante=nombreComprobante($codComprobante);
-                            $fechaComprobante=obtenerFechaComprobante($codComprobante); 
+                            //$fechaComprobante=obtenerFechaComprobante($codComprobante); 
                             $glosaComprobante=obtenerGlosaComprobante($codComprobante); 
                           }
                           $tamanioGlosa=obtenerValorConfiguracion(72); 
@@ -174,23 +183,24 @@ if($sw_check=="0"){
                             $glosaComprobante=substr($glosaComprobante, 0, $tamanioGlosa);
                           }
 
-                          if($codSimulacion!=0){
-                           $nombreCliente="Sin Cliente";
-                           $nombreSimulacion=nameSimulacion($codSimulacion);
-                          }else{
-                           $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
-                           $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
-                          }
+                          // if($codSimulacion!=0){
+                          //  // $nombreCliente="Sin Cliente";
+                          //  $nombreSimulacion=nameSimulacion($codSimulacion);
+                          // }else{
+                          //  // $nombreCliente=nameClienteSimulacionServicio($codSimulacionServicio);
+                          //  $nombreSimulacion=nameSimulacionServicio($codSimulacionServicio);
+                          // }
                           $codigoServicio="-";
-                          $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicio";
-                          $stmt1=$dbh->prepare($sql);
-                          $stmt1->execute();
-                           while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
-                             $codigoServicio=$row1['codigo'];
-                           }
+                          // $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicio";
+                          // $stmt1=$dbh->prepare($sql);
+                          // $stmt1->execute();
+                          //  while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
+                          //    $codigoServicio=$row1['codigo'];
+                          //  }
 
                        $nombreProveedor=obtenerNombreConcatenadoProveedorDetalleSolicitudRecurso($codigo);
-                       $otrosPagosCuenta=comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo);
+                       $nombreProveedor=trim($nombreProveedor,",");
+                       //$otrosPagosCuenta=comprobarCuentasOtrosPagosDeSolicitudRecursos($codigo);
 
                        $glosa_estadoX = preg_replace("[\n|\r|\n\r]", ", ", $glosa_estadoX);
                        $glosaArray=explode("####", $glosa_estadoX);
@@ -215,7 +225,7 @@ if($sw_check=="0"){
                             $segPres=$datosSeg->presupuesto;
                             $porcentSegPres=($datosSeg->ejecutado*100)/$datosSeg->presupuesto; 
                          }
-                        $arrayPresupuesto[$ic]="<small>[".obtieneNumeroCuenta($datosDetalle['cod_plancuenta'])."] ".abrevUnidad_solo($datosDetalle['cod_unidadorganizacional'])."/".abrevArea_solo($datosDetalle['cod_area']).":".number_format($segPres, 0, '.', ',')."</small>";  
+                        //$arrayPresupuesto[$ic]="<small>[".obtieneNumeroCuenta($datosDetalle['cod_plancuenta'])."] ".abrevUnidad_solo($datosDetalle['cod_unidadorganizacional'])."/".abrevArea_solo($datosDetalle['cod_area']).":".number_format($segPres, 0, '.', ',')."</small>";  
 
                         //retencion     
                        if($datosDetalle['cod_confretencion']!=0){
@@ -235,28 +245,29 @@ if($sw_check=="0"){
 
                        }//fin de for
 
-                       $arrayPresupuesto=array_unique($arrayPresupuesto);
+                       // $arrayPresupuesto=array_unique($arrayPresupuesto);
                        //$arrayRetencion=array_unique($arrayRetencion);
 
 ?>
                         <tr>
-                          <td><small><?=$index;?></small></td>
-                          <td><small><?=$unidad;?>- <?=$area;?></small></td>
+                          <!-- <td><small><?=$index;?></small></td> -->
+                          <!-- <td><small><?=$unidad;?>- <?=$area;?></small></td> -->
                           <td class="font-weight-bold"><small><?=$numeroSol;?></small></td>
                           <td class="font-weight-bold"><small><?=$nombreComprobante;?></small></td>
-                          <td class=""><small><?=$fechaComprobante;?></small></td>
-                          <td class=""><small><?=$glosaComprobante;?></small></td>
-                          <td><small><?=$codigoServicio;?></small></td>
-                          <td><small><?=$nombreCliente;?></small></td>
                           
+                          <!-- <td class=""><small><?=$fechaComprobante;?></small></td> -->
+                          <td class=""><small><?=$glosaComprobante;?></small></td>
                           <td class="text-left"><small><?=$nombreProveedor?></small></td>
+                          <!-- <td><small><?=$codigoServicio;?></small></td> -->
+                          <!-- <td><small><?=$nombreCliente;?></small></td> -->
+                          
+                          
                           <td class="text-left"><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td class="text-left"><small><?=$solicitante;?></small></td>
-                          <td><small><?=strftime('%d/%m/%Y',strtotime($fecha));?></small></td>
-                          <!--<td class="text-muted font-weight-bold"><small><b><?=$glosa_estadoX?></b></small></td>-->
+                          <td><small><?=strftime('%d/%m/%Y',strtotime($fecha));?></small></td>                          
                           <td class="text-muted font-weight-bold"><small><b><?=obtenerNombreConcatenadoEncargadoSolicitudRecurso($codigo)?></b></small></td>
                           <td class="font-weight-bold"><small><b><?=$glosa_estadoX?> <br><?=obtenerFechaCambioEstadoSolicitudRecurso($codigo)?></b></small></td>
-                          <td><small><?=implode("<br>",$arrayPresupuesto)?></small></td>
+                          <!-- <td><small><?=implode("<br>",$arrayPresupuesto)?></small></td> -->
                           <td><small><?=implode("<br>",$arrayRetencion)?></small></td>
                           <td><small><?=number_format(obtenerSumaDetalleSolicitud($codigo),2,'.',',')?></small></td>
                           <td class="td-actions text-right"><small><button class="btn <?=$btnEstado?> btn-sm btn-round btn-block"><?=$estado;?></button></small>
@@ -275,22 +286,24 @@ if($sw_check=="0"){
                        <?php if($sw_check=="0"){?>     
                             <tfoot>
                             <tr>
-                              <td class="small" style="border:2px solid;" width="2%"><small><small><b>#</b></small></small></td>
-                              <th class="small" style="border:2px solid;"><small><small><b>Of. - Area</b></small></small></th>
+                              <!-- <td class="small" style="border:2px solid;" width="2%"><small><small><b>#</b></small></small></td> -->
+                              <!-- <th class="small" style="border:2px solid;"><small><small><b>Of. - Area</b></small></small></th> -->
                               <th class="small" style="border:2px solid;"><small><small><b>Nº Sol.</b></small></small></th>
                               <th class="small" style="border:2px solid;"><small><small><b>Comprobante</b></small></small></th>
-                              <th class="small" style="border:2px solid;"><small><small><b>Fecha</b></small></small></th>
+
+                              <!-- <th class="small" style="border:2px solid;"><small><small><b>Fecha</b></small></small></th> -->
                               <th class="small" style="border:2px solid;" width="22%"><small><small><b>Glosa</b></small></small></th>
-                              <th class="small" style="border:2px solid;"><small><small><b>Cod. Servicio</b></small></small></th>
-                              <th style="border:2px solid;"><small><b>Cliente</b></small></th>
                               <th class="small" style="border:2px solid;" width="12%"><small><small><b>Proveedor</b></small></small></th>
+                              <!-- <th class="small" style="border:2px solid;"><small><small><b>Cod. Servicio</b></small></small></th> -->
+                              <!-- <th style="border:2px solid;"><small><b>Cliente</b></small></th> -->
+                              
                               <th class="small" style="border:2px solid;"><small><small><b>Cuenta</b></small></small></th>
                               <th class="small" style="border:2px solid;" width="12%"><small><small><b>Solicitante</b></small></small></th>
                               <th class="small" style="border:2px solid;"><small><small><b>Fecha</b></small></small></th>
                               <!--<th class="small" style="border:2px solid;" width="16%"><small><small><b>Observaciones</b></small></small></th>-->
                               <th class="small" style="border:2px solid;" width="12%"><small><small><b>Personal Pago</b></small></small></th>
                               <th class="small" style="border:2px solid;" width="12%"><small><small><b>Observaciones</b></small></small></th>
-                              <th class="small" style="border:2px solid;"><small><small><b>Presupuesto</b></small></small></th>
+                              <!-- <th class="small" style="border:2px solid;"><small><small><b>Presupuesto</b></small></small></th> -->
                               <th class="small" style="border:2px solid;"><small><small><b>Retención</b></small></small></th>
                               <th class="small" style="border:2px solid;"><small><small><b>Monto</b></small></small></th>
                               <th class="small" style="border:2px solid;"><small><small><b>Estado</b></small></small></th>
