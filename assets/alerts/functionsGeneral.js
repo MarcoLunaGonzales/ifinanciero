@@ -19336,14 +19336,10 @@ function exportTableToExcel(tableID, filename = ''){
 var itemDatosProductosPlantilla=[];
 
 function cargarDatosExel_tcp(){
-   
   var paqueteDeDatos = new FormData();
-
   paqueteDeDatos.append('file_excel', $('#archivo_tcp')[0].files[0]);
-
-
-  $("#texto_boton").html("Cargando...");
-      $("#texto_boton").attr("disabled",true);
+  $("#boton_cargar_datos").html("Cargando...");
+  $("#boton_cargar_datos").attr("disabled",true);
   // paqueteDeDatos.append('file_txt', $('#documentos_cabecera_txt')[0].files[0]);
   // paqueteDeDatos.append('file_csv', $('#archivo_tcp')[0].files[0]);
   var dato="";
@@ -19357,39 +19353,36 @@ function cargarDatosExel_tcp(){
     cache: false, 
     async:false,    
     success: function(resultado){ // En caso de que todo salga bien.
-      // $("#texto_boton").html("Cargando...");
+     $("#contenedor_oculto").html(resultado);
       // $("#texto_boton").attr("disabled",true);
-      // generarComprobanteExcel_TCP_TCS();
-      dato=resultado;
-      console.log(dato);
     }
   });
-    
-    
-
-
-
-    // var rows = data.split("\n");    
-    // var index=0;
-    // for(var y in rows) {
-    //   var cells = rows[y].split("\t");      
-    //   var coli=0;
-    //   var itemsFila=[];
-    //   for(var x in cells) {
-    //     // if(!(coli==1||coli==3||coli==7||coli==8)){
-    //       itemsFila.push(cells[x]);            
-    //     // }
-    //     coli++;
-    //   }
-    //   if(itemsFila.length>0&&itemsFila[0]!=""&&itemsFila[1]!=""&&itemsFila[4]!=""){ //validacion para mas de una fila
-    //     itemDatosProductosPlantilla.push(itemsFila);
-    //   }
-    //   index++;
-    // }
-
-    // generarComprobanteExcel_TCP_TCS();
+  generarComprobanteExcel_TCP_TCS();
 }
-
+function cargarDatosExel_tcs(){
+  var paqueteDeDatos = new FormData();
+  paqueteDeDatos.append('file_excel', $('#archivo_tcs')[0].files[0]);
+  $("#boton_cargar_datos_tcs").html("Cargando...");
+  $("#boton_cargar_datos_tcs").attr("disabled",true);
+  // paqueteDeDatos.append('file_txt', $('#documentos_cabecera_txt')[0].files[0]);
+  // paqueteDeDatos.append('file_csv', $('#archivo_tcp')[0].files[0]);
+  var dato="";
+  var destino = "simulaciones_servicios/ajax_subirdatosexcel_tcs.php"; 
+  $.ajax({
+    url: destino,
+    type: 'POST', // Siempre que se envíen ficheros, por POST, no por GET.
+    contentType: false,
+    data: paqueteDeDatos, // Al atributo data se le asigna el objeto FormData.
+    processData: false,
+    cache: false, 
+    async:false,    
+    success: function(resultado){ // En caso de que todo salga bien.
+     $("#contenedor_oculto_tcs").html(resultado);
+    }
+  });
+  console.log(itemDatosProductosPlantilla);
+  generarComprobanteExcel_TCS();
+}
 
 
 
@@ -19481,13 +19474,13 @@ function generarComprobanteExcel_TCP_TCS(){
     // console.log(codigo_norma);
     var atributo={
       codigo:fila,  
-      nombre: nombre=datos[fila][0],//nombre
-      direccion: datos[fila][4],//direccion
-      norma:datos[fila][2],//norma
+      nombre: nombre=datos[fila]['nombre'],//nombre
+      direccion: datos[fila]['direccion'],//direccion
+      norma:datos[fila]['norma'],//norma
       norma_cod:codigo_norma,//codigo norma
       norma_otro:"",
-      marca:datos[fila][1],//marca,
-      sello:datos[fila][3],//sello
+      marca:datos[fila]['marca'],//marca,
+      sello:datos[fila]['sello'],//sello
       pais:26,
       estado:480,
       ciudad:62,
@@ -19530,8 +19523,8 @@ function generarComprobanteExcel_TCS(){
   for (var fila = 0; fila <datos.length; fila++) {    
     var atributo={
       codigo:fila,  
-      nombre: nombre=datos[fila][0],//nombre
-      direccion: datos[fila][1],//direccion
+      nombre: nombre=datos[fila]['nombre'],//nombre
+      direccion: datos[fila]['direccion'],//direccion
       norma:"",//norma
       norma_cod:"",
       norma_otro:"",

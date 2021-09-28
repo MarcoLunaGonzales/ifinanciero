@@ -3,9 +3,7 @@
 require_once('../assets/importar_excel/php-excel-reader/excel_reader2.php');
 require_once('../assets/importar_excel/SpreadsheetReader.php');
 
-
 $file_excel=$_FILES['file_excel'];
-
 if(isset($_FILES['file_excel'])){
     //lectura de archivo Excel
     $filaArchivo=0;
@@ -23,13 +21,9 @@ if(isset($_FILES['file_excel'])){
                     $nombre="";
                     $marca="";
                     if(isset($Row[0])){$nombre=trim($Row[0]);};
-                    if(isset($Row[1])){$marca=trim($Row[1]);};
-                    if(isset($Row[2])){$norma=trim($Row[2]);};
-                    if(isset($Row[3])){$sello=trim($Row[3]);};
-                    if(isset($Row[4])){$direccion=trim($Row[4]);};
-                    
-                    if(!empty($nombre) && !empty($marca)){ ?>
-                        <script>itemDatosProductosPlantilla.push({nombre:"<?=$nombre?>",marca:"<?=$marca?>",norma:"<?=$norma?>",sello:"<?=$sello?>",direccion:"<?=$direccion?>"});
+                    if(isset($Row[1])){$direccion=trim($Row[1]);};
+                    if(!empty($nombre) && !empty($direccion)){ ?>
+                        <script>itemDatosProductosPlantilla.push({nombre:"<?=$nombre?>",direccion:"<?=$direccion?>"});
                         </script><?php
                     }else{}
                 }

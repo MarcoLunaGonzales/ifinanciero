@@ -821,7 +821,9 @@ $dbh = new Conexion();
           <label class="col-sm-2 col-form-label">Excel Formato .csv</label>
           <div class="col-sm-7">
             <input class="form-control" type="file" name="archivo_tcp" id="archivo_tcp" accept=".xls,.xlsx" required="true" />
-            
+            <div id="contenedor_oculto" class="d-none">
+              
+            </div>
           </div>
         </div>
       </div>
@@ -831,9 +833,58 @@ $dbh = new Conexion();
 
             <!-- <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a> -->
       </div>
-      
       <hr>
       <div id="div_datos_excel"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade modal-arriba" id="modalPegarDatosComprobante_tcs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content card">
+      <div class="card-header card-header-primary card-header-text">
+        <div class="card-text">
+          <h4>Pegar Datos - Excel</h4>      
+        </div>
+        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="card-body"> 
+        <div class="row">                      
+            <label class="col-sm-4 col-form-label" style="color: #4a148c;">Formato de Excel (Incluir fila de títulos)</label>
+            <div class="col-sm-12">
+                <table class="table table-condensed table-bordered table-sm">
+                   <tr class="bg-primary text-white">
+                     <td><small>NOMBRE</small></td>
+                     <td><small>DIRECCION</small></td>                     
+                   </tr>
+                 </table>  
+             </div>
+        </div>
+        <div id="contenedor_oculto_tcs" class="d-none">
+              
+            </div>
+          <div class="row">
+          <label class="col-sm-2 col-form-label">Excel Formato .csv</label>
+          <div class="col-sm-7">
+            <input class="form-control" type="file" name="archivo_tcs" id="archivo_tcs" accept=".xls,.xlsx" required="true" />
+            <div id="contenedor_oculto" class="d-none">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+            <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos_tcs" onclick="cargarDatosExel_tcs()">Cargar Datos</a>
+            <!-- <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas_tcs" onclick="generarComprobanteExcel_TCS()">Generar Filas</a>
+            <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a> -->
+      </div>
+      
+      <hr>
+      <div id="div_datos_excel_tcs"></div>
     </div>
   </div>
 </div>
