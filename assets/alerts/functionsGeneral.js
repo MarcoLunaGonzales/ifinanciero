@@ -19340,32 +19340,28 @@ function cargarDatosExel_tcp(){
   var paqueteDeDatos = new FormData();
 
   paqueteDeDatos.append('file_excel', $('#archivo_tcp')[0].files[0]);
+
+
+  $("#texto_boton").html("Cargando...");
+      $("#texto_boton").attr("disabled",true);
   // paqueteDeDatos.append('file_txt', $('#documentos_cabecera_txt')[0].files[0]);
   // paqueteDeDatos.append('file_csv', $('#archivo_tcp')[0].files[0]);
-  
+  var dato="";
   var destino = "simulaciones_servicios/ajax_subirdatosexcel_tcp.php"; 
   $.ajax({
-      url: destino,
-      type: 'POST', // Siempre que se envíen ficheros, por POST, no por GET.
+    url: destino,
+    type: 'POST', // Siempre que se envíen ficheros, por POST, no por GET.
     contentType: false,
     data: paqueteDeDatos, // Al atributo data se le asigna el objeto FormData.
     processData: false,
     cache: false, 
-    beforeSend: function () {
-      $("#texto_boton").html("Cargando...");
-      $("#texto_boton").attr("disabled",true);
-         
-        },     
+    async:false,    
     success: function(resultado){ // En caso de que todo salga bien.
-      $("#texto_boton").html("Cargar Datos");
-      $("#texto_boton").attr("disabled",false);
-      $("#datos_body").html(resultado);
-      //console.log(resultado);
-    },
-    error: function (){ // Si hay algún error.
-      $("#texto_boton").html("Cargar Datos");
-      $("#texto_boton").attr("disabled",false);
-      alert("Ocurrio un error Contactese con el Administrador!");
+      // $("#texto_boton").html("Cargando...");
+      // $("#texto_boton").attr("disabled",true);
+      // generarComprobanteExcel_TCP_TCS();
+      dato=resultado;
+      console.log(dato);
     }
   });
     
@@ -19502,10 +19498,10 @@ function generarComprobanteExcel_TCP_TCS(){
     itemAtributos.push(atributo);
   }  
   listarAtributo();
-  $("#div_datos_excel").html("");
-  $("#data_excel").val("");
-  $("#boton_cargar_datos").removeClass("d-none");
-  $("#boton_generar_filas").addClass("d-none");
+  // $("#div_datos_excel").html("");
+  // $("#data_excel").val("");
+  // $("#boton_cargar_datos").removeClass("d-none");
+  // $("#boton_generar_filas").addClass("d-none");
   $("#modalPegarDatosComprobante").modal("hide");     
 }
 function obtieneCodigoNorma_TCP(nombre_norma){

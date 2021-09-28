@@ -1,10 +1,24 @@
+
+<script>
+  var itemDatosProductosPlantilla=[];
+</script>
 <?php
 
 require_once('../assets/importar_excel/php-excel-reader/excel_reader2.php');
 require_once('../assets/importar_excel/SpreadsheetReader.php');
 
 
+
+
 $file_excel=$_FILES['file_excel'];
+
+$norma_otro="";
+$pais=26;
+$estado=480;
+$ciudad=62;
+$nom_pais="BOLIVIA";
+$nom_estado="LA PAZ";
+$nom_ciudad="LA PAZ";
 
 if(isset($_FILES['file_excel'])){
     //lectura de archivo Excel
@@ -24,25 +38,19 @@ if(isset($_FILES['file_excel'])){
                     $marca="";
                     if(isset($Row[0])){$nombre=trim($Row[0]);};
                     if(isset($Row[1])){$marca=trim($Row[1]);};
-                    
-nombre: nombre=datos[fila][0],//nombre
-      direccion: datos[fila][4],//direccion
-      norma:datos[fila][2],//norma
-      norma_cod:codigo_norma,//codigo norma
-      norma_otro:"",
-      marca:datos[fila][1],//marca,
-      sello:datos[fila][3],//sello
-      pais:26,
-      estado:480,
-      ciudad:62,
-      nom_pais:"BOLIVIA",
-      nom_estado:"LA PAZ",
-      nom_ciudad:"LA PAZ"
+                    if(isset($Row[2])){$norma=trim($Row[2]);};
+                    if(isset($Row[3])){$sello=trim($Row[3]);};
+                    if(isset($Row[4])){$direccion=trim($Row[4]);};
 
-                    if(!empty($nombre) && !empty($marca)){ ?>
-                        <script>itemDatosProductosPlantilla.push({nombre:"<?=$codigoCuentaAux?>",direccion:"<?=$nombreCuentaAux?>",norma:"<?=$codigoCuenta?>",norma_cod:"<?=$codigoCuenta?>",norma_otro:"",marca:"<?=$codigoCuenta?>",sello:"<?=$codigoCuenta?>",pais:26,estado:480,estado:480,ciudad:62,nom_pais:"BOLIVIA",nom_estado:"LA PAZ",nom_ciudad:"LA PAZ"});
-                        </script><?php
-                    }else{}
+                    if(!empty($nombre) && !empty($marca)){ 
+                      ?>
+                        <script>itemDatosProductosPlantilla.push({nombre:"<?=$nombre?>",marca:"<?=$marca?>",norma:"<?=$norma?>",sello:"<?=$sello?>",direccion:"<?=$direccion?>"});                      
+                        </script>
+
+                        <?php
+                    }else{
+
+                    }
                 }
                 $filaArchivo++;
                }//fin foreach
@@ -54,5 +62,8 @@ nombre: nombre=datos[fila][0],//nombre
     }
 
 }
+echo 1;
+
+?>
 
 
