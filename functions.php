@@ -3904,6 +3904,22 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
 
+  function descargarPDFConstanciaActivos($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    $mydompdf->set_paper('A4', 'portrait');
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(450, 763, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 9, array(0,0,0)); 
+    $mydompdf->set_base_path('assets/libraries/plantillaPDFSolicitudesRecursos.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  }
+
   function descargarPDFOfertaPropuesta($nom,$html){
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");

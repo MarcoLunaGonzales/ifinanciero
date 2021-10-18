@@ -897,7 +897,9 @@
 			require_once('activosFijos/afEtiquetasFiltro.php');
 		}
         
-
+		if ($_GET['opcion']=='afConstanciasTraspaso') {
+			require_once('reportes_activosfijos/afConstanciasTraspaso.php');
+		}
 
 		//*************************************************************************************************************/
 		//*************************************************************************************************************/
