@@ -37,11 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sucursalId=null;$pasarelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;$CodLibretaDetalle=null;$tipoPago=null;
     if(isset($datos['accion'])&&isset($datos['sIdentificador'])&&isset($datos['sKey']))
     {
-        if($datos['sIdentificador']=="facifin"&&$datos['sKey']=="AX546321asbhy347bhas191001bn0rc4654")
+        if($datos['sIdentificador']=="facifin"&&$datos['sKey']=="rrf656nb2396k6g6x44434h56jzx5g6")
         {
             if(isset($datos['accion'])){
                 $accion=$datos['accion']; //recibimos la accion
-                if($accion=="NewGenerateInvoice"){//nombre de la accion
+                if($accion=="GenerarFactura"){//nombre de la accion
                     if(isset($datos['sucursalId'])) $sucursalId=$datos['sucursalId'];//recibimos el codigo de la sucursal
                     if(isset($datos['sucursalId'])) $pasarelaId=$datos['pasarelaId'];//recibimos paralela
                     if(isset($datos['fechaFactura'])) $fechaFactura=strval($datos['fechaFactura']);//recibimos fecha de factura

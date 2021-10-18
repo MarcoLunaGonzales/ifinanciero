@@ -1,9 +1,11 @@
 <?php
+//error_reporting(0);
 
 require_once 'conexion.php';
 require_once 'conexion_externa.php';
 require_once 'styles.php';
 require_once 'configModule.php';
+//require_once 'functions.php';
 
 //$dbh = new Conexion();
 $dbh = new Conexion();
@@ -11,6 +13,26 @@ $ci_estudiante=$codigo;
 $ci_estudiante=trim($ci_estudiante," ");
 $cod_simulacion=$cod_simulacion;
 $cod_facturacion=$cod_facturacion;
+
+
+
+//inicializando variables
+$cod_tipoobjeto=0;
+$cod_personal=0;
+$cod_uo=0;
+$cod_area=13;
+$cod_tipopago=0;
+$dias_credito=0;
+$observaciones=0;
+$cod_personal=0;
+$correo_contacto="";
+$cod_cliente=0;
+$observaciones_2="";
+
+
+
+//echo "COD_FACTURACION: ".$cod_facturacion;
+
 $IdCurso=$IdCurso;
 if(isset($_GET['q'])){
   $q=$_GET['q'];
@@ -31,7 +53,9 @@ FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac,
 where cpe.clIdentificacion=aa.CiAlumno 
 and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
 m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion like '%$ci_estudiante%' and aa.IdCurso=$IdCurso limit 1;";
-// echo $sqlIBNORCA;
+
+//echo $sqlIBNORCA;
+
 $stmtIbno = $dbhIBNO->prepare($sqlIBNORCA);
 $stmtIbno->execute();
 $resultSimu = $stmtIbno->fetch();
@@ -60,6 +84,7 @@ $estado_ws=false;
 
 if(isset($_GET['q'])){
     //para uo
+    //echo "entro q";
     $arraySqlUO=explode("IdOficina",$s);
     $string_aux='0';  
     if(isset($arraySqlUO[1])){
@@ -89,6 +114,8 @@ if(isset($_GET['q'])){
     $sqlAreas_x="";
 }
 
+//echo $sqlAreas_x." ".$sqlUO_x;
+
 if($cod_facturacion>0){//editar
     $sqlFac="SELECT sf.*,sfd.precio,sfd.descuento_por,sfd.descuento_bob from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sfd.cod_solicitudfacturacion=sf.codigo and sf.codigo=$cod_facturacion";
     // echo $sqlFac;
@@ -117,34 +144,36 @@ if($cod_facturacion>0){//editar
     
 
 }else{//registrar
-
-    $sqlFac="SELECT clNit,clRazonSocial from dbcliente.cliente_persona_empresa where codigo ";
-    // echo $sqlFac;
+    //echo "entro registrar";
+    $sqlFac="SELECT clNit, clRazonSocial, clFechaRegistro as fecha_registro from dbcliente.cliente_persona_empresa where clNit='$ci_estudiante' ";
+    //echo $sqlFac;
     $stmtSimuFact = $dbh->prepare($sqlFac);
     $stmtSimuFact->execute();
-    $resultSimuFact = $stmtSimuFact->fetch();
-    $fecha_registro = $resultSimuFact['fecha_registro'];
-    $fecha_registro = date('Y-m-d');
-    $fecha_solicitudfactura = date('Y-m-d');    
-    // $razon_social=$razon_social;//ya está arriba
-    //$nit = $ci_estudiante;    
-    $observaciones = $Codigo_alterno." - ".$nombreAlumno;
-    $observaciones_2 = null;
-    $cod_tipopago=null;
-    $persona_contacto= null;
-    $cod_tipoobjeto=212;//por defecto}    
-    if(isset($_GET['q'])){
-        $cod_personal=$_GET['q'];
-    }else{
-        $cod_personal= $globalUser;
+    while( $resultSimuFact = $stmtSimuFact->fetch() ){
+        $fecha_registro = $resultSimuFact['fecha_registro'];
+        $fecha_registro = date('Y-m-d');
+        $fecha_solicitudfactura = date('Y-m-d');    
+        // $razon_social=$razon_social;//ya está arriba
+        //$nit = $ci_estudiante;    
+        $observaciones = $Codigo_alterno." - ".$nombreAlumno;
+        $observaciones_2 = null;
+        $cod_tipopago=null;
+        $persona_contacto= null;
+        $cod_tipoobjeto=212;//por defecto}    
+        if(isset($_GET['q'])){
+            $cod_personal=$_GET['q'];
+        }else{
+            $cod_personal= $globalUser;
+        }
+        $cod_cliente=0;//por defecto otros clientes
+        $descuento_por=0;
+        $descuento_bob=0;
+        $cod_uo=$_SESSION['globalUnidad'];
+        $cod_area=13;
+        $dias_credito=obtenerValorConfiguracion(58);    
+        $correo_contacto=obtenerCorreoEstudiante($ci_estudiante);        
     }
-    $cod_cliente=0;//por defecto otros clientes
-    $descuento_por=0;
-    $descuento_bob=0;
-    $cod_uo=$_SESSION['globalUnidad'];
-    $cod_area=13;
-    $dias_credito=obtenerValorConfiguracion(58);    
-    $correo_contacto=obtenerCorreoEstudiante($ci_estudiante);
+
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
@@ -503,13 +532,6 @@ $contadorRegistros=0;
                                             where cpe.clIdentificacion=aa.CiAlumno 
                                             and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
                                             m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion like '%$ci_estudiante%' and aa.IdCurso=$IdCurso";    
-                                        // $queryPr="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno, c.Abrev, c.Auxiliar,
-                                        //     pc.Costo, pc.CantidadModulos, m.NroModulo, pc.Nombre, m.IdTema,(0)as nombre_tema
-                                        //     FROM ibnorca.asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, ibnorca.alumnocurso ac, ibnorca.clasificador c, ibnorca.programas_cursos pc, ibnorca.modulos m 
-                                        //     where cpe.clIdentificacion=aa.CiAlumno 
-                                        //     and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
-                                        //     m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion like '%$ci_estudiante%' and aa.IdCurso=$IdCurso";    
-                                         //echo $queryPr;
                                         $stmt = $dbhIBNO->prepare($queryPr);
                                         $stmt->execute();
                                         $modal_totalmontopre=0;

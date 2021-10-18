@@ -30,12 +30,14 @@ if(isset($_GET['q'])){
   $sqlFilter="";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,es.nombre as estado,c.nombre as cliente 
+$sqlAdmin="SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,sc.cod_unidadorganizacional as unidad1, es.nombre as estado,c.nombre as cliente 
 from simulaciones_servicios sc 
 join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
 join clientes c on c.codigo=sc.cod_cliente 
 join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
-where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion!=1 $sqlFilter order by sc.codigo desc");
+where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion!=1 $sqlFilter order by sc.codigo desc";
+//echo $sqlAdmin;
+$stmt = $dbh->prepare($sqlAdmin);
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -52,7 +54,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
 $stmt->bindColumn('cod_unidadorganizacional', $codUnidadX);
 $stmt->bindColumn('cod_area', $codAreaX);
 $stmt->bindColumn('descripcion_servicio', $alcanceX);
-$stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
+$stmt->bindColumn('unidad1', $oficinaX);
 
 
 //datos para servidor ibnorca

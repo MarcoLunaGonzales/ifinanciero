@@ -595,6 +595,8 @@ $i=0;
 require_once 'modal.php';
 
 if(isset($_GET['sim'])){
+  //echo "ENTRO SIM: ".$_GET['sim'];
+
   $sim=$_GET['sim'];
   $det=$_GET['det'];
   if($det!=1){
@@ -633,6 +635,7 @@ if(isset($_GET['sim'])){
        $tituloPropuesta="SEC";
      }
     if($idPropuesta!="NONE"){
+      //echo "ENTRO PROPUESTA NONE";
     ?>
   <script>
   $(document).ready(function() {

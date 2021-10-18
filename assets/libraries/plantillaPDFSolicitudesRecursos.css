@@ -1,5 +1,5 @@
 @page { margin-top: 35px; margin-left: 30px; margin-right: 30px; margin-bottom: 35px;}
-footer { position: fixed; bottom: -40px; left: 0px; right: 0px; height: 50px; }
+footer { position: fixed; bottom: -10px; left: 0px; right: 0px; height: 50px; }
 table, th, td {
       padding: 10px;
       border: 1px solid black; 

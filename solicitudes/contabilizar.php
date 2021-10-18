@@ -59,21 +59,26 @@ if((int)$globalNombreGestion<(int)$anioActual){
   } 
 }
 // FIN DE LA FECHA
-$dia = date('w',strtotime($dia_uno));
+
+    /*REVISAR ESTO NO SE UTILIZA DESPUESS*/
+    //$dia = date('w',strtotime($dia_uno));
 
     //glosa detalle
     //"".." F/".$numeroFac." ".$proveedorX." ".$detalleX
-    $IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
-    $codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicio);
+    
+    /*QUITAMOS TODA LA PARTE DEL SERVICIO*/
+    //$IdTipo=obtenerTipoServicioPorIdServicio($idServicioX);
+    //$codObjeto=obtenerCodigoObjetoServicioPorIdSimulacion($codSimulacionServicio);
     $datosServicio="";
-    if(obtenerServiciosTipoObjetoNombre($codObjeto)!=""){
-      $datosServicio.=obtenerServiciosTipoObjetoNombre($codObjeto);  
-    }
+    //if(obtenerServiciosTipoObjetoNombre($codObjeto)!=""){
+    //  $datosServicio.=obtenerServiciosTipoObjetoNombre($codObjeto);  
+    //}
 
-    if(obtenerServiciosClaServicioTipoNombre($IdTipo)!=""){
-      $datosServicio.=obtenerServiciosClaServicioTipoNombre($IdTipo);  
-    }
-//
+    //if(obtenerServiciosClaServicioTipoNombre($IdTipo)!=""){
+    //  $datosServicio.=obtenerServiciosClaServicioTipoNombre($IdTipo);  
+    //}
+    //
+    
     $glosa=" ".obtenerProveedorSolicitudRecursos($codigo)." ".$datosServicio."  F/".$facturaCabecera." ".$nombreCliente." SR ".$numeroSol;
     $userSolicitud=obtenerPersonalSolicitanteRecursos($codigo);
     $unidadSol=$cod_unidadX;
@@ -699,12 +704,17 @@ if($flagSuccessCompro==true){
 }//fin if($flagSuccessComprobante==true)
 
 //       LINK DE RETORNO ("q" -> DESDE INTRANET)
+
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
   $u=$_GET['u'];
   $v=$_GET['v'];
-
+}else{
+  $q=0;
+  $s=0;
+  $u=0;
+  $v=0;
 }
 
 if(isset($_GET['admin'])){

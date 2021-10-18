@@ -616,11 +616,14 @@ $archivos_cajachica=0;//contador de archivos de caja chica
                   <div id="div_contenedor_sol_recursos" >
                     <?php
                     
-                    if($codigo>0){                      
+                    if($codigo>0 && $cod_comprobante>0){                      
                       $archivos_cajachica=verificar_archivos_cajachica($codigo);
                       //sacar codigo de estado de cuenta
+
                       $sqlEstadoCuenta="SELECT e.cod_comprobantedetalle From estados_cuenta e where e.codigo=$cod_comprobante limit 1"; 
-                      // echo $sqlEstadoCuenta;
+                      
+                      //echo $sqlEstadoCuenta;
+                      
                       $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
                       $stmtEstadoCuenta->execute();                    
                       $resultado=$stmtEstadoCuenta->fetch();

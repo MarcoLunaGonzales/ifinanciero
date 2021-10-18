@@ -24,6 +24,8 @@ if(isset($_GET['q'])){
   $s=0;
   $u=0;
 }
+
+//echo "Q:".$q;
 ?>
 <input type="hidden" name="q" value="<?=$q?>" id="q"/>
 <input type="hidden" name="s" value="<?=$s?>" id="s"/>
@@ -33,6 +35,8 @@ if(isset($_GET['q'])){
 
 //datos registrado de la simulacion en curso
 $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_personal=$globalUser order by codigo desc limit 50";
+//echo $sqlDatos;
+
   $stmt = $dbh->prepare($sqlDatos);
 
   $stmt->execute();
@@ -144,27 +148,32 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                 $btnEstado="btn-default";
                               break;
                             }
-                            //verificamos si ya tiene factura generada y esta activa                           
-                            $stmtFact = $dbh->prepare("SELECT codigo, nro_factura, cod_estadofactura, razon_social, nit, nro_autorizacion, importe, cod_comprobante from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion order by codigo desc limit 1");
-                            $stmtFact->execute();
-                            $resultSimu = $stmtFact->fetch();
-                            $codigo_fact_x = $resultSimu['codigo'];
-                            $nro_fact_x = $resultSimu['nro_factura'];
-                            $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
-                            $nit_x = $resultSimu['nit'];
-                            $razon_social_x = $resultSimu['razon_social'];
-                            $nro_autorizacion_x = $resultSimu['nro_autorizacion'];
-                            $importe_x = $resultSimu['importe'];
-                            $cod_comprobante_x = $resultSimu['cod_comprobante'];
-                            if ($nro_fact_x==null)$nro_fact_x="-";
-                            else $nro_fact_x="F".$nro_fact_x;
-                            if($cod_estado_factura_x==4){
-                              // $btnEstado="btn-warning";
-                              $label='<span class="badge badge-warning">';
-                              $estado="FACTURA MANUAL";
+                            //verificamos si ya tiene factura generada y esta activa
+                            $sqlFact="SELECT codigo, nro_factura, cod_estadofactura, razon_social, nit, nro_autorizacion, importe, cod_comprobante from facturas_venta where cod_solicitudfacturacion='$codigo_facturacion' order by codigo desc limit 1";
+                            $stmtFact = $dbh->prepare($sqlFact);
 
-                              
-                              $datos_FacManual=$cliente_x."/".$razon_social_x."/".$nit_x."/".$nro_fact_x."/".$nro_autorizacion_x."/".$importe_x;
+                            $stmtFact->execute();
+                            $nro_fact_x="0";
+                            $cod_estado_factura_x=0;
+
+                            $codigo_fact_x=0;
+                            while($resultSimu = $stmtFact->fetch()){
+                              $codigo_fact_x = $resultSimu['codigo'];
+                              $nro_fact_x = $resultSimu['nro_factura'];
+                              $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
+                              $nit_x = $resultSimu['nit'];
+                              $razon_social_x = $resultSimu['razon_social'];
+                              $nro_autorizacion_x = $resultSimu['nro_autorizacion'];
+                              $importe_x = $resultSimu['importe'];
+                              $cod_comprobante_x = $resultSimu['cod_comprobante'];
+                              if ($nro_fact_x==null)$nro_fact_x="-";
+                              else $nro_fact_x="F".$nro_fact_x;
+                              if($cod_estado_factura_x==4){
+                              // $btnEstado="btn-warning";
+                                $label='<span class="badge badge-warning">';
+                                $estado="FACTURA MANUAL";                              
+                                $datos_FacManual=$cliente_x."/".$razon_social_x."/".$nit_x."/".$nro_fact_x."/".$nro_autorizacion_x."/".$importe_x;
+                              }
                             }
 
                             //sacamos monto total de la factura para ver si es de tipo factura por pagos
@@ -222,7 +231,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                            
                             $sumaTotalImporte=obtenerSumaTotal_solicitudFacturacion($codigo_facturacion);
 
-                            if($cont_facturas>1){      
+                              if($cont_facturas>1){      
                                 // $estado="FACTURA PARCIAL";
                                 $nro_fact_x=trim($cadenaFacturas,',');
                               }
@@ -254,7 +263,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               <td><small><small><?=$razon_social;?></small></small></td>
                               <td><small><small><?=$concepto_contabilizacion?></small></small></td>
                               <td><small><?=$observaciones_string;?></small></td>
-                              <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small>
+                              <td style="color:#298A08;"><small><?=($nro_fact_x>0)?$nro_fact_x:"-";?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small>
                                 <?php if($cod_estado_factura_x==3){
                                   $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
                                   ?>
@@ -300,9 +309,11 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                 $obs_devolucion = str_replace('"', " ", $obs_devolucion);//quitamos comillas dobles
                                 $obs_devolucion = str_replace("'", " ", $obs_devolucion);//quitamos comillas simples
                                 // echo $obs_devolucion;
-                                  if($cod_estado_factura_x!=4){
+                                if($cod_estado_factura_x!=4){
                                     // echo $codigo_fact_x."-";
-                                    if($codigo_fact_x>0 && $cod_estado_factura_x!=2 && $cod_estado_factura_x!=5){//print facturas
+                                    if($codigo_fact_x>0 && $cod_estado_factura_x!=2 && $cod_estado_factura_x!=5){
+                                      //echo "ENTRA CON FACTURAS".$nro_correlativo;
+                                      //print facturas
                                       // echo "entra";
                                       if($cont_facturas<2){
                                         ?>
@@ -311,7 +322,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                        <?php               
                                       }
                                       
-                                    }else{// generar facturas                                        
+                                    }else{    // generar facturas                                        
+                                      //echo "ENTRA SIN FACTURAS".$nro_correlativo;
                                       if($codEstado==1){
                                         $cod_tipopago=obtenemosformaPagoSolfact($codigo_facturacion);//fomra pago
                                         $cod_tipopago_cred=obtenerValorConfiguracion(48);
@@ -320,6 +332,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                         if($cod_tipopago_aux!=0){
                                           $cod_tipopago=$cod_tipopago_aux;
                                         }
+                                        
                                         if($cod_tipopago==$cod_tipopago_cred){//si es igual a credito cambia de flujo
                                           if(isset($_GET['q'])){
                                             if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar
@@ -378,13 +391,17 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                               </button><?php
                                             }
                                           } 
-
-                                        }
-                                        if(isset($_GET['q'])){?>
+                                        }//fin valida tipo pago credito
+                                        
+                                        //echo "DEBERIA ENTRAR A EDITAR";
+                                        if(isset($_GET['q'])){
+                                        ?>
                                           <a title="Editar Solicitud Facturación" href='<?=$urlEditSolicitudfactura;?>&codigo_s=<?=$codigo_facturacion?>&q=<?=$q?>&v=<?=$v?>&s=<?=$s?>&u=<?=$u?>' class="btn btn-success">
                                             <i class="material-icons"><?=$iconEdit;?></i>
-                                          </a><?php
-                                        }else{?>
+                                          </a>
+                                        <?php
+                                        }else{
+                                        ?>
                                           <a title="Editar Solicitud Facturación" href='<?=$urlEditSolicitudfactura;?>&codigo_s=<?=$codigo_facturacion?>' class="btn btn-success">
                                             <i class="material-icons"><?=$iconEdit;?></i>
                                           </a>
