@@ -2836,6 +2836,39 @@ function ajaxPersonalUbicacionTrasfer(combo){
   }
   ajax.send(null)
 }
+
+
+function ajaxPersonalUbicacionTrasferDesde(combo){
+  var contenedor;
+  var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_personal_UODesde');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ubicacionPersonalAjaxTransferDesde.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);
+      ajaxAFunidadorganizacionalArea2Desde(codigo_UO);
+    }
+  }
+  ajax.send(null)
+}
+function ajaxAFunidadorganizacionalArea2Desde(codigo_UO){
+  // var contenedor;
+  // var codigo_UO=combo.value;
+  contenedor = document.getElementById('div_contenedor_areaDesde');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ubicacionesUnidadAjaxDesde.php?codigo_UO='+codigo_UO,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);   
+       
+    }
+  }
+  ajax.send(null)  
+}//unidad_area-cargo
+
 function ajaxAFunidadorganizacionalArea2(codigo_UO){
   // var contenedor;
   // var codigo_UO=combo.value;

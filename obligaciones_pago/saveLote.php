@@ -53,7 +53,7 @@ for ($i=0; $i <count($array_cuentasAuxiliares) ; $i++) { //
     if($codigo_cuentaauxiliar==$cod_cuentaaux_s){
       $codigo_auxiliar_s=$_POST["codigo_auxiliar_s".$pro];
       $monto_pago_s=$_POST["monto_pago_s".$pro];
-      $sql="SELECT cod_comprobantedetalle,cod_plancuenta,cod_cuentaaux from estados_cuenta where codigo='$codigo_auxiliar_s'";
+      $sql="SELECT cod_comprobantedetalle,cod_plancuenta,cod_cuentaaux,cod_proveedor from estados_cuenta where codigo='$codigo_auxiliar_s'";
       //echo "<br>..".$sql;
       $stmtEstaCueSele = $dbh->prepare($sql);
       $stmtEstaCueSele->execute();                    
@@ -74,7 +74,7 @@ for ($i=0; $i <count($array_cuentasAuxiliares) ; $i++) { //
       //insertamos los estados de cuenta
       // $stmtContraCuenta = $dbh->prepare("INSERT INTO estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_cajachicadetalle,glosa_auxiliar)values('0','$cod_plancuenta','$monto_pago_s','$cod_proveedor','$fecha_pago','$codigo_auxiliar_s','$cod_cuentaaux',0,'$observaciones_pago_x')");
       // $flagSuccess=$stmtContraCuenta->execute();
-      if($flagSuccess){
+
           $codigo_sr=0;
           $sqlDetalleX="SELECT sd.codigo,sd.cod_solicitudrecurso,sd.cod_proveedor,sd.cod_tipopagoproveedor 
           FROM solicitud_recursos s,solicitud_recursosdetalle sd
@@ -96,12 +96,13 @@ for ($i=0; $i <count($array_cuentasAuxiliares) ; $i++) { //
           $cod_pagoproveedordetalle=obtenerCodigoPagoProveedorDetalle();
           $sqlInsert2="INSERT INTO pagos_proveedoresdetalle (codigo,cod_pagoproveedor,cod_proveedor,cod_solicitudrecursos,cod_solicitudrecursosdetalle,cod_tipopagoproveedor,monto,observaciones,fecha) 
            VALUES ('".$cod_pagoproveedordetalle."','".$cod_pagoproveedor."','".$cod_proveedor_sr."','".$cod_solicitudrecurso_sr."','".$codigo_sr."','".$cod_tipopagoproveedor_sr."','".$monto_pago_s."','".$observaciones_pago_x."','".$fecha_pago."')";
+           echo $sqlInsert2;
           $stmtInsert2 = $dbh->prepare($sqlInsert2);
           $flagSuccess=$stmtInsert2->execute();
           $stmtCambioEstadoSR = $dbh->prepare("UPDATE solicitud_recursos set cod_estadosolicitudrecurso=9 where codigo=:codigo");
           $stmtCambioEstadoSR->bindParam(':codigo', $cod_solicitudrecurso_sr);
           $flagSuccess=$stmtCambioEstadoSR->execute();   
-      }
+    
     }
     
 
