@@ -300,7 +300,9 @@ $stmt->execute();
 		    <?php
 			 }
 		    
-			$stmt = $dbh->prepare("SELECT codigo, cod_unidadorganizacional, porcentaje FROM distribucion_gastosporcentaje");
+		  $sqlDist="SELECT codigo, cod_unidadorganizacional, porcentaje FROM distribucion_gastosporcentaje";  
+			//echo $sqlDist;
+			$stmt = $dbh->prepare($sqlDist);
 			$stmt->execute();
 			$i=0;
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

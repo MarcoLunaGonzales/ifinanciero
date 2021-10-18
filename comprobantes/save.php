@@ -23,6 +23,8 @@ if(isset($_POST['salvado_temporal'])){
 }
 
 $desdeSR=0;
+$codigoSR=0;
+
 if(isset($_POST['codigo_sr'])&&isset($_POST['codigo_personal'])){
   $desdeSR=1;
   $codigoSR=$_POST['codigo_sr'];

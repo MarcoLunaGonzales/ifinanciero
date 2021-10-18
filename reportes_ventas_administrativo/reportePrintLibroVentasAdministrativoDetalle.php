@@ -1,6 +1,12 @@
 <style>
   #reporte_datos_busqueda_filter{
          display: none !important;
+         .table-border,
+          thead,
+          tbody,
+          tr {
+            border: 5px dotted #4c4c4c;
+          }
        }      
 </style>
 <div class="card-body">

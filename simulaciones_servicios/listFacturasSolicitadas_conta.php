@@ -16,7 +16,9 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion in (3,4) order by codigo desc");
+$sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion in (3,4) order by codigo desc";
+ //echo $sql;
+  $stmt = $dbh->prepare($sql);
 
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
@@ -107,17 +109,24 @@ $globalAdmin=$_SESSION["globalAdmin"];
                             }
                             //verificamos si ya tiene factura generada y esta activa                           
                             $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
+
+                            $codigo_fact_x=0;
+                            $nro_fact_x=0;
+                            $cod_estado_factura_x=0;
+                            
                             $stmtFact->execute();
-                            $resultSimu = $stmtFact->fetch();
-                            $codigo_fact_x = $resultSimu['codigo'];
-                            $nro_fact_x = $resultSimu['nro_factura'];
-                            $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
-                            if ($nro_fact_x==null)$nro_fact_x="-";
-                            else $nro_fact_x="F".$nro_fact_x;
-                            if($cod_estado_factura_x==4){
-                              $btnEstado="btn-warning";
-                              $estado="FACTURA MANUAL";                            
+                            while($resultSimu = $stmtFact->fetch()){
+                              $codigo_fact_x = $resultSimu['codigo'];
+                              $nro_fact_x = $resultSimu['nro_factura'];
+                              $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
+                              if ($nro_fact_x==null)$nro_fact_x="-";
+                              else $nro_fact_x="F".$nro_fact_x;
+                              if($cod_estado_factura_x==4){
+                                $btnEstado="btn-warning";
+                                $estado="FACTURA MANUAL";                            
+                              }
                             }
+                            
                             //sacamos monto total de la factura para ver si es de tipo factura por pagos
                             $sqlMontos="SELECT codigo,importe,nro_factura,cod_estadofactura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4) ORDER BY codigo desc";
                             // echo $sqlMontos;

@@ -52,7 +52,7 @@ join facturas_venta f on f.codigo=lf.cod_facturaventa
 join libretas_bancariasdetalle ld on ld.codigo=lf.cod_libretabancariadetalle
 where ld.cod_libretabancaria=$codigoLibreta 
 and ld.fecha_hora BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' 
-and (concat(year(f.fecha_factura),'-',month(f.fecha_factura),'-','01')==concat(year(ld.fecha_hora),'-',month(ld.fecha_hora),'-','01'))
+and (concat(year(f.fecha_factura),'-',month(f.fecha_factura),'-','01')=concat(year(ld.fecha_hora),'-',month(ld.fecha_hora),'-','01'))
 and f.cod_estadofactura<>2;";
 // echo $sql;
 $stmt2 = $dbh->prepare($sql2);
@@ -79,12 +79,12 @@ $stmt2->execute();
         <tr style="background:#21618C; color:#fff;">
           <td>Cuenta</td>
           <td>Comprobante</td>
-          <td>Fecha</td>
+          <td>FechaComp</td>
           <td>Hora</td>
           <td width="35%">Descripción</td>
           <td>Sucursal</td>
           <td>Monto</td>
-          <td>Saldo</td>
+          <!--td>Saldo</td-->
           <td width="10%">Nro Doc / Nro Ref</td>
           <td class="bg-success">Fecha</td>
           <td class="bg-success">Numero</td>
@@ -108,7 +108,8 @@ $stmt2->execute();
             $codComprobanteDetalle=$rowComp['cod_comprobantedetalle'];
             $nro_documento=$rowComp['nro_documento']; 
             $monto=$rowComp['monto'];
-            $saldo=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,"",$monto);
+            $fechaLibretaBancaria=$rowComp['fecha_hora'];
+            //$saldo=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,"",$monto);
 
             $sqlFacturas="SELECT lf.cod_facturaventa,(SELECT sum(f.importe) from facturas_venta f where f.codigo=lf.cod_facturaventa and f.cod_estadofactura!=2)as monto_fac From libretas_bancariasdetalle_facturas lf join facturas_venta f on f.codigo=lf.cod_facturaventa where lf.cod_libretabancariadetalle=$codigo and f.cod_estadofactura<>2 limit 1";
           $stmtFacturas = $dbh->prepare($sqlFacturas);
@@ -131,7 +132,7 @@ $stmt2->execute();
               </td>      
               <td class="text-left"><?=$agencia?></td>
               <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-              <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
+              <!--td class="text-right"><?=number_format($saldo,2,".",",")?></td-->
               <td class="text-right"><?=$nro_documento?></td>
               <?php
               
@@ -187,7 +188,7 @@ $stmt2->execute();
             $codComprobanteDetalle=$rowComp['cod_comprobantedetalle'];
             $nro_documento=$rowComp['nro_documento']; 
             $monto=$rowComp['monto'];
-            $saldo=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,"",$monto);
+            //$saldo=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,"",$monto);
 
             $sqlFacturas="SELECT lf.cod_facturaventa,(SELECT sum(f.importe) from facturas_venta f where f.codigo=lf.cod_facturaventa and f.cod_estadofactura!=2)as monto_fac From libretas_bancariasdetalle_facturas lf join facturas_venta f on f.codigo=lf.cod_facturaventa where lf.cod_libretabancariadetalle=$codigo and f.cod_estadofactura<>2 limit 1";
           $stmtFacturas = $dbh->prepare($sqlFacturas);
@@ -202,6 +203,7 @@ $stmt2->execute();
             ?>
             <tr class="" style="background:#82E0AA;">
               <td class="text-center font-weight-bold"><?=nameCuenta($entroLib)?></td>
+              <td class="text-center font-weight-bold"><?=nombreComprobante($codComprobanteFactura)." CODIGO: <a href='../comprobantes/edit_prueba.php?codigo=".$codComprobanteFactura."' target='_blank'>".$codComprobanteFactura?></a></td>
               <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
               <td class="text-center"><?=strftime('%H:%M:%S',strtotime($fecha))?></td>
               <td class="text-left">
@@ -209,7 +211,7 @@ $stmt2->execute();
               </td>      
               <td class="text-left"><?=$agencia?></td>
               <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-              <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
+              <!--td class="text-right"><?=number_format($saldo,2,".",",")?></td-->
               <td class="text-right"><?=$nro_documento?></td>
               <?php
               

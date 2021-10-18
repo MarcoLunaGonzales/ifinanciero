@@ -204,7 +204,8 @@ $stmtb->bindColumn('nombre', $nombre);
                           //==termina el codigom temporal
                             $codComprobanteAux=0;
                             $codComprobanteDetalleAux=0;
-                            $sqlExisteComprobante="SELECT codigo from comprobantes where codigo=$codComprobante and cod_estadocomprobante<>2";
+                            $sqlExisteComprobante="SELECT codigo from comprobantes where codigo='$codComprobante' and cod_estadocomprobante<>2";
+                            //echo $sqlExisteComprobante;
                             $stmtExisteComprobante = $dbh->prepare($sqlExisteComprobante);
                             $stmtExisteComprobante->execute();
                             while ($rowExisteCompro = $stmtExisteComprobante->fetch(PDO::FETCH_ASSOC)) {
@@ -231,8 +232,12 @@ $stmtb->bindColumn('nombre', $nombre);
                               // $cont_facturas=contarFacturasLibretaBancaria($codigo);
                               // if($cont_facturas>0){
                                 $cadena_facturas=obtnerCadenaFacturas($codigo);
+                                if($cadena_facturas==""){
+                                  $cadena_facturas=0;
+                                }
                                 // $sqlDetalleX="SELECT * FROM facturas_venta where cod_libretabancariadetalle=$codigo and cod_estadofactura!=2 order by codigo desc";
                                 $sqlDetalleX="SELECT f.codigo,f.fecha_factura,f.nro_factura,f.nit,f.razon_social,f.observaciones,(SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) from facturas_ventadetalle fd where fd.cod_facturaventa=f.codigo)as importe FROM facturas_venta f where f.codigo in ($cadena_facturas) and f.cod_estadofactura!=2 order by f.codigo desc";
+                                //echo $sqlDetalleX;
                                 $stmtDetalleX = $dbh->prepare($sqlDetalleX);
                                 $stmtDetalleX->execute();
                                 $stmtDetalleX->bindColumn('codigo', $codigo_factura);

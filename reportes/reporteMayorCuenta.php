@@ -90,9 +90,13 @@
       }
 
       //OBTENEMOS LOS SALDOS ANTERIORES
-      //$tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($desdeInicioAnio)));
-      $tc=1;
+      if($moneda!=1){
+        $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($desdeInicioAnio)));
+      }else{
+        $tc=1;        
+      }
       if($tc==0){$tc=1;}
+      
       //echo "desde: ".$desde." desdeInicioAnio: ".$desdeInicioAnio;
       if($desde==$desdeInicioAnio){
         $saldoAnterior=0;
@@ -172,8 +176,12 @@
             $glosaX=substr($glosaX,0,obtenerValorConfiguracion(72))."...";
           }
         }
-        //$tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
-        $tc=1;
+        
+        if($moneda!=1){
+          $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
+        }else{
+          $tc=1;        
+        }
         if($tc==0){$tc=1;}
 
         $tDebeBol+=$debeX;$tHaberBol+=$haberX;

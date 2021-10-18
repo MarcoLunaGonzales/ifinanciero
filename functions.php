@@ -689,7 +689,9 @@
   }
   function abrevUnidad_solo($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT abreviatura FROM unidades_organizacionales where codigo in ($codigo)");
+     $sql="SELECT abreviatura FROM unidades_organizacionales where codigo in ($codigo)";
+     //echo $sql;
+     $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $nombreX="";
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -2528,6 +2530,7 @@
   and tablap.cod_simulacioncosto=tabla_uno.cod_simulacioncostos and tablap.habilitado=1  
   and tablap.cod_cuenta=$codigo and s.cod_responsable=$codUsuario and s.fecha BETWEEN '$fechai' and '$fechaf'
   order by tabla_uno.codigo) sec )";
+  //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
@@ -7920,15 +7923,17 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
   }
   function verificamosFacturaDuplicada($codigo){
     $dbh = new Conexion();
-    $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo and cod_estadofactura=1");
+    $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion='$codigo' and cod_estadofactura=1");
     $stmtVerif->execute();
-    $resultVerif = $stmtVerif->fetch();    
-    $codigo_facturacion = $resultVerif['codigo'];
+    $codigo_facturacion=0;
+    if($resultVerif = $stmtVerif->fetch()){
+       $codigo_facturacion = $resultVerif['codigo'];
+    }        
     return $codigo_facturacion;
   }
   function verificamosFacturaGenerada($codigo){
     $dbh = new Conexion();
-    $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion=$codigo and cod_estadofactura=2");
+    $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion='$codigo' and cod_estadofactura=2");
     $stmtVerif->execute();
     $valor=0;
     while ($row = $stmtVerif->fetch())    
@@ -7939,7 +7944,7 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
   }
   function obtenerSolicitudFactura($codigo){
     $dbh = new Conexion();
-    $stmtVerif = $dbh->prepare("SELECT cod_solicitudfacturacion from facturas_venta  where codigo=$codigo");
+    $stmtVerif = $dbh->prepare("SELECT cod_solicitudfacturacion from facturas_venta  where codigo='$codigo'");
     $stmtVerif->execute();
     $valor=0;
     while ($row = $stmtVerif->fetch())    
@@ -8018,7 +8023,10 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
 function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto,$nombre){
     //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
     // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
+    
+    //$direccion='http://ibnored.ibnorca.org/ifinanciero/wsifin/';
     $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+
     $sIde = "libBan";
     $sKey = "89i6u32v7xda12jf96jgi30lh";
     //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
@@ -8047,7 +8055,11 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
     $remote_server_output = curl_exec ($ch);
     // cerramos la sesión cURL
     curl_close ($ch);
+    
     return json_decode($remote_server_output);
+    //echo $direccion."ws_obtener_libreta_bancaria.php";
+    //echo "decode: ".json_decode($remote_server_output);
+
     // imprimir en formato JSON
     //header('Content-type: application/json');   
     //print_r($remote_server_output);
@@ -8392,6 +8404,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
   function obtenerCorreoEstudiante($nit){
     $dbh = new Conexion();
     $sqlCorreo2="SELECT c.clCorreo as correo from dbcliente.cliente_persona_empresa c where c.clCorreo IS NOT NULL and c.clIdentificacion='$nit'";
+    //echo $sqlCorreo2;
     $stmtCorreos2 = $dbh->prepare($sqlCorreo2);
     $stmtCorreos2->execute();
     $stmtCorreos2->bindColumn('correo', $correo2);
@@ -11069,6 +11082,41 @@ function obtenerSolicitudPropuestaCapacitacion($codigo){
               $sumaImporteEjec+=$rowDetalles['importe'];
           }
      }
+     //$valor[4]=$valor[4]-$sumaImporteEjec;
+     $valor[4]=$sumaImporteEjec;
+      return $valor;
+ }
+
+ function obtenerDatosContratoSolicitudCapacitacionServicios($codigo){
+   $dbh = new Conexion();
+     $sql="SELECT c.Monto,c.CodAuditor, c.idServicio from simulaciones_servicios sc join ibnorca.contratos c on c.IdObjeto=sc.idServicio where sc.codigo=$codigo;";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor[0]=0;
+     $valor[1]=-1111111;
+     $valor[2]="";
+     $valor[3]="";
+     $valor[4]=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor[0]=$row['Monto'];
+        $valor[1]=$row['CodAuditor'];
+        $valor[2]=" ";
+        $valor[3]=$row['idServicio'];
+        $valor[4]=$row['Monto'];
+    }
+
+     $sumaImporteEjec=0;
+     /*$codigoPlantillaXX=obtenerPlantillaCodigoSimulacion($codigo);
+     $detalle=obtenerDetalleSolicitudSimulacionCuentaPlantilla($codigo,$codigoPlantillaXX);
+     while ($row = $detalle->fetch(PDO::FETCH_ASSOC)) {
+       $cod_plantilladetalle=$row['codigo_detalle'];
+       $codSol=obtenerSolicitudPropuestaCapacitacion($codigo);
+       //ACA SUMAMOS TODO LO RELACIONADO A LA PLANTILLA
+       $solicitudDetalle=obtenerSolicitudRecursosDetallePlantillaSinSol($codSol,$cod_plantilladetalle);       
+          while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
+              $sumaImporteEjec+=$rowDetalles['importe'];
+          }
+     }*/
      //$valor[4]=$valor[4]-$sumaImporteEjec;
      $valor[4]=$sumaImporteEjec;
       return $valor;

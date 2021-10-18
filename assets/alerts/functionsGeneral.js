@@ -19151,6 +19151,22 @@ function verificarContratoDatosDesdeSolicitud(codSim,codProv,montoContrato){
   return tiene;
 }
 
+function verificarContratoDatosDesdeSolicitudAmbos(codSim,codProv,montoContrato,tipoSolicitud){
+  var tiene = "1#####ErrorContrato";
+   var parametros={"codigo":codSim,"cod_prov":codProv,"monto":montoContrato,"tipoSolicitud":tipoSolicitud};
+     $.ajax({
+        async:false,
+        type: "POST",
+        dataType: 'html',
+        url: "ajax_verificar_contrato_propuesta_ambos.php",
+        data: parametros,      
+        success:  function (resp) {
+           tiene=resp;
+        }
+    });
+  return tiene;
+}
+
 
 //CON ESTE PROCESO ENVIAMSO LOS ARCHIVOS AJAX A LA LIBRERIA DEL ING. WILLY input name archivito
 function subirArchivosLibreriaInborca(inpFile){

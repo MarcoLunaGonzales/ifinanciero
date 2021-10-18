@@ -29,7 +29,8 @@ if(isset($_GET['anio'])){
   $lista=obtenerObtenerLibretaBancariaIndividualAnio($codLibretaBan,$_GET['anio'],$_GET['fecha'],$_GET['monto'],$_GET['nombre']);  
 }else{
   $lista=obtenerObtenerLibretaBancariaIndividual($codLibretaBan);  
-} 
+}
+//echo "lista: ".$lista;
 ?>
 <style>
   tfoot input {
@@ -59,14 +60,16 @@ if(isset($_GET['anio'])){
       <?php
       // if($lista->estado==1){
         $j=1;
-          foreach ($lista->libretas as $v) {
-            $Nombre=$v->Nombre;
-            $Banco=$v->Banco;
-            $detalle=$v->detalle;
-            $index=1;
-            
-             if($listarLib==1){
-            ?>            
+          if(empty($lista)){
+          }else{  
+            foreach ($lista->libretas as $v) {
+              $Nombre=$v->Nombre;
+              $Banco=$v->Banco;
+              $detalle=$v->detalle;
+              $index=1;
+              
+               if($listarLib==1){
+              ?>            
             <tr>
               <td class="d-none"></td>
               <td class="d-none"></td>
@@ -226,7 +229,8 @@ if(isset($_GET['anio'])){
             $index++;
             }
             $j++;
-        }      
+        }
+      }      
       ?>
     </tbody>
     <tfoot>

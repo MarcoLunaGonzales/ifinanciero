@@ -38,6 +38,8 @@ if($_POST["fecha_desde"]==""){
 
 $moneda=$_POST["moneda"];
 
+//echo $moneda;
+
 $codcuenta=$_POST["cuenta"];
 $codcuentaMayor=$_POST["cuenta"];
 $nombreMoneda=nameMoneda($moneda);

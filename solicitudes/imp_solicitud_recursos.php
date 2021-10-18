@@ -469,10 +469,17 @@ $tituloImporte="";
      <footer class="footer">
         <table class="table">
           <tr>
-            <td class="s4 text-left" width="25%">IBNORCA</td>
-            <td class="s4 text-left" width="25%">Codigo: REG-PRE-SA-04-01.05</td>
-            <td class="s4 text-left" width="25%">V: 2015-09-21</td>
-            <td class="s4 text-left" width="25%"></td>
+            <td class="s4 text-center" width="25%"><b>IBNORCA &#169;</b></td>
+            <!--td class="s4 text-left" width="25%"><b>Codigo:</b> REG-PRE-SA-04-01.05</td-->
+            <td class="s4 text-center" width="25%"><b>Codigo:</b> REG-PRO-AF-02-03.06</td>
+            <td class="s4 text-center" width="25%"><b>V:</b> 2021-08-13</td>
+            <td class="s4 text-center" width="25%"></td>
+          </tr>
+         <tr style="border: inset 0pt">
+            <td class="s4 text-center" width="100%" colspan="4">
+                <i>Los documentos impresos o fotocopiados se consideran copias no controladas. Verifique la vigencia
+del documento a través del ICOMITÉ o página web de IBNORCA.</i>
+            </td>
           </tr>
        </table>
      </footer>
