@@ -1310,6 +1310,9 @@ function readSingleFileDRC(evt) {
 function modalPegarDatosComprobante(){
   $('#modalPegarDatosComprobante').modal('show');
 }
+function modalPegarDatosComprobante_tcs(){
+  $('#modalPegarDatosComprobante_tcs').modal('show');
+}
 function limpiarComprobanteExcel(){
   $('textarea[name=data_excel]').val("");
    $('#div_datos_excel').html("");
@@ -8126,7 +8129,7 @@ function guardarDatosPlantilla(btn_id){
    var precio_alternativo=$("#total_preciosimulacion").val();
    var modal_modulos=$("#modal_modulo").val();
    var normas=$("#normas").val();
-   alert(normas);
+      alert(normas);
    var parametros={"dias_curso":dias_curso,"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo,"modal_modulos":modal_modulos,"normas":normas};
 
   if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){
@@ -8446,7 +8449,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       $.ajax({
         type:"POST",
         data:parametros,
-        url:"d2.php",
+        url:"ajaxSaveDatosPlantilla2.php",
         beforeSend: function () { 
           iniciarCargaAjax();
         },
@@ -11752,7 +11755,7 @@ function listarAtributo(){
 }
 
 function listarAtributoUltimo(){
-  if(itemAtributos.length>1){
+  if(itemAtributos.length>1){      
     var sumaDias=[];
      for (var i = (itemAtributos.length-1); i < itemAtributos.length; i++) {
      var row = $('<tr>').addClass('');
@@ -11834,6 +11837,7 @@ function guardarAtributoItem(){
   }else{
     var normasMultiple=$("#normas").val();
     var norma_cod=normasMultiple.join(",");
+    // console.log(norma_cod);
     var normasArray=[]; var i=0;
     $("#normas option:selected").each(function() {     
        normasArray[i]= $(this).text();      
@@ -11988,9 +11992,11 @@ function editarAtributo(fila){
     $("#modal_norma").tagsinput('removeAll');
     $("#modal_norma").tagsinput('add', itemAtributos[fila].norma_otro);
    if(!($("#div_norma").hasClass("d-none"))){
-    var normasMultiple=itemAtributos[fila].norma_cod.split(",");
+    var normasMultiple=itemAtributos[fila].norma_cod;
+    // console.log(normasMultiple);
     $("#normas").val(normasMultiple);
-    var norma_cod=normasMultiple.join(",");
+    // var norma_cod=normasMultiple.join(",");
+    var norma_cod=normasMultiple;
    }   
   }
   if(($("#div_marca").hasClass("d-none"))){
@@ -19340,4 +19346,388 @@ function exportTableToExcel(tableID, filename = ''){
         //triggering the function
         downloadLink.click();
     }
+}
+
+//****** comie<a cargado de excel***
+var itemDatosProductosPlantilla=[];
+
+function cargarDatosExel_tcp(){
+  var paqueteDeDatos = new FormData();
+  paqueteDeDatos.append('file_excel', $('#archivo_tcp')[0].files[0]);
+  $("#boton_cargar_datos").html("Cargando...");
+  $("#boton_cargar_datos").attr("disabled",true);
+  // paqueteDeDatos.append('file_txt', $('#documentos_cabecera_txt')[0].files[0]);
+  // paqueteDeDatos.append('file_csv', $('#archivo_tcp')[0].files[0]);
+  var dato="";
+  var destino = "simulaciones_servicios/ajax_subirdatosexcel_tcp.php"; 
+  $.ajax({
+    url: destino,
+    type: 'POST', // Siempre que se envíen ficheros, por POST, no por GET.
+    contentType: false,
+    data: paqueteDeDatos, // Al atributo data se le asigna el objeto FormData.
+    processData: false,
+    cache: false, 
+    async:false,    
+    success: function(resultado){ // En caso de que todo salga bien.
+     $("#contenedor_oculto").html(resultado);
+      // $("#texto_boton").attr("disabled",true);
+    }
+  });
+  generarComprobanteExcel_TCP_TCS();
+}
+function cargarDatosExel_tcs(){
+  var paqueteDeDatos = new FormData();
+  paqueteDeDatos.append('file_excel', $('#archivo_tcs')[0].files[0]);
+  $("#boton_cargar_datos_tcs").html("Cargando...");
+  $("#boton_cargar_datos_tcs").attr("disabled",true);
+  // paqueteDeDatos.append('file_txt', $('#documentos_cabecera_txt')[0].files[0]);
+  // paqueteDeDatos.append('file_csv', $('#archivo_tcp')[0].files[0]);
+  var dato="";
+  var destino = "simulaciones_servicios/ajax_subirdatosexcel_tcs.php"; 
+  $.ajax({
+    url: destino,
+    type: 'POST', // Siempre que se envíen ficheros, por POST, no por GET.
+    contentType: false,
+    data: paqueteDeDatos, // Al atributo data se le asigna el objeto FormData.
+    processData: false,
+    cache: false, 
+    async:false,    
+    success: function(resultado){ // En caso de que todo salga bien.
+     $("#contenedor_oculto_tcs").html(resultado);
+    }
+  });
+  console.log(itemDatosProductosPlantilla);
+  generarComprobanteExcel_TCS();
+}
+
+
+
+function cargarComprobanteExcel_TCP_TCS() {
+  $('#div_datos_excel').html("");
+    var data = $('textarea[name=data_excel]').val();
+    // console.log(data);
+    var rows = data.split("\n");
+    var table = $('<table />');
+    table.addClass("table").addClass("table-condensed").addClass("table-bordered").addClass("table-sm");
+    var index=0;
+    for(var y in rows) {
+      var cells = rows[y].split("\t");
+      var row = $('<tr />'); 
+      var coli=0;
+      var itemsFila=[];
+      for(var x in cells) {
+          // if(!(coli==1||coli==3||coli==7||coli==8)){
+            itemsFila.push(cells[x]);
+            row.append('<td>'+cells[x]+'</td>');   
+          // }
+          coli++;
+      }
+      if(index==0){
+        row.addClass("bg-success").addClass("text-white"); 
+      }else{
+        if(itemsFila.length>0&&itemsFila[0]!=""&&itemsFila[1]!=""&&itemsFila[4]!=""){ //validacion para mas de una fila
+          itemDatosProductosPlantilla.push(itemsFila);
+        }
+        row.addClass("font-weight-bold").addClass("small"); 
+      }
+      table.append(row);
+      index++;
+    }
+  if(index>1){
+    if($("#boton_generar_filas").hasClass("d-none")){
+      $("#boton_generar_filas").removeClass("d-none");
+      $("#boton_cargar_datos").addClass("d-none");
+    }
+  }
+  // Insert into DOM
+  $('#div_datos_excel').html(table);
+}
+function cargarComprobanteExcel_TCS() {
+  $('#div_datos_excel').html("");
+    var data = $('textarea[name=data_excel_tcs]').val();
+    console.log(data);
+    var rows = data.split("\n");
+    var table = $('<table />');
+    table.addClass("table").addClass("table-condensed").addClass("table-bordered").addClass("table-sm");
+    var index=0;
+    for(var y in rows) {
+      var cells = rows[y].split("\t");
+      var row = $('<tr />'); 
+      var coli=0;
+      var itemsFila=[];
+      for(var x in cells) {          
+            itemsFila.push(cells[x]);
+            row.append('<td>'+cells[x]+'</td>');          
+          coli++;
+      }
+      if(index==0){
+        row.addClass("bg-success").addClass("text-white"); 
+      }else{
+        if(itemsFila.length>0&&itemsFila[0]!=""&&itemsFila[1]!=""&&itemsFila[4]!=""){ //validacion para mas de una fila
+          itemDatosProductosPlantilla.push(itemsFila);
+        }
+        row.addClass("font-weight-bold").addClass("small"); 
+      }
+      table.append(row);
+      index++;
+    }
+  if(index>1){
+    if($("#boton_generar_filas_tcs").hasClass("d-none")){
+      $("#boton_generar_filas_tcs").removeClass("d-none");
+      $("#boton_cargar_datos_tcs").addClass("d-none");
+    }
+  }
+  // Insert into DOM
+  $('#div_datos_excel_tcs').html(table);
+}
+
+
+function generarComprobanteExcel_TCP_TCS(){  
+  var datos=itemDatosProductosPlantilla;
+  listarAtributo();
+  for (var fila = 0; fila <datos.length; fila++) {    
+    var codigo_norma=obtieneCodigoNorma_TCP(datos[fila][2]);
+    // console.log(codigo_norma);
+    var atributo={
+      codigo:fila,  
+      nombre: nombre=datos[fila]['nombre'],//nombre
+      direccion: datos[fila]['direccion'],//direccion
+      norma:datos[fila]['norma'],//norma
+      norma_cod:codigo_norma,//codigo norma
+      norma_otro:"",
+      marca:datos[fila]['marca'],//marca,
+      sello:datos[fila]['sello'],//sello
+      pais:26,
+      estado:480,
+      ciudad:62,
+      nom_pais:"BOLIVIA",
+      nom_estado:"LA PAZ",
+      nom_ciudad:"LA PAZ"
+    }
+    itemAtributos.push(atributo);
+  }  
+  listarAtributo();
+  // $("#div_datos_excel").html("");
+  // $("#data_excel").val("");
+  // $("#boton_cargar_datos").removeClass("d-none");
+  // $("#boton_generar_filas").addClass("d-none");
+  $("#modalPegarDatosComprobante").modal("hide");     
+}
+function obtieneCodigoNorma_TCP(nombre_norma){
+  var dato="";
+  var parametros={"nombre_norma":nombre_norma};
+    $.ajax({
+        type: "GET",
+        dataType: 'html',
+        url: "simulaciones_servicios/ajax_obtenerCodigoNorma.php",
+        data: parametros,
+        async:false,
+        success:  function (resp) {
+          dato=resp;
+        }
+    });
+    return dato; 
+}
+
+function generarComprobanteExcel_TCS(){  
+  var datos=itemDatosProductosPlantilla;
+  listarAtributo(); 
+  var norma="";
+  var sello="";
+  var marca="";
+
+  for (var fila = 0; fila <datos.length; fila++) {    
+    var atributo={
+      codigo:fila,  
+      nombre: nombre=datos[fila]['nombre'],//nombre
+      direccion: datos[fila]['direccion'],//direccion
+      norma:"",//norma
+      norma_cod:"",
+      norma_otro:"",
+      marca:"",//marca,
+      sello:"",//sello
+      pais:26,
+      estado:480,
+      ciudad:62,
+      nom_pais:"BOLIVIA",
+      nom_estado:"LA PAZ",
+      nom_ciudad:"LA PAZ"
+    }
+    itemAtributos.push(atributo);
+  }  
+  listarAtributo();
+  $("#div_datos_excel_tcs").html("");
+  $("#data_excel_tcs").val("");
+  $("#boton_cargar_datos_tcs").removeClass("d-none");
+  $("#boton_generar_filas_tcs").addClass("d-none");
+  $("#modalPegarDatosComprobante_tcs").modal("hide");     
+
+}
+ //****** termina cargado
+
+
+function guardarAtributoItem_prueba(){
+  if($('#modal_nombre').val()==""){
+   Swal.fire("Informativo!", "Debe ingresar el Nombre del sitio o producto", "warning");
+  }else{
+  if(($("#productos_div").hasClass("d-none"))){
+    var norma="";
+    var sello="";
+    var marca="";
+      
+  }else{
+    var normasMultiple=$("#normas").val();
+    var norma_cod=normasMultiple.join(",");
+    var normasArray=[]; var i=0;
+    $("#normas option:selected").each(function() {     
+       normasArray[i]= $(this).text();      
+       i++;
+     });
+    var norma=normasArray.join(",");
+
+    if($("#modal_norma").val()!=""){
+     norma=norma+","+$("#modal_norma").val();
+    }
+
+    var norma_otro=$("#modal_norma").val();
+    var sello=$("#modal_sello").val();
+    var marca=$("#modal_marca").val();
+  }
+  if($("#pais_empresa").val()!=null){
+    var pais=$("#pais_empresa").val().split("####")[0];
+    var nom_pais=$("#pais_empresa").val().split("####")[1];
+  }else{
+      var pais="";
+      var nom_pais="SIN PAIS";
+  }
+  if(!($("#departamento_empresa").val()==null||$("#departamento_empresa").val()=="")){
+    var estado=$("#departamento_empresa").val().split("####")[0];
+    var nom_estado=$("#departamento_empresa").val().split("####")[1];
+  }else{
+      var estado="";
+      var nom_estado="SIN DEPTO";
+  }
+  if(!($("#ciudad_empresa").val()==null||$("#ciudad_empresa").val()=="")){
+    var ciudad=$("#ciudad_empresa").val().split("####")[0];
+    var nom_ciudad=$("#ciudad_empresa").val().split("####")[1];
+  }else{
+    var ciudad="";
+    var nom_ciudad="SIN CIUDAD";
+  }
+  var fila=$("#modal_fila").val();
+  if(fila<0){
+    var codigoNuevo=itemAtributos.length;
+    var atributo={
+    codigo:codigoNuevo,  
+    nombre: $('#modal_nombre').val(),
+    direccion: $('#modal_direccion').val(),
+    norma:norma,
+    norma_cod:norma_cod,
+    norma_otro:norma_otro,
+    marca:marca,
+    sello:sello,
+    pais:pais,
+    estado:estado,
+    ciudad:ciudad,
+    nom_pais:nom_pais,
+    nom_estado:nom_estado,
+    nom_ciudad:nom_ciudad
+    }
+  itemAtributos.push(atributo);
+   if($("#modalEditPlantilla").length){
+    //agregar Nuevo dias sitios
+    for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
+         var atributoDias={
+         codigo_atributo: codigoNuevo,  
+         dias: $("#modal_dias_sitio"+i).val(),
+         anio: i
+         }
+       itemAtributosDias.push(atributoDias);
+     };   
+   }
+  }else{
+    itemAtributos[fila].nombre=$('#modal_nombre').val();
+    itemAtributos[fila].direccion=$('#modal_direccion').val();
+    if(!($("#productos_div").hasClass("d-none"))){
+       var normasMultiple=$("#normas").val();
+    var norma_cod=normasMultiple.join(",");
+    var normasArray=[]; var i=0;
+    $("#normas option:selected").each(function() {     
+       normasArray[i]= $(this).text();      
+       i++;
+     });
+    var norma=normasArray.join(",");
+    }
+   
+    if($("#modal_norma").val()!=""){
+     itemAtributos[fila].norma=norma+","+$("#modal_norma").val();  
+    }else{
+      itemAtributos[fila].norma=norma;
+    }    
+    itemAtributos[fila].norma_otro=$("#modal_norma").val();
+    itemAtributos[fila].norma_cod=norma_cod;
+    itemAtributos[fila].marca=$('#modal_marca').val();
+    itemAtributos[fila].sello=$('#modal_sello').val();
+    itemAtributos[fila].pais=pais;
+    itemAtributos[fila].estado=estado;
+    itemAtributos[fila].ciudad=ciudad;
+    itemAtributos[fila].nom_pais=nom_pais;
+    itemAtributos[fila].nom_estado=nom_estado;
+    itemAtributos[fila].nom_ciudad=nom_ciudad;
+    if($("#modalEditPlantilla").length){
+    //editar dias sitios
+      for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
+        for (var j = 0; j < itemAtributosDias.length; j++) {
+           if(itemAtributosDias[j].codigo_atributo==itemAtributos[fila].codigo&&itemAtributosDias[j].anio==i){
+            itemAtributosDias[j].dias=$("#modal_dias_sitio"+i).val()
+           } 
+        };
+     };
+   }
+  }
+  $("#modal_nombre").val("");
+  $("#modal_direccion").val("");
+  $("#modal_norma").val("");
+  $("#modal_marca").val("");
+  $("#modal_sello").val("");
+
+  if($("#modalEditPlantilla").length>0){
+    limpiarModalCache("modal_atributo");
+    editarDatosPlantilla();
+   }else{
+    listarAtributoUltimo();
+    $("#modal_atributo").modal("hide");
+   }
+  }
+  
+}
+
+
+
+function generarComprobanteExcel_TCP_TCS_bk(){
+  var datos=itemDatosComprobante;
+  var parametros={"filas":$("#cantidad_filas").val(),"datos":JSON.stringify(datos)};
+  $.ajax({
+        type: "POST",
+        dataType: 'html',
+        url: "ajaxCargarExcel.php",
+        data: parametros,
+        beforeSend:function(){
+          iniciarCargaAjax();
+          $("#texto_ajax_titulo").html("Generando Filas");
+        },
+        success:  function (resp) {
+          detectarCargaAjax();
+          $("#texto_ajax_titulo").html("Procesando Datos");
+          var fi=$("#fiel");
+          fi.append(resp);
+          // calcularTotalesComprobante("null");
+          $('.selectpicker').selectpicker("refresh");
+          $("#div_datos_excel").html("");
+          $("#data_excel").val("");
+          $("#boton_cargar_datos").removeClass("d-none");
+          $("#boton_generar_filas").addClass("d-none");
+          $("#modalPegarDatosComprobante").modal("hide");     
+        }
+    }); 
 }

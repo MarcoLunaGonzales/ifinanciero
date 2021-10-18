@@ -1,6 +1,5 @@
 <?php 
-class Conexion extends PDO {    
-
+class Conexion extends PDO { 
    private $tipo_de_base = 'mysql';
    private $host = 'localhost';
    private $nombre_de_base = 'financiero1021';

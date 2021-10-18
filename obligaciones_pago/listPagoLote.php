@@ -131,6 +131,7 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                     </table>
                   </div>
                    <input type="hidden" id="cantidad_proveedores" name="cantidad_proveedores"  value="0">
+                   <input type="hidden" id="codigo_proveedores" name="codigo_proveedores"value="0">
                   </div>
                 </div>
               </div>
@@ -218,7 +219,10 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
         </table>
       </div>
       <input type="hidden" id="cantidad_proveedores_modal" name="cantidad_proveedores_modal"value="0">
-      <input type="hidden" id="cantidad_proveedores" name="cantidad_proveedores"value="0">
+      <!-- <input type="hidden" id="cantidad_proveedores" name="cantidad_proveedores"value="0"> -->
+
+      
+
       <div class="card-footer d-flex">
         <a href="#" onclick="agregarLotePago_seleccionados()" class="btn btn-white btn-sm mx-auto" style="background:#07B46D; color:#F7FF5A;">SELECCIONAR</a>
       </div>

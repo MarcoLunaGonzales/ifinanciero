@@ -66,7 +66,7 @@ $dbh = new Conexion();
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
-     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+     <p class="text-white">Aguarde un momento por favor</p>  
   </div>
 </div>
 <div class="content">
@@ -307,7 +307,7 @@ $dbh = new Conexion();
                       </div>-->
                       <br>
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Productos</label>
+                       <label class="col-sm-1 col-form-label">Productos</label>
                        <div class="col-sm-9">
                         <div class="form-group">
                           <!--<input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="warning">-->
@@ -318,9 +318,12 @@ $dbh = new Conexion();
                           </div>
                         </div>
                       </div>
-                      <div class="col-sm-1">
-                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                      <div class="col-sm-2">
+                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
+                            <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante()" class="btn btn-primary btn-fab btn-sm">
+                              <i class="material-icons">content_paste</i>
+                            </a>
                         </div>
                     </div>
                     
@@ -494,7 +497,7 @@ $dbh = new Conexion();
                       </div>
                      <br>
                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Sitios</label>
+                       <label class="col-sm-1 col-form-label">Sitios</label>
                        <div class="col-sm-9">
                         <div class="form-group">
                           <!--<input type="readonly" value="" class="form-control tagsinput" name="sitios" id="sitios" data-role="tagsinput" required data-color="success">-->
@@ -505,9 +508,12 @@ $dbh = new Conexion();
                           </div>
                         </div>
                         </div>
-                        <div class="col-sm-1">
-                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                        <div class="col-sm-2">
+                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
+                            <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante_tcs()" class="btn btn-primary btn-fab btn-sm">
+                              <i class="material-icons">content_paste</i>
+                            </a>
                         </div>       
                      </div>
                      
@@ -675,10 +681,210 @@ $dbh = new Conexion();
                 </div>
       </div>  
     </div>
-  </div>
+</div>
 <!--    end small modal -->
 
-<script>
- 
 
-</script>
+
+<div class="modal fade modal-arriba" id="modalPegarDatosComprobante_bk" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content card">
+      <div class="card-header card-header-primary card-header-text">
+        <div class="card-text">
+          <h4>Pegar Datos - Excel</h4>      
+        </div>
+        
+        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="card-body"> 
+        <div class="row">                      
+            <label class="col-sm-4 col-form-label" style="color: #4a148c;">Formato de Excel (Incluir fila de títulos)</label>
+            <div class="col-sm-12">
+                <table class="table table-condensed table-bordered table-sm">
+                   <tr class="bg-primary text-white">
+                     <td><small>NOMBRE</small></td>
+                     <td><small>MARCA</small></td>
+                     <td><small>NORMA</small></td>
+                     <td><small>SELLO</small></td> 
+                     <td><small>DIRECCION</small></td>                    
+                   </tr>
+                 </table>  
+             </div>
+        </div>
+      
+       
+        <div class="row">                      
+            <label class="col-sm-2 col-form-label" style="color: #4a148c;">Pega los datos del EXCEL aquí</label>
+            <div class="col-sm-12">
+                <div class="form-group">  
+                  <div id="">
+                   <textarea class="form-control" style="background-color:#E3CEF6;text-align: left;" rows="10" name="data_excel" id="data_excel"></textarea>                        
+                 </div>                                                                                                
+               </div>
+             </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+            <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos" onclick="cargarComprobanteExcel_TCP_TCS()">Cargar Datos</a>
+            <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas" onclick="generarComprobanteExcel_TCP_TCS()">Generar Filas</a>
+            <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a>
+      </div>
+      
+      <hr>
+      <div id="div_datos_excel"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade modal-arriba" id="modalPegarDatosComprobante_tcs_bk" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content card">
+      <div class="card-header card-header-primary card-header-text">
+        <div class="card-text">
+          <h4>Pegar Datos - Excel</h4>      
+        </div>
+        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="card-body"> 
+        <div class="row">                      
+            <label class="col-sm-4 col-form-label" style="color: #4a148c;">Formato de Excel (Incluir fila de títulos)</label>
+            <div class="col-sm-12">
+                <table class="table table-condensed table-bordered table-sm">
+                   <tr class="bg-primary text-white">
+                     <td><small>NOMBRE</small></td>
+                     <td><small>DIRECCION</small></td>                     
+                   </tr>
+                 </table>  
+             </div>
+        </div>
+      
+       
+        <div class="row">                      
+            <label class="col-sm-2 col-form-label" style="color: #4a148c;">Pega los datos del EXCEL aquí</label>
+            <div class="col-sm-12">
+                <div class="form-group">  
+                  <div id="">
+                   <textarea class="form-control" style="background-color:#E3CEF6;text-align: left;" rows="10" name="data_excel_tcs" id="data_excel_tcs"></textarea>                        
+                 </div>                                                                                                
+               </div>
+             </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+            <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos_tcs" onclick="cargarComprobanteExcel_TCS()">Cargar Datos</a>
+            <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas_tcs" onclick="generarComprobanteExcel_TCS()">Generar Filas</a>
+            <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a>
+      </div>
+      
+      <hr>
+      <div id="div_datos_excel_tcs"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade modal-arriba" id="modalPegarDatosComprobante" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content card">
+      <div class="card-header card-header-primary card-header-text">
+        <div class="card-text">
+          <h4>Pegar Datos - Excel</h4>      
+        </div>
+        
+        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="card-body"> 
+        <div class="row">                      
+            <label class="col-sm-4 col-form-label" style="color: #4a148c;">Formato de Excel (Incluir fila de títulos)</label>
+            <div class="col-sm-12">
+                <table class="table table-condensed table-bordered table-sm">
+                   <tr class="bg-primary text-white">
+                     <td><small>NOMBRE</small></td>
+                     <td><small>MARCA</small></td>
+                     <td><small>NORMA</small></td>
+                     <td><small>SELLO</small></td> 
+                     <td><small>DIRECCION</small></td>                    
+                   </tr>
+                 </table>  
+             </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label">Excel Formato .csv</label>
+          <div class="col-sm-7">
+            <input class="form-control" type="file" name="archivo_tcp" id="archivo_tcp" accept=".xls,.xlsx" required="true" />
+            <div id="contenedor_oculto" class="d-none">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+            <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos" onclick="cargarDatosExel_tcp();return false;"><span id='texto_boton'>CARGAR DATOS</span></a>
+
+            <!-- <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a> -->
+      </div>
+      <hr>
+      <div id="div_datos_excel"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade modal-arriba" id="modalPegarDatosComprobante_tcs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content card">
+      <div class="card-header card-header-primary card-header-text">
+        <div class="card-text">
+          <h4>Pegar Datos - Excel</h4>      
+        </div>
+        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="card-body"> 
+        <div class="row">                      
+            <label class="col-sm-4 col-form-label" style="color: #4a148c;">Formato de Excel (Incluir fila de títulos)</label>
+            <div class="col-sm-12">
+                <table class="table table-condensed table-bordered table-sm">
+                   <tr class="bg-primary text-white">
+                     <td><small>NOMBRE</small></td>
+                     <td><small>DIRECCION</small></td>                     
+                   </tr>
+                 </table>  
+             </div>
+        </div>
+        <div id="contenedor_oculto_tcs" class="d-none">
+              
+            </div>
+          <div class="row">
+          <label class="col-sm-2 col-form-label">Excel Formato .csv</label>
+          <div class="col-sm-7">
+            <input class="form-control" type="file" name="archivo_tcs" id="archivo_tcs" accept=".xls,.xlsx" required="true" />
+            <div id="contenedor_oculto" class="d-none">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+            <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos_tcs" onclick="cargarDatosExel_tcs()">Cargar Datos</a>
+            <!-- <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas_tcs" onclick="generarComprobanteExcel_TCS()">Generar Filas</a>
+            <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a> -->
+      </div>
+      
+      <hr>
+      <div id="div_datos_excel_tcs"></div>
+    </div>
+  </div>
+</div>

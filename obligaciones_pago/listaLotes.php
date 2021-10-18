@@ -126,9 +126,9 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                              }
                             if($codEstado==1){
                               ?>
-                                   <a title="Editar Pago Lote- Detalle" target="_self" href='<?=$urlEditPagoLote;?>?cod=<?=$codigo;?>' class="btn btn-info">
+                                   <!-- <a title="Editar Pago Lote- Detalle" target="_self" href='<?=$urlEditPagoLote;?>?cod=<?=$codigo;?>' class="btn btn-info">
                                     <i class="material-icons"><?=$iconEdit;?></i>
-                                  </a>
+                                  </a> -->
                                     <?php 
                             }
                             if($codComprobante!=0){
