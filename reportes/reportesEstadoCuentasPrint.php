@@ -23,6 +23,11 @@ $hasta=$fecha;
 $tipo_cp=$_POST["tipo_cp"];
 $ver_saldo=$_POST["ver_saldo"];
 
+if($ver_saldo==3){//saldos Generales
+   
+   include "reportesEstadoCuentasPrint_saldos.php";
+}else{
+
 $proveedoresString=implode(",", $proveedores);
 
 $proveedoresStringAux="and e.cod_cuentaaux in ($proveedoresString)";
@@ -423,3 +428,9 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
     </div>
 </div>
 
+
+<?php
+
+}
+
+?>
