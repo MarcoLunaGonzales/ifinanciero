@@ -1313,6 +1313,10 @@ function modalPegarDatosComprobante(){
 function modalPegarDatosComprobante_tcs(){
   $('#modalPegarDatosComprobante_tcs').modal('show');
 }
+function modalActualizarDatosCliente(){
+  $('#modal_actualizar_cliente').modal('show');
+}
+
 function limpiarComprobanteExcel(){
   $('textarea[name=data_excel]').val("");
    $('#div_datos_excel').html("");
@@ -11689,18 +11693,18 @@ function listarAtributo(){
   var titulos = $('<tr>').addClass('bg-info text-white');
      titulos.append($('<th>').addClass('').text('#'));
      titulos.append($('<th>').addClass('').text('NOMBRE'));
-     titulos.append('<td width="20%">DIRECCION</td>'); 
+     titulos.append('<td >DIRECCION</td>'); 
      if(!($("#productos_div").hasClass("d-none"))){
       titulos.append($('<th>').addClass('').text('MARCA'));
       titulos.append($('<th>').addClass('').text('NORMA'));
       titulos.append($('<th>').addClass('').text('SELLO'));
-      titulos.append('<td width="7%">PAIS</td>');
-      titulos.append('<td width="7%">DEPTO</td>');
-      titulos.append('<td width="7%">CIUDAD</td>');
+      // titulos.append('<td width="7%">PAIS</td>');
+      // titulos.append('<td width="7%">DEPTO</td>');
+      // titulos.append('<td width="7%">CIUDAD</td>');
      }else{
-      titulos.append('<td width="7%">PAIS</td>');
-      titulos.append('<td width="7%">DEPTO</td>');
-      titulos.append('<td width="7%">CIUDAD</td>');
+      // titulos.append('<td width="7%">PAIS</td>');
+      // titulos.append('<td width="7%">DEPTO</td>');
+      // titulos.append('<td width="7%">CIUDAD</td>');
       if($("#modalEditPlantilla").length>0){
         if($("#codigo_area").val()!=39){
         for (var k = 0; k <= parseInt($("#anio_simulacion").val()); k++) {
@@ -11731,13 +11735,13 @@ function listarAtributo(){
       row.append($('<td>').addClass('').text(itemAtributos[i].marca));
       row.append($('<td>').addClass('').text(itemAtributos[i].norma));
       row.append($('<td>').addClass('').text(itemAtributos[i].sello));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
      }else{
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
       if($("#modalEditPlantilla").length>0){
        if($("#codigo_area").val()!=39){
         for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
@@ -19383,7 +19387,7 @@ function exportTableToExcel(tableID, filename = ''){
 
 //****** comie<a cargado de excel***
 var itemDatosProductosPlantilla=[];
-
+var itemDatosProductosPlantilla_cabecera=[];
 function cargarDatosExel_tcp(){
   var paqueteDeDatos = new FormData();
   paqueteDeDatos.append('file_excel', $('#archivo_tcp')[0].files[0]);
@@ -19406,6 +19410,7 @@ function cargarDatosExel_tcp(){
       // $("#texto_boton").attr("disabled",true);
     }
   });
+  cargarDatosCliente();
   generarComprobanteExcel_TCP_TCS();
 }
 function cargarDatosExel_tcs(){
@@ -19426,14 +19431,36 @@ function cargarDatosExel_tcs(){
     cache: false, 
     async:false,    
     success: function(resultado){ // En caso de que todo salga bien.
-     $("#contenedor_oculto_tcs").html(resultado);
+     $("#contenedor_oculto").html(resultado);
     }
   });
-  console.log(itemDatosProductosPlantilla);
+  // console.log(itemDatosProductosPlantilla);
+  cargarDatosCliente();
   generarComprobanteExcel_TCS();
+
 }
 
-
+function cargarDatosCliente(){
+  var datos=itemDatosProductosPlantilla_cabecera;  
+  //console.log(itemDatosProductosPlantilla_cabecera);
+  $("#nit_cliente_actualizar").val(datos[0]['nit']);  
+  $("#razon_social_cliente_actualizar").val(datos[0]['razon_social']);
+  $("#direccion_cliente_actualizar").val(datos[0]['direccion_c']);
+  $("#ciudad_cliente_actualizar").val(datos[0]['ciudad']);
+  $("#departamento_cliente_actualizar").val(datos[0]['departamento']);
+  $("#telefono_cliente_actualizar").val(datos[0]['telefono']);
+  $("#fax_cliente_actualizar").val(datos[0]['fax']);
+  $("#email_cliente_actualizar").val(datos[0]['email']);
+  $("#web_cliente_actualizar").val(datos[0]['web']);
+  $("#mae_nombre_actualizar").val(datos[0]['mae_nombre']);
+  $("#mae_cargo_actualizar").val(datos[0]['mae_cargo']);
+  $("#mae_telefono_actualizar").val(datos[0]['mae_telefono']);
+  $("#mae_email_actualizar").val(datos[0]['mae_email']);
+  $("#contacto_nombre_actualizar").val(datos[0]['contacto_nombre']);
+  $("#contacto_cargo_actualizar").val(datos[0]['contacto_cargo']);
+  $("#contacto_telefono_actualizar").val(datos[0]['contacto_telefono']);
+  $("#contacto_email_actualizar").val(datos[0]['contacto_email']);
+}
 
 function cargarComprobanteExcel_TCP_TCS() {
   $('#div_datos_excel').html("");
@@ -19568,7 +19595,6 @@ function generarComprobanteExcel_TCS(){
   var norma="";
   var sello="";
   var marca="";
-
   for (var fila = 0; fila <datos.length; fila++) {    
     var atributo={
       codigo:fila,  

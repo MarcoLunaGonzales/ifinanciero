@@ -143,7 +143,7 @@ $dbh = new Conexion();
                                 <select class="selectpicker form-control" name="plantilla_servicio" onchange="listarDatosPlantillaSim(this.value)" id="plantilla_servicio" data-style="<?=$comboColor;?>"  data-live-search="true" title="-- Elija una plantilla --" data-style="select-with-transition" data-actions-box="true"required>
                                 <?php
                                 $sql="SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_servicios p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.cod_estadoreferencial!=2 and p.cod_estadoplantilla=3 $sqlAreas order by codigo";
-                                echo $sql;
+                                // echo $sql;
                                  $stmt = $dbh->prepare($sql);
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -323,6 +323,9 @@ $dbh = new Conexion();
                             </button>
                             <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante()" class="btn btn-primary btn-fab btn-sm">
                               <i class="material-icons">content_paste</i>
+                            </a>
+                            <a  title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente()" class="btn btn-success btn-fab btn-sm">
+                              <i class="material-icons">replay_circle_filled</i>
                             </a>
                         </div>
                     </div>
@@ -509,11 +512,14 @@ $dbh = new Conexion();
                         </div>
                         </div>
                         <div class="col-sm-2">
-                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
-                            </button>
-                            <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante_tcs()" class="btn btn-primary btn-fab btn-sm">
-                              <i class="material-icons">content_paste</i>
-                            </a>
+                          <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
+                          </button>
+                          <a title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante_tcs()" class="btn btn-primary btn-fab btn-sm">
+                            <i class="material-icons">content_paste</i>
+                          </a>
+                          <a title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente()" class="btn success-success btn-fab btn-sm">
+                            <i class="material-icons">replay_circle_filled</i>
+                          </a>
                         </div>       
                      </div>
                      
@@ -684,112 +690,6 @@ $dbh = new Conexion();
 </div>
 <!--    end small modal -->
 
-
-
-<div class="modal fade modal-arriba" id="modalPegarDatosComprobante_bk" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content card">
-      <div class="card-header card-header-primary card-header-text">
-        <div class="card-text">
-          <h4>Pegar Datos - Excel</h4>      
-        </div>
-        
-        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-          <i class="material-icons">close</i>
-        </button>
-      </div>
-      <div class="card-body"> 
-        <div class="row">                      
-            <label class="col-sm-4 col-form-label" style="color: #4a148c;">Formato de Excel (Incluir fila de títulos)</label>
-            <div class="col-sm-12">
-                <table class="table table-condensed table-bordered table-sm">
-                   <tr class="bg-primary text-white">
-                     <td><small>NOMBRE</small></td>
-                     <td><small>MARCA</small></td>
-                     <td><small>NORMA</small></td>
-                     <td><small>SELLO</small></td> 
-                     <td><small>DIRECCION</small></td>                    
-                   </tr>
-                 </table>  
-             </div>
-        </div>
-      
-       
-        <div class="row">                      
-            <label class="col-sm-2 col-form-label" style="color: #4a148c;">Pega los datos del EXCEL aquí</label>
-            <div class="col-sm-12">
-                <div class="form-group">  
-                  <div id="">
-                   <textarea class="form-control" style="background-color:#E3CEF6;text-align: left;" rows="10" name="data_excel" id="data_excel"></textarea>                        
-                 </div>                                                                                                
-               </div>
-             </div>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-            <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos" onclick="cargarComprobanteExcel_TCP_TCS()">Cargar Datos</a>
-            <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas" onclick="generarComprobanteExcel_TCP_TCS()">Generar Filas</a>
-            <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a>
-      </div>
-      
-      <hr>
-      <div id="div_datos_excel"></div>
-    </div>
-  </div>
-</div>
-
-
-<div class="modal fade modal-arriba" id="modalPegarDatosComprobante_tcs_bk" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content card">
-      <div class="card-header card-header-primary card-header-text">
-        <div class="card-text">
-          <h4>Pegar Datos - Excel</h4>      
-        </div>
-        <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
-          <i class="material-icons">close</i>
-        </button>
-      </div>
-      <div class="card-body"> 
-        <div class="row">                      
-            <label class="col-sm-4 col-form-label" style="color: #4a148c;">Formato de Excel (Incluir fila de títulos)</label>
-            <div class="col-sm-12">
-                <table class="table table-condensed table-bordered table-sm">
-                   <tr class="bg-primary text-white">
-                     <td><small>NOMBRE</small></td>
-                     <td><small>DIRECCION</small></td>                     
-                   </tr>
-                 </table>  
-             </div>
-        </div>
-      
-       
-        <div class="row">                      
-            <label class="col-sm-2 col-form-label" style="color: #4a148c;">Pega los datos del EXCEL aquí</label>
-            <div class="col-sm-12">
-                <div class="form-group">  
-                  <div id="">
-                   <textarea class="form-control" style="background-color:#E3CEF6;text-align: left;" rows="10" name="data_excel_tcs" id="data_excel_tcs"></textarea>                        
-                 </div>                                                                                                
-               </div>
-             </div>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-            <a href="#" class="btn btn-primary btn-round" id="boton_cargar_datos_tcs" onclick="cargarComprobanteExcel_TCS()">Cargar Datos</a>
-            <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas_tcs" onclick="generarComprobanteExcel_TCS()">Generar Filas</a>
-            <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a>
-      </div>
-      
-      <hr>
-      <div id="div_datos_excel_tcs"></div>
-    </div>
-  </div>
-</div>
-
-
 <div class="modal fade modal-arriba" id="modalPegarDatosComprobante" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content card">
@@ -802,23 +702,9 @@ $dbh = new Conexion();
           <i class="material-icons">close</i>
         </button>
       </div>
-      <div class="card-body"> 
-        <div class="row">                      
-            <label class="col-sm-4 col-form-label" style="color: #4a148c;">Formato de Excel (Incluir fila de títulos)</label>
-            <div class="col-sm-12">
-                <table class="table table-condensed table-bordered table-sm">
-                   <tr class="bg-primary text-white">
-                     <td><small>NOMBRE</small></td>
-                     <td><small>MARCA</small></td>
-                     <td><small>NORMA</small></td>
-                     <td><small>SELLO</small></td> 
-                     <td><small>DIRECCION</small></td>                    
-                   </tr>
-                 </table>  
-             </div>
-        </div>
+      <div class="card-body">         
         <div class="row">
-          <label class="col-sm-2 col-form-label">Excel Formato .csv</label>
+          <label class="col-sm-2 col-form-label">Excel Formato .xlsx</label>
           <div class="col-sm-7">
             <input class="form-control" type="file" name="archivo_tcp" id="archivo_tcp" accept=".xls,.xlsx" required="true" />
             <div id="contenedor_oculto" class="d-none">
@@ -851,29 +737,15 @@ $dbh = new Conexion();
           <i class="material-icons">close</i>
         </button>
       </div>
-      <div class="card-body"> 
-        <div class="row">                      
-            <label class="col-sm-4 col-form-label" style="color: #4a148c;">Formato de Excel (Incluir fila de títulos)</label>
-            <div class="col-sm-12">
-                <table class="table table-condensed table-bordered table-sm">
-                   <tr class="bg-primary text-white">
-                     <td><small>NOMBRE</small></td>
-                     <td><small>DIRECCION</small></td>                     
-                   </tr>
-                 </table>  
-             </div>
-        </div>
-        <div id="contenedor_oculto_tcs" class="d-none">
-              
-            </div>
-          <div class="row">
-          <label class="col-sm-2 col-form-label">Excel Formato .csv</label>
-          <div class="col-sm-7">
-            <input class="form-control" type="file" name="archivo_tcs" id="archivo_tcs" accept=".xls,.xlsx" required="true" />
-            <div id="contenedor_oculto" class="d-none">
-              
-            </div>
+      <div class="card-body">         
+        <div id="contenedor_oculto_tcs" class="d-none"></div>
+        <div class="row">
+        <label class="col-sm-2 col-form-label">Excel Formato .xlsx</label>
+        <div class="col-sm-7">
+          <input class="form-control" type="file" name="archivo_tcs" id="archivo_tcs" accept=".xls,.xlsx" required="true" />
+          <div id="contenedor_oculto" class="d-none">
           </div>
+        </div>
         </div>
       </div>
 
@@ -882,9 +754,284 @@ $dbh = new Conexion();
             <!-- <a href="#" class="btn btn-success btn-round d-none" id="boton_generar_filas_tcs" onclick="generarComprobanteExcel_TCS()">Generar Filas</a>
             <a href="#" class="btn btn-default btn-round" onclick="limpiarComprobanteExcel()">Limpiar Datos</a> -->
       </div>
-      
       <hr>
       <div id="div_datos_excel_tcs"></div>
     </div>
   </div>
 </div>
+
+
+
+<!-- small modal -->
+<div class="modal fade modal-primary" id="modal_actualizar_cliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+     <div class="card-header card-header-primary card-header-text">
+        <div class="card-text">
+          <h4>Actualizar Datos Cliente</h4>
+        </div>
+        <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+      </div>
+
+      <div class="card-body">                       
+          <div class="row">
+            <label class="col-sm-6 "><center><span style="text-align: center;color:red;">Datos Actuales</span></center></label>             
+            <label class="col-sm-6 "><center><span style="text-align: center;color:green;">Datos a Actualizar</span></center></label>             
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Nit</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="nit_cliente" id="nit_cliente" value="">
+               </div>
+             </div>                
+             <label class="col-sm-2 col-form-label" >Nit</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="nit_cliente_actualizar" id="nit_cliente_actualizar" value="">
+               </div>
+             </div>                
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Razón Social</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="razon_social_cliente" id="razon_social_cliente" value="">
+               </div>
+            </div>
+            <label class="col-sm-2 col-form-label" >Razón Social</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="razon_social_cliente_actualizar" id="razon_social_cliente_actualizar" value="">
+               </div>
+            </div>                
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Dirección</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="direccion_cliente" id="direccion_cliente" value="">
+               </div>
+             </div>
+             <label class="col-sm-2 col-form-label" >Dirección</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="direccion_cliente_actualizar" id="direccion_cliente_actualizar" value="">
+               </div>
+             </div>
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Ciudad</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="ciudad_cliente" id="ciudad_cliente" value="">
+               </div>
+             </div>               
+             <label class="col-sm-2 col-form-label" >Ciudad</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="ciudad_cliente_actualizar" id="ciudad_cliente_actualizar" value="">
+               </div>
+             </div>                
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Departamento</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="departamento_cliente" id="departamento_cliente" value="">
+               </div>
+             </div>                
+             <label class="col-sm-2 col-form-label" >Departamento</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="departamento_cliente_actualizar" id="departamento_cliente_actualizar" value="">
+               </div>
+             </div>                
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Telefono</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="telefono_cliente" id="telefono_cliente" value="">
+               </div>
+             </div>                
+             <label class="col-sm-2 col-form-label" >Telefono</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="telefono_cliente_actualizar" id="telefono_cliente_actualizar" value="">
+               </div>
+             </div>                
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Fax</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="fax_cliente" id="fax_cliente" value="">
+               </div>
+             </div>                
+             <label class="col-sm-2 col-form-label" >Fax</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="fax_cliente_actualizar" id="fax_cliente_actualizar" value="">
+               </div>
+             </div>                
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >E-mail</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="email_cliente" id="email_cliente" value="">
+               </div>
+             </div>                
+             <label class="col-sm-2 col-form-label" >E-mail</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="email_cliente_actualizar" id="email_cliente_actualizar" value="">
+               </div>
+             </div>                
+          </div>
+
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Pagina Web</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="web_cliente" id="web_cliente" value="">
+               </div>
+             </div>                
+             <label class="col-sm-2 col-form-label" >Pagina Web</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="web_cliente_actualizar" id="web_cliente_actualizar" value="">
+               </div>
+             </div>                
+          </div>
+          <div class="row">
+            <label class="col-sm-12 col-form-label"><center><span style="text-align: center;color:blue;">Máxima Autoridad Ejecutiva</span></center></label>
+          </div>
+
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Nombre</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="mae_nombre" id="mae_nombre" value="">
+               </div>
+             </div>
+             <label class="col-sm-2 col-form-label" >Nombre</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="mae_nombre_actualizar" id="mae_nombre_actualizar" value="">
+               </div>
+             </div>
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Cargo</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="mae_cargo" id="mae_cargo" value="">
+               </div>
+             </div>
+             <label class="col-sm-2 col-form-label" >Cargo</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="mae_cargo_actualizar" id="mae_cargo_actualizar" value="">
+               </div>
+             </div>
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Telefono</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="mae_telefono" id="mae_telefono" value="">
+               </div>
+             </div>
+             <label class="col-sm-2 col-form-label" >Telefono</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="mae_telefono_actualizar" id="mae_telefono_actualizar" value="">
+               </div>
+             </div>
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label">E-mail</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="mae_email" id="mae_email" value="">
+               </div>
+             </div>
+             <label class="col-sm-2 col-form-label">E-mail</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="mae_email_actualizar" id="mae_email_actualizar" value="">
+               </div>
+             </div>
+          </div>
+          <div class="row">
+            <label class="col-sm-12 col-form-label"><center><span style="text-align: center;color:blue;">Contacto</span></center></label>
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Nombre</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="contacto_nombre" id="contacto_nombre" value="">
+               </div>
+             </div>
+             <label class="col-sm-2 col-form-label" >Nombre</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="contacto_nombre_actualizar" id="contacto_nombre_actualizar" value="">
+               </div>
+             </div>
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Cargo</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="contacto_cargo" id="contacto_cargo" value="">
+               </div>
+             </div>
+             <label class="col-sm-2 col-form-label" >Cargo</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="contacto_cargo_actualizar" id="contacto_cargo_actualizar" value="">
+               </div>
+             </div>
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Telefono</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="contacto_telefono" id="contacto_telefono" value="">
+               </div>
+             </div>
+             <label class="col-sm-2 col-form-label" >Telefono</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="contacto_telefono_actualizar" id="contacto_telefono_actualizar" value="">
+               </div>
+             </div>
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label">E-mail</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="contacto_email" id="contacto_email" value="">
+               </div>
+             </div>
+             <label class="col-sm-2 col-form-label">E-mail</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="contacto_email_actualizar" id="contacto_email_actualizar" value="">
+               </div>
+             </div>
+          </div>
+          <hr>
+          <div class="form-group float-right">
+            <button type="button" id="boton_guardarsim" class="btn btn-danger" onclick="#">Confirmar Actualización</button>
+          </div> 
+      </div>
+    </div>  
+  </div>
+</div>
+<!--    end small modal -->
