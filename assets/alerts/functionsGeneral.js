@@ -19434,7 +19434,7 @@ function cargarDatosExel_tcs(){
      $("#contenedor_oculto").html(resultado);
     }
   });
-  // console.log(itemDatosProductosPlantilla);
+  //console.log(itemDatosProductosPlantilla);
   cargarDatosCliente();
   generarComprobanteExcel_TCS();
 
@@ -19442,7 +19442,7 @@ function cargarDatosExel_tcs(){
 
 function cargarDatosCliente(){
   var datos=itemDatosProductosPlantilla_cabecera;  
-  //console.log(itemDatosProductosPlantilla_cabecera);
+  console.log("datos:"+itemDatosProductosPlantilla_cabecera);
   $("#nit_cliente_actualizar").val(datos[0]['nit']);  
   $("#razon_social_cliente_actualizar").val(datos[0]['razon_social']);
   $("#direccion_cliente_actualizar").val(datos[0]['direccion_c']);

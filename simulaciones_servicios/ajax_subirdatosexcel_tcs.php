@@ -21,6 +21,7 @@ if(isset($_FILES['file_excel'])){
         $i=0;
         $array_datos=[];
         $array_datos2=[];
+        $nit=0;
         foreach ($Reader as $Row){ 
             if($i==8){//datos de la cabecera
                 if(isset($Row[3])){$razon_social=trim($Row[3]);}
