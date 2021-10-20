@@ -96,6 +96,12 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                       <?php
                         $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+                          if($codUnidadX==""){
+                            $codUnidadX=0;
+                          }
+                          if($codAreaX==""){
+                            $codAreaX=0;
+                          }
                           $unidadX=abrevUnidad_solo($codUnidadX);
                           $areaX=abrevArea_solo($codAreaX);
                           $codigoServicio="SIN CODIGO";
