@@ -40,9 +40,10 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
     /*Listar Contactos de Cliente Empresa */
         
     $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
-                      "accion"=>"ListarContactosEmpresaXLS", 
+                      "accion"=>"DatosClienteEmpresa", 
                       "IdCliente"=>41335, //ID del registrado de la tabla cliente, recuperado de los datos de cliente
                       );
+    
     
     
     /*Datos Contacto de Cliente Empresa 
@@ -62,7 +63,7 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
     $ch = curl_init();
     // definimos la URL a la que hacemos la petición
     //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/registro/ws-fin-cliente-contacto.php"); // on line 
-    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/registro/ws-fin-cliente-contacto.php"); // db pruebas
+    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/cliente/ws-cliente-listas.php"); // db pruebas
     //curl_setopt($ch, CURLOPT_URL,"http://localhost/wsibno/registro/ws-fin-cliente-contacto.php"); // local
     // indicamos el tipo de petición: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);

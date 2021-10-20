@@ -768,6 +768,7 @@ $dbh = new Conexion();
     <div class="modal-content card">
      <div class="card-header card-header-primary card-header-text">
         <div class="card-text">
+          <div id="contenedor_oculto_actualizar" class="d-none">
           <h4>Actualizar Datos Cliente</h4>
         </div>
         <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">

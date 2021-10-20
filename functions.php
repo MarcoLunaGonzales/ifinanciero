@@ -6212,6 +6212,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       curl_close ($ch);  
       return json_decode($remote_server_output);       
   }
+
   function obtenerListaContactosClientesDelServicio($cod_cliente){
     $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
     $sIde = "ifinanciero";
