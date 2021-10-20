@@ -19424,7 +19424,7 @@ function cargarDatosExel_tcp(){
       // $("#texto_boton").attr("disabled",true);
     }
   });
-  cargarDatosCliente();
+  //cargarDatosCliente();
   generarComprobanteExcel_TCP_TCS();
 }
 function cargarDatosExel_tcs(){
@@ -19449,7 +19449,7 @@ function cargarDatosExel_tcs(){
     }
   });
   // console.log(itemDatosProductosPlantilla);
-  cargarDatosCliente();
+  //cargarDatosCliente();
   generarComprobanteExcel_TCS();
 
 }
