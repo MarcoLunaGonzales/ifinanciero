@@ -1314,20 +1314,6 @@ function modalPegarDatosComprobante_tcs(){
   $('#modalPegarDatosComprobante_tcs').modal('show');
 }
 function modalActualizarDatosCliente(){
-
-  // var cod_cliente = $('#cliente').val();
-  // var parametros={"cod_cliente":cod_cliente};
-  // $.ajax({
-  //       type: "GET",
-  //       dataType: 'html',
-  //       url: "simulaciones_servicios/ajax_datosCliente.php",
-  //       data: parametros,
-  //       success:  function (resp) {
-  //         var fi=$("#contenedor_oculto_actualizar");
-  //         fi.html(resp);
-  //         $('#modal_actualizar_cliente').modal('show');
-  //       }
-  //   });   
   $('#modal_actualizar_cliente').modal('show');
 }
 
@@ -19420,11 +19406,11 @@ function cargarDatosExel_tcp(){
     cache: false, 
     async:false,    
     success: function(resultado){ // En caso de que todo salga bien.
-     $("#contenedor_oculto_actualizar").html(resultado);
+     $("#contenedor_oculto").html(resultado);
       // $("#texto_boton").attr("disabled",true);
     }
   });
-  //cargarDatosCliente();
+  cargarDatosCliente();
   generarComprobanteExcel_TCP_TCS();
 }
 function cargarDatosExel_tcs(){
@@ -19445,21 +19431,18 @@ function cargarDatosExel_tcs(){
     cache: false, 
     async:false,    
     success: function(resultado){ // En caso de que todo salga bien.
-     $("#contenedor_oculto_actualizar_tcs").html(resultado);
+     $("#contenedor_oculto").html(resultado);
     }
   });
-
-
   // console.log(itemDatosProductosPlantilla);
-  //cargarDatosCliente();
-
+  cargarDatosCliente();
   generarComprobanteExcel_TCS();
 
 }
 
 function cargarDatosCliente(){
   var datos=itemDatosProductosPlantilla_cabecera;  
-  console.log("datos:"+itemDatosProductosPlantilla_cabecera);
+  //console.log(itemDatosProductosPlantilla_cabecera);
   $("#nit_cliente_actualizar").val(datos[0]['nit']);  
   $("#razon_social_cliente_actualizar").val(datos[0]['razon_social']);
   $("#direccion_cliente_actualizar").val(datos[0]['direccion_c']);
