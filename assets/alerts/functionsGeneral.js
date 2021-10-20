@@ -1314,6 +1314,20 @@ function modalPegarDatosComprobante_tcs(){
   $('#modalPegarDatosComprobante_tcs').modal('show');
 }
 function modalActualizarDatosCliente(){
+
+  // var cod_cliente = $('#cliente').val();
+  // var parametros={"cod_cliente":cod_cliente};
+  // $.ajax({
+  //       type: "GET",
+  //       dataType: 'html',
+  //       url: "simulaciones_servicios/ajax_datosCliente.php",
+  //       data: parametros,
+  //       success:  function (resp) {
+  //         var fi=$("#contenedor_oculto_actualizar");
+  //         fi.html(resp);
+  //         $('#modal_actualizar_cliente').modal('show');
+  //       }
+  //   });   
   $('#modal_actualizar_cliente').modal('show');
 }
 
@@ -19406,7 +19420,7 @@ function cargarDatosExel_tcp(){
     cache: false, 
     async:false,    
     success: function(resultado){ // En caso de que todo salga bien.
-     $("#contenedor_oculto").html(resultado);
+     $("#contenedor_oculto_actualizar").html(resultado);
       // $("#texto_boton").attr("disabled",true);
     }
   });
@@ -19431,7 +19445,7 @@ function cargarDatosExel_tcs(){
     cache: false, 
     async:false,    
     success: function(resultado){ // En caso de que todo salga bien.
-     $("#contenedor_oculto").html(resultado);
+     $("#contenedor_oculto_actualizar_tcs").html(resultado);
     }
   });
   // console.log(itemDatosProductosPlantilla);
