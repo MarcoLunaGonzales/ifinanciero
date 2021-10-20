@@ -24,7 +24,6 @@ $tipo_cp=$_POST["tipo_cp"];
 $ver_saldo=$_POST["ver_saldo"];
 
 if($ver_saldo==3){//saldos Generales
-   
    include "reportesEstadoCuentasPrint_saldos.php";
 }else{
 
@@ -83,9 +82,9 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header card-header-icon">
-                      <div class="float-right col-sm-2">
+                      <!--div class="float-right col-sm-2">
                         <h6 class="card-title">Exportar como:</h6>
-                      </div>
+                      </div-->
                       <h4 class="card-title"> 
                         <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:250px;">
                           Estado de Cuentas

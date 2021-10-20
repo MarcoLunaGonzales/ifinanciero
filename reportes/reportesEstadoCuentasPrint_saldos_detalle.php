@@ -41,11 +41,18 @@ while ($row = $stmtUO->fetch()) {
     }
 }
 $j=0;
+
+$sumaTotalCliente=0;
+
 foreach ($array_periodo as $periodo) {    
     echo '<td class="text-right small">'.formatNumberDec($monto_periodo[$j]).'</td>';
+    $sumaTotalCliente+=$monto_periodo[$j];
     $j++;    
 }    
 echo '<td class="text-right small">'.formatNumberDec($monto_periodo[$j]).'</td>';
+$sumaTotalCliente+=$monto_periodo[$j];
+
+echo '<td class="text-right small font-weight-bold">'.formatNumberDec($sumaTotalCliente).'</td>';
 
 }
 
