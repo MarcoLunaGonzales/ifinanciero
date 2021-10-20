@@ -47,9 +47,9 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header card-header-icon">
-                        <div class="float-right col-sm-2">
+                        <!--div class="float-right col-sm-2">
                             <h6 class="card-title">Exportar como:</h6>
-                        </div>
+                        </div-->
                         <h4 class="card-title"> 
                             <img  class="card-img-top" src="../marca.png" style="width:100%; max-width:50px;">
                             Estado de Cuentas
@@ -79,8 +79,8 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                                             $x++;
                                         }
                                         $monto_periodo[$x]=0;
-                                        echo '<th class="text-right"> > '.$periodo.'</th>';
-                                    echo '</tr>'.
+                                        echo '<th class="text-right"> > '.$periodo.' Días</th>';
+                                    echo '<th class="text-right">Total</th></tr>'.
                                 '</thead>'.
                                 '<tbody>';
                                 foreach ($cuenta as $cuentai ) {
