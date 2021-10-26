@@ -57,7 +57,7 @@ and c.cod_personal=$cod_responsable and c.cod_unidadorganizacional=$cod_unidador
             <td class="s2 text-center" colspan="3">ACTIVOS FIJOS</td>
         </tr>
         <tr>
-            <td class="s2 text-center" colspan="4">CONSTANCIA DE TRANSFERENCIA DE ACTIVOS & FUNGIBLES</td>
+            <td class="s2 text-center" colspan="4">CONSTANCIA DE TRANSFERENCIA DE ACTIVOS</td>
         </tr>
         <tr>
             <td class="s3 text-left bg-celeste" width="18%">Fecha:</td>
