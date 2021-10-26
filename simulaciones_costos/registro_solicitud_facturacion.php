@@ -115,7 +115,7 @@ if(isset($_GET['q'])){
 }
 
 //echo $sqlAreas_x." ".$sqlUO_x;
-
+//echo "COD FACTURACION:".$cod_facturacion;
 if($cod_facturacion>0){//editar
     $sqlFac="SELECT sf.*,sfd.precio,sfd.descuento_por,sfd.descuento_bob from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sfd.cod_solicitudfacturacion=sf.codigo and sf.codigo=$cod_facturacion";
     // echo $sqlFac;
@@ -145,7 +145,7 @@ if($cod_facturacion>0){//editar
 
 }else{//registrar
     //echo "entro registrar";
-    $sqlFac="SELECT clNit, clRazonSocial, clFechaRegistro as fecha_registro from dbcliente.cliente_persona_empresa where clNit='$ci_estudiante' ";
+    $sqlFac="SELECT clNit, clRazonSocial, clFechaRegistro as fecha_registro from dbcliente.cliente_persona_empresa where clNit='$ci_estudiante' or clIdentificacion='$ci_estudiante'";
     //echo $sqlFac;
     $stmtSimuFact = $dbh->prepare($sqlFac);
     $stmtSimuFact->execute();
