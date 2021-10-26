@@ -50,14 +50,14 @@ and c.cod_personal=$cod_responsable and c.cod_unidadorganizacional=$cod_unidador
      <table class="table">
          <tr>
             <td rowspan="2" class="text-center imagen-td"><img class="imagen-logo-izq_2" src="../assets/img/logo_ibnorca_origen_2.png" width="50" ></td>
-            <td class="s2 text-center" colspan="3">CORPORACION BOLIVIANA DE FARMACIAS S.A.</td>
+            <td class="s2 text-center" colspan="3">Instituto Boliviano de Normalización y Calidad</td>
 
         </tr>
         <tr>
             <td class="s2 text-center" colspan="3">ACTIVOS FIJOS</td>
         </tr>
         <tr>
-            <td class="s2 text-center" colspan="4">CONSTANCIA DE TRANSFERENCIA DE ACTIVOS & FUNGIBLES</td>
+            <td class="s2 text-center" colspan="4">CONSTANCIA DE TRANSFERENCIA DE ACTIVOS</td>
         </tr>
         <tr>
             <td class="s3 text-left bg-celeste" width="18%">Fecha:</td>
@@ -71,9 +71,9 @@ and c.cod_personal=$cod_responsable and c.cod_unidadorganizacional=$cod_unidador
             <td class="s3 text-left"><?=namePersonal($cod_responsable)?></td>
         </tr>
         <tr>
-            <td class="s3 text-left bg-celeste">Departamento:</td>
+            <td class="s3 text-left bg-celeste">Oficina:</td>
             <td class="s3 text-left"><?=abrevUnidad_solo($cod_unidadorganizacionaldesde)?> - <?=abrevUnidad_solo($cod_unidadorganizacional)?></td>
-            <td class="s3 text-left bg-celeste">Sucursal:</td>
+            <td class="s3 text-left bg-celeste">Area:</td>
             <td class="s3 text-left"><?=abrevArea_solo($cod_areadesde)?> - <?=abrevArea_solo($cod_area)?></td>
         </tr>
      </table>

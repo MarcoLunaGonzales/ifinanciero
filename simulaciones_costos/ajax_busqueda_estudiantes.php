@@ -67,6 +67,7 @@ if($codigo_curso!=""){
   $grupo=$arrayCodigo[3];
   $grupo_x=trim($grupo,'G');
   $IdGestion=$arrayCodigo[4];
+
   $sql.=" and d_abrevclasificador(pc.IdOficina) like '%$IdOficina%' and d_abrevclasificador(pc.idprograma) like '%$idprograma%' and d_abrevclasificador(pc.idtipo) like '%$idtipo%' and pc.grupo=$grupo_x and d_abrevclasificador(pc.IdGestion) like '%$IdGestion%'";
 }
 

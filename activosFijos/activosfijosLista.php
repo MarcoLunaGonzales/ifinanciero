@@ -107,6 +107,9 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                             <a href='<?=$printDepreciacion1;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-info">
                               <i class="material-icons" title="Ficha Activo Fijo" style="color:black">print</i>
                             </a>
+                            <a href='reportes_activosfijos/imp_actaEntrega_html.php?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-danger">
+                              <i class="material-icons" title="Acta de Entrega" style="color:black">print</i>
+                            </a>
                           </td>
                           <td class="text-center small"><?=$codigoactivo;?></td>
                           <td class="text-center small"><?=$nombreUnidad;?>-<?=$nombreArea;?></td>
