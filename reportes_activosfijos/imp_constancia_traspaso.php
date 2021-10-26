@@ -71,9 +71,9 @@ and c.cod_personal=$cod_responsable and c.cod_unidadorganizacional=$cod_unidador
             <td class="s3 text-left"><?=namePersonal($cod_responsable)?></td>
         </tr>
         <tr>
-            <td class="s3 text-left bg-celeste">Departamento:</td>
+            <td class="s3 text-left bg-celeste">Oficina:</td>
             <td class="s3 text-left"><?=abrevUnidad_solo($cod_unidadorganizacionaldesde)?> - <?=abrevUnidad_solo($cod_unidadorganizacional)?></td>
-            <td class="s3 text-left bg-celeste">Sucursal:</td>
+            <td class="s3 text-left bg-celeste">Area:</td>
             <td class="s3 text-left"><?=abrevArea_solo($cod_areadesde)?> - <?=abrevArea_solo($cod_area)?></td>
         </tr>
      </table>
