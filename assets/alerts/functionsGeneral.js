@@ -1313,9 +1313,7 @@ function modalPegarDatosComprobante(){
 function modalPegarDatosComprobante_tcs(){
   $('#modalPegarDatosComprobante_tcs').modal('show');
 }
-function modalActualizarDatosCliente(){
-  $('#modal_actualizar_cliente').modal('show');
-}
+
 
 function limpiarComprobanteExcel(){
   $('textarea[name=data_excel]').val("");
@@ -19376,7 +19374,6 @@ function exportTableToExcel(tableID, filename = ''){
     }else{
         // Create a link to the file
         downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-    
         // Setting the file name
         downloadLink.download = filename;
         
@@ -19447,6 +19444,7 @@ function cargarDatosCliente(){
   $("#razon_social_cliente_actualizar").val(datos[0]['razon_social']);
   $("#direccion_cliente_actualizar").val(datos[0]['direccion_c']);
   $("#ciudad_cliente_actualizar").val(datos[0]['ciudad']);
+  $("#pais_cliente_actualizar").val(datos[0]['pais']);
   $("#departamento_cliente_actualizar").val(datos[0]['departamento']);
   $("#telefono_cliente_actualizar").val(datos[0]['telefono']);
   $("#fax_cliente_actualizar").val(datos[0]['fax']);
@@ -19541,7 +19539,6 @@ function cargarComprobanteExcel_TCS() {
   $('#div_datos_excel_tcs').html(table);
 }
 
-
 function generarComprobanteExcel_TCP_TCS(){  
   var datos=itemDatosProductosPlantilla;
   listarAtributo();
@@ -19622,6 +19619,97 @@ function generarComprobanteExcel_TCS(){
   $("#modalPegarDatosComprobante_tcs").modal("hide");     
 
 }
+
+var itemDatosClienteActualizar=[];
+function modalActualizarDatosCliente(){
+  var codigo_cliente=$("#cliente").val();
+  var parametos={"codigo_cliente":codigo_cliente};
+  var destino = "simulaciones_servicios/ajax_datosClienteActualizarPropuesta.php"; 
+  $.ajax({
+    url: destino,
+    dataType: 'html',
+    type: 'GET', // Siempre que se envíen ficheros, por POST, no por GET.    
+    data: parametos, // Al atributo data se le asigna el objeto FormData.    
+    async:false,    
+    success: function(resultado){ // En caso de que todo salga bien.
+     $("#contenedor_oculto_actualizarCliente").html(resultado);
+      // $("#texto_boton").attr("disabled",true);
+    }
+  });
+  //** listamos el array al modal
+
+
+  var datos=itemDatosClienteActualizar;
+  //console.log(itemDatosProductosPlantilla_cabecera);
+  $("#nit_cliente").val(datos[0]['nit']);  
+  $("#razon_social_cliente").val(datos[0]['razonSocial']);
+  $("#direccion_cliente").val(datos[0]['direccion']);
+  $("#pais_cliente").val(datos[0]['pais']);
+  $("#ciudad_cliente").val(datos[0]['ciudad']);
+  $("#departamento_cliente").val(datos[0]['departamento']);
+  $("#telefono_cliente").val(datos[0]['telefono']);
+  $("#fax_cliente").val(datos[0]['fax']);
+  $("#email_cliente").val(datos[0]['email']);
+  $("#web_cliente").val(datos[0]['web']);
+  $("#mae_nombre").val("");
+  $("#mae_cargo").val("");
+  $("#mae_telefono").val("");
+  $("#mae_email").val("");
+  $("#contacto_nombre").val("");
+  $("#contacto_cargo").val("");
+  $("#contacto_telefono").val("");
+  $("#contacto_email").val("");
+  
+  $('#modal_actualizar_cliente').modal('show');
+}
+
+function modalActualizarDatosCliente_enviar(){
+  var codigo_cliente=$("#cliente").val();
+  var nit_cliente= $("#nit_cliente_actualizar").val();
+  var razon_social_cliente= $("#razon_social_cliente_actualizar").val();
+  var direccion_cliente= $("#direccion_cliente_actualizar").val();
+  var pais_cliente= $("#pais_cliente_actualizar").val();
+  var ciudad_cliente= $("#ciudad_cliente_actualizar").val();
+  var departamento_cliente= $("#departamento_cliente_actualizar").val();
+  var telefono_cliente= $("#telefono_cliente_actualizar").val();
+  var fax_cliente= $("#fax_cliente_actualizar").val();
+  var email_cliente= $("#email_cliente_actualizar").val();
+  var web_cliente= $("#web_cliente_actualizar").val();
+  var mae_nombre= $("#mae_nombre_actualizar").val();
+  var mae_cargo= $("#mae_cargo_actualizar").val();
+  var mae_telefono= $("#mae_telefono_actualizar").val();
+  var mae_email= $("#mae_email_actualizar").val();
+  var contacto_nombre= $("#contacto_nombre_actualizar").val();
+  var contacto_cargo= $("#contacto_cargo_actualizar").val();
+  var contacto_telefono= $("#contacto_telefono_actualizar").val();
+  var contacto_email= $("#contacto_email_actualizar").val();
+  
+
+  var parametos={"codigo_cliente":codigo_cliente,"nit_cliente":nit_cliente,"razon_social_cliente":razon_social_cliente,"direccion_cliente":direccion_cliente,"pais_cliente":pais_cliente,"ciudad_cliente":ciudad_cliente,"departamento_cliente":departamento_cliente,"telefono_cliente":telefono_cliente
+    ,"fax_cliente":fax_cliente,"email_cliente":email_cliente,"web_cliente":web_cliente
+    ,"mae_nombre":mae_nombre,"mae_cargo":mae_cargo,"mae_telefono":mae_telefono
+    ,"mae_email":mae_email,"contacto_nombre":contacto_nombre,"contacto_cargo":contacto_cargo,"contacto_telefono":contacto_telefono,"contacto_email":contacto_email};
+  var destino = "simulaciones_servicios/ajax_datosClienteActualizarPropuesta_enviar.php"; 
+  $.ajax({
+    url: destino,
+    dataType: 'html',
+    type: 'GET', // Siempre que se envíen ficheros, por POST, no por GET.    
+    data: parametos, // Al atributo data se le asigna el objeto FormData.    
+    async:false,    
+    success: function(resultado){ // En caso de que todo salga bien.      
+      var respuesta = resultado.split("####")[0];
+      var alerta = resultado.split("####")[1];
+      
+      Swal.fire("Informativo!", respuesta+". "+alerta, "success");     
+
+     $("#contenedor_oculto_actualizarCliente").html(resultado);  
+
+    }
+  });
+  //** listamos el array al modal  
+  $('#modal_actualizar_cliente').modal('hide');
+}
+
  //****** termina cargado
 
 
