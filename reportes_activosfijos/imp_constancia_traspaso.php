@@ -50,7 +50,7 @@ and c.cod_personal=$cod_responsable and c.cod_unidadorganizacional=$cod_unidador
      <table class="table">
          <tr>
             <td rowspan="2" class="text-center imagen-td"><img class="imagen-logo-izq_2" src="../assets/img/logo_ibnorca_origen_2.png" width="50" ></td>
-            <td class="s2 text-center" colspan="3">CORPORACION BOLIVIANA DE FARMACIAS S.A.</td>
+            <td class="s2 text-center" colspan="3">Instituto Boliviano de Normalización y Calidad</td>
 
         </tr>
         <tr>
