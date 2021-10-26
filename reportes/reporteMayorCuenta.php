@@ -88,7 +88,6 @@
       while ($rowCount = $stmtCount->fetch(PDO::FETCH_ASSOC)) {
         $contador++;
       }
-
       //OBTENEMOS LOS SALDOS ANTERIORES
       if($moneda!=1){
         $tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($desdeInicioAnio)));

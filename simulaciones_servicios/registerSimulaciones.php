@@ -695,7 +695,7 @@ $dbh = new Conexion();
     <div class="modal-content card">
       <div class="card-header card-header-primary card-header-text">
         <div class="card-text">
-          <h4>Pegar Datos - Excel</h4>      
+          <h4>TCP > Pegar Datos - Excel</h4>      
         </div>
         
         <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
@@ -731,7 +731,7 @@ $dbh = new Conexion();
     <div class="modal-content card">
       <div class="card-header card-header-primary card-header-text">
         <div class="card-text">
-          <h4>Pegar Datos - Excel</h4>      
+          <h4>TCS > Pegar Datos - Excel</h4>      
         </div>
         <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
@@ -822,6 +822,20 @@ $dbh = new Conexion();
                  <input type="text" readonly class="form-control" name="direccion_cliente_actualizar" id="direccion_cliente_actualizar" value="">
                </div>
              </div>
+          </div>
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Pais</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="pais_cliente" id="pais_cliente" value="">
+               </div>
+             </div>               
+             <label class="col-sm-2 col-form-label" >Pais</label>
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <input type="text" readonly class="form-control" name="pais_cliente_actualizar" id="pais_cliente_actualizar" value="">
+               </div>
+             </div>                
           </div>
           <div class="row">
             <label class="col-sm-2 col-form-label" >Ciudad</label>
@@ -1029,9 +1043,10 @@ $dbh = new Conexion();
           </div>
           <hr>
           <div class="form-group float-right">
-            <button type="button" id="boton_guardarsim" class="btn btn-danger" onclick="#">Confirmar Actualización</button>
+            <button type="button" id="boton_guardarsim" class="btn btn-danger" onclick="modalActualizarDatosCliente_enviar()">Confirmar Actualización</button>
           </div> 
       </div>
+      <div id="contenedor_oculto_actualizarCliente"></div>
     </div>  
   </div>
 </div>
