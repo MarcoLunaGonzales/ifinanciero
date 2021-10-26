@@ -19445,7 +19445,7 @@ function cargarDatosCliente(){
   $("#direccion_cliente_actualizar").val(datos[0]['direccion_c']);
   $("#ciudad_cliente_actualizar").val(datos[0]['ciudad']);
   $("#pais_cliente_actualizar").val(datos[0]['pais']);
-  $("#departamento_cliente_actualizar").val(datos[0]['departamento']);
+  $("#departamento_cliente_actualizar").val(datos[0]['depto']);
   $("#telefono_cliente_actualizar").val(datos[0]['telefono']);
   $("#fax_cliente_actualizar").val(datos[0]['fax']);
   $("#email_cliente_actualizar").val(datos[0]['email']);

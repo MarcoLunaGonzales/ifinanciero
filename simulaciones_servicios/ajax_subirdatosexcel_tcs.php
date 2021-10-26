@@ -34,7 +34,7 @@ if(isset($_FILES['file_excel'])){
                 if(isset($Row[3])){$ciudad=trim($Row[3]);}
                 if(isset($Row[7])){
                     $depto=trim($Row[7]);
-                    $pais="";
+                    $pais="BOLIVIA";
                 }
             }
             if($i==11){//datos de la cabecera
@@ -97,7 +97,7 @@ if(isset($_FILES['file_excel'])){
                 </script><?php
             }
         }
-        //echo $razon_social."**".$nit."**".$direccion_c."**".$ciudad."**".$pais."<br><br>";
+        //echo $depto."**".$telefono."**".$fax."**".$email."**".$web."<br><br>";
         if(!empty($razon_social) && !empty($nit)){?>
             <script>itemDatosProductosPlantilla_cabecera.push({razon_social:"<?=$razon_social?>",nit:"<?=$nit?>",direccion_c:"<?=$direccion_c?>",ciudad:"<?=$ciudad?>",pais:"<?=$pais?>",depto:"<?=$depto?>",telefono:"<?=$telefono?>",fax:"<?=$fax?>",email:"<?=$email?>",web:"<?=$web?>",mae_nombre:"<?=$mae_nombre?>",mae_cargo:"<?=$mae_cargo?>",mae_telefono:"<?=$mae_telefono?>",mae_email:"<?=$mae_email?>",contacto_nombre:"<?=$contacto_nombre?>",contacto_cargo:"<?=$contacto_cargo?>",contacto_telefono:"<?=$contacto_telefono?>",contacto_email:"<?=$contacto_email?>"});
         </script><?php
