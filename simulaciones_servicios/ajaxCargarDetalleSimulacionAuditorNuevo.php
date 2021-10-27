@@ -131,9 +131,10 @@ for ($nanio=$inicioAnioReal; $nanio <= $aniosReal; $nanio++) {
       }
       $estiloFilaTextoAud="";
       $existeCostoVariableSolAu=obtenerCostoVariableSolicitadoPropuestaTCPTCS($codSimulacion,$codigoTipo,2);
+      
       if($existeCostoVariableSolAu==1){  //HONORARIOS 1, COSTOS VARIABLES 2
            $estiloFilaTextoAud='rel="tooltip" title="SOLICITUD DE RECURSOS" disabled';
-       }
+      }
        ?>
        <tr>
          <td class="text-left small"><input type="hidden" id="modal_local_extranjero<?=$anio?>CCCC<?=$iii?>" value="<?=$codExtLoc?>"><input type="hidden" id="codigo_filaauditor<?=$anio?>CCCC<?=$iii?>" value="<?=$codigoTipo?>"><input type="hidden" id="codigo_filatipoauditor<?=$anio?>CCCC<?=$iii?>" value="<?=$row["cod_tipoauditor"]?>"><?=$nombreTipo?></td>
@@ -224,10 +225,13 @@ for ($nanio=$inicioAnioReal; $nanio <= $aniosReal; $nanio++) {
           
           $estiloFilaTexto='';
           $existeCostoVariableSol=obtenerCostoVariableSolicitadoPropuestaTCPTCS($codSimulacion,$codigoPres,1);
+          
           if($existeCostoVariableSol==1||$existeCostoVariableSolAu==1){  //HONORARIOS 1, COSTOS VARIABLES 2
            $estiloFilaTexto='rel="tooltip" title="SOLICITUD DE RECURSOS" disabled';
            ?><script>$("#solicitado_item"+'<?=$anio?>CCCC<?=$iii?>').html('<i class="material-icons text-danger">not_interested</i>');</script><?php
           }
+
+
           //if($existeCostoVariableSol!=1){ 
          ?>
          <td class="text-right">
