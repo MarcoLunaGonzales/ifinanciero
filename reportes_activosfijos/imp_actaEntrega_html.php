@@ -50,43 +50,51 @@ $anio=date('Y');
     <link href="../assets/libraries/plantillaPDFCajaChica.css" rel="stylesheet" />
    </head><body>
     <header class="header">
-    <table width="100%">
+    <table width="100%" style="font-size: 12px;">
         <tr><td>
-            <table  width="100%" ><tr><td width="20%">&nbsp;</td><td width="60%"><p><center><h3>Instituto Boliviano de Normalización y calidad</h3><br><h3>REGISTRO</h3><br><h3>ACTA DE ENTREGA DE BIENES DE USO</h3><center></p></td><td width="20%"><img style="width:70px;height:70px;" src="../assets/img/ibnorca2.jpg"></td><tr></table>
+            <table  width="100%" >
+                <tr>
+                    <td width="20%">&nbsp;</td>
+                    <td width="60%"><center><b><span style="font:arial;"><u>Instituto Boliviano de Normalización y calidad</u><br><h3>REGISTRO</h3><br><h3>ACTA DE ENTREGA DE BIENES DE USO</h3></span></b><center>
+
+                    </td>
+                    <td width="20%"><img style="width:70px;height:70px;" src="../assets/img/ibnorca2.jpg"></td>
+                <tr>
+                </table>
         </td></tr>
         <tr><td>
             <table align="center" class="table">
                 <tbody>
                     <tr>
-                        <td class="text-left small" width="15%">Ciudad Y Fecha:</td>
-                        <td class="text-center small" >La Paz, <?=$dia?> de <?=$nom_mes?> de <?=$anio?></td>
-                        <td class="text-left small" width="15%">N°</td>
-                        <td class="text-left small" ></td>
+                        <td class="text-left" width="18%" style="background: black;color:white; ">Ciudad Y Fecha:</td>
+                        <td class="text-center" >La Paz, <?=$dia?> de <?=$nom_mes?> de <?=$anio?></td>
+                        <td class="text-left" width="10%" style="background: black;color:white; ">N°</td>
+                        <td class="text-left" width="20%"></td>
                     </tr>
                     <tr>
-                        <td class="text-left small" >Responsable:</td>
-                        <td class="text-center small" ><?=$personal?></td>
-                        <td class="text-left small" >C.I.</td>
-                        <td class="text-center small" ><?=$identificacion?></td>
+                        <td class="text-left" style="background: black;color:white; ">Responsable:</td>
+                        <td class="text-center" ><?=$personal?></td>
+                        <td class="text-left" style="background: black;color:white; ">C.I.</td>
+                        <td class="text-center" ><?=$identificacion?></td>
                     </tr>
                     <tr>
-                        <td class="text-left small" >Cargo:</td>
-                        <td class="text-center small" ><?=$cargo?></td>
-                        <td class="text-left small" >Área:</td>
-                        <td class="text-center small" ><?=$area?></td>
+                        <td class="text-left" style="background: black;color:white; ">Cargo:</td>
+                        <td class="text-center" ><?=$cargo?></td>
+                        <td class="text-left" style="background: black;color:white; ">Área:</td>
+                        <td class="text-center" ><?=$area?></td>
                     </tr>
                 </tbody>
             </table>
         </td></tr>
-        <tr><td><p><span style="font-size: 12px;">El Área Administrativa mediante el presente acta, hace entrega de los bienes de uso detallados a continuación:</span></p></td></tr>
+        <tr><td><p><span >El Área Administrativa mediante el presente acta, hace entrega de los bienes de uso detallados a continuación:</span></p></td></tr>
         <tr><td>
-            <table class="table">
+            <table class="table" >
                 <tr>
-                    <td class="font-weight-bold">TIPO DE BIEN</td>
-                    <td class="font-weight-bold">CODIGO ACTIVO</td>
-                    <td class="font-weight-bold">DESCRIPCIÓN</td>
-                    <td class="font-weight-bold small">DEVOLUCIÓN</td>
-                    <td class="font-weight-bold small">CODIGO DE TRAPASO</td>
+                    <td class="font-weight-bold text-center">TIPO DE BIEN</td>
+                    <td class="font-weight-bold text-center">CODIGO BIEN</td>
+                    <td class="font-weight-bold text-center">DESCRIPCIÓN</td>
+                    <td class="font-weight-bold text-center">DEVOLUCIÓN</td>
+                    <td class="font-weight-bold text-center">CODIGO DE TRAPASO</td>
                 </tr>
 
                <tr>
@@ -98,19 +106,20 @@ $anio=date('Y');
              </tr>
             </table>
         </td></tr>
-        <tr><td><p><span style="font-size: 12px;">El funcionario es responsable de los bienes de Uso a partir de la firma de la presente acta, comprometiendose a :<br>
+        <tr><td><p><span >El funcionario es responsable de los bienes de Uso a partir de la firma de la presente acta, comprometiendose a :<br>
             * Asumir la responsabilidad de los Bienes de Uso y Equipos de Oficina relacionados en el presente documento.<br>
-            * Dar uso exclusivo para el desempeño de las fubciones asignadas por la empresa.<br>
-            * Se hace cargo por el daño o ña perdida de los mismos a causa de negligencia o incumplimiento de las normas y procedimeintos relacionados con el uso y conservación.<br>
-            * Se compromete a informacr oportunamente al area administrativa sobre cualquier traslado temporal o definitivo, ademas de situaciones que pongan en peligro el Bien o Qeuipo mediante los aspectos formales.</span></p></td></tr>
+            * Dar uso exclusivo para el desempeño de las funciones asignadas por la empresa.<br>
+            * Se hace cargo por el daño o la perdida de los mismos a causa de negligencia o incumplimiento de las normas y procedimientos relacionados con el uso y conservación.<br>
+            * Se compromete a informar oportunamente al area administrativa sobre cualquier traslado temporal o definitivo, ademas de situaciones que pongan en peligro el Bien o Equipo mediante los aspectos formales.</span></p></td></tr>
         <tr>
             <td>
-            <center >
-            <table class="table" width="80% !important"><tr><td>&nbsp;<br>Firma:</td><td></td><td></td></tr>
-                <tr><td></td><td>ENTREGUE CONFORME</td><td>RECIBI CONFORME</td></tr>
-                <tr><td>Nombre</td><td></td><td></td></tr>
-                <tr><td>Cargo:</td><td></td><td></td></tr>
-            </table></center>
+            
+                <table class="table" width="70% !important" align="center" ><tr><td>&nbsp;<br>&nbsp;<br>Firma:</td><td></td><td></td></tr>
+                    <tr><td></td><td class="text-center">ENTREGUE CONFORME</td><td class="text-center">RECIBI CONFORME</td></tr>
+                    <tr><td>Nombre</td><td></td><td></td></tr>
+                    <tr><td>Cargo:</td><td></td><td></td></tr>
+                </table>
+            
             </td>
         </tr>
     </table>

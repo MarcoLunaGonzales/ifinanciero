@@ -88,7 +88,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                                     echo '<tr style="background-color:#9F81F7;">
                                         <td style="display: none;"></td>
                                         <td class="text-left small" colspan="2">CUENTA</td>
-                                        <td class="text-left small" colspan="4">'.$nombreCuenta.'</td>
+                                        <td class="text-left small" colspan="5">'.$nombreCuenta.'</td>
                                         <td style="display: none;"></td>
                                         <td style="display: none;"></td>                                        
                                         <td style="display: none;"></td>
