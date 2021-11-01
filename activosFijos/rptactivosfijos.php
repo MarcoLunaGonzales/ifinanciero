@@ -6,6 +6,8 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 $query = "SELECT * from depreciaciones order by 3";
 $statement = $dbh->query($query);
+$fechaDesde=date('Y-01-01');
+$fechaHasta=date('Y-12-31');
 ?>
 
 <div class="content">
@@ -51,20 +53,7 @@ $statement = $dbh->query($query);
             <div class="form-group">
               <div id="contenedor_areas_reporte">
                 
-              </div>
-              <!-- <select class="selectpicker form-control" title="Seleccione una opcion" name="areas[]" id="areas" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true>
-                <?php
-                $stmt = $dbh->prepare("SELECT * FROM areas order by 2");
-              $stmt->execute();
-              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $codigoX=$row['codigo'];
-                $nombreX=$row['nombre'];
-              ?>
-              <option value="<?=$codigoX;?>"><?=$row['abreviatura'];?> - <?=$nombreX;?></option>
-              <?php 
-              }
-                ?>
-              </select> -->
+              </div>             
             </div>
             </div>
           </div>
@@ -73,15 +62,41 @@ $statement = $dbh->query($query);
               <label class="col-sm-2 col-form-label">Rubro</label>
               <div class="col-sm-7">
               <div class="form-group">
-                  <select class="selectpicker form-control" title="Seleccione una opcion" name="rubros[]" id="rubros" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true>
+                  <select class="selectpicker form-control" title="Seleccione una opcion" name="rubros[]" id="rubros" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true">
                   <?php while ($row = $statement->fetch()){ ?>
-                      <option value="<?=$row["codigo"];?>"><?=$row['abreviatura'];?> - <?=$row["nombre"];?></option>
+                      <option value="<?=$row['codigo'];?>"><?=$row['abreviatura'];?> - <?=$row["nombre"];?></option>
                   <?php } ?> 
                   </select>
               </div>
               </div>
           </div>
           <!--fin campo ufvinicio -->
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="row">
+               <label class="col-sm-4 col-form-label">Fecha Alta I.</label>
+               <div class="col-sm-4">
+                <div class="form-group">
+                  <div id="div_contenedor_fechaI">                              
+                    <input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" value="<?=$fechaDesde?>">  
+                  </div>                                    
+                   </div>
+                </div>
+           </div>
+             </div>
+            <div class="col-sm-4">
+              <div class="row">
+               <label class="col-sm-4 col-form-label">Fecha Alta F.</label>
+               <div class="col-sm-8">
+                <div class="form-group">
+                  <div id="div_contenedor_fechaH">                              
+                    <input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" value="<?=$fechaHasta?>">
+                  </div>
+                         
+                  </div>
+                </div>
+            </div>
+          </div>
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				  <button type="submit" class="<?=$buttonNormal;?>">Generar</button>

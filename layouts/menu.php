@@ -441,9 +441,29 @@ if($menuModulo==0){
                     </a>
                 </li>
 
+                <!-- utilitarios -->
+                <li class="nav-item ">
+                  <a class="nav-link" data-toggle="collapse" href="#utilitarios">
+                    <i class="material-icons">build</i>
+                    <p> Utilitarios
+                      <b class="caret"></b>
+                    </p>
+                  </a>
+                  <div class="collapse" id="utilitarios">
+                    <ul class="nav">
+                      <li class="nav-item ">
+                        <a class="nav-link" href="?opcion=cambiarResponsableAF">
+                          <span class="sidebar-mini"> CRAF </span>
+                          <span class="sidebar-normal"> Cambiar Responsable AF </span>
+                        </a>
+                      </li>
+                  </ul>
+                </div>
+              </li>  
               </ul>
             </div>
           </li>
+
           <?php
               break;
               case 3:

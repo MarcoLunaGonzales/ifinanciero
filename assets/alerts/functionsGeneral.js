@@ -19880,3 +19880,43 @@ function generarComprobanteExcel_TCP_TCS_bk(){
         }
     }); 
 }
+
+
+function ajaxBuscar_personal_af_cambio(){
+  var cod_responable1=document.getElementById("cod_responable1").value;  
+  var contenedor; 
+  if(cod_responable1!=""){
+    iniciarCargaAjax();
+    contenedor = document.getElementById('contenedor_detalle');
+    ajax=nuevoAjax();
+    ajax.open('GET', 'activosFijos/ajax_cambiar_responsable.php?resp1='+cod_responable1,true);
+    ajax.onreadystatechange=function() {
+      if (ajax.readyState==4) {
+        contenedor.innerHTML = ajax.responseText;
+        var detalle_comprobante=document.getElementById("detalle_comprobante").value;
+        // alert(detalle_comprobante);
+        if(detalle_comprobante!="NO ENCONTRADO"){
+          ajaxVisibleButtonElimProdSave(1);          
+        }else{
+          ajaxVisibleButtonElimProdSave(0);            
+        }
+        detectarCargaAjax();
+      }
+    }
+    ajax.send(null);
+  }else{
+      Swal.fire("Informativo!", "Por favor, seleccione el responsable.", "warning");
+  }
+}
+function ajaxVisibleButtonElimProdSave(index){  
+  var contenedor;
+  contenedor = document.getElementById('contenedor_boton_save_elimprod');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajax_cambiarrespoafForm_btnSave.php?sw='+index,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+    }
+  }
+  ajax.send(null);
+}
