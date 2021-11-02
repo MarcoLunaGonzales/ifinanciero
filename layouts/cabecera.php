@@ -47,7 +47,7 @@ $urmesCurso2="index.php?opcion=mesCurso2";
             <h6>Gesti&oacute;n Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Gestión de Trabajo" style="color:#FF0000; " href='<?=$urlListGestionTrabajo?>' >[<?=$globalNombreGestion;?>]</a></h4>
             &nbsp;&nbsp;&nbsp;
             <h6>Mes Trabajo: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Mes de Trabajo" style="color:#FF0000; " href='<?=$urmesCurso2?>' >[<?=$globalMes;?>]</a></h4>&nbsp;&nbsp;&nbsp;
-            <h6>Unidad: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Oficina de Trabajo" style="color:#FF0000; " href='<?=$urllistUnidadOrganizacional?>' >[ <?=$globalNombreUnidad;?> ]</a></h4> &nbsp;&nbsp; <h6>Area: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Aceptar Solicitud" style="color:#FF0000; " href='#' >[ <?=$globalNombreArea;?> ]</a></h4>
+            <h6>Unidad: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a title="Cambiar Oficina de Trabajo" style="color:#FF0000; " href='<?=$urllistUnidadOrganizacional?>' >[ <?=$globalNombreUnidad;?> ]</a></h4> &nbsp;&nbsp; <h6>Area: </h6>&nbsp;<h4 class="text-danger font-weight-bold"><a style="color:#FF0000; " href='#' >[ <?=$globalNombreArea;?> ]</a></h4>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           
           <div class="collapse navbar-collapse justify-content-end">
@@ -106,16 +106,24 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
        }
      }
  }
+//***clientes MORA
+$stmtCMora = $dbh->prepare("SELECT codigo from clientes_mora where cod_estado=1 limit 1");
+$stmtCMora->execute();
+$stmtCMora->bindColumn('codigo', $codigoMora);
+while ($rowMora = $stmtCMora->fetch(PDO::FETCH_BOUND)) {
+  $html.='<a class="dropdown-item" target="_blank" href="clientes_mora/reporte_clientesMora.php">Nuevos Clientes Mora</a>';
+  $contMonedas++; 
+}
 
- if($contMonedas==0){
+
+if($contMonedas==0){
   $html='<label class="dropdown-item">No hay Notificaciones</label>';
- $numeroNot='';  
- }else{
- $numeroNot='<span class="notification">'.$contMonedas.'</span>'; 
- }
+  $numeroNot='';  
+}else{
+  $numeroNot='<span class="notification">'.$contMonedas.'</span>'; 
+}
  
-            if(!isset($_GET['q'])){
- ?>
+if(!isset($_GET['q'])){?>
 
               <li class="nav-item dropdown">
                 <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -17,7 +17,7 @@ function generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$St
         $monto_ecX=$row['monto'];
         //PAGADO
         $sql="SELECT e.monto
-        FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen=$codigo_ec";
+        FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and cc.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen=$codigo_ec";
         // echo $sql."***<br>";
         $stmt_d = $dbh->prepare($sql);
         $stmt_d->execute();
@@ -25,7 +25,6 @@ function generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$St
         while ($row_d = $stmt_d->fetch()) {
             $monto_ecD=$row_d['monto'];
         }
-
         $saldo_X=$monto_ecX-$monto_ecD;
         $periodo=0;
         $fechai=$desde;
@@ -43,19 +42,23 @@ function generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$St
         }
     }
     $j=0;
-
     $sumaTotalCliente=0;
-
+    $array_periodo_total=[];
     foreach ($array_periodo as $periodo) {    
         echo '<td class="text-right small">'.formatNumberDec($monto_periodo[$j]).'</td>';
         $sumaTotalCliente+=$monto_periodo[$j];
+        $array_periodo_total[$j]=$monto_periodo[$j];
         $j++;    
     }    
     echo '<td class="text-right small">'.formatNumberDec($monto_periodo[$j]).'</td>';
+    $array_periodo_total[$j]=$monto_periodo[$j];
     $sumaTotalCliente+=$monto_periodo[$j];
-
     echo '<td class="text-right small font-weight-bold">'.formatNumberDec($sumaTotalCliente).'</td>';
+    $array_periodo_total[$j+1]=$sumaTotalCliente;
 
+    // echo "**1";
+    //  var_dump($array_periodo_total);
+    return $array_periodo_total;
 }
 
 ?>

@@ -901,6 +901,14 @@
 			require_once('reportes_activosfijos/afConstanciasTraspaso.php');
 		}
 
+		//utilitarios AF
+        if ($_GET['opcion']=='cambiarResponsableAF') {
+			require_once('activosFijos/cambiar_responsable.php');
+		}
+		if ($_GET['opcion']=='cambiarResponsableAFsave') {
+            require_once('activosFijos/cambiar_responsable_save.php');
+		}
+
 		//*************************************************************************************************************/
 		//*************************************************************************************************************/
 		//*************************************************************************************************************/

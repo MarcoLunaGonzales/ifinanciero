@@ -6,10 +6,8 @@ require_once __DIR__.'/../conexion.php';
 require_once __DIR__.'/../functions.php';
 require_once  __DIR__.'/../fpdf_html.php';
 require '../assets/phpqrcode/qrlib.php';
-
+require_once __DIR__.'/../functionsGeneral.php';
 require_once '../layouts/bodylogin2.php';
-
-
 $dbh = new Conexion();
 set_time_limit(300);
 
@@ -30,6 +28,10 @@ $unidadOrgString=implode(",", $unidadOrganizacional);
 $areaString=implode(",", $areas);
 $rubrosString=implode(",", $rubros);
 
+$fecha_desde=$_POST["fecha_desde"];
+$fecha_hasta=$_POST["fecha_hasta"];
+
+
 // echo $areaString;
 $stringUnidades="";
 foreach ($unidadOrganizacional as $valor ) {    
@@ -48,12 +50,12 @@ $sqlActivos="SELECT codigoactivo,activo,(select uo.abreviatura from unidades_org
 (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
 (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
 tipoalta,
-fechalta,valorinicial,valorresidual,
+DATE_FORMAT(fechalta,'%d/%m/%Y')as fechalta_x,valorinicial,valorresidual,
 (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable,
 (select e.nombre from estados_activofijo e where e.codigo=cod_estadoactivofijo) as estado_af,
 (select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien
 from activosfijos 
-where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_depreciaciones in ($rubrosString)";  
+where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_depreciaciones in ($rubrosString) and fechalta between '$fecha_desde' and '$fecha_hasta'";  
 
 //echo $sqlActivos;
 
@@ -66,7 +68,7 @@ $stmtActivos->bindColumn('activo', $activoX);
 $stmtActivos->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
 $stmtActivos->bindColumn('cod_area', $cod_area);
 $stmtActivos->bindColumn('cod_depreciaciones', $cod_depreciaciones);
-$stmtActivos->bindColumn('fechalta', $fecha_alta);
+$stmtActivos->bindColumn('fechalta_x', $fecha_alta);
 $stmtActivos->bindColumn('tipoalta', $tipo_alta);
 $stmtActivos->bindColumn('valorinicial', $valor_inicial);
 $stmtActivos->bindColumn('valorresidual', $valor_residual);
@@ -101,19 +103,14 @@ $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
                         <tr >
                           <th class="text-center">-</th>
                           <th class="font-weight-bold">Codigo Activo</th>
-                          <th class="font-weight-bold">Oficina</th>
-                          <th class="font-weight-bold">Area</th>
+                          <th class="font-weight-bold">Of/Area</th>                          
                           <th class="font-weight-bold">Rubro</th>
                           <th class="font-weight-bold">Activo</th>
-
                           <th class="font-weight-bold">Tipo De Alta</th>
                           <th class="font-weight-bold">Fecha De Alta</th>
                           <th class="font-weight-bold">Valor Ini.</th>
                           <th class="font-weight-bold">Valor Res.</th>
-
-                          
                           <th class="font-weight-bold">Responsable</th>
-
                           <th class="font-weight-bold">Estado AF</th>
                         </tr>
                       </thead>
@@ -139,20 +136,15 @@ $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
                               echo '<img src="'.$fileName.'"/>';
                             ?>
                           </td>
-                          <td class="text-center small"><?=$cod_unidadorganizacional; ?></td>
-                          <td class="text-center small"><?= $cod_area; ?></td>
-                          <td class="text-left small"><?= $cod_depreciaciones; ?></td>
-                          <td class="text-left small"><?= $activoX; ?></td>
-
-                          <td class="text-left small"><?= $tipo_alta; ?></td>
-                          <td class="text-center small"><?= $fecha_alta; ?></td>
-                          <td class="text-left small"><?= $valor_inicial; ?></td>
-                          <td class="text-left small"><?= $valor_residual; ?></td>
-
-                          
-                          <td class="text-left small"><?= $responsables_responsable; ?></td>
-
-                          <td class="text-left small"><?= $estado_af; ?></td>
+                          <td class="text-center small"><?=$cod_unidadorganizacional?>/<?=$cod_area?></td>                          
+                          <td class="text-left small"><?=$cod_depreciaciones?></td>
+                          <td class="text-left small"><?=$activoX?></td>
+                          <td class="text-left small"><?=$tipo_alta?></td>
+                          <td class="text-center small"><?=$fecha_alta?></td>
+                          <td class="text-left small"><?=formatNumberDec($valor_inicial)?></td>
+                          <td class="text-left small"><?=$valor_residual?></td>
+                          <td class="text-left small"><?=$responsables_responsable?></td>
+                          <td class="text-left small"><?=$estado_af?></td>
                         </tr>
                         <?php 
                             } 

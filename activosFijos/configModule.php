@@ -134,4 +134,7 @@ $urlprint_contabilizacion_af="activosfijos/executeComprobanteActivoFijo.php";
 
 $urlImp="comprobantes/imp.php";
 
+
+$urlcambiar_respo="?opcion=cambiarResponsableAF";
+$urlSave_cambiar_resp="?opcion=cambiarResponsableAFsave";//guardar
 ?>
