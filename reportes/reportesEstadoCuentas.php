@@ -255,7 +255,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
               <div class="form-group">
                   <select name="ver_saldo" id="ver_saldo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required>
                         <option value="1">SALDOS DETALLADO</option>
-                        <option value="3">SALDOS TOTALES POR PERIDOS</option>
+                        <option value="3">SALDOS TOTALES POR PERIODOS</option>
                         <option value="2">TODO</option>
                         
                   </select>

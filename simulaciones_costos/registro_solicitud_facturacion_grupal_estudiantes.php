@@ -1,4 +1,7 @@
 <?php
+
+set_time_limit(0);
+
 session_start();
 require_once '../layouts/bodylogin2.php';
 require_once '../conexion.php';
@@ -13,7 +16,9 @@ $dbh = new Conexion();
 $dbhIBNO = new ConexionIBNORCA();
 $globalUser=$_SESSION["globalUser"];
 
-set_time_limit(0);
+$cod_simulacion=0;
+$cod_facturacion=0; 
+
 //recibimos las normas seleccionadas a facturar
 if(isset($_GET['q'])){
   $q=$_GET['q'];
@@ -368,7 +373,7 @@ $contadorRegistros=0;
                                     <div id="div_contenedor_contactos">
                                         <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
                                           <?php 
-                                          $query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
+                                          $query="SELECT * FROM clientes_contactos where cod_cliente='$cod_cliente' order by nombre";
                                           $stmt = $dbh->prepare($query);
                                           $stmt->execute();
                                           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
