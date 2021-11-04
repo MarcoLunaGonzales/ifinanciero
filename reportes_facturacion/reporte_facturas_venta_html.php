@@ -1,6 +1,6 @@
 <?php
 function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin,$estado_factura){
-	require_once __DIR__.'/../conexion.php';
+	require_once __DIR__.'/../conexion_reportes.php';
 	if($tipo_admin==1){
 		require '../assets/phpqrcode/qrlib.php';
 		require_once '../assets/libraries/CifrasEnLetras.php';

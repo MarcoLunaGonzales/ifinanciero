@@ -145,7 +145,7 @@ if($cod_facturacion>0){//editar
 
 }else{//registrar
     //echo "entro registrar";
-    $sqlFac="SELECT clNit, clRazonSocial, clFechaRegistro as fecha_registro from dbcliente.cliente_persona_empresa where clNit='$ci_estudiante' or clIdentificacion='$ci_estudiante'";
+    $sqlFac="SELECT clNit, clRazonSocial, clFechaRegistro as fecha_registro from dbcliente.cliente_persona_empresa where clIdentificacion='$ci_estudiante'";
     //echo $sqlFac;
     $stmtSimuFact = $dbh->prepare($sqlFac);
     $stmtSimuFact->execute();

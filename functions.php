@@ -2739,6 +2739,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      $dbh = new Conexion();
      $sql="";
      $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd join plan_cuentas pc on sd.cod_plancuenta=pc.codigo where sd.cod_servicioauditor=$codigo"; //and sd.cod_solicitudrecurso=$codSol
+     //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;

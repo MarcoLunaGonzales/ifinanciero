@@ -30,6 +30,10 @@ $proyecto=$_GET['proyecto'];
 
 $glosa=$_GET['glosa'];
 
+
+$codigoSistema=$_GET['codigoSistema'];
+$codigoActivo=$_GET['codigoActivo'];
+
 // $unidadOrgString=implode(",", $cod_uo);
 
 
@@ -63,6 +67,12 @@ if($proyecto!=""){
 if($glosa!=""){
   $sql.=" and af.activo like '%$glosa%'";
 }
+if($codigoSistema!=""){
+  $sql.=" and af.codigo = '$codigoSistema'";
+}
+if($codigoActivo!=""){
+  $sql.=" and af.codigoactivo like '%$codigoActivo%'";
+}
 // $sql.=" order by c.fecha desc, c.numero desc;";
 // echo $sql; 
 
@@ -89,6 +99,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                   <thead>
                     <tr>
                       <th></th>
+                        <th>CodSistema</th>
                         <th>Codigo</th>
                         <th>Of/Area</th>
                         <th>Activo</th>
@@ -110,6 +121,7 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                               <i class="material-icons" title="Ficha Activo Fijo" style="color:black">print</i>
                             </a>
                           </td>
+                          <td class="text-center small"><?=$codigo;?></td>
                           <td class="text-center small"><?=$codigoactivo;?></td>
                           <td class="text-center small"><?=$nombreUnidad;?>-<?=$nombreArea;?></td>
                           <td class="text-left small"><?=$activo;?></td>
