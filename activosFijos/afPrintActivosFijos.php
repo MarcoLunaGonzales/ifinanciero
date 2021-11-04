@@ -46,7 +46,7 @@ foreach ($rubros as $valor ) {
     $stringRubros.=" ".abrevDepreciacion($valor)." ";
 }
 
-$sqlActivos="SELECT codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
+$sqlActivos="SELECT codigo,codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
 (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
 (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
 tipoalta,
@@ -63,6 +63,7 @@ $stmtActivos = $dbh->prepare($sqlActivos);
 $stmtActivos->execute();
 
 // bindColumn
+$stmtActivos->bindColumn('codigo', $codigoX);
 $stmtActivos->bindColumn('codigoactivo', $codigoActivoX);
 $stmtActivos->bindColumn('activo', $activoX);
 $stmtActivos->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
@@ -102,7 +103,8 @@ $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
                       <thead class="bg-secondary text-white">
                         <tr >
                           <th class="text-center">-</th>
-                          <th class="font-weight-bold">Codigo Activo</th>
+                          <th class="font-weight-bold">CodSis</th>
+                          <th class="font-weight-bold">Codigo</th>
                           <th class="font-weight-bold">Of/Area</th>                          
                           <th class="font-weight-bold">Rubro</th>
                           <th class="font-weight-bold">Activo</th>
@@ -121,9 +123,12 @@ $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
                             $contador++;   
                         ?>
                         <tr>
-                          <td class="text-center small"><?=$contador;?></td>
-                          <td class="text-center small">
-                            <?php
+                          <!-- <td class="text-center small"><?=$contador;?></td> -->
+                          <td class="text-center small"></td>
+                          <td class="text-center small"><?=$codigoX;?></td>
+                          <td class="text-center small"><?=$codigoActivoX;?></td>
+                          <!-- <td class="text-center small"> -->
+                            <!-- <?php
                               $dir = 'qr_temp/';
                               if(!file_exists($dir)){
                                   mkdir ($dir);}
@@ -134,8 +139,8 @@ $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
                               $contenido = "Cod:".$codigoActivoX."\nRubro:".$cod_depreciaciones."\nDesc:".$activoX."\nRespo.:".$cod_unidadorganizacional.' - '.$responsables_responsable;                               
                               QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
                               echo '<img src="'.$fileName.'"/>';
-                            ?>
-                          </td>
+                            ?> -->
+                          <!-- </td> -->
                           <td class="text-center small"><?=$cod_unidadorganizacional?>/<?=$cod_area?></td>                          
                           <td class="text-left small"><?=$cod_depreciaciones?></td>
                           <td class="text-left small"><?=$activoX?></td>

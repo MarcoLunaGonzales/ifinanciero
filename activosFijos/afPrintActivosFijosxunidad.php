@@ -45,7 +45,7 @@ foreach ($areas as $valor ) {
 
 
 
-$sqlActivos="SELECT codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
+$sqlActivos="SELECT codigo,codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
 (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
 (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
 (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable
@@ -58,6 +58,7 @@ $stmtActivos = $dbh->prepare($sqlActivos);
 $stmtActivos->execute();
 
 // bindColumn
+$stmtActivos->bindColumn('codigo', $codigoX);
 $stmtActivos->bindColumn('codigoactivo', $codigoActivoX);
 $stmtActivos->bindColumn('activo', $activoX);
 $stmtActivos->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
@@ -93,7 +94,8 @@ $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsab
                       '<thead class="bg-secondary text-white">'.
                         '<tr >'.
                           '<th class="font-weight-bold">-</th>'.
-                          '<th class="font-weight-bold">Codigo Activo</th>'.
+                          '<th class="font-weight-bold">CodSis</th>'.
+                          '<th class="font-weight-bold">Codigo</th>'.
                           '<th class="font-weight-bold">Oficina</th>'.
                           '<th class="font-weight-bold">Area</th>'.
                           '<th class="font-weight-bold">Rubro</th>'.
@@ -107,7 +109,8 @@ $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsab
                           while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
                           $contador++;   
                         $html.='<tr>'.
-                          '<td class="text-center small">'.$contador.'</td>'.
+                          '<td class="text-center small"></td>'.
+                          '<td class="text-center small">'.$codigoX.'</td>'.
                           '<td class="text-center small">'.$codigoActivoX.'</td>'.
                           '<td class="text-center small">'.$cod_unidadorganizacional.'</td>'.
                           '<td class="text-center small">'.$cod_area.'</td>'.

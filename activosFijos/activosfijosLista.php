@@ -87,7 +87,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                   <thead>
                     <tr>
                       <th></th>
-                        <th>CodSistema</th>
+                        <th>CodSis</th>
                         <th>Codigo</th>
                         <th>Of/Area</th>
                         <th>Activo</th>
