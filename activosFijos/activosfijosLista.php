@@ -87,6 +87,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                   <thead>
                     <tr>
                       <th></th>
+                        <th>CodSistema</th>
                         <th>Codigo</th>
                         <th>Of/Area</th>
                         <th>Activo</th>
@@ -111,6 +112,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                               <i class="material-icons" title="Acta de Entrega" style="color:black">print</i>
                             </a>
                           </td>
+                          <td class="text-center small"><?=$codigo;?></td>
                           <td class="text-center small"><?=$codigoactivo;?></td>
                           <td class="text-center small"><?=$nombreUnidad;?>-<?=$nombreArea;?></td>
                           <td class="text-left small"><?=$activo;?></td>
@@ -232,9 +234,9 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
         </div> 
         
         <div class="row">
-            <label class="col-sm-4 text-center" style="color:#0040FF;">Respontable</label> 
+            <label class="col-sm-4 text-center" style="color:#0040FF;">Responsable</label> 
             <label class="col-sm-4 text-center" style="color:#0040FF;">Tipo Alta</label>                  
-            <label class="col-sm-4 text-center" style="color:#0040FF;">Proyecto</label>                                
+            <label class="col-sm-4 text-center" style="color:#0040FF;">Proyecto</label>                           
         </div> 
         <div class="row">
           <div class="form-group col-sm-4">
@@ -259,16 +261,26 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                 <option value="<?=$codigo_proy;?>"> <?=$nombre_proyecto;?></option>
               <?php }?>
             </select>
-            
           </div>              
         </div> 
         <div class="row">
-          <label class="col-sm-3 text-center" style="color:#0040FF;">Descripción</label> 
+          <label class="col-sm-3 text-center" style="color:#0040FF;">Nombre Activo</label> 
           <div class="form-group col-sm-8">
             <input class="form-control input-sm" type="text" name="glosaBusqueda" id="glosaBusqueda"  >
           </div>           
-        </div> 
+        </div>
 
+        <div class="row">
+            <label class="col-sm-4 text-center" style="color:#0040FF;">Codigo de Sistema</label> 
+            <label class="col-sm-4 text-center" style="color:#0040FF;">Codigo</label>                  
+        </div> 
+        <div class="row">
+          <div class="form-group col-sm-4">
+            <input class="form-control input-sm" type="text" name="codigo_sistema" id="codigo_sistema">
+          </div> 
+          <div class="form-group col-sm-4">
+            <input class="form-control input-sm" type="text" name="codigo_activo" id="codigo_activo">
+          </div>
       </div>
 
       <div class="modal-footer">
