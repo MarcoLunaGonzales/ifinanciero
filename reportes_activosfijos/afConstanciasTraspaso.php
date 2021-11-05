@@ -127,7 +127,6 @@ $fechaDesde=date("Y-m-d");
         </div>
         <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
-          <a href="#" type="button" class="btn btn-primary" onClick="impirmir_acta_de_entrega_all()">Acta De Entrega</a>
         </div>
       </div>
       </form>

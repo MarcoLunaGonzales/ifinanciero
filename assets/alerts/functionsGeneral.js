@@ -19925,9 +19925,9 @@ function ajaxVisibleButtonElimProdSave(index){
   ajax.send(null);
 }
 
-function impirmir_acta_de_entrega_all(){
+function impirmir_acta_de_entrega_all(cod_responsables_responsabledesde){
 
-  var cod_responsables_responsabledesde=$("#cod_responsables_responsabledesde").val();
+  // var cod_responsables_responsabledesde=$("#cod_responsables_responsabledesde").val();
   if(cod_responsables_responsabledesde>0){    
     var urlEditar="reportes_activosfijos/imp_actaEntrega_html_all.php?cod_personal="+cod_responsables_responsabledesde;    
     window.open(urlEditar, '_blank');
