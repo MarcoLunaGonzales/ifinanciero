@@ -19924,3 +19924,15 @@ function ajaxVisibleButtonElimProdSave(index){
   }
   ajax.send(null);
 }
+
+function impirmir_acta_de_entrega_all(){
+
+  var cod_responsables_responsabledesde=$("#cod_responsables_responsabledesde").val();
+  if(cod_responsables_responsabledesde>0){    
+    var urlEditar="reportes_activosfijos/imp_actaEntrega_html_all.php?cod_personal="+cod_responsables_responsabledesde;    
+    window.open(urlEditar, '_blank');
+  }else{
+    Swal.fire("Informativo!","Por favor, seleccione el responsable.", "warning");
+  }
+   
+}
