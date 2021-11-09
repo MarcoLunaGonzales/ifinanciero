@@ -35,7 +35,7 @@ $identificacion = $result['identificacion'];
 //*******
 
 $sqlActivos="SELECT a.codigo,a.codigoactivo,a.otrodato,a.cod_tiposbienes,(select tb.tipo_bien from tiposbienes tb
- where tb.codigo=a.cod_tiposbienes)as tipo_bien
+ where tb.codigo=a.cod_tiposbienes)as tipo_bien,(select CONCAT_WS('###',f.fechaasignacion,f.fecha_recepcion)as fechas from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable and f.cod_estadoasignacionaf=2 order by f.codigo limit 1) as fechas
 from activosfijos a 
 where a.cod_responsables_responsable=$codigo_personal";  
 $stmtActivos = $dbh->prepare($sqlActivos);
@@ -45,6 +45,8 @@ $stmtActivos->bindColumn('codigoactivo', $codigoactivo);
 $stmtActivos->bindColumn('otrodato', $otrodato);
 $stmtActivos->bindColumn('cod_tiposbienes', $cod_tiposbienes);
 $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
+$stmtActivos->bindColumn('fechas', $fechas);
+
 
 
 $nro_etiqueta="";
@@ -97,7 +99,7 @@ width: 100%;
 }
 </style>
    </head><body>
-    <table width="100%" style="font-size: 12px;">
+    <table width="100%" style="font-size: 11px;">
         <tr><td>
             <table  width="100%" >
                 <tr>
@@ -138,21 +140,35 @@ width: 100%;
             <table class="table" >
                 <tr>
                     <td class="font-weight-bold text-center">TIPO DE BIEN</td>
-                    <td class="font-weight-bold text-center">CODIGO BIEN</td>
+                    <td class="font-weight-bold text-center">CODSIS</td>
+                    <td class="font-weight-bold text-center">CODIGO</td>
                     <td class="font-weight-bold text-center">DESCRIPCIÓN</td>
-                    <td class="font-weight-bold text-center">DEVOLUCIÓN</td>
-                    <td class="font-weight-bold text-center">CODIGO DE TRAPASO</td>
+                    <td class="font-weight-bold text-center">F.ASIGNACIÓN</td>
+                    <td class="font-weight-bold text-center">F.RECEPCIÓN</td>
                 </tr>
 
                 <?php 
                 while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
+
+                    $array_fecha=explode('###', $fechas);
+                    $fecha_asig="";
+                    $fecha_rec="";
+
+                    if(isset($array_fecha[1])){
+                        $fecha_asig=$array_fecha[0];
+                        $fecha_rec_ar=$array_fecha[1];
+                        $fecha_rec_ar=explode(' ', $fecha_rec_ar);
+                        $fecha_rec=$fecha_rec_ar[0];
+                    }
+
                 ?>
                 <tr>
                     <td class="text-left small"><?=$tipo_bien?></td>
+                    <td class="text-center small"><?=$codigoSis?></td>
                     <td class="text-center small"><?=$codigoactivo?></td>
                     <td class="text-left small"><?=$otrodato?></td>
-                    <td class="text-left small"><?=$devolucion?></td>
-                    <td class="text-left small"><?=$codigo_traspaso?></td>
+                    <td class="text-left small"><?=$fecha_asig?></td>
+                    <td class="text-left small"><?=$fecha_rec?></td>
                 </tr>
             <?php } ?>
             </table>

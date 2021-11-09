@@ -19936,3 +19936,20 @@ function impirmir_acta_de_entrega_all(cod_responsables_responsabledesde){
   }
    
 }
+
+function buscarCodigoActivoExistente(){
+  var codigoactivo=$("#codigoactivo").val();
+
+contenedor = document.getElementById('divCodigoAF_validador');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'activosFijos/ajax_buscarcodigoactivo_exitente.php?codigoactivo='+codigoactivo,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);      
+    }
+  }
+  ajax.send(null)  
+
+}
+
