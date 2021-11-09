@@ -116,7 +116,7 @@ if ($codigo > 0){
     $codigo_aux = $result['id']+1; 
     
     //$codigoactivo = "AF-".$codigo_aux;
-    $codigoactivo = "-";
+    $codigoactivo = "";
 
     $tipoalta = '';
     $fechalta = '';
@@ -174,28 +174,21 @@ if ($codigo > 0){
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <div id="divCodigoAF">
-                                            <input type="text"  readonly="readonly" style="padding-left:20px" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigoactivo;?>"/>
+                                            <?php  if($codigo>0){?>
+                                                <input type="text" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigoactivo;?>"/>
+                                            <?php }else{ ?>
+                                                <input type="text" class="form-control" name="codigoactivo" id="codigoactivo" required="true"  value="<?=$codigoactivo;?>" onChange="buscarCodigoActivoExistente()"/>
+                                            <?php }?>
                                         </div>
                                     </div>
+                                </div>                                                                
+                                <div class="col-sm-4">
+                                    <div class="form-group">                                        
+                                        <div id="divCodigoAF_validador">
+                                            
+                                        </div>                                      
+                                    </div>
                                 </div>
-                                <!-- imagen qr-->
-                                <div class='col-sm-6'>
-                                        <?php
-                                            require 'assets/phpqrcode/qrlib.php';
-                                            $dir = 'qr_temp/';
-                                            if(!file_exists($dir)){
-                                                mkdir ($dir);}
-                                            $fileName = $dir.'test.png';
-                                            $tamanio = 3; //tamaño de imagen que se creará
-                                            $level = 'L'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
-                                            $frameSize = 1; //marco de qr
-                                            $contenido = "Cod:".$codigoactivo."\nRubro:".$nombreRubro."\nDesc:".$activo."\nRespo.:".$nombreUO.' - '.$nombreResponsable;
-
-                                            QRcode::png($contenido, $fileName, $level,$tamanio,$frameSize);
-                                            echo '<img src="'.$fileName.'"/>';
-                                        ?>
-                                </div>
-
                             </div><!--fin campo codigoactivo -->
 
                           
@@ -203,7 +196,7 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Oficina</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_unidadorganizacional" id="cod_unidadorganizacional" onChange="ajaxAFunidadorganizacionalArea(this);" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+                                        <select name="cod_unidadorganizacional" id="cod_unidadorganizacional" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
                                         
                                             <option value=""></option>
                                             <?php 
@@ -219,14 +212,7 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Area</label>
                                   <div class="col-sm-4">
                                     <div class="form-group" >
-                                        <div id="div_contenedor_area">
-                                            <?php
-                                                if($codigo>0){?>
-
-                                                <?php }else{
-
-                                                }
-                                            ?>
+                                        
                                             <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" >
 
                                                 <option value=""></option>
@@ -236,8 +222,7 @@ if ($codigo > 0){
                                                 while ($row = $statementArea->fetch()){ ?>
                                                     <option <?=($cod_area==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["abreviatura"];?> - <?=$row["nombre"];?></option>
                                                 <?php } ?>
-                                            </select>
-                                        </div>                    
+                                            </select>                                        
                                     </div>
                                 </div>
                             </div>   
@@ -257,7 +242,7 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Rubro</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                            		<select name="cod_depreciaciones" id="cod_depreciaciones" onchange="ajaxCodigoActivo(this);" required="true" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true">
+                            		<select name="cod_depreciaciones" id="cod_depreciaciones" required="true" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true">
                             			<option disabled selected value=""></option>
                                 		<?php while ($row = $statementDepre->fetch()){ ?>
                             				<option <?php if($cod_depreciaciones == $row["codigo"]) echo "selected"; ?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
@@ -375,11 +360,12 @@ if ($codigo > 0){
                                         <?php
                                         $stmtRR = $dbh->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
                                         from personal p, ubicaciones u, unidades_organizacionales uo 
-                                        where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional and uo.codigo=$cod_unidadorganizacional order by 2");
+                                        where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional order by 2");
                                         $stmtRR->execute();
                                         ?>
                                         <select id="cod_responsables_responsable" name="cod_responsables_responsable" class="selectpicker form-control form-control-sm" 
                                         data-style="btn btn-primary" data-size="5">
+                                        <option value=""></option>
                                             <?php while ($row = $stmtRR->fetch()){ ?>
                                                 <option <?=($cod_responsables_responsable==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>">
                                                     <?=$row["paterno"].' '.$row["materno"].' '.$row["primer_nombre"];?>
