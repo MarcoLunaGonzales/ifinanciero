@@ -48,7 +48,7 @@ foreach ($areas as $valor ) {
 $sqlActivos="SELECT a.codigo,a.codigoactivo,a.activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=a.cod_unidadorganizacional)as cod_unidadorganizacional,
 (select ar.abreviatura from areas ar where ar.codigo=a.cod_area) as cod_area,
 (select d.nombre from depreciaciones d where d.codigo=a.cod_depreciaciones) as cod_depreciaciones,
-(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=a.cod_responsables_responsable) as cod_responsables_responsable,(select CONCAT_WS('###',f.cod_estadoasignacionaf,f.fechaasignacion,f.fecha_recepcion) from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechas
+(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=a.cod_responsables_responsable) as cod_responsables_responsable,(select f.fechaasignacion from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select f2.fecha_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion,(select f3.cod_estadoasignacionaf from activofijos_asignaciones f3 where f3.cod_activosfijos=a.codigo and f3.cod_personal=a.cod_responsables_responsable order by f3.codigo limit 1) as estado_asignacionaf
 from activosfijos a
 where a.cod_estadoactivofijo = 1 and a.cod_unidadorganizacional in ($unidadOrgString) and a.cod_area in ($areaString) and a.cod_responsables_responsable in ($personalString)";  
 
@@ -65,7 +65,9 @@ $stmtActivos->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
 $stmtActivos->bindColumn('cod_area', $cod_area);
 $stmtActivos->bindColumn('cod_depreciaciones', $cod_depreciaciones);
 $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsable);
-$stmtActivos->bindColumn('fechas', $fechas_array);
+$stmtActivos->bindColumn('fechaasignacion', $fechaasignacion);
+$stmtActivos->bindColumn('fecha_recepcion', $fecha_recepcion);
+$stmtActivos->bindColumn('estado_asignacionaf', $estado_asignacionaf);
 
 
 ?>
@@ -113,21 +115,8 @@ $stmtActivos->bindColumn('fechas', $fechas_array);
                           $contador = 0;
                           while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
                             $contador++;   
-                            $array_fecha=explode('###', $fechas_array);
-                            $fecha_asig="";
-                            $fecha_rec="";
-                            $nombre_estado="";
-
-                            if(isset($array_fecha[2])){
-                                $estadoAsig=$array_fecha[0];
-                                $nombre_estado=nameTipoAsignacion($estadoAsig);
-                                // echo $fechas_array." ".$estadoAsig."<br>";
-                                $fecha_asig=$array_fecha[1];
-                                $fecha_rec_ar=$array_fecha[2];
-                                $fecha_rec_ar=explode(' ', $fecha_rec_ar);
-                                $fecha_rec=$fecha_rec_ar[0];
-                            }
-                            
+                            $nombre_estado=nameTipoAsignacion($estado_asignacionaf);
+                                                        
                         $html.='<tr>'.
                           '<td class="text-center small">'.$contador.'</td>'.
                           '<td class="text-center small">'.$codigoX.'</td>'.
@@ -138,8 +127,8 @@ $stmtActivos->bindColumn('fechas', $fechas_array);
                           '<td class="text-left small">'.$activoX.'</td>'.
                           '<td class="text-left small">'.$responsables_responsable.'</td>'.
                           '<td class="text-left small">'.$nombre_estado.'</td>'.
-                          '<td class="text-left small">'.$fecha_asig.'</td>'.
-                          '<td class="text-left small">'.$fecha_rec.'</td>'.
+                          '<td class="text-left small">'.$fechaasignacion.'</td>'.
+                          '<td class="text-left small">'.$fecha_recepcion.'</td>'.
                         '</tr>';
                          
                           } 
