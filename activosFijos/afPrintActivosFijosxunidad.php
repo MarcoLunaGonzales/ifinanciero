@@ -45,12 +45,12 @@ foreach ($areas as $valor ) {
 
 
 
-$sqlActivos="SELECT codigo,codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
-(select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
-(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
-(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable,(select CONCAT_WS('###',f.cod_estadoasignacionaf,f.fechaasignacion,f.fecha_recepcion) from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechas
+$sqlActivos="SELECT a.codigo,a.codigoactivo,a.activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=a.cod_unidadorganizacional)as cod_unidadorganizacional,
+(select ar.abreviatura from areas ar where ar.codigo=a.cod_area) as cod_area,
+(select d.nombre from depreciaciones d where d.codigo=a.cod_depreciaciones) as cod_depreciaciones,
+(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=a.cod_responsables_responsable) as cod_responsables_responsable,(select CONCAT_WS('###',f.cod_estadoasignacionaf,f.fechaasignacion,f.fecha_recepcion) from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechas
 from activosfijos a
-where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_responsables_responsable in ($personalString)";  
+where a.cod_estadoactivofijo = 1 and a.cod_unidadorganizacional in ($unidadOrgString) and a.cod_area in ($areaString) and a.cod_responsables_responsable in ($personalString)";  
 
 // echo $sqlActivos;
 
