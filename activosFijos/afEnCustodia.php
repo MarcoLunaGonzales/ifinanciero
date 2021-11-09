@@ -6,6 +6,7 @@ require_once 'styles.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
+$globalNameUserX=$_SESSION["globalNameUser"];
 
 //echo "usuario:  ".$globalUser;
 
@@ -48,7 +49,7 @@ $stmt->bindColumn('codigoactivo', $codigoActivoInterno);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Activos Fijos En Custodia</h4>
+                  <h4 class="card-title">Activos Fijos En Custodia - <span class="text-danger font-weight-bold"><?=$globalNameUserX;?></span></h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
