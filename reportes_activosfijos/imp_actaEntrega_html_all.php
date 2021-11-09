@@ -35,7 +35,8 @@ $identificacion = $result['identificacion'];
 //*******
 
 $sqlActivos="SELECT a.codigo,a.codigoactivo,a.otrodato,a.cod_tiposbienes,(select tb.tipo_bien from tiposbienes tb
- where tb.codigo=a.cod_tiposbienes)as tipo_bien,(select CONCAT_WS('###',f.fechaasignacion,f.fecha_recepcion)as fechas from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechas
+ where tb.codigo=a.cod_tiposbienes)as tipo_bien,
+ (select f.fechaasignacion from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select f2.fecha_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion
 from activosfijos a 
 where a.cod_responsables_responsable=$codigo_personal";  
 $stmtActivos = $dbh->prepare($sqlActivos);
@@ -45,7 +46,8 @@ $stmtActivos->bindColumn('codigoactivo', $codigoactivo);
 $stmtActivos->bindColumn('otrodato', $otrodato);
 $stmtActivos->bindColumn('cod_tiposbienes', $cod_tiposbienes);
 $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
-$stmtActivos->bindColumn('fechas', $fechas);
+$stmtActivos->bindColumn('fechaasignacion', $fechaasignacion);
+$stmtActivos->bindColumn('fecha_recepcion', $fecha_recepcion);
 
 
 
@@ -148,27 +150,14 @@ width: 100%;
                 </tr>
 
                 <?php 
-                while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
-
-                    $array_fecha=explode('###', $fechas);
-                    $fecha_asig="";
-                    $fecha_rec="";
-
-                    if(isset($array_fecha[1])){
-                        $fecha_asig=$array_fecha[0];
-                        $fecha_rec_ar=$array_fecha[1];
-                        $fecha_rec_ar=explode(' ', $fecha_rec_ar);
-                        $fecha_rec=$fecha_rec_ar[0];
-                    }
-
-                ?>
+                while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {?>
                 <tr>
                     <td class="text-left small"><?=$tipo_bien?></td>
                     <td class="text-center small"><?=$codigoSis?></td>
                     <td class="text-center small"><?=$codigoactivo?></td>
                     <td class="text-left small"><?=$otrodato?></td>
-                    <td class="text-left small"><?=$fecha_asig?></td>
-                    <td class="text-left small"><?=$fecha_rec?></td>
+                    <td class="text-left small"><?=$fechaasignacion?></td>
+                    <td class="text-left small"><?=$fecha_recepcion?></td>
                 </tr>
             <?php } ?>
             </table>
