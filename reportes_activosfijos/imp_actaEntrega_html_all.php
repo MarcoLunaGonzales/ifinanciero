@@ -35,7 +35,7 @@ $identificacion = $result['identificacion'];
 //*******
 
 $sqlActivos="SELECT a.codigo,a.codigoactivo,a.otrodato,a.cod_tiposbienes,(select tb.tipo_bien from tiposbienes tb
- where tb.codigo=a.cod_tiposbienes)as tipo_bien,(select CONCAT_WS('###',f.fechaasignacion,f.fecha_recepcion)as fechas from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable and order by f.codigo limit 1) as fechas
+ where tb.codigo=a.cod_tiposbienes)as tipo_bien,(select CONCAT_WS('###',f.fechaasignacion,f.fecha_recepcion)as fechas from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechas
 from activosfijos a 
 where a.cod_responsables_responsable=$codigo_personal";  
 $stmtActivos = $dbh->prepare($sqlActivos);
