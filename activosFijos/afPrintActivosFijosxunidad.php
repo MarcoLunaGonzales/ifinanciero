@@ -48,11 +48,11 @@ foreach ($areas as $valor ) {
 $sqlActivos="SELECT codigo,codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
 (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
 (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
-(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable,(select CONCAT_WS('###',f.cod_estadoasignacionaf,f.fechaasignacion,f.fecha_recepcion) from activofijos_asignaciones f where f.cod_activosfijos=codigo and f.cod_personal=cod_responsables_responsable and f.cod_estadoasignacionaf=2 order by f.codigo limit 1) as fechas
-from activosfijos 
+(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable,(select CONCAT_WS('###',f.cod_estadoasignacionaf,f.fechaasignacion,f.fecha_recepcion) from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechas
+from activosfijos a
 where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_responsables_responsable in ($personalString)";  
 
-//echo $sqlActivos;
+// echo $sqlActivos;
 
 $stmtActivos = $dbh->prepare($sqlActivos);
 $stmtActivos->execute();
@@ -113,16 +113,15 @@ $stmtActivos->bindColumn('fechas', $fechas_array);
                           $contador = 0;
                           while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {
                             $contador++;   
-
                             $array_fecha=explode('###', $fechas_array);
-                            
                             $fecha_asig="";
                             $fecha_rec="";
                             $nombre_estado="";
 
-                            if(isset($array_fecha[1])){
+                            if(isset($array_fecha[2])){
                                 $estadoAsig=$array_fecha[0];
                                 $nombre_estado=nameTipoAsignacion($estadoAsig);
+                                // echo $fechas_array." ".$estadoAsig."<br>";
                                 $fecha_asig=$array_fecha[1];
                                 $fecha_rec_ar=$array_fecha[2];
                                 $fecha_rec_ar=explode(' ', $fecha_rec_ar);
