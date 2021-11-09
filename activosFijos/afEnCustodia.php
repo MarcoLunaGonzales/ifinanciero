@@ -6,6 +6,7 @@ require_once 'styles.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
+$globalNameUserX=$_SESSION["globalNameUser"];
 
 //echo "usuario:  ".$globalUser;
 
@@ -15,7 +16,7 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$sql="SELECT afa.cod_activosfijos as cod_activo,(SELECT abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional) as cod_unidadorganizacional,(Select abreviatura from areas where codigo=afa.cod_area)as cod_area,af.activo,afa.fechaasignacion,afa.cod_estadoasignacionaf,(select nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf) as estado_asignacionaf,afa.cod_personal,afa.fecha_recepcion
+$sql="SELECT afa.cod_activosfijos as cod_activo,(SELECT abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional) as cod_unidadorganizacional,(Select abreviatura from areas where codigo=afa.cod_area)as cod_area,af.activo,afa.fechaasignacion,afa.cod_estadoasignacionaf,(select nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf) as estado_asignacionaf,afa.cod_personal,afa.fecha_recepcion, af.codigoactivo
 from activofijos_asignaciones afa, activosfijos af
 where  af.cod_estadoactivofijo=1 and afa.cod_activosfijos=af.codigo and afa.cod_personal=$globalUser";
 
@@ -33,6 +34,8 @@ $stmt->bindColumn('estado_asignacionaf', $estado_asignacionaf);
 $stmt->bindColumn('cod_estadoasignacionaf', $cod_estadoasignacionaf);
 $stmt->bindColumn('cod_personal', $cod_personal);
 $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
+$stmt->bindColumn('codigoactivo', $codigoActivoInterno);
+
 
 
 ?>
@@ -46,7 +49,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Activos Fijos En Custodia</h4>
+                  <h4 class="card-title">Activos Fijos En Custodia - <span class="text-danger font-weight-bold"><?=$globalNameUserX;?></span></h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -55,6 +58,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                         <tr>
                             <th></th>
                             <th>Nro.</th>
+                            <th>CodSis</th>
                             <th>Código</th>
                             <th>Oficina</th>
                             <th>Area</th>
@@ -96,6 +100,7 @@ $stmt->bindColumn('fecha_recepcion', $fecha_recepcion);
                                 </td>
                                 <td><?=$index?></td>
                                 <td><?=$cod_activo;?></td>
+                                <td><?=$codigoActivoInterno;?></td>
                                 <td><?=$cod_unidadorganizacional;?></td>
                                 <td><?=$cod_area;?></td>
                                 <td><?=$activo;?></td>

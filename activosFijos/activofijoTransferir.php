@@ -47,7 +47,8 @@ $responsable='';
                       <table class="table">
                           <thead>
                               <tr>
-                                <th>CodAF</th>
+                                <th>CodSis</th>
+                                <th>Codigo</th>
                                 <th>Nombre</th>
                                 <th>QR</th>
                                 <th>Imagen</th>
@@ -75,6 +76,7 @@ $responsable='';
                                 }?>
                              <tr>
                                 <td><?=$cod_activosfijos;?></td>
+                                <td><?=$codigo;?></td>
                                 <td><small><?=$nombreActivo;?></small></td>
                                 <td>
                                   <?php

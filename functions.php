@@ -5640,7 +5640,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function nameTipoAsignacion($valor){
      $dbh = new Conexion();
-     $nombreX=0;
+     $nombreX="";
      $sqlX="SELECT nombre FROM estados_asignacionaf where codigo='$valor'";
      $stmt = $dbh->prepare($sqlX);
      $stmt->execute();
