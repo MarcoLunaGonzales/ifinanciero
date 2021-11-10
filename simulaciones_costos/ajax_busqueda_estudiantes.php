@@ -158,8 +158,8 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                             $cont_total_pagados++;
                           }
                         }
-                        // echo $cont_total_ws."-".$cont_total_pagados;              
-                        if($cont_total_ws==$cont_total_pagados || $importe_curso==0){
+                        //echo "VERIFICACION....".$cont_total_ws."-".$cont_total_pagados;              
+                        if(($cont_total_ws==$cont_total_pagados || $importe_curso==0){
                           $estado="Pagado<br>total"; //pagado
                           $btnEstado="btn-success";
                           $style_s="style='color:  #239b56;'";
@@ -176,7 +176,8 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                       }
                       if($cont_total_ws==0 && $cont_total_pagados==0){
                         $sw_aux=false;
-                        $estado="No Encontrado";//faltan algunos
+                        //$estado="No Encontrado"." ws:".$cont_total_ws." pag:".$cont_total_pagados." impcurso:".$importe_curso;//faltan algunos
+                        $estado="No Encontrado";
                         $style_s="style='color: #ff0000;'";
                         // $btnEstado="btn-danger"; 
                       }
@@ -224,23 +225,26 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                                 <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><small>SF</small></button>
                                 <div class="dropdown-menu"><?php 
                                   //verificamos si ya tiene factura generada y esta activa
-                                  $sql="SELECT codigo,nro_correlativo from solicitudes_facturacion where tipo_solicitud=2 and ci_estudiante=$CiAlumno and cod_simulacion_servicio=$IdCurso
+                                  $sql="SELECT codigo,nro_correlativo,count(*)as contador from solicitudes_facturacion where tipo_solicitud=2 and ci_estudiante='$CiAlumno' and cod_simulacion_servicio='$IdCurso'
                                   UNION
-                                  SELECT fd.cod_solicitudfacturacion as codigo,f.nro_correlativo from solicitudes_facturacion f, solicitudes_facturaciondetalle fd where f.codigo=fd.cod_solicitudfacturacion and f.tipo_solicitud=7 and fd.ci_estudiante=$CiAlumno and fd.cod_curso=$IdCurso";
-                                  // echo $sql;
+                                  SELECT fd.cod_solicitudfacturacion as codigo,f.nro_correlativo, count(*)as contador from solicitudes_facturacion f, solicitudes_facturaciondetalle fd where f.codigo=fd.cod_solicitudfacturacion and f.tipo_solicitud=7 and fd.ci_estudiante='$CiAlumno' and fd.cod_curso='$IdCurso'";
+                                  //echo $sql;
                                   $stmtFact = $dbh->prepare($sql);
                                   $stmtFact->execute();
                                   $contador_SolFact=0;
+                                  $contadorSolQuery=0;
                                   while ($rowFact = $stmtFact->fetch(PDO::FETCH_ASSOC)){
+                                    //echo "entro";
                                     $contador_SolFact++;
                                     $cod_factura_x=$rowFact['codigo'];
                                     $nro_correlativo_x=$rowFact['nro_correlativo'];
+                                    $contadorSolQuery=$rowFact['contador'];
                                     if($cod_factura_x!=0){?>
                                       <a class="dropdown-item" type="button" href='<?=$urlPrintSolicitud;?>?codigo=<?=$cod_factura_x;?>' target="_blank"><i class="material-icons text-danger" title="Imprimir Factura">print</i> SF Nro: <?=$nro_correlativo_x?></a>
                                     <?php }
                                   }
-                                  if($contador_SolFact==0){?>
-                                    <span style="color: #ff0000;"><small>Solicitudes No Encontradas</small></span>                                  
+                                  if($contador_SolFact==0 || $contadorSolQuery==0){?>
+                                    <span style="color: #ff0000;"><small>Solicitudes No Encontradas</small></span>                                 
                                   <?php }
                                   ?>
                                 </div>
