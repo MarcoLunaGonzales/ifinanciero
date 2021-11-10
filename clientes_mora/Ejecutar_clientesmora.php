@@ -33,8 +33,8 @@ while ($row = $stmtUO->fetch()) {
         $diff = $date1->diff($date2);        
         $dias_mora=$diff->days;
         // echo  $dias_mora."*";
-        $sqlInsert="INSERT INTO clientes_mora(fecha,cod_plancuenta,cod_cuentaauxiliar,dias_mora,monto_mora,cod_estado)
-            values ('$fechaEC',$cod_plancuentaEC,'$cod_cuentaauxEC','$dias_mora','$montoEC','$cod_estado')";
+        $sqlInsert="INSERT INTO clientes_mora(fecha,cod_plancuenta,cod_cuentaauxiliar,dias_mora,monto_mora,cod_estado,cod_estadocuenta)
+            values ('$fechaEC',$cod_plancuentaEC,'$cod_cuentaauxEC','$dias_mora','$montoEC','$cod_estado','$codigoEC')";
         $stmt2 = $dbh->prepare($sqlInsert);
         $flagSuccess=$stmt2->execute();
     }
