@@ -12,7 +12,7 @@ $stmtX->execute();
 
 
 
-$sql="SELECT cm.codigo,cm.fecha,DATE_FORMAT(cm.fecha,'%d/%m/%Y')as fecha_x,cm.dias_mora,cm.monto_mora,ca.nombre from clientes_mora cm join cuentas_auxiliares ca on cm.cod_cuentaauxiliar=ca.codigo where cm.cod_estado=1 order by ca.nombre,cm.fecha";
+$sql="SELECT cm.codigo,cm.fecha,DATE_FORMAT(cm.fecha,'%d/%m/%Y')as fecha_x,cm.dias_mora,cm.monto_mora,ca.nombre,ca.glosa from clientes_mora cm join cuentas_auxiliares ca on cm.cod_cuentaauxiliar=ca.codigo where cm.cod_estado=1 order by ca.nombre,cm.fecha";
  // echo $sql;
 $stmt2 = $dbh->prepare($sql);
 $stmt2->execute();
@@ -23,6 +23,7 @@ $stmt2->bindColumn('fecha_x', $fecha_formateada);
 $stmt2->bindColumn('dias_mora', $dias_mora_x);
 $stmt2->bindColumn('monto_mora', $monto_mora_x);
 $stmt2->bindColumn('nombre', $nombre_x);
+$stmt2->bindColumn('glosa', $glosa_x);
 ?>
 
 <div class="content">
@@ -43,6 +44,7 @@ $stmt2->bindColumn('nombre', $nombre_x);
                             <tr>
                                 <th width="5%"><small>-</small></th>
                                 <th ><small>Cliente</small></th>
+                                <th ><small>Glosa</small></th>
                                 <th ><small>Fecha</small></th>
                                 <th ><small>Días</small></th>
                                 <th ><small>Monto</small></th>                                
@@ -79,6 +81,7 @@ $stmt2->bindColumn('nombre', $nombre_x);
                                           <i class="material-icons" title="Desactivar Clientes Mora" style="color:black">notifications_off</i>
                                         </a></td>
                                         <td class="text-left small"><?=$nombre_x;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><a href="#" class="et-cart-info-<?=$index?>" style="color:#3498db;font-size: 14px;"><span></span></a></b></td>
+                                        <td class="text-center small"><?=$glosa_x;?></td>
                                         <td class="text-center small"><?=$fecha_formateada;?></td>
                                         <td class="text-right small"><?=$dias_mora_x; ?></td>
                                         <td class="text-right small"><?=formatNumberDec($monto_mora_x); ?></td>

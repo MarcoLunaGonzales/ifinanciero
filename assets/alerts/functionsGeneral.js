@@ -19956,7 +19956,7 @@ contenedor = document.getElementById('divCodigoAF_validador');
 function silenciarClientesMora(codigo,index){
   Swal.fire({
     title: '¿Estás Segur@?',
-    text: "Se silenciará a éste cliente y no se visualizará más adelante!",
+    text: "Se silenciará éste Estado de Cuenta y no se visualizará posteriormente!",
      type: 'warning',
     showCancelButton: true,
     confirmButtonClass: 'btn btn-warning',
