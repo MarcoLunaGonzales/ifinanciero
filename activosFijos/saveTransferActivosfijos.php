@@ -61,17 +61,16 @@ try {
         $stmt->bindParam(':estadobien_asig', $estadobien_asig);
         $stmt->bindParam(':cod_estadoasignacionaf', $cod_estadoasignacionaf);
         //$stmt->bindParam(':created_at', $fechaasignacion);
-
-
         $flagSuccess=$stmt->execute();
-        ///////////////////////////////////////////////////////////////////////////////////////////////
 
-        
-        //$stmt3->debugDumpParams();
 
-        //$arr = $stmt->errorInfo();
-        //print_r($arr);
-        //$tabla_id = $dbh->lastInsertId();;
+
+        $stmtSA = $dbh->prepare("UPDATE activosfijos set cod_responsables_responsable=:cod_responsable where codigo=:codigo_activo");
+        $stmtSA->bindParam(':cod_responsable', $cod_responsable);
+        $stmtSA->bindParam(':codigo_activo', $codigoactivo);
+        $flagSuccess2=$stmtSA->execute();
+
+
         
         showAlertSuccessError($flagSuccess,$urlList6);
 

@@ -34,20 +34,21 @@ $identificacion = $result['identificacion'];
 
 //*******
 
-$sqlActivos="SELECT a.codigo,a.codigoactivo,a.otrodato,a.cod_tiposbienes,(select tb.tipo_bien from tiposbienes tb
- where tb.codigo=a.cod_tiposbienes)as tipo_bien,
- (select f.fechaasignacion from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select f2.fecha_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion
+$sqlActivos="SELECT a.codigo,a.codigoactivo,a.activo,a.cod_tiposbienes,(select de.abreviatura from depreciaciones de
+ where de.codigo=a.cod_depreciaciones)as tipo_bien,
+ (select f.fechaasignacion from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select f2.fecha_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion, (select f2.observaciones_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as observaciones_recepcion
 from activosfijos a 
 where a.cod_responsables_responsable=$codigo_personal";  
 $stmtActivos = $dbh->prepare($sqlActivos);
 $stmtActivos->execute();
 $stmtActivos->bindColumn('codigo', $codigoSis);
 $stmtActivos->bindColumn('codigoactivo', $codigoactivo);
-$stmtActivos->bindColumn('otrodato', $otrodato);
+$stmtActivos->bindColumn('activo', $otrodato);
 $stmtActivos->bindColumn('cod_tiposbienes', $cod_tiposbienes);
 $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
 $stmtActivos->bindColumn('fechaasignacion', $fechaasignacion);
 $stmtActivos->bindColumn('fecha_recepcion', $fecha_recepcion);
+$stmtActivos->bindColumn('observaciones_recepcion', $observaciones_recepcion);
 
 
 
@@ -63,7 +64,7 @@ $anio=date('Y');
 ?>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style type="text/css">
-        body{font-family:"DejaVu Sans", "Times New Roman", Times, serif;font-size: 9px;}
+        body{font-family:"DejaVu Sans", "Times New Roman", Times, serif;font-size: 7px;}
 @page { margin-top: 50px; margin-left: 40px; margin-right: 40px; margin-bottom: 50px;}
 
 .table{
@@ -87,7 +88,10 @@ width: 100%;
     border-top: 1px solid black;
     border-left: 0px;
 }
-.table tr td{
+.table tr td {
+    border: 1px solid black;
+}
+.table tr th {
     border: 1px solid black;
 }
 .td-border-none{
@@ -97,7 +101,7 @@ width: 100%;
   background:#BFFBF1;
 }
 .table .table-title{
- font-size: 12px;
+ font-size: 8px;
 }
 </style>
    </head><body>
@@ -141,23 +145,23 @@ width: 100%;
         <tr><td>
             <table class="table" >
                 <tr>
-                    <td class="font-weight-bold text-center">TIPO DE BIEN</td>
-                    <td class="font-weight-bold text-center">CODSIS</td>
-                    <td class="font-weight-bold text-center">CODIGO</td>
-                    <td class="font-weight-bold text-center">DESCRIPCIÓN</td>
-                    <td class="font-weight-bold text-center">F.ASIGNACIÓN</td>
-                    <td class="font-weight-bold text-center">F.RECEPCIÓN</td>
+                    <th class="text-center" width="10%"><small><small>RUBRO</small></small></th>
+                    <th class="text-center" width="10%"><small><small>CODSIS</small></small></th>
+                    <th class="text-center" width="10%"><small><small>CODIGO</small></small></th>
+                    <th class="text-center" width="30%"><small><small>DESCRIPCIÓN</small></small></th>
+                    <th class="text-center" width="15%"><small><small>F.ASIGNACIÓN<br>F.RECEPCIÓN</small></small></th>
+                    <th class="text-center" width="25%"><small><small>OBS.</small></small></th>
                 </tr>
 
                 <?php 
                 while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {?>
                 <tr>
-                    <td class="text-left small"><?=$tipo_bien?></td>
-                    <td class="text-center small"><?=$codigoSis?></td>
-                    <td class="text-center small"><?=$codigoactivo?></td>
-                    <td class="text-left small"><?=$otrodato?></td>
-                    <td class="text-left small"><?=$fechaasignacion?></td>
-                    <td class="text-left small"><?=$fecha_recepcion?></td>
+                    <td class="text-left small"><small><small><?=$tipo_bien?></small></small></td>
+                    <td class="text-center small"><small><small><?=$codigoSis?></small></small></td>
+                    <td class="text-center small"><small><small><?=$codigoactivo?></small></small></td>
+                    <td class="text-left small"><small><small><?=$otrodato?></small></small></td>
+                    <td class="text-left small"><small><small><?=$fechaasignacion?><br><?=$fecha_recepcion?></small></small></td>
+                    <td class="text-left small"><small><small><small><?=$observaciones_recepcion?></small></small></small></td>
                 </tr>
             <?php } ?>
             </table>
@@ -170,11 +174,11 @@ width: 100%;
         <tr>
             <td>
             
-                <table class="table" width="70% !important" align="center" ><tr><td>&nbsp;<br>&nbsp;<br>Firma:</td><td></td><td></td></tr>
+                <!--table class="table" width="70% !important" align="center" ><tr><td>&nbsp;<br>&nbsp;<br>Firma:</td><td></td><td></td></tr>
                     <tr><td></td><td class="text-center">ENTREGUE CONFORME</td><td class="text-center">RECIBI CONFORME</td></tr>
                     <tr><td>Nombre</td><td></td><td></td></tr>
                     <tr><td>Cargo:</td><td></td><td></td></tr>
-                </table>
+                </table-->
             
             </td>
         </tr>
@@ -185,7 +189,7 @@ width: 100%;
 <?php 
 $html = ob_get_clean();
  // echo $html;
-descargarPDF("IBNORCA - ACTA DE ENTREGA BIENES DE USO",$html);
+descargarPDF("IBNORCA - ACTA DE ENTREGA ACTIVOS",$html);
 
 ?>
 

@@ -149,16 +149,17 @@ $stmt->bindColumn('codigoactivo', $codigoActivoInterno);
 
 <!-- Modal Aeptar-->
 <div class="modal fade" id="modalAceptar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">¿Estás Seguro?</h4>
+        <h4 class="modal-title" id="myModalLabel">Esta acción recepcionará el Activo Fijo. ¿Desea Continuar?</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
         <input type="hidden" name="codigo_af_aceptar2" id="codigo_af_aceptar2" value="0">
-        Esta acción recepcionará el Activo Fijo. ¿Deseas Continuar?
+        <h6> Observacion de Recepcion : </h6><br>
+        <textarea name="observacion" id="observacion" class="form-control input-sm" rows="2"></textarea>
       </div>       
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="RecepcionarAF" data-dismiss="modal">Aceptar</button>
@@ -169,7 +170,7 @@ $stmt->bindColumn('codigoactivo', $codigoActivoInterno);
 </div>
 <!-- Modal rechazaR-->
 <div class="modal fade" id="modalRechazar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -178,8 +179,8 @@ $stmt->bindColumn('codigoactivo', $codigoActivoInterno);
       <div class="modal-body">
         <input type="hidden" name="codigo_af_aceptar1" id="codigo_af_aceptar1" value="0">
         <input type="hidden" name="codigo_af_aceptar2" id="codigo_af_aceptar2" value="0">
-        <h6> Observaciones : </h6><br>
-        <input type="text" name="observacion" id="observacion" class="form-control input-sm">
+        <h6> Observacion de Rechazo : </h6><br>
+        <textarea name="observacion" id="observacion" class="form-control input-sm" rows="2"></textarea>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="RechazarAF"  data-dismiss="modal">Aceptar</button>
@@ -265,8 +266,8 @@ $stmt->bindColumn('codigoactivo', $codigoActivoInterno);
       //cod_af='<?php echo $cod_activo;?>';
       cod_af=document.getElementById("codigo_af_aceptar1").value;
       cod_personal=document.getElementById("codigo_af_aceptar2").value;
-
-      RecepcionarAF(cod_personal,cod_af);
+      observacion=$('#observacion').val();
+      RecepcionarAF(cod_personal,cod_af,observacion);
     });
 
     $('#DevolverAF').click(function(){
