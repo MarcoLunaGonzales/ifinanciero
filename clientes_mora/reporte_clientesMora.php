@@ -94,7 +94,7 @@ $stmt2->bindColumn('glosa', $glosa_x);
                         <tfoot>
                             <tr class="bg-dark text-white">
                                 <th ></th>
-                                <th colspan="3">Total :</th>
+                                <th colspan="4">Total :</th>
                                 <td class="text-right small"><?=formatNumberDec($total_mora); ?></td>
                             </tr>
                         </tfoot>
