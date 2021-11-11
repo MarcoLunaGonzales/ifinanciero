@@ -6,10 +6,9 @@ function generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$St
     $dbh = new Conexion();
 
     $saldo_X=0;
-    $fecha_actual=date('Y-m-d');
     $sql="SELECT e.codigo,e.fecha,e.monto
         FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) and e.cod_cuentaaux in ($cod_cuentaauxX) and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) order by e.fecha"; //ca.nombre, 
-    //echo $sql."***<br>";
+    // echo $sql."***<br>";
     $stmtUO = $dbh->prepare($sql);
     $stmtUO->execute();
     while ($row = $stmtUO->fetch()) {
@@ -17,7 +16,7 @@ function generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$St
         $fechaDet=$row['fecha'];
         $monto_ecX=$row['monto'];
         //PAGADO
-        $sql="SELECT sum(e.monto) as monto
+        $sql="SELECT e.monto
         FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and cc.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen=$codigo_ec";
         // echo $sql."***<br>";
         $stmt_d = $dbh->prepare($sql);
@@ -27,36 +26,18 @@ function generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$St
             $monto_ecD=$row_d['monto'];
         }
         $saldo_X=$monto_ecX-$monto_ecD;
-        
+        $periodo=0;
         $fechai=$desde;
         $i=0;
-        $date1 = new DateTime($fechaDet);
-        $date2 = new DateTime($fecha_actual);
-        $diff = $date1->diff($date2);        
-        $dias_mora=$diff->days;
-        // echo $dias_mora."-";
-        $periodo=0;
-        $periodo1=0;
         foreach ($array_periodo as $periodo) {
-            // echo $periodo1."<".$dias_mora." ".$dias_mora."<=".$periodo."<br>";
-            if($periodo1<$dias_mora and $dias_mora<=$periodo){
-                // echo "si<br>";
+            $fechaf=date('Y-m-d',strtotime($fechai.'+'.$periodo.' day'));
+            if($fechai<=$fechaDet and $fechaDet<=$fechaf){
                 $monto_periodo[$i]+=$saldo_X;
             }
-            $periodo1=$periodo;
-
-            // $fecha_limite=date('Y-m-d',strtotime($fechaDet.'+'.$periodo.' day'));
-            // if($fecha_limite<=$fecha_actual){
-            //     $monto_periodo[$i]+=$saldo_X;
-            // }
-            //$fechaf=date('Y-m-d',strtotime($fechai.'+'.$periodo.' day'));
-            // if($fechai<=$fechaDet and $fechaDet<$fechaf){
-            //     $monto_periodo[$i]+=$saldo_X;
-            // }
             $i++;
-            //$fechai=$fechaf;
+            $fechai=$fechaf;        
         }
-        if($dias_mora>$periodo){//si es mayor a 90 dias
+        if($fechaDet>$fechaf){//si es mayor a 90 dias
             $monto_periodo[$i]+=$saldo_X;
         }
     }
