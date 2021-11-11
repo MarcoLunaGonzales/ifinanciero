@@ -148,7 +148,6 @@ width: 100%;
                     <td class="font-weight-bold text-center">F.ASIGNACIÓN</td>
                     <td class="font-weight-bold text-center">F.RECEPCIÓN</td>
                 </tr>
-
                 <?php 
                 while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {?>
                 <tr>
