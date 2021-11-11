@@ -41,7 +41,7 @@ $stmt2->bindColumn('nombre', $nombre_x);
                     <table class="table table-bordered table-condensed table-striped" id="tablePaginatorFixed">
                         <thead>
                             <tr>
-                                <th ><small>-</small></th>
+                                <th width="5%"><small>-</small></th>
                                 <th ><small>Cliente</small></th>
                                 <th ><small>Fecha</small></th>
                                 <th ><small>Días</small></th>
@@ -75,8 +75,10 @@ $stmt2->bindColumn('nombre', $nombre_x);
 
                                     ?>
                                     <tr <?=$fondo_tr?>>
-                                        <td class="text-center small"><?=$index;?></td>
-                                        <td class="text-left small"><?=$nombre_x;?></td>
+                                        <td class="text-center small"><?=$index;?>&nbsp;&nbsp;<a href='#' onclick="silenciarClientesMora('<?=$codigo_x?>','<?=$index?>');return false;" class="btn btn-danger" style="padding-top:4px;padding-left:0;padding-right:0;font-size:10px;width:23px;height:23px;">
+                                          <i class="material-icons" title="Desactivar Clientes Mora" style="color:black">notifications_off</i>
+                                        </a></td>
+                                        <td class="text-left small"><?=$nombre_x;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><a href="#" class="et-cart-info-<?=$index?>" style="color:#3498db;font-size: 14px;"><span></span></a></b></td>
                                         <td class="text-center small"><?=$fecha_formateada;?></td>
                                         <td class="text-right small"><?=$dias_mora_x; ?></td>
                                         <td class="text-right small"><?=formatNumberDec($monto_mora_x); ?></td>
@@ -88,9 +90,7 @@ $stmt2->bindColumn('nombre', $nombre_x);
                         </tbody>
                         <tfoot>
                             <tr class="bg-dark text-white">
-                                <th ><a href='reporte_clientesMora_update.php?codigo=0' class="btn btn-warning" style="padding-top:4px;padding-left:0;padding-right:0;font-size:10px;width:23px;height:23px;">
-                                  <i class="material-icons" title="Desactivar Clientes Mora" style="color:black">notifications_off</i>
-                                </a></th>
+                                <th ></th>
                                 <th colspan="3">Total :</th>
                                 <td class="text-right small"><?=formatNumberDec($total_mora); ?></td>
                             </tr>

@@ -11554,6 +11554,16 @@ function obtenerNombreInstanciaCajaChica($codCaja){
    }
    return $valor; 
  }
-
+  function verificarEstadoClienteMora($codigoEC){
+    $dbh = new Conexion();
+    $sql="SELECT codigo from clientes_mora where  cod_estado=3 and cod_estadocuenta='$codigoEC'";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $valor=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $valor=$row['codigo'];
+    }
+    return $valor;   
+  }
  
 ?>

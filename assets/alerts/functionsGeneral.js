@@ -19953,3 +19953,36 @@ contenedor = document.getElementById('divCodigoAF_validador');
 
 }
 
+function silenciarClientesMora(codigo,index){
+  Swal.fire({
+    title: '¿Estás Segur@?',
+    text: "Se silenciará a éste cliente y no se visualizará más adelante!",
+     type: 'warning',
+    showCancelButton: true,
+    confirmButtonClass: 'btn btn-warning',
+    cancelButtonClass: 'btn btn-danger',
+    confirmButtonText: 'SI',
+    cancelButtonText: 'NO',
+    buttonsStyling: false
+   }).then((result) => {
+      if (result.value) {
+        
+        $.ajax({
+            type:"POST",
+            data:"codigo="+codigo,
+            url:"reporte_clientesMora_update.php",
+            success:function(r){
+              if(r==1){
+                document.getElementsByClassName('et-cart-info-'+index)[0].firstElementChild.innerHTML = 'Silenciado';
+                Swal.fire("CORRECTO!", "Se procesó correctamente. =)", "success");
+              }else{
+                Swal.fire("ERROR!", "Hubo un error al silenciar al cliente. =(", "warning");
+              }
+            }
+          });
+        return(true);
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        return(false);
+      }
+    });
+}
