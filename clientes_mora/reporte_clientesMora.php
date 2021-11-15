@@ -12,7 +12,7 @@ $stmtX->execute();
 
 
 
-$sql="SELECT cm.codigo,cm.fecha,DATE_FORMAT(cm.fecha,'%d/%m/%Y')as fecha_x,cm.dias_mora,cm.monto_mora,ca.nombre,ca.glosa from clientes_mora cm join cuentas_auxiliares ca on cm.cod_cuentaauxiliar=ca.codigo where cm.cod_estado=1 order by ca.nombre,cm.fecha";
+$sql="SELECT cm.codigo,cm.fecha,DATE_FORMAT(cm.fecha,'%d/%m/%Y')as fecha_x,cm.dias_mora,cm.monto_mora,ca.nombre,cm.glosa from clientes_mora cm join cuentas_auxiliares ca on cm.cod_cuentaauxiliar=ca.codigo where cm.cod_estado=1 order by ca.nombre,cm.fecha";
  // echo $sql;
 $stmt2 = $dbh->prepare($sql);
 $stmt2->execute();
@@ -34,8 +34,16 @@ $stmt2->bindColumn('glosa', $glosa_x);
                 <div class="card-header <?=$colorCard;?> card-header-icon">
                     <h4 class="card-title"> 
                         <img  class="card-img-top"  src="../marca.png" style="width:100%; max-width:150px;">
-                        <b>Clientes Mora</b>
-                    </h4>                    
+                        <b>Clientes en Mora</b>
+                    </h4>
+                <!--table class="table table-bordered table-condensed table-striped" id="tablePaginatorFixed">
+                    <tr>
+                        <td><small>Mora >30</small></td>
+                        <td><small>Mora >60</small></td>
+                        <td><small>Mora >90</small></td>
+                    </tr>   
+                </table-->
+                    
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -44,10 +52,11 @@ $stmt2->bindColumn('glosa', $glosa_x);
                             <tr>
                                 <th width="5%"><small>-</small></th>
                                 <th ><small>Cliente</small></th>
-                                <th ><small>Glosa</small></th>
+                                <th ><small>Detalle</small></th>
                                 <th ><small>Fecha</small></th>
                                 <th ><small>Días</small></th>
                                 <th ><small>Monto</small></th>                                
+                                <th ><small>&nbsp;</small></th>                                
                             </tr>   
                         </thead>
                         <tbody>
@@ -77,14 +86,15 @@ $stmt2->bindColumn('glosa', $glosa_x);
 
                                     ?>
                                     <tr <?=$fondo_tr?>>
-                                        <td class="text-center small"><?=$index;?>&nbsp;&nbsp;<a href='#' onclick="silenciarClientesMora('<?=$codigo_x?>','<?=$index?>');return false;" class="btn btn-danger" style="padding-top:4px;padding-left:0;padding-right:0;font-size:10px;width:23px;height:23px;">
-                                          <i class="material-icons" title="Desactivar Clientes Mora" style="color:black">notifications_off</i>
-                                        </a></td>
+                                        <td class="text-center small"><?=$index;?>&nbsp;&nbsp;</td>
                                         <td class="text-left small"><?=$nombre_x;?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><a href="#" class="et-cart-info-<?=$index?>" style="color:#3498db;font-size: 14px;"><span></span></a></b></td>
-                                        <td class="text-center small"><?=$glosa_x;?></td>
+                                        <td class="text-left small"><?=$glosa_x;?></td>
                                         <td class="text-center small"><?=$fecha_formateada;?></td>
                                         <td class="text-right small"><?=$dias_mora_x; ?></td>
                                         <td class="text-right small"><?=formatNumberDec($monto_mora_x); ?></td>
+                                        <td class="text-center"><a href='#' onclick="silenciarClientesMora('<?=$codigo_x?>','<?=$index?>');return false;" class="btn btn-danger" style="padding-top:4px;padding-left:0;padding-right:0;font-size:10px;width:23px;height:23px;">
+                                          <i class="material-icons" title="Silenciar Estado Cuenta" style="color:black">notifications_off</i>
+                                        </a></td>
                                     </tr>
                                     <?php 
                                 }?>
@@ -93,9 +103,8 @@ $stmt2->bindColumn('glosa', $glosa_x);
                         </tbody>
                         <tfoot>
                             <tr class="bg-dark text-white">
-                                <th ></th>
-                                <th colspan="4">Total :</th>
                                 <td class="text-right small"><?=formatNumberDec($total_mora); ?></td>
+                                <td colspan="3">Total :</td>
                             </tr>
                         </tfoot>
                     </table>

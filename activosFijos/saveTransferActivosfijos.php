@@ -43,8 +43,6 @@ try {
 
         //necesito guardar en una segunda tabla: activofijos_asignaciones
 
-        //$stmt->debugDumpParams();
-
         //Bind
         //$stmt->bindParam(':codigo', $codigo);
         $stmt->bindParam(':codigoactivo', $codigoactivo);
@@ -56,7 +54,16 @@ try {
         $stmt->bindParam(':cod_personal_anterior', $cod_personal_anterior);
         $stmt->bindParam(':estadobien_asig', $estadobien_asig);
         $stmt->bindParam(':cod_estadoasignacionaf', $cod_estadoasignacionaf);
-        $flagSuccess=$stmt->execute();        
+
+        //$stmt->bindParam(':created_at', $fechaasignacion);
+        $flagSuccess=$stmt->execute();
+
+
+
+        $stmtSA = $dbh->prepare("UPDATE activosfijos set cod_responsables_responsable=:cod_responsable where codigo=:codigo_activo");
+        $stmtSA->bindParam(':cod_responsable', $cod_responsable);
+        $stmtSA->bindParam(':codigo_activo', $codigoactivo);
+        $flagSuccess2=$stmtSA->execute();
         
         showAlertSuccessError($flagSuccess,$urlList6);
 

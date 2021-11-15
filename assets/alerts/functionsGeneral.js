@@ -2966,7 +2966,7 @@ function rechazarRecepcion(cod_personal,cod_af,observacion){
 function RecepcionarAF(cod_personal,cod_af){
   $.ajax({
     type:"POST",
-    data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=2&observacion=''",
+    data:"cod_personal="+cod_personal+"&cod_af="+cod_af+"&cod_estadoasignacionaf=2&observacion="+observacion,
     url:"activosFijos/saveAsignacion.php",
     success:function(r){
       if(r==1){
