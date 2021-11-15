@@ -28,9 +28,10 @@ $personal = $result['personal'];
 $cargo = $result['cargo'];
 $identificacion = $result['identificacion'];
 
+
 $sqlActivos="SELECT a.codigo,a.codigoactivo,a.otrodato,a.cod_tiposbienes,(select tb.tipo_bien from tiposbienes tb
  where tb.codigo=a.cod_tiposbienes)as tipo_bien,
- (select DATE_FORMAT(f.fechaasignacion,'%d/%m/%Y') from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select DATE_FORMAT(f2.fecha_recepcion,'%d/%m/%Y') from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion
+ (select DATE_FORMAT(f.fechaasignacion,'%d/%m/%Y') from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select DATE_FORMAT(f2.fecha_recepcion,'%d/%m/%Y') from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion,(select f2.observaciones_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as observaciones_recepcion
 from activosfijos a 
 where a.cod_responsables_responsable=$codigo_personal";  
 $stmtActivos = $dbh->prepare($sqlActivos);
@@ -42,6 +43,7 @@ $stmtActivos->bindColumn('cod_tiposbienes', $cod_tiposbienes);
 $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
 $stmtActivos->bindColumn('fechaasignacion', $fechaasignacion);
 $stmtActivos->bindColumn('fecha_recepcion', $fecha_recepcion);
+$stmtActivos->bindColumn('observaciones_recepcion', $observaciones_recepcion);
 
 
 $dia=date('d');
@@ -67,7 +69,11 @@ $stmtTransfer->bindColumn('personal', $personal_t);
 ?>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style type="text/css">
+
         body{font-family:arial, serif;font-size: 12px;}
+
+
+
 @page { margin-top: 50px; margin-left: 40px; margin-right: 40px; margin-bottom: 50px;}
 
 .table{
@@ -91,7 +97,10 @@ width: 100%;
     border-top: 1px solid black;
     border-left: 0px;
 }
-.table tr td{
+.table tr td {
+    border: 1px solid black;
+}
+.table tr th {
     border: 1px solid black;
 }
 .td-border-none{
@@ -101,7 +110,7 @@ width: 100%;
   background:#BFFBF1;
 }
 .table .table-title{
- font-size: 12px;
+ font-size: 8px;
 }
 </style>
    </head><body>
@@ -145,22 +154,31 @@ width: 100%;
         <tr><td>
             <table class="table" >
                 <tr>
-                    <td><center><b>TIPO DE BIEN</b></center></td>
+
+                    <!-- <td><center><b>TIPO DE BIEN</b></center></td>
                     <td><center><b>CODSIS</b></center></td>
                     <td><center><b>CODIGO</b></center></td>
                     <td><center><b>DESCRIPCIÓN</b></center></td>
-                    <!-- <td><center><b>F.ASIGNACIÓN</b></center></td> -->
-                    <td><center><b>F.RECEPCIÓN</b></center></td>
+                    <td><center><b>F.ASIGNACIÓN</b></center></td>
+                    <td><center><b>F.RECEPCIÓN</b></center></td> -->
+
+                    <th class="text-center" width="10%"><small><small>RUBRO</small></small></th>
+                    <th class="text-center" width="10%"><small><small>CODSIS</small></small></th>
+                    <th class="text-center" width="10%"><small><small>CODIGO</small></small></th>
+                    <th class="text-center" width="30%"><small><small>DESCRIPCIÓN</small></small></th>
+                    <th class="text-center" width="15%"><small><small>F.ASIGNACIÓN<br>F.RECEPCIÓN</small></small></th>
+                    <th class="text-center" width="25%"><small><small>OBS.</small></small></th>
+
                 </tr>
                 <?php 
                 while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)){ ?>
                 <tr>
-                    <td><?=$tipo_bien?></td>
-                    <td align="right"><?=$codigoSis?></td>
-                    <td align="right"><?=$codigoactivo?></td>
-                    <td><?=$otrodato?></td>
-                    <!-- <td class="text-left small"><?=$fechaasignacion?></td> -->
-                    <td class="text-center small" align="center"><?=$fecha_recepcion?></td>
+                    <td class="text-left small"><small><small><?=$tipo_bien?></small></small></td>
+                    <td align="center"><small><small><?=$codigoSis?></small></small></td>
+                    <td align="center"><small><small><?=$codigoactivo?></small></small></td>
+                    <td class="text-left small"><small><small><?=$otrodato?></small></small></td>
+                    <td class="text-left small"><small><small><?=$fechaasignacion?><br><?=$fecha_recepcion?></small></small></td>
+                    <td class="text-left small"><small><small><small><?=$observaciones_recepcion?></small></small></small></td>
                 </tr>
             <?php } ?>
             </table>
@@ -217,11 +235,11 @@ width: 100%;
         <tr>
             <td>
             
-                <table class="table" width="70% !important" align="center" ><tr><td>&nbsp;<br>&nbsp;<br>Firma:</td><td></td><td></td></tr>
+                <!-- <table class="table" width="70% !important" align="center" ><tr><td>&nbsp;<br>&nbsp;<br>Firma:</td><td></td><td></td></tr>
                     <tr><td></td><td class="text-center">ENTREGUE CONFORME</td><td class="text-center">RECIBI CONFORME</td></tr>
                     <tr><td>Nombre</td><td></td><td></td></tr>
                     <tr><td>Cargo:</td><td></td><td></td></tr>
-                </table>
+                </table> -->
             
             </td>
         </tr>
@@ -231,8 +249,12 @@ width: 100%;
 
 <?php 
 $html = ob_get_clean();
+
 //  echo $html;
-descargarPDF("IBNORCA - ACTA DE ENTREGA BIENES DE USO",$html);
+
+ // echo $html;
+descargarPDF("IBNORCA - ACTA DE ENTREGA ACTIVOS",$html);
+
 
 ?>
 
