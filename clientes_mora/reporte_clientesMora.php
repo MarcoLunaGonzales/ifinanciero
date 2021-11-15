@@ -103,11 +103,8 @@ $stmt2->bindColumn('glosa', $glosa_x);
                         </tbody>
                         <tfoot>
                             <tr class="bg-dark text-white">
-                                <td ></td>
-                                <td colspan="3">Total :</td>
                                 <td class="text-right small"><?=formatNumberDec($total_mora); ?></td>
                                 <td colspan="3">Total :</td>
-
                             </tr>
                         </tfoot>
                     </table>
