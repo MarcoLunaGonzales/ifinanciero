@@ -19986,3 +19986,35 @@ function silenciarClientesMora(codigo,index){
       }
     });
 }
+
+function cargarCuentasxCobrarPeriodo(){
+  var cuentas_auxiliares = $("#cuentas_auxilaires").val();
+  var unidad_costo = $("#unidad_costo").val();
+  var area_costo = $("#area_costo").val();
+  
+  if(cuentas_auxiliares!="" || unidad_costo !="" || area_costo !=""){
+    
+    var url ="obligaciones_pago/ajaxListPagosLote.php";
+
+    var parametros={"proveedor":prov,"cuentas":cuentas};
+    $.ajax({
+      type: "GET",
+      dataType: 'html',
+      url: url,
+      data: parametros,
+      beforeSend: function () {
+      $("#texto_ajax_titulo").html("Listando Pagos  de proveedores..."); 
+        iniciarCargaAjax();
+      },        
+      success:  function (resp) {
+        detectarCargaAjax();
+         $("#texto_ajax_titulo").html("Procesando Datos");
+         //$("#data_pagosproveedores").append(resp);
+         $("#tabla_proveedor").append(resp);
+         $('.selectpicker').selectpicker("refresh");
+      }
+    });
+  }else{
+    Swal.fire("Informativo!", "Debe seleccionar un proveedor.", "warning");
+  }
+}

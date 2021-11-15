@@ -64,6 +64,76 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                       </div>
                     </div>
                     <div class="card-body">
+                        <div class="row">
+                          <label class="col-sm-1 col-form-label">Cuentas</label>
+                          <div class="col-sm-2">
+                            <div class="form-group">
+                              <select class="selectpicker form-control form-control-sm"  name="cuentas_auxiliares[]" id="cuentas_auxiliares" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-live-search="true">
+                                <?php                   
+                                  $sql="SELECT distinct(ca.codigo)as codigo, ca.nombre from estados_cuenta ec, cuentas_auxiliares ca  where ca.codigo=ec.cod_cuentaaux and ca.cod_cuenta in ($cuenta) order by ca.nombre";
+                                   $stmt3 = $dbh->prepare($sql);
+                                   $stmt3->execute();
+                                 while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoSel=$rowSel['codigo'];
+                                  $nombreSelX=$rowSel['nombre'];
+                                  ?><option value="<?=$codigoSel;?>"> <?=$nombreSelX?></option><?php 
+                                 }
+                                ?>
+                              </select>
+                            </div>
+                          </div>
+                   
+                    <div class="col-sm-4">
+                        <div class="row">
+                        <label class="col-sm-4 col-form-label">Centro de Costos - Oficina</label>
+                        <div class="col-sm-8">
+                        <div class="form-group">
+                              <?php
+                          $sqlUO="SELECT uo.codigo, uo.nombre,uo.abreviatura from unidades_organizacionales uo order by 2";
+                          $stmt = $dbh->prepare($sqlUO);
+                          $stmt->execute();
+                          ?>
+                            <select class="selectpicker form-control form-control-sm" name="unidad_costo[]" id="unidad_costo" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true"><?php 
+                                while ($row = $stmt->fetch()){  ?>
+                                <option value="<?=$row["codigo"];?>"  data-subtext="<?=$row["nombre"];?>" ><?=$row["abreviatura"];?></option><?php 
+                                }  ?>
+                            </select>
+                        </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="row">
+                       <label class="col-sm-4 col-form-label">Centro de Costos - Area</label>
+                       <div class="col-sm-8">
+                        <div class="form-group">
+                                <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
+                               <?php
+                               $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM areas where cod_estado=1 and centro_costos=1 order by 2");
+                             $stmt->execute();
+                             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                              $codigoX=$row['codigo'];
+                              $nombreX=$row['nombre'];
+                              $abrevX=$row['abreviatura'];
+                             ?>
+                             <option value="<?=$codigoX;?>" selected><?=$abrevX;?></option> 
+                               <?php
+                                 }
+                                 ?>
+                             </select>
+                            </div>
+                        </div>
+                    </div>
+              </div>
+              <div class="col-sm-1">
+                            <a href="#" onclick="cargarCuentasxCobrarPeriodo()" class="btn btn-white btn-sm" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">search</i> Buscar</a>
+                          </div>  
+                  </div><!--div row-->
+
+
+
+                       
+                        <br>
                         <div class="table-responsive">
                             <?php 
                             echo '<table class="table table-bordered table-condensed" id="tablePaginatorFixedEstadoCuentas">'.
@@ -96,7 +166,9 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                                         <td style="display: none;"></td>
                                         <td style="display: none;"></td>                                        
                                         <td style="display: none;"></td>
-                                    </tr>'; 
+                                    </tr>
+                                    <div id="data_pagosproveedores">';
+
                                     $sqlFechaEstadoCuenta="and e.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59'";
                                     if(isset($_POST['cierre_anterior'])){
                                       $sqlFechaEstadoCuenta="and e.fecha<='$hasta 23:59:59'";  
@@ -132,8 +204,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                                                 $array_totales=generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$StringUnidades,$cod_cuentaauxX,$unidadCostoArray,$areaCostoArray,$desde,$hasta,$monto_periodo,$array_periodo);
                                                 echo '</tr>';
                                                 //para los totales **                                                
-		                                        $x_total=0;		                                        
-		                                        
+		                                        $x_total=0;
 		                                        foreach ($array_totales as $monto_x) {          
 		                                            $totales_array[$x_total]+=$monto_x;
 		                                            $x_total++;
@@ -150,7 +221,9 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
 	                                foreach ($totales_array as $monto_total) {
 	                                    echo '<th class="text-right">'.formatNumberDec($monto_total).'</th>';	
 	                                }    
-                                echo '</tr>';  
+                                echo '</tr>
+                                </div>
+                                ';  
 
                                 
 
