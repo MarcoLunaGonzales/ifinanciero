@@ -3888,7 +3888,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
                   $canvas->page_text($x, $y, "pie de pagina en la ultima hoja".$numero.$numeroF, $font, $size);
               }
           }*/
-    $canvas->page_text(500, 25, "Página:            {PAGE_NUM}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
     $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }

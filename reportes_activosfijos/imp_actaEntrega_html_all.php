@@ -12,7 +12,7 @@ require_once __DIR__.'/../functions.php';
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
-
+setlocale(LC_TIME, "Spanish");
 $codigo_personal = $_GET["cod_personal"];//codigoactivofijo
 try{
 
@@ -23,20 +23,14 @@ $stmt->bindParam(':codigo',$codigo_personal);
 $stmt->execute();
 
 $result = $stmt->fetch();
-// $codigo = $result['codigo'];
-// $codigoactivo = $result['codigoactivo'];
-// $otrodato = $result['otrodato'];
-// $cod_tiposbienes = $result['cod_tiposbienes'];
 $area = $result['area'];
 $personal = $result['personal'];
 $cargo = $result['cargo'];
 $identificacion = $result['identificacion'];
 
-//*******
-
 $sqlActivos="SELECT a.codigo,a.codigoactivo,a.otrodato,a.cod_tiposbienes,(select tb.tipo_bien from tiposbienes tb
  where tb.codigo=a.cod_tiposbienes)as tipo_bien,
- (select f.fechaasignacion from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select f2.fecha_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion
+ (select DATE_FORMAT(f.fechaasignacion,'%d/%m/%Y') from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select DATE_FORMAT(f2.fecha_recepcion,'%d/%m/%Y') from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion
 from activosfijos a 
 where a.cod_responsables_responsable=$codigo_personal";  
 $stmtActivos = $dbh->prepare($sqlActivos);
@@ -50,20 +44,30 @@ $stmtActivos->bindColumn('fechaasignacion', $fechaasignacion);
 $stmtActivos->bindColumn('fecha_recepcion', $fecha_recepcion);
 
 
-
-$nro_etiqueta="";
-$descripcion="";
-$devolucion="";
-$codigo_traspaso="";
-
 $dia=date('d');
 $mes=date('m');
 $nom_mes=nombreMes($mes);
 $anio=date('Y');
+
+
+
+$sql_a="SELECT DATE_FORMAT(a.fechaasignacion,'%d/%m/%Y') as fechaasignacion,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.cod_personal_anterior) as personal from activofijos_asignaciones a where a.cod_personal=$codigo_personal order by a.codigo limit 5 ";  
+$stmtAsignaciones = $dbh->prepare($sql_a);
+$stmtAsignaciones->execute();
+$stmtAsignaciones->bindColumn('fechaasignacion', $fechaasignacion_a);
+$stmtAsignaciones->bindColumn('personal', $personal_a);
+
+
+$sql_t="SELECT DATE_FORMAT(a.fechaasignacion,'%d/%m/%Y') as fechaasignacion,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.cod_personal) as personal from activofijos_asignaciones a where a.cod_personal_anterior=$codigo_personal order by a.codigo limit 5 ";  
+$stmtTransfer = $dbh->prepare($sql_t);
+$stmtTransfer->execute();
+$stmtTransfer->bindColumn('fechaasignacion', $fechaasignacion_t);
+$stmtTransfer->bindColumn('personal', $personal_t);
+
 ?>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style type="text/css">
-        body{font-family:"DejaVu Sans", "Times New Roman", Times, serif;font-size: 9px;}
+        body{font-family:arial, serif;font-size: 12px;}
 @page { margin-top: 50px; margin-left: 40px; margin-right: 40px; margin-bottom: 50px;}
 
 .table{
@@ -101,12 +105,12 @@ width: 100%;
 }
 </style>
    </head><body>
-    <table width="100%" style="font-size: 11px;">
+    <table width="100%" >
         <tr><td>
             <table  width="100%" >
                 <tr>
                     <td width="20%">&nbsp;</td>
-                    <td width="60%"><center><b><span style="font:arial;"><u>Instituto Boliviano de Normalización y calidad</u><br><h3>REGISTRO</h3><br><h3>ACTA DE ENTREGA DE BIENES DE USO</h3></span></b><center>
+                    <td width="60%"><center><b><span><u>Instituto Boliviano de Normalización y calidad</u><br><h3>REGISTRO</h3><br><h3>ACTA DE ENTREGA DE BIENES DE USO</h3></span></b><center>
 
                     </td>
                     <td width="20%"><img style="width:70px;height:70px;" src="../assets/img/ibnorca2.jpg"></td>
@@ -141,31 +145,75 @@ width: 100%;
         <tr><td>
             <table class="table" >
                 <tr>
-                    <td class="font-weight-bold text-center">TIPO DE BIEN</td>
-                    <td class="font-weight-bold text-center">CODSIS</td>
-                    <td class="font-weight-bold text-center">CODIGO</td>
-                    <td class="font-weight-bold text-center">DESCRIPCIÓN</td>
-                    <td class="font-weight-bold text-center">F.ASIGNACIÓN</td>
-                    <td class="font-weight-bold text-center">F.RECEPCIÓN</td>
+                    <td><center><b>TIPO DE BIEN</b></center></td>
+                    <td><center><b>CODSIS</b></center></td>
+                    <td><center><b>CODIGO</b></center></td>
+                    <td><center><b>DESCRIPCIÓN</b></center></td>
+                    <!-- <td><center><b>F.ASIGNACIÓN</b></center></td> -->
+                    <td><center><b>F.RECEPCIÓN</b></center></td>
                 </tr>
                 <?php 
-                while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)) {?>
+                while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)){ ?>
                 <tr>
-                    <td class="text-left small"><?=$tipo_bien?></td>
-                    <td class="text-center small"><?=$codigoSis?></td>
-                    <td class="text-center small"><?=$codigoactivo?></td>
-                    <td class="text-left small"><?=$otrodato?></td>
-                    <td class="text-left small"><?=$fechaasignacion?></td>
-                    <td class="text-left small"><?=$fecha_recepcion?></td>
+                    <td><?=$tipo_bien?></td>
+                    <td align="right"><?=$codigoSis?></td>
+                    <td align="right"><?=$codigoactivo?></td>
+                    <td><?=$otrodato?></td>
+                    <!-- <td class="text-left small"><?=$fechaasignacion?></td> -->
+                    <td class="text-center small" align="center"><?=$fecha_recepcion?></td>
                 </tr>
             <?php } ?>
             </table>
+        </td></tr>
+        <tr><td>
+            &nbsp;
         </td></tr>
         <tr><td><p><span >El funcionario es responsable de los bienes de Uso a partir de la firma de la presente acta, comprometiendose a :<br>
             * Asumir la responsabilidad de los Bienes de Uso y Equipos de Oficina relacionados en el presente documento.<br>
             * Dar uso exclusivo para el desempeño de las funciones asignadas por la empresa.<br>
             * Se hace cargo por el daño o la perdida de los mismos a causa de negligencia o incumplimiento de las normas y procedimientos relacionados con el uso y conservación.<br>
             * Se compromete a informar oportunamente al area administrativa sobre cualquier traslado temporal o definitivo, ademas de situaciones que pongan en peligro el Bien o Equipo mediante los aspectos formales.</span></p></td></tr>
+
+        <tr><td>
+            <table width="100%">
+                <tr><td colspan="2"><center><b>HISTORIAL DE CAMBIOS</b></center></td></tr>
+                <tr valign="top">
+                    <td>
+                        <table align="center" class="table">
+                                          
+                                <tr><td colspan="2"><center><b>ASIGNACION</b></center></td></tr>
+                                <tr><td><b><center>Fecha</center></b></td><td><b><center>Personal Ant.</center></b></td></tr>
+                            
+                                <?php
+                                while ($rowAs = $stmtAsignaciones->fetch(PDO::FETCH_ASSOC)){ ?>
+                                    <tr>
+                                        <td class="text-left"><?=$fechaasignacion_a?></td>
+                                        <td class="text-left"><?=$personal_a?></td>
+                                    </tr>
+                                <?php } ?>
+                            
+                        </table>
+                    </td>
+
+                    <td >
+                        <table align="center" class="table">
+                            <tr><td colspan="2"><center><b>TRANSFERENCIA</b></center></td></tr>
+                            <tr><td><b><center>Fecha</center></b></td><td><b><center>Personal Dest.</center></b></td></tr>
+                            <?php
+                            while ($rowT = $stmtTransfer->fetch(PDO::FETCH_ASSOC)){ ?>
+                                <tr>
+                                    <td class="text-left"><?=$fechaasignacion_t?></td>
+                                    <td class="text-left"><?=$personal_t?></td>
+                                </tr>
+                            <?php } ?>
+                            
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td></tr>
+        <tr>
+            <td>&nbsp;</td></tr>
         <tr>
             <td>
             
@@ -183,7 +231,7 @@ width: 100%;
 
 <?php 
 $html = ob_get_clean();
- // echo $html;
+//  echo $html;
 descargarPDF("IBNORCA - ACTA DE ENTREGA BIENES DE USO",$html);
 
 ?>

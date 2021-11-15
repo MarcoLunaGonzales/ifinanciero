@@ -15,7 +15,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 //asignaciones
 $query2 = "SELECT afs.*,af.activo,(select d.nombre from depreciaciones d where d.codigo=af.cod_depreciaciones) as nombreRubro,(select d.tipo_bien from tiposbienes d where d.codigo=af.cod_tiposbienes) as nombreBien,
-(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=afs.cod_personal) as nombre_personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=afs.cod_unidadorganizacional)as nombre_uo FROM activofijos_asignaciones afs, activosfijos af where afs.cod_activosfijos=af.codigo and af.codigo  = ".$codigo_af;
+(select CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno) from personal p where p.codigo=afs.cod_personal) as nombre_personal,afs.cod_personal,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=afs.cod_unidadorganizacional)as nombre_uo FROM activofijos_asignaciones afs, activosfijos af where afs.cod_activosfijos=af.codigo and af.codigo  = ".$codigo_af;
 $statement2 = $dbh->query($query2);
 //unidad
 $queryUO = "SELECT * from unidades_organizacionales order by 2";
@@ -61,6 +61,7 @@ $responsable='';
                           </thead>
                           <tbody>
                           <?php $index=1;
+                            $cod_personal_anterior=0;
                               while ($row = $statement2->fetch()) { 
                                   $codigo=$row["codigo"];
                                   $cod_activosfijos=$row["cod_activosfijos"];
@@ -71,6 +72,8 @@ $responsable='';
                                   $nombreActivo=$row["activo"];
                                   $nombreRubro=$row["nombreRubro"];
                                   $nombreBien=$row["nombreBien"];
+
+                                  $cod_personal_anterior=$row["cod_personal"];
                                   // $nombreUO=$row["nombreUO"];
                                   
                                 }?>
@@ -99,7 +102,7 @@ $responsable='';
                                 <td><?=$fechaasignacion;?></td>
                                 <td><?=$estadobien_asig;?></td>
                      
-                                <td><?=$nombre_personal;?></td>
+                                <td><input type="hidden" name="cod_personal_anterior" id="cod_personal_anterior" value="<?=$cod_personal_anterior?>"><?=$nombre_personal;?></td>
                                 <td><?=$nombre_uo;?></td>
                                   
                               </tr>

@@ -19,11 +19,13 @@ try {
     $cod_area = $_POST['cod_area'];
     $cod_responsable = $_POST["cod_responsables_responsable"];
 
-    //echo $cod_responsable;
+    $cod_personal_anterior = $_POST["cod_personal_anterior"];
+
+    // echo $cod_personal_anterior;
 
 
     //obtener unos datos antes de actualizar...
-    $stmtPREVIO = $dbh->prepare("SELECT * FROM activofijos_asignaciones where cod_activosfijos=:codigo");
+    $stmtPREVIO = $dbh->prepare("SELECT cod_ubicaciones,estadobien_asig FROM activofijos_asignaciones where cod_activosfijos=:codigo order by codigo limit 1");
     //Ejecutamos;
     $stmtPREVIO->bindParam(':codigo',$codigoactivo);
     $stmtPREVIO->execute();
@@ -31,17 +33,13 @@ try {
     //$codigo = $result['codigo'];
     $cod_ubicaciones = $resultPREVIO['cod_ubicaciones'];
     $estadobien_asig = $resultPREVIO['estadobien_asig'];
-    
     $fechaasignacion=date("Y-m-d H:i:s");
     $cod_estadoasignacionaf = 1;
-
-
-        //now()
-        
-        $stmt = $dbh->prepare("INSERT INTO activofijos_asignaciones(cod_activosfijos,fechaasignacion,
-            cod_ubicaciones,cod_unidadorganizacional,cod_area,cod_personal, estadobien_asig,cod_estadoasignacionaf)
+    
+    $stmt = $dbh->prepare("INSERT INTO activofijos_asignaciones(cod_activosfijos,fechaasignacion,
+            cod_ubicaciones,cod_unidadorganizacional,cod_area,cod_personal, estadobien_asig,cod_estadoasignacionaf,cod_personal_anterior)
             values (:codigoactivo, :fechaasignacion,
-            :cod_ubicaciones, :cod_unidadorganizacional,:cod_area,:cod_personal, :estadobien_asig,:cod_estadoasignacionaf)");
+            :cod_ubicaciones, :cod_unidadorganizacional,:cod_area,:cod_personal, :estadobien_asig,:cod_estadoasignacionaf,:cod_personal_anterior)");
 
         //necesito guardar en una segunda tabla: activofijos_asignaciones
 
@@ -52,26 +50,13 @@ try {
         $stmt->bindParam(':codigoactivo', $codigoactivo);
         $stmt->bindParam(':fechaasignacion', $fechaasignacion);
         $stmt->bindParam(':cod_ubicaciones', $cod_ubicaciones);
-
-        $stmt->bindParam(':cod_unidadorganizacional', $cod_unidadorganizacional);//no sirve
-        //
-        $stmt->bindParam(':cod_area', $cod_area);//no sirve
-        $stmt->bindParam(':cod_personal', $cod_responsable);//no sirve
-
+        $stmt->bindParam(':cod_unidadorganizacional', $cod_unidadorganizacional);        
+        $stmt->bindParam(':cod_area', $cod_area);
+        $stmt->bindParam(':cod_personal', $cod_responsable);
+        $stmt->bindParam(':cod_personal_anterior', $cod_personal_anterior);
         $stmt->bindParam(':estadobien_asig', $estadobien_asig);
         $stmt->bindParam(':cod_estadoasignacionaf', $cod_estadoasignacionaf);
-        //$stmt->bindParam(':created_at', $fechaasignacion);
-
-
-        $flagSuccess=$stmt->execute();
-        ///////////////////////////////////////////////////////////////////////////////////////////////
-
-        
-        //$stmt3->debugDumpParams();
-
-        //$arr = $stmt->errorInfo();
-        //print_r($arr);
-        //$tabla_id = $dbh->lastInsertId();;
+        $flagSuccess=$stmt->execute();        
         
         showAlertSuccessError($flagSuccess,$urlList6);
 
