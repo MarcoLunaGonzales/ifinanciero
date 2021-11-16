@@ -29,11 +29,11 @@ $cargo = $result['cargo'];
 $identificacion = $result['identificacion'];
 
 
-$sqlActivos="SELECT a.codigo,a.codigoactivo,a.otrodato,a.cod_tiposbienes,(select tb.tipo_bien from tiposbienes tb
- where tb.codigo=a.cod_tiposbienes)as tipo_bien,
+$sqlActivos="SELECT a.codigo,a.codigoactivo,a.activo as otrodato,a.cod_tiposbienes,(select tb.abreviatura from depreciaciones tb
+ where tb.codigo=a.cod_depreciaciones)as tipo_bien,
  (select DATE_FORMAT(f.fechaasignacion,'%d/%m/%Y') from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select DATE_FORMAT(f2.fecha_recepcion,'%d/%m/%Y') from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion,(select f2.observaciones_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as observaciones_recepcion
 from activosfijos a 
-where a.cod_responsables_responsable=$codigo_personal";  
+where a.cod_responsables_responsable=$codigo_personal order by tipo_bien, otrodato";  
 $stmtActivos = $dbh->prepare($sqlActivos);
 $stmtActivos->execute();
 $stmtActivos->bindColumn('codigo', $codigoSis);
@@ -43,6 +43,9 @@ $stmtActivos->bindColumn('cod_tiposbienes', $cod_tiposbienes);
 $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
 $stmtActivos->bindColumn('fechaasignacion', $fechaasignacion);
 $stmtActivos->bindColumn('fecha_recepcion', $fecha_recepcion);
+if($fecha_recepcion=="00/00/0000"){
+    $fecha_recepcion="";
+}
 $stmtActivos->bindColumn('observaciones_recepcion', $observaciones_recepcion);
 
 
@@ -53,11 +56,12 @@ $anio=date('Y');
 
 
 
-$sql_a="SELECT DATE_FORMAT(a.fechaasignacion,'%d/%m/%Y') as fechaasignacion,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.cod_personal_anterior) as personal from activofijos_asignaciones a where a.cod_personal=$codigo_personal order by a.codigo limit 5 ";  
+$sql_a="SELECT distinct(DATE_FORMAT(a.fechaasignacion,'%d/%m/%Y')) as fechaasignacion,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.cod_personal_anterior) as personal, a.cod_personal_anterior from activofijos_asignaciones a where a.cod_personal=$codigo_personal and a.fechaasignacion>'2021-11-01' order by a.codigo limit 5 ";  
 $stmtAsignaciones = $dbh->prepare($sql_a);
 $stmtAsignaciones->execute();
 $stmtAsignaciones->bindColumn('fechaasignacion', $fechaasignacion_a);
 $stmtAsignaciones->bindColumn('personal', $personal_a);
+$stmtAsignaciones->bindColumn('cod_personal_anterior', $cod_personal_anterior);
 
 
 $sql_t="SELECT DATE_FORMAT(a.fechaasignacion,'%d/%m/%Y') as fechaasignacion,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.cod_personal) as personal from activofijos_asignaciones a where a.cod_personal_anterior=$codigo_personal order by a.codigo limit 5 ";  
@@ -65,6 +69,10 @@ $stmtTransfer = $dbh->prepare($sql_t);
 $stmtTransfer->execute();
 $stmtTransfer->bindColumn('fechaasignacion', $fechaasignacion_t);
 $stmtTransfer->bindColumn('personal', $personal_t);
+
+if($cod_personal_anterior==0){
+    $personal_a="Asignacion Inicial";
+}
 
 ?>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -119,10 +127,10 @@ width: 100%;
             <table  width="100%" >
                 <tr>
                     <td width="20%">&nbsp;</td>
-                    <td width="60%"><center><b><span><u>Instituto Boliviano de Normalización y calidad</u><br><h3>REGISTRO</h3><br><h3>ACTA DE ENTREGA DE BIENES DE USO</h3></span></b><center>
+                    <td width="60%"><center><b><span><u>Instituto Boliviano de Normalización y Calidad</u><!--br><h3>REGISTRO</h3--><br><h3>ACTA DE ENTREGA DE ACTIVOS FIJOS</h3></span></b><center>
 
                     </td>
-                    <td width="20%"><img style="width:70px;height:70px;" src="../assets/img/ibnorca2.jpg"></td>
+                    <td width="20%"><img style="width:70px;height:70px;" src="../assets/img/logo_ibnorca_origen_3.jpg"></td>
                 <tr>
                 </table>
         </td></tr>
@@ -131,9 +139,7 @@ width: 100%;
                 <tbody>
                     <tr>
                         <td class="text-left" width="18%" style="background: black;color:white; ">Ciudad Y Fecha:</td>
-                        <td class="text-center" >La Paz, <?=$dia?> de <?=$nom_mes?> de <?=$anio?></td>
-                        <td class="text-left" width="10%" style="background: black;color:white; ">N°</td>
-                        <td class="text-left" width="20%"></td>
+                        <td class="text-center" colspan="3">La Paz, <?=$dia?> de <?=$nom_mes?> de <?=$anio?></td>
                     </tr>
                     <tr>
                         <td class="text-left" style="background: black;color:white; ">Responsable:</td>
@@ -162,22 +168,22 @@ width: 100%;
                     <td><center><b>F.ASIGNACIÓN</b></center></td>
                     <td><center><b>F.RECEPCIÓN</b></center></td> -->
 
-                    <th class="text-center" width="10%"><small><small>RUBRO</small></small></th>
-                    <th class="text-center" width="10%"><small><small>CODSIS</small></small></th>
+                    <th class="text-center" width="8%"><small><small>RUBRO</small></small></th>
+                    <th class="text-center" width="10%"><small><small>CODSISTEMA</small></small></th>
                     <th class="text-center" width="10%"><small><small>CODIGO</small></small></th>
                     <th class="text-center" width="30%"><small><small>DESCRIPCIÓN</small></small></th>
-                    <th class="text-center" width="15%"><small><small>F.ASIGNACIÓN<br>F.RECEPCIÓN</small></small></th>
-                    <th class="text-center" width="25%"><small><small>OBS.</small></small></th>
+                    <th class="text-center" width="15%"><small><small>F.RECEPCIÓN</small></small></th>
+                    <th class="text-center" width="27%"><small><small>OBSERVACIONES</small></small></th>
 
                 </tr>
                 <?php 
                 while ($rowActivos = $stmtActivos->fetch(PDO::FETCH_ASSOC)){ ?>
                 <tr>
-                    <td class="text-left small"><small><small><?=$tipo_bien?></small></small></td>
+                    <td align="center"><small><small><?=$tipo_bien?></small></small></td>
                     <td align="center"><small><small><?=$codigoSis?></small></small></td>
                     <td align="center"><small><small><?=$codigoactivo?></small></small></td>
                     <td class="text-left small"><small><small><?=$otrodato?></small></small></td>
-                    <td class="text-left small"><small><small><?=$fechaasignacion?><br><?=$fecha_recepcion?></small></small></td>
+                    <td class="text-left small"><small><small><?=$fecha_recepcion?></small></small></td>
                     <td class="text-left small"><small><small><small><?=$observaciones_recepcion?></small></small></small></td>
                 </tr>
             <?php } ?>
@@ -200,7 +206,7 @@ width: 100%;
                         <table align="center" class="table">
                                           
                                 <tr><td colspan="2"><center><b>ASIGNACION</b></center></td></tr>
-                                <tr><td><b><center>Fecha</center></b></td><td><b><center>Personal Ant.</center></b></td></tr>
+                                <tr><td><b><center>Fecha</center></b></td><td><b><center>Personal Origen</center></b></td></tr>
                             
                                 <?php
                                 while ($rowAs = $stmtAsignaciones->fetch(PDO::FETCH_ASSOC)){ ?>
@@ -216,7 +222,7 @@ width: 100%;
                     <td >
                         <table align="center" class="table">
                             <tr><td colspan="2"><center><b>TRANSFERENCIA</b></center></td></tr>
-                            <tr><td><b><center>Fecha</center></b></td><td><b><center>Personal Dest.</center></b></td></tr>
+                            <tr><td><b><center>Fecha</center></b></td><td><b><center>Personal Destino</center></b></td></tr>
                             <?php
                             while ($rowT = $stmtTransfer->fetch(PDO::FETCH_ASSOC)){ ?>
                                 <tr>

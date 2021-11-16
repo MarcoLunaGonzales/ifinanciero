@@ -215,7 +215,7 @@ try {
         cod_depreciaciones=:cod_depreciaciones,cod_tiposbienes=:cod_tiposbienes,
         vidautilmeses=:vidautilmeses,estadobien=:estadobien,otrodato=:otrodato,cod_empresa=:cod_empresa,activo=:activo,
         vidautilmeses_restante=:vidautilmeses_restante,cod_af_proveedores=:cod_af_proveedores,
-        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar,cod_proy_financiacion=:cod_proy_financiacion,tipo_af=:cod_tiposactivos where codigo = :codigo";
+        numerofactura=:numerofactura, bandera_depreciar = :bandera_depreciar,cod_proy_financiacion=:cod_proy_financiacion,tipo_af=:cod_tiposactivos, cod_unidadorganizacional=:cod_unidadorganizacional where codigo = :codigo";
 
         $stmt = $dbh->prepare($sql);
         //bind
@@ -244,6 +244,7 @@ try {
         $stmt->bindParam(':bandera_depreciar', $bandera_depreciar);
         $stmt->bindParam(':cod_proy_financiacion', $cod_proy_finan);
         $stmt->bindParam(':cod_tiposactivos', $cod_tiposactivos);
+        $stmt->bindParam(':cod_unidadorganizacional', $cod_unidadorganizacional);
 
         $flagSuccess=$stmt->execute();
 

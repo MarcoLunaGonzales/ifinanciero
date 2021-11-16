@@ -33,19 +33,20 @@ if($tipoLogin==2){
 	curl_close ($ch);
 	$obj=json_decode($remote_server_output);
 
-	//header('Content-type: application/json'); 	
-	//print_r($remote_server_output); 
+	header('Content-type: application/json'); 	
+	print_r($remote_server_output); 
 
 	$banderaLogin=$obj->estado;
 	if($banderaLogin=="true"){
 		$banderaLogin=1;
 	}
 	$idUsuarioSW=$obj->usuario->IdUsuario;
+	$idUsuarioSW2=$obj->usuario->IdClienteContacto;
 
 	if($idUsuarioSW==49299){
 		$idUsuarioSW=47770;
 	}
-	//echo $banderaLogin;
+	//echo "bandera login: ".$banderaLogin." idUsuarioSW: ".$idUsuarioSW;
 }
 
 if($banderaLogin==1 || $tipoLogin==1){
@@ -57,7 +58,7 @@ if($banderaLogin==1 || $tipoLogin==1){
 	}else{
 		$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, 1 as perfil
 			from personal p 
-			where p.codigo='$idUsuarioSW' ";		
+			where (p.codigo='$idUsuarioSW' or p.codigo='$idUsuarioSW2') ";		
 	}
 
 

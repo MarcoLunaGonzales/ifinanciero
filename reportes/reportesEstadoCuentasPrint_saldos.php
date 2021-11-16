@@ -57,12 +57,12 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                         </div-->
                         <h4 class="card-title"> 
                             <img  class="card-img-top" src="../marca.png" style="width:100%; max-width:50px;">
-                            Cuentas Por Cobrar Por Periodos
+                            Reporte de Cuentas Por Cobrar Por Periodos
                         </h4>
                       <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
-                      <h6 class="card-title">Gestion: <?= $NombreGestion; ?></h6>
+                      <!--h6 class="card-title">Gestion: <?= $NombreGestion; ?></h6>
                       <h6 class="card-title">Cuenta: <?=$stringGeneraCuentas;?></h6>
-                      <h6 class="card-title">Unidad:<?=$stringGeneraUnidades?></h6>             
+                      <h6 class="card-title">Unidad:<?=$stringGeneraUnidades?></h6-->             
                       <div class="row">
                         <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Oficina: </b> <small><?=$unidadAbrev?></small></h6></div>
                         <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Area: </b> <small><?=$areaAbrev?></small></h6></div>

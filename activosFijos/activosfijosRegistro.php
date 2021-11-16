@@ -359,12 +359,11 @@ if ($codigo > 0){
                                     <div id="div_personal_UO">
                                         <?php
                                         $stmtRR = $dbh->prepare("SELECT p.codigo, p.paterno,p.materno,p.primer_nombre
-                                        from personal p, ubicaciones u, unidades_organizacionales uo 
-                                        where u.cod_unidades_organizacionales=uo.codigo and uo.codigo=p.cod_unidadorganizacional order by 2");
+                                        from personal p where p.cod_estadopersonal=1 order by 2");
                                         $stmtRR->execute();
                                         ?>
                                         <select id="cod_responsables_responsable" name="cod_responsables_responsable" class="selectpicker form-control form-control-sm" 
-                                        data-style="btn btn-primary" data-size="5">
+                                        data-style="btn btn-primary" data-live-search="true" data-size="5">
                                         <option value=""></option>
                                             <?php while ($row = $stmtRR->fetch()){ ?>
                                                 <option <?=($cod_responsables_responsable==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>">

@@ -48,7 +48,7 @@ foreach ($areas as $valor ) {
 $sqlActivos="SELECT a.codigo,a.codigoactivo,a.activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=a.cod_unidadorganizacional)as cod_unidadorganizacional,
 (select ar.abreviatura from areas ar where ar.codigo=a.cod_area) as cod_area,
 (select d.nombre from depreciaciones d where d.codigo=a.cod_depreciaciones) as cod_depreciaciones,
-(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=a.cod_responsables_responsable) as cod_responsables_responsable,(select f.fechaasignacion from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select f2.fecha_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion,(select f3.cod_estadoasignacionaf from activofijos_asignaciones f3 where f3.cod_activosfijos=a.codigo and f3.cod_personal=a.cod_responsables_responsable order by f3.codigo limit 1) as estado_asignacionaf
+(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=a.cod_responsables_responsable) as cod_responsables_responsable,(select f.fechaasignacion from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select f2.fecha_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion,(select f3.cod_estadoasignacionaf from activofijos_asignaciones f3 where f3.cod_activosfijos=a.codigo and f3.cod_personal=a.cod_responsables_responsable order by f3.codigo limit 1) as estado_asignacionaf, a.cod_responsables_responsable as personalasignado
 from activosfijos a
 where a.cod_estadoactivofijo = 1 and a.cod_unidadorganizacional in ($unidadOrgString) and a.cod_area in ($areaString) and a.cod_responsables_responsable in ($personalString)";  
 
@@ -68,6 +68,7 @@ $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsab
 $stmtActivos->bindColumn('fechaasignacion', $fechaasignacion);
 $stmtActivos->bindColumn('fecha_recepcion', $fecha_recepcion);
 $stmtActivos->bindColumn('estado_asignacionaf', $estado_asignacionaf);
+$stmtActivos->bindColumn('personalasignado', $codPersonalAsignado);
 
 
 ?>
@@ -106,7 +107,7 @@ $stmtActivos->bindColumn('estado_asignacionaf', $estado_asignacionaf);
                           '<th class="font-weight-bold">Activo</th>'.
                           '<th class="font-weight-bold">Responsable</th>'.
                           '<th class="font-weight-bold">Estado</th>'.
-                          '<th class="font-weight-bold">F.Asig</th>'.
+                          '<th class="font-weight-bold">F.Alta</th>'.
                           '<th class="font-weight-bold">F.Recep</th>'.
                         '</tr>'.
                       '</thead>'.
@@ -125,7 +126,7 @@ $stmtActivos->bindColumn('estado_asignacionaf', $estado_asignacionaf);
                           '<td class="text-center small">'.$cod_area.'</td>'.
                           '<td class="text-left small">'.$cod_depreciaciones.'</td>'.
                           '<td class="text-left small">'.$activoX.'</td>'.
-                          '<td class="text-left small">'.$responsables_responsable.'</td>'.
+                          '<td class="text-left small"><a href="../reportes_activosfijos/imp_actaEntrega_html_all.php?cod_personal='.$codPersonalAsignado.'" target="_blank">'.$responsables_responsable.'</a></td>'.
                           '<td class="text-left small">'.$nombre_estado.'</td>'.
                           '<td class="text-left small">'.$fechaasignacion.'</td>'.
                           '<td class="text-left small">'.$fecha_recepcion.'</td>'.
