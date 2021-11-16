@@ -19988,33 +19988,39 @@ function silenciarClientesMora(codigo,index){
 }
 
 function cargarCuentasxCobrarPeriodo(){
-  var cuentas_auxiliares = $("#cuentas_auxilaires").val();
+  var cuentas_auxiliares = $("#cuentas_auxiliares").val();
   var unidad_costo = $("#unidad_costo").val();
   var area_costo = $("#area_costo").val();
+
+  var unidades_x = $("#unidades_x").val();
+  var gestion_x = $("#gestion_x").val();
+  var desde_x = $("#desde_x").val();
+  var hasta_x = $("#hasta_x").val();
+  var cuentai_x = $("#cuentai_x").val();
   
   if(cuentas_auxiliares!="" || unidad_costo !="" || area_costo !=""){
     
-    var url ="obligaciones_pago/ajaxListPagosLote.php";
+    var url ="ajax_contenedor_cuentasxcobrar.php";
 
-    var parametros={"proveedor":prov,"cuentas":cuentas};
+    var parametros={"unidades":unidades_x,"gestion":gestion_x,"desde":desde_x,"hasta":hasta_x,"cuentai":cuentai_x,"cuentas_auxiliares":cuentas_auxiliares,"unidad_costo":unidad_costo,"area_costo":area_costo};
     $.ajax({
       type: "GET",
       dataType: 'html',
       url: url,
       data: parametros,
       beforeSend: function () {
-      $("#texto_ajax_titulo").html("Listando Pagos  de proveedores..."); 
+      $("#texto_ajax_titulo").html("Listando Cuentas por Cobrar..."); 
         iniciarCargaAjax();
       },        
       success:  function (resp) {
         detectarCargaAjax();
-         $("#texto_ajax_titulo").html("Procesando Datos");
+         $("#texto_ajax_titulo").html("Procesando Datos...");
          //$("#data_pagosproveedores").append(resp);
-         $("#tabla_proveedor").append(resp);
+         $("#data_cuentasxcobrar").html(resp);
          $('.selectpicker').selectpicker("refresh");
       }
     });
   }else{
-    Swal.fire("Informativo!", "Debe seleccionar un proveedor.", "warning");
+    Swal.fire("Informativo!", "Debe seleccionar todos los campos.", "warning");
   }
 }

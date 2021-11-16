@@ -47,12 +47,17 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header card-header-icon">
+                      <input type="hidden" name="unidades_x" id="unidades_x" value="<?=$StringUnidades?>">
+                      <input type="hidden" name="gestion_x" id="gestion_x" value="<?=$gestion?>">
+                      <input type="hidden" name="desde_x" id="desde_x" value="<?=$desde?>">
+                      <input type="hidden" name="hasta_x" id="hasta_x" value="<?=$hasta?>">
+                      <input type="hidden" name="cuentai_x" id="cuentai_x" value="<?=$StringCuenta?>">
                         <!--div class="float-right col-sm-2">
                             <h6 class="card-title">Exportar como:</h6>
                         </div-->
                         <h4 class="card-title"> 
                             <img  class="card-img-top" src="../marca.png" style="width:100%; max-width:50px;">
-                            Estado de Cuentas
+                            Cuentas Por Cobrar Por Periodos
                         </h4>
                       <h6 class="card-title">Periodo: <?=$periodoTitle?></h6>
                       <h6 class="card-title">Gestion: <?= $NombreGestion; ?></h6>
@@ -65,12 +70,12 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                     </div>
                     <div class="card-body">
                         <div class="row">
-                          <label class="col-sm-1 col-form-label">Cuentas</label>
+                          <label class="col-sm-1 col-form-label">Clientes</label>
                           <div class="col-sm-2">
                             <div class="form-group">
                               <select class="selectpicker form-control form-control-sm"  name="cuentas_auxiliares[]" id="cuentas_auxiliares" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-live-search="true">
                                 <?php                   
-                                  $sql="SELECT distinct(ca.codigo)as codigo, ca.nombre from estados_cuenta ec, cuentas_auxiliares ca  where ca.codigo=ec.cod_cuentaaux and ca.cod_cuenta in ($cuenta) order by ca.nombre";
+                                  $sql="SELECT distinct(ca.codigo)as codigo, ca.nombre from estados_cuenta ec, cuentas_auxiliares ca  where ca.codigo=ec.cod_cuentaaux and ca.cod_cuenta in ($StringCuenta) order by ca.nombre";                                  
                                    $stmt3 = $dbh->prepare($sql);
                                    $stmt3->execute();
                                  while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
@@ -134,7 +139,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
 
                        
                         <br>
-                        <div class="table-responsive">
+                        <div class="table-responsive" id="data_cuentasxcobrar">
                             <?php 
                             echo '<table class="table table-bordered table-condensed" id="tablePaginatorFixedEstadoCuentas">'.
                                 '<thead>'.
@@ -166,8 +171,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                                         <td style="display: none;"></td>
                                         <td style="display: none;"></td>                                        
                                         <td style="display: none;"></td>
-                                    </tr>
-                                    <div id="data_pagosproveedores">';
+                                    </tr>';
 
                                     $sqlFechaEstadoCuenta="and e.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59'";
                                     if(isset($_POST['cierre_anterior'])){
@@ -221,9 +225,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
 	                                foreach ($totales_array as $monto_total) {
 	                                    echo '<th class="text-right">'.formatNumberDec($monto_total).'</th>';	
 	                                }    
-                                echo '</tr>
-                                </div>
-                                ';  
+                                echo '</tr>';  
 
                                 
 
@@ -246,3 +248,9 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
     </div>
 </div>
 
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguarde un momento por favor</p>  
+  </div>
+</div>

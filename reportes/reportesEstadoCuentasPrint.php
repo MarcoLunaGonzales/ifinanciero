@@ -22,8 +22,11 @@ $desde=$fecha_desde;
 $hasta=$fecha;
 $tipo_cp=$_POST["tipo_cp"];
 $ver_saldo=$_POST["ver_saldo"];
+$StringCuenta=implode(",", $cuenta);
+$StringUnidades=implode(",", $unidad);
 
 if($ver_saldo==3){//saldos Generales
+     
    include "reportesEstadoCuentasPrint_saldos.php";
 }else{
 
@@ -36,8 +39,8 @@ if(count($proveedores)==(int)$_POST["numero_proveedores"]){
 }
 
 
-$StringCuenta=implode(",", $cuenta);
-$StringUnidades=implode(",", $unidad);
+
+
 
 $stringGeneraCuentas="";
 
