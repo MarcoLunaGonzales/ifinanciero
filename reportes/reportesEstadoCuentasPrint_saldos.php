@@ -70,10 +70,10 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                     </div>
                     <div class="card-body">
                         <div class="row">
-                          <label class="col-sm-1 col-form-label">Clientes</label>
+                          <label class="col-sm-1 col-form-label" style="color:red;">Clientes</label>
                           <div class="col-sm-2">
                             <div class="form-group">
-                              <select class="selectpicker form-control form-control-sm"  name="cuentas_auxiliares[]" id="cuentas_auxiliares" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-live-search="true">
+                              <select class="selectpicker form-control form-control-sm"  name="cuentas_auxiliares[]" id="cuentas_auxiliares" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-live-search="true" >
                                 <?php                   
                                   $sql="SELECT distinct(ca.codigo)as codigo, ca.nombre from estados_cuenta ec, cuentas_auxiliares ca  where ca.codigo=ec.cod_cuentaaux and ca.cod_cuenta in ($StringCuenta) order by ca.nombre";                                  
                                    $stmt3 = $dbh->prepare($sql);
@@ -81,7 +81,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                                  while ($rowSel = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoSel=$rowSel['codigo'];
                                   $nombreSelX=$rowSel['nombre'];
-                                  ?><option value="<?=$codigoSel;?>"> <?=$nombreSelX?></option><?php 
+                                  ?><option  value="<?=$codigoSel;?>"> <?=$nombreSelX?></option><?php 
                                  }
                                 ?>
                               </select>
@@ -90,7 +90,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                    
                     <div class="col-sm-4">
                         <div class="row">
-                        <label class="col-sm-4 col-form-label">Centro de Costos - Oficina</label>
+                        <label class="col-sm-4 col-form-label" style="color:red;">Centro de Costos - Oficina</label>
                         <div class="col-sm-8">
                         <div class="form-group">
                               <?php
@@ -109,7 +109,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                     </div>
                     <div class="col-sm-4">
                       <div class="row">
-                       <label class="col-sm-4 col-form-label">Centro de Costos - Area</label>
+                       <label class="col-sm-4 col-form-label" style="color:red;" >Centro de Costos - Area</label>
                        <div class="col-sm-8">
                         <div class="form-group">
                                 <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
@@ -131,7 +131,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                     </div>
               </div>
               <div class="col-sm-1">
-                            <a href="#" onclick="cargarCuentasxCobrarPeriodo()" class="btn btn-white btn-sm" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">search</i> Buscar</a>
+                            <a href="#" onclick="cargarCuentasxCobrarPeriodo()" class="btn btn-white btn-sm" style="background:red; color:white;"><i class="material-icons">search</i> Buscar</a>
                           </div>  
                   </div><!--div row-->
                        

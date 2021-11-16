@@ -63,9 +63,13 @@ function generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$St
         echo '<td class="text-right small"><a href="reportesEstadoCuentasPrint_saldos_detalle_xperiodo.php?cuentai='.$cuentai.'&NombreGestion='.$NombreGestion.'&StringUnidades='.$StringUnidades.'&cod_cuentaauxX='.$cod_cuentaauxX.'&unidadCostoArray='.$unidadCostoArray.'&areaCostoArray='.$areaCostoArray.'&desde='.$desde.'&hasta='.$hasta.'&periodo1='.$periodo1.'&periodo2='.$periodo.'" target="_blank">'.formatNumberDec($monto_periodo[$j]).'</a></td>';
         $sumaTotalCliente+=$monto_periodo[$j];
         $array_periodo_total[$j]=$monto_periodo[$j];
+        if($j==0){
+            $periodo1++;
+        }
         $j++;
-        $periodo1+=$periodo;
+        $periodo1+=30;
     }    
+    $periodo++;
     echo '<td class="text-right small"><a href="reportesEstadoCuentasPrint_saldos_detalle_xperiodo.php?cuentai='.$cuentai.'&NombreGestion='.$NombreGestion.'&StringUnidades='.$StringUnidades.'&cod_cuentaauxX='.$cod_cuentaauxX.'&unidadCostoArray='.$unidadCostoArray.'&areaCostoArray='.$areaCostoArray.'&desde='.$desde.'&hasta='.$hasta.'&periodo1='.$periodo.'&periodo2=1000000" target="_blank">'.formatNumberDec($monto_periodo[$j]).'</a></td>';
     $array_periodo_total[$j]=$monto_periodo[$j];
     $sumaTotalCliente+=$monto_periodo[$j];
