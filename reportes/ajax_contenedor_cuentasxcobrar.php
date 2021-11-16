@@ -7,17 +7,17 @@ require_once __DIR__.'/../functionsGeneral.php';
 $dbh = new Conexion();
 
 
-$cuentas_auxiliares=$_GET['cuentas_auxiliares'];
+$cuentas_auxiliares=$_POST['cuentas_auxiliares'];
 
 $proveedoresString=implode(",", $cuentas_auxiliares);
 $proveedoresStringAux="and e.cod_cuentaaux in ($proveedoresString)";
 
-$StringUnidades=$_GET['unidades'];
-$gestion=$_GET['gestion'];
-$desde=$_GET['desde'];
-$hasta=$_GET['hasta'];
+$StringUnidades=$_POST['unidades'];
+$gestion=$_POST['gestion'];
+$desde=$_POST['desde'];
+$hasta=$_POST['hasta'];
 
-$cuentaString=$_GET['cuentai'];
+$cuentaString=$_POST['cuentai'];
 $cuenta=explode(',', $cuentaString);
 
 // if(count($proveedores)==(int)$_POST["numero_proveedores"]){
@@ -38,8 +38,8 @@ $indice=0;
 $totalCredito=0;
 $totalDebito=0;
 
-$unidadCosto=$_GET['unidad_costo'];
-$areaCosto=$_GET['area_costo'];
+$unidadCosto=$_POST['unidad_costo'];
+$areaCosto=$_POST['area_costo'];
 
 $unidadCostoArray=implode(",", $unidadCosto);
 $areaCostoArray=implode(",", $areaCosto);

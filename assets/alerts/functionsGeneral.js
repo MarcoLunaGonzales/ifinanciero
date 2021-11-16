@@ -20004,7 +20004,7 @@ function cargarCuentasxCobrarPeriodo(){
 
     var parametros={"unidades":unidades_x,"gestion":gestion_x,"desde":desde_x,"hasta":hasta_x,"cuentai":cuentai_x,"cuentas_auxiliares":cuentas_auxiliares,"unidad_costo":unidad_costo,"area_costo":area_costo};
     $.ajax({
-      type: "GET",
+      type: "POST",
       dataType: 'html',
       url: url,
       data: parametros,
