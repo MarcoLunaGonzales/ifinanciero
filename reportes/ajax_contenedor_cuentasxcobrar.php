@@ -59,7 +59,7 @@ echo '<table class="table table-bordered table-condensed" id="tablePaginatorFixe
   '<thead>'.
       '<tr class="">'.
           '<th class="text-left">-</th>'.
-          '<th class="text-left">Proveedor/Cliente</th>';
+          '<th class="text-left">Cliente</th>';
           $periodo=0;
           $x=0;
 

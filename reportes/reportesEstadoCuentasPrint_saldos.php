@@ -134,9 +134,6 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                             <a href="#" onclick="cargarCuentasxCobrarPeriodo()" class="btn btn-white btn-sm" style="background:#F7FF5A; color:#07B46D;"><i class="material-icons">search</i> Buscar</a>
                           </div>  
                   </div><!--div row-->
-
-
-
                        
                         <br>
                         <div class="table-responsive" id="data_cuentasxcobrar">
@@ -145,7 +142,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                                 '<thead>'.
                                     '<tr class="">'.
                                         '<th class="text-left">-</th>'.
-                                        '<th class="text-left">Proveedor/Cliente</th>';
+                                        '<th class="text-left">Cliente</th>';
                                         $periodo=0;
                                         $x=0;
 
@@ -192,14 +189,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                                         $tipoDebeHaberX=$row['tipoDebeHaber'];   
                                         // $periodo=0;
                                         if($tipoDebeHaberX==2){//proveedor
-                                            // $totalCredito=$totalCredito+$monto_ecX;
-                                            // $totalDebito=$totalDebito+$monto_ecD;
-                                            // $saldo_X=$monto_ecX-$monto_ecD;
-                                            // echo '<tr class="bg-white" >
-                                            //     <td class="text-center small">'.$index.'</td>
-                                            //     <td class="text-left small">'.$nombreX.'</td>
-                                            //     <td class="text-right small">'.formatNumberDec($saldo_X).'</td>
-                                            // </tr>'; 
+
                                         }else{//cliente
                                             echo '<tr class="bg-white" >
                                                 <td class="text-center small">'.$index.'</td>

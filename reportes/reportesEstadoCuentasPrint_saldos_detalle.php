@@ -45,14 +45,6 @@ function generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$St
             }
             $periodo1=$periodo;
 
-            // $fecha_limite=date('Y-m-d',strtotime($fechaDet.'+'.$periodo.' day'));
-            // if($fecha_limite<=$fecha_actual){
-            //     $monto_periodo[$i]+=$saldo_X;
-            // }
-            //$fechaf=date('Y-m-d',strtotime($fechai.'+'.$periodo.' day'));
-            // if($fechai<=$fechaDet and $fechaDet<$fechaf){
-            //     $monto_periodo[$i]+=$saldo_X;
-            // }
             $i++;
             //$fechai=$fechaf;
         }
@@ -63,13 +55,16 @@ function generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$St
     $j=0;
     $sumaTotalCliente=0;
     $array_periodo_total=[];
+    
+
+
     foreach ($array_periodo as $periodo) {    
-        echo '<td class="text-right small">'.formatNumberDec($monto_periodo[$j]).'</td>';
+        echo '<td class="text-right small"><a href="reportesEstadoCuentasPrint_saldos_detalle_xperiodo.php?cuentai='.$cuentai.'&NombreGestion='.$NombreGestion.'&StringUnidades='.$StringUnidades.'&cod_cuentaauxX='.$cod_cuentaauxX.'&unidadCostoArray='.$unidadCostoArray.'&areaCostoArray='.$areaCostoArray.'&desde='.$desde.'&hasta='.$hasta.'&periodo='.$periodo.'">'.formatNumberDec($monto_periodo[$j]).'</a></td>';
         $sumaTotalCliente+=$monto_periodo[$j];
         $array_periodo_total[$j]=$monto_periodo[$j];
         $j++;    
     }    
-    echo '<td class="text-right small">'.formatNumberDec($monto_periodo[$j]).'</td>';
+    echo '<td class="text-right small"><a href="reportesEstadoCuentasPrint_saldos_detalle_xperiodo.php?cuentai='.$cuentai.'&NombreGestion='.$NombreGestion.'&StringUnidades='.$StringUnidades.'&cod_cuentaauxX='.$cod_cuentaauxX.'&unidadCostoArray='.$unidadCostoArray.'&areaCostoArray='.$areaCostoArray.'&desde='.$desde.'&hasta='.$hasta.'&periodo=100" target="_blank">'.formatNumberDec($monto_periodo[$j]).'</a></td>';
     $array_periodo_total[$j]=$monto_periodo[$j];
     $sumaTotalCliente+=$monto_periodo[$j];
     echo '<td class="text-right small font-weight-bold">'.formatNumberDec($sumaTotalCliente).'</td>';
