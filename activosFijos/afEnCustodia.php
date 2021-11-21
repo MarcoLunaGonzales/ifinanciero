@@ -16,9 +16,17 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
-$sql="SELECT afa.cod_activosfijos as cod_activo,(SELECT abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional) as cod_unidadorganizacional,(Select abreviatura from areas where codigo=afa.cod_area)as cod_area,af.activo,afa.fechaasignacion,afa.cod_estadoasignacionaf,(select nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf) as estado_asignacionaf,afa.cod_personal,afa.fecha_recepcion, af.codigoactivo
+/*$sql="SELECT afa.cod_activosfijos as cod_activo,(SELECT abreviatura from unidades_organizacionales where codigo=afa.cod_unidadorganizacional) as cod_unidadorganizacional,(Select abreviatura from areas where codigo=afa.cod_area)as cod_area,af.activo,afa.fechaasignacion,afa.cod_estadoasignacionaf,(select nombre from estados_asignacionaf where codigo=afa.cod_estadoasignacionaf) as estado_asignacionaf,afa.cod_personal,afa.fecha_recepcion, af.codigoactivo
 from activofijos_asignaciones afa, activosfijos af
-where  af.cod_estadoactivofijo=1 and afa.cod_activosfijos=af.codigo and afa.cod_personal=$globalUser";
+where  af.cod_estadoactivofijo=1 and afa.cod_activosfijos=af.codigo and afa.cod_personal='$globalUser'";*/
+$sql="SELECT af.codigo as cod_activo,(SELECT abreviatura from unidades_organizacionales where codigo=af.cod_unidadorganizacional) as cod_unidadorganizacional,
+(Select abreviatura from areas where codigo=af.cod_area)as cod_area, af.activo, 
+(select afa.fechaasignacion from activofijos_asignaciones afa where afa.cod_activosfijos=af.codigo and afa.cod_personal=af.cod_responsables_responsable order by afa.codigo desc limit 0,1)as fechaasignacion,
+(select afa.cod_estadoasignacionaf from activofijos_asignaciones afa where afa.cod_activosfijos=af.codigo and afa.cod_personal=af.cod_responsables_responsable  order by afa.codigo desc limit 0,1)as cod_estadoasignacionaf,
+(select ea.nombre from activofijos_asignaciones afa, estados_asignacionaf ea where ea.codigo=afa.cod_estadoasignacionaf and afa.cod_activosfijos=af.codigo and afa.cod_personal=af.cod_responsables_responsable order by afa.codigo desc limit 0,1)as estado_asignacionaf, af.cod_responsables_responsable as cod_personal,
+(select afa.fecha_recepcion from activofijos_asignaciones afa where afa.cod_activosfijos=af.codigo and afa.cod_personal=af.cod_responsables_responsable  order by afa.codigo desc limit 0,1)as fecha_recepcion, af.codigoactivo
+from activosfijos af
+where  af.cod_estadoactivofijo=1 and af.cod_responsables_responsable='$globalUser'";
 
 $stmt = $dbh->prepare($sql);
 //ejecutamos

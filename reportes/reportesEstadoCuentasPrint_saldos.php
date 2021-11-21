@@ -64,8 +64,8 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                       <h6 class="card-title">Cuenta: <?=$stringGeneraCuentas;?></h6>
                       <h6 class="card-title">Unidad:<?=$stringGeneraUnidades?></h6-->             
                       <div class="row">
-                        <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Oficina: </b> <small><?=$unidadAbrev?></small></h6></div>
-                        <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Area: </b> <small><?=$areaAbrev?></small></h6></div>
+                        <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costos - Oficina: </b> <small><?=$unidadAbrev?></small></h6></div>
+                        <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costos - Area: </b> <small><?=$areaAbrev?></small></h6></div>
                       </div>
                     </div>
                     <div class="card-body">
@@ -90,7 +90,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                    
                     <div class="col-sm-4">
                         <div class="row">
-                        <label class="col-sm-4 col-form-label" style="color:red;">Centro de Costos - Oficina</label>
+                        <label class="col-sm-4 col-form-label" style="color:red;">CC-Oficina</label>
                         <div class="col-sm-8">
                         <div class="form-group">
                               <?php
@@ -109,7 +109,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                     </div>
                     <div class="col-sm-4">
                       <div class="row">
-                       <label class="col-sm-4 col-form-label" style="color:red;" >Centro de Costos - Area</label>
+                       <label class="col-sm-4 col-form-label" style="color:red;" >CC-Area</label>
                        <div class="col-sm-8">
                         <div class="form-group">
                                 <select class="selectpicker form-control form-control-sm" name="area_costo[]" id="area_costo" data-style="select-with-transition" multiple data-actions-box="true" required>
@@ -131,7 +131,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                     </div>
               </div>
               <div class="col-sm-1">
-                            <a href="#" onclick="cargarCuentasxCobrarPeriodo()" class="btn btn-white btn-sm" style="background:red; color:white;"><i class="material-icons">search</i> Buscar</a>
+                            <a href="#" onclick="cargarCuentasxCobrarPeriodo()" class="btn btn-white btn-sm" style="background:red; color:white;"><i class="material-icons">search</i>Filtrar</a>
                           </div>  
                   </div><!--div row-->
                        
