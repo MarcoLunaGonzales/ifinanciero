@@ -158,9 +158,7 @@ width: 100%;
             </table>
         </td></tr>
         <tr><td><p><span >El Área Administrativa mediante el presente acta, hace entrega de los bienes de uso detallados a continuación:</span></p></td></tr>
-    </table>
-
-        
+        <tr><td>
             <table class="table" >
                 <tr>
 
@@ -191,13 +189,17 @@ width: 100%;
                 </tr>
             <?php } ?>
             </table>
-        <p><span >El funcionario es responsable de los bienes de Uso a partir de la firma de la presente acta, comprometiendose a :<br>
+        </td></tr>
+        <tr><td>
+            &nbsp;
+        </td></tr>
+        <tr><td><p><span >El funcionario es responsable de los bienes de Uso a partir de la firma de la presente acta, comprometiendose a :<br>
             * Asumir la responsabilidad de los Bienes de Uso y Equipos de Oficina relacionados en el presente documento.<br>
             * Dar uso exclusivo para el desempeño de las funciones asignadas por la empresa.<br>
             * Se hace cargo por el daño o la perdida de los mismos a causa de negligencia o incumplimiento de las normas y procedimientos relacionados con el uso y conservación.<br>
-            * Se compromete a informar oportunamente al area administrativa sobre cualquier traslado temporal o definitivo, ademas de situaciones que pongan en peligro el Bien o Equipo mediante los aspectos formales.</span></p>
+            * Se compromete a informar oportunamente al area administrativa sobre cualquier traslado temporal o definitivo, ademas de situaciones que pongan en peligro el Bien o Equipo mediante los aspectos formales.</span></p></td></tr>
 
-        
+        <tr><td>
             <table width="100%">
                 <tr><td colspan="2"><center><b>HISTORIAL DE CAMBIOS</b></center></td></tr>
                 <tr valign="top">
@@ -242,6 +244,11 @@ width: 100%;
                     </td>
                 </tr>
             </table>
+        </td></tr>
+        <tr>
+            <td>&nbsp;</td></tr>
+        <tr>
+            <td>
             
                 <!-- <table class="table" width="70% !important" align="center" ><tr><td>&nbsp;<br>&nbsp;<br>Firma:</td><td></td><td></td></tr>
                     <tr><td></td><td class="text-center">ENTREGUE CONFORME</td><td class="text-center">RECIBI CONFORME</td></tr>
@@ -249,7 +256,9 @@ width: 100%;
                     <tr><td>Cargo:</td><td></td><td></td></tr>
                 </table> -->
             
-        
+            </td>
+        </tr>
+    </table>
 </body></html>
 
 
