@@ -38,8 +38,7 @@ if($estado!=1){
          actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);     
         }
 	}
-    if($estado==5){
-        
+    if($estado==5){    
         //crear la solicitud
         $simulacion=obtenerDatosCompletosPorSimulacionServicios($codigo);
         while ($row = $simulacion->fetch(PDO::FETCH_ASSOC)) {
@@ -50,14 +49,20 @@ if($estado!=1){
             }
             $IdTipo=$row['id_tiposervicio'];
             $IdCliente=$row['cod_cliente'];
+            $codObjeto=$row['cod_objetoservicio'];
+
             $Descripcion=obtenerServiciosClaServicioTipoNombre($IdTipo)."  ".obtenerServiciosTipoObjetoNombre($codObjeto);
             $IdUsuarioRegistro=$row['cod_responsable'];
             $fecharegistro=date("Y-m-d");
             if(!($row['idServicio']>0)){
              $idServicio=obtenerCodigoServicioIbnorca();
             // Prepare
-            $stmt = $dbh->prepare("INSERT INTO ibnorca.servicios (idServicio,IdArea,IdOficina,IdTipo,IdCliente,Descripcion,IdUsuarioRegistro,fecharegistro,IdPropuesta) 
-            VALUES ('$idServicio','$IdArea','$IdOficina','$IdTipo','$IdCliente','$Descripcion','$IdUsuarioRegistro','$fecharegistro','$codigo')");
+            $sqlInsertServicio="INSERT INTO ibnorca.servicios (idServicio,IdArea,IdOficina,IdTipo,IdCliente,Descripcion,IdUsuarioRegistro,fecharegistro,IdPropuesta) 
+            VALUES ('$idServicio','$IdArea','$IdOficina','$IdTipo','$IdCliente','$Descripcion','$IdUsuarioRegistro','$fecharegistro','$codigo')";
+            $stmt = $dbh->prepare($sqlInsertServicio);
+            
+            //echo $sqlInsertServicio;
+            
             // Bind
             $flagSuccessServicio=$stmt->execute();
             if($flagSuccessServicio==true){
@@ -123,6 +128,8 @@ if(isset($_GET['admin'])){
   //aprobar mediante servicio web
 }
 
+
+
 if(isset($_GET['q'])){
  if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlList2."&q=".$_GET['q']."&s=".$_GET['s']."&u=".$_GET['u'].$urlR);	
@@ -136,4 +143,6 @@ if(isset($_GET['q'])){
 	showAlertSuccessError(false,"../".$urlList2);
  }
 }
+
+
 ?>
