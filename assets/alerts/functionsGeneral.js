@@ -19644,7 +19644,6 @@ function modalActualizarDatosCliente(){
   });
   //** listamos el array al modal
 
-
   var datos=itemDatosClienteActualizar;
   //console.log(itemDatosProductosPlantilla_cabecera);
   $("#nit_cliente").val(datos[0]['nit']);  
@@ -19665,8 +19664,29 @@ function modalActualizarDatosCliente(){
   $("#contacto_cargo").val("");
   $("#contacto_telefono").val("");
   $("#contacto_email").val("");
+
+  //seleccionamos los contactos de los clientes
+  var contenedor;
+  contenedor = document.getElementById('contenedor_contactos_cliente');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'simulaciones_servicios/ajax_datosClienteActualizarPropuesta_contactos.php?codigo_cliente='+codigo_cliente,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);      
+      $('#modal_actualizar_cliente').modal('show');
+    }
+  }
+  ajax.send(null);
+
+
+
+
+
+  //*** termina contactos
+
   
-  $('#modal_actualizar_cliente').modal('show');
+  
 }
 
 function modalActualizarDatosCliente_enviar(){

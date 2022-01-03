@@ -985,6 +985,21 @@ $dbh = new Conexion();
           <div class="row">
             <label class="col-sm-12 col-form-label"><center><span style="text-align: center;color:blue;">Contacto</span></center></label>
           </div>
+
+
+          <div class="row">
+            <label class="col-sm-2 col-form-label" >Contactos</label>
+             <div class="col-sm-4">                     
+              <div class="form-group" id="contenedor_contactos_cliente">
+                
+               </div>
+             </div>
+            
+        </div>
+          
+
+         
+
           <div class="row">
             <label class="col-sm-2 col-form-label" >Nombre</label>
              <div class="col-sm-4">                     

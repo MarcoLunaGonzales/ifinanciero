@@ -294,7 +294,6 @@
     return $nivelCuenta;
   }
 
-
   function obtenerCodigoComprobante(){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from comprobantes c");
