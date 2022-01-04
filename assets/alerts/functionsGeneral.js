@@ -19679,15 +19679,28 @@ function modalActualizarDatosCliente(){
   }
   ajax.send(null);
 
-
-
-
-
   //*** termina contactos
 
   
   
 }
+
+ function modalActualizarDatosCliente_contactos(codigo){
+  var url="simulaciones_servicios/listPreciosDias.php";
+  ajax=nuevoAjax();
+    ajax.open("GET",url+"?codigo="+codigo,true);
+    ajax.onreadystatechange=function(){
+    if (ajax.readyState==4) {
+      
+      $("#contacto_nombre").val("");
+      $("#contacto_cargo").val("");
+      $("#contacto_telefono").val("");
+      $("#contacto_email").val("");
+      
+    }
+   }
+    ajax.send(null);
+ }
 
 function modalActualizarDatosCliente_enviar(){
   var codigo_cliente=$("#cliente").val();

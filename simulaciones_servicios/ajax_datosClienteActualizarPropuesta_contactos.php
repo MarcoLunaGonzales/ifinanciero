@@ -10,7 +10,7 @@ $codigo_cliente=$_GET['codigo_cliente'];
 
 ?>
 
-<select name="select_contactos" id="select_contactos" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" >
+<select name="select_contactos" id="select_contactos" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" onchange="modalActualizarDatosCliente_contactos(this.value)" >
 <?php 
 $query_contactos = "SELECT codigo,nombre,paterno,materno,cargo,telefono,correo from clientes_contactos
   where cod_cliente=$codigo_cliente and  cod_estadoreferencial=1";
