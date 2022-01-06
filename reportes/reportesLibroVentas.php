@@ -155,7 +155,8 @@ $fechaHasta2=$y."-12-31";
 	         	</div>
                 <div class="card-footer">
                 	<button type="submit" class="btn btn-success">Ver Reporte</button>
-                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_ventas()">Generar TXT</a>
+                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_ventas_excel()">Generar Excel (SIAT)</a>
+                	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_ventas()">Generar TXT (Facilito)</a>
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
 			  </div>
                </form> 
