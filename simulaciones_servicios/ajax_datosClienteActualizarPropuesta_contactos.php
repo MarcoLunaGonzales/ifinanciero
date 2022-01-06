@@ -5,17 +5,22 @@ require_once 'configModule.php';
 require_once '../functions.php';
 
 $dbh = new Conexion();
-
 $codigo_cliente=$_GET['codigo_cliente'];
-
+$lista=obtenerListaClientesWS_contactos($codigo_cliente);
 ?>
-
-<select name="select_contactos" id="select_contactos" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" >
-<?php 
-$query_contactos = "SELECT codigo,nombre,paterno,materno,cargo,telefono,correo from clientes_contactos
-  where cod_cliente=$codigo_cliente and  cod_estadoreferencial=1";
-$stmtContactos = $dbh->query($query_contactos);
-while ($row = $stmtContactos->fetch()){ ?>
-<option value="<?=$row["codigo"];?>"><?=$row["nombre"];?> <?=$row["paterno"];?> <?=$row["materno"];?></option>
-<?php } ?>
+<select name="select_contactos" id="select_contactos" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" onChange="modalActualizarDatosCliente_Contactos(this)">
+    <option value="">SELECCIONAR</option>
+<?php
+foreach ($lista->lstContactos as $listaContactos) {
+    $IdContactoX=$listaContactos->IdContacto;
+    $NombreCompletoX=$listaContactos->NombreCompleto;
+    $CargoContactoX=$listaContactos->CargoContacto;
+    $FonoContactoX=$listaContactos->FonoContacto;
+    $CorreoContactoX=$listaContactos->CorreoContacto;    
+    $VigenciaX=$listaContactos->Vigencia;//0 inactivo 1 activo
+    if($VigenciaX==1){?>
+    <option value="<?=$IdContactoX;?>"><?=$NombreCompletoX;?> (<?=$CargoContactoX?>)</option><?php
+    }
+}
+?>
 </select>

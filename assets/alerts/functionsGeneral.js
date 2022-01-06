@@ -19627,6 +19627,8 @@ function generarComprobanteExcel_TCS(){
 }
 
 var itemDatosClienteActualizar=[];
+
+var itemDatosClienteActualizar_contactos=[];
 function modalActualizarDatosCliente(){
   var codigo_cliente=$("#cliente").val();
   var parametos={"codigo_cliente":codigo_cliente};
@@ -19638,7 +19640,7 @@ function modalActualizarDatosCliente(){
     data: parametos, // Al atributo data se le asigna el objeto FormData.    
     async:false,    
     success: function(resultado){ // En caso de que todo salga bien.
-     $("#contenedor_oculto_actualizarCliente").html(resultado);
+      $("#contenedor_oculto_actualizarCliente").html(resultado);
       // $("#texto_boton").attr("disabled",true);
     }
   });
@@ -19646,7 +19648,7 @@ function modalActualizarDatosCliente(){
 
   var datos=itemDatosClienteActualizar;
   //console.log(itemDatosProductosPlantilla_cabecera);
-  $("#nit_cliente").val(datos[0]['nit']);  
+  $("#nit_cliente").val(datos[0]['nit']); 
   $("#razon_social_cliente").val(datos[0]['razonSocial']);
   $("#direccion_cliente").val(datos[0]['direccion']);
   $("#pais_cliente").val(datos[0]['pais']);
@@ -19664,7 +19666,6 @@ function modalActualizarDatosCliente(){
   $("#contacto_cargo").val("");
   $("#contacto_telefono").val("");
   $("#contacto_email").val("");
-
   //seleccionamos los contactos de los clientes
   var contenedor;
   contenedor = document.getElementById('contenedor_contactos_cliente');
@@ -19672,21 +19673,13 @@ function modalActualizarDatosCliente(){
   ajax.open('GET', 'simulaciones_servicios/ajax_datosClienteActualizarPropuesta_contactos.php?codigo_cliente='+codigo_cliente,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
-      contenedor.innerHTML = ajax.responseText;
+      contenedor.innerHTML = ajax.responseText;      
       $('.selectpicker').selectpicker(["refresh"]);      
       $('#modal_actualizar_cliente').modal('show');
     }
   }
   ajax.send(null);
-
-
-
-
-
   //*** termina contactos
-
-  
-  
 }
 
 function modalActualizarDatosCliente_enviar(){
@@ -19705,6 +19698,8 @@ function modalActualizarDatosCliente_enviar(){
   var mae_cargo= $("#mae_cargo_actualizar").val();
   var mae_telefono= $("#mae_telefono_actualizar").val();
   var mae_email= $("#mae_email_actualizar").val();
+  
+  var id_contacto= $("#id_contacto").val();
   var contacto_nombre= $("#contacto_nombre_actualizar").val();
   var contacto_cargo= $("#contacto_cargo_actualizar").val();
   var contacto_telefono= $("#contacto_telefono_actualizar").val();
@@ -19714,7 +19709,7 @@ function modalActualizarDatosCliente_enviar(){
   var parametos={"codigo_cliente":codigo_cliente,"nit_cliente":nit_cliente,"razon_social_cliente":razon_social_cliente,"direccion_cliente":direccion_cliente,"pais_cliente":pais_cliente,"ciudad_cliente":ciudad_cliente,"departamento_cliente":departamento_cliente,"telefono_cliente":telefono_cliente
     ,"fax_cliente":fax_cliente,"email_cliente":email_cliente,"web_cliente":web_cliente
     ,"mae_nombre":mae_nombre,"mae_cargo":mae_cargo,"mae_telefono":mae_telefono
-    ,"mae_email":mae_email,"contacto_nombre":contacto_nombre,"contacto_cargo":contacto_cargo,"contacto_telefono":contacto_telefono,"contacto_email":contacto_email};
+    ,"mae_email":mae_email,"id_contacto":id_contacto,"contacto_nombre":contacto_nombre,"contacto_cargo":contacto_cargo,"contacto_telefono":contacto_telefono,"contacto_email":contacto_email};
   var destino = "simulaciones_servicios/ajax_datosClienteActualizarPropuesta_enviar.php"; 
   $.ajax({
     url: destino,
@@ -19736,7 +19731,24 @@ function modalActualizarDatosCliente_enviar(){
   $('#modal_actualizar_cliente').modal('hide');
 }
 
- //****** termina cargado
+function modalActualizarDatosCliente_Contactos(combo){
+  var cod_contacto=combo.value;
+  $("#id_contacto").val(cod_contacto);
+  var datos_contactos=itemDatosClienteActualizar_contactos;
+  for (var fila = 0; fila <datos_contactos.length; fila++) {
+    var IdContacto=datos_contactos[fila]['IdContacto'];
+    if(cod_contacto==IdContacto){
+      $("#contacto_nombre").val(datos_contactos[fila]['NombreCompleto']);
+      $("#contacto_cargo").val(datos_contactos[fila]['CargoContacto']);
+      $("#contacto_telefono").val(datos_contactos[fila]['FonoContacto']);
+      $("#contacto_email").val(datos_contactos[fila]['CorreoContacto']);
+    }
+  }
+}
+
+//****** termina cargado
+
+
 
 
 function guardarAtributoItem_prueba(){
