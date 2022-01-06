@@ -19679,6 +19679,9 @@ function modalActualizarDatosCliente(){
     }
   }
   ajax.send(null);
+
+
+
   //*** termina contactos
 }
 
