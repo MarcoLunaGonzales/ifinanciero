@@ -1,40 +1,36 @@
 <?php //ESTADO FINALIZADO
 
-require_once __DIR__.'/../conexion.php';
-require_once __DIR__.'/../functions.php';
-require_once __DIR__.'/../functionsGeneral.php';
-require_once  __DIR__.'/../fpdf_html.php';
 
-//require_once '../layouts/bodylogin2.php';
+$fecha=date('Y-m-d');
+$nombre_archivo="archivoSIAT_ventas-".$fecha.".xls";
+header('Content-Type: application/octet-stream');
+header("Content-Transfer-Encoding: Binary"); 
+// header("Content-disposition: attachment; filename=\"archivofacilito.xls\""); 
+header("Content-disposition: attachment; filename=".$nombre_archivo); 
+
+require_once '../conexion.php';
+require_once '../functions.php';
+require_once '../functionsGeneral.php';
+require_once  '../fpdf_html.php';
+
 
 $dbh = new Conexion();
 //creamos el archivo txt
-$fecha=date('Y-m-d');
-$nombre_archivo="archivofacilito_ventas-".$fecha.".txt";
-header('Conte')
-
-
-
-
-//limpiamos en archivo
-$arch = fopen ("archivos_txt/".$nombre_archivo, "w+") or die ("nada");
-fwrite($arch,"");
-fclose($arch);
-//archi limpiado
-$archivo=fopen("archivos_txt/".$nombre_archivo, "a") or die ("#####0#####");//a de apertura de archivo
+echo "<table><td>Nº</td><td>ESPECIFICACION</td><td>FECHA DE LA FACTURA</td><td>N° DE LA FACTURA</td><td>CODIGO DE AUTORIZACION</td><td>NIT / CI CLIENTE</td><td>COMPLEMENTO</td><td>NOMBRE O RAZON SOCIAL</td><td>IMPORTE TOTAL DE LA VENTA</td><td>IMPORTE ICE</td><td>IMPORTE IEHD
+</td><td>IMPORTE IPJ</td><td>TASAS</td><td>OTROS NO SUJETOS AL IVA</td><td>EXPORTACIONES Y OPERACIONES EXENTAS</td><td>VENTAS GRAVADAS A TASA CERO</td><td>SUBTOTAL</td><td>DESCUENTOS, BONIFICACIONES Y REBAJAS SUJETAS AL IVA</td><td>IMPORTE GIFT CARD</td><td>IMPORTE BASE PARA DEBITO FISCAL</td><td>DEBITO FISCAL</td><td>ESTADO</td><td>CODIGO DE CONTROL</td><td>TIPO DE VENTA</td>";
 //RECIBIMOS LAS VARIABLES
-$gestion = $_POST["cod_gestion"];
-//$cod_mes_x = $_POST["cod_mes"];
-$unidad=$_POST["unidad"];
+$gestion = $_GET["cod_gestion"];
+//$cod_mes_x = $_GET["cod_mes"];
+$unidad=$_GET["unidad"];
 $desdeInicioAnio="";
-if($_POST["fecha_desde"]==""){
+if($_GET["fecha_desde"]==""){
   $y=$globalNombreGestion;
   $desde=$y."-01-01";
   $hasta=$y."-12-31";
   $desdeInicioAnio=$y."-01-01";
 }else{
-  $porcionesFechaDesde = explode("-", $_POST["fecha_desde"]);
-  $porcionesFechaHasta = explode("-", $_POST["fecha_hasta"]);
+  $porcionesFechaDesde = explode("-", $_GET["fecha_desde"]);
+  $porcionesFechaHasta = explode("-", $_GET["fecha_hasta"]);
 
   $desdeInicioAnio=$porcionesFechaDesde[0]."-01-01";
   $desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
@@ -43,6 +39,7 @@ if($_POST["fecha_desde"]==""){
 
 $nombre_gestion=nameGestion($gestion);
 $sql="SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and cod_unidadorganizacional in ($unidad) ORDER BY nro_factura asc"; //MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion
+// echo $sql; 
 $stmt2 = $dbh->prepare($sql);
 $stmt2->execute();
 //resultado
@@ -66,16 +63,16 @@ $stmt2->bindColumn('importe', $importe);
 $stmt2->bindColumn('observaciones', $observaciones);
 $stmt2->bindColumn('cod_estadofactura', $cod_estadofactura);
 $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
-try {
+
 	$index=1;           
 	while ($row = $stmt2->fetch()) {
 	$importe=sumatotaldetallefactura($codigo);                             
 	switch ($cod_estadofactura) {
         case 1:
-          $btnEstado='<span class="badge badge-success">';
+          // $btnEstado='<span class="badge badge-success">';
         break;
         case 2:
-          $btnEstado='<span class="badge badge-danger">';
+          // $btnEstado='<span class="badge badge-danger">';
           $razon_social="ANULADO";
           $importe=0;
           $codigo_control=0;
@@ -83,11 +80,11 @@ try {
          // $fecha_factura=0;
         break;
         case 3:
-          $btnEstado='<span class="badge badge-success">';
+          // $btnEstado='<span class="badge badge-success">';
           $cod_estadofactura=1;
         break;
         case 4:
-          $btnEstado='<span class="badge badge-default">';
+          // $btnEstado='<span class="badge badge-default">';
           $cod_estadofactura=1;
       }
 	$nombre_estado=nameEstadoFactura($cod_estadofactura);
@@ -109,15 +106,7 @@ try {
     $codigo_control=trim($codigo_control);
 
 	//agregamos los items al archivo	
-	$texto="3|".$index."|".$fecha_factura."|".$nro_factura."|".$nro_autorizacion."|".$nombre_estado."|".$nit."|".$razon_social."|".number_format($importe,2,'.','')."|".number_format($importe_no_iva,2,'.','')."|".number_format($extento,2,'.','')."|".number_format($ventas_gravadas,2,'.','')."|".number_format($subtotal,2,'.','')."|".number_format($rebajas_sujetos_iva,2,'.','')."|".number_format($importe_debito_fiscal,2,'.','')."|".number_format($debito_fiscal,2,'.','')."|".$codigo_control;
-	fwrite($archivo, $texto);
-	fwrite($archivo, "".PHP_EOL);
-	
+	echo "<tr><td>".$index."</td><td>2</td><td>".$fecha_factura."</td><td>".$nro_factura."</td><td>".$nro_autorizacion."</td><td>".$nit."</td><td></td><td>".$razon_social."</td><td>".number_format($importe,2,'.',',')."</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>".number_format($importe,2,'.',',')."</td><td>0.00</td><td>0.00</td><td>".number_format($importe,2,'.',',')."</td><td>".number_format($debito_fiscal,2,'.',',')."</td><td>".$nombre_estado."</td><td>".$codigo_control."</td><td>0</td></tr>";
 	$index++; } 
-	fclose($archivo);
-	// echo "#####1#####".$nombre_archivo;
-
-} catch (Exception $e) {
-	// echo "#####0#####";
-}
+echo "</table>";
 ?>

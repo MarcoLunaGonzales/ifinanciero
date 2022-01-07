@@ -16362,34 +16362,11 @@ function descargar_txt_libro_ventas_excel(){
           Swal.fire("Informativo!", "Por favor seleccione la unidad!", "warning");
         }else{   
           // alert("llegue");
-          $.ajax({
-          type:"POST",
-          data:"cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta,
-          url:"reportes/reportePrintLibroVentasExcel.php",
-          beforeSend:function(){
-               //iniciar carga 
-              $("#texto_ajax_titulo").html("Generando Archivo"); 
-              iniciarCargaAjax();
-          },
-          success:function(r){
-            detectarCargaAjax();
-            $("#texto_ajax_titulo").html("Procesando Datos");
-            var respu=r.split('#####');
-            var estado=respu[1];
-            var nombre_ar=respu[2];
-            // console.log(r);
-            if(estado==1){
-              // Swal.fire("Correcto!", "El proceso se completo correctamente!", "success");
-              // alerts.showSwal('success-message','reportes/'+nombre_ar);
-              var direccion=nombre_ar;
-              descargar_txt_libro_ventas_x(direccion);
-            }else{
-              
-              Swal.fire("ERROR!", "Hubo un error al generar el TXT!", "warning");
-              
-            }
-          }
-          }); 
+
+          var urlEditar="reportes/reportePrintLibroVentasExcel.php?cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta;    
+          window.open(urlEditar, '_blank');
+
+           
         }         
       }
     }
@@ -16438,6 +16415,29 @@ function descargar_txt_libro_compras(){
             }
           }
           }); 
+        }      
+      }
+    }
+}
+
+function descargar_txt_libro_compras_excel(){
+    var cod_gestion=$("#gestiones").val();
+    //var cod_mes=$("#cod_mes_x").val();
+    var cod_mes=12;
+    var fecha_desde=$("#fecha_desde").val();
+    var fecha_hasta=$("#fecha_hasta").val();
+    var unidad=$("#unidad").val();
+    if(cod_gestion==null || cod_gestion==''){
+      Swal.fire("Informativo!", "Por favor Seleccione la gestión!", "warning");
+    }else{
+      if(cod_mes==null || cod_mes==''){
+        Swal.fire("Informativo!", "Por favor Seleccione el mes!", "warning");
+      }else{
+        if(unidad==null || unidad==''){
+          Swal.fire("Informativo!", "Por favor seleccione la unidad!", "warning");
+        }else{     
+          var urlEditar="reportes/reportePrintLibroComprasExcel.php?cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta;    
+          window.open(urlEditar, '_blank');
         }      
       }
     }
