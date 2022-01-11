@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 function obtenerListaLibretaBancaria(){
-  require_once __DIR__.'/../conexion.php';
+  require_once __DIR__.'/../conexion_simple.php';
   $dbh = new Conexion();
   $sqlX="SET NAMES 'utf8'";
   $stmtX = $dbh->prepare($sqlX);
@@ -136,7 +136,7 @@ WHERE dc.cod_estadoreferencial=1";
 }
 
 function obtenerDatosLibreta($codigo,$anioLib,$montoLibreta,$fechaLibreta,$nombreLibreta,$codFactura){
-  require_once __DIR__.'/../conexion.php';
+  require_once __DIR__.'/../conexion_simple.php';
   require_once __DIR__.'/../functions.php';
   $dbh = new Conexion();
   $sqlX="SET NAMES 'utf8'";

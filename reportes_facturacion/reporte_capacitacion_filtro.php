@@ -14,13 +14,16 @@ $globalUser="";
 $dbh = new Conexion();
 $fechaActual=date("m/d/Y");
 $m=date("m");
-$y=date("Y");
+
+$y=date("Y")-1;
+$y2=date("Y");
+
 $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
 $fechaDesde=$y."-01-01";
-$fechaHasta=$y."-".$m."-".$d;
+$fechaHasta=$y2."-".$m."-".$d;
 
 $fechaDesde2=$y."-01-01";
-$fechaHasta2=$y."-12-31";
+$fechaHasta2=$y2."-12-31";
 ?>
 
 <div class="content">
