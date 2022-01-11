@@ -5,6 +5,7 @@ require '../assets/phpqrcode/qrlib.php';
 
 //require_once 'configModule.php';
 require_once __DIR__.'/../functions.php';
+require_once __DIR__.'/../functionsGeneral.php';
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
@@ -76,7 +77,7 @@ try{
     $stmt2 = $dbh->prepare("SELECT * 
     from mesdepreciaciones m, mesdepreciaciones_detalle md
     WHERE m.codigo = md.cod_mesdepreciaciones 
-    and md.cod_activosfijos = :codigo");
+    and md.cod_activosfijos = :codigo order by m.codigo desc limit 0,5");
     // Ejecutamos
     //$stmt2->bindParam(':mes',$mes2);
     $stmt2->bindParam(':codigo',$codigo_af);
@@ -147,6 +148,7 @@ $html.=  '<header class="header">'.
                     $row = $stmt2->fetch();
                         $d2_valorresidual_aux = $row["d2_valorresidual"];
                         $d10_valornetobs_aux = $row["d10_valornetobs"];
+                        $d10_formateado=formatNumberDec($d10_valornetobs_aux);
                     $html.='<tr>'.
                         '<td class="text-left small" >'.
                             '<p>'.
@@ -161,8 +163,8 @@ $html.=  '<header class="header">'.
                                 '<b>Estado Bien : </b>'.$estadobien.' <br>'.
                                 '<b>Fecha alta : </b>'.$fechalta.'<br>'.
                                 '<b>Tipo Bien : </b>'.$tipo_bien.'<br>'.
-                                '<b>Valor Residual : </b> '.$d2_valorresidual_aux.'<br>'.
-                                '<b>Valor Neto Bs : </b>'.$d10_valornetobs_aux.'<br>'.'<br>'.
+                                '<b>Ultimo Mes Depreciado : </b>'.$mes3.' / '.$gestion3.'<br>'.
+                                '<b>Valor Neto (Bs): </b>'.$d10_formateado.'<br>'.'<br>'.
                                 '<b>Proyecto Financiación : </b>'.$nom_proy_financiacion.
                             '</p>'.
                         '</td>'.
@@ -234,7 +236,7 @@ $html.=  '<header class="header">'.
             '</table>'.        
         '</body>'.
       '</html>';           
-descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
+descargarPDF("Ficha Activo Fijo - ".$codigo,$html);
 
 ?>
 
