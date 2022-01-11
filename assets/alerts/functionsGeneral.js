@@ -19678,7 +19678,8 @@ function generarComprobanteExcel_TCS(){
 var itemDatosClienteActualizar=[];
 
 var itemDatosClienteActualizar_contactos=[];
-function modalActualizarDatosCliente(){
+function modalActualizarDatosCliente(cod_area){
+  iniciarCargaAjax();
   var codigo_cliente=$("#cliente").val();
   var parametos={"codigo_cliente":codigo_cliente};
   var destino = "simulaciones_servicios/ajax_datosClienteActualizarPropuesta.php"; 
@@ -19715,6 +19716,8 @@ function modalActualizarDatosCliente(){
   $("#contacto_cargo").val("");
   $("#contacto_telefono").val("");
   $("#contacto_email").val("");
+
+  $("#cod_area_contacto").val(cod_area);
   //seleccionamos los contactos de los clientes
   var contenedor;
   contenedor = document.getElementById('contenedor_contactos_cliente');
@@ -19723,7 +19726,8 @@ function modalActualizarDatosCliente(){
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;      
-      $('.selectpicker').selectpicker(["refresh"]);      
+      $('.selectpicker').selectpicker(["refresh"]);
+      detectarCargaAjax();      
       $('#modal_actualizar_cliente').modal('show');
     }
   }
@@ -19734,7 +19738,7 @@ function modalActualizarDatosCliente(){
   //*** termina contactos
 }
 
-function modalActualizarDatosCliente_enviar(){
+function modalActualizarDatosCliente_enviar(tipo){
   var codigo_cliente=$("#cliente").val();
   var nit_cliente= $("#nit_cliente_actualizar").val();
   var razon_social_cliente= $("#razon_social_cliente_actualizar").val();
@@ -19756,12 +19760,13 @@ function modalActualizarDatosCliente_enviar(){
   var contacto_cargo= $("#contacto_cargo_actualizar").val();
   var contacto_telefono= $("#contacto_telefono_actualizar").val();
   var contacto_email= $("#contacto_email_actualizar").val();
+  var cod_area_contacto= $("#cod_area_contacto").val();
   
 
   var parametos={"codigo_cliente":codigo_cliente,"nit_cliente":nit_cliente,"razon_social_cliente":razon_social_cliente,"direccion_cliente":direccion_cliente,"pais_cliente":pais_cliente,"ciudad_cliente":ciudad_cliente,"departamento_cliente":departamento_cliente,"telefono_cliente":telefono_cliente
     ,"fax_cliente":fax_cliente,"email_cliente":email_cliente,"web_cliente":web_cliente
     ,"mae_nombre":mae_nombre,"mae_cargo":mae_cargo,"mae_telefono":mae_telefono
-    ,"mae_email":mae_email,"id_contacto":id_contacto,"contacto_nombre":contacto_nombre,"contacto_cargo":contacto_cargo,"contacto_telefono":contacto_telefono,"contacto_email":contacto_email};
+    ,"mae_email":mae_email,"id_contacto":id_contacto,"contacto_nombre":contacto_nombre,"contacto_cargo":contacto_cargo,"contacto_telefono":contacto_telefono,"contacto_email":contacto_email,"cod_area_contacto":cod_area_contacto,"tipo":tipo};
   var destino = "simulaciones_servicios/ajax_datosClienteActualizarPropuesta_enviar.php"; 
   $.ajax({
     url: destino,

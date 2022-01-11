@@ -324,7 +324,7 @@ $dbh = new Conexion();
                             <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante()" class="btn btn-primary btn-fab btn-sm">
                               <i class="material-icons">content_paste</i>
                             </a>
-                            <a  title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente()" class="btn btn-success btn-fab btn-sm">
+                            <a  title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente('39')" class="btn btn-success btn-fab btn-sm">
                               <i class="material-icons">replay_circle_filled</i>
                             </a>
                         </div>
@@ -517,7 +517,7 @@ $dbh = new Conexion();
                           <a title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante_tcs()" class="btn btn-primary btn-fab btn-sm">
                             <i class="material-icons">content_paste</i>
                           </a>
-                          <a title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente()" class="btn success-success btn-fab btn-sm">
+                          <a title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente('38')" class="btn success-success btn-fab btn-sm">
                             <i class="material-icons">replay_circle_filled</i>
                           </a>
                         </div>       
@@ -780,6 +780,7 @@ $dbh = new Conexion();
           <div class="row">
             <label class="col-sm-6 "><center><span style="text-align: center;color:red;">Datos Actuales</span></center></label>             
             <label class="col-sm-6 "><center><span style="text-align: center;color:green;">Datos a Actualizar</span></center></label>             
+            <input type="hidden" name="cod_area_contacto" id="cod_area_contacto" value="0">
           </div>
           <div class="row">
             <label class="col-sm-2 col-form-label" >Nit</label>
@@ -922,6 +923,20 @@ $dbh = new Conexion();
                </div>
              </div>                
           </div>
+
+           <div class="row">
+             <div class="col-sm-8">                     
+               <div class="form-group">
+               </div>
+             </div>                
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <button type="button" id="boton_guardarDatosCliente" class="btn btn-success btn-sm" onclick="modalActualizarDatosCliente_enviar('1')">Actualizar Datos Cliente</button>
+               </div>
+             </div>                
+          </div>
+
+          
           <div class="row">
             <label class="col-sm-12 col-form-label"><center><span style="text-align: center;color:blue;">Máxima Autoridad Ejecutiva</span></center></label>
           </div>
@@ -981,6 +996,17 @@ $dbh = new Conexion();
                  <input type="text" readonly class="form-control" name="mae_email_actualizar" id="mae_email_actualizar" value="">
                </div>
              </div>
+          </div>
+          <div class="row">
+             <div class="col-sm-8">                     
+               <div class="form-group">
+               </div>
+             </div>                
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <button type="button" id="boton_guardarDatosCliente" class="btn btn-success btn-sm" onclick="modalActualizarDatosCliente_enviar('2')">Actualizar Datos MAE</button>
+               </div>
+             </div>                
           </div>
           <div class="row">
             <label class="col-sm-12 col-form-label"><center><span style="text-align: center;color:blue;">Contacto</span></center></label>
@@ -1053,9 +1079,20 @@ $dbh = new Conexion();
                </div>
              </div>
           </div>
+            <div class="row">
+             <div class="col-sm-8">                     
+               <div class="form-group">
+               </div>
+             </div>                
+             <div class="col-sm-4">                     
+               <div class="form-group">
+                 <button type="button" id="boton_guardarDatosCliente" class="btn btn-success btn-sm" onclick="modalActualizarDatosCliente_enviar('3')">Actualizar Datos Contacto</button>
+               </div>
+             </div>                
+          </div>
           <hr>
           <div class="form-group float-right">
-            <button type="button" id="boton_guardarsim" class="btn btn-danger" onclick="modalActualizarDatosCliente_enviar()">Confirmar Actualización</button>
+            <button type="button" id="boton_guardarsim" class="btn btn-warning btn-sm" onclick="modalActualizarDatosCliente_enviar('0')">Actualizar TODO</button>
           </div> 
       </div>
       <div id="contenedor_oculto_actualizarCliente"></div>
