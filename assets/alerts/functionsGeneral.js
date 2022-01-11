@@ -16346,6 +16346,8 @@ function descargar_txt_libro_ventas(){
     }
 }
 function descargar_txt_libro_ventas_excel(){
+   $("#texto_ajax_titulo").html("Generando Archivo"); 
+    iniciarCargaAjax();
     var cod_gestion=$("#gestiones").val();
     //var cod_mes=$("#cod_mes_x").val();
     var cod_mes=12;
@@ -16365,6 +16367,7 @@ function descargar_txt_libro_ventas_excel(){
 
           var urlEditar="reportes/reportePrintLibroVentasExcel.php?cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta;    
           window.open(urlEditar, '_blank');
+          detectarCargaAjax();
 
            
         }         
@@ -16421,6 +16424,9 @@ function descargar_txt_libro_compras(){
 }
 
 function descargar_txt_libro_compras_excel(){
+    $("#texto_ajax_titulo").html("Generando Archivo"); 
+    iniciarCargaAjax();
+
     var cod_gestion=$("#gestiones").val();
     //var cod_mes=$("#cod_mes_x").val();
     var cod_mes=12;
@@ -16438,6 +16444,7 @@ function descargar_txt_libro_compras_excel(){
         }else{     
           var urlEditar="reportes/reportePrintLibroComprasExcel.php?cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta;    
           window.open(urlEditar, '_blank');
+          detectarCargaAjax();
         }      
       }
     }
