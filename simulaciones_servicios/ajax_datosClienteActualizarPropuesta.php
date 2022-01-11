@@ -14,7 +14,6 @@ $codigo_cliente=$_GET['codigo_cliente'];
 foreach ($lista->lista as $listaCliente) {
     $codigoX=$listaCliente->IdCliente;
     if($codigo_cliente==$codigoX){
-
         $nombreX=$listaCliente->NombreRazon;
         $identificacionX=$listaCliente->Identificacion;
         $paisX=$listaCliente->Pais;
@@ -26,7 +25,7 @@ foreach ($lista->lista as $listaCliente) {
 
         ?>
         <script>itemDatosClienteActualizar.push({razonSocial:"<?=$nombreX?>",nit:"<?=$identificacionX?>",direccion:"<?=$direccionX?>",pais:"<?=$paisX?>",ciudad:"<?=$Ciudad?>",deptartamento:"<?=$deptartamentoX?>",telefono:"<?=$telefonoX?>",fax:0,email:"<?=$correoX?>",web:""});
-        </script><?php        
+        </script><?php
 
         // $nombreX=$listaCliente->NombreRazon;
         // if(isset($listaCliente->Identificacion))
@@ -56,6 +55,21 @@ foreach ($lista->lista as $listaCliente) {
         //     $telefonoX=$listaCliente->Telefono;
         // else $telefonoX=0;
 
+    }
+}
+
+//lista,os los contactos
+$lista_contacto=obtenerListaClientesWS_contactos($codigo_cliente);
+foreach ($lista_contacto->lstContactos as $listaContactos) {
+    $IdContactoX=$listaContactos->IdContacto;
+    $NombreCompletoX=$listaContactos->NombreCompleto;
+    $CargoContactoX=$listaContactos->CargoContacto;
+    $FonoContactoX=$listaContactos->FonoContacto;
+    $CorreoContactoX=$listaContactos->CorreoContacto;    
+    $VigenciaX=$listaContactos->Vigencia;//0 inactivo 1 activo
+    if($VigenciaX==1){?>    
+    <script>itemDatosClienteActualizar_contactos.push({IdContacto:"<?=$IdContactoX?>",NombreCompleto:"<?=$NombreCompletoX?>",CargoContacto:"<?=$CargoContactoX?>",FonoContacto:"<?=$FonoContactoX?>",CorreoContacto:"<?=$CorreoContactoX?>"});
+        </script><?php
     }
 }
 ?>

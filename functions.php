@@ -294,7 +294,6 @@
     return $nivelCuenta;
   }
 
-
   function obtenerCodigoComprobante(){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT IFNULL(max(c.codigo)+1,1)as codigo from comprobantes c");
@@ -6554,6 +6553,33 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       curl_close ($ch);  
       return json_decode($remote_server_output);       
   }
+
+  function obtenerListaClientesWS_contactos($codigo_cliente){
+    $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+    $sIde = "ifinanciero";
+    $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
+    // $sIde = "monitoreo";
+    // $sKey = "837b8d9aa8bb73d773f5ef3d160c9b17";
+    /*Lista de Clientes Empresa*/
+    $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ListarContactosEmpresaXLS","IdCliente" => $codigo_cliente); 
+    $parametros=json_encode($parametros);
+    // abrimos la sesión cURL
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    curl_setopt($ch, CURLOPT_URL,$direccion."registro/ws-fin-cliente-contacto.php");     
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    // cerramos la sesión cURL
+    curl_close ($ch);  
+    return json_decode($remote_server_output);       
+  }
+
+
   function nameContacto($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT nombre,paterno,materno FROM clientes_contactos where codigo=:codigo");
