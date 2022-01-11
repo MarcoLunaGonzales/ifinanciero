@@ -45,42 +45,42 @@ if(isset($_FILES['file_excel'])){
                 if(isset($Row[3])){$email=trim($Row[3]);}
                 if(isset($Row[7])){$web=trim($Row[7]);}
             }
-            if($i==14){//datos de la cabecera
+            if($i==15){//datos de la cabecera
                 if(isset($Row[3])){$mae_nombre=trim($Row[3]);}                
             }
-            if($i==15){//datos de la cabecera
+            if($i==16){//datos de la cabecera
                 if(isset($Row[3])){$mae_cargo=trim($Row[3]);}                
             }
-            if($i==16){//datos de la cabecera
+            if($i==17){//datos de la cabecera
                 if(isset($Row[3])){$mae_telefono=trim($Row[3]);}                
             }
-            if($i==17){//datos de la cabecera
+            if($i==18){//datos de la cabecera
                 if(isset($Row[3])){$mae_email=trim($Row[3]);}                
             }
 
-            if($i==19){//datos de la cabecera
+            if($i==20){//datos de la cabecera
                 if(isset($Row[3])){$contacto_nombre=trim($Row[3]);}                
             }
-            if($i==20){//datos de la cabecera
+            if($i==21){//datos de la cabecera
                 if(isset($Row[3])){$contacto_cargo=trim($Row[3]);}                
             }
-            if($i==21){//datos de la cabecera
+            if($i==22){//datos de la cabecera
                 if(isset($Row[3])){$contacto_telefono=trim($Row[3]);}                
             }
-            if($i==22){//datos de la cabecera
+            if($i==23){//datos de la cabecera
                 if(isset($Row[3])){$contacto_email=trim($Row[3]);}                
             } 
 
 
 
-            if($i==61){//nombre sitio
+            if($i==62){//nombre sitio
                 $array_datos[0]=$Row[4];
                 $array_datos[1]=$Row[5];
                 $array_datos[2]=$Row[6];
                 $array_datos[3]=$Row[7];
                 $array_datos[4]=$Row[8];
             }
-            if($i==62){//direccion
+            if($i==63){//direccion
                 $array_datos2[0]=$Row[4];
                 $array_datos2[1]=$Row[5];
                 $array_datos2[2]=$Row[6];

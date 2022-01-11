@@ -8,59 +8,47 @@ require_once '../styles.php';
 $dbh = new Conexion();
 
 //lista de contactos
-$lista=obtenerListaClientesWS();
+
+
 
 $codigo_cliente=$_GET['codigo_cliente'];
-foreach ($lista->lista as $listaCliente) {
-    $codigoX=$listaCliente->IdCliente;
-    if($codigo_cliente==$codigoX){
-        $nombreX=$listaCliente->NombreRazon;
-        $identificacionX=$listaCliente->Identificacion;
-        $paisX=$listaCliente->Pais;
-        $deptartamentoX=$listaCliente->Departamento;
-        $Ciudad=$listaCliente->Ciudad;
-        $direccionX=$listaCliente->Direccion;
-        $correoX=$listaCliente->Correo;
-        $telefonoX=$listaCliente->Telefono;
+$datosCliente=obtenerListaClientesWS_X($codigo_cliente);
+$detalle_cliente=$datosCliente->datos;
+// foreach ($lista->datos as $listaCliente) {    
+    $nombreX=$detalle_cliente->NombreRazon;
+    $identificacionX=$detalle_cliente->Identificacion;
+    $paisX=$detalle_cliente->Pais;
+    $deptartamentoX=$detalle_cliente->Departamento;
+    $Ciudad=$detalle_cliente->Ciudad;
+    $direccionX=$detalle_cliente->Direccion;
+    $correoX=$detalle_cliente->Correo;
+    $telefonoX=$detalle_cliente->Telefono;
+    ?>
+    <script>itemDatosClienteActualizar.push({razonSocial:"<?=$nombreX?>",nit:"<?=$identificacionX?>",direccion:"<?=$direccionX?>",pais:"<?=$paisX?>",ciudad:"<?=$Ciudad?>",deptartamento:"<?=$deptartamentoX?>",telefono:"<?=$telefonoX?>",fax:0,email:"<?=$correoX?>",web:""});
+    </script><?php
+    
+// }
 
-        ?>
-        <script>itemDatosClienteActualizar.push({razonSocial:"<?=$nombreX?>",nit:"<?=$identificacionX?>",direccion:"<?=$direccionX?>",pais:"<?=$paisX?>",ciudad:"<?=$Ciudad?>",deptartamento:"<?=$deptartamentoX?>",telefono:"<?=$telefonoX?>",fax:0,email:"<?=$correoX?>",web:""});
+//listamos los Datos MAE
+$datosMAE=obtenerListaClientesWS_contactos($codigo_cliente,1);//tipo MAE
+// var_dump($datosMAE);
+foreach ($datosMAE->lista as $listaContactosMae) {
+    $IdContactoMae=$listaContactosMae->IdContacto;
+    $NombreCompletoMae=$listaContactosMae->NombreCompleto;
+    $CargoContactoMae=$listaContactosMae->CargoContacto;
+    $FonoContactoMae=$listaContactosMae->FonoContacto;
+    $CorreoContactoMae=$listaContactosMae->CorreoContacto;    
+    $VigenciaMae=$listaContactosMae->Vigencia;//0 inactivo 1 activo
+    if($VigenciaMae==1){ ?>    
+    <script>itemDatosClienteActualizar_contactos_mae.push({IdContacto:"<?=$IdContactoMae?>",NombreCompleto:"<?=$NombreCompletoMae?>",CargoContacto:"<?=$CargoContactoMae?>",FonoContacto:"<?=$FonoContactoMae?>",CorreoContacto:"<?=$CorreoContactoMae?>"});
         </script><?php
-
-        // $nombreX=$listaCliente->NombreRazon;
-        // if(isset($listaCliente->Identificacion))
-        //     $identificacionX=$listaCliente->Identificacion;
-        // else $identificacionX=0;
-
-        // if(isset($listaCliente->Pais))
-        //     $paisX=$listaCliente->Pais;
-        // else $paisX=0;
-        // if(isset($listaCliente->Deptartamento))
-        //     $deptartamentoX=$listaCliente->Deptartamento;
-        // else $deptartamentoX=0;
-
-        // if(isset($listaCliente->Ciudad))
-        //     $Ciudad=strtoupper($listaCliente->Ciudad);
-        // else $Ciudad=0;
-
-        // if(isset($listaCliente->Direccion))
-        //     $direccionX=$listaCliente->Direccion;
-        // else $direccionX=0;
-
-        // if(isset($listaCliente->Correo))
-        //     $correoX=$listaCliente->Correo;
-        // else $correoX=0;
-
-        // if(isset($listaCliente->Telefono))
-        //     $telefonoX=$listaCliente->Telefono;
-        // else $telefonoX=0;
-
     }
+
 }
 
-//lista,os los contactos
-$lista_contacto=obtenerListaClientesWS_contactos($codigo_cliente);
-foreach ($lista_contacto->lstContactos as $listaContactos) {
+//listamos los contactos
+$datosContacto=obtenerListaClientesWS_contactos($codigo_cliente,2);
+foreach ($datosContacto->lstContactos as $listaContactos) {
     $IdContactoX=$listaContactos->IdContacto;
     $NombreCompletoX=$listaContactos->NombreCompleto;
     $CargoContactoX=$listaContactos->CargoContacto;
