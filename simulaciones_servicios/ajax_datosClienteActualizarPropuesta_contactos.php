@@ -6,7 +6,7 @@ require_once '../functions.php';
 
 $dbh = new Conexion();
 $codigo_cliente=$_GET['codigo_cliente'];
-$lista=obtenerListaClientesWS_contactos($codigo_cliente);
+$lista=obtenerListaClientesWS_contactos($codigo_cliente,2);
 ?>
 <select name="select_contactos" id="select_contactos" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" onChange="modalActualizarDatosCliente_Contactos(this)">
     <option value="">SELECCIONAR</option>

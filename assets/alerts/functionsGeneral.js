@@ -16346,6 +16346,8 @@ function descargar_txt_libro_ventas(){
     }
 }
 function descargar_txt_libro_ventas_excel(){
+   $("#texto_ajax_titulo").html("Generando Archivo"); 
+    iniciarCargaAjax();
     var cod_gestion=$("#gestiones").val();
     //var cod_mes=$("#cod_mes_x").val();
     var cod_mes=12;
@@ -16365,6 +16367,7 @@ function descargar_txt_libro_ventas_excel(){
 
           var urlEditar="reportes/reportePrintLibroVentasExcel.php?cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta;    
           window.open(urlEditar, '_blank');
+          detectarCargaAjax();
 
            
         }         
@@ -16421,6 +16424,9 @@ function descargar_txt_libro_compras(){
 }
 
 function descargar_txt_libro_compras_excel(){
+    $("#texto_ajax_titulo").html("Generando Archivo"); 
+    iniciarCargaAjax();
+
     var cod_gestion=$("#gestiones").val();
     //var cod_mes=$("#cod_mes_x").val();
     var cod_mes=12;
@@ -16438,6 +16444,7 @@ function descargar_txt_libro_compras_excel(){
         }else{     
           var urlEditar="reportes/reportePrintLibroComprasExcel.php?cod_gestion="+cod_gestion+"&cod_mes="+cod_mes+"&unidad="+unidad+"&fecha_desde="+fecha_desde+"&fecha_hasta="+fecha_hasta;    
           window.open(urlEditar, '_blank');
+          detectarCargaAjax();
         }      
       }
     }
@@ -19676,8 +19683,8 @@ function generarComprobanteExcel_TCS(){
 }
 
 var itemDatosClienteActualizar=[];
-
 var itemDatosClienteActualizar_contactos=[];
+var itemDatosClienteActualizar_contactos_mae=[];
 function modalActualizarDatosCliente(cod_area){
   iniciarCargaAjax();
   var codigo_cliente=$("#cliente").val();
@@ -19697,7 +19704,8 @@ function modalActualizarDatosCliente(cod_area){
   //** listamos el array al modal
 
   var datos=itemDatosClienteActualizar;
-  //console.log(itemDatosProductosPlantilla_cabecera);
+  var datos_mae=itemDatosClienteActualizar_contactos_mae;
+  //console.log(itemDatosClienteActualizar_contactos_mae);
   $("#nit_cliente").val(datos[0]['nit']); 
   $("#razon_social_cliente").val(datos[0]['razonSocial']);
   $("#direccion_cliente").val(datos[0]['direccion']);
@@ -19708,10 +19716,22 @@ function modalActualizarDatosCliente(cod_area){
   $("#fax_cliente").val(datos[0]['fax']);
   $("#email_cliente").val(datos[0]['email']);
   $("#web_cliente").val(datos[0]['web']);
-  $("#mae_nombre").val("");
-  $("#mae_cargo").val("");
-  $("#mae_telefono").val("");
-  $("#mae_email").val("");
+
+  if(datos_mae.length>0){
+    $("#id_contacto_mae").val(datos_mae[0]['IdContacto']);
+    $("#mae_nombre").val(datos_mae[0]['NombreCompleto']);
+    $("#mae_cargo").val(datos_mae[0]['CargoContacto']);
+    $("#mae_telefono").val(datos_mae[0]['FonoContacto']);
+    $("#mae_email").val(datos_mae[0]['CorreoContacto']);
+  }else{
+    $("#id_contacto_mae").val(0);
+    $("#mae_nombre").val("");
+    $("#mae_cargo").val("");
+    $("#mae_telefono").val("");
+    $("#mae_email").val("");
+  }
+  
+
   $("#contacto_nombre").val("");
   $("#contacto_cargo").val("");
   $("#contacto_telefono").val("");
@@ -19750,6 +19770,8 @@ function modalActualizarDatosCliente_enviar(tipo){
   var fax_cliente= $("#fax_cliente_actualizar").val();
   var email_cliente= $("#email_cliente_actualizar").val();
   var web_cliente= $("#web_cliente_actualizar").val();
+  
+  var id_contacto_mae= $("#id_contacto_mae").val();
   var mae_nombre= $("#mae_nombre_actualizar").val();
   var mae_cargo= $("#mae_cargo_actualizar").val();
   var mae_telefono= $("#mae_telefono_actualizar").val();
@@ -19765,7 +19787,7 @@ function modalActualizarDatosCliente_enviar(tipo){
 
   var parametos={"codigo_cliente":codigo_cliente,"nit_cliente":nit_cliente,"razon_social_cliente":razon_social_cliente,"direccion_cliente":direccion_cliente,"pais_cliente":pais_cliente,"ciudad_cliente":ciudad_cliente,"departamento_cliente":departamento_cliente,"telefono_cliente":telefono_cliente
     ,"fax_cliente":fax_cliente,"email_cliente":email_cliente,"web_cliente":web_cliente
-    ,"mae_nombre":mae_nombre,"mae_cargo":mae_cargo,"mae_telefono":mae_telefono
+    ,"id_contacto_mae":id_contacto_mae,"mae_nombre":mae_nombre,"mae_cargo":mae_cargo,"mae_telefono":mae_telefono
     ,"mae_email":mae_email,"id_contacto":id_contacto,"contacto_nombre":contacto_nombre,"contacto_cargo":contacto_cargo,"contacto_telefono":contacto_telefono,"contacto_email":contacto_email,"cod_area_contacto":cod_area_contacto,"tipo":tipo};
   var destino = "simulaciones_servicios/ajax_datosClienteActualizarPropuesta_enviar.php"; 
   $.ajax({

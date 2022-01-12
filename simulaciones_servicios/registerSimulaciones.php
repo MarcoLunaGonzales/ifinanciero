@@ -938,6 +938,7 @@ $dbh = new Conexion();
 
           
           <div class="row">
+            <input type="hidden" name="id_contacto_mae" id="id_contacto_mae" value="0">
             <label class="col-sm-12 col-form-label"><center><span style="text-align: center;color:blue;">Máxima Autoridad Ejecutiva</span></center></label>
           </div>
 

@@ -3,10 +3,10 @@
 
 $fecha=date('Y-m-d');
 $nombre_archivo="archivoSIAT_compras-".$fecha.".xls";
-// header('Content-Type: application/octet-stream');
-// header("Content-Transfer-Encoding: Binary"); 
-// // header("Content-disposition: attachment; filename=\"archivofacilito.xls\""); 
-// header("Content-disposition: attachment; filename=".$nombre_archivo); 
+header('Content-Type: application/octet-stream');
+header("Content-Transfer-Encoding: Binary"); 
+// header("Content-disposition: attachment; filename=\"archivofacilito.xls\""); 
+header("Content-disposition: attachment; filename=".$nombre_archivo); 
 
 require_once '../conexion.php';
 require_once '../functions.php';
@@ -120,7 +120,7 @@ $stmt2->bindColumn('tipo_compra', $tipo_compra);
 		//agregamos los items al archivo	
 		//$texto="1|".$index."|".$fecha_factura."|".$nit."|".$razon_social."|".$nro_factura."|0|".$nro_autorizacion."|".number_format($importe,2,'.','')."|".number_format($importe_no_iva,2,'.','')."|".number_format($subtotal,2,'.','')."|".number_format($rebajas_sujetos_iva,2,'.','')."|".number_format($importe_credito_fiscal,2,'.','')."|".number_format($credito_fiscal,2,'.','')."|".$codigo_control."|".$tipo_compra;
 		
-		echo "<tr><td>".$index."</td><td>1</td><td>".$nit."</td><td>".$razon_social."</td><td>".$nro_autorizacion."</td><td>".$nro_factura."</td><td>0</td><td>".$fecha_factura."</td><td>".number_format($importe,2,'.',',')."</td><td>".$ice."</td><td>".$importe_iehd."</td><td>".$importe_ipj."</td><td>".$importe_tasa."</td><td>".$otros_no_iva."</td><td>".number_format($exento,2,'.',',')."</td><td>".$importe_tasa_cero."</td><td>".number_format($subtotal,2,'.',',')."</td><td>".$rebajas_sujetos_iva."</td><td>".$importe_gift_card."</td><td>".number_format($importe_credito_fiscal,2,'.',',')."</td><td>".number_format($credito_fiscal,2,'.',',')."</td><td>".$tipo_compra."</td><td>".$codigo_control."</td></tr>";
+		echo "<tr><td>".$index."</td><td>1</td><td>".$nit."</td><td>".$razon_social."</td><td>".$nro_autorizacion."&nbsp;</td><td>".$nro_factura."&nbsp;</td><td>0</td><td>".$fecha_factura."</td><td>".number_format($importe,2,'.',',')."</td><td>".$ice."</td><td>".$importe_iehd."</td><td>".$importe_ipj."</td><td>".$importe_tasa."</td><td>".$otros_no_iva."</td><td>".number_format($exento,2,'.',',')."</td><td>".$importe_tasa_cero."</td><td>".number_format($subtotal,2,'.',',')."</td><td>".$rebajas_sujetos_iva."</td><td>".$importe_gift_card."</td><td>".number_format($importe_credito_fiscal,2,'.',',')."</td><td>".number_format($credito_fiscal,2,'.',',')."</td><td>".$tipo_compra."</td><td>".$codigo_control."</td></tr>";
 		$index++; 
 	} 
 	echo "</table>";
