@@ -162,8 +162,9 @@ while ($row = $stmt->fetch()) {
   $i++;
   $indice++;
 }
- ?>
-<script>$("#cantidad_proveedores").val(<?=$contador_items?>);</script>
+?>
+
+<script>$("#cantidad_proveedores").val('<?=$contador_items?>');</script>
 <script>$("#codigo_proveedores").val('<?=$proveedoresString?>');</script>
 <script type="text/javascript">
   $(document).ready(function(e) {

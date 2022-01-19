@@ -17040,8 +17040,8 @@ function agregarLotePago_seleccionados(){
           detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
            // $("#data_pagosproveedores").append(resp);
-           // $("#data_pagosproveedores").append(resp);
-           contenedor.innerHTML = resp;
+           $("#data_pagosproveedores").html(resp);
+           // contenedor.innerHTML = resp;
            //$("#tabla_proveedor").append(resp);
            $('.selectpicker').selectpicker("refresh");
         }
