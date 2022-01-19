@@ -179,7 +179,8 @@ $sql="SELECT (select t.nombre from tipos_pagoproveedor t where t.codigo=p.cod_eb
             </table>
           </div>    
             <div class="card-footer fixed-bottom col-sm-12">
-            <a href="../<?=$urlListPagoLotes;?>" class="btn btn-danger">Volver</a>
+
+            
           <!--  <div class="row col-sm-9 float-right">
                     <div class="col-sm-2">
                         <div class="form-group">
