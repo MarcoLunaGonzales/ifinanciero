@@ -60,6 +60,51 @@ switch ($tipo) {
 			if(isset($respuesta->alerta)){
 				$alerta="Sin Embargo, ".trim($respuesta->alerta);
 			}
+			//actualizando MAE
+			if($_GET['id_contacto_mae']==0){
+				//**ingresamos contacto cliente
+				$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+		        "accion"=>"RegistrarContactoEmpresaXLS",
+		        "IdCliente"=>$_GET['codigo_cliente'],
+		        "IdUsuarioReg"=>$globalPersonal,
+		        "NombreContacto"=>$_GET['mae_nombre'],
+		        "CargoContacto"=>$_GET['mae_cargo'],
+		        "Telefono"=>$_GET['mae_telefono'],
+		        "CorreoContacto"=>$_GET['mae_email'],
+		        "IdTipoContacto"=>4233,
+		        "IdArea"=>$_GET['cod_area_contacto']
+		        );  
+		        $datos=json_encode($parametros);			
+				$ch = curl_init();			
+				curl_setopt($ch, CURLOPT_URL,$direccion."registro/ws-fin-cliente-contacto.php"); // 			
+				curl_setopt($ch, CURLOPT_POST, TRUE);			
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				$remote_server_output = curl_exec ($ch);
+				curl_close ($ch);
+			}else{
+				$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+					"accion"=>"EditarContactoEmpresaXLS", //Nuevo contacto de empresa
+					"IdContacto" => $_GET['id_contacto_mae'], //id del registro de contacto
+					"IdCliente"=>$_GET['codigo_cliente'], //ID del registrado de la tabla cliente, recuperado de los datos de cliente
+					"IdUsuarioReg"=>$globalPersonal, //ID_USUARIO_REG, //ID del usuario que modifica el registro; 0 (cero) en caso de no tenerlo
+					"NombreContacto"=>$_GET['mae_nombre'], //Nombre del contacto de la empresa
+					"CargoContacto"=>$_GET['mae_cargo'], //Cargo que ocupa el contacto dentro la empresa
+					"Telefono"=>$_GET['mae_telefono'], //Telefono o celular de contacto
+					"CorreoContacto"=>$_GET['mae_email'], //correo se usa como nombre de usuario para acceso a la cuenta (Usuario Visor)
+					"IdTipoContacto"=>4233, //Id Clasificador IdPadre=2817, tipos de contacto; 0 en caso de no requerir el dato
+					"IdArea"=>$_GET['cod_area_contacto'] //id de area de servicio asignado al contacto (obtener del clasificador 
+	            );
+	            $datosC=json_encode($parametros);			
+				$ch = curl_init();			
+				curl_setopt($ch, CURLOPT_URL,$direccion."registro/ws-fin-cliente-contacto.php"); // 			
+				curl_setopt($ch, CURLOPT_POST, TRUE);			
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $datosC);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				$remote_server_output = curl_exec ($ch);
+				curl_close ($ch);	
+			}
+			//actualizando contactos
 			if($_GET['id_contacto']==0){
 				//**ingresamos contacto cliente
 				$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
@@ -102,7 +147,6 @@ switch ($tipo) {
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 				$remote_server_output = curl_exec ($ch);
 				curl_close ($ch);	
-
 			}
 	        echo $mensaje_error."####".$alerta;
 		}else{

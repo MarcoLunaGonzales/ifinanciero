@@ -191,12 +191,12 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                                         if($tipoDebeHaberX==2){//proveedor
 
                                         }else{//cliente
-                                            echo '<tr class="bg-white" >
-                                                <td class="text-center small">'.$index.'</td>
-                                                <td class="text-left small">'.$nombreX.'</td>';
+                                            // echo '<tr class="bg-white" >
+                                            //     <td class="text-center small">'.$index.'</td>
+                                            //     <td class="text-left small">'.$nombreX.'</td>';
                                                 // include "reportesEstadoCuentasPrint_saldos_detalle.php";
-                                                $array_totales=generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$StringUnidades,$cod_cuentaauxX,$unidadCostoArray,$areaCostoArray,$desde,$hasta,$monto_periodo,$array_periodo);
-                                                echo '</tr>';
+                                                $array_totales=generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$StringUnidades,$cod_cuentaauxX,$unidadCostoArray,$areaCostoArray,$desde,$hasta,$monto_periodo,$array_periodo,$nombreX,$index);
+                                                // echo '</tr>';
                                                 //para los totales **                                                
 		                                        $x_total=0;
 		                                        foreach ($array_totales as $monto_x) {          
@@ -204,10 +204,13 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
 		                                            $x_total++;
 		                                        }
 		                                        //totales fin
-                                            }
-                                        $index++;
+                                          }
+                                          if($x_total>0){
+                                            $index++;
+                                          }
+                                        
                                     }    
-                                }                                
+                                }           
 
                                 echo '<tr>
                                     <td style="display: none;"></td>

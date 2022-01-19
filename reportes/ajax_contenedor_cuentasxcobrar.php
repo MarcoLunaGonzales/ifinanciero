@@ -115,12 +115,12 @@ echo '<table class="table table-bordered table-condensed" id="tablePaginatorFixe
               //     <td class="text-right small">'.formatNumberDec($saldo_X).'</td>
               // </tr>'; 
           }else{//cliente
-              echo '<tr class="bg-white" >
-                  <td class="text-center small">'.$index.'</td>
-                  <td class="text-left small">'.$nombreX.'</td>';
+              // echo '<tr class="bg-white" >
+              //     <td class="text-center small">'.$index.'</td>
+              //     <td class="text-left small">'.$nombreX.'</td>';
                   // include "reportesEstadoCuentasPrint_saldos_detalle.php";
-                  $array_totales=generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$StringUnidades,$cod_cuentaauxX,$unidadCostoArray,$areaCostoArray,$desde,$hasta,$monto_periodo,$array_periodo);
-                  echo '</tr>';
+                  $array_totales=generarHTMLFacCliente($cuentai,$NombreGestion,$sqlFechaEstadoCuenta,$StringUnidades,$cod_cuentaauxX,$unidadCostoArray,$areaCostoArray,$desde,$hasta,$monto_periodo,$array_periodo,$nombreX,$index);
+                  // echo '</tr>';
                   //para los totales **                                                
               $x_total=0;
               foreach ($array_totales as $monto_x) {          
@@ -128,8 +128,10 @@ echo '<table class="table table-bordered table-condensed" id="tablePaginatorFixe
                   $x_total++;
               }
               //totales fin
-              }
-          $index++;
+            }
+            if($x_total>0){
+              $index++;
+            }
       }    
   }                                
 

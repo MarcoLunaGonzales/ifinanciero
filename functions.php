@@ -6597,6 +6597,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
         $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
           "accion"=>"ListarContactosEmpresaXLS", 
           "IdCliente"=>$codigo_cliente, //ID del registrado de la tabla cliente, recuperado de los datos de cliente
+          "IdTipoContacto"=>3551 //4233 MAE. Puede ser el id recuperado del clasificador de tipos de contacto empresa idPadre=2817
           );
       }
 
