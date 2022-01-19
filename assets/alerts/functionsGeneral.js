@@ -16958,7 +16958,7 @@ function cargarDatosProveedorPagosLote(){
       url: url,
       data: parametros,
       beforeSend: function () {
-      $("#texto_ajax_titulo").html("Listando Pagos  de proveedores..."); 
+      $("#texto_ajax_titulo").html("Listando Pagos de proveedores..."); 
         iniciarCargaAjax();
       },        
       success:  function (resp) {
@@ -17046,6 +17046,35 @@ function agregarLotePago_seleccionados(){
   
 
 }
+
+
+function removeListaPago_lote(fila){
+  swal({
+    title: '¿Estás Seguro?',
+    text: "¡Se borrará el detalle!",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonClass: 'btn btn-warning',
+    cancelButtonClass: 'btn btn-danger',
+    confirmButtonText: 'Si',
+    cancelButtonText: 'No',
+    buttonsStyling: false
+  }).then((result) => {
+    if (result.value) {
+      
+      $('#fila_item'+fila).remove();
+      $("#monto_pago_s"+fila).val(0);
+
+      return(true);
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      return(false);
+    }
+  }); 
+}
+
+
+
+
 
 function removeListaPago(codigo){
   $('.fila_proveedor'+codigo).remove();

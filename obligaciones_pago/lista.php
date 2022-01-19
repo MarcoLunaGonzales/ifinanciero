@@ -14,7 +14,9 @@ if(isset($_GET['codigo'])){
   $sqlNombreLote=" - ".nameLotesPago($codigoLote); 
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo $sqlwhere order by sr.codigo desc");
+$sql="SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo $sqlwhere order by sr.codigo desc";
+// echo "<br><br>".$sql;
+$stmt = $dbh->prepare($sql);
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -58,9 +60,9 @@ $stmt->bindColumn('cod_cajachicadetalle', $cod_cajachicadetalle);
                           <th>Proveedor</th>
                           <th>Detalle</th>
                           <th>Fecha Pago</th>
-                          <th>Fecha Sol.</th>
-                          <th># Sol.</th>
-                          <th>Oficina</th>
+                          <!-- <th>Fecha Sol.</th> -->
+                          <!-- <th># Sol.</th> -->
+                          <!-- <th>Oficina</th> -->
                           <th>Observaciones</th>
                           <th>Estado</th>
                           <th class="text-right" width="25%">Actions</th>
@@ -103,9 +105,9 @@ $stmt->bindColumn('cod_cajachicadetalle', $cod_cajachicadetalle);
                           <td><?=$datosArray[1]?></td>
                           <!--<td><?=$descripcion?></td>-->
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
-                          <td><?=$datosArray[2]?></td>
-                          <td><div class="btn-group"><?=$datosArray[3]?></div></td>
-                          <td><?=$datosArray[4]?></td>
+                          
+                          
+                          
                           <td><?=$observaciones;?></td>
                           <td class="text-muted"><?=$estado?></td>
                           <td class="td-actions text-right">
