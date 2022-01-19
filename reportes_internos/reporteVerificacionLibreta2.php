@@ -12,20 +12,22 @@ require_once '../functionsReportes.php';
 $dbh = new Conexion();
 
 
-$codigoLibreta=4;
+$codigoLibreta=8;
 
 $nombreLibretasBancaria=nameLibretas($codigoLibreta);
-$cuentaPasiva=contraCuentaLibreta($codigoLibreta);
+
 $cuentaLibreta=cuentaLibreta($codigoLibreta);
+
+$cuentaPasiva=contraCuentaLibreta($codigoLibreta);
 
 $dbh = new Conexion();
 
 $sql="SELECT ld.codigo, ld.fecha_hora, fv.fecha_factura, cd.cod_comprobante, cd.codigo as codCompDetalle, fv.codigo as codFactura, ld.*, fv.* from libretas_bancariasdetalle ld, facturas_venta fv, comprobantes_detalle cd, libretas_bancariasdetalle_facturas ldf
 where fv.cod_comprobante=cd.cod_comprobante and ld.codigo=ldf.cod_libretabancariadetalle and ldf.cod_facturaventa=fv.codigo and 
-(concat(year(fv.fecha_factura),'-',month(fv.fecha_factura))!=concat(year(ld.fecha_hora),'-',month(ld.fecha_hora)))
-and ld.cod_libretabancaria=4 
+(concat(year(fv.fecha_factura),'-',month(fv.fecha_factura))=concat(year(ld.fecha_hora),'-',month(ld.fecha_hora)))
+and ld.cod_libretabancaria=$codigoLibreta 
 and fv.fecha_factura BETWEEN '2021-01-01 00:00:00' and '2021-12-31 23:59:59' and fv.cod_estadofactura!=2 
-and cd.cod_cuenta=$cuentaLibreta order by cd.cod_comprobante";
+and cd.cod_cuenta=$cuentaPasiva order by cd.cod_comprobante";
 // echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
@@ -58,7 +60,7 @@ $stmt->execute();
             
 
             $sqlDetalle="SELECT pc.nombre, cd.haber, cd.debe from comprobantes_detalle cd, plan_cuentas pc where 
-              cd.cod_cuenta=pc.codigo and cd.cod_comprobante=$codComprobante and cd.cod_cuenta in (386,450) order by pc.codigo;";
+              cd.cod_cuenta=pc.codigo and cd.cod_comprobante=$codComprobante and cd.cod_cuenta in ($cuentaLibreta,$cuentaPasiva) order by pc.codigo;";
             $stmtDetalle = $dbh->prepare($sqlDetalle);
             $stmtDetalle->execute();
             $txtDetalle="<table border=1>";
