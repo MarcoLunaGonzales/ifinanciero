@@ -7928,6 +7928,16 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
      $stmt->execute();
      return $stmt;
   }
+
+   function obtenerPagoProveedorDetalle_v2($codigo){
+     $dbh = new Conexion();
+     $sql="";
+     $sql=" SELECT pp.codigo,ppd.cod_proveedor,ppd.cod_tipopagoproveedor,ppd.monto,ppd.observaciones,DATE_FORMAT(ppd.fecha,'%d/%m/%Y') as fecha from pagos_proveedores pp join pagos_proveedoresdetalle ppd on ppd.cod_pagoproveedor=pp.codigo
+   where pp.cod_pagolote=$codigo";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     return $stmt;
+  }
   function listaLibretasBancarias(){
     $dbh = new Conexion();
     $sql="SELECT p.nombre as banco,dc.* 
