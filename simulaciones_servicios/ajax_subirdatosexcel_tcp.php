@@ -69,36 +69,36 @@ if(isset($_FILES['file_excel'])){
                 if(isset($Row[3])){$email=trim($Row[3]);}
                 if(isset($Row[7])){$web=trim($Row[7]);}
             }
-            if($i==14){//datos de la cabecera
+            if($i==15){//datos de la cabecera
                 if(isset($Row[3])){$mae_nombre=trim($Row[3]);}                
             }
-            if($i==15){//datos de la cabecera
+            if($i==16){//datos de la cabecera
                 if(isset($Row[3])){$mae_cargo=trim($Row[3]);}                
             }
-            if($i==16){//datos de la cabecera
+            if($i==17){//datos de la cabecera
                 if(isset($Row[3])){$mae_telefono=trim($Row[3]);}                
             }
-            if($i==17){//datos de la cabecera
+            if($i==18){//datos de la cabecera
                 if(isset($Row[3])){$mae_email=trim($Row[3]);}                
             }
 
-            if($i==19){//datos de la cabecera
+            if($i==20){//datos de la cabecera
                 if(isset($Row[3])){$contacto_nombre=trim($Row[3]);}                
             }
-            if($i==20){//datos de la cabecera
+            if($i==21){//datos de la cabecera
                 if(isset($Row[3])){$contacto_cargo=trim($Row[3]);}                
             }
-            if($i==21){//datos de la cabecera
+            if($i==22){//datos de la cabecera
                 if(isset($Row[3])){$contacto_telefono=trim($Row[3]);}                
             }
-            if($i==22){//datos de la cabecera
+            if($i==23){//datos de la cabecera
                 if(isset($Row[3])){$contacto_email=trim($Row[3]);}                
             } 
 
 
 
             //****DETALLE
-            if($i==35 || $i==36 || $i==37 || $i==38 || $i==39 || $i==40){//desde aqui empieza el detalle
+            if($i==36 || $i==37 || $i==38 || $i==39 || $i==40 || $i==41){//desde aqui empieza el detalle
                 $nombre="";
                 $marca="";
                 if(isset($Row[1])){$nombre=trim($Row[1]);};
@@ -116,7 +116,6 @@ if(isset($_FILES['file_excel'])){
 
             $i++;        
         }//fin foreach
-
 
 
         //echo $depto."**".$mae_telefono."**".$mae_email."**".$contacto_nombre."**".$contacto_cargo."<br><br>";
