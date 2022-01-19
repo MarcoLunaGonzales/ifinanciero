@@ -17,6 +17,15 @@ $detalle_cliente=$datosCliente->datos;
 // foreach ($lista->datos as $listaCliente) {    
     $nombreX=$detalle_cliente->NombreRazon;
     $identificacionX=$detalle_cliente->Identificacion;
+    if($identificacionX==null || $identificacionX=="" || $identificacionX==" " || $identificacionX==0){
+        $sql="SELECT identificacion from clientes where codigo=$codigo_cliente";
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();        
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            
+            $identificacionX=$row['identificacion'];
+        }
+    }
     $paisX=$detalle_cliente->Pais;
     $deptartamentoX=$detalle_cliente->Departamento;
     $Ciudad=$detalle_cliente->Ciudad;
@@ -26,6 +35,7 @@ $detalle_cliente=$datosCliente->datos;
     ?>
     <script>itemDatosClienteActualizar.push({razonSocial:"<?=$nombreX?>",nit:"<?=$identificacionX?>",direccion:"<?=$direccionX?>",pais:"<?=$paisX?>",ciudad:"<?=$Ciudad?>",deptartamento:"<?=$deptartamentoX?>",telefono:"<?=$telefonoX?>",fax:0,email:"<?=$correoX?>",web:""});
     </script><?php
+    
     
 // }
 
@@ -43,7 +53,6 @@ foreach ($datosMAE->lista as $listaContactosMae) {
     <script>itemDatosClienteActualizar_contactos_mae.push({IdContacto:"<?=$IdContactoMae?>",NombreCompleto:"<?=$NombreCompletoMae?>",CargoContacto:"<?=$CargoContactoMae?>",FonoContacto:"<?=$FonoContactoMae?>",CorreoContacto:"<?=$CorreoContactoMae?>"});
         </script><?php
     }
-
 }
 
 //listamos los contactos
@@ -61,7 +70,3 @@ foreach ($datosContacto->lstContactos as $listaContactos) {
     }
 }
 ?>
-
-
-
-

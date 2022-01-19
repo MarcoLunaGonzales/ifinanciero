@@ -68,9 +68,7 @@ $sKey = "ce94a8dabdf0b112eafa27a5aa475751";
             "IdTipoContacto"=>4233 //4233 MAE. Puede ser el id recuperado del clasificador de tipos de contacto empresa idPadre=2817
             );
   
-  
-  
-  
+
   $datos=json_encode($parametros);
   
   // abrimos la sesión cURL
