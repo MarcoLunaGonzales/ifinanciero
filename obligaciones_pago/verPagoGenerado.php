@@ -27,12 +27,12 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
 if(isset($_GET['cod'])){
-	$codigo=$_GET['cod'];
+  $codigo=$_GET['cod'];
 }else{
-	$codigo=0;
+  $codigo=0;
 }
 if(isset($_GET['admin'])){
-	$urlListPago=$urlListPagoAdmin;
+  $urlListPago=$urlListPagoAdmin;
 }
 
       $stmt = $dbh->prepare("SELECT sr.*,e.nombre as estado from pagos_proveedores sr join estados_pago e on sr.cod_estadopago=e.codigo where sr.codigo=$codigo");
@@ -48,20 +48,20 @@ if(isset($_GET['admin'])){
 ?>
 <div id="logo_carga" class="logo-carga" style="display:none;"></div>
 <div class="content">
-	<div id="contListaGrupos" class="container-fluid">
-			<input type="hidden" name="cod_solicitudrecursos" id="cod_solicitudrecursos" value="<?=$codigo?>">
+  <div id="contListaGrupos" class="container-fluid">
+      <input type="hidden" name="cod_solicitudrecursos" id="cod_solicitudrecursos" value="<?=$codigo?>">
            <div class="row">
              <div class="col-sm-12">
-			  <div class="card">
-				<div class="card-header card-header-deafult card-header-text text-center">
-					<div class="card-text">
-					  <h4 class="card-title"><b>PAGO PROVEEDORES</b></h4>
-					</div>
-				</div>
-				<div class="card-body">
-					<div class=""> 	
-					<div class="row" id="">
-				        <?php 
+        <div class="card">
+        <div class="card-header card-header-deafult card-header-text text-center">
+          <div class="card-text">
+            <h4 class="card-title"><b>PAGO PROVEEDORES</b></h4>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="">  
+          <div class="row" id="">
+                <?php 
                             while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                                 $datosArray=obtenerDatosProveedoresPagoDetalle($codigo);
                           $descripcion=obtenerGlosaComprobante($codComprobante);
@@ -88,11 +88,11 @@ if(isset($_GET['admin'])){
                           }
                           $fechaPago=strftime('%d/%m/%Y',strtotime($fecha));
                                 ?>      
-					
+          
                     <label class="col-sm-1 col-form-label" style="color:#000000; ">Proveedor :</label>
 <div class="col-sm-4">
   <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$datosArray[0]?>" style="background-color:#E3CEF6;text-align: left" >
+    <input type="text" class="form-control" readonly="true" value="<?=$datosArray[0]?>" style="background-color:#E3CEF6;text-align: left" >
   </div>
 </div>  
 <label class="col-sm-1 col-form-label" style="color:#000000; ">Oficina:</label>
@@ -104,7 +104,7 @@ if(isset($_GET['admin'])){
 <label class="col-sm-1 col-form-label" style="color:#000000; ">Fecha Pago:</label>
 <div class="col-sm-2">
   <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$fechaPago?>" style="background-color:#E3CEF6;text-align: left" >
+    <input type="text" class="form-control" readonly="true" value="<?=$fechaPago?>" style="background-color:#E3CEF6;text-align: left" >
   </div>
 </div> 
 </div>
@@ -112,66 +112,66 @@ if(isset($_GET['admin'])){
 <label class="col-sm-1 col-form-label" style="color:#000000; ">N Solicitud:</label>
 <div class="col-sm-2">
   <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$datosArray[5]?>" style="background-color:#E3CEF6;text-align: left" >
+    <input type="text" class="form-control" readonly="true" value="<?=$datosArray[5]?>" style="background-color:#E3CEF6;text-align: left" >
   </div>
 </div> 
 <label class="col-sm-1 col-form-label" style="color:#000000; ">Estado</label>
 <div class="col-sm-1">
   <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$estado?>" style="background-color:#E3CEF6;text-align: left" >
+    <input type="text" class="form-control" readonly="true" value="<?=$estado?>" style="background-color:#E3CEF6;text-align: left" >
   </div>
 </div> 
 <label class="col-sm-1 col-form-label" style="color:#000000; ">Observaciones</label>
 <div class="col-sm-5">
   <div class="form-group">
-  	<input type="text" class="form-control" readonly="true" value="<?=$observaciones?>" style="background-color:#E3CEF6;text-align: left" >
+    <input type="text" class="form-control" readonly="true" value="<?=$observaciones?>" style="background-color:#E3CEF6;text-align: left" >
   </div>
 </div>         <?php
 
                   } ?>
                     </div>
 
-					<div class="col-sm-4 div-center"><center><h3>Detalle de Pagos</h3></center></div>
-					<div class="col-sm-12 div-center">	
-						<table class="table table-bordered table-condensed">
-							<thead>
-								<tr style="background:#21618C; color:#fff;">
-									<th>#</th>
-									<th>Numero</th>
-									<th class="text-left">Nombre Cuenta</th>
-									<th>Detalle</th>
-									<th>Tipo Pago</th>
-									
-                  <th class="text-right">Monto a Pagar</th>			
-									<th>Proveedor</th>
-								</tr>
-							</thead>
-							<tbody>
-							<?php 
-							$solicitudDetalle=obtenerPagoProveedorDetalle($codigo);
-							$index=1;$totalImportePres=0;$totalImporte=0;$totalPago=0;
+          <div class="col-sm-4 div-center"><center><h3>Detalle de Pagos</h3></center></div>
+          <div class="col-sm-12 div-center">  
+            <table class="table table-bordered table-condensed">
+              <thead>
+                <tr style="background:#21618C; color:#fff;">
+                  <th>#</th>
+                  <th>Numero</th>
+                  <th class="text-left">Nombre Cuenta</th>
+                  <th>Detalle</th>
+                  <th>Tipo Pago</th>
+                  
+                  <th class="text-right">Monto a Pagar</th>     
+                  <th>Proveedor</th>
+                </tr>
+              </thead>
+              <tbody>
+              <?php 
+              $solicitudDetalle=obtenerPagoProveedorDetalle($codigo);
+              $index=1;$totalImportePres=0;$totalImporte=0;$totalPago=0;
                              while ($rowDetalles = $solicitudDetalle->fetch(PDO::FETCH_ASSOC)) {
-                             	$codCuentaX=$rowDetalles['cod_plancuenta'];
-                             	$detalleX=$rowDetalles["detalle"];
-                             	$importeX=$rowDetalles["importe_presupuesto"];
-							    $importeSolX=$rowDetalles["importe"];
-							    $proveedorX=nameProveedor($rowDetalles["cod_proveedor"]);
-							    $retencionX=$rowDetalles["cod_confretencion"];
-							    $totalImportePres+=$importeX;
-							    $totalImporte+=$importeSolX;
-							    if($retencionX!=0){
-							   	  $tituloImporte="<strong>".nameRetencion($retencionX)."</strong>";
-							    }else{
-							      $tituloImporte="Ninguno";	
-							    }
-							    $numeroCuentaX=trim($rowDetalles['numero']);
-							    $nombreCuentaX=trim($rowDetalles['nombre']);
+                              $codCuentaX=$rowDetalles['cod_plancuenta'];
+                              $detalleX=$rowDetalles["detalle"];
+                              $importeX=$rowDetalles["importe_presupuesto"];
+                  $importeSolX=$rowDetalles["importe"];
+                  $proveedorX=nameProveedor($rowDetalles["cod_proveedor"]);
+                  $retencionX=$rowDetalles["cod_confretencion"];
+                  $totalImportePres+=$importeX;
+                  $totalImporte+=$importeSolX;
+                  if($retencionX!=0){
+                    $tituloImporte="<strong>".nameRetencion($retencionX)."</strong>";
+                  }else{
+                    $tituloImporte="Ninguno"; 
+                  }
+                  $numeroCuentaX=trim($rowDetalles['numero']);
+                  $nombreCuentaX=trim($rowDetalles['nombre']);
                   $pagoX=$rowDetalles['pago'];
                   $totalPago+=$pagoX;
                                 ?>
                                 <tr>
                                     <td><?=$index?></td>
-                                	<td class="font-weight-bold"><?=$numeroCuentaX?></td>
+                                  <td class="font-weight-bold"><?=$numeroCuentaX?></td>
                                     <td class="text-left"><?=$nombreCuentaX?></td>
                                     <td><?=$detalleX?></td>
                                     <td><?=$rowDetalles['tipo_pago']?></td>
@@ -183,26 +183,26 @@ if(isset($_GET['admin'])){
                                 </tr><?php
                               $index++;
                              }
-                        	?>
-                        	  <tr class="font-weight-bold bg-white text-dark">
-                        	  	 <td colspan="5" class="text-left">Total</td>
+                          ?>
+                            <tr class="font-weight-bold bg-white text-dark">
+                               <td colspan="5" class="text-left">Total</td>
                                     <td class="text-right"><?=number_format($totalPago, 2, '.', ',')?></td>
                                     <td></td>
-                        	  </tr>
-							</tbody>
-						</table>
-					</div>		
-				  	<div class="card-footer fixed-bottom col-sm-12">
-						
-						<?php 
+                            </tr>
+              </tbody>
+            </table>
+          </div>    
+            <div class="card-footer fixed-bottom col-sm-12">
+            
+            <?php 
             if(isset($_GET['codl'])){
               $codigoL=$_GET['codl'];
               ?><a href="../<?=$urlListPago;?>&codigo=<?=$codigoL?>" class="btn btn-warning">Volver</a><?php  
             }else{
               ?><a href="../<?=$urlListPago;?>" class="btn btn-danger">Volver</a><?php  
             }     
-						?>
-						<div class="row col-sm-9 float-right">
+            ?>
+            <div class="row col-sm-9 float-right">
                    <!--  <div class="col-sm-2">
                         <div class="form-group">
                             <label class="bmd-label-static text-white" style="background:#21618C;">Solicitado</label>  
@@ -222,10 +222,10 @@ if(isset($_GET['admin'])){
                         </div>
                     </div> -->
               </div>
-				  	</div>
-				 </div>
-			    </div><!--div end card-->			
+            </div>
+         </div>
+          </div><!--div end card-->     
                </div>
             </div>
-	</div>
+  </div>
 </div>

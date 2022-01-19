@@ -33,6 +33,7 @@ $urlSaveLote="obligaciones_pago/saveLote.php";
 
 $urlVer="solicitudes/verSolicitudRecursos.php";
 $urlVerPago="obligaciones_pago/verPagoGenerado.php";
+$urlVerPagov2="obligaciones_pago/verPagoGeneradov2.php";
 
 $urlEditPago="obligaciones_pago/editPago.php";
 $urlSaveEdit="obligaciones_pago/saveEdit.php";

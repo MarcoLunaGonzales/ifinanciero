@@ -162,7 +162,7 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
                               <div class="dropdown-menu">
-                                <a href="<?=$urlListPago?>&codigo=<?=$codigo?>" class="dropdown-item">
+                                <a href="<?=$urlVerPagov2?>?codigo=<?=$codigo?>" target="_blank" class="dropdown-item">
                                        <i class="material-icons">list</i> Detalle de Pago 
                                     </a>
                                 <?php 
