@@ -16999,6 +16999,10 @@ function agregarLotePago(){//borrar
 }
 
 function agregarLotePago_seleccionados(){
+
+  var contenedor = document.getElementById('data_pagosproveedores');
+
+
   var cant= parseInt($("#cantidad_proveedores_modal").val());
   var cuentas = $("#cuentas_proveedor").val();
   var prov = $("#proveedor").val();
@@ -17035,7 +17039,9 @@ function agregarLotePago_seleccionados(){
         success:  function (resp) {
           detectarCargaAjax();
            $("#texto_ajax_titulo").html("Procesando Datos");
-           $("#data_pagosproveedores").append(resp);
+           // $("#data_pagosproveedores").append(resp);
+           // $("#data_pagosproveedores").append(resp);
+           contenedor.innerHTML = resp;
            //$("#tabla_proveedor").append(resp);
            $('.selectpicker').selectpicker("refresh");
         }
