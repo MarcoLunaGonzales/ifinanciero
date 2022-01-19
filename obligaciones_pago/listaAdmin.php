@@ -273,8 +273,8 @@ $stmtLotes->bindColumn('cod_estadopagolote', $codEstado);
                                 <i class="material-icons">list</i> <?=$estado;?>
                               </button>
                               <div class="dropdown-menu">
-                                <a href="<?=$urlListPago?>&codigo=<?=$codigo?>&admin=1" class="dropdown-item">
-                                       <i class="material-icons">list</i> Lista Pagos 
+                                <a href="<?=$urlVerPagov2?>?codigo=<?=$codigo?>&admin=1" target="_blank" class="dropdown-item">
+                                       <i class="material-icons">list</i> Detalle de Pago 
                                     </a>
                                 <?php 
                                 if($codEstado!=2){
