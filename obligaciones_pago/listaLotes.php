@@ -163,37 +163,36 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                               </button>
                               <div class="dropdown-menu">
                                 <a href="<?=$urlListPago?>&codigo=<?=$codigo?>" class="dropdown-item">
-                                       <i class="material-icons">list</i> Lista Pagos 
+                                       <i class="material-icons">list</i> Detalle de Pago 
                                     </a>
                                 <?php 
                                 if($codEstado!=2){
                                   if($codEstado==1){
                                     ?><a href="<?=$urlEdit2Lote?>?cod=<?=$codigo?>&estado=4&admin=0" class="dropdown-item">
-                                       <i class="material-icons text-warning">send</i> Enviar Solicitud Lote
+                                       <i class="material-icons text-warning">send</i> Enviar a Aprobación
                                     </a><?php 
                                   }else{
                                     if($codEstado==3){
                                         ?>
                                        <a href="#" onclick="alerts.showSwal('warning-message-crear-comprobante','<?=$urlGenerarComprobanteLote?>?cod=<?=$codigo?>')" class="dropdown-item">
-                                       <i class="material-icons text-success">attach_money</i> Generar Comprobante Lote
+                                       <i class="material-icons text-success">attach_money</i> Generar Comprobante Pago
                                       </a> 
                                         <?php
                                     }else{
                                       if($codEstado==4){
                                         ?><a href="<?=$urlEdit2Lote?>?cod=<?=$codigo?>&estado=1&admin=0" class="dropdown-item">
-                                       <i class="material-icons text-danger">clear</i> Cancelar Envio Lote
+                                       <i class="material-icons text-danger">clear</i> Cancelar Envío a Aprobación
                                       </a><?php
                                       }else{
                                         //cod 5 PAGADO
                                         ?><a href="#" class="dropdown-item">
-                                       <i class="material-icons text-info">attach_money</i> Pago Lote Registrado
+                                       <i class="material-icons text-info">attach_money</i> Pago Registrado
                                       </a><?php
                                       }        
                                     }               
                                  }
                                 }
                                ?>
-                                      
                               </div>
                             </div>             
                           </td>

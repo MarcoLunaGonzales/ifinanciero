@@ -141,9 +141,8 @@ if(isset($_GET['admin'])){
 									<th class="text-left">Nombre Cuenta</th>
 									<th>Detalle</th>
 									<th>Tipo Pago</th>
-									<th class="text-right">Presupuestado</th>
-									<th class="text-right">Solicitado</th>
-                  <th class="text-right">Pagado</th>			
+									
+                  <th class="text-right">Monto a Pagar</th>			
 									<th>Proveedor</th>
 								</tr>
 							</thead>
@@ -176,8 +175,8 @@ if(isset($_GET['admin'])){
                                     <td class="text-left"><?=$nombreCuentaX?></td>
                                     <td><?=$detalleX?></td>
                                     <td><?=$rowDetalles['tipo_pago']?></td>
-                                    <td class="text-right"><?=number_format($importeX, 2, '.', ',')?></td>
-                                    <td class="text-right"><?=number_format($importeSolX, 2, '.', ',')?></td>
+                                    
+                                    
                                     <td class="text-right"><?=number_format($pagoX, 2, '.', ',')?></td>
                                     <td><?=$proveedorX?></td>
                                     
@@ -186,9 +185,7 @@ if(isset($_GET['admin'])){
                              }
                         	?>
                         	  <tr class="font-weight-bold bg-white text-dark">
-                        	  	    <td colspan="5" class="text-left">Total</td>
-                                    <td class="text-right"><?=number_format($totalImportePres, 2, '.', ',')?></td>
-                                    <td class="text-right"><?=number_format($totalImporte, 2, '.', ',')?></td>
+                        	  	 <td colspan="5" class="text-left">Total</td>
                                     <td class="text-right"><?=number_format($totalPago, 2, '.', ',')?></td>
                                     <td></td>
                         	  </tr>
@@ -206,24 +203,24 @@ if(isset($_GET['admin'])){
             }     
 						?>
 						<div class="row col-sm-9 float-right">
-                    <div class="col-sm-2">
+                   <!--  <div class="col-sm-2">
                         <div class="form-group">
                             <label class="bmd-label-static text-white" style="background:#21618C;">Solicitado</label>  
                           <input class="form-control bg-info text-white text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="<?=$totalImporte?>" id="total_presupuestado" readonly="true"> 
                         </div>
-                    </div>
-                    <div class="col-sm-2">
+                    </div> -->
+             <!--        <div class="col-sm-2">
                         <div class="form-group">
-                          <label class="bmd-label-static text-white" style="background:#21618C;">Pagado</label> 
+                          <label class="bmd-label-static text-white" style="background:#21618C;">Monto Pago</label> 
                           <input class="form-control bg-info text-white text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="<?=$totalPago?>" id="total_solicitado" readonly="true"> 
                         </div>
-                    </div>
-                    <div class="col-sm-2">
+                    </div> -->
+                    <!-- <div class="col-sm-2">
                         <div class="form-group">
                           <label class="bmd-label-static text-white" style="background:#21618C;">Saldo del pago</label> 
                           <input class="form-control bg-info text-white text-center" style="border-radius:10px;" type="number" step=".01" placeholder="0" value="<?=$totalImporte-$totalPago?>" id="total_solicitado" readonly="true"> 
                         </div>
-                    </div>
+                    </div> -->
               </div>
 				  	</div>
 				 </div>
