@@ -26,17 +26,17 @@ fclose($fh);
 $fileName = basename("pagosebisalote.txt");
 $filePath = "data_ebisa.txt";
 if($_GET['a']==1){
-    require_once '../layouts/bodylogin.php';
-    require_once '../functionsGeneral.php';
-      $sqlUpdate="UPDATE pagos_proveedores SET  cod_ebisa=1 where cod_pagolote=$codigoLote;
-                 UPDATE pagos_lotes SET  cod_ebisalote=1 where codigo=$codigoLote;";
-      $stmtUpdate = $dbh->prepare($sqlUpdate);
-      $flagSuccess=$stmtUpdate->execute();
-      if($flagSuccess==true){
-        showAlertSuccessError(true,"../".$urlListPagoLotes); 
-      }else{
-        showAlertSuccessError(false,"../".$urlListPagoLotes);
-      }
+  require_once '../layouts/bodylogin.php';
+  require_once '../functionsGeneral.php';
+  $sqlUpdate="UPDATE pagos_proveedores SET  cod_ebisa=1 where cod_pagolote=$codigoLote;
+  UPDATE pagos_lotes SET  cod_ebisalote=1 where codigo=$codigoLote;";
+  $stmtUpdate = $dbh->prepare($sqlUpdate);
+  $flagSuccess=$stmtUpdate->execute();
+  if($flagSuccess==true){
+    showAlertSuccessError(true,"../".$urlListPagoLotes); 
+  }else{
+    showAlertSuccessError(false,"../".$urlListPagoLotes);
+  }
 }else{
 
     if(!empty($fileName) && file_exists($filePath)){
@@ -51,7 +51,7 @@ if($_GET['a']==1){
         //unlink('data_ebisa.txt');
         
         exit;
-}else{
-    echo 'The file does not exist.';
-}
+      }else{
+          echo 'The file does not exist.';
+      }
 }

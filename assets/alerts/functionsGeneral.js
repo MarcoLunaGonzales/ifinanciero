@@ -16943,8 +16943,7 @@ function seleccionar_proveedor_pagos(){
 function cargarDatosProveedorPagosLote(){
   var cuentas = $("#cuentas_proveedor").val();
   var prov = $("#proveedor").val();
-  //var cantidad_proveedores_modal = $("#cantidad_proveedores_modal").val();
-  //var proveedor = prov[0];//codigo de proveedor, nombre
+ 
   if(cuentas!="" && prov !=""){
     if($("#cod_pagoloteedit").length>0){
       var url ="ajaxListPagosLote.php";
@@ -16965,7 +16964,10 @@ function cargarDatosProveedorPagosLote(){
         detectarCargaAjax();
          $("#texto_ajax_titulo").html("Procesando Datos");
          //$("#data_pagosproveedores").append(resp);
-         $("#tabla_proveedor").append(resp);
+         // $("#tabla_proveedor").append(resp);
+         $("#tabla_proveedor").html(resp);
+         cargar_dataTable_ajax_list_totales('libreta_bancaria_reporte_modal');
+          cargar_filtro_datatable_ajax('modalLotesPago');
          $('.selectpicker').selectpicker("refresh");
       }
     });
@@ -17411,6 +17413,24 @@ function cargar_dataTable_ajax_listas(tabla){
     },
     "ordering": false,
     "searching":false
+  });
+}
+
+function cargar_dataTable_ajax_list_totales(tabla){
+  // DataTable
+  var table = $('#'+tabla+'').DataTable({
+    "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    fixedHeader: {
+      header: false
+    },
+    "searching":false,
+    "order": false,
+      "paging":   false,
+      "info":     false,          
+      "scrollY":        "400px",
+      "scrollCollapse": true
   });
 }
 function cargar_filtro_datatable_ajax(modal){
@@ -20169,4 +20189,25 @@ function cargarCuentasxCobrarPeriodo(){
   }else{
     Swal.fire("Informativo!", "Debe seleccionar todos los campos.", "warning");
   }
+}
+
+
+function calcularTotalFilaEstadoCuentaPagoProvedores(){
+
+  var sumal=0;  
+  var total= $("#cantidad_proveedores_modal").val();
+  for (var i=1;i<=(total);i++){
+    var importe_a_pagar=$("#modal_estadocuenta_saldo"+i).val();
+    var monto_importe_total=parseFloat(importe_a_pagar);
+    var check=document.getElementById("pagos_seleccionados"+i).checked;
+      if(check) {//BUSACMOS LOS CHECK ACTIVOS
+        //sumanos los importes
+        sumal+=monto_importe_total;
+      } 
+  } 
+
+  // var resulta=sumal;
+  var resulta=parseFloat(Math.round(sumal * 100) / 100).toFixed(2);
+  
+  document.getElementById("total_saldo_ec").value=number_format(resulta,2);//con formato
 }

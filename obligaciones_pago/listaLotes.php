@@ -46,6 +46,7 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                     <table class="table table-condesed small" id="tablePaginator">
                       <thead>
                         <tr style="background:#21618C; color:#fff;">
+                          <th>Nro</th>
                           <th>Descripción</th>
                           <th>Proveedor</th>
                           <th>Fecha Pago</th>
@@ -86,6 +87,7 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                           }
 ?>
                         <tr>
+                          <td><?=$codigo?></td>
                           <td><?=$observaciones?></td>
                           <td><?=$datosArray[0]?></td>
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>

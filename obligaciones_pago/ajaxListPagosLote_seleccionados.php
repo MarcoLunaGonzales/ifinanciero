@@ -127,24 +127,20 @@ while ($row = $stmt->fetch()) {
        $contador_items++;
     }
     
-    $nombreProveedorX=nameProveedor($codProveedor);
+    // $nombreProveedorX=nameProveedor($codProveedor);
     
     ?>  
     <tr class="bg-white det-estados <?=$estiloEstados?> <?=$mostrarFilasEstado?>" <?=$estiloFilasEstado?> id="fila_item<?=$contador_items?>" >
         <td class="text-left small"><input type="hidden" id="codigo_auxiliar_s<?=$contador_items?>" name="codigo_auxiliar_s<?=$contador_items?>"  value="<?=$codigoX?>"><input type="hidden" id="cod_proveedor_s<?=$contador_items?>" name="cod_proveedor_s<?=$contador_items?>"  value="<?=$codPlanCuentaAuxiliarX?>"><?=$nombreUnidadCabecera?></td>
         <td class="text-left small"><?=$nombreUnidadO?>-<?=$nombreAreaCentroCosto?></td>
-        <td class="text-center small"><?=$nombreComprobanteX?></td>
+        
         <td class="text-left small"><?=$fechaComprobante?></td>
-        <td class="text-left small"><?=$fechaX?></td>          
-        <td class="text-left small"><?=$nombreCuentaAuxiliarX?></td>
-        <td class="text-left small"><?=$glosaMostrar?></td>
-        <td class="text-right text-muted font-weight-bold small"><?=formatNumberDec($montoEstado)?></td>
-        <td class="text-right small"><?=formatNumberDec($montoX)?></td>
+                  
+        <td class="text-left small"><?=$nombreCuentaAuxiliarX?> Pago: <?=$nombreComprobanteX?> <?=$glosaMostrar?></td>
         <td class="text-right small font-weight-bold" <?=$estiloFilasEstadoSaldo?>><?=formatNumberDec($montoX-$montoEstado)?></td>
         <td class="text-right">
           <?php 
-          if(($montoX-$montoEstado)>0){
-            ?>
+          if(($montoX-$montoEstado)>0){ ?>
             <input type="number" step="any" required class="form-control text-right text-success" value="<?=$montoX-$montoEstado?>" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"><?php
           }else{ ?>
             <input type="number" step="any" required class="form-control text-right text-success" readonly value="<?=$montoX-$montoEstado?>" id="monto_pago_s<?=$contador_items?>" name="monto_pago_s<?=$contador_items?>"> <?php
@@ -154,7 +150,6 @@ while ($row = $stmt->fetch()) {
           <a rel="tooltip" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="removeListaPago_lote('<?=$contador_items;?>');return false;">
               <i class="material-icons">disabled_by_default</i>
           </a>
-
         </td>
     </tr>
     <?php 
