@@ -21,7 +21,7 @@ if($_GET['a']==1){
 <?php
 header("Pragma: public");
 header("Expires: 0");
-$filename = "reporte_movimientos.xls";
+$filename = "REPORTE PAGO PROVEEDORES.xls";
 header("Content-type: application/x-msdownload");
 header("Content-Disposition: attachment; filename=$filename");
 header("Pragma: no-cache");
