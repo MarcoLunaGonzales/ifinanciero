@@ -1,11 +1,16 @@
 <?php
 require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
+require_once '../conexion2.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
+
+$dbh_detalle = new Conexion2();
+
+
 $codigo=$_GET["cod"];
 session_start();
 
@@ -68,7 +73,7 @@ $total_monto_haber=0;
     $datosPago = listaDetallePagosProveedoresLote($codigo);
     $obs_cabecera="PAGOS PROVEDORES";
     while ($row = $datosPago->fetch(PDO::FETCH_ASSOC)) {
-        $cod_plancuenta=$row['cod_plancuenta'];
+        $cod_plancuenta=$row['cod_cuenta'];
         $proveedor=$row['cod_proveedor'];  
        $monto_pago=$row["monto"];
        // $codigo_detalle=$row["cod_solicitudrecursosdetalle"];
@@ -107,8 +112,8 @@ $total_monto_haber=0;
         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
         $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
         VALUES ('$codComprobanteDetalle','$codComprobante', '$cod_plancuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$indexCompro')";
-        //echo $sqlDetalle."DDDDD";
-        $stmtDetalle = $dbh->prepare($sqlDetalle);
+        // echo $sqlDetalle."DDDDD";
+        $stmtDetalle = $dbh_detalle->prepare($sqlDetalle);
         $flagSuccessDetalle=$stmtDetalle->execute();
        
     
@@ -117,7 +122,7 @@ $total_monto_haber=0;
         //estado de cuentas devengado
           $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
           VALUES ('$codComprobanteDetalle', '$cod_plancuenta', '$debe','$proveedor', '$fecha_pago','$cod_solicitudrecursos','$cuentaAuxiliar','$glosaDetalle')";
-          $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
+          $stmtDetalleEstadoCuenta = $dbh_detalle->prepare($sqlDetalleEstadoCuenta);
           $stmtDetalleEstadoCuenta->execute();
         $indexCompro++;   
     }
@@ -148,14 +153,16 @@ $total_monto_haber=0;
     $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
     VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$obs_cabecera', '$indexCompro')";
     //echo $sqlDetalle."RRRR"; 
-    $stmtDetalle = $dbh->prepare($sqlDetalle);
+    $stmtDetalle = $dbh_detalle->prepare($sqlDetalle);
     $flagSuccessDetalle=$stmtDetalle->execute();
 
     
     $sqlUpdate="UPDATE comprobantes SET glosa='$obs_cabecera' where codigo=$codComprobante";
-    $stmtUpdate = $dbh->prepare($sqlUpdate);
+    $stmtUpdate = $dbh_detalle->prepare($sqlUpdate);
     $stmtUpdate->execute();
 
+$dbh="";
+$dbh_detalle="";
 if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlListPagoLotes);	
    }else{
