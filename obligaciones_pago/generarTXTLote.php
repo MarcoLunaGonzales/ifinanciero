@@ -4,54 +4,53 @@ require_once '../functions.php';
 require_once 'configModule.php';
 $dbh = new Conexion();
 $codigoLote=$_GET["cod"];
-session_start();
-$fechaHoraActual=date("Y-m-d H:i:s");
-$fh = fopen('data_ebisa.txt', 'w');
-
-$sqlLote="SELECT codigo from pagos_proveedores where cod_pagolote=$codigoLote";
-$stmtLote = $dbh->prepare($sqlLote);
-$stmtLote->execute();
-while ($rowLote = $stmtLote->fetch(PDO::FETCH_ASSOC)) {
-  $codigo=$rowLote['codigo'];
-  $sql="SELECT sd.nro_cuenta_beneficiario,pd.monto,sd.detalle,sd.nombre_beneficiario,sd.apellido_beneficiario from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on pd.cod_solicitudrecursosdetalle=sd.codigo where pd.cod_pagoproveedor=$codigo";
-  $stmt = $dbh->prepare($sql);
-  $stmt->execute();
-  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    fwrite($fh, $row['nro_cuenta_beneficiario']."@".number_format($row['monto'], 2, '.', '')."@".$row['detalle']."@".$row['nombre_beneficiario']." ".$row['apellido_beneficiario']);
-    fwrite($fh, PHP_EOL);
-  }
-}
-
-fclose($fh);
-$fileName = basename("pagosebisalote.txt");
-$filePath = "data_ebisa.txt";
 if($_GET['a']==1){
-    require_once '../layouts/bodylogin.php';
-    require_once '../functionsGeneral.php';
-      $sqlUpdate="UPDATE pagos_proveedores SET  cod_ebisa=1 where cod_pagolote=$codigoLote;
-                 UPDATE pagos_lotes SET  cod_ebisalote=1 where codigo=$codigoLote;";
-      $stmtUpdate = $dbh->prepare($sqlUpdate);
-      $flagSuccess=$stmtUpdate->execute();
-      if($flagSuccess==true){
-        showAlertSuccessError(true,"../".$urlListPagoLotes); 
-      }else{
-        showAlertSuccessError(false,"../".$urlListPagoLotes);
-      }
-}else{
+  require_once '../layouts/bodylogin.php';
+  require_once '../functionsGeneral.php';
+  $sqlUpdate="UPDATE pagos_proveedores SET  cod_ebisa=1 where cod_pagolote=$codigoLote;
+  UPDATE pagos_lotes SET  cod_ebisalote=1 where codigo=$codigoLote;";
+  $stmtUpdate = $dbh->prepare($sqlUpdate);
+  $flagSuccess=$stmtUpdate->execute();
+  if($flagSuccess==true){
+    showAlertSuccessError(true,"../".$urlListPagoLotes); 
+  }else{
+    showAlertSuccessError(false,"../".$urlListPagoLotes);
+  }
+}else{ ?>
+<meta charset="utf-8">
+<?php
+header("Pragma: public");
+header("Expires: 0");
+$filename = "reporte_movimientos.xls";
+header("Content-type: application/x-msdownload");
+header("Content-Disposition: attachment; filename=$filename");
+header("Pragma: no-cache");
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+   
+?>
 
-    if(!empty($fileName) && file_exists($filePath)){
-        // Define headers
-        header("Cache-Control: public");
-        header("Content-Description: File Transfer");
-        header("Content-Disposition: attachment; filename=$fileName");
-        header("Content-Type: application/zip");
-        header("Content-Transfer-Encoding: binary");
-        // Read the file
-        readfile($filePath);
-        //unlink('data_ebisa.txt');
-        
-        exit;
-}else{
-    echo 'The file does not exist.';
+<table>
+  <tr><td>REGIONAL</td><td>CODIGO</td><td>CUENTA</td><td>AUXILIAR</td><td>DEBE</td><td>HABER</td><td>GLOSA</td><td>CHEQUE</td><td>OBSERVACIONES</td></tr>
+<?php
+  $sqlLote="SELECT pp.codigo,ppd.cod_proveedor,(select tp.nombre from tipos_pagoproveedor tp where tp.codigo=ppd.cod_tipopagoproveedor)as tipopagoproveedor,ppd.monto,ppd.observaciones,DATE_FORMAT(ppd.fecha,'%d/%m/%Y') as fecha
+  from pagos_proveedores pp join pagos_proveedoresdetalle ppd on ppd.cod_pagoproveedor=pp.codigo
+   where pp.cod_pagolote=11";
+  $stmtLote = $dbh->prepare($sqlLote);
+  $stmtLote->execute();
+  while ($rowLote = $stmtLote->fetch(PDO::FETCH_ASSOC)) {
+    $codigo=$rowLote['codigo'];
+    $cod_proveedor=$rowLote['cod_proveedor'];
+    $tipopagoproveedor=$rowLote['tipopagoproveedor'];
+    $monto=$rowLote['monto'];
+    $observaciones=$rowLote['observaciones'];
+    ?>
+      <tr><td>LA PAZ</td><td></td><td>CUENTA</td><td></td><td><?=$monto?></td><td></td><td><?=$observaciones?></td><td><?=$tipopagoproveedor?></td><td></td></tr>
+    <?php
+   
+  }?>
+</table>
+<?php
+
 }
-}
+
+?>

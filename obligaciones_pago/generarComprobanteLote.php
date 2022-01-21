@@ -18,6 +18,9 @@ $globalMes=$_SESSION['globalMes'];
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $fecha_pago=date("Y-m-d H:i:s");
 
+$total_monto_debe=0;
+$total_monto_haber=0;
+
 //creacion del comprobante de pago
     $codComprobante=obtenerCodigoComprobante();
     $anioActual=date("Y");
@@ -63,17 +66,24 @@ $fecha_pago=date("Y-m-d H:i:s");
     $stmtInsert4->execute();
     $indexCompro=1;
     $datosPago = listaDetallePagosProveedoresLote($codigo);
+    $obs_cabecera="PAGOS PROVEDORES";
     while ($row = $datosPago->fetch(PDO::FETCH_ASSOC)) {
         $cod_plancuenta=$row['cod_plancuenta'];
         $proveedor=$row['cod_proveedor'];  
        $monto_pago=$row["monto"];
-       $codigo_detalle=$row["cod_solicitudrecursosdetalle"];
-       $glosa_detalle=$row["detalle"];
+       // $codigo_detalle=$row["cod_solicitudrecursosdetalle"];
+       // $glosa_detalle=$row["detalle"];
+
+       $glosa_detalle=$row["observaciones"];       
+       $obs_cabecera=$row["obs_cabecera"];
+       $cod_solicitudrecursos=$row["cod_solicitudrecursos"];//se encuentra el estado de cuenta
+       // $cod_solicitudrecursosdetalle=$row["cod_solicitudrecursosdetalle"];//se encuentra el codigo de detalle comprobante 
        //comprobante detalle
-       $cuenta=obtenerCuentaPasivaSolicitudesRecursos($cod_plancuenta);
-       $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$proveedor);
-        $cuentaAuxiliar=0;
-        $numeroCuenta=trim(obtieneNumeroCuenta($cuenta));
+       // $cuenta=obtenerCuentaPasivaSolicitudesRecursos($cod_plancuenta);
+       // $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$proveedor);
+       $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$proveedor,$cod_plancuenta);
+        //$cuentaAuxiliar=0;
+        $numeroCuenta=trim(obtieneNumeroCuenta($cod_plancuenta));
         $inicioNumero=$numeroCuenta[0];
         $unidadarea=obtenerUnidadAreaCentrosdeCostos($inicioNumero);
         if($unidadarea[0]==0){
@@ -86,58 +96,63 @@ $fecha_pago=date("Y-m-d H:i:s");
 
         $debe=$monto_pago;
         $haber=0;
-        
-        $glosaDetalle=obtenerGlosaSolicitudRecursoDetalle($codigo_detalle);
-        if($glosaDetalle==""){
-          $glosaDetalle=$glosa." - ".$glosa_detalle;
-        }
+        $total_monto_debe+=$debe;
+        // $total_monto_haber+=$haber;
+        // $glosaDetalle=obtenerGlosaSolicitudRecursoDetalle($codigo_detalle);
+        // if($glosaDetalle==""){
+        $glosaDetalle=$glosa_detalle;
+
+        // }
 
         $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
         $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-        VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$indexCompro')";
-        echo $sqlDetalle."DDDDD";
+        VALUES ('$codComprobanteDetalle','$codComprobante', '$cod_plancuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$indexCompro')";
+        //echo $sqlDetalle."DDDDD";
         $stmtDetalle = $dbh->prepare($sqlDetalle);
         $flagSuccessDetalle=$stmtDetalle->execute();
        
-       //haber
-        $cuenta=obtenerValorConfiguracion(38);
-        $cuentaAuxiliar=0;
-        $numeroCuenta=trim(obtieneNumeroCuenta($cuenta));
-        $inicioNumero=$numeroCuenta[0];
-        $unidadarea=obtenerUnidadAreaCentrosdeCostos($inicioNumero);
-        if($unidadarea[0]==0){
-            $unidadDetalle=$unidadSol;
-            $area=$areaSol;
-        }else{
-            $unidadDetalle=$unidadarea[0];
-            $area=$unidadarea[1];
-        }
-
-        $debe=0;
-        $haber=$monto_pago;
-        $glosaDetalle=obtenerGlosaSolicitudRecursoDetalle($codigo_detalle);
-        if($glosaDetalle==""){
-          $glosaDetalle=$glosa." - ".$glosa_detalle;
-        }
-        $indexCompro++;
-        $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
-        $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
-        VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$glosaDetalle', '$indexCompro')";
-        echo $sqlDetalle."RRRR"; 
-        $stmtDetalle = $dbh->prepare($sqlDetalle);
-        $flagSuccessDetalle=$stmtDetalle->execute();
-
+    
        //fin comprobante detalle
-        $codComprobanteDetalleOrigen=obtenerCodigoEstadoCuentaSolicitudRecursosDetalle($codigo_detalle);
+        // $codComprobanteDetalleOrigen=obtenerCodigoEstadoCuentaSolicitudRecursosDetalle($codigo_detalle);
         //estado de cuentas devengado
-          $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux) 
-          VALUES ('$codComprobanteDetalle', '$cuenta', '$haber', '0', '$fecha_pago','$codComprobanteDetalleOrigen','$cuentaAuxiliar')";
+          $sqlDetalleEstadoCuenta="INSERT INTO estados_cuenta (cod_comprobantedetalle, cod_plancuenta, monto, cod_proveedor, fecha,cod_comprobantedetalleorigen,cod_cuentaaux,glosa_auxiliar) 
+          VALUES ('$codComprobanteDetalle', '$cod_plancuenta', '$debe','$proveedor', '$fecha_pago','$cod_solicitudrecursos','$cuentaAuxiliar','$glosaDetalle')";
           $stmtDetalleEstadoCuenta = $dbh->prepare($sqlDetalleEstadoCuenta);
           $stmtDetalleEstadoCuenta->execute();
-             
+        $indexCompro++;   
     }
+
+
+    //haber
+    $cuenta=obtenerValorConfiguracion(38);
+    $cuentaAuxiliar=0;
+    $numeroCuenta=trim(obtieneNumeroCuenta($cuenta));
+    $inicioNumero=$numeroCuenta[0];
+    $unidadarea=obtenerUnidadAreaCentrosdeCostos($inicioNumero);
+    if($unidadarea[0]==0){
+        $unidadDetalle=$unidadSol;
+        $area=$areaSol;
+    }else{
+        $unidadDetalle=$unidadarea[0];
+        $area=$unidadarea[1];
+    }
+
+    $debe=0;
+    // $haber=$monto_pago;
+    $haber=$total_monto_debe;
+    // $glosaDetalle=obtenerGlosaSolicitudRecursoDetalle($codigo_detalle);
+    // if($glosaDetalle==""){
+    //   $glosaDetalle=$glosa." - ".$glosa_detalle;
+    // }    
+    $codComprobanteDetalle=obtenerCodigoComprobanteDetalle();
+    $sqlDetalle="INSERT INTO comprobantes_detalle (codigo,cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) 
+    VALUES ('$codComprobanteDetalle','$codComprobante', '$cuenta', '$cuentaAuxiliar', '$unidadDetalle', '$area', '$debe', '$haber', '$obs_cabecera', '$indexCompro')";
+    //echo $sqlDetalle."RRRR"; 
+    $stmtDetalle = $dbh->prepare($sqlDetalle);
+    $flagSuccessDetalle=$stmtDetalle->execute();
+
     
-    $sqlUpdate="UPDATE comprobantes SET glosa='$glosaDetalle' where codigo=$codComprobante";
+    $sqlUpdate="UPDATE comprobantes SET glosa='$obs_cabecera' where codigo=$codComprobante";
     $stmtUpdate = $dbh->prepare($sqlUpdate);
     $stmtUpdate->execute();
 

@@ -87,43 +87,17 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
                   	   <div class="col-sm-12">
                     <table id="" class="table table-condensed small">
                       <thead>
-                        <!-- <tr>
-                          <th width="20%">Proveedor</th>
-                          <th width="20%">Detalle</th>
-                          <th>F. Sol</th>     
-                          <th>Nº Sol</th>
-                          <th>Nº Comp</th>
-                          <th>Oficina</th>
-                          <th class="bg-warning text-dark">Importe</th>
-                          <th class="" style="background:#07B46D; color:#F7FF5A;">Pagado</th>
-                          <th>Saldo</th>
-                          <th width="10%">Monto</th>
-                          <th width="10%">Fecha Pago</th>
-                          <th width="10%">Tipo</th>
-                          <th width="10%">Bancos</th>
-                          <th width="10%">Cheques</th>
-                          <th width="10%">Nº Cheque</th>
-                          <th width="10%">Beneficiario</th>
-                        </tr> -->
                         <tr style="background:#21618C; color:#fff;">                           
                           <td class="text-left">Of</td>
                           <td class="text-left">CC</td>
-                          <td class="text-left">Tipo/#</td>
+                          <!-- <td class="text-left">Tipo/#</td> -->
                           <td class="text-left">F Comp.</td>
-                          <td class="text-left">F.EC</td>
-                          <td class="text-left">Proveedor</td>
+                          <!-- <td class="text-left">F.EC</td> -->
+                          <!-- <td class="text-left">Proveedor</td> -->
                           <td class="text-left">Glosa</td>
-                          <td class="text-left">Debe</td>
-                          <td class="text-left">Haber</td>
                           <td class="text-left">Saldo</td>
                           <td class="text-left">Monto</td>
-                          <!-- <td width="10%">Tipo</td>
-                          <td width="10%">Bancos</td>
-                          <td width="10%">Cheques</td>
-                          <td width="10%">Nº Cheque</td>
-                          <td width="10%">Beneficiario</td> -->
                           <td width="4%" class="text-right">Actions</td>
-
                         </tr>
                       </thead>
                       <tbody id="data_pagosproveedores">
@@ -162,8 +136,8 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
       </div>
       <div class="card-body">
         <div class="row">
-          <label class="col-sm-2 col-form-label">Cuentas</label>
-          <div class="col-sm-6">
+          <label class="col-sm-1 col-form-label">Cuentas</label>
+          <div class="col-sm-2">
             <div class="form-group">
               <select class="selectpicker form-control form-control-sm"  name="cuentas_proveedor[]" id="cuentas_proveedor" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-live-search="true" onchange="seleccionar_proveedor_pagos()">
                 <?php                   
@@ -180,10 +154,9 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
               </select>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <label class="col-sm-2 col-form-label">Proveedor</label>
-          <div class="col-sm-6">
+        
+          <label class="col-sm-1 col-form-label">Proveedor</label>
+          <div class="col-sm-3">
             <div class="form-group" id="contenedor_proveedor">
               <select class="selectpicker form-control form-control-sm"  data-live-search="true" name="proveedor" id="proveedor" data-style="btn btn-primary">
                 <option  value="">--PROVEEDOR--</option>
@@ -197,35 +170,36 @@ $codigoPago=obtenerCodigoPagoProveedorDetallePorSolicitudRecurso($codSol);
           </div>    
         </div>
         <br>
-        <table class="table table-bordered table-condensed small">
-          <thead>
-            <tr style="background:#21618C; color:#fff;">                           
-              <td class="text-left">Of</td>
-              <td class="text-left">CC</td>
-              <td class="text-left">Tipo/#</td>
-              <td class="text-left">F Comp.</td>
-              <td class="text-left">F.EC</td>
-              <td class="text-left">Proveedor</td>
-              <td class="text-left">Glosa</td>
-              <td class="text-left">Debe</td>
-              <td class="text-left">Haber</td>
-              <td class="text-left">Saldo</td>
-              <td width="4%" class="text-right">Actions</td>
-            </tr> 
-          </thead>
-          <tbody id="tabla_proveedor">
-           
-          </tbody>
-        </table>
+        <div class="row" >
+          <div class="col-sm-12" id="tabla_proveedor">
+          </div>
+        </div>
+
+        <div class="row" >
+          <div class="col-sm-9">
+            <div class="form-group" >
+            <center><a href="#" onclick="agregarLotePago_seleccionados()" class="btn btn-white btn-sm mx-auto" style="background:#07B46D; color:#F7FF5A;">SELECCIONAR</a></center>
+            </div>
+          </div>
+          <label class="col-sm-1 col-form-label" style="color:#7a7a7a"><span style="font-size:15px">TOTAL</span> </label>
+          <div class="col-sm-2">
+            <div class="form-group" >
+             <input style="background:#ffffff;font-size: 20px;color:#21618C;font-style:bold;" class="form-control" type="text" value="0" name="total_saldo_ec" id="total_saldo_ec" readonly="true" />
+            </div>
+          </div>
+        </div>
+
       </div>
       <input type="hidden" id="cantidad_proveedores_modal" name="cantidad_proveedores_modal"value="0">
+      <input type="hidden" id="cantidad_proveedores" name="cantidad_proveedores"value="0">
+     <!--  <input type="hidden" id="cantidad_proveedores_modal" name="cantidad_proveedores_modal"value="0"> -->
       <!-- <input type="hidden" id="cantidad_proveedores" name="cantidad_proveedores"value="0"> -->
 
       
 
-      <div class="card-footer d-flex">
+     <!--  <div class="card-footer d-flex">
         <a href="#" onclick="agregarLotePago_seleccionados()" class="btn btn-white btn-sm mx-auto" style="background:#07B46D; color:#F7FF5A;">SELECCIONAR</a>
-      </div>
+      </div> -->
     </div>  
   </div>
 </div>

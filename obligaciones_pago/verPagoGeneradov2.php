@@ -136,8 +136,8 @@ $sql="SELECT (select t.nombre from tipos_pagoproveedor t where t.codigo=p.cod_eb
               <thead>
                 <tr style="background:#21618C; color:#fff;">
                   <th>#</th>
-                  <th>OF/CC</th>
-                  <th class="text-left">Tipo</th>
+                  <!-- <th>OF/CC</th> -->
+                  <!-- <th class="text-left">Tipo</th> -->
                   <th>Fecha</th>
                   <th>Proveedor</th>
                   <th >Glosa</th>
@@ -161,8 +161,8 @@ $sql="SELECT (select t.nombre from tipos_pagoproveedor t where t.codigo=p.cod_eb
                 $totalPago+=$importeX;?>
                 <tr>
                   <td><small><?=$index?></small></td>
-                  <td class="font-weight-bold"></td>
-                  <td class="text-left"></td>
+                  <!-- <td class="font-weight-bold"></td>
+                  <td class="text-left"></td> -->
                   <td><small><?=$fechaX?></small></td>
                   <td class="text-left"><small><?=$nombre_proveedorX?></small></td>
                   <td class="text-left"><small><?=$observacionesX?></small></td>
@@ -172,7 +172,7 @@ $sql="SELECT (select t.nombre from tipos_pagoproveedor t where t.codigo=p.cod_eb
               } ?>
               
               <tr class="font-weight-bold bg-white text-dark">
-                <td colspan="6" class="text-left">Total</td>
+                <td colspan="4" class="text-left">Total</td>
                 <td class="text-right"><?=number_format($totalPago, 2, '.', ',')?></td>
               </tr>
               </tbody>
