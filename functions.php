@@ -7245,9 +7245,15 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      return $stmt;
   }
 
+
   function listaDetallePagosProveedoresLote($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT pd.*,sd.detalle,sd.cod_plancuenta from pagos_proveedoresdetalle pd join solicitud_recursosdetalle sd on pd.cod_solicitudrecursosdetalle=sd.codigo join pagos_proveedores p on p.codigo=pd.cod_pagoproveedor where p.cod_pagolote=$codigo");
+     $sql="SELECT ppd.*,ec.cod_plancuenta,pp.observaciones as obs_cabecera
+      FROM pagos_proveedores pp JOIN pagos_proveedoresdetalle ppd on pp.codigo=ppd.cod_pagoproveedor
+      join estados_cuenta ec on ec.codigo=ppd.cod_solicitudrecursos
+      where pp.cod_pagolote=$codigo";
+     // echo $sql;
+     $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
   }
