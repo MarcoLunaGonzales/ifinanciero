@@ -30,21 +30,23 @@ header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 ?>
 
 <table>
-  <tr><td>REGIONAL</td><td>CODIGO</td><td>CUENTA</td><td>AUXILIAR</td><td>DEBE</td><td>HABER</td><td>GLOSA</td><td>CHEQUE</td><td>OBSERVACIONES</td></tr>
+  <tr><td>REGIONAL</td><td>CODIGO</td><td>CUENTA</td><td>AUXILIAR</td><td>DEBE</td><td>HABER</td><td>GLOSA</td><td>TIPO PAGO</td><td>OBSERVACIONES</td></tr>
 <?php
-  $sqlLote="SELECT pp.codigo,ppd.cod_proveedor,(select tp.nombre from tipos_pagoproveedor tp where tp.codigo=ppd.cod_tipopagoproveedor)as tipopagoproveedor,ppd.monto,ppd.observaciones,DATE_FORMAT(ppd.fecha,'%d/%m/%Y') as fecha
-  from pagos_proveedores pp join pagos_proveedoresdetalle ppd on ppd.cod_pagoproveedor=pp.codigo
-   where pp.cod_pagolote=11";
+  $sqlLote="SELECT pp.codigo,ppd.cod_proveedor,(select tp.nombre from tipos_pagoproveedor tp where tp.codigo=ppd.cod_tipopagoproveedor)as tipopagoproveedor,ppd.monto,ppd.observaciones,DATE_FORMAT(ppd.fecha,'%d/%m/%Y') as fecha,cd.cod_cuenta,cd.cod_unidadorganizacional
+ from pagos_proveedores pp join pagos_proveedoresdetalle ppd on ppd.cod_pagoproveedor=pp.codigo join comprobantes_detalle cd on cd.codigo=ppd.cod_solicitudrecursosdetalle
+   where pp.cod_pagolote=$codigoLote";
   $stmtLote = $dbh->prepare($sqlLote);
   $stmtLote->execute();
   while ($rowLote = $stmtLote->fetch(PDO::FETCH_ASSOC)) {
     $codigo=$rowLote['codigo'];
+    $cod_cuenta=$rowLote['cod_cuenta'];
+    $cod_unidadorganizacional=$rowLote['cod_unidadorganizacional'];
     $cod_proveedor=$rowLote['cod_proveedor'];
     $tipopagoproveedor=$rowLote['tipopagoproveedor'];
     $monto=$rowLote['monto'];
     $observaciones=$rowLote['observaciones'];
     ?>
-      <tr><td>LA PAZ</td><td></td><td>CUENTA</td><td></td><td><?=$monto?></td><td></td><td><?=$observaciones?></td><td><?=$tipopagoproveedor?></td><td></td></tr>
+      <tr><td><?=nameUnidad($cod_unidadorganizacional)?></td><td></td><td><?=obtieneNumeroCuenta($cod_cuenta)?></td><td></td><td><?=$monto?></td><td></td><td><?=$observaciones?></td><td><?=$tipopagoproveedor?></td><td></td></tr>
     <?php
    
   }?>

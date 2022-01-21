@@ -48,7 +48,7 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                         <tr style="background:#21618C; color:#fff;">
                           <th>Nro</th>
                           <th>Descripción</th>
-                          <th>Proveedor</th>
+                          <!-- <th>Proveedor</th> -->
                           <th>Fecha Pago</th>
                           <!-- <th>Fecha Sol.</th> -->
                           <th>Oficina</th>
@@ -89,10 +89,10 @@ $stmt->bindColumn('cod_ebisalote', $cod_ebisa);
                         <tr>
                           <td><?=$codigo?></td>
                           <td><?=$observaciones?></td>
-                          <td><?=$datosArray[0]?></td>
+                          
                           <td><?=strftime('%d/%m/%Y',strtotime($fecha));?></td>
                           
-                          <td><?=$datosArray[4]?></td>
+                          <td>LA PAZ</td>
                           <td class="text-muted"><?=$estado?></td>
                           <td class="td-actions text-right">
                             <?php 
