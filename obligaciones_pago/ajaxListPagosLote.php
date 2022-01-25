@@ -6,18 +6,23 @@ require_once '../functions.php';
 require_once '../styles.php';
 
 
-// $sqlX="SET NAMES 'utf8'";
-// $stmtX = $dbh->prepare($sqlX);
-// $stmtX->execute();
+
+$gestion=$_SESSION['globalNombreGestion'];
+
 $proveedoresString=$_GET['proveedor'];
 $proveedoresString=implode(",", $proveedoresString);
 
 $cuentas=$_GET['cuentas'];
 $cuentas=implode(",", $cuentas);
 
+
+$fechainicio=$gestion.'-01-01';
+$fechafin=$gestion.'-12-31';
+
+
+
 $contador_items=0;
 
-///
 $i=0;$saldo=0;
 $indice=0;
 $totalCredito=0;
@@ -52,7 +57,7 @@ $ver_saldo=1;?>
 <?php
 
 $dbh = new Conexion();
-$sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentas) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux in ($proveedoresString) order by e.fecha";
+$sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentas) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux in ($proveedoresString) and e.fecha BETWEEN '$fechainicio 00:00:00' and '$fechafin 23:59:59' order by e.fecha,d.glosa";
 $stmt = $dbh->prepare($sql);
 //echo $sql;
 $stmt->execute();
