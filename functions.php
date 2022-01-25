@@ -7253,7 +7253,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      //  join estados_cuenta ec on ec.codigo=ppd.cod_solicitudrecursos
      //  where pp.cod_pagolote=$codigo";
 
-      $sql="SELECT ppd.*,pp.observaciones as obs_cabecera,cd.cod_cuenta,cd.cod_unidadorganizacional
+      $sql="SELECT ppd.*,pp.observaciones as obs_cabecera,cd.cod_cuenta,cd.cod_cuentaauxiliar,cd.cod_unidadorganizacional
       from pagos_proveedores pp join pagos_proveedoresdetalle ppd on ppd.cod_pagoproveedor=pp.codigo join comprobantes_detalle cd on cd.codigo=ppd.cod_solicitudrecursosdetalle
       where pp.cod_pagolote=$codigo";
       // echo $sql;

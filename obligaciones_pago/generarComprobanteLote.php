@@ -74,6 +74,10 @@ $total_monto_haber=0;
     $obs_cabecera="PAGOS PROVEDORES";
     while ($row = $datosPago->fetch(PDO::FETCH_ASSOC)) {
         $cod_plancuenta=$row['cod_cuenta'];
+
+        $cuentaAuxiliar=$row['cod_cuentaauxiliar'];
+
+        
         $proveedor=$row['cod_proveedor'];  
        $monto_pago=$row["monto"];
        // $codigo_detalle=$row["cod_solicitudrecursosdetalle"];
@@ -86,7 +90,7 @@ $total_monto_haber=0;
        //comprobante detalle
        // $cuenta=obtenerCuentaPasivaSolicitudesRecursos($cod_plancuenta);
        // $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(1,$proveedor);
-       $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$proveedor,$cod_plancuenta);
+       // $cuentaAuxiliar=obtenerCodigoCuentaAuxiliarProveedorClienteCuenta(1,$proveedor,$cod_plancuenta);
         //$cuentaAuxiliar=0;
         $numeroCuenta=trim(obtieneNumeroCuenta($cod_plancuenta));
         $inicioNumero=$numeroCuenta[0];
