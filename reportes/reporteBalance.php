@@ -179,7 +179,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                $index++;         
                }/* Fin del primer while*/
                $cuentaResultado=obtenerValorConfiguracion(47);
-               if($codigo_4==obtieneCuentaPadre($cuentaResultado)&&$vacio==0){                  
+               if($codigo_4==obtieneCuentaPadre($cuentaResultado)&&$vacio!=0){                  
                   $nombreResultado=nameCuenta($cuentaResultado);
                   $numeroResultado=obtieneNumeroCuenta($cuentaResultado);
                   $datosResultados=sumaMontosDebeHaberComprobantesDetalleResultados($fechaFormateada,1,$unidades,$areas,$gestion,"none");
