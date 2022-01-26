@@ -20211,3 +20211,31 @@ function calcularTotalFilaEstadoCuentaPagoProvedores(){
   
   document.getElementById("total_saldo_ec").value=number_format(resulta,2);//con formato
 }
+
+function registrar_planilla_sueldos(){
+  var dias_trabajado=document.getElementById("dias_trabajado").value; 
+  if(dias_trabajado==0 || dias_trabajado=="" || dias_trabajado==" "){
+    document.getElementById('dias_trabajado').focus();
+    //Swal.fire("Informativo", "Por favor, introduzca días trabajados de Lunes a Sabado", "warning");  
+  }else{
+    $.ajax({
+      type:"POST",
+      data:"dias_trabajado="+dias_trabajado,
+      url:"planillas/generarPlanillaSueldo.php", 
+      success:function(r){
+        detectarCargaAjax();
+        if(r==1){              
+          alerts.showSwal('success-message','index.php?opcion=planillasSueldoPersonal');
+        }else{
+          if(r==0){
+            Swal.fire("Informativo", "La planilla ya se encuentra registrada. Gracias..", "warning");
+            $('#modalGenerarPlanilla').modal('hide');
+          }else{
+            Swal.fire("Ocurrió un error! :(", "Contáctese con el administrador.", "warning");  
+            $('#modalGenerarPlanilla').modal('hide');
+          }
+        }
+      }
+    });
+  }
+}

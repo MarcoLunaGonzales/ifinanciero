@@ -19,8 +19,6 @@ $cuentas=implode(",", $cuentas);
 $fechainicio=$gestion.'-01-01';
 $fechafin=$gestion.'-12-31';
 
-
-
 $contador_items=0;
 
 $i=0;$saldo=0;
