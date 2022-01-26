@@ -288,7 +288,6 @@ $dbh = new Conexion();
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalGenerarPlanilla">Registrar Planilla Actual (1)</button> 
                 <a href="bonos/descargarExcelGlobal.php" target="_blank" class="btn btn-warning"><span class="material-icons">download</span>Descargar Plantilla (2)</a>
                 <button class="btn btn-success" onClick="location.href='index.php?opcion=subirBonoExcel_global_from'"><span class="material-icons">file_upload</span>Cargar Plantilla (3)</button>
-                <button class="btn btn-rose" onClick="procesar_bonos_descuentos_planilla('<?=$nombre_mes?>','<?=$cod_mes_global?>','<?=$estado_planilla?>')"><span class="material-icons">sync</span>Procesar o reprocesar PLANTILLA (4)</button>
               <?php
               }
             ?>
