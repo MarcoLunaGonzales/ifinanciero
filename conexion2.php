@@ -1,19 +1,15 @@
 <?php 
 class Conexion2 extends PDO { 
-   // private $tipo_de_base = 'mysql';
-   // private $host = 'localhost';
-   // private $nombre_de_base = 'financiero310721';
-   // private $usuario = 'root';
-   // private $contrasena = '4868422Marco';
-   // private $port = '3306'; 
 
-         private $tipo_de_base = 'mysql';
+      private $tipo_de_base = 'mysql';
       private $host = '200.105.199.166';
       private $nombre_de_base = 'bdifinanciero';
       private $usuario = 'ingresofm';
       private $contrasena = 'minka123';
       private $port = '4606';  
  
+
+
   public function __construct() {
     //Sobreescribo el método constructor de la clase PDO.
     try{

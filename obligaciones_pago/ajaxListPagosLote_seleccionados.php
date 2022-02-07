@@ -80,7 +80,7 @@ while ($row = $stmt->fetch()) {
   $codAreaCentroCosto=$row['area_centro_costos'];
 
   $nombreComprobanteX=nombreComprobante($codigoComprobanteX);
-  $nombreCuentaAuxiliarX=nameCuentaAuxiliar($codPlanCuentaAuxiliarX);
+  // $nombreCuentaAuxiliarX=nameCuentaAuxiliar($codPlanCuentaAuxiliarX);
   $tipoDebeHaber=verificarTipoEstadoCuenta($codPlanCuentaX);
 
 
@@ -136,7 +136,7 @@ while ($row = $stmt->fetch()) {
         
         <td class="text-left small"><?=$fechaComprobante?></td>
                   
-        <td class="text-left small"><?=$nombreCuentaAuxiliarX?> Pago: <?=$nombreComprobanteX?> <?=$glosaMostrar?></td>
+        <td class="text-left small">Pago: <?=$nombreComprobanteX?> <?=$glosaMostrar?></td>
         <td class="text-right small font-weight-bold" <?=$estiloFilasEstadoSaldo?>><?=formatNumberDec($montoX-$montoEstado)?></td>
         <td class="text-right">
           <?php 

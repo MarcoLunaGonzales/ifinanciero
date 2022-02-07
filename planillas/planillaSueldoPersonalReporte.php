@@ -38,7 +38,35 @@
 	$stmtArea->bindColumn('cod_area', $cod_area_x);
 	$stmtArea->bindColumn('nombre_area', $nombre_area_x);
 ?>
-
+<style>
+	  table ,tr td{
+    border:1px solid red
+}
+tbody {
+    display:block;
+    height:500px;
+    overflow:auto;
+}
+thead, tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;/* even columns width , fix width of table too*/
+}
+thead {
+    width: calc( 100% - 1em )/* scrollbar is average 1em/16px width, remove it from thead width */
+}
+tfoot, tbody tr {
+    display:table;
+    width:100%;
+    table-layout:fixed;/* even columns width , fix width of table too*/
+}
+tfoot {
+    width: calc( 100% - 1em )/* scrollbar is average 1em/16px width, remove it from thead width */
+}
+table {
+    width:2000px !important;
+}
+</style>
 <div class="content">
   <div class="container-fluid">
     <div class="row">
@@ -58,7 +86,8 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">                  
-				<table class="table table-bordered table-condensed table-hover" id="tablePaginatorHeaderFooter">
+				<!-- <table class="table table-bordered table-condensed table-hover" id="tablePaginatorHeaderFooter"> -->
+					<table width="2000px !important" class="table table-condensed table-bordered table-sm table-striped mb-0" id="tablePaginatorHeaderFooter123">
                 	<thead>
 		                <tr class="bg-dark text-white">                  
 		                    <th><small>#</small></th> 
@@ -71,40 +100,40 @@
 		                    <th><small>Porcentaje</small></th>
 		                    <th><small>Haber Básico</small></th>
 		                    <th><small>Días Trab</small></th>                                        
-		                    <th><small>Bono Antiguedad</small></th>
+		                    <th><small>Bono de Antig</small></th>
 		                    <th class="bg-success text-white"><button id="botonBonos" style="border:none;" class="bg-success text-white small">Otros Bonos</button> </th>
 		                    <?php
-		                    	$swBonosOtro=false;
-		                      	$sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
-		                              from bonos_personal_mes 
-		                              where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_bono)
-		                              order by cod_bono ASC";
-		                        // echo $sqlBonos;
-								$stmtBonos = $dbh->prepare($sqlBonos);
-								$stmtBonos->execute();                      
-								$stmtBonos->bindColumn('cod_bono',$cod_bono);
-								$stmtBonos->bindColumn('nombre_bono',$nombre_bono);
-								while ($row = $stmtBonos->fetch()) 
-								{ ?>
-									<th class="bonosDet bg-success text-white" style="display:none"><small><?=$nombre_bono;?></small></th>                      
-									<?php
-									$arrayBonos[] = $cod_bono;
-									$swBonosOtro=true;
-								}
+													$swBonosOtro=false;
+													$sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
+													  from bonos_personal_mes 
+													  where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_bono)
+													  order by cod_bono ASC";
+													// echo $sqlBonos;
+													$stmtBonos = $dbh->prepare($sqlBonos);
+													$stmtBonos->execute();                      
+													$stmtBonos->bindColumn('cod_bono',$cod_bono);
+													$stmtBonos->bindColumn('nombre_bono',$nombre_bono);
+													while ($row = $stmtBonos->fetch()) 
+													{ ?>
+														<th class="bonosDet bg-success text-white" style="display:none"><small><?=$nombre_bono;?></small></th>                      
+														<?php
+														$arrayBonos[] = $cod_bono;
+														$swBonosOtro=true;
+													}
 		                    ?>
 		                    <th><small>Monto Bonos</small></th>                            
-		                    <th class="bg-primary text-white"><small>Total Ganado</small></th>
-		                    <th class="bg-success text-white"><button id="botonAportes" style="border:none;" class="bg-success text-white small">Monto Aportes</button></th>
-		                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.Fut</small></th>
-		                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.Prev</small></th>
-		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Solidario(13)</small></th>
-		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Solidario(25)</small></th>
-		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Solidario(35)</small></th>
+		                    <th class="bg-primary text-white"><small>Tot Gan</small></th>
+		                    <th class="bg-success text-white"><button id="botonAportes" style="border:none;" class="bg-success text-white small">+Aport</button></th>
+		                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.F</small></th>
+		                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.P</small></th>
+		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Sol(13)</small></th>
+		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Sol(25)</small></th>
+		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Sol(35)</small></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>RC-IVA</small></th>
-		                    <th><small>Atrasos</small></th>
+		                    <!-- <th><small>Atrasos</small></th> -->
 		                    <th><small>Anticipos</small></th>
 		                    <th><small>Dotaciones</small></th>
-		                    <th class="bg-success text-white"><button id="botonOtrosDescuentos" style="border:none;" class="bg-success text-white small">Otros Descuentos</button> </th>
+		                    <th class="bg-success text-white"><button id="botonOtrosDescuentos" style="border:none;" class="bg-success text-white small">Otros Desc</button> </th>
 		                    <?php  
 		                      $swDescuentoOtro=false;                  
 		                      $sqlDescuento = "SELECT cod_descuento,(select d.nombre from descuentos d where d.codigo=cod_descuento) as nombre_descuentos
@@ -123,13 +152,13 @@
 		                        $swDescuentoOtro=true;
 		                      }
 		                    ?>
-		                    <th><small>Monto Descuentos</small></th>     
-		                    <th class="bg-primary text-white"><small>Liqu Pagable</small></th>                    
-		                    <th><small>Seguro De Salud</small></th>
-		                    <th><small>Riesgo Profesional</small></th>
-		                    <th><small>Provivienda</small></th>
-		                    <th><small>Apo Patronal Sol</small></th>
-		                    <th><small>Total Apo Patronal</small></th>
+		                    <th><small>Monto Desc</small></th>     
+		                    <th class="bg-primary text-white"><small>Liqu Pag</small></th>                    
+		                    <th><small>Seg De Sal</small></th>
+		                    <th><small>Ries Prof</small></th>
+		                    <th><small>Proviv</small></th>
+		                    <th><small>Apo Patr Sol</small></th>
+		                    <th><small>Tot Apo Patr</small></th>
 		                </tr>                                  
 	                </thead>
 	                <tbody>

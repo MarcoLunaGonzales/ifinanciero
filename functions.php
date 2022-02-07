@@ -3222,17 +3222,11 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   //================ ========== PARA  planilla sueldos
 
   function obtenerBonoAntiguedad($minino_salarial,$ing_contr,$fecha_planilla){  
-    // $anio_actual= date('Y');
-    // $anio_actual=2019;
-    // $fechaComoEntero = strtotime($ing_contr);
-    // $anio_inicio = date("Y", $fechaComoEntero);
-    // $diferencia_anios=$anio_actual-$anio_inicio;
-    // $anio_actual=date('Y-m-d');
     $date1 = new DateTime($ing_contr);
     $date2 = new DateTime($fecha_planilla);
     $diff = $date1->diff($date2);    
     $diferencia_anios=$diff->y;
-    // echo $dias;
+    // echo $diferencia_anios;
     $total_bono_antiguedad = 0;
     $dbh = new Conexion();
     $stmt = $dbh->prepare("SELECT * from escalas_antiguedad where cod_estadoreferencial=1");
@@ -3243,8 +3237,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       if($anios_inicio<=$diferencia_anios and $diferencia_anios<$anios_final){
-          $total_bono_antiguedad = $minino_salarial*$porcentaje/100;          
-          break;
+         $total_bono_antiguedad = $minino_salarial*3*$porcentaje/100;          
+         break;
       }else $total_bono_antiguedad = 0;
     }    
     $total_bono_antiguedad_x=number_format($total_bono_antiguedad,2,'.','');    
@@ -3789,17 +3783,20 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   //FUNCIONES DE REPORTE
   function obtenerPlanillaSueldosRevision($codigo,$cod_area_x,$cod_uo_x){
-    $dbh = new Conexion();
-    $sql="SELECT p.codigo,p.cod_area,a.nombre as area, CONCAT(p.primer_nombre,' ', p.otros_nombres) as nombres,CONCAT(p.paterno,' ', p.materno) as apellidos,
-    p.identificacion as ci,p.ing_planilla,c.nombre as cargo,pm.haber_basico,
-    pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable,pm.afp_1,pm.afp_2,pad.porcentaje
+   require_once 'conexion_simple.php';
+    $dbh = new Conexion_simple();
+    $sql="SELECT p.codigo,p.cod_area,a.nombre as area, p.primer_nombre as nombres,p.paterno, p.materno,
+    p.identificacion as ci,p.ing_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,
+    pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable,pm.afp_1,pm.afp_2,pad.porcentaje,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.rc_iva,pp.atrasos,pp.anticipo,p.fecha_nacimiento,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,(select tg.abreviatura from tipos_genero tg where tg.codigo=p.cod_genero)as genero,(select pp2.abreviatura from personal_pais pp2 where pp2.codigo=p.cod_nacionalidad) as nacionalidad
+
     FROM personal p
-    join cargos c on p.cod_cargo=c.codigo
     join planillas_personal_mes pm on pm.cod_personalcargo=p.codigo
+    join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
     join areas a on p.cod_area=a.codigo
-    join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal
-    
-    where pm.cod_planilla=$codigo and pad.cod_uo=$cod_uo_x and pad.cod_area=$cod_area_x order by a.nombre";
+    join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1
+    where pm.cod_planilla=$codigo and pad.cod_uo=$cod_uo_x  
+    order by p.cod_unidadorganizacional,a.nombre,p.paterno";
+    // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return $stmt;
@@ -11656,4 +11653,16 @@ function obtenerNombreInstanciaCajaChica($codCaja){
     return $valor;   
   }
  
+
+ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$dias_trabajados_por_defecto){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT dias_trabajados from personal_kardex_mes where cod_mes=$cod_mes_x and cod_gestion=$cod_gestion_x and cod_personal=$codigo_personal and cod_estadoreferencial=1");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $valor=$row['dias_trabajados']*30/$dias_trabajados_por_defecto;
+   }
+   return(round($valor));
+}
+
 ?>

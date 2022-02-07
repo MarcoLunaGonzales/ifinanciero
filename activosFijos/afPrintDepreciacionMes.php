@@ -68,7 +68,7 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                                     <th colspan="12" >Oficina : <?php echo $nombre_unidadO; ?></th>
                                 </tr>
                                 <?php
-                                    $sql="SELECT af.cod_depreciaciones from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+                                    $sql="SELECT af.cod_depreciaciones from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
                                              and af.cod_unidadorganizacional=$cod_unidad and m.codigo=$id GROUP BY af.cod_depreciaciones";
                                     $stmt_rubro = $dbh->prepare($sql);
                                     $stmt_rubro->execute();
@@ -108,7 +108,7 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                                         <?php                                        
                                         $stmt2 = $dbh->prepare("SELECT af.codigo,af.activo,md.d10_valornetobs,md.d9_depreciacionacumuladaactual,md.d8_depreciacionperiodo,md.d7_incrementodepreciacionacumulada,md.d6_depreciacionacumuladaanterior,md.d5_incrementoporcentual,md.d4_valoractualizado ,md.d2_valorresidual,md.d3_factoractualizacion,md.d11_vidarestante, af.codigoactivo
                                             from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
-                                            WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+                                            WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
                                              and af.cod_unidadorganizacional=$cod_unidad and m.codigo=$id and af.cod_depreciaciones=$cod_depreciaciones_rubros");
                                         // Ejecutamos                                        
                                         $stmt2->execute();

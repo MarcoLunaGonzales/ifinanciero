@@ -82,7 +82,7 @@ $total_valorNeto=0;
                                 } ?>
                             </tr>
                             <?php                            
-                                $sql="SELECT af.cod_depreciaciones from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+                                $sql="SELECT af.cod_depreciaciones from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
                                              and af.cod_unidadorganizacional in ($unidadOrgString) and m.mes = $mes2 and m.gestion=$gestion and af.cod_depreciaciones in ($depreciacionesString) GROUP BY af.cod_depreciaciones";
                                 $stmt_rubro = $dbh->prepare($sql);
                                 $stmt_rubro->execute();
@@ -101,7 +101,7 @@ $total_valorNeto=0;
                                             while ($row = $stmt_UO_2->fetch()) { 
                                                 $stmt2 = $dbh->prepare("SELECT sum(md.d9_depreciacionacumuladaactual)totalDepreAcumu
                                                 from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
-                                                WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+                                                WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
                                                  and af.cod_unidadorganizacional=$cod_unidadorganizacional and m.mes = $mes2 and m.gestion=$gestion and af.cod_depreciaciones=$cod_depreciaciones_rubros");
                                                 $stmt2->execute();
                                                 //resultado                                                

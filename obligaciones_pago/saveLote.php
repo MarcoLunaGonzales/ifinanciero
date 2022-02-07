@@ -40,7 +40,7 @@ $contadorCheque=0;$contadorChequeFilas=0;
 $flagSuccess=false;
 for ($i=0; $i <count($array_cuentasAuxiliares) ; $i++) { //
   $codigo_cuentaauxiliar=$array_cuentasAuxiliares[$i];
-  $nameCuentaAuxiliar=nameCuentaAuxiliar($codigo_cuentaauxiliar);
+  // $nameCuentaAuxiliar=nameCuentaAuxiliar($codigo_cuentaauxiliar);
   // echo $codigo_cuentaauxiliar."**";
   $cod_pagoproveedor=obtenerCodigoPagoProveedor();
   // $observaciones_pago_x=$observaciones_pago." - ".$nameCuentaAuxiliar;
@@ -136,7 +136,7 @@ for ($i=0; $i <count($array_cuentasAuxiliares) ; $i++) { //
         }
 
         $nombreComprobanteX=nombreComprobante($cod_comprobante);
-        $observaciones_pago_x=$nameCuentaAuxiliar." Pago ".$nombreComprobanteX." ".$glosa_auxiliar;
+        $observaciones_pago_x="Pago ".$nombreComprobanteX." ".$glosa_auxiliar;
         $cod_pagoproveedordetalle=obtenerCodigoPagoProveedorDetalle();
         $sqlInsert2="INSERT INTO pagos_proveedoresdetalle (codigo,cod_pagoproveedor,cod_proveedor,cod_solicitudrecursos,cod_solicitudrecursosdetalle,cod_tipopagoproveedor,monto,observaciones,fecha) 
          VALUES ('".$cod_pagoproveedordetalle."','".$cod_pagoproveedor."','".$cod_proveedor."','".$codigo_auxiliar_s."','".$cod_comprobantedetalle."','".$tipo_pago."','".$monto_pago_s."','".$observaciones_pago_x."','".$fecha_pago."')";
@@ -148,14 +148,8 @@ for ($i=0; $i <count($array_cuentasAuxiliares) ; $i++) { //
         $flagSuccess=$stmtCambioEstadoSR->execute();   
       }
     }
-    
-
   }
-
 }
-
-
-         
 
 if($flagSuccess==true){
 	showAlertSuccessError(true,"../".$urlListPagoLotes);	
