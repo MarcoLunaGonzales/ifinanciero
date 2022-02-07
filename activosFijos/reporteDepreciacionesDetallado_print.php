@@ -38,7 +38,7 @@ $gestion=nameGestion($gestion);
 
 $sql="SELECT (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)oficina,(select d.abreviatura from  depreciaciones d where d.codigo=af.cod_depreciaciones)rubro,af.codigo,af.activo,md.d2_valorresidual,md.d5_incrementoporcentual,md.d4_valoractualizado,md.d6_depreciacionacumuladaanterior,md.d7_incrementodepreciacionacumulada,md.d8_depreciacionperiodo,md.d9_depreciacionacumuladaactual,md.d10_valornetobs,md.d11_vidarestante
 from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
-WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
  and af.cod_unidadorganizacional in ($unidadOrgString) and af.cod_depreciaciones in ($depreciacionesString)  and m.mes=$mes2 and m.gestion=$gestion ORDER BY 1,2";
  // echo $sql;
  $stmt2 = $dbh->prepare($sql);
@@ -134,9 +134,9 @@ $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
                                         <td class="text-center small bg-success"><small><?=formatNumberDec($d5_incrementoporcentual); ?></small></td>
                                         <td class="text-center small"><small><?=formatNumberDec($d4_valoractualizado); ?></small></td>
                                         <td class="text-center small"><small><?=formatNumberDec($d6_depreciacionacumuladaanterior); ?></small></td>
-                                        <td class="text-center small"><small><?=formatNumberDec($d7_incrementodepreciacionacumulada);?></small></td>
+                                        <td class="text-center small bg-success"><small><?=formatNumberDec($d7_incrementodepreciacionacumulada);?></small></td>
                                         <td class="text-center small bg-success"><small><?=formatNumberDec($d8_depreciacionperiodo); ?></small></td>
-                                        <td class="text-center small bg-success"><small><?=formatNumberDec($d9_depreciacionacumuladaactual); ?></small></td>
+                                        <td class="text-center small"><small><?=formatNumberDec($d9_depreciacionacumuladaactual); ?></small></td>
                                         <td class="text-center small"><small><?=formatNumberDec($d10_valornetobs); ?></small></td>
                                         <td class="text-center small"><small><?=$d11_vidarestante; ?></small></td>
                                     </tr>
@@ -152,9 +152,9 @@ $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
                                 <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActualizacion); ?></td>
                                 <td class="text-center small "><?=formatNumberDec($sumRubroValorActualizado); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($sumRubroDepreciacionAcumulada); ?></td>
-                                <td class="text-center small"><?=formatNumberDec($sumRubroActDepreciacionAcumulada); ?></td>
+                                <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActDepreciacionAcumulada); ?></td>
                                 <td class="text-center small bg-success"><?=formatNumberDec($sumrubro_depreciacionPeriodo); ?></td>
-                                <td class="text-center small bg-success"><?=formatNumberDec($sumrubro_depreciacion); ?></td>
+                                <td class="text-center small "><?=formatNumberDec($sumrubro_depreciacion); ?></td>
                                 <td class="text-center small"><?=formatNumberDec($sumRubroValorNeto); ?></td>
                                 <td>-</td>
                             </tr>
