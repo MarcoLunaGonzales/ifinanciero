@@ -208,6 +208,11 @@
 		if ($_GET['opcion']=='tipoDeCambio') {
 			require_once('tipos_cambios/list.php');
 		}
+		if ($_GET['opcion']=='deleteTipoCambio') {
+			require_once('tipos_cambios/deleteTipoCambioHoy.php');
+		}
+
+
 
 		//PLANTILLAS DE COSTO
 		if ($_GET['opcion']=='listPlantillasCostos') {

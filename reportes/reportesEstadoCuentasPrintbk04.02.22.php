@@ -111,12 +111,10 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                     '<tr class="">'.
                                         '<th class="text-left">Of.</th>'.
                                         '<th class="text-left">CC</th>'.
-                                        '<th class="text-left">CC</th>'.
                                         '<th class="text-left">Tipo/#</th>'.
                                         '<th class="text-left">FechaComp</th>'.
                                         '<th class="text-left">FechaEC</th>'.
                                         '<th class="text-left">Proveedor/Cliente</th>'.
-                                        '<th class="text-left">CuentaAux</th>'.
                                         '<th class="text-left">Glosa</th>'.
                                         '<th class="text-right">Debe</th>'.
                                         '<th class="text-right">Haber</th>'.
@@ -129,8 +127,6 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                         $nombreCuenta=nameCuenta($cuentai);//nombre de cuenta    
                                         
                                         $html.='<tr style="background-color:#9F81F7;">                                    
-                                            <td style="display: none;"></td>
-                                            <td style="display: none;"></td>
                                             <td style="display: none;"></td>
                                             <td style="display: none;"></td>
                                             <td style="display: none;"></td>
@@ -213,7 +209,21 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
 
                                             if($codPlanCuentaAuxiliarX!=$codPlanCuentaAuxiliarPivotX){
                                                 $saldo=0;
-                                                $codPlanCuentaAuxiliarPivotX=$codPlanCuentaAuxiliarX;                                            
+                                                $codPlanCuentaAuxiliarPivotX=$codPlanCuentaAuxiliarX;
+                                            
+                                            /*$html.='<tr style="background-color:#58D68D" class="'.$mostrarFilasEstado.'">
+                                                <td colspan="10"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                                <td style="display: none;"></td>
+                                            </tr>';*/
+                                            
                                             }
                                             // $cod_tipoCuenta=$row['cod_tipoestadocuenta'];
                                             
@@ -266,13 +276,11 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                 $html.='<tr class="bg-white det-estados '.$estiloEstados.' '.$mostrarFilasEstado.'" '.$estiloFilasEstado.'>
                                                     <td class="text-left small">'.$nombreUnidadCabecera.'</td>
                                                     <td class="text-left small">'.$nombreUnidadO.'-'.$nombreAreaCentroCosto.'</td>
-                                                    <td class="text-left small">'.$codUnidadOrganizacional.'-'.$codAreaCentroCosto.'</td>
                                                     <td class="text-center small">'.$nombreComprobanteX.'</td>
                                                     <td class="text-left small">'.$fechaComprobante.'</td>
                                                     <td class="text-left small">'.$fechaX.'</td>
                                                     <!--td class="text-left small">'.$nombreCuentaAuxiliarX.'['.$nombreProveedorX.']</td-->
                                                     <td class="text-left small">'.$nombreCuentaAuxiliarX.'</td>
-                                                    <td class="text-left small">'.$codPlanCuentaAuxiliarX.'</td>
                                                     <td class="text-left small">'.$glosaMostrar.'</td>
                                                     <td class="text-right text-muted font-weight-bold small">'.formatNumberDec($montoEstado).'</td>
                                                     <td class="text-right small">'.formatNumberDec($montoX).'</td>
@@ -288,13 +296,11 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                  $html.='<tr class="bg-white det-estados '.$estiloEstados.' '.$mostrarFilasEstado.'" '.$estiloFilasEstado.'>
                                                     <td class="text-left small">'.$nombreUnidadCabecera.'</td>
                                                     <td class="text-left small">'.$nombreUnidadO.'-'.$nombreAreaCentroCosto.'</td>
-                                                    <td class="text-left small">'.$codUnidadOrganizacional.'@'.$codAreaCentroCosto.'</td>
                                                     <td class="text-center small">'.$nombreComprobanteX.'</td>
                                                     <td class="text-left small">'.$fechaComprobante.'</td>
                                                     <td class="text-left small">'.$fechaX.'</td>
                                                     <!--td class="text-left small">'.$nombreCuentaAuxiliarX.'['.$nombreProveedorX.']</td-->
                                                     <td class="text-left small">'.$nombreCuentaAuxiliarX.'</td>
-                                                    <td class="text-left small">'.$codPlanCuentaAuxiliarX.'</td>
                                                     <td class="text-left small">'.$glosaMostrar.'</td>
                                                     <td class="text-right small">'.formatNumberDec($montoX).'</td>
                                                     <td class="text-right text-muted font-weight-bold small">'.formatNumberDec($montoEstado).'</td>

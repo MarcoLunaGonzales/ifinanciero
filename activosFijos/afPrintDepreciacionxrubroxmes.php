@@ -91,7 +91,7 @@ $total_valorNeto=0;
                                 </tr>
                                 <?php
                                     $sql="SELECT af.cod_depreciaciones from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
-                                             and af.cod_unidadorganizacional=$cod_unidadorganizacional and m.mes = $mes2 and m.gestion=$gestion and af.cod_depreciaciones in ($depreciacionesString) GROUP BY af.cod_depreciaciones";
+                                             and af.cod_unidadorganizacional=$cod_unidadorganizacional and m.mes = $mes2 and m.gestion=$gestion and af.cod_depreciaciones in ($depreciacionesString) and af.cod_proy_financiacion=0 GROUP BY af.cod_depreciaciones";
                                     $stmt_rubro = $dbh->prepare($sql);
                                     $stmt_rubro->execute();
                                     $stmt_rubro->bindColumn('cod_depreciaciones', $cod_depreciaciones_rubros);
@@ -101,7 +101,7 @@ $total_valorNeto=0;
                                         $stmt2 = $dbh->prepare("SELECT sum(md.d10_valornetobs)valorNeto,sum(md.d9_depreciacionacumuladaactual)totalDepreAcumu,sum(md.d8_depreciacionperiodo)deprePeriodo,sum(md.d7_incrementodepreciacionacumulada)actDepAcum,sum(md.d6_depreciacionacumuladaanterior)depreAcumAnt,sum(md.d5_incrementoporcentual)actualizacion_porcentual,sum(md.d4_valoractualizado)valorActualizado,sum(md.d2_valorresidual)valorresidual
                                             from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
                                             WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
-                                             and af.cod_unidadorganizacional=$cod_unidadorganizacional and m.mes = $mes2 and m.gestion=$gestion and af.cod_depreciaciones=$cod_depreciaciones_rubros");
+                                             and af.cod_unidadorganizacional=$cod_unidadorganizacional and m.mes = $mes2 and m.gestion=$gestion and af.cod_proy_financiacion=0 and af.cod_depreciaciones=$cod_depreciaciones_rubros");
                                         // Ejecutamos
                                         // $stmt2->bindParam(':cod_unidadorganizacional',$cod_unidadorganizacional);
                                         $stmt2->execute();
