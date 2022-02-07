@@ -1,8 +1,8 @@
 <?php
-require_once '../conexion.php';
+require_once '../conexion_simple.php';
 require_once '../functions.php';
 
-session_start();
+// session_start();
 setlocale(LC_TIME, "Spanish");
 //INICIAR valores de las sumas
 $total1=0;$total2=0;$total3=0;$total4=0;$total5=0;$total6=0;
@@ -11,9 +11,9 @@ $total_aporteSolidario=0;$total_rc_iva=0;$total_otros_descuentos=0;
 $total_anticipos=0;
 
 //datos para el titulo del reporte
-$mesActual=strtoupper(nameMes(date("m")));
-$anioActual=date("Y");
-// $nombreUnidad="Reporte IBNORCA";
+// $mesActual=strtoupper(nameMes(date("m")));
+// $anioActual=date("Y");
+// // $nombreUnidad="Reporte IBNORCA";
 
 
 $fechaActual=date("Y-m-d");
@@ -22,17 +22,17 @@ $cod_gestion=$_GET['cod_gestion'];
 $codPlanilla=$_GET['codigo_planilla'];
 $cod_uo = $_GET["codigo_uo"];//
 //nombre de unidad
-$dbh = new Conexion();
+$dbh = new Conexion_simple();
 $mes=strtoupper(nameMes($cod_mes));
 $gestion=nameGestion($cod_gestion);
 $nombreUnidad= nameUnidad($cod_uo);
-$stmtArea = $dbh->prepare("SELECT cod_area,(SELECT a.abreviatura from areas a where a.codigo=cod_area) as nombre_area
-  from personal_area_distribucion
-  where cod_estadoreferencial=1 and cod_uo=$cod_uo
-  GROUP BY cod_area order by nombre_area");
-$stmtArea->execute();
-$stmtArea->bindColumn('cod_area', $cod_area_x);
-$stmtArea->bindColumn('nombre_area', $nombre_area_x);
+// $stmtArea = $dbh->prepare("SELECT cod_area,(SELECT a.abreviatura from areas a where a.codigo=cod_area) as nombre_area
+//   from personal_area_distribucion
+//   where cod_estadoreferencial=1 and cod_uo=$cod_uo
+//   GROUP BY cod_area order by nombre_area");
+// $stmtArea->execute();
+// $stmtArea->bindColumn('cod_area', $cod_area_x);
+// $stmtArea->bindColumn('nombre_area', $nombre_area_x);
 
 $dias_trabajados_asistencia=30;//ver datos
 
@@ -55,10 +55,20 @@ $html.='<body>'.
       '}'.
     '</script>';
 $html.=  '<header class="header">'.            
-            '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
-            '<div id="header_titulo_texto">PLANILLA DE SUELDOS PERIODO '.$mes.' '.$gestion.'</div>'.
-         '<div id="header_titulo_texto_inf">'.$nombreUnidad.'</div>'.
-         '</header><br><br>';
+         //    '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
+         //    '<div id="header_titulo_texto">PLANILLA DE SUELDOS PERIODO '.$mes.' '.$gestion.'</div>'.
+         // '<div id="header_titulo_texto_inf"><b>'.$nombreUnidad.'</b><br>(Expresado en Bolivianos)</div>'.
+          '<table width="100%">
+              <tr>
+              <td width="25%"><p>INSTITUTO BOLIVIANO DE NORMALIZACIÓN Y CALIDAD
+                <br>Calle 7 N° 545 Esq. 14 Septiembre, Zona Obrajes
+                <br>La Paz - Bolivia
+                </p></td>
+              <td><center><span style="font-size: 13px"><b>PLANILLA DE SUELDOS CORRESPONDIENTE AL PERIODO '.$mes.'  '.$gestion.'</b></span><BR>Correspondientes al mes de '.$mes.' '.$gestion.'<br><b>'.$nombreUnidad.'</b><br>(Expresado en Bolivianos)</center></td>
+              <td width="25%">NIT:1020745020<br>N° PATRONAL: 925-1-761</td>
+              </tr>
+            </table>'.
+         '</header>';
          $html.='<table class="table">'.
             '<thead>'.
             '<tr class="bold table-title text-center">'.
@@ -89,23 +99,23 @@ $html.=  '<header class="header">'.
            '<tbody>';
             $index=1;
             $codArea=0;
-            while ($rowArea = $stmtArea->fetch(PDO::FETCH_BOUND)) 
-            {
-            $data = obtenerPlanillaSueldosRevision($codPlanilla,$cod_area_x,$cod_uo);
+            
+            $data = obtenerPlanillaSueldosRevision($codPlanilla,0,$cod_uo);
             while ($row = $data->fetch(PDO::FETCH_ASSOC)) {
-              $monto_bonos_otros=obtenerPlanillaSueldoRevisionBonos($row['codigo'],$cod_gestion,$cod_mes,$dias_trabajados_asistencia,$row['dias_trabajados']);
+               $monto_bonos_otros=obtenerPlanillaSueldoRevisionBonos($row['codigo'],$cod_gestion,$cod_mes,$dias_trabajados_asistencia,$row['dias_trabajados']);
               $cod_personal_cargo=$row['codigo'];
               $porcentaje=$row['porcentaje'];
-              $sql = "SELECT * from planillas_personal_mes_patronal 
-              where cod_planilla=$codPlanilla and cod_personal_cargo=$cod_personal_cargo";
-              $stmtPersonalPatronal = $dbh->prepare($sql);
-              $stmtPersonalPatronal->execute();
-              $resultPatronal=$stmtPersonalPatronal->fetch();
-              $a_solidario_13000=$resultPatronal['a_solidario_13000'];
-              $a_solidario_25000=$resultPatronal['a_solidario_25000'];
-              $rc_iva=$resultPatronal['rc_iva'];
-              $atrasos=$resultPatronal['atrasos'];
-              $anticipo=$resultPatronal['anticipo'];
+              // $sql = "SELECT * from planillas_personal_mes_patronal 
+              // where cod_planilla=$codPlanilla and cod_personal_cargo=$cod_personal_cargo";
+              // $stmtPersonalPatronal = $dbh->prepare($sql);
+              // $stmtPersonalPatronal->execute();
+              // $resultPatronal=$stmtPersonalPatronal->fetch();
+              $a_solidario_13000=$row['a_solidario_13000'];
+              $a_solidario_25000=$row['a_solidario_25000'];
+              $a_solidario_35000=$row['a_solidario_35000'];
+              $rc_iva=$row['rc_iva'];
+              $atrasos=$row['atrasos'];
+              $anticipo=$row['anticipo'];
               
               $sqlTotalOtroDescuentos = "SELECT SUM(monto) as suma_descuentos
                       from descuentos_personal_mes 
@@ -116,20 +126,20 @@ $html.=  '<header class="header">'.
               $sumaDescuentos_otros=$resultDescuentosOtros['suma_descuentos'];
               if($codArea!=$row['cod_area']){
                $html.='<tr>'.
-                      '<td colspan="21">'.$row['area'].'</td>';                                  
+                      '<td colspan="21"><b>'.$row['area'].'</b></td>';                                  
                     $html.='</tr>'; 
                $codArea=$row['cod_area'];      
               }
-             $html.='<tr>'.
+              $html.='<tr>'.
                       '<td>'.$row['codigo'].'</td>'.
                       '<td>'.$row['codigo'].'</td>'.
                       '<td></td>'.
                       '<td>'.$row['nombres'].'</td>'.
-                      '<td>'.$row['apellidos'].'</td>'.
+                      '<td>'.$row['paterno'].' '.$row['materno'].'</td>'.
                       '<td>'.$row['ci'].'</td>'.
                       '<td>'.strftime('%d/%m/%Y',strtotime($row['ing_planilla'])).'</td>'.
                       '<td>'.$row['cargo'].'</td>'.
-                      '<td class="text-right">'.number_format($row['haber_basico']*$porcentaje/100, 2, '.', ',').'</td>'.
+                      '<td class="text-right">'.number_format($row['haber_basico2']*$porcentaje/100, 2, '.', ',').'</td>'.
                       '<td class="text-right">'.$row['dias_trabajados'].'</td>'.
                       '<td class="text-right">'.number_format($row['bono_antiguedad']*$porcentaje/100, 2, '.', ',').'</td>'.
                       '<td class="text-right">'.number_format($monto_bonos_otros*$porcentaje/100, 2, '.', ',').'</td>'.
@@ -142,22 +152,22 @@ $html.=  '<header class="header">'.
                       '<td class="text-right">'.number_format($anticipo*$porcentaje/100, 2, '.', ',').'</td>'.
                       '<td class="text-right">'.number_format($row['monto_descuentos']*$porcentaje/100, 2, '.', ',').'</td>'.
                       '<td class="text-right">'.number_format($row['liquido_pagable']*$porcentaje/100, 2, '.', ',').'</td>';                    
-                    $html.='</tr>';
-                  //suma de totales
-                  $total1+=$row['haber_basico']*$porcentaje/100;                  
-                  $total3+=$row['bono_antiguedad']*$porcentaje/100; 
-                  $total_bonos_otros +=($monto_bonos_otros)*$porcentaje/100;
-                  $total4+=$row['total_ganado']*$porcentaje/100;
-                  $total_afp1+=$row['afp_1']*$porcentaje/100; 
-                  $total_afp2+=$row['afp_2']*$porcentaje/100; 
-                  $total_aporteSolidario+=($a_solidario_13000+$a_solidario_25000+$a_solidario_35000)*$porcentaje/100; 
-                  $total_rc_iva+=$rc_iva*$porcentaje/100;              
-                  $total_otros_descuentos+=($sumaDescuentos_otros+$atrasos)*$porcentaje/100;
-                  $total_anticipos+=$anticipo*$porcentaje/100;
-                  $total5+=$row['monto_descuentos']*$porcentaje/100; 
-                  $total6+=$row['liquido_pagable']*$porcentaje/100; 
-              }
+              $html.='</tr>';
+              //suma de totales
+              $total1+=$row['haber_basico2']*$porcentaje/100;                  
+              $total3+=$row['bono_antiguedad']*$porcentaje/100; 
+              $total_bonos_otros +=($monto_bonos_otros)*$porcentaje/100;
+              $total4+=$row['total_ganado']*$porcentaje/100;
+              $total_afp1+=$row['afp_1']*$porcentaje/100; 
+              $total_afp2+=$row['afp_2']*$porcentaje/100; 
+              $total_aporteSolidario+=($a_solidario_13000+$a_solidario_25000+$a_solidario_35000)*$porcentaje/100; 
+              $total_rc_iva+=$rc_iva*$porcentaje/100;              
+              $total_otros_descuentos+=($sumaDescuentos_otros+$atrasos)*$porcentaje/100;
+              $total_anticipos+=$anticipo*$porcentaje/100;
+              $total5+=$row['monto_descuentos']*$porcentaje/100; 
+              $total6+=$row['liquido_pagable']*$porcentaje/100; 
             }
+          
       $html.='<tr class="bold table-title">'.
                   '<td colspan="8" class="text-center">Sumas:</td>'.
                   '<td class="text-right">'.number_format($total1, 2, '.', ',').'</td>'.
@@ -178,5 +188,7 @@ $html.=  '<header class="header">'.
 $html.=    '</table>';        
 $html.='</body>'.
       '</html>';           
+
+      //echo $html;
 descargarPDFHorizontal("prueba Reporte Planilla",$html);
 ?>

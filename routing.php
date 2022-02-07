@@ -1407,6 +1407,12 @@
 			require_once('bonos/calculaBonoProfesion.php');
 		}
 
+		if ($_GET['opcion']=='subirBonoExcel_global_from') {
+			require_once('bonos/subirExcel_global_from.php');
+		}
+		if ($_GET['opcion']=='subirBonoExcel_global_save') {
+			require_once('bonos/subirExcel_global_save.php');
+		}
 
 
 
