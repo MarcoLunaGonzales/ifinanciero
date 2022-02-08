@@ -5525,7 +5525,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
               where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and c.cod_gestion=$gestion and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
       
-      echo $sql;
+      //echo $sql;
       
       $stmt = $dbh->prepare($sql);
       $stmt->execute();

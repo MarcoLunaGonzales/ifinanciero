@@ -238,7 +238,7 @@ try {
         $stmt->bindParam(':otrodato', $otrodato);
         $stmt->bindParam(':cod_empresa', $cod_empresa);
         $stmt->bindParam(':activo', $activo);    
-        $stmt->bindParam(':vidautilmeses_restante', $vidautilmeses_restante);
+        $stmt->bindParam(':vidautilmeses_restante', $vidautilmeses);
         $stmt->bindParam(':cod_af_proveedores', $cod_af_proveedores);
         $stmt->bindParam(':numerofactura', $numerofactura);
         $stmt->bindParam(':bandera_depreciar', $bandera_depreciar);

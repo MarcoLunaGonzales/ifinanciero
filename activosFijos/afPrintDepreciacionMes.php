@@ -65,10 +65,10 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                             <?php
                             while ($row = $stmtUO->fetch()) { ?>
                                 <tr class="bg-dark text-white">
-                                    <th colspan="11" >Oficina : <?php echo $nombre_unidadO; ?></th>
+                                    <th colspan="12" >Oficina : <?php echo $nombre_unidadO; ?></th>
                                 </tr>
                                 <?php
-                                    $sql="SELECT af.cod_depreciaciones from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+                                    $sql="SELECT af.cod_depreciaciones from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
                                              and af.cod_unidadorganizacional=$cod_unidad and m.codigo=$id GROUP BY af.cod_depreciaciones";
                                     $stmt_rubro = $dbh->prepare($sql);
                                     $stmt_rubro->execute();
@@ -88,9 +88,10 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                                         $sumRubroValorNeto=0;
                                         ?>
                                         <tr class="bg-secondary text-white">
-                                            <th colspan="11">Rubro : <?=$nombre_depreciaciones; ?></th>
+                                            <th colspan="12">Rubro : <?=$nombre_depreciaciones; ?></th>
                                         </tr>
                                         <tr >
+                                            <th ><small>Cod.<br>Interno</small></th>
                                             <th ><small>Cod.<br>Activo</small></th>
                                             <th ><small>Activo</small></th>
                                             <th ><small>Valor<br>Anterior</small></th>
@@ -105,9 +106,9 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                                             <th ><small>Vida útil Restante</small></th>            
                                         </tr>
                                         <?php                                        
-                                        $stmt2 = $dbh->prepare("SELECT af.codigo,af.activo,md.d10_valornetobs,md.d9_depreciacionacumuladaactual,md.d8_depreciacionperiodo,md.d7_incrementodepreciacionacumulada,md.d6_depreciacionacumuladaanterior,md.d5_incrementoporcentual,md.d4_valoractualizado ,md.d2_valorresidual,md.d3_factoractualizacion,md.d11_vidarestante
+                                        $stmt2 = $dbh->prepare("SELECT af.codigo,af.activo,md.d10_valornetobs,md.d9_depreciacionacumuladaactual,md.d8_depreciacionperiodo,md.d7_incrementodepreciacionacumulada,md.d6_depreciacionacumuladaanterior,md.d5_incrementoporcentual,md.d4_valoractualizado ,md.d2_valorresidual,md.d3_factoractualizacion,md.d11_vidarestante, af.codigoactivo
                                             from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
-                                            WHERE af.cod_estadoactivofijo=1 and m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
+                                            WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
                                              and af.cod_unidadorganizacional=$cod_unidad and m.codigo=$id and af.cod_depreciaciones=$cod_depreciaciones_rubros");
                                         // Ejecutamos                                        
                                         $stmt2->execute();
@@ -125,6 +126,8 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                                         $stmt2->bindColumn('d9_depreciacionacumuladaactual', $d9_depreciacionacumuladaactual);
                                         $stmt2->bindColumn('d10_valornetobs', $d10_valornetobs);
                                         $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
+                                        $stmt2->bindColumn('codigoactivo', $codigoActivoInternoX);
+
                                         
                                         while ($row = $stmt2->fetch()) {                                             
                                             //totales
@@ -142,6 +145,7 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                                             ?>
                                            <tr>
                                                 <td class="text-center small"><small><?=$codigoactivo;?></td>
+                                                <td class="text-center small"><small><?=$codigoActivoInternoX;?></td>
                                                 <td class="text-left small"><small><?=$activo; ?></td>
                                                 <td class="text-center small"><small><?=formatNumberDec($d2_valorresidual); ?></small></td>
                                                 <td class="text-center small bg-success"><small><?=formatNumberDec($d5_incrementoporcentual); ?></small></td>
@@ -156,7 +160,7 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                                             <?php 
                                         }?>
                                         <tr class="bg-info text-white">
-                                            <th colspan="2">Total :</th>
+                                            <th colspan="3">Total :</th>
                                             <td class="text-center small"><?=formatNumberDec($sumRubroValorAnterior); ?></td>
                                             <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActualizacion); ?></td>
                                             <td class="text-center small"><?=formatNumberDec($sumRubroValorActualizado); ?></td>
