@@ -36,7 +36,7 @@ $stmt->bindColumn('cuenta_auxiliar', $cuentaAuxiliar);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title"><?=$moduleNamePlural?></h4>
+                  <h4 class="card-title"><?=$moduleNamePlural?> <a href='plan_cuentas/plancuentas_pdf.php' target="_blank" title="Imprimir Plan de cuentas" rel='tooltip'><i class='material-icons' style='color:red'>print</i></a></h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
