@@ -36,7 +36,7 @@ $gestion=nameGestion($gestion);
 //listamos las oficinas
 
 
-$sql="SELECT (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)oficina,(select d.abreviatura from  depreciaciones d where d.codigo=af.cod_depreciaciones)rubro,af.codigo,af.activo,md.d2_valorresidual,md.d5_incrementoporcentual,md.d4_valoractualizado,md.d6_depreciacionacumuladaanterior,md.d7_incrementodepreciacionacumulada,md.d8_depreciacionperiodo,md.d9_depreciacionacumuladaactual,md.d10_valornetobs,md.d11_vidarestante
+$sql="SELECT (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)oficina,(select d.abreviatura from  depreciaciones d where d.codigo=af.cod_depreciaciones)rubro,af.codigo,af.activo,md.d2_valorresidual,md.d5_incrementoporcentual,md.d4_valoractualizado,md.d6_depreciacionacumuladaanterior,md.d7_incrementodepreciacionacumulada,md.d8_depreciacionperiodo,md.d9_depreciacionacumuladaactual,md.d10_valornetobs,md.d11_vidarestante, af.codigoactivo
 from mesdepreciaciones m, mesdepreciaciones_detalle md, activosfijos af
 WHERE  m.codigo = md.cod_mesdepreciaciones and md.cod_activosfijos = af.codigo
  and af.cod_unidadorganizacional in ($unidadOrgString) and af.cod_depreciaciones in ($depreciacionesString)  and m.mes=$mes2 and m.gestion=$gestion ORDER BY 1,2";
@@ -60,6 +60,8 @@ $stmt2->bindColumn('d8_depreciacionperiodo', $d8_depreciacionperiodo);
 $stmt2->bindColumn('d9_depreciacionacumuladaactual', $d9_depreciacionacumuladaactual);
 $stmt2->bindColumn('d10_valornetobs', $d10_valornetobs);
 $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
+$stmt2->bindColumn('codigoactivo', $codigoActivoInternoX);
+
 
 ?>
 
@@ -84,6 +86,7 @@ $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
                             <tr >
                                 <th ><small>Oficina</small></th>
                                 <th ><small>Rubro</small></th>
+                                <th ><small>Cod.<br>Interno</small></th>
                                 <th ><small>Cod.<br>Activo</small></th>
                                 <th ><small>Activo</small></th>
                                 <th ><small>Valor<br>Anterior</small></th>                                
@@ -127,8 +130,8 @@ $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
                                    <tr>
                                         <td class="text-center small"><small><?=$oficina_x;?></td>
                                         <td class="text-center small"><small><?=$rubro_x;?></td>
-
                                         <td class="text-center small"><small><?=$codigoactivo;?></td>
+                                        <td class="text-center small"><small><?=$codigoActivoInternoX;?></td>
                                         <td class="text-left small"><small><?=$activo; ?></td>
                                         <td class="text-center small"><small><?=formatNumberDec($d2_valorresidual); ?></small></td>
                                         <td class="text-center small bg-success"><small><?=formatNumberDec($d5_incrementoporcentual); ?></small></td>
@@ -147,7 +150,7 @@ $stmt2->bindColumn('d11_vidarestante', $d11_vidarestante);
                         </tbody>
                         <tfoot>
                             <tr class="bg-info text-white">
-                                <th colspan="4">Total :</th>
+                                <th colspan="5">Total :</th>
                                 <td class="text-center small"><?=formatNumberDec($sumRubroValorAnterior); ?></td>
                                 <td class="text-center small bg-success"><?=formatNumberDec($sumRubroActualizacion); ?></td>
                                 <td class="text-center small "><?=formatNumberDec($sumRubroValorActualizado); ?></td>

@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
-
+$sql="";
 
 // Preparamos
 if(isset($_GET['q'])){
@@ -25,23 +25,26 @@ if(isset($_GET['q'])){
     $sqlAreas="and p.cod_area=".$codigoArea;
   }
   //cargarDatosSession();
-  $stmt = $dbh->prepare("SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,es.nombre as estado,c.nombre as cliente 
+  $sql="SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,es.nombre as estado,c.nombre as cliente 
 from simulaciones_servicios sc 
 join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
 join clientes c on c.codigo=sc.cod_cliente 
 join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
-where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser) $sqlAreas order by sc.fecha desc");
+where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser) $sqlAreas order by sc.fecha desc";
+  $stmt = $dbh->prepare($sql);
 }else{
   $s=0;
   $u=0;
-  $stmt = $dbh->prepare("SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,es.nombre as estado,c.nombre as cliente 
+  $sql="SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,es.nombre as estado,c.nombre as cliente 
 from simulaciones_servicios sc 
 join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
 join clientes c on c.codigo=sc.cod_cliente 
 join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
-where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser) order by sc.codigo desc");
+where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser) order by sc.codigo desc";
+  $stmt = $dbh->prepare($sql);
 }
 
+echo $sql;
 // Ejecutamos
 $stmt->execute();
 // bindColumn
