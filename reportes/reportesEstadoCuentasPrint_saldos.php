@@ -37,8 +37,16 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
 
 $string_periodo="30,60,90";
 $array_periodo=explode(",", $string_periodo);
-
 require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
+
+if(isset($_POST['cierre_anterior'])){?>
+  <input type="hidden" name="cierre_anterior" id="cierre_anterior" value="1">
+<?php }else{
+  ?>
+  <input type="hidden" name="cierre_anterior" id="cierre_anterior" value="0">
+<?php
+}
+
 ?>
 
 <div class="content">
@@ -52,6 +60,7 @@ require_once 'reportesEstadoCuentasPrint_saldos_detalle.php';
                       <input type="hidden" name="desde_x" id="desde_x" value="<?=$desde?>">
                       <input type="hidden" name="hasta_x" id="hasta_x" value="<?=$hasta?>">
                       <input type="hidden" name="cuentai_x" id="cuentai_x" value="<?=$StringCuenta?>">
+
                         <!--div class="float-right col-sm-2">
                             <h6 class="card-title">Exportar como:</h6>
                         </div-->
