@@ -9205,7 +9205,7 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
      $dbh = new Conexion();
      $sql="SELECT cd.glosa,cd.debe,cd.haber,(cd.debe+cd.haber) as monto,cd.cod_area,cd.cod_unidadorganizacional,p.nombre,p.numero,(SELECT nombre FROM cuentas_auxiliares where codigo=cd.cod_cuentaauxiliar) as nombre_auxiliar from comprobantes_detalle cd join plan_cuentas p on p.codigo=cd.cod_cuenta join comprobantes c on c.codigo=cd.cod_comprobante where cd.codigo=$codigo and c.cod_estadocomprobante<>2 $sqlFiltro";
      $stmt = $dbh->prepare($sql);
-    // echo $sql;
+     //echo "COMPROBANTE DETALLE FECHAS: ".$sql."<br>";
      $stmt->execute();
      $valor=array('','','','','');
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -9472,22 +9472,29 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
   
   function obtenerSaldoLibretaBancariaDetalleFiltro($codigo,$sqlFiltro,$montoLib){
     $dbh = new Conexion();
+    
+    //SACA TODAS LAS LIBRETAS ASOCIADAS A LA FACTURA
     $sql="SELECT ld.codigo,ld.monto,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf 
     join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
     where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta fv  where lbdf.cod_libretabancariadetalle='$codigo' 
       and fv.codigo=lbdf.cod_facturaventa and fv.cod_estadofactura<>2 $sqlFiltro) order by fecha_hora";
+    
+    echo "SALDO DETALLE FILTRO: ".$sql."<br>";
+    
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     
+    //obtiene el monto de la factura relacionada
     $montoFactura=obtenerMontoTotalLibretaBancariaDetalleFiltro($codigo,$sqlFiltro);//450
     $montoFacturaAux=$montoFactura;
     $saldo=$montoLib;$montoAux=0;
-     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+   
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+       //pregunta por otro codigo de libreta --> revisar esto
        if($row['codigo']!=$codigo){
-        $montoAux=obtenerSaldoLibretaBancariaDetalleFiltroAux($row['codigo'],$codigo,$sqlFiltro); //100  -> 1015
-
+         $montoAux=obtenerSaldoLibretaBancariaDetalleFiltroAux($row['codigo'],$codigo,$sqlFiltro); //100  -> 1015
        }else{
-        if($montoAux>0&&$montoAux<=$row['monto']){
+        if($montoAux>0 && $montoAux<=$row['monto']){
         //if($montoAux>0&&$montoFacturaAux<($row['monto']+$montoAux)){ //validacion para libretas detalle que tienen dos o más facturas asociadas
           $montoFactura=$montoAux;
         }   
@@ -9505,13 +9512,16 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
      }
      return $saldo; 
   }
+
   function obtenerSaldoLibretaBancariaDetalleFiltroAux($codigo,$codigoAux,$sqlFiltro){
     $sqlFiltro=""; //PARA NO FILTRAR LOS ANTERIORES
     $dbh = new Conexion();
     $sql="SELECT ld.monto,ld.codigo,lf.cod_facturaventa from libretas_bancariasdetalle_facturas lf join libretas_bancariasdetalle ld on lf.cod_libretabancariadetalle=ld.codigo 
     where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta fv  where lbdf.cod_libretabancariadetalle='$codigo' 
       and fv.codigo=lbdf.cod_facturaventa and fv.cod_estadofactura<>2 $sqlFiltro) and ld.codigo!=$codigoAux order by fecha_hora";
-    //echo $sql;
+    
+    echo "FILTRO AUX: ".$sql."<br>";
+    
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $montoFactura=obtenerMontoTotalLibretaBancariaDetalleFiltro($codigo,$sqlFiltro);
@@ -9536,7 +9546,9 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
     $dbh = new Conexion();
     $sql="SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as monto_factura from facturas_venta fv, facturas_ventadetalle fd, libretas_bancariasdetalle_facturas lf  
       where lf.cod_facturaventa=fv.codigo and fv.codigo=fd.cod_facturaventa and fv.cod_estadofactura<>2 and lf.cod_libretabancariadetalle=$codigo $sqlFiltro";
-     //echo $sql;
+     
+     echo "MONTO FACTURA: ".$sql."<br>";
+     
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $valor=0;
