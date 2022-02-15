@@ -1,7 +1,6 @@
 <?php
 
 require_once 'conexion2.php';
-require_once 'conexion_externa.php';
 ini_set('memory_limit', '1G');
 
 

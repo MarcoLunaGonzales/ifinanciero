@@ -9479,7 +9479,7 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
     where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta fv  where lbdf.cod_libretabancariadetalle='$codigo' 
       and fv.codigo=lbdf.cod_facturaventa and fv.cod_estadofactura<>2 $sqlFiltro) order by fecha_hora";
     
-    echo "SALDO DETALLE FILTRO: ".$sql."<br>";
+    //echo "SALDO DETALLE FILTRO: ".$sql."<br>";
     
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -9520,7 +9520,7 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
     where lf.cod_facturaventa in (SELECT lbdf.cod_facturaventa from libretas_bancariasdetalle_facturas lbdf, facturas_venta fv  where lbdf.cod_libretabancariadetalle='$codigo' 
       and fv.codigo=lbdf.cod_facturaventa and fv.cod_estadofactura<>2 $sqlFiltro) and ld.codigo!=$codigoAux order by fecha_hora";
     
-    echo "FILTRO AUX: ".$sql."<br>";
+    //echo "FILTRO AUX: ".$sql."<br>";
     
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -9547,7 +9547,7 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
     $sql="SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as monto_factura from facturas_venta fv, facturas_ventadetalle fd, libretas_bancariasdetalle_facturas lf  
       where lf.cod_facturaventa=fv.codigo and fv.codigo=fd.cod_facturaventa and fv.cod_estadofactura<>2 and lf.cod_libretabancariadetalle=$codigo $sqlFiltro";
      
-     echo "MONTO FACTURA: ".$sql."<br>";
+     //echo "MONTO FACTURA: ".$sql."<br>";
      
      $stmt = $dbh->prepare($sql);
      $stmt->execute();

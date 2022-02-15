@@ -38,7 +38,8 @@ if($_POST["fecha_desde"]==""){
 $unidadCosto=$_POST['unidad_costo'];
 $areaCosto=$_POST['area_costo'];
 
-$gestion= $_POST["gestion"];
+//$gestion= $_POST["gestion"];
+$gestion=0;
 $filtroPersonal= implode(",",$_POST["personal"]);
 $formas_pago= $_POST["forma_pago"];
 $filtroTiposPago= implode(",",$formas_pago);

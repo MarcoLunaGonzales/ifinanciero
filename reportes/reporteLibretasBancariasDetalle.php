@@ -123,10 +123,11 @@ switch ($filtro) {
             $saldo=$monto;
           }else{
             //$saldo=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,$sqlFiltroSaldo,$monto);
-            
+            $saldo=obtenerSaldoLibretaBancariaNuevo($codigo,$monto,$fecha_fac,$fechaHasta_fac);
           }*/
-          $saldo=obtenerSaldoLibretaBancariaNuevo($codigo,$monto,$fecha_fac,$fechaHasta_fac);
-          
+
+          $saldo=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,$sqlFiltroSaldo,$monto);
+            
           //echo "<br>Saldo: ".$saldo." <br>";
 
           if($entro==1){
@@ -142,7 +143,25 @@ switch ($filtro) {
               if($datosDetalle[1]!=''){
                       $saldo=$saldo-(float)$datosDetalle[1];
               }
-            }   
+            }
+
+
+            /*QUITAR ESTA PARTE ES SOLO PARA EL CIERRE DE LA 2021*/
+            /*BISA NACIONAL*/
+            if($codigo==3611 || $codigo==6023 || $codigo==7144 || $codigo==7271  || $codigo==7679 || $codigo==15449 || $codigo==15860 || $codigo==16588 || $codigo==18088 || $codigo==18219 || $codigo==18498 || $codigo==19743){
+              $saldo=0;
+            }
+            /*BISA SCZ*/
+            if($codigo==4019 || $codigo==4020 || $codigo==4021 || $codigo==4025){
+              $saldo=0;
+            }
+            if($codigo==4639){
+              $saldo=238;
+            }
+
+            /*fin quitar*/
+
+
             $totalMonto+=(float)$saldo;
             $montoMonto+=(float)$monto;
 
