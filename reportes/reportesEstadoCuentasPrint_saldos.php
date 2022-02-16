@@ -185,7 +185,7 @@ if(isset($_POST['cierre_anterior'])){?>
                                     }
                                     $sql="SELECT e.fecha,e.cod_cuentaaux,ca.nombre,(SELECT c.tipo from configuracion_estadocuentas c where c.cod_plancuenta=d.cod_cuenta)as tipoDebeHaber
                                         FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) $proveedoresStringAux and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) GROUP BY e.cod_cuentaaux  order by ca.nombre"; //ca.nombre, 
-                                    // echo $sql;
+                                    //echo $sql;
                                     $stmtUO = $dbh->prepare($sql);
                                     $stmtUO->execute();
                                     $index=1;

@@ -11,7 +11,7 @@ class Conexion_simple extends PDO {
 
    // private $tipo_de_base = 'mysql';
    // private $host = 'localhost';
-   // private $nombre_de_base = 'ibnfinanciero4000';
+   // private $nombre_de_base = 'ibnofinanciero1000';
    // private $usuario = 'root';
    // private $contrasena = '';
    // private $port = '3306';  
