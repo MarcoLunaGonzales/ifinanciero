@@ -109,11 +109,11 @@ if($banderaLogin==1 || $tipoLogin==1){
 		$nombreGestion=nameGestion($codGestionActiva);
 
 		if($idUsuarioSW==49299){
-			$codGestionActiva=1205;
-			$nombreGestion="2020";
+			$codGestionActiva=3584;
+			$nombreGestion="2021";
 			$codMesActiva=12;
-			$codUnidad=3000;
-			$nombreUnidad="SIS";
+			$codUnidad=5;
+			$nombreUnidad="RLP";
 		}
 
 		$_SESSION['globalUser']=$codigo;

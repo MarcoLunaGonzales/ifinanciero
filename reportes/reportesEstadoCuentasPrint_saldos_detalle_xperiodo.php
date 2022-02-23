@@ -134,10 +134,10 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                     
                                     foreach ($cuenta as $cuentai ) {
                                         $nombreCuenta=nameCuenta($cuentai);//nombre de cuenta                                            
-                                        $sqlFechaEstadoCuenta="and e.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59'"; 
+                                        // $sqlFechaEstadoCuenta="and e.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59'"; 
                                             
                                         // if(isset($_GET['cierre_anterior'])){
-                                        //   $sqlFechaEstadoCuenta="and e.fecha<='$hasta 23:59:59'";  
+                                           $sqlFechaEstadoCuenta="and e.fecha<='$hasta 23:59:59'";  
                                         //  }
 
                                         $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos, 

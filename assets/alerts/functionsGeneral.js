@@ -20163,12 +20163,21 @@ function cargarCuentasxCobrarPeriodo(){
   var desde_x = $("#desde_x").val();
   var hasta_x = $("#hasta_x").val();
   var cuentai_x = $("#cuentai_x").val();
+  var cierre_anterior = $("#cierre_anterior").val();
+
+ 
   
   if(cuentas_auxiliares!="" || unidad_costo !="" || area_costo !=""){
     
     var url ="ajax_contenedor_cuentasxcobrar.php";
 
-    var parametros={"unidades":unidades_x,"gestion":gestion_x,"desde":desde_x,"hasta":hasta_x,"cuentai":cuentai_x,"cuentas_auxiliares":cuentas_auxiliares,"unidad_costo":unidad_costo,"area_costo":area_costo};
+     if(cierre_anterior==1){
+    
+      var parametros={"unidades":unidades_x,"gestion":gestion_x,"desde":desde_x,"hasta":hasta_x,"cuentai":cuentai_x,"cuentas_auxiliares":cuentas_auxiliares,"unidad_costo":unidad_costo,"area_costo":area_costo,"cierre_anterior":cierre_anterior};
+    }else{
+      var parametros={"unidades":unidades_x,"gestion":gestion_x,"desde":desde_x,"hasta":hasta_x,"cuentai":cuentai_x,"cuentas_auxiliares":cuentas_auxiliares,"unidad_costo":unidad_costo,"area_costo":area_costo};
+    }
+    
     $.ajax({
       type: "POST",
       dataType: 'html',

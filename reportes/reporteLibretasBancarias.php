@@ -1,11 +1,13 @@
 <?php
 session_start();
 set_time_limit(0);
+ini_set('memory_limit', '1G');
 require_once '../layouts/bodylogin2.php';
-require_once '../conexion.php';
+require_once '../conexion2.php';
 require_once '../styles.php';
 require_once '../functionsGeneral.php';
 require_once '../functions.php';
+require_once '../functionsLibretaBancaria.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
 
 setlocale(LC_TIME, "Spanish");
