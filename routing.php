@@ -689,6 +689,10 @@
         if ($_GET['opcion']=='saveEditUbicaciones') {
 	        require_once('activosFijos/ubicacionesSave.php');
 		}
+
+		if ($_GET['opcion']=='afdardebaja_rpt') {
+			require_once('reportes_activosfijos/reporte_bajasaf_filtro.php');
+		}
 		//RESPONSABLES
 		if ($_GET['opcion']=='listResponsables') {
 			require_once('activosFijos/list3.php');
