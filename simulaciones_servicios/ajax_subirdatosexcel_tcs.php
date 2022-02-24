@@ -73,14 +73,14 @@ if(isset($_FILES['file_excel'])){
 
 
 
-            if($i==62){//nombre sitio
+            if($i==64){//nombre sitio
                 $array_datos[0]=$Row[4];
                 $array_datos[1]=$Row[5];
                 $array_datos[2]=$Row[6];
                 $array_datos[3]=$Row[7];
                 $array_datos[4]=$Row[8];
             }
-            if($i==63){//direccion
+            if($i==65){//direccion
                 $array_datos2[0]=$Row[4];
                 $array_datos2[1]=$Row[5];
                 $array_datos2[2]=$Row[6];
