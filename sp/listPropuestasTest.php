@@ -3,6 +3,8 @@
 require_once '../conexion.php';
 require_once '../styles.php';
 
+$corregir=0; /*CORREGIR DEBE ESTAR EN 1 PARA HACER EL UPD*/
+
 $dbh = new Conexion();
 
 $stmt = $dbh->prepare("select s.codigo, s.cod_estadosimulacion, e.nombre as nombreestado
@@ -41,10 +43,17 @@ $stmt->bindColumn('nombreestado', $nombreEstado);
                 </thead>
                 <tbody>
                   <?php
+
+
+
                      $index = 1;
                      $idEstadoExt=0;
                      $nombreEstadoExt="";
                       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+
+                        if($nombreEstado=="Ejecutado"){
+                          $nombreEstado="Adjudicado";
+                        }
 
                           $sql2="SELECT ibnorca.id_estadoobjeto(2707, $codigo) AS IdEstado, ibnorca.d_clasificador(ibnorca.id_estadoobjeto(2707, $codigo)) AS descr";
                           $stmt2 = $dbh -> prepare($sql2);
@@ -53,6 +62,7 @@ $stmt->bindColumn('nombreestado', $nombreEstado);
                               $idEstadoExt=$row2['IdEstado'];
                               $nombreEstadoExt=$row2['descr'];
                            }
+                      if($nombreEstado!=$nombreEstadoExt){
 
                   ?>
                     <tr>
@@ -63,7 +73,28 @@ $stmt->bindColumn('nombreestado', $nombreEstado);
                       <td class="text-center"><?= $nombreEstadoExt; ?></td>
                     </tr>
                   <?php
-                          $index++;
+                           if($corregir==1){
+                                if($idEstadoExt==2715){
+                                  $nuevoEstadoPropuesta=1;
+                                }
+                                if($idEstadoExt==2720){
+                                  $nuevoEstadoPropuesta=2;
+                                }
+                                if($idEstadoExt==2717){
+                                  $nuevoEstadoPropuesta=3;
+                                }
+                                if($idEstadoExt==2716){
+                                  $nuevoEstadoPropuesta=4;
+                                }
+                                if($idEstadoExt==2718){
+                                  $nuevoEstadoPropuesta=5;
+                                }
+                                $sqlUpd="update simulaciones_servicios set cod_estadosimulacion='$nuevoEstadoPropuesta' where codigo=$codigo";
+                                $stmtUpd = $dbh->prepare($sqlUpd);
+                                $stmtUpd->execute();
+                           }
+                            $index++;
+                          }
                        }
                   ?>
                 </tbody>
