@@ -45,7 +45,7 @@ $sql="SELECT l.* from (SELECT sr.*,es.nombre as estado,(SELECT count(*) from sol
   from solicitud_recursos sr 
   join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo 
   ) l 
-  where l.cod_estadoreferencial=1 and (l.cod_estadosolicitudrecurso in ($stringEstadoX)) and l.cod_personal in ($stringPersonalX) and year(l.fecha)=$nombre_gestion and month(l.fecha)=$cod_mes_x and l.detalle_sr>0 $sql_rangos
+  where (l.cod_estadosolicitudrecurso in ($stringEstadoX)) and l.cod_personal in ($stringPersonalX) and year(l.fecha)=$nombre_gestion and month(l.fecha)=$cod_mes_x and l.detalle_sr>0 $sql_rangos
   order by l.numero desc";
 //  echo $sql;
 $stmt = $dbh->prepare($sql);
