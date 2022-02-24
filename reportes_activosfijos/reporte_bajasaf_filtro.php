@@ -110,6 +110,26 @@ $statement = $dbh->query($query);
               </div>
             </div>
 
+            <label class="col-sm-1 col-form-label">Mes</label>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <select name="mes" id="mes" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required>
+                    <?php
+                      $sql="SELECT codigo,nombre from meses order by 2 desc";
+                      $stmtg = $dbh->prepare($sql);
+                      $stmtg->execute();
+                      while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
+                        $codigog=$rowg['codigo'];
+                        $nombreg=$rowg['nombre'];
+                      ?>
+                      <option value="<?=$codigog;?>"><?=$nombreg;?></option>
+                      <?php 
+                      }
+                    ?>
+                </select>
+              </div>
+            </div>
+
              <label class="col-sm-1 col-form-label">Altas/Bajas</label>
             <div class="col-sm-2">
               <div class="form-group">

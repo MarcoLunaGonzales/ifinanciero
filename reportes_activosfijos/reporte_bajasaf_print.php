@@ -30,10 +30,11 @@ $areaString=implode(",", $areas);
 $rubrosString=implode(",", $rubros);
 
 $gestion=$_POST["gestion"];
+$mes=$_POST["mes"];
 $nameGestion=nameGestion($gestion);
 
-$fecha_inicio=$nameGestion.'-01-01';
-$fecha_fin=$nameGestion.'-12-31';
+$fecha_inicio=$nameGestion.'-'.$mes.'-01';
+$fecha_fin=$nameGestion.'-'.$mes.'-31';
 
 // echo $areaString;
 $stringUnidades="";
