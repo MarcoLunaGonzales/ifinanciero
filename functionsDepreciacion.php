@@ -225,15 +225,18 @@ function obtener_cantidad_meses_depreciacion($codigo)
 }
 function verificar_si_nuevo($codigo){
     $dbh= new Conexion();
-    $stmt=$dbh->prepare("SELECT bandera_depreciar from activosfijos where codigo =$codigo");
+    $stmt=$dbh->prepare("SELECT bandera_depreciar,tipoalta from activosfijos where codigo =$codigo");
     $stmt->execute();
     $valor=0;
     while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
         $valor_aux=$row['bandera_depreciar'];
+        $tipoalta=$row['tipoalta'];
         if($valor_aux=='NO'){
-            $valor=1;
             $stmtUpdate=$dbh->prepare("UPDATE activosfijos set bandera_depreciar='SI' where codigo=$codigo");
             $stmtUpdate->execute();
+            if($tipoalta=='NUEVO'){
+                $valor=1;
+            }
         }
     }
     return $valor;
