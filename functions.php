@@ -11677,4 +11677,26 @@ function obtenerNombreInstanciaCajaChica($codCaja){
    return(round($valor));
 }
 
+
+  function obterValorAltasAFGestion($cod_depreciaciones_rubros,$gestion,$mes2,$unidadOrgString){
+      $fecha_inicio=$gestion.'-'.$mes2.'-01';
+      $fecha_fin=date('Y-m-d',strtotime($fecha_inicio));
+      
+      $sql="SELECT sum(valorinicial)as valorinicial
+     from activosfijos 
+     where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and  fechalta  BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59'
+     and  cod_depreciaciones in ($cod_depreciaciones_rubros)";
+      $dbh = new Conexion();
+      $valor=0;
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+         $valor=$row['valorinicial'];
+      }
+      if($valor=="" || $valor==null){
+         $valor=0;
+      }   
+      return $valor;
+  }
+
 ?>
