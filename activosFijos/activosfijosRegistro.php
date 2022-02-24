@@ -1,3 +1,12 @@
+<script type="text/javascript">
+    
+    function calcular_valorressidual(){
+  var valorinicial=document.getElementById("valorinicial").value; 
+  var depreciacionacumulada=document.getElementById("depreciacionacumulada").value; 
+  var valor_residual=valorinicial-depreciacionacumulada;
+  document.getElementById("valorresidual").value=valor_residual; 
+}
+</script>
 <?php
 
 
@@ -285,7 +294,7 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Depr. Acumulada (Nuevo es 0)</label>
                                 <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="depreciacionacumulada" id="depreciacionacumulada" required="true" value="<?=($row["codigo"]==0)?"0":$depreciacionacumulada;?>"/>
+                                    <input class="form-control" type="text" name="depreciacionacumulada" id="depreciacionacumulada" required="true" value="<?=($row["codigo"]==0)?"0":$depreciacionacumulada;?>" onChange="calcular_valorressidual();"/>
                                 </div>
                                 </div>
                             </div><!--fin campo depreciacionacumulada --> 

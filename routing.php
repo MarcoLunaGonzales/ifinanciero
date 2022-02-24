@@ -355,6 +355,9 @@
         if ($_GET['opcion']=='listSimulacionesServicios') {
 			require_once('simulaciones_servicios/list.php');
 		}
+		if ($_GET['opcion']=='listSimulacionesServiciosTest') {
+			require_once('simulaciones_servicios/listProp2.php');
+		}
 		if ($_GET['opcion']=='listFacturasServicios') {
 			require_once('simulaciones_servicios/listFacturasSolicitadas.php');
 		}

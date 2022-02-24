@@ -49,7 +49,7 @@ where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_r
   $stmt = $dbh->prepare($sql);
 }
 
-echo $sql;
+//echo $sql;
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -121,7 +121,9 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                            }
                           $responsable=namePersonal($codResponsable);
 
-                          //revisamos la configuracion de los estados
+                          //REVISAMOS LA CONFIGURACION DE LOS ESTADOS
+                          $idEstadoExt=0;
+                          $nombreEstadoExt="";
                           if($configuracionEstados==1){
                             $sql2="SELECT ibnorca.id_estadoobjeto(2707, $codigo) AS IdEstado, ibnorca.d_clasificador(ibnorca.id_estadoobjeto(2707, $codigo)) AS descr";
                             $stmt2 = $dbh -> prepare($sql2);
@@ -130,8 +132,6 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                 $idEstadoExt=$row2['IdEstado'];
                                 $nombreEstadoExt=$row2['descr'];
                             }
-                            $idEstadoExt=0;
-                            $nombreEstadoExt="";
                             $sql3="SELECT e.codigo, e.nombre from estados_simulaciones e where e.codigo_ibnorca=$idEstadoExt";
                             $stmt3 = $dbh -> prepare($sql3);
                             $stmt3 -> execute();
@@ -173,8 +173,8 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
 ?>
                         <tr>
                           <td align="center"><?=$index;?></td>
-                          <td class="font-weight-bold"><?=$nombre;?> - <?=$areaX?></td>
-                          <td><?=$cliente?></td>
+                          <td class="font-weight-bold text-left"><?=$nombre;?> - <?=$areaX?></td>
+                          <td class="text-left"><?=$cliente?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
                           </td>
@@ -209,7 +209,8 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                   if($codEstado==3){
                                    ?><a href="#" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>')" class="dropdown-item">
                                     <i class="material-icons text-success">emoji_events</i> EJECUTAR
-                                 </a><a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&edit=1' class="dropdown-item">
+                                 </a>
+                                 <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&edit=1' class="dropdown-item">
                                     <i class="material-icons text-success"><?=$iconEdit;?></i> Editar Propuesta
                                  </a><?php
                                   }else{
@@ -235,7 +236,9 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                  <?php 
                                  }else{
                                    if($codEstado==3){
-                                   ?><a href="#" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0')" class="dropdown-item">
+                                   
+                                   ?>
+                                   <a href="#" onclick="alerts.showSwal('warning-message-crear-servicio','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=5&admin=0')" class="dropdown-item">
                                       <i class="material-icons text-success">emoji_events</i> EJECUTAR
                                    </a>
                                    <a title="Editar Propuesta - Detalle" target="_blank" href='<?=$urlRegister;?>?cod=<?=$codigo;?>&edit=1' class="dropdown-item">
@@ -261,7 +264,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                             <?php
                             if(isset($_GET['q'])){
                                   ?>
-                                  <div class="btn-group dropdown">
+                                  <!--div class="btn-group dropdown">
                                     <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" title="Ver Oferta en PDF" aria-expanded="false">
                                       <i class="material-icons text-dark">picture_as_pdf</i>
                                     </button>
@@ -271,10 +274,11 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                          <i class="material-icons text-danger">picture_as_pdf</i> PDF
                                       </a> 
                                     </div>
-                                  </div>
+                                  </div-->
                              <?php
                              }else{
-                                ?><div class="btn-group dropdown">
+                                ?>
+                                  <!--div class="btn-group dropdown">
                                     <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" title="Ver Oferta en PDF" aria-expanded="false">
                                       <i class="material-icons text-dark">picture_as_pdf</i>
                                     </button>
@@ -283,7 +287,8 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                          <i class="material-icons text-danger">picture_as_pdf</i> PDF
                                       </a> 
                                     </div>
-                                  </div><?php
+                                  </div-->
+                                <?php
                              }     
                              if($codEstado==5){
                                $anteriorCod=obtenerCodigoSolicitudRecursosSimulacion(2,$codigo);

@@ -32,8 +32,10 @@ $detalle_cliente=$datosCliente->datos;
     $direccionX=$detalle_cliente->Direccion;
     $correoX=$detalle_cliente->Correo;
     $telefonoX=$detalle_cliente->Telefono;
+
+    $webX=$detalle_cliente->Web;
     ?>
-    <script>itemDatosClienteActualizar.push({razonSocial:"<?=$nombreX?>",nit:"<?=$identificacionX?>",direccion:"<?=$direccionX?>",pais:"<?=$paisX?>",ciudad:"<?=$Ciudad?>",deptartamento:"<?=$deptartamentoX?>",telefono:"<?=$telefonoX?>",fax:0,email:"<?=$correoX?>",web:""});
+    <script>itemDatosClienteActualizar.push({razonSocial:"<?=$nombreX?>",nit:"<?=$identificacionX?>",direccion:"<?=$direccionX?>",pais:"<?=$paisX?>",ciudad:"<?=$Ciudad?>",deptartamento:"<?=$deptartamentoX?>",telefono:"<?=$telefonoX?>",fax:0,email:"<?=$correoX?>",web:"<?=$webX?>"});
     </script><?php
     
     

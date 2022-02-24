@@ -11664,25 +11664,13 @@ function obtenerNombreInstanciaCajaChica($codCaja){
     }
     return $valor;   
   }
- 
-
- function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$dias_trabajados_por_defecto){
-   $dbh = new Conexion();
-   $stmt = $dbh->prepare("SELECT dias_trabajados from personal_kardex_mes where cod_mes=$cod_mes_x and cod_gestion=$cod_gestion_x and cod_personal=$codigo_personal and cod_estadoreferencial=1");
-   $stmt->execute();
-   $valor=0;
-   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-     $valor=$row['dias_trabajados']*30/$dias_trabajados_por_defecto;
-   }
-   return(round($valor));
-}
 
 
    function obterValorAltasAFGestion($cod_depreciaciones_rubros,$gestion,$mes2,$unidadOrgString){
       $fecha_inicio=$gestion.'-'.$mes2.'-01';
       $fecha_fin=date('Y-m-d',strtotime($fecha_inicio));
       
-      $sql="SELECT sum(valorinicial)as valorinicial
+      $sql="SELECT sum(valorresidual)as valorinicial
      from activosfijos 
      where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and  fechalta  BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59'
      and  cod_depreciaciones in ($cod_depreciaciones_rubros)";

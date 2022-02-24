@@ -20248,3 +20248,4 @@ function registrar_planilla_sueldos(){
     });
   }
 }
+
