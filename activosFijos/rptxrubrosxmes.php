@@ -11,17 +11,17 @@ $statement = $dbh->query($query);
 ?>
 
 <div class="content">
-	<div class="container-fluid">
+  <div class="container-fluid">
 
-		<div class="col-md-12">
-		  <form id="form1" class="form-horizontal" action="<?=$rpt01procesar;?>" method="post" target="_blank">
-			<div class="card">
-			  <div class="card-header <?=$colorCard;?> card-header-text">
-				<div class="card-text">
-				  <h4 class="card-title">Reporte por Rubros por Mes</h4>
-				</div>
-			  </div>
-			  <div class="card-body ">
+    <div class="col-md-12">
+      <form id="form1" class="form-horizontal" action="<?=$rpt01procesar;?>" method="post" target="_blank">
+      <div class="card">
+        <div class="card-header <?=$colorCard;?> card-header-text">
+        <div class="card-text">
+          <h4 class="card-title">Reporte por Rubros por Mes</h4>
+        </div>
+        </div>
+        <div class="card-body ">
           <div class="row">
             <label class="col-sm-2 col-form-label">Gestion</label>
             <div class="col-sm-7">
@@ -49,8 +49,8 @@ $statement = $dbh->query($query);
             <div class="col-sm-7">
             <div class="form-group">
                 <select name="mes" id="mes" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
-        					<option value="1">ENERO</option>
-        					<option value="2">FEBRERO</option>
+                  <option value="1">ENERO</option>
+                  <option value="2">FEBRERO</option>
                   <option value="3">MARZO</option>
                   <option value="4">ABRIL</option>
                   <option value="5">MAYO</option>
@@ -61,7 +61,7 @@ $statement = $dbh->query($query);
                   <option value="10">OCTUBRE</option>
                   <option value="11">NOVIEMBRE</option>
                   <option value="12">DICIEMBRE</option>
-        				</select>
+                </select>
             </div>
             </div>
           </div><!--fin campo mes -->
@@ -91,38 +91,15 @@ $statement = $dbh->query($query);
             </div>
           </div>
           <!--  fin de seleccion unidad organizacional-->
-          <div class="row">
-            <label class="col-sm-2 col-form-label">Rubro</label>
-            <div class="col-sm-7">
-              <div class="form-group">
-                <select class="selectpicker form-control" title="Seleccione una opcion" 
-                name="cod_depreciaciones[]" id="cod_depreciaciones" 
-                data-style="select-with-transition" data-size="5" 
-                data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true">
-                  <?php
-                    $sql="SELECT codigo,nombre,abreviatura from depreciaciones where cod_estado=1 ORDER BY 3";
-                    $stmt = $dbh->prepare($sql);
-                    $stmt->execute();
-                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                      $codigoX=$row['codigo'];
-                      $nombreX=$row['nombre'];
-                      $abreviaturaX=$row['abreviatura'];
-                    ?>
-                    <option value="<?=$codigoX;?>"><?=$abreviaturaX;?> - <?=$nombreX;?></option>
-                    <?php 
-                    }
-                  ?>
-                </select>
-              </div>
-            </div>
+
+          
+        </div>
+        <div class="card-footer ml-auto mr-auto">
+        <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
           </div>
-			  </div>
-			  <div class="card-footer ml-auto mr-auto">
-				<button type="submit" class="<?=$buttonNormal;?>">Generar</button>
-			    </div>
-			</div>
-		  </form>
-		</div>
-	
-	</div>
+      </div>
+      </form>
+    </div>
+  
+  </div>
 </div>
