@@ -43,7 +43,7 @@ if(isset($_FILES['file_excel'])){
         $contacto_email="";
         
         $depto_pais=0;
-
+        $sello=0;
         foreach ($Reader as $Row){ 
             if($i==8){//datos de la cabecera
                 if(isset($Row[3])){$razon_social=trim($Row[3]);}
@@ -58,6 +58,9 @@ if(isset($_FILES['file_excel'])){
                     $depto_pais=trim($Row[7]);
                     $array_depto_pais=explode("-", $depto_pais);
                     $pais=$array_depto_pais[1];
+                    if($pais==''){
+                        $pais='Bolivia';
+                    }
                     $depto=$array_depto_pais[0];
                 }
             }
@@ -104,10 +107,12 @@ if(isset($_FILES['file_excel'])){
                 if(isset($Row[1])){$nombre=trim($Row[1]);};
                 if(isset($Row[4])){$marca=trim($Row[4]);};
                 if(isset($Row[5])){$norma=trim($Row[5]);};
-                if(isset($Row[7])){$sello=trim($Row[7]);};
+                // if(isset($Row[7])){$sello=trim($Row[7]);};
+                
                 if(isset($Row[8])){$direccion=trim($Row[8]);};
                 if(!empty($nombre) && !empty($marca)){
                     //echo $nombre."**".$marca."**".$norma."**".$sello."**".$direccion."<br><br>";
+                    $sello++;
                 ?>
                     <script>itemDatosProductosPlantilla.push({nombre:"<?=$nombre?>",marca:"<?=$marca?>",norma:"<?=$norma?>",sello:"<?=$sello?>",direccion:"<?=$direccion?>"});
                     </script><?php

@@ -792,7 +792,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label" >Nit</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="nit_cliente_actualizar" id="nit_cliente_actualizar" value="">
+                 <input type="text"  class="form-control" name="nit_cliente_actualizar" id="nit_cliente_actualizar" value="">
                </div>
              </div>                
           </div>
@@ -806,7 +806,7 @@ $dbh = new Conexion();
             <label class="col-sm-2 col-form-label" >Razón Social</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="razon_social_cliente_actualizar" id="razon_social_cliente_actualizar" value="">
+                 <input type="text"  class="form-control" name="razon_social_cliente_actualizar" id="razon_social_cliente_actualizar" value="">
                </div>
             </div>                
           </div>
@@ -820,7 +820,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label" >Dirección</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="direccion_cliente_actualizar" id="direccion_cliente_actualizar" value="">
+                 <input type="text"  class="form-control" name="direccion_cliente_actualizar" id="direccion_cliente_actualizar" value="">
                </div>
              </div>
           </div>
@@ -876,24 +876,12 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label" >Telefono</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="telefono_cliente_actualizar" id="telefono_cliente_actualizar" value="">
+                 <input type="text"  class="form-control" name="telefono_cliente_actualizar" id="telefono_cliente_actualizar" value="">
                </div>
              </div>                
           </div>
-          <div class="row">
-            <label class="col-sm-2 col-form-label" >Fax</label>
-             <div class="col-sm-4">                     
-               <div class="form-group">
-                 <input type="text" readonly class="form-control" name="fax_cliente" id="fax_cliente" value="">
-               </div>
-             </div>                
-             <label class="col-sm-2 col-form-label" >Fax</label>
-             <div class="col-sm-4">                     
-               <div class="form-group">
-                 <input type="text" readonly class="form-control" name="fax_cliente_actualizar" id="fax_cliente_actualizar" value="">
-               </div>
-             </div>                
-          </div>
+          <input type="hidden" readonly class="form-control" name="fax_cliente" id="fax_cliente" value="">
+          <input type="hidden" readonly class="form-control" name="fax_cliente_actualizar" id="fax_cliente_actualizar" value="">
           <div class="row">
             <label class="col-sm-2 col-form-label" >E-mail</label>
              <div class="col-sm-4">                     
@@ -904,7 +892,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label" >E-mail</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="email_cliente_actualizar" id="email_cliente_actualizar" value="">
+                 <input type="text"  class="form-control" name="email_cliente_actualizar" id="email_cliente_actualizar" value="">
                </div>
              </div>                
           </div>
@@ -919,7 +907,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label" >Pagina Web</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="web_cliente_actualizar" id="web_cliente_actualizar" value="">
+                 <input type="text"  class="form-control" name="web_cliente_actualizar" id="web_cliente_actualizar" value="">
                </div>
              </div>                
           </div>
@@ -952,7 +940,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label" >Nombre</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="mae_nombre_actualizar" id="mae_nombre_actualizar" value="">
+                 <input type="text"  class="form-control" name="mae_nombre_actualizar" id="mae_nombre_actualizar" value="">
                </div>
              </div>
           </div>
@@ -966,7 +954,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label" >Cargo</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="mae_cargo_actualizar" id="mae_cargo_actualizar" value="">
+                 <input type="text"  class="form-control" name="mae_cargo_actualizar" id="mae_cargo_actualizar" value="">
                </div>
              </div>
           </div>
@@ -980,7 +968,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label" >Telefono</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="mae_telefono_actualizar" id="mae_telefono_actualizar" value="">
+                 <input type="text"  class="form-control" name="mae_telefono_actualizar" id="mae_telefono_actualizar" value="">
                </div>
              </div>
           </div>
@@ -994,7 +982,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label">E-mail</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="mae_email_actualizar" id="mae_email_actualizar" value="">
+                 <input type="text"  class="form-control" name="mae_email_actualizar" id="mae_email_actualizar" value="">
                </div>
              </div>
           </div>
@@ -1034,7 +1022,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label" >Nombre</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="contacto_nombre_actualizar" id="contacto_nombre_actualizar" value="">
+                 <input type="text"  class="form-control" name="contacto_nombre_actualizar" id="contacto_nombre_actualizar" value="">
                </div>
              </div>
           </div>
@@ -1048,7 +1036,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label" >Cargo</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="contacto_cargo_actualizar" id="contacto_cargo_actualizar" value="">
+                 <input type="text"  class="form-control" name="contacto_cargo_actualizar" id="contacto_cargo_actualizar" value="">
                </div>
              </div>
           </div>
@@ -1062,7 +1050,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label" >Telefono</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="contacto_telefono_actualizar" id="contacto_telefono_actualizar" value="">
+                 <input type="text"  class="form-control" name="contacto_telefono_actualizar" id="contacto_telefono_actualizar" value="">
                </div>
              </div>
           </div>
@@ -1076,7 +1064,7 @@ $dbh = new Conexion();
              <label class="col-sm-2 col-form-label">E-mail</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text" readonly class="form-control" name="contacto_email_actualizar" id="contacto_email_actualizar" value="">
+                 <input type="text"  class="form-control" name="contacto_email_actualizar" id="contacto_email_actualizar" value="">
                </div>
              </div>
           </div>
