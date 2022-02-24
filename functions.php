@@ -11678,7 +11678,7 @@ function obtenerNombreInstanciaCajaChica($codCaja){
 }
 
 
-  function obterValorAltasAFGestion($cod_depreciaciones_rubros,$gestion,$mes2,$unidadOrgString){
+   function obterValorAltasAFGestion($cod_depreciaciones_rubros,$gestion,$mes2,$unidadOrgString){
       $fecha_inicio=$gestion.'-'.$mes2.'-01';
       $fecha_fin=date('Y-m-d',strtotime($fecha_inicio));
       
@@ -11697,6 +11697,6 @@ function obtenerNombreInstanciaCajaChica($codCaja){
          $valor=0;
       }   
       return $valor;
-  }
+   }
 
 ?>
