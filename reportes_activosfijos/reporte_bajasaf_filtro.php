@@ -130,7 +130,7 @@ $statement = $dbh->query($query);
               </div>
             </div>
 
-             <label class="col-sm-1 col-form-label">Altas/Bajas</label>
+             <!-- <label class="col-sm-1 col-form-label">Altas/Bajas</label>
             <div class="col-sm-2">
               <div class="form-group">
                 <select name="alta_baja" id="alta_baja" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required>
@@ -139,7 +139,7 @@ $statement = $dbh->query($query);
                 </select>
               </div>
             </div>
-
+ -->
 
           </div>
           <!--fin campo ufvinicio -->

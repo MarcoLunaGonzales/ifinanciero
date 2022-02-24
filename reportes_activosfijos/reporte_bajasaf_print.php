@@ -24,7 +24,8 @@ $areas=$_POST["areas"];
 $rubros=$_POST["rubros"];
 $tipo=$_POST["tipo"];
 
-$alta_baja=$_POST["alta_baja"];
+// $alta_baja=$_POST["alta_baja"];
+$alta_baja=1;//altas
 $unidadOrgString=implode(",", $unidadOrganizacional);
 $areaString=implode(",", $areas);
 $rubrosString=implode(",", $rubros);
