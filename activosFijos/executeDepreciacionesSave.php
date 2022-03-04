@@ -61,9 +61,11 @@ if($codigo_aux==0){
 			$codActivo=$resultActivos["codigo"];
 			$cod_depreciaciones=$resultActivos["cod_depreciaciones"];
 			
+			// $valorInicial=$resultActivos["valorinicial"];
+			// $depreciacionAcum=$resultActivos["depreciacionacumulada"];
+
 			$valorInicial=0;
 			$depreciacionAcum=0;
-
 			$valorresidual=$resultActivos["valorresidual"];
 			$valorInicial=$valorresidual;
 			$vidautil=$resultActivos["vidautil"];
