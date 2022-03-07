@@ -77,8 +77,7 @@ $nombre_mes="";
 $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
 ?>
 <script> 
-          gestion_reporte='<?=$nombre_gestion;?>';
-          mes_reporte='<?=$nombre_mes;?>';
+          periodo='<?=$periodoTitle;?>';
  </script>
 <div class="content">
   <div class="container-fluid">
@@ -105,20 +104,20 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                           </tr>                                                        
                       </thead>
                     </table>                
-                    <table id="libro_mayor_rep" class="table table-bordered table-condensed" style="width:100%"><!--libro_mayor_rep-->
+                    <table id="libro_ventas_rep" class="table table-bordered table-condensed" style="width:100%"><!--libro_mayor_rep-->
                         <thead>                         
                           <tr>
                             <td style="border:2px solid;"><small><small><b>Esp.</b></small></small></td>
                             <td style="border:2px solid;"><small><small><b>-</b></small></small></td>                            
                             <td style="border:2px solid;" width="6%"><small><small><b>Fecha</b></small></small></td>
-                            <td style="border:2px solid;"><small><small><b>Nro.<br>Factura</b></small></small></td>
-                            <td style="border:2px solid;"><small><small><b>Estado</b></small></small></td>
+                            <td style="border:2px solid;" width="3%"><small><small><b>Nro. <br>Factura</b></small></small></td>
+                            <td style="border:2px solid;" ><small><small><b>Est <br>ado</b></small></small></td>
                             <td style="border:2px solid;"><small><small><b>Nit/CI<br>Cliente</b></small></small></td>
                             <td style="border:2px solid;" width="20%"><small><small><b>Nombre o<br>Razón Social</b></small></small></td>
                             <td style="border:2px solid;" width="6%"><small><small><b>Código Control</b></small></small></td>
                             <td style="border:2px solid;"><small><small><b>Nro. Autorización</b></small></small></td>
                             <td style="border:2px solid;" width="6%"><small><small><b>Importe Total<br> Venta (A)</b></small></small></td>
-                            <td style="border:2px solid;" width="6%"><small><small><b>Importe<br> otros no sujetos a iva (B)</b></small></small></td>
+                            <td style="border:2px solid;" width="6%"><small><small><b>Imp otros <br>no sujetos a iva (B)</b></small></small></td>
                             <td style="border:2px solid;" width="3%"><small><small><b>Export.<br> y Operac. Extentas (C)</b></small></small></td>
                             <td style="border:2px solid;" width="3%"><small><small><b>Ventas Gravadas<br> a tasa Cero (D)</b></small></small></td>
                             <td style="border:2px solid;"><small><small><b>Subtotal <br>E=A-B-C-D</b></small></small></td>
@@ -215,8 +214,8 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                 <td class="d-none"></td>
                                 <td class="d-none"></td>
                                 <td class="d-none"></td> -->
-                                <td class="text-left small csp" colspan="4" style="border:2px solid;"><small>CI:</small></td>
-                                <td class="text-left small csp" colspan="4" style="border:2px solid;"><small>Nombre Responsable:</small></td>
+                                <td class="text-left small csp" colspan="5" style="border:2px solid;"><small>CI:</small></td>
+                                <td class="text-left small csp" colspan="3" style="border:2px solid;"><small>Nombre Responsable:</small></td>
                                 <td class="text-center small"><small>TOTAL</small></td>                                
                                 <td class="text-right small"><small><?=formatNumberDec($total_importe); ?></small></td>
                                 <td class="text-right small"><small><?=formatNumberDec($total_importe_no_iva); ?></small></td>

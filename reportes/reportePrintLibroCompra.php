@@ -33,6 +33,8 @@ if($_POST["fecha_desde"]==""){
   $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
 }
 
+
+
 if (isset($_POST["check_rs_librocompras"])) {
   $check_rs_librocompras=$_POST["check_rs_librocompras"]; 
   if($check_rs_librocompras){
@@ -93,11 +95,13 @@ $nit=$result['nit'];
 $razon_social=$result['razon_social'];
 
 $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
+
 ?>
  <script> 
-          gestion_reporte='<?=$nombre_gestion;?>';
-          mes_reporte='<?=$nombre_mes;?>';
+          periodo='<?=$periodoTitle;?>';
+          
  </script>
+
 <div class="content">
   <div class="container-fluid">
         <div class="row">
@@ -122,7 +126,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                           </tr>                                                        
                         </thead>
                       </table>
-                        <table id="libro_mayor_rep" class="table table-bordered table-condensed" style="width:100%">
+                        <table id="libro_compras_rep" class="table table-bordered table-condensed" style="width:100%">
                             <thead>
                               <tr >
                                   <th width="2%" style="border:2px solid;"><small><small><b>-</b></small></small></th>   
@@ -135,7 +139,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                   <th style="border:2px solid;" width="6%"><small><small><small><b>Total Factura (A)</b></small></small></small></th>
                                   <th style="border:2px solid;" width="3%"><small><small><small><b>Total I.C.E (B)</b></small></small></small></th>
                                   <th style="border:2px solid;" width="3%"><small><small><small><small><b>Importes Exentos (C)</b></small></small></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><small><small><b>Importe Neto Sujeto a IVA (A-B-C)</b></small></small></small></small></small></th>
+                                  <th style="border:2px solid;" width="6%"><small><small><small><small><b>Imp Neto Suj a IVA (A-B-C)</b></small></small></small></small></small></th>
                                   <th style="border:2px solid;" width="6%"><small><small><small><small><b>Crédito Fiscal Obtenido</b></small></small></small></small></th>
                               </tr>                                  
                             </thead>
@@ -167,6 +171,20 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
 
                                 // $sumadeimporte=$importe+$ice+$exento;
                                 $sumadeimporte=$importe;
+
+                                //si es mayor a 20 caracteres, se partira
+                                $nro_autorizacion_1="";
+                                $nro_autorizacion_2="";
+                                if (strlen($nro_autorizacion)>25) {
+                                  for ($i=0; $i <25 ; $i++) { 
+                                        $nro_autorizacion_1.=$nro_autorizacion[$i];
+                                  }
+                                  for ($i=25; $i <strlen($nro_autorizacion) ; $i++) { 
+                                        $nro_autorizacion_2.=$nro_autorizacion[$i];
+                                  }
+                                }else{
+                                  $nro_autorizacion_1=$nro_autorizacion;
+                                }
                                 ?>
                                 <tr>
                                   <td class="text-center small"><small><?=$index;?></small></td>
@@ -174,7 +192,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                   <td class="text-right small"><small><?=$nit;?></small></td>
                                   <td class="text-left small"><small><span style="padding-left: 15px;"><?=$razon_social;?></span></small></td>
                                   <td class="text-right small"><small><?=$nro_factura;?></small></td>
-                                  <td class="text-right small"><small><?=$nro_autorizacion;?></small></td>
+                                  <td class="text-right small"><small><?=$nro_autorizacion_1.' '.$nro_autorizacion_2;?></small></td>
                                   <td class="text-center small"><small><?=$codigo_control;?></small></td>
                                   <td class="text-right small"><small><?=formatNumberDec($sumadeimporte);?></small></td>
                                   <td class="text-right small"><small><?=formatNumberDec($ice);?></small></td>
