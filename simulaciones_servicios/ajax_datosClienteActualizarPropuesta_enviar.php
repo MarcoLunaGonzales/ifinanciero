@@ -35,9 +35,9 @@ switch ($tipo) {
 		  "IdCliente" =>$_GET['codigo_cliente'], // Id de registro cliente
 		  "nit"=>$_GET['nit_cliente'], //Numero de NIT
 		  "razonSocial"=>$_GET['razon_social_cliente'], 
-		  "pais"=>$_GET['pais_cliente'], //Enviar "Bolivia" o el nombre de otro pais
+		  "pais"=>"'".$_GET['pais_cliente']."'", //Enviar "Bolivia" o el nombre de otro pais
 		  "depto"=>"'".$_GET['departamento_cliente']."'", //Nombre del departamento o estado de un pais
-		  "ciudad"=>$_GET['ciudad_cliente'], //Nombre de un ciudad dentro de un departamento o estado
+		  "ciudad"=>"'".$_GET['ciudad_cliente']."'", //Nombre de un ciudad dentro de un departamento o estado
 		  "direccion"=>$_GET['direccion_cliente'], //Direccion del Cliente
 		  "telefono"=>$_GET['telefono_cliente'], //Telefono cliente
 		  "correo"=>$_GET['email_cliente'], //correo general de la empresa

@@ -2,23 +2,23 @@
 class Conexion2 extends PDO { 
 
 
-      // private $tipo_de_base = 'mysql';
-      // private $host = '200.105.199.166';
-      // private $nombre_de_base = 'bdifinanciero';
-      // private $usuario = 'ingresofm';
-      // private $contrasena = 'minka123';
-      // private $port = '4606';  
+      private $tipo_de_base = 'mysql';
+      private $host = '200.105.199.166';
+      private $nombre_de_base = 'bdifinanciero';
+      private $usuario = 'ingresofm';
+      private $contrasena = 'minka123';
+      private $port = '4606';  
 
 
  
-    private $tipo_de_base = 'mysql';
-   private $host = 'localhost';
+   //  private $tipo_de_base = 'mysql';
+   // private $host = 'localhost';
 
-   private $nombre_de_base = 'ibnofinanciero1000';
+   // private $nombre_de_base = 'financierotest';
 
-   private $usuario = 'root';
-   private $contrasena = '';
-   private $port = '3306';  
+   // private $usuario = 'root';
+   // private $contrasena = '4868422Marco';
+   // private $port = '3306';  
 
 
 
