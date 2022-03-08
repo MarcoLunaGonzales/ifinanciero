@@ -143,6 +143,9 @@ if($codigo_aux==0){
 	  				$fechaFinalDepreciacion=date('Y-m-d',strtotime($fechaFinalDepreciacion.'-1 day'));	
 	  				$vidautilmeses_restante_af=$vidautilmeses_restante_af-1;//ponemos en estado normal
 				}
+				if($vidarestante==0){
+					$fechaFinalDepreciacion=date('Y-m-t',strtotime($fechaInicioDepreciacion.'+1 day'));	
+				}
 				// echo "   *** FECHAS COMPARACION: ".$fechaInicioDepreciacion." ".$fechaFinalDepreciacion;
 				// echo "    *** NRO MESES: ".$numeroMesesDepreciacion."<br>";
 				$respuestaDepreciacion=correrDepreciacion($codActivo,$fechaInicioDepreciacion,$fechaFinalDepreciacion,$valorInicialDepreciado,$depreciacionAcumDepreciado,$numeroMesesDepreciacion,$vidautil,$ultimoIdInsertado,$vidautilmeses_restante_af,$cod_depreciaciones,$fecha_actual,$sw_nuevo);

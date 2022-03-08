@@ -3863,6 +3863,23 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   } 
 
 
+  function descargarPDFHorizontal_carta($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    $mydompdf->set_paper('carta', 'landscape');
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(730, 25," ", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+    $mydompdf->set_base_path('assets/libraries/plantillaPDF_ba.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  } 
+
+
   function descargarPDF($nom,$html){
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");

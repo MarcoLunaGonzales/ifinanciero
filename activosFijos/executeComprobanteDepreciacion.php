@@ -167,45 +167,47 @@ while ($rowUnidades = $stmtUnidades->fetch(PDO::FETCH_BOUND)) {
 
             $ordenDetalle=$ordenComprobanteDetalle;
 
-            //AQUI HACEMOS LA CONTABILIZACION DEL VALOR ANTERIOR ACTUALIZADO(actualizacion)
-            $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaReg1','0','$codUnidadCabecera','$codAreaSA','$valorActualizacionAnterior','0','$glosaDetalle1','$ordenDetalle')";
+            if($valorActualizacionAnterior>0){
+               //AQUI HACEMOS LA CONTABILIZACION DEL VALOR ANTERIOR ACTUALIZADO(actualizacion)
+               $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaReg1','0','$codUnidadCabecera','$codAreaSA','$valorActualizacionAnterior','0','$glosaDetalle1','$ordenDetalle')";
+                  $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+               $flagSuccessDet=$stmtInsertDet->execute();
+
+               $ordenDetalle=$ordenComprobanteDetalle+1;
+               $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaDepreciacion','0','$codUnidadCabecera','$codAreaSA','0','$valorActualizacionAnterior','$glosaDetalle1','$ordenDetalle')";
                $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-            $flagSuccessDet=$stmtInsertDet->execute();
+               $flagSuccessDet=$stmtInsertDet->execute();
+               //FIN CONTABILIZACION VALOR ANTERIOR ACTUALIZADO
+               $ordenDetalle=$ordenComprobanteDetalle+2;
+            }
+            
+            if($valorActualizacionDepreciacion>0){
+               //CONTABILIZACION ACTUALIZACION DE LA DEPRECIACION
+               $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaDepreciacion','0','$codUnidadCabecera','$codAreaSA','$valorActualizacionDepreciacion','0','$glosaDetalle2','$ordenDetalle')";
+                  $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+               $flagSuccessDet=$stmtInsertDet->execute();
 
-            $ordenDetalle=$ordenComprobanteDetalle+1;
-            $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaDepreciacion','0','$codUnidadCabecera','$codAreaSA','0','$valorActualizacionAnterior','$glosaDetalle1','$ordenDetalle')";
-            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-            $flagSuccessDet=$stmtInsertDet->execute();
-            //FIN CONTABILIZACION VALOR ANTERIOR ACTUALIZADO
-
-            //CONTABILIZACION ACTUALIZACION DE LA DEPRECIACION
-            $ordenDetalle=$ordenComprobanteDetalle+2;
-            $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaDepreciacion','0','$codUnidadCabecera','$codAreaSA','$valorActualizacionDepreciacion','0','$glosaDetalle2','$ordenDetalle')";
+                  $ordenDetalle=$ordenComprobanteDetalle+3;
+               $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaReg2','0','$codUnidadCabecera','$codAreaSA','0','$valorActualizacionDepreciacion','$glosaDetalle2','$ordenDetalle')";
                $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-            $flagSuccessDet=$stmtInsertDet->execute();
-
-               $ordenDetalle=$ordenComprobanteDetalle+3;
-            $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaReg2','0','$codUnidadCabecera','$codAreaSA','0','$valorActualizacionDepreciacion','$glosaDetalle2','$ordenDetalle')";
-            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-            $flagSuccessDet=$stmtInsertDet->execute();
-            //FIN CONTABILIZACION ACTUALIZACION DE LA DEPRECIACION
+               $flagSuccessDet=$stmtInsertDet->execute();
+               //FIN CONTABILIZACION ACTUALIZACION DE LA DEPRECIACION
+               $ordenDetalle=$ordenComprobanteDetalle+4;
+            }
 
             //CONTABILIZACION DE LA DEPRECIACION DEL PERIODO
-            $ordenDetalle=$ordenComprobanteDetalle+4;
-            $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaDepreciacionAF','0','$codUnidadCabecera','$codAreaSA','$valorDepreciacionPeriodo','0','$glosaDetalle3','$ordenDetalle')";
+            if($valorDepreciacionPeriodo>0){
+               $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaDepreciacionAF','0','$codUnidadCabecera','$codAreaSA','$valorDepreciacionPeriodo','0','$glosaDetalle3','$ordenDetalle')";
+                  $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+               $flagSuccessDet=$stmtInsertDet->execute();
+                  $ordenDetalle=$ordenComprobanteDetalle+5;
+               $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaReg2','0','$codUnidadCabecera','$codAreaSA','0','$valorDepreciacionPeriodo','$glosaDetalle3','$ordenDetalle')";
                $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-            $flagSuccessDet=$stmtInsertDet->execute();
-
-               $ordenDetalle=$ordenComprobanteDetalle+5;
-            $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$codCuentaReg2','0','$codUnidadCabecera','$codAreaSA','0','$valorDepreciacionPeriodo','$glosaDetalle3','$ordenDetalle')";
-            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-            $flagSuccessDet=$stmtInsertDet->execute();
-            //FIN CONTABILIZACION DEPRECIACION DEL PERIODO
-
-
-
-            //echo $codCuentaReg1." ".$codCuentaReg2."<br>";
+               $flagSuccessDet=$stmtInsertDet->execute();
+               //FIN CONTABILIZACION DEPRECIACION DEL PERIODO
                $ordenComprobanteDetalle=$ordenComprobanteDetalle+4;
+            }    
+            //echo $codCuentaReg1." ".$codCuentaReg2."<br>";
          }
       }
 
