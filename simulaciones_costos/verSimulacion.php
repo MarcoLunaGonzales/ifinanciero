@@ -389,6 +389,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
                  }
 
+                //CALCULAMOS EL VALOR DE LAS NORMAS
+                $valorNormas=(precioNormasPropuesta($codigo)*$alumnosX);
+                //echo "XXXXXXXXXXXXXXXXXX: ".$valorNormas;
+
                  $totalFijoPlanModulos=$totalFijoPlan*$cantidadModuloX;
 
                   //
@@ -426,8 +430,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                  }
 
                  //cambios para la nueva acortar la simulacion 
-                 $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal)-$totalFijoPlan-($totalVariable[2]*$alumnosX);
-                 $utilidadNetaExterno=$ingresoExterno-((($iva+$it)/100)*$ingresoExterno)-$totalFijo[3]-($totalVariable[3]*$alumnosExternoX);
+                 $utilidadNetaLocal=$ingresoLocal-((($iva+$it)/100)*$ingresoLocal)-$totalFijoPlan-($totalVariable[2]*$alumnosX)-$valorNormas;
+
+                 $utilidadNetaExterno=$ingresoExterno-((($iva+$it)/100)*$ingresoExterno)-$totalFijo[3]-($totalVariable[3]*$alumnosExternoX)-$valorNormas;
 
                  $pUtilidadLocal=($utilidadNetaLocal*100)/$ingresoLocal;
                  $pUtilidadExterno=($utilidadNetaExterno*100)/$ingresoExterno;
@@ -536,6 +541,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                 <tr>
                   <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
                   <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
+                </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary text-white">COSTO NORMAS</td>
+                  <td class="text-right font-weight-bold"><?=number_format(($valorNormas), 2, '.', ',')?></td>
                 </tr>
                 <tr class="bg-warning text-dark">
                   <td class="text-left small">COSTO TOTAL</td>

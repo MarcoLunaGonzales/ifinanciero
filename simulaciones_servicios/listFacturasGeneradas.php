@@ -73,13 +73,14 @@ $globalPersonal=$_SESSION["globalUser"];
                         <tr>
                           <!-- <th class="text-center"></th> -->
                           <th width="6%">#Fac</th>
-                          <th width="10%">Personal</th>
+                          <th width="6%">Personal</th>
                           <th width="8%">Fecha<br>Factura</th>
-                          <th width="25%">Razón Social</th>
+                          <th width="15%">Razón Social</th>
                           <th width="9%">Nit</th>
                           <th width="8%">Importe<br>Factura</th>
-                          <th>Detalle</th>
-                          <th width="12%">Observaciones</th>
+                          <th>Concepto</th>
+                          <!--th width="15%">Observaciones</th-->
+                          <th width="15%">Glosa Factura E.</th>
                           <th width="10%" class="text-right">Opciones</th>                            
                         </tr>
                       </thead>                        
@@ -87,6 +88,17 @@ $globalPersonal=$_SESSION["globalUser"];
                       <?php
                         $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+
+                          /*FACTURA ESPECIAL*/
+                          if($glosa_factura3!=""){
+                            if (strlen($glosa_factura3)>50){
+                              $glosa_factura3= substr($glosa_factura3, 0, 50)."..."; 
+                            }
+                            $glosa_factura3="<i class='material-icons text-alert'>info</i>".$glosa_factura3;
+                          }
+                          /*FIN FACTURA ESPECIAL*/
+
+
                           //para la anulacion de facturas
                           if(isset($_GET['interno'])){
                             $sw_anular=true;
@@ -141,9 +153,37 @@ $globalPersonal=$_SESSION["globalUser"];
                               $label='btn-info';
                               break;
                           }
+                          if (strlen($observaciones_solfac)>50){
+                            $observaciones_solfac= substr($observaciones_solfac, 0, 50)."..."; 
+                          }
+
+                          if (strlen($observaciones)>50){
+                            $observaciones= substr($observaciones, 0, 50)."..."; 
+                          }
+
+                          //FORMAMOS EL CONCEPTO DE LA FACTURA
+                          $stmtDetalleSol = $dbh->prepare("SELECT fv.cantidad, fv.precio, fv.descripcion_alterna from facturas_ventadetalle fv where cod_facturaventa=$codigo_factura");
+                          $stmtDetalleSol->execute();
+                          $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
+                          $stmtDetalleSol->bindColumn('precio', $precio_unitario);
+                          $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna); 
+
+
+                          $cadenaFacturas="";
+                          $cadenaFacturasM="";
+                          $concepto_contabilizacion="";
+
+                          while ($row_det = $stmtDetalleSol->fetch()){
+                            $precio=$precio_unitario*$cantidad;
+                            $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
+                            $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
+                          }
+                          $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
+                          // --------
+
                           $cod_tipopago_anticipo=obtenerValorConfiguracion(48);//tipo pago credito
                           $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$cod_solicitudfacturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista                            
-                          $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social.'/'.$interno;
+                          $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social.'/'.$interno.'/'.$cod_tipopago;
                           ?>
                           <tr>
                             <!-- <td align="center"><?=$index;?></td> -->
@@ -153,8 +193,9 @@ $globalPersonal=$_SESSION["globalUser"];
                             <td class="text-left"><small><?=mb_strtoupper($razon_social);?></small></td>
                             <td class="text-right"><?=$nit;?></td>
                             <td class="text-right"><?=formatNumberDec($importe);?></td>
-                            <td><small><?=strtoupper($observaciones);?></small></td>                            
-                            <td style="color: #ff0000;"><?=strtoupper($observaciones_solfac)?></td>
+                            <td><small><?=strtoupper($concepto_contabilizacion);?></small></td>                            
+                            <!--td style="color: #ff0000;"><?=strtoupper($observaciones_solfac)?></td-->
+                            <td style="color: #ff0000;"><?=$glosa_factura3?></td>
                             <td class="td-actions text-right">
                               <!-- <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br> -->
                               <?php
@@ -189,19 +230,13 @@ $globalPersonal=$_SESSION["globalUser"];
                                 <div class="dropdown-menu" >
                                   <?php                                
                                   if(($cod_estadofactura==1)){
-                                    if($cod_tipopago!=217){
-                                       ?>
+                                  ?>
                                     <button  rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
                                       <i class="material-icons text-warning" title="Enviar Correo">email</i> Enviar Correo
-                                    </button><?php
-                                    }else{
-                                      ?>
-                                    <button  class="dropdown-item">
-                                      <i class="material-icons text-muted" title="Enviar Correo">email</i> Enviar Correo (Desactivado)
-                                    </button><?php
-                                    }  
+                                    </button>
+                                  <?php    
                                   } 
-                                  if($cod_estadofactura!=4&&$cod_solicitudfacturacion!=-100){?>  
+                                  if( $cod_estadofactura!=4 && $cod_solicitudfacturacion!=-100 ){?>  
                                     <a rel="tooltip" class="dropdown-item" href='<?=$urlPrintSolicitud;?>?codigo=<?=$cod_solicitudfacturacion;?>' target="_blank"><i class="material-icons text-primary" title="Imprimir Solicitud Facturación">print</i> Imprimir SF</a>
                                     <a rel="tooltip" class="dropdown-item" href="<?=$urlVer_SF;?>?codigo=<?=$cod_solicitudfacturacion;?>" target="_blank">
                                       <i class="material-icons text-default" title="Ver Solicitud Facturación">print</i> Ver SF
@@ -244,7 +279,7 @@ $globalPersonal=$_SESSION["globalUser"];
 
 <?php  //require_once 'simulaciones_servicios/modal_facturacion.php';?>
 <div class="modal fade" id="modalBuscadorFacturas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button  class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -394,6 +429,9 @@ $globalPersonal=$_SESSION["globalUser"];
     </div>
   </div>
 </div>
+
+
+
 <!-- Modal enviar correo-->
 <div class="modal fade" id="modalEnviarCorreo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -406,6 +444,8 @@ $globalPersonal=$_SESSION["globalUser"];
         <input type="hidden" name="codigo_facturacion" id="codigo_facturacion" value="0">
         <input type="hidden" name="cod_solicitudfacturacion" id="cod_solicitudfacturacion" value="0">
         <input type="hidden" name="interno_x" id="interno_x" value="0">
+        <input type="hidden" name="cod_tipopagofactura" id="cod_tipopagofactura" value="0">
+
         <!-- <input type="text" name="nro_factura" id="nro_factura" value="0">
         <input type="text" name="razon_social" id="razon_social" value="0"> -->
         <?php
@@ -602,7 +642,8 @@ $globalPersonal=$_SESSION["globalUser"];
       nro_factura=document.getElementById("nro_factura").value;
       razon_social=document.getElementById("razon_social").value;
       interno=document.getElementById("interno_x").value;
-      
+      codTipoPagoFactura=document.getElementById("cod_tipopagofactura").value;
+
       correo_copia=$('#correo_copia').val();
       var correo_solicitante=$('#correo_solicitante').val();
       if(correo_solicitante.trim()!=""){
@@ -620,8 +661,8 @@ $globalPersonal=$_SESSION["globalUser"];
         // alert("Por Favor Agregue Un correo para el envío de la Factura!");
         Swal.fire("Informativo!", "Por Favor Agregue Un correo válido para el envío de la Factura!", "warning");
       }else{
-       EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social,interno);  
-      }
+          EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social,interno,codTipoPagoFactura);
+      }  
     });
 
     $('#guardarFacturaEdit').click(function(){          

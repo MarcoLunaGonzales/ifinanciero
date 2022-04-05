@@ -55,6 +55,7 @@ $cod_gestion=3684;
 $gestionInsertar=2022;
 $mes_gestion=1;
 $glosa="BALANCE INICIAL 2022";
+
 $codComprobante=64173;//obtenerCodigoComprobante(); // IBNORCA: 39843 LOCALHOST: 39084 comprobante INICIAL LA PAZ 
 /*$numeroComprobante=numeroCorrelativoComprobanteFijo($cod_gestion,$unidadInsertar,$tipoComprobanteInsertar,$mes_gestion); //datos gestion 3584 "2021" y 1 "ENERO"
 

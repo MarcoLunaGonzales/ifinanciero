@@ -8,13 +8,13 @@ class Conexion_simple extends PDO {
       // private $contrasena = 'minka123';
       // private $port = '4606';  
 
-
    private $tipo_de_base = 'mysql';
    private $host = 'localhost';
-   private $nombre_de_base = 'financierotest';
+   private $nombre_de_base = 'financiero080322';
    private $usuario = 'root';
    private $contrasena = '4868422Marco';
    private $port = '3306';  
+
 
 
 public function __construct() {

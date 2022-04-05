@@ -5,32 +5,15 @@ require_once '../functions.php';
 
 $sIde = "facifin";
 $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
-// $Objeto_detalle = new stdClass();
-// $Objeto_detalle->suscripcionId = 0;
-// $Objeto_detalle->pagoCursoId = 123;
-// $Objeto_detalle->detalle = "Alimentos en Grano";
-// $Objeto_detalle->precioUnitario = 162;
-// $Objeto_detalle->cantidad = 1;
 
-// $Objeto_detalle2 = new stdClass();
-// $Objeto_detalle2->suscripcionId = 815;
-// $Objeto_detalle2->pagoCursoId = 0;
-// $Objeto_detalle2->detalle = "NB/ISO 10075-3:2006";
-// $Objeto_detalle2->precioUnitario = 101.00;
-// $Objeto_detalle2->cantidad = 1;
-
-// $Objeto_detalle3 = new stdClass();
-// $Objeto_detalle3->suscripcionId = 815;
-// $Objeto_detalle3->pagoCursoId = 0;
-// $Objeto_detalle3->detalle = "NB/ISO 22000:2018";
-// $Objeto_detalle3->precioUnitario = 214.00;
-// $Objeto_detalle3->cantidad = 1;
 
 $Objeto_detalle4 = new stdClass();
-$Objeto_detalle4->suscripcionId = 0;
-$Objeto_detalle4->pagoCursoId = 5595;
-$Objeto_detalle4->detalle = "test CRM";
-$Objeto_detalle4->precioUnitario = "600";
+$Objeto_detalle4->suscripcionId = 0;   /*SUSCRIPCION ID  (SE MANTIENE)*/
+$Objeto_detalle4->pagoCursoId = 5595;  /*PAGOCURSO ID (SE MANTIENE)*/
+$Objeto_detalle4->moduloId = 3254;  /*HACE REFERENCIA AL MODULO ID*/
+$Objeto_detalle4->codClaServicio = 706;   /*HACE REFERENCIA AL CODIGO DE CLASERVICIOS*/
+$Objeto_detalle4->detalle = "TEST CERTIFICADO";
+$Objeto_detalle4->precioUnitario = "128";
 $Objeto_detalle4->cantidad = 1;
 
 $Array= array($Objeto_detalle4);

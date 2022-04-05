@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $estado='false';
     $mensaje="ERROR";
     $sw_cod_libreta=true;
-    $sucursalId=null;$pasarelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;$CodLibretaDetalle=null;$tipoPago=null;
+    $sucursalId=null;$pasarelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;$CodLibretaDetalle=null;$tipoPago=null;$moduloId=null;$codClaServicio=null;
     if(isset($datos['accion'])&&isset($datos['sIdentificador'])&&isset($datos['sKey']))
     {
         if($datos['sIdentificador']=="facifin"&&$datos['sKey']=="AX546321asbhy347bhas191001bn0rc4654")
@@ -61,7 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     foreach ($items as $valor) {  
                         $cont_items++;
                         $suscripcionId=$valor['suscripcionId'];
-                        $pagoCursoId=$valor['pagoCursoId'];                    
+                        $pagoCursoId=$valor['pagoCursoId'];     
+
+                        /*valores anadidos al detalle*/
+                        $moduloId=$valor['moduloId'];   
+                        $codClaServicio=$valor['codClaServicio'];   
+
+
                         $detalle=strval($valor['detalle']);
                         $precioUnitario=$valor['precioUnitario'];
                         $cantidad=$valor['cantidad'];

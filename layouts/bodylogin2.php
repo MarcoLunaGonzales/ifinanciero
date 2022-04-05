@@ -1134,6 +1134,8 @@
                 text:'<i class="material-icons">picture_as_pdf</i>',
                 titleAttr: 'Pdf',
                 title:'Reporte Libro Mayor',
+                orientation:'landscape',
+                pageSize:'LEGAL',
                 exportOptions: {
                     columns: ':visible'
                 },
@@ -1279,7 +1281,9 @@
               footer: true
             },
         });
-        var table_diario=$('#libro_compras_rep').DataTable({
+
+        var table_mayor=$('#libro_compras_rep').DataTable(
+      {
           "paging":   false,
             "info":     false,
             "language": {
@@ -1298,7 +1302,7 @@
                 extend: 'copy',
                 text:      '<i class="material-icons">file_copy</i>',
                 titleAttr: 'Copiar',
-                title: 'Reporte Libro Compras',
+                title:'Libro Compras',
                 exportOptions: {
                     columns: ':visible'
                 }
@@ -1307,7 +1311,7 @@
                 extend: 'csv',
                 text:      '<i class="material-icons">list_alt</i>',
                 titleAttr: 'CSV',
-                title: 'Reporte Libro Compras',
+                title:'Libro Compras',
                 exportOptions: {
                     columns: ':visible'
                 }
@@ -1316,22 +1320,22 @@
                 extend: 'excel',
                 text:      '<i class="material-icons">assessment</i>',
                 titleAttr: 'Excel',
-                title: 'Reporte Libro Compras',
+                title:'Libro Compras',
                 exportOptions: {
                     columns: ':visible'
                 }
             },
             {
                 extend: 'pdf',
-                text:      '<i class="material-icons">picture_as_pdf</i>',
+                text:'<i class="material-icons">picture_as_pdf</i>',
                 titleAttr: 'Pdf',
-                title: 'Reporte Libro Compras',
-                orientation: 'landscape',
-                pageSize: 'A4',
+                title:'Libro Compras',
+                orientation:'landscape',
+                pageSize:'LEGAL',
                 exportOptions: {
-                        columns: ':visible'
+                    columns: ':visible'
                 },
-              customize: function ( doc) {
+                customize: function ( doc) {
                    doc['footer']=(function(page, pages) { return {
                          columns: ['IBNORCA - REPORTES',{alignment: 'right',text: [{ 
                               text: page.toString(), italics: true 
@@ -1342,19 +1346,19 @@
                         }
                    });
                 doc.content.splice( 1, 0, {
-                    margin: [ 0, -80, 0, 12 ],
+                    margin: [ 0, -100, 0, 50 ],
                     alignment: 'left',
                     image: imageLogo,
                     width:50,
-                    height:50, 
+                    height:50 
                 } );
-                doc.content.splice( 1, 0, {
-                    margin: [ 100, 0, 0, 12 ],
+               doc.content.splice( 1, 0, {
+                    margin: [ 0, 0, 0, 12 ],
                     text: [{
-                      text: 'Unidad: '+unidad_reporte+' \n Fecha: '+fecha_reporte+' \n ',
+                      text: 'Periodo: '+periodo,
                       bold: true,
                       fontSize: 9,
-                      alignment: 'right'
+                      alignment: 'left'
                    }]        
                 } );
               }
@@ -1363,14 +1367,16 @@
                 extend: 'print',
                 text:      '<i class="material-icons">print</i>',
                 titleAttr: 'Imprimir',
-                title: 'Reporte Libro Compras',
+                title:'Libro Compras',
                 exportOptions: {
                     columns: ':visible'
                 }
             }
           ]
         });
-        var table_diario=$('#libro_ventas_rep').DataTable({
+        
+         var table_mayor=$('#libro_ventas_rep').DataTable(
+      {
           "paging":   false,
             "info":     false,
             "language": {
@@ -1389,7 +1395,7 @@
                 extend: 'copy',
                 text:      '<i class="material-icons">file_copy</i>',
                 titleAttr: 'Copiar',
-                title: 'Reporte Libro Ventas',
+                title:'Libro Ventas',
                 exportOptions: {
                     columns: ':visible'
                 }
@@ -1398,7 +1404,7 @@
                 extend: 'csv',
                 text:      '<i class="material-icons">list_alt</i>',
                 titleAttr: 'CSV',
-                title: 'Reporte Libro Ventas',
+                title:'Libro Ventas',
                 exportOptions: {
                     columns: ':visible'
                 }
@@ -1407,23 +1413,22 @@
                 extend: 'excel',
                 text:      '<i class="material-icons">assessment</i>',
                 titleAttr: 'Excel',
-                title: 'Reporte Libro Ventas',
+                title:'Libro Ventas',
                 exportOptions: {
                     columns: ':visible'
                 }
             },
             {
                 extend: 'pdf',
-                text:      '<i class="material-icons">picture_as_pdf</i>',
+                text:'<i class="material-icons">picture_as_pdf</i>',
                 titleAttr: 'Pdf',
-                title: 'Reporte Libro Ventas',
-                orientation: 'landscape',
-                pageSize: 'LEGAL',
-                //messageTop:'Reporte Libro Ventas',
+                title:'Libro Ventas',
+                orientation:'landscape',
+                pageSize:'LEGAL',
                 exportOptions: {
-                        columns: ':visible'
+                    columns: ':visible'
                 },
-              customize: function ( doc) {
+                customize: function ( doc) {
                    doc['footer']=(function(page, pages) { return {
                          columns: ['IBNORCA - REPORTES',{alignment: 'right',text: [{ 
                               text: page.toString(), italics: true 
@@ -1434,19 +1439,19 @@
                         }
                    });
                 doc.content.splice( 1, 0, {
-                    margin: [ 0, -80, 0, 12 ],
+                    margin: [ 0, -90, 0, 50 ],
                     alignment: 'left',
                     image: imageLogo,
                     width:50,
-                    height:50, 
+                    height:50 
                 } );
-                doc.content.splice( 1, 0, {
-                    margin: [ 100, 0, 0, 12 ],
+               doc.content.splice( 1, 0, {
+                    margin: [ 0, 0, 0, 12 ],
                     text: [{
-                      text: 'Gestión: '+gestion_reporte+' \n Mes: '+mes_reporte+' \n ',
+                      text: 'Periodo: '+periodo,
                       bold: true,
                       fontSize: 9,
-                      alignment: 'right'
+                      alignment: 'left'
                    }]        
                 } );
               }
@@ -1455,7 +1460,7 @@
                 extend: 'print',
                 text:      '<i class="material-icons">print</i>',
                 titleAttr: 'Imprimir',
-                title: 'Reporte Libro Ventas',
+                title:'Libro Ventas',
                 exportOptions: {
                     columns: ':visible'
                 }

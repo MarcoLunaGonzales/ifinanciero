@@ -186,7 +186,9 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                s.IdServicio = $IdServicio
                                                AND ibnorca.d_clasificador (
                                                ibnorca.id_estadoobjeto ( 196, c.IdCotizacion ))= 'Adjudicada';";
+                                        
                                         //echo $queryPr;
+                                        
                                         if ($cod_facturacion > 0){
                                             $queryPr.=" UNION ";                                            
                                             $queryPr.="SELECT d.codigo,0 as Descuento,d.cod_claservicio,d.cantidad,d.precio,tipo_item from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";

@@ -428,6 +428,12 @@ if($menuModulo==0){
                     </a>
                 </li>
                 <li class="nav-item ">
+                    <a class="nav-link" href="?opcion=afdardebaja_rpt">
+                      <span class="sidebar-mini"> AFB </span>
+                      <span class="sidebar-normal"> Activos Fijos Altas y Bajas</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
                     <a class="nav-link" href="?opcion=afEtiquetasFiltro">
                       <span class="sidebar-mini"> EI </span>
                       <span class="sidebar-normal"> Etiquetas Impresión</span>

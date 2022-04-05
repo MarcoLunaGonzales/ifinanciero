@@ -16,7 +16,8 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 //datos registrado de la simulacion en curso
 
-$sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion in (3,4) order by codigo desc";
+$sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where 
+  cod_estadosolicitudfacturacion in (3,4) order by codigo desc limit 0,100";
  //echo $sql;
   $stmt = $dbh->prepare($sql);
 
@@ -68,7 +69,8 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                             <th><small>Razón Social</small></th>
                             <th><small>Concepto</small></th>                            
                             <th><small>Observaciones</small></th>
-                            <th style="color:#ff0000;"><small>#Fact</small></th>
+                            <th><small>Glosa Factura E.</small></th>
+                            <!--th style="color:#ff0000;"><small>#Fact</small></th-->
                             <th style="color:#ff0000;" width="6%"><small>Forma<br>Pago</small></th>
                             <th class="text-right"><small>Actions</small></th>                            
                           </tr>
@@ -81,6 +83,10 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                           $cont_pagosParciales= array();
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {// para la parte de facturas parciales, items de sol_Fact
                             $observaciones_string=obtener_string_observaciones($obs_devolucion,$observaciones,$observaciones_2);
+                            if($observaciones_2!=""){
+                              $observaciones_2="<i class='material-icons text-alert'>info</i>".$observaciones_2;
+                            }
+
                             switch ($codEstado) {
                               case 1:                                
                                 // $label='<span style="padding:1;" class="badge badge-default">';
@@ -107,13 +113,13 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                                 $btnEstado="btn-default";
                               break;
                             }
-                            //verificamos si ya tiene factura generada y esta activa                           
-                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
 
+
+                            //VERIFICAMOS SI YA TIENE FACTURA GENERADA Y ESTA ACTIVA                           
+                            $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
                             $codigo_fact_x=0;
                             $nro_fact_x=0;
                             $cod_estado_factura_x=0;
-                            
                             $stmtFact->execute();
                             while($resultSimu = $stmtFact->fetch()){
                               $codigo_fact_x = $resultSimu['codigo'];
@@ -126,6 +132,7 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                                 $estado="FACTURA MANUAL";                            
                               }
                             }
+                            //FIN VERIFICAR FACTURA
                             
                             //sacamos monto total de la factura para ver si es de tipo factura por pagos
                             $sqlMontos="SELECT codigo,importe,nro_factura,cod_estadofactura from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4) ORDER BY codigo desc";
@@ -147,6 +154,7 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                               $cadenaCodFacturas.=$row_montos['codigo'].",";
                               $cont_facturas++;
                             }                      
+                            
                             //sacamos nombre de los detalles
                             $stmtDetalleSol = $dbh->prepare("SELECT cantidad,precio,descripcion_alterna from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion");
                             $stmtDetalleSol->execute();
@@ -167,6 +175,9 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                             $cod_area_simulacion=$cod_area;                           
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
                             // --------
+                            
+
+
                             $responsable=namePersonal($cod_personal);//nombre del personal
                             // $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);
                             $string_formaspago=obtnerFormasPago($codigo_facturacion);
@@ -191,8 +202,8 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                                 <td class="text-left"><small><?=$codigo_alterno?></small></td>
                                 <td><small><?=$fecha_registro;?></small></td>                                                              
                                 <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                              
-                                <td class="text-left"><small><small><?=$razon_social;?></small></small></td>
-                                <td class="text-left"><small><?=$concepto_contabilizacion?></small></td>                                
+                                <td class="text-left text-uppercase font-weight-bold"><small><?=$razon_social;?></small></td>
+                                <td class="text-left"><small><small><?=$concepto_contabilizacion;?></small></small></td>                                
                                 <td>
                                   <?php if($cod_estado_factura_x==3){
                                       $estadofactura=obtener_nombreestado_factura($cod_estadofactura);?>
@@ -200,7 +211,9 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                                   }else{?><small><?=$observaciones_string;?></small><?php 
                                   }?>
                                 </td>
-                                <td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td>
+                                <td class="text-left font-weight-bold" style="color:#ff0000;">
+                                  <small><?=$observaciones_2;?></small></td>
+                                <!--td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td-->
                                 <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
                                 <td class="td-actions text-right">
                                   <?php

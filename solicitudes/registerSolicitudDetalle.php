@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once '../layouts/bodylogin2.php';
 require_once '../conexion.php';
@@ -227,6 +228,8 @@ $i=0;
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
 </div>
+
+
 <form id="formSolDet" class="form-horizontal" action="saveEdit.php" method="post" enctype="multipart/form-data">
 <div class="content">
   <div id="contListaGrupos" class="container-fluid">

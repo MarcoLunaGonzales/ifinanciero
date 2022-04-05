@@ -3863,6 +3863,23 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   } 
 
 
+  function descargarPDFHorizontal_carta($nom,$html){
+    //aumentamos la memoria  
+    ini_set("memory_limit", "128M");
+    // Cargamos DOMPDF
+    require_once 'assets/libraries/dompdf/dompdf_config.inc.php';
+    $mydompdf = new DOMPDF();
+    $mydompdf->set_paper('carta', 'landscape');
+    ob_clean();
+    $mydompdf->load_html($html);
+    $mydompdf->render();
+    $canvas = $mydompdf->get_canvas();
+    $canvas->page_text(730, 25," ", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+    $mydompdf->set_base_path('assets/libraries/plantillaPDF_ba.css');
+    $mydompdf->stream($nom.".pdf", array("Attachment" => false));
+  } 
+
+
   function descargarPDF($nom,$html){
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");
@@ -6824,6 +6841,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
      $sql="SELECT dd.*,u.nombre FROM distribucion_gastosarea_detalle dd join distribucion_gastosarea d on d.codigo=dd.cod_distribucionarea 
     join areas u on u.codigo=dd.cod_area  
     where estado=1 and d.cod_uo=$unidad";  
+     //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
@@ -7702,6 +7720,25 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
     }
     return($nroCorrelativo);
   }
+
+  function nro_correlativo_correocredito($cod_sucursal, $cod_tipo_pago){
+    $dbh = new Conexion();   
+    $nroCorrelativo=0;
+    if($cod_tipo_pago==217){
+      $sqlFac="SELECT IFNULL(MAX(f.nro_correlativocorreo)+1,1)as correlativo from facturas_venta f where f.cod_sucursal='$cod_sucursal' and f.cod_estadofactura<>4";
+      echo $sqlFac;
+      $stmtFac = $dbh->prepare($sqlFac);
+      $stmtFac->execute();
+      while ($row = $stmtFac->fetch(PDO::FETCH_ASSOC)) {    
+       $nroCorrelativo=$row['correlativo'];     
+      }
+      if($nroCorrelativo==null || $nroCorrelativo=='')$nroCorrelativo=1; 
+
+    }
+    return($nroCorrelativo);
+  }
+
+
   function verifica_modulosPagados($IdCurso,$ci_estudiante){
     $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
     $sIde = "ifinanciero";
@@ -11666,13 +11703,13 @@ function obtenerNombreInstanciaCajaChica($codCaja){
   }
 
 
-  function obterValorAltasAFGestion($cod_depreciaciones_rubros,$gestion,$mes2,$unidadOrgString){
+   function obterValorAltasAFGestion($cod_depreciaciones_rubros,$gestion,$mes2,$unidadOrgString){
       $fecha_inicio=$gestion.'-'.$mes2.'-01';
       $fecha_fin=date('Y-m-d',strtotime($fecha_inicio));
       
-      $sql="SELECT sum(valorinicial)as valorinicial
+      $sql="SELECT sum(valorresidual)as valorinicial
      from activosfijos 
-     where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and  fechalta  BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59'
+     where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and  fechalta  BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59' AND tipoalta='NUEVO' 
      and  cod_depreciaciones in ($cod_depreciaciones_rubros)";
       $dbh = new Conexion();
       $valor=0;
@@ -11685,6 +11722,6 @@ function obtenerNombreInstanciaCajaChica($codCaja){
          $valor=0;
       }   
       return $valor;
-  }
+   }
 
 ?>

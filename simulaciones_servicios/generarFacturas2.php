@@ -213,7 +213,14 @@ try{
                                     $stmtCommit = $dbh->prepare($sqlCommit);
                                     $stmtCommit->execute();
 
-                                    header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');
+                                    //Verificamos si la glosa especial es distinta de vacio para el formato de impresion
+                                    if($observaciones_2<>""){
+                                        $adminImpresion=7;
+                                    }else{
+                                        $adminImpresion=5;
+                                    }
+
+                                    header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2&admin='.$adminImpresion);
                                 }                            
                             }else{?>
                                 <script>Swal.fire("Error!","Hubo un error durante el proceso de generar la factura.", "error");
@@ -234,6 +241,7 @@ try{
             $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
             $stmtCommit = $dbh->prepare($sqlCommit);
             $stmtCommit->execute();
+
             header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');            
         }
         $codigo_facturacion=verificamosFacturaDuplicada($codigo);

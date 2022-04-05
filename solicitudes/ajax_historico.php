@@ -11,6 +11,10 @@ $globalMesActivo=$_SESSION['globalMes'];
 $userAdmin=obtenerValorConfiguracion(74);
 $dbh = new Conexion();
 
+$fechaInicioX=$_POST['fecha_desde'];
+$fechaFinX=$_POST['fecha_hasta'];
+
+
 $sqlNumero="";
 if(isset($_POST['numero'])&&$_POST['numero']!=""){
   $sqlNumero="and l.numero in (".$_POST['numero'].")";
@@ -36,15 +40,24 @@ if(isset($_POST['personal'])&&count($_POST['personal'])>0){
   $stringSolicitanteX=implode(",",$_POST['personal']);
 }
 
+$stringProveedorX="";
+if(isset($_POST['proveedor'])&&count($_POST['proveedor'])>0){
+  $stringProveedorX=implode(",",$_POST['proveedor']);
+}
+
+
 $sql="SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle,
-  (SELECT count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo AND cod_plancuenta in ($stringCuentaX)) as detalle_sr 
+  (SELECT count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo AND cod_plancuenta in ($stringCuentaX) AND  cod_proveedor in ($stringProveedorX) ) as detalle_sr 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (5,8,9)) l  
 where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0) $sqlNumero and detalle_sr>0 
 and l.cod_unidadorganizacional in ($stringOficinasX)
 and l.cod_area in ($stringAreasX)
 and l.cod_personal in ($stringSolicitanteX)
-order by l.revisado_contabilidad,l.numero desc";
+and l.fecha BETWEEN '$fechaInicioX 00:00:00' and '$fechaFinX 23:59:59'
+order by l.numero desc";
+
+
 $stmt = $dbh->prepare($sql);
 //echo $sql;
 // Ejecutamos

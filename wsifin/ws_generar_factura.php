@@ -61,7 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     foreach ($items as $valor) {  
                         $cont_items++;
                         $suscripcionId=$valor['suscripcionId'];
-                        $pagoCursoId=$valor['pagoCursoId'];                    
+                        $pagoCursoId=$valor['pagoCursoId'];   
+                        
+                        /*valores anadidos al detalle*/
+                        $moduloId=$valor['moduloId'];   
+                        $codClaServicio=$valor['codClaServicio'];   
+
                         $detalle=strval($valor['detalle']);
                         $precioUnitario=$valor['precioUnitario'];
                         $cantidad=$valor['cantidad'];

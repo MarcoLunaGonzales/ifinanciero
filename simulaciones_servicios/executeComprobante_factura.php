@@ -12,7 +12,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 	// session_start();
 	try{
 		$cod_uo_unico=5;
-		$stmtCajaChica = $dbh->prepare("SELECT cod_cliente,cod_unidadorganizacional, cod_area, observaciones, codigo_alterno, razon_social,tipo_solicitud from solicitudes_facturacion where codigo=$cod_solicitudfacturacion");
+		$stmtCajaChica = $dbh->prepare("SELECT cod_cliente,cod_unidadorganizacional, cod_area, observaciones, codigo_alterno, razon_social, tipo_solicitud, observaciones_2 from solicitudes_facturacion where codigo=$cod_solicitudfacturacion");
 	    $stmtCajaChica->execute();
 	    $resultCCD = $stmtCajaChica->fetch();
 	    $cod_uo_solicitud = $resultCCD['cod_unidadorganizacional'];    
@@ -22,6 +22,8 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 	    $razon_social = $resultCCD['razon_social'];
 	    $tipo_solicitud = $resultCCD['tipo_solicitud'];
 	    $cod_cliente = $resultCCD['cod_cliente'];
+	    $glosa_factura3=$resultCCD['observaciones_2'];
+
 		//datos para el comprbant
 		$globalUser=$_SESSION["globalUser"];
 		$mesTrabajo=$_SESSION['globalMes'];
@@ -51,6 +53,12 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 		}
 		$codComprobante=obtenerCodigoComprobante();
 		//insertamos cabecera
+
+		//CAMBIAMOS EL CONCEPTO DE CONTABILIZACION CUANDO LA FACTURA TIENE GLOSA_ESPECIAL
+		if($glosa_factura3!=""){
+			$concepto_contabilizacion=$stringFacturas." / ".$razon_social." / ".$glosa_factura3;
+		}
+
 		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser);		
 		$ordenDetalle=1;//<--
 		if($flagSuccess){

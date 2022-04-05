@@ -116,7 +116,7 @@ try{
     (select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=cod_estadoasignacionaf) as estadoAsigAF,
     fecha_recepcion,observaciones_recepcion,fecha_devolucion,observaciones_devolucion
     from activofijos_asignaciones
-    where cod_activosfijos =".$codigo_af." order by fecha_recepcion desc";
+    where cod_activosfijos =".$codigo_af." order by fechaasignacion desc";
         $statement2 = $dbh->query($query2);
 
 

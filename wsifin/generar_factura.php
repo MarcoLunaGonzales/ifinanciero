@@ -1,29 +1,5 @@
 <?php //ESTADO FINALIZADO
 
-// $sucursalId=5; // ID Sucursal
-// $fechaFactura='2020-05-09'; // fecha a factura
-// $nitciCliente=1020113024; //nit o ci de cliente
-// $razonSocial='Juan Gabriel'; //razon social
-// $importeTotal=260.5; //importe total
-
-// $Objeto_detalle = new stdClass();
-// $Objeto_detalle->suscripcionId = 1;
-// $Objeto_detalle->pagoCursoId = 1;
-// $Objeto_detalle->detalle = "detalle del item";
-// $Objeto_detalle->precioUnitario = 100;
-// $Objeto_detalle->cantidad = 1;
-
-// $Objeto_detalle2 = new stdClass();
-// $Objeto_detalle2->suscripcionId = 2;
-// $Objeto_detalle2->pagoCursoId = 2;
-// $Objeto_detalle2->detalle = "detalle del item2";
-// $Objeto_detalle2->precioUnitario = 100;
-// $Objeto_detalle2->cantidad = 1;
-// $items= array($Objeto_detalle,$Objeto_detalle2);
-
-
-// ejecutarGenerarFactura($sucursalId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items);
-
 function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items,$CodLibretaDetalle,$tipoPago,$normas){
     require_once __DIR__.'/../conexion.php';
     require '../assets/phpqrcode/qrlib.php';
@@ -108,6 +84,9 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
             //NUMERO CORRELATIVO DE FACTURA
             // echo $sucursalId;
             $nro_correlativo = nro_correlativo_facturas($sucursalId);
+            //SACAMOS EL NRO CORRELATIVO DEL CORREO
+            $nro_correlativoCorreo = nro_correlativo_correocredito($sucursalId,$cod_tipopago);
+
             if($nro_correlativo==0){                
                 return "11###";//No tiene registrado La dosificación para la facturación
 
@@ -122,9 +101,11 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                     $llaveDosificacion//Llave de dosificación
                     );
                     //echo "cod:".$code;
-                    $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,created_at,created_by) 
-                      values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0',NOW(),1)";
-                      // echo $sql;
+                    $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,created_at,created_by, nro_correlativocorreo) 
+                      values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0',NOW(),1,'$nro_correlativoCorreo')";
+                    
+                    echo $sql;
+                    
                     $stmtInsertSoliFact = $dbh->prepare($sql);
                     $flagSuccess=$stmtInsertSoliFact->execute();
                     $cod_facturaVenta = $dbh->lastInsertId();                    
@@ -134,6 +115,10 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                         foreach ($items as $valor) {
                             $suscripcionId=$valor['suscripcionId'];
                             $pagoCursoId=$valor['pagoCursoId'];
+                            
+                            $moduloId=$valor['moduloId'];
+                            $codClaServicio=$valor['codClaServicio'];
+
                             $detalle=$valor['detalle'];
                             $precioUnitario=$valor['precioUnitario'];
                             $cantidad=$valor['cantidad'];

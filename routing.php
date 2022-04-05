@@ -27,8 +27,6 @@
 			require_once('configuracion_cuentas/list.php');
 		}
 
-
-
 		if ($_GET['opcion']=='listCuentasAux') {
 			$codigo=$_GET['codigo'];
 			require_once('cuentas_auxiliares/list2.php');
@@ -688,6 +686,10 @@
 		}
         if ($_GET['opcion']=='saveEditUbicaciones') {
 	        require_once('activosFijos/ubicacionesSave.php');
+		}
+
+		if ($_GET['opcion']=='afdardebaja_rpt') {
+			require_once('reportes_activosfijos/reporte_bajasaf_filtro.php');
 		}
 		//RESPONSABLES
 		if ($_GET['opcion']=='listResponsables') {

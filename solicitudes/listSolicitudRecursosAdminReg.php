@@ -55,9 +55,12 @@ if(isset($_GET['cod_sim'])){
   $sqlSimCosto=" and sr.cod_simulacion=$codSimCosto";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
+$sqlSR="SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (6,7,4) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc");
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (6,7,4) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc";
+echo $sqlSR;
+$stmt = $dbh->prepare($sqlSR);
+//echo $sqlSR;
 // Ejecutamos
 $stmt->execute();
 // bindColumn

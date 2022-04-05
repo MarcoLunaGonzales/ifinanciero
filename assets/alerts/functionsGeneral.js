@@ -12207,6 +12207,8 @@ function agregaformEnviarCorreo(datos){
   document.getElementById("razon_social").value=d[4];
   document.getElementById("interno_x").value=d[5];
   document.getElementById("correo_solicitante").value=d[3];
+  document.getElementById("cod_tipopagofactura").value=d[6];
+
 }
 // function agregaformEnviarCorreo_solfac(datos){ 
 
@@ -12218,17 +12220,25 @@ function agregaformEnviarCorreo(datos){
 //   document.getElementById("razon_social_sf").value=d[4];
 // }
 
-function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social,interno){
+function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social,interno,cod_tipopago){
   iniciarCargaAjax();
+  console.log("entro envio correo 1");
+  if(cod_tipopago==217){
+    urlString="simulaciones_servicios/enviarCorreoCredito.php";
+  }else{
+    urlString="simulaciones_servicios/enviarCorreo.php";
+  }
+  console.log("entro envio correo 2: "+urlString);
   $.ajax({
     type:"POST",
     data:"codigo_facturacion="+codigo_facturacion+"&nro_factura="+nro_factura+"&cod_solicitudfacturacion="+cod_solicitudfacturacion+"&correo_destino="+correo_destino+"&asunto="+asunto+"&mensaje="+mensaje+"&razon_social="+razon_social,
-    url:"simulaciones_servicios/enviarCorreo.php",
+    url:urlString,
     success:function(r){
       var resp = r.split('$$$');
       var success = resp[0];
       var correos = resp[1];
       detectarCargaAjax();
+      console.log("entro envio correo 3");
       if(interno==0){
         var url="index.php?opcion=listFacturasGeneradas";
       }else{
@@ -19069,8 +19079,12 @@ function buscarSolicitudesDeRecursosHistorial(){
   var oficinas=$("#buscar_unidad_solicitud").val(); 
   var areas=$("#buscar_area_solicitud").val(); 
   var personal=$("#buscar_personal").val();
+  var proveedor=$("#buscar_proveedor").val();
+  var fecha_desde=$("#fecha_desde").val();
+  var fecha_hasta=$("#fecha_hasta").val();
+
   
-  var parametros={"numero":numero,"cuentas":cuentas,"oficinas":oficinas,"areas":areas,"personal":personal};
+  var parametros={"numero":numero,"cuentas":cuentas,"oficinas":oficinas,"areas":areas,"personal":personal,"proveedor":proveedor,"fecha_desde":fecha_desde,"fecha_hasta":fecha_hasta};
      $.ajax({
         type: "POST",
         dataType: 'html',
@@ -20248,3 +20262,4 @@ function registrar_planilla_sueldos(){
     });
   }
 }
+

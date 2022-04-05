@@ -1,11 +1,11 @@
 <?php 
 class ConexionIBNORCA extends PDO { 
-  // private $tipo_de_base = 'mysql';
-  // private $host = 'localhost';
-  // private $nombre_de_base = 'ibnorca';
-  // private $usuario = 'root';
-  // private $contrasena = '';
-  // private $port = '3306';   
+  private $tipo_de_base = 'mysql';
+  private $host = 'localhost';
+  private $nombre_de_base = 'financiero080322';
+  private $usuario = 'root';
+  private $contrasena = '4868422Marco';
+  private $port = '3306';   
 
 
   // private $tipo_de_base = 'mysql';

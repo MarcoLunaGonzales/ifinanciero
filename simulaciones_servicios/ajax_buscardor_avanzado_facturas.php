@@ -95,13 +95,14 @@ if(isset($_GET['interno'])){
     <tr>
       <!-- <th class="text-center"></th> -->
       <th width="6%">#Fac</th>
-      <th width="10%">Personal</th>
+      <th width="6%">Personal</th>
       <th width="8%">Fecha<br>Factura</th>
-      <th width="25%">Razón Social</th>
+      <th width="15%">Razón Social</th>
       <th width="9%">Nit</th>
       <th width="8%">Importe<br>Factura</th>
-      <th>Detalle</th>
-      <th width="12%">Observaciones</th>
+      <!--th>Detalle</th-->
+      <th width="15%">Observaciones</th>
+      <th width="15%">Glosa Factura E.</th>
       <th width="10%" class="text-right">Opciones</th>                            
     </tr>
   </thead>                        
@@ -109,6 +110,15 @@ if(isset($_GET['interno'])){
   <?php
     $index=1;
     while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+
+       /*FACTURA ESPECIAL*/
+      if($glosa_factura3!=""){
+        if (strlen($glosa_factura3)>50){
+          $glosa_factura3= substr($glosa_factura3, 0, 50)."..."; 
+        }
+        $glosa_factura3="<i class='material-icons text-alert'>info</i>".$glosa_factura3;
+      }
+      /*FIN FACTURA ESPECIAL*/
       //para la anulacion de facturas
       if(isset($_GET['interno'])){
         $sw_anular=true;
@@ -156,6 +166,14 @@ if(isset($_GET['interno'])){
           $label='btn-info';
           break;
       }
+      if (strlen($observaciones_solfac)>50){
+        $observaciones_solfac= substr($observaciones_solfac, 0, 50)."..."; 
+      }
+      if (strlen($observaciones)>50){
+        $observaciones= substr($observaciones, 0, 50)."..."; 
+      }
+      
+
       $cod_tipopago_anticipo=obtenerValorConfiguracion(48);//tipo pago credito
       $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$cod_solicitudfacturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista                            
       $datos=$codigo_factura.'/'.$cod_solicitudfacturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social.'/'.$interno;
@@ -168,8 +186,9 @@ if(isset($_GET['interno'])){
         <td class="text-left"><small><?=mb_strtoupper($razon_social);?></small></td>
         <td class="text-right"><?=$nit;?></td>
         <td class="text-right"><?=formatNumberDec($importe);?></td>
-        <td><small><?=strtoupper($observaciones);?></small></td>                            
+        <!--td><small><?=strtoupper($observaciones);?></small></td-->                            
         <td style="color: #ff0000;"><?=strtoupper($observaciones_solfac)?></td>
+        <td style="color: #ff0000;"><?=$glosa_factura3;?></td>
         <td class="td-actions text-right">
           <!-- <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br> -->
           <?php

@@ -232,8 +232,34 @@ function cantidadF($arreglo){
     return $cont;
    }
 
+  function sumatotaldetallefacturaGeneral($cod_factura){
+    $dbh = new Conexion();
+    $sql="SELECT sf.precio,sf.descuento_bob,sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura";  
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();  
+    $stmt->bindColumn('precio', $precio);
+    $stmt->bindColumn('descuento_bob', $descuento_bob);
+    $stmt->bindColumn('cantidad', $cantidad);
+    $suma_total=0;
+    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+      $precio=$precio*$cantidad-$descuento_bob;    
+      $suma_total+=$precio;
+    }  
+    return($suma_total);
+  }
 
-
+   function obtenerCorrelativoFactura($cod_factura){
+    $dbh = new Conexion();
+    $nroCorrelativoCorreo=1;
+    $sql="SELECT f.nro_correlativocorreo from facturas_venta f where f.cod_facturaventa=$cod_factura";  
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();  
+    $stmt->bindColumn('nro_correlativocorreo', $nroCorrelativoCorreo);
+    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
+      $nroCorrelativoCorreo=$nroCorrelativoCorreo;    
+    }  
+    return($nroCorrelativoCorreo);
+  }
 
    
 //tratando de cerar json para Web service

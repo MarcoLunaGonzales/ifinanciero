@@ -19,7 +19,7 @@ $fechaDesde2=$y."-01-01";
 $fechaHasta2=$y."-12-31";
 
 $dbh = new Conexion();
-$stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.nivel from plan_cuentas p order by p.numero");
+$stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre, p.nivel from plan_cuentas p where p.cod_estadoreferencial=1 order by p.numero");
 $stmt->execute();
 $i=0;
   echo "<script>var array_cuenta=[];</script>";

@@ -113,7 +113,11 @@ if(isset($_GET['v'])){
                                        <select class="selectpicker form-control form-control-sm" name="area_solicitud" id="area_solicitud" data-style="btn btn-rose">
                                      <?php
                                                              
-                                           $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo $sqlAreas where a.cod_estado=1 order by 2");
+                                           $sqlAreas="SELECT a.codigo, a.nombre, a.abreviatura FROM areas a join areas_activas aa on aa.cod_area=a.codigo $sqlAreas where a.cod_estado=1 order by 2";
+                                           
+                                           //echo "SQL AREAS XXX: ".$sqlAreas;
+
+                                           $stmt = $dbh->prepare($sqlAreas);
                                          $stmt->execute();
                                          $cont=0;
                                          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

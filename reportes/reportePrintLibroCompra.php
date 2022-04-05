@@ -5,7 +5,7 @@ require_once __DIR__.'/../conexion.php';
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
 require_once  __DIR__.'/../fpdf_html.php';
-require_once '../layouts/bodylogin2.php';
+
 $dbh = new Conexion();
 
 //RECIBIMOS LAS VARIABLES
@@ -32,6 +32,8 @@ if($_POST["fecha_desde"]==""){
   $desde=$porcionesFechaDesde[0]."-".$porcionesFechaDesde[1]."-".$porcionesFechaDesde[2];
   $hasta=$porcionesFechaHasta[0]."-".$porcionesFechaHasta[1]."-".$porcionesFechaHasta[2];
 }
+
+
 
 if (isset($_POST["check_rs_librocompras"])) {
   $check_rs_librocompras=$_POST["check_rs_librocompras"]; 
@@ -93,54 +95,63 @@ $nit=$result['nit'];
 $razon_social=$result['razon_social'];
 
 $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d/%m/%Y',strtotime($hasta));
+
 ?>
  <script> 
-          gestion_reporte='<?=$nombre_gestion;?>';
-          mes_reporte='<?=$nombre_mes;?>';
+          periodo='<?=$periodoTitle;?>';
+          
  </script>
-<div class="content">
-  <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="card-header <?=$colorCard;?> card-header-icon">
-                  <div class="card-icon bg-blanco">
-                    <img class="" width="60" height="60" src="../assets/img/logo_ibnorca_origen.png">
-                  </div>                  
-                  <h3 class="card-title text-center" ><b>Libro de Compras IVA</b>
-                    <span><br><h6>
-                    Periodo: <?=$periodoTitle;?><br>
-                    Expresado En Bolivianos</h6></span></h3>                                    
-                </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                     <table id="" class="table table-bordered table-condensed" style="width:100%"><!--libro_mayor_rep-->
-                        <thead>  
-                          <tr>
-                            <th colspan="9" class="text-left csp"><small> Razón Social : <?=$razon_social?><br>Sucursal : <?=$sucursal?></small></th>   
-                            <th colspan="8" class="text-left csp"><small> Nit : <?=$nit?><br>Dirección : <?=$direccion?></small></th>   
-                          </tr>                                                        
-                        </thead>
-                      </table>
-                        <table id="libro_mayor_rep" class="table table-bordered table-condensed" style="width:100%">
+
+<?php 
+
+$html = '';
+$html.='<html>'.
+         '<head>'.
+             '<!-- CSS Files -->'.
+             '<link rel="icon" type="image/png" href="../ assets/img/favicon.png">'.
+             '<link href="../assets/libraries/plantillaPDF_ba.css" rel="stylesheet" />'.
+           '</head>';
+$html.='<body>'.
+        '<script type="text/php">'.
+      'if ( isset($pdf) ) {'. 
+        '$font = Font_Metrics::get_font("helvetica", "normal");'.
+        '$size = 9;'.
+        '$y = $pdf->get_height() - 24;'.
+        '$x = $pdf->get_width() - 15 - Font_Metrics::get_text_width("1/1", $font, $size);'.
+        '$pdf->page_text($x, $y, "{PAGE_NUM}/{PAGE_COUNT}", $font, $size);'.
+      '}'.
+    '</script>';
+$html.=  '<header class="header">'.
+          '<table width="100%">
+              <tr>
+              <td width="25%"><p>Razón Social : '.$razon_social.'<br>Sucursal : '.$sucursal.'<br>Nit : '.$nit.'<br>Dirección : '.$direccion.'
+                </p></td>
+              <td><center><span style="font-size: 13px"><b>Libro de Compras IVA<br>Periodo: '.$periodoTitle.'<br>Expresado En Bolivianos</b></center></td>
+              <td width="25%" class="text-center"><img style="width:70px;height:70px;" src="../assets/img/ibnorca2.jpg"></td>
+              </tr>
+            </table>'.
+         '</header>';
+
+
+                       $html.=' <table class="table table-bordered table-condensed" style="width:100%">
                             <thead>
                               <tr >
                                   <th width="2%" style="border:2px solid;"><small><small><b>-</b></small></small></th>   
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Fecha</b></small></small></small></th>                                
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>NIT</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="4%"><small><small><small><b>Fecha</b></small></small></small></th>                                
+                                  <th style="border:2px solid;" width="4%"><small><small><small><b>NIT</b></small></small></small></th>
                                   <th style="border:2px solid;" width="20%"><small><small><small><b>Razón Social </b></small></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Nro. Factura</b></small></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Nro de Autorización</b></small></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Código de Control</b></small></small></small></th>                                 
-                                  <th style="border:2px solid;" width="6%"><small><small><small><b>Total Factura (A)</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="4%"><small><small><small><b>Nro. Factura</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="5%"><small><small><small><b>Nro de Autorización</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="10%"><small><small><small><b>Código de Control</b></small></small></small></th>                                 
+                                  <th style="border:2px solid;" width="5%"><small><small><small><b>Total Factura (A)</b></small></small></small></th>
                                   <th style="border:2px solid;" width="3%"><small><small><small><b>Total I.C.E (B)</b></small></small></small></th>
-                                  <th style="border:2px solid;" width="3%"><small><small><small><small><b>Importes Exentos (C)</b></small></small></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><small><small><b>Importe Neto Sujeto a IVA (A-B-C)</b></small></small></small></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><small><small><b>Crédito Fiscal Obtenido</b></small></small></small></small></th>
+                                  <th style="border:2px solid;" ><small><small><small><small><b>Importes<br> Exentos (C)</b></small></small></small></small></th>
+                                  <th style="border:2px solid; text-align: right;" ><small><small><small><small><b>Imp Neto<br>Suj a IVA<br>(A-B-C)</b></small></small></small></small></small></th>
+                                  <th style="border:2px solid;" ><small><small><small><small><b>Crédito Fiscal Obtenido</b></small></small></small></small></th>
                               </tr>                                  
                             </thead>
-                            <tbody>
-                              <?php
+                            <tbody>';
+                              
                               $index=0; 
                               $total_importe=0;
                               $total_ice=0;
@@ -167,43 +178,49 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
 
                                 // $sumadeimporte=$importe+$ice+$exento;
                                 $sumadeimporte=$importe;
-                                ?>
-                                <tr>
-                                  <td class="text-center small"><small><?=$index;?></small></td>
-                                  <td class="text-center small"><small><?=$fecha;?></small></td>
-                                  <td class="text-right small"><small><?=$nit;?></small></td>
-                                  <td class="text-left small"><small><span style="padding-left: 15px;"><?=$razon_social;?></span></small></td>
-                                  <td class="text-right small"><small><?=$nro_factura;?></small></td>
-                                  <td class="text-right small"><small><?=$nro_autorizacion;?></small></td>
-                                  <td class="text-center small"><small><?=$codigo_control;?></small></td>
-                                  <td class="text-right small"><small><?=formatNumberDec($sumadeimporte);?></small></td>
-                                  <td class="text-right small"><small><?=formatNumberDec($ice);?></small></td>
-                                  <td class="text-right small"><small><?=formatNumberDec($exento);?></small></td>
-                                  <td class="text-right small"><small><?=formatNumberDec($importe_sujeto_iva);?></small></td>
-                                  <td class="text-right small"><small><?=formatNumberDec($iva_obtenido);?></small></td>                                      
-                                </tr>
-                                <?php                                  
-                              }?>
-                              <tr style="border:2px solid;">                               
+
+                                //si es mayor a 20 caracteres, se partira
+                                $nro_autorizacion_1="";
+                                $nro_autorizacion_2="";
+                                if (strlen($nro_autorizacion)>28) {
+                                  for ($i=0; $i <28 ; $i++) { 
+                                        $nro_autorizacion_1.=$nro_autorizacion[$i];
+                                  }
+                                  for ($i=28; $i <strlen($nro_autorizacion) ; $i++) { 
+                                        $nro_autorizacion_2.=$nro_autorizacion[$i];
+                                  }
+                                }else{
+                                  $nro_autorizacion_1=$nro_autorizacion;
+                                }
+                              
+                                $html.='<tr>
+                                  <td class="text-center small"><small>'.$index.'</small></td>
+                                  <td class="text-center small"><small>'.$fecha.'</small></td>
+                                  <td class="text-right small"><small>'.$nit.'</small></td>
+                                  <td class="text-left small"><small>'.$razon_social.'</small></td>
+                                  <td class="text-right small"><small>'.$nro_factura.'</small></td>
+                                  <td class="text-right small"><small>'.$nro_autorizacion_1.' '.$nro_autorizacion_2.'</small></td>
+                                  <td class="text-center small"><small>'.$codigo_control.'</small></td>
+                                  <td class="text-right small"><small>'.formatNumberDec($sumadeimporte).'</small></td>
+                                  <td class="text-right small"><small>'.formatNumberDec($ice).'</small></td>
+                                  <td class="text-right small"><small>'.formatNumberDec($exento).'</small></td>
+                                  <td class="text-right small"><small>'.formatNumberDec($importe_sujeto_iva).'</small></td>
+                                  <td class="text-right small"><small>'.formatNumberDec($iva_obtenido).'</small></td>                                      
+                                </tr>';
+                                                                
+                              }
+                              $html.='<tr style="border:2px solid;">                               
                                   <td class="text-left small csp" colspan="3" style="border:2px solid;"><small>CI:</small></td>
                                   <td class="text-left small csp" colspan="3" style="border:2px solid;"><small>Nombre del Responsable:</small></td>
                                   <td class="text-center small"><small><b>SubTotal:</b></small></td>                                  
-                                  <td class="text-right small"><small><?=formatNumberDec($total_importe);?></small></td>
-                                  <td class="text-right small"><small><?=formatNumberDec($total_ice);?></small></td>
-                                  <td class="text-right small"><small><?=formatNumberDec($total_exento);?></small></td>
-                                  <td class="text-right small"><small><?=formatNumberDec($total_importe_sujeto_iva);?></small></td>
-                                  <td class="text-right small"><small><?=formatNumberDec($total_iva_obtenido);?></small></td>                                      
+                                  <td class="text-right small"><small>'.formatNumberDec($total_importe).'</small></td>
+                                  <td class="text-right small"><small>'.formatNumberDec($total_ice).'</small></td>
+                                  <td class="text-right small"><small>'.formatNumberDec($total_exento).'</small></td>
+                                  <td class="text-right small"><small>'.formatNumberDec($total_importe_sujeto_iva).'</small></td>
+                                  <td class="text-right small"><small>'.formatNumberDec($total_iva_obtenido).'</small></td>                                      
                                 </tr>
                             </tbody>
-                        </table>
+                        </table>';
 
-                    
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>  
-        </div>
-    </div>
-
+//                    echo $html;
+descargarPDFHorizontal_carta("Libro Compra",$html);

@@ -527,12 +527,12 @@ $item_1=2708;
 </div>
 <!-- modal reenviar solicitud devuelto -->
 
-<!-- modal devolver solicitud -->
+<!-- modal buscar solicitud -->
 <div class="modal fade" id="modalBuscarSolicitudRecurso" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-lg" role="document">
+  <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header" id="cabecera_conta" style="background:#732590; !important;color:#fff;">
-        <h4 class="modal-title" id="titulo_conta">Buscar Solicitud Recurso</h4>
+        <h4 class="modal-title" id="titulo_conta">Buscar Solicitudes de Recursos</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> 
       </div>
       <div class="modal-body">        
@@ -562,55 +562,92 @@ $item_1=2708;
             </div>
           </div>
         </div> 
+
+        <?php
+          $fechaActual=date("m/d/Y");
+          $m=date("m");
+          $y=date("Y");
+          $d=date("d",(mktime(0,0,0,$m+1,1,$y)-1));
+          $fechaDesde=$y."-01-01";
+          $fechaHasta=$y."-".$m."-".$d;
+
+          $fechaDesde2=$y."-01-01";
+          $fechaHasta2=$y."-12-31";
+        ?>
         <div class="row">
-                    <div class="col-sm-6">
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Oficina</small></label>
-                       <div class="col-sm-10">
-                        <div class="form-group">
-                              <select class="selectpicker form-control form-control-sm" name="buscar_unidad_solicitud[]" id="buscar_unidad_solicitud" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
-                                      <?php
-                                   $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
-                                   $stmt->execute();
-                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                    $codigoX=$row['codigo'];
-                                    $nombreX=$row['nombre'];
-                                    $abrevX=$row['abreviatura'];
-                                    ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
-                                       
-                                      }
-                                    ?>
-                                   </select>                           
-                            </div>
-                        </div>
-                   </div>
-                     </div>
-                    <div class="col-sm-6">
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Area</small></label>
-                       <div class="col-sm-10">
-                        <div class="form-group">
-                                <select class="selectpicker form-control form-control-sm" name="buscar_area_solicitud[]" id="buscar_area_solicitud" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
-                                     <?php
-                                                             
-                                           $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a where a.cod_estado=1 order by 2");
-                                         $stmt->execute();
-                                         $cont=0;
-                                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                           $codigoX=$row['codigo'];
-                                           $nombreX=$row['nombre'];
-                                           $abrevX=$row['abreviatura'];
-                                           ?><option selected value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
-                                            
-                                         } 
-                                         ?>
-                                        </select>
-                            </div>
-                        </div>
-                    </div>
+          <div class="col-sm-6">
+            <div class="row">
+              <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Fecha Inicio</small></label>
+              <div class="col-sm-10">
+               <div class="form-group">  
+                  <input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" value="<?=$fechaDesde?>">                           
+               </div>
               </div>
-                  </div><!--div row-->
-                
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="row">
+              <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Fecha Fin</small></label>
+              <div class="col-sm-10">
+                <div class="form-group">
+                  <input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" value="<?=$fechaHasta?>">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!--div row-->
+
+
+
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="row">
+             <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Oficina</small></label>
+             <div class="col-sm-10">
+              <div class="form-group">
+                    <select class="selectpicker form-control form-control-sm" name="buscar_unidad_solicitud[]" id="buscar_unidad_solicitud" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+                            <?php
+                         $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
+                         $stmt->execute();
+                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                          $codigoX=$row['codigo'];
+                          $nombreX=$row['nombre'];
+                          $abrevX=$row['abreviatura'];
+                          ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php 
+                             
+                            }
+                          ?>
+                         </select>                           
+                  </div>
+              </div>
+            </div>
+          </div>
+            <div class="col-sm-6">
+              <div class="row">
+                <label class="col-sm-2 col-form-label" style="color:#7e7e7e"><small>Area</small></label>
+                <div class="col-sm-10">
+                  <div class="form-group">
+                  <select class="selectpicker form-control form-control-sm" name="buscar_area_solicitud[]" id="buscar_area_solicitud" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+                  <?php                                     
+                    $stmt = $dbh->prepare("SELECT a.codigo, a.nombre, a.abreviatura FROM areas a where a.cod_estado=1 order by 2");
+                    $stmt->execute();
+                    $cont=0;
+                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                       $codigoX=$row['codigo'];
+                       $nombreX=$row['nombre'];
+                       $abrevX=$row['abreviatura'];
+                       ?><option selected value="<?=$codigoX;?>" selected><?=$abrevX;?></option><?php
+                        
+                     } 
+                  ?>
+                  </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!--div row-->
+
+
         <div class="row">
           <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Solicitante</small></label>
         </div>
@@ -619,7 +656,7 @@ $item_1=2708;
             <div class="form-group" >              
               <select class="selectpicker form-control form-control-sm" name="buscar_personal[]" id="buscar_personal" data-live-search="true" data-style="select-with-transition" data-size="4" multiple data-actions-box="true" required>  
                <?php
-             $stmt = $dbh->prepare("SELECT distinct s.cod_personal,UPPER(CONCAT(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno)) as nombre from solicitud_recursos s
+             $stmt = $dbh->prepare("SELECT distinct s.cod_personal,UPPER(CONCAT(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno)) as nombre from solicitud_recursos s
 join personal p on p.codigo=s.cod_personal
 where s.cod_estadoreferencial<>2 order by 2;");
             $stmt->execute();
@@ -634,7 +671,32 @@ where s.cod_estadoreferencial<>2 order by 2;");
             </select>
             </div>
           </div>
-        </div>        
+        </div>
+
+        <div class="row">
+          <label class="col-sm-12 col-form-label" style="color:#7e7e7e"><small>Proveedor</small></label>
+        </div>
+        <div class="row">
+          <div class="col-sm-12" style="background-color:#f9edf7">
+            <div class="form-group" >              
+              <select class="selectpicker form-control form-control-sm" name="buscar_proveedor[]" id="buscar_proveedor" data-live-search="true" data-style="select-with-transition" data-size="4" multiple data-actions-box="true" required>  
+               <?php
+             $stmt = $dbh->prepare("SELECT distinct(p.codigo)as codigo, p.nombre from solicitud_recursos s, solicitud_recursosdetalle sd, af_proveedores p
+where s.codigo=sd.cod_solicitudrecurso and sd.cod_proveedor=p.codigo ORDER BY 2;");
+            $stmt->execute();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+              $codigoX=$row['codigo'];
+              $nombreX=$row['nombre'];
+            ?>
+            <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option> 
+            <?php
+               }
+               ?>
+            </select>
+            </div>
+          </div>
+        </div>  
+
       </div>
       <br>  
       <div class="modal-footer">

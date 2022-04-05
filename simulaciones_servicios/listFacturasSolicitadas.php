@@ -333,7 +333,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                           $cod_tipopago=$cod_tipopago_aux;
                                         }
                                         
-                                        if($cod_tipopago==$cod_tipopago_cred){//si es igual a credito cambia de flujo
+                                        if( ($cod_tipopago==$cod_tipopago_cred) || ($cod_area==38 || $cod_area==39) ){//si es igual a credito cambia de flujo y tambien si es TCP O TCS
                                           if(isset($_GET['q'])){
                                             if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar
                                               ?>                                             

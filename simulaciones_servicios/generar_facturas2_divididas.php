@@ -40,8 +40,13 @@
             $totalFinalRedondeado,//Monto de la transacción
             $llaveDosificacion//Llave de dosificación
             );
-            $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,ci_estudiante,glosa_factura3,created_at,created_by) 
-                values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0','$ci_estudiante','$observaciones_2',NOW(),$globalUser)";
+
+            //SACAMOS EL NRO CORRELATIVO DEL CORREO
+            $nro_correlativoCorreo = nro_correlativo_correocredito($sucursalId,$cod_tipopago);
+
+
+            $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,ci_estudiante,glosa_factura3,created_at,created_by,nro_correlativocorreo) 
+                values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0','$ci_estudiante','$observaciones_2',NOW(),$globalUser,'$nro_correlativoCorreo')";
                 // echo $sql;
             $stmtInsertSoliFact = $dbh->prepare($sql);
             $flagSuccess=$stmtInsertSoliFact->execute();
