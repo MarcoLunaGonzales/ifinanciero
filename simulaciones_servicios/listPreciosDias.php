@@ -26,6 +26,8 @@ if(isset($_GET["codigo"])){
  $stmt = $dbh->prepare($query);
  $stmt->execute();
  $dias=1;$utilidad=1;$unidadOrganizacional=0;
+
+ $areaX=0;
  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
    $dias=$row['dias_auditoria'];
    $utilidad=$row['utilidad_minima'];
@@ -70,29 +72,42 @@ if(isset($_GET["codigo"])){
                           </div> 
 
                     </div>
-            <?php 
+          <?php 
             $codSimServ=obtenerCodigoSimServicioTCPTCS($areaX);
-            if($areaX==39){
+            
 
-               ?>
+            if($areaX==39){//productos
+          ?>
                <script>$("#productos_div").removeClass("d-none");</script>
                <script>$("#div_marca").removeClass("d-none");</script>
                <script>$("#div_norma").removeClass("d-none");</script>
                <script>$("#titulo_modal_atributo").html("AGREGAR PRODUCTO");</script>
                <script>$("#div_pais").removeClass("d-none");</script> 
-               <?php
+          <?php
             }else{
               if($areaX==38){
-                ?>
+          ?>
+                <script>$("#tiposervicio_div").removeClass("d-none");</script>
                 <script>$("#div_pais").removeClass("d-none");</script>
                 <script>$("#sitios_div").removeClass("d-none");</script>
+                <script>$("#tiposervicio_div").removeClass("d-none");</script>
                 <script>$("#titulo_modal_atributo").html("AGREGAR SITIO");</script> 
-                <?php
+          <?php
               }else{
+                if($codigo==1000000 && $areaX==0){
+          ?>
+                  <!--<script>$("#tiposervicio_div").removeClass("d-none");</script>
+                  <script>$("#productos_div").removeClass("d-none");</script>
+                 <script>$("#div_marca").removeClass("d-none");</script>
+                 <script>$("#div_norma").removeClass("d-none");</script>
+                 <script>$("#titulo_modal_atributo").html("AGREGAR PRODUCTO");</script>
+                 <script>$("#div_pais").removeClass("d-none");</script>--> 
 
+          <?php
+                }
               }
             }
-            ?>       
+          ?>       
          <script>$("#nombre").val(<?=$codSimServ?>);</script>                      
          <script>$("#oficina_servicio").val(<?=$unidadOrganizacional?>);</script>                      
 <?php   

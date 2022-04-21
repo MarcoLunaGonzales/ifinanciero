@@ -242,6 +242,7 @@ try{
             $stmtCommit = $dbh->prepare($sqlCommit);
             $stmtCommit->execute();
 
+            //DESCOMENTAR ESTO
             header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');            
         }
         $codigo_facturacion=verificamosFacturaDuplicada($codigo);

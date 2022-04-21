@@ -137,9 +137,6 @@ $html.=  '<header class="header">'.
               </tr>                    
             </thead>
             <tbody>';
-            // $sqlA="SELECT sf.*,t.descripcion as nombre_serv ,t.Codigo from solicitudes_facturaciondetalle sf,cla_servicios t 
-            //     where sf.cod_claservicio=t.idclaservicio and sf.cod_solicitudfacturacion=$codigo_facturacion";
-
             $sqlA="SELECT *,(select t.Codigo from cla_servicios t where t.idclaservicio=cod_claservicio) as Codigo_alterno  from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
             $stmt2 = $dbh->prepare($sqlA);                                
             $stmt2->execute();
@@ -170,7 +167,7 @@ $html.=  '<header class="header">'.
               $sumaTotal_bob+=$precio_unitario*$row2["cantidad"];
               $sumaTotal_sus+=$precio_sus;
             }
-            //total de detalles
+            //FIN DEL DETALLE           
             $html.='<tr>                
                 <td  class="text-right td-color-celeste" colspan="6"><b>TOTAL</b></td>
                 <td  class="text-right "><b>'.formatNumberDec($sumaTotal_bob).'</b></td>
@@ -179,6 +176,51 @@ $html.=  '<header class="header">'.
             $html.='</tbody>
           </table>'.
           '<br>';
+
+
+          //AQUI CONSTRUIMOS LA GLOSA ESPECIAL SI TIENE LA SF
+          $txtTablaFacturacionEspecial='<table class="table">
+            <thead>
+              <tr class="td-color-rojo">
+                <td rowspan="2" rowspan="2" width="3%" class="text-center"><b><b>N°</b></td>
+                <td rowspan="2" width="6%" class="text-center"><b>C.Costo</b></td>
+                <td rowspan="2" class="text-center"><b>Concepto Especial Factura</b></td>                
+                <td rowspan="2" width="5%" class="text-center"><b>Cantidad</b></td>
+                <td rowspan="2" width="8%" class="text-center"><b>P.U.</b></td>
+                <td colspan="2" class="text-center"><b>Importe</b></td>
+              </tr>
+              <tr class="td-color-rojo">
+                <td width="8%" class="text-center"><b>BOB</b></td>
+                <td width="8%" class="text-center"><b>USD</b></td>
+              </tr>                    
+            </thead>
+            <tbody>';
+
+              $txtTablaFacturacionEspecial.='<tr>
+                <td  class="text-center"><b>1</b></td>
+                <td  class="text-center">'.$abrev_area.'</td>
+                <td  class="text-left"><small>'.$observaciones_2.'</small></td>
+                <td  class="text-right">1</td>
+                <td  class="text-right">'.number_format($sumaTotal_bob,2).'</td>
+                <td  class="text-right">'.formatNumberDec($sumaTotal_bob).'</td>
+                <td  class="text-right">'.formatNumberDec($sumaTotal_sus).'</td>
+              </tr>';
+
+            $txtTablaFacturacionEspecial.='<tr>                
+                <td  class="text-right td-color-rojo" colspan="5"><b>TOTAL</b></td>
+                <td  class="text-right "><b>'.formatNumberDec($sumaTotal_bob).'</b></td>
+                <td  class="text-right "><b>'.formatNumberDec($sumaTotal_sus).'</b></td>
+              </tr>';          
+            $txtTablaFacturacionEspecial.='</tbody>
+          </table>'.
+          '<br>';
+        //FIN FACTURACION ESPECIAL
+
+          if($observaciones_2!=""){
+            $html.=$txtTablaFacturacionEspecial;
+          }
+
+
           //distribucion de UO
           $sqlUO="SELECT cod_area,cod_uo,porcentaje,monto from solicitudes_facturacion_areas_uo where cod_solicitudfacturacion=$codigo_facturacion";
           $stmtUO = $dbh->prepare($sqlUO);                                   

@@ -57,8 +57,11 @@ if($estado!=1){
             if(!($row['idServicio']>0)){
              $idServicio=obtenerCodigoServicioIbnorca();
             // Prepare
+            
+            //TEMPORALMENTE PONEMOS EL USUARIO DE CINTYA ZARATE LOS OTROS ESTAN CON PROBLEMAS. 
+            $IdUsuarioRegistroXXX=177;
             $sqlInsertServicio="INSERT INTO ibnorca.servicios (idServicio,IdArea,IdOficina,IdTipo,IdCliente,Descripcion,IdUsuarioRegistro,fecharegistro,IdPropuesta) 
-            VALUES ('$idServicio','$IdArea','$IdOficina','$IdTipo','$IdCliente','$Descripcion','$IdUsuarioRegistro','$fecharegistro','$codigo')";
+            VALUES ('$idServicio','$IdArea','$IdOficina','$IdTipo','$IdCliente','$Descripcion','$IdUsuarioRegistroXXX','$fecharegistro','$codigo')";
             $stmt = $dbh->prepare($sqlInsertServicio);
             
             //echo $sqlInsertServicio;

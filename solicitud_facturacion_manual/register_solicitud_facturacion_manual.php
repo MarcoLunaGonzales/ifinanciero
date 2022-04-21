@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
 require_once 'conexion.php';
 require_once 'styles.php';
@@ -209,7 +211,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
                                         <?php 
                                         $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE codigo in (214,840) order by nombre";
-                                        $statementObjeto = $dbh->query($queryTipoObjeto);
+                                        $statementObjeto = $dbh->prepare($queryTipoObjeto);
+                                        $statementObjeto -> execute();
                                         $nc=0;$cont= array();
                                         while ($row = $statementObjeto->fetch()){
                                             ?>
@@ -350,7 +353,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     <div id="div_contenedor_contactos">
                                         <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
                                           <?php 
-                                          $query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
+                                          $query="SELECT * FROM clientes_contactos where cod_cliente='$cod_cliente' order by nombre";
                                           $stmt = $dbh->prepare($query);
                                           $stmt->execute();
                                           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

@@ -99,14 +99,15 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                           <tr>
                             <th><small>Of - Area</small></th>
                             <th><small>#Sol.</small></th>
-                            <th><small>Responsable</small></th>
+                            <!--th><small>Responsable</small></th-->
                             <th><small>Codigo<br>Servicio</small></th>
-                            <th><small>Cliente</small></th>
+                            <!--th><small>Cliente</small></th-->
                             <th><small>Fecha<br>Registro</small></th>
                             <th><small>Importe<br>(BOB)</small></th>                              
                             <th width="15%"><small>Razón Social</small></th>
                             <th width="35%"><small>Concepto</small></th>                            
                             <th width="12%"><small>Observaciones</small></th>
+                            <th><small>Concepto Especial Factura</small></th>
                             <th style="color:#ff0000;"><small>#Fact</small></th>
                             <th style="color:#ff0000;" width="6%"><small>Forma<br>Pago</small></th>
                             <th class="text-right"><small>Actions</small></th>
@@ -116,11 +117,20 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                         <?php
                           $index=1;
                           $codigo_fact_x=0;
+
+                          $nombreNroFacX="";
+                          
                           $cont= array();
                           while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                             $cliente_x=nameCliente($cod_cliente);
-
                             $observaciones_string=obtener_string_observaciones($obs_devolucion,$observaciones,$observaciones_2);
+
+                            /*GLOSA ESPECIAL PARA LA FACTURA*/
+                            if($observaciones_2!=""){
+                              $observaciones_2="<i class='material-icons text-alert'>info</i>".$observaciones_2;
+                            }
+
+
                             $datos_otros=$codigo_facturacion."/0/0/0/".$nit."/".$razon_social;//dato 
                             switch ($codEstado) {
                               case 1:                                
@@ -149,30 +159,29 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               break;
                             }
                             //verificamos si ya tiene factura generada y esta activa
-                            $sqlFact="SELECT codigo, nro_factura, cod_estadofactura, razon_social, nit, nro_autorizacion, importe, cod_comprobante from facturas_venta where cod_solicitudfacturacion='$codigo_facturacion' order by codigo desc limit 1";
+                            $sqlFact="SELECT codigo, nro_factura, fecha_factura, cod_estadofactura from facturas_venta where cod_solicitudfacturacion='$codigo_facturacion' order by codigo desc limit 1";
+                            //echo $sqlFact;
                             $stmtFact = $dbh->prepare($sqlFact);
 
                             $stmtFact->execute();
                             $nro_fact_x="0";
+                            $nombreNroFacX="";
                             $cod_estado_factura_x=0;
-
+                            $fechaFacturaX="";
                             $codigo_fact_x=0;
                             while($resultSimu = $stmtFact->fetch()){
+                              //echo "entra facturas";
                               $codigo_fact_x = $resultSimu['codigo'];
                               $nro_fact_x = $resultSimu['nro_factura'];
                               $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
-                              $nit_x = $resultSimu['nit'];
-                              $razon_social_x = $resultSimu['razon_social'];
-                              $nro_autorizacion_x = $resultSimu['nro_autorizacion'];
-                              $importe_x = $resultSimu['importe'];
-                              $cod_comprobante_x = $resultSimu['cod_comprobante'];
-                              if ($nro_fact_x==null)$nro_fact_x="-";
-                              else $nro_fact_x="F".$nro_fact_x;
-                              if($cod_estado_factura_x==4){
-                              // $btnEstado="btn-warning";
+                              $fechaFacturaX=$resultSimu['fecha_factura'];
+                              //echo $nro_fact_x;
+
+                              if ($nro_fact_x==null) $nombreNroFacX="-";
+                              else $nombreNroFacX="F".$nro_fact_x;
+                              if($cod_estado_factura_x==2){
                                 $label='<span class="badge badge-warning">';
-                                $estado="FACTURA MANUAL";                              
-                                $datos_FacManual=$cliente_x."/".$razon_social_x."/".$nit_x."/".$nro_fact_x."/".$nro_autorizacion_x."/".$importe_x;
+                                $estado="ANULADO";                              
                               }
                             }
 
@@ -244,33 +253,32 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                 $correos_string=obtenerCorreoEstudiante($cod_cliente);
                               }else $correos_string=obtenerCorreosCliente($cod_cliente);
                               if($cod_factura!=''){
-                                $nro_factura=obtenerNroFactura($cod_factura);
+                                $nombreNroFacX=obtenerNroFactura($cod_factura);
                               }else{
-                                $nro_factura="";
+                                $nombreNroFacX="";
                               }
                               
-                              $datos_factura_envio=$cod_factura.'/'.$codigo_facturacion.'/'.$nro_factura.'/'.$correos_string.'/'.$razon_social;
+                              $datos_factura_envio=$cod_factura.'/'.$codigo_facturacion.'/'.$nombreNroFacX.'/'.$correos_string.'/'.$razon_social;
                             ?>
                             <tr>
                               
                               <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
                               <td class="text-right"><small><?=$nro_correlativo;?></small></td>
-                              <td><small><?=$responsable;?></small></td>
+                              <!--td><small><?=$responsable;?></small></td-->
                               <td><small><?=$codigo_alterno?></small></td>
-                              <td><small><small><?=$cliente_x?></small></small></td>
+                              <!--td><small><small><?=$cliente_x?></small></small></td-->
                               <td><small><?=$fecha_registro;?></small></td>
                               <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
                               <td><small><small><?=$razon_social;?></small></small></td>
                               <td><small><small><?=$concepto_contabilizacion?></small></small></td>
                               <td><small><?=$observaciones_string;?></small></td>
-                              <td style="color:#298A08;"><small><?=($nro_fact_x>0)?$nro_fact_x:"-";?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small>
-                                <?php if($cod_estado_factura_x==3){
-                                  $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
-                                  ?>
-                                    <span class="badge badge-dark"><small><?=$estadofactura?></small></span><?php
-                                  }?>
-                              </td>
 
+                              <td class="text-left" style="color:#ff0000;"><small><small><?=$observaciones_2;?></small></small></td>
+
+                              <td style="color:#298A08;"><small><?=$nombreNroFacX;?>
+                              </td>
+                              
+                              
                               <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
                               <td class="td-actions text-right">                              
                                 
@@ -413,9 +421,9 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                     }
                                   }else{//factura manual                                   
                                     ?>
-                                    <button title="Detalles Factura Manual" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
+                                    <!--button title="Detalles Factura Manual" class="btn btn-success" type="button" data-toggle="modal" data-target="#modalDetalleFacturaManual" onclick="agregaDatosDetalleFactManual('<?=$datos_FacManual;?>')">
                                       <i class="material-icons">list</i>
-                                    </button>                                    
+                                    </button-->                                    
                                      <?php 
                                   }
 

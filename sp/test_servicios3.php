@@ -6,12 +6,6 @@ WS: ws-fin-cliente-contacto.php
 
     $sIde = "facifin";
     $sKey = "AX546321asbhy347bhas191001bn0rc4654";  
-    // OBTENER MODULOS PAGADOS x CURSO
-    // $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
-    //         "accion"=>"ObtenerModulosPagados", 
-    //         "Identificacion"=>$ci_estudiante, //7666922 ci del alumno
-    //         "IdCurso"=>$IdCurso); //1565 
-
     $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
             "accion"=>"solicitarTipoCambio", 
             "idMoneda"=>2, //7666922 ci del alumno

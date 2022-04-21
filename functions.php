@@ -896,7 +896,7 @@
   //    $sql="SELECT d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev,(select 1 from comprobantes_detalle cdd where cdd.debe=0 and d.codigo=cdd.codigo) as haber_order 
   // FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by haber_order, d.codigo";
      $sql="SELECT d.cod_cuentaauxiliar,d.codigo as cod_det,d.cod_area,d.cod_unidadorganizacional,p.codigo,p.numero,p.nombre,d.glosa,d.debe,d.haber,a.abreviatura,p.cuenta_auxiliar,u.abreviatura as unidadAbrev,(select 1 from comprobantes_detalle cdd where cdd.debe=0 and d.codigo=cdd.codigo) as haber_order, (select ca.nombre from cuentas_auxiliares ca where ca.codigo=d.cod_cuentaauxiliar)as nombrecuentaauxiliar
-  FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by d.codigo";
+  FROM plan_cuentas p join comprobantes_detalle d on p.codigo=d.cod_cuenta join areas a on d.cod_area=a.codigo join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional where d.cod_comprobante=$codigo order by d.orden, d.codigo";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      // bindColumn
@@ -3880,7 +3880,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   } 
 
 
-  function descargarPDF($nom,$html){
+ function descargarPDF($nom,$html){
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");
     // Cargamos DOMPDF
@@ -3890,21 +3890,12 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf->load_html($html);
     $mydompdf->set_paper('A4', 'portrait');
     $mydompdf->render();
-    $canvas = $mydompdf->get_canvas();
-         /* if ( isset($canvas) ) {
-            $numero="{PAGE_NUM}";$numeroF="{PAGE_COUNT}"; 
-            if ((int)$numero==(int)$numeroF) {
-              $font = Font_Metrics::get_font("helvetica", "normal");
-                  $size = 9;
-                  $y = 50;
-                  $x = 100;
-                  $canvas->page_text($x, $y, "pie de pagina en la ultima hoja".$numero.$numeroF, $font, $size);
-              }
-          }*/
-    $canvas->page_text(500, 25, "", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0)); 
+    $canvas = $mydompdf->get_canvas();       
+    $canvas->page_text(500, 25, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 10, array(0,0,0));
     $mydompdf->set_base_path('assets/libraries/plantillaPDF.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
+
   function descargarPDFSolicitudesRecursos($nom,$html){
     //aumentamos la memoria  
     ini_set("memory_limit", "128M");

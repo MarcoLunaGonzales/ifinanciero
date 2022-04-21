@@ -155,6 +155,7 @@ $dbh = new Conexion();
                                   <?php
                                     }
                                     ?>
+                                    <!--option value="1000000">TCP - BPM (Caso Especial) </option--> 
                                 </select>
                               </div>
                         </div>
@@ -189,6 +190,38 @@ $dbh = new Conexion();
                       <div class="" id="lista_precios">
                       </div>
                       
+
+                    <div id="tiposervicio_div" class="d-none">
+                     <div class="row">
+                       <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
+                       <div class="col-sm-7">
+                        <div class="form-group">
+                          <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();">       
+                                <?php
+                                $tituloTipoServ="";
+                                $indexOb=0;
+                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 and vigente=1 and Aprobado=1 order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo_n2'];
+                                  $nombreX=$row['descripcion_n2'];
+                                  if($indexOb==0){
+                                      $tituloTipoServ=obtenerServiciosClaServicioTipoNombre($codigoX);
+                                  }
+                                  $indexOb++;
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                            </select>
+                        </div>
+                        </div>
+                     </div>
+                  </div>
+
+
+
                       <div id="productos_div" class="d-none">
                         <div class="row">
                        <label class="col-sm-2 col-form-label">Regi&oacute;n</label>
@@ -331,8 +364,9 @@ $dbh = new Conexion();
                     </div>
                     
                       </div>
-                      <div id="sitios_div" class="d-none">
-                      
+
+
+                    <div id="sitios_div" class="d-none">
                      <div class="row">
                        <label class="col-sm-2 col-form-label">Objeto del Servicio</label>
                        <div class="col-sm-7">
@@ -363,32 +397,7 @@ $dbh = new Conexion();
                         </div>
                        </div>
                       </div><!--row-->
-                     <div class="row">
-                       <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
-                       <div class="col-sm-7">
-                        <div class="form-group">
-                          <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();">       
-                                <?php
-                                $tituloTipoServ="";
-                                $indexOb=0;
-                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 and vigente=1 and Aprobado=1 order by 2");
-                                 $stmt->execute();
-                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo_n2'];
-                                  $nombreX=$row['descripcion_n2'];
-                                  if($indexOb==0){
-                                      $tituloTipoServ=obtenerServiciosClaServicioTipoNombre($codigoX);
-                                  }
-                                  $indexOb++;
-                                   ?>
-                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
-                                  <?php
-                                    }
-                                    ?>
-                            </select>
-                        </div>
-                        </div>
-                     </div>
+
                      <div class="row d-none" id="div_normastipo">
                        <label class="col-sm-2 col-form-label">Normas</label>
                        <div class="col-sm-7">
@@ -525,28 +534,6 @@ $dbh = new Conexion();
                      
                     </div>
                       
-                      
-
-                      
-                      <!--<div class="row">
-                       <label class="col-sm-2 col-form-label">Norma</label>
-                       <div class="col-sm-7">
-                        <div class="form-group">-->
-                          <input class="form-control" type="hidden" name="norma" id="norma" required value="NINGUNA" autocomplete="off"/>
-                        <!--</div>
-                        </div>
-                      </div>-->
-                      <!--<div class="row">
-                       <label class="col-sm-2 col-form-label">Regi&oacute;n</label>
-                       <div class="col-sm-7">
-                         <div class="form-group">
-                           <select class="form-control selectpicker" data-style="btn btn-info" name="local_extranjero" id="local_extranjero">
-                                 <option value="1" selected>BOLIVIA</option>
-                                 <option value="0">EXTRANJERO</option>        
-                                </select>
-                         </div>
-                        </div>
-                     </div>-->  
         </div>
         <br>
         <div id="mensaje"></div>

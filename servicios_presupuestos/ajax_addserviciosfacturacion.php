@@ -54,12 +54,11 @@ switch ($cod_area) {
               <?php 
               $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where vigente=1 and codigo_n1=$codigoAreaServ
                 UNION 
-                  Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2=$codigoAdministrativos";
-                // $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where  vigente=1
-                //   UNION 
-                //   Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2=$codigoAdministrativos";
+                  Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
                 $stmt3 = $dbh->prepare($sql);//IdTipo=$IdTipo and
-                // echo $sql; 
+                
+                //echo $sql; 
+                
                 $stmt3->execute();
                 while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                   $codigoServX=$rowServ['IdClaServicio'];

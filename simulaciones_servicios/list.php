@@ -49,7 +49,7 @@ where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_r
   $stmt = $dbh->prepare($sql);
 }
 
-echo $sql;
+//echo $sql;
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -121,6 +121,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                            }
                           $responsable=namePersonal($codResponsable);
 
+                          $idEstadoZ=0;
                           //revisamos la configuracion de los estados
                           if($configuracionEstados==1){
                             $sql2="SELECT ibnorca.id_estadoobjeto(2707, $codigo) AS IdEstado, ibnorca.d_clasificador(ibnorca.id_estadoobjeto(2707, $codigo)) AS descr";
@@ -262,7 +263,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                             if(isset($_GET['q'])){
                                   ?>
                                   <div class="btn-group dropdown">
-                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" title="Ver Oferta en PDF" aria-expanded="false">
+                                    <!--button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" title="Ver Oferta en PDF" aria-expanded="false">
                                       <i class="material-icons text-dark">picture_as_pdf</i>
                                     </button>
                                     <div class="dropdown-menu menu-fixed-sm-table menu-fixed-sm-table">
@@ -270,19 +271,19 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                       <a href="<?=$urlOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>" class="dropdown-item"  target="_blank">
                                          <i class="material-icons text-danger">picture_as_pdf</i> PDF
                                       </a> 
-                                    </div>
+                                    </div-->
                                   </div>
                              <?php
                              }else{
                                 ?><div class="btn-group dropdown">
-                                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" title="Ver Oferta en PDF" aria-expanded="false">
+                                    <!--button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" title="Ver Oferta en PDF" aria-expanded="false">
                                       <i class="material-icons text-dark">picture_as_pdf</i>
                                     </button>
                                     <div class="dropdown-menu menu-fixed-sm-table">
                                       <a href="<?=$urlOferta?>?cod=<?=$codigo;?>&cod_area=<?=$codAreaX?>" class="dropdown-item"  target="_blank">
                                          <i class="material-icons text-danger">picture_as_pdf</i> PDF
                                       </a> 
-                                    </div>
+                                    </div-->
                                   </div><?php
                              }     
                              if($codEstado==5){

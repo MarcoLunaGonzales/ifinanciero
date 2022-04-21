@@ -337,6 +337,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     }
                                                  } 
                                                 //}
+                                                $codSC=0;
                                                 $itemServicioAux=$IdServicio;
                                                 $itemServicioFilaAux=$codSC;
 

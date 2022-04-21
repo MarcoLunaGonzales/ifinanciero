@@ -23,6 +23,12 @@ $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
+$norma=0;
+$nombre="";
+$dias=0;
+$objeto_servicio=0;
+
+
 if(isset($_POST['nombre'])){
   $nombre=$_POST['nombre'];
   $plantilla_servicio=$_POST['plantilla_servicio'];
@@ -35,7 +41,12 @@ if(isset($_POST['nombre'])){
   $atributos= json_decode($_POST['atributos']);
   $tipo_atributo=$_POST['tipo_atributo'];   
   $afnor=$_POST['afnor'];
-  $norma=$_POST['norma'];
+  if(isset($_POST['norma'])){
+    $norma=$_POST['norma'];
+  }else{
+    $norma=0;
+  }
+
   $id_servicio=0; //$_POST['id_servicio']
   $cod_region=1; //$_POST['local_extranjero']
   $anios=$_POST['anios'];
@@ -68,6 +79,7 @@ if(isset($_POST['nombre'])){
   }
   $areaGeneralPlantilla=obtenerCodigoAreaPlantillasServicios($plantilla_servicio);
   $unidadGeneralPlantilla=obtenerCodigoUnidadPlantillasServicios($plantilla_servicio);
+   
    if($areaGeneralPlantilla==39){
      $inicioAnio=1;
    }else{
@@ -348,6 +360,7 @@ if(isset($_POST['nombre'])){
          $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codSimServ,$jjjj);
          $precioRegistrado=obtenerPrecioRegistradoPlantilla($plantilla_servicio);
          $nCursos=obtenerCantidadAuditoriasPlantilla($plantilla_servicio); 
+         
          $porcentPrecios=($precioLocalX)/($precioRegistrado);
          if($tipoFijo==1){ 
          $anioSim= date("Y");  

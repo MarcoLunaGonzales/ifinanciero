@@ -13,6 +13,7 @@ $stmtX->execute();
 $usuario=$_SESSION['globalUser'];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
+$globalAdmin=$_SESSION["globalAdmin"];
 
 $v=0;
 if(isset($_GET['v'])){
@@ -124,7 +125,7 @@ if(isset($_GET['v'])){
                                            $codigoX=$row['codigo'];
                                            $nombreX=$row['nombre'];
                                            $abrevX=$row['abreviatura'];
-                                           if($codigoX==$globalArea){
+                                           if($codigoX==$globalArea || ($globalAdmin==1 && $codigoX==501)){
                                              ?><option selected value="<?=$codigoX;?>"><?=$abrevX;?></option><?php
                                            }else{
                                             //if($v==0){

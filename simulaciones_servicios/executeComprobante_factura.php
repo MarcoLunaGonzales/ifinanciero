@@ -312,6 +312,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_bk($nitciCliente,$razonSocia
 			$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago);
 			$descripcion=$concepto_contabilizacion;	
 			$sw=0;
+
 			if($tipoPago!=4){//caso payme
 				if($cod_cuenta_libreta!='0'){
 					$cod_cuenta_libreta=trim($cod_cuenta_libreta,",");
@@ -382,6 +383,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_bk($nitciCliente,$razonSocia
 
 			}else{
 				$cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
+				
 				$cod_cuenta=obtenerCodCuentaTipoPago($cod_tipopago_tarjetas);
 				
 				$cod_cuenta_tarjetacredito=obtenerValorConfiguracion(60);
@@ -422,6 +424,7 @@ function ejecutarComprobanteSolicitud_tiendaVirtual_bk($nitciCliente,$razonSocia
 		        $porcentaje_pasivo=100-$porcentaje_debito_iva;
 				$monto_areas_format=$monto_total*$porcentaje_pasivo/100;
 				$descripcion=$concepto_contabilizacion;
+				
 				$cod_cuenta_areas=obtenerCodCuentaArea($cod_area_solicitud);
 				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_areas,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_areas_format,$descripcion,$ordenDetalle);
 	            $ordenDetalle++;				

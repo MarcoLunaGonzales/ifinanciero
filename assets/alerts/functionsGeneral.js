@@ -16767,6 +16767,7 @@ function removePlantillaComprobantes(cod_plantilla){
 
 function modalDevolverSolicitud(datos){    
   var d=datos.split('###');  
+  console.log("devolver:"+d);
   document.getElementById("cod_solicitudfacturacion").value=d[0];
   document.getElementById("nro_solicitud").value=d[1];
   document.getElementById("codigo_servicio").value=d[2];  
@@ -16776,7 +16777,9 @@ function modalDevolverSolicitud(datos){
   document.getElementById("observaciones").value=d[6];  //obs
 }
 function modal_rechazarFactura(datos){    
+  console.log("rechazar:"+datos);
   var d=datos.split('###');  
+  console.log("rechazar:"+d);
   document.getElementById("cod_solicitudfacturacion").value=d[0];
   document.getElementById("nro_solicitud").value=d[1];
   document.getElementById("codigo_servicio").value=d[2];  
@@ -17801,7 +17804,9 @@ function seleccionar_Factura_relacion(cod_factura){
 }
 
 function ponerSistemasIntegrados(){
+  console.log("entra a change select tipo servicio");
   var tipo_servicio=$("#tipo_servicio").val();
+  //ESTA FUNCION ES PARA SISTEMAS INTEGRADOS
   if(tipo_servicio==2778){ //codigo Sistemas Integrados
     if($("#div_normastipo").hasClass("d-none")){
       $("#div_normastipo").removeClass("d-none");
@@ -17812,6 +17817,15 @@ function ponerSistemasIntegrados(){
       $("#div_normastipo").addClass("d-none");
       $("#div_normastipotexto").addClass("d-none");
     }
+  }
+  if(tipo_servicio==2767){      // si es bpm desaparecemos productos y ponemos sitios
+      console.log("entro BPM");
+      $("#sitios_div").addClass("d-none");
+      $("#productos_div").removeClass("d-none");
+      $("#div_marca").removeClass("d-none");
+      $("#div_norma").removeClass("d-none");
+      $("#div_pais").removeClass("d-none");
+      $("#tiposervicio_div").removeClass("d-none");
   }
 }
 

@@ -87,6 +87,11 @@ $globalPersonal=$_SESSION["globalUser"];
                       <tbody>
                       <?php
                         $index=1;
+
+                        $cadenaFacturas="";
+                        $cadenaFacturasM="";
+                        $concepto_contabilizacion="";
+
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 
                           /*FACTURA ESPECIAL*/
@@ -118,7 +123,7 @@ $globalPersonal=$_SESSION["globalUser"];
                           if($cod_personal==0){
                             $nombre_personal="Tienda Virtual";
                           }                          
-                          $cadenaFacturas='F '.$nro_factura;
+                          $cadenaFacturas=''.$nro_factura;
                           $codigos_facturas=$codigo_factura;                          
                           $importe=sumatotaldetallefactura($codigo_factura);
                           $correosEnviados=obtenerCorreosEnviadosFactura($codigo_factura);
@@ -168,10 +173,6 @@ $globalPersonal=$_SESSION["globalUser"];
                           $stmtDetalleSol->bindColumn('precio', $precio_unitario);
                           $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna); 
 
-
-                          $cadenaFacturas="";
-                          $cadenaFacturasM="";
-                          $concepto_contabilizacion="";
 
                           while ($row_det = $stmtDetalleSol->fetch()){
                             $precio=$precio_unitario*$cantidad;
