@@ -62,7 +62,7 @@ $fechaHasta=date("Y-m-d");
                 <div class="col-sm-3">
                   <div class="form-group">
                     <div id="div_contenedor_fechaD"> 
-                      <input type="date" style="background-color:#E3CEF6;text-align: left" class="form-control" name="fecha_desde" id="fecha_desde" max="<?=$fechaHasta?>" value="<?=$fechaDesde?>" required="true">  
+                      <input type="date" style="background-color:#E3CEF6;text-align: left" class="form-control" name="fecha_desde" id="fecha_desde" min="2021-01-01" max="<?=$fechaHasta?>" value="<?=$fechaDesde?>" required="true">  
                     </div>     
                   </div>
                 </div>
@@ -70,7 +70,7 @@ $fechaHasta=date("Y-m-d");
                 <div class="col-sm-3">
                   <div class="form-group">
                     <div id="div_contenedor_fechaH"> 
-                    <input type="date" style="background-color:#E3CEF6;text-align: left" class="form-control" name="fecha_hasta" id="fecha_hasta" max="<?=$fechaHasta?>" value="<?=$fechaHasta?>" required="true">                    
+                    <input type="date" style="background-color:#E3CEF6;text-align: left" class="form-control" name="fecha_hasta" id="fecha_hasta" min="2021-01-01" max="<?=$fechaHasta?>" value="<?=$fechaHasta?>" required="true">                    
                     </div>
                   </div>
                 </div>

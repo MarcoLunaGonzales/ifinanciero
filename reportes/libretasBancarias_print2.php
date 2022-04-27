@@ -106,7 +106,6 @@ $sqlFiltroComp="";
       </thead> <tbody>
       <?php
       
-      
       $sqlDetalle="SELECT ce.*
       FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria where lb.codigo in ($StringEntidadCodigos) and ce.fecha_hora BETWEEN '$fecha 00:00:00' and '$fechaHasta 23:59:59' and
        ce.cod_estadoreferencial=1 order by ce.fecha_hora";
@@ -126,30 +125,28 @@ $sqlFiltroComp="";
       $stmt->bindColumn('saldo', $saldolb);
       $stmt->bindColumn('cod_comprobante', $codComprobante);
       $stmt->bindColumn('cod_comprobantedetalle', $codComprobanteDetalle);
-
       $index=1;$totalMonto=0;
-
       while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
         $saltoAnterior=$saltoAnterior+$monto;
         $diferencia=$saltoAnterior-$saldolb;
-        if($diferencia>0){
-
+        $label="<span>";
+        if(number_format($diferencia,2,".",",")<>0){
+          $label="<span class='bagde badge-danger'>";
         }
         ?>
         <tr>
-              <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
-              <td class="text-center"><?=strftime('%H:%M:%S',strtotime($fecha))?></td>
-              <td class="text-left">
-                <?=$descripcion?> info: <?=$informacion_complementaria?>
-              </td>      
-              <td class="text-left"><?=$agencia?></td>
-              <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-              <td class="text-right"><?=number_format($saldolb,2,".",",")?></td>
-              <td class="text-right"><?=$nro_documento?></td>
-              <td class="text-right"><?=number_format($saltoAnterior,2,".",",")?></td>
-              <td class="text-right"><?=number_format($diferencia,2,".",",")?></td>
-              </tr>
-
+          <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
+          <td class="text-center"><?=strftime('%H:%M:%S',strtotime($fecha))?></td>
+          <td class="text-left">
+            <?=$descripcion?> info: <?=$informacion_complementaria?>
+          </td>      
+          <td class="text-left"><?=$agencia?></td>
+          <td class="text-right"><?=number_format($monto,2,".",",")?></td>
+          <td class="text-right"><?=number_format($saldolb,2,".",",")?></td>
+          <td class="text-right"><?=$nro_documento?></td>
+          <td class="text-right"><?=number_format($saltoAnterior,2,".",",")?></td>
+          <td class="text-right"><?=$label?><?=number_format($diferencia,2,".",",")?></span></td>
+        </tr>
         <?php
       }?>
 
