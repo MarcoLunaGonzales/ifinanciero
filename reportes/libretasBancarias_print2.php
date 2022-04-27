@@ -32,12 +32,13 @@ $fechaFormateadaHasta=$fechaTituloHasta[2].'/'.$fechaTituloHasta[1].'/'.$fechaTi
 // $fechaFormateadaHastaFac=$fechaTituloHastaFac[2].'/'.$fechaTituloHastaFac[1].'/'.$fechaTituloHastaFac[0];
 
 $moneda=1; //$_POST["moneda"];
-$entidades=$_POST['libretas'];
-$StringEntidadCodigos=implode(",", $entidades);
-$stringEntidades="";
-foreach ($entidades as $valor ) {    
-  $stringEntidades.=nameLibretas($valor).",";
-}  
+$StringEntidadCodigos=$_POST['libretas'];
+  $stringEntidades=nameLibretas($StringEntidadCodigos);
+// $StringEntidadCodigos=implode(",", $entidades);
+// $stringEntidades="";
+// foreach ($entidades as $valor ) {    
+//   $stringEntidades.=nameLibretas($valor).",";
+// }  
 $periodoTitle= "Del ".$fechaFormateada.' al '.$fechaFormateadaHasta; 
 //$periodoTitleFac= "Del ".$fechaFormateadaFac.' al '.$fechaFormateadaHastaFac;  
 
