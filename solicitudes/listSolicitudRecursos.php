@@ -65,6 +65,7 @@ $stmt->bindColumn('cod_simulacionservicio', $codSimulacionServicio);
 $stmt->bindColumn('numero', $numeroSol);
 $stmt->bindColumn('idServicio', $idServicioX);
 $stmt->bindColumn('glosa_estado', $glosa_estadoX);
+$stmt->bindColumn('cod_area', $codAreaCabecera);
 
 ?>
 <style>
@@ -251,6 +252,11 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
                                     if(verificarImporteMayorAlPresupuestado($codigo)!=0){
                                           $estadoSiguiente=4;
                                     }
+                                  }
+
+                                  //SI EL AREA DE SERVICIO ES TCP Y TCS DEBE IR DIRECTAMENTE A APROBACION
+                                  if($codAreaCabecera==38 && $codAreaCabecera==39){
+                                    $estadoSiguiente=6;
                                   }
 
                                  if($glosa_estadoX!=""){
