@@ -138,19 +138,39 @@ function obtenerMontoFactura($codigo){
 }
 
 function obtenerSaldoAnteriorLibreta($fecha,$codLibreta){
+   $gestion=2020;
+   $fecha_inicio_saldo="2021-01-01";
 
-   $dbh = new Conexion();
-   $sql="SELECT sum(ce.monto)as monto
-   FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria 
-   where lb.codigo in ($codLibreta) and ce.fecha_hora < '$fecha 00:00:00' and
-   ce.cod_estadoreferencial=1 order by ce.fecha_hora";
-   $stmt = $dbh->prepare($sql);
-   $stmt->execute();
+   $saldo_gestion2020=obtenerSaldoGestionLibreta($codLibreta,$gestion);
    $valor=0;
-   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-     $valor=$row["monto"];
+   if($fecha==$fecha_inicio_saldo){
+      $valor=$saldo_gestion2020;
+   }else{
+      $dbh = new Conexion();
+      $sql="SELECT sum(ce.monto)as monto
+      FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria 
+      where lb.codigo in ($codLibreta) and ce.fecha_hora between '$fecha_inicio_saldo 00:00:00' and '$fecha 00:00:00' and
+      ce.cod_estadoreferencial=1 order by ce.fecha_hora";
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row["monto"]+$saldo_gestion2020;
+      }
    }
    return $valor; 
+}
+
+function obtenerSaldoGestionLibreta($codLibreta,$gestion){
+   $dbh = new Conexion();
+    $sql="select monto from libretas_bancarias_saldos where cod_libreta=$codLibreta and gestion=$gestion";
+     $stmt = $dbh->prepare($sql);
+     $stmt->execute();
+     $valor=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $valor=$row["monto"];
+     }
+     return $valor;
+
 }
 
 
