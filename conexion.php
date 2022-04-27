@@ -5,9 +5,9 @@ class Conexion extends PDO {
       //private $host = '200.105.199.166';
       private $host = 'lpsit.ibnorca.org';
       private $nombre_de_base = 'bdifinanciero';
-      private $usuario = 'ingresofm';
-      private $contrasena = 'minka123';
-      private $port = '4606';  
+      private $usuario = 'ingresobd';
+      private $contrasena = 'ingresoibno';
+      private $port = '3360';  
 
 
 

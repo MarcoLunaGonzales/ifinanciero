@@ -174,6 +174,10 @@ $globalPersonal=$_SESSION["globalUser"];
                           $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna); 
 
 
+                          $cadenaFacturas="";
+                          $cadenaFacturasM="";
+                          $concepto_contabilizacion="";
+
                           while ($row_det = $stmtDetalleSol->fetch()){
                             $precio=$precio_unitario*$cantidad;
                             $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
