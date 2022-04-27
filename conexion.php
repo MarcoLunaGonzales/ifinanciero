@@ -3,12 +3,12 @@ class Conexion extends PDO {
 
 
 
-   private $tipo_de_base = 'mysql';
-   private $host = 'localhost';
-   private $nombre_de_base = 'ibnofinanciero2000';
-   private $usuario = 'root';
-   private $contrasena = '';
-   private $port = '3306';  
+      private $tipo_de_base = 'mysql';
+      private $host = 'lpsit.ibnorca.org';
+      private $nombre_de_base = 'bdifinanciero';
+      private $usuario = 'ingresofm';
+      private $contrasena = 'minka123';
+      private $port = '4606'; 
 
 
 public function __construct() {
