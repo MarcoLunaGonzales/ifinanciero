@@ -33,6 +33,7 @@ $fechaFormateadaHasta=$fechaTituloHasta[2].'/'.$fechaTituloHasta[1].'/'.$fechaTi
 
 $moneda=1; //$_POST["moneda"];
 $entidades=$_POST['libretas'];
+
 $StringEntidadCodigos=implode(",", $entidades);
 $stringEntidades="";
 foreach ($entidades as $valor ) {    
