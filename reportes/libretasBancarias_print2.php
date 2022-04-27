@@ -141,10 +141,10 @@ $sqlFiltroComp="";
             <?=$descripcion?> info: <?=$informacion_complementaria?>
           </td>      
           <td class="text-left"><?=$agencia?></td>
-          <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-          <td class="text-right"><?=number_format($saldolb,2,".",",")?></td>
+          <td class="text-right"><b><?=number_format($monto,2,".",",")?></b></td>
+          <td class="text-right"><b><?=number_format($saldolb,2,".",",")?></b></td>
           <td class="text-right"><?=$nro_documento?></td>
-          <td class="text-right"><?=number_format($saltoAnterior,2,".",",")?></td>
+          <td class="text-right"><b><?=number_format($saltoAnterior,2,".",",")?></b></td>
           <td class="text-right"><?=$label?><?=number_format($diferencia,2,".",",")?></span></td>
         </tr>
         <?php
