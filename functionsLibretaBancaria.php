@@ -137,5 +137,21 @@ function obtenerMontoFactura($codigo){
      return $valor; 
 }
 
+function obtenerSaldoAnteriorLibreta($fecha,$codLibreta){
+
+   $dbh = new Conexion();
+   $sql="SELECT sum(ce.monto)as monto
+   FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria 
+   where lb.codigo in ($codLibreta) and ce.fecha_hora < '$fecha 00:00:00' and
+   ce.cod_estadoreferencial=1 order by ce.fecha_hora";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $valor=$row["monto"];
+   }
+   return $valor; 
+}
+
 
 ?>

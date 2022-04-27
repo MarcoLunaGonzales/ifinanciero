@@ -709,6 +709,12 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=reportesLibretasBancarias2">
+                    <span class="sidebar-mini"> LB2 </span>
+                    <span class="sidebar-normal"> Libretas Bancarias 2</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="reportes_ventas/index.php" target="_blank">
                     <span class="sidebar-mini"> RV </span>
                     <span class="sidebar-normal"> Reportes Ventas</span>

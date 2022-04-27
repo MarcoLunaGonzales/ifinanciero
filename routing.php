@@ -184,6 +184,9 @@
         if ($_GET['opcion']=='reportesLibretasBancarias') {
 			require_once('reportes/reportesLibretasBancarias.php');
 		}
+		if ($_GET['opcion']=='reportesLibretasBancarias2') {
+			require_once('reportes/libretasBancarias_from2.php');
+		}
 
 		//REPORTES
 		if ($_GET['opcion']=='reporteAdminEstadoCuentas') {
