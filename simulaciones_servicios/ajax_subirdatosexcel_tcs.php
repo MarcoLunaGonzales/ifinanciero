@@ -71,6 +71,10 @@ if(isset($_FILES['file_excel'])){
                 if(isset($Row[3])){$contacto_email=trim($Row[3]);}                
             } 
 
+            if($i==57){//datos de la cabecera
+                if(isset($Row[1])){$alcance=trim($Row[1]);}
+            } 
+
 
 
             if($i==64){//nombre sitio
@@ -97,9 +101,9 @@ if(isset($_FILES['file_excel'])){
                 </script><?php
             }
         }
-        //echo $depto."**".$telefono."**".$fax."**".$email."**".$web."<br><br>";
+        //echo $depto."**".$telefono."**".$fax."**".$email."**".$web."*a:".$alcance."<br><br>";
         if(!empty($razon_social) && !empty($nit)){?>
-            <script>itemDatosProductosPlantilla_cabecera.push({razon_social:"<?=$razon_social?>",nit:"<?=$nit?>",direccion_c:"<?=$direccion_c?>",ciudad:"<?=$ciudad?>",pais:"<?=$pais?>",depto:"<?=$depto?>",telefono:"<?=$telefono?>",fax:"<?=$fax?>",email:"<?=$email?>",web:"<?=$web?>",mae_nombre:"<?=$mae_nombre?>",mae_cargo:"<?=$mae_cargo?>",mae_telefono:"<?=$mae_telefono?>",mae_email:"<?=$mae_email?>",contacto_nombre:"<?=$contacto_nombre?>",contacto_cargo:"<?=$contacto_cargo?>",contacto_telefono:"<?=$contacto_telefono?>",contacto_email:"<?=$contacto_email?>"});
+            <script>itemDatosProductosPlantilla_cabecera.push({razon_social:"<?=$razon_social?>",nit:"<?=$nit?>",direccion_c:"<?=$direccion_c?>",ciudad:"<?=$ciudad?>",pais:"<?=$pais?>",depto:"<?=$depto?>",telefono:"<?=$telefono?>",fax:"<?=$fax?>",email:"<?=$email?>",web:"<?=$web?>",mae_nombre:"<?=$mae_nombre?>",mae_cargo:"<?=$mae_cargo?>",mae_telefono:"<?=$mae_telefono?>",mae_email:"<?=$mae_email?>",contacto_nombre:"<?=$contacto_nombre?>",contacto_cargo:"<?=$contacto_cargo?>",contacto_telefono:"<?=$contacto_telefono?>",contacto_email:"<?=$contacto_email?>",alcance:"<?=$alcance?>"});
         </script><?php
         }        
         

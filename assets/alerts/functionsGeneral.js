@@ -19603,6 +19603,7 @@ function cargarDatosCliente(){
   $("#contacto_cargo_actualizar").val(datos[0]['contacto_cargo']);
   $("#contacto_telefono_actualizar").val(datos[0]['contacto_telefono']);
   $("#contacto_email_actualizar").val(datos[0]['contacto_email']);
+  $("#alcance").val(datos[0]['alcance']); 
 }
 
 function cargarComprobanteExcel_TCP_TCS() {
