@@ -149,7 +149,7 @@ function obtenerSaldoAnteriorLibreta($fecha,$codLibreta){
       $dbh = new Conexion();
       $sql="SELECT sum(ce.monto)as monto
       FROM libretas_bancariasdetalle ce join libretas_bancarias lb on lb.codigo=ce.cod_libretabancaria 
-      where lb.codigo in ($codLibreta) and ce.fecha_hora between '$fecha_inicio_saldo 00:00:00' and '$fecha 00:00:00' and
+      where lb.codigo in ($codLibreta) and ce.fecha_hora between '$fecha_inicio_saldo 00:00:00' and '$fecha 23:59:59' and
       ce.cod_estadoreferencial=1 order by ce.fecha_hora";
       $stmt = $dbh->prepare($sql);
       $stmt->execute();

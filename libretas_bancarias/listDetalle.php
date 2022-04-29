@@ -97,7 +97,7 @@ if($diferencia<>0){
                       <div class="col-sm-12">
                         <div class="form-group">
                            <input class="form-control" style="color:blue;font-size: 18px;background: white;" readonly value="Saldo Calculado : <?=number_format($saltoActual,2,".",",")?>" id="total_reporte">
-                           <input class="form-control" <?=$estilo?> readonly value="Diferencia : <?=number_format($diferencia,2,".",",")?>" id="total_reporte">
+                           <input class="form-control" <?=$estilo?> readonly value="Diferencia : <?=$diferencia?>" id="total_reporte">
                         </div>  
                       </div>
                     </div>

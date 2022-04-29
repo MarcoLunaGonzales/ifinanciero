@@ -37,7 +37,8 @@ $sqlFiltro2="";
 
 $sqlFiltroComp="";
 
- $saltoAnterior=obtenerSaldoAnteriorLibreta($fecha,$StringEntidadCodigos);
+$fecha_ant=date('Y-m-d', strtotime($fecha."-1 days"));
+ $saltoAnterior=obtenerSaldoAnteriorLibreta($fecha_ant,$StringEntidadCodigos);
 //$saltoAnterior=183840.23-480.00;
 ?>
 <div class="content">
