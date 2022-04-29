@@ -3,6 +3,7 @@
 require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
+require_once 'functionsLibretaBancaria.php';
 
 $codigoLibreta=$_GET['codigo'];
 //echo "test cod bono: ".$codigoLibreta;
@@ -39,8 +40,6 @@ $stmt->bindColumn('cod_estado', $estadoFila);
 $stmt->bindColumn('nro_referencia', $nro_referencia);
 $stmt->bindColumn('cod_comprobante', $codComprobante);
 $stmt->bindColumn('cod_comprobantedetalle', $codComprobanteDetalle);
-
-
 //Mostrar tipo bono
 $stmtb = $dbh->prepare("SELECT p.nombre as banco,c.* FROM $table c join bancos p on c.cod_banco=p.codigo WHERE c.codigo=$codigoLibreta");
 // Ejecutamos
@@ -50,6 +49,26 @@ $stmtb->bindColumn('banco', $nombreBanco);
 $stmtb->bindColumn('nro_cuenta', $cuenta);
 $stmtb->bindColumn('nombre', $nombre);
 
+//saldo 
+$fecha=date('Y-m-d');
+$saltoActual=obtenerSaldoAnteriorLibreta($fecha,$codigoLibreta);
+
+$stmt_saldoFin = $dbh->prepare("SELECT ce.saldo
+FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.fecha_hora desc limit 1"); 
+$stmt_saldoFin->execute();
+$stmt_saldoFin->bindColumn('saldo', $saldo_final);
+$saldo_final=0;
+while ($row = $stmt_saldoFin->fetch(PDO::FETCH_BOUND)) {
+    $saldo_final=$saldo_final;
+}
+$diferencia=$saldo_final-$saltoActual;
+$diferencia=number_format($diferencia,2,".",",");
+
+if($diferencia<>0){
+  $estilo="style='color:red;font-size: 18px;background: white;'";
+}else{
+  $estilo="style='color:blue;font-size: 18px;background: white;'";
+}
 ?>
 <style>
 .menu-fixed {
@@ -72,10 +91,17 @@ $stmtb->bindColumn('nombre', $nombre);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title"><b style="color:#732590;"><?=$moduleNamePluralDetalle?></b>
-                     
-                  </h4>
-
+                  <h4 class="card-title"><b style="color:#732590;"><?=$moduleNamePluralDetalle?></b></h4>
+                  <div class="col-sm-4 float-right">
+                    <div class="row">                        
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                           <input class="form-control" style="color:blue;font-size: 18px;background: white;" readonly value="Saldo Calculado : <?=number_format($saltoActual,2,".",",")?>" id="total_reporte">
+                           <input class="form-control" <?=$estilo?> readonly value="Diferencia : <?=number_format($diferencia,2,".",",")?>" id="total_reporte">
+                        </div>  
+                      </div>
+                    </div>
+                  </div>
                   <?php
                   while ($row = $stmtb->fetch(PDO::FETCH_BOUND)) {
                     ?>
@@ -159,9 +185,9 @@ $stmtb->bindColumn('nombre', $nombre);
                           <td>Información C.</td>
                           <td>Sucursal</td>
                           <td>Monto</td>
-                          <td style="background:#A4E082;">Saldo Acumulado</td>
-                          <td style="background:#B91E0B;">Saldo según Banco <br>(Cargado)</td>
-                          <td style="background:#B91E0B;">Saldo del Registro</td>
+                          <!-- <td style="background:#A4E082;">Saldo Acumulado</td> -->
+                          <td >Saldo según Banco <br>(Cargado)</td>
+                          <!-- <td style="background:#B91E0B;">Saldo del Registro</td> -->
                           <td>Nro Doc / Nro Ref</td>
 
                           <th class="small bg-success" width="4%"><small>Fecha Fac.</small></th>
@@ -222,9 +248,8 @@ $stmtb->bindColumn('nombre', $nombre);
                             <td class="text-left"><?=$informacion_complementaria?></td>      
                             <td class="text-left"><?=$agencia?></td>
                             <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-                            <td class="text-right" style="background:#A4E082;"><?=number_format($saldo_acumulado,2,".",",")?></td>
-                            <td class="text-right" style="background:#F7684F;"><?=number_format($saldo,2,".",",")?></td>
-                            <td class="text-right" style="background:#F7684F;"><?=number_format($saldo_inicial,2,".",",")?></td>                        
+                            <td class="text-right" ><?=number_format($saldo,2,".",",")?></td>
+                                          
                             <td class="text-left"><?=$nro_documento?></td>
 
                             <?php
