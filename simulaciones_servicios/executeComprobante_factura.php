@@ -51,14 +51,12 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 			$concepto_contabilizacion.=$descripcion_alterna." / ".$stringFacturas." / ".$razon_social."&#010;";
 			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."&#010;";
 		}
-		$codComprobante=obtenerCodigoComprobante();
 		//insertamos cabecera
-
 		//CAMBIAMOS EL CONCEPTO DE CONTABILIZACION CUANDO LA FACTURA TIENE GLOSA_ESPECIAL
 		if($glosa_factura3!=""){
 			$concepto_contabilizacion=$stringFacturas." / ".$razon_social." / ".$glosa_factura3;
 		}
-
+		$codComprobante=obtenerCodigoComprobante();
 		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_unico,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,$globalUser);		
 		$ordenDetalle=1;//<--
 		if($flagSuccess){
@@ -71,7 +69,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 			$stmtDetalleTipoPago->bindColumn('monto', $monto_tipopago);	  
 			$stmtDetalleTipoPago->bindColumn('cod_cuenta', $cod_cuenta);  
 			$monto_tipopago_total=0;
-			while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {
+			while ($row_detTipopago = $stmtDetalleTipoPago->fetch()) {				
 				$descripcion=$concepto_contabilizacion;
 				$monto_tipopago_total+=$monto_tipopago;
 				$cod_tipopago_credito=obtenerValorConfiguracion(48);
@@ -83,7 +81,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 				if($cod_tipopago==$cod_tipopago_deposito_cuenta && $cod_libretas_X!=0){
 					//Agrupamos los estados de las libretas bancarias
 					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_libretas_X)";
-					// echo $sqlTipopago;
+					echo $sqlTipopago;
 					$stmtLibreta = $dbh->prepare($sqlTipopago);
 					$stmtLibreta->execute();							
 					$stmtLibreta->bindColumn('codigo', $codigo_libreta_det);
@@ -110,10 +108,10 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 								// $array_libreta_save.=$codigo_libreta_det.",";
 								if($estado_libreta==0){//cueenta de libreta
 					                $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
-					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
+					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle,$codigo_libreta_det);
 					            }elseif($estado_libreta==1){//contra cuenta de libreta
 					                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
-									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
+									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle,$codigo_libreta_det);
 					            }					            
 					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$stringFacturasCod)";					            
 		                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
@@ -124,10 +122,10 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 								$monto_libreta_saldo=$monto_tipopago-$saldo_libreta;
 								if($estado_libreta==0){//cueenta de libreta								
 					                $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
-					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle);
+					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle,$codigo_libreta_det);
 					            }elseif($estado_libreta==1){//contra cuenta de libreta
 					                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
-									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle);
+									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle,$codigo_libreta_det);
 					            }
 					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$stringFacturasCod)";
 		                        $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
@@ -149,36 +147,89 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 				}elseif($cod_tipopago==$cod_tipopago_anticipo && $cod_estado_cuenta_x!=0){//tipo de pago anticipo en $cod_estado_cuenta_x viene el codigo de estado de cuenta
 					$cuenta_auxiliar=obtenerValorConfiguracion(63);//cod cuenta auxiliar por defecto de anulacion de facturas
 					$cod_proveedor=obtenerCodigoProveedorCuentaAux($cuenta_auxiliar);
-					$cod_uo_estado=obtenerDatosComprobanteEstadoCuentas($cod_estado_cuenta_x,$cod_uo_solicitud,$cod_area_solicitud)[0]; //para cambiar el area y oficina del estado de cuentas a cerrar
-					$cod_area_estado=obtenerDatosComprobanteEstadoCuentas($cod_estado_cuenta_x,$cod_uo_solicitud,$cod_area_solicitud)[1];
-					$cod_compte_origen=$cod_estado_cuenta_x;//obtenerCod_comprobanteDetalleorigen($cod_estado_cuenta_x); //codigo estado de cuenta
-					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,$cuenta_auxiliar,$cod_uo_estado,$cod_area_estado,$monto_tipopago,0,$descripcion,$ordenDetalle);
-					$stmtdetalleCom = $dbh->prepare("SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante and orden=$ordenDetalle");
-					//en este caso insertamos la contra cuenta del estado de cuenta, para ello necesitamos el codigo del comprobnate detalle
-					$stmtdetalleCom->execute();			
-					$stmtdetalleCom->bindColumn('codigo', $cod_comprobante_detalle);
-					while ($row = $stmtdetalleCom->fetch()) {						
-						$cod_comprobante_detalle=$cod_comprobante_detalle;			
-					}
 					
-					$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta,$monto_tipopago,$cod_proveedor,'$fechaActual','$cod_compte_origen',$cuenta_auxiliar,'1','$concepto_contabilizacion')";
-					// echo $sqlEstadoCuenta;
-		            $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
-		            $flagSuccess=$stmtEstadoCuenta->execute(); 
+					
+					//***desde aqui
+					$sqlTipopago="SELECT codigo,monto from estados_cuenta where codigo in ($cod_estado_cuenta_x)";					
+					// echo $sqlTipopago;
+					$stmtEC = $dbh->prepare($sqlTipopago);
+					$stmtEC->execute();							
+					$stmtEC->bindColumn('codigo', $codigo_ec_det);
+					// $stmtEC->bindColumn('cod_estado', $estado_libreta);  
+					$stmtEC->bindColumn('monto', $monto_ec);
+					$monto_ec_total=0;
+					$array_libreta_save="";
+					$sw_controlador=0;//contrala la entradas					
+					while ($row_EC = $stmtEC->fetch()) {
+
+						
+						$datos_array=obtenerDatosComprobanteEstadoCuentas($codigo_ec_det,$cod_uo_solicitud,$cod_area_solicitud);
+						$cod_uo_estado=$datos_array[0]; //para cambiar el area y oficina del estado de cuentas a cerrar
+						$cod_area_estado=$datos_array[1];
+						$cod_compte_origen=$codigo_ec_det;//obtenerCod_comprobanteDetalleorigen($cod_estado_cuenta_x); //codigo estado de cuenta
+						// $monto_ec_x=obtenerSaldoLibretaBancariaDetalle($codigo_ec_det);
+						// if($monto_ec_x==0){
+						// 	$monto_ec=$monto_ec;
+						// }else{
+						// 	$monto_ec=$monto_ec_x;
+						// }
+						if($sw_controlador==0){
+							$monto_ec_total+=$monto_ec;
+							if($monto_tipopago>=$monto_ec_total){
+								
+
+								$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,$cuenta_auxiliar,$cod_uo_estado,$cod_area_estado,$monto_ec,0,$descripcion,$ordenDetalle);
+								// echo "aqui estado cuenta";
+								$stmtdetalleCom = $dbh->prepare("SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante and orden=$ordenDetalle");
+								$stmtdetalleCom->execute();			
+								$stmtdetalleCom->bindColumn('codigo', $cod_comprobante_detalle);
+								while ($row = $stmtdetalleCom->fetch()) {						
+									$cod_comprobante_detalle=$cod_comprobante_detalle;			
+								}
+
+								$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta,$monto_ec,$cod_proveedor,'$fechaActual','$cod_compte_origen',$cuenta_auxiliar,'1','$concepto_contabilizacion')";
+								 // echo $sqlEstadoCuenta;
+					            $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
+					            $flagSuccess=$stmtEstadoCuenta->execute();
+							}else{
+								// $array_libreta_save.=$codigo_ec_det.",";
+								$saldo_ec=$monto_ec_total-$monto_ec;//volvemos al monto anterior
+								$monto_ec_saldo=$monto_tipopago-$saldo_ec;
+												               
+								$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,$cuenta_auxiliar,$cod_uo_estado,$cod_area_estado,$monto_ec_saldo,0,$descripcion,$ordenDetalle);
+								$stmtdetalleCom = $dbh->prepare("SELECT codigo from comprobantes_detalle where cod_comprobante=$codComprobante and orden=$ordenDetalle");
+								$stmtdetalleCom->execute();			
+								$stmtdetalleCom->bindColumn('codigo', $cod_comprobante_detalle);
+								while ($row = $stmtdetalleCom->fetch()) {						
+									$cod_comprobante_detalle=$cod_comprobante_detalle;			
+								}
+								$sqlEstadoCuenta="INSERT into estados_cuenta(cod_comprobantedetalle,cod_plancuenta,monto,cod_proveedor,fecha,cod_comprobantedetalleorigen,cod_cuentaaux,cod_tipoestadocuenta,glosa_auxiliar) values($cod_comprobante_detalle,$cod_cuenta,$monto_ec_saldo,$cod_proveedor,'$fechaActual','$cod_compte_origen',$cuenta_auxiliar,'1','$concepto_contabilizacion')";
+								// echo $sqlEstadoCuenta;
+					            $stmtEstadoCuenta = $dbh->prepare($sqlEstadoCuenta);
+					            $flagSuccess=$stmtEstadoCuenta->execute();
+					            $sw_controlador=1;
+							}
+						}
 
 
-		            //actualizar glosa comprobante
-		            $codComprobanteDetalleOrigen=$cod_compte_origen;
-		            $tituloEstadoOrigen="";
-                    if(isset($codComprobanteDetalleOrigen)&&$codComprobanteDetalleOrigen>0){
-                      $codigoComprobanteOrigen=obtenerComprobanteDetalleRelacionado(obtenerCod_comprobanteDetalleorigen($codComprobanteDetalleOrigen));
-                      if($codigoComprobanteOrigen>0){
-                        $tituloEstadoOrigen="Cierre de ".nombreComprobante($codigoComprobanteOrigen)." ";  
-                        $sqlDetalleOrigen="UPDATE comprobantes_detalle set glosa=CONCAT('$tituloEstadoOrigen',glosa) WHERE codigo=$cod_comprobante_detalle and glosa NOT LIKE '$tituloEstadoOrigen%'";
-                        $stmtDetalleOrigen = $dbh->prepare($sqlDetalleOrigen);
-                        $stmtDetalleOrigen->execute();
-                      }   
-                    } 
+						//actualizar glosa comprobante
+			            $codComprobanteDetalleOrigen=$cod_compte_origen;
+			            $tituloEstadoOrigen="";
+	                    if($codComprobanteDetalleOrigen>0){
+	                     	$codigoComprobanteOrigen=obtenerComprobanteDetalleRelacionado(obtenerCod_comprobanteDetalleorigen($codComprobanteDetalleOrigen));
+	                    	if($codigoComprobanteOrigen>0){
+		                        $tituloEstadoOrigen="Cierre de ".nombreComprobante($codigoComprobanteOrigen)." ";  
+		                        $sqlDetalleOrigen="UPDATE comprobantes_detalle set glosa=CONCAT('$tituloEstadoOrigen',glosa) WHERE codigo=$cod_comprobante_detalle and glosa NOT LIKE '$tituloEstadoOrigen%'";
+		                        $stmtDetalleOrigen = $dbh->prepare($sqlDetalleOrigen);
+		                        $stmtDetalleOrigen->execute();
+		                    }
+	                    } 
+
+					}					
+
+
+					
+		            
 				}elseif($cod_tipopago==$cod_tipopago_credito){
 					// $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(2,$cod_cliente);//tipo cliente
 					$cuenta_defecto_cliente=obtenerValorConfiguracion(78);//creidto
@@ -534,11 +585,11 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 								// $array_libreta_save.=$codigo_libreta_det.",";
 								if($estado_libreta==0){//cueenta de libreta
 					                $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
-					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
+					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle,$codigo_libreta_det);
 					                array_push($SQLDATOSINSTERT,$flagSuccessDet);
 					            }elseif($estado_libreta==1){//contra cuenta de libreta
 					                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
-									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle);
+									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta,0,$descripcion,$ordenDetalle,$codigo_libreta_det);
 									array_push($SQLDATOSINSTERT,$flagSuccessDet);
 					            }
 					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$cod_facturaventa)";
@@ -551,11 +602,11 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 								$monto_libreta_saldo=$monto_total-$saldo_libreta;
 								if($estado_libreta==0){//cueenta de libreta								
 					                $cod_cuenta_libr=obtenerCuentaLibretaBancaria($codigo_libreta_det);
-					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle);
+					                $flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle,$codigo_libreta_det);
 					                array_push($SQLDATOSINSTERT,$flagSuccessDet);
 					            }elseif($estado_libreta==1){//contra cuenta de libreta
 					                $cod_contracuenta_libr=obtenerContraCuentaLibretaBancaria($codigo_libreta_det);
-									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle);
+									$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_contracuenta_libr,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_libreta_saldo,0,$descripcion,$ordenDetalle,$codigo_libreta_det);
 									array_push($SQLDATOSINSTERT,$flagSuccessDet);
 					            }
 					            $sqlUpdateLibreta="INSERT into libretas_bancariasdetalle_facturas(cod_libretabancariadetalle,cod_facturaventa) values ($codigo_libreta_det,$cod_facturaventa)";

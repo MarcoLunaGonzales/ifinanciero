@@ -163,7 +163,9 @@ try{
                                     break;
                                 }
                             }
+                            // echo "a1ui";
                             if($codigo_error==0){
+                                
                                 $stringFacturas=obtenerStringFacturas($codigo);
                                 $stringFacturasCod=obtenerStringCodigoFacturas($codigo);
                                 $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$stringFacturas,$stringFacturasCod,$cod_libreta,$cod_estadocuenta,$cod_cuentaaux);                            
