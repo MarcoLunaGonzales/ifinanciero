@@ -17604,6 +17604,114 @@ function ajax_contenedor_tabla_estados_cuenta(saldo){
     }
   });
 }
+function verificarEstadoCuentaModal(codigo){
+   var n = $("#cantidad_filas_estadoscuenta").val();
+   var existe=false;
+   for (var i = 1; i <= n; i++) {
+      if($("#cod_detalle_estado_cuenta"+i).length>0){
+        if($("#cod_detalle_estado_cuenta"+i).val()==codigo){
+         existe=true;
+        }
+      }
+   };
+   return existe;
+}
+
+function seleccionar_estadoscuenta(cod_estadocuenta,descripcion){
+
+  // var datos_ec= $("#datos_ec").val();;
+  // var d=datos.split('/');
+  // // var cod_solicitudfacturacion=d[0];
+  // var monto_factura=d[2];
+
+  // var razon_social=d[5];
+  // if(indice==4 || indice==5){
+  //   var saldo=d[6];
+  // }
+
+  var sw_verifiar=verificarEstadoCuentaModal(cod_estadocuenta);
+  // var sw_verifiar=false;
+  if(sw_verifiar){
+    Swal.fire("A ocurrido un error!", "El estado de cuenta ya está seleccionado", "warning");
+  }else{
+    var n= $("#cantidad_filas_estadoscuenta").val();
+    n++;
+    $("#cantidad_filas_estadoscuenta").val(n);    
+    var contador_estados=1;
+    for (var i = 1; i <= $("#cantidad_filas_estadoscuenta").val(); i++) {
+      if($("#cod_detalle_estado_cuenta"+i).length>0){
+        contador_estados=contador_estados+1;
+      }
+    };
+    $("#nfacturasEstadosCuenta").html(contador_estados);  
+    agregarEstadosCuentaDetalleFactura(cod_estadocuenta,descripcion,n);
+  }
+}
+function agregarEstadosCuentaDetalleFactura(cod_estadocuenta,descripcion,n){
+  
+  
+  var descripcionList=[];
+  if(descripcion!=""){
+    descripcionList=descripcion.split("####");
+  }else{
+    descripcionList[0]="";descripcionList[1]="";descripcionList[2]="";descripcionList[3]="";descripcionList[4]="";
+  }
+  var saldo_total=descripcionList[3];
+  var html ='<tr id="fila_detalle_factura'+n+'">'+
+    '<td>'+descripcionList[0]+'<input id="cod_detalle_estado_cuenta'+n+'" type="hidden" value="'+cod_estadocuenta+'"></td>'+
+    '<td>'+descripcionList[1]+'</td>'+
+    '<td><small>'+descripcionList[2]+'</small><input id="saldo_ec'+n+'" type="hidden" value="'+saldo_total+'"></td>'+
+    '<td>'+descripcionList[3]+'</td>'+
+    // '<td>'+descripcionList[4]+'</td>'+
+    '<td><button title="Eliminar de la lista" class="btn btn-sm btn-danger btn-fab" onclick="eliminarEstadoCuentaSeleccionado('+n+')"><i class="material-icons">delete</i></td>'+   
+   '</tr>';
+   //ponemos el total
+  $("#datos_estados_cuenta_detalle").append(html);
+  poner_total_estadocuenta_modal();
+  $("#modalListaEstadosCuenta").modal("show");
+}
+function poner_total_estadocuenta_modal(){
+  var n = $("#cantidad_filas_estadoscuenta").val();        
+  var saldo_libreta_x=0
+  for (var i = 1; i <= $("#cantidad_filas_estadoscuenta").val(); i++) {
+      if($("#cod_detalle_estado_cuenta"+i).length>0){
+         saldo_libreta_x=saldo_libreta_x+parseFloat($("#saldo_ec"+i).val());         
+      }
+  };
+  $("#total_saldo_estadoscuenta").val(number_format(saldo_libreta_x,2));
+}
+
+function eliminarEstadoCuentaSeleccionado(fila){
+  $("#fila_detalle_factura"+fila).remove();
+}
+
+function facturarEstadosCuenta(){
+  var codDetalle=[];
+  var index=0;
+  var monto_factura=document.getElementById("saldo_ec").value;
+  var saldo_libreta_x=0
+  for (var i = 1; i <= $("#cantidad_filas_estadoscuenta").val(); i++) {
+      if($("#cod_detalle_estado_cuenta"+i).length>0){
+         codDetalle[index]=$("#cod_detalle_estado_cuenta"+i).val();
+         saldo_libreta_x=saldo_libreta_x+parseFloat($("#saldo_ec"+i).val());
+         index++;
+      }
+  };
+  // alert(saldo_libreta_x+"-"+monto_factura);
+  if(redondeo(saldo_libreta_x) == redondeo(monto_factura)){ //saldo + 0.5 para la validacion al facturar
+    seleccionar_estado_cuenta_sol_fac(codDetalle.join(","));
+  }else{
+    Swal.fire("Informativo", "La suma del monto de los estados de cuenta es diferente al de la factura (Monto total estado de cuenta:"+numberFormat(saldo_libreta_x,2)+").", "warning");
+  }
+}
+
+
+function mostrar_listado_facturas_ec(){
+  $("#modalListaEstadosCuenta").modal("show");
+}
+//****hasta aqui
+
+
 function seleccionar_estado_cuenta_sol_fac(cod_estadocuenta){
   var indice=document.getElementById("indice_ec").value;
   var datos=document.getElementById("datos_ec").value;

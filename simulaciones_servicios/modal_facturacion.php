@@ -632,6 +632,11 @@
         <button title="Cerrar" type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
         </button>
+        
+        <a href="#" id="boton_libreta_detalle_facturas" title="Estados de Cuenta Seleccionados" onclick="mostrar_listado_facturas_ec()" class="btn btn-primary btn-sm btn-fab float-right">
+          <i class="material-icons">L</i><span id="nfacturasEstadosCuenta" class="count bg-warning">0</span>
+        </a>
+
         <!-- <button title="Listar todo" onclick="ajax_listado_libreta_bancaria_filtrar()" type="button" class="btn btn-warning btn-sm btn-fab float-right" >
           <i class="material-icons">list</i>
         </button> -->
@@ -664,3 +669,45 @@
   </div>
 </div>
 
+
+
+<div class="modal fade" id="modalListaEstadosCuenta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" style="background-color:#e2e6e7">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Relacionar Estado Cuenta - Factura</h4>
+      </div>
+      <div class="modal-body">
+         <table class="table table-condensed table-bordered small">
+          <thead>
+           <tr class="bg-primary text-white">
+             <td>FECHA</td>
+             <td>TIPO</td>
+             <td>DESCRIPCION</td>
+             <td>MONTO</td>
+             <!-- <td>SALDO</td> -->
+             <td>QUITAR</td>
+           </tr>
+           </thead>
+           <tbody id="datos_estados_cuenta_detalle">
+             
+           </tbody>
+           <tfoot >
+            <tr style="background-color:#768c9c; color: #FFFFFF">
+              <td>-</td>
+              <td colspan="2">TOTAL SALDO</td>              
+              <td><input style="background-color:#768c9c; color: #FFFFFF" type="text" name="total_saldo_estadoscuenta" id="total_saldo_estadoscuenta" value="0" readonly="true"></td>
+              <td>-</td>
+            </tr>
+           </tfoot>           
+         </table>
+         <input type="hidden" id="cantidad_filas_estadoscuenta" value="0">
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn btn-success" onclick="facturarEstadosCuenta()">FACTURAR</a>
+        <button type="button" class="btn btn-warning" data-dismiss="modal">Adicionar + </button>
+      </div>
+    </div>
+  </div>
+</div>

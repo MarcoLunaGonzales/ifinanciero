@@ -8003,13 +8003,15 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
       $flagSuccess=$stmtInsertCab->execute();
      return $flagSuccess;
   }
-  function insertarDetalleComprobante($codComprobante,$cod_cuenta,$cod_cuentaauxiliar,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion,$ordenDetalle){
+  function insertarDetalleComprobante($codComprobante,$cod_cuenta,$cod_cuentaauxiliar,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion,$ordenDetalle,$cod_libretabancariadetalle=0){
     $dbh = new Conexion();
-    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','$cod_cuentaauxiliar','$cod_uo_solicitud','$cod_area_solicitud','$monto_debe','$monto_haber','$descripcion','$ordenDetalle')";
+    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden,cod_libretabancariadet) VALUES ('$codComprobante','$cod_cuenta','$cod_cuentaauxiliar','$cod_uo_solicitud','$cod_area_solicitud','$monto_debe','$monto_haber','$descripcion','$ordenDetalle','$cod_libretabancariadetalle')";
+    // echo $sqlInsertDet;
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);
     $flagSuccessDet=$stmtInsertDet->execute();
     return $flagSuccessDet;
   }
+
   function verificamos_cuentas_tipos_pagos(){
     $dbh = new Conexion();
     $stmtVerif_tipopago = $dbh->prepare("SELECT (select c.cod_cuenta from tipos_pago_contabilizacion c where c.cod_tipopago=t.codigo) as cuenta from tipos_pago t where t.cod_estadoreferencial=1");
