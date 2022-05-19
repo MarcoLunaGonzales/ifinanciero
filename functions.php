@@ -11504,10 +11504,12 @@ function obtenerComprobanteCajaChicaRelacionado($codigo){
   function convertirAUltimoDiaHabil($fechaUltimoDia){
    $diaComprobar = date('w',strtotime($fechaUltimoDia));
    if((int)$diaComprobar==0){
-     return date('Y-m-d', strtotime("{$fechaUltimoDia} - 2 day"));
-   }elseif ((int)$diaComprobar==6) {
      return date('Y-m-d', strtotime("{$fechaUltimoDia} - 1 day"));
-   }else{
+   }
+   //elseif ((int)$diaComprobar==6) {
+     //return date('Y-m-d', strtotime("{$fechaUltimoDia} - 1 day"));
+   //}
+   else{
      return $fechaUltimoDia;
    }
   }

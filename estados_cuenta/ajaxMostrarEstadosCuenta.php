@@ -24,11 +24,16 @@ $tipoComprobanteX=$_POST['tipo_comprobante'];
 $cerrarEstadoCuenta=$_POST["cerrar_ec"];
 
 if($codCuentaAuxiliar!=0){
-  $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar and year(c.fecha)=$anioActual order by c.cod_tipocomprobante,c.fecha,c.numero";
+  $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante, 
+(select u.abreviatura from unidades_organizacionales u where u.codigo=d.cod_unidadorganizacional) as nombreuodetalle,
+  d.cod_area as areadetalle, (select ca.nombre from cuentas_auxiliares ca where ca.codigo=d.cod_cuentaauxiliar)as nombrecaux, CONCAT((select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante),(select MONTH(c.fecha)),'-',(select LPAD(c.numero,5,'0')))as nombrecomprobante, (select CONCAT(p.numero,'|',p.nombre) from plan_cuentas p where p.codigo=d.cod_cuenta)as datoscuenta
+   FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and e.cod_cuentaaux=$codCuentaAuxiliar and year(c.fecha)=$anioActual order by c.cod_tipocomprobante,c.fecha,c.numero";
 }else{
-  $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and and year(c.fecha)=$anioActual order by c.cod_tipocomprobante,c.fecha,c.numero";
+  $sqlZ="SELECT e.*,d.glosa,d.haber,d.debe,d.cod_cuentaauxiliar,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante,
+(select u.abreviatura from unidades_organizacionales u where u.codigo=d.cod_unidadorganizacional) as nombreuodetalle,
+  d.cod_area as areadetalle, (select ca.nombre from cuentas_auxiliares ca where ca.codigo=d.cod_cuentaauxiliar)as nombrecaux, CONCAT((select t.abreviatura from tipos_comprobante t where t.codigo=c.cod_tipocomprobante),(select MONTH(c.fecha)),'-',(select LPAD(c.numero,5,'0')))as nombrecomprobante, (select CONCAT(p.numero,'|',p.nombre) from plan_cuentas p where p.codigo=d.cod_cuenta)as datoscuenta
+   FROM estados_cuenta e,comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 and  e.cod_comprobantedetalle=d.codigo and (d.cod_cuenta=$codCuenta) and e.cod_comprobantedetalleorigen=0 and and year(c.fecha)=$anioActual order by c.cod_tipocomprobante,c.fecha,c.numero";
 }
-
 
 //echo $sqlZ;
 
@@ -80,9 +85,22 @@ if($codCuentaAuxiliar!=0){
     $codCuentaAuxX=$row['cod_cuentaaux'];
     $glosaAuxiliar=$row['glosa_auxiliar'];
     $codigoComprobante=$row['codigocomprobante'];
-    $nombreComprobante=nombreComprobante($codigoComprobante);
-    $codOficinaDetalle=obtenerCodigoUnidadComprobanteDetalle($row['cod_comprobantedetalle']);
-    $codAreaDetalle=obtenerCodigoAreaComprobanteDetalle($row['cod_comprobantedetalle']);
+    $nombreUODetalle=$row['nombreuodetalle'];//nombre uo comprobantes detalle
+    $nombreCuentaAuxEstadoCuenta=$row['nombrecaux'];    
+    $nombreComprobante=$row['nombrecomprobante'];
+    $datosCuenta=$row['datoscuenta'];
+
+    $codAreaDetalle=$row['areadetalle'];
+    //COD_UNIDADORG DE COMPROBANTES DETALLE
+
+    list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
+
+    list($numeroCuentaDetalle, $nombreCuentaDetalle)=explode("|",$datosCuenta);
+    
+    $nombreUnidadO=$nombreUODetalle;
+    $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
+
+    $codOficinaDetalle=$codUnidadOrganizacional;
 
     $existeEstado=0;$colorFilaExiste="";
     $montoContraAjax=0;
@@ -109,11 +127,8 @@ if($codCuentaAuxiliar!=0){
     }else{
       $glosaMostrar=$glosaX;
     }
-    list($tipoComprobante, $numeroComprobante, $codUnidadOrganizacional, $mesComprobante, $fechaComprobante)=explode("|", $codigoExtra);
-    $nombreTipoComprobante=abrevTipoComprobante($tipoComprobante)."-".$mesComprobante;
-    $nombreUnidadO=abrevUnidad_solo($codUnidadOrganizacional);
 
-    $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
+
     //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.
     if(isset($_POST['edicion'])){
       $codigoComprobante=$_POST['codigo_comprobante'];
@@ -135,26 +150,12 @@ if($codCuentaAuxiliar!=0){
     }
     $proveedorX="";
 
-
-    /*if($tipoComprobanteX==2){
-      $proveedorX=obtenerProveedorCuentaAux($codCuentaAuxX);
-    }
-    if($tipoComprobanteX==1){
-      $proveedorX=obtenerClienteCuentaAux($codCuentaAuxX);
-    }
-
-    if($tipoComprobanteX==1){
-      $nombreProveedorClienteX=nameProveedorCliente(2,$codProveedorX);
-    }
-    if($tipoComprobanteX==2){
-      $nombreProveedorClienteX=nameProveedorCliente(1,$codProveedorX);
-    }*/
-    $nombreCuentaAuxEstadoCuenta=nameCuentaAuxiliar($codCuentaAuxX);
     $debeX=$montoContra;
 
     //Filtramos las cuentas que ya esten cerradas.
 
-    $saldoIndividual+=$montoX-$montoContra;
+    //$saldoIndividual+=$montoX-$montoContra;
+    $saldoIndividual=$montoX-$montoContra;
     if(isset($_POST['edicion'])){
       $edicion=$_POST['edicion'];
     }else{
@@ -201,11 +202,15 @@ if($codCuentaAuxiliar!=0){
                     echo "Fila: ".$existeEstado;
                   }
                 }else{
+
                   $codigoCuentaAux=$codCuentaAuxX;
-                  $nombreCuentaAux=nameCuentaAuxiliar($codigoCuentaAux);
+                  //$nombreCuentaAux=nameCuentaAuxiliar($codigoCuentaAux);
+                  $nombreCuentaAux=$nombreCuentaAuxEstadoCuenta;
+                  
                   $codigoCuenta=$codPlanCuentaX;
-                  $numeroCuenta=obtieneNumeroCuenta($codigoCuenta);
-                  $nombreCuenta=nameCuenta($codigoCuenta);
+                  $numeroCuenta=$numeroCuentaDetalle;
+                  $nombreCuenta=$nombreCuentaDetalle;
+
             ?>
               <a title="Cerrar EC" id="cuentas_origen_detalle<?=$i?>" href="#" onclick="filaActiva=$('#estFila').val();setBusquedaCuenta('<?=$codigoCuenta?>','<?=$numeroCuenta?>','<?=$nombreCuenta?>','<?=$codigoCuentaAux?>','<?=$nombreCuentaAux?>');ponerCentroCostoComprobanteDetalle(<?=$codOficinaDetalle?>,<?=$codAreaDetalle?>);agregarEstadoCuentaCerrar(<?=$i;?>,'<?=$valorCerrarEC;?>');filaActiva=$('#cantidad_filas').val();" class="btn btn-sm btn-warning btn-fab"><span class="material-icons text-dark">double_arrow</span></a>
             <?php      

@@ -873,14 +873,16 @@
                 <input class="form-control" type="hidden" name="estFila" id="estFila"/>
                 <div class="card-title"><center><!--h6>Datos de la nueva transaccion</h6--></center></div>
                  <div class="row">
-                       <label class="col-sm-2 col-form-label">Monto</label>
-                       <div class="col-sm-3">
+                      <label class="col-sm-1 col-form-label">Monto</label>
+                      <div class="col-sm-2">
                         <div class="form-group">
                           <input class="form-control" type="number" step="0.001" readonly name="monto_estadocuenta" id="monto_estadocuenta"/>
                         </div>
-                        </div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="card-title"><center><div id="tituloCuentaModal"></div></center></div>               
+                      </div>
                   </div>
-                  <div class="card-title"><center><div id="tituloCuentaModal"></div></center></div>
                   <br>
                  <div id="div_estadocuentas"></div>
                  <div id="mensaje_estadoscuenta"></div>

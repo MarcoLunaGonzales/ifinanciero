@@ -50,7 +50,7 @@ $sqlFiltroComp="";
                   <div class="card-icon bg-blanco">
                     <img class="" width="40" height="40" src="../assets/img/logoibnorca.png">
                   </div>           
-                   <h4 class="card-title text-center"><?=obtenerValorConfiguracion(57)?></h4>
+                   <h4 class="card-title text-center">Reporte de Saldos Libreta Bancaria</h4>
                    <!--<div class="float-right col-sm-2"><h6 class="card-title">Exportar como</h6></div>-->
                 </div>
                 <div class="card-body">

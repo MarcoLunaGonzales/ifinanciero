@@ -255,7 +255,7 @@ $stmt->bindColumn('cod_area', $codAreaCabecera);
                                   }
 
                                   //SI EL AREA DE SERVICIO ES TCP Y TCS DEBE IR DIRECTAMENTE A APROBACION
-                                  if($codAreaCabecera==38 && $codAreaCabecera==39){
+                                  if($codAreaCabecera==38 || $codAreaCabecera==39 || $codAreaCabecera==2957){
                                     $estadoSiguiente=6;
                                   }
 

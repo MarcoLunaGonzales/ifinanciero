@@ -45,9 +45,11 @@ $IdTipo=$_GET['IdTipo'];
               <?php 
                 $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and IdTipo=$IdTipo
                 UNION 
-                  Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2=$codigoAdministrativos";
+                  Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
                 $stmt3 = $dbh->prepare($sql);
+                
                 // echo $sql; 
+                
                 $stmt3->execute();
                 while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                   $codigoServX=$rowServ['IdClaServicio'];

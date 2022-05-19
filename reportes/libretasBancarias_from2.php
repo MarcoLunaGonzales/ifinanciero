@@ -10,8 +10,6 @@ require_once 'functionsGeneral.php';
 setlocale(LC_TIME, "Spanish");
 
 $dbh = new Conexion();
-$query = "select * from depreciaciones";
-$statement = $dbh->query($query);
 
 $gestionGlobal=$_SESSION['globalGestion'];
 
@@ -30,7 +28,7 @@ $fechaHasta=date("Y-m-d");
         <div class="card">
           <div class="card-header <?=$colorCard;?> card-header-text">
           <div class="card-text">
-            <h4 class="card-title">Reporte Libretas Bancarias Formato2</h4>
+            <h4 class="card-title">Reporte de Saldos Libreta Bancaria</h4>
           </div>
           </div>
           <div class="card-body ">

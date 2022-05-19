@@ -131,6 +131,7 @@ $fechaHasta=date("Y-m-d");
           </div>
           <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
+          <a href="index.php?opcion=reportesLibretasBancarias2" class="<?=$buttonMorado;?>">Ver Reporte de Saldos</a>
             </div>
         </div>
         </form>

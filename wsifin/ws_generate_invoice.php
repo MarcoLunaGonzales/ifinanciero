@@ -94,6 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         if($suscripcionId>0 || $pagoCursoId==0){
                             $normas=1;
                         }
+                        if(!is_numeric($moduloId)){
+                            $moduloId=0;
+                        }
+                        if(!is_numeric($codClaServicio)){
+                            $codClaServicio=0;
+                        }
 
                         if($precioUnitario>0 && is_numeric($precioUnitario)){
                             $importeTotal_x=$importeTotal_x+($precioUnitario*$cantidad);                        

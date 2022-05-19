@@ -117,7 +117,14 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             $pagoCursoId=$valor['pagoCursoId'];
                             
                             $moduloId=$valor['moduloId'];
-                            $codClaServicio=$valor['codClaServicio'];
+                            $codClaServicio2=$valor['codClaServicio'];
+
+                            if(!is_numeric($moduloId)){
+                                $moduloId=0;
+                            }
+                            if(!is_numeric($codClaServicio2)){
+                                $codClaServicio2=0;
+                            }
 
                             $detalle=$valor['detalle'];
                             $precioUnitario=$valor['precioUnitario'];
@@ -127,8 +134,8 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             if($normas!=0){
                                 $cod_claservicio_x=488;
                             }
-                            $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId) 
-                             values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle',0,'$suscripcionId')");
+                            $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId,cod_modulo,cod_claservicio2) 
+                             values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle',0,'$suscripcionId','$moduloId','$codClaServicio2')");
                             $flagSuccess=$stmtInsertSoliFactDet->execute();                         
                         }
 

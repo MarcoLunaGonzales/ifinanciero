@@ -27,12 +27,12 @@ if(isset($_GET['q'])){
     if(isset($arraySql[1])){
       $codigoArea=trim($arraySql[1]);
     }
-    
+    //echo "array sql: ".$arraySql[1];
     if($codigoArea=='0'){
       $sqlAreas="and (sr.cod_area=0)";// or sr.cod_area=".obtenerValorConfiguracion(65).")             
       $sqlAreasLista="and (a.codigo=0)";// or a.codigo=".obtenerValorConfiguracion(65).")"             
     }else{
-      if($q==32){
+      if($q==32 || $q==177){
         $sqlAreas="and (sr.cod_area ".$codigoArea." or sr.cod_area=".obtenerValorConfiguracion(65)." or sr.cod_area=2957)";
         $sqlAreasLista="and (a.codigo ".$codigoArea." or a.codigo=".obtenerValorConfiguracion(65)." or sr.cod_area=2957)";
       }else{
@@ -42,7 +42,7 @@ if(isset($_GET['q'])){
     }
     //echo $s."<br>";
     //echo var_dump($arraySql);
-    //echo $sqlAreas; 
+    //echo "SQL ARESA: ".$sqlAreas; 
   }
 }else{
   $sqlAreas="";
@@ -58,7 +58,7 @@ if(isset($_GET['cod_sim'])){
 $sqlSR="SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (6,7,4) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc";
-echo $sqlSR;
+//echo $sqlSR;
 $stmt = $dbh->prepare($sqlSR);
 //echo $sqlSR;
 // Ejecutamos
