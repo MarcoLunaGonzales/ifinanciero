@@ -154,12 +154,15 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                             <a href='<?=$urlEdit6;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons" title="Editar AF"><?=$iconEdit;?></i>
                             </a>
-                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
+                            <!-- <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons" title="Borrar AF"><?=$iconDelete;?></i>
-                            </button>
+                            </button> -->
                             <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonMorado;?>">
                               <i class="material-icons" title="Transferir AF">transfer_within_a_station</i>
                             </a>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEditar" onclick="agregaformActivoFijo_baja('<?=$codigo;?>','<?=$codigoactivo;?>','<?=$activo?>')">
+                              <i class="material-icons "  title="Dar de Baja AF">flight_land</i>
+                            </button>
                             <?php
                               }
                             ?>
