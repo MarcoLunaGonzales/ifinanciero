@@ -191,11 +191,15 @@ width: 100%;
                 </tr>
             <?php } ?>
             </table>
-        <p><span >El funcionario es responsable de los bienes de Uso a partir de la firma de la presente acta, comprometiendose a :<br>
-            * Asumir la responsabilidad de los Bienes de Uso y Equipos de Oficina relacionados en el presente documento.<br>
-            * Dar uso exclusivo para el desempeño de las funciones asignadas por la empresa.<br>
-            * Se hace cargo por el daño o la perdida de los mismos a causa de negligencia o incumplimiento de las normas y procedimientos relacionados con el uso y conservación.<br>
-            * Se compromete a informar oportunamente al area administrativa sobre cualquier traslado temporal o definitivo, ademas de situaciones que pongan en peligro el Bien o Equipo mediante los aspectos formales.</span></p>
+        <p><span >El funcionario es responsable de los bienes de Uso a partir de la recepción de la presente Acta de Entrega de Activos Fijos, comprometiéndose a:
+            <br>
+            * Asumir la responsabilidad de los Bienes de Uso y Equipos de Oficina relacionados en el presente documento.
+            <br>
+            * Dar uso exclusivo para el desempeño de las funciones asignadas por la empresa.
+            <br>
+            * Se hace cargo por el daño o la pérdida de los mismos a causa de negligencia o incumplimiento de las normas y procedimientos relacionados con el uso y conservación.
+            <br>
+            * Se compromete a informar oportunamente al área administrativa sobre cualquier traslado temporal o definitivo, además de situaciones que pongan en peligro el Bien o Equipo mediante los aspectos formales.</span></p>
 
         
             <table width="100%">

@@ -73,7 +73,7 @@ if($codigoSistema!=""){
 if($codigoActivo!=""){
   $sql.=" and af.codigoactivo like '%$codigoActivo%'";
 }
-// $sql.=" order by c.fecha desc, c.numero desc;";
+$sql.=" order by af.codigoactivo desc";
 // echo $sql; 
 
 

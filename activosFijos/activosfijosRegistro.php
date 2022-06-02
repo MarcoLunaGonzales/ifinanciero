@@ -251,7 +251,7 @@ if ($codigo > 0){
                                 <label class="col-sm-2 col-form-label">Rubro</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                            		<select name="cod_depreciaciones" id="cod_depreciaciones" required="true" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true">
+                            		<select name="cod_depreciaciones" id="cod_depreciaciones" required="true" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" onchange="ajaxCodigoActivo(this);">
                             			<option disabled selected value=""></option>
                                 		<?php while ($row = $statementDepre->fetch()){ ?>
                             				<option <?php if($cod_depreciaciones == $row["codigo"]) echo "selected"; ?>  value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>

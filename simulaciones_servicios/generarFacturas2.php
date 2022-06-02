@@ -245,7 +245,12 @@ try{
             $stmtCommit->execute();
 
             //DESCOMENTAR ESTO
-            header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2');            
+            if($observaciones_2<>""){
+                $adminImpresion=7;
+            }else{
+                $adminImpresion=5;
+            }
+            header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2&admin='.$adminImpresion);      
         }
         $codigo_facturacion=verificamosFacturaDuplicada($codigo);
         if($codigo_facturacion!=null){

@@ -2724,7 +2724,7 @@ function ajaxCodigoActivo(combo){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
-      ajaxDepreciacion(codigo);
+      //ajaxDepreciacion(codigo);
     }
   }
   ajax.send(null)  

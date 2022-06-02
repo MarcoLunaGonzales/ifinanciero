@@ -18,7 +18,7 @@ $sql="SELECT af.codigo,af.codigoactivo,af.activo,DATE_FORMAT(af.fechalta, '%d/%m
  (select a.abreviatura from areas a where a.codigo=af.cod_area)as nombre_area,
  (select concat_ws(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable
 from activosfijos af, depreciaciones d, tiposbienes tb 
-where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo and af.cod_estadoactivofijo = 1 limit 100";
+where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo and af.cod_estadoactivofijo = 1 ORDER BY af.codigo desc limit 100";
 $stmt = $dbh->prepare($sql);
 //ejecutamos
 $stmt->execute();
