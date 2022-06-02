@@ -145,12 +145,17 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                             <a href='<?=$urlEdit6;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons" title="Editar AF"><?=$iconEdit;?></i>
                             </a>
-                            <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
+                            <!-- <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
                               <i class="material-icons" title="Borrar AF"><?=$iconDelete;?></i>
-                            </button>
+                            </button> -->
                             <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonMorado;?>">
                               <i class="material-icons" title="Transferir AF">transfer_within_a_station</i>
                             </a>
+
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEditar" onclick="agregaformActivoFijo_baja('<?=$codigo;?>','<?=$codigoactivo;?>','<?=$activo?>')">
+                              <i class="material-icons "  title="Dar de Baja AF">flight_land</i>
+                            </button>
+
                             <?php
                               }
                             ?>
@@ -193,6 +198,48 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
   </div>
 </div>
 
+<div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="background: #e86447;color:white;">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><b>Baja de Activo Fijo</b></h4>
+        
+
+
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group col-sm-9">
+            <input class="form-control" type="text" name="nombre_activo_b" id="nombre_activo_b" value="Este activo es nuevo a su servicio" readonly="true" style="color: #e86447;font-size: 15px;background: white">
+          </div>
+          <div class="form-group col-sm-3">
+            <input class="form-control" type="text" name="cod_activo_b2" id="cod_activo_b2" value="" readonly="true" style="color: #e86447;font-size: 15px;background: white">
+          </div>
+        </div>
+        <input type="hidden" name="cod_activo_b" id="cod_activo_b" value="0">
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Fecha de Baja</label>
+          <div class="form-group col-sm-3">
+            <input class="form-control input-sm" type="date" name="fecha_baja" id="fecha_baja" value="<?=date('Y-m-d')?>" >
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-2 col-form-label" style="color:#424242">Observaciones</label>
+          <div class="col-sm-10">
+            <div class="form-group">
+              <textarea class="form-control"  name="obs_baja" id="obs_baja"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" id="EditarPC"  data-dismiss="modal">Guardar</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="material-icons" title="Volver">keyboard_return</i> Cerrar </button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Modal busqueda de activos fijos-->
 <div class="modal fade" id="modalBuscador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -290,3 +337,21 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
     </div>
   </div>
 </div>
+
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#EditarPC').click(function(){
+      var cod_activo_b=document.getElementById("cod_activo_b").value;
+      var obs_baja=$('#obs_baja').val();
+      var fecha_baja=$('#fecha_baja').val();
+      if(fecha_baja ==null || fecha_baja==""){
+        Swal.fire('ERROR!','Por favor, ingrese fecha de baja.','error'); 
+      }else{
+        save_obs_AF_baja(cod_activo_b,obs_baja,1,fecha_baja);
+      }
+      
+    });
+  });
+</script>

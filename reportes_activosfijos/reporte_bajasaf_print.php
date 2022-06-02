@@ -24,8 +24,8 @@ $areas=$_POST["areas"];
 $rubros=$_POST["rubros"];
 $tipo=$_POST["tipo"];
 
-// $alta_baja=$_POST["alta_baja"];
-$alta_baja=1;//altas
+$alta_baja=$_POST["alta_baja"];
+// $alta_baja=1;//altas
 $unidadOrgString=implode(",", $unidadOrganizacional);
 $areaString=implode(",", $areas);
 $rubrosString=implode(",", $rubros);
@@ -112,7 +112,7 @@ if($tipo==1){
                           $suma_residual_altas=0;
                           $suma_inicial_altas=0;
                           $suma_inicial_altas_depre=0;
-                          $sqlActivosAlta="SELECT codigoactivo,otrodato,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional, (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area, (select d.abreviatura from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones, DATE_FORMAT(fechalta, '%d/%m/%Y')as fechaltax, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable, cod_estadoactivofijo,fecha_baja,obs_baja,valorinicial,valorresidual,depreciacionacumulada
+                          $sqlActivosAlta="SELECT codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional, (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area, (select d.abreviatura from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones, DATE_FORMAT(fechalta, '%d/%m/%Y')as fechaltax, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable, cod_estadoactivofijo,fecha_baja,obs_baja,valorinicial,valorresidual,depreciacionacumulada
                           from activosfijos 
                           where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) $sqladd
                           and fechalta  BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59' 
@@ -121,7 +121,7 @@ if($tipo==1){
                           $stmtActivosAlta = $dbh->prepare($sqlActivosAlta);
                           $stmtActivosAlta->execute();
                           $stmtActivosAlta->bindColumn('codigoactivo', $codigoActivoX);
-                          $stmtActivosAlta->bindColumn('otrodato', $activoX);
+                          $stmtActivosAlta->bindColumn('activo', $activoX);
                           $stmtActivosAlta->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
                           $stmtActivosAlta->bindColumn('cod_area', $cod_area);
                           $stmtActivosAlta->bindColumn('cod_depreciaciones', $cod_depreciaciones);
@@ -210,16 +210,17 @@ if($tipo==1){
                           </tr>
                           <?php  
                           $contador = 0;
-                          $sqlActivosBaja="SELECT codigo,codigoactivo,otrodato,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional, (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area, (select d.abreviatura from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones, DATE_FORMAT(fechalta, '%d/%m/%Y')as fechalta, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable, cod_estadoactivofijo,fecha_baja,obs_baja
+                          $sqlActivosBaja="SELECT codigo,codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional, (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area, (select d.abreviatura from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones, DATE_FORMAT(fechalta, '%d/%m/%Y')as fechalta, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable, cod_estadoactivofijo,fecha_baja,obs_baja
                           from activosfijos 
                           where cod_estadoactivofijo = 3 and tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) $sqladd
                           and fecha_baja BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59'
-                          order by fecha_baja";  
+                          order by fecha_baja";
+                          // echo $sqlActivosBaja;
                           $stmtActivosBajas = $dbh->prepare($sqlActivosBaja);
                           $stmtActivosBajas->execute();
                           $stmtActivosBajas->bindColumn('codigo', $codigoX);
                           $stmtActivosBajas->bindColumn('codigoactivo', $codigoActivoX);
-                          $stmtActivosBajas->bindColumn('otrodato', $activoX);
+                          $stmtActivosBajas->bindColumn('activo', $activoX);
                           $stmtActivosBajas->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
                           $stmtActivosBajas->bindColumn('cod_area', $cod_area);
                           $stmtActivosBajas->bindColumn('cod_depreciaciones', $cod_depreciaciones);
@@ -233,10 +234,12 @@ if($tipo==1){
                           $suma_residual_bajas=0;
                           $suma_inicial_bajas=0;
                           while ($rowActivos = $stmtActivosBajas->fetch(PDO::FETCH_ASSOC)) {
-                            $stmt2 = $dbh->prepare("SELECT d2_valorresidual,d10_valornetobs 
+                            $sql="SELECT d2_valorresidual,d10_valornetobs 
                             from mesdepreciaciones m, mesdepreciaciones_detalle md
                             WHERE m.codigo = md.cod_mesdepreciaciones 
-                            and md.cod_activosfijos = $codigoX and m.estado=1 order by m.codigo desc limit 1");
+                            and md.cod_activosfijos = $codigoX and m.estado=1 order by m.codigo desc limit 1";
+                            // echo $sql;
+                            $stmt2 = $dbh->prepare($sql);
                             $stmt2->execute();
                             $row2 = $stmt2->fetch();
                             $d2_valorresidual = $row2["d2_valorresidual"];

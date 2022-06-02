@@ -20386,3 +20386,25 @@ function registrar_planilla_sueldos(){
   }
 }
 
+function agregaformActivoFijo_baja(codigo,codigo2,nombre){
+  //console.log("datos: "+datos);
+  document.getElementById("cod_activo_b").value=codigo;
+  document.getElementById("cod_activo_b2").value="CODIGO: "+codigo2;
+  document.getElementById("nombre_activo_b").value="ACTIVO: "+nombre;
+}
+function save_obs_AF_baja(codigo_af,obs_baja,sw,fecha_baja){
+  iniciarCargaAjax();
+  $.ajax({
+    type:"POST",
+    data:"codigo="+codigo_af+"&obs="+obs_baja+"&fecha_baja="+fecha_baja,
+    url:"activosFijos/saveDardebaja.php",
+    success:function(r){
+      detectarCargaAjax();
+      if(r==1){        
+          alerts.showSwal('success-message','index.php?opcion=activosfijosLista');
+      }else{
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
+    }
+  });
+}
