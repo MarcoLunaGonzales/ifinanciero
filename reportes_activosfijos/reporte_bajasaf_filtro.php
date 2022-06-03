@@ -36,7 +36,7 @@ $statement = $dbh->query($query);
                       $codigoX=$row['codigo'];
                       $nombreX=$row['nombre'];
                     ?>
-                    <option value="<?=$codigoX;?>"><?=$row['abreviatura'];?> - <?=$nombreX;?></option>
+                    <option value="<?=$codigoX;?>" ><?=$row['abreviatura'];?> - <?=$nombreX;?></option>
                     <?php 
                     }
                   ?>
@@ -115,7 +115,7 @@ $statement = $dbh->query($query);
               <div class="form-group">
                 <select name="mes" id="mes" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required>
                     <?php
-                      $sql="SELECT codigo,nombre from meses order by 2 desc";
+                      $sql="SELECT codigo,nombre from meses order by codigo";
                       $stmtg = $dbh->prepare($sql);
                       $stmtg->execute();
                       while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {

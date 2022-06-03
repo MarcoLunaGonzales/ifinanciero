@@ -114,7 +114,10 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                   </thead>
                   <tbody>
                     <?php $index=1;
-                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
+                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+                      $activo= str_replace('"', '', $activo);
+                      // $activo=addslashes($activo);
+                      ?>
                       <tr>
                         <td  class="td-actions text-right">    
                             <a href='<?=$printDepreciacion1;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-info">

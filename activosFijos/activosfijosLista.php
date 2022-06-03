@@ -102,7 +102,11 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                   </thead>
                   <tbody>
                     <?php $index=1;
-                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
+                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+
+                      // $activo=addslashes($activo);
+                      $activo= str_replace('"', '', $activo);
+                      ?>
                       <tr>
                         <td  class="td-actions text-right">    
                             <a href='<?=$printDepreciacion1;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-info">
@@ -211,7 +215,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
       <div class="modal-body">
         <div class="row">
           <div class="form-group col-sm-9">
-            <input class="form-control" type="text" name="nombre_activo_b" id="nombre_activo_b" value="Este activo es nuevo a su servicio" readonly="true" style="color: #e86447;font-size: 15px;background: white">
+            <input class="form-control" type="text" name="nombre_activo_b" id="nombre_activo_b" value=" *** " readonly="true" style="color: #e86447;font-size: 15px;background: white">
           </div>
           <div class="form-group col-sm-3">
             <input class="form-control" type="text" name="cod_activo_b2" id="cod_activo_b2" value="" readonly="true" style="color: #e86447;font-size: 15px;background: white">
