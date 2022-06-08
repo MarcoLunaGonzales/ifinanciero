@@ -34,6 +34,10 @@ $glosa=$_GET['glosa'];
 $codigoSistema=$_GET['codigoSistema'];
 $codigoActivo=$_GET['codigoActivo'];
 
+$altasbajas=$_GET['altasbajas'];
+
+
+
 // $unidadOrgString=implode(",", $cod_uo);
 
 
@@ -44,7 +48,13 @@ $sql="SELECT af.codigo,af.codigoactivo,af.activo,af.fechalta, d.abreviatura as d
  (select a.abreviatura from areas a where a.codigo=af.cod_area)as nombre_area,
  (select concat_ws(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable
 from activosfijos af, depreciaciones d, tiposbienes tb 
-where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo and af.cod_estadoactivofijo = 1";  
+where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo ";  
+
+if($altasbajas!=""){
+  $sql.=" and af.cod_estadoactivofijo = 3 ";
+}else{
+  $sql.=" and af.cod_estadoactivofijo = 1 ";
+}
 
 if($cod_uo!=""){
   $sql.=" and af.cod_unidadorganizacional in ($cod_uo)";
@@ -123,6 +133,9 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                             <a href='<?=$printDepreciacion1;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-info">
                               <i class="material-icons" title="Ficha Activo Fijo" style="color:black">print</i>
                             </a>
+                            <a href='reportes_activosfijos/imp_actaEntrega_html.php?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-danger">
+                              <i class="material-icons" title="Acta de Entrega" style="color:black">print</i>
+                            </a>
                           </td>
                           <td class="text-center small"><?=$codigo;?></td>
                           <td class="text-center small"><?=$codigoactivo;?></td>
@@ -133,43 +146,49 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                           <td class="text-left small"><?=strtoupper($nombre_responsable)?></td>
                           <td class="text-left small"><?=$proy_financiacion;?></td>
                           <td class="td-actions text-right">
-                          <?php
-                            if($globalAdmin==1){
-                          ?>
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <i class="material-icons" >list</i><small><small></small></small>
+                              </button>
+                              <div class="dropdown-menu" >
+                                <?php if($globalAdmin==1){ ?>
+                                <a href='<?=$urlEdit6;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-success" ><?=$iconEdit;?></i>Editar
+                                </a>
+                                <a href='index.php?opcion=activofijoCargarImagen&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-warning" >wallpaper</i>Cargar Imagen
+                                </a>
+                                <!-- <button rel="tooltip" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
+                                  <i class="material-icons text-danger" ><?=$iconDelete;?></i>Borrar
+                                </button> -->
+                                <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-info" >transfer_within_a_station</i>Transferir
+                                </a>
+                                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalEditar" onclick="agregaformActivoFijo_baja('<?=$codigo;?>','<?=$codigoactivo;?>','<?=$activo?>')">
+                                  <i class="material-icons text-danger"  title="Editar">flight_land</i>Dar de Baja
+                                </button>
 
-                            <a href='<?=$urlafAccesorios;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
-                              <i class="material-icons" title="Accesorios AF" style="color:black">extension</i>
-                            </a>
-                            <a href='<?=$urlafEventos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                              <i class="material-icons" title="Eventos AF" style="color:black">event</i>
-                            </a>
-                            <a href='<?=$urlRevaluarAF;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
-                              <i class="material-icons" title="Reevaluar AF" style="color:black">trending_up</i>
-                            </a>
-                            <?php
-                              }
-                            ?>
-                          </td>
-                          <td class="td-actions text-right">
-                          <?php
-                            if($globalAdmin==1){
-                          ?>
-                            <a href='<?=$urlEdit6;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                              <i class="material-icons" title="Editar AF"><?=$iconEdit;?></i>
-                            </a>
-                            <!-- <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
-                              <i class="material-icons" title="Borrar AF"><?=$iconDelete;?></i>
-                            </button> -->
-                            <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonMorado;?>">
-                              <i class="material-icons" title="Transferir AF">transfer_within_a_station</i>
-                            </a>
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEditar" onclick="agregaformActivoFijo_baja('<?=$codigo;?>','<?=$codigoactivo;?>','<?=$activo?>')">
-                              <i class="material-icons "  title="Dar de Baja AF">flight_land</i>
-                            </button>
-                            <?php
-                              }
-                            ?>
-                          
+                              <?php } ?>
+                              </div>
+                            </div>
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                 <i class="material-icons" >list</i><small><small></small></small>
+                              </button>
+                              <div class="dropdown-menu" >
+                              <?php if($globalAdmin==1){ ?>
+                                <a href='<?=$urlafAccesorios;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-warning"  style="color:black">extension</i>Accesorios AF
+                                </a>
+                                <a href='<?=$urlafEventos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-info"  style="color:black">event</i>Eventos AF
+                                </a>
+                                <a href='<?=$urlRevaluarAF;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-warning" style="color:black">trending_up</i>Reevaluar AF
+                                </a><?php } ?>
+                              </div>
+                            </div>
+                            
                           </td>
                           <td class="text-center">
                             <?php

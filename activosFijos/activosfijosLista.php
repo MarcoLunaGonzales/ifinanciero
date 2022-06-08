@@ -61,7 +61,6 @@ $stmtProyecto->execute();
 $stmtProyecto->bindColumn('proyecto', $nombre_proyecto);
 $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
 
-
 ?>
 
 <div class="content">
@@ -95,8 +94,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                         <th>Rubro/TipoBien</th>
                         <th>Responsable</th>
                         <th>Proyecto</th>
-                        <th>Acc/Eventos</th>
-                        <th></th>
+                        <th>Acc/Eventos</th>                        
                         <th></th>
                     </tr>
                   </thead>
@@ -124,47 +122,50 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                           <td class="text-left small"><?=$dep_nombre;?>/<?=$tb_tipo;?></td>
                           <td class="text-left small"><?=strtoupper($nombre_responsable)?></td>
                           <td class="text-left small"><?=$proy_financiacion;?></td>
-                          <td class="td-actions text-right">
-                          <?php
-                            if($globalAdmin==1){
-                          ?>
+                          <td class="td-actions text-right">                          
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <i class="material-icons" >list</i><small><small></small></small>
+                              </button>
+                              <div class="dropdown-menu" >
+                                <?php if($globalAdmin==1){ ?>
+                                <a href='<?=$urlEdit6;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-success" ><?=$iconEdit;?></i>Editar
+                                </a>
+                                <a href='index.php?opcion=activofijoCargarImagen&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-warning" >wallpaper</i>Cargar Imagen
+                                </a>
+                                <!-- <button rel="tooltip" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
+                                  <i class="material-icons text-danger" ><?=$iconDelete;?></i>Borrar
+                                </button> -->
+                                <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-info" >transfer_within_a_station</i>Transferir
+                                </a>
+                                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalEditar" onclick="agregaformActivoFijo_baja('<?=$codigo;?>','<?=$codigoactivo;?>','<?=$activo?>')">
+                                  <i class="material-icons text-danger"  title="Editar">flight_land</i>Dar de Baja
+                                </button>
 
-                            <a href='<?=$urlafAccesorios;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
-                              <i class="material-icons" title="Accesorios AF" style="color:black">extension</i>
-                            </a>
-                            <a href='<?=$urlafEventos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                              <i class="material-icons" title="Eventos AF" style="color:black">event</i>
-                            </a>
-                            <a href='<?=$urlRevaluarAF;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
-                              <i class="material-icons" title="Reevaluar AF" style="color:black">trending_up</i>
-                            </a>
-                            <?php
-                              }
-                            ?>
-                          </td>
-                          <td class="td-actions text-right">
-                          <?php
-                            if($globalAdmin==1){
-                          ?>
-                            <a href='<?=$urlEdit6;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                              <i class="material-icons" title="Editar AF"><?=$iconEdit;?></i>
-                            </a>
-                            <!-- <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
-                              <i class="material-icons" title="Borrar AF"><?=$iconDelete;?></i>
-                            </button> -->
-                            <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonMorado;?>">
-                              <i class="material-icons" title="Transferir AF">transfer_within_a_station</i>
-                            </a>
-
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEditar" onclick="agregaformActivoFijo_baja('<?=$codigo;?>','<?=$codigoactivo;?>','<?=$activo?>')">
-                              <i class="material-icons "  title="Dar de Baja AF">flight_land</i>
-                            </button>
-
-                            <?php
-                              }
-                            ?>
-                          
-                          </td>
+                              <?php } ?>
+                              </div>
+                            </div>
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                 <i class="material-icons" >list</i><small><small></small></small>
+                              </button>
+                              <div class="dropdown-menu" >
+                              <?php if($globalAdmin==1){ ?>
+                                <a href='<?=$urlafAccesorios;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-warning"  style="color:black">extension</i>Accesorios AF
+                                </a>
+                                <a href='<?=$urlafEventos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-info"  style="color:black">event</i>Eventos AF
+                                </a>
+                                <a href='<?=$urlRevaluarAF;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-warning" style="color:black">trending_up</i>Reevaluar AF
+                                </a><?php } ?>
+                              </div>
+                            </div>
+                          </td>                          
                           <td class="text-center">
                             <?php
                             //si es mayo a cero, ya se genero el comprobante.
@@ -208,9 +209,6 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
       <div class="modal-header" style="background: #e86447;color:white;">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel"><b>Baja de Activo Fijo</b></h4>
-        
-
-
       </div>
       <div class="modal-body">
         <div class="row">
@@ -244,6 +242,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
     </div>
   </div>
 </div>
+
 <!-- Modal busqueda de activos fijos-->
 <div class="modal fade" id="modalBuscador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -323,7 +322,8 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
 
         <div class="row">
             <label class="col-sm-4 text-center" style="color:#0040FF;">Codigo de Sistema</label> 
-            <label class="col-sm-4 text-center" style="color:#0040FF;">Codigo</label>                  
+            <label class="col-sm-4 text-center" style="color:#0040FF;">Codigo</label>
+            <label class="col-sm-4 text-center" style="color:#0040FF;">AF Bajas</label>
         </div> 
         <div class="row">
           <div class="form-group col-sm-4">
@@ -332,6 +332,12 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
           <div class="form-group col-sm-4">
             <input class="form-control input-sm" type="text" name="codigo_activo" id="codigo_activo">
           </div>
+          <div class="form-group col-sm-4">
+            <select name="altasbajas[]" id="altasbajas" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple> 
+              <!-- <option value="">SELECCIONE</option> -->
+              <option value="1">Activos Dados de Baja</option>              
+            </select>
+          </div>   
       </div>
 
       <div class="modal-footer">

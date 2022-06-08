@@ -110,8 +110,8 @@ if ($codigo > 0){
     $archivo = "activosfijos/imagenes/".$imagen;//sale mal
 
     //asignaciones
-    $query2 = "SELECT * FROM v_activosfijos_asignaciones where codigo = ".$codigo;
-    $statement2 = $dbh->query($query2);
+    // $query2 = "SELECT * FROM v_activosfijos_asignaciones where codigo = ".$codigo;
+    // $statement2 = $dbh->query($query2);
 
     $variableDisabled="true";
 } else {

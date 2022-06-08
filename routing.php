@@ -785,6 +785,15 @@
 			//$codigo=$_GET['codigoactivo'];
 			require_once('activosFijos/saveTransferActivosfijos.php');
 		}
+		if ($_GET['opcion']=='activofijoCargarImagen') {
+			$codigo=$_GET['codigo'];
+			require_once('activosFijos/activosfijosGuardarImagen.php');
+		}
+		if ($_GET['opcion']=='activofijoCargarImagen_save') {			
+			require_once('activosFijos/activosfijosGuardarImagen_save.php');
+		}
+
+		
 		if ($_GET['opcion']=='saveReevaluoAF') {
 			//$codigo=$_GET['codigoactivo'];
 			require_once('activosFijos/saveReevaluoAF.php');
