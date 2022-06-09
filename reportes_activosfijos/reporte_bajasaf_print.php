@@ -187,8 +187,14 @@ if($tipo==1){
                             <td width="25%"><small>Activo</small></td>
                             <td width="3%"><small>F.Alta</small></td>
                             <td width="20%"><small>Respo1/Respo2</small></td>
-                            <td width="5%"><small>Valor Residual</small></td>
+                            <!-- <td width="5%"><small>Valor Residual</small></td>
+                            <td width="5%"><small>Valor Neto</small></td> -->
+
+                            <td width="5%"><small>Valor Actualizado</small></td>
+                              <td width="5%"><small>Depreciacion Acum</small></td>
                             <td width="5%"><small>Valor Neto</small></td>
+
+
                             <td width="4%"><small>F.Baja</small></td>
                             <td width="25"><small>Obs</small></td>
                           </tr>
@@ -233,8 +239,10 @@ if($tipo==1){
                           $stmtActivosBajas->bindColumn('obs_baja', $obs_baja);
                           $suma_residual_bajas=0;
                           $suma_inicial_bajas=0;
+                          $suma_actualizado_bajas=0;
+                            $suma_depreante_bajas=0;
                           while ($rowActivos = $stmtActivosBajas->fetch(PDO::FETCH_ASSOC)) {
-                            $sql="SELECT d2_valorresidual,d10_valornetobs 
+                            $sql="SELECT d2_valorresidual,d4_valoractualizado,d9_depreciacionacumuladaactual,d10_valornetobs 
                             from mesdepreciaciones m, mesdepreciaciones_detalle md
                             WHERE m.codigo = md.cod_mesdepreciaciones 
                             and md.cod_activosfijos = $codigoX and m.estado=1 order by m.codigo desc limit 1";
@@ -243,8 +251,11 @@ if($tipo==1){
                             $stmt2->execute();
                             $row2 = $stmt2->fetch();
                             $d2_valorresidual = $row2["d2_valorresidual"];
+                            $d4_valoractualizado = $row2["d4_valoractualizado"];
+                            $d9_depreciacionacumuladaactual = $row2["d9_depreciacionacumuladaactual"];
                             $d10_valornetobs = $row2["d10_valornetobs"];
-                            $suma_residual_bajas+=$d2_valorresidual;
+                            $suma_actualizado_bajas+=$d4_valoractualizado;
+                            $suma_depreante_bajas+=$d9_depreciacionacumuladaactual;
                             $suma_inicial_bajas+=$d10_valornetobs;
                             $fecha_baja=date('d/m/Y',strtotime($fecha_baja));
                             $contador++;?>
@@ -256,7 +267,8 @@ if($tipo==1){
                               <td class="text-left small"><small><?= $activoX; ?></small></td>
                               <td class="text-center small"><small><?= $fecha_alta; ?></small></td>
                               <td class="text-left small"><small><?= $responsables_responsable; ?> </small></td>
-                              <td class="text-right small"><small><?= formatNumberDec($d2_valorresidual);?></small></td>
+                              <td class="text-right small"><small><?= formatNumberDec($d4_valoractualizado);?></small></td>
+                              <td class="text-right small"><small><?= formatNumberDec($d9_depreciacionacumuladaactual);?></small></td>
                               <td class="text-right small"><small><?= formatNumberDec($d10_valornetobs);?></small></td>
                               <td class="text-left small"><small><?= $fecha_baja;?></small></td>
                               <td class="text-left small"><small><?= $obs_baja;?></small></td>
@@ -270,7 +282,8 @@ if($tipo==1){
                             <td class="text-left small"><small></small></td>
                             <td class="text-center small"><small></small></td>
                             <td class="text-left small"><small>TOTAL BAJAS</small></td>
-                            <td class="text-right small"><small><?= formatNumberDec($suma_residual_bajas);?></small></td>
+                            <td class="text-right small"><small><?= formatNumberDec($suma_actualizado_bajas);?></small></td>
+                            <td class="text-right small"><small><?= formatNumberDec($suma_depreante_bajas);?></small></td>
                             <td class="text-right small"><small><?= formatNumberDec($suma_inicial_bajas);?></small></td>
                             <td class="text-left small"><small></small></td>
                             <td class="text-left small"><small></small></td>

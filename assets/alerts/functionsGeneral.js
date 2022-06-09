@@ -2724,7 +2724,7 @@ function ajaxCodigoActivo(combo){
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
       $('.selectpicker').selectpicker(["refresh"]);
-      //ajaxDepreciacion(codigo);
+      ajaxDepreciacion(codigo);
     }
   }
   ajax.send(null)  
@@ -13021,6 +13021,7 @@ function actualizarRegistroClientes(){
 
 
 function botonBuscarActivoFijo(){
+  iniciarCargaAjax();
   var valor_uo=$("#OficinaBusqueda").val();
   var valor_rubro=$("#rubro").val();
   var valor_fi=$("#fechaBusquedaInicio").val();
@@ -13032,22 +13033,20 @@ function botonBuscarActivoFijo(){
   
   var codigoActivo=$("#codigo_activo").val();
   var codigoSistema=$("#codigo_sistema").val();
-
-  
-  
+  var altasbajas=$("#altasbajas").val();
   ajax=nuevoAjax();
   ajax.open('GET', 'activosFijos/ajax_busquedaAvanzadaAf.php?cod_uo='+valor_uo+'&rubro='+valor_rubro+'&fechaI='+valor_fi+'&fechaF='+valor_ff+
-    '&responsable='+valor_responsable+'&tipoAlta='+valor_tipoAlta+'&proyecto='+valor_proyecto+'&glosa='+valor_glosa+'&codigoActivo='+codigoActivo+'&codigoSistema='+codigoSistema,true);
+    '&responsable='+valor_responsable+'&tipoAlta='+valor_tipoAlta+'&proyecto='+valor_proyecto+'&glosa='+valor_glosa+'&codigoActivo='+codigoActivo+'&codigoSistema='+codigoSistema+'&altasbajas='+altasbajas,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_activosFijos");
       contenedor.html(ajax.responseText);
       $("#modalBuscador").modal("hide");
+      detectarCargaAjax();
     }
   }
   ajax.send(null)
-} 
-
+}
 // function sacandoUFVDepreAF(){
 //     var gestion=document.getElementById("gestion").value; 
 //     var mes=document.getElementById("mes").value; 

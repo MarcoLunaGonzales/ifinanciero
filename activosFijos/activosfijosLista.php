@@ -5,7 +5,7 @@ require_once 'configModule.php'; //configuraciones
 require_once 'styles.php';
 
 $globalAdmin=$_SESSION["globalAdmin"];
-
+$globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
 $sqlX="SET NAMES 'utf8'";
@@ -16,7 +16,7 @@ $sql="SELECT af.codigo,af.codigoactivo,af.activo,DATE_FORMAT(af.fechalta, '%d/%m
 (select pr.abreviatura from proyectos_financiacionexterna pr where pr.codigo=af.cod_proy_financiacion)as proy_financiacion,
  (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)as nombre_unidad, 
  (select a.abreviatura from areas a where a.codigo=af.cod_area)as nombre_area,
- (select concat_ws(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable
+ (select concat_ws(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable,(SELECT afi.imagen FROM activosfijosimagen afi where afi.codigo=af.codigo)as imagen,(select eaaf.nombre from activofijos_asignaciones afa join estados_asignacionaf eaaf on afa.cod_estadoasignacionaf=eaaf.codigo where afa.cod_activosfijos=af.codigo order by afa.codigo desc limit 1) as nombre_estado
 from activosfijos af, depreciaciones d, tiposbienes tb 
 where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo and af.cod_estadoactivofijo = 1 ORDER BY af.codigo desc limit 100";
 $stmt = $dbh->prepare($sql);
@@ -37,6 +37,11 @@ $stmt->bindColumn('nombre_area', $nombreArea);
 $stmt->bindColumn('proy_financiacion', $proy_financiacion);
 $stmt->bindColumn('contabilizado', $contabilizado);
 $stmt->bindColumn('cod_comprobante', $cod_comprobante);
+$stmt->bindColumn('imagen', $imagen);
+
+$stmt->bindColumn('nombre_estado', $nombre_estado);
+
+
 
 // busquena por Oficina
 $stmtUO = $dbh->prepare("SELECT codigo, (select u.abreviatura from unidades_organizacionales u where u.codigo=c.cod_unidadorganizacional)unidad,c.cod_unidadorganizacional as codigo_uo
@@ -62,9 +67,19 @@ $stmtProyecto->bindColumn('proyecto', $nombre_proyecto);
 $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
 
 
+$string_personal_baja=obtenerValorConfiguracion(101);
+$array_personal_bajas=explode(",", $string_personal_baja);
+$cont_per_bajas=count($array_personal_bajas);
+$personal_baja=false;
+for ($i=0; $i <$cont_per_bajas ; $i++) { 
+  if($globalUser==$array_personal_bajas[$i]){
+    $personal_baja=true;
+  }
+}
 ?>
 
 <div class="content">
+
 	<div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
@@ -81,8 +96,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
             </h4>
           </div>
           <div class="card-body">
-            <div class="table-responsive">
-              <div class="" id="data_activosFijos">
+            <div class="table-responsive" >              
                 <table class="table table-condensed" id="tablePaginatorHead">
                   <thead>
                     <tr>
@@ -94,23 +108,25 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                         <th>F. Alta</th>
                         <th>Rubro/TipoBien</th>
                         <th>Responsable</th>
-                        <th>Proyecto</th>
+                        <th>Estado</th>
+                        <th>Img</th>
                         <th>Acc/Eventos</th>
-                        <th></th>
-                        <th></th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="data_activosFijos">
                     <?php $index=1;
-                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
+                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
+                      // $activo=addslashes($activo);
+                      $activo= str_replace('"', '', $activo);
+                      ?>
                       <tr>
                         <td  class="td-actions text-right">    
                             <a href='<?=$printDepreciacion1;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-info">
                               <i class="material-icons" title="Ficha Activo Fijo" style="color:black">print</i>
                             </a>
-                            <a href='reportes_activosfijos/imp_actaEntrega_html.php?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-danger">
+                            <!-- <a href='reportes_activosfijos/imp_actaEntrega_html.php?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-danger">
                               <i class="material-icons" title="Acta de Entrega" style="color:black">print</i>
-                            </a>
+                            </a> -->
                           </td>
                           <td class="text-center small"><?=$codigo;?></td>
                           <td class="text-center small"><?=$codigoactivo;?></td>
@@ -119,80 +135,86 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
                           <td class="text-center small"><?=$fechalta;?></td>
                           <td class="text-left small"><?=$dep_nombre;?>/<?=$tb_tipo;?></td>
                           <td class="text-left small"><?=strtoupper($nombre_responsable)?></td>
-                          <td class="text-left small"><?=$proy_financiacion;?></td>
-                          <td class="td-actions text-right">
-                          <?php
-                            if($globalAdmin==1){
-                          ?>
-
-                            <a href='<?=$urlafAccesorios;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
-                              <i class="material-icons" title="Accesorios AF" style="color:black">extension</i>
-                            </a>
-                            <a href='<?=$urlafEventos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-info">
-                              <i class="material-icons" title="Eventos AF" style="color:black">event</i>
-                            </a>
-                            <a href='<?=$urlRevaluarAF;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
-                              <i class="material-icons" title="Reevaluar AF" style="color:black">trending_up</i>
-                            </a>
+                          <td class="text-left small"><?=$nombre_estado?></td>
+                          <td class="text-left small">
                             <?php
-                              }
-                            ?>
-                          </td>
-                          <td class="td-actions text-right">
-                          <?php
-                            if($globalAdmin==1){
-                          ?>
-                            <a href='<?=$urlEdit6;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
-                              <i class="material-icons" title="Editar AF"><?=$iconEdit;?></i>
-                            </a>
-                            <!-- <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
-                              <i class="material-icons" title="Borrar AF"><?=$iconDelete;?></i>
-                            </button> -->
-                            <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonMorado;?>">
-                              <i class="material-icons" title="Transferir AF">transfer_within_a_station</i>
-                            </a>
-
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEditar" onclick="agregaformActivoFijo_baja('<?=$codigo;?>','<?=$codigoactivo;?>','<?=$activo?>')">
-                              <i class="material-icons "  title="Dar de Baja AF">flight_land</i>
-                            </button>
-
-                            <?php
-                              }
-                            ?>
-                          
-                          </td>
-                          <td class="text-center">
-                            <?php
-                            //si es mayo a cero, ya se genero el comprobante.
-                              if($cod_comprobante>0){?>                                    
-                                <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1" target="_blank">
-                                       <i class="material-icons" title="Imprimir Comporbante" style="color:red">print</i>
-                                   </a> 
-                              <?php }elseif($contabilizado==0){ ?>
-                                <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" target="_blank" > 
-                                  <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
-                                </a>
+                              if($imagen<>null && $imagen<>""){?>                                
+                                 <i class="material-icons" >wallpaper</i>
                               <?php }
-                            ?>
+                              ?>
+                          </td>
+                          <td class="td-actions text-right">
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                 <i class="material-icons" >list</i><small><small></small></small>
+                              </button>
+                              <div class="dropdown-menu" >
+                                <?php if($globalAdmin==1){ ?>
+                                <a href='<?=$urlEdit6;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-success" ><?=$iconEdit;?></i>Editar
+                                </a>
+                                <a href='index.php?opcion=activofijoCargarImagen&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-warning" >wallpaper</i>Cargar Imagen
+                                </a>
+                                <!-- <button rel="tooltip" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete2;?>&codigo=<?=$codigo;?>')">
+                                  <i class="material-icons text-danger" ><?=$iconDelete;?></i>Borrar
+                                </button> -->
+                                <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-info" >transfer_within_a_station</i>Transferir
+                                </a>
+                              <?php } 
+                              if($personal_baja){
+                              ?>
+                              <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalEditar" onclick="agregaformActivoFijo_baja('<?=$codigo;?>','<?=$codigoactivo;?>','<?=$activo?>')">
+                                  <i class="material-icons text-danger"  title="Editar">flight_land</i>Dar de Baja
+                                </button>
+                              <?php
+                              }
+                              ?>
+                              </div>
+                            </div>
+                            <div class="btn-group dropdown">
+                              <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                 <i class="material-icons" >list</i><small><small></small></small>
+                              </button>
+                              <div class="dropdown-menu" >
+                              <?php if($globalAdmin==1){ ?>
+                                <a href='<?=$urlafAccesorios;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-warning"  style="color:black">extension</i>Accesorios AF
+                                </a>
+                                <a href='<?=$urlafEventos;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-info"  style="color:black">event</i>Eventos AF
+                                </a>
+                                <a href='<?=$urlRevaluarAF;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
+                                  <i class="material-icons text-warning" style="color:black">trending_up</i>Reevaluar AF
+                                </a><?php } ?>
+                                <?php
+                                //si es mayo a cero, ya se genero el comprobante.
+                                  if($cod_comprobante>0){?>
+                                    <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1" class="dropdown-item" target="_blank">
+                                           <i class="material-icons" title="Imprimir Comporbante" style="color:red">print</i>Imprimir Comporbante
+                                       </a> 
+                                  <?php }elseif($contabilizado==0){ ?>
+                                    <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" class="dropdown-item" target="_blank" > 
+                                      <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>Generar Comprobante
+                                    </a>
+                                  <?php } ?>
+                              </div>
+                            </div>
                           </td>
                       </tr>
                     <?php $index++; } ?>
                   </tbody>
                 </table>
-              </div>
             </div>
           </div>
+          <div class="card-footer fixed-bottom">
+            <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
+            <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegistrar_activosfijos;?>&codigo=0'">Registrar</button>
+          </div>
+
         </div>
-        <?php
-        // if($globalAdmin==1){
-        ?>
-				<div class="card-footer fixed-bottom">
-              <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
-          <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlRegistrar_activosfijos;?>&codigo=0'">Registrar</button>
-        </div>
-        <?php
-        // }
-        ?>
+				        
       </div>
     </div>  
   </div>
@@ -204,14 +226,11 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
       <div class="modal-header" style="background: #e86447;color:white;">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel"><b>Baja de Activo Fijo</b></h4>
-        
-
-
       </div>
       <div class="modal-body">
         <div class="row">
           <div class="form-group col-sm-9">
-            <input class="form-control" type="text" name="nombre_activo_b" id="nombre_activo_b" value="Este activo es nuevo a su servicio" readonly="true" style="color: #e86447;font-size: 15px;background: white">
+            <input class="form-control" type="text" name="nombre_activo_b" id="nombre_activo_b" value=" *** " readonly="true" style="color: #e86447;font-size: 15px;background: white">
           </div>
           <div class="form-group col-sm-3">
             <input class="form-control" type="text" name="cod_activo_b2" id="cod_activo_b2" value="" readonly="true" style="color: #e86447;font-size: 15px;background: white">
@@ -240,6 +259,7 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
     </div>
   </div>
 </div>
+
 <!-- Modal busqueda de activos fijos-->
 <div class="modal fade" id="modalBuscador" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -319,7 +339,8 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
 
         <div class="row">
             <label class="col-sm-4 text-center" style="color:#0040FF;">Codigo de Sistema</label> 
-            <label class="col-sm-4 text-center" style="color:#0040FF;">Codigo</label>                  
+            <label class="col-sm-4 text-center" style="color:#0040FF;">Codigo</label>
+            <label class="col-sm-4 text-center" style="color:#0040FF;">AF Bajas</label>
         </div> 
         <div class="row">
           <div class="form-group col-sm-4">
@@ -328,6 +349,12 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
           <div class="form-group col-sm-4">
             <input class="form-control input-sm" type="text" name="codigo_activo" id="codigo_activo">
           </div>
+          <div class="form-group col-sm-4">
+            <select name="altasbajas[]" id="altasbajas" class="selectpicker form-control form-control-sm" data-style="btn btn-info select-with-transition" data-show-subtext="true" data-live-search="true" data-actions-box="true" multiple> 
+              <!-- <option value="">SELECCIONE</option> -->
+              <option value="1">Activos Dados de Baja</option>              
+            </select>
+          </div>   
       </div>
 
       <div class="modal-footer">
@@ -338,7 +365,12 @@ $stmtProyecto->bindColumn('cod_proy_financiacion', $codigo_proy);
   </div>
 </div>
 
-
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos...</h4>
+     <p class="text-white">Aguarde un momento por favor.</p>  
+  </div>
+</div>
 
 <script type="text/javascript">
   $(document).ready(function(){

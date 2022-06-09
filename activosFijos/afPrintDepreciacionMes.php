@@ -92,7 +92,7 @@ $stmtUO->bindColumn('cod_unidadorganizacional', $cod_unidad);
                                         </tr>
                                         <tr >
                                             <th ><small>Cod.<br>Interno</small></th>
-                                            <th ><small>Cod.<br>Activo</small></th>
+                                            <th ><small>Codigo</small></th>
                                             <th ><small>Activo</small></th>
                                             <th ><small>Valor<br>Anterior</small></th>
                                             <!--th >Factor Actual.</th-->
