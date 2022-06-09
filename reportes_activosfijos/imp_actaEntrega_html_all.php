@@ -33,7 +33,7 @@ $sqlActivos="SELECT a.codigo,a.codigoactivo,a.activo as otrodato,a.cod_tiposbien
  where tb.codigo=a.cod_depreciaciones)as tipo_bien,
  (select f.fechaasignacion from activofijos_asignaciones f where f.cod_activosfijos=a.codigo and f.cod_personal=a.cod_responsables_responsable order by f.codigo limit 1) as fechaasignacion,(select f2.fecha_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as fecha_recepcion,(select f2.observaciones_recepcion from activofijos_asignaciones f2 where f2.cod_activosfijos=a.codigo and f2.cod_personal=a.cod_responsables_responsable order by f2.codigo limit 1) as observaciones_recepcion
 from activosfijos a 
-where a.cod_responsables_responsable=$codigo_personal order by tipo_bien, otrodato";  
+where a.cod_estadoactivofijo=1 and  a.cod_responsables_responsable=$codigo_personal order by tipo_bien, otrodato";  
 $stmtActivos = $dbh->prepare($sqlActivos);
 $stmtActivos->execute();
 $stmtActivos->bindColumn('codigo', $codigoSis);
@@ -65,11 +65,12 @@ $stmtAsignaciones->bindColumn('cod_personal_anterior', $cod_personal_anterior);
 $stmtAsignaciones->bindColumn('codigoactivo', $codActivoAsignado);
 
 
-$sql_t="SELECT a.fechaasignacion as fechaasignacion,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.cod_personal) as personal from activofijos_asignaciones a where a.cod_personal_anterior=$codigo_personal order by a.codigo desc limit 0,10 ";  
+$sql_t="SELECT a.fechaasignacion as fechaasignacion,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.cod_personal) as personal, (select af.codigoactivo from activosfijos af where af.codigo=a.cod_activosfijos)as codigoactivo from activofijos_asignaciones a where a.cod_personal_anterior=$codigo_personal order by a.codigo desc limit 0,10 ";  
 $stmtTransfer = $dbh->prepare($sql_t);
 $stmtTransfer->execute();
 $stmtTransfer->bindColumn('fechaasignacion', $fechaasignacion_t);
 $stmtTransfer->bindColumn('personal', $personal_t);
+$stmtTransfer->bindColumn('codigoactivo', $codActivoTransfer);
 
 if($cod_personal_anterior==0){
     $personal_a="Asignacion Inicial";
@@ -238,7 +239,7 @@ width: 100%;
                                 <tr>
                                     <td align="center"><small><small><?=$fechaasignacion_t?></small></small></td>
                                     <td class="text-left"><small><small><?=$personal_t?></small></small></td>
-                                    <td align="center"><small><small><?=$codActivoAsignado;?></small></small></td>
+                                    <td align="center"><small><small><?=$codActivoTransfer;?></small></small></td>
                                 </tr>
                             <?php } ?>
                             

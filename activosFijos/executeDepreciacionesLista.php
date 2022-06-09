@@ -11,7 +11,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 
-$stmt = $dbh->prepare("select * from mesdepreciaciones");
+$stmt = $dbh->prepare("select * from mesdepreciaciones order by 1 desc;");
 //ejecutamos
 $stmt->execute();
 //bindColumn
