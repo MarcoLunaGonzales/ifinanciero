@@ -20,9 +20,9 @@ try{
     $result = $stmtAF->fetch();
     $nom_proy_financiacion = $result['nom_proy_financiacion'];    
 
-    $stmt = $dbh->prepare("SELECT codigo,codigoactivo,tipoalta,DATE_FORMAT(fechalta ,'%d/%m/%Y')as fechalta,activo,depreciacionacumulada,valorresidual,estadobien,(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombre_depreciaciones,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_responsables_responsable) as nombre_personal,(select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien,(select uo.nombre from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as nombre_uo2,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional) as abrev_uo2,(select a.nombre from areas a where a.codigo=cod_area) as nombre_area,(select c.numero from comprobantes  c where c.codigo=cod_comprobante ) as comprobante from activosfijos WHERE codigo=:codigo");
-    //Ejecutamos;
-    $stmt->bindParam(':codigo',$codigo_af);
+    $stmt = $dbh->prepare("SELECT a.codigo,a.codigoactivo,a.tipoalta,DATE_FORMAT(a.fechalta ,'%d/%m/%Y')as fechalta,a.activo,a.depreciacionacumulada,a.valorresidual,a.estadobien,(select d.nombre from depreciaciones d where d.codigo=a.cod_depreciaciones) as nombre_depreciaciones,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.cod_responsables_responsable) as nombre_personal,(select t.tipo_bien from tiposbienes t where t.codigo=a.cod_tiposbienes)as tipo_bien,(select uo.nombre from unidades_organizacionales uo where uo.codigo=a.cod_unidadorganizacional) as nombre_uo2,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=a.cod_unidadorganizacional) as abrev_uo2,(select a.nombre from areas a where a.codigo=a.cod_area) as nombre_area,(select c.numero from comprobantes  c where c.codigo=a.cod_comprobante ) as comprobante,a.fecha_baja,a.obs_baja,(select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=a.modified_by) as responsable_baja
+        from activosfijos a WHERE a.codigo=$codigo_af");
+    //Ejecutamos;    
     $stmt->execute();
     
     $result = $stmt->fetch();
@@ -30,37 +30,24 @@ try{
     $codigo = $result['codigo'];
     $codigoactivo = $result['codigoactivo'];
     $tipoalta = $result['tipoalta'];
-    $fechalta = $result['fechalta'];
-    // $indiceufv = $result['indiceufv'];
-    // $tipocambio = $result['tipocambio'];
-    // $moneda = $result['moneda'];
-    // $valorinicial = $result['valorinicial'];
+    $fechalta = $result['fechalta'];    
     $depreciacionacumulada = $result['depreciacionacumulada'];
-    $valorresidual = $result['valorresidual'];
-    // $cod_depreciaciones = $result['cod_depreciaciones'];
-    // $cod_tiposbienes = $result['cod_tiposbienes'];
-    // $vidautilmeses = $result['vidautilmeses'];
+    $valorresidual = $result['valorresidual'];    
     $estadobien = $result['estadobien'];
-    // $otrodato = $result['otrodato'];
-    // $cod_ubicaciones = $result['cod_ubicaciones'];
-    // $cod_empresa = $result['cod_empresa'];
     $activo = $result['activo'];
-    // $cod_responsables_responsable = $result['cod_responsables_responsable'];
-    // $cod_responsables_autorizadopor = $result['cod_responsables_autorizadopor'];
-    // $created_at = $result['created_at'];
-    // $created_by = $result['created_by'];
-    // $modified_at = $result['modified_at'];
-    $comprobante = $result['modified_by'];
-    // $vidautilmeses_restante = $result['vidautilmeses_restante'];
+    $comprobante = $result['comprobante'];    
     $nombre_personal = $result['nombre_personal'];
     $nombre_depreciaciones = $result['nombre_depreciaciones'];
     $tipo_bien = $result['tipo_bien'];
     $edificio = "";
-    $oficina = "";
-    // $nombre_uo = $result['nombre_uo'];
+    $oficina = "";    
     $nombre_uo2 = $result['nombre_uo2'];
     $abrev_uo2 = $result['abrev_uo2'];
     $nombre_area = $result['nombre_area'];
+
+    $fecha_baja = $result['fecha_baja'];
+    $obs_baja = $result['obs_baja'];
+    $responsable_baja = $result['responsable_baja'];
     
 
     //==================================================================================================================
@@ -164,12 +151,19 @@ $html.=  '<header class="header">'.
                                 '<b>Fecha alta : </b>'.$fechalta.'<br>'.
                                 '<b>Tipo Bien : </b>'.$tipo_bien.'<br>'.
                                 '<b>Ultimo Mes Depreciado : </b>'.$mes3.' / '.$gestion3.'<br>'.
-                                '<b>Valor Neto (Bs): </b>'.$d10_formateado.'<br>'.'<br>'.
-                                '<b>Proyecto Financiación : </b>'.$nom_proy_financiacion.
+                                '<b>Valor Neto (Bs): </b>'.$d10_formateado.'<br>'.'<br>';
+                                if($fecha_baja<>null || $fecha_baja<>""){
+                                    $html.='<b>Fecha Baja : </b>'.date('d/m/Y',strtotime($fecha_baja)).'<br>'.
+                                    '<b>Responsable Baja : </b>'.$responsable_baja.'<br>'.
+                                    '<b>Obs Baja : </b>'.$obs_baja.'<br>'.'<br>';
+                                }
+
+                                
+                                $html.='<b>Proyecto Financiación : </b>'.$nom_proy_financiacion.
                             '</p>'.
                         '</td>'.
                         '<td class="text-center small">'; if($imagen!="" || $imagen!=null){
-                            $html.='<img src="imagenes/'.$imagen.'" style="width: 100px; height:100px;"><br>';
+                            $html.='<img src="imagenes/'.$imagen.'" style="width: 30%; "><br>';
                             }
                                                         
                                 $dir = 'qr_temp/';

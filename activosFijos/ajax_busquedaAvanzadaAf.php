@@ -18,6 +18,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalGestion=$_SESSION["globalGestion"];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
+$globalUser=$_SESSION["globalUser"];
 
 $cod_uo=$_GET['cod_uo'];
 $rubro=$_GET['rubro'];
@@ -37,16 +38,21 @@ $codigoActivo=$_GET['codigoActivo'];
 $altasbajas=$_GET['altasbajas'];
 
 
-
-// $unidadOrgString=implode(",", $cod_uo);
-
-
+$string_personal_baja=obtenerValorConfiguracion(101);
+$array_personal_bajas=explode(",", $string_personal_baja);
+$cont_per_bajas=count($array_personal_bajas);
+$personal_baja=false;
+for ($i=0; $i <$cont_per_bajas ; $i++) { 
+  if($globalUser==$array_personal_bajas[$i]){
+    $personal_baja=true;
+  }
+}
 
 $sql="SELECT af.codigo,af.codigoactivo,af.activo,af.fechalta, d.abreviatura as dep_nombre, tb.tipo_bien tb_tipo,af.contabilizado,af.cod_comprobante,
 (select pr.abreviatura from proyectos_financiacionexterna pr where pr.codigo=af.cod_proy_financiacion)as proy_financiacion,
  (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=af.cod_unidadorganizacional)as nombre_unidad, 
  (select a.abreviatura from areas a where a.codigo=af.cod_area)as nombre_area,
- (select concat_ws(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable
+ (select concat_ws(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=af.cod_responsables_responsable)as nombre_responsable,(SELECT afi.imagen FROM activosfijosimagen afi where afi.codigo=af.codigo)as imagen,(select eaaf.nombre from activofijos_asignaciones afa join estados_asignacionaf eaaf on afa.cod_estadoasignacionaf=eaaf.codigo where afa.cod_activosfijos=af.codigo order by afa.codigo desc limit 1) as nombre_estado
 from activosfijos af, depreciaciones d, tiposbienes tb 
 where af.cod_depreciaciones = d.codigo and af.cod_tiposbienes = tb.codigo ";  
 
@@ -86,8 +92,6 @@ if($codigoActivo!=""){
 $sql.=" order by af.codigoactivo desc";
 // echo $sql; 
 
-
-
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $stmt->bindColumn('codigo', $codigo);
@@ -104,38 +108,24 @@ $stmt->bindColumn('nombre_area', $nombreArea);
 $stmt->bindColumn('proy_financiacion', $proy_financiacion);
 $stmt->bindColumn('contabilizado', $contabilizado);
 $stmt->bindColumn('cod_comprobante', $cod_comprobante);
+
+$stmt->bindColumn('imagen', $imagen);
+$stmt->bindColumn('nombre_estado', $nombre_estado);
 ?>
-<table class="table table-condensed" id="tablePaginatorHead">
-                  <thead>
-                    <tr>
-                      <th></th>
-                        <th>CodSistema</th>
-                        <th>Codigo</th>
-                        <th>Of/Area</th>
-                        <th>Activo</th>
-                        <th>F. Alta</th>
-                        <th>Rubro/TipoBien</th>
-                        <th>Responsable</th>
-                        <th>Proyecto</th>
-                        <th>Acc/Eventos</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
+
                     <?php $index=1;
-                    while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
-                      $activo= str_replace('"', '', $activo);
+                  while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { 
                       // $activo=addslashes($activo);
+                      $activo= str_replace('"', '', $activo);
                       ?>
                       <tr>
                         <td  class="td-actions text-right">    
                             <a href='<?=$printDepreciacion1;?>?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-info">
                               <i class="material-icons" title="Ficha Activo Fijo" style="color:black">print</i>
                             </a>
-                            <a href='reportes_activosfijos/imp_actaEntrega_html.php?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-danger">
+                            <!-- <a href='reportes_activosfijos/imp_actaEntrega_html.php?codigo=<?=$codigo;?>' target="_blank" rel="tooltip" class="btn btn-danger">
                               <i class="material-icons" title="Acta de Entrega" style="color:black">print</i>
-                            </a>
+                            </a> -->
                           </td>
                           <td class="text-center small"><?=$codigo;?></td>
                           <td class="text-center small"><?=$codigoactivo;?></td>
@@ -144,7 +134,14 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                           <td class="text-center small"><?=$fechalta;?></td>
                           <td class="text-left small"><?=$dep_nombre;?>/<?=$tb_tipo;?></td>
                           <td class="text-left small"><?=strtoupper($nombre_responsable)?></td>
-                          <td class="text-left small"><?=$proy_financiacion;?></td>
+                          <td class="text-left small"><?=$nombre_estado?></td>
+                          <td class="text-left small">
+                            <?php
+                              if($imagen<>null && $imagen<>""){?>                                
+                                 <i class="material-icons" >wallpaper</i>
+                              <?php }
+                              ?>
+                          </td>
                           <td class="td-actions text-right">
                             <div class="btn-group dropdown">
                               <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -164,11 +161,15 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                 <a href='<?=$urlEditTransfer;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
                                   <i class="material-icons text-info" >transfer_within_a_station</i>Transferir
                                 </a>
-                                <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalEditar" onclick="agregaformActivoFijo_baja('<?=$codigo;?>','<?=$codigoactivo;?>','<?=$activo?>')">
+                              <?php } 
+                              if($personal_baja){
+                              ?>
+                              <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalEditar" onclick="agregaformActivoFijo_baja('<?=$codigo;?>','<?=$codigoactivo;?>','<?=$activo?>')">
                                   <i class="material-icons text-danger"  title="Editar">flight_land</i>Dar de Baja
                                 </button>
-
-                              <?php } ?>
+                              <?php
+                              }
+                              ?>
                               </div>
                             </div>
                             <div class="btn-group dropdown">
@@ -186,26 +187,19 @@ $stmt->bindColumn('cod_comprobante', $cod_comprobante);
                                 <a href='<?=$urlRevaluarAF;?>&codigo=<?=$codigo;?>' rel="tooltip" class="dropdown-item">
                                   <i class="material-icons text-warning" style="color:black">trending_up</i>Reevaluar AF
                                 </a><?php } ?>
+                                <?php
+                                //si es mayo a cero, ya se genero el comprobante.
+                                  if($cod_comprobante>0){?>
+                                    <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1" class="dropdown-item" target="_blank">
+                                           <i class="material-icons" title="Imprimir Comporbante" style="color:red">print</i>Imprimir Comporbante
+                                       </a> 
+                                  <?php }elseif($contabilizado==0){ ?>
+                                    <a href="<?=$urlprint_contabilizacion_cajachica;?>?cod_cajachica=<?=$cod_cajachica;?>" class="dropdown-item" target="_blank" > 
+                                      <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>Generar Comprobante
+                                    </a>
+                                  <?php } ?>
                               </div>
                             </div>
-                            
-                          </td>
-                          <td class="text-center">
-                            <?php
-                            //si es mayo a cero, ya se genero el comprobante.
-                              if($cod_comprobante>0){?>                                    
-                                <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1" target="_blank">
-                                       <i class="material-icons" title="Imprimir Comporbante" style="color:red">print</i>
-                                   </a> 
-                              <?php }elseif($contabilizado==0){ ?>
-                                <a href="<?=$urlprint_contabilizacion_af;?>?codigo_activo=<?=$codigo;?>" target="_blank" > 
-                                  <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
-                                </a>
-                              <?php }
-                            ?>
                           </td>
                       </tr>
                     <?php $index++; } ?>
-                  </tbody>
-                </table>
-
