@@ -23,7 +23,7 @@ $saldo_inicial=0;
 
 // Preparamos
 $stmt = $dbh->prepare("SELECT ce.*
-FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.fecha_hora desc limit 50"); // limit 50
+FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.fecha_hora desc, ce.codigo desc limit 50"); // limit 50
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -54,7 +54,7 @@ $fecha=date('Y-m-d');
 $saltoActual=obtenerSaldoAnteriorLibreta($fecha,$codigoLibreta);
 
 $stmt_saldoFin = $dbh->prepare("SELECT ce.saldo
-FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.fecha_hora desc limit 1"); 
+FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLibreta and  ce.cod_estadoreferencial=1 order by ce.fecha_hora desc, ce.codigo desc limit 1"); 
 $stmt_saldoFin->execute();
 $stmt_saldoFin->bindColumn('saldo', $saldo_final);
 $saldo_final=0;
