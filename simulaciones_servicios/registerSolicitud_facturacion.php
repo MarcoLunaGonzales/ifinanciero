@@ -504,18 +504,23 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
             }
         }
         var correo_contacto=f.elements["correo_contacto"].value;
-        var parts = correo_contacto.split(',');
-        //Creo esta variable para detener el ciclo siguiente cuando no es un correo válido    
-        //Recorro la lista de los correos
-        for(var i in parts){
-            /*Verifico que sea una dirección de correo correcta, es la misma
-              expresión regular que usa esta librería para la regla email */
-            if(/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(parts[i].trim()) === false){
-                //Si falla la verificación pongo a true esta variable y salgo del ciclo          
-                var msg = "Correo Electronico no válido. -> "+parts[i];        
-                ok = false;
-              break;
-            }
+        if(correo_contacto=="" || correo_contacto==null || correo_contacto==" "){
+            var msg = "Correo Electronico no válido.";        
+            ok = false;
+        }else{
+            var parts = correo_contacto.split(',');
+            //Creo esta variable para detener el ciclo siguiente cuando no es un correo válido    
+            //Recorro la lista de los correos
+            for(var i in parts){
+                /*Verifico que sea una dirección de correo correcta, es la misma
+                  expresión regular que usa esta librería para la regla email */
+                if(/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(parts[i].trim()) === false){
+                    //Si falla la verificación pongo a true esta variable y salgo del ciclo          
+                    var msg = "Correo Electronico no válido. -> "+parts[i];        
+                    ok = false;
+                  break;
+                }
+            }    
         }
         if(ok == false)    
             Swal.fire("Informativo!",msg, "warning");
