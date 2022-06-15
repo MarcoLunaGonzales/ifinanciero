@@ -12,8 +12,11 @@ if(isset($_GET['q'])){
   $s="";
   if(isset($_GET['s'])){
     $s=$_GET['s'];
-    $sqlFilter1 = str_replace("IdOficina", "p.cod_unidadorganizacional", $_GET['s']);
-    $sqlFilter2 = "and ".str_replace("IdArea", "p.cod_area", $sqlFilter1);
+    $wordsOficina = array("IdOficina", "idoficina", "Idoficina", "idOficina");
+    $wordsArea = array("IdArea", "idarea", "Idarea", "idArea");
+
+    $sqlFilter1 = str_replace($wordsOficina, "p.cod_unidadorganizacional", $_GET['s']);
+    $sqlFilter2 = "and ".str_replace($wordsArea, "p.cod_area", $sqlFilter1);
     $sqlFilter = str_replace("%20", " ", $sqlFilter2);
   }else{
     $sqlFilter = "";
@@ -36,7 +39,9 @@ join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo
 join clientes c on c.codigo=sc.cod_cliente 
 join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
 where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion!=1 $sqlFilter order by sc.codigo desc";
-//echo $sqlAdmin;
+
+echo $sqlAdmin;
+
 $stmt = $dbh->prepare($sqlAdmin);
 // Ejecutamos
 $stmt->execute();
