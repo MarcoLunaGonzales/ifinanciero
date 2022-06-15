@@ -392,7 +392,8 @@ $contadorRegistros=0;
                                 <label class="col-sm-2 col-form-label">Correo De Contacto <br>Para Envío De Factura.</label>
                                 <div class="col-sm-10">
                                     <div class="form-group">
-                                        <input class="form-control" type="email" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required />
+                                        <!-- <input class="form-control" type="email" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required /> -->
+                                        <input type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" class="form-control tagsinput" data-role="tagsinput" data-color="info" required="true" > 
                                     </div>
                                 </div>
                             </div>
@@ -672,7 +673,21 @@ $contadorRegistros=0;
                  var msg = "Por favor agregue Archivo Adjunto.";        
                 ok = false;
             }
-        }        
+        }
+        var correo_contacto=f.elements["correo_contacto"].value;
+        var parts = correo_contacto.split(',');
+        //Creo esta variable para detener el ciclo siguiente cuando no es un correo válido    
+        //Recorro la lista de los correos
+        for(var i in parts){
+            /*Verifico que sea una dirección de correo correcta, es la misma
+              expresión regular que usa esta librería para la regla email */
+            if(/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(parts[i].trim()) === false){
+                //Si falla la verificación pongo a true esta variable y salgo del ciclo          
+                var msg = "Correo Electronico no válido. -> "+parts[i];        
+                ok = false;
+              break;
+            }
+        }
 
         if(ok == false)    
             Swal.fire("Informativo!",msg, "warning");
