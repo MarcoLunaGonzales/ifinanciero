@@ -34,6 +34,9 @@ $dbh = new Conexion();
   $stmtAdmnin->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
   $stmtAdmnin->bindColumn('estadoplanilla', $estadoplanilla);
   $stmtAdmnin->bindColumn('comprobante', $comprobante_x);
+
+  $modified_at="";
+  $modified_by="";
   ?>
   <div class="content">
     <div class="container-fluid">

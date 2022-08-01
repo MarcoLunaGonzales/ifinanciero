@@ -112,7 +112,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
 
             $ordenDetalle++;
 
-            $glosaDetalle1="Aportes Personal2. Planilla de sueldos correspondiente a: ".$nombreUODistX." ".$mesPlanilla."/".$gestionPlanilla;
+            $glosaDetalle1="Aportes Personal2. Planilla de sueldos correspondiente a: ".$nombreUODistX." ".$mesPlanilla."/".$anioPlanilla;
             $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUODistX','$centroCostosDN','$montoAportesUODist','0','$glosaDetalle1','$ordenDetalle')";
             $stmtInsertDet = $dbh->prepare($sqlInsertDet);
             $flagSuccessDet=$stmtInsertDet->execute();
@@ -138,7 +138,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
 
          $ordenDetalle++;
 
-         $glosaDetalle1="Aportes Personal2. Planilla de sueldos correspondiente a: ".$nombreUODistX." ".$mesPlanilla."/".$gestionPlanilla;
+         $glosaDetalle1="Aportes Personal2. Planilla de sueldos correspondiente a: ".$nombreUODistX." ".$mesPlanilla."/".$anioPlanilla;
          $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUODistX','$centroCostosDN','$montoAportesUODist','0','$glosaDetalle1','$ordenDetalle')";
          $stmtInsertDet = $dbh->prepare($sqlInsertDet);
          $flagSuccessDet=$stmtInsertDet->execute();
@@ -156,7 +156,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
          $monto_subsidioX=$rowPersonalProyectos['monto_subsidio'];
          
          $numeroCuenta="387";//CUENTAS COBRAR PROYECTOS
-         $glosaDetalle2=$nombrePersonalX." Sueldo correspondiente a: ".$mesPlanilla."/".$gestionPlanilla;
+         $glosaDetalle2=$nombrePersonalX." Sueldo correspondiente a: ".$mesPlanilla."/".$anioPlanilla;
          $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$numeroCuenta','0','$codUODistX','$centroCostosSIS','$monto_subsidioX','0','$glosaDetalle2','$ordenDetalle')";
          $stmtInsertDet = $dbh->prepare($sqlInsertDet);
          $flagSuccessDet=$stmtInsertDet->execute();
@@ -165,7 +165,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
       }
       //FIN PERSONAL PROYECTOS
 
-      $glosaDetalleGeneral="Sueldo correspondiente a: ".$mesPlanilla."/".$gestionPlanilla;
+      $glosaDetalleGeneral="Sueldo correspondiente a: ".$mesPlanilla."/".$anioPlanilla;
       //$codUOCentroCosto="829";
       $codUOCentroCosto=$globalUnidadX;
       $codAreaCentroCosto="501";
