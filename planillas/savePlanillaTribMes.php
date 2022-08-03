@@ -9,18 +9,39 @@ $dbh = new Conexion();
 
 $codigo = $_POST['cod_planillatrib'];
 $codPlan = $_POST['cod_planilla'];
-if($codigo==0){
-  insertarPlanillaTributaria($codPlan);
-}else{
-  actualizarPlanillaTributaria($codigo);	
-  //procesarPlanillaTributaria($codigo,$codPlan);	
-  $flagsucess=ReprocesarPlanillaTribNuevo($codigo,$codPlan);
+// if($codigo==0){
+//   insertarPlanillaTributaria($codPlan);
+  
+// }else{
+//   actualizarPlanillaTributaria($codigo);	  
+//   //procesarPlanillaTributaria($codigo,$codPlan);	
+//   $flagsucess=ReprocesarPlanillaTribNuevo($codigo,$codPlan);
 
+//   if($flagsucess)
+//     echo 1;
+//   else
+//     echo 0;
+// }
+
+
+if($codigo==0){
+  $codigo_pt=insertarPlanillaTributaria($codPlan);
+  $flagsucess=ReprocesarPlanillaTribNuevo($codigo_pt,$codPlan);
+  if($flagsucess)
+    echo 1;
+  else
+    echo 0;
+}else{
+  actualizarPlanillaTributaria($codigo);  
+  //procesarPlanillaTributaria($codigo,$codPlan); 
+  $flagsucess=ReprocesarPlanillaTribNuevo($codigo,$codPlan);
   if($flagsucess)
     echo 1;
   else
     echo 0;
 }
+
+
 //actualizar la planilla tributaria el modified at
 function actualizarPlanillaTributaria($codigo){
   $codigoUser=$_SESSION["globalUser"];
@@ -32,13 +53,16 @@ function actualizarPlanillaTributaria($codigo){
 }
 //insertar nueva planilla tributaria
 function insertarPlanillaTributaria($codigo){
-  $dbh = new Conexion();	
-  $stmt = $dbh->prepare("SELECT * from planillas where codigo=$codigo");
+  $dbh = new Conexion();
+  $sql="SELECT * from planillas where codigo=$codigo";
+  // echo $sql;
+  $stmt = $dbh->prepare($sql);
   $stmt->execute();
   $result= $stmt->fetch();
   $cod_gestion=$result['cod_gestion'];
   $cod_mes=$result['cod_mes'];
   $cod_estadoplanilla=2;		
+
   //insertar
   $created_by=$_SESSION["globalUser"];
   $modified_by=$_SESSION["globalUser"];
@@ -51,6 +75,8 @@ function insertarPlanillaTributaria($codigo){
   $stmtInsert->bindParam(':created_by',$created_by);
   $stmtInsert->bindParam(':modified_by',$modified_by);
   $stmtInsert->execute();
+  $ultimo = $dbh->lastInsertId();
+  return $ultimo;
 }
 
 function procesarPlanillaTributaria($codigo,$codPlan){
@@ -179,7 +205,7 @@ function procesarPlanillaTributaria($codigo,$codPlan){
 
 function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
   $dbh = new Conexion();
-
+  $flagsuccess=false;
   //BORRAR detalle planilla tributaria
   $sqlDelete="DELETE FROM planillas_tributarias_personal_mes_2 where cod_planillatributaria=$codigo";
   $stmtDelete = $dbh->prepare($sqlDelete);
@@ -188,22 +214,22 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
   $salario_minimo_no_imponible=obtenerSueldoMinimo()*2;
   $impuesto_sueldo_gravado=obtenerValorConfiguracionPlanillas(21);
   //insertamos los datos
-  $planillas="SELECT pl.*,p.cod_mes,p.cod_gestion,(select monto_iva from rc_ivapersonal where cod_personal=pl.cod_personalcargo) as monto_iva FROM planillas_personal_mes pl,planillas p where pl.cod_planilla=p.codigo and pl.cod_planilla=$codPlan";
+  $planillas="SELECT pl.*,p.cod_mes,p.cod_gestion,(select nombre from gestiones where codigo=p.cod_gestion)as gestion,(select rc.monto_iva from rc_ivapersonal rc where rc.cod_personal=pl.cod_personalcargo and rc.cod_mes=p.cod_mes and rc.cod_gestion=p.cod_gestion and rc.cod_estadoreferencial=1) as monto_iva FROM planillas_personal_mes pl,planillas p where pl.cod_planilla=p.codigo and pl.cod_planilla=$codPlan";
   //and pl.cod_personalcargo in (84,93,183,195,286,32,176,96,68,16,97)
+
   $stmtPlanillas=$dbh->prepare($planillas);
   $stmtPlanillas->execute();
   while ($row = $stmtPlanillas->fetch(PDO::FETCH_ASSOC)) {
     $cod_personal=$row['cod_personalcargo'];
     $cod_mes=$row['cod_mes'];
     $cod_gestion=$row['cod_gestion'];
+
+    $mes=str_pad($cod_mes, 2, "0", STR_PAD_LEFT);
+    $gestion=$row['gestion'];
     
     $afp_1=$row['afp_1'];
     $afp_2=$row['afp_2'];
     $total_ganado=$row['total_ganado'];
-    // $afp_1=0;
-    // $afp_2=1340.41;
-    // $total_ganado=10546.07;
-
 
     $monto_iva=$row['monto_iva'];
     if($monto_iva==null||$monto_iva==""){
@@ -269,14 +295,22 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
     
 
       //UFV Anterior
-      $fecha_inicio=date("Y-m-01");
-      $fecha_actual=date("Y-m-d");
+      // $fecha_inicio=date("Y-m-01");
+      // $fecha_actual=date("Y-m-d");
+      //   $ufv_anterior=obtenerUFV($fecha_inicio);
+      // $ufv_actual=obtenerUFV($fecha_actual);
 
-      $ufv_anterior=obtenerUFV($fecha_inicio);
-      $ufv_actual=obtenerUFV($fecha_actual);
+      $fecha_inicio=date($gestion."-".$mes."-01");
+      //UFV Anterior
+      $fecha_anterior=date('Y-m-t',strtotime($fecha_inicio." - 1 days"));
+      $fecha_fin=date('Y-m-t',strtotime($fecha_inicio));
+      $ufv_anterior=obtenerUFV($fecha_anterior);
+      $ufv_actual=obtenerUFV($fecha_fin);
+
+    
 
        
-
+      //echo $saldo_mes_anterior."*".$ufv_actual."/".$ufv_anterior."-".$saldo_mes_anterior;
       $mantenimiento_saldo_mes_anterior=($saldo_mes_anterior*$ufv_actual/$ufv_anterior-$saldo_mes_anterior);
       //SALDO DEL PERIODO ANTERIOR ACTUALIZADO
       $saldo_mes_anterior_actualizado=$saldo_mes_anterior+$mantenimiento_saldo_mes_anterior;

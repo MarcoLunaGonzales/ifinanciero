@@ -11708,4 +11708,15 @@ function obtenerNombreInstanciaCajaChica($codCaja){
       return $valor;
    }
 
+function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$dias_trabajados_por_defecto){
+   $dbh = new Conexion();
+   $stmt = $dbh->prepare("SELECT dias_trabajados from personal_kardex_mes where cod_mes=$cod_mes_x and cod_gestion=$cod_gestion_x and cod_personal=$codigo_personal and cod_estadoreferencial=1");
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $valor=$row['dias_trabajados']*30/$dias_trabajados_por_defecto;
+   }
+   return(round($valor,0,PHP_ROUND_HALF_DOWN));
+}
+
 ?>

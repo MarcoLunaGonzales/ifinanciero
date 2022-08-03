@@ -13797,6 +13797,9 @@ function ajaxCliente_nit_razonsocial(cod_cliente){
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
+      $(".tagsinput").tagsinput();
+      // $("#correo_contacto").tagsinput('removeAll');
+      // $("#correo_contacto").tagsinput('add', '');
       $('.selectpicker').selectpicker(["refresh"]);          
     }
   }
@@ -13810,6 +13813,7 @@ function ajaxCliente_nit_razonsocialNormas(cod_cliente){
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       contenedor.innerHTML = ajax.responseText;
+      $(".tagsinput").tagsinput();
       $('.selectpicker').selectpicker(["refresh"]);          
     }
   }
