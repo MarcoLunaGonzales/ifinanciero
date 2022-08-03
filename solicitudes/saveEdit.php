@@ -21,6 +21,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 
 if(isset($_POST['numero'])){
+    $codSolicitante=$_POST["solicitante"];
     $observaciones=$_POST['observaciones_solicitud'];
     //numero correlativo de la solicitud
     $sql="SELECT IFNULL(max(c.numero)+1,1)as codigo from solicitud_recursos c";
@@ -72,13 +73,13 @@ if(isset($_POST['numero'])){
   if(isset($_POST['usuario_ibnored_v'])){
        $v=$_POST['usuario_ibnored_v'];
        $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato,idServicio,observaciones) 
-       VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$v."','".$observaciones."')";
+       VALUES ('".$codSolicitud."','".$codSolicitante."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$v."','".$observaciones."')";
   }else{
     $v=obtenerIdServicioPorIdSimulacion($codSimServ);
     $sqlInsert="INSERT INTO solicitud_recursos (codigo, cod_personal,cod_unidadorganizacional,cod_area,fecha,numero,cod_simulacion,cod_proveedor,cod_simulacionservicio,cod_contrato,idServicio,observaciones) 
-       VALUES ('".$codSolicitud."','".$globalUser."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$v."','".$observaciones."')";
+       VALUES ('".$codSolicitud."','".$codSolicitante."','".$globalUnidad."', '".$globalArea."', '".$fecha."','".$numero."','".$codSim."','".$codProv."','".$codSimServ."','".$codCont."','".$v."','".$observaciones."')";
   }
-  print_r($sqlInsert);
+  //print_r($sqlInsert);
   $stmtInsert = $dbh->prepare($sqlInsert);
   $flagSuccess=$stmtInsert->execute();
 
@@ -91,7 +92,7 @@ if(isset($_POST['numero'])){
        $u=$_POST['usuario_ibnored_u'];
        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codSolicitud,$fechaHoraActual,$obs);
   }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codSolicitud,$fechaHoraActual,$obs);
+       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$codSolicitante,$codSolicitud,$fechaHoraActual,$obs);
   }
 
 
@@ -279,7 +280,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
             "BeneficiarioApellido"=>$_POST["apellido_beneficiario".$i], 
             "BeneficiarioIdentificacion"=>NULL, // valor textual en el caso de requerir el registro de la identificacion. Caso contrario enviar NULL
             "BancoIntermediario"=>NULL, // valor textual en caso de hacer uso del campo. Caso contrario NULL
-            "IdUsuarioReg"=>$globalUser, // valor numerico obtenido del id del usuario autenticado. Usar 0 en caso de no tener el id
+            "IdUsuarioReg"=>$codSolicitante, // valor numerico obtenido del id del usuario autenticado. Usar 0 en caso de no tener el id
             "Vigencia"=>1 //valor recuperado de los datos de cuenta
             );
     $parametros=json_encode($parametros);

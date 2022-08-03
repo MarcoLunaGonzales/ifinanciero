@@ -61,7 +61,7 @@ if($banderaLogin==1 || $tipoLogin==1){
 			where (p.codigo='$idUsuarioSW' or p.codigo='$idUsuarioSW2') ";		
 	}
 
-
+	echo $sql;
 	/*if($idUsuarioSW==47770){
 		$idUsuarioSW=49299;
 	}*/

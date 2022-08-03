@@ -1,5 +1,5 @@
 <?php
-function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
+function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin,$tipo_leyenda){
 	require_once __DIR__.'/../conexion.php';
 	if($tipo_admin==1){
 		require '../assets/phpqrcode/qrlib.php';
@@ -11,11 +11,6 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	
 	$dbh = new Conexion();
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
-
-	// $sqlX="SET NAMES 'utf8'"; 
-	// $stmtX = $dbh->prepare($sqlX);
-	// $stmtX->execute();
-
 	
 	set_time_limit(300);
 
@@ -24,12 +19,12 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	// $auxiliar = $_GET["tipo"];
 
 	$codigo = $codigo;
-	$auxiliar =$auxiliar; //de dónde llega la solicitud para impresión 1=lista facturas (cod_factura) / 2=lista solicitudes (cod_sol_Fact)//3=lista facturas (cod_factura)tienda virtual
-	$tipo_admin=$tipo_admin;//1 original cliente completo(abre y cierra de html), 2 original cliente (abre html), 3 copia contabilidad (cierra html), 4 original (abre y cierra html), 5 copia(abre y cierra html)
+	$auxiliar = 1; //de dónde llega la solicitud para impresión 1=lista facturas (cod_factura) / 2=lista solicitudes (cod_sol_Fact)//3=lista facturas (cod_factura)tienda virtual
+	$tipo_admin=$tipo_admin;
+	//1 original cliente completo(abre y cierra de html), 2 original cliente (abre html), 3 copia contabilidad (cierra html), 4 original (abre y cierra html), 5 copia(abre y cierra html)
 	$tipo_impresion=2;//tipo de impresión 1 sin detalles, 2 detalladamente
 	try {	
-		//cabecera factura
-		if($auxiliar==1){//list facturas
+
 		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf where sf.codigo=$codigo");
 		    $stmtInfo->execute();
 		    $resultInfo = $stmtInfo->fetch();   
@@ -52,53 +47,8 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		    $observaciones = $resultInfo['observaciones'];
 		    $cod_tipopago = $resultInfo['cod_tipopago'];
 		    $nombre_cliente = $razon_social;
-		}elseif($auxiliar==2){//solicitudes
-		    $stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf  where sf.cod_solicitudfacturacion=$codigo");
-		    $stmtInfo->execute();
-		    $resultInfo = $stmtInfo->fetch();   
-		    $cod_factura = $resultInfo['codigo']; 
-		    $cod_solicitudfacturacion = $resultInfo['cod_solicitudfacturacion'];
-		    $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
-		    $cod_area = $resultInfo['cod_area'];
-		    $fecha_factura = $resultInfo['fecha_factura_x'];
-		    $fecha_limite_emision = $resultInfo['fecha_limite_emision_x'];
-		    $cod_cliente = $resultInfo['cod_cliente'];
-		    $cod_personal = $resultInfo['cod_personal'];
-		    $razon_social = $resultInfo['razon_social'];
-		    $nit = $resultInfo['nit'];
-		    $nro_factura = $resultInfo['nro_factura'];
-		    $nro_autorizacion = $resultInfo['nro_autorizacion'];
-		    $codigo_control = $resultInfo['codigo_control'];
-		    $importe = $resultInfo['importe'];
-		    $cod_dosificacionfactura = $resultInfo['cod_dosificacionfactura'];		    		    
-		    $observaciones = $resultInfo['observaciones'];
-		    $cod_tipopago = $resultInfo['cod_tipopago'];
-		    // $nombre_cliente = $resultInfo['nombre_cliente'];
-		    $nombre_cliente = $razon_social;
-		}else{//para la tiendA
-			$stmtInfo = $dbh->prepare("SELECT sf.*,DATE_FORMAT(sf.fecha_limite_emision,'%d/%m/%Y')as fecha_limite_emision_x,DATE_FORMAT(sf.fecha_factura,'%Y-%m-%d')as fecha_factura_x FROM facturas_venta sf  where sf.codigo=$codigo");
-			$stmtInfo->execute();
-			$resultInfo = $stmtInfo->fetch();   
-			$cod_factura = $resultInfo['codigo']; 
-			$cod_solicitudfacturacion = $resultInfo['cod_solicitudfacturacion'];
-			$cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
-			$cod_area = $resultInfo['cod_area'];
-			$fecha_factura = $resultInfo['fecha_factura_x'];
-			$fecha_limite_emision = $resultInfo['fecha_limite_emision_x'];
-			$cod_cliente = $resultInfo['cod_cliente'];
-			$cod_personal = $resultInfo['cod_personal'];
-			$razon_social = $resultInfo['razon_social'];
-			$nit = $resultInfo['nit'];
-			$nro_factura = $resultInfo['nro_factura'];
-			$nro_autorizacion = $resultInfo['nro_autorizacion'];
-			$codigo_control = $resultInfo['codigo_control'];
-			$importe = $resultInfo['importe'];
-			$cod_dosificacionfactura = $resultInfo['cod_dosificacionfactura'];			
-			$observaciones = $resultInfo['observaciones'];
-			$cod_tipopago = $resultInfo['cod_tipopago'];
-			// $nombre_cliente = $resultInfo['nombre_cliente'];
-			$nombre_cliente = $razon_social;
-		}		
+
+
 		$tipo_pago=nameTipoPagoSolFac($cod_tipopago);
 		$leyenda=obtener_dato_dosificacion($cod_dosificacionfactura);//sacmos la leyenda
 		$nombre_ciudad =  obtenerCiudadDeUnidad(5);//sacmos la ciudad de cod_uo 5(regional La Paz)defecto para todas las fac
@@ -106,10 +56,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		//para generar factura
 		$stmtDesCli = $dbh->prepare("SELECT sf.cantidad,sf.descripcion_alterna,sf.precio,sf.descuento_bob from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
 		$stmtDesCli->execute();
-		// $stmt2DesCli = $dbh->prepare("SELECT sf.descripcion_alterna from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
-		// $stmt2DesCli->execute();
-		// $stmt3DesCli = $dbh->prepare("SELECT sf.precio,sf.descuento_bob,sf.cantidad from facturas_ventadetalle sf where sf.cod_facturaventa=$cod_factura");
-		// $stmt3DesCli->execute();
+
 		//primero guardamos la factura del cliente
 		$nit_empresa=obtenerValorConfiguracionFactura(9);
 		if($cod_solicitudfacturacion==-100){
@@ -119,7 +66,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		}
 		
 		$html = '';
-		if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==4 || $tipo_admin==5){
+		if($tipo_admin==2 || $tipo_admin==3){
 			$html.='<html>'.
 			            '<head>'.
 			                '<!-- CSS Files -->'.
@@ -175,11 +122,9 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 		                    </table>
 		                    <br>
 		                    <small><span><b>';
-		                    if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==4){
-		                    	$html.='ORIGINAL: CLIENTE<br><br>';
-		                    }else{
-		                    	$html.='COPIA: CONTABILIDAD<br><br>';
-		                    }
+
+	                    	$html.=''.$tipo_leyenda.'<br><br>';
+
 		                    $html.='* '.obtenerValorConfiguracionFactura(6).'<br><br>
 		                      '.$nombre_ciudad.', '.obtenerFechaEnLetra($fecha_factura).'<br>
 		                    </b></span></small>
@@ -275,7 +220,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin){
 	            <tr align="center"><td>&quot;'.obtenerValorConfiguracionFactura(7).'&quot;<br>&quot;'.$leyenda.'&quot;</td></tr>
 	        </table>';
 		$html.='</div>';
-        if($tipo_admin==1 || $tipo_admin==3 || $tipo_admin==4 || $tipo_admin==5){
+        if($tipo_admin==2 || $tipo_admin==3){
         	// $html.='</header>';
 			$html.='</body>'.
 			      '</html>';   

@@ -40,7 +40,7 @@ join clientes c on c.codigo=sc.cod_cliente
 join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
 where sc.cod_estadoreferencial=1 and sc.cod_estadosimulacion!=1 $sqlFilter order by sc.codigo desc";
 
-echo $sqlAdmin;
+//echo $sqlAdmin;
 
 $stmt = $dbh->prepare($sqlAdmin);
 // Ejecutamos

@@ -118,6 +118,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
               </thead>
               <tbody>                                
                   <?php 
+                  
                   $iii=1;
                   // $queryPr="SELECT * from ibnorca.ventanormas where (idSolicitudfactura=0 or idSolicitudfactura is null) order by Fecha desc limit 20";
                   // echo $queryPr;
@@ -136,15 +137,17 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                   $stmtIBNO->bindColumn('NroModulo', $NroModulo);
                   $stmtIBNO->bindColumn('Nombre', $nombre_mod);                                    
                   $stmtIBNO->bindColumn('FechaInscripcion_x', $FechaInscripcion);
+
                   while ($rowPre = $stmtIBNO->fetch(PDO::FETCH_ASSOC)){
+
                     $CiAlumno=preg_replace("[\n|\r|\n\r]", "", $CiAlumno);
                     $codigo_curso=obtenerCodigoExternoCurso($IdCurso);
                     $descuento=trim($descuento,'%');
-                    $monto_pagar=($Costo - ($Costo*$descuento/100) )/$CantidadModulos; //monto a pagar del estudiante 
-                    $importe_curso=   $Costo*$descuento/100;//importe curso con desuento
-                    $importe_curso= $Costo-$importe_curso;//importe curso con desuento       
+                    $monto_pagar=($Costo-($Costo*$descuento/100))/$CantidadModulos; //monto a pagar del estudiante 
+                    $importe_curso=$Costo*$descuento/100;//importe curso con desuento
+                    $importe_curso=$Costo-$importe_curso;//importe curso con desuento       
                     //verificamos si pertence a empresas
-                    if($idEmpresa==0){
+                    if($idEmpresa==0 || $idEmpresa>0){
                       $cont_total_ws=0;
                       $cont_total_pagados=0;
                       $sw_aux=true;
@@ -159,7 +162,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                           }
                         }
                         //echo "VERIFICACION....".$cont_total_ws."-".$cont_total_pagados;              
-                        if(($cont_total_ws==$cont_total_pagados || $importe_curso==0){
+                        if(($cont_total_ws==$cont_total_pagados || $importe_curso==0)){
                           $estado="Pagado<br>total"; //pagado
                           $btnEstado="btn-success";
                           $style_s="style='color:  #239b56;'";

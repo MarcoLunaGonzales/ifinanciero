@@ -69,7 +69,7 @@ try{
             $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
             if($cod_sucursal==null || $cod_sucursal==''){//sucursal no encontrado ?>
                 <script>                    
-                    Swal.fire("Error!","A ocurrido un error: Por favor verifique la existencia de sucursales!.", "error");
+                    Swal.fire("Error!","Ocurrio un error: Por favor verifique la existencia de sucursales!.", "error");
                 </script><?php 
             }else{
                 // echo "uo:",$cod_unidadorganizacional."<br>";
