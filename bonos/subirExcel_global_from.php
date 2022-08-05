@@ -8,6 +8,7 @@ require_once 'configModule.php';
 $dbh = new Conexion();
 $codGestion = $_SESSION['globalGestion'];
 $nombreGestion=$_SESSION['globalNombreGestion'];
+$cod_mesGlobal= $_SESSION['globalMes'];
 ?>
 
 <div class="content">
@@ -33,7 +34,7 @@ $nombreGestion=$_SESSION['globalNombreGestion'];
                           $sql = "SELECT codigo,nombre from meses where cod_estado=1 order by codigo";
                           $stmt = $dbh->query($sql);
                           while ($row = $stmt->fetch()){ ?>
-                              <option value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["nombre"];?></option>
+                              <option <?=($cod_mesGlobal==$row["codigo"])?"selected":"";?>  value="<?=$row["codigo"];?>" data-subtext="(<?=$row['codigo']?>)"><?=$row["nombre"];?></option>
                           <?php } ?>
                       </select>
                   </div>

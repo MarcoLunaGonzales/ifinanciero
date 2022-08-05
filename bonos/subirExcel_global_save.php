@@ -54,7 +54,7 @@ if($alert==true){
         $i++;
     }    
 
-    $delimitador = "|";
+    $delimitador = ";";
     $longitudDeLinea = 1000;
     $x=0;
     $datos=array();
@@ -109,7 +109,7 @@ if($alert==true){
                             $monto=0;
                         }
                         $sqlbonos="INSERT INTO bonos_personal_mes (cod_bono, cod_personal,cod_gestion,cod_mes,monto, cod_estadoreferencial,created_at,created_by) 
-                        VALUES ($codDescuento,$cod_personal,$codGestion,$codMes,$monto,$cod_estadoreferencial,now(),'$globalUser')";
+                        VALUES ($codDescuento,$cod_personal,$codGestion,$codMes,$monto,$cod_estadoreferencial,NOW(),'$globalUser')";
                         //echo $sqlbonos;
                         $stmtBonos = $dbh->prepare($sqlbonos);
                         $flagSuccess=$stmtBonos->execute();
