@@ -8041,7 +8041,7 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
   }
   function verificamosFacturaGenerada($codigo){
     $dbh = new Conexion();
-    $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion='$codigo' and cod_estadofactura=2");
+    $stmtVerif = $dbh->prepare("SELECT codigo FROM facturas_venta where cod_solicitudfacturacion='$codigo' and cod_estadofactura<>2");
     $stmtVerif->execute();
     $valor=0;
     while ($row = $stmtVerif->fetch())    

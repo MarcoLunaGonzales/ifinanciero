@@ -204,18 +204,17 @@ $globalPersonal=$_SESSION["globalUser"];
                             <td class="td-actions text-right">
                               <!-- <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br> -->
                               <?php
-                              if($cod_estadofactura!=4){?>                                   
+                              if($cod_estadofactura!=4){ ?>                                   
                                   <div class="btn-group dropdown">
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 1">
                                        <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
                                     </button>
                                     <div class="dropdown-menu">                                      
-                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=1' target="_blank"><i class="material-icons text-success">print</i> Original Cliente y Copia Contabilidad</a>
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>                                    
                                     </div>
                                   </div>
-                                  <div class="btn-group dropdown">
+                                  <!--div class="btn-group dropdown">
                                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 2">
                                        <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
                                     </button>
@@ -225,7 +224,7 @@ $globalPersonal=$_SESSION["globalUser"];
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=6' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>                                    
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=7' target="_blank"><i class="material-icons text-warning">print</i>Copia Original 3</a>
                                     </div>
-                                  </div> 
+                                  </div--> 
                                   <?php                               
                               }?>
                               <div class="btn-group dropdown">

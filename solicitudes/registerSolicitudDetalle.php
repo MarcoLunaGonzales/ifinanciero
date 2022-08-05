@@ -16,8 +16,12 @@ $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
 
+$codSolicitante=0;
+
 if(isset($_GET['q'])){
   $q=$_GET['q'];
+  $codSolicitante=$q;
+  //echo "SOLICITANTE XXXX: ".$q;
   $s=$_GET['s'];
   $u=$_GET['u'];
   $v=0;
@@ -25,6 +29,9 @@ if(isset($_GET['q'])){
     $v=$_GET['v'];
   }
 }
+
+//echo "SOLICITANTE XXXX: ".$q;
+
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalUser=$_SESSION["globalUser"];
@@ -34,6 +41,10 @@ $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 
+
+if($codSolicitante==0){
+  $codSolicitante=$globalUser;
+}
 
 //distribucion gastosarea
 $distribucionOfi=obtenerDistribucionCentroCostosUnidadActivo(); //null para todas las iniciales del numero de cuenta obtenerCuentasLista(5,[5,4]);
@@ -273,10 +284,39 @@ $i=0;
                   <input class="form-control" type="text" name="numero" value="<?=$nroCorrelativo?>" id="numero" readonly/>
               </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-1">
               <div class="form-group">
                   <label class="bmd-label-static">Fecha Solicitud</label>
                   <input class="form-control" type="text" name="nfecha_solicitudumero" value="<?=$fechaActualFormat?>" id="numero" readonly/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group">
+                <label class="bmd-label-static">Solicitante</label>
+                  <select class="selectpicker form-control form-control-sm" data-live-search="true" data-size="6" name="solicitante" id="solicitante" data-style="<?=$comboColor;?>">
+                      <?php
+                      $stmt = $dbh->prepare("SELECT p.codigo, concat(p.paterno,' ',p.primer_nombre)as nombre FROM personal p order by p.paterno, p.materno, p.primer_nombre");
+                      $stmt->execute();
+                      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                        $codigoX=$row['codigo'];
+                        $nombreX=$row['nombre'];
+
+                        if($codigoX==$codSolicitante){
+                          //echo "xyzxyzxyz";
+                      ?>
+                      <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option>  
+                      <?php
+                        }else{
+                      ?>
+                      <option value="<?=$codigoX;?>"><?=$nombreX;?></option>  
+                      <?php
+                        }
+                      }
+                      ?>
+                </select>
+                <script>
+                    actualizarCombosPickerSR();
+                </script>
               </div>
             </div>
             <div class="col-sm-2">
@@ -289,7 +329,7 @@ $i=0;
                   </select>
               </div>
             </div>             
-            <div class="col-sm-3" id="lista_tipo">
+            <div class="col-sm-2" id="lista_tipo">
             </div> 
             <div class="col-sm-2">
               <div class="form-group">

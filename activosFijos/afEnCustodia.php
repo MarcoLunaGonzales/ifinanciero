@@ -26,7 +26,7 @@ $sql="SELECT af.codigo as cod_activo,(SELECT abreviatura from unidades_organizac
 (select ea.nombre from activofijos_asignaciones afa, estados_asignacionaf ea where ea.codigo=afa.cod_estadoasignacionaf and afa.cod_activosfijos=af.codigo and afa.cod_personal=af.cod_responsables_responsable order by afa.codigo desc limit 0,1)as estado_asignacionaf, af.cod_responsables_responsable as cod_personal,
 (select afa.fecha_recepcion from activofijos_asignaciones afa where afa.cod_activosfijos=af.codigo and afa.cod_personal=af.cod_responsables_responsable  order by afa.codigo desc limit 0,1)as fecha_recepcion, af.codigoactivo
 from activosfijos af
-where  af.cod_estadoactivofijo=1 and af.cod_responsables_responsable='$globalUser'";
+where  af.cod_estadoactivofijo=1 and af.cod_responsables_responsable='$globalUser' order by af.codigoactivo desc";
 
 $stmt = $dbh->prepare($sql);
 //ejecutamos

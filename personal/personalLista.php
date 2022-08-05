@@ -54,9 +54,12 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
               
               <h4 class="card-title" ><?=$nombrePluralPersonal?> </h4>
               <h4 align="right" >
+                <a  style="height:10px;width: 10px;"  href='index.php?opcion=rptPersonal_from' target="_blank">
+                  <i class="material-icons" title="Reporte Personal Activo">groups</i>
+                </a>
                 <a  style="height:10px;width: 10px;"  href='<?=$urlListPersonalRetirado;?>' >
-                <i class="material-icons" title="Lista Personal Retirado">rowing</i>
-              </a>  
+                  <i class="material-icons" title="Lista Personal Retirado">rowing</i>
+                </a>  
               </h4>
               
 
