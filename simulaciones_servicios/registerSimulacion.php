@@ -568,41 +568,9 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                  $pUtilidadLocal=($utilidadNetaLocal*100)/($precioLocalX);
 
                  $codEstadoSimulacion=4; 
-                 if($pUtilidadLocal>=$utilidadIbnorcaX&&$pUtilidadExterno>=$utilidadFueraX){
-                    $estiloUtilidad="bg-success text-white";
-                    $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
-                    $estiloMensaje="text-success font-weight-bold";
-                    $codEstadoSimulacion=3;  
-                 }else{
-                    if($pUtilidadLocal>=$utilidadIbnorcaX){
-                        $estiloUtilidadIbnorca="bg-success text-white";
-                        if($ibnorcaC==1){
-                         $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
-                         $estiloMensaje="text-success font-weight-bold";
-                         $codEstadoSimulacion=3;
-                        }                 
-                    }else{
-                        $estiloUtilidadIbnorca="bg-danger text-white";
-                        if($ibnorcaC==1){
-                         $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
-                         $estiloMensaje="text-danger font-weight-bold";
-                        }                      
-                    }
-                    if($pUtilidadExterno>=$utilidadFueraX){
-                        $estiloUtilidadFuera="bg-success text-white";
-                        if($ibnorcaC!=1){
-                         $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
-                         $estiloMensaje="text-success font-weight-bold";
-                         $codEstadoSimulacion=3;
-                        }
-                    }else{
-                        $estiloUtilidadFuera="bg-danger text-white";
-                        if($ibnorcaC!=1){
-                         $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
-                         $estiloMensaje="text-danger font-weight-bold";
-                        }                      
-                    }
-                 }
+                 //echo "UTILIDAD LOCALXXXXX: ".$pUtilidadLocal." utilidadIbnorcaXXXXX: ".$utilidadIbnorcaX." utilidadNetaExternoXXX: ".$pUtilidadExterno." utilidadFueraXXXXX: ".$utilidadFueraX;
+
+                 /*AQUI SE MOSTRABAN LOS CALCULOS PARA LOS MENSAJES*/
 
 				?>	
 				<input type="hidden" id="cantidad_alibnorca" name="cantidad_alibnorca" readonly value="<?=$alumnosX?>">
@@ -803,45 +771,49 @@ for ($an=0; $an<=$anioGeneral; $an++) {
            $utilidadBruta=($precioLocalX)-($costoTotalLocal);
            $utilidadNetaLocal=$utilidadBruta-((($iva+$it)/100)*($precioLocalX))-($precioAfnorX);
            $pUtilidadLocal=($utilidadNetaLocal*100)/($precioLocalX);
+
+
+           /*NUEVO LUGAR MENSAJES*/
+           if($pUtilidadLocal>=$utilidadIbnorcaX&&$pUtilidadExterno>=$utilidadFueraX){
+              $estiloUtilidad="bg-success text-white";
+              $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+              $estiloMensaje="text-success font-weight-bold";
+              $codEstadoSimulacion=3;  
+           }else{
+              if($pUtilidadLocal>=$utilidadIbnorcaX){
+                  $estiloUtilidadIbnorca="bg-success text-white";
+                  if($ibnorcaC==1){
+                   $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                   $estiloMensaje="text-success font-weight-bold";
+                   $codEstadoSimulacion=3;
+                  }                 
+              }else{
+                  $estiloUtilidadIbnorca="bg-danger text-white";
+                  if($ibnorcaC==1){
+                   $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                   $estiloMensaje="text-danger font-weight-bold";
+                  }                      
+              }
+              if($pUtilidadExterno>=$utilidadFueraX){
+                  $estiloUtilidadFuera="bg-success text-white";
+                  if($ibnorcaC!=1){
+                   $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                   $estiloMensaje="text-success font-weight-bold";
+                   $codEstadoSimulacion=3;
+                  }
+              }else{
+                  $estiloUtilidadFuera="bg-danger text-white";
+                  if($ibnorcaC!=1){
+                   $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                   $estiloMensaje="text-danger font-weight-bold";
+                  }                      
+              }
+           }
+
            ?> 
           </div>
           <br>
 				  <div class="row"> 	
-					<!--<div class="col-sm-3">
-            <p class="font-weight-bold float-right">DATOS ADICIONALES PARA EL CALCULO</p>
-            <table class="table table-bordered table-condensed">
-              <tbody>
-								<tr class="">
-									<td  style="font-size:9px !important;"></td>
-									<td class="bg-table-primary text-white">IMPORTE</td>
-								</tr>
-								<tr>
-									<td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
-                  <td class="text-right font-weight-bold"><?=number_format($totalFijoPlan, 2, '.', ',')?></td>
-								</tr>
-                <tr>
-                  <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL</td>
-                  <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
-                </tr>
-								<tr>
-                  <td class="text-left small bg-table-primary text-white">COSTO HONORARIOS PERSONAL</td>
-                  <td class="text-right font-weight-bold"><?=number_format($costoVariablePersonal, 2, '.', ',')?></td>
-                </tr>
-                <tr class="">
-                  <td  style="font-size:9px !important;"></td>
-                  <td class="bg-table-primary text-white">CANTIDAD</td>
-                </tr>
-              
-                <tr class="bg-warning text-dark">
-                  <td class="text-left small">DIAS Servicio</td>
-                  <td class="text-right font-weight-bold"><?=$diasSimulacion?></td>
-                </tr>
-                <?php
-               // $puntoEquilibrio=($totalFijoPlan/($precioLocalX-$totalVariable[2]));
-                 ?>
-              </tbody>
-            </table>
-					</div>-->
 					<div class="col-sm-6">
             <p class="font-weight-bold float-left">RESUMEN DE LA PROPUESTA</p>
             <table class="table table-bordered table-condensed">
