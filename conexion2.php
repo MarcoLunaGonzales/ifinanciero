@@ -9,19 +9,19 @@ class Conexion2 extends PDO {
       // private $contrasena = 'minka123';
       // private $port = '4606';  
   
-      private $tipo_de_base = 'mysql';
-      private $host = 'localhost';
-      private $nombre_de_base = 'financiero0722';
-      private $usuario = 'root';
-      private $contrasena = '4868422Marco';
-      private $port = '3306'; 
-
-      //       private $tipo_de_base = 'mysql';
-      // private $host = 'lpsit.ibnorca.org';
-      // private $nombre_de_base = 'bdifinanciero';
-      // private $usuario = 'ibnofinanciero';
-      // private $contrasena = 'Financiero1bn0';
+      // private $tipo_de_base = 'mysql';
+      // private $host = 'localhost';
+      // private $nombre_de_base = 'financiero0722';
+      // private $usuario = 'root';
+      // private $contrasena = '4868422Marco';
       // private $port = '3306'; 
+
+            private $tipo_de_base = 'mysql';
+      private $host = 'lpsit.ibnorca.org';
+      private $nombre_de_base = 'bdifinanciero';
+      private $usuario = 'ibnofinanciero';
+      private $contrasena = 'Financiero1bn0';
+      private $port = '3306'; 
 
 
 
