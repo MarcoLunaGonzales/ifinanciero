@@ -3237,7 +3237,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
     {
       if($anios_inicio<=$diferencia_anios and $diferencia_anios<$anios_final){
-         $total_bono_antiguedad = $minino_salarial*3*$porcentaje/100;          
+         $total_bono_antiguedad = $minino_salarial*1*$porcentaje/100;
          break;
       }else $total_bono_antiguedad = 0;
     }    
