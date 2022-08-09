@@ -13,7 +13,7 @@ class Conexion_simple extends PDO {
    private $host = 'localhost';
    private $nombre_de_base = 'ibnofinanciero3000';
    private $usuario = 'root';
-   private $contrasena = '';
+   private $contrasena = '12345678';
    private $port = '3306'; 
 
 

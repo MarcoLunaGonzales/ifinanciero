@@ -101,29 +101,32 @@ table {
 		                    <th><small>Haber Básico</small></th>
 		                    <th><small>Días Trab</small></th>                                        
 		                    <th><small>Bono de Antig</small></th>
-		                    <th class="bg-success text-white"><button id="botonBonos" style="border:none;" class="bg-success text-white small">Otros Bonos</button> </th>
+		                    <th class="bg-success text-white"><a id="botonBonos" style="border:none;" class="bg-success text-white small">Otros Bonos</a></th>
 		                    <?php
-													$swBonosOtro=false;
-													$sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
-													  from bonos_personal_mes 
-													  where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_bono)
-													  order by cod_bono ASC";
-													// echo $sqlBonos;
-													$stmtBonos = $dbh->prepare($sqlBonos);
-													$stmtBonos->execute();                      
-													$stmtBonos->bindColumn('cod_bono',$cod_bono);
-													$stmtBonos->bindColumn('nombre_bono',$nombre_bono);
-													while ($row = $stmtBonos->fetch()) 
-													{ ?>
-														<th class="bonosDet bg-success text-white" style="display:none"><small><?=$nombre_bono;?></small></th>                      
-														<?php
-														$arrayBonos[] = $cod_bono;
-														$swBonosOtro=true;
-													}
+								$swBonosOtro=false;
+								$sqlBonos = "SELECT cod_bono,(select b.nombre from bonos b where b.codigo=cod_bono) as nombre_bono
+								  from bonos_personal_mes 
+								  where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_bono)
+								  order by cod_bono ASC";
+								// echo $sqlBonos;
+								$stmtBonos = $dbh->prepare($sqlBonos);
+								$stmtBonos->execute();                      
+								$stmtBonos->bindColumn('cod_bono',$cod_bono);
+								$stmtBonos->bindColumn('nombre_bono',$nombre_bono);
+								$x=0;
+								while ($row = $stmtBonos->fetch()) 
+								{ ?>
+									<th class="bonosDet bg-success text-white" style="display:none"><small><?=$nombre_bono;?></small></th>
+									<?php
+									$arrayBonos[] = $cod_bono;
+									$arrayBonos_aux[$x]=0;
+									$swBonosOtro=true;
+									$x++;
+								}
 		                    ?>
 		                    <th><small>Monto Bonos</small></th>                            
 		                    <th class="bg-primary text-white"><small>Tot Gan</small></th>
-		                    <th class="bg-success text-white"><button id="botonAportes" style="border:none;" class="bg-success text-white small">+Aport</button></th>
+		                    <th class="bg-success text-white"><a id="botonAportes" style="border:none;" class="bg-success text-white small">+Aport</a></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.F</small></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.P</small></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Sol(13)</small></th>
@@ -133,7 +136,7 @@ table {
 		                    <!-- <th><small>Atrasos</small></th> -->
 		                    <th><small>Anticipos</small></th>
 		                    <th><small>Dotaciones</small></th>
-		                    <th class="bg-success text-white"><button id="botonOtrosDescuentos" style="border:none;" class="bg-success text-white small">Otros Desc</button> </th>
+		                    <th class="bg-success text-white"><a id="botonOtrosDescuentos" style="border:none;" class="bg-success text-white small">Otros Desc</a> </th>
 		                    <?php  
 		                      $swDescuentoOtro=false;                  
 		                      $sqlDescuento = "SELECT cod_descuento,(select d.nombre from descuentos d where d.codigo=cod_descuento) as nombre_descuentos
@@ -144,12 +147,15 @@ table {
 		                      $stmtDescuento->execute();                      
 		                      $stmtDescuento->bindColumn('cod_descuento',$cod_descuento);
 		                      $stmtDescuento->bindColumn('nombre_descuentos',$nombre_descuentos);
+		                      $x=0;
 		                      while ($row = $stmtDescuento->fetch()) 
 		                      { ?>
 		                        <th class="DescuentosOtros bg-success text-white" style="display:none"><small><?=$nombre_descuentos;?></small></th>
 		                        <?php
 		                        $arrayDescuentos[] = $cod_descuento;
+		                        $arrayDescuentos_aux[$x]=0;
 		                        $swDescuentoOtro=true;
+		                        $x++;
 		                      }
 		                    ?>
 		                    <th><small>Monto Desc</small></th>     
@@ -170,12 +176,26 @@ table {
 						$sum_total_m_bonos=0;
 						$sum_total_t_ganado=0;
 						$sum_total_m_aportes=0;
+
+						$suma_total_afp_1=0;
+                  		$suma_total_afp_2=0;
+                  		$suma_total_a_solidario_13000=0;
+                  		$suma_total_a_solidario_25000=0;
+                  		$suma_total_a_solidario_35000=0;
+                  		$suma_total_rc_iva=0;
+
 						$sum_total_atrasos=0;
 						$sum_total_anticipos=0;
 						$sum_total_dotaciones=0;
 						$sum_total_o_descuentos=0;
 						$sum_total_m_descuentos=0;
 						$sum_total_l_pagable=0;
+						
+						$sum_total_seguro_sal=0;
+						$sum_total_riesgo_profesional=0;
+						$sum_total_provivienda=0;
+						$sum_total_patronal=0;
+
 						$sum_total_a_patronal=0;
 
 						$dias_trabajados_asistencia=30;//ver datos
@@ -238,7 +258,7 @@ table {
 		                          $a_solidario_25000=$resultPatronal['a_solidario_25000'];
 		                          $a_solidario_35000=$resultPatronal['a_solidario_35000'];
 		                          $rc_iva=$resultPatronal['rc_iva'];
-		                          $atrasos=$resultPatronal['atrasos'];
+		                          // $atrasos=$resultPatronal['atrasos'];
 		                          $anticipo=$resultPatronal['anticipo'];
 		                          $seguro_de_salud=$resultPatronal['seguro_de_salud'];
 		                          $riesgo_profesional=$resultPatronal['riesgo_profesional'];
@@ -250,7 +270,7 @@ table {
 		                          $bono_antiguedad_tp=$bono_antiguedad*$porcentaje/100;
 		                          $monto_bonos_tp=$monto_bonos*$porcentaje/100;
 		                          $total_ganado_tp=$total_ganado*$porcentaje/100;
-		                          $atrasos_tp=$atrasos*$porcentaje/100;
+		                          // $atrasos_tp=$atrasos*$porcentaje/100;
 		                          $anticipo_tp=$anticipo*$porcentaje/100;
 		                          $monto_descuentos_tp=$monto_descuentos*$porcentaje/100;
 		                          $dotaciones_tp=$dotaciones*$porcentaje/100;
@@ -265,12 +285,18 @@ table {
 		                          $sum_total_b_antiguedad+=$bono_antiguedad_tp;
 		                          $sum_total_m_bonos+=$monto_bonos_tp;
 		                          $sum_total_t_ganado+=$total_ganado_tp;                          
-		                          $sum_total_atrasos+=$atrasos_tp;
+		                          // $sum_total_atrasos+=$atrasos_tp;
 		                          $sum_total_anticipos+=$anticipo_tp;
 		                          $sum_total_m_descuentos+=$monto_descuentos_tp;
 		                          $sum_total_dotaciones+=$dotaciones_tp;
 		                          
 		                          $sum_total_l_pagable+=$liquido_pagable_tp;
+
+		                          $sum_total_seguro_sal+=$seguro_de_salud_tp;
+		                          $sum_total_riesgo_profesional=$riesgo_profesional_tp;
+		                          $sum_total_provivienda+=$provivienda_tp;
+		                          $sum_total_patronal+=$a_patronal_sol_tp;
+
 		                          $sum_total_a_patronal+=$total_a_patronal_tp;
 
 		                          $nombreAreaxy=trim(abrevArea($cod_area_xy),",");
@@ -300,39 +326,37 @@ table {
 				                    if($swBonosOtro)
 				                    {
 				                        $total_bonos1=0;
-										  $total_bonos2=0;
-										  $sqlBonos1 = "SELECT bpm.monto
-										  from bonos_personal_mes bpm,bonos b
-										  where bpm.cod_bono=b.codigo and bpm.cod_personal=$cod_personalcargo and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=1";
-										  $stmtBonos1 = $dbh->prepare($sqlBonos1);
-										  $stmtBonos1->execute();
-										  $stmtBonos1->bindColumn('monto',$monto1);
-										  while ($row = $stmtBonos1->fetch()) 
-										  {
-										    $total_bonos1=$total_bonos1+$monto1;
-										  }
-										    $sqlBonos2 = "SELECT bpm.monto
-										  from bonos_personal_mes bpm,bonos b
-										  where bpm.cod_bono=b.codigo and bpm.cod_personal=$cod_personalcargo and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=2";
-										  $stmtBonos2 = $dbh->prepare($sqlBonos2);
-										  $stmtBonos2->execute();
-										  $stmtBonos2->bindColumn('monto',$monto2);
-										  while ($row = $stmtBonos2->fetch()) 
-										  {
-										    $porcen_monto=$dias_trabajados_asistencia*100/$dias_trabajados;
-										    $monto2_aux=$porcen_monto*$monto2/100;
-										    $total_bonos2=$total_bonos2+$monto2_aux;
-										  }
-										  $sumaBono_otros=$total_bonos1+$total_bonos2;
-
-				                      $sumaBono_otros_tp=$sumaBono_otros*$porcentaje/100;
-				                      $sum_total_o_bonos+=$sumaBono_otros_tp;
-				                      if($sumaBono_otros==null){ $sumaBono_otros_tp=0;}
-				                      ?> 
-				                      <td class="text-center small"><?=formatNumberDec($sumaBono_otros_tp);?></td>
-				                      <?php
-				                      set_time_limit(300);
-				                      for ($j=0; $j <count($arrayBonos);$j++){ 
+										$total_bonos2=0;
+										$sqlBonos1 = "SELECT bpm.monto
+										from bonos_personal_mes bpm,bonos b
+										where bpm.cod_bono=b.codigo and bpm.cod_personal=$cod_personalcargo and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=1";
+										$stmtBonos1 = $dbh->prepare($sqlBonos1);
+										$stmtBonos1->execute();
+										$stmtBonos1->bindColumn('monto',$monto1);
+										while ($row = $stmtBonos1->fetch()) 
+										{
+										$total_bonos1=$total_bonos1+$monto1;
+										}
+										$sqlBonos2 = "SELECT bpm.monto
+										from bonos_personal_mes bpm,bonos b
+										where bpm.cod_bono=b.codigo and bpm.cod_personal=$cod_personalcargo and bpm.cod_gestion=$cod_gestion and bpm.cod_mes=$cod_mes and bpm.cod_estadoreferencial=1 and b.cod_tipocalculobono=2";
+										$stmtBonos2 = $dbh->prepare($sqlBonos2);
+										$stmtBonos2->execute();
+										$stmtBonos2->bindColumn('monto',$monto2);
+										while ($row = $stmtBonos2->fetch()) 
+										{
+										$porcen_monto=$dias_trabajados_asistencia*100/$dias_trabajados;
+										$monto2_aux=$porcen_monto*$monto2/100;
+										$total_bonos2=$total_bonos2+$monto2_aux;
+										}
+										$sumaBono_otros=$total_bonos1+$total_bonos2;
+				                      	$sumaBono_otros_tp=$sumaBono_otros*$porcentaje/100;
+				                      	$sum_total_o_bonos+=$sumaBono_otros_tp;
+				                      	if($sumaBono_otros==null){ $sumaBono_otros_tp=0;}
+				                      	?> 
+				                      	<td class="text-center small"><?=formatNumberDec($sumaBono_otros_tp);?></td>
+				                      	<?php				                      
+				                      	for ($j=0; $j <count($arrayBonos);$j++){ 
 				                          $cod_bono_aux=$arrayBonos[$j];                          
 				                          $sqlBonosOtrs = "SELECT bpm.cod_bono,bpm.monto,b.cod_tipocalculobono
 				                                from bonos_personal_mes bpm,bonos b 
@@ -347,9 +371,7 @@ table {
 				                          	$porcen_monto=30*100/$dias_trabajados;
 										    $montoX_aux=$porcen_monto*$montoX/100;
 				                          }else $montoX_aux=$montoX;
-
 				                          $montoX_tp=$montoX_aux*$porcentaje/100;
-
 				                          if($cod_bonosX==$cod_bono_aux){ ?>
 				                            <td  class="bonosDet small" style="display:none"><?=formatNumberDec($montoX_tp);?></td>  
 				                          <?php                            
@@ -357,9 +379,8 @@ table {
 				                            <td  class="bonosDet small" style="display:none"><?=formatNumberDec($montoAux);?></td>
 				                          <?php                            
 				                          }
+				                          $arrayBonos_aux[$j]+=$montoX_tp;
 				                      	}
-					                    
-				                                            
 				                    }else{
 				                      $sumabonos_otros=0;
 				                      ?>
@@ -373,12 +394,15 @@ table {
 			                    	$a_solidario_25000_tp=$a_solidario_25000*$porcentaje/100;
 			                    	$a_solidario_35000_tp=$a_solidario_35000*$porcentaje/100;
 			                    	$rc_iva_tp=$rc_iva*$porcentaje/100;
-
-
 		                      		$monto_aportes_tp = $afp_1_tp+$afp_2_tp+$a_solidario_13000_tp+$a_solidario_25000_tp+$a_solidario_35000_tp+$rc_iva_tp;
+		                      		$sum_total_m_aportes+=$monto_aportes_tp;
 
-		                      		$sum_total_m_aportes+=$monto_aportes_tp;                    
-				                          
+		                      		$suma_total_afp_1+=$afp_1_tp;
+		                      		$suma_total_afp_2+=$afp_2_tp;
+		                      		$suma_total_a_solidario_13000+=$a_solidario_13000_tp;
+		                      		$suma_total_a_solidario_25000+=$a_solidario_25000_tp;
+		                      		$suma_total_a_solidario_35000+=$a_solidario_35000_tp;
+		                      		$suma_total_rc_iva+=$rc_iva_tp;
 				                    ?>  
 				                    <td class="small"><?=formatNumberDec($monto_bonos_tp);?></td>
 				                    <td class="small"><?=formatNumberDec($total_ganado_tp);?></td>
@@ -390,7 +414,7 @@ table {
 				                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($a_solidario_35000_tp);?></td>
 				                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($rc_iva_tp);?></td>
 
-				                    <td class="small"><?=formatNumberDec($atrasos_tp);?></td>
+				                    
 				                    <td class="small"><?=formatNumberDec($anticipo_tp);?></td>
 				                    <td class="small"><?=formatNumberDec($dotaciones_tp);?></td>
 				                    
@@ -433,6 +457,7 @@ table {
 				                            <td  class="DescuentosOtros small" style="display:none"><?=formatNumberDec($montoAux);?></td>
 				                          <?php                            
 				                          }
+				                          $arrayDescuentos_aux[$j]+=$montoX_tp;
 				                        }  	                     
 				                        $monto_descuentosX_tp=$monto_descuentos_tp+$sumaDescuentos_otros_tp;                      
 				                    }else{
@@ -457,28 +482,18 @@ table {
 		                	}
 
 						}
-
-	                 
 						?>                      
 	                </tbody>
-	                <tfoot>
+	                 <tfoot>
 	                    <tr class="bg-dark text-white">                  
 	                    <th colspan="8" class="text-center small">Total</th>
-	                    
 	                    <th class="text-center small"><?=formatNumberDec($sum_total_basico);?></th>
 	                    <th class="text-center small">-</th>                                        
 	                    <th class="text-center small"><?=formatNumberDec($sum_total_b_antiguedad);?></th>
 	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_o_bonos);?> </th>
 	                    <?php
-	                      $sqlBonos = "SELECT cod_bono
-	                              from bonos_personal_mes 
-	                              where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_bono)";
-	                      $stmtBonos = $dbh->prepare($sqlBonos);
-	                      $stmtBonos->execute();                      
-	                      $stmtBonos->bindColumn('cod_bono',$cod_bono);                      
-	                      while ($row = $stmtBonos->fetch()) 
-	                      { ?>
-	                        <th class="bonosDet bg-success text-white small" style="display:none">-</th>                      
+	                      for ($i=0; $i <count($arrayBonos) ; $i++) { ?>
+	                        <th class="bonosDet bg-success text-white small" style="display:none"><?=formatNumberDec($arrayBonos_aux[$i])?></th>
 	                        <?php                        
 	                      }
 	                    ?>
@@ -486,41 +501,29 @@ table {
 	                    <th class="bg-primary text-white text-center small"><?=formatNumberDec($sum_total_t_ganado);?></th>
 
 	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_m_aportes);?></th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none">-</th>
-
-	                    
-	                    <th class="text-center small"><?=formatNumberDec($sum_total_atrasos);?></th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($suma_total_afp_1)?></th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($suma_total_afp_2)?></th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($suma_total_a_solidario_13000)?></th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($suma_total_a_solidario_25000)?></th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($suma_total_a_solidario_35000)?></th>
+	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($suma_total_rc_iva)?></th>
 	                    <th class="text-center small"><?=formatNumberDec($sum_total_anticipos);?></th>
 	                    <th class="text-center small"><?=formatNumberDec($sum_total_dotaciones);?></th>
 	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_o_descuentos);?></th>
 	                    <?php  
-	                      $swDescuentoOtro=false;                  
-	                      $sqlDescuento = "SELECT cod_descuento
-	                              from descuentos_personal_mes 
-	                              where  cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1 GROUP BY (cod_descuento)";
-	                      $stmtDescuento = $dbh->prepare($sqlDescuento);
-	                      $stmtDescuento->execute();                      
-	                      $stmtDescuento->bindColumn('cod_descuento',$cod_descuento);                      
-	                      while ($row = $stmtDescuento->fetch()) 
-	                      { ?>
-	                        <th class="DescuentosOtros bg-success text-white small" style="display:none">-</th>
-	                        <?php
-	                      }
-	                    ?>
-	                    <th class="text-center small"><?=formatNumberDec($sum_total_m_descuentos);?></th>                                        
-	                    <th class="bg-primary text-white small"><?=formatNumberDec($sum_total_l_pagable);?></th>                    
-	                    <th class="text-center small">-</th>
-	                    <th class="text-center small">-</th>
-	                    <th class="text-center small">-</th>
-	                    <th class="text-center small">-</th>
+		                	for ($i=0; $i <count($arrayDescuentos) ; $i++) { ?>
+		                    <th class="DescuentosOtros small" style="display:none;background:#d98880;"><small><?=formatNumberDec($arrayDescuentos_aux[$i]);?></small></th><?php
+		                	}
+		                ?>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_m_descuentos);?></th>
+	                    <th class="bg-primary text-white small"><?=formatNumberDec($sum_total_l_pagable);?></th>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_seguro_sal)?></th>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_riesgo_profesional)?></th>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_provivienda)?></th>
+	                    <th class="text-center small"><?=formatNumberDec($sum_total_patronal)?></th>
 	                    <th class="text-center small"><?=formatNumberDec($sum_total_a_patronal);?></th>
 	                  </tr>
-	                </tfoot>               
+	                </tfoot>             
               	</table>                                
             </div>                 
           </div>
