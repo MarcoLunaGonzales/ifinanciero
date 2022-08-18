@@ -358,7 +358,6 @@
                                   <?php
                                   $iii++; 
                                   } ?>
-                                  
                               </tbody>
                            </table>
                            <script>$("#total_preciosimulacion").val(<?=$totalFilasPrecios?>);</script>

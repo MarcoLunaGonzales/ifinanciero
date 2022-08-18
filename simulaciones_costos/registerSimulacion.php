@@ -403,6 +403,8 @@ if($codEstadoSimulacionXX==3){
                // $alumnosX=($utilidadIbnorcaX+($totalFijoPlan+))
                   //$precioLocalX=$ingresoAlternativo;
                  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codigoPX);
+
+                 
                  if($ingresoAlternativo!=0){
                   $porcentPrecios=(($ingresoAlternativo)*100)/$precioRegistrado; 
                  }else{
@@ -414,7 +416,8 @@ if($codEstadoSimulacionXX==3){
                  }else{
                   $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
                  }
-
+                 //TOMAMOS EL NETO DEL INGRESO
+                 $totalFijoPlan=$totalFijoPlan*0.87;
                 
                  //CALCULAMOS EL VALOR DE LAS NORMAS
                  $valorNormas=(precioNormasPropuesta($codigo)*$alumnosX);

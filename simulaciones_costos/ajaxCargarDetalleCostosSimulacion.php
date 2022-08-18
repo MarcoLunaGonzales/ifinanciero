@@ -79,7 +79,15 @@ $bgClase="bg-info";
           if($ingresoAlternativo!=0){
             $precioLocalX=$ingresoAlternativo;
           }
+
+          //TOMAMOS EL NETO DEL INGRESO
+          $precioLocalXNeto=$precioLocalX*0.87;
+
           $porcentPrecios=($precioLocalX*100)/($precioRegistrado);
+
+          //TOMAMOS EL PORCENTAJE NETO
+          $porcentPreciosNeto=($precioLocalXNeto*100)/($precioRegistrado);
+
           /* fin de datos */
           $tituloUnidad="NACIONAL";
           if(obtenerValorConfiguracion(51)==1){
@@ -101,19 +109,12 @@ $bgClase="bg-info";
             <tr>
               <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$tituloUnidad?> GESTION</td>
               <td class="text-right"><?=number_format($precioRegistrado, 2, '.', ',')?></td>
-              <td class="bg-plomo">Precio</td>
-              <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
+              <td class="bg-plomo">Monto Ingreso Neto</td>
+              <td class="text-right"><?=number_format($precioLocalXNeto, 2, '.', ',')?></td>
               <td class="bg-plomo">Porcentaje</td>
-              <td class="text-right"><?=number_format($porcentPrecios, 2, '.', ',')?> %</td>
+              <td class="text-right"><?=number_format($porcentPreciosNeto, 2, '.', ',')?> %</td>
             </tr>
-            <tr>
-              <td class="bg-plomo">PRESUPUESTO <?=$_GET['area_nombre']?>, <?=$tituloUnidad?> MES (INFORMATIVO)</td>
-              <td class="text-right"><?=number_format($presupuestoMes, 2, '.', ',')?></td>
-              <td class="bg-plomo">Precio</td>
-              <td class="text-right"><?=number_format($precioLocalX, 2, '.', ',')?></td>
-              <td class="bg-plomo">Porcentaje</td>
-              <td class="text-right"><?=number_format($porcentPreciosMes, 2, '.', ',')?> %</td>
-            </tr>
+
             <?php
             if($mesesProrrateo>0){
               ?><tr>
