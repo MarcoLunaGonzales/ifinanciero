@@ -172,8 +172,6 @@ $globalPersonal=$_SESSION["globalUser"];
                           $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
                           $stmtDetalleSol->bindColumn('precio', $precio_unitario);
                           $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna); 
-
-
                           $cadenaFacturas="";
                           $cadenaFacturasM="";
                           $concepto_contabilizacion="";

@@ -7,6 +7,10 @@ require_once 'executeComprobante_factura.php';
 require_once '../layouts/bodylogin.php';
 require_once 'generar_facturas2_divididas.php';
 
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 set_time_limit(300);
@@ -165,7 +169,6 @@ try{
                             }
                             // echo "a1ui";
                             if($codigo_error==0){
-                                
                                 $stringFacturas=obtenerStringFacturas($codigo);
                                 $stringFacturasCod=obtenerStringCodigoFacturas($codigo);
                                 $cod_comprobante=ejecutarComprobanteSolicitud($codigo,$stringFacturas,$stringFacturasCod,$cod_libreta,$cod_estadocuenta,$cod_cuentaaux);                            
@@ -196,7 +199,11 @@ try{
                                     $idTipoObjeto=2709;
                                     $idObjeto=2729; //facturado
                                     $obs="Solicitud Facturada";                                    
+                                    
+                                    //Descomentar esto
                                     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+                                    
+
                                     //finalizando en rollback
                                     $errorInsertar=0;
                                     for ($flag=0; $flag < count($SQLDATOSINSTERT); $flag++) { 

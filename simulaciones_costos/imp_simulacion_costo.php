@@ -167,6 +167,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                  $totalFijoManual=obtenerTotalesPlantilla($codigoPX,3,$mesConf);
                   //total desde la plantilla  
                  $totalFijo=obtenerTotalesPlantilla($codigoPX,1,$mesConf); //tipo de costo 1:fijo,2:variable desde la plantilla
+
+                 /*if($totalFijo>0){
+                    $totalFijo=$totalFijo*(0.87);
+                 }*/
+
                   //total variable desde la plantilla
                  //$totalVariable=obtenerTotalesPlantilla($codigoPX,2,18);
                  //total variable desde simulacion cuentas
@@ -182,9 +187,13 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                  }
                  
                  if($mesesProrrateo>0){
-                  $totalFijoPlan=($totalFijo[0]*($porcentPreciosEnMeses/100))*($porcentPrecios/100)+$totalFijoManual[0]; 
+                    $totalFijoPlan=($totalFijo[0]*($porcentPreciosEnMeses/100))*($porcentPrecios/100)+$totalFijoManual[0]; 
+                    //CALCULAMOS EL FIJO AL 87%
+                    $totalFijoPlan=$totalFijoPlan*0.87;
                  }else{
-                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
+                    $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
+                    //CALCULAMOS EL FIJO AL 87%
+                    $totalFijoPlan=$totalFijoPlan*0.87;
                  }
 
                  $totalFijoPlanModulos=$totalFijoPlan*$cantidadModuloX;
