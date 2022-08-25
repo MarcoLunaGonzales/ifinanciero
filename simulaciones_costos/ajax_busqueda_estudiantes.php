@@ -180,7 +180,7 @@ $sql.=" GROUP BY IdCurso,cpe.clIdentificacion Order by pc.Nombre desc";
                       if($cont_total_ws==0 && $cont_total_pagados==0){
                         $sw_aux=false;
                         //$estado="No Encontrado"." ws:".$cont_total_ws." pag:".$cont_total_pagados." impcurso:".$importe_curso;//faltan algunos
-                        $estado="No Encontrado";
+                        $estado="Error en Servicio";
                         $style_s="style='color: #ff0000;'";
                         // $btnEstado="btn-danger"; 
                       }

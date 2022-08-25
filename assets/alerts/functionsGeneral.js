@@ -8164,7 +8164,7 @@ function guardarDatosPlantilla(btn_id){
    var precio_alternativo=$("#total_preciosimulacion").val();
    var modal_modulos=$("#modal_modulo").val();
    var normas=$("#normas").val();
-      alert(normas);
+   //alert(normas);
    var parametros={"dias_curso":dias_curso,"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo,"modal_modulos":modal_modulos,"normas":normas};
 
   if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){

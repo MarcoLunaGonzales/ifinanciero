@@ -7479,6 +7479,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     {
       $num=$row['venta_local']*$row['cantidad_alumnoslocal'];
     }
+    //TOMAMOS EL NETO DEL CURSO
+    $num=$num*0.87;
     return $num;
   }
   function obtenerCantidadCursosPlantillaCosto($codigo){

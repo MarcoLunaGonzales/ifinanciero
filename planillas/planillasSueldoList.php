@@ -204,8 +204,8 @@ $dbh = new Conexion();
                               }
                             }
                           ?> 
-                          <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><small>TODOS</small></a></li>
-                          <li role="presentation"><a role="item" href="planillas/planillaSueldoPersonalReporte2.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><small>TODOS 100</small></a></li>
+                          <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><small>Ver Todo con % Persona</small></a></li>
+                          <li role="presentation"><a role="item" href="planillas/planillaSueldoPersonalReporte2.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><small>Ver Todo</small></a></li>
                           </ul>
                         </div>
                         <div class="dropdown">

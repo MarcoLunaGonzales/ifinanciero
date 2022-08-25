@@ -100,8 +100,9 @@ if(isset($_GET['interno'])){
       <th width="15%">Razón Social</th>
       <th width="9%">Nit</th>
       <th width="8%">Importe<br>Factura</th>
+      <th>Concepto</th>
       <!--th>Detalle</th-->
-      <th width="15%">Observaciones</th>
+      <!---th width="15%">Observaciones</th-->
       <th width="15%">Glosa Factura E.</th>
       <th width="10%" class="text-right">Opciones</th>                            
     </tr>
@@ -173,6 +174,24 @@ if(isset($_GET['interno'])){
         $observaciones= substr($observaciones, 0, 50)."..."; 
       }
       
+      //FORMAMOS EL CONCEPTO DE LA FACTURA
+      $stmtDetalleSol = $dbh->prepare("SELECT fv.cantidad, fv.precio, fv.descripcion_alterna from facturas_ventadetalle fv where cod_facturaventa=$codigo_factura");
+      $stmtDetalleSol->execute();
+      $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
+      $stmtDetalleSol->bindColumn('precio', $precio_unitario);
+      $stmtDetalleSol->bindColumn('descripcion_alterna', $descripcion_alterna); 
+      $cadenaFacturas="";
+      $cadenaFacturasM="";
+      $concepto_contabilizacion="";
+
+      while ($row_det = $stmtDetalleSol->fetch()){
+        $precio=$precio_unitario*$cantidad;
+        $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$razon_social."<br>\n";
+        $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
+      }
+      $concepto_contabilizacion = (substr($concepto_contabilizacion, 0, 100))."..."; //limite de string
+      // --------
+
 
       $cod_tipopago_anticipo=obtenerValorConfiguracion(48);//tipo pago credito
       $cod_tipopago_aux=obtnerFormasPago_codigo($cod_tipopago_anticipo,$cod_solicitudfacturacion);//verificamos si en nuestra solicitud se hizo alguna distribucion de formas de pago y sacamos el de dep cuenta. devolvera 0 en caso de q no exista                            
@@ -186,9 +205,8 @@ if(isset($_GET['interno'])){
         <td class="text-left"><small><?=mb_strtoupper($razon_social);?></small></td>
         <td class="text-right"><?=$nit;?></td>
         <td class="text-right"><?=formatNumberDec($importe);?></td>
-        <!--td><small><?=strtoupper($observaciones);?></small></td-->                            
-        <td style="color: #ff0000;"><?=strtoupper($observaciones_solfac)?></td>
-        <td style="color: #ff0000;"><?=$glosa_factura3;?></td>
+        <td><small><?=strtoupper($concepto_contabilizacion);?></small></td>                            
+       <td style="color: #ff0000;"><?=$glosa_factura3;?></td>
         <td class="td-actions text-right">
           <!-- <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br> -->
           <?php

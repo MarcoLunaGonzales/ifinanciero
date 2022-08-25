@@ -9,6 +9,8 @@ $dbh = new Conexion();
 $codigo=$_GET["codigo"];
 session_start();
 
+$globalUnidad=0;
+
 $codPlantillaCosto=$_GET["codigo"];
 $codSimulacion=$_GET["cod_sim"];
 $ut_i=$_GET['ut_i'];
@@ -86,6 +88,7 @@ while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
 
  //costos Fijos en tabla
       $sqlDelete="DELETE FROM simulaciones_cf where cod_simulacioncosto=$codSimulacion";  
+      echo "sqlDelete: ".$sqlDelete;
       $stmtDelete = $dbh->prepare($sqlDelete);
       $stmtDelete->execute();
 
@@ -98,19 +101,30 @@ while ($row = $detallesMontos->fetch(PDO::FETCH_ASSOC)) {
          $tipoFijo=$rowFijo['tipo'];
 
          $precioLocalX=obtenerPrecioSimulacionCostoGeneral($codSimulacion);
+         //TOMAMOS EL NETO DEL TOTAL DEL PRECIO
          $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codPlantillaCosto);
          $nCursos=obtenerCantidadCursosPlantillaCosto($codPlantillaCosto); 
          $porcentPrecios=($precioLocalX)/($precioRegistrado);
+
+         echo "precioLocalX: ".$precioLocalX."<br>";
+         echo "precioRegistrado: ".$precioRegistrado."<br>";
+         echo "nCursos: ".$nCursos."<br>";
+         echo "porcentPrecios: ".$porcentPrecios."<br>";
+
          if($tipoFijo==1){ 
-         $anioSim= date("Y");  
-         $monto=ejecutadoEgresosMes($globalUnidad,((int)$anioSim-1),12,13,1,$numeroCuentaFijo);          
+            $anioSim= date("Y");  
+            $monto=ejecutadoEgresosMes($globalUnidad,((int)$anioSim-1),12,13,1,$numeroCuentaFijo);          
          }else{
-          $monto=obtenerListaCuentasPlantillasCostoFijoManual($codCuentaFijo,$codPartidaFijo,$codPlantillaCosto);
+            $monto=obtenerListaCuentasPlantillasCostoFijoManual($codCuentaFijo,$codPartidaFijo,$codPlantillaCosto);
          }
+
+         echo "monto: ".$monto."<br>";
+
          $montoUnidad=$monto*$porcentPrecios; 
          $dbh = new Conexion();
          $sqlFijos="INSERT INTO simulaciones_cf (cod_simulacionservicio, cod_simulacioncosto,cod_partidapresupuestaria,cod_cuenta,monto,cantidad,monto_total) 
          VALUES (0,'".$codSimulacion."','".$codPartidaFijo."','".$codCuentaFijo."','".$montoUnidad."',1,'".$montoUnidad."')";
+        echo "sqlFijos: ".$sqlFijos;
          $stmtFijos = $dbh->prepare($sqlFijos);
          $stmtFijos->execute();
       }    
