@@ -224,12 +224,12 @@ try{
 
                                     //Verificamos si la glosa especial es distinta de vacio para el formato de impresion
                                     if($observaciones_2<>""){
-                                        $adminImpresion=7;
+                                        $adminImpresion=2;
                                     }else{
-                                        $adminImpresion=5;
+                                        $adminImpresion=2;
                                     }
 
-                                    header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2&admin='.$adminImpresion);
+                                    header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$stringFacturasCod.'&tipo=1&admin='.$adminImpresion);
                                 }                            
                             }else{?>
                                 <script>Swal.fire("Error!","Hubo un error durante el proceso de generar la factura.", "error");
@@ -251,13 +251,13 @@ try{
             $stmtCommit = $dbh->prepare($sqlCommit);
             $stmtCommit->execute();
 
-            //DESCOMENTAR ESTO
+            //DESCOMENTAR ESTO -- EN TODOS LOS CASOS ENVIA EL ORIGINAL CLIENTE
             if($observaciones_2<>""){
-                $adminImpresion=7;
+                $adminImpresion=2;
             }else{
-                $adminImpresion=5;
+                $adminImpresion=2;
             }
-            header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$codigo.'&tipo=2&admin='.$adminImpresion);      
+            header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$stringFacturasCod.'&tipo=1&admin='.$adminImpresion);      
         }
         $codigo_facturacion=verificamosFacturaDuplicada($codigo);
         if($codigo_facturacion!=null){
