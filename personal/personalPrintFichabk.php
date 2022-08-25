@@ -1,11 +1,10 @@
 <?php //ESTADO FINALIZADO
 
 require_once __DIR__.'/../conexion.php';
-
+require '../assets/phpqrcode/qrlib.php';
 
 //require_once 'configModule.php';
 require_once __DIR__.'/../functions.php';
-require_once __DIR__.'/../functionsGeneral.php';
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
@@ -21,8 +20,7 @@ try{
         (select ep.nombre from estados_personal ep where ep.codigo=cod_estadopersonal) as cod_estadopersonalX,
         (select tp.nombre from tipos_personal tp where tp.codigo=cod_tipopersonal) as cod_tipopersonalX,
         (select tafp.nombre from tipos_afp tafp where tafp.codigo=cod_tipoafp) as cod_tipoafpX,
-        (select taafp.nombre from tipos_aporteafp taafp where taafp.codigo=cod_tipoaporteafp) as cod_tipoaporteafpX,
-        (select b.nombre from bancos b where b.codigo=cod_banco) as banco_personal
+        (select taafp.nombre from tipos_aporteafp taafp where taafp.codigo=cod_tipoaporteafp) as cod_tipoaporteafpX
     from personal
     WHERE codigo=:codigo");
 
@@ -73,46 +71,30 @@ try{
     $email = $result['email'];
     $persona_contacto = $result['persona_contacto'];
     $cuenta_bancaria = $result['cuenta_bancaria'];
-    $banco_personal= $result['banco_personal'];
-    $cod_dependiente_rciva=$result['codigo_dependiente'];
     $created_at = $result['created_at'];
     $created_by = $result['created_by'];
-    // $turno = $result['turno'];
-    // $tipo_trabajo = $result['tipo_trabajo'];
-    // $turno=obtenerNombreTurno($turno);
-    // $tipo_trabajo=obtenerNombreTipoTrabajo($tipo_trabajo);
+    $modified_at = $result['modified_at'];
+    $modified_by = $result['modified_by'];
     //====================================
     //personal discapacitado
-    $stmtDiscapacitado = $dbh->prepare("SELECT tipo_persona_discapacitado FROM personal_discapacitado where codigo =:codigo");
+    $stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo");
     $stmtDiscapacitado->bindParam(':codigo',$codigo);
     $stmtDiscapacitado->execute();
     $resultDiscapacitado = $stmtDiscapacitado->fetch();
-    // var_dump($resultDiscapacitado);
-    if(count($resultDiscapacitado)>0){
-        $discapacitado = $resultDiscapacitado['tipo_persona_discapacitado'];
-        $tutor_discapacitado = $resultDiscapacitado['tipo_persona_discapacitado'];
-        $celular_tutor = "";
-        $parentesco = "";
-    }else{
-        $discapacitado = '';
-        $tutor_discapacitado = '';
-        $celular_tutor = '';
-        $parentesco = '';
-    }
+    $discapacitado = $resultDiscapacitado['discapacitado'];
+    $tutor_discapacitado = $resultDiscapacitado['tutor_discapacitado'];
+    $celular_tutor = $resultDiscapacitado['celular_tutor'];
+    $parentesco = $resultDiscapacitado['parentesco'];
 
 
         //==================================================================================================================
     //imagen
-    $stmtIM = $dbh->prepare("SELECT imagen FROM personalimagen  where codigo =:codigo");
+    $stmtIM = $dbh->prepare("SELECT * FROM personalimagen  where codigo =:codigo");
     $stmtIM->bindParam(':codigo',$codigo);
     $stmtIM->execute();
     $resultIM = $stmtIM->fetch();
-    if (isset($resultIM['imagen'])) {
-        $imagen = $resultIM['imagen'];        
-    }else{
-        $imagen = "";
-    }    
-    
+    //$codigo = $result['codigo'];
+    $imagen = $resultIM['imagen'];
     
 
 
@@ -134,19 +116,23 @@ $html.='<body>'.
           '}'.
         '</script>';
 $html.=  '<header class="header">'.        
-            
             '<img class="imagen-logo-izq" src="../assets/img/ibnorca2.jpg">'.
             '<div id="header_titulo_texto">Ficha De Personal</div>'.
         
             '<br>'.'<br>'.'<br>'.'<br>'.
-            '<table border="1" align="center" style="width: 100%;border-collapse: collapse;">'.
-
+            '<table border="1" align="center" style="width: 80%;border-collapse: collapse;">'.
+                '<colgroup>'.
+                    '<col style="width: 25%"/>'.
+                    '<col style="width: 5%"/>'.
+                    '<col style="width: 25%"/>'.
+                    '<col style="width: 25%"/>'.
+                '</colgroup>'.
                 '<tbody style=" font-family: Times New Roman;
                                 font-size: 11px;
                                     ">';
 
                     $html.='<tr>'.
-                        '<td colspan="2" align="center">'.                        
+                        '<td colspan="3" align="center">'.                        
                             '<h2><b>'.$paterno.' '.$materno.' '.$primer_nombre.'</b><br></h2>'.
                             $cod_cargo.' / '.$cod_unidadorganizacional.'<br>'.
                             $cod_area.'<br>'.
@@ -159,111 +145,109 @@ $html.=  '<header class="header">'.
                     
                     '<tr>'.
                         '<td>Código</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td>'.$codigo.'</td>'.
                     '</tr>'.
                     '<tr>'.
-                        '<td>Tipo de Identificación (CI, PAS, CEXT)</td>'.
-                        
-                        '<td>'.$cod_tipoIdentificacion.' '.$tipo_identificacionOtro.'</td>'.
+                        '<td>Tipo De identificación</td>'.
+                        '<td align="center">:</td>'.
+                        '<td>'.obtenerNombreIdentificacionPersona($cod_tipoIdentificacion,1).' '.obtenerNombreIdentificacionPersona($tipo_identificacionOtro,2).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Identificación</td>'.
-                        
-                        '<td>'.$identificacion.' - '.obtenerlugarEmision($cod_lugar_emision,1).' '.$lugar_emisionOtro.'</td>'.
+                        '<td align="center">:</td>'.
+                        '<td>'.$identificacion.' - '.obtenerlugarEmision($cod_lugar_emision,1).' '.obtenerlugarEmision($lugar_emisionOtro,1).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Grado Académico</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td>'.$grado_academico.'</td>'.
                     '</tr>'.                    
                     '<tr>'.
                         '<td>Telefono</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td>'.$telefono.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Celular</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td>'.$celular.'</td>'.
                     '</tr>'.                    
                     '<tr>'.
                         '<td>Email</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td >'.$email.'</td>'.
                     '</tr>'.
                     
                     '<tr>'.
-                        '<td colspan="3"><br></td>           '.
+                        '<td colspan="4"><br></td>           '.
                     '</tr>'.
                     '<tr>'.
                         '<td>Fecha Nacimiento</td>'.
-                        
-                        '<td colspan=2>'.date("d/m/Y",strtotime($fecha_nacimiento)).'</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.$fecha_nacimiento.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Dirección</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$direccion.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Nacionalidad</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.obtenerNombreNacionalidadPersona($cod_nacionalidad,1).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Pais</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.obtenerNombreNacionalidadPersona($cod_pais,2).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Departamento</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.obtenerlugarEmision($cod_departamento,2).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Ciudad</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.obtenerNombreCiudadPersona($cod_ciudad).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Otra Ciudad</td>'.
-                        
-                        '<td colspan=2>'.$ciudadOtro.'</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.obtenerNombreCiudadPersona($ciudadOtro).'</td>'.
                     '</tr>'.
                     '<tr>'.
-                        '<td colspan="3"><br></td>           '.
+                        '<td colspan="4"><br></td>           '.
                     '</tr>'.
                     '<tr>'.
                         '<td>Ingreso Contrato</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$ingreso_contrato.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Ingreso Planilla</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$ingreso_contrato.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Tipo Personal</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$cod_tipopersonal.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Estado Personal</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$cod_estadopersonal.'</td>'.
                     '</tr>'.
-                    
-                    
                     '<tr>'.
                         '<td>Haber Básico</td>'.
-                        
-                        '<td colspan=2>'.formatNumberDec($haber_basico).'</td>'.
+                        '<td align="center">:</td>'.
+                        '<td colspan=2>'.$haber_basico.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Jubilado</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>';
                         if($jubilado==0) $nombreAux0="NO";
                         else $nombreAux0="SI";                        
@@ -271,72 +255,64 @@ $html.=  '<header class="header">'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Contacto</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$persona_contacto.'</td>'.
                     '</tr>'.
                     '<tr>'.
-                        '<td>Banco</td>'.
-                        
-                        '<td colspan=2>'.$banco_personal.'</td>'.
-                    '</tr>'.
-                    '<tr>'.
                         '<td>Cuenta Bancaria</td>'.
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$cuenta_bancaria.'</td>'.
                     '</tr>'.
                     '<tr>'.
-                        '<td>Codigo Dependiente RC-IVA</td>'.
-                        '<td colspan=2>'.$cod_dependiente_rciva.'</td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td colspan="3"><br></td>'.
+                        '<td colspan="4"><br></td>           '.
                     '</tr>'.
                     '<tr>'.
                         '<td>Nro. Seguro</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$nro_seguro.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Nua Cua Asignado</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$nua_cua_asignado.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Tipo AFP</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$cod_tipoafp.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Tipo Aporte AFP</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$cod_tipoaporteafp.'</td>'.
                     '</tr>'.
                     '<tr>'.
-                        '<td colspan="3"><br></td>           '.
+                        '<td colspan="4"><br></td>           '.
                     '</tr>'.                 
                     '<tr>'.
                         '<td>Personal discapacitado</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>';
-                        if($discapacitado<>1) $nombreAux="NO";
+                        if($discapacitado==0) $nombreAux="NO";
                         else $nombreAux="SI";                        
                         $html.=$nombreAux.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Tutor De discapacitado</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>';
-                        if($tutor_discapacitado<>2) $nombreAux1="NO";
+                        if($tutor_discapacitado==0) $nombreAux1="NO";
                         else $nombreAux1="SI";                        
                         $html.=$nombreAux1.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>parentesco</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$parentesco.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Celular Tutor</td>'.
-                        
+                        '<td align="center">:</td>'.
                         '<td colspan=2>'.$celular_tutor.'</td>'.
                     '</tr>'.
                 '</tbody>'.            
@@ -344,8 +320,7 @@ $html.=  '<header class="header">'.
             '</header>'.
         '</body>'.
       '</html>';           
-//echo $html;
- descargarPDF("COBOFAR PERSONAL ",$html);
+descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
 
 ?>
 

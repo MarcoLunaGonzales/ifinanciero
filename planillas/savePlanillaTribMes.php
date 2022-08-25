@@ -9,20 +9,6 @@ $dbh = new Conexion();
 
 $codigo = $_POST['cod_planillatrib'];
 $codPlan = $_POST['cod_planilla'];
-// if($codigo==0){
-//   insertarPlanillaTributaria($codPlan);
-  
-// }else{
-//   actualizarPlanillaTributaria($codigo);	  
-//   //procesarPlanillaTributaria($codigo,$codPlan);	
-//   $flagsucess=ReprocesarPlanillaTribNuevo($codigo,$codPlan);
-
-//   if($flagsucess)
-//     echo 1;
-//   else
-//     echo 0;
-// }
-
 
 if($codigo==0){
   $codigo_pt=insertarPlanillaTributaria($codPlan);
@@ -40,12 +26,10 @@ if($codigo==0){
   else
     echo 0;
 }
-
-
 //actualizar la planilla tributaria el modified at
 function actualizarPlanillaTributaria($codigo){
   $codigoUser=$_SESSION["globalUser"];
-  $fechaActual=date("Y-m-d H:i:s");	
+  $fechaActual=date("Y-m-d H:i:s"); 
   $dbhI = new Conexion();
   $sqlUpdate="UPDATE planillas_tributarias SET modified_by='$codigoUser',modified_at='$fechaActual' where codigo=$codigo";
   $stmtUpdate = $dbhI->prepare($sqlUpdate);
@@ -53,16 +37,13 @@ function actualizarPlanillaTributaria($codigo){
 }
 //insertar nueva planilla tributaria
 function insertarPlanillaTributaria($codigo){
-  $dbh = new Conexion();
-  $sql="SELECT * from planillas where codigo=$codigo";
-  // echo $sql;
-  $stmt = $dbh->prepare($sql);
+  $dbh = new Conexion();  
+  $stmt = $dbh->prepare("SELECT cod_gestion,cod_mes from planillas where codigo=$codigo");
   $stmt->execute();
   $result= $stmt->fetch();
   $cod_gestion=$result['cod_gestion'];
   $cod_mes=$result['cod_mes'];
-  $cod_estadoplanilla=2;		
-
+  $cod_estadoplanilla=2;    
   //insertar
   $created_by=$_SESSION["globalUser"];
   $modified_by=$_SESSION["globalUser"];
@@ -79,133 +60,9 @@ function insertarPlanillaTributaria($codigo){
   return $ultimo;
 }
 
-function procesarPlanillaTributaria($codigo,$codPlan){
-  $dbh = new Conexion();
-
-  //BORRAR detalle planilla tributaria
-  $sqlDelete="DELETE FROM planillas_tributarias_personal_mes where cod_planillatributaria=$codigo";
-  $stmtDelete = $dbh->prepare($sqlDelete);
-  $stmtDelete->execute();
-
-  //insertamos los datos
-  $planillas="SELECT pl.*,p.cod_mes,p.cod_gestion,(select monto_iva from rc_ivapersonal where cod_personal=pl.cod_personalcargo) as monto_iva FROM planillas_personal_mes pl,planillas p where pl.cod_planilla=p.codigo and pl.cod_planilla=$codPlan";
-  $stmtPlanillas=$dbh->prepare($planillas);
-  $stmtPlanillas->execute();
-  //datos estaticos
-  $minimo_no_imponible=obtenerSueldoMinimo()*2;
-  $impuesto_sueldo_gravado=obtenerValorConfiguracionPlanillas(21);
-   
-  while ($row = $stmtPlanillas->fetch(PDO::FETCH_ASSOC)) {
-   	$cod_personal=$row['cod_personalcargo'];
-   	$cod_mes=$row['cod_mes'];
-   	$cod_gestion=$row['cod_gestion'];
-
-    $monto_iva=$row['monto_iva'];
-    if($monto_iva==null||$monto_iva==""){
-      $monto_iva=0;
-    }
-   	//valores constantes
-    $importe_cotizable=$row['liquido_pagable'];
-    $prima=0;
-    $otros_ingresos=0;
-    // valores de plantilla
-    $total_ganado=$importe_cotizable+$prima+$otros_ingresos;
-    //suedo gravado
-    if($total_ganado>$minimo_no_imponible){
-      $sueldo_gravado=$total_ganado-$minimo_no_imponible;
-    }else{
-      $sueldo_gravado=0;     	
-    }
-
-    //********************************estan sin redondear*****************************
-    //sueldo grabado porcentaje
-    $porcentaje_sueldogravado=$sueldo_gravado*($impuesto_sueldo_gravado/100);
-    //13% del form110
-    
-    $porcentaje_formulario110=obtenerRcIvaPersonal($cod_personal,$cod_mes,$cod_gestion);
-    // echo "pers".$cod_personal."-".$porcentaje_formulario110."<br>";
-    $porcentaje_formulario110=$monto_iva;
-    //porcentajeSueldoMinimo
-    $porcentaje_minimonoimponible=$minimo_no_imponible*(obtenerValorConfiguracionPlanillas(21)/100);
-    //fisco (no se debe redondear)
-    if($porcentaje_sueldogravado>($porcentaje_formulario110+$porcentaje_minimonoimponible)){
-      $fisco=$porcentaje_sueldogravado-$porcentaje_formulario110-$porcentaje_minimonoimponible;	
-    }else{
-      $fisco=0;
-    }
-    //dependiente (si pide redondear)
-    if($porcentaje_sueldogravado<($porcentaje_formulario110+$porcentaje_minimonoimponible)){
-      $dependiente=$porcentaje_minimonoimponible+$porcentaje_formulario110-$porcentaje_sueldogravado;
-    }else{
-      $dependiente=0;
-    }
-
-    //saldo anterior pendiente
-         //////////////////////si es del mes de enero
-        if((int)$cod_mes==1){
-          $cod_gestion_ant=((int)$cod_gestion-1);
-          $cod_mes_ant=12;
-        }else{
-          $cod_gestion_ant=(int)$cod_gestion;
-          $cod_mes_ant=(int)$cod_mes-1;
-        }
-        /////////////////////////
-    $saldo_mes_anterior=obtenerSaldoMesAnteriorTrib($cod_personal,$cod_mes_ant,$cod_gestion_ant);
-    $saldo_mes_anterior_actualizado=$saldo_mes_anterior;
-
-    /*********************************************************************************************/
-     
-     //total saldo
-     $total_saldo=($saldo_mes_anterior+$saldo_mes_anterior_actualizado);
-     
-     //total saldo favor 
-     $total_saldo_favordependiente=$dependiente+$total_saldo;
-     
-     //saldo utilizado
-     if($fisco<$total_saldo_favordependiente){
-      $saldo_utilizado=$fisco;
-     }else{
-      $saldo_utilizado=$total_saldo_favordependiente;
-     }
-
-     //importe retenido (redondear)
-     if($fisco>$total_saldo_favordependiente){
-     	$importe_retenido=$fisco-$total_saldo_favordependiente;
-     }else{
-     	$importe_retenido=0;
-     }
-     $dbhInstert = new Conexion();
-     $sqlInsert="INSERT INTO planillas_tributarias_personal_mes (cod_planillatributaria,cod_personal,importe_cotizable,prima,otros_ingresos,total_ganado,minimo_no_imponible,sueldo_gravado,porcentaje_sueldogravado,porcentaje_formulario110,porcentaje_minimonoimponible,fisco,dependiente,saldo_mes_anterior,saldo_mes_anterior_actualizado,total_saldo,total_saldo_favordependiente,saldo_utilizado,importe_retenido,cod_estadoreferencial) 
-     VALUES (
-      '$codigo',
-      '$cod_personal',
-      '$importe_cotizable',
-      '$prima',
-      '$otros_ingresos',
-      '$total_ganado',
-      '$minimo_no_imponible',
-      '$sueldo_gravado',
-      '$porcentaje_sueldogravado',
-      '$porcentaje_formulario110',
-      '$porcentaje_minimonoimponible',
-      '$fisco',
-      '$dependiente',
-      '$saldo_mes_anterior',
-      '$saldo_mes_anterior_actualizado',
-      '$total_saldo',
-      '$total_saldo_favordependiente',
-      '$saldo_utilizado',
-      '$importe_retenido',
-      '1'
-     	)";
-     $stmtInsert = $dbhInstert->prepare($sqlInsert);
-     $stmtInsert->execute();     	
-   } //while plantillas
-}
-
 function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
   $dbh = new Conexion();
-  $flagsuccess=false;
+
   //BORRAR detalle planilla tributaria
   $sqlDelete="DELETE FROM planillas_tributarias_personal_mes_2 where cod_planillatributaria=$codigo";
   $stmtDelete = $dbh->prepare($sqlDelete);
@@ -214,24 +71,23 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
   $salario_minimo_no_imponible=obtenerSueldoMinimo()*2;
   $impuesto_sueldo_gravado=obtenerValorConfiguracionPlanillas(21);
   //insertamos los datos
-  $planillas="SELECT pl.*,p.cod_mes,p.cod_gestion,(select nombre from gestiones where codigo=p.cod_gestion)as gestion,(select rc.monto_iva from rc_ivapersonal rc where rc.cod_personal=pl.cod_personalcargo and rc.cod_mes=p.cod_mes and rc.cod_gestion=p.cod_gestion and rc.cod_estadoreferencial=1) as monto_iva FROM planillas_personal_mes pl,planillas p where pl.cod_planilla=p.codigo and pl.cod_planilla=$codPlan";
+  $planillas="SELECT pl.cod_personalcargo,pl.afp_1,pl.afp_2,pl.total_ganado,p.cod_mes,p.cod_gestion,(select nombre from gestiones where codigo=p.cod_gestion)as gestion,(select rc.monto_iva from rc_ivapersonal rc where rc.cod_personal=pl.cod_personalcargo and rc.cod_mes=p.cod_mes and rc.cod_gestion=p.cod_gestion and rc.cod_estadoreferencial=1) as monto_iva
+    FROM planillas_personal_mes pl,planillas p where pl.cod_planilla=p.codigo and pl.cod_planilla=$codPlan";
   //and pl.cod_personalcargo in (84,93,183,195,286,32,176,96,68,16,97)
-
   $stmtPlanillas=$dbh->prepare($planillas);
   $stmtPlanillas->execute();
   while ($row = $stmtPlanillas->fetch(PDO::FETCH_ASSOC)) {
     $cod_personal=$row['cod_personalcargo'];
     $cod_mes=$row['cod_mes'];
     $cod_gestion=$row['cod_gestion'];
-
     $mes=str_pad($cod_mes, 2, "0", STR_PAD_LEFT);
     $gestion=$row['gestion'];
-    
+
     $afp_1=$row['afp_1'];
     $afp_2=$row['afp_2'];
     $total_ganado=$row['total_ganado'];
-
     $monto_iva=$row['monto_iva'];
+
     if($monto_iva==null||$monto_iva==""){
       $monto_iva=0;
     }
@@ -242,12 +98,6 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
     $a_solidario_13000=$resultPatronal['a_solidario_13000'];
     $a_solidario_25000=$resultPatronal['a_solidario_25000'];
     $a_solidario_35000=$resultPatronal['a_solidario_35000'];
-    // $monto_iva=0;
-    // $a_solidario_13000=0;
-    // $a_solidario_25000=0;
-    // $a_solidario_35000=0;
-
-
 
     $dato_auxiliar1=$afp_1+$afp_2+$a_solidario_13000+$a_solidario_25000+$a_solidario_35000;
     $monto_de_ingreso_neto=$total_ganado-$dato_auxiliar1;//
@@ -293,25 +143,16 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
     // $saldo_mes_anterior= 6543;
     //MANTENIMIENTO DE VALOR DEL SALDO A FAVOR DEL DEPENDIENTE DEL PERIODO ANTERIOR
     
+    $fecha_inicio=date($gestion."-".$mes."-01");
+    //UFV Anterior
+    $fecha_anterior=date('Y-m-t',strtotime($fecha_inicio." - 1 days"));
+    $fecha_fin=date('Y-m-t',strtotime($fecha_inicio));
+    // echo $fecha_inicio."***".$fecha_anterior."***".$fecha_fin;
+    $ufv_anterior=obtenerUFV($fecha_anterior);
+    $ufv_actual=obtenerUFV($fecha_fin);
 
-      //UFV Anterior
-      // $fecha_inicio=date("Y-m-01");
-      // $fecha_actual=date("Y-m-d");
-      //   $ufv_anterior=obtenerUFV($fecha_inicio);
-      // $ufv_actual=obtenerUFV($fecha_actual);
-
-      $fecha_inicio=date($gestion."-".$mes."-01");
-      //UFV Anterior
-      $fecha_anterior=date('Y-m-t',strtotime($fecha_inicio." - 1 days"));
-      $fecha_fin=date('Y-m-t',strtotime($fecha_inicio));
-      $ufv_anterior=obtenerUFV($fecha_anterior);
-      $ufv_actual=obtenerUFV($fecha_fin);
-
-    
-
-       
-      //echo $saldo_mes_anterior."*".$ufv_actual."/".$ufv_anterior."-".$saldo_mes_anterior;
-      $mantenimiento_saldo_mes_anterior=($saldo_mes_anterior*$ufv_actual/$ufv_anterior-$saldo_mes_anterior);
+    // echo $ufv_anterior."-".$ufv_actual."<br>";
+      $mantenimiento_saldo_mes_anterior=($saldo_mes_anterior*($ufv_actual/$ufv_anterior)-$saldo_mes_anterior);
       //SALDO DEL PERIODO ANTERIOR ACTUALIZADO
       $saldo_mes_anterior_actualizado=$saldo_mes_anterior+$mantenimiento_saldo_mes_anterior;
       //SALDO UTILIZADO

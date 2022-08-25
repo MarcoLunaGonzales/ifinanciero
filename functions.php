@@ -2275,7 +2275,8 @@
   }
 
   function calculaIva($monto){
-    $calculo=$monto*0.13;
+    // $calculo=$monto*0.13;
+    $calculo=round($monto*0.13);
     return ($calculo);
   }
 
@@ -3386,6 +3387,23 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     return ($aporte_rc_iva_neto);
   }
 
+  function obtenerRC_IVA_planilla($codigo_personal,$cod_gestion_x,$cod_mes_x){
+   $dbh_t = new Conexion();
+    $sql = "select impuesto_rc_iva_retenido 
+      from planillas_tributarias p join planillas_tributarias_personal_mes_2 pd on p.codigo=pd.cod_planillatributaria 
+      where pd.cod_personal=$codigo_personal and p.cod_gestion=$cod_gestion_x and p.cod_mes=$cod_mes_x ";
+      // echo $sql."<br>";
+    $stmtRCIVA = $dbh_t->prepare($sql);
+    $stmtRCIVA->execute();
+    $total_descuentos_otros=0;
+    while ($resultRCIVA = $stmtRCIVA->fetch(PDO::FETCH_ASSOC)) {
+         $total_descuentos_otros = $resultRCIVA['impuesto_rc_iva_retenido'];
+    }    
+    $stmtRCIVA = null;
+    $dbh_t = null;
+    return $total_descuentos_otros;
+  }
+
   function obtenerAtrasoPersonal($id_personal,$haber_basico,$cod_gestion,$mes){
     $dbh = new Conexion();
     set_time_limit(300);
@@ -3786,7 +3804,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
    require_once 'conexion_simple.php';
     $dbh = new Conexion_simple();
     $sql="SELECT p.codigo,p.cod_area,a.nombre as area, p.primer_nombre as nombres,p.paterno, p.materno,
-    p.identificacion as ci,p.ing_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,
+    p.identificacion as ci,p.ing_contr,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,
     pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable,pm.afp_1,pm.afp_2,pad.porcentaje,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.rc_iva,pp.atrasos,pp.anticipo,p.fecha_nacimiento,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,(select tg.abreviatura from tipos_genero tg where tg.codigo=p.cod_genero)as genero,(select pp2.abreviatura from personal_pais pp2 where pp2.codigo=p.cod_nacionalidad) as nacionalidad
 
     FROM personal p
@@ -4169,6 +4187,20 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     return $monto;
   }
   function obtenerSaldoMesAnteriorTrib($cod_persona,$cod_mes,$cod_gestion){
+    $monto=0;
+    $dbh = new Conexion();
+    set_time_limit(300);
+    $stmt = $dbh->prepare("SELECT ptd.saldo_credito_fiscal_mes_siguiente from planillas_tributarias_personal_mes_2 ptd join planillas_tributarias pt on pt.codigo=ptd.cod_planillatributaria where ptd.cod_personal='$cod_persona' and pt.cod_mes='$cod_mes' and pt.cod_gestion='$cod_gestion'");
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $monto = $row['saldo_credito_fiscal_mes_siguiente'];
+    }
+    if($monto==null){
+      $monto=0;
+    }
+    return $monto;
+  }
+  function obtenerSaldoMesAnteriorTrib_bk($cod_persona,$cod_mes,$cod_gestion){
     $monto=0;
     $dbh = new Conexion();
     set_time_limit(300);

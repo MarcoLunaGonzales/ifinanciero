@@ -132,7 +132,7 @@ table {
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Sol(13)</small></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Sol(25)</small></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Sol(35)</small></th>
-		                    <th class="aportesDet bg-success text-white" style="display:none"><small>RC-IVA</small></th>
+		                    <th ><small>RC-IVA</small></th>
 		                    <!-- <th><small>Atrasos</small></th> -->
 		                    <th><small>Anticipos</small></th>
 		                    <th><small>Dotaciones</small></th>
@@ -412,7 +412,7 @@ table {
 				                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($a_solidario_13000_tp);?></td>
 				                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($a_solidario_25000_tp);?></td>
 				                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($a_solidario_35000_tp);?></td>
-				                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($rc_iva_tp);?></td>
+				                    <td class="small"><?=formatNumberDec($rc_iva_tp);?></td>
 
 				                    
 				                    <td class="small"><?=formatNumberDec($anticipo_tp);?></td>
@@ -506,7 +506,7 @@ table {
 	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($suma_total_a_solidario_13000)?></th>
 	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($suma_total_a_solidario_25000)?></th>
 	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($suma_total_a_solidario_35000)?></th>
-	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($suma_total_rc_iva)?></th>
+	                    <th class="small" ><?=formatNumberDec($suma_total_rc_iva)?></th>
 	                    <th class="text-center small"><?=formatNumberDec($sum_total_anticipos);?></th>
 	                    <th class="text-center small"><?=formatNumberDec($sum_total_dotaciones);?></th>
 	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_o_descuentos);?></th>

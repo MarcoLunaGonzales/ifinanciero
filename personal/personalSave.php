@@ -36,8 +36,8 @@ try {
     
     $persona_contacto = $_POST["persona_contacto"];
     $grado_academico=$_POST['grado_academico'];
-    $ing_contr=$_POST['ing_contr'];
-    $ing_planilla=$_POST['ing_contr'];
+    $ing_contr=$_POST['ing_contr'];//esto se manejará para las planillas
+    $ing_planilla=$_POST['ing_planilla'];
     $bandera=1;
     $email_empresa=$_POST['email_empresa'];
     $tipo_persona_discapacitado=$_POST['tipo_persona_discapacitado'];
@@ -46,6 +46,10 @@ try {
 
     $personal_confianza=$_POST['personal_confianza'];
     $cuenta_bancaria=$_POST['cuenta_bancaria'];
+    $cod_banco=$_POST['cod_banco'];
+    $codigo_dependiente=$_POST['codigo_dependiente'];
+
+    
     $globalUser=$_SESSION['globalUser'];
     //$created_at = $_POST["created_at"];
     $created_by = $globalUser;//$_POST["created_by"];
@@ -54,20 +58,20 @@ try {
     $cod_estadoreferencial=1;
     $porcentaje=100;
 
-    $stmt = $dbh->prepare("UPDATE personal set cod_cargo=:cod_cargo,cod_unidadorganizacional=:cod_unidadorganizacional,cod_area=:cod_area,jubilado=:jubilado,
-    cod_tipopersonal=:cod_tipopersonal,haber_basico=:haber_basico,apellido_casada=:apellido_casada,otros_nombres=:otros_nombres,
+    $stmt = $dbh->prepare("UPDATE personal set jubilado=:jubilado,
+    cod_tipopersonal=:cod_tipopersonal,apellido_casada=:apellido_casada,otros_nombres=:otros_nombres,
     nua_cua_asignado=:nua_cua_asignado,ing_contr=:ing_contr,ing_planilla=:ing_planilla,
-    cod_tipoafp=:cod_tipoafp,nro_seguro=:nro_seguro,cod_grado_academico=:grado_academico,
-    cod_estadopersonal=:cod_estadopersonal,persona_contacto=:persona_contacto,cod_tipoaporteafp = :cod_tipoaporteafp,email_empresa=:email_empresa,bandera=:bandera,personal_confianza=:personal_confianza ,modified_by=:modified_by,modified_at=NOW(),cuenta_bancaria=:cuenta_bancaria
+    cod_tipoafp=:cod_tipoafp,nro_seguro=:nro_seguro,
+    cod_estadopersonal=:cod_estadopersonal,persona_contacto=:persona_contacto,cod_tipoaporteafp = :cod_tipoaporteafp,email_empresa=:email_empresa,bandera=:bandera,personal_confianza=:personal_confianza ,modified_by=:modified_by,modified_at=NOW(),cuenta_bancaria=:cuenta_bancaria,cod_banco=:cod_banco,codigo_dependiente=:codigo_dependiente
     where codigo = :codigo");
     //bind
     $stmt->bindParam(':codigo', $codigo);
-    $stmt->bindParam(':cod_cargo', $cod_cargo);
-    $stmt->bindParam(':cod_unidadorganizacional', $cod_unidadorganizacional);
-    $stmt->bindParam(':cod_area', $cod_area);
+    // $stmt->bindParam(':cod_cargo', $cod_cargo);
+    // $stmt->bindParam(':cod_unidadorganizacional', $cod_unidadorganizacional);
+    // $stmt->bindParam(':cod_area', $cod_area);
     $stmt->bindParam(':jubilado', $jubilado);        
     $stmt->bindParam(':cod_tipopersonal', $cod_tipopersonal);
-    $stmt->bindParam(':haber_basico', $haber_basico);        
+    // $stmt->bindParam(':haber_basico', $haber_basico);        
     $stmt->bindParam(':apellido_casada', $apellido_casada);
     $stmt->bindParam(':otros_nombres', $otros_nombres);
     $stmt->bindParam(':nua_cua_asignado', $nua_cua_asignado);            
@@ -76,7 +80,7 @@ try {
     $stmt->bindParam(':nro_seguro', $nro_seguro);
     $stmt->bindParam(':cod_estadopersonal', $cod_estadopersonal);        
     $stmt->bindParam(':persona_contacto', $persona_contacto);
-    $stmt->bindParam(':grado_academico', $grado_academico);
+    // $stmt->bindParam(':grado_academico', $grado_academico);
 
     $stmt->bindParam(':ing_contr', $ing_contr);
     $stmt->bindParam(':ing_planilla', $ing_planilla);
@@ -85,6 +89,8 @@ try {
     $stmt->bindParam(':personal_confianza', $personal_confianza);
     $stmt->bindParam(':modified_by', $modified_by);
     $stmt->bindParam(':cuenta_bancaria', $cuenta_bancaria);
+    $stmt->bindParam(':cod_banco', $cod_banco);
+    $stmt->bindParam(':codigo_dependiente', $codigo_dependiente);
 
     
     $flagSuccess=$stmt->execute();

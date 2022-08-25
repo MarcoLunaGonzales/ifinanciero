@@ -1,4 +1,7 @@
 <?php
+// error_reporting(E_ALL);
+// ini_set('display_errors', '1');
+
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'rrhh/configModule.php';
@@ -68,6 +71,8 @@ $nombre_area = $result['nombre_area'];
 $email_empresa = $result['email_empresa'];
 $personal_confianza = $result['personal_confianza'];
 $cuenta_bancaria = $result['cuenta_bancaria'];
+$cod_banco = $result['cod_banco'];
+$codigo_dependiente = $result['codigo_dependiente'];
 
 
 //personal discapacitado
@@ -133,7 +138,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Tipo Identificación Otro</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" name="tipo_identificacionOtro" id="tipo_identificacionOtro" value="<?=obtenerNombreIdentificacionPersona($tipo_identificacionOtro,2);?>" readonly="readonly"/>
+                                        <input class="form-control" name="tipo_identificacionOtro" id="tipo_identificacionOtro" value="<?=$tipo_identificacionOtro;?>" readonly="readonly"/>
                                     </div>
                                 </div>                            
                             </div><!--fin campo tipo_identificacionOtro--> 
@@ -274,12 +279,19 @@ $statementestados_personal = $dbh->query($queryestados_personal);
 
                             <h3 align="center">CAMPOS GESTIONADOS POR RRHH</h3>                        
                             <div class="row">
-                                <label class="col-sm-2 col-form-label">Fecha de Ingreso</label>
+                                <label class="col-sm-2 col-form-label">Fecha de Ingreso Contr</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <input class="form-control" type="date" name="ing_contr" id="ing_contr" required="true" value="<?=$ing_contr;?>" />                                    
                                     </div>
                                 </div>
+                                <label class="col-sm-2 col-form-label">Fecha de Ingreso Planilla</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" type="date" name="ing_planilla" id="ing_planilla" required="true" value="<?=$ing_planilla;?>"/>
+                                    </div>
+                                </div>
+
                                 <label class="col-sm-2 col-form-label">Apellido Casada</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
@@ -495,13 +507,35 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <input class="form-control" type="number" name="nro_seguro" id="nro_seguro" required value="<?=$nro_seguro;?>"/>
                                 </div>
                                 </div>
+                                <label class="col-sm-2 col-form-label">Cod. Dependiente RC-IVA</label>
+                                <div class="col-sm-4">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="codigo_dependiente" id="codigo_dependiente" required value="<?=$codigo_dependiente;?>"/>
+                                </div>
+                                </div>
+                            </div><!--fin campo-->
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Banco</label>
+                                <div class="col-sm-4">
+                                <div class="form-group">
+                                    <select name="cod_banco" id="cod_banco" class="selectpicker form-control form-control-sm" data-style="btn btn-info" required>
+                                        <option value=""></option>
+                                        <?php 
+                                        $queryBanc = "SELECT codigo,nombre from bancos where cod_estadoreferencial=1 order by 2";
+                                        $stmtBanco = $dbh->query($queryBanc);
+                                        while ($rowBanco = $stmtBanco->fetch()) { ?>
+                                            <option <?php if($cod_banco == $rowBanco["codigo"]) echo "selected"; ?> value="<?=$rowBanco["codigo"];?>"><?=$rowBanco["nombre"];?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                </div>
                                 <label class="col-sm-2 col-form-label">Cuenta Bancaria</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <input class="form-control" type="number" name="cuenta_bancaria" id="cuenta_bancaria" required value="<?=$cuenta_bancaria;?>"/>
                                     </div>
                                 </div>
-                            </div><!--fin campo cod_estadopersonal-->
+                            </div><!--fin campo-->
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Estado</label>
                                 <div class="col-sm-2">

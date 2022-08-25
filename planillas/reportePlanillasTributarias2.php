@@ -116,11 +116,11 @@
 				                    <td class="small"><?=formatNumberDec($row['formulario_110_13']);?></td>
 				                    <td class="small"><?=formatNumberDec($row['saldo_favor_fisico']);?></td>
 				                    <td class="text-center small"><?=formatNumberDec($row['saldo_favor_dependiente']);?></td>
-				                    <td class="text-white small"><?=formatNumberDec($row['saldo_mes_anterior']);?></td>
+				                    <td class="text-white small" style="background:#e59866;"><?=formatNumberDec($row['saldo_mes_anterior']);?></td>
 				                    <td  class="text-center small"><?=formatNumberDec($row['mantenimiento_saldo_mes_anterior']);?></td>
 				                    <td class="text-center small"><?=formatNumberDec($row['saldo_anterior_actualizado']);?></td>
-				                    <td class="text-center small"><?=formatNumberDec($row['saldo_utilizado']);?></td>
-				                    <td class="text-center small"><?=formatNumberDec($row['impuesto_rc_iva_retenido']);?></td>
+				                    <td class="text-center small"><?=formatNumberDec($row['saldo_utilizado']);?></td>				                    
+				                    <td class="text-white text-center small" style="background:red;"><?=formatNumberDec($row['impuesto_rc_iva_retenido']);?></td>
 				                    <td class="text-center small"><?=formatNumberDec($row['saldo_credito_fiscal_mes_siguiente']);?></td>
 				                </tr> 
 			                  	<?php 

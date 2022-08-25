@@ -137,7 +137,7 @@ $html.=  '<header class="header">'.
                       '<td>'.$row['nombres'].'</td>'.
                       '<td>'.$row['paterno'].' '.$row['materno'].'</td>'.
                       '<td>'.$row['ci'].'</td>'.
-                      '<td>'.strftime('%d/%m/%Y',strtotime($row['ing_planilla'])).'</td>'.
+                      '<td>'.strftime('%d/%m/%Y',strtotime($row['ing_contr'])).'</td>'.
                       '<td>'.$row['cargo'].'</td>'.
                       '<td class="text-right">'.number_format($row['haber_basico2']*$porcentaje/100, 2, '.', ',').'</td>'.
                       '<td class="text-right">'.$row['dias_trabajados'].'</td>'.

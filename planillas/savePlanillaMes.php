@@ -75,7 +75,6 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 	$dias_trabajados_mes = obtenerValorConfiguracionPlanillas(22); //por defecto
 	// $dias_del_mes=30;
 
-
 	$horas_pagadas = 0; //buscar datos
 	// $minimo_salarial=0;
 	$valor_conf_x65_90=0;
@@ -117,7 +116,7 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 
 	//============select del personal
 	$sql = "SELECT codigo,haber_basico,cod_grado_academico,
-	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,cod_tipoafp,ing_planilla,cuenta_bancaria
+	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,cod_tipoafp,ing_contr,cuenta_bancaria
 	from personal where cod_estadoreferencial=1 and cod_estadopersonal=1";
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
@@ -126,7 +125,7 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 	$stmtPersonal->bindColumn('cod_grado_academico', $cod_gradoacademico);  
 	$stmtPersonal->bindColumn('p_grado_academico', $p_grado_academico);  
 	$stmtPersonal->bindColumn('cod_tipoafp', $cod_tipoafp);
-	$stmtPersonal->bindColumn('ing_planilla', $ing_planilla);
+	$stmtPersonal->bindColumn('ing_contr', $ing_contr);
 	$stmtPersonal->bindColumn('cuenta_bancaria', $cuenta_bancaria);
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
@@ -144,8 +143,8 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 		// if($p_grado_academico==0)
 		// else $bono_academico = $p_grado_academico/100*$minimo_salarial;
 
-		$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_planilla,$fecha_planilla);//ok	
-		//echo $minimo_salarial."--".$ing_planilla."--".$nombre_gestion_x;
+		$bono_antiguedad= obtenerBonoAntiguedad($minimo_salarial,$ing_contr,$fecha_planilla);//ok	
+		//echo $minimo_salarial."--".$ing_contr."--".$nombre_gestion_x;
 
 		//$otros_b = 0 ;//buscar datos
 		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
@@ -169,7 +168,8 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 		$aporte_solidario_25000 = obtenerAporteSolidario25000($total_ganado);
 		$aporte_solidario_35000 = obtenerAporteSolidario35000($total_ganado);
 
-		$RC_IVA = obtenerRC_IVA($total_ganado,$afp_futuro,$afp_prevision,$aporte_solidario_13000,$aporte_solidario_25000,$aporte_solidario_35000);
+		// $RC_IVA = obtenerRC_IVA($total_ganado,$afp_futuro,$afp_prevision,$aporte_solidario_13000,$aporte_solidario_25000,$aporte_solidario_35000);
+		$RC_IVA=obtenerRC_IVA_planilla($codigo_personal,$cod_gestion_x,$cod_mes_x);
 
 		$atrasos = 0;//ee
 		$anticipo = obtenerAnticipo($codigo_personal,$cod_gestion_x,$cod_mes_x);//ee
