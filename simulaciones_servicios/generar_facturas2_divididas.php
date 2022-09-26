@@ -32,14 +32,17 @@
             $cod_tipopago_anticipo=obtenerValorConfiguracion(64);//tipo de pago anticipo
             
         	    // echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fecha_actual:".$fecha_actual." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
-            $controlCode = new ControlCode();
-            $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
-            $nro_correlativo,//Numero de factura
-            $nitCliente,//Número de Identificación Tributaria o Carnet de Identidad
-            str_replace('-','',$fecha_actual),//fecha de transaccion de la forma AAAAMMDD
-            $totalFinalRedondeado,//Monto de la transacción
-            $llaveDosificacion//Llave de dosificación
-            );
+            $code=0;// para el siat ya no se usa codigo de control
+
+
+            // $controlCode = new ControlCode();
+            // $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
+            // $nro_correlativo,//Numero de factura
+            // $nitCliente,//Número de Identificación Tributaria o Carnet de Identidad
+            // str_replace('-','',$fecha_actual),//fecha de transaccion de la forma AAAAMMDD
+            // $totalFinalRedondeado,//Monto de la transacción
+            // $llaveDosificacion//Llave de dosificación
+            // );
 
             //SACAMOS EL NRO CORRELATIVO DEL CORREO
             $nro_correlativoCorreo = nro_correlativo_correocredito($cod_sucursal,$cod_tipopago);
@@ -75,12 +78,25 @@
                         //echo $ci_estudiante_x."-".$cod_simulacion_servicio."-".$cod_claservicio_x."-".$precio_x."-".$codigo;
                         $ci_estudiante_x=$ci_estudiante;
                         $datos=resgistrar_pago_curso($ci_estudiante,$cod_simulacion_servicio,$cod_claservicio_x,$precio_x,$codigo);
-                        $estado_x=$datos["estado"];
-                        $mensaje_x=$datos["mensaje"];                    
+                        if(isset($datos["estado"])){
+                            $estado_x=$datos["estado"];
+                            $mensaje_x=$datos["mensaje"];                    
+                        }else{
+                            $estado_x=false;
+                            $mensaje_x="";
+                        }
+                        
                     }elseif($tipo_solicitud==7){//pago grupal                     
                         $datos=resgistrar_pago_curso($ci_estudiante_x,$cod_curso_x,$cod_claservicio_x,$precio_x,$codigo);
-                        $estado_x=$datos["estado"];
-                        $mensaje_x=$datos["mensaje"];                        
+                        // $estado_x=$datos["estado"];
+                        // $mensaje_x=$datos["mensaje"];                        
+                        if(isset($datos["estado"])){
+                            $estado_x=$datos["estado"];
+                            $mensaje_x=$datos["mensaje"];                    
+                        }else{
+                            $estado_x=false;
+                            $mensaje_x="";
+                        }
                     }
                     if(!$estado_x){//registro correcto webservice                            
                         $stmtDelte = $dbh->prepare("DELETE from facturas_venta where codigo=$cod_facturaVenta");

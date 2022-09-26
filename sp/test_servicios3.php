@@ -3,7 +3,8 @@
 WS: ws-fin-cliente-contacto.php 
 */
 //LLAVES DE ACCESO AL WS
-    $direccion="http://ibnored.ibnorca.org/wsibno/";//direccion des servicio web
+// echo "aqui";
+    $direccion="http://ibnored.ibnorca.org/wsibnob/";//direccion des servicio web
     $sIde = "ifinanciero";
     $sKey = "ce94a8dabdf0b112eafa27a5aa475751";  
     $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 

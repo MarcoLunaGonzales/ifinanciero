@@ -51,7 +51,8 @@ try{
         $codigo_facturacion=verificamosFacturaDuplicada($codigo);
         if($codigo_facturacion==null){//no se registró            
             //datos de la solicitud de facturacion           
-            $stmtInfo = $dbh->prepare("SELECT sf.* FROM solicitudes_facturacion sf where sf.codigo=$codigo");
+            $stmtInfo = $dbh->prepare("SELECT sf.cod_simulacion_servicio,sf.cod_unidadorganizacional,sf.cod_area,sf.cod_tipoobjeto,sf.cod_tipopago,sf.cod_cliente,sf.cod_personal,sf.nit,sf.observaciones,sf.observaciones_2,sf.razon_social,sf.tipo_solicitud,sf.ci_estudiante,sf.siat_tipoidentificacion,sf.siat_complemento,sf.siat_nroTarjeta,sf.fecha_facturacion,(select stp.codigoClasificador from siat_tipos_pago stp where stp.cod_tipopago=sf.cod_tipopago)as siat_tipoPago
+                 FROM solicitudes_facturacion sf where sf.codigo=$codigo");
             $stmtInfo->execute();
             $resultInfo = $stmtInfo->fetch();    
             $cod_simulacion_servicio = $resultInfo['cod_simulacion_servicio'];
@@ -67,7 +68,18 @@ try{
             $observaciones_2 = $resultInfo['observaciones_2'];
             $nombre_cliente = $resultInfo['razon_social'];
             $tipo_solicitud = $resultInfo['tipo_solicitud'];//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
-            $ci_estudiante = $resultInfo['ci_estudiante'];  
+            $ci_estudiante = $resultInfo['ci_estudiante'];
+
+            $siat_tipoidentificacion = $resultInfo['siat_tipoidentificacion'];
+            $siat_complemento = $resultInfo['siat_complemento'];
+            $siat_nroTarjeta = $resultInfo['siat_nroTarjeta'];
+            $fecha_facturacion = $resultInfo['fecha_facturacion'];
+
+            $siat_tipoPago = $resultInfo['siat_tipoPago'];
+
+            
+
+            
 
             $cod_personal=$globalUser;
             $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
@@ -77,29 +89,35 @@ try{
                 </script><?php 
             }else{
                 // echo "uo:",$cod_unidadorganizacional."<br>";
-                $fecha_actual=date('Y-m-d');                
-                $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
-                from dosificaciones_facturas d where d.cod_sucursal='$cod_sucursal' and d.fecha_limite_emision>='$fecha_actual' and d.cod_estado=1 order by codigo";
-                $stmtInfo = $dbh->prepare($sqlInfo);
-                // echo $sqlInfo;
-                $stmtInfo->execute();
-                $resultInfo = $stmtInfo->fetch();  
-                $cod_dosificacionfactura = $resultInfo['codigo'];  
-                $nroAutorizacion = $resultInfo['nro_autorizacion'];
-                $llaveDosificacion = $resultInfo['llave_dosificacion'];
-                $fecha_limite_emision = $resultInfo['fecha_limite_emision'];
+                $fecha_actual=date('Y-m-d');
+
+                // $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
+                // from dosificaciones_facturas d where d.cod_sucursal='$cod_sucursal' and d.fecha_limite_emision>='$fecha_actual' and d.cod_estado=1 order by codigo";
+                // $stmtInfo = $dbh->prepare($sqlInfo);
+                // // echo $sqlInfo;
+                // $stmtInfo->execute();
+                // $resultInfo = $stmtInfo->fetch();  
+                // $cod_dosificacionfactura = $resultInfo['codigo'];  
+                // $nroAutorizacion = $resultInfo['nro_autorizacion'];
+                // $llaveDosificacion = $resultInfo['llave_dosificacion'];
+                // $fecha_limite_emision = $resultInfo['fecha_limite_emision'];
+
+                //Para la facturacion con el SIAT ya no se usa las dosificaciones
+                $cod_dosificacionfactura = 0;
+                $nroAutorizacion = 1;
+                $llaveDosificacion = null;
+                $fecha_limite_emision = null;
                 if($nroAutorizacion==null || $nroAutorizacion=='' || $nroAutorizacion==' '){?>
                     <script>
                         Swal.fire("Error!","DOSIFICACION de sucursal No encontrada.", "error");
                     </script><?php                    
                 }else{                                    
                     //NUMERO CORRELATIVO DE FACTURA                    
-                    $nro_correlativo = nro_correlativo_facturas($cod_sucursal);//solo para verificar
-                    if($nro_correlativo==0){ ?>
-                        <script>                            
-                            Swal.fire("Error!","DOSIFICACION de sucursal incorrecta.", "error");
-                        </script> <?php
-                    }else{
+                    $nro_correlativo=0;//desde el servicio nos enviará el numero de factura
+                    //$nro_correlativo = nro_correlativo_facturas($cod_sucursal);//solo para verificar
+                    // if($nro_correlativo==0){             
+                            // Swal.fire("Error!","DOSIFICACION de sucursal incorrecta.", "error");
+                    // }else{
                         if(isset($_GET["cod_libreta"])){
                             $cod_libreta=$_GET["cod_libreta"];
                         }else{
@@ -198,12 +216,9 @@ try{
                                     $fechaHoraActual=date("Y-m-d H:i:s");
                                     $idTipoObjeto=2709;
                                     $idObjeto=2729; //facturado
-                                    $obs="Solicitud Facturada";                                    
-                                    
+                                    $obs="Solicitud Facturada";
                                     //Descomentar esto
-                                    actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
-                                    
-
+                                    //actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
                                     //finalizando en rollback
                                     $errorInsertar=0;
                                     for ($flag=0; $flag < count($SQLDATOSINSTERT); $flag++) { 
@@ -212,15 +227,15 @@ try{
                                          // echo $flag;
                                          break;
                                         }
-                                    } 
+                                    }
                                     if($errorInsertar!=0){//si hay errores deshace todo
                                       $sqlRolBack="ROLLBACK;";
                                       $stmtRolBack = $dbh->prepare($sqlRolBack);
                                       $stmtRolBack->execute();
                                     }
-                                    $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
-                                    $stmtCommit = $dbh->prepare($sqlCommit);
-                                    $stmtCommit->execute();
+                                    // $sqlCommit="COMMIT;SET AUTOCOMMIT=1;";
+                                    // $stmtCommit = $dbh->prepare($sqlCommit);
+                                    // $stmtCommit->execute();
 
                                     //Verificamos si la glosa especial es distinta de vacio para el formato de impresion
                                     if($observaciones_2<>""){
@@ -228,15 +243,75 @@ try{
                                     }else{
                                         $adminImpresion=2;
                                     }
+                                    //enviamos los datos para la facturacion con el SIAT
 
-                                    header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$stringFacturasCod.'&tipo=1&admin='.$adminImpresion);
+                                    //enviamos los datos para la facturacion con el SIAT
+                                    
+                                    //datos cabecera
+                                    $monto_total=34.8;
+                                    $descuento=0;
+                                    $monto_final=$monto_total-$descuento;   
+                                    //armamos el detalle
+                                    $stmt5 = $dbh->prepare("SELECT sf.cantidad,sf.precio,sf.descuento_bob,sf.descripcion_alterna
+                                        from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
+                                    $stmt5->execute();
+                                    $arrayDetalle=[];
+                                    while ($row = $stmt5->fetch()) 
+                                    {   
+                                        // $cod_claservicio_x=$row['cod_claservicio'];
+                                        $cantidad_x=$row['cantidad'];
+                                        $precio_x=$row['precio'];
+                                        $descuento_bob_x=$row['descuento_bob'];     
+                                        $precio_x=$precio_x+$descuento_bob_x/$cantidad_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario y tambien el descuetno unitario, ya que se registro el descuento total * cantidad
+                                        $descripcion_alterna_x=$row['descripcion_alterna'];         
+
+                                        $Objeto_detalle = new stdClass();
+                                        $Objeto_detalle->codDetalle = 1;
+                                        $Objeto_detalle->cantidadUnitaria = $cantidad_x;
+                                        $Objeto_detalle->precioUnitario = $precio_x;
+                                        $Objeto_detalle->descuentoProducto = $descuento_bob_x;
+                                        // $Objeto_detalle->monto_final = "34.8";
+                                        $Objeto_detalle->conceptoProducto = $descripcion_alterna_x;
+                                        $arrayDetalle[] = $Objeto_detalle;
+                                        $arrayDetalle[] = $Objeto_detalle;
+                                    }
+                                    // print_r($arrayDetalle);
+                                    $id_usuario=$globalUser;//usuario quien atendió
+                                    $usuario="";
+                                    $datos=enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_total,$descuento,$monto_final,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle);
+                                    if(isset($datos["estado"]) && isset($datos["idTransaccion"])){//el servicio respondio
+                                        $idTransaccion_x=$datos["idTransaccion"];
+                                        $nroFactura_x=$datos["nroFactura"];
+                                        $mensaje_x=$datos["mensaje"];
+
+                                        $sqlUpdateFact="UPDATE facturas_venta set idTransaccion_siat='$idTransaccion_x',nro_factura='$nroFactura_x' where codigo in ($stringFacturasCod)";
+                                        $stmtUpdateFact = $dbh->prepare($sqlUpdateFact);
+                                        $stmtUpdateFact->execute();
+
+                                        if($datos["estado"]==1){//Todo ok con el servicio
+                                            echo "<script>Swal.fire('Correcto!','".$mensaje_x."', 'success');
+                                            </script>";
+                                        }else{
+                                            // $estado_x=$datos["estado"];
+                                            $mensaje_x=$datos["mensaje"];
+                                            echo "<script>Swal.fire('Informativo!','".$mensaje_x."', 'warning');
+                                            </script>";
+                                        }
+                                    }else{
+                                        echo '<script>Swal.fire("Error!","Hubo un error con Servicio MinkaSiat.", "error");
+                                        </script>';
+                                    }
+                                    // print_r($datos);
+                                    // header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$stringFacturasCod.'&tipo=1&admin='.$adminImpresion);
+                                    
+                                    
                                 }                            
                             }else{?>
                                 <script>Swal.fire("Error!","Hubo un error durante el proceso de generar la factura.", "error");
                                 </script> <?php
                             }
                         }
-                    }
+                    //}
                 }
             }        
         }else{//ya se registro
