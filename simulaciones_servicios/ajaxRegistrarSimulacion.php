@@ -41,6 +41,8 @@ if(isset($_POST['nombre'])){
   $atributos= json_decode($_POST['atributos']);
   $tipo_atributo=$_POST['tipo_atributo'];   
   $afnor=$_POST['afnor'];
+  $codPersonalX=$_POST['codigo_personal'];
+
   if(isset($_POST['norma'])){
     $norma=$_POST['norma'];
   }else{
@@ -93,14 +95,14 @@ if(isset($_POST['nombre'])){
   $ingresoPresupuestado=obtenerPresupuestoEjecucionPorAreaAcumulado(0,$areaGeneralPlantilla,2020,12,1)['presupuesto'];//$globalNombreGestion
 
   $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio,cod_objetoservicio,cod_tipoclientenacionalidad,cod_iaf_primario,cod_iaf_secundario,alcance_propuesta,ingreso_presupuestado,descripcion_servicio,cod_unidadorganizacional,cod_tipocliente) 
-  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$globalUser."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$idTipoServicio."','".$objeto_servicio."','".$regionCliente."','".$iafprimario."','".$iafsecundario."','".$alcance."','".$ingresoPresupuestado."','".$des_serv."','".$oficina_servicio."','".$tipoCliente."')";
+  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$codPersonalX."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$idTipoServicio."','".$objeto_servicio."','".$regionCliente."','".$iafprimario."','".$iafsecundario."','".$alcance."','".$ingresoPresupuestado."','".$des_serv."','".$oficina_servicio."','".$tipoCliente."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $flagsuccess=$stmtInsert->execute();
   array_push($SQLDATOSINSTERT,$flagsuccess);
   //enviar propuestas para la actualizacion de ibnorca
   $fechaHoraActual=date("Y-m-d H:i:s");
   $idTipoObjeto=2707;
-  $idObjeto=2715; //regristado
+  $idObjeto=2715; //registrado
   $obs="Registro de propuesta";
   //id de perfil para cambio de estado en ibnorca
   $id_perfil=$_POST['id_perfil'];

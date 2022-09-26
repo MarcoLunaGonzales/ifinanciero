@@ -178,7 +178,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             from ibnorca.serviciopresupuesto s 
                                             INNER JOIN ibnorca.cotizaciones c ON c.IdCotizacion=s.IdCotizacion
                                             where  s.IdServicio=$IdServicio AND ibnorca.d_clasificador(ibnorca.id_estadoobjeto(196, c.IdCotizacion))='Adjudicada';";*/
-                                  $queryPr="SELECT c.IdCotizacion,c.Descuento,s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario, 1 AS tipo_item 
+                                  $queryPr="SELECT c.IdCotizacion,c.Descuento,s.IdDetServicio,s.IdClaServicio,s.Cantidad,s.PrecioUnitario, 1 AS tipo_item, s.detalle 
                                            FROM
                                                ibnorca.serviciopresupuesto s
                                                INNER JOIN ibnorca.cotizaciones c ON c.IdCotizacion = s.IdCotizacion 
@@ -186,7 +186,6 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                s.IdServicio = $IdServicio
                                                AND ibnorca.d_clasificador (
                                                ibnorca.id_estadoobjeto ( 196, c.IdCotizacion ))= 'Adjudicada';";
-                                        
                                         //echo $queryPr;
                                         
                                         if ($cod_facturacion > 0){
@@ -197,6 +196,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                         $stmt = $dbh->prepare($queryPr);
                                         $stmt->execute();
                                         $modal_totalmontopre=0;$modal_totalmontopretotal=0;
+                                        $detalleCotizacion="";
+
                                         while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                             $tipo_item=$rowPre['tipo_item'];//hace referencia a los items adiciones insertados
                                             $codigoPre=$rowPre['IdDetServicio'];
@@ -210,6 +211,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             $cantidad_inicial=$cantidadPre;
                                             // $cantidadPre=1;
                                             $montoPre=$rowPre['PrecioUnitario'];
+                                            $detalleCotizacion=$rowPre['detalle'];
+
                                             $montoPre=number_format($montoPre,2,".","");                                            
                                             $tipoPre=$Codigo_alterno." - ".descripcionClaServicio($codCS);
                                             $montoPreTotal=($montoPre*$cantidadPre);
@@ -238,13 +241,6 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     $precio_total_x+=$rowPre['precio']*$rowPre['cantidad'];
                                                     $cantidad_total_registrado+=$rowPre['cantidad'];
                                                 }
-                                                /*if($itemServicioAux==$IdServicio&&$codSC==$itemServicioFilaAux){
-                                                    $precio_total_x=0;
-                                                    $cantidad_total_registrado=0;
-                                                }*/
-                                                
-                                                
-                                                // $resultMontoTotal=$stmtControladorTotal->fetch();
                                                 if($precio_total_x>0){
                                                     //$saldo=$monto_pagar*$cantidad_saldo-$precio_total_x;
                                                     $saldo=($monto_pagar*$cantidadPre)-$precio_total_x;
@@ -252,7 +248,6 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                     if($cod_facturacion==0){
                                                         $cantidad_saldo=$cantidad_inicial-$cantidad_total_registrado;    
                                                     }
-                                                    
                                                 }
                                                 if($precio_total_x==null || $precio_total_x=='' || $precio_total_x==' ' || $precio_total_x==0){
                                                 }else $monto_total_pagado=$precio_total_x;
@@ -329,7 +324,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                         // $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
                                                         $descuento_porX=$rowPre['descuento_por'];
                                                         $descuento_bobX=$rowPre['descuento_bob'];
-                                                        $descripcion_alternaX=$rowPre['descripcion_alterna'];
+                                                        $descripcion_alternaX=$rowPre['descripcion_alterna']." ".$detalleCotizacion;
                                                     }else{//editar                                                        
                                                         $monto_total_pagado=$precio_total_x-$preciox;
                                                         $saldo=$preciox;

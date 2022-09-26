@@ -1,4 +1,7 @@
 <?php
+
+$start_time = microtime(true);
+
 session_start();
 set_time_limit(0);
 error_reporting(-1);
@@ -157,7 +160,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
   var itemAtributosDias=[];
 </script>
 <?php 
-  $stmtAtributos = $dbh->prepare("SELECT * from simulaciones_servicios_atributos where cod_simulacionservicio=$codigo");
+  $sqlAtributos="SELECT * from simulaciones_servicios_atributos where cod_simulacionservicio=$codigo GROUP BY nombre, direccion, cod_tipoatributo, habilitado, marca, norma, nro_sello, cod_ciudad, cod_estado, cod_pais";
+  
+  //echo "sqlAtributos: ".$sqlAtributos;
+  
+  $stmtAtributos = $dbh->prepare($sqlAtributos);
   $stmtAtributos->execute();
   $codigoFilaAtrib=0;
   while ($rowAtributo = $stmtAtributos->fetch(PDO::FETCH_ASSOC)) {
@@ -214,7 +221,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
   $normaAtrib=explode(",", $normaXAtrib);
 
   if($tipoXAtrib==1){
-    $stmtAtributosNorma = $dbh->prepare("SELECT * from simulaciones_servicios_atributosnormas where cod_simulacionservicioatributo=$codigoXAtrib");
+    $sqlAtributosNormas="SELECT * from simulaciones_servicios_atributosnormas where cod_simulacionservicioatributo=$codigoXAtrib GROUP BY cod_simulacionservicioatributo, cod_norma, precio, cantidad";
+
+    //echo "sql atributos normas: ".$sqlAtributosNormas;
+    
+    $stmtAtributosNorma = $dbh->prepare($sqlAtributosNormas);
     $stmtAtributosNorma->execute();
     $ni=0;$normaFila=[];
     while ($rowAtributoNorma = $stmtAtributosNorma->fetch(PDO::FETCH_ASSOC)) {
@@ -240,8 +251,11 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
    }
   }else{
 //atributos auditores
-for ($an=0; $an<=$anioGeneral; $an++) { 
-    $sqlAuditoresAtrib="SELECT sa.*,s.descripcion FROM simulaciones_servicios_atributosauditores sa join simulaciones_servicios_auditores s on s.codigo=sa.cod_auditor join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_anio=$an and sa.cod_simulacionservicioatributo=$codigoXAtrib and s.cod_tipoauditor!=-100 order by t.nro_orden";
+  for ($an=0; $an<=$anioGeneral; $an++) { 
+    $sqlAuditoresAtrib="SELECT sa.*,s.descripcion FROM simulaciones_servicios_atributosauditores sa join simulaciones_servicios_auditores s on s.codigo=sa.cod_auditor join tipos_auditor t on s.cod_tipoauditor=t.codigo where s.cod_simulacionservicio=$codigoSimulacionSuper and s.cod_anio=$an and sa.cod_simulacionservicioatributo=$codigoXAtrib and s.cod_tipoauditor!=-100 GROUP BY sa.cod_simulacionservicioatributo, sa.cod_auditor, sa.cod_anio, sa.estado, s.descripcion order by t.nro_orden";
+    
+    //echo "atributos auditores: ".$sqlAuditoresAtrib;
+
     $stmtAuditoresAtrib=$dbh->prepare($sqlAuditoresAtrib);
     $stmtAuditoresAtrib->execute();
     ?>
@@ -296,12 +310,12 @@ for ($an=0; $an<=$anioGeneral; $an++) {
     nom_estado: '<?=$nom_estadoXAtrib?>',
     nom_ciudad: '<?=$nom_ciudadXAtrib?>'
     }
-  itemAtributos.push(atributo);
+    itemAtributos.push(atributo);
     </script>
    <?php
    //DIAS DE LOS SITIOS
    if($tipoXAtrib!=1){
-    $stmtAtributosDias = $dbh->prepare("SELECT * from simulaciones_servicios_atributosdias where cod_simulacionservicioatributo=$codigoXAtrib");
+    $stmtAtributosDias = $dbh->prepare("SELECT * from simulaciones_servicios_atributosdias where cod_simulacionservicioatributo=$codigoXAtrib GROUP BY dias, cod_anio");
     $stmtAtributosDias->execute();
     while ($rowAtributoDias = $stmtAtributosDias->fetch(PDO::FETCH_ASSOC)) {
       $nombreXAtribDias=$rowAtributoDias['dias'];
@@ -967,4 +981,13 @@ for ($an=0; $an<=$anioGeneral; $an++) {
 
 <?php
 require_once 'modal.php';
+
+$end_time = microtime(true);
+$duration=$end_time-$start_time;
+$hours = (int)($duration/60/60);
+$minutes = (int)($duration/60)-$hours*60;
+$seconds = (int)$duration-$hours*60*60-$minutes*60;
+
+echo $hours.' h, '.$minutes.' m y '.$seconds.' s';
+
 ?>

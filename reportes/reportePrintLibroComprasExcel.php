@@ -97,8 +97,15 @@ $stmt2->bindColumn('tipo_compra', $tipo_compra);
 		$importe_credito_fiscal=$subtotal-$rebajas_sujetos_iva;
 
 		$importe_gift_card=0;
-
 		$credito_fiscal=13*$importe_credito_fiscal/100;
+		
+		//ESTE ES EL CASO PARA LAS FACTURAS SIN GRAVAMEN TIPO 2
+    if($tipo_compra==2){
+      $exento=$importe_credito_fiscal;
+      $importe_credito_fiscal=0;
+      $credito_fiscal=0;
+    }
+
 		if($nit ==null || $nit==''){
 			$nit=0;
 		}

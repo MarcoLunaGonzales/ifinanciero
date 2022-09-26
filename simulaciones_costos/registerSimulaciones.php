@@ -3,24 +3,8 @@
 require_once 'conexion.php';
 require_once 'styles.php';
 require_once 'configModule.php';
-
-setlocale(LC_TIME, "Spanish");
 $dbh = new Conexion();
-$sqlAreas="";
-if(isset($_GET['q'])){
-  $q=$_GET['q'];
-  $s=$_GET['s'];
-  $u=$_GET['u'];
-  if(isset($_GET['u'])){
-    $u=$_GET['u'];
-    ?><input type="hidden" name="idPerfil" id="idPerfil" value="<?=$u?>"/><?php
-  }
-}
-
-$sqlX="SET NAMES 'utf8'";
-$stmtX = $dbh->prepare($sqlX);
-$stmtX->execute();
-
+setlocale(LC_TIME, "Spanish");
 
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
 $globalUser=$_SESSION["globalUser"];
@@ -29,6 +13,25 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalNombreUnidad=$_SESSION['globalNombreUnidad'];
 $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
+
+$sqlAreas="";
+if(isset($_GET['q'])){
+  $q=$_GET['q'];
+  $s=$_GET['s'];
+  $u=$_GET['u'];
+  if(isset($_GET['u'])){
+    $u=$_GET['u'];
+    ?><input type="hidden" name="idPerfil" id="idPerfil" value="<?=$u?>"/><?php
+  }else{
+    $q=$globalUser;
+  }
+}else{
+  $q=$globalUser;
+}
+
+$sqlX="SET NAMES 'utf8'";
+$stmtX = $dbh->prepare($sqlX);
+$stmtX->execute();
 
 $contadorRegistros=0;
 ?>
@@ -97,6 +100,33 @@ $dbh = new Conexion();
                               </div>
                         </div>
                       </div>
+
+                      <div class="row">
+                       <label class="col-sm-2 col-form-label">Personal</label>
+                       <div class="col-sm-6">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group" id="lista_personal">
+                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Seleccionar usuario que registra..." data-live-search="true" name="codigo_personal" id="codigo_personal" data-style="btn btn-info"  required>
+                                <option value="0">-- -- --</option>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT p.codigo, concat(p.paterno,' ',p.materno,' ',p.primer_nombre)as nombrepersona FROM personal p where p.cod_estadopersonal in (1,3) order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombrepersona'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>" <?=($codigoX==$u)?"selected":""?> ><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                    </div><!--row-->  
+
                       <div class="row" id="lista_precios">
                       </div>
                       <br>
@@ -151,6 +181,45 @@ $dbh = new Conexion();
                               </div>
                         </div>
                       </div>
+
+                   <div class="row">
+                       <label class="col-sm-2 col-form-label">Cliente</label>
+                       <div class="col-sm-6">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group" id="lista_clientes">
+                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="codigo_cliente" id="codigo_cliente" data-style="btn btn-info"  required>
+          
+                                <<option value="0">-- --</option>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM clientes c where c.cod_estadoreferencial=1 order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  //$tipoX=$row['tipo'];
+                                  //$abrevX=$row['abreviatura'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                       <div class="col-sm-1">
+                        <div class="row">
+                          <div class="form-group">
+                            <a href="#" class="btn btn-warning btn-round btn-fab" onclick="actualizarRegistroSoloClientes()"> <!---->
+                             <i class="material-icons" title="Actualizar Clientes">update</i>
+                            </a>
+                         </div>
+                        </div>
+                       </div>
+                  </div><!--row-->   
+
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Normas:</label>
                        <div class="col-sm-7">

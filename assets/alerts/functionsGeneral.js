@@ -3196,6 +3196,8 @@ function alertDatosTabla(){
 
 //funciones simulaciones
 function guardarSimulacionCosto(){
+  var cod_personal=0;
+  var cod_cliente=0;
   if(!($("#codigo_servicioibnorca").length)){
     var idServicio="";
   }else{
@@ -3211,6 +3213,11 @@ function guardarSimulacionCosto(){
   }else{
     var idModulo=$("#codigo_servicioibnorca_u").val();
   }
+  cod_personal=$("#codigo_personal").val();
+  cod_cliente=$("#codigo_cliente").val();
+  console.log("personal: "+cod_personal);
+  console.log("cliente: "+cod_cliente);
+
   var nombre=$("#nombre").val();
   var precio=$("#precio_venta").val();
   var plantilla_costo=$("#plantilla_costo").val();
@@ -3226,10 +3233,10 @@ function guardarSimulacionCosto(){
   }else{
       var ibnorca=2;
   }*/
-  if(nombre==""||!(plantilla_costo>0)||cantidad_modulos==""||monto_norma==""){
+  if(nombre=="" || !(plantilla_costo>0) || cantidad_modulos=="" || monto_norma=="" || cod_personal==0){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"normas":normas,"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos,"IdCurso":idCurso,"IdModulo":idModulo};
+     var parametros={"normas":normas,"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos,"IdCurso":idCurso,"IdModulo":idModulo,"codigo_personal":cod_personal,"codigo_cliente":cod_cliente};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -3255,6 +3262,7 @@ function guardarSimulacionCosto(){
 }
 
 function guardarSimulacionServicio(){
+  var cod_personal=0;
   if(!($("#codigo_servicioibnorca").length)){
     var idServicio="";
   }else{
@@ -3288,9 +3296,12 @@ function guardarSimulacionServicio(){
   }else{
     var afnor=0;
   }
+  cod_personal=$("#codigo_personal").val();
+  console.log("personal: "+cod_personal);
+
   if($("#productos_div").hasClass("d-none")){
-   if(norma==""||itemAtributos.length==0||dias==""||nombre==""||!(plantilla_servicio>0)){
-   Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
+   if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
+   Swal.fire('Informativo!','Debe llenar los campos  1 !','warning'); 
   }else{
     var tipoServicio=$("#tipo_servicio").val();
     var normas_tiposervicio=$("#normas_tiposervicio").val();
@@ -3298,9 +3309,9 @@ function guardarSimulacionServicio(){
     alcance=$("#alcance").val();
     var des_serv=$("#d_servicio").val();
     var iaf_primario=$("#iaf_primario_tcs").val();
-      var iaf_secundario=$("#iaf_secundario_tcs").val();
-     var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2};
-     $.ajax({
+    var iaf_secundario=$("#iaf_secundario_tcs").val();
+    var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2,"codigo_personal":cod_personal};
+    $.ajax({
         type: "POST",
         dataType: 'html',
         url: "simulaciones_servicios/ajaxRegistrarSimulacion.php",
@@ -3341,9 +3352,9 @@ function guardarSimulacionServicio(){
     });
   }
   }else{
-    if(norma==""||itemAtributos.length==0||dias==""||nombre==""||!(plantilla_servicio>0)){
-   Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
-     }else{
+    if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
+      Swal.fire('Informativo!','Debe llenar los campos 2 !','warning'); 
+    }else{
       var regionCliente=$("#region_cliente").val();
       var tipoCliente=$("#tipo_cliente").val();
 
@@ -17915,7 +17926,7 @@ function seleccionar_Factura_relacion(cod_factura){
 }
 
 function ponerSistemasIntegrados(){
-  console.log("entra a change select tipo servicio");
+  /*console.log("entra a change select tipo servicio");
   var tipo_servicio=$("#tipo_servicio").val();
   //ESTA FUNCION ES PARA SISTEMAS INTEGRADOS
   if(tipo_servicio==2778){ //codigo Sistemas Integrados
@@ -17937,7 +17948,7 @@ function ponerSistemasIntegrados(){
       $("#div_norma").removeClass("d-none");
       $("#div_pais").removeClass("d-none");
       $("#tiposervicio_div").removeClass("d-none");
-  }
+  }*/
 }
 
 function ponerDescripcionServicio(){

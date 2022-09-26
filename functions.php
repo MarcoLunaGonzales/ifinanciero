@@ -677,14 +677,18 @@
   }
   function abrevUnidad($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT abreviatura FROM unidades_organizacionales where codigo in ($codigo)");
-     $stmt->execute();
-     $nombreX="";
-     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $nombreX.=$row['abreviatura']."-";
+     if($codigo!=0 || $codigo!="NULL" || $codigo!=null){
+        $stmt = $dbh->prepare("SELECT abreviatura FROM unidades_organizacionales where codigo in ($codigo)");
+        $stmt->execute();
+        $nombreX="";
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+           $nombreX.=$row['abreviatura']."-";
+        }
+        $nombreX=substr($nombreX, 0, -1);
+        return($nombreX);      
+     }else{
+         return(0);
      }
-     $nombreX=substr($nombreX, 0, -1);
-     return($nombreX);
   }
   function abrevUnidad_solo($codigo){
      $dbh = new Conexion();

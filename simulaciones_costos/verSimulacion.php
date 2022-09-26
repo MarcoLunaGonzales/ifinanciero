@@ -389,6 +389,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
                   $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
                  }
 
+                //SACAMOS EL NETO DEL COSTO FIJO 
+                $totalFijoPlan=$totalFijoPlan*0.87;
+                
+
                 //CALCULAMOS EL VALOR DE LAS NORMAS
                 $valorNormas=(precioNormasPropuesta($codigo)*$alumnosX);
                 //echo "XXXXXXXXXXXXXXXXXX: ".$valorNormas;

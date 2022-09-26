@@ -1,10 +1,10 @@
 <?php
-require_once 'conexion.php';
+require_once 'conexion2.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
-$dbh = new Conexion();
+$dbh = new Conexion2();
 
 // Preparamos
 if(isset($_GET['q'])){
@@ -23,13 +23,16 @@ if(isset($_GET['q'])){
   // Preparamos
   /*$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser $sqlModulos order by sc.codigo desc");*/
   /* modificacion realizada para que puedan ver lo de otros usuarios y realizar SR */
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 $sqlModulos order by sc.codigo desc");
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado, 
+    (select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente 
+    from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 $sqlModulos order by sc.codigo desc");
 
 }else{
   $s=0;
   $u=0;
   // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc");
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente
+ from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc");
 }
 
 
@@ -47,6 +50,7 @@ $stmt->bindColumn('cod_estadosimulacion', $codEstado);
 $stmt->bindColumn('cod_responsable', $codResponsable);
 $stmt->bindColumn('cod_area_registro', $codArea);
 $stmt->bindColumn('estado', $estado);
+$stmt->bindColumn('cliente', $nombreCliente);
 
 ?>
 
@@ -72,6 +76,7 @@ $stmt->bindColumn('estado', $estado);
                           <th>Nombre</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
+                          <th>Cliente</th>
                           <th>Estado</th>
                           <th class="text-right">Actions</th>
                         </tr>
@@ -107,6 +112,7 @@ $stmt->bindColumn('estado', $estado);
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
                           </td>
                           <td><?=$fecha;?></td>
+                          <td><?=$nombreCliente;?></td>
                           <td><?=$estado;?> <?=$nEst?> %
                              <div class="progress">
                                <div class="progress-bar <?=$barEstado?>" role="progressbar" aria-valuenow="<?=$nEst?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$nEst?>%">
