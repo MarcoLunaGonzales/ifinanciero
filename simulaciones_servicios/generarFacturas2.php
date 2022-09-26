@@ -242,15 +242,9 @@ try{
                                         $adminImpresion=2;
                                     }else{
                                         $adminImpresion=2;
-                                    }
+                                    }                                    
                                     //enviamos los datos para la facturacion con el SIAT
-
-                                    //enviamos los datos para la facturacion con el SIAT
-                                    
-                                    //datos cabecera
-                                    $monto_total=34.8;
-                                    $descuento=0;
-                                    $monto_final=$monto_total-$descuento;   
+                                    $monto_totalCab=0;
                                     //armamos el detalle
                                     $stmt5 = $dbh->prepare("SELECT sf.cantidad,sf.precio,sf.descuento_bob,sf.descripcion_alterna
                                         from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
@@ -263,22 +257,28 @@ try{
                                         $precio_x=$row['precio'];
                                         $descuento_bob_x=$row['descuento_bob'];     
                                         $precio_x=$precio_x+$descuento_bob_x/$cantidad_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario y tambien el descuetno unitario, ya que se registro el descuento total * cantidad
-                                        $descripcion_alterna_x=$row['descripcion_alterna'];         
+                                        $descripcion_alterna_x=$row['descripcion_alterna'];
 
                                         $Objeto_detalle = new stdClass();
                                         $Objeto_detalle->codDetalle = 1;
                                         $Objeto_detalle->cantidadUnitaria = $cantidad_x;
                                         $Objeto_detalle->precioUnitario = $precio_x;
                                         $Objeto_detalle->descuentoProducto = $descuento_bob_x;
-                                        // $Objeto_detalle->monto_final = "34.8";
                                         $Objeto_detalle->conceptoProducto = $descripcion_alterna_x;
                                         $arrayDetalle[] = $Objeto_detalle;
-                                        $arrayDetalle[] = $Objeto_detalle;
+
+                                        $monto_totalCab+=$precio_x*$cantidad_x;
                                     }
+
+                                    //datos cabecera
+                                    // $monto_totalCab=34.8;
+                                    $descuentoCab=0;
+                                    $monto_finalCab=$monto_totalCab-$descuentoCab;   
+
                                     // print_r($arrayDetalle);
                                     $id_usuario=$globalUser;//usuario quien atendió
                                     $usuario="";
-                                    $datos=enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_total,$descuento,$monto_final,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle);
+                                    $datos=enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_totalCab,$descuentoCab,$monto_finalCab,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle);
                                     if(isset($datos["estado"]) && isset($datos["idTransaccion"])){//el servicio respondio
                                         $idTransaccion_x=$datos["idTransaccion"];
                                         $nroFactura_x=$datos["nroFactura"];

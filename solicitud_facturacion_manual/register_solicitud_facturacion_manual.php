@@ -233,6 +233,14 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Fecha<br>Facturación</label>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <input class="form-control" type="date" name="fecha_facturacion" id="fecha_facturacion" required="true" value="<?=$fecha_facturacion;?>" required="true"/>
+                                </div>
+                            </div>
+                        </div>
                         <!-- fin fechas -->
                         <div class="row" >
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
@@ -347,13 +355,12 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContacto(this);" data-live-search="true">
                                         <option value=""></option>
                                         <?php 
-                                        $queryTipoObjeto = "SELECT * from clientes where cod_estadoreferencial=1 order by nombre";
+                                        $queryTipoObjeto = "SELECT codigo,nombre from clientes where cod_estadoreferencial=1 order by nombre";
                                         $statementObjeto = $dbh->query($queryTipoObjeto);
                                         while ($row = $statementObjeto->fetch()){ ?>
                                             <option <?=($cod_cliente==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                         <?php } ?>
                                     </select>  
-                                        
                                 </div>
                             </div>
                             <label class="col-sm-2 col-form-label">Persona Contacto</label>
@@ -362,7 +369,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     <div id="div_contenedor_contactos">
                                         <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
                                           <?php 
-                                          $query="SELECT * FROM clientes_contactos where cod_cliente='$cod_cliente' order by nombre";
+                                          $query="SELECT codigo,nombre,paterno FROM clientes_contactos where cod_cliente='$cod_cliente' order by nombre";
                                           $stmt = $dbh->prepare($query);
                                           $stmt->execute();
                                           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -390,13 +397,13 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                         <div id="contenedor_razon_nit">
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Razón Social</label>
-                                <div class="col-sm-5">
-                                    <div class="form-group">                                    
+                                <div class="col-sm-4">
+                                    <div class="form-group">                
                                             <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>                                        
                                     </div>
                                 </div>
                                 <!-- <label class="col-sm-1 col-form-label">Nit</label> -->
-                                <div class="col-sm-1">
+                                <div class="col-sm-2" >
                                     <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
                                     <?php
                                     $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
@@ -455,19 +462,6 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <label class="col-sm-2 col-form-label">Fecha<br>Facturación</label>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <input class="form-control" type="date" name="fecha_facturacion" id="fecha_facturacion" required="true" value="<?=$fecha_facturacion;?>" required="true"/>
-                                </div>
-                            </div>                                                        
-                            
-                            
-                        </div>
-                        
-                        
                         <!-- fin observaciones -->
                         <!-- archivos -->
                         <div class="row">
