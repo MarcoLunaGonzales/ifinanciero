@@ -82,6 +82,12 @@ if ($cod_facturacion > 0){
     $Codigo_alterno=null;
     $dias_credito=$result['dias_credito'];
     $correo_contacto=$result['correo_contacto'];
+
+    $codigo_identificacion=$result['siat_tipoidentificacion'];
+    $complemento=$result['siat_complemento'];
+
+    $fecha_facturacion=$result['fecha_facturacion'];
+    
 }else {
     $nombre_simulacion = null;
     $cod_uo = null; 
@@ -100,13 +106,16 @@ if ($cod_facturacion > 0){
     $cod_tipopago = null;
     $name_cliente=null;    
     $razon_social = $name_cliente;
-    $nit = 0;
+    $nit = null;
     $observaciones = null;
     $observaciones_2 = null;
     $persona_contacto=null;
     $Codigo_alterno=null;
     $dias_credito=obtenerValorConfiguracion(58);
     $correo_contacto="";
+    $codigo_identificacion=1;//por defecto ci
+    $complemento=null;
+    $fecha_facturacion=date('Y-m-d');
 }
 $name_uo=null;
 $name_area=null;
@@ -224,6 +233,14 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Fecha<br>Facturación</label>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <input class="form-control" type="date" name="fecha_facturacion" id="fecha_facturacion" required="true" value="<?=$fecha_facturacion;?>" required="true"/>
+                                </div>
+                            </div>
+                        </div>
                         <!-- fin fechas -->
                         <div class="row" >
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
@@ -338,13 +355,12 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContacto(this);" data-live-search="true">
                                         <option value=""></option>
                                         <?php 
-                                        $queryTipoObjeto = "SELECT * from clientes where cod_estadoreferencial=1 order by nombre";
+                                        $queryTipoObjeto = "SELECT codigo,nombre from clientes where cod_estadoreferencial=1 order by nombre";
                                         $statementObjeto = $dbh->query($queryTipoObjeto);
                                         while ($row = $statementObjeto->fetch()){ ?>
                                             <option <?=($cod_cliente==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                         <?php } ?>
                                     </select>  
-                                        
                                 </div>
                             </div>
                             <label class="col-sm-2 col-form-label">Persona Contacto</label>
@@ -353,7 +369,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     <div id="div_contenedor_contactos">
                                         <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
                                           <?php 
-                                          $query="SELECT * FROM clientes_contactos where cod_cliente='$cod_cliente' order by nombre";
+                                          $query="SELECT codigo,nombre,paterno FROM clientes_contactos where cod_cliente='$cod_cliente' order by nombre";
                                           $stmt = $dbh->prepare($query);
                                           $stmt->execute();
                                           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -381,15 +397,34 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                         <div id="contenedor_razon_nit">
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Razón Social</label>
-                                <div class="col-sm-5">
-                                    <div class="form-group">                                    
+                                <div class="col-sm-4">
+                                    <div class="form-group">                
                                             <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>                                        
                                     </div>
                                 </div>
-                                <label class="col-sm-1 col-form-label">Nit</label>
-                                <div class="col-sm-4">
-                                    <div class="form-group">                                        
-                                            <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true"/>
+                                <!-- <label class="col-sm-1 col-form-label">Nit</label> -->
+                                <div class="col-sm-2" >
+                                    <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
+                                    <?php
+                                    $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
+                                    $stmtTipoIdentificacion = $dbh->prepare($sql2);
+                                    $stmtTipoIdentificacion->execute();
+                                    while ($rowTipoIden = $stmtTipoIdentificacion->fetch(PDO::FETCH_ASSOC)) {
+                                        $codigo_identificacionx=$rowTipoIden['codigo'];    
+                                        $nombre_identificacionx=$rowTipoIden['nombre'];
+                                        ?><option <?=($codigo_identificacion==$codigo_identificacionx)?"selected":"";?> value="<?=$codigo_identificacionx?>" class="text-right"><?=$nombre_identificacionx?></option>
+                                       <?php 
+                                    } ?> 
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <input class="form-control" type="number" name="nit" id="nit" value="<?=$nit;?>" required="true"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <div class="form-group">
+                                            <input class="form-control" type='hidden' name="complemento" id="complemento" placeholder="Complemento" value="<?=$complemento;?>" style="position:absolute;width:100px !important;background:#D2FFE8;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                     </div>
                                 </div>
                             </div>
@@ -427,9 +462,6 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 </div>
                             </div>
                         </div>
-
-                        
-                        
                         <!-- fin observaciones -->
                         <!-- archivos -->
                         <div class="row">

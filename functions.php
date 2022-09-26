@@ -11757,4 +11757,55 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
    return(round($valor,0,PHP_ROUND_HALF_DOWN));
 }
 
+
+
+function enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_total,$descuento,$monto_final,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle)
+{
+    
+    //$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+  $url="http://localhost:8080/minka_siat_ibno/wsminka/ws_generarFactura.php";
+  
+  $sIde = "MinkaSw123*";
+  $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
+ 
+    //REGISTRAR CONTROL PAGOS 
+  
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+   "accion"=>"generarFacturaMinka", //
+   "sucursal"=>$cod_sucursal,
+   // "tipoTabla"=>$tipoTabla,
+   "idRecibo"=>$codigo,//cod solicitud de facturacion
+   "fecha"=>$fecha_actual,
+   "idPersona"=>$cod_cliente,
+   "monto_total"=>$monto_total,
+   "descuento"=>$descuento,
+   "monto_final"=>$monto_final,
+   "id_usuario"=>$id_usuario,//***
+   "nitCliente"=>$nitCliente,
+   "nombreFactura"=>$razon_social,
+   // "Concepto"=>$Concepto,
+   "tipoPago"=>$siat_tipoPago,
+   "nroTarjeta"=>$siat_nroTarjeta,
+   "tipoDocumento"=>$siat_tipoidentificacion,
+   "complementoDocumento"=>$siat_complemento,
+   "items"=>$arrayDetalle
+   // ,"NombreEstudiante"=>$NombreEstudiante,
+   // "periodoFacturado"=>$periodoFacturado
+  );  
+
+  // print_r($parametros);
+    // $parametros=json_encode($parametros);
+    // $ch = curl_init();
+    // curl_setopt($ch, CURLOPT_URL,$url);
+    // curl_setopt($ch, CURLOPT_POST, TRUE);
+    // curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // $remote_server_output = curl_exec ($ch);
+    // curl_close ($ch);
+
+    $jsons=callService($parametros, $url);
+    return json_decode($jsons, true);
+  }
+
+
 ?>

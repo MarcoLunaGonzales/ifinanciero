@@ -20422,3 +20422,24 @@ function save_obs_AF_baja(codigo_af,obs_baja,sw,fecha_baja){
     }
   });
 }
+
+//FUNCIONES PARA EL SIAT
+function mostrarComplemento(){
+  var tipo=$("#tipo_documento").val();  
+  if(tipo==1){
+    $("#complemento").attr("type","text");
+    $("#nit").attr("placeholder","INGRESE EL CARNET");
+  }else{
+    $("#complemento").attr("type","hidden");
+    if(tipo==5){
+      $("#nit").attr("placeholder","INGRESE EL NIT");  
+    }else{
+      $("#nit").attr("placeholder","INGRESE EL DOCUMENTO");
+    }
+    
+  }
+}
+$(document).ready(function (){
+    mostrarComplemento();
+});
+
