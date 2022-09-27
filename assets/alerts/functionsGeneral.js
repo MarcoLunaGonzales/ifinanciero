@@ -13998,6 +13998,14 @@ function ajaxTipoPagoContactoPersonal(combo){
   var cod_cliente=$("#cod_cliente").val();
   var contenedor;
   var cod_tipo=combo.value;
+  //para SIAT
+  if(cod_tipo==220){//tipo tarjeta
+    document.getElementById("div_nrotarjeta1").style.display = "inline";
+    document.getElementById("div_nrotarjeta2").style.display = "inline";
+  }else{
+    document.getElementById("div_nrotarjeta1").style.display = "none";
+    document.getElementById("div_nrotarjeta2").style.display = "none";
+  }
   contenedor = document.getElementById('div_contenedor_contactos');
   ajax=nuevoAjax();
   ajax.open('GET', 'simulaciones_servicios/ajax_tipopago_contacto.php?cod_tipo='+cod_tipo+'&cod_cliente='+cod_cliente,true);
