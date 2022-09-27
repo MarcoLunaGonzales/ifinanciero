@@ -131,9 +131,13 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                             $cantidad=$valor['cantidad'];
                             $precio_x=$precioUnitario;
                             $cod_claservicio_x=$pagoCursoId;
-                            if($normas!=0){
+
+                            if( $normas!=0 && ($codClaServicio2==428 || $codClaServicio2==488) ){
                                 $cod_claservicio_x=488;
+                            }else{
+                                $cod_claservicio_x=$codClaServicio2;
                             }
+
                             $stmtInsertSoliFactDet = $dbh->prepare("INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId,cod_modulo,cod_claservicio2) 
                              values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad','$precio_x','$detalle',0,'$suscripcionId','$moduloId','$codClaServicio2')");
                             $flagSuccess=$stmtInsertSoliFactDet->execute();                         

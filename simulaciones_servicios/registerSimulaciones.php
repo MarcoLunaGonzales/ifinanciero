@@ -5,6 +5,15 @@ require_once 'styles.php';
 require_once 'configModule.php';
 
 setlocale(LC_TIME, "Spanish");
+
+$globalNombreGestion=$_SESSION["globalNombreGestion"];
+$globalUser=$_SESSION["globalUser"];
+$globalGestion=$_SESSION["globalGestion"];
+$globalUnidad=$_SESSION["globalUnidad"];
+$globalNombreUnidad=$_SESSION['globalNombreUnidad'];
+$globalArea=$_SESSION["globalArea"];
+$globalAdmin=$_SESSION["globalAdmin"];
+
 $sqlAreas="";
 if(isset($_GET['q'])){
   $q=$_GET['q'];
@@ -27,10 +36,13 @@ if(isset($_GET['q'])){
   }
   if(isset($_GET['u'])){
     $u=$_GET['u'];
-    ?><input type="hidden" name="idPerfil" id="idPerfil" value="<?=$u?>"/><?php
+    ?>
+    <!--input type="hidden" name="idPerfil" id="idPerfil" value="<?=$u?>"/-->
+  <?php
   }
 }else{
   $nombreInputPropuesta="";
+  $q=$globalUser;
 }
 
 $dbh = new Conexion();
@@ -38,15 +50,6 @@ $dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
-
-
-$globalNombreGestion=$_SESSION["globalNombreGestion"];
-$globalUser=$_SESSION["globalUser"];
-$globalGestion=$_SESSION["globalGestion"];
-$globalUnidad=$_SESSION["globalUnidad"];
-$globalNombreUnidad=$_SESSION['globalNombreUnidad'];
-$globalArea=$_SESSION["globalArea"];
-$globalAdmin=$_SESSION["globalAdmin"];
 
 $contadorRegistros=0;
 
@@ -99,6 +102,32 @@ $dbh = new Conexion();
                       </div>
                       
                    <div class="row">
+                       <label class="col-sm-2 col-form-label">Personal</label>
+                       <div class="col-sm-6">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="form-group" id="lista_personal">
+                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Seleccionar usuario que registra..." data-live-search="true" name="codigo_personal" id="codigo_personal" data-style="btn btn-info"  required>
+                                <option value="0">-- -- --</option>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT p.codigo, concat(p.paterno,' ',p.materno,' ',p.primer_nombre)as nombrepersona FROM personal p where p.cod_estadopersonal=1 order by 2");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombrepersona'];
+                                   ?>
+                                  <option value="<?=$codigoX;?>" <?=($codigoX==$q)?"selected":""?> ><?=$nombreX;?></option> 
+                                  <?php
+                                    }
+                                    ?>
+                                </select>
+                              </div>
+                          </div> 
+                        </div>
+                       </div>
+                  </div><!--row-->  
+
+                   <div class="row">
                        <label class="col-sm-2 col-form-label">Cliente</label>
                        <div class="col-sm-6">
                         <div class="row">
@@ -134,7 +163,7 @@ $dbh = new Conexion();
                          </div>
                         </div>
                        </div>
-                      </div><!--row-->   
+                  </div><!--row-->   
                        
                   <div class="row">
                        <label class="col-sm-2 col-form-label">Plantilla de Servicios :</label>

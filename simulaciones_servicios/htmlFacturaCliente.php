@@ -1,5 +1,5 @@
 <?php
-function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin,$tipo_leyenda){
+function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin,$tipo_leyenda=""){
 	require_once __DIR__.'/../conexion.php';
 	if($tipo_admin==1){
 		require '../assets/phpqrcode/qrlib.php';
@@ -9,6 +9,10 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin,$tipo_leyenda){
 	require_once __DIR__.'/../functions.php';
 	require_once __DIR__.'/../functionsGeneral.php';
 	
+	if($tipo_leyenda==""){
+		$tipo_leyenda="ORIGINAL: CLIENTE";
+	}
+
 	$dbh = new Conexion();
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 	
@@ -66,7 +70,7 @@ function generarHTMLFacCliente($codigo,$auxiliar,$tipo_admin,$tipo_leyenda){
 		}
 		
 		$html = '';
-		if($tipo_admin==2 || $tipo_admin==3){
+		if($tipo_admin==1 || $tipo_admin==2 || $tipo_admin==3){
 			$html.='<html>'.
 			            '<head>'.
 			                '<!-- CSS Files -->'.

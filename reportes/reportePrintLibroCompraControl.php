@@ -139,6 +139,14 @@ $razon_social=$result['razon_social'];
                                 // $importe_sujeto_iva=$importe-$ice-$exento;
                                 $importe_sujeto_iva=$importe-$ice-$exento;;
                                 $iva_obtenido=$importe_sujeto_iva*13/100;
+
+                                //ESTE ES EL CASO PARA LAS FACTURAS SIN GRAVAMEN TIPO 2
+                                if($tipo_compra==2){
+                                  $exento=$importe_sujeto_iva;
+                                  $importe_sujeto_iva=0;
+                                  $iva_obtenido=0;
+                                }
+                                
                                 $caracter=substr($codigo_control, -1);
                                 if($caracter=='-'){
                                   $codigo_control=trim($codigo_control, '-');

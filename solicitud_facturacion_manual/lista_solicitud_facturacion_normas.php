@@ -7,6 +7,10 @@ require_once 'functions.php';
 require_once 'functionsGeneral.php';
 //$dbh = new Conexion();
 $globalUser=$_SESSION["globalUser"];
+
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 $dbh = new Conexion();
 if(isset($_GET['q'])){
   $q=$_GET['q'];
