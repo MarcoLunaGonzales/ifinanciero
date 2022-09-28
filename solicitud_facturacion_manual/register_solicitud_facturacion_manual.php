@@ -87,6 +87,7 @@ if ($cod_facturacion > 0){
     $complemento=$result['siat_complemento'];
 
     $fecha_facturacion=$result['fecha_facturacion'];
+    $nro_tarjeta=$result['nro_tarjeta'];
     
 }else {
     $nombre_simulacion = null;
@@ -116,6 +117,7 @@ if ($cod_facturacion > 0){
     $codigo_identificacion=1;//por defecto ci
     $complemento=null;
     $fecha_facturacion=date('Y-m-d');
+    $nro_tarjeta=null;
 }
 $name_uo=null;
 $name_area=null;
@@ -237,7 +239,13 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                             <label class="col-sm-2 col-form-label">Fecha<br>Facturación</label>
                             <div class="col-sm-4">
                                 <div class="form-group">
-                                    <input class="form-control" type="date" name="fecha_facturacion" id="fecha_facturacion" required="true" value="<?=$fecha_facturacion;?>" required="true"/>
+                                    <input class="form-control" type="date" name="fecha_facturacion" id="fecha_facturacion" required="true" value="<?=$fecha_facturacion;?>"/>
+                                </div>
+                            </div>
+                            <label class="col-sm-2 col-form-label" id="div_nrotarjeta1" style="display: none">Número Tarjeta</label>
+                            <div class="col-sm-4" id="div_nrotarjeta2" style="display: none">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="nro_tarjeta" id="nro_tarjeta" required="true" value="<?=$nro_tarjeta;?>" autocomplete="off" style='height:40px;font-size:25px;width:80%;background:#D7B3D8 !important; float:left; margin-top:4px; color:#4C079A;'/>
                                 </div>
                             </div>
                         </div>
