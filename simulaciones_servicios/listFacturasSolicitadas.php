@@ -102,7 +102,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             <!--th><small>Responsable</small></th-->
                             <th><small>Codigo<br>Servicio</small></th>
                             <!--th><small>Cliente</small></th-->
-                            <th><small>Fecha<br>Registro</small></th>
+                            <th><small><small>Fecha<br>Registro<br>/Factura</small></small></th>
                             <th><small>Importe<br>(BOB)</small></th>                              
                             <th width="15%"><small>Razón Social</small></th>
                             <th width="35%"><small>Concepto</small></th>                            
@@ -267,7 +267,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               <!--td><small><?=$responsable;?></small></td-->
                               <td><small><?=$codigo_alterno?></small></td>
                               <!--td><small><small><?=$cliente_x?></small></small></td-->
-                              <td><small><?=$fecha_registro;?></small></td>
+                              <td><small><?=$fecha_registro;?><br><span style="color:#ff0000;"><?=$fecha_solicitudfactura;?></span></small></td>
                               <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
                               <td><small><small><?=$razon_social;?></small></small></td>
                               <td><small><small><?=$concepto_contabilizacion?></small></small></td>
