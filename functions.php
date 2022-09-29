@@ -11762,8 +11762,8 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
 function enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_total,$descuento,$monto_final,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle)
 {
     
-    //$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
-  $url="http://localhost:8080/minka_siat_ibno/wsminka/ws_generarFactura.php";
+  $url=obtenerValorConfiguracion(102);//direccion des servicio web
+  // $url="http://localhost:8080/minka_siat_ibno/wsminka/ws_generarFactura.php";
   
   $sIde = "MinkaSw123*";
   $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
