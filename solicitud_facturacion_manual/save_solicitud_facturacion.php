@@ -46,7 +46,6 @@ try {
         $fecha_facturacion=$fecha_solicitudfactura;
     }
     
-
     if(isset($_POST["tipo_documento"])){
         $tipo_documento = $_POST["tipo_documento"];
     }else{
