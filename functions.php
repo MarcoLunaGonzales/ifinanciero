@@ -11781,6 +11781,7 @@ function enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_clien
    "descuento"=>$descuento,
    "monto_final"=>$monto_final,
    "id_usuario"=>$id_usuario,//***
+   "usuario"=>$usuario,
    "nitCliente"=>$nitCliente,
    "nombreFactura"=>$razon_social,
    // "Concepto"=>$Concepto,
