@@ -365,8 +365,11 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                         <?php 
                                         $queryTipoObjeto = "SELECT codigo,nombre from clientes where cod_estadoreferencial=1 order by nombre";
                                         $statementObjeto = $dbh->query($queryTipoObjeto);
-                                        while ($row = $statementObjeto->fetch()){ ?>
-                                            <option <?=($cod_cliente==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                        while ($row = $statementObjeto->fetch()){ 
+                                            $nombreClienteSelect=$row["nombre"];
+                                            $nombreClienteSelect=substr($nombreClienteSelect, 0, 100);
+                                        ?>
+                                            <option <?=($cod_cliente==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$nombreClienteSelect;?></option>
                                         <?php } ?>
                                     </select>  
                                 </div>
