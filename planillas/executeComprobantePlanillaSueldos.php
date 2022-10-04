@@ -38,7 +38,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $codAnio=$_SESSION["globalNombreGestion"];
   $codMoneda=1;
   $codEstadoComprobante=1;
-  $fechaActual=date("Y-m-d H:i:s");
+  // $fechaActual=date("Y-m-d H:i:s");
   $mesPlanilla=$_GET["cod_mes"];
   $namemesPlanilla=nombreMes($mesPlanilla);
   $gestionPlanilla=$_GET["cod_gestion"];
@@ -46,11 +46,51 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
 
   $mesTrabajo=$_SESSION['globalMes'];
   $gestionTrabajo=$_SESSION['globalNombreGestion'];
-  $glosaCabecera="Sueldos Correspondientes a: ".$namemesPlanilla." ".$anioPlanilla;
+  $glosaCabecera="Personal IBNORCA registro de sueldos correspondiente a: ".$namemesPlanilla." ".$anioPlanilla;
 
-  $numeroComprobante=obtenerCorrelativoComprobante($tipoComprobante, $globalUnidadX, $gestionTrabajo, $mesTrabajo);
+  //$numeroComprobante=obtenerCorrelativoComprobante($tipoComprobante, $globalUnidadX, $gestionTrabajo, $mesTrabajo);
+
+
+
+     // $globalUnidad_ofcen=1;//Oficina central
+   // $cod_area_ofcen=obtenerValorConfiguracion(29);//area
+   // $tipoComprobante=3;
+   // $codEmpresa=1;
+   // $mesPlanilla=$_GET["cod_mes"];
+   // $gestionPlanilla=$_GET["cod_gestion"];
+   // $nombreGestion=nameGestion($gestionPlanilla);
+   // $nombreMes=nombreMes($mesPlanilla);
+
+   // $mesTrabajo=$_SESSION['globalMes'];
+    $anioActual=date("Y");
+    $mesActual=date("m");
+    $diaActual=date("d");
+    // $mesTrabajo=$_SESSION['globalMes']; 
+    // $gestionTrabajo=$_SESSION['globalNombreGestion'];
+    $month = $gestionTrabajo."-".$mesTrabajo;
+    $aux = date('Y-m-d', strtotime("{$month} + 1 month"));
+    $diaUltimo = date('d', strtotime("{$aux} - 1 day"));
+    $horasActual=date("H:i:s");
+    if((int)$gestionTrabajo<(int)$anioActual){
+      $fechaHoraActual=$gestionTrabajo."-".$mesTrabajo."-".$diaUltimo." ".$horasActual;
+    }else{
+      if((int)$mesActual==(int)$mesTrabajo){
+          $fechaHoraActual=date("Y-m-d H:i:s");
+      }else{
+        $fechaHoraActual=$gestionTrabajo."-".$mesTrabajo."-".$diaUltimo." ".$horasActual;
+      } 
+    }
+
+     // //indicamos que ya se realizo el comprbante      
+     //  $stmtUdatePlanilla = $dbh->prepare("UPDATE planillas set comprobante=1 where codigo=$codigo_planilla");
+     //  $stmtUdatePlanilla->execute();
+
+   // $ordenDetalle=1;//
+   $numeroComprobante=numeroCorrelativoComprobante($gestionTrabajo,$globalUnidadX,$tipoComprobante,$mesTrabajo);
+   // $numeroComprobante=obtenerCorrelativoComprobante($tipoComprobante, $globalUnidadX, $gestionTrabajo, $mesTrabajo);
+
   $codComprobante=obtenerCodigoComprobante();
-  $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) values ('$codComprobante','$codEmpresa','$globalUnidadX','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante','$fechaActual','$numeroComprobante','$glosaCabecera')";
+  $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa) values ('$codComprobante','$codEmpresa','$globalUnidadX','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante','$fechaHoraActual','$numeroComprobante','$glosaCabecera')";
   $stmtInsertCab = $dbh->prepare($sqlInsertCab);
   $flagSuccess=$stmtInsertCab->execute();
   //creamos array
@@ -88,7 +128,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     $array_monto_area[$cod_area_contabilizacionX]+=$totalGanadoAreax;
   }
 
-  $ordenDetalle=0;
+  $ordenDetalle=1;
   for ($j=0; $j <$cont_areas_agrupado; $j++) { 
     $cod_area_contabilizacionX=$array_area_agrupado[$j];
     // $cod_area_contabilizacionX=$cod_areay['cod_area_contabilizacion']; //nombre de la sunida
