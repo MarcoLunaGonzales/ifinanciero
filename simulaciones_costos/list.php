@@ -7,10 +7,19 @@ $globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion2();
 
 // Preparamos
+$q=0;
+$u=0;
+$s=0;
+
 if(isset($_GET['q'])){
   $q=$_GET['q'];
-  $s=$_GET['s'];
-  $u=$_GET['u'];
+  if(isset($_GET['s'])){
+    $s=$_GET['s'];    
+  }
+  if(isset($_GET['u'])){
+    $u=$_GET['u'];
+  }
+
   $sqlModulos="";
   if(isset($_GET['s'])){
     $s=$_GET['s'];
@@ -25,14 +34,14 @@ if(isset($_GET['q'])){
   /* modificacion realizada para que puedan ver lo de otros usuarios y realizar SR */
   $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado, 
     (select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente 
-    from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 $sqlModulos order by sc.codigo desc");
+    from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 $sqlModulos order by sc.codigo desc limit 0,150");
 
 }else{
   $s=0;
   $u=0;
   // Preparamos
 $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente
- from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc");
+ from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc limit 0,150");
 }
 
 
@@ -82,6 +91,7 @@ $stmt->bindColumn('cliente', $nombreCliente);
                         </tr>
                       </thead>
                       <tbody>
+                        <div id="divBuscadorPropuestas">
 <?php
             $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
@@ -212,6 +222,7 @@ $stmt->bindColumn('cliente', $nombreCliente);
               $index++;
             }
 ?>
+                        </div>
                       </tbody>
                     </table>
                 </div>
