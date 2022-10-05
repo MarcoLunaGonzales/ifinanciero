@@ -14,10 +14,24 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
-$sql="";
 
+
+// Datos de Filtro
+$start          = isset($_POST['date_start'])?$_POST['date_start']:"";
+$end            = isset($_POST['date_end'])?$_POST['date_end']:"";
+$cod_cliente    = isset($_POST['cod_cliente'])?$_POST['cod_cliente']:"";
+$cod_personal   = isset($_POST['personal'])?$_POST['personal']:"";
+$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' AND sc.fecha <= '$end' "):"").
+(!empty($cod_cliente)?(" AND sc.cod_cliente = '$cod_cliente' "):"").
+(!empty($cod_personal)?(" AND sc.cod_responsable = '$cod_personal' "):"");
+
+$sql="";
 // Preparamos
+$listSC = "";
 if(isset($_GET['q'])){
+  // URL actual
+  $listSC = "&q=".$_GET['q'];
+
   $q=$_GET['q'];
   $s=$_GET['s'];
   $u=$_GET['u'];
@@ -45,7 +59,10 @@ from simulaciones_servicios sc
 join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
 join clientes c on c.codigo=sc.cod_cliente 
 join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
-where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser) order by sc.codigo desc";
+where sc.cod_estadoreferencial=1 
+and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser)  ".
+$filter_list.
+" order by sc.codigo desc";
   $stmt = $dbh->prepare($sql);
 }
 
@@ -83,7 +100,18 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                   <div class="card-icon">
                     <i class="material-icons">polymer</i>
                   </div>
-                  <h4 class="card-title"><b><?=$moduleNamePlural?></b></h4>
+                  <div class="row">
+                    <div class="col-sm-6">
+                        <h4 class="card-title"><b> Gestionar <?=$moduleNamePlural?></b></h4>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group" align="right">
+                          <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscadorFacturas">
+                              <i class="material-icons" title="Buscador Avanzado">search</i>
+                          </button>                               
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="card-body">
                     <table class="table table-condensed table-striped" id="tablePaginator">
@@ -402,6 +430,79 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
           </div>  
         </div>
     </div>
+
+<!-- Filtro de Datos Propuestas de Servicios TCP - TCS -->
+<div class="modal fade" id="modalBuscadorFacturas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button  class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Filtrar Datos</h4>
+      </div>
+        <form action="index.php?opcion=listSimulacionesServicios<?=$listSC;?>" method="POST">
+            <div class="modal-body ">
+                <input type="text" hidden name="q" value="<?=$listSC;?>">
+                <div class="row">
+                    <label class="col-sm-6 col-form-label text-center">Fecha Inicial</label> 
+                    <label class="col-sm-6 col-form-label text-center">Fecha Final</label> 
+                    </div>
+                    <div class="row">
+                    <div class="form-group col-sm-6">
+                        <input class="form-control input-sm" type="date" name="date_start" id="date_start" require>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <input class="form-control input-sm" type="date" name="date_end" id="date_end" require>
+                    </div>        
+                    </div>
+                    <div class="row">
+                    <label class="col-sm-6 col-form-label text-center">Cliente</label> 
+                    <label class="col-sm-6 col-form-label text-center">Responsable</label> 
+                    </div>
+                    <div class="row">
+                    <div class="form-group col-sm-6">
+                            <select class="selectpicker form-control form-control-sm" name="cod_cliente" id="cod_cliente" data-style="select-with-transition" data-actions-box="true" data-live-search="true">
+                            <option value="">Todos</option>
+                            <?php
+                                $sql="SELECT codigo, nombre
+                                FROM clientes
+                                GROUP BY nombre ";
+                                $stmtSC = $dbh->prepare($sql);
+                                $stmtSC->execute();
+                            while ($rowSC = $stmtSC->fetch()){
+                                ?>
+                                <option value="<?=$rowSC['codigo'];?>" ><?=$rowSC['nombre'];?></option><?php 
+                            } ?>
+                            </select> 
+                    </div>
+                    <div class="form-group col-sm-6">
+                            <?php
+                            ?>
+                            <select class="selectpicker form-control form-control-sm" name="personal" id="personal" data-style="select-with-transition" data-actions-box="true" data-live-search="true">
+                            <option value="">Todos</option>
+                            <?php 
+                                $sqlP="SELECT CONCAT(p.paterno, ' ',p.materno, ' ',p.primer_nombre) as nombre_personal, p.codigo
+                                from personal p
+                                order by nombre_personal ASC";
+                                $stmtP = $dbh->prepare($sqlP);
+                                $stmtP->execute();
+                                while ($rowP = $stmtP->fetch()){
+                            ?>
+                                <option value="<?=$rowP["codigo"];?>" ><?=$rowP["nombre_personal"];?></option>
+                            <?php 
+                                } 
+                            ?>
+                            </select> 
+                    </div>        
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Filtrar</button>
+            </div>
+        </form> 
+    </div>
+  </div>
+</div>
 
 
 
