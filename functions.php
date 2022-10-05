@@ -8167,7 +8167,11 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
     // print_r($remote_server_output);
   }
 function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto,$nombre){
-    $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+    
+    //$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+    //***********
+    $direccion="http://127.0.0.1:8090/ifinanciero/wsifin/";//direccion del servicio web ifinanciero
+    
 
     $sIde = "libBan";
     $sKey = "89i6u32v7xda12jf96jgi30lh";
@@ -8191,14 +8195,15 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $remote_server_output = curl_exec ($ch);
     curl_close ($ch);
-    
+
+    //ESTO ES PARA PRUEBAS
+    //echo $direccion."ws_obtener_libreta_bancaria.php";
+    //print_r($remote_server_output);
+    //ESTO ES PARA PRUEBAS
+
+    //esto es oficial
     return json_decode($remote_server_output);
     
-    //echo $direccion."ws_obtener_libreta_bancaria.php";
-    //echo "decode: ".json_decode($remote_server_output);
-    // imprimir en formato JSON
-    //header('Content-type: application/json');   
-    //print_r($remote_server_output);
   }
   function verificarFechaMaxDetalleLibreta($fecha,$codigo){
      $dbh = new Conexion();
@@ -11752,9 +11757,7 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
 function enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_total,$descuento,$monto_final,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle)
 {
     
-    //$direccion=obtenerValorConfiguracion(42);//direccion des servicio web
-  $url="http://localhost:8090/minka_siat_ibno/wsminka/ws_generarFactura.php";
-  
+  $url=obtenerValorConfiguracion(102);//direccion de servicio web  
   $sIde = "MinkaSw123*";
   $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
  

@@ -14011,11 +14011,16 @@ function ajaxTipoPagoContactoPersonal(combo){
   var cod_tipo=combo.value;
   //para SIAT
   if(cod_tipo==220){//tipo tarjeta
-    document.getElementById("div_nrotarjeta1").style.display = "inline";
-    document.getElementById("div_nrotarjeta2").style.display = "inline";
+    // document.getElementById("div_nrotarjeta1").style.display = "inline";
+    // document.getElementById("div_nrotarjeta2").style.display = "inline";
+    
+    $("#div_nrotarjeta1").removeClass("d-none");
+    $("#div_nrotarjeta2").removeClass("d-none");
   }else{
-    document.getElementById("div_nrotarjeta1").style.display = "none";
-    document.getElementById("div_nrotarjeta2").style.display = "none";
+    $("#div_nrotarjeta1").addClass("d-none");
+    $("#div_nrotarjeta2").addClass("d-none");
+    // document.getElementById("div_nrotarjeta1").style.display = "none";
+    // document.getElementById("div_nrotarjeta2").style.display = "none";
   }
   contenedor = document.getElementById('div_contenedor_contactos');
   ajax=nuevoAjax();

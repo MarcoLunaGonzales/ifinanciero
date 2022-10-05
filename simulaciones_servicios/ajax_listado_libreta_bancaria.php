@@ -4,6 +4,7 @@ require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../styles.php';
 
+
  error_reporting(E_ALL);
  ini_set('display_errors', '1');
 
@@ -31,10 +32,14 @@ if(isset($_GET['codigo_lib'])){
   $codLibretaBan=$_GET['codigo_lib'];
 }
 if(isset($_GET['anio'])){
+  
   //echo "entra por anio";
+  
   $lista=obtenerObtenerLibretaBancariaIndividualAnio($codLibretaBan,$_GET['anio'],$_GET['fecha'],$_GET['monto'],$_GET['nombre']);  
 }else{
+  
   //echo "entra por NO anio";
+  
   $lista=obtenerObtenerLibretaBancariaIndividual($codLibretaBan);  
 }
 

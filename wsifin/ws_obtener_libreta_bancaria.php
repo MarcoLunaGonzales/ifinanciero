@@ -1,5 +1,10 @@
 <?php
 
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $datos = json_decode(file_get_contents("php://input"), true); 
     //Parametros de consulta
@@ -10,8 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $estado=0;
         $mensaje="";
         if($accion=="ObtenerLibretaBancaria"){
-          $codLibreta=$datos['idLibreta'];//recibimos el codigo del proyecto
 
+          //echo "ENTRA WS";
+          $codLibreta=$datos['idLibreta'];//recibimos el codigo del proyecto
           //variables para el filtro
           $montoLibreta=null;
           if(isset($datos['monto'])){
@@ -142,6 +148,7 @@ function obtenerDatosLibreta($codigo,$anioLib,$montoLibreta,$fechaLibreta,$nombr
   error_reporting(E_ALL);
   ini_set('display_errors', '1');
 
+
   //echo "entrando obtenerDatosLibreta";
 
   $dbh = new Conexion();
@@ -212,7 +219,10 @@ if($nombreLibreta!=null){
      //echo $sqlDetalle;
 
      $stmtFacDetalle = $dbh->prepare($sqlDetalle);
-     $stmtFacDetalle->execute();
+     $resultadoQuery = $stmtFacDetalle->execute();
+
+     //print_r($resultadoQuery);
+
      $datosDetalle=[];
      $index=0;
      while ($rowLibDetalle = $stmtFacDetalle->fetch(PDO::FETCH_ASSOC)) {

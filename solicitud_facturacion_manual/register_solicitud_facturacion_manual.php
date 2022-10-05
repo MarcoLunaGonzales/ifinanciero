@@ -242,10 +242,10 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     <input class="form-control" type="date" name="fecha_facturacion" id="fecha_facturacion" required="true" value="<?=$fecha_facturacion;?>"/>
                                 </div>
                             </div>
-                            <label class="col-sm-2 col-form-label" id="div_nrotarjeta1" style="display: none">Número Tarjeta</label>
-                            <div class="col-sm-4" id="div_nrotarjeta2" style="display: none">
+                            <label class="col-sm-2 d-none col-form-label" id="div_nrotarjeta1" >Número Tarjeta</label>
+                            <div class="col-sm-4 d-none" id="div_nrotarjeta2" >
                                 <div class="form-group">
-                                    <input class="form-control" type="text" name="nro_tarjeta" id="nro_tarjeta" required="true" value="<?=$nro_tarjeta;?>" autocomplete="off" style='height:40px;font-size:25px;width:80%;background:#D7B3D8 !important; float:left; margin-top:4px; color:#4C079A;'/>
+                                    <input class="form-control" type="text" name="nro_tarjeta" id="nro_tarjeta" value="<?=$nro_tarjeta;?>"  style='height:40px;font-size:25px;width:80%;background:#D7B3D8 !important; float:left; margin-top:4px; color:#4C079A;'/>
                                 </div>
                             </div>
                         </div>
