@@ -29,7 +29,6 @@ class Conexion extends PDO {
       // private $nombre_de_base = 'bdifinanciero';
       // private $usuario = 'ingresobd';
       // private $contrasena = 'ingresoibno';
-      // private $port = '3306'; 
 
 public function __construct() {
       //Sobreescribo el método constructor de la clase PDO.
