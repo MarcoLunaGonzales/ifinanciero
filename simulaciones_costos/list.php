@@ -6,16 +6,20 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion2();
 
+// Datos de Filtro
+$start          = isset($_POST['date_start'])?$_POST['date_start']:"";
+$end            = isset($_POST['date_end'])?$_POST['date_end']:"";
+$cod_tipo       = isset($_POST['cod_tipo'])?$_POST['cod_tipo']:"";
+$cod_personal   = isset($_POST['personal'])?$_POST['personal']:"";
+$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' AND sc.fecha <= '$end' "):"").
+(!empty($cod_tipo)?(" AND sc.cod_tipocurso = '$cod_tipo' "):"").
+(!empty($cod_personal)?(" AND sc.cod_responsable = '$cod_personal' "):"");
+
 // Preparamos
 $listSC = "";
 if(isset($_GET['q'])){
     // URL actual
-    $listSC = $_GET['q'];
-    // Datos de Filtro
-    $start          = isset($_POST['date_start'])?$_POST['date_start']:"";
-    $end            = isset($_POST['date_end'])?$_POST['date_end']:"";
-    $cod_tipo       = isset($_POST['cod_tipo'])?$_POST['cod_tipo']:"";
-    $cod_personal   = isset($_POST['personal'])?$_POST['personal']:"";
+    $listSC = "&q=".$_GET['q'];
     
   $q=$_GET['q'];
   $s=$_GET['s'];
@@ -37,9 +41,7 @@ if(isset($_GET['q'])){
   from simulaciones_costos sc 
   join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
   where sc.cod_estadoreferencial=1 $sqlModulos ".
-  (!empty($start)?(" AND sc.fecha >= '$start' AND sc.fecha <= '$end' "):"").
-  (!empty($cod_tipo)?(" AND sc.cod_tipocurso = '$cod_tipo' "):"").
-  (!empty($cod_personal)?(" AND sc.cod_responsable = '$cod_personal' "):"").
+  $filter_list.
   " order by sc.codigo desc";
   $stmt = $dbh->prepare($sql);
 
@@ -48,7 +50,12 @@ if(isset($_GET['q'])){
   $u=0;
   // Preparamos
 $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente
- from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc");
+ from simulaciones_costos sc 
+ join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+ where sc.cod_estadoreferencial=1 
+ and sc.cod_responsable=$globalUser ".
+ $filter_list.
+ "order by sc.codigo desc");
 }
 
 
@@ -265,7 +272,7 @@ $stmt->bindColumn('cliente', $nombreCliente);
         <button  class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Filtrar Datos</h4>
       </div>
-        <form action="index.php?opcion=listSimulacionesCostos&q=<?=$listSC;?>" method="POST">
+        <form action="index.php?opcion=listSimulacionesCostos<?=$listSC;?>" method="POST">
             <div class="modal-body ">
                 <input type="text" hidden name="q" value="<?=$listSC;?>">
                 <div class="row">
