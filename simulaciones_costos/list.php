@@ -6,8 +6,21 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion2();
 
+// Datos de Filtro
+$start          = isset($_POST['date_start'])?$_POST['date_start']:"";
+$end            = isset($_POST['date_end'])?$_POST['date_end']:"";
+$cod_tipo       = isset($_POST['cod_tipo'])?$_POST['cod_tipo']:"";
+$cod_personal   = isset($_POST['personal'])?$_POST['personal']:"";
+$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' AND sc.fecha <= '$end' "):"").
+(!empty($cod_tipo)?(" AND sc.cod_tipocurso = '$cod_tipo' "):"").
+(!empty($cod_personal)?(" AND sc.cod_responsable = '$cod_personal' "):"");
+
 // Preparamos
+$listSC = "";
 if(isset($_GET['q'])){
+    // URL actual
+    $listSC = "&q=".$_GET['q'];
+    
   $q=$_GET['q'];
   $s=$_GET['s'];
   $u=$_GET['u'];
@@ -23,16 +36,26 @@ if(isset($_GET['q'])){
   // Preparamos
   /*$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser $sqlModulos order by sc.codigo desc");*/
   /* modificacion realizada para que puedan ver lo de otros usuarios y realizar SR */
-  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado, 
-    (select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente 
-    from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 $sqlModulos order by sc.codigo desc");
+  $sql = "SELECT sc.*,es.nombre as estado, 
+  (select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente 
+  from simulaciones_costos sc 
+  join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+  where sc.cod_estadoreferencial=1 $sqlModulos ".
+  $filter_list.
+  " order by sc.codigo desc";
+  $stmt = $dbh->prepare($sql);
 
 }else{
   $s=0;
   $u=0;
   // Preparamos
 $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente
- from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser order by sc.codigo desc");
+ from simulaciones_costos sc 
+ join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+ where sc.cod_estadoreferencial=1 
+ and sc.cod_responsable=$globalUser ".
+ $filter_list.
+ "order by sc.codigo desc");
 }
 
 
@@ -63,7 +86,18 @@ $stmt->bindColumn('cliente', $nombreCliente);
                   <div class="card-icon">
                     <i class="material-icons">polymer</i>
                   </div>
-                  <h4 class="card-title"><b><?=$moduleNamePlural?></b></h4>
+                  <div class="row">
+                    <div class="col-sm-6">
+                        <h4 class="card-title"><b><?=$moduleNamePlural?></b></h4>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="form-group" align="right">
+                          <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscadorFacturas">
+                              <i class="material-icons" title="Buscador Avanzado">search</i>
+                          </button>                               
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="card-body">
                     <table class="table" id="tablePaginator">
@@ -230,3 +264,77 @@ $stmt->bindColumn('cliente', $nombreCliente);
           </div>  
         </div>
     </div>
+<!-- Filtro de Datos Propuestas de Presupuestos SEC -->
+<div class="modal fade" id="modalBuscadorFacturas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button  class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Filtrar Datos</h4>
+      </div>
+        <form action="index.php?opcion=listSimulacionesCostos<?=$listSC;?>" method="POST">
+            <div class="modal-body ">
+                <input type="text" hidden name="q" value="<?=$listSC;?>">
+                <div class="row">
+                    <label class="col-sm-6 col-form-label text-center">Fecha Inicial</label> 
+                    <label class="col-sm-6 col-form-label text-center">Fecha Final</label> 
+                    </div>
+                    <div class="row">
+                    <div class="form-group col-sm-6">
+                        <input class="form-control input-sm" type="date" name="date_start" id="date_start" require>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <input class="form-control input-sm" type="date" name="date_end" id="date_end" require>
+                    </div>        
+                    </div>
+                    <div class="row">
+                    <label class="col-sm-6 col-form-label text-center">Tipo</label> 
+                    <label class="col-sm-6 col-form-label text-center">Responsable</label> 
+                    </div>
+                    <div class="row">
+                    <div class="form-group col-sm-6">
+                            <select class="selectpicker form-control form-control-sm" name="cod_tipo" id="cod_tipo" data-style="select-with-transition" data-actions-box="true" data-live-search="true">
+                            <option value="">Todos</option>
+                            <?php
+                                $sql="SELECT cod_tipocurso
+                                FROM simulaciones_costos
+                                WHERE cod_tipocurso is not null
+                                GROUP BY cod_tipocurso ";
+                                $stmtSC = $dbh->prepare($sql);
+                                $stmtSC->execute();
+                            while ($rowSC = $stmtSC->fetch()){ 
+                                $tipoCurso = nameTipoCurso($rowSC['cod_tipocurso']);
+                                ?>
+                                <option value="<?=$rowSC['cod_tipocurso']?>" ><?=$tipoCurso;?></option><?php 
+                            } ?>
+                            </select> 
+                    </div>
+                    <div class="form-group col-sm-6">
+                            <?php
+                            ?>
+                            <select class="selectpicker form-control form-control-sm" name="personal" id="personal" data-style="select-with-transition" data-actions-box="true" data-live-search="true">
+                            <option value="">Todos</option>
+                            <?php 
+                                $sqlP="SELECT CONCAT(p.paterno, ' ',p.materno, ' ',p.primer_nombre) as nombre_personal, p.codigo
+                                from personal p
+                                order by nombre_personal ASC";
+                                $stmtP = $dbh->prepare($sqlP);
+                                $stmtP->execute();
+                                while ($rowP = $stmtP->fetch()){
+                            ?>
+                                <option value="<?=$rowP["codigo"];?>" ><?=$rowP["nombre_personal"];?></option>
+                            <?php 
+                                } 
+                            ?>
+                            </select> 
+                    </div>        
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Filtrar</button>
+            </div>
+        </form> 
+    </div>
+  </div>
+</div>
