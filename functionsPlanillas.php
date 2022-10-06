@@ -14,11 +14,15 @@ function totalGanadoDN($gestion, $mes, $unidad){
     }
     return($monto);
 }
-function totalGanadoArea($gestion, $mes, $cod_area){
+function totalGanadoArea($gestion, $mes, $cod_area,$cod_uo=null){
+  $sql_add="";
+  if($cod_uo!=null){
+    $sql_add=" and pad.cod_uo='$cod_uo' ";
+  }
   $dbh = new Conexion();
   $sql="SELECT sum(pm.total_ganado*(pad.porcentaje/100))as monto 
     from planillas p join planillas_personal_mes pm on p.codigo=pm.cod_planilla join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1
-    where p.cod_gestion='$gestion' and p.cod_mes='$mes' and pad.cod_area='$cod_area'";
+    where p.cod_gestion='$gestion' and p.cod_mes='$mes' and pad.cod_area='$cod_area' $sql_add";
     // echo $sql."<br>";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -275,7 +279,7 @@ function obtenerTotalprovivienda2($gestion, $mes, $unidad){
 }
 function obtenerTotalOtrosdescuentos($gestion, $mes, $unidad){
   $dbh = new Conexion();
-  $sql="SELECT sum((pm.monto_descuentos)-(pm.afp_1)-(pm.afp_2))as monto 
+  $sql="SELECT sum(pm.monto_descuentos-pm.afp_1-pm.afp_2-pm.descuentos_otros)as monto 
     from planillas p, planillas_personal_mes pm,personal per where p.codigo=pm.cod_planilla and p.cod_gestion='$gestion' and p.cod_mes='$mes' and pm.cod_personalcargo=per.codigo";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -283,7 +287,7 @@ function obtenerTotalOtrosdescuentos($gestion, $mes, $unidad){
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       $monto1=$row['monto'];
     }
-    $sql2="SELECT sum((pm.a_solidario_13000)+(pm.a_solidario_25000)+(pm.a_solidario_35000)+(pm.atrasos)+(pm.anticipo)+ifnull(pm.dotaciones,0))as monto 
+    $sql2="SELECT sum(pm.a_solidario_13000+pm.a_solidario_25000+pm.a_solidario_35000+pm.atrasos+pm.rc_iva+pm.anticipo+ifnull(pm.dotaciones,0))as monto 
     from planillas p, planillas_personal_mes_patronal pm,personal per 
     where p.codigo=pm.cod_planilla and p.cod_gestion='$gestion' and p.cod_mes='$mes' and pm.cod_personal_cargo=per.codigo";
     //+(pm.rc_iva)
@@ -294,10 +298,6 @@ function obtenerTotalOtrosdescuentos($gestion, $mes, $unidad){
       $monto2=$row['monto'];
     }
     $montoTotal=$monto1-$monto2;
-    // echo $monto1."<br>";
-    // echo $monto2."<br>";
-    // echo $montoTotal."<br>";
-
     return($montoTotal);
 }
 
