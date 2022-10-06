@@ -88,6 +88,8 @@ $filter_list.
   $stmt = $dbh->prepare($sql);
 }
 
+//echo $sql;
+
 // Ejecutamos
 $stmt->execute();
 // bindColumn
