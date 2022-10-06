@@ -22,10 +22,13 @@ $u=0;
 $s=0;
 
 $listSC = "";
+// URL actual
+$query_q = isset($_GET['q'])?("&q=".$_GET['q']):"";
+$query_s = isset($_GET['s'])?("&q=".$_GET['s']):"";
+$query_u = isset($_GET['u'])?("&q=".$_GET['u']):"";
+$listSC = $query_q.$query_s.$query_u;
 
 if(isset($_GET['q'])){
-    // URL actual
-    $listSC = "&q=".$_GET['q'];
     
   $q=$_GET['q'];
   if(isset($_GET['s'])){
