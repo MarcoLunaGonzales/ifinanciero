@@ -677,7 +677,7 @@
   }
   function abrevUnidad($codigo){
      $dbh = new Conexion();
-     if($codigo!=0 || $codigo!="NULL" || $codigo!=null){
+    if(($codigo!=0 || $codigo!="NULL" || $codigo!=null || $codigo!=NULL) && $codigo>0){
         $stmt = $dbh->prepare("SELECT abreviatura FROM unidades_organizacionales where codigo in ($codigo)");
         $stmt->execute();
         $nombreX="";

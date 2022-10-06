@@ -3,6 +3,9 @@ require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 /*SACAR LOS ESTADOS DEL FINANCIERO O DE IBNORCA*/
 $configuracionEstados=obtenerValorConfiguracion(100);
 
@@ -38,10 +41,10 @@ if(isset($_GET['q'])){
   if(isset($_GET['s'])){
     $s=$_GET['s'];
     $u=$_GET['u'];
-    $arraySql=explode("IdArea=",$_GET['s']);
+    $arraySql=explode("IdArea in",$_GET['s']);
     $codigoArea=trim($arraySql[1]);
 
-    $sqlAreas="and p.cod_area=".$codigoArea;
+    $sqlAreas="and p.cod_area in ".$codigoArea;
   }
   //cargarDatosSession();
   $sql="SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,es.nombre as estado,c.nombre as cliente 
@@ -49,7 +52,7 @@ from simulaciones_servicios sc
 join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
 join clientes c on c.codigo=sc.cod_cliente 
 join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
-where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser) $sqlAreas order by sc.fecha desc";
+where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser) $sqlAreas order by sc.fecha desc limit 0,70";
   $stmt = $dbh->prepare($sql);
 }else{
   $s=0;
@@ -62,11 +65,12 @@ join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
 where sc.cod_estadoreferencial=1 
 and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser)  ".
 $filter_list.
-" order by sc.codigo desc";
+" order by sc.codigo desc limit 0,70";
   $stmt = $dbh->prepare($sql);
 }
 
 //echo $sql;
+
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -141,7 +145,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                           $unidadX=abrevUnidad_solo($codUnidadX);
                           $areaX=abrevArea_solo($codAreaX);
                           $codigoServicio="SIN CODIGO";
-                          $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
+                          $sql="SELECT codigo FROM ibnorca.servicios where idServicio='$idServicioX'";
                           $stmt1=$dbh->prepare($sql);
                           $stmt1->execute();
                            while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
