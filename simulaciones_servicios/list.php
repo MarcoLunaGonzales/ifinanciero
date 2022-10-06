@@ -32,9 +32,11 @@ if(isset($_GET['q'])){
   // URL actual
   $listSC = "&q=".$_GET['q'];
 
-  $q=$_GET['q'];
-  $s=$_GET['s'];
-  $u=$_GET['u'];
+  $q=isset($_GET['q'])?$_GET['q']:"";
+  $s=isset($_GET['s'])?$_GET['s']:"";
+  $u=isset($_GET['u'])?$_GET['u']:"";
+
+  $sqlAreas = "";
   if(isset($_GET['s'])){
     $s=$_GET['s'];
     $u=$_GET['u'];
@@ -49,7 +51,12 @@ from simulaciones_servicios sc
 join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
 join clientes c on c.codigo=sc.cod_cliente 
 join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
-where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser) $sqlAreas order by sc.fecha desc";
+where sc.cod_estadoreferencial=1 ".
+$filter_list.
+" and (sc.cod_responsable=$globalUser
+or sc.cod_responsableactual=$globalUser) 
+$sqlAreas 
+order by sc.fecha desc";
   $stmt = $dbh->prepare($sql);
 }else{
   $s=0;
@@ -66,7 +73,7 @@ $filter_list.
   $stmt = $dbh->prepare($sql);
 }
 
-//echo $sql;
+// echo $sql;
 // Ejecutamos
 $stmt->execute();
 // bindColumn
