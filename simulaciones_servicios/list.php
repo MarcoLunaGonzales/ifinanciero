@@ -21,7 +21,8 @@ $start          = isset($_POST['date_start'])?$_POST['date_start']:"";
 $end            = isset($_POST['date_end'])?$_POST['date_end']:"";
 $cod_cliente    = isset($_POST['cod_cliente'])?$_POST['cod_cliente']:"";
 $cod_personal   = isset($_POST['personal'])?$_POST['personal']:"";
-$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' AND sc.fecha <= '$end' "):"").
+$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' "):"").
+(!empty($end)?(" AND sc.fecha <= '$end' "):"").
 (!empty($cod_cliente)?(" AND sc.cod_cliente = '$cod_cliente' "):"").
 (!empty($cod_personal)?(" AND sc.cod_responsable = '$cod_personal' "):"");
 
