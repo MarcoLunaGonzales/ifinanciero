@@ -55,7 +55,8 @@ if(isset($_GET['q'])){
   join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
   where sc.cod_estadoreferencial=1 $sqlModulos ".
   $filter_list.
-  " order by sc.codigo desc";
+  " order by sc.codigo desc
+  LIMIT 0, 50";
   $stmt = $dbh->prepare($sql);
 
 }else{
@@ -68,7 +69,8 @@ $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from c
  where sc.cod_estadoreferencial=1 ".
  (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
  $filter_list.
- "order by sc.codigo desc");
+ "order by sc.codigo desc
+ LIMIT 0, 50");
 }
 
 echo $sql;

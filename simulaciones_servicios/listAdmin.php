@@ -25,7 +25,7 @@ $query_u = isset($_GET['u'])?("&q=".$_GET['u']):"";
 $listSC = $query_q.$query_s.$query_u;
 
 if(isset($_GET['q'])){
-  
+
   $q=isset($_GET['q'])?$_GET['q']:"";
   $item_3=isset($_GET['r'])?$_GET['r']:"";
   $u=isset($_GET['u'])?$_GET['u']:"";
@@ -61,7 +61,8 @@ join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
 where sc.cod_estadoreferencial=1 
 and sc.cod_estadosimulacion!=1 $sqlFilter ".
 $filter_list.
-" order by sc.codigo desc";
+" order by sc.codigo desc
+  LIMIT 0, 50";
 
 //echo $sqlAdmin;
 
