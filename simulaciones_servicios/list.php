@@ -81,8 +81,8 @@ from simulaciones_servicios sc
 join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
 join clientes c on c.codigo=sc.cod_cliente 
 join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
-where sc.cod_estadoreferencial=1 
-and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser)  ".
+where sc.cod_estadoreferencial=1 ".
+(empty($filter_list)?(' and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser) '):''). 
 $filter_list.
 " order by sc.codigo desc limit 0,70";
   $stmt = $dbh->prepare($sql);
