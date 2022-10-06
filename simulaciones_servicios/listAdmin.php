@@ -20,8 +20,8 @@ $filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' "):"").
 $listSC = "";
 // URL actual
 $query_q = isset($_GET['q'])?("&q=".$_GET['q']):"";
-$query_s = isset($_GET['s'])?("&q=".$_GET['s']):"";
-$query_u = isset($_GET['u'])?("&q=".$_GET['u']):"";
+$query_s = isset($_GET['s'])?("&s=".$_GET['s']):"";
+$query_u = isset($_GET['u'])?("&u=".$_GET['u']):"";
 $listSC = $query_q.$query_s.$query_u;
 
 if(isset($_GET['q'])){
