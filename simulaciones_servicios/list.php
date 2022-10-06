@@ -41,10 +41,18 @@ if(isset($_GET['q'])){
   if(isset($_GET['s'])){
     $s=$_GET['s'];
     $u=$_GET['u'];
-    $arraySql=explode("IdArea in",$_GET['s']);
-    $codigoArea=trim($arraySql[1]);
 
-    $sqlAreas="and p.cod_area in ".$codigoArea;
+    if(strpos($_GET['s'],"=")){
+      $arraySql=explode("IdArea=",$_GET['s']);
+      $codigoArea=trim($arraySql[1]);
+      $sqlAreas="and p.cod_area=".$codigoArea;
+    }else{
+      $arraySql=explode("IdArea in",$_GET['s']);
+      $codigoArea=trim($arraySql[1]);
+      $sqlAreas="and p.cod_area in ".$codigoArea;
+    }
+
+    
   }
   //cargarDatosSession();
   $sql="SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,es.nombre as estado,c.nombre as cliente 
