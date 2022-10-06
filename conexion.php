@@ -23,6 +23,7 @@ class Conexion extends PDO {
      //  private $usuario = 'ibnofinanciero';
      //  private $contrasena = 'Financiero1bn0';
      //  private $port = '3306'; 
+
 public function __construct() {
       //Sobreescribo el método constructor de la clase PDO.
       try{

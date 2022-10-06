@@ -24,7 +24,8 @@ $start          = isset($_POST['date_start'])?$_POST['date_start']:"";
 $end            = isset($_POST['date_end'])?$_POST['date_end']:"";
 $cod_cliente    = isset($_POST['cod_cliente'])?$_POST['cod_cliente']:"";
 $cod_personal   = isset($_POST['personal'])?$_POST['personal']:"";
-$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' AND sc.fecha <= '$end' "):"").
+$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' "):"").
+(!empty($end)?(" AND sc.fecha <= '$end' "):"").
 (!empty($cod_cliente)?(" AND sc.cod_cliente = '$cod_cliente' "):"").
 (!empty($cod_personal)?(" AND sc.cod_responsable = '$cod_personal' "):"");
 
@@ -35,9 +36,11 @@ if(isset($_GET['q'])){
   // URL actual
   $listSC = "&q=".$_GET['q'];
 
-  $q=$_GET['q'];
-  $s=$_GET['s'];
-  $u=$_GET['u'];
+  $q=isset($_GET['q'])?$_GET['q']:"";
+  $s=isset($_GET['s'])?$_GET['s']:"";
+  $u=isset($_GET['u'])?$_GET['u']:"";
+
+  $sqlAreas = "";
   if(isset($_GET['s'])){
     $s=$_GET['s'];
     $u=$_GET['u'];
@@ -56,11 +59,16 @@ if(isset($_GET['q'])){
   }
   //cargarDatosSession();
   $sql="SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,es.nombre as estado,c.nombre as cliente 
-from simulaciones_servicios sc 
-join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
-join clientes c on c.codigo=sc.cod_cliente 
-join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
-where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser) $sqlAreas order by sc.fecha desc limit 0,70";
+    from simulaciones_servicios sc 
+    join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+    join clientes c on c.codigo=sc.cod_cliente 
+    join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
+    where sc.cod_estadoreferencial=1 ".
+      $filter_list." and (sc.cod_responsable=$globalUser
+    or sc.cod_responsableactual=$globalUser) 
+    $sqlAreas 
+    order by sc.fecha desc";
+
   $stmt = $dbh->prepare($sql);
 }else{
   $s=0;
@@ -76,8 +84,6 @@ $filter_list.
 " order by sc.codigo desc limit 0,70";
   $stmt = $dbh->prepare($sql);
 }
-
-//echo $sql;
 
 // Ejecutamos
 $stmt->execute();
