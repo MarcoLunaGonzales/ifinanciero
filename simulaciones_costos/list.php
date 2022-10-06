@@ -66,7 +66,7 @@ $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from c
  from simulaciones_costos sc 
  join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
  where sc.cod_estadoreferencial=1 ".
- (empty($filter_list)?(' and sc.cod_responsable=$globalUser '):'').
+ (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
  $filter_list.
  "order by sc.codigo desc");
 }
