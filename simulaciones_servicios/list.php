@@ -70,7 +70,8 @@ if(isset($_GET['q'])){
     $filter_list.
     (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):''). 
     " $sqlAreas 
-    order by sc.fecha desc";
+    order by sc.fecha desc
+    LIMIT 0, 50";
 
   $stmt = $dbh->prepare($sql);
 }else{
@@ -84,7 +85,7 @@ join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
 where sc.cod_estadoreferencial=1 ".
 (empty($filter_list)?(' and (sc.cod_responsable='.$globalUser.' or sc.cod_responsableactual='.$globalUser.') '):''). 
 $filter_list.
-" order by sc.codigo desc limit 0,70";
+" order by sc.codigo desc limit 0,50";
   $stmt = $dbh->prepare($sql);
 }
 
