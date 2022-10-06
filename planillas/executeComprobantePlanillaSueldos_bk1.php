@@ -95,7 +95,6 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     $cont_areas++;
  }
  
- // print_r($array_area_agrupado);
 
   //recorremos todas las areas
   for ($i=0; $i <$cont_areas; $i++) {     
@@ -103,6 +102,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     $cod_areaX=$datos_area[0]; //
     $cod_area_contabilizacionX=$datos_area[1]; //
     $nombre_area_contabilizacionX="";
+
     $totalGanadoAreax=totalGanadoArea($gestionPlanilla, $mesPlanilla, $cod_areaX,null);
     // echo $totalGanadoAreax."<br>";
     $array_monto_area[$cod_area_contabilizacionX]+=$totalGanadoAreax;
@@ -238,15 +238,14 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
 
 
   //RC IVA
-  $sqlRCIVA="SELECT per.primer_nombre,per.paterno,sum(pm.rc_iva)as rc_iva 
+  $sqlRCIVA="SELECT per.codigo,per.primer_nombre,per.paterno,sum(pm.rc_iva)as rc_iva 
     from planillas p, planillas_personal_mes_patronal pm,personal per where p.codigo=pm.cod_planilla and p.cod_gestion='$gestionPlanilla' and p.cod_mes='$mesPlanilla'  and pm.cod_personal_cargo=per.codigo
     GROUP BY per.codigo
     having rc_iva > 0";
-    // echo $sqlRCIVA;
   $stmtRCIVA = $dbh->prepare($sqlRCIVA);
   $stmtRCIVA->execute();      
   while ($rowRCIVA = $stmtRCIVA->fetch(PDO::FETCH_ASSOC)) {
-    // $codigoPer=$rowRCIVA['codigo'];
+    $codigoPer=$rowRCIVA['codigo'];
     $primer_nombrePer=$rowRCIVA['primer_nombre'];
     $paternoPer=$rowRCIVA['paterno'];
     $rc_ivaPer=$rowRCIVA['rc_iva'];
@@ -259,16 +258,14 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   }
 
   //Atrasos
-  $sqlRCIVA="SELECT dm.cod_personal,p.primer_nombre,p.paterno,SUM(dm.monto) as atrasos
+  $sqlRCIVA="SELECT dm.cod_personal,per.primer_nombre,per.paterno,SUM(dm.monto) as atrasos
     from descuentos_personal_mes dm join personal p on dm.cod_personal=p.codigo
     where dm.cod_gestion='$gestionPlanilla' and dm.cod_mes='$mesPlanilla' and dm.cod_estadoreferencial=1 and dm.cod_descuento=5
     GROUP BY dm.cod_personal
     HAVING atrasos>0";
-    // echo $sqlRCIVA;
   $stmtAtrasos = $dbh->prepare($sqlRCIVA);
   $stmtAtrasos->execute();      
   while ($rowAtraso = $stmtAtrasos->fetch(PDO::FETCH_ASSOC)) {    
-
     $primer_nombrePer=$rowAtraso['primer_nombre'];
     $paternoPer=$rowAtraso['paterno'];
     $atrasos=$rowAtraso['atrasos'];
@@ -281,7 +278,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   }
 
   //Otros descuentos
-  $sqlRCIVA="SELECT dm.cod_personal,p.primer_nombre,p.paterno,SUM(dm.monto) as atrasos
+  $sqlRCIVA="SELECT dm.cod_personal,per.primer_nombre,per.paterno,SUM(dm.monto) as atrasos
     from descuentos_personal_mes dm join personal p on dm.cod_personal=p.codigo
     where dm.cod_gestion='$gestionPlanilla' and dm.cod_mes='$mesPlanilla' and dm.cod_estadoreferencial=1 and dm.cod_descuento=7
     GROUP BY dm.cod_personal
