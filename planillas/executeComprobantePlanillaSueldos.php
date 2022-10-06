@@ -15,8 +15,10 @@ $codigo_planilla=$_GET['codigo_planilla'];
 // echo "planilla:".$codigo_planilla;
 //comprobamos ue todos los sueldos del personal estén correctamente distribuidos
 
-$sqlPersonalDistribucion="SELECT cod_personal, SUM(porcentaje) as porcentaje from personal_area_distribucion where cod_estadoreferencial=1 GROUP BY cod_personal
-";
+$sqlPersonalDistribucion="SELECT pd.cod_personal, SUM(pd.porcentaje) as porcentaje 
+from personal_area_distribucion pd join personal p on pd.cod_personal=p.codigo 
+where pd.cod_estadoreferencial=1 and p.cod_estadoreferencial=1 and p.cod_estadopersonal=1
+GROUP BY pd.cod_personal";
 $stmtPersonalDistribucion = $dbh->prepare($sqlPersonalDistribucion);
 $stmtPersonalDistribucion->execute();
 $sw_auxiliar=0;
@@ -293,7 +295,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     $paternoPer=$rowAtraso['paterno'];
     $atrasos=$rowAtraso['atrasos'];
     $cod_cuenta=117;
-    $glosaDetalle1=" Otros descuentos del mes de ".$namemesPlanilla."/".$anioPlanilla;
+    $glosaDetalle1=$primer_nombrePer." ".$paternoPer." Otros descuentos del mes de ".$namemesPlanilla."/".$anioPlanilla;
     $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta_personal','0','$codUOCentroCosto','$codAreaCentroCosto','0','$atrasos','$glosaDetalle1','$ordenDetalle')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);
     $flagSuccessDet=$stmtInsertDet->execute();
