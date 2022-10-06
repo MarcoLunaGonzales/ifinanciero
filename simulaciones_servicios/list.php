@@ -67,9 +67,9 @@ if(isset($_GET['q'])){
     join clientes c on c.codigo=sc.cod_cliente 
     join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
     where sc.cod_estadoreferencial=1 ".
-      $filter_list." and (sc.cod_responsable=$globalUser
-    or sc.cod_responsableactual=$globalUser) 
-    $sqlAreas 
+    $filter_list.
+    (empty($filter_list)?(' and sc.cod_responsable=$globalUser '):''). 
+    " $sqlAreas 
     order by sc.fecha desc";
 
   $stmt = $dbh->prepare($sql);

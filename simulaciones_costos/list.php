@@ -65,13 +65,13 @@ if(isset($_GET['q'])){
 $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente
  from simulaciones_costos sc 
  join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
- where sc.cod_estadoreferencial=1 
- and sc.cod_responsable=$globalUser ".
+ where sc.cod_estadoreferencial=1 ".
+ (empty($filter_list)?(' and sc.cod_responsable=$globalUser '):'').
  $filter_list.
  "order by sc.codigo desc");
 }
 
-
+echo $sql;
 // Ejecutamos
 $stmt->execute();
 // bindColumn
