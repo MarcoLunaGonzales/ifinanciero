@@ -6813,6 +6813,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante
               where (c.fecha between '$fi 00:00:00' and '$fa 23:59:59') $sqlUnidades and c.cod_gestion='$gestion' and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.numero like '5%' and p.nivel=5 order by p.numero)";
+     //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;

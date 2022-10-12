@@ -73,7 +73,7 @@ $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from c
  LIMIT 0, 50");
 }
 
-echo $sql;
+//echo $sql;
 // Ejecutamos
 $stmt->execute();
 // bindColumn
