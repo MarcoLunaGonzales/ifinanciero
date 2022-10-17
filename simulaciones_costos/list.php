@@ -70,7 +70,7 @@ $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from c
  (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
  $filter_list.
  "order by sc.codigo desc
- LIMIT 0, 50");
+ LIMIT 0, 200");
 }
 
 //echo $sql;
