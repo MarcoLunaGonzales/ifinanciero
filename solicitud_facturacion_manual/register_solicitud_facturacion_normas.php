@@ -93,6 +93,7 @@ if ($cod_facturacion > 0){
     $Codigo_alterno=null;
     $dias_credito=$result['dias_credito'];
     $correo_contacto=$result['correo_contacto'];
+    $nro_tarjeta=$result['nro_tarjeta'];
 }else {
     $cod_simulacion=0;
     $cod_facturacion=null;
@@ -113,6 +114,7 @@ if ($cod_facturacion > 0){
     $Codigo_alterno=null;
     $dias_credito=obtenerValorConfiguracion(58);
     $correo_contacto="";
+    $nro_tarjeta=null;
 }
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
 $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
@@ -211,6 +213,21 @@ $contadorRegistros=0;
                                 </div>
                             </div> 
                         </div>
+                        
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Fecha<br>Facturación</label>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <input class="form-control" type="date" name="fecha_facturacion" id="fecha_facturacion" required="true" value="<?=$fecha_solicitudfactura;?>"/>
+                                </div>
+                            </div>
+                            <label class="col-sm-2 d-none col-form-label" id="div_nrotarjeta1" >Número Tarjeta</label>
+                            <div class="col-sm-4 d-none" id="div_nrotarjeta2" >
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="nro_tarjeta" id="nro_tarjeta" value="<?=$nro_tarjeta;?>"  style='height:40px;font-size:25px;width:80%;background:#D7B3D8 !important; float:left; margin-top:4px; color:#4C079A;'/>
+                                </div>
+                            </div>
+                        </div>
                         <!-- fin fechas -->                        
                         <div class="row" >                            
                             <script>
@@ -270,7 +287,7 @@ $contadorRegistros=0;
                             <label class="col-sm-2 col-form-label">Forma de Pago</label>
                             <div class="col-sm-3">
                                 <div class="form-group" >
-                                    <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="ajaxTipoPagoContactoPersonal_normas(this);">
+                                    <select name="cod_tipopago" id="cod_tipopago" class="selectpicker form-control form-control-sm" data-style="btn btn-info" onChange="selectTarjetaDebito(this);">
                                         <?php 
                                         $queryTipoPago = "SELECT codigo,nombre FROM  tipos_pago WHERE cod_estadoreferencial=1 order by nombre";
                                         $statementPAgo = $dbh->query($queryTipoPago);
@@ -347,7 +364,7 @@ $contadorRegistros=0;
                                     <div id="div_contenedor_contactos">
                                         <select class="selectpicker form-control form-control-sm" name="persona_contacto" id="persona_contacto" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Contacto">
                                           <?php 
-                                          $query="SELECT * FROM clientes_contactos where cod_cliente=$cod_cliente order by nombre";
+                                          $query="SELECT * FROM clientes_contactos where cod_cliente='$cod_cliente' order by nombre";
                                           $stmt = $dbh->prepare($query);
                                           $stmt->execute();
                                           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

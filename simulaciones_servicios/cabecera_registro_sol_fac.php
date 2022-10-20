@@ -38,6 +38,20 @@
         </div>
     </div>                            
 </div>
+<div class="row">
+    <label class="col-sm-2 col-form-label">Fecha<br>Facturación</label>
+    <div class="col-sm-4">
+        <div class="form-group">
+            <input class="form-control" type="date" name="fecha_facturacion" id="fecha_facturacion" required="true" value="<?=$fecha_solicitudfactura;?>"/>
+        </div>
+    </div>
+    <label class="col-sm-2 d-none col-form-label" id="div_nrotarjeta1" >Número Tarjeta</label>
+    <div class="col-sm-4 d-none" id="div_nrotarjeta2" >
+        <div class="form-group">
+            <input class="form-control" type="text" name="nro_tarjeta" id="nro_tarjeta" value="<?=$nro_tarjeta;?>"  style='height:40px;font-size:25px;width:80%;background:#D7B3D8 !important; float:left; margin-top:4px; color:#4C079A;'/>
+        </div>
+    </div>
+</div>
 <!-- fin fechas -->                        
 <div class="row" >                            
     <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
