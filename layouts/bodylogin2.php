@@ -40,7 +40,6 @@
   </nav>
   <!-- End Navbar -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
   <script>
     $("#con_fac").mask("AA-AA-AA-AA-AA-AA-AA");
   </script>
@@ -84,6 +83,7 @@
   </script>
   
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.11/jquery.mask.min.js"></script>
   <!--ESTE ES EL DOCUMENTO DEL BODYLOGIN -->
   <script>
     $(document).ready(function() {
@@ -103,8 +103,18 @@
   </script>
 
   <script type="text/javascript">
+    function selectTarjetaDebito(combo){
+      var cod_tipo=combo.value;
+      if(cod_tipo==220){//tipo tarjeta
+        $("#div_nrotarjeta1").removeClass("d-none");
+        $("#div_nrotarjeta2").removeClass("d-none");
+      }else{
+        $("#div_nrotarjeta1").addClass("d-none");
+        $("#div_nrotarjeta2").addClass("d-none");
+      }
+    }
     $(document).ready(function() {
-
+        $("#nro_tarjeta").mask("0000****0000");
         // Setup - add a text input to each footer cell
         $('#libreta_bancaria_reporte_modal tfoot th').each( function () {
             var title = $(this).text();

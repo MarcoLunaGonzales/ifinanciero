@@ -141,7 +141,7 @@ if($cod_facturacion>0){//editar
     $cod_cliente=$resultSimuFact['cod_cliente'];
     $correo_contacto=$resultSimuFact['correo_contacto'];
     $correo_contacto=trim($correo_contacto,",");
-    
+    $nro_tarjeta=$resultSimuFact['nro_tarjeta'];
 
 }else{//registrar
     //echo "entro registrar";
@@ -152,7 +152,8 @@ if($cod_facturacion>0){//editar
     while( $resultSimuFact = $stmtSimuFact->fetch() ){
         $fecha_registro = $resultSimuFact['fecha_registro'];
         $fecha_registro = date('Y-m-d');
-        $fecha_solicitudfactura = date('Y-m-d');    
+        $fecha_solicitudfactura = date('Y-m-d'); 
+        $nro_tarjeta=null;   
         // $razon_social=$razon_social;//ya está arriba
         //$nit = $ci_estudiante;    
         $observaciones = $Codigo_alterno." - ".$nombreAlumno;
@@ -274,6 +275,21 @@ $contadorRegistros=0;
                                     <input class="form-control" type="hidden" name="cod_tipoobjeto" id="cod_tipoobjeto" required="true" value="<?=$cod_tipoobjeto;?>" required="true" readonly/>
 
                                     <input class="form-control" type="text" required="true" value="<?=$name_tipoPago;?>" required="true" readonly style="background-color:#E3CEF6;text-align: left"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Fecha<br>Facturación</label>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <input class="form-control" type="date" name="fecha_facturacion" id="fecha_facturacion" required="true" value="<?=$fecha_solicitudfactura;?>"/>
+                                </div>
+                            </div>
+                            <label class="col-sm-2 d-none col-form-label" id="div_nrotarjeta1" >Número Tarjeta</label>
+                            <div class="col-sm-4 d-none" id="div_nrotarjeta2" >
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="nro_tarjeta" id="nro_tarjeta" value="<?=$nro_tarjeta;?>"  style='height:40px;font-size:25px;width:80%;background:#D7B3D8 !important; float:left; margin-top:4px; color:#4C079A;'/>
                                 </div>
                             </div>
                         </div>

@@ -278,6 +278,7 @@ try{
                                     // print_r($arrayDetalle);
                                     $id_usuario=$globalUser;//ID usuario quien facturó
                                     $usuario=namePersonal_2($id_usuario);//Usuario quien facturó
+                                    var_dump($arrayDetalle);
                                     $datos=enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_totalCab,$descuentoCab,$monto_finalCab,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle);
                                     if(isset($datos["estado"]) && isset($datos["idTransaccion"])){//el servicio respondio
                                         $idTransaccion_x=$datos["idTransaccion"];
