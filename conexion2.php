@@ -16,7 +16,7 @@ class Conexion2 extends PDO {
       private $contrasena = 'ingresoibno';
       private $port = '3360'; 
 
-     //CONEXION INTERNA 
+//     CONEXION INTERNA 
      // private $tipo_de_base = 'mysql';
      //  private $host = '192.168.30.35';
      //  private $nombre_de_base = 'bdifinanciero';

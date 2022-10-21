@@ -5234,7 +5234,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function obtenerUnidadSolicitanteRecursos($codigo){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cod_unidadorganizacional from solicitud_recursos where codigo=$codigo");
+     $stmt = $dbh->prepare("SELECT cod_unidadorganizacional from solicitud_recursos where codigo='$codigo'");
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5244,7 +5244,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function obtenerAreaSolicitanteRecursos($codigo){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cod_area from solicitud_recursos where codigo=$codigo");
+     $stmt = $dbh->prepare("SELECT cod_area from solicitud_recursos where codigo='$codigo'");
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -10263,7 +10263,9 @@ function obtenerNombreEstadoSol($cod_estado){
 
 function obtenerDetalleRecursosSIS($codigo){
   $dbh = new Conexion();        
-      $sql="SELECT codigo from solicitud_recursosdetalle where (cod_unidadorganizacional=3000 or cod_area=1235) and cod_solicitudrecurso=$codigo";    
+      $sql="SELECT codigo from solicitud_recursosdetalle where 
+      (cod_unidadorganizacional in (3000,4000,5000) or cod_area in (1235,5000,6000)) 
+      and cod_solicitudrecurso='$codigo'";    
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
       $valor=0;

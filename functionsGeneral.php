@@ -251,7 +251,7 @@ function cantidadF($arreglo){
    function obtenerCorrelativoFactura($cod_factura){
     $dbh = new Conexion();
     $nroCorrelativoCorreo=1;
-    $sql="SELECT f.nro_correlativocorreo from facturas_venta f where f.cod_facturaventa=$cod_factura";  
+    $sql="SELECT f.nro_correlativocorreo from facturas_venta f where f.codigo='$cod_factura'";  
     $stmt = $dbh->prepare($sql);
     $stmt->execute();  
     $stmt->bindColumn('nro_correlativocorreo', $nroCorrelativoCorreo);

@@ -243,7 +243,7 @@ if($nombreLibreta!=null){
            $datosDetalle[$index]['CodComprobante']=0;
            $datosDetalle[$index]['CodComprobanteDetalle']=0;
            
-           $sqlExisteComprobante="SELECT codigo from comprobantes where codigo=$codComprobante and cod_estadocomprobante<>2";
+           $sqlExisteComprobante="SELECT codigo from comprobantes where codigo='$codComprobante' and cod_estadocomprobante<>2";
            $stmtExisteComprobante = $dbh->prepare($sqlExisteComprobante);
            $stmtExisteComprobante->execute();
            while ($rowExisteCompro = $stmtExisteComprobante->fetch(PDO::FETCH_ASSOC)) {

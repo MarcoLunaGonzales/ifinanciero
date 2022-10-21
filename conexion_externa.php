@@ -8,10 +8,10 @@ class ConexionIBNORCA extends PDO {
       // private $contrasena = '4868422Marco';
       // private $port = '3306'; 
 
-       //CONEXION IBNORCA PRUEBAS
+      //  //CONEXION IBNORCA PRUEBAS
       private $tipo_de_base = 'mysql';
       private $host = 'lpsit.ibnorca.org';
-      private $nombre_de_base = 'bdifinanciero';
+      private $nombre_de_base = 'ibnorca';
       private $usuario = 'ingresobd';
       private $contrasena = 'ingresoibno';
       private $port = '3360'; 
@@ -19,7 +19,7 @@ class ConexionIBNORCA extends PDO {
      //CONEXION INTERNA PRUEBAS 
      // private $tipo_de_base = 'mysql';
      //  private $host = '192.168.30.35';
-     //  private $nombre_de_base = 'bdifinanciero';
+     //  private $nombre_de_base = 'ibnorca';
      //  private $usuario = 'ibnofinanciero';
      //  private $contrasena = 'Financiero1bn0';
      //  private $port = '3306'; 
