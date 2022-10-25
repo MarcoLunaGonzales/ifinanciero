@@ -9,7 +9,7 @@ $globalPersonal=$_SESSION["globalUser"];
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal
+  $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,idTransaccion_siat
  from facturas_venta f where cod_estadofactura in (1,2,3) order by  f.codigo desc limit 50");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_factura);
@@ -38,12 +38,18 @@ $globalPersonal=$_SESSION["globalUser"];
   $stmt->bindColumn('cod_comprobante', $cod_comprobante);
   $stmt->bindColumn('glosa_factura3', $glosa_factura3);
 
+
+  $stmt->bindColumn('idTransaccion_siat', $idTransaccion_siat);
+
   date_default_timezone_set('America/La_Paz');
   if(isset($_GET['interno'])){
     $interno=$_GET['interno'];
   }else{
     $interno=0;
   }
+
+  $url_list_siat="http://localhost:8080/minka_siat_ibno/";
+
   ?>
   <input type="hidden" name="interno" value="<?=$interno?>" id="interno"/>
   <div class="content">
@@ -209,7 +215,10 @@ $globalPersonal=$_SESSION["globalUser"];
                                     </button>
                                     <div class="dropdown-menu">                                      
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
-                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>                                    
+                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>
+
+                                      <a class="dropdown-item" href='<?=$url_list_siat;?>formatoFacturaOnLine.php?codVenta=<?=$idTransaccion_siat?>' target="_blank"><i class="material-icons text-success">print</i>Factura SIAT</a>
+
                                     </div>
                                   </div>
                                   <!--div class="btn-group dropdown">
