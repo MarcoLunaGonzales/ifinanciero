@@ -29,7 +29,8 @@ switch ($menuModulo) {
 }
 
 $cod_ciudad_externo=1;//codigo para facturacion SIAT s
-$url_list_siat="http://localhost:8080/minka_siat_ibno/";
+// $url_list_siat="http://localhost:8080/minka_siat_ibno/";
+$url_list_siat=obtenerValorConfiguracion(103);
 
 if($menuModulo==0){
  ?><script>window.location.href="index.php";</script><?php

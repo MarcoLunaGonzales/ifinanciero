@@ -48,7 +48,9 @@ $globalPersonal=$_SESSION["globalUser"];
     $interno=0;
   }
 
-  $url_list_siat="http://localhost:8080/minka_siat_ibno/";
+  // $url_list_siat="http://localhost:8080/minka_siat_ibno/";
+  $url_list_siat=obtenerValorConfiguracion(103);
+
 
   ?>
   <input type="hidden" name="interno" value="<?=$interno?>" id="interno"/>
