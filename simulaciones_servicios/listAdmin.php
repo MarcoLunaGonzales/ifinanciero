@@ -11,19 +11,24 @@ $start          = isset($_POST['date_start'])?$_POST['date_start']:"";
 $end            = isset($_POST['date_end'])?$_POST['date_end']:"";
 $cod_cliente    = isset($_POST['cod_cliente'])?$_POST['cod_cliente']:"";
 $cod_personal   = isset($_POST['personal'])?$_POST['personal']:"";
-$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' AND sc.fecha <= '$end' "):"").
+$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' "):"").
+(!empty($end)?(" AND sc.fecha <= '$end' "):"").
 (!empty($cod_cliente)?(" AND sc.cod_cliente = '$cod_cliente' "):"").
 (!empty($cod_personal)?(" AND sc.cod_responsable = '$cod_personal' "):"");
 
 // Preparamos
 $listSC = "";
-if(isset($_GET['q'])){
-    // URL actual
-    $listSC = "&q=".$_GET['q'];
+// URL actual
+$query_q = isset($_GET['q'])?("&q=".$_GET['q']):"";
+$query_s = isset($_GET['s'])?("&s=".$_GET['s']):"";
+$query_u = isset($_GET['u'])?("&u=".$_GET['u']):"";
+$listSC = $query_q.$query_s.$query_u;
 
-  $q=$_GET['q'];
-  $item_3=$_GET['r'];
-  $u=$_GET['u'];
+if(isset($_GET['q'])){
+
+  $q=isset($_GET['q'])?$_GET['q']:"";
+  $item_3=isset($_GET['r'])?$_GET['r']:"";
+  $u=isset($_GET['u'])?$_GET['u']:"";
   $s="";
   if(isset($_GET['s'])){
     $s=$_GET['s'];
@@ -56,7 +61,8 @@ join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
 where sc.cod_estadoreferencial=1 
 and sc.cod_estadosimulacion!=1 $sqlFilter ".
 $filter_list.
-" order by sc.codigo desc";
+" order by sc.codigo desc
+  LIMIT 0, 50";
 
 //echo $sqlAdmin;
 

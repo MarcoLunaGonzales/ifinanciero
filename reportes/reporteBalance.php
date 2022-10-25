@@ -178,8 +178,11 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                             
                $index++;         
                }/* Fin del primer while*/
+
+
                $cuentaResultado=obtenerValorConfiguracion(47);
-               if($codigo_4==obtieneCuentaPadre($cuentaResultado)&&$vacio!=0){                  
+               //if($codigo_4==obtieneCuentaPadre($cuentaResultado)&&$vacio!=0){          
+              if($codigo_4==obtieneCuentaPadre($cuentaResultado)){          
                   $nombreResultado=nameCuenta($cuentaResultado);
                   $numeroResultado=obtieneNumeroCuenta($cuentaResultado);
                   $datosResultados=sumaMontosDebeHaberComprobantesDetalleResultados($fechaFormateada,1,$unidades,$areas,$gestion,"none");
@@ -224,6 +227,8 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                       $html4.='</tr>'; */     
                     }
                }
+
+
 
               if(number_format($sumaNivel4, 2, '.', '')>0){
                 $sumaNivel3+=$sumaNivel4;  
@@ -384,7 +389,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 }
 
 
- $html.=    '</tbody></table>';
+      $html.='</tbody></table>';
      
       $entero=floor($tDebeBolActivo);
       $decimal=$tDebeBol-$entero;
@@ -415,6 +420,6 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
 /*$html.='<p class="bold table-title">Son: '.ucfirst(CifrasEnLetras::convertirNumeroEnLetras($entero)).'      '.$centavos.'/100 Bolivianos</p>';*/
 $html.='</body>'.
       '</html>';
-                    
+
 descargarPDF("IBNORCA - ".$unidadC." (".$tipoC.", ".$numeroC.")",$html);
 ?>

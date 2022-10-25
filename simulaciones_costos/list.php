@@ -16,14 +16,28 @@ $filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' AND sc.fecha <= '$
 (!empty($cod_personal)?(" AND sc.cod_responsable = '$cod_personal' "):"");
 
 // Preparamos
+
+$q=0;
+$u=0;
+$s=0;
+
 $listSC = "";
+// URL actual
+$query_q = isset($_GET['q'])?("&q=".$_GET['q']):"";
+$query_s = isset($_GET['s'])?("&s=".$_GET['s']):"";
+$query_u = isset($_GET['u'])?("&u=".$_GET['u']):"";
+$listSC = $query_q.$query_s.$query_u;
+
 if(isset($_GET['q'])){
-    // URL actual
-    $listSC = "&q=".$_GET['q'];
     
   $q=$_GET['q'];
-  $s=$_GET['s'];
-  $u=$_GET['u'];
+  if(isset($_GET['s'])){
+    $s=$_GET['s'];    
+  }
+  if(isset($_GET['u'])){
+    $u=$_GET['u'];
+  }
+
   $sqlModulos="";
   if(isset($_GET['s'])){
     $s=$_GET['s'];
@@ -34,15 +48,15 @@ if(isset($_GET['q'])){
   }
   $globalUser=$q;
   // Preparamos
-  /*$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_costos sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.cod_responsable=$globalUser $sqlModulos order by sc.codigo desc");*/
-  /* modificacion realizada para que puedan ver lo de otros usuarios y realizar SR */
+
   $sql = "SELECT sc.*,es.nombre as estado, 
   (select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente 
   from simulaciones_costos sc 
   join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
   where sc.cod_estadoreferencial=1 $sqlModulos ".
   $filter_list.
-  " order by sc.codigo desc";
+  " order by sc.codigo desc
+  LIMIT 0, 50";
   $stmt = $dbh->prepare($sql);
 
 }else{
@@ -52,14 +66,14 @@ if(isset($_GET['q'])){
 $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente
  from simulaciones_costos sc 
  join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
- where sc.cod_estadoreferencial=1 
- and sc.cod_responsable=$globalUser ".
+ where sc.cod_estadoreferencial=1 ".
+ (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
  $filter_list.
- "order by sc.codigo desc");
+ "order by sc.codigo desc
+ LIMIT 0, 200");
 }
 
-
-
+//echo $sql;
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -116,6 +130,7 @@ $stmt->bindColumn('cliente', $nombreCliente);
                         </tr>
                       </thead>
                       <tbody>
+                        <div id="divBuscadorPropuestas">
 <?php
             $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
@@ -246,6 +261,7 @@ $stmt->bindColumn('cliente', $nombreCliente);
               $index++;
             }
 ?>
+                        </div>
                       </tbody>
                     </table>
                 </div>

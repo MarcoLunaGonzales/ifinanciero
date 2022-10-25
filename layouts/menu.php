@@ -7,6 +7,7 @@ $globalPerfilX=$_SESSION['globalPerfil'];
 $globalNameUserX=$_SESSION['globalNameUser'];
 $globalNombreUnidadX=$_SESSION['globalNombreUnidad'];
 $globalNombreAreaX=$_SESSION['globalNombreArea'];
+$cod_ciudad_externo=1;//codigo de ciudad para facturacion siat
 
 $menuModulo=$_SESSION['modulo'];
 switch ($menuModulo) {
@@ -608,6 +609,12 @@ if($menuModulo==0){
                   <a class="nav-link" href="?opcion=listFacturasGeneradas">
                     <span class="sidebar-mini"> FG </span>
                     <span class="sidebar-normal"> Facturas Generadas</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="http://localhost:8080/minka_siat_ibno/navegadorVentas.php?cod_ciudad_externo=<?=$cod_ciudad_externo?>" target="_blank">
+                    <span class="sidebar-mini"> FGS </span>
+                    <span class="sidebar-normal"> Facturas Generadas SIAT</span>
                   </a>
                 </li>
                 <li class="nav-item ">

@@ -110,7 +110,7 @@ $dbh = new Conexion();
                                 <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Seleccionar usuario que registra..." data-live-search="true" name="codigo_personal" id="codigo_personal" data-style="btn btn-info"  required>
                                 <option value="0">-- -- --</option>
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT p.codigo, concat(p.paterno,' ',p.materno,' ',p.primer_nombre)as nombrepersona FROM personal p where p.cod_estadopersonal in (1,3) order by 2");
+                                 $stmt = $dbh->prepare("SELECT p.codigo, concat(p.paterno,' ',p.materno,' ',p.primer_nombre)as nombrepersona FROM personal p where p.cod_estadopersonal in (1,2,3) order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];

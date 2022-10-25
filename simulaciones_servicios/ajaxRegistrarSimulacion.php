@@ -88,7 +88,7 @@ if(isset($_POST['nombre'])){
      $inicioAnio=0;
    }
 
-  $codOficinaPres=0;
+  $codOficinaPres=0; 
   if(obtenerValorConfiguracion(52)==1){
     $codOficinaPres=$unidadGeneralPlantilla;
   }

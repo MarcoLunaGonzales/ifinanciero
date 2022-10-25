@@ -7,6 +7,12 @@ require_once '../styles.php';
 
 $dbh = new Conexion();
 
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
+
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();

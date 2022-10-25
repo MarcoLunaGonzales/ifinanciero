@@ -16,7 +16,7 @@
 	$nombre_gestion=nameGestion($cod_gestion);	
 	$sql = "SELECT pt.*,p.primer_nombre,p.paterno,p.materno,
 		(Select i.abreviatura from tipos_identificacion_personal i where i.codigo=p.cod_tipo_identificacion) as tipo_identificacion,p.tipo_identificacion_otro,
-		p.identificacion
+		p.identificacion, p.codigo_dependiente
 		from planillas_tributarias_personal_mes_2 pt
 		join personal p on p.codigo=pt.cod_personal
 		where pt.cod_planillatributaria=$codPlanilla";
@@ -100,7 +100,7 @@
 			                	<tr>			                		
 				                    <td class="text-center small"><?=$nombre_gestion;?></td>
 				                    <td class="text-left small"><?=$cod_mes;?></td>
-				                    <td class="text-left small">Cod. RC-IVA</td>
+				                    <td class="text-left small"><?=$row['codigo_dependiente']?></td>
 				                    <td class="text-left small"><?=$row['primer_nombre'];?></td>
 				                    <td class="text-left small"><?=$row['paterno'];?></td>
 				                    <td class="text-left small"><?=$row['materno'];?></td>

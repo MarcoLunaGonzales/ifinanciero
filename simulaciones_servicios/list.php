@@ -3,6 +3,9 @@ require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 /*SACAR LOS ESTADOS DEL FINANCIERO O DE IBNORCA*/
 $configuracionEstados=obtenerValorConfiguracion(100);
 
@@ -21,35 +24,55 @@ $start          = isset($_POST['date_start'])?$_POST['date_start']:"";
 $end            = isset($_POST['date_end'])?$_POST['date_end']:"";
 $cod_cliente    = isset($_POST['cod_cliente'])?$_POST['cod_cliente']:"";
 $cod_personal   = isset($_POST['personal'])?$_POST['personal']:"";
-$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' AND sc.fecha <= '$end' "):"").
+$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' "):"").
+(!empty($end)?(" AND sc.fecha <= '$end' "):"").
 (!empty($cod_cliente)?(" AND sc.cod_cliente = '$cod_cliente' "):"").
 (!empty($cod_personal)?(" AND sc.cod_responsable = '$cod_personal' "):"");
 
 $sql="";
 // Preparamos
 $listSC = "";
+// URL actual
+$query_q = isset($_GET['q'])?("&q=".$_GET['q']):"";
+$query_s = isset($_GET['s'])?("&s=".$_GET['s']):"";
+$query_u = isset($_GET['u'])?("&u=".$_GET['u']):"";
+$listSC = $query_q.$query_s.$query_u;
 if(isset($_GET['q'])){
-  // URL actual
-  $listSC = "&q=".$_GET['q'];
 
-  $q=$_GET['q'];
-  $s=$_GET['s'];
-  $u=$_GET['u'];
+  $q=isset($_GET['q'])?$_GET['q']:"";
+  $s=isset($_GET['s'])?$_GET['s']:"";
+  $u=isset($_GET['u'])?$_GET['u']:"";
+
+  $sqlAreas = "";
   if(isset($_GET['s'])){
     $s=$_GET['s'];
     $u=$_GET['u'];
-    $arraySql=explode("IdArea=",$_GET['s']);
-    $codigoArea=trim($arraySql[1]);
 
-    $sqlAreas="and p.cod_area=".$codigoArea;
+    if(strpos($_GET['s'],"=")){
+      $arraySql=explode("IdArea=",$_GET['s']);
+      $codigoArea=trim($arraySql[1]);
+      $sqlAreas="and p.cod_area=".$codigoArea;
+    }else{
+      $arraySql=explode("IdArea in",$_GET['s']);
+      $codigoArea=trim($arraySql[1]);
+      $sqlAreas="and p.cod_area in ".$codigoArea;
+    }
+
+    
   }
   //cargarDatosSession();
   $sql="SELECT p.cod_unidadorganizacional,p.cod_area,sc.*,es.nombre as estado,c.nombre as cliente 
-from simulaciones_servicios sc 
-join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
-join clientes c on c.codigo=sc.cod_cliente 
-join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
-where sc.cod_estadoreferencial=1 and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser) $sqlAreas order by sc.fecha desc";
+    from simulaciones_servicios sc 
+    join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+    join clientes c on c.codigo=sc.cod_cliente 
+    join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
+    where sc.cod_estadoreferencial=1 ".
+    $filter_list.
+    (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):''). 
+    " $sqlAreas 
+    order by sc.fecha desc
+    LIMIT 0, 50";
+
   $stmt = $dbh->prepare($sql);
 }else{
   $s=0;
@@ -59,14 +82,15 @@ from simulaciones_servicios sc
 join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
 join clientes c on c.codigo=sc.cod_cliente 
 join plantillas_servicios p on p.codigo=sc.cod_plantillaservicio
-where sc.cod_estadoreferencial=1 
-and (sc.cod_responsable=$globalUser or sc.cod_responsableactual=$globalUser)  ".
+where sc.cod_estadoreferencial=1 ".
+(empty($filter_list)?(' and (sc.cod_responsable='.$globalUser.' or sc.cod_responsableactual='.$globalUser.') '):''). 
 $filter_list.
-" order by sc.codigo desc";
+" order by sc.codigo desc limit 0,50";
   $stmt = $dbh->prepare($sql);
 }
 
 //echo $sql;
+
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -141,7 +165,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                           $unidadX=abrevUnidad_solo($codUnidadX);
                           $areaX=abrevArea_solo($codAreaX);
                           $codigoServicio="SIN CODIGO";
-                          $sql="SELECT codigo FROM ibnorca.servicios where idServicio=$idServicioX";
+                          $sql="SELECT codigo FROM ibnorca.servicios where idServicio='$idServicioX'";
                           $stmt1=$dbh->prepare($sql);
                           $stmt1->execute();
                            while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
@@ -153,15 +177,17 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                           //revisamos la configuracion de los estados
                           if($configuracionEstados==1){
                             $sql2="SELECT ibnorca.id_estadoobjeto(2707, $codigo) AS IdEstado, ibnorca.d_clasificador(ibnorca.id_estadoobjeto(2707, $codigo)) AS descr";
+                            //echo $sql2;
                             $stmt2 = $dbh -> prepare($sql2);
                             $stmt2 -> execute();
+                            $idEstadoExt=0;
+                            $nombreEstadoExt="";
                             if($row2 = $stmt2 -> fetch(PDO::FETCH_ASSOC)){
                                 $idEstadoExt=$row2['IdEstado'];
                                 $nombreEstadoExt=$row2['descr'];
                             }
-                            $idEstadoExt=0;
-                            $nombreEstadoExt="";
                             $sql3="SELECT e.codigo, e.nombre from estados_simulaciones e where e.codigo_ibnorca=$idEstadoExt";
+
                             $stmt3 = $dbh -> prepare($sql3);
                             $stmt3 -> execute();
                             if($row3 = $stmt3 -> fetch(PDO::FETCH_ASSOC)){

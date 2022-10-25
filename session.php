@@ -1,4 +1,4 @@
-<?php
+<?php 
 require_once 'functions.php';
 require_once 'functionsGeneral.php';
 require_once 'conexion.php';
@@ -26,6 +26,7 @@ if($tipoLogin==2){
 	$datos=json_encode($datos);
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/verifica/ws-user-personal.php");
+	//curl_setopt($ch, CURLOPT_URL,"http://192.168.30.15/wsibno/verifica/ws-user-personal.php");
 	curl_setopt($ch, CURLOPT_POST, TRUE);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -61,7 +62,7 @@ if($banderaLogin==1 || $tipoLogin==1){
 			where (p.codigo='$idUsuarioSW' or p.codigo='$idUsuarioSW2') ";		
 	}
 
-	echo $sql;
+	//echo $sql;
 	/*if($idUsuarioSW==47770){
 		$idUsuarioSW=49299;
 	}*/

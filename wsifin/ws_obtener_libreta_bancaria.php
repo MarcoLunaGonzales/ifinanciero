@@ -1,5 +1,10 @@
 <?php
 
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $datos = json_decode(file_get_contents("php://input"), true); 
     //Parametros de consulta
@@ -10,8 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $estado=0;
         $mensaje="";
         if($accion=="ObtenerLibretaBancaria"){
-          $codLibreta=$datos['idLibreta'];//recibimos el codigo del proyecto
 
+          //echo "ENTRA WS";
+          $codLibreta=$datos['idLibreta'];//recibimos el codigo del proyecto
           //variables para el filtro
           $montoLibreta=null;
           if(isset($datos['monto'])){
@@ -107,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 function obtenerListaLibretaBancaria(){
-  require_once __DIR__.'/../conexion_simple.php';
+  require_once __DIR__.'/../conexion.php';
   $dbh = new Conexion();
   $sqlX="SET NAMES 'utf8'";
   $stmtX = $dbh->prepare($sqlX);
@@ -136,8 +142,15 @@ WHERE dc.cod_estadoreferencial=1";
 }
 
 function obtenerDatosLibreta($codigo,$anioLib,$montoLibreta,$fechaLibreta,$nombreLibreta,$codFactura){
-  require_once __DIR__.'/../conexion_simple.php';
+  require_once __DIR__.'/../conexion.php';
   require_once __DIR__.'/../functions.php';
+  
+  error_reporting(E_ALL);
+  ini_set('display_errors', '1');
+
+
+  //echo "entrando obtenerDatosLibreta";
+
   $dbh = new Conexion();
   $sqlX="SET NAMES 'utf8'";
   $stmtX = $dbh->prepare($sqlX);
@@ -163,8 +176,11 @@ if($nombreLibreta!=null){
 }
 
   $sql="SELECT p.nombre as banco,dc.* 
-FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo
-WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
+  FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo
+  WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
+
+  //echo $sql;
+
   $stmtFac = $dbh->prepare($sql);
   $stmtFac->execute();
   $filaA=0;
@@ -196,11 +212,17 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
        FROM libretas_bancariasdetalle ce join libretas_bancariasdetalle_facturas ldf on ldf.cod_libretabancariadetalle=ce.codigo       
        where ce.cod_libretabancaria=$codigoLib and ldf.cod_facturaventa=$codFactura and  ce.cod_estadoreferencial=1 $sqlFiltroDetalle order by ce.fecha_hora desc";
      }else{
-    $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura,(SELECT obtener_saldo_libreta_bancaria_detalle_oficial(ce.codigo)) as saldo_libreta_detalle
-       FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 $sqlFiltroDetalle order by ce.fecha_hora desc";
+        $sqlDetalle="SELECT ce.*,(select cod_estadofactura from facturas_venta where codigo=ce.cod_factura) as estado_factura,(SELECT obtener_saldo_libreta_bancaria_detalle_oficial(ce.codigo)) as saldo_libreta_detalle
+        FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 $sqlFiltroDetalle order by ce.fecha_hora desc";
      }
+     
+     //echo $sqlDetalle;
+
      $stmtFacDetalle = $dbh->prepare($sqlDetalle);
-     $stmtFacDetalle->execute();
+     $resultadoQuery = $stmtFacDetalle->execute();
+
+     //print_r($resultadoQuery);
+
      $datosDetalle=[];
      $index=0;
      while ($rowLibDetalle = $stmtFacDetalle->fetch(PDO::FETCH_ASSOC)) {
@@ -221,7 +243,7 @@ WHERE dc.cod_estadoreferencial=1 $sqlCodigo";
            $datosDetalle[$index]['CodComprobante']=0;
            $datosDetalle[$index]['CodComprobanteDetalle']=0;
            
-           $sqlExisteComprobante="SELECT codigo from comprobantes where codigo=$codComprobante and cod_estadocomprobante<>2";
+           $sqlExisteComprobante="SELECT codigo from comprobantes where codigo='$codComprobante' and cod_estadocomprobante<>2";
            $stmtExisteComprobante = $dbh->prepare($sqlExisteComprobante);
            $stmtExisteComprobante->execute();
            while ($rowExisteCompro = $stmtExisteComprobante->fetch(PDO::FETCH_ASSOC)) {

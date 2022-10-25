@@ -677,7 +677,7 @@
   }
   function abrevUnidad($codigo){
      $dbh = new Conexion();
-     if($codigo!=0 || $codigo!="NULL" || $codigo!=null){
+    if(($codigo!=0 || $codigo!="NULL" || $codigo!=null || $codigo!=NULL) && $codigo>0){
         $stmt = $dbh->prepare("SELECT abreviatura FROM unidades_organizacionales where codigo in ($codigo)");
         $stmt->execute();
         $nombreX="";
@@ -5234,7 +5234,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function obtenerUnidadSolicitanteRecursos($codigo){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cod_unidadorganizacional from solicitud_recursos where codigo=$codigo");
+     $stmt = $dbh->prepare("SELECT cod_unidadorganizacional from solicitud_recursos where codigo='$codigo'");
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -5244,7 +5244,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function obtenerAreaSolicitanteRecursos($codigo){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cod_area from solicitud_recursos where codigo=$codigo");
+     $stmt = $dbh->prepare("SELECT cod_area from solicitud_recursos where codigo='$codigo'");
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -6813,6 +6813,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante
               where (c.fecha between '$fi 00:00:00' and '$fa 23:59:59') $sqlUnidades and c.cod_gestion='$gestion' and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.numero like '5%' and p.nivel=5 order by p.numero)";
+     //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      return $stmt;
@@ -8167,15 +8168,15 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
     // print_r($remote_server_output);
   }
 function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto,$nombre){
-    //$direccion='http://127.0.0.1/ifinanciero/wsifin/';
-    // $direccion='http://200.105.199.164:8008/ifinanciero/wsifin/';
     
-    //$direccion='http://ibnored.ibnorca.org/ifinanciero/wsifin/';
-    $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+    //$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+    //***********
+    $direccion="http://127.0.0.1:8090/ifinanciero/wsifin/";//direccion del servicio web ifinanciero
+    
 
     $sIde = "libBan";
     $sKey = "89i6u32v7xda12jf96jgi30lh";
-    //PARAMETROS PARA LA OBTENCION DE ARRAY LIBRETA
+
     $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, "accion"=>"ObtenerLibretaBancaria","idLibreta"=>$codigo,"anio"=>$anio,"monto"=>null,"nombre"=>null,"fecha"=>null); 
     if(!($monto==0||$monto=="")){
       $parametros['monto']=$monto;
@@ -8188,27 +8189,22 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
     }
 
     $parametros=json_encode($parametros);
-    // abrimos la sesión cURL
     $ch = curl_init();
-    // definimos la URL a la que hacemos la petición
     curl_setopt($ch, CURLOPT_URL,$direccion."ws_obtener_libreta_bancaria.php"); 
-    // indicamos el tipo de petición: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);
-    // definimos cada uno de los parámetros
     curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
-    // recibimos la respuesta y la guardamos en una variable
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $remote_server_output = curl_exec ($ch);
-    // cerramos la sesión cURL
     curl_close ($ch);
-    
-    return json_decode($remote_server_output);
-    //echo $direccion."ws_obtener_libreta_bancaria.php";
-    //echo "decode: ".json_decode($remote_server_output);
 
-    // imprimir en formato JSON
-    //header('Content-type: application/json');   
+    //ESTO ES PARA PRUEBAS
+    //echo $direccion."ws_obtener_libreta_bancaria.php";
     //print_r($remote_server_output);
+    //ESTO ES PARA PRUEBAS
+
+    //esto es oficial
+    return json_decode($remote_server_output);
+    
   }
   function verificarFechaMaxDetalleLibreta($fecha,$codigo){
      $dbh = new Conexion();
@@ -10267,7 +10263,9 @@ function obtenerNombreEstadoSol($cod_estado){
 
 function obtenerDetalleRecursosSIS($codigo){
   $dbh = new Conexion();        
-      $sql="SELECT codigo from solicitud_recursosdetalle where (cod_unidadorganizacional=3000 or cod_area=1235) and cod_solicitudrecurso=$codigo";    
+      $sql="SELECT codigo from solicitud_recursosdetalle where 
+      (cod_unidadorganizacional in (3000,4000,5000) or cod_area in (1235,5000,6000)) 
+      and cod_solicitudrecurso='$codigo'";    
       $stmt = $dbh->prepare($sql);
       $stmt->execute();
       $valor=0;
@@ -11762,9 +11760,7 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
 function enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_total,$descuento,$monto_final,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle)
 {
     
-  $url=obtenerValorConfiguracion(102);//direccion des servicio web
-  // $url="http://localhost:8080/minka_siat_ibno/wsminka/ws_generarFactura.php";
-  
+  $url=obtenerValorConfiguracion(102);//direccion de servicio web  
   $sIde = "MinkaSw123*";
   $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
  
