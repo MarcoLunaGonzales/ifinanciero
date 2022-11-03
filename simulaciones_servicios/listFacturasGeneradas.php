@@ -50,7 +50,15 @@ $globalPersonal=$_SESSION["globalUser"];
 
   // $url_list_siat="http://localhost:8080/minka_siat_ibno/";
   $url_list_siat=obtenerValorConfiguracion(103);
+  
+  $datosOffline=obtener_contadorOffline();
+  
+  $cantidadOffline=0;
 
+  if(isset($datosOffline['cont'])){
+    $cantidadOffline = $datosOffline['cont'];
+  }
+  
 
   ?>
   <input type="hidden" name="interno" value="<?=$interno?>" id="interno"/>
@@ -64,14 +72,18 @@ $globalPersonal=$_SESSION["globalUser"];
                     <div class="card-icon">
                       <i class="material-icons">polymer</i>
                     </div>
-                    <h4 class="card-title"><b>Facturas Generadas</b></h4>                    
+                    <h4 class="card-title"><b>Facturas Generadas</b></h4>
                   </div>
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group" align="right">
+                          <a type="button" class="btn btn-danger btn-round btn-fab btn-sm" title="Facturas OFFLINE" target="_blank" href="http://localhost:8080/minka_siat_ibno/siat_folder/siat_facturacion_offline/facturas_sincafc_list.php">
+                            <i class="material-icons" title="Buscador Avanzado">list</i><span class="count bg-warning" style="width:20px;height: 20px;font-size: 12px;" ><b><?=$cantidadOffline?></b></span>
+                          </a>
+
                           <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscadorFacturas">
                               <i class="material-icons" title="Buscador Avanzado">search</i>
-                          </button>                               
+                          </button>
                       </div>
                     </div>
                   </div>
@@ -215,12 +227,17 @@ $globalPersonal=$_SESSION["globalUser"];
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 1">
                                        <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
                                     </button>
-                                    <div class="dropdown-menu">                                      
-                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
+                                    <div class="dropdown-menu">
+                                      <?php
+                                      if($idTransaccion_siat>0){?>
+                                        <a class="dropdown-item" href='<?=$url_list_siat;?>formatoFacturaOnLine.php?codVenta=<?=$idTransaccion_siat?>' target="_blank"><i class="material-icons text-success">print</i>Factura SIAT</a>
+                                      <?php }else{ ?>
+                                        <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
                                       <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>
-
-                                      <a class="dropdown-item" href='<?=$url_list_siat;?>formatoFacturaOnLine.php?codVenta=<?=$idTransaccion_siat?>' target="_blank"><i class="material-icons text-success">print</i>Factura SIAT</a>
-
+                                      <?php }
+                                      ?>
+                                      
+                                      
                                     </div>
                                   </div>
                                   <!--div class="btn-group dropdown">
