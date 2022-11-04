@@ -18,8 +18,6 @@ $globalNombreGestion=$_SESSION['globalNombreGestion'];
 
 $dbh = new Conexion();
 
-
-
   $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,comprobante,
   (select m.nombre from meses m where m.codigo=cod_mes)as mes,
   (select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
@@ -269,13 +267,36 @@ $dbh = new Conexion();
                       <?php }?>                          
                     </td>
                     
-                    <td class="text-center">
-                      <?php if($comprobante_x!=1){ ?>
-                        <a href="#" 
-                          onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>')"> 
-                          <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>
-                        </a>
-                      <?php } ?>
+                    <td class="text-center td-actions ">
+                      
+                        
+
+                        <div class="dropdown">
+                          <button class="btn btn-info dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
+                            <i class="material-icons" title="Comprobante">chrome_reader_mode</i>
+                            <span class="caret"></span>
+                          </button>
+                          
+                          <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                            
+                            <li>
+                              <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalVistaPreviaPlanilla" onclick="agregarDatosVistaPreviaPlanilla('<?=$codigo_planilla;?>','<?=$cod_mes?>','<?=$cod_gestion?>')">
+                              <i class="material-icons">list</i>Vista Previa
+                            </button> 
+                            </li>
+                            <?php if($comprobante_x!=1){ ?>
+                            <li>
+                              <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>')"> 
+                                <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>Generar
+                              </a>
+                            </li>
+                            <?php } ?>
+                          </ul>
+                        </div>
+
+
+                        
+                      
                     </td>
 
                     </tr>
@@ -433,6 +454,32 @@ $dbh = new Conexion();
     </div>
   </div>
 
+  <div class="modal fade" id="modalVistaPreviaPlanilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title text-danger font-weight-bold" id="myModalLabel">CONTABILIZACION PLANILLA - VISTA PREVIA</h4>
+        </div>
+        <div class="modal-body" id="div_contenedor_vistaprevia_planilla">
+          <table class="table table-condensed" >
+            <thead>
+              <tr class="text-danger">
+                <th>CC</th>
+                <th>PERSONAL</th>
+                <th>MONTO</th>
+                <!-- <th>HABER</th> -->
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <script type="text/javascript">
     $(document).ready(function(){
@@ -450,7 +497,30 @@ $dbh = new Conexion();
       });
       
     });
-  </script>
-  <?php 
 
-?>
+    function mostrarFilaTablaHorario(codigo){   
+      var mostrar=0; 
+      $(".fila_"+codigo).each(function(){
+          if($(this).hasClass("d-none")){
+            $(this).removeClass("d-none");
+            mostrar++;
+          }else{
+            $(this).addClass("d-none");
+          }
+      }); 
+
+      if(mostrar>0){      
+        if(!$("#icono_"+codigo).hasClass("text-danger")){
+          $("#icono_"+codigo).removeClass("text-success");
+          $("#icono_"+codigo).addClass("text-danger");
+        }
+        $("#icono_"+codigo).html("do_not_disturb_on");      
+      }else{
+        if(!$("#icono_"+codigo).hasClass("text-success")){
+          $("#icono_"+codigo).removeClass("text-danger");
+          $("#icono_"+codigo).addClass("text-success");
+        }  
+        $("#icono_"+codigo).html("add_circle"); 
+      }   
+    }
+  </script>

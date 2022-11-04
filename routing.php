@@ -378,6 +378,7 @@
 		if ($_GET['opcion']=='listFacturasGeneradas') {
 			require_once('simulaciones_servicios/listFacturasGeneradas.php');
 		}		
+
         if ($_GET['opcion']=='registerSimulacionServicio') {
 			require_once('simulaciones_servicios/registerSimulaciones.php');
 		}

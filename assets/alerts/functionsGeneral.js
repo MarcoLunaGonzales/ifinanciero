@@ -20457,3 +20457,21 @@ $(document).ready(function (){
     mostrarComplemento();
 });
 
+function agregarDatosVistaPreviaPlanilla(codigo_planilla,cod_mes,cod_gestion){  
+  // var d=datos.split('/');
+  // var codigo_planilla=d[0];
+  // var cod_mes=d[1];
+  // var cod_gestion=d[2];
+  
+  var contenedor;  
+  contenedor = document.getElementById('div_contenedor_vistaprevia_planilla');
+  ajax=nuevoAjax();
+  ajax.open('GET', 'planillas/ajax_vistapreviaplanilla.php?codigo_planilla='+codigo_planilla+'&cod_mes='+cod_mes+'&cod_gestion='+cod_gestion,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      contenedor.innerHTML = ajax.responseText;
+      $('.selectpicker').selectpicker(["refresh"]);          
+    }
+  }
+  ajax.send(null);
+}

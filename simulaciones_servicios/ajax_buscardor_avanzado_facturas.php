@@ -30,7 +30,7 @@ $interno=$_GET['interno'];
 $cod_factura=$_GET['cod_factura'];
 
 
-$sql="SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal
+$sql="SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,idTransaccion_siat
  from facturas_venta f where cod_estadofactura in (1,2,3)";
 if($razon_social_f!=""){
   $sql.=" and f.razon_social like '%$razon_social_f%'";
@@ -81,6 +81,8 @@ $stmt->bindColumn('cod_estadofactura', $cod_estadofactura);
 $stmt->bindColumn('sucursal', $sucursal);
 $stmt->bindColumn('cod_comprobante', $cod_comprobante);
 $stmt->bindColumn('glosa_factura3', $glosa_factura3);
+
+$stmt->bindColumn('idTransaccion_siat', $idTransaccion_siat);
 
 date_default_timezone_set('America/La_Paz');
 $mes_actual=date('m');
@@ -212,15 +214,20 @@ if(isset($_GET['interno'])){
           <?php
           if($cod_estadofactura!=4){?>                                   
               <div class="btn-group dropdown">
-                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 1">
-                   <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
-                </button>
-                <div class="dropdown-menu">                                      
-                  <!--a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=1' target="_blank"><i class="material-icons text-success">print</i> Original Cliente y Copia Contabilidad</a-->
-                  <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
-                  <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>                                    
-                </div>
-              </div>
+                                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 1">
+                                       <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                      <?php
+                                      if($idTransaccion_siat>0){?>
+                                        <a class="dropdown-item" href='<?=$url_list_siat;?>formatoFacturaOnLine.php?codVenta=<?=$idTransaccion_siat?>' target="_blank"><i class="material-icons text-success">print</i>Factura SIAT</a>
+                                      <?php }else{ ?>
+                                        <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
+                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>
+                                      <?php }
+                                      ?>
+                                    </div>
+                                  </div>
               <!--div class="btn-group dropdown">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 2">
                    <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>

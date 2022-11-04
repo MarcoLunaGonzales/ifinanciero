@@ -28,6 +28,10 @@ switch ($menuModulo) {
   break;
 }
 
+$cod_ciudad_externo=1;//codigo para facturacion SIAT s
+// $url_list_siat="http://localhost:8080/minka_siat_ibno/";
+$url_list_siat=obtenerValorConfiguracion(103);
+
 if($menuModulo==0){
  ?><script>window.location.href="index.php";</script><?php
 }
@@ -608,6 +612,12 @@ if($menuModulo==0){
                   <a class="nav-link" href="?opcion=listFacturasGeneradas">
                     <span class="sidebar-mini"> FG </span>
                     <span class="sidebar-normal"> Facturas Generadas</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="<?=$url_list_siat?>navegadorVentas.php?cod_ciudad_externo=<?=$cod_ciudad_externo?>" target="_blank">
+                    <span class="sidebar-mini"> FGS </span>
+                    <span class="sidebar-normal"> Facturas Generadas SIAT</span>
                   </a>
                 </li>
                 <li class="nav-item ">
