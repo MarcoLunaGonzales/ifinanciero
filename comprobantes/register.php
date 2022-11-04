@@ -480,7 +480,7 @@ $cod_sis_configuracion=obtenerValorConfiguracion(16);//codigo de proyecto sis
                                    if($desdeSR==0){
                                    	?>
 						      		 <div class="form-group">
-						      		 	<a href="#" class="btn btn-round btn-default btn-fab btn-sm" onclick="salvarComprobante(0);return false;" title="Salvar Comprobante">
+						      		 	<a href="#" id="boton_salvar_comprobante" class="btn btn-round btn-default btn-fab btn-sm" onclick="salvarComprobante(0);return false;" title="Salvar Comprobante">
 			                        	   <i class="material-icons text-dark">save</i> 
 			                            </a>
 									</div>						      		
@@ -657,7 +657,7 @@ $stmt->bindColumn('nombre', $nombreCuenta);
 			$numeroCuenta=trim($numeroCuenta);
 			$nombreCuenta=trim($nombreCuenta);
 
-			$sqlCuentasAux="SELECT codigo, nombre, (select count(*) from estados_cuenta e, comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle and c.cod_estadocomprobante<>2 and e.cod_cuentaaux=ca.codigo and e.cod_comprobantedetalleorigen=0)as contador FROM cuentas_auxiliares ca where ca.cod_cuenta='$codigoCuenta' order by 2";
+			$sqlCuentasAux="SELECT codigo, nombre, (select count(*) from estados_cuenta e, comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle and c.cod_estadocomprobante<>2 and e.cod_cuentaaux=ca.codigo and e.cod_comprobantedetalleorigen=0 and YEAR(c.fecha)=2022)as contador FROM cuentas_auxiliares ca where ca.cod_cuenta='$codigoCuenta' order by 2";
 			$stmtAux = $dbh->prepare($sqlCuentasAux);
 			$stmtAux->execute();
 			$stmtAux->bindColumn('codigo', $codigoCuentaAux);

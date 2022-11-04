@@ -21,7 +21,8 @@ if(isset($_GET['s'])){
     $sqlAreas="and p.cod_area=".$codigoArea;
   }
 }
-
+$query="";
+$query2="";
 if(isset($_GET["sim"])){
   if($_GET["sim"]=="sec"){
     $query="SELECT s.*,p.cod_area FROM simulaciones_costos s join plantillas_costo p on p.codigo=s.cod_plantillacosto  where s.cod_estadosimulacion=3 $sqlAreas order by s.codigo";

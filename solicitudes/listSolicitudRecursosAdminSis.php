@@ -3,8 +3,13 @@ require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
-
 $dbh = new Conexion();
+
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+$sqlServicio="";
+
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $u=$_GET['u'];
@@ -46,10 +51,19 @@ if(isset($_GET['cod_sim'])){
   $sqlSimCosto=" and sr.cod_simulacion=$codSimCosto";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle 
+
+//Sacamos las configuraciones de los proyectos que existan
+$stringOficinasProyectosExt=obtenerValorConfiguracion(69);
+$stringAreasProyectosExt=obtenerValorConfiguracion(65);
+
+
+$sqlProyectosExt="SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,
+    (select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional in ($stringOficinasProyectosExt) or cod_area in ($stringAreasProyectosExt))) as sis_detalle 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (7,4,3,5) order by sr.numero desc) l  
-where (l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0)");
+where (l.cod_unidadorganizacional in ($stringOficinasProyectosExt) or l.cod_area in ($stringAreasProyectosExt) or l.sis_detalle>0)";
+//echo $sqlProyectosExt;
+$stmt = $dbh->prepare($sqlProyectosExt);
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -359,7 +373,7 @@ $stmt->bindColumn('glosa_estado', $glosa_estadoX);
 <?php
 $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=2 $sqlServicio $sqlSimCosto $sqlAreas and sr.cod_unidadorganizacional=3000 order by sr.numero desc");
+  where sr.cod_estadoreferencial=2 $sqlServicio $sqlSimCosto $sqlAreas and sr.cod_unidadorganizacional in ($stringOficinasProyectosExt) order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn

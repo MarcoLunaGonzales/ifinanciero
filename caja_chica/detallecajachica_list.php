@@ -69,6 +69,7 @@ $stmt->bindColumn('cod_area', $cod_area);
 $stmt->bindColumn('cod_uo', $cod_uo);
 $stmt->bindColumn('nro_recibo', $nro_recibo);
 //listamos los reembolso de caja chica en curso
+
 $stmtReembolso = $dbh->prepare("SELECT * from caja_chicareembolsos where cod_estadoreferencial=1 and cod_cajachica =$cod_cajachica");
 $stmtReembolso->execute();
 $stmtReembolso->bindColumn('codigo', $codigo_reembolso);

@@ -33,13 +33,18 @@ if(isset($_GET['q'])){
   $sqlAreas="";
 }
 
+
+//Sacamos las configuraciones de los proyectos que existan
+$stringOficinasProyectosExt=obtenerValorConfiguracion(69);
+$stringAreasProyectosExt=obtenerValorConfiguracion(65);
+
 $montoCaja=obtenerValorConfiguracion(85);
 // Preparamos
-$stmt = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle,
+$stmt = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional in ($stringOficinasProyectosExt) or cod_area in ($stringAreasProyectosExt) )) as sis_detalle,
 (select sum(IF(sd.cod_confretencion = 0 or sd.cod_confretencion = 8 or sd.cod_confretencion = 10,sd.importe,(sd.importe)*((100-(SELECT IFNULL(SUM(porcentaje),0) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=sd.cod_confretencion and cod_cuenta!=0))/100))) from solicitud_recursosdetalle sd where sd.cod_solicitudrecurso=sr.codigo) as monto_importe
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3)) l  
-where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0) and l.monto_importe>$montoCaja order by l.revisado_contabilidad,l.numero desc");
+where !(l.cod_unidadorganizacional in ($stringOficinasProyectosExt) or l.cod_area in ($stringAreasProyectosExt) or l.sis_detalle>0) and l.monto_importe>$montoCaja order by l.revisado_contabilidad,l.numero desc");
 
 // Ejecutamos
 $stmt->execute();
@@ -64,10 +69,10 @@ $stmt->bindColumn('monto_importe', $montoImporteX);
 
 //Solicitudes SIS
 // Preparamos
-$stmtSIS = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle 
+$stmtSIS = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional in ($stringOficinasProyectosExt) or cod_area in ($stringAreasProyectosExt) )) as sis_detalle 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3,5,8)) l  
-where (l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0) order by l.cod_comprobante,l.numero desc");
+where (l.cod_unidadorganizacional in ($stringOficinasProyectosExt) or l.cod_area in ($stringAreasProyectosExt) or l.sis_detalle>0) order by l.cod_comprobante,l.numero desc");
 // Ejecutamos
 $stmtSIS->execute();
 // bindColumn
@@ -89,11 +94,11 @@ $stmtSIS->bindColumn('revisado_contabilidad', $estadoContabilidadX);
 $stmtSIS->bindColumn('devengado', $devenX);
 
 // Preparamos
-$stmtMen = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle,
+$stmtMen = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional in ($stringOficinasProyectosExt) or cod_area in ($stringAreasProyectosExt) )) as sis_detalle,
 (select sum(IF(sd.cod_confretencion = 0 or sd.cod_confretencion = 8 or sd.cod_confretencion = 10,sd.importe,(sd.importe)*((100-(SELECT IFNULL(SUM(porcentaje),0) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=sd.cod_confretencion and cod_cuenta!=0))/100))) from solicitud_recursosdetalle sd where sd.cod_solicitudrecurso=sr.codigo) as monto_importe
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3)) l  
-where !(l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0) and l.monto_importe<=$montoCaja order by l.revisado_contabilidad,l.numero desc");
+where !(l.cod_unidadorganizacional in ($stringOficinasProyectosExt) or l.cod_area in ($stringAreasProyectosExt) or l.sis_detalle>0) and l.monto_importe<=$montoCaja order by l.revisado_contabilidad,l.numero desc");
 
 // Ejecutamos
 $stmtMen->execute();
@@ -136,7 +141,7 @@ $item_1=2708;
                   </a>
                   <a href="#" onclick="cambiarTresDivPantallaClase('list_div_2','list_div_1','list_div_3','bg-info')">
                      <div id="button_list_div_2" class="card-text bg-default text-white">
-                        <h4 class="">SOL. PROYECTO SIS <span class="badge bg-info d-none" id="n_list_div_2"></span></h4>
+                        <h4 class="">SOL. PROYECTOS FIN <span class="badge bg-info d-none" id="n_list_div_2"></span></h4>
                      </div>
                   </a>
                   <a href="#" onclick="cambiarTresDivPantallaClase('list_div_3','list_div_1','list_div_2','bg-info')">
@@ -421,7 +426,6 @@ $item_1=2708;
                                     </a>
                                     <?php
                                   }else{
-
                                     ?>
                                    <!--<a title="Contabilizar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=5')" class="dropdown-item">-->
                                    <a title="Contabilizar Solicitud" onclick="contabilizarSolicitudRecursoModal(<?=$codigo?>,1,<?=$numeroSol?>,'<?=$montoDetalleSoliditud?>','<?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?>','<?=$urlComprobante?>?admin=0&cod=<?=$codigo?>&deven=1','<?=$nombreProveedor?>','<?=$arrayEnc?>');return false;" href='#'  class="dropdown-item">

@@ -93,7 +93,7 @@ order by e.fecha";
 
       $fechaComprobante=strftime('%d/%m/%Y',strtotime($fechaComprobante));
       //SACAMOS CUANTO SE PAGO DEL ESTADO DE CUENTA.    
-      $sqlContra="SELECT sum(e.monto)as monto from estados_cuenta e, comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen='$codigoX'";    
+      $sqlContra="SELECT sum(e.monto)as monto from estados_cuenta e, comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and e.cod_comprobantedetalle=cd.codigo and c.cod_estadocomprobante<>2 and e.cod_comprobantedetalleorigen='$codigoX'";    
       
     //    echo $sqlContra;
       $stmtContra = $dbh->prepare($sqlContra);
