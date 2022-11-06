@@ -146,12 +146,12 @@ $stmtCommit = $dbh->prepare($sqlCommit);
 $stmtCommit->execute();
 
 
-$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraSistema', modified_by='$globalUser',salvado_temporal=$salvado_temporal where codigo=$codComprobante";
+$sqlUpdate="UPDATE comprobantes SET  glosa='$glosa', fecha='$fechaHoraActual2',modified_at='$fechaHoraSistema', modified_by='$globalUser',salvado_temporal='$salvado_temporal' where codigo='$codComprobante'";
 //echo $sqlUpdate;
 $stmtUpdate = $dbh->prepare($sqlUpdate);
 $flagSuccess=$stmtUpdate->execute();  
 array_push($SQLDATOSINSTERT,$flagSuccess);
-$sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=0, cod_comprobantedetalle=0,cod_estado=0 where cod_comprobante=$codComprobante";
+$sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante='0', cod_comprobantedetalle='0',cod_estado=0 where cod_comprobante='$codComprobante'";
 $stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
 $flagsuccess=$stmtDetalleUpdate->execute(); 
 array_push($SQLDATOSINSTERT,$flagsuccess);
@@ -226,7 +226,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     if($codSolicitudRecurso!=""||$codSolicitudRecurso!=0){
       //actualizar SOLICITUDES SIS AL ESTADO PAGADO
      //verificar que la validacion si tiene centro de costo SIS     
-      $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=8 where codigo=$codSolicitudRecurso";
+      $sqlUpdate="UPDATE solicitud_recursos SET cod_estadosolicitudrecurso='8' where codigo='$codSolicitudRecurso'";
       $stmtUpdate = $dbh->prepare($sqlUpdate);
       $flagSuccess=$stmtUpdate->execute();
 
@@ -245,7 +245,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     if((isset($_POST['codigo_detalle'.$i]))&&(isset($_POST['incompleto']))){
 	    $codigoDetalle=$_POST["codigo_detalle".$i];
       $codComprobanteDetalle=$codigoDetalle;
-      $sqlDetalle="UPDATE comprobantes_detalle SET cod_actividadproyecto='$codActividadProyecto',cod_accnum='$codAccNum',cod_solicitudrecurso='$codSolicitudRecurso',cod_comprobante=$codComprobante , cod_cuenta= '$cuenta', cod_cuentaauxiliar= '$cuentaAuxiliar', cod_unidadorganizacional= '$unidadDetalle', cod_area= '$area', debe= '$debe', haber= '$haber', glosa= '$glosaDetalle', orden ='$i'  where codigo='$codComprobanteDetalle' ";
+      $sqlDetalle="UPDATE comprobantes_detalle SET cod_actividadproyecto='$codActividadProyecto',cod_accnum='$codAccNum',cod_solicitudrecurso='$codSolicitudRecurso',cod_comprobante='$codComprobante', cod_cuenta='$cuenta', cod_cuentaauxiliar= '$cuentaAuxiliar', cod_unidadorganizacional= '$unidadDetalle', cod_area= '$area', debe= '$debe', haber= '$haber', glosa= '$glosaDetalle', orden ='$i'  where codigo='$codComprobanteDetalle' ";
 		  $stmtDetalle = $dbh->prepare($sqlDetalle);
 		  $flagSuccessDetalle=$stmtDetalle->execute();
       array_push($SQLDATOSINSTERT,$flagSuccessDetalle);	
@@ -260,7 +260,7 @@ for ($i=1;$i<=$cantidadFilas;$i++){
     
     if($_POST["cod_detallelibreta".$i]!=0){
       $codDetalleLibreta=$_POST["cod_detallelibreta".$i];
-      $sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante=$codComprobante, cod_comprobantedetalle=$codComprobanteDetalle,cod_estado=1 where codigo=$codDetalleLibreta";
+      $sqlDetalleUpdate="UPDATE libretas_bancariasdetalle SET cod_comprobante='$codComprobante', cod_comprobantedetalle='$codComprobanteDetalle',cod_estado='1' where codigo='$codDetalleLibreta'";
       $stmtDetalleUpdate = $dbh->prepare($sqlDetalleUpdate);
       $flagDetalleUpdate=$stmtDetalleUpdate->execute();
 

@@ -2532,7 +2532,7 @@
   join plantillas_costo plan on plan.codigo=s.cod_plantillacosto
   where tablap.cod_cuenta=tabla_uno.codigo and (tablap.cod_plantillacosto!='' or tablap.cod_plantillacosto!=NULL) and tablap.cod_plantillacosto=3 
   and tablap.cod_simulacioncosto=tabla_uno.cod_simulacioncostos and tablap.habilitado=1  
-  and tablap.cod_cuenta=$codigo and s.cod_responsable=$codUsuario and s.fecha BETWEEN '$fechai' and '$fechaf'
+  and tablap.cod_cuenta='$codigo' and s.cod_responsable='$codUsuario' and s.fecha BETWEEN '$fechai' and '$fechaf'
   order by tabla_uno.codigo) sec )";
   //echo $sql;
      $stmt = $dbh->prepare($sql);
@@ -5177,7 +5177,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function obtenerCodigoProveedorCuentaAux($codigo){
     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT c.cod_proveedorcliente from cuentas_auxiliares c where c.codigo=$codigo");
+     $stmt = $dbh->prepare("SELECT c.cod_proveedorcliente from cuentas_auxiliares c where c.codigo='$codigo'");
      $stmt->execute();
      $valor=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -7007,6 +7007,28 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $variableMontos=array($debeX,$haberX);
     return($variableMontos); 
   }
+
+function montoCuentaAuxRangoFechas($unidadArray, $unidadCostoArray, $areaCostoArray, $desde, $hasta, $cuenta, $gestion,$cuentaAux){
+    $dbh = new Conexion();
+    $sql="SELECT sum(d.debe)as debe, sum(d.haber)as haber
+        FROM cuentas_auxiliares p 
+        join comprobantes_detalle d on p.codigo=d.cod_cuentaauxiliar and d.cod_cuentaauxiliar='$cuentaAux'
+        join areas a on d.cod_area=a.codigo 
+        join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional 
+        join comprobantes c on d.cod_comprobante=c.codigo
+        where c.cod_gestion=$gestion and p.codigo=$cuenta and c.cod_estadocomprobante<>2 and c.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) and c.cod_unidadorganizacional in ($unidadArray)";
+    //echo $sql;
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $debeX=0; $haberX=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $debeX=$row['debe'];
+      $haberX=$row['haber'];
+    }
+    $variableMontos=array($debeX,$haberX);
+    return($variableMontos); 
+  }
+
   function verificarListaDistribucionGastoSolicitudRecurso($codigoSolicitud){
     $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT * FROM distribucion_gastos_solicitud_recursos where cod_solicitudrecurso=$codigoSolicitud");

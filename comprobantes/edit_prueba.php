@@ -2,6 +2,8 @@
 session_start();
 set_time_limit(0);
 
+$start_time = microtime(true);
+
 setlocale(LC_TIME, "Spanish");
 
 
@@ -122,8 +124,10 @@ $un=0;
 	}
 
 //facturas
- $un=0;
-$stmt = $dbh->prepare("SELECT * FROM facturas_compra");
+$un=0;
+/*TEMPORAL*/
+$stmt = $dbh->prepare("SELECT * FROM facturas_compra f where YEAR(f.fecha)=2022;");
+//$stmt = $dbh->prepare("SELECT * FROM facturas_compra");
 $stmt->execute();
 $arrayFacturasGenerales=[];
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -143,7 +147,8 @@ $arrayFacturasGenerales=[];
 	}
 //estados de Cuentas
 $un=0;
-$stmt = $dbh->prepare("SELECT * FROM estados_cuenta");
+$stmt = $dbh->prepare("SELECT * FROM estados_cuenta e where YEAR(e.fecha)=2022;");
+//$stmt = $dbh->prepare("SELECT * FROM estados_cuenta");
 $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   	 $arrayEstadosCuentas[$un]['cod_comprobantedetalle']=$row['cod_comprobantedetalle'];
@@ -177,8 +182,8 @@ $stmt->execute();
 		    <?php
 			 }
             
-             //LIBRETAS BANCARIAS DETALLE CARGAR
-             $stmt = $dbh->prepare("SELECT p.nombre as banco,dc.* FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo WHERE dc.cod_estadoreferencial=1");
+      //LIBRETAS BANCARIAS DETALLE CARGAR
+      $stmt = $dbh->prepare("SELECT p.nombre as banco,dc.* FROM libretas_bancarias dc join bancos p on dc.cod_banco=p.codigo WHERE dc.cod_estadoreferencial=1");
 			$stmt->execute();
 			$i=0;
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -199,7 +204,7 @@ $stmt->execute();
 		    <?php
 			 }
 
-            //ESTADO DE CUENTAS
+      //ESTADO DE CUENTAS
 			$stmt = $dbh->prepare("SELECT * FROM configuracion_estadocuentas where cod_estadoreferencial=1");
 			$stmt->execute();
 			$i=0;
@@ -355,7 +360,7 @@ $stmt->execute();
 				 	<?php 
                   while ($row = $data->fetch(PDO::FETCH_BOUND)) {
                   	$fechaComprobanteModal=$fechaComprobante;
-					$fechaComprobanteModal = date("Y-m-d",strtotime($fechaComprobanteModal));
+										$fechaComprobanteModal = date("Y-m-d",strtotime($fechaComprobanteModal));
                   	
                   	$vectorFechas=buscarFechasMinMaxComprobante($tipoComprobante, $nroCorrelativo, $globalUnidad, $globalNombreGestion, $globalMesActivo,$_GET['codigo']);
                   	
@@ -541,25 +546,20 @@ $stmt->execute();
 							$totaldebDet+=$row['debe'];$totalhabDet+=$row['haber'];
 							$codigoCuenta=$row['codigo'];
 
-							//echo $unidadDet." ".$areaDet;
-                            $codDetalleSolicitudSis=obtenerCodigoSolicitudRecursoSisComprobante($codDet);
-                            $estiloSolicitudRecurso="";
+							
+              $codDetalleSolicitudSis=obtenerCodigoSolicitudRecursoSisComprobante($codDet);
+              $estiloSolicitudRecurso="";
 							if($codDetalleSolicitudSis!=0){
 							 $estiloSolicitudRecurso="estado";
 							}
 
 							$codActividadProyecto=obtenerCodigoActividadSisComprobante($codDet);
-                            $estiloActividadProyecto="";
+              $estiloActividadProyecto="";
 							if($codActividadProyecto!=0){
 							 $estiloActividadProyecto="estado";
 							}
 
 							$codAccNum=obtenerCodigoAccNumSisComprobante($codDet);
-                            /*$estiloActividadProyecto="";
-							if($codAccNum!=0){
-							 $estiloActividadProyecto="estado";
-							}*/
-
 
 							$codDetalleLibreta=obtenerCodigoLibretaDetalleComprobante($codDet);
 							$descripcionDetalleLibreta=obtenerDescripcionLibretaDetalleComprobante($codDet);
@@ -761,7 +761,7 @@ $stmt->execute();
 			  	                   if($codX==$codDet){
 			  	                     ?><script>abrirFactura(<?=$idFila?>,'<?=$nit?>',<?=$factura?>,'<?=$fechaFac?>','<?=$razon?>',<?=$importe?>,<?=$exento?>,'<?=$autorizacion?>','<?=$control?>','<?=$ice?>','<?=$tipocompra?>','<?=$tasacero?>');</script><?php
 			  	                   }
-			                   } 	
+			                   } 
 
 						      // estados de cuenta
 			                   for ($i=0; $i < count($arrayEstadosCuentas) ; $i++) {
@@ -835,7 +835,7 @@ $stmt->execute();
 						      	</div>
 						      	<div class="col-sm-1">
 						      		 <div class="form-group">
-						      		 	<a href="#" class="btn btn-round btn-default btn-fab btn-sm" onclick="salvarComprobante(1);return false;" title="Salvar Comprobante">
+						      		 	<a href="#" id="boton_salvar_comprobante" class="btn btn-round btn-default btn-fab btn-sm" onclick="salvarComprobante(1);return false;" title="Salvar Comprobante">
 			                        	   <i class="material-icons text-dark">save</i> 
 			                            </a>
 									</div>						      		
@@ -1103,3 +1103,12 @@ require_once 'modal.php';?>
     $("#boton_enviar_formulario").removeClass("d-none");
   });
  </script>
+
+ 						      	<?php
+											$end_time = microtime(true);
+											$duration=$end_time-$start_time;
+											$hours = (int)($duration/60/60);
+											$minutes = (int)($duration/60)-$hours*60;
+											$seconds = (int)$duration-$hours*60*60-$minutes*60;
+											echo $hours.' h, '.$minutes.' m y '.$seconds.' s';
+						      	?>

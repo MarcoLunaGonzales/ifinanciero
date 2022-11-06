@@ -19381,6 +19381,7 @@ function salvarComprobante(tipo){
   if($("#nro_correlativo").val()>0){
     if($("#cantidad_filas").val()>0){
        salvarComprobanteProceso(tipo);
+       $("#boton_salvar_comprobante").addClass("d-none");
     }else{
        Swal.fire("Informativo!", "Debe registrar al menos un detalle!", "warning");
     }

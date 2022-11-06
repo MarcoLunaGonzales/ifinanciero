@@ -105,7 +105,14 @@
       }else{
         $diaAntesCalculoSaldoAnterior=date('Y-m-d',strtotime($desde.'-1 day'));
 
-        $saldoAnteriorArray=montoCuentaRangoFechas($unidadArray, $unidadCostoArray, $areaCostoArray, $desdeInicioAnio, $diaAntesCalculoSaldoAnterior, $cuenta, $NombreGestion);
+        //VEMOS SI ES UNA CUENTA AUXILIAR PARA SACAR EL SALDO ANTERIOR
+        if($porciones[1]=="aux"){
+          $saldoAnteriorArray=montoCuentaAuxRangoFechas($unidadArray, $unidadCostoArray, $areaCostoArray, $desdeInicioAnio, $diaAntesCalculoSaldoAnterior, $cuenta, $NombreGestion, $cuenta);
+        }else{
+          $saldoAnteriorArray=montoCuentaRangoFechas($unidadArray, $unidadCostoArray, $areaCostoArray, $desdeInicioAnio, $diaAntesCalculoSaldoAnterior, $cuenta, $NombreGestion);
+
+        }
+        
         $saldoAnterior=floatval($saldoAnteriorArray[0])-floatval($saldoAnteriorArray[1]);
         $debeAnterior=$saldoAnteriorArray[0];
         $haberAnterior=$saldoAnteriorArray[1];

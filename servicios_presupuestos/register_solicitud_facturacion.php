@@ -231,7 +231,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 $sw="";
 
                                                 //sacamos el monto total de registros
-                                                $sqlControladorTotal="SELECT sfd.precio,sfd.cantidad from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio=$IdServicio  and sfd.cod_claservicio=$codCS and tipo_solicitud=3 and sf.cod_estadosolicitudfacturacion!=2";
+                                                $sqlControladorTotal="SELECT sfd.precio,sfd.cantidad from solicitudes_facturacion sf,solicitudes_facturaciondetalle sfd where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_simulacion_servicio='$IdServicio'  and sfd.cod_claservicio='$codCS' and tipo_solicitud=3 and sf.cod_estadosolicitudfacturacion!=2";
                                                  // echo $sqlControladorTotal;
                                                 $stmtControladorTotal = $dbh->prepare($sqlControladorTotal);
                                                 $stmtControladorTotal->execute();

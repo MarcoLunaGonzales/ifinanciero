@@ -5,6 +5,16 @@ require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+ 
+$arraySql="";
+$codigoArea="";
+$sqlAreas="";
+
+
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $u=$_GET['u'];
@@ -19,25 +29,36 @@ if(isset($_GET['q'])){
   }
   if(isset($_GET['s'])){
     $s=$_GET['s'];
-    //$arraySql=explode("IdArea=",$s);
-    //$codigoArea=trim($arraySql[1]);
-    //$sqlAreas="and sr.cod_area=".$codigoArea;
-    $arraySql=explode("IdArea",$s);
-    $codigoArea='0';  
-    if(isset($arraySql[1])){
+
+    //CORTAMOS LA PARTE DE OFICINA PORQUE EXISTEN 2 IGUALES
+    $s_recortado=substr($s,12);
+    if(strpos($s_recortado,"=")){
+      if(strpos($s_recortado,">=")){
+        $arraySql=explode("IdArea>=",$s_recortado);
+      }else{      
+        $arraySql=explode("IdArea=",$s_recortado);
+      }
       $codigoArea=trim($arraySql[1]);
+      $sqlAreas="and sr.cod_area='".$codigoArea."' ";
+    }else{
+      $arraySql=explode("IdArea in",$s_recortado);
+      //var_dump($arraySql);
+      $codigoArea=trim($arraySql[1]);
+      $sqlAreas="and sr.cod_area in ".$codigoArea;
     }
-    //echo "array sql: ".$arraySql[1];
+
+    //echo "s recortado".$s_recortado;
+    
     if($codigoArea=='0'){
-      $sqlAreas="and (sr.cod_area=0)";// or sr.cod_area=".obtenerValorConfiguracion(65).")             
-      $sqlAreasLista="and (a.codigo=0)";// or a.codigo=".obtenerValorConfiguracion(65).")"             
+      $sqlAreas="and (sr.cod_area>=0) ";// or sr.cod_area=".obtenerValorConfiguracion(65).")             
+      $sqlAreasLista="and (a.codigo>=0) ";// or a.codigo=".obtenerValorConfiguracion(65).")"             
     }else{
       if($q==32 || $q==177){
-        $sqlAreas="and (sr.cod_area ".$codigoArea." or sr.cod_area=".obtenerValorConfiguracion(65)." or sr.cod_area=2957)";
-        $sqlAreasLista="and (a.codigo ".$codigoArea." or a.codigo=".obtenerValorConfiguracion(65)." or sr.cod_area=2957)";
+        $sqlAreas.=$sqlAreas." or (sr.cod_area in (".obtenerValorConfiguracion(65).") or sr.cod_area=2957)";
+        $sqlAreasLista.=$sqlAreas." or (a.codigo in (".obtenerValorConfiguracion(65).") or a.cod_area=2957)";
       }else{
-        $sqlAreas="and (sr.cod_area ".$codigoArea." or sr.cod_area=".obtenerValorConfiguracion(65).")";
-        $sqlAreasLista="and (a.codigo ".$codigoArea." or a.codigo=".obtenerValorConfiguracion(65).")";
+        $sqlAreas.=$sqlAreas." or (sr.cod_area in (".obtenerValorConfiguracion(65).") )";
+        $sqlAreasLista.=$sqlAreas." or (a.codigo in (".obtenerValorConfiguracion(65).") )";
       }                    
     }
     //echo $s."<br>";
@@ -57,8 +78,10 @@ if(isset($_GET['cod_sim'])){
 // Preparamos
 $sqlSR="SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (6,7,4) $sqlServicio $sqlSimCosto $sqlAreas order by sr.numero desc";
+  where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (6,7) $sqlServicio $sqlSimCosto $sqlAreas and sr.cod_estadosolicitudrecurso in (6,7) order by sr.numero desc";
+
 //echo $sqlSR;
+
 $stmt = $dbh->prepare($sqlSR);
 //echo $sqlSR;
 // Ejecutamos
