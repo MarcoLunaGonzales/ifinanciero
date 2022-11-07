@@ -468,6 +468,7 @@ $dbh = new Conexion();
                 <th>CC</th>
                 <th>PERSONAL</th>
                 <th>MONTO</th>
+                <th>PORCENTAJE</th>
                 <!-- <th>HABER</th> -->
               </tr>
             </thead>

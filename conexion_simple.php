@@ -8,7 +8,7 @@ class ConexionSimple extends PDO {
       // private $contrasena = '4868422Marco';
       // private $port = '3306'; 
 
-       //CONEXION IBNORCA PRUEBAS
+      //  // CONEXION IBNORCA PRUEBAS
       // private $tipo_de_base = 'mysql';
       // private $host = 'lpsit.ibnorca.org';
       // private $nombre_de_base = 'bdifinanciero';
@@ -24,6 +24,7 @@ class ConexionSimple extends PDO {
      //  private $contrasena = 'Financiero1bn0';
      //  private $port = '3306'; 
 
+<<<<<<< HEAD
 
    private $tipo_de_base = 'mysql';
    private $host = 'localhost';
@@ -31,6 +32,14 @@ class ConexionSimple extends PDO {
    private $usuario = 'root';
    private $contrasena = '4868422Marco';
    private $port = '3306'; 
+=======
+      private $tipo_de_base = 'mysql';
+      private $host = 'localhost';
+      private $nombre_de_base = 'ibnofinanciero3000';
+      private $usuario = 'root';
+      private $contrasena = '12345678';
+      private $port = '3306'; 
+>>>>>>> 6f0ebb97611f4bf00bc534753a9197d7d33adc7c
 
   
    // private $tipo_de_base = 'mysql';

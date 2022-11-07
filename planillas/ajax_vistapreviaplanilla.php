@@ -4,6 +4,7 @@
         <th>CC</th>
         <th>Personal</th>
         <th>Total Ganado</th>
+        <th>Porcentaje</th>
         <th>-</th>
       </tr>
     </thead>
@@ -59,11 +60,11 @@ for ($i=0; $i <$cont_areas; $i++) {
     $stmtXY->execute();      
     while ($rowXY = $stmtXY->fetch(PDO::FETCH_ASSOC)) {
       $codigoUOXY=$rowXY['codigo'];
-      $totalGanadoAreax=totalGanadoArea($gestionPlanilla, $mesPlanilla, $cod_area_contabilizacionX,$codigoUOXY);//para OI el cod_area_contabilizacionX es lo mismo que cod_areaX. no afecta en nada
+      $totalGanadoAreax=totalGanadoArea($gestionPlanilla, $mesPlanilla, $cod_areaX,$codigoUOXY);//para OI el cod_area_contabilizacionX es lo mismo que cod_areaX. no afecta en nada
+      $array_uo[$codigoUOXY]=$totalGanadoAreax;
       if($totalGanadoAreax>0){
-        $array_uo[$codigoUOXY]=$totalGanadoAreax;
         //sacamos montos por pesonal
-        $sqlPer="SELECT pm.cod_personalcargo,CONCAT_WS(' ',per.primer_nombre,per.paterno,per.materno)as personal,sum(pm.total_ganado*(pad.porcentaje/100))as montoGanado
+        $sqlPer="SELECT pm.cod_personalcargo,CONCAT_WS(' ',per.primer_nombre,per.paterno,per.materno)as personal,sum(pm.total_ganado*(pad.porcentaje/100))as montoGanado,sum(pad.porcentaje)as porcentaje
         from planillas p join planillas_personal_mes pm on p.codigo=pm.cod_planilla join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1 join personal per on pm.cod_personalcargo=per.codigo
         where p.cod_gestion='$gestionPlanilla' and p.cod_mes='$mesPlanilla' and pad.cod_area='$cod_areaX' and pad.cod_uo='$codigoUOXY'
         GROUP BY pm.cod_personalcargo 
@@ -76,7 +77,8 @@ for ($i=0; $i <$cont_areas; $i++) {
           $cod_personalcargo=$rowPerMonto['cod_personalcargo'];
           $personal=$rowPerMonto['personal'];
           $montoGanado=$rowPerMonto['montoGanado'];
-          $arrayPersonal[$cod_personalcargo]=array($personal,$montoGanado);
+          $porcentaje=$rowPerMonto['porcentaje'];
+          $arrayPersonal[$cod_personalcargo]=array($personal,$montoGanado,$porcentaje);
         }
         $array_personal_area[$cod_area_contabilizacionX."_".$codigoUOXY]=$arrayPersonal;
       }
@@ -86,9 +88,9 @@ for ($i=0; $i <$cont_areas; $i++) {
   }else{
     //mostramos solo cabecera
     $totalGanadoAreax=totalGanadoArea($gestionPlanilla, $mesPlanilla, $cod_areaX,null);
+    $array_monto_area[$cod_area_contabilizacionX]+=$totalGanadoAreax;
     if($totalGanadoAreax>0){
-      $array_monto_area[$cod_area_contabilizacionX]+=$totalGanadoAreax;
-      $sqlPer="SELECT pm.cod_personalcargo,CONCAT_WS(' ',per.primer_nombre,per.paterno,per.materno)as personal,sum(pm.total_ganado*(pad.porcentaje/100))as montoGanado
+      $sqlPer="SELECT pm.cod_personalcargo,CONCAT_WS(' ',per.primer_nombre,per.paterno,per.materno)as personal,sum(pm.total_ganado*(pad.porcentaje/100))as montoGanado,sum(pad.porcentaje)as porcentaje
       from planillas p join planillas_personal_mes pm on p.codigo=pm.cod_planilla join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1 join personal per on pm.cod_personalcargo=per.codigo
       where p.cod_gestion='$gestionPlanilla' and p.cod_mes='$mesPlanilla' and pad.cod_area='$cod_areaX'
       GROUP BY pm.cod_personalcargo 
@@ -104,7 +106,8 @@ for ($i=0; $i <$cont_areas; $i++) {
         $cod_personalcargo=$rowPerMonto['cod_personalcargo'];
         $personal=$rowPerMonto['personal'];
         $montoGanado=$rowPerMonto['montoGanado'];
-        $arrayPersonal[$cod_personalcargo]=array($personal,$montoGanado);
+        $porcentaje=$rowPerMonto['porcentaje'];
+        $arrayPersonal[$cod_personalcargo]=array($personal,$montoGanado,$porcentaje);
       }
       $array_personal_area[$cod_area_contabilizacionX]=$arrayPersonal;
     }
@@ -122,12 +125,12 @@ foreach ($array_monto_area as $keyArea => $montoTotalAreal) {
         ?>
         <tr style="color:#8e44ad">
           <td class="text-left" onclick="mostrarFilaTablaHorario('<?=$keyEspecial?>');return false;"><i style="font-size: 18px;" class="material-icons text-success" id="icono_<?=$keyEspecial?>">add_circle</i><b><?=$nombreUOXY?>/<?=$nombre_area?></b></td>
-          <td class="text-left">-</td><td class="text-right"><b><?=formatNumberDec($valorUO)?></b></td></tr><?php 
+          <td class="text-left">-</td><td class="text-right"><b><?=formatNumberDec($valorUO)?></b></td><td></td></tr><?php 
           $totalLiquidoPagable+=$valorUO;
         $arrayPersonal_aux=$array_personal_area[$keyArea."_".$keyUO];
         foreach ($arrayPersonal_aux as $valorPersonal) {
           if($valorPersonal[1]>0){ ?>
-            <tr class="d-none fila_<?=$keyEspecial?>"><td><?=$nombreUOXY?>/<?=$nombre_area?></td><td class="text-left"><?=$valorPersonal[0]?></td><td class="text-right"><?=formatNumberDec($valorPersonal[1])?></td></tr>
+            <tr class="d-none fila_<?=$keyEspecial?>"><td><?=$nombreUOXY?>/<?=$nombre_area?></td><td class="text-left"><?=$valorPersonal[0]?></td><td class="text-right"><?=formatNumberDec($valorPersonal[1])?></td><td class="text-left"> <?=$valorPersonal[2]?> % </td></tr>
             <?php
           }
         }
@@ -137,13 +140,13 @@ foreach ($array_monto_area as $keyArea => $montoTotalAreal) {
     if($montoTotalAreal>0){ ?>
       <tr style="color:#8e44ad">
         <td class="text-left" onclick="mostrarFilaTablaHorario(<?=$keyArea?>);return false;"><i style="font-size: 18px;" class="material-icons text-success" id="icono_<?=$keyArea?>">add_circle</i><b><?=$nameUO?>/<?=$nombre_area?></b></td>
-        <td class="text-left">-</td><td class="text-right"><b><?=formatNumberDec($montoTotalAreal)?></b></td></tr><?php 
+        <td class="text-left">-</td><td class="text-right"><b><?=formatNumberDec($montoTotalAreal)?></b></td><td></td></tr><?php 
         $totalLiquidoPagable+=$montoTotalAreal;
       $arrayPersonal_aux=$array_personal_area[$keyArea];
       foreach ($arrayPersonal_aux as $valorPersonal) {
         if($valorPersonal[1]>0){ ?>
           <!-- <tr class="d-none fila_<?=$gestion?>"> -->
-          <tr class="d-none fila_<?=$keyArea?>" ><td><?=$nameUO?>/<?=$nombre_area?></td><td class="text-left"><?=$valorPersonal[0]?></td><td class="text-right"><?=formatNumberDec($valorPersonal[1])?></td></tr>
+          <tr class="d-none fila_<?=$keyArea?>" ><td><?=$nameUO?>/<?=$nombre_area?></td><td class="text-left"><?=$valorPersonal[0]?></td><td class="text-right"><?=formatNumberDec($valorPersonal[1])?></td><td class="text-left"> <?=$valorPersonal[2]?> % </td></tr>
           <?php
         }
       }
@@ -153,7 +156,7 @@ foreach ($array_monto_area as $keyArea => $montoTotalAreal) {
 }
 
 ?>
-<tr><td><b>TOTAL</b></td><td></td><td class="text-right"><b><?=formatNumberDec($totalLiquidoPagable)?></b></td></tr>
+<tr><td><b>TOTAL</b></td><td></td><td class="text-right"><b><?=formatNumberDec($totalLiquidoPagable)?></b></td><td></td></tr>
 </tbody>
 </table>
 
