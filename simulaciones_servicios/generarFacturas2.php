@@ -13,7 +13,8 @@ require_once 'generar_facturas2_divididas.php';
 
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
-set_time_limit(300);
+set_time_limit(0);
+ini_set("default_socket_timeout", 6000);
 session_start();
 date_default_timezone_set('America/La_Paz');
 $globalUser=$_SESSION["globalUser"];
@@ -51,7 +52,7 @@ try{
         $codigo_facturacion=verificamosFacturaDuplicada($codigo);
         if($codigo_facturacion==null){//no se registró            
             //datos de la solicitud de facturacion           
-            $stmtInfo = $dbh->prepare("SELECT sf.cod_simulacion_servicio,sf.cod_unidadorganizacional,sf.cod_area,sf.cod_tipoobjeto,sf.cod_tipopago,sf.cod_cliente,sf.cod_personal,sf.nit,sf.observaciones,sf.observaciones_2,sf.razon_social,sf.tipo_solicitud,sf.ci_estudiante,sf.siat_tipoidentificacion,sf.siat_complemento,sf.siat_nroTarjeta,sf.fecha_facturacion,(select stp.codigoClasificador from siat_tipos_pago stp where stp.cod_tipopago=sf.cod_tipopago)as siat_tipoPago
+            $stmtInfo = $dbh->prepare("SELECT sf.cod_simulacion_servicio,sf.cod_unidadorganizacional,sf.cod_area,sf.cod_tipoobjeto,sf.cod_tipopago,sf.cod_cliente,sf.cod_personal,sf.nit,sf.observaciones,sf.observaciones_2,sf.razon_social,sf.tipo_solicitud,sf.ci_estudiante,sf.siat_tipoidentificacion,sf.siat_complemento,sf.siat_nroTarjeta,sf.fecha_facturacion,sf.correo_contacto,(select stp.codigoClasificador from siat_tipos_pago stp where stp.cod_tipopago=sf.cod_tipopago)as siat_tipoPago
                  FROM solicitudes_facturacion sf where sf.codigo=$codigo");
             $stmtInfo->execute();
             $resultInfo = $stmtInfo->fetch();    
@@ -74,12 +75,9 @@ try{
             $siat_complemento = $resultInfo['siat_complemento'];
             $siat_nroTarjeta = $resultInfo['siat_nroTarjeta'];
             $fecha_facturacion = $resultInfo['fecha_facturacion'];
-
             $siat_tipoPago = $resultInfo['siat_tipoPago'];
 
-            
-
-            
+            $correoCliente = $resultInfo['correo_contacto'];
 
             $cod_personal=$globalUser;
             $cod_sucursal=obtenerSucursalCodUnidad($cod_unidadorganizacional);
@@ -250,6 +248,7 @@ try{
                                         from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
                                     $stmt5->execute();
                                     $arrayDetalle=[];
+                                    $contadoDetalle=1;
                                     while ($row = $stmt5->fetch()) 
                                     {   
                                         // $cod_claservicio_x=$row['cod_claservicio'];
@@ -260,14 +259,14 @@ try{
                                         $descripcion_alterna_x=$row['descripcion_alterna'];
 
                                         $Objeto_detalle = new stdClass();
-                                        $Objeto_detalle->codDetalle = 1;
+                                        $Objeto_detalle->codDetalle = $contadoDetalle;
                                         $Objeto_detalle->cantidadUnitaria = $cantidad_x;
                                         $Objeto_detalle->precioUnitario = $precio_x;
                                         $Objeto_detalle->descuentoProducto = $descuento_bob_x;
                                         $Objeto_detalle->conceptoProducto = $descripcion_alterna_x;
                                         $arrayDetalle[] = $Objeto_detalle;
-
                                         $monto_totalCab+=$precio_x*$cantidad_x;
+                                        $contadoDetalle++;
                                     }
 
                                     //datos cabecera
@@ -279,32 +278,48 @@ try{
                                     $id_usuario=$globalUser;//ID usuario quien facturó
                                     $usuario=namePersonal_2($id_usuario);//Usuario quien facturó
                                     // var_dump($arrayDetalle);
-                                    $datos=enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_totalCab,$descuentoCab,$monto_finalCab,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle);
-                                    if(isset($datos["estado"]) && isset($datos["idTransaccion"])){//el servicio respondio
-                                        $idTransaccion_x=$datos["idTransaccion"];
-                                        $nroFactura_x=$datos["nroFactura"];
-                                        $mensaje_x=$datos["mensaje"];
+                                    $datosWS=enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_totalCab,$descuentoCab,$monto_finalCab,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle,$correoCliente,$stringFacturasCod);
+                                    // print_r($datosWS);  
+                                    $banderaSW=false;
+                                    if(isset($datosWS->estado) && isset($datosWS->idTransaccion)){//el servicio respondio
+                                        $idTransaccion_x=$datosWS->idTransaccion;
+                                        $nroFactura_x=$datosWS->nroFactura;
+                                        $mensaje_x=$datosWS->mensaje;
+                                        $banderaSW=true;
+                                        if($datosWS->estado==1){//Todo ok con el servicio
+                                            $titulo="Correcto!";
+                                            $estado="success";
+                                        }else{
+                                            $titulo="Informativo!";
+                                            $estado="warning";
+                                        }
+                                    }else{
+                                        //timepo de respuesta solo 3 segundos. avences se lanza
+                                        $datosWS_consulta=verificarExistenciaFacturaSiat($stringFacturasCod);
 
+                                        $titulo="Error!";
+                                        $estado="error";
+                                        $mensaje_x="Hubo un error con el Servicio MinkaSiat.";
+                                        if(isset($datosWS_consulta->estado)){
+                                            if($datosWS_consulta->estado==1){
+                                                $idTransaccion_x=$datosWS_consulta->idTransaccion;
+                                                $nroFactura_x=$datosWS_consulta->nroFactura;
+                                                $mensaje_x=$datosWS_consulta->mensaje;
+                                                $banderaSW=true;
+                                                $titulo="Correcto!";
+                                                $estado="success";
+                                            }
+                                            
+                                        }   
+                                    }
+
+                                    if($banderaSW){
                                         $sqlUpdateFact="UPDATE facturas_venta set idTransaccion_siat='$idTransaccion_x',nro_factura='$nroFactura_x' where codigo in ($stringFacturasCod)";
                                         $stmtUpdateFact = $dbh->prepare($sqlUpdateFact);
                                         $stmtUpdateFact->execute();
-
-                                        if($datos["estado"]==1){//Todo ok con el servicio
-                                            echo "<script>Swal.fire('Correcto!','".$mensaje_x."', 'success');
-                                            </script>";
-                                        }else{
-                                            // $estado_x=$datos["estado"];
-                                            $mensaje_x=$datos["mensaje"];
-                                            echo "<script>Swal.fire('Informativo!','".$mensaje_x."', 'warning');
-                                            </script>";
-                                        }
-                                    }else{
-                                        echo '<script>Swal.fire("Error!","Hubo un error con Servicio MinkaSiat.", "error");
-                                        </script>';
                                     }
-                                    // print_r($datos);
-                                    // header('Location: ../simulaciones_servicios/generarFacturasPrint.php?codigo='.$stringFacturasCod.'&tipo=1&admin='.$adminImpresion);
-                                    
+
+                                    echo "<script>Swal.fire('".$titulo."','".$mensaje_x."', '".$estado."');</script>";
                                     
                                 }                            
                             }else{?>

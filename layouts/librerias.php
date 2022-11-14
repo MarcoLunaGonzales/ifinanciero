@@ -691,7 +691,7 @@
 
     $(document).ready(function() {
       $("#con_fac").mask("AA-AA-AA-AA-AA-AA-AA");
-      $("#nro_tarjeta").mask("0000****0000");
+      $("#nro_tarjeta").mask("0000********0000");
 
       $("#formRegFactCajaChica").submit(function(e) {
       $('<input />').attr('type', 'hidden')

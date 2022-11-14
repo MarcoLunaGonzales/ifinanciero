@@ -114,7 +114,7 @@
       }
     }
     $(document).ready(function() {
-        $("#nro_tarjeta").mask("0000****0000");
+        $("#nro_tarjeta").mask("0000********0000");
         // Setup - add a text input to each footer cell
         $('#libreta_bancaria_reporte_modal tfoot th').each( function () {
             var title = $(this).text();
