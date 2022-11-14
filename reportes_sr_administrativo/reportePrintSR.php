@@ -250,18 +250,10 @@ if($sw_check=="0"){
 
 ?>
                         <tr>
-                          <!-- <td><small><?=$index;?></small></td> -->
-                          <!-- <td><small><?=$unidad;?>- <?=$area;?></small></td> -->
                           <td class="font-weight-bold"><small><?=$numeroSol;?></small></td>
                           <td class="font-weight-bold"><small><?=$nombreComprobante;?></small></td>
-                          
-                          <!-- <td class=""><small><?=$fechaComprobante;?></small></td> -->
                           <td class=""><small><?=$glosaComprobante;?></small></td>
-                          <td class="text-left"><small><?=$nombreProveedor?></small></td>
-                          <!-- <td><small><?=$codigoServicio;?></small></td> -->
-                          <!-- <td><small><?=$nombreCliente;?></small></td> -->
-                          
-                          
+                          <td class="text-left"><small><?=$nombreProveedor?></small></td>                         
                           <td class="text-left"><small><?=obtenerNombreConcatenadoCuentaDetalleSolicitudRecurso($codigo)?></small></td>
                           <td class="text-left"><small><?=$solicitante;?></small></td>
                           <td><small><?=strftime('%d/%m/%Y',strtotime($fecha));?></small></td>                          

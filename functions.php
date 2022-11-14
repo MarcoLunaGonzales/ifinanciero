@@ -512,16 +512,20 @@
 
   function abrevArea($codigo){
      $dbh = new Conexion();
-     $sql="SELECT abreviatura FROM areas where codigo in ($codigo)";
-     $stmt = $dbh->prepare($sql);
-     //echo $sql;
-     $stmt->execute();
-     $cadenaAreas="";
-     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $cadenaAreas=$cadenaAreas."-".$row['abreviatura'];
-     }
-     $cadenaAreas=substr($cadenaAreas, 1);
-     return($cadenaAreas);
+      if($codigo!=0 || $codigo!="NULL" || $codigo!=null || $codigo!=NULL || $codigo>0){
+         $sql="SELECT abreviatura FROM areas where codigo in ($codigo)";
+         $stmt = $dbh->prepare($sql);
+         //echo $sql;
+         $stmt->execute();
+         $cadenaAreas="";
+         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $cadenaAreas=$cadenaAreas."-".$row['abreviatura'];
+         }
+         $cadenaAreas=substr($cadenaAreas, 1);      
+      }else{
+         $cadenaAreas=0;
+      }     
+      return($cadenaAreas);
   }
   function nameCuentaArray($codigo){
      $dbh = new Conexion();

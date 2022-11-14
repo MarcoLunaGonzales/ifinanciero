@@ -6,6 +6,13 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $globalArea=$_SESSION["globalArea"];
 $dbh = new Conexion();
+
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+ 
+
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $u=$_GET['u'];
@@ -45,7 +52,8 @@ $sql="SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as a
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (1,2,3,6,7,4)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc";
 
-  //echo "<br><br><br>".$sql;
+
+//echo "<br><br><br>".$sql;
 
 $stmt = $dbh->prepare($sql);
 // Ejecutamos

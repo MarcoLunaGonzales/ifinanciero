@@ -314,9 +314,11 @@ $i=0;
                       }
                       ?>
                 </select>
+
                 <script>
                     actualizarCombosPickerSR();
                 </script>
+                
               </div>
             </div>
             <div class="col-sm-2">
