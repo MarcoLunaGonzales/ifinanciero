@@ -55,10 +55,10 @@ if(isset($_GET['q'])){
     }else{
       if($q==32 || $q==177){
         $sqlAreas.=$sqlAreas." or (sr.cod_area in (".obtenerValorConfiguracion(65).") or sr.cod_area=2957)";
-        $sqlAreasLista.=$sqlAreas." or (a.codigo in (".obtenerValorConfiguracion(65).") or a.cod_area=2957)";
+        $sqlAreasLista.=$sqlAreasLista." or (a.codigo in (".obtenerValorConfiguracion(65).") or a.codigo=2957)";
       }else{
         $sqlAreas.=$sqlAreas." or (sr.cod_area in (".obtenerValorConfiguracion(65).") )";
-        $sqlAreasLista.=$sqlAreas." or (a.codigo in (".obtenerValorConfiguracion(65).") )";
+        $sqlAreasLista.=$sqlAreasLista." or (a.codigo in (".obtenerValorConfiguracion(65).") )";
       }                    
     }
     //echo $s."<br>";

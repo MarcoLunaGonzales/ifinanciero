@@ -7,6 +7,10 @@ require_once '../styles.php';
 
 $dbh = new Conexion();
 
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
@@ -18,7 +22,7 @@ if(isset($_GET['s'])){
 
   if(isset($arraySql[1])){
     $codigoArea=trim($arraySql[1]);
-    $sqlAreas="and p.cod_area=".$codigoArea;
+    $sqlAreas="and p.cod_area='".$codigoArea."'";
   }
 }
 $query="";

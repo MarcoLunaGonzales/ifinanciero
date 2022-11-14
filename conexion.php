@@ -24,13 +24,12 @@ class Conexion extends PDO {
       // private $usuario = 'ingresobd';
       // private $contrasena = 'ingresoibno';
       // private $port = '3306'; 
-
-      private $tipo_de_base = 'mysql';
-   private $host = 'localhost';
-   private $nombre_de_base = 'financiero06112022';
-   private $usuario = 'root';
-   private $contrasena = '4868422Marco';
-   private $port = '3306'; 
+private $tipo_de_base = 'mysql';
+  private $host = '192.168.20.12';
+  private $nombre_de_base = 'bdifinanciero';
+  private $usuario = 'ingresobd';
+  private $contrasena = 'ingresoibno';
+  private $port = '3306';
 
 public function __construct() {
       //Sobreescribo el método constructor de la clase PDO.
