@@ -11779,7 +11779,7 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
 
 
 
-function enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_total,$descuento,$monto_final,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle)
+function enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_total,$descuento,$monto_final,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle,$correoCliente,$stringFacturasCod)
 {
     
   $url=obtenerValorConfiguracion(102);//direccion de servicio web  
@@ -11808,12 +11808,14 @@ function enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_clien
    "nroTarjeta"=>$siat_nroTarjeta,
    "tipoDocumento"=>$siat_tipoidentificacion,
    "complementoDocumento"=>$siat_complemento,
-   "items"=>$arrayDetalle
+   "correo"=>$correoCliente,
+   "items"=>$arrayDetalle,
+   "codFacturaIbno"=>$stringFacturasCod
+   
    // ,"NombreEstudiante"=>$NombreEstudiante,
    // "periodoFacturado"=>$periodoFacturado
   );  
 
-  // print_r($parametros);
     // $parametros=json_encode($parametros);
     // $ch = curl_init();
     // curl_setopt($ch, CURLOPT_URL,$url);
@@ -11821,10 +11823,12 @@ function enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_clien
     // curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
     // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     // $remote_server_output = curl_exec ($ch);
-    // curl_close ($ch);
+    // curl_close ($ch);      
+    // return json_decode($remote_server_output);
 
     $jsons=callService($parametros, $url);
-    return json_decode($jsons, true);
+    // return json_decode($jsons, true);
+    return json_decode($jsons);
 }
 
 function obtener_contadorOffline()
@@ -11841,5 +11845,20 @@ function obtener_contadorOffline()
   return json_decode($jsons, true);
 }
 
+
+function verificarExistenciaFacturaSiat($stringFacturasCod)
+{
+  $url=obtenerValorConfiguracion(103);//direccion de servicio web  
+  //$url="http://localhost:8080/minka_siat_ibno/wsminka/
+  $url=$url."wsminka/ws_operaciones.php";
+  $sIde = "MinkaSw123*";
+  $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+   "accion"=>"verificarExistenciaFacturaSiat",
+   "codFacturaIbno"=>$stringFacturasCod
+  );
+  $jsons=callService($parametros, $url);
+  return json_decode($jsons);
+}
 
 ?>
