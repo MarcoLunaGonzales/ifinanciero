@@ -8191,9 +8191,9 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
   }
 function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto,$nombre){
     
-    //$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
+    $direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
     //***********
-    $direccion="http://127.0.0.1:8090/ifinanciero/wsifin/";//direccion del servicio web ifinanciero
+    //$direccion="http://127.0.0.1:8090/ifinanciero/wsifin/";//direccion del servicio web ifinanciero
     
 
     $sIde = "libBan";
