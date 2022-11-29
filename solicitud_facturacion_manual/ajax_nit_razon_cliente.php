@@ -55,7 +55,7 @@ $complemento=null;
     </div>
     <div class="col-sm-2">
         <div class="form-group">
-            <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>"/>
+            <input class="form-control" type="text" name="nit" id="nit" required="true" value="<?=$nit;?>"/>
         </div>
     </div>
     <div class="col-sm-1">

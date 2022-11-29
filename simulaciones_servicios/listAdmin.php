@@ -6,6 +6,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
+/*SACAR LOS ESTADOS DEL FINANCIERO O DE IBNORCA*/
+$configuracionEstados=obtenerValorConfiguracion(100);
+
+
 // Datos de Filtro
 $start          = isset($_POST['date_start'])?$_POST['date_start']:"";
 $end            = isset($_POST['date_end'])?$_POST['date_end']:"";
@@ -151,6 +155,34 @@ $item_1=2707;
                            }
 
                           $responsable=namePersonal($codResponsable);
+
+
+                          $idEstadoZ=0;
+                          //revisamos la configuracion de los estados
+                          if($configuracionEstados==1){
+                            $sql2="SELECT ibnorca.id_estadoobjeto(2707, $codigo) AS IdEstado, ibnorca.d_clasificador(ibnorca.id_estadoobjeto(2707, $codigo)) AS descr";
+                            //echo $sql2;
+                            $stmt2 = $dbh -> prepare($sql2);
+                            $stmt2 -> execute();
+                            $idEstadoExt=0;
+                            $nombreEstadoExt="";
+                            if($row2 = $stmt2 -> fetch(PDO::FETCH_ASSOC)){
+                                $idEstadoExt=$row2['IdEstado'];
+                                $nombreEstadoExt=$row2['descr'];
+                            }
+                            $sql3="SELECT e.codigo, e.nombre from estados_simulaciones e where e.codigo_ibnorca=$idEstadoExt";
+
+                            $stmt3 = $dbh -> prepare($sql3);
+                            $stmt3 -> execute();
+                            if($row3 = $stmt3 -> fetch(PDO::FETCH_ASSOC)){
+                                $idEstadoZ=$row3['codigo'];
+                                $nombreEstadoZ=$row3['nombre'];
+                            }
+
+                            $codEstado=$idEstadoZ;
+                            $estado=$nombreEstadoExt;
+                          }
+                          
                           switch ($codEstado) {
                             case 1:
                               $nEst=40;$barEstado="progress-bar-default";$btnEstado="btn-default";

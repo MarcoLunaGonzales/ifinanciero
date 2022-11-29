@@ -95,7 +95,7 @@
   <script>
     $(document).ready(function() {
       // Initialise the wizard
-      demo.initMaterialWizard();
+      //demo.initMaterialWizard();
       setTimeout(function() {
         $('.card.card-wizard').addClass('active');
       }, 600);

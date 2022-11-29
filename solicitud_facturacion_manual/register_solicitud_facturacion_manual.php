@@ -430,7 +430,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 </div>
                                 <div class="col-sm-2">
                                     <div class="form-group">
-                                        <input class="form-control" type="number" name="nit" id="nit" value="<?=$nit;?>" required="true"/>
+                                        <input class="form-control" type="text" name="nit" id="nit" value="<?=$nit;?>" required="true"/>
                                     </div>
                                 </div>
                                 <div class="col-sm-1">
