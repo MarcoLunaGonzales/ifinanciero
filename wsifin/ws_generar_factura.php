@@ -145,8 +145,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 }
                             }
                         }
-                        if($sw_cod_libreta){                            
-                            $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas);//llamamos a la funcion                 
+                        if($sw_cod_libreta){
+
+                            if(isset($datos['usuario'])){
+                                $usuario=$datos['usuario'];
+                            }else{
+                                $usuario="";    
+                            }
+                            if(isset($datos['idCliente'])){
+                                $idCliente=$datos['idCliente'];
+                            }else{
+                                $idCliente=0;
+                            }
+                            if(isset($datos['idIdentificacion'])){
+                                $idIdentificacion=$datos['idIdentificacion'];
+                            }else{
+                                $idIdentificacion="";    
+                            }
+                            if(isset($datos['complementoCiCliente'])){
+                                $complementoCiCliente=$datos['complementoCiCliente'];
+                            }else{
+                                $complementoCiCliente="";    
+                            }
+                            if(isset($datos['nroTarjeta'])){
+                                $nroTarjeta=$datos['nroTarjeta'];
+                            }else{
+                                $nroTarjeta="";    
+                            }
+                            if(isset($datos['CorreoCliente'])){
+                                $CorreoCliente=$datos['CorreoCliente'];
+                            }else{
+                                $CorreoCliente="";    
+                            }
+                            
+                            $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas,$nroTarjeta,$idIdentificacion,$complementoCiCliente,$CorreoCliente,$idCliente,$usuario);//llamamos a la funcion                 
                             $rspArray = explode("###", $rspString);
                             $rsp=$rspArray[0];
                             if($rsp=='0'){

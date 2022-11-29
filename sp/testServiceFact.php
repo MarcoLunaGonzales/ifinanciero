@@ -24,12 +24,22 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"NewGenerateInvoice", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
-              "fechaFactura"=>'2022-05-13', // fecha de la factura
+              "fechaFactura"=>'2022-11-29', // fecha de la factura
               "nitciCliente"=>'123465', //nit o ci de cliente
               "razonSocial"=>'Gutierrez', //razon social
               "importeTotal"=>"34.8", //importe total
               "tipoPago"=>4, // codigo tipo de pago
               "codLibretaDetalle"=>'0', // codigo de libreta bancaria
+              
+
+              "usuario"=>"Tienda virtual",
+              "idCliente"=>146,
+              "idIdentificacion"=>1,
+              "complementoCiCliente"=>"",
+              "nroTarjeta"=>"",
+              "CorreoCliente"=>"",
+
+
               "items"=>$Array // array con el detalle    
               );
 /*$tipoPago=5 Y $tipoPago=6;//deposito en cuenta
@@ -37,12 +47,14 @@ $tipoPago=4;//tarjetas*/
 //$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
     
 
-    $direccion="http://lpsit.ibnorca.org:8008/ifinanciero/wsifin/";
+    // $direccion="http://lpsit.ibnorca.org:8008/ifinanciero/wsifin/";
+$direccion="http://localhost/ifinanciero/wsifin/";
     $parametros=json_encode($parametros);
     // abrimos la sesiรณn cURL
     $ch = curl_init();
     
-    curl_setopt($ch, CURLOPT_URL,$direccion."ws_generate_invoice.php");
+    // curl_setopt($ch, CURLOPT_URL,$direccion."ws_generate_invoice.php");
+    curl_setopt($ch, CURLOPT_URL,$direccion."ws_generar_factura.php");
     // indicamos el tipo de peticiรณn: POST
     curl_setopt($ch, CURLOPT_POST, TRUE);
     // definimos cada uno de los parรกmetros
