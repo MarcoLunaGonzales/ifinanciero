@@ -194,11 +194,13 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                                 
                                 //********
                                 //preparamos datos para facturacion con el SIAT
-                                $sqlInfo="SELECT (select stp.codigoClasificador from siat_tipos_pago stp where stp.cod_tipopago=f.cod_tipopago)as siat_tipoPago from facturas_venta f where f.codigo=$cod_facturaVenta";
-                                $stmtInfo = $dbh->prepare($sqlInfo);
-                                $stmtInfo->execute();
-                                $resultInfo = $stmtInfo->fetch();
-                                $siat_tipoPago = $resultInfo['siat_tipoPago'];
+                                // $sqlInfo="SELECT (select stp.codigoClasificador from siat_tipos_pago stp where stp.cod_tipopago=f.cod_tipopago)as siat_tipoPago from facturas_venta f where f.codigo=$cod_facturaVenta";
+                                // $stmtInfo = $dbh->prepare($sqlInfo);
+                                // $stmtInfo->execute();
+                                // $resultInfo = $stmtInfo->fetch();
+                                // $siat_tipoPago = $resultInfo['siat_tipoPago'];
+
+                                $siat_tipoPago = 33;
 
                                 //datos cabecera
                                 $descuentoCab=0;
