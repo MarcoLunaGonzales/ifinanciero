@@ -414,7 +414,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     </div>
                                 </div>
                                 <!-- <label class="col-sm-1 col-form-label">Nit</label> -->
-                                <div class="col-sm-2" >
+                                <div class="col-sm-1" >
                                     <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
                                     <?php
                                     $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";

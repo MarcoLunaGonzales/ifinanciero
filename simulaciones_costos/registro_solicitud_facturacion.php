@@ -141,6 +141,11 @@ if($cod_facturacion>0){//editar
     $cod_cliente=$resultSimuFact['cod_cliente'];
     $correo_contacto=$resultSimuFact['correo_contacto'];
     $correo_contacto=trim($correo_contacto,",");
+    
+
+    $codigo_identificacion=$resultSimuFact['siat_tipoidentificacion'];
+    $complemento=$resultSimuFact['siat_complemento'];
+    $fecha_facturacion=$resultSimuFact['fecha_facturacion'];
     $nro_tarjeta=$resultSimuFact['nro_tarjeta'];
 
 }else{//registrar
@@ -174,6 +179,12 @@ if($cod_facturacion>0){//editar
         $dias_credito=obtenerValorConfiguracion(58);    
         $correo_contacto=obtenerCorreoEstudiante($ci_estudiante);        
     }
+
+
+    $codigo_identificacion=null;//por defecto ci
+    $complemento="";
+    $fecha_facturacion=date('Y-m-d');
+    $nro_tarjeta="";
 
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
@@ -469,10 +480,29 @@ $contadorRegistros=0;
                                     </div>
                                 </div>
                             </div>
-                            <label class="col-sm-1 col-form-label">Nit</label>
-                            <div class="col-sm-4">
+                            <!-- <label class="col-sm-1 col-form-label">Nit</label> -->
+                            <div class="col-sm-1" >
+                                <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
+                                <?php
+                                $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
+                                $stmtTipoIdentificacion = $dbh->prepare($sql2);
+                                $stmtTipoIdentificacion->execute();
+                                while ($rowTipoIden = $stmtTipoIdentificacion->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigo_identificacionx=$rowTipoIden['codigo'];    
+                                    $nombre_identificacionx=$rowTipoIden['nombre'];
+                                    ?><option <?=($codigo_identificacion==$codigo_identificacionx)?"selected":"";?> value="<?=$codigo_identificacionx?>" class="text-right"><?=$nombre_identificacionx?></option>
+                                   <?php 
+                                } ?> 
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
                                 <div class="form-group">
                                     <input  class="form-control" type="number" name="nit" id="nit" value="<?=$nit;?>" required />
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                        <input class="form-control" type='hidden' name="complemento" id="complemento" placeholder="Complemento" value="<?=$complemento;?>" style="position:absolute;width:100px !important;background:#D2FFE8;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
                             </div>
                         </div>

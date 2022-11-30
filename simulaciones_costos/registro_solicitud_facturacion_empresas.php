@@ -96,6 +96,12 @@ if($cod_facturacion>0){//editar
     $cod_uo= $resultSimuFact['cod_unidadorganizacional'];
     $cod_area= $resultSimuFact['cod_area'];
     $correo_contacto=$resultSimuFact['correo_contacto'];
+
+
+    $codigo_identificacion=$resultSimuFact['siat_tipoidentificacion'];
+    $complemento=$resultSimuFact['siat_complemento'];
+    $fecha_facturacion=$resultSimuFact['fecha_facturacion'];
+    $nro_tarjeta=$resultSimuFact['nro_tarjeta'];
 }else{//registrat
     $fecha_registro = date('Y-m-d');
     $fecha_solicitudfactura = date('Y-m-d');
@@ -116,6 +122,11 @@ if($cod_facturacion>0){//editar
     $dias_credito=obtenerValorConfiguracion(58);
     $correo_contacto=obtenerCorreoEstudiante($nit);
     $correo_contacto=trim($correo_contacto,",");
+
+    $codigo_identificacion=null;//por defecto ci
+    $complemento="";
+    $fecha_facturacion=date('Y-m-d');
+    $nro_tarjeta="";
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
 $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
@@ -217,6 +228,22 @@ $descuento_cliente=0;
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Fecha<br>Facturación</label>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <input class="form-control" type="date" name="fecha_facturacion" id="fecha_facturacion" required="true" value="<?=$fecha_solicitudfactura;?>"/>
+                                </div>
+                            </div>
+                            <label class="col-sm-2 d-none col-form-label" id="div_nrotarjeta1" >Número Tarjeta</label>
+                            <div class="col-sm-4 d-none" id="div_nrotarjeta2" >
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="nro_tarjeta" id="nro_tarjeta" value="<?=$nro_tarjeta;?>"  style='height:40px;font-size:25px;width:80%;background:#D7B3D8 !important; float:left; margin-top:4px; color:#4C079A;'/>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">          
                             <script>var nfac=[];itemTipoPagos_facturacion.push(nfac);var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);</script>
                              <div class="">
@@ -373,10 +400,29 @@ $descuento_cliente=0;
                                     </div>
                                 </div>
                             </div>
-                            <label class="col-sm-1 col-form-label">Nit</label>
-                            <div class="col-sm-4">
+                            <!-- <label class="col-sm-1 col-form-label">Nit</label> -->
+                            <div class="col-sm-1" >
+                                <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
+                                <?php
+                                $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
+                                $stmtTipoIdentificacion = $dbh->prepare($sql2);
+                                $stmtTipoIdentificacion->execute();
+                                while ($rowTipoIden = $stmtTipoIdentificacion->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigo_identificacionx=$rowTipoIden['codigo'];    
+                                    $nombre_identificacionx=$rowTipoIden['nombre'];
+                                    ?><option <?=($codigo_identificacion==$codigo_identificacionx)?"selected":"";?> value="<?=$codigo_identificacionx?>" class="text-right"><?=$nombre_identificacionx?></option>
+                                   <?php 
+                                } ?> 
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
                                 <div class="form-group">
                                     <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true"/>
+                                </div>
+                            </div>
+                             <div class="col-sm-1">
+                                <div class="form-group">
+                                        <input class="form-control" type='hidden' name="complemento" id="complemento" placeholder="Complemento" value="<?=$complemento;?>" style="position:absolute;width:100px !important;background:#D2FFE8;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                 </div>
                             </div>
                         </div>
