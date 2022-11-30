@@ -51,6 +51,11 @@ if ($cod_facturacion > 0){
     $dias_credito=$result['dias_credito'];
     $correo_contacto=$result['correo_contacto'];
 
+    $codigo_identificacion=$result['siat_tipoidentificacion'];
+    $complemento=$result['siat_complemento'];
+    $fecha_facturacion=$result['fecha_facturacion'];
+    $nro_tarjeta=$result['nro_tarjeta'];
+
 }else {
     $nombre_simulacion = $resultServicio['Descripcion'];
      if(isset($_GET['q'])){
@@ -77,6 +82,10 @@ if ($cod_facturacion > 0){
     $correo_contacto=obtenerCorreosCliente($cod_cliente);
     $correo_contacto=trim($correo_contacto,",");
     
+    $codigo_identificacion=null;//por defecto ci
+    $complemento="";
+    $fecha_facturacion=date('Y-m-d');
+    $nro_tarjeta="";
     // echo "aqui";
 }
 $name_tipoPago=obtenerNombreTipoPago($cod_tipoobjeto);
