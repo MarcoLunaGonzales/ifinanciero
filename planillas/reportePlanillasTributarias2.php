@@ -107,21 +107,21 @@
 				                    <td class="text-center small"><?=$row['identificacion'];?></td>
 				                    <td class="text-center small"><?=$row['tipo_identificacion'].$row['tipo_identificacion_otro'];?></td>
 				                    <td class="text-center small">V</td>
-				                    <td class="text-center small"><?=formatNumberDec($row['monto_ingreso_neto']);?></td>
-				                    <td class="text-center small"><?=formatNumberDec($row['minimo_no_imponble']);?></td>
-				                    <td class="small"><?=formatNumberDec($row['importe_sujeto_impuesto_i']);?></td>
-				                    <td class="small"><?=formatNumberDec($row['impuesto_rc_iva']);?></td>
-				                    <td class="small"><?=formatNumberDec($row['minimo_13']);?></td> 
-				                    <td class="small"><?=formatNumberDec($row['impuesto_neto_rc_iva']);?></td>
-				                    <td class="small"><?=formatNumberDec($row['formulario_110_13']);?></td>
-				                    <td class="small"><?=formatNumberDec($row['saldo_favor_fisico']);?></td>
-				                    <td class="text-center small"><?=formatNumberDec($row['saldo_favor_dependiente']);?></td>
-				                    <td class="text-white small" style="background:#e59866;"><?=formatNumberDec($row['saldo_mes_anterior']);?></td>
-				                    <td  class="text-center small"><?=formatNumberDec($row['mantenimiento_saldo_mes_anterior']);?></td>
-				                    <td class="text-center small"><?=formatNumberDec($row['saldo_anterior_actualizado']);?></td>
-				                    <td class="text-center small"><?=formatNumberDec($row['saldo_utilizado']);?></td>				                    
-				                    <td class="text-white text-center small" style="background:red;"><?=formatNumberDec($row['impuesto_rc_iva_retenido']);?></td>
-				                    <td class="text-center small"><?=formatNumberDec($row['saldo_credito_fiscal_mes_siguiente']);?></td>
+				                    <td class="text-center small"><?=number_format($row['monto_ingreso_neto'],0);?></td>
+				                    <td class="text-center small"><?=number_format($row['minimo_no_imponble'],0);?></td>
+				                    <td class="small"><?=number_format($row['importe_sujeto_impuesto_i'],0);?></td>
+				                    <td class="small"><?=number_format($row['impuesto_rc_iva'],0);?></td>
+				                    <td class="small"><?=number_format($row['minimo_13'],0);?></td> 
+				                    <td class="small"><?=number_format($row['impuesto_neto_rc_iva'],0);?></td>
+				                    <td class="small"><?=number_format($row['formulario_110_13'],0);?></td>
+				                    <td class="small"><?=number_format($row['saldo_favor_fisico'],0);?></td>
+				                    <td class="text-center small"><?=number_format($row['saldo_favor_dependiente'],0);?></td>
+				                    <td class="text-white small" style="background:#e59866;"><?=number_format($row['saldo_mes_anterior'],0);?></td>
+				                    <td  class="text-center small"><?=number_format($row['mantenimiento_saldo_mes_anterior'],0);?></td>
+				                    <td class="text-center small"><?=number_format($row['saldo_anterior_actualizado'],0);?></td>
+				                    <td class="text-center small"><?=number_format($row['saldo_utilizado'],0);?></td>				                    
+				                    <td class="text-white text-center small" style="background:red;"><?=number_format($row['impuesto_rc_iva_retenido'],0);?></td>
+				                    <td class="text-center small"><?=number_format($row['saldo_credito_fiscal_mes_siguiente'],0);?></td>
 				                </tr> 
 			                  	<?php 
 			                    $index+=1;
@@ -132,21 +132,21 @@
 	                    <tr class="bg-dark text-white">                  
 		                    <th colspan="9" class="text-center small">Total</th>
 		                    
-		                    <th class="text-center small"><?=formatNumberDec($total_1);?></th>	                    
-		                    <th class="text-center small"><?=formatNumberDec($total_2);?></th>
-		                    <th class="text-center small"><?=formatNumberDec($total_3);?></th>                            
-		                    <th class="text-center small"><?=formatNumberDec($total_4);?></th>
-		                    <th class="text-center small"><?=formatNumberDec($total_5);?></th>
-		                    <th class="text-center small"><?=formatNumberDec($total_6);?></th>
-		                    <th class="text-center small"><?=formatNumberDec($total_7);?></th>
-		                    <th class="text-center small"><?=formatNumberDec($total_8);?></th>	                    
-		                    <th class="text-center small"><?=formatNumberDec($total_9);?></th>
-		                    <th class="text-center small"><?=formatNumberDec($total_10);?></th>                            
-		                    <th class="text-center small"><?=formatNumberDec($total_11);?></th>
-		                    <th class="text-center small"><?=formatNumberDec($total_12);?></th>
-		                    <th class="text-center small"><?=formatNumberDec($total_13);?></th>
-		                    <th class="text-center small"><?=formatNumberDec($total_14);?></th>
-		                    <th class="text-center small"><?=formatNumberDec($total_15);?></th>		                    
+		                    <th class="text-center small"><?=number_format($total_1,0);?></th>	                    
+		                    <th class="text-center small"><?=number_format($total_2,0);?></th>
+		                    <th class="text-center small"><?=number_format($total_3,0);?></th>                            
+		                    <th class="text-center small"><?=number_format($total_4,0);?></th>
+		                    <th class="text-center small"><?=number_format($total_5,0);?></th>
+		                    <th class="text-center small"><?=number_format($total_6,0);?></th>
+		                    <th class="text-center small"><?=number_format($total_7,0);?></th>
+		                    <th class="text-center small"><?=number_format($total_8,0);?></th>	                    
+		                    <th class="text-center small"><?=number_format($total_9,0);?></th>
+		                    <th class="text-center small"><?=number_format($total_10,0);?></th>                            
+		                    <th class="text-center small"><?=number_format($total_11,0);?></th>
+		                    <th class="text-center small"><?=number_format($total_12,0);?></th>
+		                    <th class="text-center small"><?=number_format($total_13,0);?></th>
+		                    <th class="text-center small"><?=number_format($total_14,0);?></th>
+		                    <th class="text-center small"><?=number_format($total_15,0);?></th>		                    
 						</tr>
 	                </tfoot>             
               	</table>                                

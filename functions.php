@@ -6215,7 +6215,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function descripcionClaServicio($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT Descripcion FROM cla_servicios where IdClaServicio=:codigo");
+     $stmt = $dbh->prepare("SELECT Descripcion FROM cla_servicios2 where IdClaServicio=:codigo");
      $stmt->bindParam(':codigo',$codigo);
      $stmt->execute();
      $descripcionX=0;
