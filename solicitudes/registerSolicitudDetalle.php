@@ -315,9 +315,9 @@ $i=0;
                       ?>
                 </select>
 
-                <script>
-                    actualizarCombosPickerSR();
-                </script>
+                <!--script>
+                    //actualizarCombosPickerSR();
+                </script-->
                 
               </div>
             </div>

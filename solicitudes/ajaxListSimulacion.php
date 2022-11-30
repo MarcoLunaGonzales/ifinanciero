@@ -5,10 +5,12 @@ require_once '../functionsGeneral.php';
 require_once '../functions.php';
 require_once '../styles.php';
 
+require_once '../register_logs.php';
+
 $dbh = new Conexion();
 
- error_reporting(E_ALL);
- ini_set('display_errors', '1');
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
 
 $sqlX="SET NAMES 'utf8'";
@@ -39,7 +41,12 @@ if(isset($_GET["sim"])){
   $query="SELECT s.*,p.cod_area FROM simulaciones_costos s join plantillas_costo p on p.codigo=s.cod_plantillacosto  where s.cod_estadosimulacion=3 $sqlAreas order by s.codigo";
  $query2="SELECT s.*,p.cod_area,c.nombre as cliente FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente where s.cod_estadosimulacion=5 $sqlAreas order by s.codigo"; //cod_responsable=$usuario and
 }
+
+log_querys($query,'simulaciones','ERROR 1','-','ajaxListSimulacion.php');
+log_querys($query2,'simulaciones','ERROR 2','-','ajaxListSimulacion.php');
+
 //echo $query."<br>";
+
 //echo $query2;
 
   ?>

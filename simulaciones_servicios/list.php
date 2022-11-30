@@ -166,6 +166,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                           $areaX=abrevArea_solo($codAreaX);
                           $codigoServicio="SIN CODIGO";
                           $sql="SELECT codigo FROM ibnorca.servicios where idServicio='$idServicioX'";
+                          //echo $sql;
                           $stmt1=$dbh->prepare($sql);
                           $stmt1->execute();
                            while ($row1 = $stmt1->fetch(PDO::FETCH_ASSOC)) {
