@@ -1,5 +1,5 @@
 <?php 
-class ConexionSimple extends PDO { 
+class Conexion_Simple extends PDO { 
 
       // private $tipo_de_base = 'mysql';
       // private $host = 'localhost';
@@ -24,14 +24,14 @@ class ConexionSimple extends PDO {
      //  private $contrasena = 'Financiero1bn0';
      //  private $port = '3306'; 
 
-      private $tipo_de_base = 'mysql';
+
+
+   private $tipo_de_base = 'mysql';
       private $host = 'localhost';
       private $nombre_de_base = 'ibnofinanciero3000';
       private $usuario = 'root';
       private $contrasena = '12345678';
       private $port = '3306'; 
-
-
   
    // private $tipo_de_base = 'mysql';
    //    private $host = '192.168.30.35';

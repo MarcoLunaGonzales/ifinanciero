@@ -96,6 +96,7 @@
 		                        $total_14+=round($row['impuesto_rc_iva_retenido'],0);
 		                        $total_15+=round($row['saldo_credito_fiscal_mes_siguiente'],0);
 
+
 		                        ?>
 			                	<tr>			                		
 				                    <td class="text-center small"><?=$nombre_gestion;?></td>

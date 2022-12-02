@@ -68,7 +68,7 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
   $stmtDelete = $dbh->prepare($sqlDelete);
   $stmtDelete->execute();
   //datos estaticos
-  $salario_minimo_no_imponible=obtenerSueldoMinimo()*2;
+  $salario_minimo_no_imponible=round(obtenerSueldoMinimo()*2,0);
   $impuesto_sueldo_gravado=obtenerValorConfiguracionPlanillas(21);
   //insertamos los datos
   $planillas="SELECT pl.cod_personalcargo,pl.afp_1,pl.afp_2,pl.total_ganado,p.cod_mes,p.cod_gestion,(select nombre from gestiones where codigo=p.cod_gestion)as gestion,(select rc.monto_iva from rc_ivapersonal rc where rc.cod_personal=pl.cod_personalcargo and rc.cod_mes=p.cod_mes and rc.cod_gestion=p.cod_gestion and rc.cod_estadoreferencial=1) as monto_iva
@@ -100,33 +100,33 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
     $a_solidario_35000=$resultPatronal['a_solidario_35000'];
 
     $dato_auxiliar1=$afp_1+$afp_2+$a_solidario_13000+$a_solidario_25000+$a_solidario_35000;
-    $monto_de_ingreso_neto=$total_ganado-$dato_auxiliar1;//
+    $monto_de_ingreso_neto=round($total_ganado-$dato_auxiliar1,0);//
     
     if($monto_de_ingreso_neto>$salario_minimo_no_imponible) 
-      $importe_sujeto_a_impuesto_I=$monto_de_ingreso_neto-$salario_minimo_no_imponible;
+      $importe_sujeto_a_impuesto_I=round($monto_de_ingreso_neto-$salario_minimo_no_imponible,0);
     else
       $importe_sujeto_a_impuesto_I=0;//redondear 
 
-    $impuesto_rc_iva=$importe_sujeto_a_impuesto_I*$impuesto_sueldo_gravado/100;//redondear
+    $impuesto_rc_iva=round($importe_sujeto_a_impuesto_I*$impuesto_sueldo_gravado/100,0);//redondear
     if($importe_sujeto_a_impuesto_I>0)
-      $salarios_minimos_nacionales_13=$salario_minimo_no_imponible*$impuesto_sueldo_gravado/100;
+      $salarios_minimos_nacionales_13=round($salario_minimo_no_imponible*$impuesto_sueldo_gravado/100,0);
     else
       $salarios_minimos_nacionales_13=0;
     if($impuesto_rc_iva>$salarios_minimos_nacionales_13)
-      $impuesto_neto_rc_iva= $impuesto_rc_iva-$salarios_minimos_nacionales_13;
+      $impuesto_neto_rc_iva= round($impuesto_rc_iva-$salarios_minimos_nacionales_13,0);
     else
       $impuesto_neto_rc_iva=0;
     //13% del form110
-    $porcentaje_formulario110=$monto_iva;
+    $porcentaje_formulario110=round($monto_iva,0);
     //SALDO A FAVOR DEL FISCO
     //fisco (no se debe redondear)
     if($impuesto_neto_rc_iva>$porcentaje_formulario110)
-      $saldo_favor_fisico=$impuesto_neto_rc_iva-$porcentaje_formulario110;
+      $saldo_favor_fisico=round($impuesto_neto_rc_iva-$porcentaje_formulario110,0);
     else
       $saldo_favor_fisico=0;
     //SALDO A FAVOR DEL DEPENDIENTE
     if($porcentaje_formulario110>$impuesto_neto_rc_iva)
-      $saldo_favor_del_dependiente=$porcentaje_formulario110-$impuesto_neto_rc_iva;
+      $saldo_favor_del_dependiente=round($porcentaje_formulario110-$impuesto_neto_rc_iva,0);
     else
       $saldo_favor_del_dependiente=0;
     //SALDO A FAVOR DEL DEPENDIENTE PERIODO ANTERIOR
@@ -139,7 +139,7 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
           $cod_mes_ant=(int)$cod_mes-1;
         }
         /////////////////////////
-    $saldo_mes_anterior=obtenerSaldoMesAnteriorTrib($cod_personal,$cod_mes_ant,$cod_gestion_ant);
+    $saldo_mes_anterior=round(obtenerSaldoMesAnteriorTrib($cod_personal,$cod_mes_ant,$cod_gestion_ant),0);
     // $saldo_mes_anterior= 6543;
     //MANTENIMIENTO DE VALOR DEL SALDO A FAVOR DEL DEPENDIENTE DEL PERIODO ANTERIOR
     
@@ -152,12 +152,12 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
     $ufv_actual=obtenerUFV($fecha_fin);
 
     // echo $ufv_anterior."-".$ufv_actual."<br>";
-      $mantenimiento_saldo_mes_anterior=($saldo_mes_anterior*($ufv_actual/$ufv_anterior)-$saldo_mes_anterior);
+      $mantenimiento_saldo_mes_anterior=round(($saldo_mes_anterior*($ufv_actual/$ufv_anterior)-$saldo_mes_anterior),0);
       //SALDO DEL PERIODO ANTERIOR ACTUALIZADO
-      $saldo_mes_anterior_actualizado=$saldo_mes_anterior+$mantenimiento_saldo_mes_anterior;
+      $saldo_mes_anterior_actualizado=round($saldo_mes_anterior+$mantenimiento_saldo_mes_anterior,0);
       //SALDO UTILIZADO
       if($saldo_mes_anterior_actualizado<=$saldo_favor_fisico)
-        $saldo_utilizado=$saldo_mes_anterior_actualizado;
+        $saldo_utilizado=round($saldo_mes_anterior_actualizado,0);
       else
       {
         if($saldo_favor_fisico<$saldo_mes_anterior_actualizado)
@@ -167,11 +167,12 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
       }
       //IMPUESTO RC-IVA RETENIDO
       if($saldo_favor_fisico>$saldo_utilizado)
-        $impuesto_rc_iva_retenido=$saldo_favor_fisico-$saldo_utilizado;
+        $impuesto_rc_iva_retenido=round($saldo_favor_fisico-$saldo_utilizado,0);
       else
         $impuesto_rc_iva_retenido=0;
       //SALDO DE CRÉDITO FISCAL A FAVOR DEL DEPENDIENTE PARA EL MES SIGUIENTE
-      $saldo_credito_fiscal_siguiente=$saldo_favor_del_dependiente+$saldo_mes_anterior_actualizado-$saldo_utilizado;
+      $saldo_credito_fiscal_siguiente=round($saldo_favor_del_dependiente+$saldo_mes_anterior_actualizado-$saldo_utilizado,0);
+
       $dbhInstert = new Conexion();
       $sqlInsert="INSERT INTO planillas_tributarias_personal_mes_2 (cod_planillatributaria,cod_personal,monto_ingreso_neto,minimo_no_imponble,importe_sujeto_impuesto_i,impuesto_rc_iva,minimo_13,impuesto_neto_rc_iva,formulario_110_13,saldo_favor_fisico,saldo_favor_dependiente,saldo_mes_anterior,mantenimiento_saldo_mes_anterior,saldo_anterior_actualizado,saldo_utilizado,impuesto_rc_iva_retenido,saldo_credito_fiscal_mes_siguiente) 
      VALUES (
