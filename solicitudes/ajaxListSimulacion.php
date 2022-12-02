@@ -55,23 +55,32 @@ log_querys($query2,'simulaciones','ERROR 2','-','ajaxListSimulacion.php');
      <div class="form-group">
           <select class="selectpicker form-control form-control-sm" data-size="10" data-live-search="true" name="simulaciones" id="simulaciones" data-style="btn-warning" required>
            <?php 
-           $stmt = $dbh->prepare($query);
-           $stmt->execute();
-           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-              $nomArea=abrevArea_solo($row['cod_area']);
-              $codigoSim=$row['codigo'];    
-              ?><option value="<?=$codigoSim?>$$$SIM" class="text-right">(<?=$codigoSim?> - <?=$nomArea?>) <?=$row['nombre']?></option>
-             <?php 
-             } 
-          $stmt2 = $dbh->prepare($query2);
-           $stmt2->execute();
-           while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-              $codigoSim=$row2['codigo'];
-              $cliente=$row2['cliente'];
-              $nomArea=abrevArea_solo($row2['cod_area']);    
-              ?><option value="<?=$codigoSim?>$$$TCP" class="text-right"><?=$row2['nombre']?> - <?=$nomArea?> <?=$cliente?></option>
-             <?php 
-             } ?> 
-           </select>
+            if($query!=""){
+              $stmt = $dbh->prepare($query);
+              $stmt->execute();
+              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $nomArea=abrevArea_solo($row['cod_area']);
+                $codigoSim=$row['codigo'];    
+          ?>
+            <option value="<?=$codigoSim?>$$$SIM" class="text-right">(<?=$codigoSim?> - <?=$nomArea?>) <?=$row['nombre']?></option>
+          <?php 
+              }            
+            }
+
+            if($query2!=""){
+              $stmt2 = $dbh->prepare($query2);
+              $stmt2->execute();
+              while ($row2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                $codigoSim=$row2['codigo'];
+                $cliente=$row2['cliente'];
+                $nomArea=abrevArea_solo($row2['cod_area']);    
+                
+                ?>
+                <option value="<?=$codigoSim?>$$$TCP" class="text-right"><?=$row2['nombre']?> - <?=$nomArea?> <?=$cliente?></option>
+          <?php 
+              }               
+            }
+          ?>
+          </select>
       </div>
     </div>        

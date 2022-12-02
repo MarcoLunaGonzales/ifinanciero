@@ -288,9 +288,7 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                                                     <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
                                                       <i class="material-icons text-success">receipt</i> Generar Factura
                                                     </a>                                                  
-                                                    <!-- <button title="Generar Factura Manual" class="dropdown-item" type="button" data-toggle="modal" data-target="#modalFacturaManual" onclick="agregaDatosFactManual('<?=$datos_FacManual;?>')">
-                                                      <i class="material-icons text-info">receipt</i> Generar Factura Manual
-                                                    </button> --><?php 
+                                                    <?php 
                                                   }  
                                                 }
                                               

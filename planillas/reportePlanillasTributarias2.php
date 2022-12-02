@@ -78,24 +78,25 @@
 						<?php 
 							$index=1;
 							while ($row = $stmtPersonal->fetch()) 
-							{
-		                        
-		                        $total_1+=$row['monto_ingreso_neto'];
-		                        $total_2+=$row['minimo_no_imponble'];
-		                        $total_3+=$row['importe_sujeto_impuesto_i'];
-		                        $total_4+=$row['impuesto_rc_iva'];
-		                        $total_5+=$row['minimo_13'];
-		                        $total_6+=$row['impuesto_neto_rc_iva'];
-		                        $total_7+=$row['formulario_110_13'];
-		                        $total_8+=$row['saldo_favor_fisico'];
-		                        $total_9+=$row['saldo_favor_dependiente'];
-		                        $total_10+=$row['saldo_mes_anterior'];
-		                        $total_11+=$row['mantenimiento_saldo_mes_anterior'];
-		                        $total_12+=$row['saldo_anterior_actualizado'];
-		                        $total_13+=$row['saldo_utilizado'];
-		                        $total_14+=$row['impuesto_rc_iva_retenido'];
-		                        $total_15+=$row['saldo_credito_fiscal_mes_siguiente'];
-		                        
+							{		                        
+
+		                        $total_1+=round($row['monto_ingreso_neto'],0);
+		                        $total_2+=round($row['minimo_no_imponble'],0);
+		                        $total_3+=round($row['importe_sujeto_impuesto_i'],0);
+		                        $total_4+=round($row['impuesto_rc_iva'],0);
+		                        $total_5+=round($row['minimo_13'],0);
+		                        $total_6+=round($row['impuesto_neto_rc_iva'],0);
+		                        $total_7+=round($row['formulario_110_13'],0);
+		                        $total_8+=round($row['saldo_favor_fisico'],0);
+		                        $total_9+=round($row['saldo_favor_dependiente'],0);
+		                        $total_10+=round($row['saldo_mes_anterior'],0);
+		                        $total_11+=round($row['mantenimiento_saldo_mes_anterior'],0);
+		                        $total_12+=round($row['saldo_anterior_actualizado'],0);
+		                        $total_13+=round($row['saldo_utilizado'],0);
+		                        $total_14+=round($row['impuesto_rc_iva_retenido'],0);
+		                        $total_15+=round($row['saldo_credito_fiscal_mes_siguiente'],0);
+
+
 		                        ?>
 			                	<tr>			                		
 				                    <td class="text-center small"><?=$nombre_gestion;?></td>
