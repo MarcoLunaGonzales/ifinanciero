@@ -100,7 +100,7 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
     $a_solidario_35000=$resultPatronal['a_solidario_35000'];
 
     $dato_auxiliar1=$afp_1+$afp_2+$a_solidario_13000+$a_solidario_25000+$a_solidario_35000;
-    $monto_de_ingreso_neto=round($total_ganado-$dato_auxiliar1,0);//
+    $monto_de_ingreso_neto=round($total_ganado-$dato_auxiliar1,2);//
     
     if($monto_de_ingreso_neto>$salario_minimo_no_imponible) 
       $importe_sujeto_a_impuesto_I=round($monto_de_ingreso_neto-$salario_minimo_no_imponible,0);
