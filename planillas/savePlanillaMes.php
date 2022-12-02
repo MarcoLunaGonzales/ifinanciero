@@ -111,6 +111,8 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 	$flagSuccessIP=0;
 	$flagSuccessIPMD=0;
 	$procesado_reprocesado=1;//procesado
+
+	$correlativo_planilla=1;
 		
 	// fin de valores de configruacion
 
@@ -198,10 +200,10 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 		//==== insert de panillas de  personal mes
 		$sqlInsertPlanillas="INSERT into planillas_personal_mes(cod_planilla,cod_personalcargo,cod_gradoacademico,dias_trabajados,horas_pagadas,
 		  haber_basico,bono_academico,bono_antiguedad,monto_bonos,total_ganado,monto_descuentos,afp_1,afp_2,dotaciones,
-		  liquido_pagable,cod_estadoreferencial,created_by,modified_by,procesado_reprocesado,bonos_otros,descuentos_otros,cuenta_habilitada,haber_basico_pactado)
+		  liquido_pagable,cod_estadoreferencial,created_by,modified_by,procesado_reprocesado,bonos_otros,descuentos_otros,cuenta_habilitada,haber_basico_pactado,correlativo_planilla)
 		 values(:cod_planilla,:codigo_personal,:cod_gradoacademico,:dias_trabajados,:horas_pagadas,:haber_basico,:bono_academico,
 		 	:bono_antiguedad,:monto_bonos,:total_ganado,:monto_descuentos,:afp_1,:afp_2,:dotaciones,
-		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by,:procesado_reprocesado,:bonos_otros,:descuentos_otros,:cuenta_habilitada,:haber_basico_pactado)";
+		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by,:procesado_reprocesado,:bonos_otros,:descuentos_otros,:cuenta_habilitada,:haber_basico_pactado,:correlativo_planilla)";
 		$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 		$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
@@ -227,6 +229,7 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 		$stmtInsertPlanillas->bindParam(':bonos_otros',$otros_b);
 		$stmtInsertPlanillas->bindParam(':descuentos_otros',$otros_descuentos);
 		$stmtInsertPlanillas->bindParam(':cuenta_habilitada',$cuenta_habilitada);
+		$stmtInsertPlanillas->bindParam(':correlativo_planilla',$correlativo_planilla);
 		
 		$flagSuccessIP=$stmtInsertPlanillas->execute();
 
@@ -270,6 +273,7 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 		$stmtInsertPlanillaDetalle->bindParam(':a_patronal_sol',$a_patronal_sol);
 		$stmtInsertPlanillaDetalle->bindParam(':total_a_patronal',$total_a_patronal);
 		$flagSuccessIPMD=$stmtInsertPlanillaDetalle->execute();
+		$correlativo_planilla++;
 	}
 	//===fin de planilla previa
 	// if($flagSuccessIP)echo "Planilla Sueldos Personal CORRECTO"."<br>";

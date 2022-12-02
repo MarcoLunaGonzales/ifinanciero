@@ -95,7 +95,7 @@
 		                        $total_13+=$row['saldo_utilizado'];
 		                        $total_14+=$row['impuesto_rc_iva_retenido'];
 		                        $total_15+=$row['saldo_credito_fiscal_mes_siguiente'];
-
+		                        
 		                        ?>
 			                	<tr>			                		
 				                    <td class="text-center small"><?=$nombre_gestion;?></td>

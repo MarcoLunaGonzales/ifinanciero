@@ -261,6 +261,14 @@ function cantidadF($arreglo){
     return($nroCorrelativoCorreo);
   }
 
+  function alghoBolPersonal($cod_personal,$cod_planilla,$cod_mes,$cod_gestion){
+    //generando Clave unico 
+    $nuevo_numero=$cod_personal+$cod_planilla+$cod_mes+$cod_gestion;
+    $cantidad_digitos=strlen($nuevo_numero);
+    $numero_adicional=$nuevo_numero+100+$cantidad_digitos;
+    $numero_adicional_exa=dechex($numero_adicional);//convertimos de decimal a hexadecimal 
+    return $numero_adicional_exa;
+}
    
 //tratando de cerar json para Web service
 
