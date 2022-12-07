@@ -78,9 +78,9 @@
 						<?php 
 							$index=1;
 							while ($row = $stmtPersonal->fetch()) 
-							{		                        
-
-		                        $total_1+=round($row['monto_ingreso_neto'],0);
+							{
+		                        
+		                        $total_1+=round($row['monto_ingreso_neto'],2);
 		                        $total_2+=round($row['minimo_no_imponble'],0);
 		                        $total_3+=round($row['importe_sujeto_impuesto_i'],0);
 		                        $total_4+=round($row['impuesto_rc_iva'],0);
@@ -108,7 +108,7 @@
 				                    <td class="text-center small"><?=$row['identificacion'];?></td>
 				                    <td class="text-center small"><?=$row['tipo_identificacion'].$row['tipo_identificacion_otro'];?></td>
 				                    <td class="text-center small">V</td>
-				                    <td class="text-center small"><?=number_format($row['monto_ingreso_neto'],0);?></td>
+				                    <td class="text-center small"><?=number_format($row['monto_ingreso_neto'],2);?></td>
 				                    <td class="text-center small"><?=number_format($row['minimo_no_imponble'],0);?></td>
 				                    <td class="small"><?=number_format($row['importe_sujeto_impuesto_i'],0);?></td>
 				                    <td class="small"><?=number_format($row['impuesto_rc_iva'],0);?></td>
