@@ -333,7 +333,7 @@ $responsable=namePersonal($codResponsableX);
                   <td class="text-right font-weight-bold"><?=number_format(($totalVariable[2]*$alumnosX), 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($pCostoLocal, 2, '.', ',')?> %</td>
                   <td class="text-right font-weight-bold"><?=number_format(($ejecutadoEgresoX), 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format(($ejecutadoEgresoX/$ejecutadoIngresoX)*100, 2, '.', ',')?> %</td>
+                  <td class="text-right font-weight-bold"><?=number_format(($ejecutadoEgresoX/($totalVariable[2]*$alumnosX))*100, 2, '.', ',')?> %</td>
                 </tr>
                 <tr>
                   <td class="text-left small  text-white" style="background:#C70039">TOTAL COSTO NORMAS</td>
@@ -413,7 +413,7 @@ $responsable=namePersonal($codResponsableX);
                   <td class="text-right font-weight-bold"><?=number_format($sumaCostoVariable, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format(($sumaCostoVariable/($sumaIngresosPropuesta))*100, 2, '.', ',')?> %</td>
                   <td class="text-right font-weight-bold"><?=number_format($sumaCostoVariableEjecutado, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format(($sumaCostoVariableEjecutado/($sumaIngresosPropuestaEjecutado))*100, 2, '.', ',')?> %</td>
+                  <td class="text-right font-weight-bold"><?=number_format(($sumaCostoVariableEjecutado/($sumaCostoVariable))*100, 2, '.', ',')?> %</td>
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">PAGO IMPUESTOS (IVA  <?=$iva?> % + IT <?=$it?> % = <?=$iva+$it?> %)</td>

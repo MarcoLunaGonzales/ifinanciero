@@ -146,7 +146,7 @@ foreach ($array_monto_area as $keyArea => $montoTotalAreal) {
       foreach ($arrayPersonal_aux as $valorPersonal) {
         if($valorPersonal[1]>0){ ?>
           <!-- <tr class="d-none fila_<?=$gestion?>"> -->
-          <tr class="d-none fila_<?=$keyArea?>" ><td><?=$nameUO?>/<?=$nombre_area?></td><td class="text-left"><?=$valorPersonal[0]?></td><td class="text-right"><?=formatNumberDec($valorPersonal[1])?></td><td class="text-left"> <?=$valorPersonal[2]?> % </td></tr>
+          <tr class="d-none fila_<?=$keyArea?>" ><td><?=$nameUO?>/<?=$nombre_area?></td><td class="text-left"><?=$valorPersonal[0]?></td><td class="text-right"><?=formatNumberDec($valorPersonal[1])?></td><td class="text-right"> <?=$valorPersonal[2]?> % </td></tr>
           <?php
         }
       }

@@ -238,7 +238,6 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $flagSuccessDet=$stmtInsertDet->execute();
   $ordenDetalle++;
 
-
   //RC IVA
   $sqlRCIVA="SELECT per.primer_nombre,per.paterno,sum(pm.rc_iva)as rc_iva 
     from planillas p, planillas_personal_mes_patronal pm,personal per where p.codigo=pm.cod_planilla and p.cod_gestion='$gestionPlanilla' and p.cod_mes='$mesPlanilla'  and pm.cod_personal_cargo=per.codigo
