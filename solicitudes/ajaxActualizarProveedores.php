@@ -16,7 +16,7 @@ $dbh = new Conexion();
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
-set_time_limit(300);
+set_time_limit(10000);
 
 $lista=obtenerListaProveedoresDelServicio();//empresa
 $contador=0;
@@ -93,11 +93,13 @@ foreach ($listaDocente->lstPersona as $listas) {
 
 	$nombre=$NombreRazon." ".$paterno." ".$materno."";
 
-	$sql="INSERT INTO af_proveedores (codigo,cod_empresa,nombre,nit,created_by,modified_by,direccion,telefono,email,personacontacto,email_personacontacto,cod_estado)
-        VALUES ('$codigo','$cod_empresa','$nombre','$nit','$idUsuario','$idUsuario','$direccion','$telefono','$email','$personacontacto','$email_personacontacto','$cod_estado')";
-     $stmt = $dbh->prepare($sql);
-     $stmt->execute();  
-     $contador++;
+	if(existeProveedor($codigo)==0){
+		$sql="INSERT INTO af_proveedores (codigo,cod_empresa,nombre,nit,created_by,modified_by,direccion,telefono,email,personacontacto,email_personacontacto,cod_estado)
+	        VALUES ('$codigo','$cod_empresa','$nombre','$nit','$idUsuario','$idUsuario','$direccion','$telefono','$email','$personacontacto','$email_personacontacto','$cod_estado')";
+	     $stmt = $dbh->prepare($sql);
+	     $stmt->execute();    	
+    }
+    $contador++;
 }
 $listaAuditor=obtenerListaPersonalAuditorServicio();//auditor
 foreach ($listaAuditor->lstPersona as $listas) {
@@ -121,11 +123,13 @@ foreach ($listaAuditor->lstPersona as $listas) {
 
 	$nombre=$NombreRazon." ".$paterno." ".$materno."";
 
-	$sql="INSERT INTO af_proveedores (codigo,cod_empresa,nombre,nit,created_by,modified_by,direccion,telefono,email,personacontacto,email_personacontacto,cod_estado)
-        VALUES ('$codigo','$cod_empresa','$nombre','$nit','$idUsuario','$idUsuario','$direccion','$telefono','$email','$personacontacto','$email_personacontacto','$cod_estado')";
-     $stmt = $dbh->prepare($sql);
-     $stmt->execute();  
-     $contador++;
+	if(existeProveedor($codigo)==0){
+		$sql="INSERT INTO af_proveedores (codigo,cod_empresa,nombre,nit,created_by,modified_by,direccion,telefono,email,personacontacto,email_personacontacto,cod_estado)
+	        VALUES ('$codigo','$cod_empresa','$nombre','$nit','$idUsuario','$idUsuario','$direccion','$telefono','$email','$personacontacto','$email_personacontacto','$cod_estado')";
+	     $stmt = $dbh->prepare($sql);
+	     $stmt->execute();     	
+	} 
+    $contador++;
 }
 $listaConsultor=obtenerListaPersonalConsultorServicio();//consultor
 foreach ($listaConsultor->lstPersona as $listas) {
@@ -149,10 +153,12 @@ foreach ($listaConsultor->lstPersona as $listas) {
 
 	$nombre=$NombreRazon." ".$paterno." ".$materno."";
 
-	$sql="INSERT INTO af_proveedores (codigo,cod_empresa,nombre,nit,created_by,modified_by,direccion,telefono,email,personacontacto,email_personacontacto,cod_estado)
-        VALUES ('$codigo','$cod_empresa','$nombre','$nit','$idUsuario','$idUsuario','$direccion','$telefono','$email','$personacontacto','$email_personacontacto','$cod_estado')";
-     $stmt = $dbh->prepare($sql);
-     $stmt->execute();  
+    if(existeProveedor($codigo)==0){
+		$sql="INSERT INTO af_proveedores (codigo,cod_empresa,nombre,nit,created_by,modified_by,direccion,telefono,email,personacontacto,email_personacontacto,cod_estado)
+	        VALUES ('$codigo','$cod_empresa','$nombre','$nit','$idUsuario','$idUsuario','$direccion','$telefono','$email','$personacontacto','$email_personacontacto','$cod_estado')";
+	     $stmt = $dbh->prepare($sql);
+	     $stmt->execute();     	
+	 } 
      $contador++;
 }
 

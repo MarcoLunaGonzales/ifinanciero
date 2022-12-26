@@ -16,6 +16,7 @@ class Conexion extends PDO {
       // private $contrasena = 'Financiero1bn0';
       // private $port = '3306'; 
 
+
      //CONEXION INTERNA PRUEBAS 
       private $tipo_de_base = 'mysql';
       private $host = 'localhost';
@@ -23,8 +24,9 @@ class Conexion extends PDO {
       private $usuario = 'root';
       private $contrasena = '12345678';
 
-      private $port = '3306'; 
 
+
+      private $port = '3306'; 
   
 
 public function __construct() {

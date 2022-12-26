@@ -106,6 +106,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             $stmt1->bindColumn('cod_tipocurso', $codTipoCursoX);
             $stmt1->bindColumn('dias_curso', $diasCursoX);
             $stmt1->bindColumn('fecha_curso', $fechaCursoX);
+            $stmt1->bindColumn('cod_cliente', $codClienteX);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -210,13 +211,18 @@ if($codEstadoSimulacionXX==3){
 						  		<input class="form-control" type="text" name="estado" value="<?=$estadoX?>" id="estado" readonly/>
 							</div>
 				    </div>
-						<!--<div class="col-sm-4 bg-warning text-dark">
-              <label class="">Simulaci&oacute;n para</label>
-							<h4><b id="tipo_ibnorca"><?=$simulacionEn?></b></h4>-->
 					  			<input class="form-control" type="hidden" readonly name="ibnorca" value="<?=$simulacionEn?>" id="ibnorca"/>
-							
 						<!--</div>-->
 					</div>
+          <div class="row">
+            <div class="col-sm-10">
+                  <div class="form-group">
+                  <label class="bmd-label-static">Cliente</label>
+                  <input type="hidden" name="codigo_cliente" id="codigo_cliente" value="<?=$codClienteX?>">
+                  <input class="form-control" type="text" name="nombre_cliente" value="<?=$codClienteX?>" id="nombre_cliente" readonly/>
+              </div>
+            </div>
+          </div>
 				</div>
 			</div>
 			<div class="card col-sm-7">

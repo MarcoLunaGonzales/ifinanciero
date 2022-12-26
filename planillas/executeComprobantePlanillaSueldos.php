@@ -238,7 +238,6 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $flagSuccessDet=$stmtInsertDet->execute();
   $ordenDetalle++;
 
-
   //RC IVA
   $sqlRCIVA="SELECT per.primer_nombre,per.paterno,sum(pm.rc_iva)as rc_iva 
     from planillas p, planillas_personal_mes_patronal pm,personal per where p.codigo=pm.cod_planilla and p.cod_gestion='$gestionPlanilla' and p.cod_mes='$mesPlanilla'  and pm.cod_personal_cargo=per.codigo
@@ -294,6 +293,26 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     $paternoPer=$rowAtraso['paterno'];
     $atrasos=$rowAtraso['atrasos'];
     $cod_cuenta=117;
+    $glosaDetalle1=$primer_nombrePer." ".$paternoPer." Otros descuentos del mes de ".$namemesPlanilla."/".$anioPlanilla;
+    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$atrasos','$glosaDetalle1','$ordenDetalle')";
+    $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+    $flagSuccessDet=$stmtInsertDet->execute();
+    $ordenDetalle++;
+  }
+
+  //Descuento Especial
+  $sqlRCIVA="SELECT dm.cod_personal,p.primer_nombre,p.paterno,SUM(dm.monto) as atrasos
+    from descuentos_personal_mes dm join personal p on dm.cod_personal=p.codigo
+    where dm.cod_gestion='$gestionPlanilla' and dm.cod_mes='$mesPlanilla' and dm.cod_estadoreferencial=1 and dm.cod_descuento=8
+    GROUP BY dm.cod_personal
+    HAVING atrasos>0";
+  $stmtAtrasos = $dbh->prepare($sqlRCIVA);
+  $stmtAtrasos->execute();      
+  while ($rowAtraso = $stmtAtrasos->fetch(PDO::FETCH_ASSOC)) {    
+    $primer_nombrePer=$rowAtraso['primer_nombre'];
+    $paternoPer=$rowAtraso['paterno'];
+    $atrasos=$rowAtraso['atrasos'];
+    $cod_cuenta=154;
     $glosaDetalle1=$primer_nombrePer." ".$paternoPer." Otros descuentos del mes de ".$namemesPlanilla."/".$anioPlanilla;
     $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$atrasos','$glosaDetalle1','$ordenDetalle')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);

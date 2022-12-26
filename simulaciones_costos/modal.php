@@ -148,6 +148,36 @@
                              </div>
                            </div>  
                       </div>
+                       
+                      <div class="row">
+                           <label class="col-sm-2 col-form-label">Cliente</label>
+                           <div class="col-sm-6">
+                            <div class="row">
+                              <div class="col-sm-12">
+                                <div class="form-group" id="lista_clientes">
+                                    <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="modal_codcliente" id="modal_codcliente" data-style="btn btn-info"  required>
+              
+                                    <<option value="0">-- --</option>
+                                    <?php
+                                     $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM clientes c where c.cod_estadoreferencial=1 order by 2");
+                                     $stmt->execute();
+                                      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                      $codigoX=$row['codigo'];
+                                      $nombreX=$row['nombre'];
+                                      //$tipoX=$row['tipo'];
+                                      //$abrevX=$row['abreviatura'];
+                                       ?>
+                                      <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                      <?php
+                                        }
+                                        ?>
+                                    </select>
+                                  </div>
+                              </div> 
+                            </div>
+                           </div>
+                      </div><!--row-->   
+
                       <div class="row">
                           <label class="col-sm-2 col-form-label">Fecha Curso</label>
                            <div class="col-sm-10">                     

@@ -24,7 +24,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"NewGenerateInvoice", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
-              "fechaFactura"=>'2022-11-29', // fecha de la factura
+              "fechaFactura"=>'2022-12-26', // fecha de la factura
               "nitciCliente"=>'4868422016', //nit o ci de cliente
               "razonSocial"=>'Luna', //razon social
               "importeTotal"=>"34.8", //importe total
@@ -48,7 +48,7 @@ $tipoPago=4;//tarjetas*/
     
 
     // $direccion="http://lpsit.ibnorca.org:8008/ifinanciero/wsifin/";
-$direccion="http://localhost/ifinanciero/wsifin/";
+$direccion="http://localhost:8090/ifinanciero/wsifin/";
     $parametros=json_encode($parametros);
     // abrimos la sesiรณn cURL
     $ch = curl_init();

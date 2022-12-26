@@ -8068,10 +8068,12 @@ function editarDatosSimulacion(){
   var cod_i=$("#cod_ibnorca").val();
   var nombre_s=$("#nombre").val();
   var fecha_s=$("#fecha_curso").val();
+  var codigocliente_s=$("#codigo_cliente").val();
   $("#modal_nombresim").val(nombre_s);
   $("#modal_fechacurso").val(fecha_s);
-  //$("#modal_tiposim").val(cod_i);
-  //$('.selectpicker').selectpicker("refresh");
+  $("#modal_codcliente").val(codigocliente_s);
+  console.log("codigoCliente: "+codigocliente_s);
+  $('.selectpicker').selectpicker("refresh");
 
   $("#modalEditSimulacion").modal("show");
 }
