@@ -15,12 +15,12 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 	set_time_limit(0);  
   $porcentaje_aport_afp=obtenerValorConfiguracionPlanillas(12);
 	$porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
-	set_time_limit(0);
+	// set_time_limit(0);
   $mes=strtoupper(nombreMes($cod_mes));
   $gestion=nameGestion($cod_gestion);
 
-  $sql="SELECT p.codigo, p.primer_nombre as nombres,CONCAT(p.paterno,' ', p.materno) as apellidos,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,pm.bono_antiguedad,pm.bonos_otros,pm.total_ganado,pm.descuentos_otros,pm.correlativo_planilla,pm.liquido_pagable,
-    pm.dias_trabajados,pm.afp_1,pm.afp_2,pp.seguro_de_salud,pp.riesgo_profesional,pp.rc_iva,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,p.ing_planilla
+  $sql="SELECT p.codigo, p.primer_nombre as nombres,CONCAT(p.paterno,' ', p.materno) as apellidos,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,(select a.nombre from areas a where a.codigo=p.cod_area) as area,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,pm.bono_antiguedad,pm.bonos_otros,pm.total_ganado,pm.descuentos_otros,pm.correlativo_planilla,pm.liquido_pagable,
+    pm.dias_trabajados,pm.afp_1,pm.afp_2,pp.seguro_de_salud,pp.riesgo_profesional,pp.rc_iva,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,p.ing_planilla,p.identificacion
     FROM personal p
     join planillas_personal_mes pm on pm.cod_personalcargo=p.codigo
       join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
@@ -54,8 +54,12 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
     // $index_planilla=1;
     // $urlBoletas="192.168.100.243/ifinanciero/boletas/";
     $urlBoletas=obtenerValorConfiguracion(104);
+    $urlFirma="../assets/img/".obtenerValorConfiguracion(105);
+    echo $urlFirma;
 	while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
 		$cod_personal=$result['codigo'];
+		// $saldo_rciva=0;
+		$saldo_rciva=obtenerSaldoMesAnteriorTrib($cod_personal,$cod_mes,$cod_gestion);
 		//generando Clave unico 
 		// $nuevo_numero=$cod_personal+$cod_planilla+$cod_mes+$cod_gestion;
 		// $cantidad_digitos=strlen($nuevo_numero);

@@ -6,8 +6,8 @@ $cod_planilla = $_GET["codigo_planilla"];
 $cod_gestion = $_GET["cod_gestion"];
 $cod_mes = $_GET["cod_mes"];//
 
-// $cod_personal=90;
-$cod_personal=0;
+$cod_personal=90;
+// $cod_personal=0;
 $gestion=nameGestion($cod_gestion);
 $mes=strtoupper(nombreMes($cod_mes));
 
