@@ -30,16 +30,13 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "importeTotal"=>"34.8", //importe total
               "tipoPago"=>4, // codigo tipo de pago
               "codLibretaDetalle"=>'0', // codigo de libreta bancaria
-              
-
               "usuario"=>"Tienda virtual",
               "idCliente"=>146,
               "idIdentificacion"=>5,
               "complementoCiCliente"=>"",
               "nroTarjeta"=>"",
               "CorreoCliente"=>"",
-
-
+              
               "items"=>$Array // array con el detalle    
               );
 /*$tipoPago=5 Y $tipoPago=6;//deposito en cuenta
@@ -48,7 +45,7 @@ $tipoPago=4;//tarjetas*/
     
 
     // $direccion="http://lpsit.ibnorca.org:8008/ifinanciero/wsifin/";
-$direccion="http://localhost:8090/ifinanciero/wsifin/";
+$direccion="http://localhost/ifinanciero/wsifin/";
     $parametros=json_encode($parametros);
     // abrimos la sesiรณn cURL
     $ch = curl_init();

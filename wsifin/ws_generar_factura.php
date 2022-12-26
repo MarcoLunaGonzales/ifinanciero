@@ -35,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mensaje="ERROR";
     $sw_cod_libreta=true;
     $sucursalId=null;$pasarelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;$CodLibretaDetalle=null;$tipoPago=null;
+    $idIdentificacion=null;
     if(isset($datos['accion'])&&isset($datos['sIdentificador'])&&isset($datos['sKey']))
     {
         if($datos['sIdentificador']=="facifin"&&$datos['sKey']=="AX546321asbhy347bhas191001bn0rc4654")
@@ -51,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if(isset($datos['tipoPago'])) $tipoPago=$datos['tipoPago'];//recibimos el tipo de pago
                     if(isset($datos['codLibretaDetalle']))$CodLibretaDetalle=$datos['codLibretaDetalle'];//recibimos el importe total
                     if(isset($datos['items'])) $items=$datos['items'];//recibimos array de detalle
+
+                    if(isset($datos['idIdentificacion'])) $idIdentificacion=$datos['idIdentificacion'];//recibimos array de detalle
                     $cont_items=0;
                     $importeTotal_x=0;
                     $sw=true;
@@ -90,6 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $estado=10;
                             $mensaje = "algún item con cantidad incorrecta";
                         }
+
+
                         if($suscripcionId>0 || $pagoCursoId==0){
                             $normas=1;
                         }
@@ -126,6 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }elseif($items==null || $cont_items<=0){
                         $estado=6;
                         $mensaje = "Items Vacío";
+                    }elseif($idIdentificacion==null || $idIdentificacion=='' || $idIdentificacion==' '){
+                        $estado=6;
+                        $mensaje = "Tipo de indentificación incorrecta";
                     }elseif(!$sw){
                         //mostrará el error de los items 
                     }else{
@@ -157,11 +165,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             }else{
                                 $idCliente=0;
                             }
-                            if(isset($datos['idIdentificacion'])){
-                                $idIdentificacion=$datos['idIdentificacion'];
-                            }else{
-                                $idIdentificacion="";    
-                            }
+                            // if(isset($datos['idIdentificacion'])){
+                            //     $idIdentificacion=$datos['idIdentificacion'];
+                            // }else{
+                            //     $idIdentificacion="";    
+                            // }
                             if(isset($datos['complementoCiCliente'])){
                                 $complementoCiCliente=$datos['complementoCiCliente'];
                             }else{
