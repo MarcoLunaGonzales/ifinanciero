@@ -47,7 +47,7 @@ foreach ($estado_asignacion_af as $valor ) {
 $sqlActivos="SELECT aa.cod_activosfijos, af.codigoactivo, af.activo, 
 (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=aa.cod_unidadorganizacional)as cod_unidadorganizacional,
 (select a.abreviatura from areas a where a.codigo=aa.cod_area)as cod_area, 
-DATE_FORMAT(aa.fechaasignacion ,'%d/%m/%Y')as fechaasignacion, (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal, aa.cod_estadoasignacionaf,(select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=aa.cod_estadoasignacionaf) as estadoAsigAF,DATE_FORMAT(aa.fecha_recepcion,'%d/%m/%Y')as fecha_recepcion, aa.observaciones_recepcion, DATE_FORMAT(aa.fecha_devolucion,'%d/%m/%Y')as fecha_devolucion, aa.observaciones_devolucion
+DATE_FORMAT(aa.fechaasignacion ,'%d/%m/%Y')as fechaasignacion, (select CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) from personal p where p.codigo=cod_personal)as cod_personal, aa.cod_estadoasignacionaf,(select eaf.nombre from estados_asignacionaf eaf where eaf.codigo=aa.cod_estadoasignacionaf) as estadoAsigAF,DATE_FORMAT(aa.fecha_recepcion,'%d/%m/%Y')as fecha_recepcion, aa.observaciones_recepcion, DATE_FORMAT(aa.fecha_devolucion,'%d/%m/%Y')as fecha_devolucion, aa.observaciones_devolucion, aa.estadobien_asig
 from activosfijos af, activofijos_asignaciones aa where 
 af.codigo=aa.cod_activosfijos and af.cod_estadoactivofijo=1 and aa.cod_estadoasignacionaf in ($estadoAsigAFString) and aa.cod_unidadorganizacional in ($unidadOrgString) and aa.cod_area in ($areaString) and 
 aa.codigo in (select max(asig.codigo)ultimocodigo from activofijos_asignaciones asig GROUP BY asig.cod_activosfijos) 

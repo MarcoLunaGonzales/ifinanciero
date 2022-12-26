@@ -253,7 +253,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     $rc_ivaPer=$rowRCIVA['rc_iva'];
     $cod_cuenta=132;
     $glosaDetalle1=$primer_nombrePer." ".$paternoPer." retención 13% RC IVA mes de ".$namemesPlanilla."/".$anioPlanilla;
-    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta_personal','0','$codUOCentroCosto','$codAreaCentroCosto','0','$rc_ivaPer','$glosaDetalle1','$ordenDetalle')";
+    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$rc_ivaPer','$glosaDetalle1','$ordenDetalle')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);
     $flagSuccessDet=$stmtInsertDet->execute();
     $ordenDetalle++;
@@ -269,13 +269,12 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $stmtAtrasos = $dbh->prepare($sqlRCIVA);
   $stmtAtrasos->execute();      
   while ($rowAtraso = $stmtAtrasos->fetch(PDO::FETCH_ASSOC)) {    
-
     $primer_nombrePer=$rowAtraso['primer_nombre'];
     $paternoPer=$rowAtraso['paterno'];
     $atrasos=$rowAtraso['atrasos'];
     $cod_cuenta=117;
     $glosaDetalle1=$primer_nombrePer." ".$paternoPer." descuento por atraso mes de ".$namemesPlanilla."/".$anioPlanilla;
-    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta_personal','0','$codUOCentroCosto','$codAreaCentroCosto','0','$atrasos','$glosaDetalle1','$ordenDetalle')";
+    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$atrasos','$glosaDetalle1','$ordenDetalle')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);
     $flagSuccessDet=$stmtInsertDet->execute();
     $ordenDetalle++;
@@ -295,7 +294,27 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     $atrasos=$rowAtraso['atrasos'];
     $cod_cuenta=117;
     $glosaDetalle1=$primer_nombrePer." ".$paternoPer." Otros descuentos del mes de ".$namemesPlanilla."/".$anioPlanilla;
-    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta_personal','0','$codUOCentroCosto','$codAreaCentroCosto','0','$atrasos','$glosaDetalle1','$ordenDetalle')";
+    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$atrasos','$glosaDetalle1','$ordenDetalle')";
+    $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+    $flagSuccessDet=$stmtInsertDet->execute();
+    $ordenDetalle++;
+  }
+
+  //Descuento Especial
+  $sqlRCIVA="SELECT dm.cod_personal,p.primer_nombre,p.paterno,SUM(dm.monto) as atrasos
+    from descuentos_personal_mes dm join personal p on dm.cod_personal=p.codigo
+    where dm.cod_gestion='$gestionPlanilla' and dm.cod_mes='$mesPlanilla' and dm.cod_estadoreferencial=1 and dm.cod_descuento=8
+    GROUP BY dm.cod_personal
+    HAVING atrasos>0";
+  $stmtAtrasos = $dbh->prepare($sqlRCIVA);
+  $stmtAtrasos->execute();      
+  while ($rowAtraso = $stmtAtrasos->fetch(PDO::FETCH_ASSOC)) {    
+    $primer_nombrePer=$rowAtraso['primer_nombre'];
+    $paternoPer=$rowAtraso['paterno'];
+    $atrasos=$rowAtraso['atrasos'];
+    $cod_cuenta=154;
+    $glosaDetalle1=$primer_nombrePer." ".$paternoPer." Otros descuentos del mes de ".$namemesPlanilla."/".$anioPlanilla;
+    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$atrasos','$glosaDetalle1','$ordenDetalle')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);
     $flagSuccessDet=$stmtInsertDet->execute();
     $ordenDetalle++;
@@ -328,13 +347,13 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     $haber=0;    
   }
   $cod_cuenta="306";
-  $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$diferencia','$glosaDetalleGeneral','$ordenDetalle')";
+  $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','$debe','$haber','$glosaDetalleGeneral','$ordenDetalle')";
   $stmtInsertDet = $dbh->prepare($sqlInsertDet);
   $flagSuccessDet=$stmtInsertDet->execute();
   $ordenDetalle++;
 
   //indicamos que ya se realizo el comprbante      
-  $stmtUdatePlanilla = $dbh->prepare("UPDATE planillas set comprobante=$codComprobante where codigo=$codigo_planilla");
+  $stmtUdatePlanilla = $dbh->prepare("UPDATE planillas set comprobante='$codComprobante' where codigo=$codigo_planilla");
   $stmtUdatePlanilla->execute();
 
    ?>

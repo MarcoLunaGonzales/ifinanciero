@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $accion=$datos['accion']; //recibimos la accion
                 if($accion=="NewGenerateInvoice"){//nombre de la accion
                     if(isset($datos['sucursalId'])) $sucursalId=$datos['sucursalId'];//recibimos el codigo de la sucursal
-                    if(isset($datos['sucursalId'])) $pasarelaId=$datos['pasarelaId'];//recibimos paralela
+                    if(isset($datos['pasarelaId'])) $pasarelaId=$datos['pasarelaId'];//recibimos paralela
                     if(isset($datos['fechaFactura'])) $fechaFactura=strval($datos['fechaFactura']);//recibimos fecha de factura
                     if(isset($datos['nitciCliente'])) $nitciCliente=$datos['nitciCliente'];//recibimos ci o nit del cliente
                     if(isset($datos['razonSocial'])) $razonSocial=strval($datos['razonSocial']);//recibimos razon social
