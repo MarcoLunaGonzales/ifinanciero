@@ -11892,4 +11892,20 @@ function obtenerFacturaBase64Siat($cod_factura){
   $jsons=callService($parametros, $url);
   return json_decode($jsons);
 }
+
+
+function anulacionFacturaSiat($idTransaccionSiat)
+{
+  $url=obtenerValorConfiguracion(102);//direccion de servicio web  
+  //$url="http://localhost:8080/minka_siat_ibno/wsminka/ws_generarFactura.php";//direccion de servicio web  
+  $sIde = "MinkaSw123*";
+  $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+   "accion"=>"anularFacturaSiat",
+   "idTransaccionSiat"=>$idTransaccionSiat
+  ); 
+  $jsons=callService($parametros, $url);
+  return json_decode($jsons);
+}
+
 ?>
