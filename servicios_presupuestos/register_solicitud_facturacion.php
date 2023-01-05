@@ -552,11 +552,18 @@ function valida(f) {
     }
     var cod_tipopago=f.elements["cod_tipopago"].value;
     var cod_defecto_deposito_cuenta=$("#cod_defecto_deposito_cuenta").val();
+    var tipo_documento_id=$("#tipo_documento").val();
+    console.log("tipo doc id: "+tipo_documento_id)
+
     if(cod_tipopago==cod_defecto_deposito_cuenta){
         if(f.elements["cantidad_archivosadjuntos"].value==0){
              var msg = "Por favor agregue Archivo Adjunto.";        
             ok = false;
         }
+    }
+    if(tipo_documento_id==0 && tipo_documento_id==""){
+        var msg = "Seleccione el Tipo de Documento de Identidad (CI, Nit, etc.)";        
+        ok = false;
     }
     var correo_contacto=f.elements["correo_contacto"].value;
         if(correo_contacto=="" || correo_contacto==null || correo_contacto==" "){

@@ -13791,12 +13791,11 @@ function ajaxClienteContactoNormas(combo){
     ajax.onreadystatechange=function() {
       if (ajax.readyState==4) {
         contenedor.innerHTML = ajax.responseText;
-        $('.selectpicker').selectpicker(["refresh"]);   
         ajaxCliente_nit_razonsocialNormas(cod_cliente);       
+        $('.selectpicker').selectpicker(["refresh"]);   
       }
     }
-    ajax.send(null)  
-
+    ajax.send(null) 
   }else{
 
   }
@@ -17742,7 +17741,7 @@ function facturarEstadosCuenta(){
       }
   };
   // alert(saldo_libreta_x+"-"+monto_factura);
-  if(redondeo(saldo_libreta_x) == redondeo(monto_factura)){ //saldo + 0.5 para la validacion al facturar
+  if(redondeo(saldo_libreta_x) >= redondeo(monto_factura)){ //saldo + 0.5 para la validacion al facturar
     seleccionar_estado_cuenta_sol_fac(codDetalle.join(","));
   }else{
     Swal.fire("Informativo", "La suma del monto de los estados de cuenta es diferente al de la factura (Monto total estado de cuenta:"+numberFormat(saldo_libreta_x,2)+").", "warning");
@@ -20467,8 +20466,8 @@ function mostrarComplemento(){
     }else{
       $("#nit").attr("placeholder","INGRESE EL DOCUMENTO");
     }
-    
   }
+  $('.selectpicker').selectpicker(["refresh"]);    
 }
 $(document).ready(function (){
     mostrarComplemento();

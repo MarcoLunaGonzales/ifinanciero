@@ -427,7 +427,7 @@ $contadorRegistros=0;
                             <label class="col-sm-2 col-form-label">Cliente</label>
                             <div class="col-sm-4">
                                 <div class="form-group" >                                                            
-                                    <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContacto(this);" data-live-search="true" >
+                                    <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" data-live-search="true" >
                                         <option value=""></option>
                                         <?php 
                                         $queryTipoObjeto = "SELECT * from clientes where cod_estadoreferencial=1 order by nombre";
@@ -470,10 +470,10 @@ $contadorRegistros=0;
                             </div>                    
                         </div>
                         <!-- fin cliente  -->
-
+                    <div id="contenedor_razon_nit">
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Razón Social</label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <div id="contenedor_razonsocial">
                                         <input class="form-control" type="text" name="razon_social" id="razon_social"  value="<?=$razon_social;?>" required />    
@@ -481,8 +481,8 @@ $contadorRegistros=0;
                                 </div>
                             </div>
                             <!-- <label class="col-sm-1 col-form-label">Nit</label> -->
-                            <div class="col-sm-1" >
-                                <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
+                            <div class="col-sm-2" >
+                                <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-danger" title="Tipo de documento" onChange='mostrarComplemento();' >
                                 <?php
                                 $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
                                 $stmtTipoIdentificacion = $dbh->prepare($sql2);
@@ -517,6 +517,9 @@ $contadorRegistros=0;
                             </div>
                         </div>
                         
+                    </div>
+                        
+
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Observaciones * 1</label>
                             <div class="col-sm-10">
@@ -875,11 +878,17 @@ $contadorRegistros=0;
         }
         var cod_tipopago=f.elements["cod_tipopago"].value;
         var cod_defecto_deposito_cuenta=$("#cod_defecto_deposito_cuenta").val();
+        var tipo_documento_id=$("#tipo_documento").val();
+        console.log("tipo doc id: "+tipo_documento_id)
         if(cod_tipopago==cod_defecto_deposito_cuenta){
             if(f.elements["cantidad_archivosadjuntos"].value==0){
                  var msg = "Por favor agregue Archivo Adjunto.";        
                 ok = false;
             }
+        }
+        if(tipo_documento_id==0 && tipo_documento_id==""){
+            var msg = "Seleccione el Tipo de Documento de Identidad (CI, Nit, etc.)";        
+            ok = false;
         }
         var correo_contacto=f.elements["correo_contacto"].value;
         if(correo_contacto=="" || correo_contacto==null || correo_contacto==" "){

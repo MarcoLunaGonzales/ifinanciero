@@ -16,7 +16,9 @@ $globalArea=$_SESSION["globalArea"];
 $globalAdmin=$_SESSION["globalAdmin"];
 //datos registrado de la simulacion en curso
 
-$sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where 
+$sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x, DATE_FORMAT(sf.fecha_facturacion,'%d/%m/%Y')as fecha_facturacion_x, 
+  (select st.abreviatura from siat_tipos_documentoidentidad st where st.codigo=sf.siat_tipoidentificacion)as abrevTipoDoc 
+  FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where 
   cod_estadosolicitudfacturacion in (3,4) order by codigo desc limit 0,100";
  //echo $sql;
   $stmt = $dbh->prepare($sql);
@@ -28,6 +30,7 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
   $stmt->bindColumn('cod_area', $cod_area);  
   $stmt->bindColumn('fecha_registro_x', $fecha_registro);
   $stmt->bindColumn('fecha_solicitudfactura_x', $fecha_solicitudfactura);
+  $stmt->bindColumn('fecha_facturacion_x', $fecha_facturacion_x);
   $stmt->bindColumn('cod_tipoobjeto', $cod_tipoobjeto);
   $stmt->bindColumn('cod_tipopago', $cod_tipopago);
   $stmt->bindColumn('cod_cliente', $cod_cliente);
@@ -43,6 +46,10 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
   $stmt->bindColumn('codigo_alterno', $codigo_alterno);
   $stmt->bindColumn('obs_devolucion', $obs_devolucion);
   $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas, 7 capcitacion estudaintes grupal
+  $stmt->bindColumn('correo_contacto', $correoSF);
+  $stmt->bindColumn('siat_tipoidentificacion', $siatTipoDocIdentificacion);
+  $stmt->bindColumn('abrevTipoDoc', $siatTipoDocAbrev);
+
   ?>
   <div class="content">
     <div class="container-fluid">
@@ -64,7 +71,7 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                             <th><small>#Sol.</small></th>
                             <th><small>Responsable</small></th>
                             <th><small>Codigo<br>Servicio</small></th>                            
-                            <th><small>Fecha<br>Registro</small></th>
+                            <th><small>Fecha<br>Registro / Facturacion</small></th>
                             <th><small>Importe<br>(BOB)</small></th>                              
                             <th><small>Razón Social</small></th>
                             <th><small>Concepto</small></th>                            
@@ -114,6 +121,7 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                               break;
                             }
 
+                            $datosFacturacion=$razon_social."<br>"."<span style='color:red'>".$siatTipoDocAbrev."-".$nit."</span>";
 
                             //VERIFICAMOS SI YA TIENE FACTURA GENERADA Y ESTA ACTIVA                           
                             $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");
@@ -176,7 +184,7 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                             $name_area_simulacion=trim(abrevArea($cod_area_simulacion),'-');
                             // --------
                             
-                            $responsable=namePersonal($cod_personal);//nombre del personal
+                            $responsable=namePersonal_2($cod_personal);//nombre del personal
                             // $nombre_tipopago=nameTipoPagoSolFac($cod_tipopago);
                             $string_formaspago=obtnerFormasPago($codigo_facturacion);
                             $nombre_area=trim(abrevArea($cod_area),'-');//nombre del area
@@ -198,9 +206,9 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                                 <td class="text-right"><small><?=$nro_correlativo;?></small></td>
                                 <td class="text-left"><small><?=$responsable;?></small></td>
                                 <td class="text-left"><small><?=$codigo_alterno?></small></td>
-                                <td><small><?=$fecha_registro;?></small></td>                                                              
+                                <td><small><?=$fecha_registro;?><br><span style="color:#ff0000;"><?=$fecha_facturacion_x;?></span></small></td>                                                              
                                 <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                              
-                                <td class="text-left text-uppercase font-weight-bold"><small><?=$razon_social;?></small></td>
+                                <td class="text-left text-uppercase font-weight-bold"><small><?=$datosFacturacion;?></small></td>
                                 <td class="text-left"><small><small><?=$concepto_contabilizacion;?></small></small></td>                                
                                 <td>
                                   <?php if($cod_estado_factura_x==3){
@@ -214,9 +222,10 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                                 <!--td style="color:#298A08;"><small><?=$nro_fact_x;?><br><span style="color:#DF0101;"><?=$cadenaFacturasM;?></span></small></td-->
                                 <td class="text-left" style="color:#ff0000;"><small><small><?=$string_formaspago;?></small></small></td>
                                 <td class="td-actions text-right">
+                                  <i class="material-icons text-danger" title="<?=$correoSF;?>">mail</i>
                                   <?php
                                   if($globalAdmin==1){
-                                      if($codEstado==3){ ?>                                          
+                                      if($codEstado==3 && $siatTipoDocIdentificacion>0){ ?>                     
                                         <div class="btn-group dropdown">
                                           <button type="button" class="btn <?=$btnEstado?> dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                              <small>Generar</small>

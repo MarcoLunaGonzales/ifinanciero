@@ -393,7 +393,7 @@ $descuento_cliente=0;
 
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Razón Social</label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <div id="contenedor_razonsocial">
                                         <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>    
@@ -401,8 +401,8 @@ $descuento_cliente=0;
                                 </div>
                             </div>
                             <!-- <label class="col-sm-1 col-form-label">Nit</label> -->
-                            <div class="col-sm-1" >
-                                <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
+                            <div class="col-sm-2" >
+                                <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-danger" title="Tipo de documento" onChange='mostrarComplemento();' required="true">
                                 <?php
                                 $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
                                 $stmtTipoIdentificacion = $dbh->prepare($sql2);

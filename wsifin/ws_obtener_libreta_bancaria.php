@@ -216,7 +216,7 @@ if($nombreLibreta!=null){
         FROM libretas_bancariasdetalle ce where ce.cod_libretabancaria=$codigoLib and  ce.cod_estadoreferencial=1 $sqlFiltroDetalle order by ce.fecha_hora desc";
      }
      
-     echo $sqlDetalle;
+     //echo $sqlDetalle;
 
      $stmtFacDetalle = $dbh->prepare($sqlDetalle);
      $resultadoQuery = $stmtFacDetalle->execute();

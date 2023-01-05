@@ -13,8 +13,10 @@ require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once  '../fpdf_html.php';
 
-
 $dbh = new Conexion();
+
+$bd_siat=obtenerValorConfiguracion(106);
+
 //creamos el archivo txt
 echo "<table><td>Nº</td><td>ESPECIFICACION</td><td>FECHA DE LA FACTURA</td><td>N° DE LA FACTURA</td><td>CODIGO DE AUTORIZACION</td><td>NIT / CI CLIENTE</td><td>COMPLEMENTO</td><td>NOMBRE O RAZON SOCIAL</td><td>IMPORTE TOTAL DE LA VENTA</td><td>IMPORTE ICE</td><td>IMPORTE IEHD
 </td><td>IMPORTE IPJ</td><td>TASAS</td><td>OTROS NO SUJETOS AL IVA</td><td>EXPORTACIONES Y OPERACIONES EXENTAS</td><td>VENTAS GRAVADAS A TASA CERO</td><td>SUBTOTAL</td><td>DESCUENTOS, BONIFICACIONES Y REBAJAS SUJETAS AL IVA</td><td>IMPORTE GIFT CARD</td><td>IMPORTE BASE PARA DEBITO FISCAL</td><td>DEBITO FISCAL</td><td>ESTADO</td><td>CODIGO DE CONTROL</td><td>TIPO DE VENTA</td>";
@@ -38,7 +40,8 @@ if($_GET["fecha_desde"]==""){
 }
 
 $nombre_gestion=nameGestion($gestion);
-$sql="SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and cod_unidadorganizacional in ($unidad) ORDER BY nro_factura asc"; //MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion
+$sql="SELECT *,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,
+(select s.siat_cuf from ".$bd_siat.".salida_almacenes s where s.cod_salida_almacenes=f.idTransaccion_siat)as cuf from facturas_venta f where f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidad) ORDER BY f.fecha_factura, f.nro_factura asc"; //MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion
 // echo $sql; 
 $stmt2 = $dbh->prepare($sql);
 $stmt2->execute();
@@ -63,6 +66,7 @@ $stmt2->bindColumn('importe', $importe);
 $stmt2->bindColumn('observaciones', $observaciones);
 $stmt2->bindColumn('cod_estadofactura', $cod_estadofactura);
 $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
+$stmt2->bindColumn('cuf', $cufSiat);
 
 	$index=1;           
 	while ($row = $stmt2->fetch()) {
@@ -104,6 +108,12 @@ $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
 	$razon_social=trim($razon_social);
     $nro_autorizacion=trim($nro_autorizacion);
     $codigo_control=trim($codigo_control);
+
+  /*SIAT AUTORIZACION CUF*/
+  if($nro_autorizacion==1 && $cufSiat<>""){
+    $nro_autorizacion=$cufSiat;
+  }
+
 
 	//agregamos los items al archivo	
 	echo "<tr><td>".$index."</td><td>2</td><td>".$fecha_factura."</td><td>".$nro_factura."</td><td>".$nro_autorizacion."</td><td>".$nit."</td><td></td><td>".$razon_social."</td><td>".number_format($importe,2,'.',',')."</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>".number_format($importe,2,'.',',')."</td><td>0.00</td><td>0.00</td><td>".number_format($importe,2,'.',',')."</td><td>".number_format($debito_fiscal,2,'.',',')."</td><td>".$nombre_estado."</td><td>".$codigo_control."</td><td>0</td></tr>";

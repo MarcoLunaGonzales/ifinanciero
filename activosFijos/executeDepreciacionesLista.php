@@ -75,6 +75,9 @@ $stmt->bindColumn('estado', $estado);
                                     <a target="_blank" href="<?=$urlImp;?>?comp=<?=$cod_comprobante;?>&mon=1">
                                       <i class="material-icons" title='Imprimir Comprobante' style="color:red">assignment</i>
                                     </a>
+                                    <!--a target="_blank" href="activosFijos/executeComprobanteDepreciacionRestart.php?codigo=<?=$codigo;?>&comprobante=<?=$cod_comprobante;?>">
+                                      <i class="material-icons" title='Reescribir en Comprobante Existente' style="color:black">refresh</i-->
+                                    </a>
                                   <?php }
                                   ?>
                                 </td>

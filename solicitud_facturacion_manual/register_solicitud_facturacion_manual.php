@@ -414,8 +414,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     </div>
                                 </div>
                                 <!-- <label class="col-sm-1 col-form-label">Nit</label> -->
-                                <div class="col-sm-1" >
-                                    <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
+                                <div class="col-sm-2" >
+                                    <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-success" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
                                     <?php
                                     $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
                                     $stmtTipoIdentificacion = $dbh->prepare($sql2);
@@ -446,6 +446,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 </div>
                               </div>
                             </div> -->
+                        </div>
+                        <!-- fin razon social y nit -->
 
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Correo De Contacto <br>Para Envío De Factura.</label>
@@ -455,8 +457,6 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- fin razon social y nit -->
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Observaciones * 1</label>
                             <div class="col-sm-10">

@@ -72,16 +72,6 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
         $llaveDosificacion = null;
         $fecha_limite_emision = null;
 
-        // $sqlInfo="SELECT d.codigo,d.nro_autorizacion, d.llave_dosificacion,d.fecha_limite_emision
-        //         from dosificaciones_facturas d where d.cod_sucursal='$sucursalId' and d.fecha_limite_emision>='$fecha_actual' and d.cod_estado=1 order by codigo";
-        // $stmtInfo = $dbh->prepare($sqlInfo);
-        // // echo $sqlInfo;
-        // $stmtInfo->execute();
-        // $resultInfo = $stmtInfo->fetch();  
-        // $cod_dosificacionfactura = $resultInfo['codigo'];  
-        // $nroAutorizacion = $resultInfo['nro_autorizacion'];
-        // $llaveDosificacion = $resultInfo['llave_dosificacion'];
-        // $fecha_limite_emision = $resultInfo['fecha_limite_emision'];
         if($nroAutorizacion==null || $nroAutorizacion=='' || $nroAutorizacion==' '){                    
             return "11###";//No tiene registrado La dosificación para la facturación
         }else{
