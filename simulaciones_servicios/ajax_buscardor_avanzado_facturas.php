@@ -30,6 +30,10 @@ $interno=$_GET['interno'];
 $cod_factura=$_GET['cod_factura'];
 
 
+$url_list_siat=obtenerValorConfiguracion(103);
+
+
+
 $sql="SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,idTransaccion_siat
  from facturas_venta f where cod_estadofactura in (1,2,3)";
 if($razon_social_f!=""){

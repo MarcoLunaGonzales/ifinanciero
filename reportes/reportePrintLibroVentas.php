@@ -8,6 +8,8 @@ require_once  __DIR__.'/../fpdf_html.php';
 
 $dbh = new Conexion();
 
+$bd_siat=obtenerValorConfiguracion(106);
+
 //RECIBIMOS LAS VARIABLES
 $gestion = $_POST["gestiones"];
 //$cod_mes_x = $_POST["cod_mes_x"];
@@ -34,7 +36,7 @@ if (isset($_POST["check_rs_librocompras"])) {
   $check_rs_librocompras=$_POST["check_rs_librocompras"]; 
   if($check_rs_librocompras){
     $razon_social=$_POST["razon_social"]; 
-    $sql_rs=" and razon_social like '%$razon_social%'";
+    $sql_rs=" and f.razon_social like '%$razon_social%'";
   }else{
     $sql_rs="";
   }
@@ -42,7 +44,13 @@ if (isset($_POST["check_rs_librocompras"])) {
   $sql_rs="";
 }
 
-$stmt2 = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_factura,'%d/%m/%Y')as fecha_factura_x from facturas_venta where fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and cod_unidadorganizacional in ($stringUnidadesX) $sql_rs ORDER BY fecha_factura, nro_factura asc");
+$sql="SELECT *,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,
+(select s.siat_cuf from ".$bd_siat.".salida_almacenes s where s.cod_salida_almacenes=f.idTransaccion_siat)as cuf 
+from facturas_venta f where f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($stringUnidadesX) $sql_rs ORDER BY f.fecha_factura, f.nro_factura asc";
+
+//echo $sql;
+
+$stmt2 = $dbh->prepare($sql);
 $stmt2->execute();
 //resultado
 $stmt2->bindColumn('codigo', $codigo);
@@ -64,6 +72,7 @@ $stmt2->bindColumn('codigo_control', $codigo_control);
 $stmt2->bindColumn('observaciones', $observaciones);
 $stmt2->bindColumn('cod_estadofactura', $cod_estadofactura);
 $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
+$stmt2->bindColumn('cuf', $cufSiat);
 
 //datos de la factura
 $stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in (5)");
@@ -172,6 +181,12 @@ $html.=  '<header class="header">'.
                             $importe_debito_fiscal=$subtotal-$rebajas_sujetos_iva;
                             $debito_fiscal=13*$importe_debito_fiscal/100;
 
+                            /*SIAT AUTORIZACION CUF*/
+                            if($nro_autorizacion==1 && $cufSiat<>""){
+                              $nro_autorizacion=$cufSiat;
+                              $nro_autorizacion=substr($cufSiat, 0, 20)."<br>".substr($cufSiat, 20, 20)."<br>".substr($cufSiat, 40, 20);
+                            }
+
                             $total_importe+=$importe;
                             $total_importe_no_iva+=$importe_no_iva;
                             $total_extento+=$extento;
@@ -180,6 +195,7 @@ $html.=  '<header class="header">'.
                             $total_rebajas_sujetos_iva+=$rebajas_sujetos_iva;
                             $total_importe_debito_fiscal+=$importe_debito_fiscal;
                             $total_debito_fiscal+=$debito_fiscal;
+
 
                             
                               // <!-- el ultimo no sale -->
@@ -192,7 +208,7 @@ $html.=  '<header class="header">'.
                                 <td class="text-right small"><small>'.$nit.'</small></td>                                
                                 <td class="text-left small"><small><small>'.mb_strtoupper($razon_social,"utf-8").'</small></small></td>
                                 <td class="text-center small"><small>'.$codigo_control.'</small></td>
-                                <td class="text-right small"><small>'.$nro_autorizacion.'</small></td>
+                                <td class="text-left small"><small>'.$nro_autorizacion.'</small></td>
                                 <td class="text-right small"><small>'.formatNumberDec($importe).'</small></td>
                                 <td class="text-right small"><small>'.formatNumberDec($importe_no_iva).'</small></td>
                                 <td class="text-right small"><small>'.formatNumberDec($extento).'</small></td>

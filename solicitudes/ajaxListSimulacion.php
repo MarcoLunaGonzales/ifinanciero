@@ -16,7 +16,11 @@ ini_set('display_errors', '1');
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
 $stmtX->execute();
-$usuario=$_SESSION['globalUser'];
+
+$usuario=0;
+if(isset($_SESSION['globalUser'])){
+  $usuario=$_SESSION['globalUser'];  
+}
 
 $sqlAreas="";
 if(isset($_GET['s'])){

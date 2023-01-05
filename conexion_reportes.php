@@ -8,12 +8,12 @@ class Conexion extends PDO {
     // private $contrasena = 'minka123';
     // private $port = '4606';  
 
-   private $tipo_de_base = 'mysql';
-   private $host = 'localhost';
-   private $nombre_de_base = 'financiero06112022';
-   private $usuario = 'root';
-   private $contrasena = '4868422Marco';
-   private $port = '3306'; 
+   // private $tipo_de_base = 'mysql';
+   // private $host = 'localhost';
+   // private $nombre_de_base = 'financiero06112022';
+   // private $usuario = 'root';
+   // private $contrasena = '4868422Marco';
+   // private $port = '3306'; 
 
 
 public function __construct() {

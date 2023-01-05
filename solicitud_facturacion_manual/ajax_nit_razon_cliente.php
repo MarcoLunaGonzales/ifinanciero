@@ -27,7 +27,7 @@ $complemento=null;
 ?> 
 <div class="row">
 	<label class="col-sm-2 col-form-label">Razón Social</label>
-	<div class="col-sm-5">
+	<div class="col-sm-4">
 	    <div class="form-group">                                    
 	        <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>                                        
 	    </div>
@@ -40,8 +40,7 @@ $complemento=null;
 	</div> -->
 
 	<div class="col-sm-2">
-        <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-success" data-show-subtext="true" data-live-search="true" title="Tipo de documento" onChange='mostrarComplemento();' required="true">
-            <option value="">Tipo de documento</option>
+        <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-danger" data-show-subtext="true" title="Tipo de documento" onChange='mostrarComplemento();' required="true">
         <?php
         $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
         $stmtTipoIdentificacion = $dbh->prepare($sql2);
@@ -65,19 +64,16 @@ $complemento=null;
         </div>
     </div>
 
-
-
-
-
-	<input class="form-control" type="hidden" name="descuento" id="descuento" required="true" value="<?=$descuento;?>" required="true"/>
+	<input class="form-control" type="hidden" name="descuento" id="descuento" value="<?=$descuento;?>" />
 </div>
-<div class="row">
+
+<!--div class="row">
     <label class="col-sm-2 col-form-label">Correo De Contacto <br>Para Envío De Factura.</label>
     <div class="col-sm-10">
         <div class="form-group">
             <!-- <input class="form-control" type="email" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required /> -->
-            <input type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" class="form-control tagsinput" data-role="tagsinput" data-color="info"  > 
+            <!--input type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" class="form-control tagsinput" data-role="tagsinput" data-color="info"  > 
         </div>
     </div>
-</div>
+</div-->
 

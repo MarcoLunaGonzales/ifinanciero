@@ -14,8 +14,8 @@ $Objeto_detalle4->suscripcionId = 0;   /*SUSCRIPCION ID  (SE MANTIENE)*/
 $Objeto_detalle4->pagoCursoId = 148;  /*PAGOCURSO ID (SE MANTIENE)*/
 $Objeto_detalle4->moduloId = 6412;  /*HACE REFERENCIA AL MODULO ID*/
 $Objeto_detalle4->codClaServicio = 707;   /*HACE REFERENCIA AL CODIGO DE CLASERVICIOS*/
-$Objeto_detalle4->detalle = "Material";
-$Objeto_detalle4->precioUnitario = "34.8";
+$Objeto_detalle4->detalle = "Normas NB:3001";
+$Objeto_detalle4->precioUnitario = "300";
 $Objeto_detalle4->cantidad = 1;
 
 $Array= array($Objeto_detalle4);
@@ -24,10 +24,10 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "accion"=>"NewGenerateInvoice", //nombre de la accion
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
-              "fechaFactura"=>'2022-12-26', // fecha de la factura
-              "nitciCliente"=>'4868422016', //nit o ci de cliente
-              "razonSocial"=>'Luna', //razon social
-              "importeTotal"=>"34.8", //importe total
+              "fechaFactura"=>'2022-12-27', // fecha de la factura
+              "nitciCliente"=>'1020305027', //nit o ci de cliente
+              "razonSocial"=>'CORPORACION BOLIVIANA DE FARMACIAS S.A.', //razon social
+              "importeTotal"=>"300", //importe total
               "tipoPago"=>4, // codigo tipo de pago
               "codLibretaDetalle"=>'0', // codigo de libreta bancaria
               "usuario"=>"Tienda virtual",
@@ -35,7 +35,7 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
               "idIdentificacion"=>5,
               "complementoCiCliente"=>"",
               "nroTarjeta"=>"",
-              "CorreoCliente"=>"",
+              "CorreoCliente"=>"lunagonzalesmarco@gmail.com",
               
               "items"=>$Array // array con el detalle    
               );
@@ -45,7 +45,7 @@ $tipoPago=4;//tarjetas*/
     
 
     // $direccion="http://lpsit.ibnorca.org:8008/ifinanciero/wsifin/";
-$direccion="http://localhost/ifinanciero/wsifin/";
+$direccion="http://localhost:8090/ifinanciero/wsifin/";
     $parametros=json_encode($parametros);
     // abrimos la sesiรณn cURL
     $ch = curl_init();

@@ -291,7 +291,7 @@ table {
 		                          
 		                          $sum_total_l_pagable+=$liquido_pagable_tp;
 		                          $sum_total_seguro_sal+=$seguro_de_salud_tp;
-		                          $sum_total_riesgo_profesional=$riesgo_profesional_tp;
+		                          $sum_total_riesgo_profesional+=$riesgo_profesional_tp;
 		                          $sum_total_provivienda+=$provivienda_tp;
 		                          $sum_total_patronal+=$a_patronal_sol_tp;
 		                          $sum_total_a_patronal+=$total_a_patronal_tp;
@@ -416,8 +416,7 @@ table {
 				                    <td class="small"><?=formatNumberDec($dotaciones_tp);?></td>
 				                    
 				                    <?php
-				                    if($swDescuentoOtro)
-				                    {
+				                    if($swDescuentoOtro){
 				                      $sqlTotalOtroDescuentos = "SELECT SUM(monto) as suma_descuentos
 				                              from descuentos_personal_mes 
 				                              where  cod_personal=$cod_personalcargo and cod_gestion=$cod_gestion and cod_mes=$cod_mes and cod_estadoreferencial=1";
@@ -454,13 +453,15 @@ table {
 				                          }
 				                          $arrayDescuentos_aux[$j]+=$montoX_tp;
 				                        }  	                     
-				                        $monto_descuentosX_tp=$monto_descuentos_tp+$sumaDescuentos_otros_tp;
+				                        //$monto_descuentosX_tp=$monto_descuentos_tp+$sumaDescuentos_otros_tp;
+				                        $monto_descuentosX_tp=$monto_descuentos_tp;
 				                    }else{
 				                      $sumaDescuentos_otros_tp=0;
 				                      ?>
 				                      <td class="small"><?=formatNumberDec($sumaDescuentos_otros_tp);?></td>
 				                      <?php
-				                      $monto_descuentosX_tp=$monto_descuentos_tp+$sumaDescuentos_otros_tp;
+				                      //$monto_descuentosX_tp=$monto_descuentos_tp+$sumaDescuentos_otros_tp;
+				                      $monto_descuentosX_tp=$monto_descuentos_tp;
 				                    }
 				                    ?>
 				                    <td class="text-center small"><?=formatNumberDec($monto_descuentosX_tp);?></td>

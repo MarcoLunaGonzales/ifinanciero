@@ -713,9 +713,9 @@ $item_1=2708;
                                     <?php
                                   }else{
                                     ?>
-                                    <!--<a title="Contabilizar Solicitud"  href="#" onclick="javascript:window.open('<?=$urlRegisterCompro;?>')"  class="dropdown-item">
-                                      <i class="material-icons text-warning">assignment_turned_in</i> Contabilización Manual Solicitud
-                                    </a>-->
+                                    <a title="Contabilizar Solicitud"  href="#" onclick="javascript:window.open('<?=$urlRegisterCompro;?>')"  class="dropdown-item">
+                                      <i class="material-icons text-warning">assignment_turned_in</i>Contabilización Manual Solicitud
+                                    </a>
                                     <?php
                                   }
                                   }else{
@@ -745,9 +745,12 @@ $item_1=2708;
                                    <a onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=1','<?=$nombreProveedor?>')" href="#" class="dropdown-item">
                                     <i class="material-icons text-danger">reply</i> Devolver Solicitud
                                   </a>
-                                    <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=8')" class="dropdown-item">
+                                  <a title="Contabilizar Solicitud"  href="#" onclick="javascript:window.open('<?=$urlRegisterCompro;?>')"  class="dropdown-item">
+                                      <i class="material-icons text-warning">assignment_turned_in</i>Contabilización Manual Solicitud
+                                  </a>
+                                  <a title="Pagar Solicitud"  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2?>?cod=<?=$codigo?>&conta=2&estado=8')" class="dropdown-item">
                                       <i class="material-icons text-info">dns</i> <b class="text-muted">Cambiar a <u class="text-info">Pagado</u></b>
-                                    </a>
+                                  </a>
                                    <?php 
                                   
                                   }else{

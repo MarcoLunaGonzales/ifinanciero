@@ -1,5 +1,9 @@
 <?php //ESTADO FINALIZADO
 
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
 function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,$stringFacturasCod,$cod_libretas_X,$cod_estado_cuenta_x,$cod_cuentaaux){
 	require_once __DIR__.'/../conexion.php';
 	require_once '../functions.php';
@@ -81,7 +85,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 				if($cod_tipopago==$cod_tipopago_deposito_cuenta && $cod_libretas_X!=0){
 					//Agrupamos los estados de las libretas bancarias
 					$sqlTipopago="SELECT codigo,cod_estado,monto from libretas_bancariasdetalle where codigo in ($cod_libretas_X)";
-					echo $sqlTipopago;
+					//echo $sqlTipopago;
 					$stmtLibreta = $dbh->prepare($sqlTipopago);
 					$stmtLibreta->execute();							
 					$stmtLibreta->bindColumn('codigo', $codigo_libreta_det);

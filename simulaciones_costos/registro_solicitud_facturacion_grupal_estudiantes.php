@@ -427,14 +427,14 @@ $contadorRegistros=0;
                         <div id="contenedor_razon_nit">
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Razón Social</label>
-                                <div class="col-sm-5">
+                                <div class="col-sm-4">
                                     <div class="form-group">                                    
                                         <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>                                        
                                     </div>
                                 </div>
                                 <!-- <label class="col-sm-1 col-form-label">Nit</label> -->
-                                <div class="col-sm-1" >
-                                    <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-info" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
+                                <div class="col-sm-2" >
+                                    <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-info" title="Tipo de documento" onChange='mostrarComplemento();' required="true">
                                     <?php
                                     $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
                                     $stmtTipoIdentificacion = $dbh->prepare($sql2);
@@ -458,17 +458,18 @@ $contadorRegistros=0;
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <label class="col-sm-2 col-form-label">Correo De Contacto <br>Para Envío De Factura.</label>
-                                <div class="col-sm-10">
-                                    <div class="form-group">
-                                        <!-- <input class="form-control" type="email" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required /> -->
-                                        <input type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" class="form-control tagsinput" data-role="tagsinput" data-color="info" > 
-                                    </div>
+                        </div>
+                        <!-- fin razon social y nit -->
+                        
+                        <div class="row">
+                            <label class="col-sm-2 col-form-label">Correo De Contacto <br>Para Envío De Factura.</label>
+                            <div class="col-sm-10">
+                                <div class="form-group">
+                                    <!-- <input class="form-control" type="email" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" required /> -->
+                                    <input type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" class="form-control tagsinput" data-role="tagsinput" data-color="info" > 
                                 </div>
                             </div>
                         </div>
-                        <!-- fin razon social y nit -->
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Observaciones * 1</label>
                             <div class="col-sm-10">

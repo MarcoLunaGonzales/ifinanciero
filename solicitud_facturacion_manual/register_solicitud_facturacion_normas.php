@@ -405,7 +405,8 @@ $contadorRegistros=0;
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                        </div>
+                        <div class="row">
                                 <label class="col-sm-2 col-form-label">Correo De Contacto <br>Para Envío De Factura.</label>
                                 <div class="col-sm-10">
                                     <div class="form-group">
@@ -413,9 +414,7 @@ $contadorRegistros=0;
                                         <input type="text" name="correo_contacto" id="correo_contacto" value="<?=$correo_contacto;?>" class="form-control tagsinput" data-role="tagsinput" data-color="info" > 
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                       
+                        </div>                       
                         <!-- fin razon social y nit -->
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Observaciones * 1</label>

@@ -45,9 +45,9 @@ switch ($cod_area) {
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php                 
-                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios2 where vigente=1 and IdArea=$cod_area
+                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where vigente=1 and IdArea=$cod_area
                 UNION 
-                  Select IdClaServicio,Descripcion,Codigo from cla_servicios2 where codigo_n2 in ($codigoAdministrativos)";
+                  Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
                 $stmt3 = $dbh->prepare($sql);
                 
                 //echo $sql; 
