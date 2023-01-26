@@ -26,6 +26,9 @@ while ($rowPersonal = $stmtPersonalDistribucion->fetch(PDO::FETCH_ASSOC))
       $array_personal[]=$rowPersonal['cod_personal'];
    } 
 }
+
+$bandera_segundoAguinaldo=obtenerValorConfiguracion(108);
+
 if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
    //SE DEBE PARAMETRIZAR ESTE CODIGO DE CUENTA PARA LA DEPRECIACION
   $codCuentaDepreciacion=298;
@@ -62,7 +65,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     }else{
       $fechaHoraActual=$gestionTrabajo."-".$mesTrabajo."-".$diaUltimo." ".$horasActual;
     } 
-  }   
+  }
   $numeroComprobante=numeroCorrelativoComprobante($gestionTrabajo,$globalUnidadX,$tipoComprobante,$mesTrabajo);   
   $codComprobante=obtenerCodigoComprobante();
   $sqlInsertCab="INSERT INTO comprobantes (codigo, cod_empresa, cod_unidadorganizacional, cod_gestion, cod_moneda, cod_estadocomprobante, cod_tipocomprobante, fecha, numero, glosa,created_at,created_by) values ('$codComprobante','$codEmpresa','$globalUnidadX','$codAnio','$codMoneda','$codEstadoComprobante','$tipoComprobante','$fechaHoraActual','$numeroComprobante','$glosaCabecera',NOW(),'$globalUser')";
@@ -116,14 +119,25 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
         $monto_area=totalGanadoArea($gestionPlanilla, $mesPlanilla, $cod_area_contabilizacionX,$codigoUOXY);
         // echo $monto_area."<br>";
         if($monto_area>0){
+          $cod_cuenta=229;//sueldos al personal
           $montoAguinaldo=$monto_area*0.0833;    
           $totalProvision+=$montoAguinaldo;
-          $cod_cuenta=229;//sueldos al personal          
+          
           $glosaDetalle1=$nombre_area." Duodecimas de aguinaldo correspondiente a: ".$namemesPlanilla."/".$anioPlanilla;
           $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codigoUOXY','$cod_area_contabilizacionX','$montoAguinaldo','0','$glosaDetalle1','$ordenDetalle')";
           $stmtInsertDet = $dbh->prepare($sqlInsertDet);
           $flagSuccessDet=$stmtInsertDet->execute();
           $ordenDetalle++;
+
+          //esto para segundo aguinaldo
+          if($bandera_segundoAguinaldo==1){//1 si 0 no
+            $totalProvision+=$montoAguinaldo;
+            $glosaDetalle1=$nombre_area." Duodecimas de segundo aguinaldo correspondiente a: ".$namemesPlanilla."/".$anioPlanilla;
+            $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codigoUOXY','$cod_area_contabilizacionX','$montoAguinaldo','0','$glosaDetalle1','$ordenDetalle')";
+            $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+            $flagSuccessDet=$stmtInsertDet->execute();
+            $ordenDetalle++;
+          }
         }
       }
     }else{
@@ -155,7 +169,6 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $ordenDetalle++;
 
   ///**** desde aqui provisión de imdenmizaciones
-
   $totalProvision=0;
   for ($j=0; $j <$cont_areas_agrupado; $j++) { 
     $cod_area_contabilizacionX=$array_area_agrupado[$j];
@@ -216,6 +229,8 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   {
     $diferencia=$rowdiferencia['diferencia'];
   }
+  $debe=0;
+  $haber=0;
   if($diferencia>0) {
     $debe=0;
     $haber=$diferencia;

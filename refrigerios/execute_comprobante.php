@@ -111,7 +111,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
         $monto_area=totalRefrigerioArea($gestionPlanilla, $mesPlanilla, $cod_area_contabilizacionX,$codigoUOXY);
         // echo $monto_area."<br>";
         if($monto_area>0){
-          $montoRefrigerio=$monto_area*1;    
+          $montoRefrigerio=$monto_area+$monto_area*0.13;//monto de refrigerio se le suma el 13% a cada area
           $totalRefrigerioX+=$montoRefrigerio;
           $cod_cuenta=233;//sueldos al personal          
           $glosaDetalle1=$nombre_area." Personal IBNORCA refrigerio correspondiene a: ".$namemesPlanilla."/".$anioPlanilla;
@@ -124,7 +124,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     }else{
       $monto_area=$array_monto_area[$cod_area_contabilizacionX];
       $nombre_area=abrevArea($cod_area_contabilizacionX);
-      $montoRefrigerio=$monto_area*1;    
+      $montoRefrigerio=$monto_area+$monto_area*0.13;//monto de refrigerio se le suma el 13% a cada area
       $totalRefrigerioX+=$montoRefrigerio;
       $cod_cuenta=233;//sueldos al personal      
       $glosaDetalle1=$nombre_area." Personal IBNORCA refrigerio correspondiene a: ".$namemesPlanilla."/".$anioPlanilla;
@@ -139,7 +139,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $glosaDetalleGeneral="Personal IBNORCA registro refrigerios correspondiente a: ".$namemesPlanilla."/".$anioPlanilla;      
   $codUOCentroCosto=$globalUnidadX;
   $codAreaCentroCosto="502";
-  //SUELDOS POR PAGAR
+  //TOTAL REFRIGEROP
   // $totalRefrigerioMes=totalLiquidoPagable($gestionPlanilla, $mesPlanilla);
   $totalRefrigerioMes=totalRefrigerioMes($gestionPlanilla, $mesPlanilla);  
   $cod_cuenta=118;
