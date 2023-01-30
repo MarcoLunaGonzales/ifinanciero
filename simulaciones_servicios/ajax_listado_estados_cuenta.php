@@ -22,7 +22,7 @@ $listarLib=1;
 if (isset($_SESSION["globalNombreGestion"])) {
   $globalNombreGestion=$_SESSION["globalNombreGestion"];
 }else{
-  $globalNombreGestion=2022;
+  $globalNombreGestion=2023;
 }
 // $globalAdmin=$_SESSION["globalAdmin"];
 // $globalNombreGestion=$_SESSION["globalNombreGestion"];

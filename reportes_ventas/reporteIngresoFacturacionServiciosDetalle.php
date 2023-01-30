@@ -13,6 +13,7 @@
             '<th width="20%">Codigo</th>'.
               '<th >Servicio</th>'.
               '<th width="10%">Importe Neto</th>'.
+              '<th width="10%">Cantidad Servicio</th>'.
             '</tr>'.
            '</thead>'.
            '<tbody>';
@@ -28,9 +29,14 @@
     $stringAreas_1=trim($stringAreas_1,",");
     // $stringAreas_2=trim($stringAreas_2,",");
     $totalImporte=0;
+    
     if($stringAreas_1!=""){
       $listaDetalleUnidades=obtenerListaVentasA_servicios($unidadCostoArray,$stringAreas_1,0,$desde,$hasta);
+
       while ($rowComp = $listaDetalleUnidades->fetch(PDO::FETCH_ASSOC)) {
+
+          $cantidadServiciosX=0;
+
           $codigo_alterno=$rowComp['Codigo'];
           $IdtipoX=$rowComp['IdTipo'];
           $codAreaX=$rowComp['cod_area'];
@@ -40,11 +46,14 @@
           $descripcion_n2=$rowComp['descripcion_n2'];
           $importe_realX=$rowComp['importe_real'];
           $totalImporte+=$importe_realX;
+          $cantidadServiciosX+=$rowComp['cantidad_servicios'];
+
           $html.='<tr>'.
                         '<td class="text-left font-weight-bold">'.$nombreAreaX.'</td>'.
                         '<td class="text-left font-weight-bold">'.$codigo_alterno.'</td>'.
                         '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
                         '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
+                        '<td class="text-right font-weight-bold">'.formatNumberDec($cantidadServiciosX).' </td>'.     
                     '</tr>';
 
           $longitudUnidades = count($unidadCosto);
@@ -53,12 +62,15 @@
             $listaDetalleUnidades4=obtenerListaVentasA_servicios($unidadCosto[$i],$stringAreas_1,$IdtipoX,$desde,$hasta);
             while ($rowCompUnidades = $listaDetalleUnidades4->fetch(PDO::FETCH_ASSOC)) {
               $importe_realY=$rowCompUnidades['importe_real'];
+              $cantidadServiciosY=$rowCompUnidades['cantidad_servicios'];
+
               if($importe_realY>0){
                 $html.='<tr">'.
                       '<td class="text-center">-</td>'.  
-                      '<td class="text-center">-</td>'.  
+                      '<td class="text-center">'.$codigo_alterno.'</td>'.  
                       '<td class="text-center">'.$unidadDetAbrevY.'</td>'.  
                       '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
+                      '<td class="text-right font-weight-bold small">'.formatNumberDec($cantidadServiciosY).'</td>'.      
                   '</tr>';              
               }        
             }

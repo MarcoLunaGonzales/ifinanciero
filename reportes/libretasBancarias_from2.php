@@ -73,6 +73,9 @@ $fechaHasta=date("Y-m-d");
                   </div>
                 </div>
             </div><!--fin campo RUBRO -->
+
+            
+
           </div>
           <div class="card-footer ml-auto mr-auto">
             <button type="submit" class="<?=$buttonNormal;?>">Generar</button>

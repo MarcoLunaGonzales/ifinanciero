@@ -145,6 +145,7 @@ $contadorRegistros=0;
                     <?php
                   }
                   ?>
+                  <input type="hidden" value="-100" id="tipo_documento_otro" name="tipo_documento_otro">
                 <input type="hidden" name="cod_defecto_deposito_cuenta" id="cod_defecto_deposito_cuenta" value="<?=$cod_defecto_deposito_cuenta?>"/>
                 <input type="hidden" name="cod_defecto_cod_tipo_credito" id="cod_defecto_cod_tipo_credito" value="<?=$cod_defecto_cod_tipo_credito?>"/>
                 <input type="hidden" name="cod_simulacion" id="cod_simulacion" value="<?=$cod_simulacion;?>"/>
@@ -393,15 +394,35 @@ $contadorRegistros=0;
                         <div id="contenedor_razon_nit">
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Razón Social</label>
-                                <div class="col-sm-5">
+                                <div class="col-sm-4">
                                     <div class="form-group">                                    
                                         <input class="form-control" type="text" name="razon_social" id="razon_social" required="true" value="<?=$razon_social;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>                                        
                                     </div>
                                 </div>
-                                <label class="col-sm-1 col-form-label">Nit</label>
-                                <div class="col-sm-4">
+                                
+                                <div class="col-sm-2" >
+                                    <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-success" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
+                                    <?php
+                                    $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
+                                    $stmtTipoIdentificacion = $dbh->prepare($sql2);
+                                    $stmtTipoIdentificacion->execute();
+                                    while ($rowTipoIden = $stmtTipoIdentificacion->fetch(PDO::FETCH_ASSOC)) {
+                                        $codigo_identificacionx=$rowTipoIden['codigo'];    
+                                        $nombre_identificacionx=$rowTipoIden['nombre'];
+                                        ?><option <?=($codigo_identificacion==$codigo_identificacionx)?"selected":"";?> value="<?=$codigo_identificacionx?>" class="text-right"><?=$nombre_identificacionx?></option>
+                                       <?php 
+                                    } ?> 
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-2">
                                     <div class="form-group">                                        
                                             <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-1">
+                                    <div class="form-group">
+                                            <input class="form-control" type='hidden' name="complemento" id="complemento" placeholder="Complemento" value="<?=$complemento;?>" style="position:absolute;width:100px !important;background:#D2FFE8;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
                                     </div>
                                 </div>
                             </div>

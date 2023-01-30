@@ -17,7 +17,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 //datos registrado de la simulacion en curso
 
 $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x, DATE_FORMAT(sf.fecha_facturacion,'%d/%m/%Y')as fecha_facturacion_x, 
-  (select st.abreviatura from siat_tipos_documentoidentidad st where st.codigo=sf.siat_tipoidentificacion)as abrevTipoDoc 
+  (select st.abreviatura from siat_tipos_documentoidentidad st where st.codigo=sf.siat_tipoidentificacion)as abrevTipoDoc, sf.siat_complemento 
   FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where 
   cod_estadosolicitudfacturacion in (3,4) order by codigo desc limit 0,100";
  //echo $sql;
@@ -49,6 +49,8 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
   $stmt->bindColumn('correo_contacto', $correoSF);
   $stmt->bindColumn('siat_tipoidentificacion', $siatTipoDocIdentificacion);
   $stmt->bindColumn('abrevTipoDoc', $siatTipoDocAbrev);
+  $stmt->bindColumn('siat_complemento', $siatComplemento);
+
 
   ?>
   <div class="content">
@@ -121,7 +123,10 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                               break;
                             }
 
-                            $datosFacturacion=$razon_social."<br>"."<span style='color:red'>".$siatTipoDocAbrev."-".$nit."</span>";
+                            if($siatComplemento!=""){
+                              $siatComplemento="<span style='color:red'><b>-".$siatComplemento."</b></span>";
+                            }
+                            $datosFacturacion=$razon_social."<br>"."<span style='color:red'>".$siatTipoDocAbrev."-</span><span style='color:blue'>".$nit."</span>".$siatComplemento;
 
                             //VERIFICAMOS SI YA TIENE FACTURA GENERADA Y ESTA ACTIVA                           
                             $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion and cod_estadofactura in (1,4)");

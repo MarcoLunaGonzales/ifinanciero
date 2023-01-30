@@ -258,36 +258,30 @@
                                <input type="number" class="form-control" min="1" name="modal_alibnorca" id="modal_alibnorca" value="">
                              </div>
                            </div>  
-
-                          <!--<label class="col-sm-2 col-form-label">Alumnos Fuera</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">-->
-                               <input type="hidden" class="form-control" min="1" name="modal_alfuera" id="modal_alfuera" value="">
-                             <!--</div>
-                           </div>--> 
                       </div> 
 
                       <div class="row">
-                       <label class="col-sm-3 col-form-label">Normas:</label>
+                       <label class="col-sm-3 col-form-label">Normas Nacionales:</label>
                        <div class="col-sm-8">
                         <div class="form-group">
                                 <select class="selectpicker form-control" name="normas[]" id="normas" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT * from normas where cod_estado=1 order by abreviatura");
+                                 $stmt = $dbh->prepare("SELECT * from v_normas where cod_estado=1 order by abreviatura");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['nombre'];
                                   $abrevX=$row['abreviatura'];
-
-                                  $stmtNormasEdit = $dbh->prepare("SELECT count(*)as contador from simulaciones_costosnormas where cod_simulacion='$codigo' and  cod_norma='$codigoX'");
+                                  $nombreX=substr($nombreX, 0, 70);
+                                  
+                                  $stmtNormasEdit = $dbh->prepare("SELECT count(*)as contador from simulaciones_costosnormas where cod_simulacion='$codigo' and  cod_norma='$codigoX' and catalogo='L'");
                                   $stmtNormasEdit->execute();
                                   $cantidadFilasNormasEdit=0;
                                       while($rowNormasEdit = $stmtNormasEdit->fetch(PDO::FETCH_ASSOC)) {
                                           $cantidadFilasNormasEdit=$rowNormasEdit['contador'];
                                       }  
                                   ?>
-                                      <option value="<?=$codigoX;?>" <?=($cantidadFilasNormasEdit>0)?'selected':'';?> ><?=$abrevX;?></option> 
+                                      <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>" <?=($cantidadFilasNormasEdit>0)?'selected':'';?> ><?=$abrevX;?></option> 
                                   <?php
                                   }
                                   ?>
@@ -295,6 +289,37 @@
                               </div>
                         </div>
                       </div>
+
+                      <div class="row">
+                       <label class="col-sm-3 col-form-label">Normas Internacionales:</label>
+                       <div class="col-sm-8">
+                        <div class="form-group">
+                                <select class="selectpicker form-control" name="normas_int[]" id="normas_int" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
+                                <?php
+                                 $stmt = $dbh->prepare("SELECT * from v_normas_int where cod_estado=1 order by abreviatura");
+                                 $stmt->execute();
+                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['nombre'];
+                                  $abrevX=$row['abreviatura'];
+                                  $nombreX=substr($nombreX, 0, 70);
+
+                                  $stmtNormasEdit = $dbh->prepare("SELECT count(*)as contador from simulaciones_costosnormas where cod_simulacion='$codigo' and  cod_norma='$codigoX' and catalogo='I'");
+                                  $stmtNormasEdit->execute();
+                                  $cantidadFilasNormasEdit=0;
+                                      while($rowNormasEdit = $stmtNormasEdit->fetch(PDO::FETCH_ASSOC)) {
+                                          $cantidadFilasNormasEdit=$rowNormasEdit['contador'];
+                                      }  
+                                  ?>
+                                      <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>" <?=($cantidadFilasNormasEdit>0)?'selected':'';?> ><?=$abrevX;?></option> 
+                                  <?php
+                                  }
+                                  ?>
+                                </select>
+                              </div>
+                        </div>
+                      </div>
+
 
                       <div class="row">
                        <label class="col-sm-3 col-form-label">Precio</label>

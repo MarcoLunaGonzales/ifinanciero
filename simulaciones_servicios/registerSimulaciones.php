@@ -65,6 +65,9 @@ $codSimServ=obtenerCodigoSimServicio();
 $lista= obtenerPaisesServicioIbrnorca();//null 
 $fechaActual=date("Y-m-d");
 $dbh = new Conexion();
+
+$fechaActualInput=date("Y-m-d");
+
 ?>
 <div class="cargar-ajax d-none">
   <div class="div-loading text-center">
@@ -164,7 +167,16 @@ $dbh = new Conexion();
                         </div>
                        </div>
                   </div><!--row-->   
-                       
+                      
+                  <div class="row">
+                    <label class="col-sm-2 col-form-label">Fecha Solicitud Cliente:</label>
+                    <div class="col-sm-5">
+                     <div class="form-group">
+                        <input class="form-control" type="date" id="fecha_solicitud_cliente" name="fecha_solicitud_cliente" value="<?=$fechaActualInput?>">  
+                     </div>
+                    </div>
+                  </div>
+
                   <div class="row">
                        <label class="col-sm-2 col-form-label">Plantilla de Servicios :</label>
                        <div class="col-sm-7">

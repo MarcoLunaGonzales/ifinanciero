@@ -6,6 +6,8 @@ require_once 'styles.php';
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 
+$url_list_siat=obtenerValorConfiguracion(103);
+
 
 
 if(isset($_GET['q'])){
@@ -159,7 +161,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               break;
                             }
                             //verificamos si ya tiene factura generada y esta activa
-                            $sqlFact="SELECT codigo, nro_factura, fecha_factura, cod_estadofactura from facturas_venta where cod_solicitudfacturacion='$codigo_facturacion' order by codigo desc limit 1";
+                            $sqlFact="SELECT codigo, nro_factura, fecha_factura, cod_estadofactura, IFNULL(idTransaccion_siat,0)as facturasiat from facturas_venta where cod_solicitudfacturacion='$codigo_facturacion' order by codigo desc limit 1";
                             //echo $sqlFact;
                             $stmtFact = $dbh->prepare($sqlFact);
 
@@ -169,12 +171,15 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             $cod_estado_factura_x=0;
                             $fechaFacturaX="";
                             $codigo_fact_x=0;
+                            $facturaSIAT=0;
                             while($resultSimu = $stmtFact->fetch()){
                               //echo "entra facturas";
                               $codigo_fact_x = $resultSimu['codigo'];
                               $nro_fact_x = $resultSimu['nro_factura'];
                               $cod_estado_factura_x = $resultSimu['cod_estadofactura'];
                               $fechaFacturaX=$resultSimu['fecha_factura'];
+                              $facturaSIAT=$resultSimu['facturasiat'];
+
                               //echo $nro_fact_x;
 
                               if ($nro_fact_x==null) $nombreNroFacX="-";
@@ -183,6 +188,14 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                 $label='<span class="badge badge-warning">';
                                 $estado="ANULADO";                              
                               }
+                            }
+
+                            /*ARMAMOS LA URL PARA LA VISTA DE LAS FACTURAS*/
+                            $urlFacturaImprimir="";
+                            if($facturaSIAT==0){
+                                $urlFacturaImprimir="simulaciones_servicios/generarFacturasPrint.php?codigo=".$codigo_facturacion."&tipo=2";
+                            }else{
+                                $urlFacturaImprimir=$url_list_siat."formatoFacturaOnLine.php?codVenta=".$facturaSIAT."";
                             }
 
                             //sacamos monto total de la factura para ver si es de tipo factura por pagos
@@ -295,7 +308,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                               $cod_factura_x= $arrayCodFacturas[$i];
                                               $nro_factura_x= $arrayFacturas[$i];
                                               if($cod_factura_x!=0){?>
-                                                <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
+                                                <a class="dropdown-item" type="button" href='<?=$urlFacturaImprimir;?>' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
                                               <?php }else{?>
                                                 <a class="dropdown-item" type="button" href='#'><i class="material-icons text-success" title="Factura">list</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
                                               <?php }                                           
@@ -325,7 +338,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                       // echo "entra";
                                       if($cont_facturas<2){
                                         ?>
-                                        <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
+                                        <a class="btn btn-success" href='<?=$urlFacturaImprimir;?>' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
                                         
                                        <?php               
                                       }
