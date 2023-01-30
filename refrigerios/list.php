@@ -12,7 +12,7 @@ $stmt = $dbh->prepare("SELECT r.codigo as cod_refrigerio,
 (SELECT g.nombre FROM gestiones g WHERE r.cod_gestion=g.codigo) as gestion,
 (SELECT m.nombre FROM meses m WHERE r.cod_mes=m.codigo) as mes,
 (SELECT m.codigo FROM meses m WHERE r.cod_mes=m.codigo) as codigo_mes,
-(SELECT ep.nombre FROM estados_planilla ep WHERE r.cod_estadoplanilla=ep.codigo) as estado_planilla
+(SELECT ep.nombre FROM estados_planilla ep WHERE r.cod_estadoplanilla=ep.codigo) as estado_planilla,r.cod_comprobante,r.cod_gestion
 FROM  $table_refrigerios r order by codigo_mes");
 
 $stmt->execute();
@@ -22,6 +22,10 @@ $stmt->bindColumn('gestion', $gestion);
 $stmt->bindColumn('mes', $mes);
 $stmt->bindColumn('codigo_mes', $codigo_mes);
 $stmt->bindColumn('estado_planilla', $estadoPlanilla);
+$stmt->bindColumn('cod_comprobante', $comprobante_x);
+$stmt->bindColumn('cod_gestion', $cod_gestion);
+
+
 
 ?>
 
@@ -63,11 +67,16 @@ $stmt->bindColumn('estado_planilla', $estadoPlanilla);
                         if ($globalAdmin == 1) {
                         ?>
                         <a href='<?= $urlDetalle; ?>&cod_ref=<?= $codRefrigerio; ?>&cod_mes=<?=$codigo_mes;?>' rel="tooltip" class="<?=$buttonDetailMin;?>">
-                              <i class="material-icons" title="Detalle">playlist_add</i>
-                            </a>
-                          <a href='<?= $urlAprobar; ?>&cod_ref=<?= $codRefrigerio; ?>' rel="tooltip" class="btn btn-success">
-                            <i class="material-icons" title="Aprobar" style="color:white">done</i>
-                          </a>
+                          <i class="material-icons" title="Detalle">playlist_add</i>
+                        </a>
+                        <a href='<?= $urlAprobar; ?>&cod_ref=<?= $codRefrigerio; ?>' rel="tooltip" class="btn btn-success">
+                          <i class="material-icons" title="Aprobar" style="color:white">done</i>
+                        </a>
+                          <?php if($comprobante_x==0){ ?>
+                            <a  href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','refrigerios/execute_comprobante.php?cod_ref=<?=$codRefrigerio;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$codigo_mes;?>')" class="btn btn-danger"> 
+                              <i class="material-icons" title="Generar Comprobante" style="color:white">input</i>
+                            </a>                            
+                            <?php } ?>
                           
                         <?php
         }

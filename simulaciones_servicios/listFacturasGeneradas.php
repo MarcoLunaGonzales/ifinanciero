@@ -135,7 +135,8 @@ $globalPersonal=$_SESSION["globalUser"];
                             $fechaComoEntero = strtotime($fecha_factura_xy);
                             $fecha_factura_xyz = date("Y-m-d", $fechaComoEntero);
                             // echo $fecha_inicio_x."-".$fecha_fin."<br>";
-                            $sw_anular=verificar_fecha_rango($fecha_inicio_x, $fecha_fin, $fecha_factura_xyz);
+                            //$sw_anular=verificar_fecha_rango($fecha_inicio_x, $fecha_fin, $fecha_factura_xyz);
+                            $sw_anular=true;
                           }
                           //==
                           $nombre_personal=namePersonal_2($cod_personal);
@@ -407,7 +408,7 @@ $globalPersonal=$_SESSION["globalUser"];
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h2 class="modal-title" id="myModalLabel"><b>Anular Factura<b></h2>
+        <h2 class="modal-title" id="myModalLabel"><b>Anular Facturas<b></h2>
       </div>
       <div class="modal-body">        
         <form id="form_anular_facturas" action="simulaciones_servicios/anular_facturaGenerada.php" method="post"  onsubmit="return valida(this)" enctype="multipart/form-data">

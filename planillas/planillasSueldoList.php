@@ -21,7 +21,7 @@ $dbh = new Conexion();
   $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,comprobante,
   (select m.nombre from meses m where m.codigo=cod_mes)as mes,
   (select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
-  (select ep.nombre from estados_planilla ep where ep.codigo=cod_estadoplanilla) as estadoplanilla
+  (select ep.nombre from estados_planilla ep where ep.codigo=cod_estadoplanilla) as estadoplanilla,cod_comprobante_prevision
   from planillas order by cod_gestion desc,cod_mes desc");
   $stmtAdmnin->execute();
   $stmtAdmnin->bindColumn('codigo', $codigo_planilla);
@@ -32,6 +32,8 @@ $dbh = new Conexion();
   $stmtAdmnin->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
   $stmtAdmnin->bindColumn('estadoplanilla', $estadoplanilla);
   $stmtAdmnin->bindColumn('comprobante', $comprobante_x);
+  $stmtAdmnin->bindColumn('cod_comprobante_prevision', $cod_comprobante_prevision);
+  
 
   $modified_at="";
   $modified_by="";
@@ -289,10 +291,17 @@ $dbh = new Conexion();
                               <i class="material-icons">list</i>Vista Previa
                             </button> 
                             </li>
-                            <?php if($comprobante_x!=1){ ?>
+                            <?php if($comprobante_x==0){ ?>
                             <li>
                               <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>')"> 
-                                <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>Generar
+                                <i class="material-icons" title="Generar Comprobante" style="color:red">input</i>Comprobante Planilla
+                              </a>
+                            </li>
+                            <?php } ?>
+                            <?php if($cod_comprobante_prevision==0){ ?>
+                            <li>
+                              <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','planillas/executeComprobanteProvisionAguinaldos.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>')"> 
+                                <i class="material-icons" title="Generar Comprobante Previsión" style="color:red">input</i>Comprobante Previsión
                               </a>
                             </li>
                             <?php } ?>

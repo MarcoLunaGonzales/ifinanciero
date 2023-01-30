@@ -120,9 +120,6 @@ function monto_planillaGeneral_afps($cod_planilla){
     return($monto);
 }
 
-
-
-
 function totalLiquidoPagable($gestion, $mes){
   $dbh = new Conexion();
   $sql="SELECT sum(pm.liquido_pagable)as monto 
@@ -135,8 +132,6 @@ function totalLiquidoPagable($gestion, $mes){
     }
     return($monto);
 }
-
-
 function totalPersonalProyectos($proyecto){
   $dbh = new Conexion();
   $sql="SELECT sum(p.monto_subsidio)as monto from personal_proyectosfinanciacionexterna p where p.cod_estado_referencial=1 and p.cod_proyecto='$proyecto'";
@@ -148,8 +143,6 @@ function totalPersonalProyectos($proyecto){
     }
     return($monto);
 }
-
-
 function cuentaCorrienteUO($unidad){
   $nroCuenta="";
   if($unidad==10){
@@ -172,7 +165,6 @@ function cuentaCorrienteUO($unidad){
   }
   return($nroCuenta);
 }
-
 function obtenerTotalCPS($gestion, $mes){
   $dbh = new Conexion();
   $sql="SELECT sum(pm.seguro_de_salud)as monto from planillas p, planillas_personal_mes_patronal pm where p.codigo=pm.cod_planilla and p.cod_gestion='$gestion' and p.cod_mes='$mes' ";
@@ -301,5 +293,40 @@ function obtenerTotalOtrosdescuentos($gestion, $mes, $unidad){
     return($montoTotal);
 }
 
+
+function totalRefrigerioArea($gestion, $mes, $cod_area,$cod_uo=null){
+  $sql_add="";
+  if($cod_uo!=null){
+    $sql_add=" and pad.cod_uo='$cod_uo' ";
+  }
+  $dbh = new Conexion();
+
+
+    $sql="SELECT sum(rd.monto*rd.dias_asistidos*(pad.porcentaje/100))as monto 
+    from refrigerios r join refrigerios_detalle rd on r.codigo=rd.cod_refrigerio join personal_area_distribucion pad on rd.cod_personal=pad.cod_personal and pad.cod_estadoreferencial=1
+    where r.cod_gestion='$gestion' and r.cod_mes='$mes' and pad.cod_area='$cod_area'  and rd.cod_estadoreferencial=1 $sql_add";
+    // echo $sql."<br>";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $monto=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $monto=$row['monto'];
+    }
+    return($monto);
+}
+
+function totalRefrigerioMes($gestion, $mes){
+  $dbh = new Conexion();
+  $sql="SELECT sum(pm.monto*pm.dias_asistidos)as monto 
+  from refrigerios p join refrigerios_detalle pm on p.codigo=pm.cod_refrigerio 
+  where  p.cod_gestion='$gestion' and p.cod_mes='$mes'";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $monto=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $monto=$row['monto'];
+    }
+    return($monto);
+}
 
 ?>
