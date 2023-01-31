@@ -151,6 +151,17 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
       $stmtInsertDet = $dbh->prepare($sqlInsertDet);
       $flagSuccessDet=$stmtInsertDet->execute();
       $ordenDetalle++;      
+
+      //esto para segundo aguinaldo
+      if($bandera_segundoAguinaldo==1){//1 si 0 no
+        $totalProvision+=$montoAguinaldo;
+        $glosaDetalle1=$nombre_area." Duodecimas de segundo aguinaldo correspondiente a: ".$namemesPlanilla."/".$anioPlanilla;
+        $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$globalUnidadX','$cod_area_contabilizacionX','$montoAguinaldo','0','$glosaDetalle1','$ordenDetalle')";
+        $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+        $flagSuccessDet=$stmtInsertDet->execute();
+        $ordenDetalle++;      
+      }
+
     }
   }
 

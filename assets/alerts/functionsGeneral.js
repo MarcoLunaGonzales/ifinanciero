@@ -3215,8 +3215,6 @@ function guardarSimulacionCosto(){
   }
   cod_personal=$("#codigo_personal").val();
   cod_cliente=$("#codigo_cliente").val();
-  console.log("personal: "+cod_personal);
-  console.log("cliente: "+cod_cliente);
 
   var nombre=$("#nombre").val();
   var precio=$("#precio_venta").val();
@@ -3225,9 +3223,15 @@ function guardarSimulacionCosto(){
   var monto_norma=$("#monto_norma").val();
   var tipo_curso=$("#tipo_curso").val();
   var fecha_estimada=$("#fecha_estimada").val();
+  var fecha_solicitud_cliente=$("#fecha_solicitud_cliente").val();
   var cantidad_dias=$("#cantidad_dias").val();
   var normas=$("#normas").val();
+  var normas_int=$("#normas_int").val();
   var ibnorca = 1;
+
+  console.log("personal: "+cod_personal);
+  console.log("cliente: "+cod_cliente);
+  console.log("fecha sol cliente: "+fecha_solicitud_cliente);
   /*if( $("#ibnorca_check").is(':checked') ) {
       var ibnorca=1;
   }else{
@@ -3236,7 +3240,7 @@ function guardarSimulacionCosto(){
   if(nombre=="" || !(plantilla_costo>0) || cantidad_modulos=="" || monto_norma=="" || cod_personal==0){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"normas":normas,"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos,"IdCurso":idCurso,"IdModulo":idModulo,"codigo_personal":cod_personal,"codigo_cliente":cod_cliente};
+     var parametros={"normas":normas,"normas_int":normas_int,"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos,"IdCurso":idCurso,"IdModulo":idModulo,"codigo_personal":cod_personal,"codigo_cliente":cod_cliente,"fecha_solicitud_cliente":fecha_solicitud_cliente};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -3277,6 +3281,7 @@ function guardarSimulacionServicio(){
   var nombre=$("#nombre").val();
   var dias=$("#dias_auditoria").val();
   var cliente=$("#cliente").val();
+  var fecha_solicitud_cliente=$("#fecha_solicitud_cliente").val();
   var objeto=$("#objeto_servicio").val();
   //var producto=$("#productos").val();
   //var sitio=$("#sitios").val();
@@ -3297,12 +3302,13 @@ function guardarSimulacionServicio(){
     var afnor=0;
   }
   cod_personal=$("#codigo_personal").val();
+  
   console.log("personal: "+cod_personal);
 
   if($("#productos_div").hasClass("d-none")){
    if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
    Swal.fire('Informativo!','Debe llenar los campos  1 !','warning'); 
-  }else{
+   }else{
     var tipoServicio=$("#tipo_servicio").val();
     var normas_tiposervicio=$("#normas_tiposervicio").val();
     var normas_tiposerviciotext=$("#normas_tiposerviciotext").val();
@@ -3310,7 +3316,7 @@ function guardarSimulacionServicio(){
     var des_serv=$("#d_servicio").val();
     var iaf_primario=$("#iaf_primario_tcs").val();
     var iaf_secundario=$("#iaf_secundario_tcs").val();
-    var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2,"codigo_personal":cod_personal};
+    var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2,"codigo_personal":cod_personal,"fecha_solicitud_cliente":fecha_solicitud_cliente};
     $.ajax({
         type: "POST",
         dataType: 'html',
@@ -3362,7 +3368,7 @@ function guardarSimulacionServicio(){
       var iaf_secundario=$("#iaf_secundario").val();
       objeto=0;
       var des_serv=$("#d_servicio_p").val();
-     var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1};
+      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1,"fecha_solicitud_cliente":fecha_solicitud_cliente};
      $.ajax({
         type: "POST",
         dataType: 'html',
@@ -8177,8 +8183,9 @@ function guardarDatosPlantilla(btn_id){
    var precio_alternativo=$("#total_preciosimulacion").val();
    var modal_modulos=$("#modal_modulo").val();
    var normas=$("#normas").val();
+   var normas_int=$("#normas_int").val();
    //alert(normas);
-   var parametros={"dias_curso":dias_curso,"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo,"modal_modulos":modal_modulos,"normas":normas};
+   var parametros={"dias_curso":dias_curso,"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo,"modal_modulos":modal_modulos,"normas":normas,"normas_int":normas_int};
 
   if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){
     var cantidadFilas=$("#cantidad_filasprecios").val();
@@ -12236,6 +12243,7 @@ function agregaformEnviarCorreo(datos){
 function EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social,interno,cod_tipopago){
   iniciarCargaAjax();
   console.log("entro envio correo 1");
+  console.log("codigoFacturacion"+codigo_facturacion);
   if(cod_tipopago==217){
     urlString="simulaciones_servicios/enviarCorreoCredito.php";
   }else{
@@ -18337,15 +18345,15 @@ function botonBuscar_facturas(){
   $("#texto_ajax_titulo").html("Listando Facturas...");        
   var interno=$("#interno").val();
   var razon_social_f=$("#razon_social_f").val();
-  var detalle_f=$("#detalle_f").val();
   var fechaBusquedaInicio=$("#fechaBusquedaInicio").val();
   var fechaBusquedaFin=$("#fechaBusquedaFin").val();
   var nit_f=$("#nit_f").val();
   var nro_f=$("#nro_f").val();
   var personal_p=$("#personal_p").val();
+  var estado_facturas=$("#estado_facturas").val();
   var cod_factura=$("#cod_factura").val();
   ajax=nuevoAjax();
-  ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_facturas.php?razon_social_f='+razon_social_f+'&detalle_f='+detalle_f+'&fechaI='+fechaBusquedaInicio+'&fechaF='+fechaBusquedaFin+'&nit_f='+nit_f+'&nro_f='+nro_f+'&personal_p='+personal_p+'&interno='+interno+'&cod_factura='+cod_factura,true);
+  ajax.open('GET', 'simulaciones_servicios/ajax_buscardor_avanzado_facturas.php?razon_social_f='+razon_social_f+'&estado_facturas='+estado_facturas+'&fechaI='+fechaBusquedaInicio+'&fechaF='+fechaBusquedaFin+'&nit_f='+nit_f+'&nro_f='+nro_f+'&personal_p='+personal_p+'&interno='+interno+'&cod_factura='+cod_factura,true);
   ajax.onreadystatechange=function() {
     if (ajax.readyState==4) {
       var contenedor=$("#data_facturas_generadas");

@@ -148,7 +148,7 @@ switch ($filtro) {
 
             /*QUITAR ESTA PARTE ES SOLO PARA EL CIERRE DE LA 2021*/
             /*BISA NACIONAL*/
-            if($codigo==3611 || $codigo==6023 || $codigo==7144 || $codigo==7271  || $codigo==7679 || $codigo==15449 || $codigo==15860 || $codigo==16588 || $codigo==18088 || $codigo==18219 || $codigo==18498 || $codigo==19743){
+            if($codigo==3611 || $codigo==6023 || $codigo==7144 || $codigo==7271  || $codigo==7679 || $codigo==15449 || $codigo==15860 || $codigo==16588 || $codigo==18088 || $codigo==18219 || $codigo==18498 || $codigo==19743 || $codigo==20815 || $codigo==20856 || $codigo==25381 || $codigo==27057){
               $saldo=0;
             }
             /*BISA SCZ*/

@@ -17,19 +17,11 @@ class Conexion extends PDO {
       // private $port = '3306'; 
 
 
-      //CONEXION INTERNA PRUEBAS 
-      // private $tipo_de_base = 'mysql';
-      // private $host = 'localhost';
-      // private $nombre_de_base = 'financiero_2022';
-      // private $usuario = 'root';
-      // private $contrasena = '4868422Marco';
-      // private $port = '3306'; 
-
-private $tipo_de_base = 'mysql';
+      private $tipo_de_base = 'mysql';
       private $host = 'localhost';
-      private $nombre_de_base = 'ibnofinanciero5000';
+      private $nombre_de_base = 'financiero_cierre2022_oficial';
       private $usuario = 'root';
-      private $contrasena = '12345678';
+      private $contrasena = '4868422Marco';
       private $port = '3306'; 
 
 public function __construct() {

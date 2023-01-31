@@ -1,4 +1,5 @@
 <?php
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -60,11 +61,11 @@ function sendemail($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_se
 	  return 1;
 	}
 }
-function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject, $template,$inicio,$rutaArchivo,$nombreArchivo){
+function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$mail_setFromName,$mail_addAddress,$txt_message,$mail_subject, $template,$inicio,$rutaArchivo,$nombreArchivo,$rutaARchivo2,$nombreArchivo2){
 	if($inicio==0){
-		require 'PHPMailer/src/Exception.php';
-	    require 'PHPMailer/src/PHPMailer.php';
-	    require 'PHPMailer/src/SMTP.php';
+		require_once 'PHPMailer/src/Exception.php';
+	    require_once 'PHPMailer/src/PHPMailer.php';
+	    require_once 'PHPMailer/src/SMTP.php';
 	}   
 	//recibimos correos
 	$mail = new PHPMailer;
@@ -88,6 +89,7 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	}
 
 	$mail->addAttachment($rutaArchivo,$nombreArchivo);
+	//$mail->addAttachment($rutaArchivo2,$nombreArchivo2);
 	
 	
 	///////////////////////////////////////para la version de php 7
@@ -124,13 +126,6 @@ function sendemailFiles($mail_username,$mail_userpassword,$mail_setFromEmail,$ma
 	}else{
 	  return 1;
 	}
-
-	// if(!$mail->send()) {
-	//     echo 'Message could not be sent.';
-	//     echo 'Mailer Error: ' . $mail->ErrorInfo;
-	// } else {
-	//     echo 'Message has been sent';
-	// }
 
 }
 ?>

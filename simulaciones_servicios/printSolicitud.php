@@ -15,7 +15,7 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 $codigo_facturacion = $_GET["codigo"];//codigoactivofijo
 try{
   //datos de solicitud de facturacion
-  $stmtInfo = $dbh->prepare("SELECT *,DATE_FORMAT(fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x from solicitudes_facturacion where codigo=$codigo_facturacion");
+  $stmtInfo = $dbh->prepare("SELECT *,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x, (select st.abreviatura from siat_tipos_documentoidentidad st where st.codigo=sf.siat_tipoidentificacion)as abrevTipoDoc from solicitudes_facturacion sf where sf.codigo=$codigo_facturacion");
   $stmtInfo->execute();
   $resultInfo = $stmtInfo->fetch();
   $cod_simulacion_servicio = $resultInfo['cod_simulacion_servicio'];  
@@ -38,7 +38,16 @@ try{
   $persona_contacto = $resultInfo['persona_contacto'];  
   $ci_estudiante = $resultInfo['ci_estudiante'];
   $correo_contacto_x = $resultInfo['correo_contacto'];
-  
+
+  $siatTipoDocIdentificacion=$resultInfo['siat_tipoidentificacion'];
+  $siatTipoDocAbrev=$resultInfo['abrevTipoDoc'];
+  $siatComplemento=$resultInfo['siat_complemento'];
+
+  if($siatComplemento!=""){
+    $siatComplemento="<span style='color:red'><b>-".$siatComplemento."</b></span>";
+  }
+  $datosFacturacion="<span style='color:red'>".$siatTipoDocAbrev."-</span><span style='color:blue'>".$nit."</span>".$siatComplemento;
+
   $nombre_unidad=nameUnidad($cod_unidadorganizacional);
   $abrev_area=trim(abrevArea($cod_area),'-');
   $nombre_cliente=nameCliente($cod_cliente);
@@ -112,8 +121,8 @@ $html.=  '<header class="header">'.
             <tr>
               <td class="text-center td-color-celeste" colspan="2"><b>Factura a nombre de:</b></td>
               <td width="60%">'.$razon_social.'</td>
-              <td width="3%" class="td-color-celeste"><b>NIT/CI: </b></td>
-              <td width="3%" colspan="2">'.$nit.'</td>              
+              <td width="3%" class="td-color-celeste"><b>NIT/CI/CEX: </b></td>
+              <td width="3%" colspan="2">'.$datosFacturacion.'</td>              
             </tr>    
             <tr>
               <td colspan="2" class="text-center td-color-celeste"><b>Código de servicio:</b></td>              

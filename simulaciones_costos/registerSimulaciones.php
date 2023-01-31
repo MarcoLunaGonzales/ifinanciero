@@ -42,7 +42,7 @@ $contadorRegistros=0;
 
 <?php
 $fechaActual=date("Y-m-d");
-$fechaActualInput=date("d/m/Y");
+$fechaActualInput=date("Y-m-d");
 $dbh = new Conexion();
 ?>
 <div class="cargar-ajax d-none">
@@ -110,6 +110,10 @@ $dbh = new Conexion();
                                 <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Seleccionar usuario que registra..." data-live-search="true" name="codigo_personal" id="codigo_personal" data-style="btn btn-info"  required>
                                 <option value="0">-- -- --</option>
                                 <?php
+                                 $u=0;
+                                 if(isset($u)){
+                                    $u=$_GET['u'];
+                                 }
                                  $stmt = $dbh->prepare("SELECT p.codigo, concat(p.paterno,' ',p.materno,' ',p.primer_nombre)as nombrepersona FROM personal p where p.cod_estadopersonal in (1,2,3) order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -154,9 +158,15 @@ $dbh = new Conexion();
                       </div>-->
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Fecha Estimada:</label>
-                       <div class="col-sm-7">
+                       <div class="col-sm-2">
                          <div class="form-group">
-                            <input class="form-control datepicker" type="text" id="fecha_estimada" name="fecha_estimada" value="<?=$fechaActualInput?>">  
+                            <input class="form-control" type="date" id="fecha_estimada" name="fecha_estimada" value="<?=$fechaActualInput?>">  
+                         </div>
+                        </div>
+                        <label class="col-sm-2 col-form-label">Fecha Solicitud Cliente:</label>
+                        <div class="col-sm-2">
+                         <div class="form-group">
+                            <input class="form-control" type="date" id="fecha_solicitud_cliente" name="fecha_solicitud_cliente" value="<?=$fechaActualInput?>">  
                          </div>
                         </div>
                       </div>
@@ -220,27 +230,52 @@ $dbh = new Conexion();
                        </div>
                   </div><!--row-->   
 
-                      <div class="row">
-                       <label class="col-sm-2 col-form-label">Normas:</label>
-                       <div class="col-sm-7">
-                        <div class="form-group">
-                                <select class="selectpicker form-control" name="normas[]" id="normas" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
-                                <?php
-                                 $stmt = $dbh->prepare("SELECT * from normas where cod_estado=1 order by abreviatura");
-                                 $stmt->execute();
-                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo'];
-                                  $nombreX=$row['nombre'];
-                                  $abrevX=$row['abreviatura'];
-                                   ?>
-                                  <option value="<?=$codigoX;?>"><?=$abrevX;?></option> 
-                                  <?php
-                                    }
-                                    ?>
-                                </select>
-                              </div>
-                        </div>
-                      </div>
+                  <div class="row">
+                   <label class="col-sm-2 col-form-label">Normas Nacionales:</label>
+                   <div class="col-sm-7">
+                    <div class="form-group">
+                            <select class="selectpicker form-control" name="normas[]" id="normas" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
+                            <?php
+                             $stmt = $dbh->prepare("SELECT vn.codigo, vn.abreviatura, vn.nombre, 'L' as tipo from v_normas vn where vn.cod_estado=1 order by 4,2");
+                             $stmt->execute();
+                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                              $codigoX=$row['codigo'];
+                              $nombreX=$row['nombre'];
+                              $tipoX=$row['tipo'];
+                              $abrevX=$row['abreviatura']." (".$tipoX.")";
+                              $nombreX=substr($nombreX, 0, 70);
+                               ?>
+                              <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>"><?=$abrevX;?></option> 
+                              <?php
+                                }
+                                ?>
+                            </select>
+                          </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                   <label class="col-sm-2 col-form-label">Normas Internacionales:</label>
+                   <div class="col-sm-7">
+                    <div class="form-group">
+                            <select class="selectpicker form-control" name="normas_int[]" id="normas_int" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
+                            <?php
+                             $stmt = $dbh->prepare("SELECT vi.codigo, vi.abreviatura, vi.nombre, 'I' as tipo from v_normas_int vi where vi.cod_estado=1 order by 4,2");
+                             $stmt->execute();
+                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                              $codigoX=$row['codigo'];
+                              $nombreX=$row['nombre'];
+                              $tipoX=$row['tipo'];
+                              $abrevX=$row['abreviatura']." (".$tipoX.")";
+                              $nombreX=substr($nombreX, 0, 70);
+                               ?>
+                              <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>"><?=$abrevX;?></option> 
+                              <?php
+                                }
+                                ?>
+                            </select>
+                          </div>
+                    </div>
+                  </div>
         
         </div>
         <br>

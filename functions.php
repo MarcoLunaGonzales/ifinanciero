@@ -28,6 +28,7 @@
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     $remote_server_output = curl_exec ($ch);
     curl_close ($ch);
     return $remote_server_output;   
@@ -5573,7 +5574,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
               from comprobantes_detalle d join comprobantes c on c.codigo=d.cod_comprobante 
               join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
               join plan_cuentas p on p.codigo=d.cod_cuenta
-              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and c.cod_gestion=$gestion and d.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and c.cod_gestion=$gestion and c.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>2 group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre order by p.numero";
       
       //echo $sql;
@@ -5635,7 +5636,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
               join areas a on a.codigo=d.cod_area
               join unidades_organizacionales u on u.codigo=d.cod_unidadorganizacional
               join plan_cuentas p on p.codigo=d.cod_cuenta
-              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and .cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>'2' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
+              where c.fecha between '$fi 00:00:00' and '$fa 23:59:59' and c.cod_unidadorganizacional in ($arrayUnidades) and c.cod_estadocomprobante<>'2' group by (d.cod_cuenta) order by d.cod_cuenta) cuentas_monto
           on p.codigo=cuentas_monto.cod_cuenta where p.cod_padre=$padre $stringCuenta order by p.numero";
       //echo $sql;
       $stmt = $dbh->prepare($sql);
@@ -8332,7 +8333,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
 
   function obtenerCorreosInstanciaEnvio($codigo){
     $dbh = new Conexion();
-    $stmt = $dbh->prepare("SELECT p.email_empresa,concat(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno) as personal from instancias_envios_correos_detalle i join personal p on p.codigo=i.cod_personal where i.cod_instancia_envio=$codigo and p.email_empresa IS NOT NULL and i.cod_estadoreferencial=1");
+    $stmt = $dbh->prepare("SELECT p.email_empresa,concat(p.primer_nombre,' ',p.paterno,' ',p.materno) as personal from instancias_envios_correos_detalle i join personal p on p.codigo=i.cod_personal where i.cod_instancia_envio=$codigo and p.email_empresa IS NOT NULL and i.cod_estadoreferencial=1");
     $stmt->execute();
     $datos=[];$datos2=[];
     $index=0;
@@ -10691,7 +10692,7 @@ function obtenerCodigosCajaChicaSolicitudRecursos($codigo){
    $dbh = new Conexion();
    $codigos=[];
    $codigos[0]=-100;
-     $sql="SELECT a.cod_cajachicadetalle from solicitud_recursosdetalle a where a.cod_solicitudrecurso=$codigo";
+     $sql="SELECT a.cod_cajachicadetalle from solicitud_recursosdetalle a where a.cod_solicitudrecurso='$codigo'";
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
      $index=0;
@@ -11538,25 +11539,36 @@ function obtenerPathArchivoIbnorca($codigo){
 
 function obtenerCodigoCajaChicaString($codigoString){
    $dbh = new Conexion();
+   $valorX=0;
+   if($codigoString==0 || $codigoString=="" || $codigoString=="null" || $codigoString=="NULL" || $codigoString=="Null"){
+      $valorX=0;
+   }else{
      $stmt = $dbh->prepare("SELECT cod_cajachica from caja_chicadetalle where codigo in ($codigoString)");
      $stmt->execute();
      $valorX=0;
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valorX=$row['cod_cajachica'];
-     }
-     return $valorX;
+     }      
+   }
+   return $valorX;
 }
 
 function obtenerComprobanteCajaChicaRelacionado($codigo){
-     $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT cod_comprobante from caja_chica  where codigo=$codigo");
-     $stmt->execute();
-     $valor=0;
-     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+   $dbh = new Conexion();
+   $valor=0;
+   if($codigo==0 || $codigo=="" || $codigo=="null" || $codigo=="NULL" || $codigo=="Null"){
+      $valor=0;
+   }else{
+      $stmt = $dbh->prepare("SELECT cod_comprobante from caja_chica  where codigo=$codigo");
+      $stmt->execute();
+      $valor=0;
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row['cod_comprobante'];
-     }
-     return($valor);
-  }
+      }
+   }
+   return($valor);
+}
+
   function obtenerComprobanteDetalleRelacionado($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT cod_comprobante from comprobantes_detalle  where codigo=$codigo");
@@ -11795,17 +11807,27 @@ function obtenerAsistenciaPersonal($codigo_personal,$cod_gestion_x,$cod_mes_x,$d
    return(round($valor,0,PHP_ROUND_HALF_DOWN));
 }
 
+function verificaAnulacionSIAT($cod_factura_siat){
+   $dbh = new Conexion();
+   $nombreBD=obtenerValorConfiguracion(106);
+   $sql="SELECT count(*)as contador from ".$nombreBD.".salida_almacenes s where s.estado_salida=3 and s.salida_anulada=1 and s.cod_salida_almacenes='$cod_factura_siat'";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $valor=0;
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $valor=$row['contador'];
+   }
+   return($valor);
+}
 
 
-function enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_total,$descuento,$monto_final,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle,$correoCliente,$stringFacturasCod)
-{
-    
+function enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_total,$descuento,$monto_final,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle,$correoCliente,$stringFacturasCod){
   $url=obtenerValorConfiguracion(102);//direccion de servicio web  
   //$url="http://localhost:8080/minka_siat_ibno/wsminka/ws_generarFactura.php";//direccion de servicio web  
   $sIde = "MinkaSw123*";
   $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
  
-    //REGISTRAR CONTROL PAGOS 
+  //REGISTRAR CONTROL PAGOS 
   
   $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
    "accion"=>"generarFacturaMinka", //

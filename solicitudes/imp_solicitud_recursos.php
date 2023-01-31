@@ -472,7 +472,7 @@ $tituloImporte="";
             <td class="s4 text-center" width="25%"><b>IBNORCA &#169;</b></td>
             <!--td class="s4 text-left" width="25%"><b>Codigo:</b> REG-PRE-SA-04-01.05</td-->
             <td class="s4 text-center" width="25%"><b>Codigo:</b> REG-PRO-AF-02-03.06</td>
-            <td class="s4 text-center" width="25%"><b>V:</b> 2021-08-13</td>
+            <td class="s4 text-center" width="25%"><b>V:</b> 2022-02-25</td>
             <td class="s4 text-center" width="25%"></td>
           </tr>
          <tr style="border: inset 0pt">

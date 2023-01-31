@@ -22,6 +22,7 @@ $dias_curso=$_GET['dias_curso'];
 $precio_pedit=$_GET['precio_pedit'];
 $modal_modulos=$_GET['modal_modulos'];
 $normas=$_GET['normas'];
+$normasInt=$_GET['normas_int'];
 
 //echo $normas;
 
@@ -136,11 +137,18 @@ $stmtDelNorma->execute();
 
 for ($i=0; $i < count($normas); $i++) { 
      $codNorma=$normas[$i];
-     $sqlInsertNorma="INSERT INTO simulaciones_costosnormas (cod_simulacion, cod_norma,cantidad,precio) 
-     VALUES ('".$codSimulacion."','".$codNorma."',1,10)";
+     $sqlInsertNorma="INSERT INTO simulaciones_costosnormas (cod_simulacion, cod_norma,cantidad,precio, catalogo) 
+     VALUES ('".$codSimulacion."','".$codNorma."',1,10,'L')";
      $stmtInsertNorma = $dbh->prepare($sqlInsertNorma);
      $stmtInsertNorma->execute();
-}
+  }
+  for ($i=0; $i < count($normasInt); $i++) { 
+     $codNorma=$normasInt[$i];
+     $sqlInsertNorma="INSERT INTO simulaciones_costosnormas (cod_simulacion, cod_norma,cantidad,precio, catalogo) 
+     VALUES ('".$codSimulacion."','".$codNorma."',1,10,'I')";
+     $stmtInsertNorma = $dbh->prepare($sqlInsertNorma);
+     $stmtInsertNorma->execute();
+  }
 
 
 $precios=obtenerPreciosPorCodigo($precio_p);

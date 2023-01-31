@@ -5,9 +5,14 @@ require_once 'styles.php';
 
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
+
+$url_list_siat=obtenerValorConfiguracion(103);
+
+
 //datos registrado de la simulacion en curso
 
-  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion=5 order by codigo desc limit 100");
+  $stmt = $dbh->prepare("SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x,
+  (select st.abreviatura from siat_tipos_documentoidentidad st where st.codigo=sf.siat_tipoidentificacion)as abrevTipoDoc, sf.siat_complemento  FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where cod_estadosolicitudfacturacion=5 order by codigo desc limit 100");
 
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_facturacion);
@@ -32,6 +37,10 @@ $globalAdmin=$_SESSION["globalAdmin"];
   $stmt->bindColumn('obs_devolucion', $obs_devolucion);
   $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
   // busquena por Oficina
+  $stmt->bindColumn('siat_tipoidentificacion', $siatTipoDocIdentificacion);
+  $stmt->bindColumn('abrevTipoDoc', $siatTipoDocAbrev);
+  $stmt->bindColumn('siat_complemento', $siatComplemento);
+
 $stmtUO = $dbh->prepare("SELECT cod_unidadorganizacional,(select u.nombre from unidades_organizacionales u where u.codigo =cod_unidadorganizacional)as nombre, (select u.abreviatura from unidades_organizacionales u where u.codigo =cod_unidadorganizacional)as abreviatura FROM solicitudes_facturacion where cod_estadosolicitudfacturacion=5 GROUP BY nombre");
 $stmtUO->execute();
 $stmtUO->bindColumn('cod_unidadorganizacional', $codigo_uo);
@@ -42,6 +51,7 @@ SELECT cod_cliente,(SELECT c.nombre from  clientes c where c.codigo=cod_cliente)
 $stmtCliente->execute();
 $stmtCliente->bindColumn('cod_cliente', $codigo_cli);
 $stmtCliente->bindColumn('nombre', $nombre_cli);
+
 ?>
 <div class="content">
   <div class="container-fluid">
@@ -111,8 +121,14 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                     break;
                   }
 
+                  if($siatComplemento!=""){
+                    $siatComplemento="<span style='color:red'><b>-".$siatComplemento."</b></span>";
+                  }
+                  $datosFacturacion=$razon_social."<br>"."<span style='color:red'>".$siatTipoDocAbrev."-</span><span style='color:blue'>".$nit."</span>".$siatComplemento;
+
+
                   //verificamos si ya tiene factura generada y esta activa                           
-                  $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe,cod_comprobante from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion order by codigo desc limit 1");
+                  $stmtFact = $dbh->prepare("SELECT codigo,nro_factura,cod_estadofactura,razon_social,nit,nro_autorizacion,importe,cod_comprobante, idTransaccion_siat from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion order by codigo desc limit 1");
                   $stmtFact->execute();
                   $resultSimu = $stmtFact->fetch();
                   $codigo_fact_x = $resultSimu['codigo'];
@@ -123,6 +139,8 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                   $nro_autorizacion_x = $resultSimu['nro_autorizacion'];
                   $importe_x = $resultSimu['importe'];
                   $cod_comprobante_x = $resultSimu['cod_comprobante'];
+                  $idTransaccionSiat = $resultSimu['idTransaccion_siat'];
+
                   if ($nro_fact_x==null)$nro_fact_x="-";
                   else $nro_fact_x="F".$nro_fact_x;
                   if($cod_estado_factura_x==4){
@@ -194,7 +212,7 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                     <td><small><?=$codigo_alterno?></small></td>
                     <td><small><?=$fecha_registro;?></small></td>
                     <td class="text-right"><small><?=formatNumberDec($sumaTotalImporte);?></small></td>                            
-                    <td><small><small><?=$razon_social;?></small></small></td>
+                    <td><small><small><?=$datosFacturacion;?></small></small></td>
                     <td><small><small><?=$concepto_contabilizacion?></small></small></td>
                     <td>
                       <?php if($cod_estado_factura_x==3){
@@ -217,9 +235,16 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                             for ($i=0; $i < $cont_facturas; $i++) { 
                               $cod_factura_x= $arrayCodFacturas[$i];
                               $nro_factura_x= $arrayFacturas[$i];
-                              if($cod_factura_x!=0){?>
+                              if($cod_factura_x!=0){
+                                if($idTransaccionSiat!=0){?>
+                                <a class="dropdown-item" type="button" href='<?=$url_list_siat;?>formatoFacturaOnLine.php?codVenta=<?=$idTransaccion_siat?>' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
+                              <?php 
+                                }else{
+                              ?>
                                 <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
-                              <?php }else{?>
+                              <?php    
+                                }
+                              }else{?>
                                 <a class="dropdown-item" type="button" href='#'><i class="material-icons text-success" title="Factura">list</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
                               <?php }
                             }?>
@@ -235,8 +260,16 @@ $stmtCliente->bindColumn('nombre', $nombre_cli);
                       <?php
                         if($globalAdmin==1){ //
                           if($codigo_fact_x>0 && $cont_facturas<2 && ($cod_estado_factura_x!=2)){//print facturas
-                            ?>
+                            if($idTransaccionSiat!=0){
+                      ?>
+                            <a class="btn btn-success" href='<?=$url_list_siat;?>formatoFacturaOnLine.php?codVenta=<?=$idTransaccionSiat?>' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
+                      <?php        
+                            }else{
+                      ?>
                             <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>
+                      <?php        
+                            }
+                            ?>
                             <a href="<?=$urlImp;?>?comp=<?=$cod_comprobante_x;?>&mon=1" target="_blank" class="btn" style="background-color:#3f33ff">
                               <i class="material-icons" title="Imprimir Comprobante">print</i></a><?php
                           }elseif($cod_estado_factura_x==4){//factura manual ?>
