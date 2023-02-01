@@ -6,7 +6,7 @@
 					<table width="100%">
 					<tr><td colspan="3" style="border: 0;"><b>INSTITUTO BOLIVIANO DE NORMALIZACIÓN Y CALIDAD</b></td>
 					</tr>
-					<tr ><td width="30%" style="border: 0;" >'.$arrayOficinas[$cod_unidad_x][2].'<br>'.$arrayOficinas[$cod_unidad_x][5].'</td>
+					<tr ><td width="30%" style="border: 0;" >'.$arrayOficinas[$cod_unidad_x][1].'<br>'.$arrayOficinas[$cod_unidad_x][5].'</td>
 						<td width="25%" style="border: 0;"><center><span style="font-size: 13px"><b>BOLETA DE PAGO</b></span><br><b>Expresada en bolivianos</b></center></td>
 						<td width="25%" style="border: 0;"><center><table width="100%"><tr><td style="border: 0;align:left" width="70%">NIT:1020745020<br><b>N° PAT. '.$arrayOficinas[$cod_unidad_x][4].'</b></td><td style="border: 0;" width="30%"><img class="" width="40" height="40" src="../assets/img/logo_ibnorca_origen_3.jpg"></td></tr></table></center></td>
 					</tr>
