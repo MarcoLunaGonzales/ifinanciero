@@ -13,6 +13,7 @@ $mes=strtoupper(nombreMes($cod_mes));
 
 // $htmlConta1=generarHtmlBoletaRetroactivo($cod_planilla,$cod_gestion,0);  
 $htmlConta1=generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_personal);
+// echo $htmlConta1;
 descargarPDFBoleta("IBNORCA BOLETAS DE SUELDO ".$mes." ".$gestion,$htmlConta1);
 
 //borramos los archivos temporales
