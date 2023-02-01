@@ -167,6 +167,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
 
   //contra cuenta
   $glosaDetalleGeneral="Provisión de aguinaldo correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;      
+  $glosaDetalleGeneral2="Provisión de segundo aguinaldo correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;      
   $codUOCentroCosto=$globalUnidadX;
   $codAreaCentroCosto="502";
   //SUELDOS POR PAGAR
@@ -174,10 +175,28 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   // $totalProvision=$totalProvision*0.0833;
   $cod_cuenta=146;
   $cod_cuenta_aux=0;
-  $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','$cod_cuenta_aux','$codUOCentroCosto','$codAreaCentroCosto','0','$totalProvision','$glosaDetalleGeneral','$ordenDetalle')";
-  $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-  $flagSuccessDet=$stmtInsertDet->execute();
-  $ordenDetalle++;
+  if($bandera_segundoAguinaldo==1){
+    $totalProvision=$totalProvision/2;
+
+    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','$cod_cuenta_aux','$codUOCentroCosto','$codAreaCentroCosto','0','$totalProvision','$glosaDetalleGeneral','$ordenDetalle')";
+    $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+    $flagSuccessDet=$stmtInsertDet->execute();
+    $ordenDetalle++;
+
+    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','$cod_cuenta_aux','$codUOCentroCosto','$codAreaCentroCosto','0','$totalProvision','$glosaDetalleGeneral2','$ordenDetalle')";
+    $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+    $flagSuccessDet=$stmtInsertDet->execute();
+    $ordenDetalle++;    
+  }elseif($bandera_segundoAguinaldo==0){
+    $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','$cod_cuenta_aux','$codUOCentroCosto','$codAreaCentroCosto','0','$totalProvision','$glosaDetalleGeneral','$ordenDetalle')";
+    $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+    $flagSuccessDet=$stmtInsertDet->execute();
+    $ordenDetalle++;    
+  }
+
+
+
+
 
   ///**** desde aqui provisión de imdenmizaciones
   $totalProvision=0;

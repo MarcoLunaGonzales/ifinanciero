@@ -3537,7 +3537,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $valor_configuracion=$resultado['valor_configuracion'];
 
     $aporte_p_seguro_medico=$total_ganado*$valor_configuracion/100;
-    $aporte_p_seguro_medico_X=number_format($aporte_p_seguro_medico,2,'.','');
+    //$aporte_p_seguro_medico_X=number_format($aporte_p_seguro_medico,2,'.','');
+    $aporte_p_seguro_medico_X=$aporte_p_seguro_medico;
 
     //cerramos
     $stmt = null;

@@ -9,6 +9,10 @@ require_once 'functions.php';
 require_once 'configModule.php';
 $dbh = new Conexion();
 
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+$url_list_siat=obtenerValorConfiguracion(103);
 
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
@@ -21,7 +25,7 @@ if(isset($_GET['q'])){
   $s=$_GET['s'];
   $u=$_GET['u'];
 }
-$sql="SELECT f.cod_estadofactura,f.cod_solicitudfacturacion,f.codigo,f.nro_factura,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,f.nit,f.razon_social from facturas_venta f, facturas_ventadetalle fd where f.codigo=fd.cod_facturaventa and fd.ci_estudiante=$ci GROUP BY f.codigo order by f.nro_factura";  
+$sql="SELECT f.cod_estadofactura,f.cod_solicitudfacturacion,f.codigo,f.nro_factura,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,f.nit,f.razon_social,IFNULL(idTransaccion_siat,0)as facturasiat from facturas_venta f, facturas_ventadetalle fd where f.codigo=fd.cod_facturaventa and fd.ci_estudiante=$ci GROUP BY f.codigo order by f.nro_factura";  
 ?>
 <div class="content">
   <div class="container-fluid">
@@ -72,10 +76,21 @@ $sql="SELECT f.cod_estadofactura,f.cod_solicitudfacturacion,f.codigo,f.nro_factu
                   $stmt->bindColumn('hora_factura_x', $hora_factura_x);
                   $stmt->bindColumn('cod_estadofactura', $cod_estadofactura);
                   $stmt->bindColumn('cod_solicitudfacturacion', $cod_solicitudfacturacion);
+                  $stmt->bindColumn('facturasiat', $facturaSiat);
+
                   while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)){
                     $nombreAlumno=obtenerNombreEstudiante($ci);  
                     $correosEnviados=obtenerCorreosEnviadosFactura($codigo);  
                     $estadofactura=obtener_nombreestado_factura($cod_estadofactura);
+
+                    /*ARMAMOS LA URL PARA LA VISTA DE LAS FACTURAS*/
+                    $urlFacturaImprimir="";
+                    if($facturaSiat==0){
+                        $urlFacturaImprimir="simulaciones_servicios/generarFacturasPrint.php?codigo=".$codigo."&tipo=1";
+                    }else{
+                        $urlFacturaImprimir=$url_list_siat."formatoFacturaOnLine.php?codVenta=".$facturaSiat."";
+                    }
+
                     switch ($cod_estadofactura) {
                       case 1://activo
                         $label='<span class="badge badge-success">';
@@ -98,7 +113,7 @@ $sql="SELECT f.cod_estadofactura,f.cod_solicitudfacturacion,f.codigo,f.nro_factu
                       <td class="text-left small"><?=$nit;?></td>
                       <td class="text-left small"><?=$label.$estadofactura;?></span></td>
                       <td class="td-actions text-right">
-                        <a title="Imprimir Factura. <?=$correosEnviados?>" class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo;?>&tipo=1&admin=2' target="_blank"><i class="material-icons">print</i></a>
+                        <a title="Imprimir Factura. <?=$correosEnviados?>" class="btn btn-success" href='<?=$urlFacturaImprimir;?>' target="_blank"><i class="material-icons">print</i></a>
                         <a  class="btn btn-danger" href='<?=$urlPrintSolicitud;?>?codigo=<?=$cod_solicitudfacturacion;?>' target="_blank" title="Imprimir Solicitud Facturación"><i class="material-icons">print</i></a>
                       </td>
                     </tr>
