@@ -44,7 +44,7 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
       join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
 
     where pm.cod_planilla=$cod_planilla $sql_add 
-    order by pm.correlativo_planilla";
+    order by pm.correlativo_planilla limit 0,1";
 
 
     $stmt = $dbh->prepare($sql);
@@ -76,9 +76,11 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
     // echo $urlFirma;
 	while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
 		$cod_unidadorganizacional=$result['cod_unidadorganizacional'];
-		if($cod_unidadorganizacional==9 || $cod_unidadorganizacional==10 ){
-			$cod_unidad_x=$cod_unidadorganizacional;
-		}else{    
+		if($cod_unidadorganizacional==270 || $cod_unidadorganizacional==9){
+			$cod_unidad_x=9;
+		}elseif($cod_unidadorganizacional==271 || $cod_unidadorganizacional==10){    
+			$cod_unidad_x=10;
+		}else{
 			$cod_unidad_x=5;
 		}
 

@@ -9,9 +9,17 @@ require_once '../functionsPlanillas.php';
 require_once '../layouts/bodylogin2.php';
 require_once '../rrhh/configModule.php';
 
-$array_personal;
+/*
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+*/
+
 $dbh = new Conexion();
 $cod_ref=$_GET['cod_ref'];
+
+$array_personal=[];
+
+
 $sqlPersonalDistribucion="SELECT pd.cod_personal, SUM(pd.porcentaje) as porcentaje 
 from personal_area_distribucion pd join personal p on pd.cod_personal=p.codigo 
 where pd.cod_estadoreferencial=1 and p.cod_estadoreferencial=1 and p.cod_estadopersonal=1
@@ -148,8 +156,10 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $stmtInsertDet = $dbh->prepare($sqlInsertDet);
   $flagSuccessDet=$stmtInsertDet->execute();
   $ordenDetalle++;
+
+
   ///retencion RC IVA
-  $totalRefrigerioX=$totalRefrigerioX*0.13;
+  $totalRefrigerioX=$totalRefrigerioMes*0.13;
   $glosaDetalleGeneral="Retención del 13% refirgerio mes de a: ".$namemesPlanilla."/".$anioPlanilla;      
   $codUOCentroCosto=$globalUnidadX;
   $codAreaCentroCosto="502";
@@ -161,6 +171,8 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $ordenDetalle++;
 
 
+  $debe=0;
+  $haber=0;
   $sqlDifirencia="SELECT sum(debe)-sum(haber) as diferencia from comprobantes_detalle where cod_comprobante='$codComprobante'";
   $stmtdiferencia = $dbh->prepare($sqlDifirencia);
   $stmtdiferencia->execute();
@@ -191,6 +203,14 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $stmtUdatePlanilla->execute();
 
   // volver
+    ?>
+    <script>
+          $(document).ready(function()
+          {           
+             $("#mostrarmodal1").modal("show");         
+          });
+       </script>
+    <?php  
 
 }else{ 
    ?>
@@ -203,6 +223,24 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
 <?php }
 ?>
 
+
+<!-- modal  -->
+<div class="modal fade" id="mostrarmodal1" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel" aria-labelledby="basicModal" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">        
+        <h4 class="modal-title" id="myModalLabel" align="left"><b>El Proceso ha finalizado correctamente.</b></h4>
+      </div>
+      <div class="modal-body" align="left">
+         Por favor seleccione una opción.
+      </div>       
+      <div class="modal-footer">          
+        <a href="<?=$urlComprobantesLista2;?>" type="button" class="btn btn-success">Ir a Comprobantes</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal fade" id="mostrarmodal2" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="myModalLabel" aria-labelledby="basicModal" >
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -214,17 +252,15 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
          <b>Error en personal:</b> <br>
          <?php
          // $longitud_array=count($array_personal);
-         foreach ($array_personal as $cod_personal_x) {
-            $nombre_personal_x=obtenerNombrePersonal($cod_personal_x);
-            echo "<b>- Nombre: </b>".$nombre_personal_x."(Cod:".$cod_personal_x.").<br>";
-         }
+          if($sw_auxiliar==0){
+            foreach ($array_personal as $cod_personal_x) {
+              $nombre_personal_x=obtenerNombrePersonal($cod_personal_x);
+              echo "<b>- Nombre: </b>".$nombre_personal_x."(Cod:".$cod_personal_x.").<br>";
+            }
+          }
 
          ?>
       </div>       
-      <div class="modal-footer">                  
-        <a href="<?=$urlPersonalLista2;?>" type="button" class="btn btn-success">Ir a Personal</a>
-        <a href="<?=$urlPlanillasSueldoList2;?>" type="button" class="btn btn-danger">Ir a Planillas</a>
-      </div>
     </div>
   </div>
 </div>
