@@ -81,8 +81,12 @@
 							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($Anticipos).'</td>
 						</tr>
 						<tr>
+							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Atrasos</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($atrasos).'</td>
+						</tr>
+						<tr>
 							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Otros Descuentos</td>
-							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($descuentos_otros).'</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($descuentos_otrosX).'</td>
 						</tr>
 						<tr>
 							<td class=text-left" style="border: 0;">&nbsp;</td>
@@ -133,7 +137,7 @@
 				</tr>
 			</table><br><br>';
 
-			 $html.='<div style="page-break-after: always"></div>';
+			 // $html.='<div style="page-break-after: always"></div>';
 	$html.='</div>';
 
 

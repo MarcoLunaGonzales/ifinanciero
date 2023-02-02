@@ -38,7 +38,7 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 
 
   $sql="SELECT p.codigo, p.primer_nombre as nombres,CONCAT(p.paterno,' ', p.materno) as apellidos,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,(select a.nombre from areas a where a.codigo=p.cod_area) as area,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,pm.bono_antiguedad,pm.bonos_otros,pm.total_ganado,pm.descuentos_otros,pm.correlativo_planilla,pm.liquido_pagable,
-    pm.dias_trabajados,pm.afp_1,pm.afp_2,pp.seguro_de_salud,pp.riesgo_profesional,pp.rc_iva,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,p.ing_planilla,p.identificacion,p.cod_unidadorganizacional
+    pm.dias_trabajados,pm.afp_1,pm.afp_2,pp.seguro_de_salud,pp.riesgo_profesional,pp.rc_iva,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,p.ing_planilla,p.identificacion,p.cod_unidadorganizacional,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=5 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as datrasos
     FROM personal p
     join planillas_personal_mes pm on pm.cod_personalcargo=p.codigo
       join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
@@ -135,12 +135,14 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 
 		$otrosBonos=$result['bonos_otros'];
 		$descuentos_otros=$result['descuentos_otros'];
+		$atrasos=$result['datrasos'];
 		$index_planilla=$result['correlativo_planilla'];
+		$descuentos_otrosX=$descuentos_otros-$atrasos;
 		// $otrosBonos=$bono_antiguedad-$otrosBonos;//$bono_antiguedad+ esta variable ya esta incluido en otrosBonos
 		// $descuentos_otros
 		
 		$suma_ingresos=$haber_basico_dias+$bono_antiguedad+$otrosBonos;
-		$suma_egresos=$Ap_Vejez+$Riesgo_Prof+$ComAFP+$aposol+$aposol13+$aposol25+$aposol35+$RC_IVA+$Anticipos+$descuentos_otros;
+		$suma_egresos=$Ap_Vejez+$Riesgo_Prof+$ComAFP+$aposol+$aposol13+$aposol25+$aposol35+$RC_IVA+$Anticipos+$descuentos_otrosX+$atrasos;
 
 		$liquido_pagable=$suma_ingresos-$suma_egresos;
 		// $liquido_pagable=$result['liquido_pagable'];
@@ -150,8 +152,8 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 			require 'boletas_html_aux.php';	
 		}else{
 			require 'boletas_html_aux.php';
-			$html.='<br>';
-			// require 'boletas_html_aux.php';	
+			// $html.='<br>';
+			require 'boletas_html_aux.php';	
 		}
 		// $index_planilla++;
 	}
