@@ -42,9 +42,8 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
     FROM personal p
     join planillas_personal_mes pm on pm.cod_personalcargo=p.codigo
       join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
-
     where pm.cod_planilla=$cod_planilla $sql_add 
-    order by pm.correlativo_planilla limit 0,1";
+    order by pm.correlativo_planilla limit 0,5";
 
 
     $stmt = $dbh->prepare($sql);
@@ -152,7 +151,7 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 			require 'boletas_html_aux.php';	
 		}else{
 			require 'boletas_html_aux.php';
-			// $html.='<br>';
+			$html.='<hr>';
 			require 'boletas_html_aux.php';	
 		}
 		// $index_planilla++;

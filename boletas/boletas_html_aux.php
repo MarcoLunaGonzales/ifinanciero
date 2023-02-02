@@ -56,6 +56,10 @@
 							<td class="text-right" style="border: 0;">&nbsp;</td>
 						</tr>
 						<tr>
+							<td class=text-left" style="border: 0;">&nbsp;</td>
+							<td class="text-right" style="border: 0;">&nbsp;</td>
+						</tr>
+						<tr>
 							<td class=text-left" style="border: 0;"><b>Total Ganado:</b></td>
 							<td class="text-right" style="border: 0;">'.formatNumberDec($suma_ingresos).'</td>
 						</tr>
@@ -74,7 +78,7 @@
 						</tr>
 						<tr>
 							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">RC IVA</td>
-							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.($RC_IVA).'</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($RC_IVA).'</td>
 						</tr>
 						<tr>
 							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Anticipos</td>
@@ -91,7 +95,8 @@
 						<tr>
 							<td class=text-left" style="border: 0;">&nbsp;</td>
 							<td class="text-right" style="border: 0;">&nbsp;</td>
-						</tr>						<tr>
+						</tr>
+						<tr>
 							<td class=text-left" style="border: 0;"><b>Total Deducciones:</b></td>
 							<td class="text-right" style="border: 0;">'.formatNumberDec($suma_egresos).'</td>
 						</tr>
@@ -135,8 +140,7 @@
 					<center><p><br><br><br>______________________________<br><b>RECIBÍ CONFORME</b><br><br></p></center>
 					</td>
 				</tr>
-			</table><br><br>';
-
+			</table>';
 			 // $html.='<div style="page-break-after: always"></div>';
 	$html.='</div>';
 
