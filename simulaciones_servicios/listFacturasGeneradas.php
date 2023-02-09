@@ -9,8 +9,8 @@ $globalPersonal=$_SESSION["globalUser"];
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,idTransaccion_siat
- from facturas_venta f where cod_estadofactura in (1,2,3) order by  f.codigo desc limit 50");
+  $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal
+ from facturas_venta f where cod_estadofactura in (1,2,3) order by  f.cod_dosificacionfactura desc,f.nro_factura desc limit 50");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_factura);
   $stmt->bindColumn('cod_sucursal', $cod_sucursal);
@@ -37,9 +37,6 @@ $globalPersonal=$_SESSION["globalUser"];
   // $stmt->bindColumn('estadofactura', $estadofactura);
   $stmt->bindColumn('cod_comprobante', $cod_comprobante);
   $stmt->bindColumn('glosa_factura3', $glosa_factura3);
-
-
-  $stmt->bindColumn('idTransaccion_siat', $idTransaccion_siat);
 
   date_default_timezone_set('America/La_Paz');
   if(isset($_GET['interno'])){
@@ -71,18 +68,14 @@ $globalPersonal=$_SESSION["globalUser"];
                     <div class="card-icon">
                       <i class="material-icons">polymer</i>
                     </div>
-                    <h4 class="card-title"><b>Facturas Generadas</b></h4>
+                    <h4 class="card-title"><b>Facturas Generadas</b></h4>                    
                   </div>
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group" align="right">
-                          <a type="button" class="btn btn-danger btn-round btn-fab btn-sm" title="Facturas OFFLINE" target="_blank" href="<?=$url_list_siat;?>siat_folder/siat_facturacion_offline/facturas_sincafc_list.php">
-                            <i class="material-icons" title="Buscador Avanzado">list</i><span class="count bg-warning" style="width:20px;height: 20px;font-size: 12px;" ><b><?=$cantidadOffline?></b></span>
-                          </a>
-
                           <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscadorFacturas">
                               <i class="material-icons" title="Buscador Avanzado">search</i>
-                          </button>
+                          </button>                               
                       </div>
                     </div>
                   </div>
@@ -305,9 +298,9 @@ $globalPersonal=$_SESSION["globalUser"];
                       </tbody>
                     </table>
                   </div>
-                  <!-- <div class="card-footer fixed-bottom col-sm-9">
+                  <div class="card-footer fixed-bottom col-sm-9">
                     <a href='<?=$urlListFacturasGeneradasManuales;?>' class="btn btn-info float-right"><i class="material-icons">list</i>Facturas Manuales</a>
-                  </div>    -->
+                  </div>   
                 </div>                
               </div>
           </div>  
