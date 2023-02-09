@@ -98,6 +98,11 @@ $dbh = new Conexion();
 
 				  		<div class="col-sm-3">
 							<div class="form-group">
+								<a href="http://ibnored.ibnorca.org/siat_ibno/reporte_facturas/facturas_venta_filtro.php" class="btn btn-primary" target="_blank"> Impresión de Facturas SIAT</a>
+							</div>
+				  		</div>
+				  		<div class="col-sm-3">
+							<div class="form-group">
 								<a href="<?=$urlImpresionFacturas;?>" class="btn btn-default" target="_blank"> Impresión de Facturas </a>
 							</div>
 				  		</div>
