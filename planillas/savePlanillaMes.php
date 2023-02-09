@@ -156,15 +156,27 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 		$total_ganado = $haber_basico_x+$total_bonos;	
 		//calculamos descuentos
 		if($cod_tipoafp==1){
-		  $afp_futuro =obtenerAporteAFP($total_ganado);
-		  $afp_prevision=0;
+		  	$afp_futuro =obtenerAporteAFP($total_ganado);
+		  	$afp_prevision=0;
+  			/*CASO ESPECIAL JOSE DURAN*/
+  			if($codigo_personal==84){
+  				$afp_futuro = $total_ganado*0.0271; 
+  			}
+			/*FIN CASO ESPECIAL JOSE DURAN*/
 		}elseif($cod_tipoafp==2){
-		  $afp_prevision = obtenerAporteAFP($total_ganado);
-		  $afp_futuro=0;
+		  	$afp_prevision = obtenerAporteAFP($total_ganado);
+		  	$afp_futuro=0;
+  			/*CASO ESPECIAL JOSE DURAN*/
+  			if($codigo_personal==84){
+	  			$afp_prevision = $total_ganado*0.0271; 
+  			}
+			/*FIN CASO ESPECIAL JOSE DURAN*/
 		}else{
-		  $afp_prevision = 0;
-		  $afp_futuro=0;
+		  	$afp_prevision = 0;
+		  	$afp_futuro=0;
 		}
+
+
 		//aportes volvuntarios
 		$aporte_solidario_13000 = obtenerAporteSolidario13000($total_ganado);
 		$aporte_solidario_25000 = obtenerAporteSolidario25000($total_ganado);

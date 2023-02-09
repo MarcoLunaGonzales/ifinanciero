@@ -22,7 +22,7 @@ $dbh = new Conexion();
                 </div>
                 
                 <div class="card-body">
-                  <div class="table-responsive">
+                  <div class="">
                     <table class="table table-striped">
                       <thead>
                         <tr>
@@ -32,7 +32,7 @@ $dbh = new Conexion();
                       <tbody>
                         <tr>
                           <td align="center">
-                            <select class="selectpicker" title="Seleccione una opcion" name="gestion" id="gestion" data-style="<?=$comboColor;?>" required>
+                            <select class="selectpicker" data-style="<?=$comboColor;?>" data-show-subtext="true" data-live-search="true"  title="Seleccione una opcion" name="gestion" id="gestion" required>
                               <option disabled selected value=""></option>
                               <?php
                               $stmt = $dbh->prepare("SELECT g.codigo, g.nombre FROM gestiones g where g.cod_estado=1 order by 2 desc");

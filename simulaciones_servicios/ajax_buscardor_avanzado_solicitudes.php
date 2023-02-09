@@ -19,6 +19,10 @@ $globalGestion=$_SESSION["globalGestion"];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 
+
+$url_list_siat=obtenerValorConfiguracion(103);
+
+
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $v=$_GET['v'];
@@ -141,7 +145,7 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
         break;
       }
       //verificamos si ya tiene factura generada y esta activa                           
-      $stmtFact = $dbh->prepare("SELECT codigo, nro_factura, cod_estadofactura, razon_social, nit, nro_autorizacion, importe, cod_comprobante from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion order by codigo desc limit 1");
+      $stmtFact = $dbh->prepare("SELECT codigo, nro_factura, cod_estadofactura, razon_social, nit, nro_autorizacion, importe, cod_comprobante, IFNULL(idTransaccion_siat,0)as facturasiat from facturas_venta where cod_solicitudfacturacion=$codigo_facturacion order by codigo desc limit 1");
       $stmtFact->execute();
       $resultSimu = $stmtFact->fetch();
       $codigo_fact_x = $resultSimu['codigo'];
@@ -161,6 +165,16 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
 
         $cliente_x=nameCliente($cod_cliente);                              
         $datos_FacManual=$cliente_x."/".$razon_social_x."/".$nit_x."/".$nro_fact_x."/".$nro_autorizacion_x."/".$importe_x;
+      }
+      $facturaSIAT=$resultSimu['facturasiat'];
+
+
+      /*ARMAMOS LA URL PARA LA VISTA DE LAS FACTURAS*/
+      $urlFacturaImprimir="";
+      if($facturaSIAT==0){
+          $urlFacturaImprimir="simulaciones_servicios/generarFacturasPrint.php?codigo=".$codigo_facturacion."&tipo=2";
+      }else{
+          $urlFacturaImprimir=$url_list_siat."formatoFacturaOnLine.php?codVenta=".$facturaSIAT."";
       }
 
       //sacamos monto total de la factura para ver si es de tipo factura por pagos
@@ -266,7 +280,7 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
                         $cod_factura_x= $arrayCodFacturas[$i];
                         $nro_factura_x= $arrayFacturas[$i];
                         if($cod_factura_x!=0){?>
-                          <a class="dropdown-item" type="button" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$cod_factura_x;?>&tipo=1' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
+                          <a class="dropdown-item" type="button" href='<?=$urlFacturaImprimir;?>' target="_blank"><i class="material-icons text-success" title="Imprimir Factura">print</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
                         <?php }else{?>
                           <a class="dropdown-item" type="button" href='#'><i class="material-icons text-success" title="Factura">list</i> Factura <?=$i+1;?> - Nro <?=$nro_factura_x?></a>
                         <?php }                                           
@@ -294,7 +308,7 @@ $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 
                 // echo "entra";
                 if($cont_facturas<2){
                   ?>
-                  <a class="btn btn-success" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_facturacion;?>&tipo=2' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
+                  <a class="btn btn-success" href='<?=$urlFacturaImprimir;?>' target="_blank"><i class="material-icons" title="Imprimir Factura">print</i></a>          
                   
                  <?php               
                 }

@@ -126,7 +126,7 @@ $un=0;
 //facturas
 $un=0;
 /*TEMPORAL*/
-$stmt = $dbh->prepare("SELECT * FROM facturas_compra f where YEAR(f.fecha)=2022;");
+$stmt = $dbh->prepare("SELECT * FROM facturas_compra f where YEAR(f.fecha)=2023;");
 //$stmt = $dbh->prepare("SELECT * FROM facturas_compra");
 $stmt->execute();
 $arrayFacturasGenerales=[];
@@ -147,7 +147,8 @@ $arrayFacturasGenerales=[];
 	}
 //estados de Cuentas
 $un=0;
-$stmt = $dbh->prepare("SELECT * FROM estados_cuenta e where YEAR(e.fecha)=2022;");
+$stmt = $dbh->prepare("SELECT e.* FROM comprobantes c, comprobantes_detalle cd, estados_cuenta e where 
+c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle and YEAR(c.fecha)=2023");
 //$stmt = $dbh->prepare("SELECT * FROM estados_cuenta");
 $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

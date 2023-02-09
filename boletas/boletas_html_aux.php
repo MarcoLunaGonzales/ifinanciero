@@ -2,40 +2,70 @@
 
 	$html.='<div  style="height: 49.4%">';
 			$html.='<table width="100%" class="table" style="font-size:12px;">
-				<tr><td colspan="2" >
+				<tr>
+					<td colspan="2" >
+					
 					<table width="100%">
-					<tr ><td width="29%" style="border: 0;" ><b>INSTITUTO BOLIVIANO DE NORMALIZACIÓN Y CALIDAD</b><br>Calle 7 N° 545 Esq. 14 Septiembre, Zona Obrajes<br>La Paz - Bolivia<br>NIT:1020745020</td>
-						<td width="25%" style="border: 0;"><center><span style="font-size: 13px"><b>BOLETA DE PAGO</b></span><br><b>EXPRESADA EN BOLIVIANOS</b></center></td>
-						<td width="25%" style="border: 0;"><center><table width="100%"><tr><td style="border: 0;align:left" width="70%">N° PAT. 925-1-761</td><td style="border: 0;" width="30%"><img class="" width="40" height="40" src="../assets/img/logoibnorca_a.jpg"></td></tr></table></center></td>
+					<tr>
+						<td style="border: 1;" align="left" width="50%"><b>INSTITUTO BOLIVIANO DE NORMALIZACIÓN Y CALIDAD</b></td>
+						<td style="border: 1;" align="right" width="50%"><b>N° PATRONAL '.$arrayOficinas[$cod_unidad_x][4].'</b></td>
 					</tr>
 					</table>
-				</td></tr>
+					<table width="100%">
+						<tr>
+							<td width="33%" style="border: 0;" align="left"><b>NIT:1020745020<br>'.$arrayOficinas[$cod_unidad_x][1].'</b><br><br><br></td>
+							<td width="33%" style="border: 0;" align="center"><span style="font-size: 15px"><b>BOLETA DE PAGO</b></span><br><b>(Expresado en Bolivianos)</b></td>
+							<td width="33%" style="border: 0;" align="right"><img class="" width="50" height="50" src="../assets/img/logo_ibnorca_origen_3.jpg"></td>
+						</tr>
+					</table>
+				
+					</td>
+				</tr>
 				<tr><td>
-					<b>NOMBRE: '.$result['apellidos'].' '.$result['nombres'].'</b><BR>
-					<b>CARGO: '.mb_strtolower($result['cargo']).'</b><br>
-					<b>AREA: '.$result['area'].'</b><br>
-					<b>PERIODO: '.$mes.' '.$gestion.'</b>
+					<b>NOMBRE: </b><span style="text-transform:capitalize">'.$result['apellidos'].' '.$result['nombres'].'</span><BR>
+					<b>CARGO: </b><span style="text-transform:capitalize">'.$result['cargo'].'</span><br>
+					<b>ÁREA: </b><span style="text-transform:capitalize">'.$result['area'].'</span>
 				</td>
 				<td class="text-left">
-					<b>SUELDO BASICO:</b> '.formatNumberDec($result['haber_basico_pactado']).' BS <br>
-					<b>DIAS TRAB:</b> '.$result['dias_trabajados'].'<br>
-					<b>DOC. DE IDENTIDAD:</b> '.$result['identificacion'].'<BR>
-					<b>FECHA DE INGRESO: </b>'.strftime('%d/%m/%Y',strtotime($ing_planilla)).'</td></tr>
+					<b>PERIODO: </b><span style="text-transform:capitalize">'.$mes.' '.$gestion.'</span><br>
+					<b>SUELDO BÁSICO: </b><span style="text-transform:capitalize">'.formatNumberDec($result['haber_basico_pactado']).'</span><br>
+					<b>DIAS TRABAJADOS: </b><span style="text-transform:capitalize">'.$result['dias_trabajados'].'</span><br>
+					<b>FECHA DE INGRESO: </b><span style="text-transform:capitalize">'.strftime('%d/%m/%Y',strtotime($ing_planilla)).'</span></td></tr>
 
 				<tr><td width="50%" valign="top">
 					<table width="100%">
 						<tr><td colspan="2" style="background:#F2F2F2;border: 0;"><center><b>INGRESOS</b></center></td></tr>
 						<tr>
-							<td class=text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Haber Basico<br>Bono Antiguedad<br>Otros Bonos</td>
-							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($haber_basico_dias).'<br>'.formatNumberDec($bono_antiguedad).'<br>'.formatNumberDec($otrosBonos).'<BR>&nbsp;<BR>&nbsp;</td>
+							<td class=text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Haber Básico</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($haber_basico_dias).'</td>
+						</tr>
+						<tr>
+							<td class=text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Bono Antiguedad</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($bono_antiguedad).'</td>
+						</tr>
+						<tr>
+							<td class=text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Otros Bonos</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($otrosBonos).'</td>
+						</tr>
+						<tr>
+							<td class=text-left" style="border: 0;">&nbsp;</td>
+							<td class="text-right" style="border: 0;">&nbsp;</td>
+						</tr>
+						<tr>
+							<td class=text-left" style="border: 0;">&nbsp;</td>
+							<td class="text-right" style="border: 0;">&nbsp;</td>
+						</tr>
+						<tr>
+							<td class=text-left" style="border: 0;">&nbsp;</td>
+							<td class="text-right" style="border: 0;">&nbsp;</td>
 						</tr>
 						<tr>
 							<td class=text-left" style="border: 0;"><b>Total Ganado:</b></td>
-							<td class="text-right" style="border: 0;">'.formatNumberDec($suma_ingresos).'<BR>&nbsp;</td>
+							<td class="text-right" style="border: 0;">'.formatNumberDec($suma_ingresos).'</td>
 						</tr>
-						<tr>
-							<td class=text-left" style="border: 0;">SALDO RC-IVA:</td>
-							<td class="text-right" style="border: 0;background:#F2F2F2;border-left: 0;">'.formatNumberDec($saldo_rciva).'</td>
+						<tr style="background:#F2F2F2;">
+							<td class=text-left" style="border: 0;"><b>SALDO RC-IVA:</b></td>
+							<td class="text-right" style="border: 0;border-left: 0;">'.formatNumberDec($saldo_rciva).'</td>
 						</tr>
 					</table>
 				</td>
@@ -43,16 +73,36 @@
 					<table width="100%">
 						<tr><td colspan="2" style="background:#F2F2F2;border: 0;"><center><b>DEDUCCIONES</b></center></td></tr>
 						<tr>
-							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">AFP<br>RC IVA<br>Anticipos<br>Otros Descuentos</td>
-							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($Ap_Vejez+$Riesgo_Prof+$ComAFP+$aposol+$aposol13+$aposol25+$aposol35).'<br>'.formatNumberDec($RC_IVA).'<br>'.formatNumberDec($Anticipos).'<br>'.formatNumberDec($descuentos_otros).'<BR>&nbsp;</td>
+							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">AFP</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($Ap_Vejez+$Riesgo_Prof+$ComAFP+$aposol+$aposol13+$aposol25+$aposol35).'</td>
 						</tr>
 						<tr>
-							<td class=text-left" style="border: 0;"><b>Total Descuentos:</b></td>
-							<td class="text-right" style="border: 0;">'.formatNumberDec($suma_egresos).'<BR>&nbsp;</td>
+							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">RC IVA</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($RC_IVA).'</td>
 						</tr>
 						<tr>
-							<td class=text-left" style="border: 0;"><b>Liquido Pagable:</b></td>
-							<td class="text-right" style="border: 0;background:#F2F2F2;border-left: 0;"><b> '.formatNumberDec($liquido_pagable).'</b></td>
+							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Anticipos</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($Anticipos).'</td>
+						</tr>
+						<tr>
+							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Atrasos</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($atrasos).'</td>
+						</tr>
+						<tr>
+							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Otros Descuentos</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($descuentos_otrosX).'</td>
+						</tr>
+						<tr>
+							<td class=text-left" style="border: 0;">&nbsp;</td>
+							<td class="text-right" style="border: 0;">&nbsp;</td>
+						</tr>
+						<tr>
+							<td class=text-left" style="border: 0;"><b>Total Deducciones:</b></td>
+							<td class="text-right" style="border: 0;">'.formatNumberDec($suma_egresos).'</td>
+						</tr>
+						<tr style="background:#F2F2F2;">
+							<td class=text-left" style="border: 0;"><b>Líquido Pagable:</b></td>
+							<td class="text-right" style="border: 0;"><b> '.formatNumberDec($liquido_pagable).'</b></td>
 						</tr>
 					</table>
 				</td></tr>';
@@ -76,14 +126,22 @@
 				// 	</tr>';
 
 					$html.='<tr>
-					<td style="border-right: 0;">';
-					$html.='<img src="'.$fileName.'"/>';
+					<td style="border-right: 0;" valign="bottom">
+						<table width="100%">
+							<tr>
+							<td style="border: 0;" ><img src="'.$fileName.'"/></td>
+							<td style="border: 0;" >
+<center><p><img width="100px" src="'.$urlFirma.'"/>______________________________<b>JUAN QUENALLATA VEGA<br>DIRECTOR NACIONAL DE ADMINISTRACIÓN Y FINANZAS</b></p></center>
+							</td>
+							</tr>
+						</table>';
 					$html.='</td>
-					<td style="background:#F2F2F2;border-left:0;"><center><p><img width="100px" src="'.$urlFirma.'"/><br>______________________________<br><b>JUAN QUENALLATA VEGA<br>DIRECTOR NACIONAL ADMINISTRATIVO Y FINANCIERO</b></p></center></td>
+					<td style="border-left:0;">
+					<center><p><br><br><br>______________________________<br><b>RECIBÍ CONFORME</b><br><br></p></center>
+					</td>
 				</tr>
-			</table><br><br>';
-
-			 $html.='<div style="page-break-after: always"></div>';
+			</table>';
+			 // $html.='<div style="page-break-after: always"></div>';
 	$html.='</div>';
 
 

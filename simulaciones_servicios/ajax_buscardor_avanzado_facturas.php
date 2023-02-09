@@ -20,7 +20,7 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 
 $razon_social_f=$_GET['razon_social_f'];
-$detalle_f=$_GET['detalle_f'];
+$estadoFacturas=$_GET['estado_facturas'];
 $fechaBusquedaInicio=$_GET['fechaI'];
 $fechaBusquedaFin=$_GET['fechaF'];
 $nit_f=$_GET['nit_f'];
@@ -35,25 +35,25 @@ $url_list_siat=obtenerValorConfiguracion(103);
 
 
 $sql="SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,idTransaccion_siat
- from facturas_venta f where cod_estadofactura in (1,2,3)";
+ from facturas_venta f where 1=1 ";
 if($razon_social_f!=""){
   $sql.=" and f.razon_social like '%$razon_social_f%'";
-}
-if($detalle_f!=""){
-  $sql.=" and f.observaciones like '%$detalle_f%'";  
 }
 if($fechaBusquedaInicio!="" && $fechaBusquedaFin!=""){
   $sql.=" and f.fecha_factura BETWEEN '$fechaBusquedaInicio 00:00:00' and '$fechaBusquedaFin 23:59:59'"; 
 }
 if($nit_f!="" ){
-  $sql.=" and f.nit=$nit_f"; 
+  $sql.=" and f.nit='$nit_f' "; 
 }
 if($nro_f!="" ){
   $nro_f=trim($nro_f,",");
-  $sql.=" and f.nro_factura in ($nro_f)"; 
+  $sql.=" and f.nro_factura='$nro_f'"; 
 }
 if($personal_p!=""){  
   $sql.=" and f.cod_personal in ($personal_p)"; 
+}
+if($estadoFacturas!=""){  
+  $sql.=" and f.cod_estadofactura in ($estadoFacturas)"; 
 }
 if($cod_factura!=""){  
   $sql.=" and f.codigo in ($cod_factura)"; 
@@ -141,7 +141,7 @@ if(isset($_GET['interno'])){
         $sw_anular=verificar_fecha_rango($fecha_inicio_x, $fecha_fin, $fecha_factura_xyz);
       }
       //==
-      $nombre_personal=namePersonalCompleto($cod_personal);
+      $nombre_personal=namePersonal_2($cod_personal);
       if($cod_personal==0){
         $nombre_personal="Tienda Virtual";
       }                          
@@ -179,6 +179,20 @@ if(isset($_GET['interno'])){
       if (strlen($observaciones)>50){
         $observaciones= substr($observaciones, 0, 50)."..."; 
       }
+
+      //VERIFICAMOS SI ESTA ANULADA EN SIAT
+      $estadoAnuladoSIAT=0;
+      $estadoAnuladoSIAT=verificaAnulacionSIAT($idTransaccion_siat);
+      $strikeIni="";
+      $strikeFin="";
+      $strikeFin2="";
+      if($estadoAnuladoSIAT==1){
+          $strikeIni="<strike class='text-danger'>";        
+          $strikeFin="</strike>";
+          $strikeFin2="<br>(Anulado en SIAT)</strike>";
+      }
+      //FIN VERIFICACION SIAT
+
       
       //FORMAMOS EL CONCEPTO DE LA FACTURA
       $stmtDetalleSol = $dbh->prepare("SELECT fv.cantidad, fv.precio, fv.descripcion_alterna from facturas_ventadetalle fv where cod_facturaventa=$codigo_factura");
@@ -205,13 +219,13 @@ if(isset($_GET['interno'])){
       ?>
       <tr>
         <!-- <td align="center"><?=$index;?></td> -->
-        <td><?=$nro_factura;?></td>
-        <td><?=$nombre_personal;?></td>
-        <td><?=$fecha_factura?><br><?=$hora_factura?></td>
-        <td class="text-left"><small><?=mb_strtoupper($razon_social);?></small></td>
-        <td class="text-right"><?=$nit;?></td>
-        <td class="text-right"><?=formatNumberDec($importe);?></td>
-        <td><small><?=strtoupper($concepto_contabilizacion);?></small></td>                            
+        <td><?=$strikeIni;?><?=$nro_factura;?><?=$strikeFin;?></td>
+        <td><small><?=$strikeIni;?><?=$nombre_personal;?><?=$strikeFin;?></small></td>
+        <td><?=$strikeIni;?><?=$fecha_factura?><br><?=$hora_factura?><?=$strikeFin;?></td>
+        <td class="text-left"><small><?=$strikeIni;?><?=mb_strtoupper($razon_social);?><?=$strikeFin2;?></small></td>
+        <td class="text-right"><?=$strikeIni;?><?=$nit;?><?=$strikeFin;?></td>
+        <td class="text-right"><?=$strikeIni;?><?=formatNumberDec($importe);?><?=$strikeFin;?></td>
+        <td><small><?=$strikeIni;?><?=strtoupper($concepto_contabilizacion);?><?=$strikeFin;?></small></td>                            
        <td style="color: #ff0000;"><?=$glosa_factura3;?></td>
         <td class="td-actions text-right">
           <!-- <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br> -->
@@ -224,6 +238,7 @@ if(isset($_GET['interno'])){
                                     <div class="dropdown-menu">
                                       <?php
                                       if($idTransaccion_siat>0){?>
+                                        <a class="dropdown-item" href='<?=$url_list_siat;?>dFacturaElectronica.php?codigo_salida=<?=$idTransaccion_siat?>' target="_blank"><i class="material-icons text-warning">description</i>DOCUMENTO SIAT</a>
                                         <a class="dropdown-item" href='<?=$url_list_siat;?>formatoFacturaOnLine.php?codVenta=<?=$idTransaccion_siat?>' target="_blank"><i class="material-icons text-success">print</i>Factura SIAT</a>
                                       <?php }else{ ?>
                                         <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>

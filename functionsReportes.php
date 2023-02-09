@@ -60,10 +60,12 @@ function obtenerListaVentasA_servicios($unidades,$cod_area,$servicios,$desde,$ha
     else $sql_aux="and cs.Idtipo in ($servicios)";
     $valorIVA=100-(obtenerValorConfiguracion(1));
     $dbh = new Conexion();
-    $sql="SELECT da.cod_area,(SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area,cs.IdTipo,cs.Codigo,cs.descripcion_n2,SUM(((s.cantidad*s.precio)-s.descuento_bob)*(da.porcentaje/100)*($valorIVA/100)) as importe_real 
+    $sql="SELECT da.cod_area,(SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area,cs.IdTipo,cs.Codigo,cs.descripcion_n2,SUM(((s.cantidad*s.precio)-s.descuento_bob)*(da.porcentaje/100)*($valorIVA/100)) as importe_real, sum(s.cantidad) as cantidad_servicios
     From facturas_venta f,facturas_ventadetalle s,facturas_venta_distribucion da, cla_servicios cs 
     where f.codigo=s.cod_facturaventa and da.cod_factura=f.codigo and s.cod_claservicio=cs.IdClaServicio $sql_aux and f.cod_estadofactura<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($cod_area) GROUP BY cs.Idtipo order by area";
+    
     //echo $sql;
+    
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return($stmt);

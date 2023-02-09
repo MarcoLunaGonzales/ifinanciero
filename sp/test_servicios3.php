@@ -9,12 +9,12 @@ WS: ws-fin-cliente-contacto.php
     $sKey = "ce94a8dabdf0b112eafa27a5aa475751";  
     $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
             "accion"=>"ObtenerModuloxPagarPagadoySaldo", 
-            "Identificacion"=>3656721, //7666922 ci del alumno
-            "IdCurso"=>6976); //1565
+            "Identificacion"=>8404760, //7666922 ci del alumno
+            "IdCurso"=>3958); //1565
     $parametros=json_encode($parametros);
     $ch = curl_init();
-    // curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/capacitacion/ws-inscribiralumno.php"); //PRUEBA
-    curl_setopt($ch, CURLOPT_URL,$direccion."capacitacion/ws-inscribiralumno.php");
+    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/capacitacion/ws-inscribiralumno.php"); //PRUEBA
+    //curl_setopt($ch, CURLOPT_URL,$direccion."capacitacion/ws-inscribiralumno.php");
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

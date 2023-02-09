@@ -13,20 +13,37 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 		$sql_add=" and p.codigo in ($cod_personal)";
 	}
 	set_time_limit(0);  
-  $porcentaje_aport_afp=obtenerValorConfiguracionPlanillas(12);
+	$porcentaje_aport_afp=obtenerValorConfiguracionPlanillas(12);
 	$porcentaje_aport_sol=obtenerValorConfiguracionPlanillas(15);
 	// set_time_limit(0);
-  $mes=strtoupper(nombreMes($cod_mes));
-  $gestion=nameGestion($cod_gestion);
+  	$mes=strtoupper(nombreMes($cod_mes));
+  	$gestion=nameGestion($cod_gestion);
+
+	
+	//datos de cabecera
+	$arrayOficinas=[];
+	$sql="SELECT cod_uo,sucursal,direccion,nit,razon_social,nro_patronal,ciudad_pais from titulos_oficinas";
+	$stmtOficinas = $dbh->prepare($sql);    
+    $stmtOficinas->execute();
+	while ($result = $stmtOficinas->fetch(PDO::FETCH_ASSOC)) {
+		$cod_uo=$result['cod_uo'];
+		$sucursal=$result['sucursal'];
+		$direccion=$result['direccion'];
+		$nit=$result['nit'];
+		$razon_social=$result['razon_social'];
+		$nro_patronal=$result['nro_patronal'];
+		$ciudad_pais=$result['ciudad_pais'];
+		$arrayOficinas[$cod_uo]=array($sucursal,$direccion,$nit,$razon_social,$nro_patronal,$ciudad_pais);
+	}
+
 
   $sql="SELECT p.codigo, p.primer_nombre as nombres,CONCAT(p.paterno,' ', p.materno) as apellidos,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,(select a.nombre from areas a where a.codigo=p.cod_area) as area,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,pm.bono_antiguedad,pm.bonos_otros,pm.total_ganado,pm.descuentos_otros,pm.correlativo_planilla,pm.liquido_pagable,
-    pm.dias_trabajados,pm.afp_1,pm.afp_2,pp.seguro_de_salud,pp.riesgo_profesional,pp.rc_iva,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,p.ing_planilla,p.identificacion
+    pm.dias_trabajados,pm.afp_1,pm.afp_2,pp.seguro_de_salud,pp.riesgo_profesional,pp.rc_iva,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,p.ing_planilla,p.identificacion,p.cod_unidadorganizacional,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=5 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as datrasos
     FROM personal p
     join planillas_personal_mes pm on pm.cod_personalcargo=p.codigo
       join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
-
     where pm.cod_planilla=$cod_planilla $sql_add 
-    order by pm.correlativo_planilla";
+    order by pm.correlativo_planilla limit 0,5";
 
 
     $stmt = $dbh->prepare($sql);
@@ -55,8 +72,17 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
     // $urlBoletas="192.168.100.243/ifinanciero/boletas/";
     $urlBoletas=obtenerValorConfiguracion(104);
     $urlFirma="../assets/img/".obtenerValorConfiguracion(105);
-    echo $urlFirma;
+    // echo $urlFirma;
 	while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
+		$cod_unidadorganizacional=$result['cod_unidadorganizacional'];
+		if($cod_unidadorganizacional==270 || $cod_unidadorganizacional==9){
+			$cod_unidad_x=9;
+		}elseif($cod_unidadorganizacional==271 || $cod_unidadorganizacional==10){    
+			$cod_unidad_x=10;
+		}else{
+			$cod_unidad_x=5;
+		}
+
 		$cod_personal=$result['codigo'];
 		// $saldo_rciva=0;
 		$saldo_rciva=obtenerSaldoMesAnteriorTrib($cod_personal,$cod_mes,$cod_gestion);
@@ -108,12 +134,14 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 
 		$otrosBonos=$result['bonos_otros'];
 		$descuentos_otros=$result['descuentos_otros'];
+		$atrasos=$result['datrasos'];
 		$index_planilla=$result['correlativo_planilla'];
+		$descuentos_otrosX=$descuentos_otros-$atrasos;
 		// $otrosBonos=$bono_antiguedad-$otrosBonos;//$bono_antiguedad+ esta variable ya esta incluido en otrosBonos
 		// $descuentos_otros
 		
 		$suma_ingresos=$haber_basico_dias+$bono_antiguedad+$otrosBonos;
-		$suma_egresos=$Ap_Vejez+$Riesgo_Prof+$ComAFP+$aposol+$aposol13+$aposol25+$aposol35+$RC_IVA+$Anticipos+$descuentos_otros;
+		$suma_egresos=$Ap_Vejez+$Riesgo_Prof+$ComAFP+$aposol+$aposol13+$aposol25+$aposol35+$RC_IVA+$Anticipos+$descuentos_otrosX+$atrasos;
 
 		$liquido_pagable=$suma_ingresos-$suma_egresos;
 		// $liquido_pagable=$result['liquido_pagable'];
@@ -123,8 +151,8 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 			require 'boletas_html_aux.php';	
 		}else{
 			require 'boletas_html_aux.php';
-			$html.='<br>';
-			// require 'boletas_html_aux.php';	
+			$html.='<hr>';
+			require 'boletas_html_aux.php';	
 		}
 		// $index_planilla++;
 	}

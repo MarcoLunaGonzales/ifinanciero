@@ -44,6 +44,18 @@ $globalPersonal=$_SESSION["globalUser"];
   }else{
     $interno=0;
   }
+
+  // $url_list_siat="http://localhost:8080/minka_siat_ibno/";
+  $url_list_siat=obtenerValorConfiguracion(103);
+  
+  $datosOffline=obtener_contadorOffline();
+  
+  $cantidadOffline=0;
+
+  if(isset($datosOffline['cont'])){
+    $cantidadOffline = $datosOffline['cont'];
+  }
+
   ?>
   <input type="hidden" name="interno" value="<?=$interno?>" id="interno"/>
   <div class="content">
@@ -116,10 +128,11 @@ $globalPersonal=$_SESSION["globalUser"];
                             $fechaComoEntero = strtotime($fecha_factura_xy);
                             $fecha_factura_xyz = date("Y-m-d", $fechaComoEntero);
                             // echo $fecha_inicio_x."-".$fecha_fin."<br>";
-                            $sw_anular=verificar_fecha_rango($fecha_inicio_x, $fecha_fin, $fecha_factura_xyz);
+                            //$sw_anular=verificar_fecha_rango($fecha_inicio_x, $fecha_fin, $fecha_factura_xyz);
+                            $sw_anular=true;
                           }
                           //==
-                          $nombre_personal=namePersonalCompleto($cod_personal);
+                          $nombre_personal=namePersonal_2($cod_personal);
                           if($cod_personal==0){
                             $nombre_personal="Tienda Virtual";
                           }                          
@@ -137,13 +150,7 @@ $globalPersonal=$_SESSION["globalUser"];
                           $correos_string=str_replace(";",",",$correos_string);
                           //correos de contactos
                           $tipo_solicitud=obtenerTipoSolicitud($cod_solicitudfacturacion);
-                          /*if($correos_string==""){
-                            if($tipo_solicitud==2 || $tipo_solicitud==6 || $tipo_solicitud==7){
-                              $correos_string=obtenerCorreoEstudiante($nit);
-                            }else $correos_string=obtenerCorreosCliente($cod_cliente);                            
-                            
-                          }*/
-                          
+
                           //colores de estados                            
                           $observaciones_solfac="";
                           switch ($cod_estadofactura) {
@@ -165,6 +172,22 @@ $globalPersonal=$_SESSION["globalUser"];
                           if (strlen($observaciones)>50){
                             $observaciones= substr($observaciones, 0, 50)."..."; 
                           }
+
+
+
+                          //VERIFICAMOS SI ESTA ANULADA EN SIAT
+                          $estadoAnuladoSIAT=0;
+                          $estadoAnuladoSIAT=verificaAnulacionSIAT($idTransaccion_siat);
+                          $strikeIni="";
+                          $strikeFin="";
+                          $strikeFin2="";
+                          if($estadoAnuladoSIAT==1){
+                              $strikeIni="<strike class='text-danger'>";        
+                              $strikeFin="</strike>";
+                              $strikeFin2="<br>(Anulado en SIAT)</strike>";
+                          }
+                          //FIN VERIFICACION SIAT
+
 
                           //FORMAMOS EL CONCEPTO DE LA FACTURA
                           $stmtDetalleSol = $dbh->prepare("SELECT fv.cantidad, fv.precio, fv.descripcion_alterna from facturas_ventadetalle fv where cod_facturaventa=$codigo_factura");
@@ -190,15 +213,15 @@ $globalPersonal=$_SESSION["globalUser"];
                           ?>
                           <tr>
                             <!-- <td align="center"><?=$index;?></td> -->
-                            <td><?=$nro_factura;?></td>
-                            <td><?=$nombre_personal;?></td>
-                            <td><?=$fecha_factura?><br><?=$hora_factura?></td>
-                            <td class="text-left"><small><?=mb_strtoupper($razon_social);?></small></td>
-                            <td class="text-right"><?=$nit;?></td>
-                            <td class="text-right"><?=formatNumberDec($importe);?></td>
-                            <td><small><?=strtoupper($concepto_contabilizacion);?></small></td>                            
+                            <td><?=$strikeIni;?><?=$nro_factura;?><?=$strikeFin;?></td>
+                            <td><small><?=$strikeIni;?><?=$nombre_personal;?><?=$strikeFin;?></small></td>
+                            <td><?=$strikeIni;?><?=$fecha_factura?><br><?=$hora_factura?><?=$strikeFin;?></td>
+                            <td class="text-left"><small><?=$strikeIni;?><?=mb_strtoupper($razon_social);?><?=$strikeFin2;?></small></td>
+                            <td class="text-right"><?=$strikeIni;?><?=$nit;?></td>
+                            <td class="text-right"><?=$strikeIni;?><?=formatNumberDec($importe);?><?=$strikeFin;?></td>
+                            <td><small><?=$strikeIni;?><?=strtoupper($concepto_contabilizacion);?><?=$strikeFin;?></small></td>                            
                             <!--td style="color: #ff0000;"><?=strtoupper($observaciones_solfac)?></td-->
-                            <td style="color: #ff0000;"><?=$glosa_factura3?></td>
+                            <td style="color: #ff0000;"><?=$strikeIni;?><?=$glosa_factura3?><?=$strikeFin;?></td>
                             <td class="td-actions text-right">
                               <!-- <button class="btn <?=$label?> btn-sm btn-link" style="padding:0;"><small><?=$estadofactura;?></small></button><br> -->
                               <?php
@@ -207,22 +230,17 @@ $globalPersonal=$_SESSION["globalUser"];
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 1">
                                        <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
                                     </button>
-                                    <div class="dropdown-menu">                                      
-                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
-                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>                                    
+                                    <div class="dropdown-menu">
+                                      <?php
+                                      if($idTransaccion_siat>0){?>
+                                        <a class="dropdown-item" href='<?=$url_list_siat;?>formatoFacturaOnLine.php?codVenta=<?=$idTransaccion_siat?>' target="_blank"><i class="material-icons text-success">print</i>Factura SIAT</a>
+                                      <?php }else{ ?>
+                                        <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
+                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>
+                                      <?php }
+                                      ?>
                                     </div>
                                   </div>
-                                  <!--div class="btn-group dropdown">
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 2">
-                                       <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
-                                    </button>
-                                    <div class="dropdown-menu">                                      
-                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=4' target="_blank"><i class="material-icons text-success">print</i> Original Cliente y Copia Contabilidad</a>
-                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=5' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
-                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=6' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>                                    
-                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=7' target="_blank"><i class="material-icons text-warning">print</i>Copia Original 3</a>
-                                    </div>
-                                  </div--> 
                                   <?php                               
                               }?>
                               <div class="btn-group dropdown">
@@ -230,14 +248,25 @@ $globalPersonal=$_SESSION["globalUser"];
                                    <i class="material-icons" >list</i><small><small><?=$estadofactura;?></small></small>
                                 </button>
                                 <div class="dropdown-menu" >
-                                  <?php                                
-                                  if(($cod_estadofactura==1)){
-                                  ?>
+                                  <?php                   
+                                  //verificamos si es factuacion con SIAT             
+                                  if($idTransaccion_siat>0){?>
+                                    <a class="dropdown-item" href='<?=$url_list_siat;?>dFacturaElectronica.php?codigo_salida=<?=$idTransaccion_siat?>' target="_blank"><i class="material-icons text-warning">description</i>DOCUMENTO SIAT</a>
+                                    <?php 
+                                    if($cod_estadofactura==1 && $cod_solicitudfacturacion!=-100){
+                                    ?>
                                     <button  rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
-                                      <i class="material-icons text-warning" title="Enviar Correo">email</i> Enviar Correo
+                                        <i class="material-icons text-warning" title="Enviar Correo">email</i> Enviar Correo
                                     </button>
-                                  <?php    
-                                  } 
+                                  <?php      
+                                    }
+                                  }else{
+                                    if($cod_estadofactura==1){ ?>
+                                      <button  rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
+                                        <i class="material-icons text-warning" title="Enviar Correo">email</i> Enviar Correo
+                                      </button><?php    
+                                    }
+                                  }
                                   if( $cod_estadofactura!=4 && $cod_solicitudfacturacion!=-100 ){?>  
                                     <a rel="tooltip" class="dropdown-item" href='<?=$urlPrintSolicitud;?>?codigo=<?=$cod_solicitudfacturacion;?>' target="_blank"><i class="material-icons text-primary" title="Imprimir Solicitud Facturación">print</i> Imprimir SF</a>
                                     <a rel="tooltip" class="dropdown-item" href="<?=$urlVer_SF;?>?codigo=<?=$cod_solicitudfacturacion;?>" target="_blank">
@@ -245,7 +274,7 @@ $globalPersonal=$_SESSION["globalUser"];
                                     </a>
                                     <?php                               
                                   }
-                                  $datos_devolucion=$cod_solicitudfacturacion."###".$cadenaFacturas."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux."###".$interno;                                
+                                  $datos_devolucion=$cod_solicitudfacturacion."###".$nro_factura."###".$razon_social."###".$urllistFacturasServicios."###".$codigos_facturas."###".$cod_comprobante."###".$cod_tipopago_aux."###".$interno;                                
                                   if($cod_estadofactura!=4 && $cod_estadofactura!=2 && $sw_anular){?>
                                     <button rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalDevolverSolicitud" onclick="modal_rechazarFactura('<?=$datos_devolucion;?>')">
                                       <i class="material-icons text-danger" title="Anular Factura">delete</i> Anular Factura
@@ -288,40 +317,41 @@ $globalPersonal=$_SESSION["globalUser"];
         <h4 class="modal-title" id="myModalLabel">Buscar Facturas</h4>
       </div>
       <div class="modal-body ">
-        <div class="row">        
-          <label class="col-sm-6 col-form-label text-center">Razón Social</label> 
-          <label class="col-sm-5 col-form-label text-center">Fechas</label>
+        <div class="row">   
+          <label class="col-sm-3 col-form-label text-center">Cod. Factura</label>
+          <label class="col-sm-3 col-form-label text-center">Nro. Factura</label>
+          <label class="col-sm-3 col-form-label text-center">Nit</label> 
+          <label class="col-sm-3 col-form-label text-center">Razón Social</label> 
         </div> 
         <div class="row">
-          <div class="form-group col-sm-6">
+          <div class="form-group col-sm-3">            
+            <input class="form-control input-sm" type="text" name="cod_factura" id="cod_factura">
+          </div>
+          <div class="form-group col-sm-3">            
+            <input class="form-control input-sm" type="text" name="nro_f" id="nro_f">
+          </div>
+          <div class="form-group col-sm-3">            
+            <input class="form-control input-sm" type="text" name="nit_f" id="nit_f">          
+          </div>              
+          <div class="form-group col-sm-3">
             <input class="form-control input-sm" type="text" name="razon_social_f" id="razon_social_f">
           </div>
+        </div>
+
+        <div class="row">
+          <label class="col-sm-3 col-form-label text-center">Fecha Inicio</label>
+          <label class="col-sm-3 col-form-label text-center">Fecha Final</label>
+          <label class="col-sm-3 col-form-label text-center">Personal que emitio la factura</label>
+          <label class="col-sm-3 col-form-label text-center">Estado Factura</label>
+        </div> 
+        <div class="row">                   
           <div class="form-group col-sm-3">
             <input class="form-control input-sm" type="date" name="fechaBusquedaInicio" id="fechaBusquedaInicio">
           </div>
           <div class="form-group col-sm-3">
             <input class="form-control input-sm" type="date" name="fechaBusquedaFin" id="fechaBusquedaFin">
-          </div>          
-        </div>
-        <div class="row">
-            <label class="col-sm-6 col-form-label text-center">Detalle</label> 
-            <label class="col-sm-3 col-form-label text-center">Nit</label> 
-            <label class="col-sm-2 col-form-label text-center">Nro. Factura</label>                                 
-        </div> 
-        <div class="row">                   
-          <div class="form-group col-sm-6">
-            <input class="form-control input-sm" type="text" name="detalle_f" id="detalle_f">
           </div>
           <div class="form-group col-sm-3">            
-            <input class="form-control input-sm" type="text" name="nit_f" id="nit_f">          
-          </div>              
-          <div class="form-group col-sm-3">            
-            <input class="form-control input-sm" type="text" name="nro_f" id="nro_f">
-          </div>
-        </div> 
-        <div class="row">                   
-          <label class="col-sm-2 col-form-label text-center">Personal</label>
-          <div class="form-group col-sm-7">            
             <?php
               $sqlUO="SELECT cod_personal from facturas_venta where cod_estadofactura<>2 and cod_personal<>0 GROUP BY cod_personal";
               $stmt = $dbh->prepare($sqlUO);
@@ -337,12 +367,25 @@ $globalPersonal=$_SESSION["globalUser"];
                     <option value="<?=$cod_personal?>" ><?=$nombre_personal?></option><?php 
                   } ?>
                 </select>     
-          </div>
-          <label class="col-sm-1 col-form-label text-center">Cod. Factura</label>
-          <div class="form-group col-sm-2">            
-            <input class="form-control input-sm" type="text" name="cod_factura" id="cod_factura">
-          </div>
+          </div>      
+          <div class="form-group col-sm-3">            
+            <?php
+              $sqlE="SELECT e.codigo, e.nombre from estados_factura e where e.cod_estadoreferencial=1";
+              $stmtE = $dbh->prepare($sqlE);
+              $stmtE->execute();
+              ?>
+                <select class="selectpicker form-control form-control-sm" name="estado_facturas[]" id="estado_facturas" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+                <?php 
+                  while ($rowE = $stmtE->fetch()){ 
+                    $codEstadoF=$rowE["codigo"];
+                    $nombreEstadoF=$rowE["nombre"];
+                    ?>
+                    <option value="<?=$codEstadoF?>" ><?=$nombreEstadoF?></option><?php 
+                  } ?>
+                </select>     
+          </div>              
         </div> 
+ 
       </div>
 
       <div class="modal-footer">
@@ -358,7 +401,7 @@ $globalPersonal=$_SESSION["globalUser"];
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h2 class="modal-title" id="myModalLabel"><b>Anular Factura<b></h2>
+        <h2 class="modal-title" id="myModalLabel"><b>Anular Facturas<b></h2>
       </div>
       <div class="modal-body">        
         <form id="form_anular_facturas" action="simulaciones_servicios/anular_facturaGenerada.php" method="post"  onsubmit="return valida(this)" enctype="multipart/form-data">
@@ -646,24 +689,31 @@ $globalPersonal=$_SESSION["globalUser"];
       interno=document.getElementById("interno_x").value;
       codTipoPagoFactura=document.getElementById("cod_tipopagofactura").value;
 
-      correo_copia=$('#correo_copia').val();
+      var correo_destino=$('#correo_destino').val();
+      var correo_copia=$('#correo_copia').val();
       var correo_solicitante=$('#correo_solicitante').val();
+      var correo_destino_total="";
+
       if(correo_solicitante.trim()!=""){
-        correo_solicitante=","+correo_solicitante;
+        correo_destino_total=correo_solicitante;
       }
-      if(correo_copia!=""){
-        correo_destino=$('#correo_destino').val()+","+correo_copia+correo_solicitante;        
-      }else{
-        correo_destino=$('#correo_destino').val()+correo_solicitante;        
-      } 
-      //console.log(correo_destino);
+      if(correo_copia.trim()!=""){
+        if(correo_destino_total.trim()!=""){    correo_destino_total=correo_destino_total+","+correo_copia; }
+          else{   correo_destino_total=correo_copia;   }
+      }
+      if(correo_destino.trim()!=""){
+        if(correo_destino_total.trim()!=""){    correo_destino_total=correo_destino_total+","+correo_destino; }
+          else{   correo_destino_total=correo_destino;   }
+      }
+
+
       asunto=null;
       mensaje=null;
-      if(correo_destino==null || correo_destino == "" ||correo_destino == 0){
+      if(correo_destino_total==null || correo_destino_total == "" ||correo_destino_total == 0){
         // alert("Por Favor Agregue Un correo para el envío de la Factura!");
         Swal.fire("Informativo!", "Por Favor Agregue Un correo válido para el envío de la Factura!", "warning");
       }else{
-          EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino,asunto,mensaje,razon_social,interno,codTipoPagoFactura);
+          EnviarCorreoAjax(codigo_facturacion,nro_factura,cod_solicitudfacturacion,correo_destino_total,asunto,mensaje,razon_social,interno,codTipoPagoFactura);
       }  
     });
 

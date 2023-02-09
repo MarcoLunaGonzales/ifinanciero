@@ -2,6 +2,11 @@
 require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $globalNombreGestion=$_SESSION["globalNombreGestion"];
@@ -55,12 +60,14 @@ $stmt->bindColumn('idServicio', $idServicio);
 $stmt->bindColumn('devengado', $devenX);
 $item_1=2708;
 ?>
-<div class="cargar-ajax d-none">
+
+
+<!--div class="cargar-ajax d-none">
   <div class="div-loading text-center">
      <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
      <p class="text-white">Aguard&aacute; un momento por favor</p>  
   </div>
-</div>
+</div-->
 
  <style>
   #tablePaginator100NoFidexHead_filter{
@@ -271,6 +278,9 @@ $item_1=2708;
                                 <?php
                                 if($codEstado==9){
                                   $codigoDetalleCajaChica=obtenerCodigosCajaChicaSolicitudRecursos($codigo);
+                                  if($codigoDetalleCajaChica==""){
+                                    $codigoDetalleCajaChica=0;
+                                  }
                                   $sqlCaja="SELECT codigo,cod_cuenta,fecha,DATE_FORMAT(fecha,'%d/%m/%Y')as fecha_x,cod_tipodoccajachica,cod_uo,cod_area,
                                            (select pc.nombre from plan_cuentas pc where pc.codigo=cod_cuenta) as nombre_cuenta,
                                            (select td.numero from caja_chica td where td.codigo=cod_cajachica) as nombre_cajachica,

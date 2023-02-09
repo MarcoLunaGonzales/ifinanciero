@@ -34,6 +34,8 @@ while ($row = $stmtFActuras->fetch()) {
 	$flagSuccess=$stmtUpdateComprobante->execute();		
 }
 $cadenaFacturas=trim($cadenaFacturas,", ");
+
+
 if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 	$cod_uo_unico=5;
 	$globalUser=$_SESSION["globalUser"];
@@ -65,7 +67,6 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 		$cod_uo_solicitud = $cod_unidadorganizacional;		
 		$cod_area_solicitud = $cod_area; 
 	}
-	
 	$concepto_contabilizacion="Anulación de ".$cadenaFacturas."/ RS: ".$rs_factura.", NIT: ".$nit_factura."&#010;";	
 	$concepto_contabilizacion.="/ Detalle: ".$glosa_libreta;
 	$cod_comprobante=obtenerCodigoComprobante();
@@ -133,6 +134,8 @@ if($estado_factura==2){ //tipo devolucion tiene contabilizacion
 }else{
 	$obs="Factura Anulada, transaccion no valida";
 }
+
+
 if($flagSuccess){
 	$sql="UPDATE facturas_venta set cod_estadofactura='2',modified_by=$globalUser,modified_at=NOW() where codigo in ($codigos_facturas_x)";	
 	$stmt = $dbh->prepare($sql);
@@ -142,7 +145,7 @@ if($flagSuccess){
 		//$verifica_monto=insertarMontoNegativoCurso($codigos_facturas_x);
 		$verifica_monto=anularMontoCurso($codigos_facturas_x);
 		//volvemos al estado de registro de la sol fac.
-		$sqlUpdate="UPDATE solicitudes_facturacion SET cod_estadosolicitudfacturacion=1,obs_devolucion='$observaciones' where codigo=$cod_solicitudfacturacion";
+		$sqlUpdate="UPDATE solicitudes_facturacion SET cod_estadosolicitudfacturacion=2, obs_devolucion='$observaciones' where codigo=$cod_solicitudfacturacion";
 		$stmtUpdate = $dbh->prepare($sqlUpdate);
 		$flagSuccess=$stmtUpdate->execute();
 		//enviar propuestas para la actualizacion de ibnorca
@@ -186,7 +189,6 @@ if($flagSuccess){
 	        }
 	    }
 	}
-
 }
 
 if($interno_delete==0){
