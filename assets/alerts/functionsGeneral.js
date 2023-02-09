@@ -20505,3 +20505,41 @@ function agregarDatosVistaPreviaPlanilla(codigo_planilla,cod_mes,cod_gestion){
   }
   ajax.send(null);
 }
+// Abrir modal
+$('body').on('click', '.btn-sim-update-cliente', function(){
+  $('#sim_codigo').val($(this).data('sim_codigo'));
+  $('#modalActualizarCliente').modal('show');
+});
+// Función para Actualizar Cliente
+function simulacionUpdateCliente(){
+  $('#modalActualizarCliente').modal('hide');
+  let formData = new FormData();
+  formData.append('codigo', $('#sim_codigo').val());
+  formData.append('cod_cliente', $('#sim_cod_cliente').val());
+  $.ajax({
+    url:"simulaciones_costos/UpdateSimulacionCliente.php",
+    type:"POST",
+    contentType: false,
+    processData: false,
+    data: formData,
+    success:function(response){
+      let resp = JSON.parse(response);
+      if(resp.status){        
+        // Mensaje
+        Swal.fire({
+            type: 'success',
+            title: 'Correcto!',
+            text: 'El proceso se completo correctamente!',
+            showConfirmButton: false,
+            timer: 1500
+        });
+            
+        setTimeout(function(){
+            location.reload()
+        }, 1550);
+      }else{
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
+    }
+  });
+}
