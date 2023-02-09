@@ -170,6 +170,12 @@ $stmt->bindColumn('cliente', $nombreCliente);
                              </div>
                           </td> 
                           <td class="td-actions text-right">
+                            <!-- Actualización de Proveedores - MODAL -->
+                              <button type="button" class="btn btn-warning btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscadorFacturas">
+                                    <i class="material-icons" title="Modificar Proveedor">search</i>
+                                    <div class="ripple-container"></div>
+                              </button>
+
                             <a title="Imprimir Propuesta" href='#' onclick="javascript:window.open('simulaciones_costos/imp.php?cod=<?=$codigo;?>')" class="btn btn-success">
                                      <i class="material-icons"><?=$iconImp;?></i>
                                  </a>
@@ -349,6 +355,48 @@ $stmt->bindColumn('cliente', $nombreCliente);
 
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success">Filtrar</button>
+            </div>
+        </form> 
+    </div>
+  </div>
+</div>
+
+<!-- Actualización de Cliente -->
+<div class="modal fade" id="modalActualizarCliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button  class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Actualizar Cliente</h4>
+      </div>
+        <form action="index.php?opcion=listSimulacionesCostos<?=$listSC;?>" method="POST">
+            <div class="modal-body ">
+                <input type="text" hidden name="q" value="<?=$listSC;?>">
+                <div class="row">
+                    <label class="col-sm-12 col-form-label text-center">Cliente</label>
+                    <div class="form-group col-sm-12">
+                        <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="codigo_cliente" id="codigo_cliente" data-style="btn btn-info"  required>
+                            <option value="0">-- --</option>
+                            <?php
+                                $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM clientes c where c.cod_estadoreferencial=1 order by 2");
+                                $stmt->execute();
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                $codigoX=$row['codigo'];
+                                $nombreX=$row['nombre'];
+                                //$tipoX=$row['tipo'];
+                                //$abrevX=$row['abreviatura'];
+                            ?>
+                            <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                          <?php
+                                }
+                          ?>
+                        </select>
+                    </div>        
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success sim-update-cliente">Actualizar</button>
             </div>
         </form> 
     </div>

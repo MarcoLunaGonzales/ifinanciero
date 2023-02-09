@@ -8228,6 +8228,12 @@ function guardarDatosPlantilla(btn_id){
        mensajeError="La cantidad de Estudiantes de la Tabla de Precios no iguala a la cantidad total de estudiantes.";
        error=1;
     }
+    // Verificacción de Cantidad de items dentro de TBODY
+    let count_item = $('body #modal_body_tabla_alumnos tr').length;
+    if(count_item < 1){
+        mensajeError="Debe seleccionar almenos un item para el registro.";
+        error=1;
+    }
 
    if(error==0){
      $("#"+btn_id).attr("disabled",true); 
