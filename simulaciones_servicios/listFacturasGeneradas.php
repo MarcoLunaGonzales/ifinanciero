@@ -9,8 +9,8 @@ $globalPersonal=$_SESSION["globalUser"];
 
 
   //datos registrado de la simulacion en curso
-  $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal,idTransaccion_siat
- from facturas_venta f where cod_estadofactura in (1,2,3) order by  f.codigo desc limit 50");
+  $stmt = $dbh->prepare("SELECT f.*,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,DATE_FORMAT(f.fecha_factura,'%H:%i:%s')as hora_factura_x,(select s.abreviatura from unidades_organizacionales s where s.cod_sucursal=f.cod_sucursal limit 1)as sucursal
+ from facturas_venta f where cod_estadofactura in (1,2,3) order by  f.cod_dosificacionfactura desc,f.nro_factura desc limit 50");
   $stmt->execute();
   $stmt->bindColumn('codigo', $codigo_factura);
   $stmt->bindColumn('cod_sucursal', $cod_sucursal);
@@ -38,28 +38,12 @@ $globalPersonal=$_SESSION["globalUser"];
   $stmt->bindColumn('cod_comprobante', $cod_comprobante);
   $stmt->bindColumn('glosa_factura3', $glosa_factura3);
 
-
-  $stmt->bindColumn('idTransaccion_siat', $idTransaccion_siat);
-
   date_default_timezone_set('America/La_Paz');
   if(isset($_GET['interno'])){
     $interno=$_GET['interno'];
   }else{
     $interno=0;
   }
-
-  // $url_list_siat="http://localhost:8080/minka_siat_ibno/";
-  $url_list_siat=obtenerValorConfiguracion(103);
-  
-  $datosOffline=obtener_contadorOffline();
-  
-  $cantidadOffline=0;
-
-  if(isset($datosOffline['cont'])){
-    $cantidadOffline = $datosOffline['cont'];
-  }
-  
-
   ?>
   <input type="hidden" name="interno" value="<?=$interno?>" id="interno"/>
   <div class="content">
@@ -72,18 +56,14 @@ $globalPersonal=$_SESSION["globalUser"];
                     <div class="card-icon">
                       <i class="material-icons">polymer</i>
                     </div>
-                    <h4 class="card-title"><b>Facturas Generadas</b></h4>
+                    <h4 class="card-title"><b>Facturas Generadas</b></h4>                    
                   </div>
                   <div class="row">
                     <div class="col-sm-12">
                       <div class="form-group" align="right">
-                          <a type="button" class="btn btn-danger btn-round btn-fab btn-sm" title="Facturas OFFLINE" target="_blank" href="<?=$url_list_siat;?>siat_folder/siat_facturacion_offline/facturas_sincafc_list.php">
-                            <i class="material-icons" title="Buscador Avanzado">list</i><span class="count bg-warning" style="width:20px;height: 20px;font-size: 12px;" ><b><?=$cantidadOffline?></b></span>
-                          </a>
-
                           <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" data-toggle="modal" data-target="#modalBuscadorFacturas">
                               <i class="material-icons" title="Buscador Avanzado">search</i>
-                          </button>
+                          </button>                               
                       </div>
                     </div>
                   </div>
@@ -227,17 +207,9 @@ $globalPersonal=$_SESSION["globalUser"];
                                     <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Formato 1">
                                        <i class="material-icons" title="Imprimir Factura <?=$correosEnviados?>">print</i>
                                     </button>
-                                    <div class="dropdown-menu">
-                                      <?php
-                                      if($idTransaccion_siat>0){?>
-                                        <a class="dropdown-item" href='<?=$url_list_siat;?>formatoFacturaOnLine.php?codVenta=<?=$idTransaccion_siat?>' target="_blank"><i class="material-icons text-success">print</i>Factura SIAT</a>
-                                      <?php }else{ ?>
-                                        <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
-                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>
-                                      <?php }
-                                      ?>
-                                      
-                                      
+                                    <div class="dropdown-menu">                                      
+                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=2' target="_blank"><i class="material-icons text-success">print</i> Original Cliente</a>
+                                      <a class="dropdown-item" href='<?=$urlGenerarFacturasPrint;?>?codigo=<?=$codigo_factura;?>&tipo=1&admin=3' target="_blank"><i class="material-icons text-success">print</i>Copia Contabilidad</a>                                    
                                     </div>
                                   </div>
                                   <!--div class="btn-group dropdown">
@@ -258,17 +230,14 @@ $globalPersonal=$_SESSION["globalUser"];
                                    <i class="material-icons" >list</i><small><small><?=$estadofactura;?></small></small>
                                 </button>
                                 <div class="dropdown-menu" >
-                                  <?php                   
-                                  //verificamos si es factuacion con SIAT             
-                                  if($idTransaccion_siat>0){?>
-                                    <a class="dropdown-item" href='<?=$url_list_siat;?>dFacturaElectronica.php?codigo_salida=<?=$idTransaccion_siat?>' target="_blank"><i class="material-icons text-warning">description</i>DOCUMENTO SIAT</a>
-                                  <?php }else{
-                                    if($cod_estadofactura==1){ ?>
-                                      <button  rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
-                                        <i class="material-icons text-warning" title="Enviar Correo">email</i> Enviar Correo
-                                      </button><?php    
-                                    }
-                                  }
+                                  <?php                                
+                                  if(($cod_estadofactura==1)){
+                                  ?>
+                                    <button  rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalEnviarCorreo" onclick="agregaformEnviarCorreo('<?=$datos;?>')">
+                                      <i class="material-icons text-warning" title="Enviar Correo">email</i> Enviar Correo
+                                    </button>
+                                  <?php    
+                                  } 
                                   if( $cod_estadofactura!=4 && $cod_solicitudfacturacion!=-100 ){?>  
                                     <a rel="tooltip" class="dropdown-item" href='<?=$urlPrintSolicitud;?>?codigo=<?=$cod_solicitudfacturacion;?>' target="_blank"><i class="material-icons text-primary" title="Imprimir Solicitud Facturación">print</i> Imprimir SF</a>
                                     <a rel="tooltip" class="dropdown-item" href="<?=$urlVer_SF;?>?codigo=<?=$cod_solicitudfacturacion;?>" target="_blank">
@@ -300,9 +269,9 @@ $globalPersonal=$_SESSION["globalUser"];
                       </tbody>
                     </table>
                   </div>
-                  <!-- <div class="card-footer fixed-bottom col-sm-9">
+                  <div class="card-footer fixed-bottom col-sm-9">
                     <a href='<?=$urlListFacturasGeneradasManuales;?>' class="btn btn-info float-right"><i class="material-icons">list</i>Facturas Manuales</a>
-                  </div>    -->
+                  </div>   
                 </div>                
               </div>
           </div>  

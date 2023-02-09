@@ -2,12 +2,12 @@
 class Conexion extends PDO { 
 
       //CONEXION IBNORCA PRUEBAS
-      // private $tipo_de_base = 'mysql';
-      // private $host = 'lpsit.ibnorca.org';
-      // private $nombre_de_base = 'bdifinanciero';
-      // private $usuario = 'ingresobd';
-      // private $contrasena = 'ingresoibno';
-      // private $port = '3360'; 
+      private $tipo_de_base = 'mysql';
+      private $host = 'lpsit.ibnorca.org';
+      private $nombre_de_base = 'bdifinanciero';
+      private $usuario = 'ingresobd';
+      private $contrasena = 'ingresoibno';
+      private $port = '3360'; 
 
       // private $tipo_de_base = 'mysql';
       // private $host = '192.168.30.35';
@@ -18,12 +18,12 @@ class Conexion extends PDO {
 
 
       //CONEXION INTERNA PRUEBAS 
-      private $tipo_de_base = 'mysql';
-      private $host = 'localhost';
-      private $nombre_de_base = 'financiero_2022';
-      private $usuario = 'root';
-      private $contrasena = '4868422Marco';
-      private $port = '3306'; 
+      // private $tipo_de_base = 'mysql';
+      // private $host = 'localhost';
+      // private $nombre_de_base = 'financiero_2022';
+      // private $usuario = 'root';
+      // private $contrasena = '4868422Marco';
+      // private $port = '3306'; 
 
 
 public function __construct() {
