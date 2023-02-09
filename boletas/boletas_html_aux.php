@@ -1,6 +1,6 @@
 <?php
 
-	$html.='<div  style="height: 49.4%">';
+	$html.='<div  style="height: 49.9%">';
 			$html.='<table width="100%" class="table" style="font-size:12px;">
 				<tr>
 					<td colspan="2" >
@@ -23,8 +23,8 @@
 				</tr>
 				<tr><td>
 					<b>NOMBRE: </b><span style="text-transform:capitalize">'.$result['apellidos'].' '.$result['nombres'].'</span><BR>
-					<b>CARGO: </b><span style="text-transform:capitalize">'.$result['cargo'].'</span><br>
-					<b>ÁREA: </b><span style="text-transform:capitalize">'.$result['area'].'</span>
+					<b>CARGO: </b><span>'.$result['cargo'].'</span><br>
+					<b>ÁREA: </b><span>'.$result['area'].'</span>
 				</td>
 				<td class="text-left">
 					<b>PERIODO: </b><span style="text-transform:capitalize">'.$mes.' '.$gestion.'</span><br>
@@ -40,7 +40,7 @@
 							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($haber_basico_dias).'</td>
 						</tr>
 						<tr>
-							<td class=text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Bono Antiguedad</td>
+							<td class=text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Bono Antigüedad</td>
 							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($bono_antiguedad).'</td>
 						</tr>
 						<tr>
