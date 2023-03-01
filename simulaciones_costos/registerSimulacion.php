@@ -47,7 +47,7 @@ $mesesProrrateo=obtenerValorConfiguracion(89);
  //obtener datos fecha de la propuesta
  $fechaSimulacion=obtenerFechaSimulacionCosto($codigo);
  
- echo $fechaSimulacion;
+// echo $fechaSimulacion;
 
  $fechaSim=explode("-", $fechaSimulacion);
  $anioSimulacion=$fechaSim[0];

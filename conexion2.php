@@ -24,7 +24,7 @@ class Conexion2 extends PDO {
       private $usuario = 'root';
       private $contrasena = '4868422Marco';
       private $port = '3306'; 
-
+      
       // CONEXION IBNORCA PRUEBAS
       // private $tipo_de_base = 'mysql';
       // private $host = 'lpsit.ibnorca.org';

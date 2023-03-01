@@ -8228,6 +8228,12 @@ function guardarDatosPlantilla(btn_id){
        mensajeError="La cantidad de Estudiantes de la Tabla de Precios no iguala a la cantidad total de estudiantes.";
        error=1;
     }
+    // Verificacción de Cantidad de items dentro de TBODY
+    let count_item = $('body #modal_body_tabla_alumnos tr').length;
+    if(count_item < 1){
+        mensajeError="Debe registar al menos un detalle para el registro de precios de la propuesta.";
+        error=1;
+    }
 
    if(error==0){
      $("#"+btn_id).attr("disabled",true); 
@@ -20498,4 +20504,42 @@ function agregarDatosVistaPreviaPlanilla(codigo_planilla,cod_mes,cod_gestion){
     }
   }
   ajax.send(null);
+}
+// Abrir modal
+$('body').on('click', '.btn-sim-update-cliente', function(){
+  $('#sim_codigo').val($(this).data('sim_codigo'));
+  $('#modalActualizarCliente').modal('show');
+});
+// Función para Actualizar Cliente
+function simulacionUpdateCliente(){
+  $('#modalActualizarCliente').modal('hide');
+  let formData = new FormData();
+  formData.append('codigo', $('#sim_codigo').val());
+  formData.append('cod_cliente', $('#sim_cod_cliente').val());
+  $.ajax({
+    url:"simulaciones_costos/UpdateSimulacionCliente.php",
+    type:"POST",
+    contentType: false,
+    processData: false,
+    data: formData,
+    success:function(response){
+      let resp = JSON.parse(response);
+      if(resp.status){        
+        // Mensaje
+        Swal.fire({
+            type: 'success',
+            title: 'Correcto!',
+            text: 'El proceso se completo correctamente!',
+            showConfirmButton: false,
+            timer: 1500
+        });
+            
+        setTimeout(function(){
+            location.reload()
+        }, 1550);
+      }else{
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
+    }
+  });
 }

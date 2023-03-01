@@ -31,11 +31,11 @@ $areaString=implode(",", $areas);
 $rubrosString=implode(",", $rubros);
 
 $gestion=$_POST["gestion"];
-$mes=$_POST["mes"];
+
 $nameGestion=nameGestion($gestion);
 
-$fecha_inicio=$nameGestion.'-'.$mes.'-01';
-$fecha_fin=$nameGestion.'-'.$mes.'-31';
+$fecha_inicio=$_POST["fecha_desde"];
+$fecha_fin=$_POST["fecha_hasta"];
 
 // echo $areaString;
 $stringUnidades="";
@@ -70,6 +70,7 @@ if($tipo==1){
                   <h6 class="card-title">Oficinas: <?=$stringUnidades; ?></h6>                        
                   <h6 class="card-title">Areas: <?=$stringAreas;?></h6>
                   <h6 class="card-title">Rubros: <?=$stringRubros?></h6>
+                  <h6 class="card-title">De: <?=$fecha_inicio;?>  a: <?=$fecha_fin;?></h6>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -79,18 +80,15 @@ if($tipo==1){
                       <table class="table table-condensed table-bordered" id="tablePaginatorFixed_af_baja">
                         <thead><tr class="bg-secondary text-white">
                              <td width="1%" class="text-center">-</td>
-                            <td width="3%"><small>Codigo</small></td>
+                            <td width="3%"><small>Cod<br>Interno</small></td>
+                            <td width="3%"><small>Cod<br>Activo</small></td>
                             <td width="4%"><small>Of/Area</small></td>
+                            <td width="3%"><small>CodRubro</small></td>
                             <td width="3%"><small>Rubro</small></td>
                             <td width="25%"><small>Activo</small></td>
                             <td width="3%"><small>F.Alta</small></td>
-                            <td width="20%"><small>Respo1/Respo2</small></td>
+                            <td width="20%"><small>Responsable</small></td>
                             <td width="5%"><small>Valor Inicial</small></td>
-                              <td width="5%"><small>Depreciacion Acum</small></td>
-                            <td width="5%"><small>Valor Residual</small></td>
-                            
-                            <td width="4%"><small>F.Baja</small></td>
-                            <td width="25"><small>Obs</small></td>
                           </tr>
                         </thead>
                         <tbody>
@@ -103,16 +101,14 @@ if($tipo==1){
                             <td style="display: none;"></td>
                             <td style="display: none;"></td>
                             <td style="display: none;"></td>
-                            <td style="display: none;"></td>
-                            <td style="display: none;"></td>
-                            <td colspan="12"><b>ALTAS</b></td>
+                            <td colspan="10"><b>ALTAS</b></td>
                           </tr>
                           <?php  
                           $contador = 0;
                           $suma_residual_altas=0;
                           $suma_inicial_altas=0;
                           $suma_inicial_altas_depre=0;
-                          $sqlActivosAlta="SELECT codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional, (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area, (select d.abreviatura from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones, DATE_FORMAT(fechalta, '%d/%m/%Y')as fechaltax, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable, cod_estadoactivofijo,fecha_baja,obs_baja,valorinicial,valorresidual,depreciacionacumulada
+                          $sqlActivosAlta="SELECT codigo,codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional, (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area, (select d.abreviatura from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones, (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombre_rubro, DATE_FORMAT(fechalta, '%d/%m/%Y')as fechaltax, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable, cod_estadoactivofijo,fecha_baja,obs_baja,valorinicial,valorresidual,depreciacionacumulada
                           from activosfijos 
                           where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) $sqladd
                           and fechalta  BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59' 
@@ -120,11 +116,13 @@ if($tipo==1){
                           // echo $sqlActivosAlta;
                           $stmtActivosAlta = $dbh->prepare($sqlActivosAlta);
                           $stmtActivosAlta->execute();
+                          $stmtActivosAlta->bindColumn('codigo', $codigoInternoX);
                           $stmtActivosAlta->bindColumn('codigoactivo', $codigoActivoX);
                           $stmtActivosAlta->bindColumn('activo', $activoX);
                           $stmtActivosAlta->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
                           $stmtActivosAlta->bindColumn('cod_area', $cod_area);
                           $stmtActivosAlta->bindColumn('cod_depreciaciones', $cod_depreciaciones);
+                          $stmtActivosAlta->bindColumn('nombre_rubro', $nombreRubroX);
                           $stmtActivosAlta->bindColumn('fechaltax', $fecha_alta);
                           $stmtActivosAlta->bindColumn('valorresidual', $valorresidual);
                           $stmtActivosAlta->bindColumn('valorinicial', $valorinicial);
@@ -144,20 +142,17 @@ if($tipo==1){
                             $contador++;?>
                             <tr>
                               <td class="text-center small"><small><?=$contador;?></small></td>
+                              <td class="text-center small"><small><?=$codigoInternoX;?></small></td>
                               <td class="text-center small"><small><?=$codigoActivoX;?></small></td>
                               <td class="text-center small"><small><?=$cod_unidadorganizacional;?>/<?=$cod_area;?></small></td>
                               <td class="text-left small"><small><?= $cod_depreciaciones; ?></small></td>
+                              <td class="text-left small"><small><?= $nombreRubroX; ?></small></td>
                               <td class="text-left small"><small><?= $activoX; ?></small></td>
                               <td class="text-center small"><small><?= $fecha_alta; ?></small></td>
                               <td class="text-left small"><small><?= $responsables_responsable;?> </small></td>
                               
                               <td class="text-right small"><small><?=formatNumberDec($valorinicial);?></small></td>
-                              <td class="text-right small"><small><?=formatNumberDec($depreciacionacumulada);?></small></td>
-
-                              <td class="text-right small"><small><?=formatNumberDec($valorresidual);?></small></td>
-                              
-                              <td class="text-left small"><small><?= $fecha_baja;?></small></td>
-                              <td class="text-left small"><small><?= $obs_baja;?></small></td>
+                                                            
                             </tr><?php 
                           }  ?>
                           <tr class="bg-secondary text-white">
@@ -166,14 +161,11 @@ if($tipo==1){
                             <td class="text-center small"><small></small></td>
                             <td class="text-left small"><small></small></td>
                             <td class="text-left small"><small></small></td>
-                            <td class="text-center small"><small></small></td>
+                            <td class="text-left small"><small></small></td>
+                            <td class="text-left small"><small></small></td>
+                            <td class="text-left small"><small></small></td>
                             <td class="text-left small"><small>TOTAL ALTAS</small></td>
-                            <td class="text-right small"><small><?= formatNumberDec($suma_inicial_altas);?></small></td>
-                            <td class="text-right small"><small><?= formatNumberDec($suma_inicial_altas_depre);?></small></td>
-                            <td class="text-right small"><small><?= formatNumberDec($suma_residual_altas);?></small></td>
-                            
-                            <td class="text-left small"><small></small></td>
-                            <td class="text-left small"><small></small></td>
+                            <td class="text-right small"><small><?= formatNumberDec($suma_inicial_altas);?></small></td>                           
                           </tr>
                         </tbody>
                       </table><?php 
@@ -181,12 +173,14 @@ if($tipo==1){
                       <table class="table table-condensed table-bordered" id="tablePaginatorFixed_af_baja">
                         <thead><tr class="bg-secondary text-white">
                              <td width="1%" class="text-center">-</td>
-                            <td width="3%"><small>Codigo</small></td>
+                            <td width="3%"><small>Cod<br>Interno</small></td>
+                            <td width="3%"><small>Cod<br>Activo</small></td>
                             <td width="4%"><small>Of/Area</small></td>
+                            <td width="3%"><small>Cod<br>Rubro</small></td>
                             <td width="3%"><small>Rubro</small></td>
                             <td width="25%"><small>Activo</small></td>
                             <td width="3%"><small>F.Alta</small></td>
-                            <td width="20%"><small>Respo1/Respo2</small></td>
+                            <td width="10%"><small>Responsable</small></td>
                             <!-- <td width="5%"><small>Valor Residual</small></td>
                             <td width="5%"><small>Valor Neto</small></td> -->
 
@@ -212,11 +206,13 @@ if($tipo==1){
                             <td style="display: none;"></td>
                             <td style="display: none;"></td>
                             <td style="display: none;"></td>
-                            <td colspan="12"><b>BAJAS</b></td>
+                            <td style="display: none;"></td>
+                            <td style="display: none;"></td>
+                            <td colspan="14"><b>BAJAS</b></td>
                           </tr>
                           <?php  
                           $contador = 0;
-                          $sqlActivosBaja="SELECT codigo,codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional, (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area, (select d.abreviatura from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones, DATE_FORMAT(fechalta, '%d/%m/%Y')as fechalta, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable, cod_estadoactivofijo,fecha_baja,obs_baja
+                          $sqlActivosBaja="SELECT codigo,codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional, (select a.abreviatura from areas a where a.codigo=cod_area) as cod_area, (select d.abreviatura from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones, (select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as nombre_rubro, DATE_FORMAT(fechalta, '%d/%m/%Y')as fechalta, (select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable, cod_estadoactivofijo,fecha_baja,obs_baja
                           from activosfijos 
                           where cod_estadoactivofijo = 3 and tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) $sqladd
                           and fecha_baja BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59'
@@ -230,6 +226,7 @@ if($tipo==1){
                           $stmtActivosBajas->bindColumn('cod_unidadorganizacional', $cod_unidadorganizacional);
                           $stmtActivosBajas->bindColumn('cod_area', $cod_area);
                           $stmtActivosBajas->bindColumn('cod_depreciaciones', $cod_depreciaciones);
+                          $stmtActivosBajas->bindColumn('nombre_rubro', $nombreRubroX);
                           $stmtActivosBajas->bindColumn('fechalta', $fecha_alta);
                           // $stmtActivosBajas->bindColumn('valorinicial', $valor_inicial);
                           $stmtActivosBajas->bindColumn('cod_responsables_responsable', $responsables_responsable);
@@ -261,9 +258,11 @@ if($tipo==1){
                             $contador++;?>
                             <tr> 
                               <td class="text-center small"><small><?=$contador;?></small></td>
+                              <td class="text-center small"><small><?=$codigoX;?></small></td>
                               <td class="text-center small"><small><?=$codigoActivoX;?></small></td>
                               <td class="text-center small"><small><?=$cod_unidadorganizacional;?>/<?=$cod_area;?></small></td>
                               <td class="text-left small"><small><?= $cod_depreciaciones; ?></small></td>
+                              <td class="text-left small"><small><?= $nombreRubroX; ?></small></td>
                               <td class="text-left small"><small><?= $activoX; ?></small></td>
                               <td class="text-center small"><small><?= $fecha_alta; ?></small></td>
                               <td class="text-left small"><small><?= $responsables_responsable; ?> </small></td>
@@ -275,6 +274,8 @@ if($tipo==1){
                             </tr><?php 
                           }  ?>
                           <tr class="bg-secondary text-white">
+                            <td class="text-center small"><small></small></td>
+                            <td class="text-center small"><small></small></td>
                             <td class="text-center small"><small></small></td>
                             <td class="text-center small"><small></small></td>
                             <td class="text-center small"><small></small></td>

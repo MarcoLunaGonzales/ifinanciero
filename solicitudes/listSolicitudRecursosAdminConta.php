@@ -181,6 +181,10 @@ $item_1=2708;
             $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
                           $solicitante=namePersonal($codPersonal);
+
+                          //PREPARAMOS LA URL PARA EL ENVIO A CONTABILIZACION MANUAL
+                          $urlRegisterCompro="comprobantes/register.php?cod=".$codigo."&deven=0&personal_encargado=".$globalUser;
+
                           switch ($codEstado) {
                             case 1:
                               $nEst=40;$barEstado="progress-bar-default";$btnEstado="btn-default";
@@ -482,6 +486,11 @@ $item_1=2708;
             $index=1;
                         while ($row = $stmtSIS->fetch(PDO::FETCH_BOUND)) {
                           $solicitante=namePersonal($codPersonal);
+
+                          //PREPARAMOS LA URL PARA EL ENVIO A CONTABILIZACION MANUAL
+                          $urlRegisterCompro="comprobantes/register.php?cod=".$codigo."&deven=0&personal_encargado=".$globalUser;
+
+
                           switch ($codEstado) {
                             case 1:
                               $nEst=40;$barEstado="progress-bar-default";$btnEstado="btn-default";
@@ -797,6 +806,10 @@ $item_1=2708;
             $index=1;
                         while ($row = $stmtMen->fetch(PDO::FETCH_BOUND)) {
                           $solicitante=namePersonal($codPersonal);
+
+                          //PREPARAMOS LA URL PARA EL ENVIO A CONTABILIZACION MANUAL
+                          $urlRegisterCompro="comprobantes/register.php?cod=".$codigo."&deven=0&personal_encargado=".$globalUser;
+
                           switch ($codEstado) {
                             case 1:
                               $nEst=40;$barEstado="progress-bar-default";$btnEstado="btn-default";

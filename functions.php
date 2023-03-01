@@ -82,6 +82,17 @@
      }
      return($nombreX);
   }
+   function obtenerEstadoGestion($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_estado FROM gestiones_datosadicionales where cod_gestion=:codigo");
+     $stmt->bindParam(':codigo',$codigo);
+     $stmt->execute();
+     $estadoG=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $estadoG=$row['cod_estado'];
+     }
+     return($estadoG);
+   }
   function nameMoneda($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT nombre FROM monedas where codigo=:codigo");
@@ -11780,10 +11791,10 @@ function obtenerNombreInstanciaCajaChica($codCaja){
       $fecha_inicio=$gestion.'-'.$mes2.'-01';
       $fecha_fin=date('Y-m-d',strtotime($fecha_inicio));
       
-      $sql="SELECT sum(valorresidual)as valorinicial
+      $sql="SELECT sum(valorinicial)as valorinicial
      from activosfijos 
-     where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and  fechalta  BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59' AND tipoalta='NUEVO' 
-     and  cod_depreciaciones in ($cod_depreciaciones_rubros)";
+     where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and  YEAR(fechalta)='$gestion' and MONTH(fechalta)='$mes2' AND tipoalta='NUEVO' and  cod_depreciaciones in ($cod_depreciaciones_rubros)";
+     //echo $sql;
       $dbh = new Conexion();
       $valor=0;
       $stmt = $dbh->prepare($sql);

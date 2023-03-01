@@ -34,7 +34,7 @@ $contadorRegistros=0;
 $nombreCompletoUnidad=nameUnidad($globalUnidad);
 
 $desdeSR=0;
-if(isset($_GET['cod'])&&isset($_GET['deven'])&&isset($_GET['personal_encargado'])){
+if( isset($_GET['cod']) && isset($_GET['deven']) && isset($_GET['personal_encargado']) ){
 	$desdeSR=1;
 	$codigoSR=$_GET['cod'];
 	$codigoSRPER=$_GET['personal_encargado'];
