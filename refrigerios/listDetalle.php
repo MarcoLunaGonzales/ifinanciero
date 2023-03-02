@@ -45,6 +45,7 @@ $stmt->bindColumn('total_mensual', $total_mensual);
                   <tr>
                     <th class="text-left"> # </th>
                     <th class="text-center">Persona</th>
+                    <th class="text-center">Dias Mes</th>
                     <th class="text-center">Dias Asistidos</th>
                     <th class="text-center">Monto Refrigerio</th>
                     <th class="text-center">Monto Mensual</th>
@@ -59,6 +60,7 @@ $stmt->bindColumn('total_mensual', $total_mensual);
                     <tr>
                       <td class="text-center"><?= $index; ?></td>
                       <td class="text-left"><?= $nombrepersonal; ?></td>
+                      <td class="text-left"><?= $codMes; ?></td>
                       <td class="text-center"><?= $dias_asistencia; ?></td>
                       <td class="text-center"><?= $monto_refrigerio; ?></td>
                       <td class="text-center"><?= $total_mensual; ?></td>
