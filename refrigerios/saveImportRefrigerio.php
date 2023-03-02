@@ -38,7 +38,7 @@
         
         $values          = [];
 
-        for ($row = 2; $row <$highestRow; $row++){
+        for ($row = 2; $row <= $highestRow; $row++){
             
             $ci = $sheet->getCell("A".$row)->getValue();
             
