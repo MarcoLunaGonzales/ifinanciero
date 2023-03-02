@@ -18,11 +18,12 @@ $globalNombreGestion=$_SESSION['globalNombreGestion'];
 
 $dbh = new Conexion();
 
-  $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,comprobante,
-  (select m.nombre from meses m where m.codigo=cod_mes)as mes,
-  (select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
-  (select ep.nombre from estados_planilla ep where ep.codigo=cod_estadoplanilla) as estadoplanilla,cod_comprobante_prevision
-  from planillas order by cod_gestion desc,cod_mes desc");
+$sql = "SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,comprobante,
+(select m.nombre from meses m where m.codigo=cod_mes)as mes,
+(select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
+(select ep.nombre from estados_planilla ep where ep.codigo=cod_estadoplanilla) as estadoplanilla,cod_comprobante_prevision
+from planillas order by cod_gestion desc,cod_mes desc";
+  $stmtAdmnin = $dbh->prepare($sql);
   $stmtAdmnin->execute();
   $stmtAdmnin->bindColumn('codigo', $codigo_planilla);
   $stmtAdmnin->bindColumn('gestion', $gestion);
@@ -289,6 +290,11 @@ $dbh = new Conexion();
                             <li role="presentation">
                               <a role="item" href="boletas/boletas_print_nuevo.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><i class="material-icons text-rose">preview</i><small>Boletas</small></a>
                             </li>
+                            <li role="presentation" onclick="sendEmailBoleta(<?=$codigo_planilla;?>)">
+                              <a role="item" 
+                                href="#">
+                                <i class="material-icons text-rose">email</i><small>Enviar Correos</small></a>
+                            </li>
 
 
                             <?php if($comprobante_x==0){ ?>
@@ -538,4 +544,36 @@ $dbh = new Conexion();
         $("#icono_"+codigo).html("add_circle"); 
       }   
     }
+
+    
+function sendEmailBoleta(cod_planilla){
+  let formData = new FormData();
+  formData.append('cod_planilla', cod_planilla);
+  $.ajax({
+    url:"sendEmailPlanilla.php",
+    type:"POST",
+    contentType: false,
+    processData: false,
+    data: formData,
+    success:function(response){
+      let resp = JSON.parse(response);
+      if(resp.status){        
+        // Mensaje
+        Swal.fire({
+            type: 'success',
+            title: 'Correcto!',
+            text: 'El proceso se completo correctamente!',
+            showConfirmButton: false,
+            timer: 1500
+        });
+            
+        setTimeout(function(){
+            location.reload()
+        }, 1550);
+      }else{
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
+    }
+  });
+}
   </script>

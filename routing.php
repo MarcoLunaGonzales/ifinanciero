@@ -1709,6 +1709,12 @@
 			$cod_mes=$_GET['cod_mes'];
 			require_once('refrigerios/listDetalle.php');
 		}
+		
+		if ($_GET['opcion']=='refrigerioImport') {
+			$cod_ref=$_GET['cod_ref'];
+			$cod_mes=$_GET['cod_mes'];
+			require_once('refrigerios/importDetalle.php');
+		}
 		if ($_GET['opcion']=='editRefrigerioDetalle') {
 			$cod_refrigeriodetalle=$_GET['cod_ref_det'];
 			require_once('refrigerios/editDetalle.php');
