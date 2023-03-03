@@ -38,17 +38,15 @@
         
         $values          = [];
 
-        for ($row = 2; $row <$highestRow; $row++){
+        for ($row = 2; $row <= $highestRow; $row++){
             
             $ci = $sheet->getCell("A".$row)->getValue();
             
             $b  = $sheet->getCell("B".$row)->getValue();
-            $c  = $sheet->getCell("C".$row)->getValue();
-            $d  = $sheet->getCell("D".$row)->getValue();
-
-            $dias_mes        = $sheet->getCell("E".$row)->getValue();
-            $dias_refrigerio = $sheet->getCell("F".$row)->getValue();
-            $monto_dia       = $sheet->getCell("G".$row)->getValue();
+            
+            $dias_mes        = $sheet->getCell("C".$row)->getValue();
+            $dias_refrigerio = $sheet->getCell("D".$row)->getValue();
+            $monto_dia       = $sheet->getCell("E".$row)->getValue();
             /* Obtener cod_personal */
             $sql = "SELECT p.codigo
                     FROM personal p
