@@ -7,7 +7,10 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 	require_once '../assets/phpqrcode/qrlib.php';
 	require_once __DIR__.'/../functions.php';
 	require_once __DIR__.'/../functionsGeneral.php';
+	
 	$dbh = new Conexion();
+
+
 	$sql_add="";
 	if($cod_personal>0){
 		$sql_add=" and p.codigo in ($cod_personal)";
@@ -147,12 +150,12 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 		$liquido_pagable=$suma_ingresos-$suma_egresos;
 		// $liquido_pagable=$result['liquido_pagable'];
 		if($cod_personal==-1000){
-			require 'boletas_html_aux.php';
-			$html.='<hr>';
+			// require 'boletas_html_aux.php';
+			// $html.='<hr>';
 			require 'boletas_html_aux.php';	
 		}else{
-			require 'boletas_html_aux.php';
-			$html.='<div class="page-break"></div>';
+			// require 'boletas_html_aux.php';
+			// $html.='<div class="page-break"></div>';
 			require 'boletas_html_aux.php';	
 			$html.='<div class="page-break"></div>';
 
