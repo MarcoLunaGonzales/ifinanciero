@@ -13,7 +13,6 @@ $sqlP = "SELECT ppm.codigo, p.cod_gestion, p.cod_mes
 $stmtP = $dbh->prepare($sqlP);
 $stmtP->execute();
 
-
 //RECIBIMOS LAS VARIABLES
 $cod_planilla   = "";
 $cod_gestion    = "";

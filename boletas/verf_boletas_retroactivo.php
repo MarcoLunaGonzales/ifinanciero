@@ -23,6 +23,14 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
   	$gestion=nameGestion($cod_gestion);
 
 	
+	// Fecha Primer Vista
+	$sql="SELECT DATE_FORMAT(fecha, '%d-%m-%Y %H:%i:%s') as primer_vista 
+			FROM planillas_email WHERE cod_planilla_mes = '$cod_planilla_mes' ORDER BY id ASC LIMIT 1";
+	$stmt = $dbh->prepare($sql);    
+	$stmt->execute();
+	while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
+		$detail_primer_vista = $result['primer_vista'];
+	}
 	//datos de cabecera
 	$arrayOficinas=[];
 	$sql="SELECT cod_uo,sucursal,direccion,nit,razon_social,nro_patronal,ciudad_pais from titulos_oficinas";

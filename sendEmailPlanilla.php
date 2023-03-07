@@ -1,6 +1,7 @@
 <?php
     // Funciones
     require_once 'conexion.php';
+	require_once 'functions.php';
 
     date_default_timezone_set('America/La_Paz');
 
@@ -32,8 +33,8 @@
         LEFT JOIN planillas pl ON pl.codigo = ppm.cod_planilla
         LEFT JOIN gestiones g ON g.codigo = pl.cod_gestion
         WHERE ppm.cod_planilla = '$cod_planilla' 
-        ORDER BY ppm.codigo DESC
-        LIMIT 2";
+        AND ppm.cod_personalcargo = 58
+        ORDER BY ppm.codigo DESC";
     $stmt= $dbh->prepare($sql);
     $stmt->execute();
 
@@ -43,8 +44,8 @@
     foreach($rows as $row){
         
         $personal       = $row['nombre_personal'];
-        $personal_email = $row['email'];
-        // $personal_email = 'roalmollericona@gmail.com';
+        // $personal_email = $row['email'];
+        $personal_email = 'roalmollericona@gmail.com';
         // $personal_email = 'lunagonzalesmarco@gmail.com';
 
         $fecha          = $row['mes'].' '.$row['anio'];
@@ -52,13 +53,9 @@
         $ruta_boleta    = $row['codigo'];
 
         $ruta = __DIR__ . "/sendEmailPlanilla.html";
-        
-        $server = $_SERVER['SERVER_NAME'];
-        $ruta_vista = "http://" .$server;
 
-        $protocolo  = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-        $dominio    = $_SERVER['SERVER_NAME'];
-        $ruta_vista = "https://ibnored.ibnorca.org/ifinanciero";
+        $ruta_vista = obtenerValorConfiguracion(104);
+        // $ruta_vista = "https://ibnored.ibnorca.org/ifinanciero";
 
         try {
             $message = file_get_contents($ruta);

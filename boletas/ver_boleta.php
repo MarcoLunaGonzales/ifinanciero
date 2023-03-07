@@ -23,24 +23,24 @@ $stmt->execute();
 
 // DETALLE
 $sql="SELECT ppm.codigo, CONCAT(p.primer_nombre, ' ', p.paterno) as nombre_personal, p.email,
-    (CASE
-        WHEN pl.cod_mes = '1' THEN 'ENERO'
-        WHEN pl.cod_mes = '2' THEN 'FEBRERO'
-        WHEN pl.cod_mes = '3' THEN 'MARZO'
-        WHEN pl.cod_mes = '4' THEN 'ABRIL'
-        WHEN pl.cod_mes = '5' THEN 'MAYO'
-        WHEN pl.cod_mes = '6' THEN 'JUNIO'
-        WHEN pl.cod_mes = '7' THEN 'JULIO'
-        WHEN pl.cod_mes = '8' THEN 'AGOSTO'
-        WHEN pl.cod_mes = '9' THEN 'SEPTIEMBRE'
-        WHEN pl.cod_mes = '10' THEN 'OCTUBRE'
-        WHEN pl.cod_mes = '11' THEN 'NOVIEMBRE'
-        WHEN pl.cod_mes = '12' THEN 'DICIEMBRE'
-    END) as mes,
-    g.nombre as anio,
-    pl.dias_trabajo,
-    DATE_FORMAT(pl.created_at,'%d-%m-%Y %H:%i:%s') as created,
-    (SELECT COUNT(*) FROM planillas_email WHERE cod_planilla_mes = ppm.codigo) as nro_vista
+        (CASE
+            WHEN pl.cod_mes = '1' THEN 'ENERO'
+            WHEN pl.cod_mes = '2' THEN 'FEBRERO'
+            WHEN pl.cod_mes = '3' THEN 'MARZO'
+            WHEN pl.cod_mes = '4' THEN 'ABRIL'
+            WHEN pl.cod_mes = '5' THEN 'MAYO'
+            WHEN pl.cod_mes = '6' THEN 'JUNIO'
+            WHEN pl.cod_mes = '7' THEN 'JULIO'
+            WHEN pl.cod_mes = '8' THEN 'AGOSTO'
+            WHEN pl.cod_mes = '9' THEN 'SEPTIEMBRE'
+            WHEN pl.cod_mes = '10' THEN 'OCTUBRE'
+            WHEN pl.cod_mes = '11' THEN 'NOVIEMBRE'
+            WHEN pl.cod_mes = '12' THEN 'DICIEMBRE'
+        END) as mes,
+        g.nombre as anio,
+        pl.dias_trabajo,
+        DATE_FORMAT(pl.created_at,'%d-%m-%Y %H:%i:%s') as created,
+        (SELECT COUNT(*) FROM planillas_email WHERE cod_planilla_mes = ppm.codigo) as nro_vista
     FROM planillas_personal_mes ppm
     LEFT JOIN personal p ON p.codigo = ppm.cod_personalcargo
     LEFT JOIN planillas pl ON pl.codigo = ppm.cod_planilla
@@ -57,6 +57,7 @@ while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $detail_nro_vista    = $result['nro_vista'];
 }
 
+$ruta_vista = obtenerValorConfiguracion(104);
 
 ?>
 <div id="logo_carga" class="logo-carga" style="display:none;"></div>
@@ -121,9 +122,12 @@ while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
                         <hr>
                         <div class="col-sm-12 text-info font-weight-bold"><center><label id="titulo_vista_previa"><b>BOLETA DE PAGO</b></label></center></div>
                         <div class="row col-sm-12">
-                        <iframe src="https://ibnored.ibnorca.org/ifinanciero/boletas/verf_boletas_print.php?key=<?=$cod_planilla_mes?>"  id="vista_previa_frame" width="1600" class="div-center" height="600" scrolling="yes" style="border:none; border: #741899 solid 9px;border-radius:10px;">
+                        <iframe src="<?=$ruta_vista?>verf_boletas_print.php?key=<?=$cod_planilla_mes?>"  id="vista_previa_frame" width="1600" class="div-center" height="600" scrolling="yes" style="border:none; border: #741899 solid 9px;border-radius:10px;">
                             No hay vista disponible
                         </iframe>
+                        <!-- <iframe src="http://localhost/ifinanciero/boletas/verf_boletas_print.php?key=<?=$cod_planilla_mes?>"  id="vista_previa_frame" width="1600" class="div-center" height="600" scrolling="yes" style="border:none; border: #741899 solid 9px;border-radius:10px;">
+                            No hay vista disponible
+                        </iframe> -->
                         </div>
                     </div>
 

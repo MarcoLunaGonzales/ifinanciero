@@ -117,7 +117,8 @@
                         $level = 'M'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                         $frameSize = 1; //marco de qr
                         // $codigo_generado2 = md5($codigo_generado);
-                        $contenido = $urlBoletas.'validar_boletas.php?ws='.$codigo_generado;
+                        // $contenido = $urlBoletas.'ver_boleta.php?key='.$codigo_generado;
+                        $contenido = $urlBoletas.'verf_boletas_print.php?key='.$cod_planilla_mes;
                         QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                         // $html.='<img src="'.$fileName.'"/>';
 
@@ -131,13 +132,13 @@
 							<tr>
 							<td style="border: 0;" ><img src="'.$fileName.'"/></td>
 							<td style="border: 0;" >
-<center><p><img width="100px" src="'.$urlFirma.'"/>______________________________<b>JUAN QUENALLATA VEGA<br>DIRECTOR NACIONAL DE ADMINISTRACIÓN Y FINANZAS</b></p></center>
+<center><p><img width="100px" src="'.$urlFirma.'"/></p></center>
 							</td>
 							</tr>
 						</table>';
 					$html.='</td>
-					<td style="border-left:0;">
-					<center><p><br><br><br>______________________________<br><b>RECIBÍ CONFORME</b><br><br></p></center>
+					<td style="border-left:0;padding-top:20px;">
+						<center><p><b>RECIBIDO CONFORME<br>'.$detail_primer_vista.'</p></b></center>
 					</td>
 				</tr>
 			</table>';
