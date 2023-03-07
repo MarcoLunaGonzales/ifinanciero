@@ -7,7 +7,9 @@
     require_once '../libs/PHPExcel/Classes/PHPExcel.php';
     
     /*####################################################*/
-    
+    error_reporting(E_ALL);
+    ini_set('display_errors', '1');
+
     $dbh = new Conexion();
     // cod refrigerio
     $cod_ref = $_POST['cod_ref'];

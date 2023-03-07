@@ -40,9 +40,6 @@
   </nav>
   <!-- End Navbar -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script>
-    $("#con_fac").mask("AA-AA-AA-AA-AA-AA-AA");
-  </script>
   <!--   Core JS Files   -->
   <script src="../assets/js/core/jquery.min.js"></script>
   <script src="../assets/js/core/popper.min.js"></script>
@@ -1111,25 +1108,6 @@
             },
             dom: 'Bfrtip',
             buttons:[
-
-            {
-                extend: 'copy',
-                text:      '<i class="material-icons">file_copy</i>',
-                titleAttr: 'Copiar',
-                title:'Reporte Libro Mayor',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'csv',
-                text:      '<i class="material-icons">list_alt</i>',
-                titleAttr: 'CSV',
-                title:'Reporte Libro Mayor',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
             {
                 extend: 'excel',
                 text:      '<i class="material-icons">assessment</i>',
@@ -1188,6 +1166,8 @@
             }
           ]
         });
+
+
         var table_diario=$('#libro_diario_rep').DataTable({
           "paging":   false,
             "info":     false,
@@ -1202,25 +1182,6 @@
             },
             dom: 'Bfrtip',
             buttons:[
-
-            {
-                extend: 'copy',
-                text:      '<i class="material-icons">file_copy</i>',
-                titleAttr: 'Copiar',
-                title: 'Reporte Libro Diario',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'csv',
-                text:      '<i class="material-icons">list_alt</i>',
-                titleAttr: 'CSV',
-                title: 'Reporte Libro Diario',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
             {
                 extend: 'excel',
                 text:      '<i class="material-icons">assessment</i>',
@@ -2323,7 +2284,11 @@
               });
 
     });
-
   </script>
+
+    <script>
+    $("#con_fac").mask("AA-AA-AA-AA-AA-AA-AA");
+  </script>
+
 </body>
 </html>

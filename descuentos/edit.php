@@ -10,7 +10,7 @@ $dbh = new Conexion();
 //RECIBIMOS LAS VARIABLES
 $codigo=$codigo;
 
-$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura, observaciones FROM $table where codigo=:codigo");
+$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura, observaciones, cod_cuenta FROM $table where codigo=:codigo");
 // Ejecutamos
 $stmt->bindParam(':codigo',$codigo);
 $stmt->execute();
@@ -20,6 +20,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 	$nombreX=$row['nombre'];
 	$abreviaturaX=$row['abreviatura'];
 	$observacionesX=$row['observaciones'];
+	$codCuentaX=$row['cod_cuenta'];
 }
 
 ?>
@@ -53,6 +54,29 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					</div>
 				  </div>
 				</div>
+
+				<div class="row">
+	                <label class="col-sm-2 col-form-label">Cuenta</label>
+	                <div class="col-sm-7">
+	                	<div class="form-group">
+                        	<select class="selectpicker form-control form-control-sm" name="cuenta" id="cuenta" data-style="select-with-transition" data-actions-box="true" data-live-search="true" required>
+	  	                    <?php
+	  	                    $stmt = $dbh->prepare("SELECT p.codigo, p.numero, p.nombre FROM plan_cuentas p where p.cod_estadoreferencial=1 and (numero like '2%' or numero like '1%') order by 2");
+		                    $stmt->execute();
+		                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+		                     	$codigoX=$row['codigo'];
+		                     	$nombreX=$row['nombre'];
+		                     	$numeroX=$row['numero'];
+		                    ?>
+		                    <option value="<?=$codigoX;?>" <?=($codigoX==$codCuentaX)?"selected":"";?> >[<?=$numeroX;?>] - <?=$nombreX;?></option>	
+		                    <?php
+	  	                    }
+	  	                    ?>
+	                       	</select>
+                     	</div>
+	                </div>
+              	</div>
+
 				<div class="row">
 				  <label class="col-sm-2 col-form-label">Observaciones</label>
 				  <div class="col-sm-7">
