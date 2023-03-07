@@ -9,7 +9,7 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 // Preparamos
-$stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura, observaciones FROM $table where cod_estadoreferencial!=2 order by nombre ");
+$stmt = $dbh->prepare("SELECT d.codigo, d.nombre, d.abreviatura, d.observaciones, (select concat('[',p.numero,'] ',p.nombre) from plan_cuentas p where p.codigo=cod_cuenta)as cuenta FROM $table d where d.cod_estadoreferencial!=2 order by d.nombre ");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -17,6 +17,7 @@ $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('abreviatura', $abreviatura);
 $stmt->bindColumn('observaciones', $observaciones);
+$stmt->bindColumn('cuenta', $cuenta);
 
 ?>
 
@@ -40,6 +41,7 @@ $stmt->bindColumn('observaciones', $observaciones);
                           <th>Nombre</th>
                           <th>Abreviatura</th>
                           <th>Observaciones</th>
+                          <th>Cuenta Asociada</th>
                           <th class="text-right">Acciones</th>
                         </tr>
                       </thead>
@@ -54,6 +56,7 @@ $stmt->bindColumn('observaciones', $observaciones);
                           <td class="text-left"><?=$nombre;?></td>
                           <td class="text-center"><?=$abreviatura;?></td>
                           <td class="text-left"><?=$observaciones;?></td>
+                          <td class="text-left"><?=$cuenta;?></td>
                           <td class="td-actions text-right">
                           <?php
                             if($globalAdmin==1){

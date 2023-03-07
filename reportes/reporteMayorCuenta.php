@@ -14,31 +14,16 @@
   <div class="table-responsive">
      <?php
     $html='<table class="table table-bordered table-condensed" id="libro_mayor_rep">'.
-            '<thead >'.
-            // '<tr class="text-center">'.
-            //   '<th style="display: none;"></th>'.
-            //   '<th style="display: none;"></th>'.
-            //   '<th style="display: none;"></th>'.
-            //   '<th style="display: none;"></th>'.
-            //   '<th style="display: none;"></th>'.
-            //   '<th style="display: none;"></th>'.
-            //   '<th colspan="3" class="">'.$nombreMoneda.'</th>'.
-            //   '<th style="display: none;"></th>'.
-            //   '<th style="display: none;"></th>'.
-            // '</tr>'.
+            '<thead>'.
             '<tr class="text-center">'.
-              '<th>Oficina Origen</th>'.
+              '<th width="10%">Oficina Origen</th>'.
               '<th width="5%">Cbte</th>'.
-              /*'<th width="5%">CompDetalle</th>'.
-              '<th width="5%">Auxiliar</th>'.
-              '<th width="5%">Proveedor</th>'.*/
               '<th width="7%">Fecha</th>'.
               '<th width="5%">Centro de Costos</th>'.
-              '<th width="60%">Concepto</th>'.
+              '<th width="5%">Cuenta</th>'.
+              '<th width="10%">Nombre Cuenta</th>'.
+              '<th width="40%">Concepto</th>'.
               '<th width="3%">t/c</th>'.
-              // '<th>Debe</th>'.
-              // '<th>Haber</th>'.
-              // '<th>Saldos</th>'.
               '<th width="5%">Debe</th>'.
               '<th width="5%">Haber</th>'.
               '<th width="5%">Saldos</th>'.
@@ -49,6 +34,8 @@
     for ($xx=0; $xx < cantidadF($codcuenta); $xx++) { 
       $porciones = explode("@", $codcuenta[$xx]);
       $cuenta=$porciones[0];
+      $numeroCuentaX=obtieneNumeroCuenta($cuenta);
+
       if($porciones[1]=="aux"){
         $nombreCuenta=nameCuentaAux($cuenta);
 
@@ -134,13 +121,15 @@
                       '<td style="display: none;"></td>'.
                       '<td style="display: none;"></td>'.
                       '<td style="display: none;"></td>'.
-                      '<td colspan="4" class="text-left font-weight-bold">Nombre de la Cuenta: '.$nombreCuenta.' </td>'.
-                      '<td colspan="2" class="text-right font-weight-bold">Sumas y Saldos Iniciales:</td>'.                  
                       '<td style="display: none;"></td>'.
+                      '<td style="display: none;"></td>'.
+                      '<td style="display: none;"></td>'.
+                      '<td colspan="6" class="text-left font-weight-bold">Nombre de la Cuenta: '.$nombreCuenta.' </td>'.
+                      '<td colspan="2" class="text-right font-weight-bold">Sumas y Saldos Iniciales:</td>'.                  
                       '<td class="text-right font-weight-bold">'.formatNumberDec($debeAnterior/$tc).'</td>'.      
                       '<td class="text-right font-weight-bold">'.formatNumberDec($haberAnterior/$tc).'</td>'.      
                       '<td class="text-right font-weight-bold">'.$saldoAnteriorFormato.'</td>'.      
-                  '</tr>';
+                '</tr>';
       
       }
 
@@ -203,18 +192,15 @@
        $html.='<tr class="cuenta'.$cuenta.'" style="display:none">'.
                 '<td class="font-weight-bold small">'.$nombreUnidad.'</td>'.
                 '<td class="font-weight-bold small">'.$nombreComprobanteX.'</td>'.
-                /*'<td class="font-weight-bold small">'.$codigoX.'</td>'.
-                '<td class="font-weight-bold small">'.$codCuentaAuxiliar.'</td>'.
-                '<td class="font-weight-bold small">'.obtenerCodigoProveedorCuentaAux($codCuentaAuxiliar).'</td>'.*/
                 '<td class="font-weight-bold small">'.strftime('%d/%m/%Y',strtotime($fechaX)).'</td>'.
                 '<td class="font-weight-bold small">'.$unidadX.'-'.$areaX.'</td>'.
-                '<td class="text-left small">['.$cuenta_auxiliarX."] - ".$glosaX.'</td>'.
+                '<td class="font-weight-bold small">'.$numeroCuentaX.'</td>'.
+                '<td class="font-weight-bold small">'.$nombreCuenta.'</td>'.
+                '<td class="text-left small">'.$glosaX.'</td>'.
                 '<td class="font-weight-bold small">'.$tc.'</td>';
-                
-                 $html.='<td class="text-right font-weight-bold small">'.formatNumberDec($debeX/$tc).'</td>'.
+        $html.='<td class="text-right font-weight-bold small">'.formatNumberDec($debeX/$tc).'</td>'.
                 '<td class="text-right font-weight-bold small">'.formatNumberDec($haberX/$tc).'</td>'.
-                '<td class="text-right font-weight-bold small">'.$saldoXFormato.'</td>';        
-                
+                '<td class="text-right font-weight-bold small">'.$saldoXFormato.'</td>';             
               $html.='</tr>';
         $entero=floor($tDebeBol);
         $decimal=$tDebeBol-$entero;
@@ -246,23 +232,27 @@
         }
 
         $html.='<tr class="bg-secondary text-white">'.
-                    '<td colspan="6" class="text-center">Sumas del periodo:'.$nombreCuenta.'</td>'.
                     '<td style="display: none;"></td>'.
                     '<td style="display: none;"></td>'.
                     '<td style="display: none;"></td>'.
                     '<td style="display: none;"></td>'.
                     '<td style="display: none;"></td>'.
+                    '<td style="display: none;"></td>'.
+                    '<td style="display: none;"></td>'.
+                    '<td colspan="8" class="text-center">Sumas del periodo:'.$nombreCuenta.'</td>'.
                     '<td class="text-right font-weight-bold small">'.formatNumberDec($tDebeTc).'</td>'. 
                     '<td class="text-right font-weight-bold small">'.formatNumberDec($tHaberTc).'</td>'.
                     '<td class="text-right font-weight-bold small">'.$saldoYFormato.'</td>'.       
                 '</tr>';
         $html.='<tr class="bg-secondary text-white">'.
-                    '<td colspan="6" class="text-center">Sumas y saldos finales:'.$nombreCuenta.'</td>'.
                     '<td style="display: none;"></td>'.
                     '<td style="display: none;"></td>'.
                     '<td style="display: none;"></td>'.
                     '<td style="display: none;"></td>'.
                     '<td style="display: none;"></td>'.
+                    '<td style="display: none;"></td>'.
+                    '<td style="display: none;"></td>'. 
+                    '<td colspan="8" class="text-center">Sumas y saldos finales:'.$nombreCuenta.'</td>'.
                     '<td class="text-right font-weight-bold">'.formatNumberDec($totalDebeSaldoFinal/$tc).'</td>'. 
                     '<td class="text-right font-weight-bold">'.formatNumberDec($totalHaberSaldoFinal/$tc).'</td>'.
                     '<td class="text-right font-weight-bold">'.$saldoFinalFormato.'</td>'.       
