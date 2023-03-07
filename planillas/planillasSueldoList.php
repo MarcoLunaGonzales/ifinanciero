@@ -39,6 +39,14 @@ from planillas order by cod_gestion desc,cod_mes desc";
   $modified_at="";
   $modified_by="";
   ?>
+
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
+
   <div class="content">
     <div class="container-fluid">
       <div class="col-md-12">     
@@ -293,7 +301,11 @@ from planillas order by cod_gestion desc,cod_mes desc";
                             <li role="presentation" onclick="sendEmailBoleta(<?=$codigo_planilla;?>)">
                               <a role="item" 
                                 href="#">
-                                <i class="material-icons text-rose">email</i><small>Enviar Correos</small></a>
+                                <i class="material-icons text-rose">email</i><small> Enviar Correos</small></a>
+                            </li>
+                            <li role="presentation">
+                              <a role="item" href="index.php?opcion=planillasSueldoPersonalDetail&codigo_planilla=<?=$codigo_planilla;?>">
+                                <i class="material-icons text-success">assessment</i><small> Reporte Visitas</small></a>
                             </li>
 
 
@@ -547,6 +559,7 @@ from planillas order by cod_gestion desc,cod_mes desc";
 
     
 function sendEmailBoleta(cod_planilla){
+  $(".cargar-ajax").removeClass("d-none");
   let formData = new FormData();
   formData.append('cod_planilla', cod_planilla);
   $.ajax({

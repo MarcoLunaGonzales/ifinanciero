@@ -1141,6 +1141,10 @@
 		if ($_GET['opcion']=='generarPlanillaSueldoPrevia') {
 			require_once('planillas/generarPlanillaSueldo.php'); //ok
 		}
+		// PLANILLA REPORTE VISITAS
+		if ($_GET['opcion']=='planillasSueldoPersonalDetail') {
+			require_once('planillas/planillasSueldoListDetail.php'); //ok
+		}
 		//planillas aguinaldos
 		if ($_GET['opcion']=='planillasAguinaldosPersonal') {
 			require_once('planillas/planillasAguinaldosList.php'); //ok

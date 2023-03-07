@@ -9,15 +9,9 @@ $sqlP = "SELECT ppm.codigo, p.cod_gestion, p.cod_mes
         FROM planillas_personal_mes ppm
         LEFT JOIN planillas p ON p.codigo = ppm.cod_planilla
         WHERE ppm.codigo = '$key' 
-        ORDER BY ppm.codigo DESC";
+        GROUP BY ppm.codigo";
 $stmtP = $dbh->prepare($sqlP);
 $stmtP->execute();
-/************************************************************/
-// VERIFICACIÖN DE CANTIDAD DE VISTAS OBTENIDAS
-$sql = "UPDATE planillas_email SET nro_vista = (nro_vista+1) WHERE cod_planilla_mes = '$key'";
-$stmt = $dbh->prepare($sql);
-$stmt->execute();
-/************************************************************/
 
 
 //RECIBIMOS LAS VARIABLES
