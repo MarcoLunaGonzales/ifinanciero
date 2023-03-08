@@ -559,34 +559,49 @@ from planillas order by cod_gestion desc,cod_mes desc";
 
     
 function sendEmailBoleta(cod_planilla){
-  $(".cargar-ajax").removeClass("d-none");
-  let formData = new FormData();
-  formData.append('cod_planilla', cod_planilla);
-  $.ajax({
-    url:"sendEmailPlanilla.php",
-    type:"POST",
-    contentType: false,
-    processData: false,
-    data: formData,
-    success:function(response){
-      let resp = JSON.parse(response);
-      if(resp.status){        
-        // Mensaje
-        Swal.fire({
-            type: 'success',
-            title: 'Correcto!',
-            text: 'El proceso se completo correctamente!',
-            showConfirmButton: false,
-            timer: 1500
-        });
-            
-        setTimeout(function(){
-            location.reload()
-        }, 1550);
-      }else{
-          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+    let formData = new FormData();
+    formData.append('cod_planilla', cod_planilla);
+    swal({
+        title: '¿Estás Seguro?',
+        text: "Se enviará un correo importante a todo el personal de la planilla de pago",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.value) {
+            $(".cargar-ajax").removeClass("d-none");
+            $.ajax({
+                url:"sendEmailPlanilla.php",
+                type:"POST",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success:function(response){
+                let resp = JSON.parse(response);
+                if(resp.status){        
+                    // Mensaje
+                    Swal.fire({
+                        type: 'success',
+                        title: 'Correcto!',
+                        text: 'El proceso se completo correctamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                        
+                    setTimeout(function(){
+                        location.reload()
+                    }, 1550);
+                }else{
+                    Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                    }
+                }
+            });
         }
-    }
-  });
+    });
+
 }
   </script>

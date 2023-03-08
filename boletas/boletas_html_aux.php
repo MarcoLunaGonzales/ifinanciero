@@ -138,7 +138,7 @@
 						</table>';
 					$html.='</td>
 					<td style="border-left:0;padding-top:20px;">
-						<center><p><b>RECIBIDO CONFORME<br>'.$detail_primer_vista.'</p></b></center>
+						<center> <b><p>RECIBIDO CONFORME <br> <b style="font-style: italic;">'.$detail_nombre_personal.'<br>'.$detail_primer_vista.'</b></p></b></center>
 					</td>
 				</tr>
 			</table>';
