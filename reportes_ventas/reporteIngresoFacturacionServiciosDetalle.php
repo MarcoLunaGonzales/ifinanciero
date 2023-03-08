@@ -43,6 +43,7 @@
           $nombreAreaX=$rowComp['area'];
           // $codAreaX="";
           // $nombreAreaX="";
+          $abreviatura_n2=$rowComp['abreviatura_n2'];
           $descripcion_n2=$rowComp['descripcion_n2'];
           $importe_realX=$rowComp['importe_real'];
           $totalImporte+=$importe_realX;
@@ -50,7 +51,7 @@
 
           $html.='<tr>'.
                         '<td class="text-left font-weight-bold">'.$nombreAreaX.'</td>'.
-                        '<td class="text-left font-weight-bold">'.$codigo_alterno.'</td>'.
+                        '<td class="text-left font-weight-bold">'.$abreviatura_n2.'</td>'.
                         '<td class="text-left font-weight-bold">'.mb_strtoupper($descripcion_n2).'</td>'.
                         '<td class="text-right font-weight-bold">'.formatNumberDec($importe_realX).' </td>'.     
                         '<td class="text-right font-weight-bold">'.formatNumberDec($cantidadServiciosX).' </td>'.     
@@ -67,7 +68,7 @@
               if($importe_realY>0){
                 $html.='<tr">'.
                       '<td class="text-center">-</td>'.  
-                      '<td class="text-center">'.$codigo_alterno.'</td>'.  
+                      '<td class="text-center">'.$abreviatura_n2.'</td>'.  
                       '<td class="text-center">'.$unidadDetAbrevY.'</td>'.  
                       '<td class="text-right font-weight-bold small">'.formatNumberDec($importe_realY).'</td>'.      
                       '<td class="text-right font-weight-bold small">'.formatNumberDec($cantidadServiciosY).'</td>'.      

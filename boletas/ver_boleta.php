@@ -71,8 +71,6 @@ $ruta_vista = obtenerValorConfiguracion(104);
                         <h4 class="card-title"><b>BOLETA DE PAGO</b></h4>
                         </div>
                     </div>
-
-				    <div class="col-sm-12 div-center"><center><h3>Detalle de la Solicitud de Recursos</h3></center></div>
 				
                     <div class="card-body">
                         <div class=""> 	
@@ -84,13 +82,13 @@ $ruta_vista = obtenerValorConfiguracion(104);
                                     <input type="text" class="form-control" readonly="true" value="<?=$detail_personal?>" style="background-color:#E3CEF6;text-align: center" >
                                 </div>
                                 </div>  
-                                <label class="col-sm-1 col-form-label" style="color:#000000; ">Pago Mes :</label>
+                                <label class="col-sm-1 col-form-label" style="color:#000000; ">Mes :</label>
                                 <div class="col-sm-1">
                                 <div class="form-group">
                                     <input type="text" class="form-control" readonly="true" value="<?=$detail_mes?>" style="background-color:#E3CEF6;text-align: center">
                                 </div>
                                 </div>  
-                                <label class="col-sm-1 col-form-label" style="color:#000000; ">Pago Gestión :</label>
+                                <label class="col-sm-1 col-form-label" style="color:#000000; ">Gestión :</label>
                                 <div class="col-sm-2">
                                 <div class="form-group">
                                     <input type="text" class="form-control" readonly="true" value="<?=$detail_gestion?>" style="background-color:#E3CEF6;text-align: center" >
@@ -104,13 +102,13 @@ $ruta_vista = obtenerValorConfiguracion(104);
                                 </div> 
                                 </div>
                                 <div class="row">
-                                <label class="col-sm-1 col-form-label" style="color:#000000; ">Días Trabajo</label>
+                                <label class="col-sm-1 col-form-label" style="color:#000000; ">Días Trabajados</label>
                                 <div class="col-sm-2">
                                     <div class="form-group">
                                         <input type="text" class="form-control" readonly="true" value="<?=$detail_dias_trabajo?>" style="background-color:#E3CEF6;text-align: center" >
                                     </div>
                                 </div> 
-                                <label class="col-sm-1 col-form-label" style="color:#000000; ">N&uacute;mero Visitas</label>
+                                <label class="col-sm-1 col-form-label" style="color:#000000; ">N&uacute;mero Visualizaciones</label>
                                 <div class="col-sm-1">
                                 <div class="form-group">
                                     <input type="text" class="form-control" readonly="true" value="<?=$detail_nro_vista?>" style="background-color:#E3CEF6;text-align: center" >

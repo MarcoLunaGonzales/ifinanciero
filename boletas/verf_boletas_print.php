@@ -32,7 +32,7 @@ $mes=strtoupper(nombreMes($cod_mes));
 // $htmlConta1=generarHtmlBoletaRetroactivo($cod_planilla,$cod_gestion,0);  
 $htmlConta1=generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_personal, $cod_planilla_mes);
 // echo $htmlConta1;
-descargarPDFBoleta("IBNORCA BOLETAS DE SUELDO ".$mes." ".$gestion,$htmlConta1);
+descargarPDFBoleta("IBNORCA BOLETA DE SUELDO ".$mes." ".$gestion,$htmlConta1);
 
 //borramos los archivos temporales
 $files = glob('../boletas/qr_temp/*.png'); //obtenemos todos los nombres de los ficheros

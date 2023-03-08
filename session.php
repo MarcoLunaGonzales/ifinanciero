@@ -63,6 +63,7 @@ if($banderaLogin==1 || $tipoLogin==1){
 	}
 
 	//echo $sql;
+	
 	/*if($idUsuarioSW==47770){
 		$idUsuarioSW=49299;
 	}*/

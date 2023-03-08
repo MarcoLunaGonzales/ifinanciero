@@ -301,7 +301,7 @@ from planillas order by cod_gestion desc,cod_mes desc";
                             <li role="presentation" onclick="sendEmailBoleta(<?=$codigo_planilla;?>)">
                               <a role="item" 
                                 href="#">
-                                <i class="material-icons text-rose">email</i><small> Enviar Correos</small></a>
+                                <i class="material-icons text-rose">email</i><small>Enviar Boletas por Correo</small></a>
                             </li>
                             <li role="presentation">
                               <a role="item" href="index.php?opcion=planillasSueldoPersonalDetail&codigo_planilla=<?=$codigo_planilla;?>">
