@@ -44,8 +44,8 @@
     foreach($rows as $row){
         
         $personal       = $row['nombre_personal'];
-        $personal_email = $row['email'];
-        // $personal_email = 'roalmollericona@gmail.com';
+        // $personal_email = $row['email'];
+        $personal_email = 'roalmollericona@gmail.com';
         // $personal_email = 'lunagonzalesmarco@gmail.com';
 
         $fecha          = $row['mes'].' '.$row['anio'];

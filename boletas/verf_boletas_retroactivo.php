@@ -23,14 +23,23 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
   	$gestion=nameGestion($cod_gestion);
 
 	
-	// Fecha Primer Vista
-	$sql="SELECT DATE_FORMAT(fecha, '%d-%m-%Y %H:%i:%s') as primer_vista 
-			FROM planillas_email WHERE cod_planilla_mes = '$cod_planilla_mes' ORDER BY id ASC LIMIT 1";
+	// Fecha Primer Vista y nombre PERSONAL
+	$sql="SELECT DATE_FORMAT(pe.fecha, '%d-%m-%Y %H:%i:%s') as primer_vista, 
+			CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as nombre_personal
+		FROM planillas_email pe
+		LEFT JOIN planillas_personal_mes ppm ON ppm.codigo = pe.cod_planilla_mes
+		LEFT JOIN personal p ON p.codigo = ppm.cod_personalcargo
+		WHERE pe.cod_planilla_mes = '$cod_planilla_mes' 
+		ORDER BY pe.id ASC LIMIT 1";
 	$stmt = $dbh->prepare($sql);    
 	$stmt->execute();
+	$detail_primer_vista 	= '';
+	$detail_nombre_personal = '';
 	while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
-		$detail_primer_vista = $result['primer_vista'];
+		$detail_primer_vista 	= $result['primer_vista'];
+		$detail_nombre_personal = $result['nombre_personal'];
 	}
+	
 	//datos de cabecera
 	$arrayOficinas=[];
 	$sql="SELECT cod_uo,sucursal,direccion,nit,razon_social,nro_patronal,ciudad_pais from titulos_oficinas";
