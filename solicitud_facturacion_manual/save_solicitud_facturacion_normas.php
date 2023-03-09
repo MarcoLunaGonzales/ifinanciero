@@ -114,6 +114,7 @@ try {
                         $descuento_por_Insert=$_POST["descuento_por".$i];
                         $descuento_bob_Insert=$_POST["descuento_bob".$i]; 
                     }
+                    $cod_detalle_facturacion = 0;
                     if($servicioInsert!=0 || $servicioInsert!=""){
                         // echo " servicio:".$servicioInsert."<br>";
                         // echo " cantida:".$CantidadInsert."<br>";
@@ -127,7 +128,42 @@ try {
                         $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,cod_curso) 
                         values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,$cod_serv_a)");
                         $flagSuccess=$stmt->execute();
+                        $cod_detalle_facturacion  = $dbh->lastInsertId();
                     }
+                    /********************************************************************************************************************************************/
+                    // PREPARACIÓN DE DATOS PARA SERVICIO ECOMMERS
+                    $queryVentaNormas="SELECT idEntidad, idTipoVenta, idPromocion, Idioma from ibnorca.ventanormas where IdVentaNormas = $cod_serv_a LIMIT 1";
+                    $stmtVentaNormas = $dbh->prepare($queryVentaNormas);
+                    $stmtVentaNormas->execute();
+                    $detalle_idEntidad         = '';
+                    $detalle_tipo_venta_normas = '';
+                    $detalle_opcion_suscripcion= '';
+                    $detalle_promocion         = '';
+                    $detalle_idioma            = '';
+                    while ($rowVentasNorma = $stmtVentaNormas->fetch(PDO::FETCH_ASSOC)) { 
+                        $detalle_idEntidad         = (int)$rowVentasNorma["idEntidad"];
+                        $detalle_tipo_venta_normas = (int)$rowVentasNorma["idTipoVenta"];
+                        $detalle_opcion_suscripcion= (int)$rowVentasNorma["idOpcionSuscripcion"];
+                        $detalle_promocion         = (int)$rowVentasNorma["idPromocion"];
+                        $detalle_idioma            = empty($rowVentasNorma["Idioma"])?'es':$rowVentasNorma["Idioma"];
+                    }
+                    // REGISTRO DE FACTURAS SUSCRIPCIONES TIENDA
+                    $stmt = $dbh->prepare("INSERT INTO facturas_suscripcionestienda(
+                            cod_factura, 
+                            cod_facturadetalle, 
+                            cod_suscripcion, 
+                            glosa, 
+                            cod_solicitudfacturacion, 
+                            catalogo, 
+                            id_cliente, 
+                            id_opcion_suscripcion, 
+                            id_promocion, 
+                            id_tipo_venta, 
+                            idioma, 
+                            fecha_inicio_suscripcion) 
+                    values (0, '$cod_detalle_facturacion', 0, '', $cod_facturacion, '$detalle_idEntidad', '$cod_cliente', '$detalle_opcion_suscripcion', '$detalle_promocion', '$detalle_tipo_venta_normas', '$detalle_idioma', '$fecha_registro')");
+                    $flagSuccess=$stmt->execute();
+                    /********************************************************************************************************************************************/
                 }
                 //======================================
                 //para distribucion de tipo de pagos y areas
