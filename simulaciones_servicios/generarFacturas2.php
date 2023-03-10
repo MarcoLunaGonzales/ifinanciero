@@ -120,12 +120,13 @@ try{
                     $adminImpresion=1;  //IMPRIME NORMAL
                 }                                    
                 $monto_totalCab=0;
-                $stmt5 = $dbh->prepare("SELECT sf.cantidad,sf.precio,sf.descuento_bob,sf.descripcion_alterna
+                $stmt5 = $dbh->prepare("SELECT sf.codigo, sf.cantidad,sf.precio,sf.descuento_bob,sf.descripcion_alterna
                     from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion=$codigo");
                 $stmt5->execute();
                 $arrayDetalle=[];
                 $contadoDetalle=1;
                 while ($row = $stmt5->fetch()) {   
+                    $sf_codigo = $row['codigo'];
                     // $cod_claservicio_x=$row['cod_claservicio'];
                     $cantidad_x=$row['cantidad'];
                     $precio_x=$row['precio'];
@@ -147,6 +148,111 @@ try{
                     }
                     $monto_totalCab+=($precio_x*$cantidad_x)-$descuento_bob_x;
                     $contadoDetalle++;
+
+                    /*****************************************************************************************/
+                    $stmtSuscripcion = $dbh->prepare("SELECT fs.codigo, fs.cod_factura, fs.cod_facturadetalle, fs.cod_suscripcion, fs.glosa, 
+                                                    fs.cod_solicitudfacturacion, fs.catalogo, fs.id_cliente, fs.id_opcion_suscripcion, 
+                                                    fs.id_promocion, fs.id_tipo_venta, fs.idioma, fs.fecha_inicio_suscripcion
+                        from facturas_suscripcionestienda fs where sf.cod_facturadetalle = '$sf_codigo'");
+                    $stmtSuscripcion->execute();
+                    $codigo                     = ''; 
+                    $cod_factura                = ''; 
+                    $cod_facturadetalle         = ''; 
+                    $cod_suscripcion            = ''; 
+                    $glosa                      = ''; 
+                    $cod_solicitudfacturacion   = ''; 
+                    $catalogo                   = ''; 
+                    $id_cliente                 = ''; 
+                    $id_opcion_suscripcion      = ''; 
+                    $id_promocion               = ''; 
+                    $id_tipo_venta              = ''; 
+                    $idioma                     = ''; 
+                    $fecha_inicio_suscripcion   = '';
+                    while ($rowSuscripcion = $stmtSuscripcion->fetch()) {
+                        $codigo                     = $rowSuscripcion['codigo']; 
+                        $cod_factura                = $rowSuscripcion['cod_factura']; 
+                        $cod_facturadetalle         = $rowSuscripcion['cod_facturadetalle']; 
+                        $cod_suscripcion            = $rowSuscripcion['cod_suscripcion']; 
+                        $glosa                      = $rowSuscripcion['glosa']; 
+                        $cod_solicitudfacturacion   = $rowSuscripcion['cod_solicitudfacturacion']; 
+                        $catalogo                   = $rowSuscripcion['catalogo']; 
+                        $id_cliente                 = $rowSuscripcion['id_cliente']; 
+                        $id_opcion_suscripcion      = $rowSuscripcion['id_opcion_suscripcion']; 
+                        $id_promocion               = $rowSuscripcion['id_promocion']; 
+                        $id_tipo_venta              = $rowSuscripcion['id_tipo_venta']; 
+                        $idioma                     = $rowSuscripcion['idioma']; 
+                        $fecha_inicio_suscripcion   = $rowSuscripcion['fecha_inicio_suscripcion'];
+                    }
+                    // Se genera la suscripcion solo cuando la norma es digital
+                    if($id_tipo_venta==2){
+                        // GENERACIÓN DE TOKEN
+                        $url_ecommerce = "https://prueba.ibnorca.org/ecommerce/";
+                        $direccion = $url_ecommerce.'backoffice/frontend/usuario/login.php';
+                        $user     = 'juan.quenallata@ibnorca.org';
+                        $password = md5('juanito2020');
+                        $parametros=array(
+                                "c"   => 'IBNTOK', 
+                                "md5" => 1, 
+                                "a"   => $user, 
+                                "b"   => $password);
+                        $parametros=json_encode($parametros);
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL,$direccion);
+                        curl_setopt($ch, CURLOPT_POST, TRUE);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        $remote_server_output = json_decode(curl_exec ($ch));
+                        curl_close ($ch); 
+                        $sw_token = $remote_server_output->value->valor->token;
+
+                        
+                        $queryIbno="SELECT idNorma, Precio from ibnorca.ventanormas where idSolicitudfactura = '$cod_solicitudfacturacion' LIMIT 1";
+                        $stmtIbno = $dbh->prepare($queryIbno);
+                        $stmtIbno->execute();
+                        $ibno_precio         = '';
+                        while ($rowIbno = $stmtIbno->fetch(PDO::FETCH_ASSOC)) { 
+                            $ibno_id_norma = $rowIbno["idNorma"];
+                            $ibno_precio   = $rowIbno["Precio"];
+                        }
+
+                        // GENERACIÓN DE SUSCRIPCIÓN
+                        $direccion = $url_ecommerce.'backoffice/frontend/tienda/generarSuscripcion.php';
+                        $parametros=array(
+                            "token"       => $sw_token,
+                            "idNorma"     => $ibno_id_norma, 
+                            "catalogo"    => $catalogo,
+                            "idCliente"   => $id_cliente,
+                            "configuracionOpcionSuscripcionId" => $id_opcion_suscripcion,
+                            "promocionId" => $id_promocion,
+                            "precio"      => $ibno_precio,
+                            "tipo"        => "digital",
+                            "idioma"      => $idioma,
+                            "desde"       => $fecha_inicio_suscripcion,
+                            "facturaId"   => 45645,
+                            "sistema"     => "Ifinanciero",
+                            "oficinaId"   => 0,
+                            "app"         => "FRONTIBNT"       
+                        );
+                        $parametros=json_encode($parametros);
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL,$direccion);
+                        curl_setopt($ch, CURLOPT_POST, TRUE);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        $remote_server_output = json_decode(curl_exec ($ch));
+                        curl_close ($ch); 
+                        $sw_error = $remote_server_output->error;
+                        
+                        $sw_cod_suscripcion = ($sw_error == "OK" ? $remote_server_output->suscripcionId : 0);
+                        $sw_glosa           = ($sw_error == "OK" ? 'REGISTRO CORRECTO!' : $remote_server_output->detail);
+                        $stmtIbnorca        = $dbh->prepare("UPDATE facturas_suscripcionestienda 
+                                            SET cod_suscripcion = '$sw_cod_suscripcion',
+                                            glosa = '$sw_glosa'
+                                            WHERE cod_facturadetalle = '$sf_codigo'");
+                        $flagSuccess=$stmtIbnorca->execute();
+                    }
+                    /*****************************************************************************************/
+
                 }
                 $descuentoCab=0;
                 $monto_finalCab=$monto_totalCab-$descuentoCab;   
