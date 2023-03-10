@@ -41,7 +41,7 @@ if($_GET["fecha_desde"]==""){
 
 $nombre_gestion=nameGestion($gestion);
 $sql="SELECT *,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,
-(select s.siat_cuf from ".$bd_siat.".salida_almacenes s where s.cod_salida_almacenes=f.idTransaccion_siat)as cuf from facturas_venta f where f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidad) ORDER BY f.fecha_factura, f.nro_factura asc"; //MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion
+(select s.siat_cuf from ".$bd_siat.".salida_almacenes s where s.cod_salida_almacenes=f.idTransaccion_siat)as cuf from facturas_venta f where f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidad) ORDER BY DATE_FORMAT(f.fecha_factura,'%d/%m/%Y'), f.nro_factura asc"; //MONTH(fecha_factura)=$cod_mes_x and YEAR(fecha_factura)=$nombre_gestion
 // echo $sql; 
 $stmt2 = $dbh->prepare($sql);
 $stmt2->execute();

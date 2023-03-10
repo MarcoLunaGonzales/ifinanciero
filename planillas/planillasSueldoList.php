@@ -562,8 +562,8 @@ function sendEmailBoleta(cod_planilla){
     let formData = new FormData();
     formData.append('cod_planilla', cod_planilla);
     swal({
-        title: '¿Estás Seguro?',
-        text: "Se enviará un correo importante a todo el personal de la planilla de pago",
+        title: '¿Esta Seguro de Continuar?',
+        text: "Se enviará un correo a todo el personal de la institución.",
         type: 'warning',
         showCancelButton: true,
         confirmButtonClass: 'btn btn-warning',

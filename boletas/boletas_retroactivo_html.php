@@ -116,12 +116,18 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 		$Ap_Vejez=$result['seguro_de_salud'];
 		$Riesgo_Prof=$result['riesgo_profesional'];
 		$totalGanado=$result['total_ganado'];
-		$ComAFP=$totalGanado*$porcentaje_aport_afp/100;
-		$aposol=$totalGanado*$porcentaje_aport_sol/100;
+
+		$descuentoAFP=$result['afp_1']+$result['afp_2'];
+
+		//$ComAFP=$totalGanado*$porcentaje_aport_afp/100;
+		//$aposol=$totalGanado*$porcentaje_aport_sol/100;
 
 		$aposol13=$result['a_solidario_13000'];
 		$aposol25=$result['a_solidario_25000'];
 		$aposol35=$result['a_solidario_35000'];
+
+		$descuentoAFP=$descuentoAFP+$aposol13+$aposol25+$aposol35;
+
 
 		$RC_IVA=$result['rc_iva'];
 		$Anticipos=$result['anticipo'];
@@ -142,8 +148,8 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 		// $descuentos_otros
 		
 		$suma_ingresos=$haber_basico_dias+$bono_antiguedad+$otrosBonos;
-		$suma_egresos=$Ap_Vejez+$Riesgo_Prof+$ComAFP+$aposol+$aposol13+$aposol25+$aposol35+$RC_IVA+$Anticipos+$descuentos_otrosX+$atrasos;
-
+		$suma_egresos=$descuentoAFP+$RC_IVA+$Anticipos+$descuentos_otrosX+$atrasos;
+		
 		$liquido_pagable=$suma_ingresos-$suma_egresos;
 		// $liquido_pagable=$result['liquido_pagable'];
 		if($cod_personal==-1000){

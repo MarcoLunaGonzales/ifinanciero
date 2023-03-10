@@ -58,10 +58,10 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
 */
 
 //OBTENER MODULOS PAGADOS x CURSO
-$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
-					"accion"=>"ObtenerModulosPagados", 
-					"Identificacion"=>1447493, //7666922 ci del alumno
-					"IdCurso"=>7048); //1565 
+// $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+// 					"accion"=>"ObtenerModulosPagados", 
+// 					"Identificacion"=>1447493, //7666922 ci del alumno
+// 					"IdCurso"=>7043); //1565 
 
 
 /* OBTENER MODULOS  X PAGAR, PAGADO Y SALDO DE UN CURSO*/
@@ -71,15 +71,15 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
 // 					"IdCurso"=>3952); //1565
 
 
- // $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
-// 					"accion"=>"RegistrarControlPago", 
-// 					"Identificacion"=>1447493, //ci del alumno
-// 					"IdCurso"=>3952,
-// 					"IdModulo"=>7048, 
-// 					"MontoPago"=> 525, 
-// 					"IdSolicitudFactura"=>24783,
-// 					"Plataforma"=>13 // 13=Sistema Financiero
-// 					);
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+					"accion"=>"RegistrarControlPago", 
+					"Identificacion"=>1447493, //ci del alumno
+					"IdCurso"=>3952,
+					"IdModulo"=>7048, 
+					"MontoPago"=> 525, 
+					"IdSolicitudFactura"=>24783,
+					"Plataforma"=>13 // 13=Sistema Financiero
+					);
 			
 
 		$parametros=json_encode($parametros);
