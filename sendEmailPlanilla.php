@@ -11,7 +11,7 @@
      * Lista de planilla de pagos MES - PLANILLAS
      * @autor: Ronald Mollericona
     **/
-    $sql="SELECT ppm.codigo, CONCAT(p.primer_nombre, ' ', p.paterno) as nombre_personal, p.email,
+    $sql="SELECT ppm.codigo, CONCAT(p.primer_nombre, ' ', p.paterno) as nombre_personal, p.email_empresa,
         (CASE
             WHEN pl.cod_mes = '1' THEN 'ENERO'
             WHEN pl.cod_mes = '2' THEN 'FEBRERO'
@@ -33,7 +33,7 @@
         LEFT JOIN planillas pl ON pl.codigo = ppm.cod_planilla
         LEFT JOIN gestiones g ON g.codigo = pl.cod_gestion
         WHERE ppm.cod_planilla = '$cod_planilla' 
-        AND ppm.cod_personalcargo = 58
+        /*AND ppm.cod_personalcargo = 58*/
         ORDER BY ppm.codigo DESC";
     $stmt= $dbh->prepare($sql);
     $stmt->execute();
@@ -44,7 +44,7 @@
     foreach($rows as $row){
         
         $personal       = $row['nombre_personal'];
-        $personal_email = $row['email'];
+        $personal_email = $row['email_empresa'];
         // $personal_email = 'roalmollericona@gmail.com';
         // $personal_email = 'lunagonzalesmarco@gmail.com';
 
@@ -74,7 +74,9 @@
                                     "CorreoDestino" => $personal_email,
                                     "NombreDestino" => $personal,
                                     "Asunto"        => 'Boleta de Pago',
-                                    "Body"          => $message);
+                                    "Body"          => $message,
+                                    "CorreoCopia"   => 'janis.solares@ibnorca.org'
+                                );
             $datos = json_encode($datos);
             
             $ch    = curl_init();

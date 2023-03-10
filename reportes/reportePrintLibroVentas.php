@@ -46,7 +46,7 @@ if (isset($_POST["check_rs_librocompras"])) {
 
 $sql="SELECT *,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,
 (select s.siat_cuf from ".$bd_siat.".salida_almacenes s where s.cod_salida_almacenes=f.idTransaccion_siat)as cuf 
-from facturas_venta f where f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($stringUnidadesX) $sql_rs ORDER BY f.fecha_factura, f.nro_factura asc";
+from facturas_venta f where f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($stringUnidadesX) $sql_rs ORDER BY DATE_FORMAT(f.fecha_factura,'%d/%m/%Y'), f.nro_factura asc";
 
 //echo $sql;
 
