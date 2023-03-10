@@ -132,7 +132,7 @@ try {
                     }
                     /********************************************************************************************************************************************/
                     // PREPARACIÓN DE DATOS PARA SERVICIO ECOMMERS
-                    $queryVentaNormas="SELECT idEntidad, idTipoVenta, idPromocion, Idioma from ibnorca.ventanormas where IdVentaNormas = $cod_serv_a LIMIT 1";
+                    $queryVentaNormas="SELECT idEntidad, idTipoVenta, idPromocion, Idioma, idNorma from ibnorca.ventanormas where IdVentaNormas = $cod_serv_a LIMIT 1";
                     $stmtVentaNormas = $dbh->prepare($queryVentaNormas);
                     $stmtVentaNormas->execute();
                     $detalle_idEntidad         = '';
@@ -141,9 +141,10 @@ try {
                     $detalle_promocion         = '';
                     $detalle_idioma            = '';
                     while ($rowVentasNorma = $stmtVentaNormas->fetch(PDO::FETCH_ASSOC)) { 
+                        $detalle_idNorma           = (int)$rowVentasNorma["idNorma"];
                         $detalle_idEntidad         = (int)$rowVentasNorma["idEntidad"];
-                        $detalle_tipo_venta_normas = (int)$rowVentasNorma["idTipoVenta"];
-                        $detalle_opcion_suscripcion= (int)$rowVentasNorma["idOpcionSuscripcion"];
+                        $detalle_tipo_venta_normas = (empty($rowVentasNorma["idTipoVenta"]) ? 1 : $rowVentasNorma["idTipoVenta"]);
+                        $detalle_opcion_suscripcion= $rowVentasNorma["idOpcionSuscripcion"];
                         $detalle_promocion         = (int)$rowVentasNorma["idPromocion"];
                         $detalle_idioma            = empty($rowVentasNorma["Idioma"])?'es':$rowVentasNorma["Idioma"];
                     }
@@ -160,8 +161,9 @@ try {
                             id_promocion, 
                             id_tipo_venta, 
                             idioma, 
-                            fecha_inicio_suscripcion) 
-                    values (0, '$cod_detalle_facturacion', 0, '', $cod_facturacion, '$detalle_idEntidad', '$cod_cliente', '$detalle_opcion_suscripcion', '$detalle_promocion', '$detalle_tipo_venta_normas', '$detalle_idioma', '$fecha_registro')");
+                            fecha_inicio_suscripcion,
+                            id_norma) 
+                    values (0, '$cod_detalle_facturacion', 0, '', $cod_facturacion, '$detalle_idEntidad', '$cod_cliente', '$detalle_opcion_suscripcion', '$detalle_promocion', '$detalle_tipo_venta_normas', '$detalle_idioma', '$fecha_registro', '$detalle_idNorma')");
                     $flagSuccess=$stmt->execute();
                     /********************************************************************************************************************************************/
                 }

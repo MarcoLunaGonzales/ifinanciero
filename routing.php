@@ -1942,6 +1942,13 @@
 			require_once('dosificaciones/saveDelete.php');
 		}
 
+
+		// REPORTES SUSCRIPCIÓN
+		
+		if ($_GET['opcion']=='reportesSuscripcion') {
+			require_once('reportes_suscripcion/list.php');
+		}
+
 	}else{
 		//require("paginaprincipal.php");
 	}
