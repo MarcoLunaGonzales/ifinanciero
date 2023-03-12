@@ -25,7 +25,8 @@ if(isset($_POST['q'])){
     $v=$_GET['v'];
     $cod_personal = $q;
 }
-
+// Inicialización de variable
+$total_items = 0;
 if(isset($_GET['cod_f'])){
     $cod_facturacion=$_GET['cod_f'];
     $cod_simulacion=0;
@@ -120,6 +121,34 @@ $cod_defecto_deposito_cuenta=obtenerValorConfiguracion(55);
 $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
 $name_area=null;
 $contadorRegistros=0;
+
+// DETALLE DE CLIENTE (Se considera de mayor importancia el primer registro seleccionado)
+$detalle_id_ventas_normas = empty($_POST["idVentaNormas_a".'1']) ? 0 : $_POST["idVentaNormas_a".'1'];
+$detalle_cod_cliente    = '';
+$detalle_nombre_cliente = '';
+$detalle_identificacion         = '';
+if($detalle_id_ventas_normas != 0){
+    // DETALLE VENTA NORMA
+    $sqlDetalleIN = "SELECT idCliente, NombreCliente from ibnorca.ventanormas where IdVentaNormas = '$detalle_id_ventas_normas'";
+    $stmtDetalleIN = $dbh->prepare($sqlDetalleIN);
+    $stmtDetalleIN->execute();
+    $resultDetalleIN        = $stmtDetalleIN->fetch();
+    $detalle_cod_cliente    = $resultDetalleIN['idCliente'];
+    $detalle_nombre_cliente = $resultDetalleIN['NombreCliente'];
+    // DETALLE DE CLIENTE
+    $sqlDetalleCliente = "SELECT identificacion from clientes where codigo = '$detalle_cod_cliente'";
+    $stmtDetalleCliente = $dbh->prepare($sqlDetalleCliente);
+    $stmtDetalleCliente->execute();
+    $resultDetalleCliente   = $stmtDetalleCliente->fetch();
+    $detalle_identificacion = $resultDetalleCliente['identificacion'];
+    // PREPARACIÓN DE DATOS
+    $razon_social = $detalle_nombre_cliente;
+    $cod_cliente  = $detalle_cod_cliente;
+    $nit          = $detalle_identificacion;
+}
+
+
+$detalle_cod_cliente = $_POST["idVentaNormas_a".'1'];
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -406,6 +435,10 @@ $contadorRegistros=0;
                                     $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
                                     $stmtTipoIdentificacion = $dbh->prepare($sql2);
                                     $stmtTipoIdentificacion->execute();
+                                    // Inicialización de variables por defecto
+                                    $codigo_identificacion = '';
+                                    $codigo_identificacionx = '';
+                                    $nombre_identificacionx = '';
                                     while ($rowTipoIden = $stmtTipoIdentificacion->fetch(PDO::FETCH_ASSOC)) {
                                         $codigo_identificacionx=$rowTipoIden['codigo'];    
                                         $nombre_identificacionx=$rowTipoIden['nombre'];
@@ -509,7 +542,7 @@ $contadorRegistros=0;
                                             $stringNormas=implode(",", $ids_normas);
                                             $stringNormas=trim($stringNormas,',');
 
-                                            $queryPr="SELECT IdVentaNormas,idNorma,Precio,Cantidad,Catalogo from ibnorca.ventanormas where IdVentaNormas in ($stringNormas)";
+                                            $queryPr="SELECT IdVentaNormas,idNorma,Precio,Cantidad,Catalogo,glosa from ibnorca.ventanormas where IdVentaNormas in ($stringNormas)";
                                            // echo $queryPr;
                                             $stmt = $dbh->prepare($queryPr);
                                             $stmt->execute();
@@ -529,6 +562,7 @@ $contadorRegistros=0;
                                                 $tipoPre=descripcionClaServicio($codCS);                                            
                                                 $cantidadPre=$rowPre['Cantidad'];
                                                 $catalogo=$rowPre['Catalogo'];
+                                                $glosa=$rowPre['glosa'];
                                                 if($cantidadPre==null || $cantidadPre=='' || $cantidadPre==' ')$cantidadPre=1;
                                                 $montoPre=$rowPre['Precio'];
                                                 $descuento_bob_cliente=0; //descuento maximo
@@ -578,7 +612,7 @@ $contadorRegistros=0;
                                                   <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
                                                                                               
                                                   <td>
-                                                    <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" required><?=$descripcion_alternaX?></textarea>
+                                                    <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" required><?=$descripcion_alternaX.' / '.$glosa?></textarea>
                                                   </td>
                                                   <!-- checkbox -->
                                                   <td>                                                    
