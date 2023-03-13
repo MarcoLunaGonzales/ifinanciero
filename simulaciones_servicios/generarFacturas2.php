@@ -285,8 +285,7 @@ try{
                     $urlSIATCompleta=$urlSIAT."formatoFacturaOnLine.php?codVenta=".$idTransaccion_x;
                     echo "<script>
                     Swal.fire('".$titulo."','".$mensaje_x."', '".$estado."');
-                    window.open('$urlSIATCompleta', '_blank');
-                    // location.href='".$urlSIATCompleta."';
+                    location.href='".$urlSIATCompleta."';
                     </script>";
                 }else{
                     $mensaje_x="Hubo un error en la generacion de la factura SIAT.";
