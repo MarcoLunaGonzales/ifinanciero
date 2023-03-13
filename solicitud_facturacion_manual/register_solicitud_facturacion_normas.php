@@ -122,8 +122,18 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
 $name_area=null;
 $contadorRegistros=0;
 
+// Lista de ITEMs
+$ids_normas= array();
+for ($i=1;$i<=$total_items-1;$i++){
+    if($_POST["idVentaNormas_a".$i]!=''){
+        $idVentaNormas=$_POST["idVentaNormas_a".$i];
+        $ids_normas[$i-1]=$idVentaNormas;
+    }
+}
+$stringNormas=implode(",", $ids_normas);
+$stringNormas=trim($stringNormas,',');
 // DETALLE DE CLIENTE (Se considera de mayor importancia el primer registro seleccionado)
-$detalle_id_ventas_normas = empty($_POST["idVentaNormas_a".'1']) ? 0 : $_POST["idVentaNormas_a".'1'];
+$detalle_id_ventas_normas = $stringNormas;
 $detalle_cod_cliente    = '';
 $detalle_nombre_cliente = '';
 $detalle_identificacion         = '';
@@ -140,7 +150,7 @@ if($detalle_id_ventas_normas != 0){
     $stmtDetalleCliente = $dbh->prepare($sqlDetalleCliente);
     $stmtDetalleCliente->execute();
     $resultDetalleCliente   = $stmtDetalleCliente->fetch();
-    $detalle_identificacion = $resultDetalleCliente['identificacion'];
+    $detalle_identificacion = empty($resultDetalleCliente['identificacion'])?'':$resultDetalleCliente['identificacion'];
     // PREPARACIÓN DE DATOS
     $razon_social = $detalle_nombre_cliente;
     $cod_cliente  = $detalle_cod_cliente;

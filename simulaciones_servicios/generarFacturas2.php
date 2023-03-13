@@ -285,7 +285,8 @@ try{
                     $urlSIATCompleta=$urlSIAT."formatoFacturaOnLine.php?codVenta=".$idTransaccion_x;
                     echo "<script>
                     Swal.fire('".$titulo."','".$mensaje_x."', '".$estado."');
-                    location.href='".$urlSIATCompleta."';
+                    window.open('$urlSIATCompleta', '_blank');
+                    // location.href='".$urlSIATCompleta."';
                     </script>";
                 }else{
                     $mensaje_x="Hubo un error en la generacion de la factura SIAT.";
@@ -431,6 +432,7 @@ function generarSuscripcion($codigo, $stringFacturasCod){
 				"oficinaId"   => 0,
 				"app"         => "FRONTIBNT"       
 			);
+            var_dump($parametros);
 			$parametros=json_encode($parametros);
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL,$direccion);

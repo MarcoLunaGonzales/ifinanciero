@@ -132,7 +132,7 @@ try {
                     }
                     /********************************************************************************************************************************************/
                     // PREPARACIÓN DE DATOS PARA SERVICIO ECOMMERS
-                    $queryVentaNormas="SELECT idEntidad, idTipoVenta, idPromocion, Idioma, idNorma from ibnorca.ventanormas where IdVentaNormas = $cod_serv_a LIMIT 1";
+                    $queryVentaNormas="SELECT idEntidad, idTipoVenta, idPromocion, Idioma, idNorma, idOpcionSuscripcion from ibnorca.ventanormas where IdVentaNormas = $cod_serv_a LIMIT 1";
                     $stmtVentaNormas = $dbh->prepare($queryVentaNormas);
                     $stmtVentaNormas->execute();
                     $detalle_idEntidad         = '';
