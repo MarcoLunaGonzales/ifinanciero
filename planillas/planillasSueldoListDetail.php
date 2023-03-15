@@ -64,7 +64,7 @@ $sql = "SELECT ppm.codigo, UPPER(CONCAT(p.primer_nombre, ' ', p.paterno)) as nom
                     <tr>                    
                       <td><?=$nombre_personal?></td>
                       <td class="td-actions text-center">
-                          <a href="<?=$ruta_vista;?>ver_boleta.php?key=<?=$codigo;?>" 
+                          <a href="<?=$ruta_vista;?>ver_boleta_admin.php?key=<?=$codigo;?>" 
                               target="_blank" 
                               rel="tooltip" 
                               class="btn btn-<?=$nro_visitas > 0 ? 'success' : 'danger' ?>" data-original-title="" title="Ver boleta">
