@@ -10,20 +10,9 @@ class Conexion extends PDO {
       // private $port = '4606'; 
 
 
-      //CONEXION IBNORCA PRUEBAS EXTERNO
-      // private $tipo_de_base = 'mysql';
-      // private $host = 'lpsit.ibnorca.org';
-      // private $nombre_de_base = 'bdifinanciero';
-      // private $usuario = 'ingresobd';
-      // private $contrasena = 'ingresoibno';
-      // private $port = '3360'; 
-
-
-
-
       private $tipo_de_base = 'mysql';
       private $host = 'localhost';
-      private $nombre_de_base = 'financiero0323';
+      private $nombre_de_base = 'financiero0223';
       private $usuario = 'root';
       private $contrasena = '4868422Marco';
       private $port = '3306'; 

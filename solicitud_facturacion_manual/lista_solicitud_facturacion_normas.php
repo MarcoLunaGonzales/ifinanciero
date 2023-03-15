@@ -103,8 +103,8 @@ $stmt->execute();
                                         $Norma=nameNorma($idNorma,$Catalogo);
                                         $Cantidad=$rowPre['Cantidad'];
                                         $idCliente=$rowPre['idCliente'];
-                                        $tipoVenta=$rowPre['TipoVenta'];
-                                        $idTipoVenta=$rowPre['idTipoVenta'];
+                                        // $tipoVenta=$rowPre['TipoVenta'];
+                                        $idTipoVenta=($rowPre['idTipoVenta'] == 1 ? 'Impreso' : 'Digital');
                                         $idPromocion=$rowPre['idPromocion'];
                                         $idiomaNorma=$rowPre['Idioma'];
 
@@ -125,7 +125,7 @@ $stmt->execute();
                                           <td class="text-left small"><?=$Norma?></td>
                                           <td class="text-left small"><?=$Norma_descripcion?></td>
                                           <td class="text-left small"><?=$idiomaNorma?></td>
-                                          <td class="text-left small"><?=$tipoVenta?></td>
+                                          <td class="text-left small"><?=$idTipoVenta?></td>
                                           <td class="text-righ smallt"><?=$Cantidad?></td>
                                           <td class="text-righ smallt"><?=number_format($Precio,2,".","")?></td>
                                           <!-- checkbox -->
