@@ -2,6 +2,7 @@
 
 require_once 'conexion.php';
 require_once 'styles.php';
+require_once 'functions.php';
 require_once 'functionsGeneral.php';
 require_once 'rrhh/configModule.php';
 
@@ -19,7 +20,7 @@ $codigo_planilla = $_GET['codigo_planilla'];
 
 $dbh = new Conexion();
 
-$sql = "SELECT UPPER(CONCAT(p.primer_nombre, ' ', p.paterno)) as nombre_personal, p.email,
+$sql = "SELECT ppm.codigo, UPPER(CONCAT(p.primer_nombre, ' ', p.paterno)) as nombre_personal, p.email,
       (SELECT COUNT(*) FROM planillas_email WHERE cod_planilla_mes = ppm.codigo) as nro_visitas,
       (SELECT DATE_FORMAT(fecha,'%d-%m-%Y %H:%i:%s') FROM planillas_email WHERE cod_planilla_mes = ppm.codigo ORDER BY id DESC LIMIT 1) as ultima_visita
       FROM planillas_personal_mes ppm
@@ -28,10 +29,12 @@ $sql = "SELECT UPPER(CONCAT(p.primer_nombre, ' ', p.paterno)) as nombre_personal
   $stmtAdmnin = $dbh->prepare($sql);
   $stmtAdmnin->execute();
 
+  $stmtAdmnin->bindColumn('codigo', $codigo);
   $stmtAdmnin->bindColumn('nombre_personal', $nombre_personal);
   $stmtAdmnin->bindColumn('nro_visitas', $nro_visitas);
   $stmtAdmnin->bindColumn('ultima_visita', $ultima_visita);
   
+  $ruta_vista = obtenerValorConfiguracion(104);
   ?>
 
   <div class="content">
@@ -61,7 +64,7 @@ $sql = "SELECT UPPER(CONCAT(p.primer_nombre, ' ', p.paterno)) as nombre_personal
                     <tr>                    
                       <td><?=$nombre_personal?></td>
                       <td class="td-actions text-center">
-                          <a href="#" target="_blank" rel="tooltip" class="btn btn-<?=$nro_visitas > 0 ? 'success' : 'danger' ?>" data-original-title="" title="">
+                          <a href="<?=$ruta_vista;?>ver_boleta.php?key=<?=$codigo;?>" target="_blank" rel="tooltip" class="btn btn-<?=$nro_visitas > 0 ? 'success' : 'danger' ?>" data-original-title="" title="">
                             <i class="material-icons" title="Visitas">remove_red_eye</i> <?=$nro_visitas?>                       
                           <div class="ripple-container"></div></a>                         
                       </td>
