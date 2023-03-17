@@ -10,6 +10,7 @@ $cod_mes = $_GET["cod_mes"];//
 $cod_personal=0;
 $gestion=nameGestion($cod_gestion);
 $mes=strtoupper(nombreMes($cod_mes));
+$cod_planilla_mes = 0;
 
 // $htmlConta1=generarHtmlBoletaRetroactivo($cod_planilla,$cod_gestion,0);  
 $htmlConta1=generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_personal);

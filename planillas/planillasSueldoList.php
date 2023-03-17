@@ -120,7 +120,8 @@ from planillas order by cod_gestion desc,cod_mes desc";
                            from planillas_uo_cerrados where cod_planilla=$codigo_planilla and cod_uo=$cod_uo_aux");
                         $stmtAdmninUOAux2->execute();
                         $resultAdmninUOAux2=$stmtAdmninUOAux2->fetch();
-                        $cod_uo_aux2=$resultAdmninUOAux2['cod_uo'];                    
+                        // Corrección por tener valor vacio
+                        $cod_uo_aux2=empty($resultAdmninUOAux2['cod_uo'])?'':$resultAdmninUOAux2['cod_uo'];                    
                         if($cod_uo_aux==$cod_uo_aux2){
                           $label_uo_aux.='<span class="badge badge-success">'.$nombre_uo_aux.'</span>';
                         }else{

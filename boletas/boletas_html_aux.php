@@ -118,7 +118,7 @@
                         $frameSize = 1; //marco de qr
                         // $codigo_generado2 = md5($codigo_generado);
                         // $contenido = $urlBoletas.'ver_boleta.php?key='.$codigo_generado;
-                        $contenido = $urlBoletas.'verf_boletas_print.php?key='.$cod_planilla_mes;
+                        $contenido = $urlBoletas.'verf_boletas_print.php?key='.$result['cod_planilla_mes'];
                         QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                         // $html.='<img src="'.$fileName.'"/>';
 
@@ -138,7 +138,7 @@
 						</table>';
 					$html.='</td>
 					<td style="border-left:0;padding-top:20px;">
-						<center> <b><p>RECIBIDO CONFORME <br> <b style="font-style: italic;">'.$detail_nombre_personal.'<br>'.$detail_primer_vista.'</b></p></b></center>
+						<center> <b><p>RECIBIDO CONFORME <br> <b style="font-style: italic;">'.$result['nombres'].' '.$result['apellidos'].'<br>'.$result['primer_vista'].'</b></p></b></center>
 					</td>
 				</tr>
 			</table>';

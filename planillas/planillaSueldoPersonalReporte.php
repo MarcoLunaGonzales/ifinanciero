@@ -12,7 +12,13 @@
 	
 	$nombre_gestion=nameGestion($cod_gestion);
 	if($cod_uo==-100){		
-		$sql="SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1 and cod_uo<>0 and cod_uo<>'' GROUP BY cod_uo";
+		$sql="SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo 
+				from personal_area_distribucion_planilla 
+				where cod_estadoreferencial=1 
+				and cod_uo<>0 
+				and cod_uo<>'' 
+				AND cod_planilla = '$cod_planilla'
+				GROUP BY cod_uo";
         // echo $sql;
         $stmtUO=$dbh->prepare($sql);
 		$stmtUO->execute();
@@ -29,8 +35,9 @@
 		$nombre_uo=nameUnidad($cod_uo);
 	}
 	$sqlArea="SELECT cod_area,(SELECT a.abreviatura from areas a where a.codigo=cod_area) as nombre_area
-	from personal_area_distribucion
+	from personal_area_distribucion_planilla
 	where cod_estadoreferencial=1 and cod_uo in ($cod_uo)
+	AND cod_planilla = '$cod_planilla'
 	GROUP BY cod_area order by nombre_area";
 	// echo $sqlArea;
 	$stmtArea = $dbh->prepare($sqlArea);
@@ -212,8 +219,10 @@ table {
 						        (select (select pd.abreviatura from personal_departamentos pd where pd.codigo=p3.cod_lugar_emision)
 						             from personal p3 where p3.codigo=ppm.cod_personalcargo) as lug_emision,
 						  		(select p4.lugar_emision_otro from personal p4 where p4.codigo=ppm.cod_personalcargo) as lug_emision_otro,pad.cod_uo,pad.cod_area
-								from planillas_personal_mes ppm,personal_area_distribucion pad
-								where ppm.cod_personalcargo=pad.cod_personal and cod_planilla=$cod_planilla and pad.cod_uo in($cod_uo) and pad.cod_area=$cod_area_x and pad.cod_estadoreferencial=1  order by paterno";
+								from planillas_personal_mes ppm,personal_area_distribucion_planilla pad
+								where ppm.cod_personalcargo=pad.cod_personal 
+								AND pad.cod_planilla = '$cod_planilla'
+								and ppm.cod_planilla=$cod_planilla and pad.cod_uo in($cod_uo) and pad.cod_area=$cod_area_x and pad.cod_estadoreferencial=1  order by paterno";
 
 							$stmtPersonal = $dbh->prepare($sql);
 							$stmtPersonal->execute();	

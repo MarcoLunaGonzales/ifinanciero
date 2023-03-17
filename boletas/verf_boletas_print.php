@@ -5,7 +5,7 @@ require_once 'verf_boletas_retroactivo.php';
 /* Datos de Personal */
 $key  = $_GET["key"];
 $dbh  = new Conexion();
-$sqlP = "SELECT ppm.codigo, p.cod_gestion, p.cod_mes
+$sqlP = "SELECT ppm.cod_planilla, p.cod_gestion, p.cod_mes
         FROM planillas_personal_mes ppm
         LEFT JOIN planillas p ON p.codigo = ppm.cod_planilla
         WHERE ppm.codigo = '$key' 
@@ -19,7 +19,7 @@ $cod_gestion    = "";
 $cod_mes        = "";
 $cod_planilla_mes = $key;
 while ($rowP = $stmtP->fetch(PDO::FETCH_ASSOC)) {
-    $cod_planilla = $rowP['codigo'];
+    $cod_planilla = $rowP['cod_planilla'];
     $cod_gestion  = $rowP['cod_gestion'];
     $cod_mes      = $rowP['cod_mes'];
 }
