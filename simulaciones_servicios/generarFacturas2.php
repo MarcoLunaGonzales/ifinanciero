@@ -416,7 +416,7 @@ function generarSuscripcion($codigo, $stringFacturasCod){
 			/**
 			 * GENERACIÓN DE SUSCRIPCIÓN
 			 **/
-			$direccion = $url_ecommerce.'backoffice/frontend/tienda/generarSuscripcion.php';
+			$direccion = $url_ecommerce.'tienda/generarSuscripcion.php';
 			
 			$parametros=array(
 				"token"       => $sw_token,
