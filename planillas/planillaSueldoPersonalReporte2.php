@@ -15,8 +15,8 @@
 		$sql="SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo 
 			from personal_area_distribucion_planilla 
 			where cod_estadoreferencial=1 
-			and cod_uo<>0 
-			and cod_uo<>'' 
+			and cod_uo<> 0 
+			and cod_uo<> ' ' 
 			AND cod_planilla = '$cod_planilla'
 			GROUP BY cod_uo";
         // echo $sql;
