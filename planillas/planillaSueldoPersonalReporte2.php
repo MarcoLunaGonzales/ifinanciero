@@ -222,7 +222,7 @@ table {
 								(select a.nombre from areas a where a.codigo=p.cod_area)as areas
 								from planillas_personal_mes ppm,personal p
 								where ppm.cod_personalcargo=p.codigo and cod_planilla='$cod_planilla'  order by paterno";
-									echo $sql;
+									// echo $sql;
 							$stmtPersonal = $dbh->prepare($sql);
 							$stmtPersonal->execute();	
 
