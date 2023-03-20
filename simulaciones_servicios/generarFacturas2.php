@@ -389,7 +389,7 @@ function generarSuscripcion($codigo, $stringFacturasCod){
 			 */
 			if(empty($sw_token)){
 				$url_ecommerce = $urlTienda;
-				$direccion = $url_ecommerce.'backoffice/frontend/usuario/login.php';
+				$direccion = $url_ecommerce.'usuario/login.php';
                 
 				// $user     = 'juan.quenallata@ibnorca.org';
 				// $password = md5('juanito2020');
