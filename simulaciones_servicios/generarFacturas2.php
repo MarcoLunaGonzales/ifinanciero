@@ -20,6 +20,9 @@ $globalUser=$_SESSION["globalUser"];
 
 $urlSIAT=obtenerValorConfiguracion(103);
 
+// Ruta WS tienda
+$urlTienda=obtenerValorConfiguracion(109);
+
 //RECIBIMOS LAS VARIABLES
 $codigo = $_GET["codigo"];
 $codigoSolicitud=$codigo;
@@ -385,8 +388,8 @@ function generarSuscripcion($codigo, $stringFacturasCod){
 			 * GENERACIÓN DE TOKEN
 			 */
 			if(empty($sw_token)){
-				$url_ecommerce = "https://prueba.ibnorca.org/ecommerce/";
-				$direccion = $url_ecommerce.'backoffice/frontend/usuario/login.php';
+				$url_ecommerce = $urlTienda;
+				$direccion = $url_ecommerce.'usuario/login.php';
                 
 				// $user     = 'juan.quenallata@ibnorca.org';
 				// $password = md5('juanito2020');
@@ -413,7 +416,7 @@ function generarSuscripcion($codigo, $stringFacturasCod){
 			/**
 			 * GENERACIÓN DE SUSCRIPCIÓN
 			 **/
-			$direccion = $url_ecommerce.'backoffice/frontend/tienda/generarSuscripcion.php';
+			$direccion = $url_ecommerce.'tienda/generarSuscripcion.php';
 			
 			$parametros=array(
 				"token"       => $sw_token,
