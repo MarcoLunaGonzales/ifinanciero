@@ -236,7 +236,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             if($banderaHab!=0){
                                                 $descuento_porX=0;
                                                 $descuento_bobX=0;
-                                                $descripcion_alternaX=$tipoPre;                                            
+                                                $descripcion_alternaX=$tipoPre." ".$detalleCotizacion;                                            
                                                 $sw="";
 
                                                 //sacamos el monto total de registros
