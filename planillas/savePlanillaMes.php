@@ -16,6 +16,8 @@ $dbh = new Conexion();
 $dbhI = new Conexion();
 $dbhIPD = new Conexion();
 $dbhU = new Conexion();
+
+$dbhPADP = new Conexion();
 set_time_limit(0);
 session_start();
 
@@ -116,12 +118,19 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 		
 	// fin de valores de configruacion
 
+	// Limpiando tabla personal_area_distribucion_planilla
+	$stmtDelete = $dbh->prepare("DELETE  FROM personal_area_distribucion_planilla where cod_planilla='$cod_planilla'");
+	$stmtDelete->execute();
+
 	//============select del personal
-	$sql = "SELECT codigo,haber_basico,cod_grado_academico,
+	$sql = "SELECT cod_cargo, cod_unidadorganizacional as cod_unidad, cod_area, codigo,haber_basico,cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,cod_tipoafp,ing_contr,cuenta_bancaria
 	from personal where cod_estadoreferencial=1 and cod_estadopersonal=1";
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
+	$stmtPersonal->bindColumn('cod_cargo', $cod_cargo);
+	$stmtPersonal->bindColumn('cod_unidad', $cod_unidad);
+	$stmtPersonal->bindColumn('cod_area', $cod_area);
 	$stmtPersonal->bindColumn('codigo', $codigo_personal);
 	$stmtPersonal->bindColumn('haber_basico', $haber_basico);
 	$stmtPersonal->bindColumn('cod_grado_academico', $cod_gradoacademico);  
@@ -212,10 +221,10 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 		//==== insert de panillas de  personal mes
 		$sqlInsertPlanillas="INSERT into planillas_personal_mes(cod_planilla,cod_personalcargo,cod_gradoacademico,dias_trabajados,horas_pagadas,
 		  haber_basico,bono_academico,bono_antiguedad,monto_bonos,total_ganado,monto_descuentos,afp_1,afp_2,dotaciones,
-		  liquido_pagable,cod_estadoreferencial,created_by,modified_by,procesado_reprocesado,bonos_otros,descuentos_otros,cuenta_habilitada,haber_basico_pactado,correlativo_planilla)
+		  liquido_pagable,cod_estadoreferencial,created_by,modified_by,procesado_reprocesado,bonos_otros,descuentos_otros,cuenta_habilitada,haber_basico_pactado,correlativo_planilla, cod_cargo, cod_uo, cod_area)
 		 values(:cod_planilla,:codigo_personal,:cod_gradoacademico,:dias_trabajados,:horas_pagadas,:haber_basico,:bono_academico,
 		 	:bono_antiguedad,:monto_bonos,:total_ganado,:monto_descuentos,:afp_1,:afp_2,:dotaciones,
-		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by,:procesado_reprocesado,:bonos_otros,:descuentos_otros,:cuenta_habilitada,:haber_basico_pactado,:correlativo_planilla)";
+		  :liquido_pagable,:cod_estadoreferencial,:created_by,:modified_by,:procesado_reprocesado,:bonos_otros,:descuentos_otros,:cuenta_habilitada,:haber_basico_pactado,:correlativo_planilla, :cod_cargo, :cod_uo, :cod_area)";
 		$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 		$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
@@ -243,8 +252,47 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 		$stmtInsertPlanillas->bindParam(':cuenta_habilitada',$cuenta_habilitada);
 		$stmtInsertPlanillas->bindParam(':correlativo_planilla',$correlativo_planilla);
 		
+		// NUEVO CAMPOS AGREGADOS
+		$stmtInsertPlanillas->bindParam(':cod_cargo',$cod_cargo);
+		$stmtInsertPlanillas->bindParam(':cod_uo',$cod_unidad);
+		$stmtInsertPlanillas->bindParam(':cod_area',$cod_area);
+		
 		$flagSuccessIP=$stmtInsertPlanillas->execute();
 
+		// PERSONAL ÁREA DISTRIBUCIÓN
+		$sqlPAD = "SELECT pad.cod_uo, pad.cod_area, pad.porcentaje, pad.monto
+				FROM personal_area_distribucion pad
+				WHERE pad.cod_estadoreferencial = 1 
+				AND pad.cod_personal = '$codigo_personal'";
+		$stmtPAD = $dbhPADP->prepare($sqlPAD);
+		$stmtPAD->execute();
+		while ($rowPAD = $stmtPAD->fetch(PDO::FETCH_ASSOC)) {
+			$sqlReload="INSERT into personal_area_distribucion_planilla(
+				cod_planilla,
+				cod_personal,
+				cod_uo,
+				cod_area,
+				porcentaje,
+				monto,
+				cod_estadoreferencial
+			)
+			values(
+				:cod_planilla,
+				:cod_personal,
+				:cod_uo,
+				:cod_area,
+				:porcentaje,
+				:monto,
+				1)";
+			$stmtInsertPAD = $dbhPADP->prepare($sqlReload);
+			$stmtInsertPAD->bindParam(':cod_planilla', $cod_planilla);
+			$stmtInsertPAD->bindParam(':cod_personal', $codigo_personal);
+			$stmtInsertPAD->bindParam(':cod_uo', $rowPAD['cod_uo']);
+			$stmtInsertPAD->bindParam(':cod_area', $rowPAD['cod_area']);
+			$stmtInsertPAD->bindParam(':porcentaje', $rowPAD['porcentaje']);
+			$stmtInsertPAD->bindParam(':monto', $rowPAD['monto']);
+			$flagSuccessPAD=$stmtInsertPAD->execute();
+		}
     
 
 		// echo "codigo_planilla_actual: ".$cod_planilla."<br>";

@@ -12,7 +12,13 @@
 	
 	$nombre_gestion=nameGestion($cod_gestion);
 	if($cod_uo==-100){		
-		$sql="SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo from personal_area_distribucion where cod_estadoreferencial=1 and cod_uo<>0 and cod_uo<>'' GROUP BY cod_uo";
+		$sql="SELECT cod_uo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_uo) as nombre_uo 
+			from personal_area_distribucion_planilla 
+			where cod_estadoreferencial=1 
+			and cod_uo<>0 
+			and cod_uo<>'' 
+			AND cod_planilla = '$cod_planilla'
+			GROUP BY cod_uo";
         // echo $sql;
         $stmtUO=$dbh->prepare($sql);
 		$stmtUO->execute();
@@ -29,7 +35,7 @@
 		$nombre_uo=nameUnidad($cod_uo);
 	}
 	// $sqlArea="SELECT cod_area,(SELECT a.abreviatura from areas a where a.codigo=cod_area) as nombre_area
-	// from personal_area_distribucion
+	// from personal_area_distribucion_planilla
 	// where cod_estadoreferencial=1 and cod_uo in ($cod_uo)
 	// GROUP BY cod_area order by nombre_area";
 	// // echo $sqlArea;
@@ -210,7 +216,10 @@ table {
 						        p.identificacion as doc_id,
 						        (select (select pd.abreviatura from personal_departamentos pd where pd.codigo=p3.cod_lugar_emision)
 						             from personal p3 where p3.codigo=ppm.cod_personalcargo) as lug_emision,
-						  		p.lugar_emision_otro as lug_emision_otro,p.cod_unidadorganizacional as cod_uo,p.cod_area,(select a.nombre from areas a where a.codigo=p.cod_area)as areas
+						  		p.lugar_emision_otro as lug_emision_otro,
+								ppm.cod_uo as cod_uo,
+								ppm.cod_area,
+								(select a.nombre from areas a where a.codigo=p.cod_area)as areas
 								from planillas_personal_mes ppm,personal p
 								where ppm.cod_personalcargo=p.codigo and cod_planilla=$cod_planilla  order by paterno";
 									// echo $sql;
