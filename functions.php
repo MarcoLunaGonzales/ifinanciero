@@ -2745,10 +2745,12 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function obtenerSolicitudRecursosDetallePlantillaSinSol($codSol,$codigo){
      $dbh = new Conexion();
+     $codCuentaHonorariosDocentes=obtenerValorConfiguracion(88);
+
+      //SACAMOS TODAS LAS SOLICITUDES DE RECURSOS ADICIONALES PARA ESE ITEM QUE ESTAN ACTIVAS
+
      $sql="";
-     //SACAMOS TODAS LAS SOLICITUDES DE RECURSOS ADICIONALES PARA ESE ITEM QUE ESTAN ACTIVAS
-     $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd, plan_cuentas pc, solicitud_recursos sr where sd.cod_plancuenta=pc.codigo and sd.cod_detalleplantilla=$codigo and 
-       sd.cod_solicitudrecurso=sr.codigo and sr.cod_estadoreferencial<>2 ";
+     $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd, plan_cuentas pc, solicitud_recursos sr where sd.cod_plancuenta=pc.codigo and sd.cod_detalleplantilla=$codigo and sd.cod_plancuenta='$codCuentaHonorariosDocentes'and sd.cod_solicitudrecurso=sr.codigo and sr.cod_estadoreferencial<>2 ";
      //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
