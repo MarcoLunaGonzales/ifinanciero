@@ -12,7 +12,7 @@ require_once 'configModule.php';
 	<div class="container-fluid">
 
 		<div class="col-md-12">
-		  <form id="form1" enctype="multipart/form-data" class="form-horizontal" action="refrigerios/saveImportRefrigerio.php" method="post">
+		  <form id="form1" enctype="multipart/form-data" class="form-horizontal" action="<?=$urlSaveRefrigerio;?>" method="post">
   
 			<div class="card">
 			  <div class="card-header <?=$colorCard;?> card-header-text">
