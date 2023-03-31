@@ -25,6 +25,6 @@ $urlSaveRefrigerioDetalle="refrigerios/saveRefrigerioDetalle.php";
 $calculaRefrigerioMes="index.php?opcion=calculaRefrigerioMes";
 
 
-$urlSave="refrigerios/saveImportRefrigerio.php";
+$urlSaveRefrigerio="refrigerios/saveImportRefrigerio.php";
 
 ?>
