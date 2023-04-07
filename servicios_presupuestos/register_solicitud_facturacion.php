@@ -26,8 +26,8 @@ $cod_facturacion=$cod_facturacion;
 $stmtIBNO = $dbhIBNO->prepare("SELECT * from servicios s where IdServicio=$IdServicio");
 $stmtIBNO->execute();
 $resultServicio = $stmtIBNO->fetch();
-$IdTipo = $resultServicio['IdTipo'];
-$Codigo_alterno = $resultServicio['Codigo'];
+$IdTipo = empty($resultServicio['IdTipo'])?'':$resultServicio['IdTipo'];
+$Codigo_alterno = empty($resultServicio['Codigo'])?'':$resultServicio['Codigo'];
 
 if ($cod_facturacion > 0){
     $stmt = $dbh->prepare("SELECT * FROM solicitudes_facturacion where codigo=$cod_facturacion");
@@ -57,7 +57,7 @@ if ($cod_facturacion > 0){
     $nro_tarjeta=$result['nro_tarjeta'];
 
 }else {
-    $nombre_simulacion = $resultServicio['Descripcion'];
+    $nombre_simulacion = empty($resultServicio['Descripcion'])?'':$resultServicio['Descripcion'];
      if(isset($_GET['q'])){
         $cod_personal=$_GET['q'];
     }else{
@@ -65,9 +65,9 @@ if ($cod_facturacion > 0){
     }
     
 
-    $cod_uo = $resultServicio['IdOficina'];
-    $cod_area = $resultServicio['IdArea'];
-    $cod_cliente = $resultServicio['IdCliente'];    
+    $cod_uo = empty($resultServicio['IdOficina'])?'':$resultServicio['IdOficina'];
+    $cod_area = empty($resultServicio['IdArea'])?'':$resultServicio['IdArea'];
+    $cod_cliente = empty($resultServicio['IdCliente'])?'':$resultServicio['IdCliente'];    
     $fecha_registro =date('Y-m-d');
     $fecha_solicitudfactura =$fecha_registro;
     $cod_tipoobjeto=211;//por defecto}
