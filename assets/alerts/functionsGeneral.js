@@ -3305,6 +3305,7 @@ function guardarSimulacionServicio(){
   
   console.log("personal: "+cod_personal);
 
+  var organismo_certificador=$("#organismo_certificador").val();
   if($("#productos_div").hasClass("d-none")){
    if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
    Swal.fire('Informativo!','Debe llenar los campos  1 !','warning'); 
@@ -3316,7 +3317,7 @@ function guardarSimulacionServicio(){
     var des_serv=$("#d_servicio").val();
     var iaf_primario=$("#iaf_primario_tcs").val();
     var iaf_secundario=$("#iaf_secundario_tcs").val();
-    var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2,"codigo_personal":cod_personal,"fecha_solicitud_cliente":fecha_solicitud_cliente};
+    var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2,"codigo_personal":cod_personal,"fecha_solicitud_cliente":fecha_solicitud_cliente, "organismo_certificador":organismo_certificador};
     $.ajax({
         type: "POST",
         dataType: 'html',
@@ -3368,7 +3369,7 @@ function guardarSimulacionServicio(){
       var iaf_secundario=$("#iaf_secundario").val();
       objeto=0;
       var des_serv=$("#d_servicio_p").val();
-      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1,"fecha_solicitud_cliente":fecha_solicitud_cliente};
+      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1,"fecha_solicitud_cliente":fecha_solicitud_cliente, "organismo_certificador":organismo_certificador};
      $.ajax({
         type: "POST",
         dataType: 'html',
@@ -19938,7 +19939,8 @@ var itemDatosClienteActualizar_contactos_mae=[];
 function modalActualizarDatosCliente(cod_area){
   iniciarCargaAjax();
   var codigo_cliente=$("#cliente").val();
-  var parametos={"codigo_cliente":codigo_cliente};
+  var parametos={"codigo_cliente":$("#cliente").val()};
+  itemDatosClienteActualizar=[];
   var destino = "simulaciones_servicios/ajax_datosClienteActualizarPropuesta.php"; 
   $.ajax({
     url: destino,
@@ -19957,15 +19959,34 @@ function modalActualizarDatosCliente(cod_area){
   var datos_mae=itemDatosClienteActualizar_contactos_mae;
   //console.log(itemDatosClienteActualizar_contactos_mae);
   $("#nit_cliente").val(datos[0]['nit']); 
+  $("#nit_cliente_actualizar").val(datos[0]['nit']); 
+  
   $("#razon_social_cliente").val(datos[0]['razonSocial']);
+  $("#razon_social_cliente_actualizar").val(datos[0]['razonSocial']);
+
   $("#direccion_cliente").val(datos[0]['direccion']);
+  $("#direccion_cliente_actualizar").val(datos[0]['direccion']);
+
   $("#pais_cliente").val(datos[0]['pais']);
+  $("#pais_cliente_actualizar").val(datos[0]['pais']);
+
   $("#ciudad_cliente").val(datos[0]['ciudad']);
+  $("#ciudad_cliente_actualizar").val(datos[0]['ciudad']);
+
   $("#departamento_cliente").val(datos[0]['departamento']);
+  $("#departamento_cliente_actualizar").val(datos[0]['departamento']);
+
   $("#telefono_cliente").val(datos[0]['telefono']);
+  $("#telefono_cliente_actualizar").val(datos[0]['telefono']);
+
   $("#fax_cliente").val(datos[0]['fax']);
+  $("#fax_cliente_actualizar").val(datos[0]['fax']);
+
   $("#email_cliente").val(datos[0]['email']);
+  $("#email_cliente_actualizar").val(datos[0]['email']);
+
   $("#web_cliente").val(datos[0]['web']);
+  $("#web_cliente_actualizar").val(datos[0]['web']);
 
   if(datos_mae.length>0){
     $("#id_contacto_mae").val(datos_mae[0]['IdContacto']);
@@ -19973,6 +19994,13 @@ function modalActualizarDatosCliente(cod_area){
     $("#mae_cargo").val(datos_mae[0]['CargoContacto']);
     $("#mae_telefono").val(datos_mae[0]['FonoContacto']);
     $("#mae_email").val(datos_mae[0]['CorreoContacto']);
+
+    // Campo de actualización
+    $("#id_contacto_mae_actualizar").val(datos_mae[0]['IdContacto']);
+    $("#mae_nombre_actualizar").val(datos_mae[0]['NombreCompleto']);
+    $("#mae_cargo_actualizar").val(datos_mae[0]['CargoContacto']);
+    $("#mae_telefono_actualizar").val(datos_mae[0]['FonoContacto']);
+    $("#mae_email_actualizar").val(datos_mae[0]['CorreoContacto']);
   }else{
     $("#id_contacto_mae").val(0);
     $("#mae_nombre").val("");
