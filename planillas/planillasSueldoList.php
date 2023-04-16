@@ -292,11 +292,6 @@ from planillas order by cod_gestion desc,cod_mes desc";
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
                             
                             <li>
-                                <button type="button" class="dropdown-item" id="adjuntarNuevoArchivo" data-cod_planilla="<?=$codigo_planilla;?>">
-                                    <i class="material-icons">archive</i>Adjuntar Archivo
-                                </button> 
-                            </li>
-                            <li>
                               <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalVistaPreviaPlanilla" onclick="agregarDatosVistaPreviaPlanilla('<?=$codigo_planilla;?>','<?=$cod_mes?>','<?=$cod_gestion?>')">
                               <i class="material-icons">list</i>Vista Previa
                             </button> 
@@ -312,6 +307,16 @@ from planillas order by cod_gestion desc,cod_mes desc";
                             <li role="presentation">
                               <a role="item" href="index.php?opcion=planillasSueldoPersonalDetail&codigo_planilla=<?=$codigo_planilla;?>">
                                 <i class="material-icons text-success">assessment</i><small> Reporte Visitas</small></a>
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-item adjuntarNuevoArchivo" data-cod_planilla="<?=$codigo_planilla;?>">
+                                    <i class="material-icons">archive</i>Adjuntar Archivo
+                                </button> 
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-item listarArchivos" data-cod_planilla="<?=$codigo_planilla;?>">
+                                    <i class="material-icons">list</i>Lista Archivos
+                                </button> 
                             </li>
 
 
@@ -492,6 +497,21 @@ from planillas order by cod_gestion desc,cod_mes desc";
     </div>
   </div>
 
+    <!-- Modal Lista Documentos -->
+    <div class="modal fade" id="modalListaDocumentosPlanilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-primary font-weight-bold" id="myModalLabel3">Lista Documentos Respaldo</h4>
+                </div>
+                <div class="modal-body" id="modal-lista_documentos">
+                    <h2>porueba</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
   <div class="modal fade" id="modalVistaPreviaPlanilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -639,11 +659,27 @@ function sendEmailBoleta(cod_planilla){
 
 }
     // Apertura de Modal
-    $('#adjuntarNuevoArchivo').on('click', function(){
+    $('.adjuntarNuevoArchivo').on('click', function(){
         $("#doc_form")[0].reset();
         $('#doc_cod_planilla').val($(this).data('cod_planilla'));
         $('#modalNuevoDocumento').modal('show');
     })
+    // Lista de Archivos Adjuntos
+    $('.listarArchivos').on('click', function(){
+        let formData = new FormData();
+        formData.append('cod_planilla', $(this).data('cod_planilla'));           
+        $.ajax({
+            url:"planillas/ajax_listaDocumentos.php",
+            type:"POST",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success:function(response){
+                $('#modal-lista_documentos').html(response);
+                $('#modalListaDocumentosPlanilla').modal('show');
+            }
+        });
+    });
     // Guardar Archivo
     $('#save_documento').on('click', function(){
         if($("#descripcion").val() != '' && $("#file").val() != ''){
