@@ -229,7 +229,10 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 }
 
                                                 $sw2="";//para registrar nuevos, impedir los ya registrados
+                                                
                                                 $monto_servicio=verificar_pago_servicios_tcp_solfac($id_servicio,$codCS);
+                                                //$monto_servicio=0;
+
                                                 ?><script>console.log("MONTO SERVICIO: "+<?=$monto_servicio?>+"CLA:"+<?=$codCS?>+"-S:"+<?=$id_servicio?>);</script><?php
                                                 $monto_servicio=number_format($monto_servicio,2,".","");
                                                 if($monto_servicio!=0){

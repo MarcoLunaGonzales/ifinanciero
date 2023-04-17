@@ -33,8 +33,8 @@
         LEFT JOIN planillas pl ON pl.codigo = ppm.cod_planilla
         LEFT JOIN gestiones g ON g.codigo = pl.cod_gestion
         WHERE ppm.cod_planilla = '$cod_planilla' 
-        AND (p.codigo = 101 OR p.codigo = 168)
-        /*AND ppm.cod_personalcargo = 58*/
+        /*AND (p.codigo = 101 OR p.codigo = 168)
+        AND ppm.cod_personalcargo = 58*/
         ORDER BY ppm.codigo DESC";
     $stmt= $dbh->prepare($sql);
     $stmt->execute();

@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }elseif(!check($fechaFactura) || $fechaFactura!=$fechaFactura_actual){
                         $estado=3;
                         $mensaje = "Fecha incorrecta o no actual";
-                    }elseif($nitciCliente==null || $nitciCliente<0 || !is_numeric($nitciCliente) ||strlen($nitciCliente)>10){
+                    }elseif($nitciCliente==null || $nitciCliente<0 || !is_numeric($nitciCliente) ||strlen($nitciCliente)>11){
                         $estado=4;
                         $mensaje = "Nit incorrecto";
                     }elseif($razonSocial==null || $razonSocial=='' || $razonSocial==' '){

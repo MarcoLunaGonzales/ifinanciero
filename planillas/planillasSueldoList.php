@@ -296,9 +296,9 @@ from planillas order by cod_gestion desc,cod_mes desc";
                               <i class="material-icons">list</i>Vista Previa
                             </button> 
                             </li>
-                            <li role="presentation">
+                            <!--li role="presentation">
                               <a role="item" href="boletas/boletas_print_nuevo.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><i class="material-icons text-rose">preview</i><small>Boletas</small></a>
-                            </li>
+                            </li-->
                             <li role="presentation" onclick="sendEmailBoleta(<?=$codigo_planilla;?>)">
                               <a role="item" 
                                 href="#">

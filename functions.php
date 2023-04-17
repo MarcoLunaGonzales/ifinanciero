@@ -3948,7 +3948,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf->load_html($html);
     $mydompdf->render();
     $canvas = $mydompdf->get_canvas();
-    $canvas->page_text(450, 763, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 9, array(0,0,0)); 
+    //$canvas->page_text(450, 763, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 9, array(0,0,0)); 
     $mydompdf->set_base_path('assets/libraries/plantillaPDFSolicitudesRecursos.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
@@ -8806,7 +8806,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
       return($array_cod);
     }
     function verificar_pago_servicios_tcp_solfac($idServicio,$idClaServicio){
-      $idTipoObjeto=211;
+      /*$idTipoObjeto=211;
       $dbhIBNO = new ConexionIBNORCA();
       $sql="SELECT sp.idServicio, sp.idclaServicio, sp.cantidad, (( sp.PrecioUnitario )-(( sp.PrecioUnitario )*( co.descuento / 100 ))) AS preciounitario,
       cs.Descripcion,f.cantidad_f, f.monto_f 
@@ -8841,7 +8841,9 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
       while ($row = $stmtIbno->fetch(PDO::FETCH_BOUND)) {      
         // echo "aqou";
           $valor=$monto_f;
-      }  
+      }
+      */
+      $valor=0;  
       return($valor);
     }
     function obtnerNombreComprimidoEstudiante($ci_estudiante){
