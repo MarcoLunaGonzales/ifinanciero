@@ -308,6 +308,16 @@ from planillas order by cod_gestion desc,cod_mes desc";
                               <a role="item" href="index.php?opcion=planillasSueldoPersonalDetail&codigo_planilla=<?=$codigo_planilla;?>">
                                 <i class="material-icons text-success">assessment</i><small> Reporte Visitas</small></a>
                             </li>
+                            <li>
+                                <button type="button" class="dropdown-item adjuntarNuevoArchivo" data-cod_planilla="<?=$codigo_planilla;?>">
+                                    <i class="material-icons">archive</i>Adjuntar Archivo
+                                </button> 
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-item listarArchivos" data-cod_planilla="<?=$codigo_planilla;?>">
+                                    <i class="material-icons">list</i>Lista Archivos
+                                </button> 
+                            </li>
 
 
                             <?php if($comprobante_x==0){ ?>
@@ -487,12 +497,27 @@ from planillas order by cod_gestion desc,cod_mes desc";
     </div>
   </div>
 
+    <!-- Modal Lista Documentos -->
+    <div class="modal fade" id="modalListaDocumentosPlanilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-primary font-weight-bold" id="myModalLabel3">Lista Documentos Respaldo</h4>
+                </div>
+                <div class="modal-body" id="modal-lista_documentos">
+                    <h2>porueba</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
   <div class="modal fade" id="modalVistaPreviaPlanilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title text-danger font-weight-bold" id="myModalLabel">CONTABILIZACION PLANILLA - VISTA PREVIA</h4>
+          <h4 class="modal-title text-danger font-weight-bold" id="myModalLabel">Formular</h4>
         </div>
         <div class="modal-body" id="div_contenedor_vistaprevia_planilla">
           <table class="table table-condensed" >
@@ -513,6 +538,34 @@ from planillas order by cod_gestion desc,cod_mes desc";
       </div>
     </div>
   </div>
+    <!-- Modal Detalle de Formulario Documento -->
+    <div class="modal fade" id="modalNuevoDocumento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-primary font-weight-bold" id="myModalLabel">Documentos Respaldo</h4>
+                </div>
+            <div class="modal-body">
+                <form id="doc_form">
+                    <div class="row">
+                        <input type="hidden" id="doc_cod_planilla"/>
+                        <label class="col-sm-2"><span class="text-danger">*</span> Archivo :</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="file" id="doc_file" placeholder="Agrear Archivo"/>
+                        </div>
+                        <label class="col-sm-2"><span class="text-danger">*</span> Descripción :</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" id="doc_descripcion" placeholder="Agregar una descripción del Archivo"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="save_documento" class="btn btn-success">Guardar</button>
+            </div>
+        </div>
+    </div>
 
 
   <script type="text/javascript">
@@ -605,4 +658,67 @@ function sendEmailBoleta(cod_planilla){
     });
 
 }
+    // Apertura de Modal
+    $('.adjuntarNuevoArchivo').on('click', function(){
+        $("#doc_form")[0].reset();
+        $('#doc_cod_planilla').val($(this).data('cod_planilla'));
+        $('#modalNuevoDocumento').modal('show');
+    })
+    // Lista de Archivos Adjuntos
+    $('.listarArchivos').on('click', function(){
+        let formData = new FormData();
+        formData.append('cod_planilla', $(this).data('cod_planilla'));           
+        $.ajax({
+            url:"planillas/ajax_listaDocumentos.php",
+            type:"POST",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success:function(response){
+                $('#modal-lista_documentos').html(response);
+                $('#modalListaDocumentosPlanilla').modal('show');
+            }
+        });
+    });
+    // Guardar Archivo
+    $('#save_documento').on('click', function(){
+        if($("#descripcion").val() != '' && $("#file").val() != ''){
+            let formData = new FormData();
+            formData.append('cod_planilla', $('#doc_cod_planilla').val());
+            formData.append('descripcion', $('#doc_descripcion').val());
+            formData.append('file', $("#doc_file")[0].files[0]);
+            $.ajax({
+                url:"planillas/savePlanillaDocumento.php",
+                type:"POST",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success:function(response){
+                    let resp = JSON.parse(response);
+                    $('#modalNuevoDocumento').modal('toggle');
+                    if(resp.status){
+                        Swal.fire({
+                            type: 'success',
+                            title: 'Correcto!',
+                            text: 'El proceso se completo correctamente!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }else{
+                        Swal.fire(
+                            'Oops...',
+                            'Ocurrio un error inesperado',
+                            'error'
+                        );
+                    }
+                }
+            });
+        }else{
+            Swal.fire(
+                'Oops...',
+                '¡Debe completar el formulario!',
+                'warning'
+            );
+        }
+    });
   </script>

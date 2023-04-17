@@ -132,7 +132,7 @@ try {
                     }
                     /********************************************************************************************************************************************/
                     // PREPARACIÓN DE DATOS PARA SERVICIO ECOMMERS
-                    $queryVentaNormas="SELECT idEntidad, idTipoVenta, idPromocion, Idioma, idNorma, idOpcionSuscripcion from ibnorca.ventanormas where IdVentaNormas = $cod_serv_a LIMIT 1";
+                    $queryVentaNormas="SELECT idEntidad, idTipoVenta, idPromocion, Idioma, idNorma, idOpcionSuscripcion, idCliente from ibnorca.ventanormas where IdVentaNormas = '$cod_serv_a' LIMIT 1";
                     $stmtVentaNormas = $dbh->prepare($queryVentaNormas);
                     $stmtVentaNormas->execute();
                     $detalle_idEntidad         = '';
@@ -147,8 +147,11 @@ try {
                         $detalle_opcion_suscripcion= $rowVentasNorma["idOpcionSuscripcion"];
                         $detalle_promocion         = (int)$rowVentasNorma["idPromocion"];
                         $detalle_idioma            = empty($rowVentasNorma["Idioma"])?'es':$rowVentasNorma["Idioma"];
+
+                        $detalle_cod_cliente       = $rowVentasNorma["idCliente"];
                     }
                     // REGISTRO DE FACTURAS SUSCRIPCIONES TIENDA
+                    // $cod_cliente // no dispone de ningun valor, codigo Cliente se Obtiene de VentaNormas
                     $stmt = $dbh->prepare("INSERT INTO facturas_suscripcionestienda(
                             cod_factura, 
                             cod_facturadetalle, 
@@ -163,7 +166,7 @@ try {
                             idioma, 
                             fecha_inicio_suscripcion,
                             id_norma) 
-                    values (0, '$cod_detalle_facturacion', 0, '', $cod_facturacion, '$detalle_idEntidad', '$cod_cliente', '$detalle_opcion_suscripcion', '$detalle_promocion', '$detalle_tipo_venta_normas', '$detalle_idioma', '$fecha_registro', '$detalle_idNorma')");
+                    values (0, '$cod_detalle_facturacion', 0, '', $cod_facturacion, '$detalle_idEntidad', '$detalle_cod_cliente', '$detalle_opcion_suscripcion', '$detalle_promocion', '$detalle_tipo_venta_normas', '$detalle_idioma', '$fecha_registro', '$detalle_idNorma')");
                     $flagSuccess=$stmt->execute();
                     /********************************************************************************************************************************************/
                 }
