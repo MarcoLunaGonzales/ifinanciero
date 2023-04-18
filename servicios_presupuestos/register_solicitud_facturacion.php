@@ -67,7 +67,7 @@ if ($cod_facturacion > 0){
 
     $cod_uo = empty($resultServicio['IdOficina'])?'':$resultServicio['IdOficina'];
     $cod_area = empty($resultServicio['IdArea'])?'':$resultServicio['IdArea'];
-    $cod_cliente = empty($resultServicio['IdCliente'])?'':$resultServicio['IdCliente'];    
+    $cod_cliente =empty( $resultServicio['IdCliente'])?'': $resultServicio['IdCliente'];    
     $fecha_registro =date('Y-m-d');
     $fecha_solicitudfactura =$fecha_registro;
     $cod_tipoobjeto=211;//por defecto}
