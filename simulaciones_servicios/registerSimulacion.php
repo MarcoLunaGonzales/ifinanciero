@@ -61,6 +61,38 @@ $usd=6.96;
 
 $nombreClienteX=obtenerNombreClienteSimulacion($codigo);
 
+/******************************************************/
+/*              ORGANISMO CERTIFICADOR                */
+/******************************************************/
+$sqlOC = "SELECT oc.cod_orgnismocertificador FROM simulaciones_servicios_orgnismocertificador oc WHERE oc.cod_simulacionservicio = '$codigo'";
+$stmtOC = $dbh->prepare($sqlOC);
+$stmtOC->execute();
+$array_orgnismo_certificador  = [];
+while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
+    $array_orgnismo_certificador[]  = $rowOC['cod_orgnismocertificador'];
+}
+
+/***********************************/
+/*              IAF                */
+/***********************************/
+$sqlOC = "SELECT si.cod_iaf FROM simulaciones_servicios_iaf si WHERE si.cod_simulacionservicio = '$codigo'";
+$stmtOC = $dbh->prepare($sqlOC);
+$stmtOC->execute();
+$array_cod_iaf  = [];
+while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
+    $array_cod_iaf[]  = $rowOC['cod_iaf'];
+}
+
+/***********************************/
+/*              IAF                */
+/***********************************/
+$sqlOC = "SELECT sci.cod_categoriainocuidad FROM simulaciones_servicios_categoriasinocuidad sci WHERE sci.cod_simulacionservicio = '$codigo'";
+$stmtOC = $dbh->prepare($sqlOC);
+$stmtOC->execute();
+$array_cod_categoriainocuidad  = [];
+while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
+    $array_cod_categoriainocuidad[]  = $rowOC['cod_categoriainocuidad'];
+}
 
 $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
 $precioLocalInputX=number_format($precioLocalX, 2, '.', '');

@@ -6,7 +6,7 @@ $cod_planilla = $_POST["cod_planilla"];
 
 $dbh = new Conexion();
 
-$sql = "SELECT pd.codigo, pd.descripcion, pd.archivo, DATE_FORMAT(pd.fecha_registro, '%d-%m-%Y') as fecha FROM planillas_documentos pd WHERE pd.cod_planilla='$cod_planilla'";
+$sql = "SELECT pd.codigo, pd.descripcion, pd.archivo, DATE_FORMAT(pd.fecha_registro, '%d-%m-%Y') as fecha FROM planillas_documentos pd WHERE pd.cod_planilla='$cod_planilla' AND cod_estado = 1";
 $stmtPlanillaDocumento = $dbh->prepare($sql);
 $stmtPlanillaDocumento->execute();
 $stmtPlanillaDocumento->bindColumn('codigo', $codigo);
@@ -26,7 +26,7 @@ $stmtPlanillaDocumento->bindColumn('fecha', $fecha);
                 <th>Nro</th>
                 <th>Descripción</th>
                 <th>Fecha Registro</th>
-                <th>Descargar</th>
+                <th class="text-center">Descargar</th>
             </tr>
         </thead>
         <tbody>
@@ -39,10 +39,15 @@ $stmtPlanillaDocumento->bindColumn('fecha', $fecha);
                 <td><?=$index?></td>
                 <td><?=$descripcion;?></td>
                 <td><?=$fecha;?></td>
-                <td>
+                <td class="text-center">
+                    <!-- Descargar Archivo -->
                     <a href="documentos_planilla/<?=$archivo;?>" download="<?=$descripcion;?>" rel="tooltip" class="btn btn-success" title="Descargar Archivo">
                         <i class="material-icons" title="Ver Planilla Triburaria">download</i>                       
                     </a>
+                    <!-- Eliminar registro -->
+                    <button class="btn btn-danger eliminar_archivo" title="Descargar Archivo" data-codigo="<?=$codigo;?>">
+                        <i class="material-icons" title="Eliminar Archivo">delete</i> 
+                    </button>
                 </td>
             <tr>  
             <?php 

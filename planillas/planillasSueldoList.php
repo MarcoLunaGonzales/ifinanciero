@@ -721,4 +721,46 @@ function sendEmailBoleta(cod_planilla){
             );
         }
     });
+    // Eliminacion de archivo (Lógico)
+    $('body').on('click','.eliminar_archivo', function(){
+      let formData = new FormData();
+      formData.append('codigo', $(this).data('codigo'));
+      swal({
+          title: '¿Esta Seguro de Eliminar?',
+          text: "Se eliminará el archivo seleccionado.",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonClass: 'btn btn-success',
+          cancelButtonClass: 'btn btn-default',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+              $.ajax({
+                  url:"planillas/ajax_eliminarDocumento.php",
+                  type:"POST",
+                  contentType: false,
+                  processData: false,
+                  data: formData,
+                  success:function(response){
+                  $('#modalListaDocumentosPlanilla').modal('toggle');
+                  let resp = JSON.parse(response);
+                  if(resp.status){        
+                      // Mensaje
+                      Swal.fire({
+                          type: 'success',
+                          title: 'Correcto!',
+                          text: 'El proceso se completo correctamente!',
+                          showConfirmButton: false,
+                          timer: 1500
+                      });
+                  }else{
+                      Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                      }
+                  }
+              });
+          }
+      });
+    });
   </script>

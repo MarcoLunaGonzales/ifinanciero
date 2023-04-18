@@ -8505,9 +8505,15 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
         } 
       }
 
+      console.log('pasa')
+
+      var organismo_certificador = $("#organismo_certificador").val();    // IAF
+      iaf_primario           = $("#iaf_primario").val();    // IAF
+      iaf_secundario         = $("#iaf_secundario").val();  // Categoria Inocuidad
+
       //datos afnor
       var des_serv = $("#modal_des_serv").val();
-      var parametros = {"mod_afnor":mod_afnor,"mod_region_cliente":mod_region_cliente,"mod_tipo_cliente":mod_tipo_cliente,"mod_cliente":mod_cliente,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
+      var parametros = {"mod_afnor":mod_afnor,"mod_region_cliente":mod_region_cliente,"mod_tipo_cliente":mod_tipo_cliente,"mod_cliente":mod_cliente,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"organismo_certificador":organismo_certificador,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
       $.ajax({
         type:"POST",
         data:parametros,
@@ -11699,11 +11705,13 @@ function agregarAtributoAjax(){
     $("#lbl_nombre_atributo").text("Producto");
    }
    $("#pais_empresa").val("26####BOLIVIA"); //para el pais de BOLIVIA
-    if($("#modalEditPlantilla").length){
-      seleccionarDepartamentoServicioSitioModal(1);  
-    }else{
-       seleccionarDepartamentoServicioSitio(1);  
-    }
+    
+    //  Acción que carga SELECT PAIS, DEPARTAMENTO 
+    // if($("#modalEditPlantilla").length){
+    //   seleccionarDepartamentoServicioSitioModal(1);  
+    // }else{
+    //    seleccionarDepartamentoServicioSitio(1);  
+    // }
 
 }
 
