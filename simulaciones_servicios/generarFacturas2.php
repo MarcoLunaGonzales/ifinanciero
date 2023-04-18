@@ -21,7 +21,7 @@ $globalUser=$_SESSION["globalUser"];
 $urlSIAT=obtenerValorConfiguracion(103);
 
 // Ruta WS tienda
-$urlTienda=obtenerValorConfiguracion(109);
+// $urlTienda=obtenerValorConfiguracion(109);
 
 //RECIBIMOS LAS VARIABLES
 $codigo = $_GET["codigo"];
@@ -166,6 +166,7 @@ try{
 
                 $id_usuario=$globalUser;//ID usuario quien facturó
                 $usuario=namePersonal_2($id_usuario);//Usuario quien facturó
+                $stringFacturasCod = '';
                 $datosWS=enviar_factura_minkasiat($cod_sucursal,$codigo,$fecha_actual,$cod_cliente,$monto_totalCab,$descuentoCab,$monto_finalCab,$id_usuario,$usuario,$nitCliente,$razon_social,$siat_tipoPago,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$arrayDetalle,$correoCliente,$stringFacturasCod);
                 $banderaSW=false;
                 if(isset($datosWS->estado) && isset($datosWS->idTransaccion)){//el servicio respondio
@@ -388,14 +389,14 @@ function generarSuscripcion($codigo, $stringFacturasCod){
 			 * GENERACIÓN DE TOKEN
 			 */
 			if(empty($sw_token)){
-				$url_ecommerce = $urlTienda;
+				$url_ecommerce = obtenerValorConfiguracion(109);;
 				$direccion = $url_ecommerce.'usuario/login.php';
                 
-				// $user     = 'juan.quenallata@ibnorca.org';
-				// $password = md5('juanito2020');
+				$user     = 'juan.quenallata@ibnorca.org';
+				$password = md5('juanito2020');
                 
-				$user     = $_SESSION['globalCredUser'];
-				$password = $_SESSION['globalCredPassword'];
+				// $user     = $_SESSION['globalCredUser'];
+				// $password = $_SESSION['globalCredPassword'];
 
                 $parametros=array(
 						"c"   => 'IBNTOK', 
@@ -421,9 +422,15 @@ function generarSuscripcion($codigo, $stringFacturasCod){
                 }else{
                     $sw_token = $remote_server_output->value->valor->token;
                 }
+                var_dump($sw_token);
 			}
             // Verificación de TOKEN
             if(!empty($sw_token)){
+                // Codigo Factura
+                $stmtCodfactura = $dbh->prepare("SELECT fv.codigo from facturas_venta fv where fv.cod_solicitudfacturacion='$detail_cod_solicitudfacturacion'");
+                $stmtCodfactura->execute();
+                $stringFacturasCod = $stmtCodfactura->fetch(PDO::FETCH_ASSOC)['codigo'];
+
                 /**
                  * GENERACIÓN DE SUSCRIPCIÓN
                  **/
@@ -455,15 +462,19 @@ function generarSuscripcion($codigo, $stringFacturasCod){
                 $remote_server_output = json_decode(curl_exec ($ch));
                 curl_close ($ch); 
                 // Resultado de Servicio SUSCRIPCIÓN
-                // var_dump($remote_server_output);
+                var_dump($remote_server_output);
                 
                 $sw_error = $remote_server_output->error;
                 $sw_cod_suscripcion = ($sw_error == "OK" ? $remote_server_output->suscripcionId : 0);
                 $sw_glosa           = ($sw_error == "OK" ? 'REGISTRO CORRECTO!' : $remote_server_output->detail);
                 $stmtIbnorca        = $dbh->prepare("UPDATE facturas_suscripcionestienda 
                                     SET cod_suscripcion = '$sw_cod_suscripcion',
-                                    glosa = '$sw_glosa'
+                                    glosa = '$sw_glosa',
+                                    cod_factura = '$stringFacturasCod'
                                     WHERE cod_facturadetalle = '$sf_codigo'");
+                $flagSuccess=$stmtIbnorca->execute();
+            }else{
+                $stmtIbnorca = $dbh->prepare("UPDATE facturas_suscripcionestienda SET glosa = 'Hubo un error en el proceso de Autenticación.' WHERE cod_facturadetalle = '$sf_codigo'");
                 $flagSuccess=$stmtIbnorca->execute();
             }
 		}
