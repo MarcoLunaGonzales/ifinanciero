@@ -11750,8 +11750,10 @@ function listarAtributo(){
               tituloTD="Et "+(k+1);
             } 
           }
-          titulos.append('<td width="6%" class="bg-principal">'+tituloTD+'</td>');
-          titulos.append('<td width="8%" class="bg-plomo text-dark">EA</td>');    
+          /* #SIN FUNCIONALIDAD#  Se quito cabecera*/
+          /* Modificacion en la linea, titulos */
+          // titulos.append('<td width="6%" class="bg-principal">'+tituloTD+'</td>');
+          // titulos.append('<td width="8%" class="bg-plomo text-dark">EA</td>');    
         };
        }
       }
@@ -11765,10 +11767,7 @@ function listarAtributo(){
      row.append($('<td>').addClass('').text(itemAtributos[i].nombre));
      row.append($('<td>').addClass('').text(itemAtributos[i].direccion)); 
      if(!($("#productos_div").hasClass("d-none"))){
-      row.append($('<td>').addClass('').text(itemAtributos[i].marca));
-      row.append($('<td>').addClass('').text(itemAtributos[i].norma));
-      row.append($('<td>').addClass('').text(itemAtributos[i].sello));
-      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));    /* #SIN FUNCIONALIDAD# */
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
      }else{
@@ -11776,7 +11775,9 @@ function listarAtributo(){
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
       if($("#modalEditPlantilla").length>0){
-       if($("#codigo_area").val()!=39){
+      /* #SIN FUNCIONALIDAD# Se quito la opcion de llenado ET, EA, cabeceras antiguas */
+      // if($("#codigo_area").val()!=39){
+      if(false){
         for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
           for (var j= 0; j< itemAtributosDias.length; j++) {
            if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
@@ -11801,7 +11802,10 @@ function listarAtributo(){
      
      table.append(row);
    }
-   if($("#modalEditPlantilla").length>0){
+   
+    /* #SIN FUNCIONALIDAD# Se quito campos de totales */
+    //  if($("#modalEditPlantilla").length>0){ // Original
+    if(false){
     if($("#codigo_area").val()!=39){
       var row = $('<tr>').addClass('');
       row.append($('<td>').addClass('font-weight-bold text-center').attr('colspan',6).text('TOTALES'));

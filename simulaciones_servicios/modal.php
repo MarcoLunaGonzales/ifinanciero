@@ -221,7 +221,7 @@
                      <?php 
                       if($codAreaX!=39){
                      ?>
-                     <div class="row" id="div_sitios_dias">
+                     <div class="row" id="div_sitios_dias" hidden>
                       <h4 class="font-weight-bold div-center"><center>DIAS - SITIOS</center></h4>
                        <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>

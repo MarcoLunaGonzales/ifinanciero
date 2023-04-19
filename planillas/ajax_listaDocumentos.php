@@ -2,7 +2,8 @@
 
 require_once '../conexion.php';
 
-$cod_planilla = $_POST["cod_planilla"];
+$cod_planilla           = $_POST["cod_planilla"];
+$cod_estado_documento   = $_POST["cod_estado_documento"];
 
 $dbh = new Conexion();
 
@@ -41,13 +42,24 @@ $stmtPlanillaDocumento->bindColumn('fecha', $fecha);
                 <td><?=$fecha;?></td>
                 <td class="text-center">
                     <!-- Descargar Archivo -->
-                    <a href="documentos_planilla/<?=$archivo;?>" download="<?=$descripcion;?>" rel="tooltip" class="btn btn-success" title="Descargar Archivo">
+                    <a href="documentos_planilla/<?=$archivo;?>" download="<?=$descripcion;?>" rel="tooltip" class="btn btn-success btn-sm" title="Descargar Archivo">
                         <i class="material-icons" title="Ver Planilla Triburaria">download</i>                       
                     </a>
                     <!-- Eliminar registro -->
-                    <button class="btn btn-danger eliminar_archivo" title="Descargar Archivo" data-codigo="<?=$codigo;?>">
-                        <i class="material-icons" title="Eliminar Archivo">delete</i> 
-                    </button>
+                    
+                    <?php
+                        if ($cod_estado_documento == 1) {
+                    ?>
+                        <button class="btn btn-danger btn-sm eliminar_archivo" title="Descargar Archivo" data-codigo="<?=$codigo;?>">
+                            <i class="material-icons" title="Eliminar Archivo">delete</i> 
+                        </button>
+                    <?php
+                        }
+                    ?>
+                    <!-- Ver registro -->
+                    <a href="planillas/ver_archivo.php?cod_documento=<?=$codigo;?>" target="_blank" class="btn btn-primary btn-sm" title="Ver Archivo">
+                    <i class="material-icons" title="Ver Planilla Triburaria PDF">remove_red_eye</i> 
+                    </a>
                 </td>
             <tr>  
             <?php 
