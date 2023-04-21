@@ -128,14 +128,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <div class="form-group">
                                         <input class="form-control" name="codigo" id="codigo" value="<?=$codigo;?>" readonly="readonly"/>
                                     </div>
-                                </div>
-                                <!--fin campo codigo --> 
-                                <label class="col-sm-2 col-form-label">Nro casillero</label>
-                                <div class="col-sm-4">
-                                    <div class="form-group">
-                                        <input class="form-control" name="nro_casillero" id="nro_casillero" value="<?=$nro_casillero;?>"/>
-                                    </div>
-                                </div>                            
+                                </div>                           
                             </div><!--fin campo nro_casillero --> 
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Tipo Identificación</label>
@@ -614,7 +607,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
 
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Imagen</label>
-                                <div class="col-md-7">
+                                <div class="col-md-4">
                                     <div class="fileinput fileinput-new text-center" data-provides="fileinput">
                                         <div class="fileinput-new img-raised">
                                             <img src="<?=$archivo;?>" alt="..." style="width:250px;">
@@ -632,6 +625,14 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <!--fin campo codigo --> 
+                                <label class="col-sm-2 col-form-label">Nro casillero</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" name="nro_casillero" id="nro_casillero" value="<?=$nro_casillero;?>"/>
+                                    </div>
+                                </div> 
                             </div>
                             <!--fin campo imagen-->                    
                         </div>
