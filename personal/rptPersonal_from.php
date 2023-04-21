@@ -8,7 +8,8 @@ $dbh = new Conexion();
 <div class="content">
   <div class="container-fluid">
     <div class="col-md-12">
-      <form id="form1" class="form-horizontal" action="personal/rptPersonal_print.php" method="post" target="_blank">
+      <!-- <form id="form1" class="form-horizontal" action="personal/rptPersonal_print.php" method="post" target="_blank"> -->
+      <form id="form1" class="form-horizontal" action="personal/rptPersonal_print2.php" method="post" target="_blank">
       <div class="card">
         <div class="card-header <?=$colorCard;?> card-header-text">
           <div class="card-text">

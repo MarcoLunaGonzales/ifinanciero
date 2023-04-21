@@ -43,22 +43,22 @@ $stmtPlanillaDocumento->bindColumn('fecha', $fecha);
                 <td class="text-center">
                     <!-- Descargar Archivo -->
                     <a href="documentos_planilla/<?=$archivo;?>" download="<?=$descripcion;?>" rel="tooltip" class="btn btn-success btn-sm" title="Descargar Archivo">
-                        <i class="material-icons" title="Ver Planilla Triburaria">download</i>                       
+                        <i class="material-icons">download</i>                       
                     </a>
                     <!-- Eliminar registro -->
                     
                     <?php
                         if ($cod_estado_documento == 1) {
                     ?>
-                        <button class="btn btn-danger btn-sm eliminar_archivo" title="Descargar Archivo" data-codigo="<?=$codigo;?>">
-                            <i class="material-icons" title="Eliminar Archivo">delete</i> 
+                        <button class="btn btn-danger btn-sm eliminar_archivo" title="Eliminar Archivo" data-codigo="<?=$codigo;?>">
+                            <i class="material-icons">delete</i> 
                         </button>
                     <?php
                         }
                     ?>
                     <!-- Ver registro -->
                     <a href="planillas/ver_archivo.php?cod_documento=<?=$codigo;?>" target="_blank" class="btn btn-primary btn-sm" title="Ver Archivo">
-                    <i class="material-icons" title="Ver Planilla Triburaria PDF">remove_red_eye</i> 
+                    <i class="material-icons">remove_red_eye</i> 
                     </a>
                 </td>
             <tr>  

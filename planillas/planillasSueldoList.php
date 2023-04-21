@@ -21,13 +21,11 @@ $dbh = new Conexion();
 $sql = "SELECT p.codigo,p.cod_gestion,p.cod_mes,p.cod_estadoplanilla,p.cod_estado_documento,p.comprobante,
 (select m.nombre from meses m where m.codigo=p.cod_mes)as mes,
 (select g.nombre from gestiones g where g.codigo=p.cod_gestion) as gestion,
-(select ep.nombre from estados_planilla ep where ep.codigo=p.cod_estadoplanilla) as estadoplanilla,p.cod_comprobante_prevision,
-(select count(1) from planillas_personal_mes ppm where ppm.cod_planilla = p.codigo) as count_detail
+(select ep.nombre from estados_planilla ep where ep.codigo=p.cod_estadoplanilla) as estadoplanilla,p.cod_comprobante_prevision
 from planillas p order by cod_gestion desc,cod_mes desc";
   $stmtAdmnin = $dbh->prepare($sql);
   $stmtAdmnin->execute();
   $stmtAdmnin->bindColumn('codigo', $codigo_planilla);
-  $stmtAdmnin->bindColumn('count_detail', $count_detail);
   $stmtAdmnin->bindColumn('gestion', $gestion);
   $stmtAdmnin->bindColumn('cod_gestion', $cod_gestion);
   $stmtAdmnin->bindColumn('cod_mes', $cod_mes);
@@ -134,11 +132,16 @@ from planillas p order by cod_gestion desc,cod_mes desc";
                     }
                     if($cod_estadoplanilla==3){                      
                       $label='<span class="badge badge-success">';
-                    }                  
+                    }    
+                    
+                    // Estado Cerrado Vacio
+                    if($cod_estadoplanilla==4){
+                      $label_uo_aux.='<span class="badge badge-success">Cerrado Vacio</span>';
+                    }              
                     ?>
                     <tr>                    
                       <td><?=$gestion?></td>
-                      <td><i class="material-icons btn-<?=$count_detail > 0 ? 'success' : 'danger';?>" title="<?=$count_detail > 0 ? 'La nómina contiene registros de pagos mensuales' : 'La nómina NO contiene registros de pagos mensuales';?>">list</i> <?=$mes;?></td>
+                      <td><?=$mes;?></td>
                       <td><?=$label.$estadoplanilla."</span>";?><?=$label_uo_aux?></td>
                       <td class="td-actions text-right">
                         <?php
@@ -206,6 +209,14 @@ from planillas p order by cod_gestion desc,cod_mes desc";
                             <i class="material-icons">folder</i>                       
                           </button>   
                         <?php }?>   
+
+                        <?php if(!in_array($cod_estadoplanilla, [4])){    ?>
+                          <!-- CAMBIAR DE ESTADO DE PLANILLA A CERRADO VACIO -->
+                          <button type="button" class="btn btn-default update_planilla_cerrado_vacio" title="Cerrar planilla en vacío" data-codigo="<?=$codigo_planilla;?>">
+                            <i class="material-icons">perm_data_setting</i>     
+                          </button>  
+                        <?php }?>    
+
 
                       </td>
                       <td class="td-actions text-right">
@@ -293,8 +304,6 @@ from planillas p order by cod_gestion desc,cod_mes desc";
                     
                     <td class="text-center td-actions ">
                       
-                        
-
                         <div class="dropdown">
                           <button class="btn btn-info dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
                             <i class="material-icons" title="Comprobante">chrome_reader_mode</i>
@@ -303,6 +312,7 @@ from planillas p order by cod_gestion desc,cod_mes desc";
                           
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
                             
+                            <?php if($cod_estadoplanilla != 4){ ?>
                             <li>
                               <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalVistaPreviaPlanilla" onclick="agregarDatosVistaPreviaPlanilla('<?=$codigo_planilla;?>','<?=$cod_mes?>','<?=$cod_gestion?>')">
                               <i class="material-icons">list</i>Vista Previa
@@ -320,6 +330,7 @@ from planillas p order by cod_gestion desc,cod_mes desc";
                               <a role="item" href="index.php?opcion=planillasSueldoPersonalDetail&codigo_planilla=<?=$codigo_planilla;?>">
                                 <i class="material-icons text-success">assessment</i><small> Reporte Visitas</small></a>
                             </li>
+                            <?php } ?>
                             
                             <?php if($cod_estado_documento == 1){ ?>
                               <li>
@@ -828,5 +839,53 @@ function sendEmailBoleta(cod_planilla){
           }
       });
     });
+
+    // Cambiar Estado de Planilla a Cerrado en Vacio
+    $('body').on('click','.update_planilla_cerrado_vacio', function(){
+      let formData = new FormData();
+      // codigo Planilla
+      formData.append('codigo', $(this).data('codigo'));
+      swal({
+          title: '¿Esta seguro de cerrar Planilla en Vacio?',
+          text: "Se cerrará la planilla sin contenido, no se podrá revertir la acción.",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonClass: 'btn btn-success',
+          cancelButtonClass: 'btn btn-danger',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+              $.ajax({
+                  url:"planillas/ajax_updateEstadoPlanilla.php",
+                  type:"POST",
+                  contentType: false,
+                  processData: false,
+                  data: formData,
+                  success:function(response){
+                  let resp = JSON.parse(response);
+                  if(resp.status){        
+                      // Mensaje
+                      Swal.fire({
+                          type: 'success',
+                          title: 'Correcto!',
+                          text: 'El proceso se completo correctamente!',
+                          showConfirmButton: false,
+                          timer: 1500
+                      });
+                      
+                      setTimeout(function(){
+                          location.reload()
+                      }, 1550);
+                  }else{
+                      Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                      }
+                  }
+              });
+          }
+      });
+    });
+    
     
   </script>

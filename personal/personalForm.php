@@ -74,6 +74,8 @@ $cuenta_bancaria = $result['cuenta_bancaria'];
 $cod_banco = $result['cod_banco'];
 $codigo_dependiente = $result['codigo_dependiente'];
 
+// Nuevo campo
+$nro_casillero = $result['nro_casillero'];
 
 //personal discapacitado
 $stmtDiscapacitado = $dbh->prepare("SELECT * FROM personal_discapacitado where codigo =:codigo and cod_estadoreferencial=1");
@@ -126,8 +128,15 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                     <div class="form-group">
                                         <input class="form-control" name="codigo" id="codigo" value="<?=$codigo;?>" readonly="readonly"/>
                                     </div>
+                                </div>
+                                <!--fin campo codigo --> 
+                                <label class="col-sm-2 col-form-label">Nro casillero</label>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <input class="form-control" name="nro_casillero" id="nro_casillero" value="<?=$nro_casillero;?>"/>
+                                    </div>
                                 </div>                            
-                            </div><!--fin campo codigo --> 
+                            </div><!--fin campo nro_casillero --> 
                             <div class="row">
                                 <label class="col-sm-2 col-form-label">Tipo Identificación</label>
                                 <div class="col-sm-4">
