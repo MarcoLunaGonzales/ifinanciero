@@ -12,9 +12,9 @@ class Conexion extends PDO {
       // LOCAL
       private $tipo_de_base = 'mysql';
       private $host = 'localhost';
-      private $nombre_de_base = 'ifinanciero';
+      private $nombre_de_base = 'financiero0323';
       private $usuario = 'root';
-      private $contrasena = '';
+      private $contrasena = '4868422Marco';
       private $port = '3306'; 
 
       // PRUEBAS EXTERNO
