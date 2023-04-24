@@ -141,6 +141,7 @@ try {
                     $detalle_promocion         = '';
                     $detalle_idioma            = '';
                     while ($rowVentasNorma = $stmtVentaNormas->fetch(PDO::FETCH_ASSOC)) { 
+                        $cod_cliente               = (int)$rowVentasNorma["idCliente"];
                         $detalle_idNorma           = (int)$rowVentasNorma["idNorma"];
                         $detalle_idEntidad         = (int)$rowVentasNorma["idEntidad"];
                         $detalle_tipo_venta_normas = (empty($rowVentasNorma["idTipoVenta"]) ? 1 : $rowVentasNorma["idTipoVenta"]);
@@ -175,7 +176,7 @@ try {
                 $tipo_solicitud=5;
                 require_once '../simulaciones_servicios/save_distribucion_montos_solfac.php';
                 //borramos los archivos
-                $sqlDel="DELETE FROM archivos_adjuntos_solicitud_facturacion where cod_solicitud_facturacion=$cod_facturacion";
+                $sqlDel="DELETE FROM archivos_adjuntos_solicitud_facturacion where cod_solicitud_facturacion='$cod_facturacion'";
                 $stmtDel = $dbh->prepare($sqlDel);
                 $stmtDel->execute();
                 //subir archivos al servidor

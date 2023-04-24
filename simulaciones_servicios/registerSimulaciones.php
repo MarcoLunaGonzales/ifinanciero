@@ -264,7 +264,7 @@ $fechaActualInput=date("Y-m-d");
                                 <?php
                                 $tituloTipoServ="";
                                 $indexOb=0;
-                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios2 where codigo_n1=109 and vigente=1 and Aprobado=1 order by 2");
+                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 and vigente=1 and Aprobado=1 order by 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo_n2'];
@@ -690,7 +690,7 @@ $fechaActualInput=date("Y-m-d");
                       </div>    
                       </div>
                       
-                     <div class="row col-sm-12" id="div_pais">
+                     <div class="row col-sm-12" hidden id="div_pais">
                           <div class="row col-sm-12">
                        <label class="col-sm-2 col-form-label">Pais</label>
                        <div class="col-sm-10">
@@ -705,7 +705,7 @@ $fechaActualInput=date("Y-m-d");
                         </div>
                        </div>
                       </div>
-                      <div class="row col-sm-12">
+                      <div class="row col-sm-12" hidden>
                        <label class="col-sm-2 col-form-label">Dep / Est</label>
                        <div class="col-sm-10">
                         <div class="form-group">
@@ -714,7 +714,7 @@ $fechaActualInput=date("Y-m-d");
                         </div>
                        </div>
                       </div>
-                      <div class="row col-sm-12">
+                      <div class="row col-sm-12" hidden>
                        <label class="col-sm-2 col-form-label">Ciudad</label>
                        <div class="col-sm-10">
                         <div class="form-group">

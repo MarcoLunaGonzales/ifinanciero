@@ -120,28 +120,33 @@ if(isset($_POST['nombre'])){
   foreach($arrayIAFprimario as $arrayIAF){
     $values[]    = "($detail_cod_simulacionservicio, $arrayIAF)";
   }
-  $sqlInsert = "INSERT INTO simulaciones_servicios_iaf (cod_simulacionservicio, cod_iaf) VALUES\n" . implode(",\n", $values);
-  $stmt      = $dbh->prepare($sqlInsert);
-  $stmt->execute();
+  if(count($values) > 0){
+    $sqlInsert = "INSERT INTO simulaciones_servicios_iaf (cod_simulacionservicio, cod_iaf) VALUES\n" . implode(",\n", $values);
+    $stmt      = $dbh->prepare($sqlInsert);
+    $stmt->execute();
+  }
   
   // NUEVAS CATEGORIAS INOCUIDAD - MULTIPLE
   $values = [];
   foreach($arrayInocuidad as $arrayIno){
     $values[]    = "($detail_cod_simulacionservicio, $arrayIno)";
   }
-  $sqlInsert = "INSERT INTO simulaciones_servicios_categoriasinocuidad (cod_simulacionservicio, cod_categoriainocuidad) VALUES\n" . implode(",\n", $values);
-  $stmt      = $dbh->prepare($sqlInsert);
-  $stmt->execute();
+  if(count($values) > 0){
+    $sqlInsert = "INSERT INTO simulaciones_servicios_categoriasinocuidad (cod_simulacionservicio, cod_categoriainocuidad) VALUES\n" . implode(",\n", $values);
+    $stmt      = $dbh->prepare($sqlInsert);
+    $stmt->execute();
+  }
   
   // NUEVAS ORGANISMO CERTIFICADOR - MULTIPLE
   $values = [];
   foreach($arrayOrgnismoCertificador as $arrayOC){
     $values[]    = "($detail_cod_simulacionservicio, $arrayOC)";
   }
-  $sqlInsert = "INSERT INTO simulaciones_servicios_orgnismocertificador (cod_simulacionservicio, cod_orgnismocertificador) VALUES\n" . implode(",\n", $values);
-  $stmt      = $dbh->prepare($sqlInsert);
-  $stmt->execute();
-  
+  if(count($values) > 0){
+    $sqlInsert = "INSERT INTO simulaciones_servicios_orgnismocertificador (cod_simulacionservicio, cod_orgnismocertificador) VALUES\n" . implode(",\n", $values);
+    $stmt      = $dbh->prepare($sqlInsert);
+    $stmt->execute();
+  }
 
   //enviar propuestas para la actualizacion de ibnorca
   $fechaHoraActual=date("Y-m-d H:i:s");

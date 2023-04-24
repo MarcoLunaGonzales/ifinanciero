@@ -35,6 +35,7 @@ $lista->execute();
                           <th>Cliente</th>
                           <th>Tipo Venta</th>
                           <th class="text-right">Fecha Suscripción</th>
+                          <th>Acciones</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -61,6 +62,17 @@ $lista->execute();
                           
                           <td class="td-actions text-right">
                             <?=$fecha_inicio;?>
+                          </td>
+                          <td>
+                            
+                            <?php if($row['id_tipo_venta'] == 1){?>  
+                              <i class="material-icons text-danger" title="Tipo norma Impresa">print</i>
+                            <?php }else if($row['cod_suscripcion'] == 0 && $row['id_tipo_venta'] == 2){ ?>  
+                              <i class="material-icons text-warning" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','reportes_suscripcion/saveGenerarSuscripcion.php?codigo=<?=$row['codigo'];?>')" title="Generar Suscripción Manual">receipt</i>
+                            <?php }else{ ?>  
+                              <i class="material-icons text-success" title="Suscripción realizada con exito">check</i>
+                            <?php } ?> 
+
                           </td>
                         </tr>
 <?php

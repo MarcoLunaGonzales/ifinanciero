@@ -71,17 +71,72 @@ if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
 
 if($_POST['tcs']==0){
   $tipo_atributo=1;
-  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos',cod_iaf_primario='$iaf_primario',cod_iaf_secundario='$iaf_secundario' $sqlEditSetTCP
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' $sqlEditSetTCP
      where codigo=$codSimulacion";
 }else{
   $tipo_atributo=2;
   $atributosDias= json_decode($_POST['sitios_dias']);
-  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos',cod_iaf_primario='$iaf_primario',cod_iaf_secundario='$iaf_secundario'
-    $sqlEditSet where codigo=$codSimulacion";
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos' $sqlEditSet where codigo=$codSimulacion";
 }
 
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();
+
+
+  /*************************************************************************************************************************************************************/
+  // Limpiar archivos
+  $arrayIAFprimario           = $_POST['iaf_primario'];
+  $arrayInocuidad             = $_POST['iaf_secundario'];
+  $arrayOrgnismoCertificador  = $_POST['organismo_certificador'];
+  // NUEVO SERVICIO IAF - MULTIPLE
+  $values = [];
+  foreach($arrayIAFprimario as $arrayIAF){
+    $values[]    = "($codSimulacion, $arrayIAF)";
+  }
+  // Limpiar Registros pasados
+  $sqlDelete = "DELETE FROM simulaciones_servicios_iaf WHERE cod_simulacionservicio = '".$codSimulacion."'";
+  $stmt      = $dbh->prepare($sqlDelete);
+  $stmt->execute();
+  if(count($values) > 0){
+    // Actualizar
+    $sqlInsert = "INSERT INTO simulaciones_servicios_iaf (cod_simulacionservicio, cod_iaf) VALUES\n" . implode(",\n", $values);
+    $stmt      = $dbh->prepare($sqlInsert);
+    $stmt->execute();
+  }
+  
+  // NUEVAS CATEGORIAS INOCUIDAD - MULTIPLE
+  $values = [];
+  foreach($arrayInocuidad as $arrayIno){
+    $values[]    = "($codSimulacion, $arrayIno)";
+  }
+  // Limpiar Registros pasados
+  $sqlDelete = "DELETE FROM simulaciones_servicios_categoriasinocuidad WHERE cod_simulacionservicio = '".$codSimulacion."'";
+  $stmt      = $dbh->prepare($sqlDelete);
+  $stmt->execute();
+  if(count($values) > 0){
+    // Actualizar
+    $sqlInsert = "INSERT INTO simulaciones_servicios_categoriasinocuidad (cod_simulacionservicio, cod_categoriainocuidad) VALUES\n" . implode(",\n", $values);
+    $stmt      = $dbh->prepare($sqlInsert);
+    $stmt->execute();
+  }
+  
+  // NUEVAS ORGANISMO CERTIFICADOR - MULTIPLE
+  $values = [];
+  foreach($arrayOrgnismoCertificador as $arrayOC){
+    $values[]    = "($codSimulacion, $arrayOC)";
+  }
+  // Limpiar Registros pasados
+  $sqlDelete = "DELETE FROM simulaciones_servicios_orgnismocertificador WHERE cod_simulacionservicio = '".$codSimulacion."'";
+  $stmt      = $dbh->prepare($sqlDelete);
+  $stmt->execute();
+  if(count($values > 0)){
+    // Actualizar
+    $sqlInsert = "INSERT INTO simulaciones_servicios_orgnismocertificador (cod_simulacionservicio, cod_orgnismocertificador) VALUES\n" . implode(",\n", $values);
+    $stmt      = $dbh->prepare($sqlInsert);
+    $stmt->execute();
+  }
+  /*************************************************************************************************************************************************************/
+
 
 //insertarNormas
 if($tipo_servicio==2778){ //sistemas integrados 

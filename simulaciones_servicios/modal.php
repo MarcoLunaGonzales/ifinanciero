@@ -136,7 +136,7 @@
                            </div>  
                       </div>    
                       </div>
-                      <div class="row col-sm-12" id="div_pais">
+                      <div class="row col-sm-12" id="div_pais" hidden>
                           <div class="row col-sm-12">
                        <label class="col-sm-2 col-form-label">Pais</label>
                        <div class="col-sm-10">
@@ -151,7 +151,7 @@
                         </div>
                        </div>
                       </div>
-                      <div class="row col-sm-12">
+                      <div class="row col-sm-12" hidden>
                        <label class="col-sm-2 col-form-label">Dep / Est</label>
                        <div class="col-sm-10">
                         <div class="form-group">
@@ -160,7 +160,7 @@
                         </div>
                        </div>
                       </div>
-                      <div class="row col-sm-12">
+                      <div class="row col-sm-12" hidden>
                        <label class="col-sm-2 col-form-label">Ciudad</label>
                        <div class="col-sm-10">
                         <div class="form-group">
@@ -173,7 +173,7 @@
                             <?php
                                  }else{
                               ?>
-                             <div class="row col-sm-12" id="div_pais">
+                             <div class="row col-sm-12" id="div_pais" hidden>
                           <div class="row col-sm-12">
                        <label class="col-sm-2 col-form-label">Pais</label>
                        <div class="col-sm-10">
@@ -188,7 +188,7 @@
                         </div>
                        </div>
                       </div>
-                      <div class="row col-sm-12">
+                      <div class="row col-sm-12" hidden>
                        <label class="col-sm-2 col-form-label">Dep / Est</label>
                        <div class="col-sm-10">
                         <div class="form-group">
@@ -197,7 +197,7 @@
                         </div>
                        </div>
                       </div>
-                      <div class="row col-sm-12">
+                      <div class="row col-sm-12" hidden>
                        <label class="col-sm-2 col-form-label">Ciudad</label>
                        <div class="col-sm-10">
                         <div class="form-group">
@@ -221,7 +221,7 @@
                      <?php 
                       if($codAreaX!=39){
                      ?>
-                     <div class="row" id="div_sitios_dias">
+                     <div class="row" id="div_sitios_dias" hidden>
                       <h4 class="font-weight-bold div-center"><center>DIAS - SITIOS</center></h4>
                        <table class="table table-bordered table-condensed table-striped table-sm">
                              <thead>
@@ -721,6 +721,29 @@
                        <?php
                        }
                         ?>
+                                              
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Organismo Certificador :</label>
+                        <div class="col-sm-10">
+                            <div class="form-group">
+                                <select class="selectpicker form-control form-control-sm" name="organismo_certificador[]" id="organismo_certificador" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+                                    <?php
+                                        $stmt = $dbh->prepare("SELECT oc.codigo, oc.nombre, oc.abreviatura FROM organismo_certificador oc order by 1");
+                                        $stmt->execute();
+                                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        $codigoX=$row['codigo'];
+                                        $nombreX=$row['nombre'];
+                                        $abreviaturaX=$row['abreviatura'];
+                                    ?>
+                                        <option value="<?=$codigoX;?>" <?=(in_array($codigoX, $array_orgnismo_certificador)?'selected':'');?>><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                    <?php
+                                        }
+                                    ?>
+                                </select>
+                              </div>
+                        </div>
+                    </div>
+
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Oficina Servicio</label>
                        <div class="col-sm-5">
@@ -883,13 +906,14 @@
 
                        }
                         ?>
-                       <div class="row">
+
+                      <div class="row">
                        <label class="col-sm-2 col-form-label">IAF</label>
                        <div class="col-sm-3">
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
-                                <select class="selectpicker form-control form-control-sm" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_primario" id="iaf_primario" data-style="btn btn-info"  required>
+                                <select class="selectpicker form-control form-control-sm" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." name="iaf_primario[]" id="iaf_primario" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
                                   <option value="0" select>NINGUNO</option> 
                                 <?php
                                  $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
@@ -898,9 +922,8 @@
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['nombre'];
                                   $abreviaturaX=$row['abreviatura'];
-
                                    ?>
-                                  <option value="<?=$codigoX;?>" <?=($codIAFX==$codigoX)?"selected":"";?>><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                  <option value="<?=$codigoX;?>" <?=(in_array($codigoX, $array_cod_iaf)?'selected':'');?>><?=$abreviaturaX?> - <?=$nombreX;?></option> 
                                   <?php
                                     }
                                     ?>
@@ -909,22 +932,21 @@
                           </div> 
                         </div>
                        </div>
-                       <label class="col-sm-1 col-form-label">IAF Sec.</label>
+                       <label class="col-sm-1 col-form-label">Categoria Inocuidad</label>
                        <div class="col-sm-3">
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
-                                <select class="selectpicker form-control form-control-sm" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_secundario" id="iaf_secundario" data-style="btn btn-default"  required>
+                                <select class="selectpicker form-control form-control-sm" data-live-search-placeholder="Categoria inocuidad..." name="iaf_secundario[]" id="iaf_secundario" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
                                  <option value="0" select>NINGUNO</option> 
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
+                                 $stmt = $dbh->prepare("SELECT ci.codigo, ci.nombre FROM categorias_inocuidad ci WHERE ci.estado = 1 order by 1");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['nombre'];
-                                  $abreviaturaX=$row['abreviatura'];
                                    ?>
-                                  <option value="<?=$codigoX;?>" <?=($codIAFSecX==$codigoX)?"selected":"";?>><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                  <option value="<?=$codigoX;?>" <?=(in_array($codigoX, $array_cod_categoriainocuidad)?'selected':'');?>><?=$nombreX;?></option> 
                                   <?php
                                     }
                                     ?>
@@ -934,6 +956,10 @@
                         </div>
                        </div>
                       </div>  
+
+
+
+
                         <?php
                        //}
                       ?>
