@@ -11776,8 +11776,8 @@ function listarAtributo(){
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
       if($("#modalEditPlantilla").length>0){
       /* #SIN FUNCIONALIDAD# Se quito la opcion de llenado ET, EA, cabeceras antiguas */
-      // if($("#codigo_area").val()!=39){
-      if(false){
+      if($("#codigo_area").val()!=39){
+      // if(false){
         for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
           for (var j= 0; j< itemAtributosDias.length; j++) {
            if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
@@ -11795,7 +11795,7 @@ function listarAtributo(){
      }
        $('.selectpicker').selectpicker("refresh");
        if($("#sinEdicionModal").length>0){
-         row.append($('<td>').addClass('text-right small').html(''));
+        //  row.append($('<td>').addClass('text-right small').html(''));
        }else{
          row.append($('<td>').addClass('text-right small').html('<div class="btn-group"><button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button></div>'));    
        }
@@ -11840,13 +11840,13 @@ function listarAtributoUltimo(){
       row.append($('<td>').addClass('').text(itemAtributos[i].marca));
       row.append($('<td>').addClass('').text(itemAtributos[i].norma));
       row.append($('<td>').addClass('').text(itemAtributos[i].sello));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
      }else{
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
       if($("#modalEditPlantilla").length>0){
        if($("#codigo_area").val()!=39){
         for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
@@ -11951,22 +11951,38 @@ function guardarAtributoItem(){
   var fila=$("#modal_fila").val();
   if(fila<0){
     var codigoNuevo=itemAtributos.length;
+    // var atributo={
+    // codigo:codigoNuevo,  
+    // nombre: $('#modal_nombre').val(),
+    // direccion: $('#modal_direccion').val(),
+    // norma:norma,
+    // norma_cod:norma_cod,
+    // norma_otro:norma_otro,
+    // marca:marca,
+    // sello:sello,
+    // pais:pais,
+    // estado:estado,
+    // ciudad:ciudad,
+    // nom_pais:nom_pais,
+    // nom_estado:nom_estado,
+    // nom_ciudad:nom_ciudad
+    // }
     var atributo={
-    codigo:codigoNuevo,  
-    nombre: $('#modal_nombre').val(),
-    direccion: $('#modal_direccion').val(),
-    norma:norma,
-    norma_cod:norma_cod,
-    norma_otro:norma_otro,
-    marca:marca,
-    sello:sello,
-    pais:pais,
-    estado:estado,
-    ciudad:ciudad,
-    nom_pais:nom_pais,
-    nom_estado:nom_estado,
-    nom_ciudad:nom_ciudad
-    }
+      codigo:codigoNuevo,  
+      nombre: $('#modal_nombre').val(),
+      direccion: $('#modal_direccion').val(),
+      norma:norma,
+      norma_cod:norma_cod,
+      norma_otro:norma_otro,
+      marca:marca,
+      sello:sello,
+      pais:0,
+      estado:estado,
+      ciudad:0,
+      nom_pais:'',
+      nom_estado:'',
+      nom_ciudad:''
+      }
   itemAtributos.push(atributo);
    if($("#modalEditPlantilla").length){
     //agregar Nuevo dias sitios
