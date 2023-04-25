@@ -65,7 +65,7 @@ $nombreClienteX=obtenerNombreClienteSimulacion($codigo);
 /*              ORGANISMO CERTIFICADOR                */
 /******************************************************/
 $sqlOC = "SELECT soc.cod_orgnismocertificador, oc.nombre
-          FROM simulaciones_servicios_orgnismocertificador soc 
+          FROM simulaciones_servicios_organismocertificador soc 
           LEFT JOIN organismo_certificador oc ON oc.codigo = soc.cod_orgnismocertificador
           WHERE soc.cod_simulacionservicio = '$codigo'";
 $stmtOC = $dbh->prepare($sqlOC);

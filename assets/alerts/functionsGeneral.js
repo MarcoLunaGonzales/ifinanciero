@@ -4144,6 +4144,7 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
     if (ajax.readyState==4) {
       var fi=$("#lista_precios");
       fi.html(ajax.responseText);
+      console.log(ajax.responseText)
       fi.bootstrapMaterialDesign();
       $(".tagsinput").tagsinput();
        $('.selectpicker').selectpicker("refresh");
