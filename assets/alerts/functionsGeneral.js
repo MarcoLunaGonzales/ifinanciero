@@ -11782,10 +11782,12 @@ function listarAtributo(){
           for (var j= 0; j< itemAtributosDias.length; j++) {
            if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
             sumaDias[k]+=parseFloat(itemAtributosDias[j].dias);
-            row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
-            row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
-              $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
-              '</select></td>');  
+            // Cambio de Monto Días
+            // row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>'); 
+            // Auditores 
+            // row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
+            //   $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
+            //   '</select></td>');  
             //alerta 2 0 3
            } 
          };     
@@ -11853,10 +11855,12 @@ function listarAtributoUltimo(){
           for (var j= 0; j< itemAtributosDias.length; j++) {
            if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
             sumaDias[k]+=parseFloat(itemAtributosDias[j].dias);
-            row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
-            row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
-              $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
-              '</select></td>');  
+            // Cambiar monto días
+            // row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
+            // Auditores
+            // row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
+            //   $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
+            //   '</select></td>');  
             //alerta 2 0 3
            } 
          };     

@@ -126,12 +126,12 @@ $stmtUpdatePlantilla->execute();
     $values[]    = "($codSimulacion, $arrayOC)";
   }
   // Limpiar Registros pasados
-  $sqlDelete = "DELETE FROM simulaciones_servicios_orgnismocertificador WHERE cod_simulacionservicio = '".$codSimulacion."'";
+  $sqlDelete = "DELETE FROM simulaciones_servicios_organismocertificador WHERE cod_simulacionservicio = '".$codSimulacion."'";
   $stmt      = $dbh->prepare($sqlDelete);
   $stmt->execute();
   if(count($values > 0)){
     // Actualizar
-    $sqlInsert = "INSERT INTO simulaciones_servicios_orgnismocertificador (cod_simulacionservicio, cod_orgnismocertificador) VALUES\n" . implode(",\n", $values);
+    $sqlInsert = "INSERT INTO simulaciones_servicios_organismocertificador (cod_simulacionservicio, cod_orgnismocertificador) VALUES\n" . implode(",\n", $values);
     $stmt      = $dbh->prepare($sqlInsert);
     $stmt->execute();
   }

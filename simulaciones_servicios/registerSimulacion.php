@@ -900,8 +900,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            ?> 
           </div>
           <br>
-				  <div class="row"> 	
-					<div class="col-sm-6">
+				  <div class="d-flex justify-content-center"> 	
+					<div class="col-sm-6" hidden>
             <p class="font-weight-bold float-left">RESUMEN DE LA PROPUESTA</p>
             <table class="table table-bordered table-condensed">
               <tbody>
@@ -954,7 +954,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
               </tbody>
             </table>
            </div>
-          <div class="col-sm-6 bg-blanco2">
+          <div class="col-sm-8 bg-blanco2">
             <p class="font-weight-bold float-left">DATOS DEL CALCULO</p>
             <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
 						<table class="table table-bordered table-condensed">
@@ -977,6 +977,18 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="text-right font-weight-bold"><?=number_format($precioLocalX, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($precioLocalX/$usd, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold">100 %</td>
+                </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
+                  <td class="text-right font-weight-bold"><?=number_format($costoFijoPrincipalPeriodo, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($costoFijoPrincipalPeriodo/$usd, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format((($costoFijoPrincipalPeriodo)*100)/($precioLocalX), 2, '.', ',')?> %</td>
+                </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL + HONORARIOS</td>
+                  <td class="text-right font-weight-bold"><?=number_format((($totalVariable[2]*$alumnosX)+$costoVariablePersonal), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format((($totalVariable[2]*$alumnosX)+$costoVariablePersonal)/$usd, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format(((($totalVariable[2]*$alumnosX)+$costoVariablePersonal)*100)/($precioLocalX), 2, '.', ',')?> %</td>
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">TOTAL COSTOS</td>
