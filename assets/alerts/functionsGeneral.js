@@ -4144,7 +4144,6 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
     if (ajax.readyState==4) {
       var fi=$("#lista_precios");
       fi.html(ajax.responseText);
-      console.log(ajax.responseText)
       fi.bootstrapMaterialDesign();
       $(".tagsinput").tagsinput();
        $('.selectpicker').selectpicker("refresh");
@@ -14735,12 +14734,10 @@ function savePorcentajeAreas(){
     //   // console.log("dato: "+dato);
     //   // console.log("datos: "+dato[4]+" "+dato[7]+" "+dato[8]);    
     // }
-
   }else{
     Swal.fire("Informativo!", "Verifique porcentajes y montos por favor", "warning");
   }      
 }
-
 function borrarItemsAreas(){
   itemAreas_facturacion.splice(0, 1);
   var nfacAreas=[];itemAreas_facturacion.push(nfacAreas);
