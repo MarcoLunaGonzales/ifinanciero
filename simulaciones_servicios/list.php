@@ -562,7 +562,6 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                   data: formData,
                   success:function(response){
                   let resp = JSON.parse(response);
-                  console.log(resp);
                   if(resp.status){        
                       // Mensaje
                       Swal.fire({
@@ -573,9 +572,9 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                           timer: 1500
                       });
                       
-                      // setTimeout(function(){
-                      //     location.reload()
-                      // }, 1550);
+                      setTimeout(function(){
+                          location.reload()
+                      }, 1550);
                   }else{
                       Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
                       }
