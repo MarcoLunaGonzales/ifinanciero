@@ -13,7 +13,7 @@ try {
   /*                  SIMULACION DE SERVICIOS                  */
   /*************************************************************/
   $sql = "INSERT INTO simulaciones_servicios (nombre,observacion,fecha,cod_plantillaservicio,cod_estadosimulacion,cod_responsable,cod_estadoreferencial,ibnorca,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio,cod_objetoservicio,cod_tipoclientenacionalidad,entrada,cod_iaf_primario,cod_iaf_secundario,estado_registro,alcance_propuesta,ingreso_presupuestado,descripcion_servicio,cod_unidadorganizacional,cod_tipocliente,cod_responsableactual,fecha_solicitud_cliente) 
-          SELECT nombre,observacion,fecha,cod_plantillaservicio,cod_estadosimulacion,cod_responsable,cod_estadoreferencial,ibnorca,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio,cod_objetoservicio,cod_tipoclientenacionalidad,entrada,cod_iaf_primario,cod_iaf_secundario,estado_registro,alcance_propuesta,ingreso_presupuestado,descripcion_servicio,cod_unidadorganizacional,cod_tipocliente,cod_responsableactual,fecha_solicitud_cliente 
+          SELECT (SELECT (MAX(CAST(ss.nombre AS DECIMAL)) + 1) FROM simulaciones_servicios ss WHERE ss.cod_plantillaservicio = cod_plantillaservicio),observacion,'".date('Y-m-d')."',cod_plantillaservicio,cod_estadosimulacion,cod_responsable,cod_estadoreferencial,ibnorca,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio,cod_objetoservicio,cod_tipoclientenacionalidad,entrada,cod_iaf_primario,cod_iaf_secundario,estado_registro,alcance_propuesta,ingreso_presupuestado,descripcion_servicio,cod_unidadorganizacional,cod_tipocliente,cod_responsableactual,fecha_solicitud_cliente 
           FROM simulaciones_servicios 
           WHERE codigo = :codigo";
   $stmt = $dbh->prepare($sql);
@@ -41,17 +41,6 @@ try {
   $sql = "INSERT INTO simulaciones_servicios_categoriasinocuidad (cod_simulacionservicio,cod_categoriainocuidad) 
           SELECT '$nuevo_cod_simulacionservicio',cod_categoriainocuidad
           FROM simulaciones_servicios_categoriasinocuidad 
-          WHERE cod_simulacionservicio = :codigo";
-  $stmt = $dbh->prepare($sql);
-  $stmt->bindParam(':codigo', $codigo);
-  $flagSuccess=$stmt->execute();
-
-  /****************************************************************/
-  /*         SIMULACION SERVICIO ORGANIZADOR CERTIFICADOR         */
-  /****************************************************************/
-  $sql = "INSERT INTO simulaciones_servicios_organismocertificador (cod_simulacionservicio,cod_orgnismocertificador) 
-          SELECT '$nuevo_cod_simulacionservicio',cod_orgnismocertificador
-          FROM simulaciones_servicios_organismocertificador 
           WHERE cod_simulacionservicio = :codigo";
   $stmt = $dbh->prepare($sql);
   $stmt->bindParam(':codigo', $codigo);
