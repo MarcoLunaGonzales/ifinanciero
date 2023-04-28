@@ -742,6 +742,9 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
     });
 </script>
 <script type="text/javascript">
+/**
+ * Validación - Porcentaje de Distribución del Ingreso por Area 
+ */
 function valida(f) {
     //verificamos monto mayor a 50
     //var nro_cuenta_doc=$("#nro_cuenta_doc").val();//monto total de items

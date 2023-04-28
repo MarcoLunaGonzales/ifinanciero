@@ -27,7 +27,12 @@ try {//recibiendo datos
     $ci_estudiante = $_POST["ci_estudiante"];
     $cod_personal = $_POST["cod_personal"];//resonsable
     $razon_social = $_POST["razon_social"];   
-     
+  
+    /**********************************************/
+    // Modificación de texto Razon Social
+    $razon_social = mb_strtoupper($razon_social);
+    /**********************************************/
+
     $patron15 = "[a-zA-Z áéíóúÁÉÍÓÚñÑ]";//solo numeros,letras M y m, tildes y la ñ
     $patron1="[\n|\r|\n\r]";//quitamos salto de linea
     $razon_social = preg_replace($patron1, " ", $razon_social);

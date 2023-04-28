@@ -35,6 +35,11 @@ try {//recibiendo datos
     $razon_social = str_replace('"', " ", $razon_social);//quitamos comillas dobles
     $razon_social = str_replace("'", " ", $razon_social);//quitamos comillas simples
 
+    /**********************************************/
+    // Modificación de texto Razon Social
+    $razon_social = mb_strtoupper($razon_social);
+    /**********************************************/
+
     $nit = $_POST["nit"];
 
     if(isset($_POST["complemento"])){

@@ -1,10 +1,10 @@
 <?php
-require_once 'conexion2.php';
+require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
-$dbh = new Conexion2();
+$dbh = new Conexion();
 
 // Datos de Filtro
 $start          = isset($_POST['date_start'])?$_POST['date_start']:"";

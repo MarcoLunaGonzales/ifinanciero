@@ -425,6 +425,10 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                   <button title="Eliminar Propuesta" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                                     <i class="material-icons"><?=$iconDelete;?></i>
                                   </button>
+                                  <!-- Duplicar Registro de Propuesta -->
+                                  <button title="Duplicar Propuesta" class="btn btn-warning propuesta_duplicar" data-codigo="<?=$codigo;?>">
+                                    <i class="material-icons">content_copy</i>
+                                  </button>
                                  <?php  
                                 }
                               ?>                            
@@ -532,4 +536,53 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
 </div>
 
 
-
+<script>
+    // Cambiar Estado de Planilla a Cerrado en Vacio
+    $('body').on('click','.propuesta_duplicar', function(){
+      let formData = new FormData();
+      // codigo Planilla
+      formData.append('codigo', $(this).data('codigo'));
+      swal({
+          title: '¿Esta seguro de duplicar?',
+          text: "Se duplicará el registro con todos su datos realacionados, no se podrá revertir la acción.",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonClass: 'btn btn-success',
+          cancelButtonClass: 'btn btn-danger',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+              $.ajax({
+                  url:"simulaciones_servicios/registerSimulacionDuplicado.php",
+                  type:"POST",
+                  contentType: false,
+                  processData: false,
+                  data: formData,
+                  success:function(response){
+                  let resp = JSON.parse(response);
+                  if(resp.status){        
+                      // Mensaje
+                      Swal.fire({
+                          type: 'success',
+                          title: 'Correcto!',
+                          text: 'El proceso se completo correctamente!',
+                          showConfirmButton: false,
+                          timer: 1500
+                      });
+                      
+                      setTimeout(function(){
+                          location.reload()
+                      }, 1550);
+                  }else{
+                      Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                      }
+                  }
+              });
+          }
+      });
+    });
+    
+    
+  </script>

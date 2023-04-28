@@ -1,5 +1,5 @@
 <?php
-require_once '../conexion_simple.php';
+require_once '../conexion.php';
 require_once '../functions.php';
 
 // session_start();
@@ -22,7 +22,7 @@ $cod_gestion=$_GET['cod_gestion'];
 $codPlanilla=$_GET['codigo_planilla'];
 $cod_uo = $_GET["codigo_uo"];//
 //nombre de unidad
-$dbh = new Conexion_simple();
+$dbh = new Conexion();
 $mes=strtoupper(nameMes($cod_mes));
 $gestion=nameGestion($cod_gestion);
 $nombreUnidad= nameUnidad($cod_uo);

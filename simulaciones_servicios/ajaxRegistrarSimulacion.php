@@ -143,7 +143,7 @@ if(isset($_POST['nombre'])){
     $values[]    = "($detail_cod_simulacionservicio, $arrayOC)";
   }
   if(count($values) > 0){
-    $sqlInsert = "INSERT INTO simulaciones_servicios_orgnismocertificador (cod_simulacionservicio, cod_orgnismocertificador) VALUES\n" . implode(",\n", $values);
+    $sqlInsert = "INSERT INTO simulaciones_servicios_organismocertificador (cod_simulacionservicio, cod_orgnismocertificador) VALUES\n" . implode(",\n", $values);
     $stmt      = $dbh->prepare($sqlInsert);
     $stmt->execute();
   }
