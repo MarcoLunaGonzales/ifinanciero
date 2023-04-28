@@ -210,13 +210,15 @@ $fechaActualInput=date("Y-m-d");
                                     <?php
                                         $stmt = $dbh->prepare("SELECT oc.codigo, oc.nombre, oc.abreviatura FROM organismo_certificador oc order by 1");
                                         $stmt->execute();
+                                        $cont_certificador = 1;
                                         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                        $codigoX=$row['codigo'];
-                                        $nombreX=$row['nombre'];
-                                        $abreviaturaX=$row['abreviatura'];
+                                          $codigoX=$row['codigo'];
+                                          $nombreX=$row['nombre'];
+                                          $abreviaturaX=$row['abreviatura'];
                                     ?>
-                                        <option value="<?=$codigoX;?>"><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                        <option value="<?=$codigoX;?>" <?=($cont_certificador)?'selected':'';?>><?=$abreviaturaX?> - <?=$nombreX;?></option> 
                                     <?php
+                                          $cont_certificador = 0;
                                         }
                                     ?>
                                 </select>
