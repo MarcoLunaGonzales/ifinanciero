@@ -9,12 +9,12 @@ class ConexionIBNORCA extends PDO {
       // private $port = '3306'; 
 
       //  //CONEXION IBNORCA PRUEBAS
-      private $tipo_de_base = 'mysql';
-      private $host = 'lpsit.ibnorca.org';
-      private $nombre_de_base = 'ibnorca';
-      private $usuario = 'ingresobd';
-      private $contrasena = 'ingresoibno';
-      private $port = '3360'; 
+      // private $tipo_de_base = 'mysql';
+      // private $host = 'lpsit.ibnorca.org';
+      // private $nombre_de_base = 'ibnorca';
+      // private $usuario = 'ingresobd';
+      // private $contrasena = 'ingresoibno';
+      // private $port = '3360'; 
 
       //CONEXION IBNORCA PRUEBAS EXTERNO
       // private $tipo_de_base = 'mysql';
@@ -44,8 +44,13 @@ class ConexionIBNORCA extends PDO {
   public function __construct() {
     //Sobreescribo el método constructor de la clase PDO.
     try{
-       parent::__construct($this->tipo_de_base.':host='.$this->host.';dbname='.$this->nombre_de_base.';port='.$this->port, $this->usuario, $this->contrasena,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));//      
-    }catch(PDOException $e){
+      // Oficial SIN.ENV
+      //  parent::__construct($this->tipo_de_base.':host='.$this->host.';dbname='.$this->nombre_de_base.';port='.$this->port, $this->usuario, $this->contrasena,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));//
+
+      // Oficial
+      parent::__construct(DATABASE_DRIVER_EXT.':host='.DATABASE_HOST_EXT.';dbname='.DATABASE_NAME_EXT.';port='.DATABASE_PORT_EXT, DATABASE_USER_EXT, DATABASE_PASSWORD_EXT,array(PDO::ATTR_PERSISTENT => 'TRUE',PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+
+   }catch(PDOException $e){
        echo 'Ha surgido un error y no se puede conectar a la base de datos. Detalle: ' . $e->getMessage();
        exit;
     }
