@@ -418,9 +418,11 @@ $fechaActualInput=date("Y-m-d");
                       <div class="col-sm-2">
                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
-                            <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante()" class="btn btn-primary btn-fab btn-sm">
+                            <!-- EXCEL -->
+                            <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante()" class="btn btn-primary btn-fab btn-sm" hidden>
                               <i class="material-icons">content_paste</i>
                             </a>
+                            <!-- FIN EXCEL -->
                             <a  title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente('39')" class="btn btn-success btn-fab btn-sm">
                               <i class="material-icons">replay_circle_filled</i>
                             </a>
@@ -587,7 +589,7 @@ $fechaActualInput=date("Y-m-d");
                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                           </button>
                           <!-- EXCEL -->
-                          <a title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante_tcs()" class="btn btn-primary btn-fab btn-sm">
+                          <a title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante_tcs()" class="btn btn-primary btn-fab btn-sm" hidden>
                             <i class="material-icons">content_paste</i>
                           </a>
                           <!-- FIN EXCEL -->
