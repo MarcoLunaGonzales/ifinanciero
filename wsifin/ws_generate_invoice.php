@@ -105,16 +105,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $importeTotal_x=$importeTotal_x+($precioUnitario*$cantidad);                        
                         }
                     }
-                    // $sw=false;
-                    //     $estado=7;
-                    //     $mensaje = $importeTotal_x."omporgte";
-
                     if($sucursalId==null || $sucursalId!=1){
                         $estado=1;
-                        $mensaje = "Id Sucural incorrecta";
+                        $mensaje = "Id Sucursal incorrecta";
                     }elseif($pasarelaId==null || $pasarelaId!=1){
                         $estado=2;
-                        $mensaje = "Id Paralela incorrecta";
+                        $mensaje = "Id Pasarela incorrecta";
                     }elseif(!check($fechaFactura) || $fechaFactura!=$fechaFactura_actual){
                         $estado=3;
                         $mensaje = "Fecha incorrecta o no actual";
@@ -142,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $mensaje = "CodLibretaDetalle no encontrado.";
                                 $sw_cod_libreta=false;
                             }else{
-                                $controlador_libreta=verificarLibretaBancarias($CodLibretaDetalle);                                
+                                $controlador_libreta=verificarLibretaBancarias($CodLibretaDetalle);                               
                                 if($controlador_libreta==0){
                                     $sw_cod_libreta=true;
                                 }else{
@@ -153,8 +149,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             }
                         }
                         if($sw_cod_libreta){                            
-
-
                             if(isset($datos['usuario'])){
                                 $usuario=$datos['usuario'];
                             }else{
@@ -168,7 +162,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             if(isset($datos['idIdentificacion'])){
                                 $idIdentificacion=$datos['idIdentificacion'];
                             }else{
-                                $idIdentificacion="";    
+                                //por defecto ponemos documento ci
+                                $idIdentificacion="1";    
                             }
                             if(isset($datos['complementoCiCliente'])){
                                 $complementoCiCliente=$datos['complementoCiCliente'];
@@ -189,6 +184,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas,$nroTarjeta,$idIdentificacion,$complementoCiCliente,$CorreoCliente,$idCliente,$usuario);//llamamos a la funcion                 
                             $rspArray = explode("###", $rspString);
                             $rsp=$rspArray[0];
+
+                            
                             if($rsp=='0'){
                                 $cod_factura=$rspArray[1];
                                 $estado='0';
