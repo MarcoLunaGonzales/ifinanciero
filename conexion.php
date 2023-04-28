@@ -47,12 +47,6 @@ public function __construct() {
       try{
          require_once 'config.php';
          
-         set_time_limit(0);
-         error_reporting(0);
-         
-         // Oficial SIN .ENV
-         // parent::__construct($this->tipo_de_base.':host='.$this->host.';dbname='.$this->nombre_de_base.';port='.$this->port, $this->usuario, $this->contrasena,array(PDO::ATTR_PERSISTENT => 'TRUE',PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-         
          // Oficial
          parent::__construct(DATABASE_DRIVER.':host='.DATABASE_HOST.';dbname='.DATABASE_NAME.';port='.DATABASE_PORT, DATABASE_USER, DATABASE_PASSWORD,array(PDO::ATTR_PERSISTENT => 'TRUE',PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
 

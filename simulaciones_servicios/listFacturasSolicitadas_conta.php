@@ -205,6 +205,17 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                                 $nro_fact_x=trim($cadenaFacturas,',');
                               }
                               $cadenaFacturasM=trim($cadenaFacturasM,',');
+
+                              /* Aca validamos que no se facture antes de la fecha de Facturacion */
+                              $fechaActual=new DateTime();
+                              list($yearFF, $monthFF, $dayFF)=explode("/",$fecha_facturacion_x);
+                              $fechaFacturacionX=new DateTime($yearFF."-".$monthFF."-".$dayFF);
+                              $diff =  $fechaActual->diff($fechaFacturacionX);
+                              $banderaFacturarFecha=false;                              
+                              if($fechaActual>=$fechaFacturacionX){
+                                $banderaFacturarFecha=true;
+                              }
+
                               ?>
                               <tr>
                                 <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
@@ -270,39 +281,38 @@ $sql="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')a
                                                     $datos_FacManual_de.="/".$saldo_dc;//adicionamos el saldo de la libreta
                                                   }                                              
                                                 }
-                                                if($cont_de_tipos_pago==2){?>
-                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','4')">
+                                                if( $cont_de_tipos_pago==2 && $banderaFacturarFecha==true ){?>
+                                                  <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','4')" >
                                                       <i class="material-icons text-success">receipt</i> Generar Factura
                                                     </a>
-                                                    <!-- <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','5')">
-                                                      <i class="material-icons text-info">receipt</i>Generar Factura Manual
-                                                    </a> --><?php
+                                                    <?php
                                                 }else{                                                
-                                                  if($cod_tipopago==$cod_tipopago_deposito_cuenta){//si es deposito se activa la libreta bancaria?>
-                                                    <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','1')">
+                                                  if( $cod_tipopago==$cod_tipopago_deposito_cuenta && $banderaFacturarFecha==true ){//si es deposito se activa la libreta bancaria?>
+                                                    <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','1')" >
                                                       <i class="material-icons text-success">receipt</i> Generar Factura
                                                     </a>
-                                                    <!-- <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirLibretaBancaria('<?=$datos_FacManual_de;?>','<?=$urlGenerarFacturas2;?>','3')">
-                                                      <i class="material-icons text-info">receipt</i>Generar Factura Manual
-                                                    </a> --><?php                                               
-                                                  }elseif($cod_tipopago==$cod_tipopago_anticipo){ //echo ?>
+                                                    <?php                                               
+                                                  }elseif( $cod_tipopago==$cod_tipopago_anticipo && $banderaFacturarFecha==true ){ //echo ?>
                                                     <a href='#' title="Generar Factura" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual_anticipo;?>','<?=$urlGenerarFacturas2;?>','1','0')">
                                                       <i class="material-icons text-success">receipt</i> Generar Factura
                                                     </a>
-                                                    <!-- <a href='#' title="Generar Factura Manual" class="dropdown-item" onclick="abrirEstadoCuenta('<?=$datos_FacManual_anticipo;?>','<?=$urlGenerarFacturas2;?>','3','0')">
-                                                      <i class="material-icons text-info">receipt</i>Generar Factura Manual
-                                                    </a> -->
                                                     <?php
-                                                  }elseif($cod_tipopago==$cod_tipopago_credito){//si es a credito y no tiene cuenta auxiliar
+                                                  }elseif( $cod_tipopago==$cod_tipopago_credito && $banderaFacturarFecha==true ){//si es a credito y no tiene cuenta auxiliar
                                                     $datos_sf_credito=$codigo_facturacion."/".$cod_cliente;?>
                                                     <a href='#' title="Registrar Cuenta Auxiliar" class="dropdown-item" onclick="abrirRegistroCuentaAuxiliar('<?=$datos_sf_credito;?>','1')">
                                                       <i class="material-icons text-success">receipt</i>Generar Factura</a><?php 
-                                                  }else{
+                                                  }elseif( $banderaFacturarFecha==true ){
                                                     ?>
                                                     <a href='#' title="Generar Factura" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation-generar-factura','<?=$urlGenerarFacturas2;?>?codigo=<?=$codigo_facturacion;?>')">
                                                       <i class="material-icons text-success">receipt</i> Generar Factura
                                                     </a>                                                  
                                                     <?php 
+                                                  }else{
+                                                    ?>
+                                                    <a href='#' title="La Factura aun no esta Habilitada" class="dropdown-item">
+                                                      <i class="material-icons text-success">receipt</i> La facturación estara disponible el <?=$fecha_facturacion_x;?>
+                                                    </a>                                                  
+                                                    <?php
                                                   }  
                                                 }
                                               

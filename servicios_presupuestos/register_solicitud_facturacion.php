@@ -19,6 +19,9 @@ if(isset($_GET['cod_sw'])){
 }
 $dbhIBNO = new ConexionIBNORCA();
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 $IdServicio=$IdServicio;
 $cod_facturacion=$cod_facturacion;
 //$cod_simulacion=$cod_simulacion;
@@ -288,7 +291,10 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 }
                                                 // echo $IdServicio."--".$codCS;
                                                 $sw2="";
+
                                                 $monto_servicio=verificar_pago_servicios_tcp_solfac($IdServicio,$codCS);
+                                                //$monto_servicio=0;
+                                                
                                                 $monto_servicio=number_format($monto_servicio,2,".","");
                                                 ?><script>console.log("MONTO SERVICIO: "+<?=$monto_servicio?>)</script><?php  
                                                 if(count(verificarSiHayFacturasAnuladasSol($cod_facturacion))>0){

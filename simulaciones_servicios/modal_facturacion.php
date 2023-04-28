@@ -1,4 +1,7 @@
-
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+?>
 <!-- modal tipo pago porcentaje -->
 <div class="modal fade" id="modalTipoPagoPorcentaje" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">

@@ -1,14 +1,13 @@
 <?php
 require_once '../layouts/bodylogin.php';
 require_once '../conexion.php';
-require_once '../conexion2.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
 require_once 'configModule.php';
 
 $dbh = new Conexion();
 
-$dbh_detalle = new Conexion2();
+$dbh_detalle = new Conexion();
 
 
 $codigo=$_GET["cod"];

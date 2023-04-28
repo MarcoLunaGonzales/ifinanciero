@@ -13,6 +13,7 @@ if(isset($_ENV['DATABASE_DRIVER']) && isset($_ENV['DATABASE_HOST'])){
 $requiredParams = array(
     'DATABASE_DRIVER',
     'DATABASE_ENCODING',
+    
     'DATABASE_HOST',
     'DATABASE_PORT',
     'DATABASE_NAME',
@@ -20,8 +21,6 @@ $requiredParams = array(
     'DATABASE_PASSWORD',
     'DATABASE_DESCRIPTION',
     
-    'DATABASE_DRIVER_EXT',
-    'DATABASE_ENCODING_EXT',
     'DATABASE_HOST_EXT',
     'DATABASE_PORT_EXT',
     'DATABASE_NAME_EXT',

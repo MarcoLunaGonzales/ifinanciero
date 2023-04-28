@@ -825,9 +825,13 @@
             };    
            }                  
           }
-          console.log("SUMATORIA FACTURAS:"+sumaFactura);
-          console.log("TOTAL SOLICITUD:"+parseFloat($("#total_solicitado").val()));
           var restaIva=parseFloat($("#total_solicitado").val())-sumaFactura;
+
+          console.log("SUMATORIA FACTURAS:"+sumaFactura);
+          console.log("RESTA IVA:"+ restaIva);
+          console.log("TOTAL SOLICITUD:"+parseFloat($("#total_solicitado").val()));
+
+
           if(sumaFactura>0){
             if((sumaFactura+restaIva)!=parseFloat($("#total_solicitado").val())){
               cont++; 

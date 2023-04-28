@@ -5,11 +5,11 @@ require_once '../conexion.php';
 $dbhB = new Conexion();
 
 $fechaActual=date("Y-m-d H:m:s");
-$asunto="TEST";
-$mensaje="Lorem ";
+$asunto="TEST EMAIL";
+$mensaje="Vamos Probando";
 		$mail_username="";//Correo electronico emisor
 		$mail_userpassword="";// contraseña correo emisor
-		$mail_addAddress="davidhuarina25@gmail.com";//correo electronico destino
+		$mail_addAddress="lunagonzalesmarco@gmail.com";//correo electronico destino
 		$template="../notificaciones_sistema/PHPMailer/email_template_factura.html";//Ruta de la plantilla HTML para enviar nuestro mensaje
 		/*Inicio captura de datos enviados por $_POST para enviar el correo */
 		$mail_setFromEmail=$mail_username;
