@@ -93,6 +93,9 @@ $bgClase="bg-info";
   $query2=$query1." and pgc.cod_tiposervicio=2 GROUP BY pgd.cod_plantillagruposervicio order by pgd.cod_plantillagruposervicio";
   $bgClase="bg-success";
 }
+
+//echo $query2;
+
   $stmt = $dbh->prepare($query2);
   $stmt->execute();
   $html='';$montoTotales=0;$montoTotales2=0;$montoTotales2Alumno=0;$montoTotalesPresupuesto=0;
@@ -104,7 +107,9 @@ $bgClase="bg-info";
 
           /* DATOS PARA PRECIO EN LUGAR DE CANTIDAD AUDITORIAS*/
           $precioLocalX=obtenerPrecioServiciosSimulacionPorAnio($codigo,$yyyy);
+          
           $precioRegistrado=obtenerPrecioRegistradoPropuestaTCPTCS($codigo);
+          
           if($precioRegistrado==0){
              $precioRegistrado=1;
           }
