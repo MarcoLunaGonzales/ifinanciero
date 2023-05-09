@@ -10,7 +10,8 @@
     /**
      * Función de Busqueda y Cierre de LEADS
      * Servicio CRM
-     * @author: Samuel
+     * @author api: Samuel
+     * @author function: Ronald
      */
     function searchLeadsFactura($cod_facturaventa){
         try {
@@ -51,7 +52,7 @@
                 /************************************************/
                 /*              LOG BUSQUEDA LEADS              */
                 /************************************************/
-                $observaciones = "cod_facturaventa: $cod_facturaventa, ci: $ci, cod_claservicio: $idServicio";
+                $observaciones = "cod_facturaventa: $cod_facturaventa, ci: $ci, idModulo: $idServicio";
                 $response      = json_encode($obj);
                 $fecha_hora    = date('Y-m-d H:i:s');
                 $stmtSave = $dbh->prepare("INSERT INTO log_leads (observaciones,response,fecha_hora,tipo) VALUES ('$observaciones','$response','$fecha_hora', 0)");
@@ -76,7 +77,7 @@
                     /**********************************************/
                     /*              LOG CIERRE LEADS              */
                     /**********************************************/
-                    $observaciones = "cod_facturaventa: $cod_factura, ci: $ci, cod_claservicio: $idModulo, Cod_lead: ".$data->id;
+                    $observaciones = "cod_facturaventa: $cod_factura, ci: $ci, idModulo: $idServicio, Cod_lead: ".$data->id;
                     $response      = json_encode($remote_server_output);
                     $fecha_hora    = date('Y-m-d H:i:s');
                     $stmtSave = $dbh->prepare("INSERT INTO log_leads (observaciones,response,fecha_hora,tipo) VALUES ('$observaciones','$response','$fecha_hora', 1)");

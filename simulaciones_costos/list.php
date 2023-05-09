@@ -55,7 +55,8 @@ if(isset($_GET['q'])){
   join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
   where sc.cod_estadoreferencial=1 $sqlModulos ".
   $filter_list.
-  " order by sc.codigo desc
+  " GROUP BY sc.codigo, sc.nombre, sc.observacion, sc.fecha,, sc.cod_tipocurso, sc.cod_plantillacosto, sc.cod_estadosimulacion, sc.cod_responsable, sc.cod_area_registro,cliente, estado
+  order by sc.codigo desc
   LIMIT 0, 50";
   $stmt = $dbh->prepare($sql);
 
@@ -69,7 +70,8 @@ $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from c
  where sc.cod_estadoreferencial=1 ".
  (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
  $filter_list.
- "order by sc.codigo desc
+ " GROUP BY sc.codigo, sc.nombre, sc.observacion, sc.fecha,, sc.cod_tipocurso, sc.cod_plantillacosto, sc.cod_estadosimulacion, sc.cod_responsable, sc.cod_area_registro,cliente, estado
+ order by sc.codigo desc
  LIMIT 0, 200");
 }
 
