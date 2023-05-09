@@ -2,6 +2,7 @@
 
 require_once __DIR__.'/../conexion.php';
 require_once __DIR__.'/../functions.php';
+require_once __DIR__.'/../servicioCRM.php';
 require_once __DIR__.'/../functionsGeneral.php';
 require_once 'executeComprobante_factura.php';
 require_once '../layouts/bodylogin.php';
@@ -283,9 +284,12 @@ try{
                     $stmtUpdateFact = $dbh->prepare($sqlUpdateFact);
                     $stmtUpdateFact->execute();
                 }
-
+                $response_lead = '';
                 if($banderaSW){
+                    // Generación de Suscripción 
                     generarSuscripcion($codigo, $stringFacturasCod);
+                    // Generación de Busqueda y Cierre de LEAD
+                    $response_lead = searchLeadsFactura($stringFacturasCod);
                     $urlSIATCompleta=$urlSIAT."formatoFacturaOnLine.php?codVenta=".$idTransaccion_x;
                     echo "<script>
                     Swal.fire('".$titulo."','".$mensaje_x."', '".$estado."');

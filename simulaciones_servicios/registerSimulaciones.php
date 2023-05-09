@@ -862,7 +862,7 @@ $fechaActualInput=date("Y-m-d");
             <label class="col-sm-2 col-form-label" >Razón Social</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text"  class="form-control" name="razon_social_cliente_actualizar" id="razon_social_cliente_actualizar" value="">
+                 <input type="text"  class="form-control" name="razon_social_cliente_actualizar" id="razon_social_cliente_actualizar" value="" readonly>
                </div>
             </div>                
           </div>
