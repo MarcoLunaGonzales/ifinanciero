@@ -1,8 +1,5 @@
 #OMITIREMOS EL ARCHIVO DE CONEXION PHP
+.environment copy
 conexion.php
 conexion_externa.php
-<<<<<<< HEAD
 activosFijos/qr_temp/
-=======
-activosFijos/qr_temp/
->>>>>>> 2a7d10879aa38c5d2e9190518bf8e17bd00e4c9e

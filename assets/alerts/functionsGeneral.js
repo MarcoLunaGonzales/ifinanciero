@@ -3229,6 +3229,9 @@ function guardarSimulacionCosto(){
   var normas_int=$("#normas_int").val();
   var ibnorca = 1;
 
+  // Nuevo campo LEAD
+  var lead_cliente = $('#lead_cliente').val();
+
   console.log("personal: "+cod_personal);
   console.log("cliente: "+cod_cliente);
   console.log("fecha sol cliente: "+fecha_solicitud_cliente);
@@ -3240,7 +3243,7 @@ function guardarSimulacionCosto(){
   if(nombre=="" || !(plantilla_costo>0) || cantidad_modulos=="" || monto_norma=="" || cod_personal==0){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"normas":normas,"normas_int":normas_int,"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos,"IdCurso":idCurso,"IdModulo":idModulo,"codigo_personal":cod_personal,"codigo_cliente":cod_cliente,"fecha_solicitud_cliente":fecha_solicitud_cliente};
+     var parametros={"normas":normas,"normas_int":normas_int,"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos,"IdCurso":idCurso,"IdModulo":idModulo,"codigo_personal":cod_personal,"codigo_cliente":cod_cliente,"fecha_solicitud_cliente":fecha_solicitud_cliente,"lead_cliente":lead_cliente};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -20020,6 +20023,7 @@ function modalActualizarDatosCliente(cod_area){
   $("#web_cliente").val(datos[0]['web']);
   $("#web_cliente_actualizar").val(datos[0]['web']);
 
+  
   if(datos_mae.length>0){
     $("#id_contacto_mae").val(datos_mae[0]['IdContacto']);
     $("#mae_nombre").val(datos_mae[0]['NombreCompleto']);
@@ -20039,6 +20043,12 @@ function modalActualizarDatosCliente(cod_area){
     $("#mae_cargo").val("");
     $("#mae_telefono").val("");
     $("#mae_email").val("");
+    // Campos de Actulización Limpia
+    $("#id_contacto_mae_actualizar").val(0);
+    $("#mae_nombre_actualizar").val("");
+    $("#mae_cargo_actualizar").val("");
+    $("#mae_telefono_actualizar").val("");
+    $("#mae_email_actualizar").val("");
   }
   
 
@@ -20046,6 +20056,11 @@ function modalActualizarDatosCliente(cod_area){
   $("#contacto_cargo").val("");
   $("#contacto_telefono").val("");
   $("#contacto_email").val("");
+  // Actualiza Datos
+  $("#contacto_nombre_actualizar").val("");
+  $("#contacto_cargo_actualizar").val("");
+  $("#contacto_telefono_actualizar").val("");
+  $("#contacto_email_actualizar").val("");
 
   $("#cod_area_contacto").val(cod_area);
   //seleccionamos los contactos de los clientes
@@ -20131,6 +20146,11 @@ function modalActualizarDatosCliente_Contactos(combo){
       $("#contacto_cargo").val(datos_contactos[fila]['CargoContacto']);
       $("#contacto_telefono").val(datos_contactos[fila]['FonoContacto']);
       $("#contacto_email").val(datos_contactos[fila]['CorreoContacto']);
+      // Campos de Edición de Datos
+      $("#contacto_nombre_actualizar").val(datos_contactos[fila]['NombreCompleto']);
+      $("#contacto_cargo_actualizar").val(datos_contactos[fila]['CargoContacto']);
+      $("#contacto_telefono_actualizar").val(datos_contactos[fila]['FonoContacto']);
+      $("#contacto_email_actualizar").val(datos_contactos[fila]['CorreoContacto']);
     }
   }
 }

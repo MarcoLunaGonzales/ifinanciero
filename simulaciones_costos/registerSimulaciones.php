@@ -200,7 +200,7 @@ $dbh = new Conexion();
                             <div class="form-group" id="lista_clientes">
                                 <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="codigo_cliente" id="codigo_cliente" data-style="btn btn-info"  required>
           
-                                <<option value="0">-- --</option>
+                                <option value="0">-- --</option>
                                 <?php
                                  $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM clientes c where c.cod_estadoreferencial=1 order by 2");
                                  $stmt->execute();
@@ -229,6 +229,20 @@ $dbh = new Conexion();
                         </div>
                        </div>
                   </div><!--row-->   
+
+                  <div class="row">
+                    <label class="col-sm-2 col-form-label">Leads Activos:</label>
+                    <div class="col-sm-7">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar lead..." data-live-search="true" name="lead_cliente" id="lead_cliente" data-style="btn btn-info"  required>
+                            </select>
+                          </div>
+                        </div> 
+                      </div>
+                    </div>
+                  </div>
 
                   <div class="row">
                    <label class="col-sm-2 col-form-label">Normas Nacionales:</label>
@@ -296,3 +310,37 @@ $dbh = new Conexion();
       
   </div>
 </div> 
+
+<script>
+  /**
+   * Busqueda de LEADS en base a Codigo de Cliente
+   * @param: codigo de cliente
+   */
+ $('body').on('change','#codigo_cliente', function(){
+  let formData = new FormData();
+  formData.append('cod_cliente', $(this).val());
+  $.ajax({
+      url:"simulaciones_costos/servicioCRMCliente.php",
+      type:"POST",
+      contentType: false,
+      processData: false,
+      data: formData,
+      success:function(response){
+        let resp = JSON.parse(response);
+        if(resp.status){
+          $('#lead_cliente').empty();
+          $.each(resp.data, function(index, value){
+              $('#lead_cliente').append('<option value="' + value.id + '">' + value.name + '</option>');
+          });
+          $('#lead_cliente').selectpicker('refresh');
+        }else{
+          Swal.fire(
+              'Oops...',
+              'El servicio ya se cuentra asignado a la actividad',
+              'warning'
+          );
+        }
+      }
+  });
+ });
+</script>

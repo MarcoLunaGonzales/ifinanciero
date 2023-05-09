@@ -1,0 +1,19 @@
+[ Main settings ]
+DATABASE_DRIVER = mysql
+DATABASE_ENCODING = utf8
+
+[ parametros de conexion bd mysql Local ]
+DATABASE_HOST = 192.168.30.35
+DATABASE_PORT = 3306
+DATABASE_NAME = bdifinanciero
+DATABASE_USER = ibnofinanciero
+DATABASE_PASSWORD = Financiero1bn0
+DATABASE_DESCRIPTION = DB LOCAL
+
+[ parametros de conexion bd mysql Externo ]
+DATABASE_HOST_EXT = lpsit.ibnorca.org
+DATABASE_PORT_EXT = 3360
+DATABASE_NAME_EXT = bdifinanciero
+DATABASE_USER_EXT = ingresobd
+DATABASE_PASSWORD_EXT = ingresoibno
+DATABASE_DESCRIPTION_EXT = DB EXTERNO

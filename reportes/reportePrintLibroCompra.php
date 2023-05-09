@@ -139,14 +139,14 @@ $html.=  '<header class="header">'.
                                   <th width="2%" style="border:2px solid;"><small><small><b>-</b></small></small></th>   
                                   <th style="border:2px solid;" width="4%"><small><small><small><b>Fecha</b></small></small></small></th>                                
                                   <th style="border:2px solid;" width="4%"><small><small><small><b>NIT</b></small></small></small></th>
-                                  <th style="border:2px solid;" width="20%"><small><small><small><b>Razón Social </b></small></small></small></th>
+                                  <th style="border:2px solid;" width="25%"><small><small><small><b>Razón Social </b></small></small></small></th>
                                   <th style="border:2px solid;" width="4%"><small><small><small><b>Nro. Factura</b></small></small></small></th>
-                                  <th style="border:2px solid;" width="5%"><small><small><small><b>Nro de Autorización</b></small></small></small></th>
+                                  <th style="border:2px solid;" width="18%"><small><small><small><b>Nro de Autorización</b></small></small></small></th>
                                   <th style="border:2px solid;" width="10%"><small><small><small><b>Código de Control</b></small></small></small></th>                                 
                                   <th style="border:2px solid;" width="5%"><small><small><small><b>Total Factura (A)</b></small></small></small></th>
                                   <th style="border:2px solid;" width="3%"><small><small><small><b>Total I.C.E (B)</b></small></small></small></th>
                                   <th style="border:2px solid;" ><small><small><small><small><b>Importes<br> Exentos (C)</b></small></small></small></small></th>
-                                  <th style="border:2px solid; text-align: right;" ><small><small><small><small><b>Imp Neto<br>Suj a IVA<br>(A-B-C)</b></small></small></small></small></small></th>
+                                  <th style="border:2px solid;"><small><small><small><small><b>Imp Neto<br>Suj a IVA<br>(A-B-C)</b></small></small></small></small></small></th>
                                   <th style="border:2px solid;" ><small><small><small><small><b>Crédito Fiscal Obtenido</b></small></small></small></small></th>
                               </tr>                                  
                             </thead>
@@ -209,7 +209,7 @@ $html.=  '<header class="header">'.
                                   <td class="text-right small"><small>'.$nit.'</small></td>
                                   <td class="text-left small"><small>'.$razon_social.'</small></td>
                                   <td class="text-right small"><small>'.$nro_factura.'</small></td>
-                                  <td class="text-right small"><small>'.$nro_autorizacion_1.' '.$nro_autorizacion_2.'</small></td>
+                                  <td class="text-right small"><small>'.$nro_autorizacion_1.'<br>'.$nro_autorizacion_2.'</small></td>
                                   <td class="text-center small"><small>'.$codigo_control.'</small></td>
                                   <td class="text-right small"><small>'.formatNumberDec($sumadeimporte).'</small></td>
                                   <td class="text-right small"><small>'.formatNumberDec($ice).'</small></td>
