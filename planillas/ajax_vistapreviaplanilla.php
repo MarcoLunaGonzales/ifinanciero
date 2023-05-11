@@ -28,7 +28,8 @@ $mesPlanilla=$_GET["cod_mes"];
 $gestionPlanilla=$_GET["cod_gestion"];
 $totalLiquidoPagable=0;
 $sqlUnidadX="SELECT pd.cod_area,(select ap.cod_area_planilla from areas_planillas_contabilizacion ap where ap.cod_area=pd.cod_area)as cod_area_contabilizacion,(select ap2.orden from areas_planillas_contabilizacion ap2 where ap2.cod_area=pd.cod_area)as orden
-  from personal p join personal_area_distribucion pd on p.codigo=pd.cod_personal
+  from personal p join personal_area_distribucion_planilla pd on p.codigo=pd.cod_personal and 
+  pd.cod_planilla='$codigo_planilla' 
   where pd.cod_estadoreferencial=1 and p.cod_estadoreferencial=1 and p.cod_estadopersonal=1 
   GROUP BY pd.cod_area
   order by 3";

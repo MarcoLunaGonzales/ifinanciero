@@ -1,3 +1,6 @@
 #OMITIREMOS EL ARCHIVO DE CONEXION PHP
+.environment_copy
+.environment_test
 conexion.php
+conexion_externa.php
 activosFijos/qr_temp/

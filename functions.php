@@ -82,6 +82,7 @@
      }
      return($nombreX);
   }
+
   function codigoGestion($nombre){
       $dbh = new Conexion();
       $stmt = $dbh->prepare("SELECT codigo from gestiones where nombre=$nombre");
@@ -95,6 +96,19 @@
       $stmt=null;
       return($codigoX);
   }
+
+   function obtenerEstadoGestion($codigo){
+     $dbh = new Conexion();
+     $stmt = $dbh->prepare("SELECT cod_estado FROM gestiones_datosadicionales where cod_gestion=:codigo");
+     $stmt->bindParam(':codigo',$codigo);
+     $stmt->execute();
+     $estadoG=0;
+     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $estadoG=$row['cod_estado'];
+     }
+     return($estadoG);
+   }
+
   function nameMoneda($codigo){
      $dbh = new Conexion();
      $stmt = $dbh->prepare("SELECT nombre FROM monedas where codigo=:codigo");
@@ -2747,10 +2761,12 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function obtenerSolicitudRecursosDetallePlantillaSinSol($codSol,$codigo){
      $dbh = new Conexion();
+     $codCuentaHonorariosDocentes=obtenerValorConfiguracion(88);
+
+      //SACAMOS TODAS LAS SOLICITUDES DE RECURSOS ADICIONALES PARA ESE ITEM QUE ESTAN ACTIVAS
+
      $sql="";
-     //SACAMOS TODAS LAS SOLICITUDES DE RECURSOS ADICIONALES PARA ESE ITEM QUE ESTAN ACTIVAS
-     $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd, plan_cuentas pc, solicitud_recursos sr where sd.cod_plancuenta=pc.codigo and sd.cod_detalleplantilla=$codigo and 
-       sd.cod_solicitudrecurso=sr.codigo and sr.cod_estadoreferencial<>2 ";
+     $sql="SELECT sd.*,pc.numero,pc.nombre from solicitud_recursosdetalle sd, plan_cuentas pc, solicitud_recursos sr where sd.cod_plancuenta=pc.codigo and sd.cod_detalleplantilla=$codigo and sd.cod_plancuenta='$codCuentaHonorariosDocentes'and sd.cod_solicitudrecurso=sr.codigo and sr.cod_estadoreferencial<>2 ";
      //echo $sql;
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
@@ -3888,8 +3904,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   //FUNCIONES DE REPORTE
   function obtenerPlanillaSueldosRevision($codigo,$cod_area_x,$cod_uo_x){
-   require_once 'conexion_simple.php';
-    $dbh = new Conexion_simple();
+   require_once 'conexion.php';
+    $dbh = new Conexion();
     $sql="SELECT p.codigo,p.cod_area,a.nombre as area, p.primer_nombre as nombres,p.paterno, p.materno,
     p.identificacion as ci,p.ing_contr,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,
     pm.dias_trabajados,pm.bono_academico,pm.bono_antiguedad,pm.total_ganado,pm.monto_descuentos,pm.liquido_pagable,pm.afp_1,pm.afp_2,pad.porcentaje,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.rc_iva,pp.atrasos,pp.anticipo,p.fecha_nacimiento,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,(select tg.abreviatura from tipos_genero tg where tg.codigo=p.cod_genero)as genero,(select pp2.abreviatura from personal_pais pp2 where pp2.codigo=p.cod_nacionalidad) as nacionalidad
@@ -4012,7 +4028,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $mydompdf->load_html($html);
     $mydompdf->render();
     $canvas = $mydompdf->get_canvas();
-    $canvas->page_text(450, 763, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 9, array(0,0,0)); 
+    //$canvas->page_text(450, 763, "Página:  {PAGE_NUM} de {PAGE_COUNT}", Font_Metrics::get_font("sans-serif"), 9, array(0,0,0)); 
     $mydompdf->set_base_path('assets/libraries/plantillaPDFSolicitudesRecursos.css');
     $mydompdf->stream($nom.".pdf", array("Attachment" => false));
   }
@@ -6308,7 +6324,8 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
 
   function descripcionClaServicio($codigo){
      $dbh = new Conexion();
-     $stmt = $dbh->prepare("SELECT Descripcion FROM cla_servicios2 where IdClaServicio=:codigo");
+    //  $stmt = $dbh->prepare("SELECT Descripcion FROM cla_servicios2 where IdClaServicio=:codigo");
+     $stmt = $dbh->prepare("SELECT Descripcion FROM cla_servicios where IdClaServicio=:codigo");
      $stmt->bindParam(':codigo',$codigo);
      $stmt->execute();
      $descripcionX=0;
@@ -8869,7 +8886,7 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
       return($array_cod);
     }
     function verificar_pago_servicios_tcp_solfac($idServicio,$idClaServicio){
-      $idTipoObjeto=211;
+      /*$idTipoObjeto=211;
       $dbhIBNO = new ConexionIBNORCA();
       $sql="SELECT sp.idServicio, sp.idclaServicio, sp.cantidad, (( sp.PrecioUnitario )-(( sp.PrecioUnitario )*( co.descuento / 100 ))) AS preciounitario,
       cs.Descripcion,f.cantidad_f, f.monto_f 
@@ -8904,7 +8921,9 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
       while ($row = $stmtIbno->fetch(PDO::FETCH_BOUND)) {      
         // echo "aqou";
           $valor=$monto_f;
-      }  
+      }
+      */
+      $valor=0;  
       return($valor);
     }
     function obtnerNombreComprimidoEstudiante($ci_estudiante){
@@ -11857,10 +11876,10 @@ function obtenerNombreInstanciaCajaChica($codCaja){
       $fecha_inicio=$gestion.'-'.$mes2.'-01';
       $fecha_fin=date('Y-m-d',strtotime($fecha_inicio));
       
-      $sql="SELECT sum(valorresidual)as valorinicial
+      $sql="SELECT sum(valorinicial)as valorinicial
      from activosfijos 
-     where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and  fechalta  BETWEEN '$fecha_inicio 00:00:00' and '$fecha_fin 23:59:59' AND tipoalta='NUEVO' 
-     and  cod_depreciaciones in ($cod_depreciaciones_rubros)";
+     where tipo_af=1 and cod_unidadorganizacional in ($unidadOrgString) and  YEAR(fechalta)='$gestion' and MONTH(fechalta)='$mes2' AND tipoalta='NUEVO' and  cod_depreciaciones in ($cod_depreciaciones_rubros)";
+     //echo $sql;
       $dbh = new Conexion();
       $valor=0;
       $stmt = $dbh->prepare($sql);

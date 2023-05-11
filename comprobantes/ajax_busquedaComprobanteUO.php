@@ -18,6 +18,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalUser=$_SESSION["globalUser"];
+$globalCodigoGestion=$_SESSION['globalGestion']; 
+
+
 $cod_uo=$_GET['cod_uo'];
 $tipo=$_GET['tipo'];
 $fechaI=$_GET['fechaI'];
@@ -26,6 +29,10 @@ $glosa=$_GET['glosa'];
 
 $comprobante=$_GET['comprobante'];
 $cuenta=$_GET['cuenta'];
+
+
+//OBTENEMOS EL ESTADO DE LA GESTION
+$estadoGestionComprobante=obtenerEstadoGestion($globalCodigoGestion);
 
 // $unidadOrgString=implode(",", $cod_uo);
 
@@ -178,7 +185,7 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
           if($codigoSol[1]==0){
             if($existeCuenta==0){
               $codCajaChica=existeCajaChicaRelacionado($codigo);
-              if($codCajaChica>0){
+              if( $codCajaChica>0 || $estadoGestionComprobante!=1 ){
                 $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
                 ?><a href='#'rel="tooltip" class="btn btn-primary" title="No Editable Caja Chica :<?=$nombreCaja?>">
                       <i class="material-icons"><?=$iconEdit;?></i>
@@ -196,11 +203,15 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
              <?php
             } 
         }
+        if($$estadoGestionComprobante==1){
         ?>
         <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
           <i class="material-icons"><?=$iconDelete;?></i>
         </button>        
-        <?php }
+        <?php 
+        }
+
+        }
       }   ?>
       </td>
     </tr>

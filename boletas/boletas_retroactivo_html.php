@@ -136,13 +136,18 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 
 
   $sql="SELECT p.codigo, p.primer_nombre as nombres,CONCAT(p.paterno,' ', p.materno) as apellidos,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,(select a.nombre from areas a where a.codigo=p.cod_area) as area,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,pm.bono_antiguedad,pm.bonos_otros,pm.total_ganado,pm.descuentos_otros,pm.correlativo_planilla,pm.liquido_pagable,
-    pm.dias_trabajados,pm.afp_1,pm.afp_2,pp.seguro_de_salud,pp.riesgo_profesional,pp.rc_iva,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,p.ing_planilla,p.identificacion,p.cod_unidadorganizacional,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=5 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as datrasos
+    pm.dias_trabajados,pm.afp_1,pm.afp_2,pp.seguro_de_salud,pp.riesgo_profesional,pp.rc_iva,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,p.ing_planilla,p.identificacion,p.cod_unidadorganizacional,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=5 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as datrasos,
+	(SELECT DATE_FORMAT(aux_pe.fecha, '%d-%m-%Y %H:%i:%s')
+		FROM planillas_email aux_pe
+		LEFT JOIN planillas_personal_mes aux_ppm ON aux_ppm.codigo = aux_pe.cod_planilla_mes
+		WHERE aux_pe.cod_planilla_mes = pm.codigo 
+		ORDER BY aux_pe.id ASC LIMIT 1) as primer_vista,
+		pm.codigo as cod_planilla_mes
     FROM personal p
     join planillas_personal_mes pm on pm.cod_personalcargo=p.codigo
       join planillas_personal_mes_patronal pp on pp.cod_planilla=pm.cod_planilla and pp.cod_personal_cargo=pm.cod_personalcargo
-
     where pm.cod_planilla=$cod_planilla $sql_add 
-    order by pm.correlativo_planilla limit 0,1";
+    order by pm.correlativo_planilla";
 
 
     $stmt = $dbh->prepare($sql);
@@ -164,6 +169,7 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
         '$y = $pdf->get_height() - 24;'.
         '$x = $pdf->get_width() - 15 - Font_Metrics::get_text_width("1/1", $font, $size);'.
         '$pdf->page_text($x, $y, "{PAGE_NUM}/{PAGE_COUNT}", $font, $size);'.
+        '$pdf->set_paper("A4", "portrait");'.
       '}'.
     '</script>';
     $codigo_generado="";
@@ -214,12 +220,18 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 		$Ap_Vejez=$result['seguro_de_salud'];
 		$Riesgo_Prof=$result['riesgo_profesional'];
 		$totalGanado=$result['total_ganado'];
-		$ComAFP=$totalGanado*$porcentaje_aport_afp/100;
-		$aposol=$totalGanado*$porcentaje_aport_sol/100;
+
+		$descuentoAFP=$result['afp_1']+$result['afp_2'];
+
+		//$ComAFP=$totalGanado*$porcentaje_aport_afp/100;
+		//$aposol=$totalGanado*$porcentaje_aport_sol/100;
 
 		$aposol13=$result['a_solidario_13000'];
 		$aposol25=$result['a_solidario_25000'];
 		$aposol35=$result['a_solidario_35000'];
+
+		$descuentoAFP=$descuentoAFP+$aposol13+$aposol25+$aposol35;
+
 
 		$RC_IVA=$result['rc_iva'];
 		$Anticipos=$result['anticipo'];
@@ -240,8 +252,8 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 		// $descuentos_otros
 		
 		$suma_ingresos=$haber_basico_dias+$bono_antiguedad+$otrosBonos;
-		$suma_egresos=$Ap_Vejez+$Riesgo_Prof+$ComAFP+$aposol+$aposol13+$aposol25+$aposol35+$RC_IVA+$Anticipos+$descuentos_otrosX+$atrasos;
-
+		$suma_egresos=$descuentoAFP+$RC_IVA+$Anticipos+$descuentos_otrosX+$atrasos;
+		
 		$liquido_pagable=$suma_ingresos-$suma_egresos;
 		// $liquido_pagable=$result['liquido_pagable'];
 		if($cod_personal==-1000){
@@ -250,8 +262,10 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 			require 'boletas_html_aux.php';	
 		}else{
 			require 'boletas_html_aux.php';
-			// $html.='<br>';
+			$html.='<div class="page-break"></div>';
 			require 'boletas_html_aux.php';	
+			$html.='<div class="page-break"></div>';
+
 		}
 		// $index_planilla++;
 	}

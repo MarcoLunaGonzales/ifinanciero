@@ -168,11 +168,11 @@ $fechaActualInput=date("Y-m-d");
                        </div>
                   </div><!--row-->   
                       
-                  <div class="row">
+                  <div class="row" hidden>
                     <label class="col-sm-2 col-form-label">Fecha Solicitud Cliente:</label>
                     <div class="col-sm-5">
                      <div class="form-group">
-                        <input class="form-control" type="date" id="fecha_solicitud_cliente" name="fecha_solicitud_cliente" value="<?=$fechaActualInput?>">  
+                        <input class="form-control" type="date" id="fecha_solicitud_cliente" name="fecha_solicitud_cliente">  
                      </div>
                     </div>
                   </div>
@@ -201,6 +201,31 @@ $fechaActualInput=date("Y-m-d");
                               </div>
                         </div>
                       </div>
+                      
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Organismo Certificador :</label>
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <select class="selectpicker form-control form-control-sm" name="organismo_certificador[]" id="organismo_certificador" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
+                                    <?php
+                                        $stmt = $dbh->prepare("SELECT oc.codigo, oc.nombre, oc.abreviatura FROM organismo_certificador oc order by 1");
+                                        $stmt->execute();
+                                        $cont_certificador = 1;
+                                        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                          $codigoX=$row['codigo'];
+                                          $nombreX=$row['nombre'];
+                                          $abreviaturaX=$row['abreviatura'];
+                                    ?>
+                                        <option value="<?=$codigoX;?>" <?=($cont_certificador)?'selected':'';?>><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                    <?php
+                                          $cont_certificador = 0;
+                                        }
+                                    ?>
+                                </select>
+                              </div>
+                        </div>
+                    </div>
+
                       <div class="row">
                        <label class="col-sm-2 col-form-label">Oficina de Servicio</label>
                        <div class="col-sm-2">
@@ -318,7 +343,8 @@ $fechaActualInput=date("Y-m-d");
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
-                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_primario" id="iaf_primario" data-style="btn btn-info"  required>
+                              
+                                <select class="selectpicker form-control form-control-sm" name="iaf_primario[]" id="iaf_primario" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
                                   <option value="0" select>NINGUNO</option> 
                                 <?php
                                  $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
@@ -337,22 +363,21 @@ $fechaActualInput=date("Y-m-d");
                           </div> 
                         </div>
                        </div>
-                       <label class="col-sm-1 col-form-label">IAF Sec.</label>
+                       <label class="col-sm-1 col-form-label">Categoria Inocuidad.</label>
                        <div class="col-sm-3">
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
-                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_secundario" id="iaf_secundario" data-style="btn btn-default"  required>
+                                <select class="selectpicker form-control form-control-sm" data-live-search-placeholder="Categoria inocuidad..." name="iaf_secundario[]" id="iaf_secundario" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
                                  <option value="0" select>NINGUNO</option> 
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
+                                 $stmt = $dbh->prepare("SELECT ci.codigo, ci.nombre FROM categorias_inocuidad ci WHERE ci.estado = 1 order by 1");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['nombre'];
-                                  $abreviaturaX=$row['abreviatura'];
                                    ?>
-                                  <option value="<?=$codigoX;?>"><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                   <?php
                                     }
                                     ?>
@@ -395,9 +420,11 @@ $fechaActualInput=date("Y-m-d");
                       <div class="col-sm-2">
                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                             </button>
-                            <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante()" class="btn btn-primary btn-fab btn-sm">
+                            <!-- EXCEL -->
+                            <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante()" class="btn btn-primary btn-fab btn-sm" hidden>
                               <i class="material-icons">content_paste</i>
                             </a>
+                            <!-- FIN EXCEL -->
                             <a  title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente('39')" class="btn btn-success btn-fab btn-sm">
                               <i class="material-icons">replay_circle_filled</i>
                             </a>
@@ -488,7 +515,7 @@ $fechaActualInput=date("Y-m-d");
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
-                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_primario_tcs" id="iaf_primario_tcs" data-style="btn btn-info"  required>
+                                <select class="selectpicker form-control form-control-sm" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." name="iaf_primario_tcs[]" id="iaf_primario_tcs" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
                                   <option value="0" select>NINGUNO</option> 
                                 <?php
                                  $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
@@ -507,22 +534,21 @@ $fechaActualInput=date("Y-m-d");
                           </div> 
                         </div>
                        </div>
-                       <label class="col-sm-1 col-form-label">IAF Sec.</label>
+                       <label class="col-sm-1 col-form-label">Categoria Inocuidad</label>
                        <div class="col-sm-3">
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
-                                <select class="selectpicker form-control" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." data-live-search="true" name="iaf_secundario_tcs" id="iaf_secundario_tcs" data-style="btn btn-default"  required>
+                                <select class="selectpicker form-control form-control-sm" data-live-search-placeholder="Categoria inocuidad..." name="iaf_secundario_tcs[]" id="iaf_secundario_tcs" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
                                  <option value="0" select>NINGUNO</option> 
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1");
+                                 $stmt = $dbh->prepare("SELECT ci.codigo, ci.nombre FROM categorias_inocuidad ci WHERE ci.estado = 1 order by 1");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['nombre'];
-                                  $abreviaturaX=$row['abreviatura'];
                                    ?>
-                                  <option value="<?=$codigoX;?>"><?=$abreviaturaX?> - <?=$nombreX;?></option> 
+                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                   <?php
                                     }
                                     ?>
@@ -564,9 +590,11 @@ $fechaActualInput=date("Y-m-d");
                         <div class="col-sm-2">
                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
                           </button>
-                          <a title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante_tcs()" class="btn btn-primary btn-fab btn-sm">
+                          <!-- EXCEL -->
+                          <a title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante_tcs()" class="btn btn-primary btn-fab btn-sm" hidden>
                             <i class="material-icons">content_paste</i>
                           </a>
+                          <!-- FIN EXCEL -->
                           <a title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente('38')" class="btn success-success btn-fab btn-sm">
                             <i class="material-icons">replay_circle_filled</i>
                           </a>
@@ -666,7 +694,7 @@ $fechaActualInput=date("Y-m-d");
                       </div>    
                       </div>
                       
-                     <div class="row col-sm-12" id="div_pais">
+                     <div class="row col-sm-12" hidden id="div_pais">
                           <div class="row col-sm-12">
                        <label class="col-sm-2 col-form-label">Pais</label>
                        <div class="col-sm-10">
@@ -681,7 +709,7 @@ $fechaActualInput=date("Y-m-d");
                         </div>
                        </div>
                       </div>
-                      <div class="row col-sm-12">
+                      <div class="row col-sm-12" hidden>
                        <label class="col-sm-2 col-form-label">Dep / Est</label>
                        <div class="col-sm-10">
                         <div class="form-group">
@@ -690,7 +718,7 @@ $fechaActualInput=date("Y-m-d");
                         </div>
                        </div>
                       </div>
-                      <div class="row col-sm-12">
+                      <div class="row col-sm-12" hidden>
                        <label class="col-sm-2 col-form-label">Ciudad</label>
                        <div class="col-sm-10">
                         <div class="form-group">
@@ -834,7 +862,7 @@ $fechaActualInput=date("Y-m-d");
             <label class="col-sm-2 col-form-label" >Razón Social</label>
              <div class="col-sm-4">                     
                <div class="form-group">
-                 <input type="text"  class="form-control" name="razon_social_cliente_actualizar" id="razon_social_cliente_actualizar" value="">
+                 <input type="text"  class="form-control" name="razon_social_cliente_actualizar" id="razon_social_cliente_actualizar" value="" readonly>
                </div>
             </div>                
           </div>

@@ -56,6 +56,59 @@ $usd=6.96;
 /*FIN*/
 
 $nombreClienteX=obtenerNombreClienteSimulacion($codigo);
+/******************************************************/
+/*              ORGANISMO CERTIFICADOR                */
+/******************************************************/
+$sqlOC = "SELECT soc.cod_orgnismocertificador, oc.nombre
+          FROM simulaciones_servicios_organismocertificador soc 
+          LEFT JOIN organismo_certificador oc ON oc.codigo = soc.cod_orgnismocertificador
+          WHERE soc.cod_simulacionservicio = '$codigo'";
+$stmtOC = $dbh->prepare($sqlOC);
+$stmtOC->execute();
+$array_orgnismo_certificador  = [];
+$title_orgnismo_certificador  = '';
+$first_orgnismo_certificador  = '';
+while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
+    $array_orgnismo_certificador[]  = $rowOC['cod_orgnismocertificador'];
+    $title_orgnismo_certificador    .= $rowOC['nombre'].' / ';
+}
+$first_orgnismo_certificador = empty($title_orgnismo_certificador) ? '' : explode(' / ', $title_orgnismo_certificador)[0];
+
+/***********************************/
+/*              IAF                */
+/***********************************/
+$sqlOC = "SELECT si.cod_iaf, i.nombre
+          FROM simulaciones_servicios_iaf si 
+          LEFT JOIN iaf i ON i.codigo = si.cod_iaf
+          WHERE si.cod_simulacionservicio = '$codigo'";
+$stmtOC = $dbh->prepare($sqlOC);
+$stmtOC->execute();
+$array_cod_iaf  = [];
+$title_cod_iaf  = '';
+$first_cod_iaf  = '';
+while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
+    $array_cod_iaf[]  = $rowOC['cod_iaf'];
+    $title_cod_iaf    .= $rowOC['nombre'].' / ';
+}
+$first_cod_iaf = empty($title_cod_iaf) ? '' : explode(' / ', $title_cod_iaf)[0];
+
+/***************************************************/
+/*              Categoria Inocuidad                */
+/***************************************************/
+$sqlOC = "SELECT sci.cod_categoriainocuidad, ci.nombre
+          FROM simulaciones_servicios_categoriasinocuidad sci 
+          LEFT JOIN categorias_inocuidad ci ON ci.codigo = sci.cod_categoriainocuidad
+          WHERE sci.cod_simulacionservicio = '$codigo'";
+$stmtOC = $dbh->prepare($sqlOC);
+$stmtOC->execute();
+$array_cod_categoriainocuidad  = [];
+$title_cod_categoriainocuidad  = '';
+$first_cod_categoriainocuidad  = '';
+while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
+    $array_cod_categoriainocuidad[]  = $rowOC['cod_categoriainocuidad'];
+    $title_cod_categoriainocuidad    .= $rowOC['nombre'].' / ';
+}
+$first_cod_categoriainocuidad = empty($title_cod_categoriainocuidad) ? '' : explode(' / ', $title_cod_categoriainocuidad)[0];
 
 
 $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
@@ -430,7 +483,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
               </div>
             </div>
              
-            <div class="col-sm-2">
+            <div class="col-sm-2" hidden>
               <div class="form-group">
                   <label class="bmd-label-static">Abreviatura</label>
                   <input class="form-control" type="text" name="abreviatura_plan" value="<?=$abreviaturaX?>" READONLY id="abreviatura_plan"/>
@@ -454,7 +507,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
 
           </div>      
            <div class="row">                
-            <div class="col-sm-2">
+            <div class="col-sm-2" hidden>
               <div class="form-group">
                   <label class="bmd-label-static">D&iacute;as Servicio</label>
                   <input class="form-control" type="text" name="dias_plan" readonly value="<?=$diasSimulacion?>" id="dias_plan"/>
@@ -480,18 +533,38 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                   <input class="form-control" type="text" name="anio_simulacion" readonly value="<?=$anioGeneral?>" id="anio_simulacion"/>
               </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2" hidden>
               <div class="form-group">
                   <label class="bmd-label-static">Precio BOB</label>
                   <input class="form-control" type="text" name="precio_auditoria_ib" readonly value="<?=$precioLocalInputX?>" id="precio_auditoria_ib"/>
               </div>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2" hidden>
               <div class="form-group">
                   <label class="bmd-label-static">Precio USD</label>
                   <input class="form-control" type="text" name="precio_auditoria_ibUSD" readonly value="<?=$precioLocalInputXUSD?>" id="precio_auditoria_ibUSD"/>
               </div>
             </div>
+            <!-- Nuevos campos -->
+            <div class="col-sm-2">
+              <div class="form-group" title="<?=$title_cod_iaf?>">
+                  <label class="bmd-label-static">IAF</label>
+                  <input class="form-control" type="text" readonly value="<?=$first_cod_iaf?>"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group" title="<?=$title_cod_categoriainocuidad?>">
+                  <label class="bmd-label-static">Cat. Ino.</label>
+                  <input class="form-control" type="text" readonly value="<?=$first_cod_categoriainocuidad?>"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group" title="<?=$title_orgnismo_certificador?>">
+                  <label class="bmd-label-static">Org. Cert.</label>
+                  <input class="form-control" type="text" readonly value="<?=$first_orgnismo_certificador?>"/>
+              </div>
+            </div>
+            <!-- Nuevos campos -->
           </div>
           <div class="row">                
             <div class="col-sm-12">
@@ -854,7 +927,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
               </tbody>
             </table>
           </div>-->
-          <div class="col-sm-6">
+          <div class="col-sm-6" hidden>
             <p class="font-weight-bold float-left">RESUMEN DE LA PROPUESTA</p>
             <table class="table table-bordered table-condensed">
               <tbody>
@@ -907,69 +980,83 @@ for ($an=0; $an<=$anioGeneral; $an++) {
               </tbody>
             </table>
            </div>
-          <div class="col-sm-6 bg-blanco2">
-            <p class="font-weight-bold float-left">DATOS DEL CALCULO</p>
-            <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
-            <table class="table table-bordered table-condensed">
-                <tr class="">
-                  <td></td>
-                  <td class="bg-table-primary2 text-white" colspan="2">EN IBNORCA</td>
-                  <td class="bg-table-primary2 text-white"></td>
-                </tr>
-                <tr class="">
-                  <td></td>
-                  <td class="bg-table-primary2 text-white">BOB</td>
-                  <td class="bg-table-primary2 text-white">USD</td>
-                  <td class="bg-table-primary2 text-white"></td>
-                </tr>
-              <tbody>
-                
-                <tr>
-                  <td class="text-left small bg-table-primary2 text-white">TOTAL INGRESOS</td>
-                 <!-- <td class="text-right font-weight-bold"><?=number_format($precioLocalX, 2, '.', ',')?></td>-->
-                  <td class="text-right font-weight-bold"><?=number_format($precioLocalX, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format($precioLocalX/$usd, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold">100 %</td>
-                </tr>
-                <tr>
-                  <td class="text-left small bg-table-primary2 text-white">TOTAL COSTOS</td>
-                  <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal/$usd, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format((($costoTotalLocal)*100)/($precioLocalX), 2, '.', ',')?> %</td>
-                </tr>
-                <?php 
-                  
-                ?>
-                <tr class="bg-warning text-dark">
-                  <td class="text-left small">UTILIDAD BRUTA</td>
-                  <td class="text-right font-weight-bold"><?=number_format($utilidadBruta, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format($utilidadBruta/$usd, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format(($utilidadBruta/($precioLocalX))*100, 2, '.', ',')?> %</td>
-                </tr>
-                <tr>
-                  <td class="text-left small bg-table-primary2 text-white">PAGO IMPUESTOS ( <?=$iva+$it?> %)</td>
-                  <td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*($precioLocalX), 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format(((($iva+$it)/100)*($precioLocalX))/$usd, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>
-                </tr>
-                <tr>
-                  <td class="text-left small bg-table-primary2 text-white">PORCENTAJE A AFNOR (<?=$porcentajeAfnor?> %)</td>
-                  <td class="text-right font-weight-bold"><?=number_format($precioAfnorX, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format($precioAfnorX/$usd, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold"><?=number_format($porcentajeAfnor, 2, '.', ',')?> %</td>
-                </tr>
-                <tr class="<?=$estiloUtilidad?>">
-                  <td class="text-left small bg-table-primary2 text-white">UTILIDAD NETA</td>
-                  <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal/$usd, 2, '.', ',')?></td>
-                  <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($pUtilidadLocal, 2, '.', ',')?> %</td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="row div-center">
-               <h5><p class="<?=$estiloMensaje?>"><?=$mensajeText?></p></h5>
-            </div>  
           </div>
+          <div class="d-flex justify-content-center">
+            <div class="col-sm-6 bg-blanco2">
+              <p class="font-weight-bold float-left">DATOS DEL CALCULO</p>
+              <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
+              <table class="table table-bordered table-condensed">
+                  <tr class="">
+                    <td></td>
+                    <td class="bg-table-primary2 text-white" colspan="2">EN IBNORCA</td>
+                    <td class="bg-table-primary2 text-white"></td>
+                  </tr>
+                  <tr class="">
+                    <td></td>
+                    <td class="bg-table-primary2 text-white">BOB</td>
+                    <td class="bg-table-primary2 text-white">USD</td>
+                    <td class="bg-table-primary2 text-white"></td>
+                  </tr>
+                <tbody>
+                  
+                  <tr>
+                    <td class="text-left small bg-table-primary2 text-white">TOTAL INGRESOS</td>
+                  <!-- <td class="text-right font-weight-bold"><?=number_format($precioLocalX, 2, '.', ',')?></td>-->
+                    <td class="text-right font-weight-bold"><?=number_format($precioLocalX, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format($precioLocalX/$usd, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold">100 %</td>
+                  </tr>
+                  <tr>
+                    <td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
+                    <td class="text-right font-weight-bold"><?=number_format($costoFijoPrincipalPeriodo, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format($costoFijoPrincipalPeriodo/$usd, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format((($costoFijoPrincipalPeriodo)*100)/($precioLocalX), 2, '.', ',')?> %</td>
+                  </tr>
+                  <tr>
+                    <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL + HONORARIOS</td>
+                    <td class="text-right font-weight-bold"><?=number_format((($totalVariable[2]*$alumnosX)+$costoVariablePersonal), 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format((($totalVariable[2]*$alumnosX)+$costoVariablePersonal)/$usd, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format(((($totalVariable[2]*$alumnosX)+$costoVariablePersonal)*100)/($precioLocalX), 2, '.', ',')?> %</td>
+                  </tr>
+                  <tr>
+                    <td class="text-left small bg-table-primary2 text-white">TOTAL COSTOS</td>
+                    <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format($costoTotalLocal/$usd, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format((($costoTotalLocal)*100)/($precioLocalX), 2, '.', ',')?> %</td>
+                  </tr>
+                  <?php 
+                    
+                  ?>
+                  <tr class="bg-warning text-dark">
+                    <td class="text-left small">UTILIDAD BRUTA</td>
+                    <td class="text-right font-weight-bold"><?=number_format($utilidadBruta, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format($utilidadBruta/$usd, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format(($utilidadBruta/($precioLocalX))*100, 2, '.', ',')?> %</td>
+                  </tr>
+                  <tr>
+                    <td class="text-left small bg-table-primary2 text-white">PAGO IMPUESTOS ( <?=$iva+$it?> %)</td>
+                    <td class="text-right font-weight-bold"><?=number_format((($iva+$it)/100)*($precioLocalX), 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format(((($iva+$it)/100)*($precioLocalX))/$usd, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format($iva+$it, 2, '.', ',')?> %</td>
+                  </tr>
+                  <tr>
+                    <td class="text-left small bg-table-primary2 text-white">PORCENTAJE A AFNOR (<?=$porcentajeAfnor?> %)</td>
+                    <td class="text-right font-weight-bold"><?=number_format($precioAfnorX, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format($precioAfnorX/$usd, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold"><?=number_format($porcentajeAfnor, 2, '.', ',')?> %</td>
+                  </tr>
+                  <tr class="<?=$estiloUtilidad?>">
+                    <td class="text-left small bg-table-primary2 text-white">UTILIDAD NETA</td>
+                    <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($utilidadNetaLocal/$usd, 2, '.', ',')?></td>
+                    <td class="text-right font-weight-bold <?=$estiloUtilidadIbnorca?>"><?=number_format($pUtilidadLocal, 2, '.', ',')?> %</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="row div-center">
+                <h5><p class="<?=$estiloMensaje?>"><?=$mensajeText?></p></h5>
+              </div>  
+            </div>
           </div>
           
             <div class="card-footer fixed-bottom">

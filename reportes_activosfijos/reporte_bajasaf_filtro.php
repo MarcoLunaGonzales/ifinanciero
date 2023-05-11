@@ -36,7 +36,7 @@ $statement = $dbh->query($query);
                       $codigoX=$row['codigo'];
                       $nombreX=$row['nombre'];
                     ?>
-                    <option value="<?=$codigoX;?>" ><?=$row['abreviatura'];?> - <?=$nombreX;?></option>
+                    <option value="<?=$codigoX;?>"><?=$row['abreviatura'];?> - <?=$nombreX;?></option>
                     <?php 
                     }
                   ?>
@@ -57,13 +57,26 @@ $statement = $dbh->query($query);
             </div>
           </div>
           <!--  fin de seleccion area-->
+          
+          <div class="row">
+            <label class="col-sm-2 col-form-label">Ver</label>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <select name="alta_baja" id="alta_baja" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required>
+                  <option value="1">ALTAS</option>
+                  <option value="2">BAJAS</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
           <div class="row">
               <label class="col-sm-2 col-form-label">Rubro</label>
               <div class="col-sm-7">
               <div class="form-group">
                   <select class="selectpicker form-control" title="Seleccione una opcion" name="rubros[]" id="rubros" data-style="select-with-transition" data-size="5" data-actions-box="true" multiple required data-show-subtext="true" data-live-search="true">
                   <?php while ($row = $statement->fetch()){ ?>
-                      <option value="<?=$row["codigo"];?>"><?=$row['abreviatura'];?> - <?=$row["nombre"];?></option>
+                      <option value="<?=$row["codigo"];?>" selected><?=$row['abreviatura'];?> - <?=$row["nombre"];?></option>
                   <?php } ?> 
                   </select>
               </div>
@@ -71,7 +84,7 @@ $statement = $dbh->query($query);
           </div>
           <div class="row">
               <label class="col-sm-2 col-form-label">Tipo</label>
-              <div class="col-sm-2">
+              <div class="col-sm-3">
               <div class="form-group">
                   <select name="tipo" id="tipo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required="true">
                   <?php
@@ -91,9 +104,11 @@ $statement = $dbh->query($query);
               </div>
 
             <label class="col-sm-1 col-form-label">Gestión</label>
-            <div class="col-sm-1">
+            <div class="col-sm-2">
               <div class="form-group">
-                <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required>
+                <select name="gestion" id="gestion" class="selectpicker form-control form-control-sm" onChange="AjaxGestionFechaDesde(this)" data-style="btn btn-primary" required>
+                    <option value="0">-</option>
+
                     <?php
                       $sql="SELECT codigo,nombre FROM gestiones order by 2 desc";
                       $stmtg = $dbh->prepare($sql);
@@ -109,39 +124,37 @@ $statement = $dbh->query($query);
                 </select>
               </div>
             </div>
-
-            <label class="col-sm-1 col-form-label">Mes</label>
-            <div class="col-sm-2">
-              <div class="form-group">
-                <select name="mes" id="mes" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required>
-                    <?php
-                      $sql="SELECT codigo,nombre from meses order by codigo";
-                      $stmtg = $dbh->prepare($sql);
-                      $stmtg->execute();
-                      while ($rowg = $stmtg->fetch(PDO::FETCH_ASSOC)) {
-                        $codigog=$rowg['codigo'];
-                        $nombreg=$rowg['nombre'];
-                      ?>
-                      <option value="<?=$codigog;?>"><?=$nombreg;?></option>
-                      <?php 
-                      }
-                    ?>
-                </select>
-              </div>
-            </div>
-
-            <label class="col-sm-1 col-form-label">Altas/Bajas</label>
-            <div class="col-sm-1">
-              <div class="form-group">
-                <select name="alta_baja" id="alta_baja" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required>
-                  <option value="1">ALTAS</option>
-                  <option value="2">BAJAS</option>
-                </select>
-              </div>
-            </div>
-
-
           </div>
+
+          <div class="row">
+              <div class="col-sm-6">
+                <div class="row">
+                 <label class="col-sm-4 col-form-label">Desde</label>
+                 <div class="col-sm-8">
+                  <div class="form-group">
+                    <div id="div_contenedor_fechaI">                              
+                      <input type="date" class="form-control" autocomplete="off" name="fecha_desde" id="fecha_desde" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaDesde?>">  
+                    </div>                                    
+                     </div>
+                  </div>
+             </div>
+               </div>
+              <div class="col-sm-6">
+                <div class="row">
+                 <label class="col-sm-4 col-form-label">Hasta</label>
+                 <div class="col-sm-8">
+                  <div class="form-group">
+                    <div id="div_contenedor_fechaH">                              
+                      <input type="date" class="form-control" autocomplete="off" name="fecha_hasta" id="fecha_hasta" min="<?=$fechaDesde2?>" max="<?=$fechaHasta2?>" value="<?=$fechaHasta?>">
+                    </div>
+                           
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div><!--div row-->
+
+
           <!--fin campo ufvinicio -->
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">

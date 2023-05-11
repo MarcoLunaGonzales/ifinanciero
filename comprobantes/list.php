@@ -9,9 +9,13 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $globalUnidad=$_SESSION['globalUnidad'];
 $globalGestion=$_SESSION['globalNombreGestion'];
+$globalCodigoGestion=$_SESSION['globalGestion']; 
 $globalMesTrabajo=$_SESSION['globalMes'];
 
 $dbh = new Conexion();
+
+//OBTENEMOS EL ESTADO DE LA GESTION
+$estadoGestionComprobante=obtenerEstadoGestion($globalCodigoGestion);
 
 // Preparamos
 $codTipoComprobanteDefault="3";
@@ -195,7 +199,7 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                   if($codigoSol[1]==0 || $globalUnidad==3000){
                                     if($existeCuenta==0 || $globalUnidad==3000){
                                       $codCajaChica=existeCajaChicaRelacionado($codigo);
-                                       if($codCajaChica>0){
+                                       if($codCajaChica>0 || $estadoGestionComprobante!=1){
                                         $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
                                         ?><a href='#' class="dropdown-item" title="No Editable Caja Chica :<?=$nombreCaja?>">
                                         <i class="material-icons text-danger"><?=$iconEdit;?></i> No Editable
@@ -215,9 +219,11 @@ $stmtTipoComprobante->bindColumn('cod_tipo_comprobante', $codigo_tipo_co);
                                   <?php
                                     }  
                                   }
+                                  if($estadoGestionComprobante==1){
                                  ?><a href="#" class="dropdown-item" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')" title="Anular">
                                     <i class="material-icons text-danger"><?=$iconDelete;?></i> Eliminar
                                   </a><?php
+                                  }
                               }//fin de editable Facturas
                                   ?>
                                   

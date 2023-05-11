@@ -1141,6 +1141,10 @@
 		if ($_GET['opcion']=='generarPlanillaSueldoPrevia') {
 			require_once('planillas/generarPlanillaSueldo.php'); //ok
 		}
+		// PLANILLA REPORTE VISITAS
+		if ($_GET['opcion']=='planillasSueldoPersonalDetail') {
+			require_once('planillas/planillasSueldoListDetail.php'); //ok
+		}
 		//planillas aguinaldos
 		if ($_GET['opcion']=='planillasAguinaldosPersonal') {
 			require_once('planillas/planillasAguinaldosList.php'); //ok
@@ -1716,6 +1720,12 @@
 			$cod_mes=$_GET['cod_mes'];
 			require_once('refrigerios/listDetalle.php');
 		}
+		
+		if ($_GET['opcion']=='refrigerioImport') {
+			$cod_ref=$_GET['cod_ref'];
+			$cod_mes=$_GET['cod_mes'];
+			require_once('refrigerios/importDetalle.php');
+		}
 		if ($_GET['opcion']=='editRefrigerioDetalle') {
 			$cod_refrigeriodetalle=$_GET['cod_ref_det'];
 			require_once('refrigerios/editDetalle.php');
@@ -1939,6 +1949,7 @@
 			require_once('dosificaciones/saveDelete.php');
 		}
 
+
 		//incremento Salarial & retroactivos
 		if ($_GET['opcion']=='incremento_salarial') {
 			require_once('incremento_salarial/main.php'); //ok
@@ -1946,6 +1957,15 @@
 
 		if ($_GET['opcion']=='incremento_salarial_edit') {
 			require_once('incremento_salarial/edit_incremento.php'); //ok
+		}
+
+
+
+
+		// REPORTES SUSCRIPCIÓN
+		
+		if ($_GET['opcion']=='reportesSuscripcion') {
+			require_once('reportes_suscripcion/list.php');
 		}
 
 

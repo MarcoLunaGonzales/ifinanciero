@@ -14,10 +14,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
     $dbh = new Conexion();
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
     set_time_limit(300);
-    session_start();
-
-    
-    
+    session_start();    
         // date_default_timezone_set('America/La_Paz');
 
         $cod_solicitudfacturacion = -100;//desde la tienda usamos el -100
@@ -53,9 +50,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
         }else{
             $cod_tipopago = 0;
         }
-        // echo $tipoPago."tipo";
 
-        // $cod_cliente = 0;
         $cod_personal = 0;
         $razon_social = $razonSocial;
         $nitCliente = $nitciCliente;
@@ -64,7 +59,6 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
         $fechaFactura=$fechaFactura;
         $fecha_actual=date('Y-m-d');
         $fechaFactura_x=date('Y-m-d H:i:s');
-        // $fechaFactura_xy=date('Y-m-d');            
         
         //Para la facturacion con el SIAT ya no se usa las dosificaciones
         $cod_dosificacionfactura = 0;
@@ -78,38 +72,19 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
             //monto total redondeado
             $monto_total= $importeTotal;
             $totalFinalRedondeado=round($monto_total,0);                    
-            //NUMERO CORRELATIVO DE FACTURA
-            // echo $sucursalId;
             $nro_correlativo=0;
-            // $nro_correlativo = nro_correlativo_facturas($sucursalId);
-            //SACAMOS EL NRO CORRELATIVO DEL CORREO
-            // $nro_correlativoCorreo = nro_correlativo_correocredito($sucursalId,$cod_tipopago);
             $nro_correlativoCorreo = nro_correlativo_correocredito($sucursalId,$cod_tipopago);
 
-            // if($nro_correlativo==0){                
-            //     return "11###";//No tiene registrado La dosificación para la facturación
+            $code=0;// para el siat ya no se usa codigo de control  
 
-            // }else{                                   
-                    //echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fechaFactura:".$fechaFactura." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
-                $code=0;// para el siat ya no se usa codigo de control
-                // $controlCode = new ControlCode();
-                // $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
-                // $nro_correlativo,//Numero de factura
-                // $nitCliente,//Número de Identificación Tributaria o Carnet de Identidad
-                // str_replace('-','',$fechaFactura),//fecha de transaccion de la forma AAAAMMDD
-                // $totalFinalRedondeado,//Monto de la transacción
-                // $llaveDosificacion//Llave de dosificación
-                // );
-                //echo "cod:".$code;
-                $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,created_at,created_by, nro_correlativocorreo) 
+            $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,created_at,created_by, nro_correlativocorreo) 
                   values ('$sucursalId','$cod_solicitudfacturacion','$cod_uo_solicitud','$cod_area_solicitud',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0',NOW(),1,'$nro_correlativoCorreo')";
-                //echo $sql;
-                $stmtInsertSoliFact = $dbh->prepare($sql);
-                $flagSuccess=$stmtInsertSoliFact->execute();
-                $cod_facturaVenta = $dbh->lastInsertId();                    
-                // $flagSuccess=true;
-                if($flagSuccess){
-
+            //echo $sql;
+            $stmtInsertSoliFact = $dbh->prepare($sql);
+            $flagSuccess=$stmtInsertSoliFact->execute();
+            $cod_facturaVenta = $dbh->lastInsertId();                    
+            // $flagSuccess=true;
+            if($flagSuccess){
                     //add de estas lineas para facturacion con SIAT
                     $monto_totalCab=0;
                     $arrayDetalle=[];
@@ -181,14 +156,6 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                                 $sqlUpdateLibreta="UPDATE facturas_venta SET cod_comprobante=$cod_comprobante where codigo=$cod_facturaVenta";
                                 $stmtUpdateLibreta = $dbh->prepare($sqlUpdateLibreta);
                                 $stmtUpdateLibreta->execute();
-                                
-                                //********
-                                //preparamos datos para facturacion con el SIAT
-                                // $sqlInfo="SELECT (select stp.codigoClasificador from siat_tipos_pago stp where stp.cod_tipopago=f.cod_tipopago)as siat_tipoPago from facturas_venta f where f.codigo=$cod_facturaVenta";
-                                // $stmtInfo = $dbh->prepare($sqlInfo);
-                                // $stmtInfo->execute();
-                                // $resultInfo = $stmtInfo->fetch();
-                                // $siat_tipoPago = $resultInfo['siat_tipoPago'];
 
                                 $siat_tipoPago = 33;
 

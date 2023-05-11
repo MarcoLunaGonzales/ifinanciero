@@ -61,6 +61,59 @@ $usd=6.96;
 
 $nombreClienteX=obtenerNombreClienteSimulacion($codigo);
 
+/******************************************************/
+/*              ORGANISMO CERTIFICADOR                */
+/******************************************************/
+$sqlOC = "SELECT soc.cod_orgnismocertificador, oc.nombre
+          FROM simulaciones_servicios_organismocertificador soc 
+          LEFT JOIN organismo_certificador oc ON oc.codigo = soc.cod_orgnismocertificador
+          WHERE soc.cod_simulacionservicio = '$codigo'";
+$stmtOC = $dbh->prepare($sqlOC);
+$stmtOC->execute();
+$array_orgnismo_certificador  = [];
+$title_orgnismo_certificador  = '';
+$first_orgnismo_certificador  = '';
+while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
+    $array_orgnismo_certificador[]  = $rowOC['cod_orgnismocertificador'];
+    $title_orgnismo_certificador    .= $rowOC['nombre'].' / ';
+}
+$first_orgnismo_certificador = empty($title_orgnismo_certificador) ? '' : explode(' / ', $title_orgnismo_certificador)[0];
+
+/***********************************/
+/*              IAF                */
+/***********************************/
+$sqlOC = "SELECT si.cod_iaf, i.nombre
+          FROM simulaciones_servicios_iaf si 
+          LEFT JOIN iaf i ON i.codigo = si.cod_iaf
+          WHERE si.cod_simulacionservicio = '$codigo'";
+$stmtOC = $dbh->prepare($sqlOC);
+$stmtOC->execute();
+$array_cod_iaf  = [];
+$title_cod_iaf  = '';
+$first_cod_iaf  = '';
+while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
+    $array_cod_iaf[]  = $rowOC['cod_iaf'];
+    $title_cod_iaf    .= $rowOC['nombre'].' / ';
+}
+$first_cod_iaf = empty($title_cod_iaf) ? '' : explode(' / ', $title_cod_iaf)[0];
+
+/***************************************************/
+/*              Categoria Inocuidad                */
+/***************************************************/
+$sqlOC = "SELECT sci.cod_categoriainocuidad, ci.nombre
+          FROM simulaciones_servicios_categoriasinocuidad sci 
+          LEFT JOIN categorias_inocuidad ci ON ci.codigo = sci.cod_categoriainocuidad
+          WHERE sci.cod_simulacionservicio = '$codigo'";
+$stmtOC = $dbh->prepare($sqlOC);
+$stmtOC->execute();
+$array_cod_categoriainocuidad  = [];
+$title_cod_categoriainocuidad  = '';
+$first_cod_categoriainocuidad  = '';
+while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
+    $array_cod_categoriainocuidad[]  = $rowOC['cod_categoriainocuidad'];
+    $title_cod_categoriainocuidad    .= $rowOC['nombre'].' / ';
+}
+$first_cod_categoriainocuidad = empty($title_cod_categoriainocuidad) ? '' : explode(' / ', $title_cod_categoriainocuidad)[0];
 
 $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
 $precioLocalInputX=number_format($precioLocalX, 2, '.', '');
@@ -392,7 +445,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
           <div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
-						  		<label class="bmd-label-static">Fecha</label>
+						  		<label class="bmd-label-static">Fecha de Registro de Propuesta</label>
 						  		<input class="form-control" type="text" name="fecha" value="<?=$fechaX?>" id="fecha" readonly/>
 							</div>
 						</div>
@@ -439,8 +492,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 					  			<input class="form-control" type="text" name="nombre_plan" value="<?=$nombreClienteX?>" id="nombre_plan" READONLY />
 							</div>
 						</div>
-             
-						<div class="col-sm-2">
+            <!-- Componente Oculto -->
+						<div class="col-sm-2" hidden>
 							<div class="form-group">
 						  		<label class="bmd-label-static">Abreviatura</label>
 						  		<input class="form-control" type="text" name="abreviatura_plan" value="<?=$abreviaturaX?>" READONLY id="abreviatura_plan"/>
@@ -490,16 +543,36 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <input class="form-control" type="text" name="anio_simulacion" readonly value="<?=$anioGeneral?>" id="anio_simulacion"/>
               </div>
             </div>
-            <div class="col-sm-4">
+            <!-- Campo escondido -->
+            <div class="col-sm-4" hidden>
               <div class="form-group">
                   <label class="bmd-label-static">Precio BOB</label>
                   <input class="form-control" type="text" name="precio_auditoria_ib" readonly value="<?=$precioLocalInputX?>" id="precio_auditoria_ib"/>
               </div>
             </div>
-            <div class="col-sm-2">
+            <!-- Campo escondido-->
+            <div class="col-sm-2" hidden>
               <div class="form-group">
                   <label class="bmd-label-static">Precio USD</label>
                   <input class="form-control" type="text" name="precio_auditoria_ibUSD" readonly value="<?=$precioLocalInputXUSD?>" id="precio_auditoria_ibUSD"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group" title="<?=$title_cod_iaf?>">
+                  <label class="bmd-label-static">IAF</label>
+                  <input class="form-control" type="text" readonly value="<?=$first_cod_iaf?>"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group" title="<?=$title_cod_categoriainocuidad?>">
+                  <label class="bmd-label-static">Cat. Inocuidad</label>
+                  <input class="form-control" type="text" readonly value="<?=$first_cod_categoriainocuidad?>"/>
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <div class="form-group" title="<?=$title_orgnismo_certificador?>">
+                  <label class="bmd-label-static">Org. Certificador</label>
+                  <input class="form-control" type="text" readonly value="<?=$first_orgnismo_certificador?>"/>
               </div>
             </div>
 				      	<?php } ?>
@@ -827,8 +900,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            ?> 
           </div>
           <br>
-				  <div class="row"> 	
-					<div class="col-sm-6">
+				  <div class="d-flex justify-content-center"> 	
+					<div class="col-sm-6" hidden>
             <p class="font-weight-bold float-left">RESUMEN DE LA PROPUESTA</p>
             <table class="table table-bordered table-condensed">
               <tbody>
@@ -881,7 +954,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
               </tbody>
             </table>
            </div>
-          <div class="col-sm-6 bg-blanco2">
+          <div class="col-sm-8 bg-blanco2">
             <p class="font-weight-bold float-left">DATOS DEL CALCULO</p>
             <img src="../assets/img/f_abajo2.gif" alt="" height="30px" class="float-right">
 						<table class="table table-bordered table-condensed">
@@ -904,6 +977,18 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                   <td class="text-right font-weight-bold"><?=number_format($precioLocalX, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold"><?=number_format($precioLocalX/$usd, 2, '.', ',')?></td>
                   <td class="text-right font-weight-bold">100 %</td>
+                </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary text-white">COSTO FIJO TOTAL</td>
+                  <td class="text-right font-weight-bold"><?=number_format($costoFijoPrincipalPeriodo, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format($costoFijoPrincipalPeriodo/$usd, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format((($costoFijoPrincipalPeriodo)*100)/($precioLocalX), 2, '.', ',')?> %</td>
+                </tr>
+                <tr>
+                  <td class="text-left small bg-table-primary text-white">COSTO VARIABLE TOTAL + HONORARIOS</td>
+                  <td class="text-right font-weight-bold"><?=number_format((($totalVariable[2]*$alumnosX)+$costoVariablePersonal), 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format((($totalVariable[2]*$alumnosX)+$costoVariablePersonal)/$usd, 2, '.', ',')?></td>
+                  <td class="text-right font-weight-bold"><?=number_format(((($totalVariable[2]*$alumnosX)+$costoVariablePersonal)*100)/($precioLocalX), 2, '.', ',')?> %</td>
                 </tr>
                 <tr>
                   <td class="text-left small bg-table-primary2 text-white">TOTAL COSTOS</td>

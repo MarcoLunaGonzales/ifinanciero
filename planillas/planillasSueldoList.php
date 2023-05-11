@@ -18,11 +18,12 @@ $globalNombreGestion=$_SESSION['globalNombreGestion'];
 
 $dbh = new Conexion();
 
-  $stmtAdmnin = $dbh->prepare("SELECT codigo,cod_gestion,cod_mes,cod_estadoplanilla,comprobante,
-  (select m.nombre from meses m where m.codigo=cod_mes)as mes,
-  (select g.nombre from gestiones g where g.codigo=cod_gestion) as gestion,
-  (select ep.nombre from estados_planilla ep where ep.codigo=cod_estadoplanilla) as estadoplanilla,cod_comprobante_prevision
-  from planillas order by cod_gestion desc,cod_mes desc");
+$sql = "SELECT p.codigo,p.cod_gestion,p.cod_mes,p.cod_estadoplanilla,p.cod_estado_documento,p.comprobante,
+(select m.nombre from meses m where m.codigo=p.cod_mes)as mes,
+(select g.nombre from gestiones g where g.codigo=p.cod_gestion) as gestion,
+(select ep.nombre from estados_planilla ep where ep.codigo=p.cod_estadoplanilla) as estadoplanilla,p.cod_comprobante_prevision
+from planillas p order by cod_gestion desc,cod_mes desc";
+  $stmtAdmnin = $dbh->prepare($sql);
   $stmtAdmnin->execute();
   $stmtAdmnin->bindColumn('codigo', $codigo_planilla);
   $stmtAdmnin->bindColumn('gestion', $gestion);
@@ -30,6 +31,7 @@ $dbh = new Conexion();
   $stmtAdmnin->bindColumn('cod_mes', $cod_mes);
   $stmtAdmnin->bindColumn('mes', $mes);
   $stmtAdmnin->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
+  $stmtAdmnin->bindColumn('cod_estado_documento', $cod_estado_documento);
   $stmtAdmnin->bindColumn('estadoplanilla', $estadoplanilla);
   $stmtAdmnin->bindColumn('comprobante', $comprobante_x);
   $stmtAdmnin->bindColumn('cod_comprobante_prevision', $cod_comprobante_prevision);
@@ -38,6 +40,14 @@ $dbh = new Conexion();
   $modified_at="";
   $modified_by="";
   ?>
+
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
+
   <div class="content">
     <div class="container-fluid">
       <div class="col-md-12">     
@@ -111,7 +121,8 @@ $dbh = new Conexion();
                            from planillas_uo_cerrados where cod_planilla=$codigo_planilla and cod_uo=$cod_uo_aux");
                         $stmtAdmninUOAux2->execute();
                         $resultAdmninUOAux2=$stmtAdmninUOAux2->fetch();
-                        $cod_uo_aux2=$resultAdmninUOAux2['cod_uo'];                    
+                        // Corrección por tener valor vacio
+                        $cod_uo_aux2=empty($resultAdmninUOAux2['cod_uo'])?'':$resultAdmninUOAux2['cod_uo'];                    
                         if($cod_uo_aux==$cod_uo_aux2){
                           $label_uo_aux.='<span class="badge badge-success">'.$nombre_uo_aux.'</span>';
                         }else{
@@ -121,7 +132,12 @@ $dbh = new Conexion();
                     }
                     if($cod_estadoplanilla==3){                      
                       $label='<span class="badge badge-success">';
-                    }                  
+                    }    
+                    
+                    // Estado Cerrado Vacio
+                    if($cod_estadoplanilla==4){
+                      $label_uo_aux.='<span class="badge badge-success">Cerrado Vacio</span>';
+                    }              
                     ?>
                     <tr>                    
                       <td><?=$gestion?></td>
@@ -184,7 +200,24 @@ $dbh = new Conexion();
                           <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-danger">
                             <i class="material-icons" title="Ver Planilla Triburaria PDF">remove_red_eye</i> PT                       
                           </a>
-                        <?php }?>                                                                
+                        <?php }?> 
+
+                        
+                        <?php if($cod_estado_documento == 1){    ?>  
+                          <!-- CAMBIAR DE ESTADO DE DOCUMENTOS -->
+                          <button type="button" class="btn btn-warning update_estado_documento" title="Cerrar acción de Ajuntar Archivos" data-codigo="<?=$codigo_planilla;?>">
+                            <i class="material-icons">folder</i>                       
+                          </button>   
+                        <?php }?>   
+
+                        <?php if(!in_array($cod_estadoplanilla, [4])){    ?>
+                          <!-- CAMBIAR DE ESTADO DE PLANILLA A CERRADO VACIO -->
+                          <button type="button" class="btn btn-default update_planilla_cerrado_vacio" title="Cerrar planilla en vacío" data-codigo="<?=$codigo_planilla;?>">
+                            <i class="material-icons">perm_data_setting</i>     
+                          </button>  
+                        <?php }?>    
+
+
                       </td>
                       <td class="td-actions text-right">
                         <?php                      
@@ -206,11 +239,6 @@ $dbh = new Conexion();
                           ?> 
                           <li role="presentation"><a role="item" href="<?=$urlPlanillaSueldoPersonalReporte;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><small>Ver Todo con % Persona</small></a></li>
                           <li role="presentation"><a role="item" href="planillas/planillaSueldoPersonalReporte2.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&codigo_uo=-100" target="_blank"><small>Ver Todo</small></a></li>
-
-
-                          <li role="presentation"><a role="item" href="boletas/boletas_print_nuevo.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><i class="material-icons text-rose">class</i><small>BOLETAS</small></a></li>
-
-
                           </ul>
                         </div>
                         <div class="dropdown">
@@ -276,8 +304,6 @@ $dbh = new Conexion();
                     
                     <td class="text-center td-actions ">
                       
-                        
-
                         <div class="dropdown">
                           <button class="btn btn-info dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
                             <i class="material-icons" title="Comprobante">chrome_reader_mode</i>
@@ -286,11 +312,41 @@ $dbh = new Conexion();
                           
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
                             
+                            <?php if($cod_estadoplanilla != 4){ ?>
                             <li>
                               <button type="button" class="dropdown-item" data-toggle="modal" data-target="#modalVistaPreviaPlanilla" onclick="agregarDatosVistaPreviaPlanilla('<?=$codigo_planilla;?>','<?=$cod_mes?>','<?=$cod_gestion?>')">
                               <i class="material-icons">list</i>Vista Previa
                             </button> 
                             </li>
+                            <!--li role="presentation">
+                              <a role="item" href="boletas/boletas_print_nuevo.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><i class="material-icons text-rose">preview</i><small>Boletas</small></a>
+                            </li-->
+                            <li role="presentation" onclick="sendEmailBoleta(<?=$codigo_planilla;?>)">
+                              <a role="item" 
+                                href="#">
+                                <i class="material-icons text-rose">email</i><small>Enviar Boletas por Correo</small></a>
+                            </li>
+                            <li role="presentation">
+                              <a role="item" href="index.php?opcion=planillasSueldoPersonalDetail&codigo_planilla=<?=$codigo_planilla;?>">
+                                <i class="material-icons text-success">assessment</i><small> Reporte Visitas</small></a>
+                            </li>
+                            <?php } ?>
+                            
+                            <?php if($cod_estado_documento == 1){ ?>
+                              <li>
+                                  <button type="button" class="dropdown-item adjuntarNuevoArchivo" data-cod_planilla="<?=$codigo_planilla;?>">
+                                      <i class="material-icons">archive</i>Adjuntar Archivo
+                                  </button> 
+                              </li>
+                            <?php } ?>
+
+                            <li>
+                                <button type="button" class="dropdown-item listarArchivos" data-cod_planilla="<?=$codigo_planilla;?>" data-cod_estado_documento="<?=$cod_estado_documento;?>">
+                                    <i class="material-icons">list</i>Lista Archivos
+                                </button> 
+                            </li>
+
+
                             <?php if($comprobante_x==0){ ?>
                             <li>
                               <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlPlanillaContabilizacion;?>?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>')"> 
@@ -471,12 +527,27 @@ $dbh = new Conexion();
     </div>
   </div>
 
+    <!-- Modal Lista Documentos -->
+    <div class="modal fade" id="modalListaDocumentosPlanilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-primary font-weight-bold" id="myModalLabel3">Lista Documentos Respaldo</h4>
+                </div>
+                <div class="modal-body" id="modal-lista_documentos">
+                    <h2>porueba</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
   <div class="modal fade" id="modalVistaPreviaPlanilla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title text-danger font-weight-bold" id="myModalLabel">CONTABILIZACION PLANILLA - VISTA PREVIA</h4>
+          <h4 class="modal-title text-danger font-weight-bold" id="myModalLabel">Formular</h4>
         </div>
         <div class="modal-body" id="div_contenedor_vistaprevia_planilla">
           <table class="table table-condensed" >
@@ -497,6 +568,34 @@ $dbh = new Conexion();
       </div>
     </div>
   </div>
+    <!-- Modal Detalle de Formulario Documento -->
+    <div class="modal fade" id="modalNuevoDocumento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title text-primary font-weight-bold" id="myModalLabel">Documentos Respaldo</h4>
+                </div>
+            <div class="modal-body">
+                <form id="doc_form">
+                    <div class="row">
+                        <input type="hidden" id="doc_cod_planilla"/>
+                        <label class="col-sm-2"><span class="text-danger">*</span> Archivo :</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="file" id="doc_file" placeholder="Agrear Archivo"/>
+                        </div>
+                        <label class="col-sm-2"><span class="text-danger">*</span> Descripción :</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" id="doc_descripcion" placeholder="Agregar una descripción del Archivo"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="save_documento" class="btn btn-success">Guardar</button>
+            </div>
+        </div>
+    </div>
 
 
   <script type="text/javascript">
@@ -541,4 +640,255 @@ $dbh = new Conexion();
         $("#icono_"+codigo).html("add_circle"); 
       }   
     }
+
+    
+function sendEmailBoleta(cod_planilla){
+    let formData = new FormData();
+    formData.append('cod_planilla', cod_planilla);
+    swal({
+        title: '¿Esta Seguro de Continuar?',
+        text: "Se enviará un correo a todo el personal de la institución.",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-warning',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.value) {
+            $(".cargar-ajax").removeClass("d-none");
+            $.ajax({
+                url:"sendEmailPlanilla.php",
+                type:"POST",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success:function(response){
+                let resp = JSON.parse(response);
+                if(resp.status){        
+                    // Mensaje
+                    Swal.fire({
+                        type: 'success',
+                        title: 'Correcto!',
+                        text: 'El proceso se completo correctamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                        
+                    setTimeout(function(){
+                        location.reload()
+                    }, 1550);
+                }else{
+                    Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                    }
+                }
+            });
+        }
+    });
+
+}
+    // Apertura de Modal
+    $('.adjuntarNuevoArchivo').on('click', function(){
+        $("#doc_form")[0].reset();
+        $('#doc_cod_planilla').val($(this).data('cod_planilla'));
+        $('#modalNuevoDocumento').modal('show');
+    })
+    // Lista de Archivos Adjuntos
+    $('.listarArchivos').on('click', function(){
+        let formData = new FormData();
+        formData.append('cod_planilla', $(this).data('cod_planilla'));
+        formData.append('cod_estado_documento', $(this).data('cod_estado_documento'));
+        $.ajax({
+            url:"planillas/ajax_listaDocumentos.php",
+            type:"POST",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success:function(response){
+                $('#modal-lista_documentos').html(response);
+                $('#modalListaDocumentosPlanilla').modal('show');
+            }
+        });
+    });
+    // Guardar Archivo
+    $('#save_documento').on('click', function(){
+        if($("#descripcion").val() != '' && $("#file").val() != ''){
+            let formData = new FormData();
+            formData.append('cod_planilla', $('#doc_cod_planilla').val());
+            formData.append('descripcion', $('#doc_descripcion').val());
+            formData.append('file', $("#doc_file")[0].files[0]);
+            $.ajax({
+                url:"planillas/savePlanillaDocumento.php",
+                type:"POST",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success:function(response){
+                    let resp = JSON.parse(response);
+                    $('#modalNuevoDocumento').modal('toggle');
+                    if(resp.status){
+                        Swal.fire({
+                            type: 'success',
+                            title: 'Correcto!',
+                            text: 'El proceso se completo correctamente!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }else{
+                        Swal.fire(
+                            'Oops...',
+                            'Ocurrio un error inesperado',
+                            'error'
+                        );
+                    }
+                }
+            });
+        }else{
+            Swal.fire(
+                'Oops...',
+                '¡Debe completar el formulario!',
+                'warning'
+            );
+        }
+    });
+    // Eliminacion de archivo (Lógico)
+    $('body').on('click','.eliminar_archivo', function(){
+      let formData = new FormData();
+      // codigo Planilla
+      formData.append('codigo', $(this).data('codigo'));
+      swal({
+          title: '¿Esta seguro de Eliminar?',
+          text: "Se eliminará el archivo seleccionado.",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonClass: 'btn btn-success',
+          cancelButtonClass: 'btn btn-danger',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+              $.ajax({
+                  url:"planillas/ajax_eliminarDocumento.php",
+                  type:"POST",
+                  contentType: false,
+                  processData: false,
+                  data: formData,
+                  success:function(response){
+                  $('#modalListaDocumentosPlanilla').modal('toggle');
+                  let resp = JSON.parse(response);
+                  if(resp.status){        
+                      // Mensaje
+                      Swal.fire({
+                          type: 'success',
+                          title: 'Correcto!',
+                          text: 'El proceso se completo correctamente!',
+                          showConfirmButton: false,
+                          timer: 1500
+                      });
+                  }else{
+                      Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                      }
+                  }
+              });
+          }
+      });
+    });
+
+    // Cambiar Estado de proceso de administración de Documentos
+    $('body').on('click','.update_estado_documento', function(){
+      let formData = new FormData();
+      // codigo Planilla
+      formData.append('codigo', $(this).data('codigo'));
+      swal({
+          title: '¿Esta seguro de Cerrar Archivos?',
+          text: "Se cerrará el proceso de adjunción de archivos, no se podrá revertir la acción.",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonClass: 'btn btn-success',
+          cancelButtonClass: 'btn btn-danger',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+              $.ajax({
+                  url:"planillas/ajax_updateEstadoDocumento.php",
+                  type:"POST",
+                  contentType: false,
+                  processData: false,
+                  data: formData,
+                  success:function(response){
+                  let resp = JSON.parse(response);
+                  if(resp.status){        
+                      // Mensaje
+                      Swal.fire({
+                          type: 'success',
+                          title: 'Correcto!',
+                          text: 'El proceso se completo correctamente!',
+                          showConfirmButton: false,
+                          timer: 1500
+                      });
+                      
+                      setTimeout(function(){
+                          location.reload()
+                      }, 1550);
+                  }else{
+                      Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                      }
+                  }
+              });
+          }
+      });
+    });
+
+    // Cambiar Estado de Planilla a Cerrado en Vacio
+    $('body').on('click','.update_planilla_cerrado_vacio', function(){
+      let formData = new FormData();
+      // codigo Planilla
+      formData.append('codigo', $(this).data('codigo'));
+      swal({
+          title: '¿Esta seguro de cerrar Planilla en Vacio?',
+          text: "Se cerrará la planilla sin contenido, no se podrá revertir la acción.",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonClass: 'btn btn-success',
+          cancelButtonClass: 'btn btn-danger',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+              $.ajax({
+                  url:"planillas/ajax_updateEstadoPlanilla.php",
+                  type:"POST",
+                  contentType: false,
+                  processData: false,
+                  data: formData,
+                  success:function(response){
+                  let resp = JSON.parse(response);
+                  if(resp.status){        
+                      // Mensaje
+                      Swal.fire({
+                          type: 'success',
+                          title: 'Correcto!',
+                          text: 'El proceso se completo correctamente!',
+                          showConfirmButton: false,
+                          timer: 1500
+                      });
+                      
+                      setTimeout(function(){
+                          location.reload()
+                      }, 1550);
+                  }else{
+                      Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                      }
+                  }
+              });
+          }
+      });
+    });
+    
+    
   </script>

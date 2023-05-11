@@ -63,6 +63,7 @@ if($banderaLogin==1 || $tipoLogin==1){
 	}
 
 	//echo $sql;
+	
 	/*if($idUsuarioSW==47770){
 		$idUsuarioSW=49299;
 	}*/
@@ -144,6 +145,10 @@ if($banderaLogin==1 || $tipoLogin==1){
 		
 		$_SESSION['globalServerArchivos']="http://ibnored.ibnorca.org/itranet/documentos/";
 
+		// $_SESSION['globalCredUser']		= $_POST["user"];
+		$_SESSION['globalCredUser']	= 'juan.quenallata@ibnorca.org';
+		// $_SESSION['globalCredPassword']	= md5($_POST["password"]);
+		$_SESSION['globalCredPassword']= md5('juanito2020');
 
 		$sIdentificador = "ifinanciero";
 		$sKey="ce94a8dabdf0b112eafa27a5aa475751";

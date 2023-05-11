@@ -3229,6 +3229,9 @@ function guardarSimulacionCosto(){
   var normas_int=$("#normas_int").val();
   var ibnorca = 1;
 
+  // Nuevo campo LEAD
+  var lead_cliente = $('#lead_cliente').val();
+
   console.log("personal: "+cod_personal);
   console.log("cliente: "+cod_cliente);
   console.log("fecha sol cliente: "+fecha_solicitud_cliente);
@@ -3240,7 +3243,7 @@ function guardarSimulacionCosto(){
   if(nombre=="" || !(plantilla_costo>0) || cantidad_modulos=="" || monto_norma=="" || cod_personal==0){
    Swal.fire('Informativo!','Debe llenar los campos!','warning'); 
   }else{
-     var parametros={"normas":normas,"normas_int":normas_int,"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos,"IdCurso":idCurso,"IdModulo":idModulo,"codigo_personal":cod_personal,"codigo_cliente":cod_cliente,"fecha_solicitud_cliente":fecha_solicitud_cliente};
+     var parametros={"normas":normas,"normas_int":normas_int,"fecha_estimada":fecha_estimada,"cantidad_dias":cantidad_dias,"tipo_curso":tipo_curso,"monto_norma":monto_norma,"nombre":nombre,"plantilla_costo":plantilla_costo,"precio":precio,"ibnorca":ibnorca,"cantidad_modulos":cantidad_modulos,"IdCurso":idCurso,"IdModulo":idModulo,"codigo_personal":cod_personal,"codigo_cliente":cod_cliente,"fecha_solicitud_cliente":fecha_solicitud_cliente,"lead_cliente":lead_cliente};
      $.ajax({
         type: "GET",
         dataType: 'html',
@@ -3305,6 +3308,7 @@ function guardarSimulacionServicio(){
   
   console.log("personal: "+cod_personal);
 
+  var organismo_certificador=$("#organismo_certificador").val();
   if($("#productos_div").hasClass("d-none")){
    if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
    Swal.fire('Informativo!','Debe llenar los campos  1 !','warning'); 
@@ -3316,7 +3320,7 @@ function guardarSimulacionServicio(){
     var des_serv=$("#d_servicio").val();
     var iaf_primario=$("#iaf_primario_tcs").val();
     var iaf_secundario=$("#iaf_secundario_tcs").val();
-    var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2,"codigo_personal":cod_personal,"fecha_solicitud_cliente":fecha_solicitud_cliente};
+    var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2,"codigo_personal":cod_personal,"fecha_solicitud_cliente":fecha_solicitud_cliente, "organismo_certificador":organismo_certificador};
     $.ajax({
         type: "POST",
         dataType: 'html',
@@ -3368,7 +3372,7 @@ function guardarSimulacionServicio(){
       var iaf_secundario=$("#iaf_secundario").val();
       objeto=0;
       var des_serv=$("#d_servicio_p").val();
-      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1,"fecha_solicitud_cliente":fecha_solicitud_cliente};
+      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1,"fecha_solicitud_cliente":fecha_solicitud_cliente, "organismo_certificador":organismo_certificador};
      $.ajax({
         type: "POST",
         dataType: 'html',
@@ -8228,6 +8232,12 @@ function guardarDatosPlantilla(btn_id){
        mensajeError="La cantidad de Estudiantes de la Tabla de Precios no iguala a la cantidad total de estudiantes.";
        error=1;
     }
+    // Verificacción de Cantidad de items dentro de TBODY
+    let count_item = $('body #modal_body_tabla_alumnos tr').length;
+    if(count_item < 1){
+        mensajeError="Debe registar al menos un detalle para el registro de precios de la propuesta.";
+        error=1;
+    }
 
    if(error==0){
      $("#"+btn_id).attr("disabled",true); 
@@ -8498,9 +8508,15 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
         } 
       }
 
+      console.log('pasa')
+
+      var organismo_certificador = $("#organismo_certificador").val();    // IAF
+      iaf_primario           = $("#iaf_primario").val();    // IAF
+      iaf_secundario         = $("#iaf_secundario").val();  // Categoria Inocuidad
+
       //datos afnor
       var des_serv = $("#modal_des_serv").val();
-      var parametros = {"mod_afnor":mod_afnor,"mod_region_cliente":mod_region_cliente,"mod_tipo_cliente":mod_tipo_cliente,"mod_cliente":mod_cliente,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
+      var parametros = {"mod_afnor":mod_afnor,"mod_region_cliente":mod_region_cliente,"mod_tipo_cliente":mod_tipo_cliente,"mod_cliente":mod_cliente,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"organismo_certificador":organismo_certificador,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
       $.ajax({
         type:"POST",
         data:parametros,
@@ -11692,11 +11708,13 @@ function agregarAtributoAjax(){
     $("#lbl_nombre_atributo").text("Producto");
    }
    $("#pais_empresa").val("26####BOLIVIA"); //para el pais de BOLIVIA
-    if($("#modalEditPlantilla").length){
-      seleccionarDepartamentoServicioSitioModal(1);  
-    }else{
-       seleccionarDepartamentoServicioSitio(1);  
-    }
+    
+    //  Acción que carga SELECT PAIS, DEPARTAMENTO 
+    // if($("#modalEditPlantilla").length){
+    //   seleccionarDepartamentoServicioSitioModal(1);  
+    // }else{
+    //    seleccionarDepartamentoServicioSitio(1);  
+    // }
 
 }
 
@@ -11735,8 +11753,10 @@ function listarAtributo(){
               tituloTD="Et "+(k+1);
             } 
           }
-          titulos.append('<td width="6%" class="bg-principal">'+tituloTD+'</td>');
-          titulos.append('<td width="8%" class="bg-plomo text-dark">EA</td>');    
+          /* #SIN FUNCIONALIDAD#  Se quito cabecera*/
+          /* Modificacion en la linea, titulos */
+          // titulos.append('<td width="6%" class="bg-principal">'+tituloTD+'</td>');
+          // titulos.append('<td width="8%" class="bg-plomo text-dark">EA</td>');    
         };
        }
       }
@@ -11750,10 +11770,7 @@ function listarAtributo(){
      row.append($('<td>').addClass('').text(itemAtributos[i].nombre));
      row.append($('<td>').addClass('').text(itemAtributos[i].direccion)); 
      if(!($("#productos_div").hasClass("d-none"))){
-      row.append($('<td>').addClass('').text(itemAtributos[i].marca));
-      row.append($('<td>').addClass('').text(itemAtributos[i].norma));
-      row.append($('<td>').addClass('').text(itemAtributos[i].sello));
-      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));    /* #SIN FUNCIONALIDAD# */
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
      }else{
@@ -11761,15 +11778,19 @@ function listarAtributo(){
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
       if($("#modalEditPlantilla").length>0){
-       if($("#codigo_area").val()!=39){
+      /* #SIN FUNCIONALIDAD# Se quito la opcion de llenado ET, EA, cabeceras antiguas */
+      if($("#codigo_area").val()!=39){
+      // if(false){
         for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
           for (var j= 0; j< itemAtributosDias.length; j++) {
            if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
             sumaDias[k]+=parseFloat(itemAtributosDias[j].dias);
-            row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
-            row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
-              $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
-              '</select></td>');  
+            // Cambio de Monto Días
+            // row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>'); 
+            // Auditores 
+            // row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
+            //   $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
+            //   '</select></td>');  
             //alerta 2 0 3
            } 
          };     
@@ -11779,14 +11800,17 @@ function listarAtributo(){
      }
        $('.selectpicker').selectpicker("refresh");
        if($("#sinEdicionModal").length>0){
-         row.append($('<td>').addClass('text-right small').html(''));
+        //  row.append($('<td>').addClass('text-right small').html(''));
        }else{
          row.append($('<td>').addClass('text-right small').html('<div class="btn-group"><button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributo('+i+');"><i class="material-icons" >edit</i></button><button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="removeAtributo('+i+');"><i class="material-icons">delete</i></button></div>'));    
        }
      
      table.append(row);
    }
-   if($("#modalEditPlantilla").length>0){
+   
+    /* #SIN FUNCIONALIDAD# Se quito campos de totales */
+    //  if($("#modalEditPlantilla").length>0){ // Original
+    if(false){
     if($("#codigo_area").val()!=39){
       var row = $('<tr>').addClass('');
       row.append($('<td>').addClass('font-weight-bold text-center').attr('colspan',6).text('TOTALES'));
@@ -11821,23 +11845,25 @@ function listarAtributoUltimo(){
       row.append($('<td>').addClass('').text(itemAtributos[i].marca));
       row.append($('<td>').addClass('').text(itemAtributos[i].norma));
       row.append($('<td>').addClass('').text(itemAtributos[i].sello));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
      }else{
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
-      row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
       if($("#modalEditPlantilla").length>0){
        if($("#codigo_area").val()!=39){
         for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
           for (var j= 0; j< itemAtributosDias.length; j++) {
            if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
             sumaDias[k]+=parseFloat(itemAtributosDias[j].dias);
-            row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
-            row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
-              $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
-              '</select></td>');  
+            // Cambiar monto días
+            // row.append('<td><input id="sitio_dias'+j+'" onchange="cambiarMontoDiasSitio('+j+')" onkeypress="cambiarMontoDiasSitio('+j+')" onkeyup="cambiarMontoDiasSitio('+j+')" class="form-control" type="number" value="'+itemAtributosDias[j].dias+'"></td>');  
+            // Auditores
+            // row.append('<td><select title="-" data-actions-box="true" class="form-control selectpicker form-control-sm" multiple data-style="fondo-boton fondo-boton-active" name="auditores'+j+'[]" id="auditores'+j+'">'+
+            //   $("#auditores"+k+"EEEE"+itemAtributosDias[j].codigo_atributo).html()+
+            //   '</select></td>');  
             //alerta 2 0 3
            } 
          };     
@@ -11932,22 +11958,38 @@ function guardarAtributoItem(){
   var fila=$("#modal_fila").val();
   if(fila<0){
     var codigoNuevo=itemAtributos.length;
+    // var atributo={
+    // codigo:codigoNuevo,  
+    // nombre: $('#modal_nombre').val(),
+    // direccion: $('#modal_direccion').val(),
+    // norma:norma,
+    // norma_cod:norma_cod,
+    // norma_otro:norma_otro,
+    // marca:marca,
+    // sello:sello,
+    // pais:pais,
+    // estado:estado,
+    // ciudad:ciudad,
+    // nom_pais:nom_pais,
+    // nom_estado:nom_estado,
+    // nom_ciudad:nom_ciudad
+    // }
     var atributo={
-    codigo:codigoNuevo,  
-    nombre: $('#modal_nombre').val(),
-    direccion: $('#modal_direccion').val(),
-    norma:norma,
-    norma_cod:norma_cod,
-    norma_otro:norma_otro,
-    marca:marca,
-    sello:sello,
-    pais:pais,
-    estado:estado,
-    ciudad:ciudad,
-    nom_pais:nom_pais,
-    nom_estado:nom_estado,
-    nom_ciudad:nom_ciudad
-    }
+      codigo:codigoNuevo,  
+      nombre: $('#modal_nombre').val(),
+      direccion: $('#modal_direccion').val(),
+      norma:norma,
+      norma_cod:norma_cod,
+      norma_otro:norma_otro,
+      marca:marca,
+      sello:sello,
+      pais:0,
+      estado:estado,
+      ciudad:0,
+      nom_pais:'',
+      nom_estado:'',
+      nom_ciudad:''
+      }
   itemAtributos.push(atributo);
    if($("#modalEditPlantilla").length){
     //agregar Nuevo dias sitios
@@ -19932,7 +19974,8 @@ var itemDatosClienteActualizar_contactos_mae=[];
 function modalActualizarDatosCliente(cod_area){
   iniciarCargaAjax();
   var codigo_cliente=$("#cliente").val();
-  var parametos={"codigo_cliente":codigo_cliente};
+  var parametos={"codigo_cliente":$("#cliente").val()};
+  itemDatosClienteActualizar=[];
   var destino = "simulaciones_servicios/ajax_datosClienteActualizarPropuesta.php"; 
   $.ajax({
     url: destino,
@@ -19951,28 +19994,61 @@ function modalActualizarDatosCliente(cod_area){
   var datos_mae=itemDatosClienteActualizar_contactos_mae;
   //console.log(itemDatosClienteActualizar_contactos_mae);
   $("#nit_cliente").val(datos[0]['nit']); 
+  $("#nit_cliente_actualizar").val(datos[0]['nit']); 
+  
   $("#razon_social_cliente").val(datos[0]['razonSocial']);
-  $("#direccion_cliente").val(datos[0]['direccion']);
-  $("#pais_cliente").val(datos[0]['pais']);
-  $("#ciudad_cliente").val(datos[0]['ciudad']);
-  $("#departamento_cliente").val(datos[0]['departamento']);
-  $("#telefono_cliente").val(datos[0]['telefono']);
-  $("#fax_cliente").val(datos[0]['fax']);
-  $("#email_cliente").val(datos[0]['email']);
-  $("#web_cliente").val(datos[0]['web']);
+  $("#razon_social_cliente_actualizar").val(datos[0]['razonSocial']);
 
+  $("#direccion_cliente").val(datos[0]['direccion']);
+  $("#direccion_cliente_actualizar").val(datos[0]['direccion']);
+
+  $("#pais_cliente").val(datos[0]['pais']);
+  $("#pais_cliente_actualizar").val(datos[0]['pais']);
+
+  $("#ciudad_cliente").val(datos[0]['ciudad']);
+  $("#ciudad_cliente_actualizar").val(datos[0]['ciudad']);
+
+  $("#departamento_cliente").val(datos[0]['departamento']);
+  $("#departamento_cliente_actualizar").val(datos[0]['departamento']);
+
+  $("#telefono_cliente").val(datos[0]['telefono']);
+  $("#telefono_cliente_actualizar").val(datos[0]['telefono']);
+
+  $("#fax_cliente").val(datos[0]['fax']);
+  $("#fax_cliente_actualizar").val(datos[0]['fax']);
+
+  $("#email_cliente").val(datos[0]['email']);
+  $("#email_cliente_actualizar").val(datos[0]['email']);
+
+  $("#web_cliente").val(datos[0]['web']);
+  $("#web_cliente_actualizar").val(datos[0]['web']);
+
+  
   if(datos_mae.length>0){
     $("#id_contacto_mae").val(datos_mae[0]['IdContacto']);
     $("#mae_nombre").val(datos_mae[0]['NombreCompleto']);
     $("#mae_cargo").val(datos_mae[0]['CargoContacto']);
     $("#mae_telefono").val(datos_mae[0]['FonoContacto']);
     $("#mae_email").val(datos_mae[0]['CorreoContacto']);
+
+    // Campo de actualización
+    $("#id_contacto_mae_actualizar").val(datos_mae[0]['IdContacto']);
+    $("#mae_nombre_actualizar").val(datos_mae[0]['NombreCompleto']);
+    $("#mae_cargo_actualizar").val(datos_mae[0]['CargoContacto']);
+    $("#mae_telefono_actualizar").val(datos_mae[0]['FonoContacto']);
+    $("#mae_email_actualizar").val(datos_mae[0]['CorreoContacto']);
   }else{
     $("#id_contacto_mae").val(0);
     $("#mae_nombre").val("");
     $("#mae_cargo").val("");
     $("#mae_telefono").val("");
     $("#mae_email").val("");
+    // Campos de Actulización Limpia
+    $("#id_contacto_mae_actualizar").val(0);
+    $("#mae_nombre_actualizar").val("");
+    $("#mae_cargo_actualizar").val("");
+    $("#mae_telefono_actualizar").val("");
+    $("#mae_email_actualizar").val("");
   }
   
 
@@ -19980,6 +20056,11 @@ function modalActualizarDatosCliente(cod_area){
   $("#contacto_cargo").val("");
   $("#contacto_telefono").val("");
   $("#contacto_email").val("");
+  // Actualiza Datos
+  $("#contacto_nombre_actualizar").val("");
+  $("#contacto_cargo_actualizar").val("");
+  $("#contacto_telefono_actualizar").val("");
+  $("#contacto_email_actualizar").val("");
 
   $("#cod_area_contacto").val(cod_area);
   //seleccionamos los contactos de los clientes
@@ -20065,6 +20146,11 @@ function modalActualizarDatosCliente_Contactos(combo){
       $("#contacto_cargo").val(datos_contactos[fila]['CargoContacto']);
       $("#contacto_telefono").val(datos_contactos[fila]['FonoContacto']);
       $("#contacto_email").val(datos_contactos[fila]['CorreoContacto']);
+      // Campos de Edición de Datos
+      $("#contacto_nombre_actualizar").val(datos_contactos[fila]['NombreCompleto']);
+      $("#contacto_cargo_actualizar").val(datos_contactos[fila]['CargoContacto']);
+      $("#contacto_telefono_actualizar").val(datos_contactos[fila]['FonoContacto']);
+      $("#contacto_email_actualizar").val(datos_contactos[fila]['CorreoContacto']);
     }
   }
 }
@@ -20501,6 +20587,7 @@ function agregarDatosVistaPreviaPlanilla(codigo_planilla,cod_mes,cod_gestion){
 }
 
 
+
 //Incremento Salarial y retroactivos
 function cargar_dataTable_ajax_list_buscador(tabla){
   // DataTable
@@ -20686,3 +20773,43 @@ function CerrarPlanillaRetroactivo(cod_planilla){
     }
   });
 }
+
+// Abrir modal
+$('body').on('click', '.btn-sim-update-cliente', function(){
+  $('#sim_codigo').val($(this).data('sim_codigo'));
+  $('#modalActualizarCliente').modal('show');
+});
+// Función para Actualizar Cliente
+function simulacionUpdateCliente(){
+  $('#modalActualizarCliente').modal('hide');
+  let formData = new FormData();
+  formData.append('codigo', $('#sim_codigo').val());
+  formData.append('cod_cliente', $('#sim_cod_cliente').val());
+  $.ajax({
+    url:"simulaciones_costos/UpdateSimulacionCliente.php",
+    type:"POST",
+    contentType: false,
+    processData: false,
+    data: formData,
+    success:function(response){
+      let resp = JSON.parse(response);
+      if(resp.status){        
+        // Mensaje
+        Swal.fire({
+            type: 'success',
+            title: 'Correcto!',
+            text: 'El proceso se completo correctamente!',
+            showConfirmButton: false,
+            timer: 1500
+        });
+            
+        setTimeout(function(){
+            location.reload()
+        }, 1550);
+      }else{
+          Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+        }
+    }
+  });
+}
+

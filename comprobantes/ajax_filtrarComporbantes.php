@@ -20,9 +20,12 @@ $globalUnidad=$_SESSION["globalUnidad"];
 $globalArea=$_SESSION["globalArea"];
 $globalMesTrabajo=$_SESSION['globalMes'];
 $globalUser=$_SESSION["globalUser"];
-
+$globalCodigoGestion=$_SESSION['globalGestion']; 
 
 $codigo_tipo=$_GET['codigo'];
+
+//OBTENEMOS EL ESTADO DE LA GESTION
+$estadoGestionComprobante=obtenerEstadoGestion($globalCodigoGestion);
 
 
 // $unidadOrgString=implode(",", $cod_uo);
@@ -179,9 +182,9 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
         if($codigoSol[1]==0 || $globalUnidad==3000){
           if($existeCuenta==0 || $globalUnidad==3000){
                     $codCajaChica=existeCajaChicaRelacionado($codigo);
-              if($codCajaChica>0){
+              if($codCajaChica>0 || $estadoGestionComprobante!=1){
                 $nombreCaja=obtenerObservacionCajaChica($codCajaChica);
-                ?><a href='#' rel="tooltip" class="btn btn-primary" title="No Editable Caja Chica :<?=$nombreCaja?>">
+                ?><a href='#' rel="tooltip" class="btn btn-primary" title="No Editable ">
                       <i class="material-icons"><?=$iconEdit;?></i>
                     </a><?php
                }else{
@@ -196,14 +199,15 @@ $stmt->bindColumn('salvado_temporal', $salvadoC);
                        </a>
                   <?php
                     }  
-         } 
-          ?>
-        
-        
-        <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
-          <i class="material-icons"><?=$iconDelete;?></i>
-        </button>
-        <?php }
+         }
+              if($estadoGestionComprobante==1){
+          ?>        
+              <button rel="tooltip" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
+                <i class="material-icons"><?=$iconDelete;?></i>
+              </button>
+        <?php 
+               }
+              }
         }  ?>
       </td>
     </tr>

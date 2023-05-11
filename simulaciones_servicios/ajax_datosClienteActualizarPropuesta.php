@@ -16,7 +16,8 @@ $datosCliente=obtenerListaClientesWS_X($codigo_cliente);
 $detalle_cliente=$datosCliente->datos;
 // foreach ($lista->datos as $listaCliente) {    
     $nombreX=$detalle_cliente->NombreRazon;
-    $identificacionX=$detalle_cliente->Identificacion;
+    
+    // $identificacionX=$detalle_cliente->Identificacion;
     if($identificacionX==null || $identificacionX=="" || $identificacionX==" " || $identificacionX==0){
         $sql="SELECT identificacion from clientes where codigo=$codigo_cliente";
         $stmt = $dbh->prepare($sql);
@@ -26,6 +27,9 @@ $detalle_cliente=$datosCliente->datos;
             $identificacionX=$row['identificacion'];
         }
     }
+
+    $identificacionX=$detalle_cliente->NIT;
+
     $paisX=$detalle_cliente->Pais;
     $deptartamentoX=$detalle_cliente->Departamento;
     $Ciudad=$detalle_cliente->Ciudad;
@@ -44,6 +48,10 @@ $detalle_cliente=$datosCliente->datos;
 //listamos los Datos MAE
 $datosMAE=obtenerListaClientesWS_contactos($codigo_cliente,1);//tipo MAE
 // var_dump($datosMAE);
+?>    
+    <script>itemDatosClienteActualizar_contactos_mae = [];</script>
+<?php
+
 foreach ($datosMAE->lista as $listaContactosMae) {
     $IdContactoMae=$listaContactosMae->IdContacto;
     $NombreCompletoMae=$listaContactosMae->NombreCompleto;
@@ -59,6 +67,12 @@ foreach ($datosMAE->lista as $listaContactosMae) {
 
 //listamos los contactos
 $datosContacto=obtenerListaClientesWS_contactos($codigo_cliente,2);
+?>    
+    <script>
+        itemDatosClienteActualizar_contactos = [];
+    </script>
+<?php
+
 foreach ($datosContacto->lstContactos as $listaContactos) {
     $IdContactoX=$listaContactos->IdContacto;
     $NombreCompletoX=$listaContactos->NombreCompleto;

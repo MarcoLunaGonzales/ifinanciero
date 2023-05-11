@@ -24,7 +24,9 @@ $cod_facturacion=null;
 $contadorRegistros=0;
 
 $queryPr="SELECT *,DATE_FORMAT(Fecha,'%d/%m/%Y')as Fecha_x from ibnorca.ventanormas where (idSolicitudfactura=0 or idSolicitudfactura is null) order by Fecha desc limit 50";
-// echo $queryPr;
+
+ //echo $queryPr;
+
 $stmt = $dbh->prepare($queryPr);
 $stmt->execute();                    
 ?>
@@ -79,6 +81,8 @@ $stmt->execute();
                                         <th width="20%">Cliente</th>
                                         <th>Código<br> Norma</th>
                                         <th>Nombre Norma</th>
+                                        <th>Idioma</th>
+                                        <th>Tipo Venta</th>
                                         <th>Cantidad</th>
                                         <th width="10%">Importe<br>(BOB)</th>                                            
                                         <th class="small">H/D</th>  
@@ -98,6 +102,11 @@ $stmt->execute();
                                         $Norma_descripcion=abrevNorma($idNorma,$Catalogo);
                                         $Norma=nameNorma($idNorma,$Catalogo);
                                         $Cantidad=$rowPre['Cantidad'];
+                                        $idCliente=$rowPre['idCliente'];
+                                        // $tipoVenta=$rowPre['TipoVenta'];
+                                        $idTipoVenta=($rowPre['idTipoVenta'] == 1 ? 'Impreso' : 'Digital');
+                                        $idPromocion=$rowPre['idPromocion'];
+                                        $idiomaNorma=$rowPre['Idioma'];
 
                                         if($Cantidad==null || $Cantidad=='' || $Cantidad==' '){
                                           $Cantidad=1;
@@ -115,6 +124,8 @@ $stmt->execute();
                                           <td class="text-left small"><?=$NombreCliente?></td>
                                           <td class="text-left small"><?=$Norma?></td>
                                           <td class="text-left small"><?=$Norma_descripcion?></td>
+                                          <td class="text-left small"><?=$idiomaNorma?></td>
+                                          <td class="text-left small"><?=$idTipoVenta?></td>
                                           <td class="text-righ smallt"><?=$Cantidad?></td>
                                           <td class="text-righ smallt"><?=number_format($Precio,2,".","")?></td>
                                           <!-- checkbox -->

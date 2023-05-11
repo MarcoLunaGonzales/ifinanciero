@@ -45,8 +45,10 @@ if (isset($_POST["check_rs_librocompras"])) {
 }
 
 $sql="SELECT *,DATE_FORMAT(f.fecha_factura,'%d/%m/%Y')as fecha_factura_x,
-(select s.siat_cuf from ".$bd_siat.".salida_almacenes s where s.cod_salida_almacenes=f.idTransaccion_siat)as cuf 
-from facturas_venta f where f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($stringUnidadesX) $sql_rs ORDER BY f.fecha_factura, f.nro_factura asc";
+(select s.siat_cuf from ".$bd_siat.".salida_almacenes s where s.cod_salida_almacenes=f.idTransaccion_siat)as cuf,
+(SELECT abreviatura from estados_factura  where codigo = f.cod_estadofactura) as nombre_estado,
+(SELECT SUM(precio * cantidad - descuento_bob) as total from facturas_ventadetalle where cod_facturaventa=f.codigo) as total_importe
+from facturas_venta f where f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($stringUnidadesX) $sql_rs ORDER BY DATE_FORMAT(f.fecha_factura,'%d/%m/%Y'), f.nro_factura asc";
 
 //echo $sql;
 
@@ -73,6 +75,9 @@ $stmt2->bindColumn('observaciones', $observaciones);
 $stmt2->bindColumn('cod_estadofactura', $cod_estadofactura);
 $stmt2->bindColumn('cod_comprobante', $cod_comprobante);
 $stmt2->bindColumn('cuf', $cufSiat);
+
+$stmt2->bindColumn('nombre_estado', $nombre_estado);
+$stmt2->bindColumn('total_importe', $importe);
 
 //datos de la factura
 $stmtPersonal = $dbh->prepare("SELECT * from titulos_oficinas where cod_uo in (5)");
@@ -149,7 +154,7 @@ $html.=  '<header class="header">'.
                           $total_importe_debito_fiscal=0;
                           $total_debito_fiscal=0;
                           while ($row = $stmt2->fetch()) {   
-                            $importe=sumatotaldetallefactura($codigo);
+                            // $importe=sumatotaldetallefactura($codigo);
                             switch ($cod_estadofactura) {
                               case 1:
                                 $btnEstado='<span class="badge badge-success">';
@@ -170,7 +175,7 @@ $html.=  '<header class="header">'.
                                 $btnEstado='<span class="badge badge-default">';
                                 $cod_estadofactura=1;
                             }
-                            $nombre_estado=nameEstadoFactura($cod_estadofactura);
+                            // $nombre_estado=nameEstadoFactura($cod_estadofactura);
 
 
                             $importe_no_iva=0;

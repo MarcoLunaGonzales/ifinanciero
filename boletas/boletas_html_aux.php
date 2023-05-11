@@ -1,6 +1,6 @@
 <?php
 
-	$html.='<div  style="height: 49.4%">';
+	$html.='<div  style="height: 49.9%">';
 			$html.='<table width="100%" class="table" style="font-size:12px;">
 				<tr>
 					<td colspan="2" >
@@ -23,8 +23,8 @@
 				</tr>
 				<tr><td>
 					<b>NOMBRE: </b><span style="text-transform:capitalize">'.$result['apellidos'].' '.$result['nombres'].'</span><BR>
-					<b>CARGO: </b><span style="text-transform:capitalize">'.$result['cargo'].'</span><br>
-					<b>ÁREA: </b><span style="text-transform:capitalize">'.$result['area'].'</span>
+					<b>CARGO: </b><span>'.$result['cargo'].'</span><br>
+					<b>ÁREA: </b><span>'.$result['area'].'</span>
 				</td>
 				<td class="text-left">
 					<b>PERIODO: </b><span style="text-transform:capitalize">'.$mes.' '.$gestion.'</span><br>
@@ -40,12 +40,16 @@
 							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($haber_basico_dias).'</td>
 						</tr>
 						<tr>
-							<td class=text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Bono Antiguedad</td>
+							<td class=text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Bono Antigüedad</td>
 							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($bono_antiguedad).'</td>
 						</tr>
 						<tr>
 							<td class=text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Otros Bonos</td>
 							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($otrosBonos).'</td>
+						</tr>
+						<tr>
+							<td class=text-left" style="border: 0;">&nbsp;</td>
+							<td class="text-right" style="border: 0;">&nbsp;</td>
 						</tr>
 						<tr>
 							<td class=text-left" style="border: 0;">&nbsp;</td>
@@ -70,11 +74,11 @@
 						<tr><td colspan="2" style="background:#F2F2F2;border: 0;"><center><b>DEDUCCIONES</b></center></td></tr>
 						<tr>
 							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">AFP</td>
-							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($Ap_Vejez+$Riesgo_Prof+$ComAFP+$aposol+$aposol13+$aposol25+$aposol35).'</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($descuentoAFP).'</td>
 						</tr>
 						<tr>
 							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">RC IVA</td>
-							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.($RC_IVA).'</td>
+							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($RC_IVA).'</td>
 						</tr>
 						<tr>
 							<td class="text-left" style="border: 0;font-family:Arial, sans-serif;" valign="top">Anticipos</td>
@@ -91,7 +95,8 @@
 						<tr>
 							<td class=text-left" style="border: 0;">&nbsp;</td>
 							<td class="text-right" style="border: 0;">&nbsp;</td>
-						</tr>						<tr>
+						</tr>
+						<tr>
 							<td class=text-left" style="border: 0;"><b>Total Deducciones:</b></td>
 							<td class="text-right" style="border: 0;">'.formatNumberDec($suma_egresos).'</td>
 						</tr>
@@ -112,7 +117,8 @@
                         $level = 'M'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                         $frameSize = 1; //marco de qr
                         // $codigo_generado2 = md5($codigo_generado);
-                        $contenido = $urlBoletas.'validar_boletas.php?ws='.$codigo_generado;
+                        // $contenido = $urlBoletas.'ver_boleta.php?key='.$codigo_generado;
+                        $contenido = $urlBoletas.'verf_boletas_print.php?key='.$result['cod_planilla_mes'];
                         QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
                         // $html.='<img src="'.$fileName.'"/>';
 
@@ -126,17 +132,16 @@
 							<tr>
 							<td style="border: 0;" ><img src="'.$fileName.'"/></td>
 							<td style="border: 0;" >
-<center><p><img width="100px" src="'.$urlFirma.'"/>______________________________<b>JUAN QUENALLATA VEGA<br>DIRECTOR NACIONAL DE ADMINISTRACIÓN Y FINANZAS</b></p></center>
+<center><p><img width="100px" src="'.$urlFirma.'"/></p></center>
 							</td>
 							</tr>
 						</table>';
 					$html.='</td>
-					<td style="border-left:0;">
-					<center><p><br><br><br>______________________________<br><b>RECIBÍ CONFORME</b><br><br></p></center>
+					<td style="border-left:0;padding-top:20px;">
+						<center> <b><p>RECIBIDO CONFORME <br> <b style="font-style: italic;">'.$result['nombres'].' '.$result['apellidos'].'<br>'.$result['primer_vista'].'</b></p></b></center>
 					</td>
 				</tr>
-			</table><br><br>';
-
+			</table>';
 			 // $html.='<div style="page-break-after: always"></div>';
 	$html.='</div>';
 

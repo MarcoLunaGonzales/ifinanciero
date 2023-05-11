@@ -60,23 +60,34 @@ $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey,
 //OBTENER MODULOS PAGADOS x CURSO
 // $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
 // 					"accion"=>"ObtenerModulosPagados", 
-// 					"Identificacion"=>1001871028, //7666922 ci del alumno
-// 					"IdCurso"=>1775); //1565 
+// 					"Identificacion"=>1447493, //7666922 ci del alumno
+// 					"IdCurso"=>7043); //1565 
 
 
 /* OBTENER MODULOS  X PAGAR, PAGADO Y SALDO DE UN CURSO*/
-$parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
-					"accion"=>"ObtenerModuloxPagarPagadoySaldo", 
-					"Identificacion"=>1001871028, //7666922 ci del alumno
-					"IdCurso"=>1775); //1565
+// $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+// 					"accion"=>"ObtenerModuloxPagarPagadoySaldo", 
+// 					"Identificacion"=>1447493, //7666922 ci del alumno
+// 					"IdCurso"=>3952); //1565
 
+
+  $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
+					"accion"=>"RegistrarControlPago", 
+					"Identificacion"=>1447493, //ci del alumno
+					"IdCurso"=>3952,
+					"IdModulo"=>7048, 
+					"MontoPago"=> 525, 
+					"IdSolicitudFactura"=>24783,
+					"Plataforma"=>13 // 13=Sistema Financiero
+					);
+			
 
 		$parametros=json_encode($parametros);
 		// abrimos la sesión cURL
 		$ch = curl_init();
 		// definimos la URL a la que hacemos la petición
-		//curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/capacitacion/ws-inscribiralumno.php"); //OFICIAL
-		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/capacitacion/ws-inscribiralumno.php"); //PRUEBA
+		curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/capacitacion/ws-inscribiralumno.php"); //OFICIAL
+		//curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/capacitacion/ws-inscribiralumno.php"); //PRUEBA
 		// indicamos el tipo de petición: POST
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		// definimos cada uno de los parámetros

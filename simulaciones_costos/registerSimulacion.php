@@ -46,6 +46,9 @@ if(isset($_GET['cod'])){
 $mesesProrrateo=obtenerValorConfiguracion(89);
  //obtener datos fecha de la propuesta
  $fechaSimulacion=obtenerFechaSimulacionCosto($codigo);
+ 
+// echo $fechaSimulacion;
+
  $fechaSim=explode("-", $fechaSimulacion);
  $anioSimulacion=$fechaSim[0];
  $mesSimulacion=$fechaSim[1];

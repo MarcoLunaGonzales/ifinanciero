@@ -181,18 +181,6 @@ text-align: left;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 .sbody{font-family:  sans-serif; font-size: 10px;}
 .header2 { position: fixed; top: -10px; left: 0px; right: 0px; height: 70px;}
 .headDes { position: fixed; top: 30px; left: 0px; right: 40px; height: 70px;}
@@ -360,4 +348,8 @@ text-align: right;
 }
 .hr {
 border-bottom: 1px solid #000;
+}
+
+.page-break {
+  page-break-after: always;
 }

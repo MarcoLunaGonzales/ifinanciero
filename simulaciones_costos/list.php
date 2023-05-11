@@ -1,19 +1,24 @@
 <?php
-require_once 'conexion2.php';
+require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
-$dbh = new Conexion2();
+$dbh = new Conexion();
 
 // Datos de Filtro
 $start          = isset($_POST['date_start'])?$_POST['date_start']:"";
 $end            = isset($_POST['date_end'])?$_POST['date_end']:"";
 $cod_tipo       = isset($_POST['cod_tipo'])?$_POST['cod_tipo']:"";
 $cod_personal   = isset($_POST['personal'])?$_POST['personal']:"";
-$filter_list    = (!empty($start)?(" AND sc.fecha >= '$start' AND sc.fecha <= '$end' "):"").
+$fil_nombre     = isset($_POST['fil_nombre'])?$_POST['fil_nombre']:"";
+$fil_cod_curos  = isset($_POST['fil_cod_curos'])?$_POST['fil_cod_curos']:"";
+
+$filter_list    = ((!empty($start)&&!empty($end))?(" AND sc.fecha >= '$start' AND sc.fecha <= '$end' "):"").
 (!empty($cod_tipo)?(" AND sc.cod_tipocurso = '$cod_tipo' "):"").
-(!empty($cod_personal)?(" AND sc.cod_responsable = '$cod_personal' "):"");
+(!empty($cod_personal)?(" AND sc.cod_responsable = '$cod_personal' "):"").
+(!empty($fil_nombre)?(" AND sc.nombre like '%$fil_nombre%' "):"").
+(!empty($fil_cod_curos)?(" AND vc.cod_curso like '%$fil_cod_curos%' "):"");
 
 // Preparamos
 
@@ -50,8 +55,9 @@ if(isset($_GET['q'])){
   // Preparamos
 
   $sql = "SELECT sc.*,es.nombre as estado, 
-  (select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente 
+  (select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente,vc.cod_curso as codigo_curso
   from simulaciones_costos sc 
+  LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
   join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
   where sc.cod_estadoreferencial=1 $sqlModulos ".
   $filter_list.
@@ -63,14 +69,15 @@ if(isset($_GET['q'])){
   $s=0;
   $u=0;
   // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente
- from simulaciones_costos sc 
- join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
- where sc.cod_estadoreferencial=1 ".
- (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
- $filter_list.
- "order by sc.codigo desc
- LIMIT 0, 200");
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente,vc.cod_curso as codigo_curso
+  FROM simulaciones_costos sc 
+  LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
+  JOIN estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+  WHERE sc.cod_estadoreferencial=1 ".
+  (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
+  $filter_list.
+  " ORDER BY sc.codigo DESC
+  LIMIT 0, 200");
 }
 
 //echo $sql;
@@ -88,6 +95,7 @@ $stmt->bindColumn('cod_responsable', $codResponsable);
 $stmt->bindColumn('cod_area_registro', $codArea);
 $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cliente', $nombreCliente);
+$stmt->bindColumn('codigo_curso', $codigoCurso);
 
 ?>
 
@@ -122,6 +130,7 @@ $stmt->bindColumn('cliente', $nombreCliente);
                           <th>Tipo</th>
                           <th>Origen</th>
                           <th>Nombre</th>
+                          <th>COD Curso</th>
                           <th>Responsable</th>
                           <th>Fecha</th>
                           <th>Cliente</th>
@@ -157,6 +166,7 @@ $stmt->bindColumn('cliente', $nombreCliente);
                           <td><?=$tipoCurso;?></td>
                           <td><?=abrevArea_solo($codArea);?></td>
                           <td><?=$nombre;?></td>
+                          <td><?=$codigoCurso;?></td>
                           <td>
                                  <img src="assets/img/faces/persona1.png" width="20" height="20"/><?=$responsable;?>
                           </td>
@@ -170,6 +180,12 @@ $stmt->bindColumn('cliente', $nombreCliente);
                              </div>
                           </td> 
                           <td class="td-actions text-right">
+                            <!-- Actualización de Proveedores - MODAL -->
+                              <button type="button" class="btn btn-info btn-fab btn-sm btn-sim-update-cliente" data-sim_codigo="<?=$codigo;?>">
+                                    <i class="material-icons" title="Editar Cliente">edit</i>
+                                    <div class="ripple-container"></div>
+                              </button>
+
                             <a title="Imprimir Propuesta" href='#' onclick="javascript:window.open('simulaciones_costos/imp.php?cod=<?=$codigo;?>')" class="btn btn-success">
                                      <i class="material-icons"><?=$iconImp;?></i>
                                  </a>
@@ -302,8 +318,8 @@ $stmt->bindColumn('cliente', $nombreCliente);
                     <div class="form-group col-sm-6">
                         <input class="form-control input-sm" type="date" name="date_end" id="date_end" require>
                     </div>        
-                    </div>
-                    <div class="row">
+                  </div>
+                  <div class="row">
                     <label class="col-sm-6 col-form-label text-center">Tipo</label> 
                     <label class="col-sm-6 col-form-label text-center">Responsable</label> 
                     </div>
@@ -345,12 +361,62 @@ $stmt->bindColumn('cliente', $nombreCliente);
                             </select> 
                     </div>        
                 </div>
+                <div class="row">
+                    <label class="col-sm-6 col-form-label text-center">Nombre</label> 
+                    <label class="col-sm-6 col-form-label text-center">Código Curso</label> 
+                    </div>
+                    <div class="row">
+                    <div class="form-group col-sm-6">
+                        <input class="form-control input-sm" type="text" name="fil_nombre" id="fil_nombre">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <input class="form-control input-sm" type="text" name="fil_cod_curos" id="fil_cod_curos">
+                    </div>        
+                  </div>
             </div>
 
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success">Filtrar</button>
             </div>
         </form> 
+    </div>
+  </div>
+</div>
+
+<!-- Actualización de Cliente -->
+<div class="modal fade" id="modalActualizarCliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button  class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Actualizar Cliente</h4>
+      </div>
+        <div class="modal-body ">
+            <input type="text" hidden name="sim_codigo" id="sim_codigo">
+            <div class="row">
+                <label class="col-sm-12 col-form-label text-center">Cliente</label>
+                <div class="form-group col-sm-12">
+                    <select class="selectpicker form-control" data-size="10" data-live-search-placeholder="Buscar cliente..." data-live-search="true" name="sim_cod_cliente" id="sim_cod_cliente" data-style="btn btn-info"  required>
+                        <option value="0">-- --</option>
+                        <?php
+                            $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM clientes c where c.cod_estadoreferencial=1 order by 2");
+                            $stmt->execute();
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                            $codigoX=$row['codigo'];
+                            $nombreX=$row['nombre'];
+                        ?>
+                        <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                      <?php
+                            }
+                      ?>
+                    </select>
+                </div>        
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" onclick="simulacionUpdateCliente()">Actualizar</button>
+        </div>
     </div>
   </div>
 </div>

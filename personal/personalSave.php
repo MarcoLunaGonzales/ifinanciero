@@ -58,11 +58,14 @@ try {
     $cod_estadoreferencial=1;
     $porcentaje=100;
 
+    // Nuevo campo Nro_casillero
+    $nro_casillero = $_POST['nro_casillero'];
+
     $stmt = $dbh->prepare("UPDATE personal set jubilado=:jubilado,
     cod_tipopersonal=:cod_tipopersonal,apellido_casada=:apellido_casada,otros_nombres=:otros_nombres,
     nua_cua_asignado=:nua_cua_asignado,ing_contr=:ing_contr,ing_planilla=:ing_planilla,
     cod_tipoafp=:cod_tipoafp,nro_seguro=:nro_seguro,
-    cod_estadopersonal=:cod_estadopersonal,persona_contacto=:persona_contacto,cod_tipoaporteafp = :cod_tipoaporteafp,email_empresa=:email_empresa,bandera=:bandera,personal_confianza=:personal_confianza ,modified_by=:modified_by,modified_at=NOW(),cuenta_bancaria=:cuenta_bancaria,cod_banco=:cod_banco,codigo_dependiente=:codigo_dependiente
+    cod_estadopersonal=:cod_estadopersonal,persona_contacto=:persona_contacto,cod_tipoaporteafp = :cod_tipoaporteafp,email_empresa=:email_empresa,bandera=:bandera,personal_confianza=:personal_confianza ,modified_by=:modified_by,modified_at=NOW(),cuenta_bancaria=:cuenta_bancaria,cod_banco=:cod_banco,codigo_dependiente=:codigo_dependiente,nro_casillero=:nro_casillero
     where codigo = :codigo");
     //bind
     $stmt->bindParam(':codigo', $codigo);
@@ -91,7 +94,7 @@ try {
     $stmt->bindParam(':cuenta_bancaria', $cuenta_bancaria);
     $stmt->bindParam(':cod_banco', $cod_banco);
     $stmt->bindParam(':codigo_dependiente', $codigo_dependiente);
-
+    $stmt->bindParam(':nro_casillero', $nro_casillero);
     
     $flagSuccess=$stmt->execute();
 

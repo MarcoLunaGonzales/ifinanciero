@@ -91,8 +91,9 @@ $stmt->bindColumn('total_mensual', $total_mensual);
                   if ($globalAdmin == 1) {
         ?>
           <div class="card-footer fixed-bottom">
-              <button class="<?=$buttonNormal;?>" data-toggle="modal" data-target="#modalGenerar">Generar</button>
-              <button class="<?= $buttonCancel; ?>" onClick="location.href='<?= $urlList; ?>'"> <-- Volver </button>
+              <!-- <button class="<?=$buttonNormal;?>" data-toggle="modal" data-target="#modalGenerar">Generar</button> -->
+              <a href="?opcion=refrigerioImport&cod_ref=<?=$codRefrigerio?>&cod_mes=<?=$codMes?>" class="btn btn-primary">Importar Archivo</a>
+              <button class="<?= $buttonCancel; ?>" onClick="location.href='<?= $urlList; ?>'"> Volver </button>
               </div>
         <?php
         }
