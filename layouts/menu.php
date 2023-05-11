@@ -244,6 +244,19 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Finiquitos </span>
                   </a>
                 </li>
+
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=incremento_salarial">
+                    <span class="sidebar-mini"> IS </span>
+                    <span class="sidebar-normal"> Incremento Salarial </span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=planillasRetroactivoPersonal">
+                    <span class="sidebar-mini"> PR </span>
+                    <span class="sidebar-normal"> Planilla de Retroactivos</span>
+                  </a>
+                </li>
                 
               </ul>
             </div>

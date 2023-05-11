@@ -34,7 +34,7 @@ class ConexionIBNORCA extends PDO {
 
   private $tipo_de_base = 'mysql';
       private $host = 'localhost';
-      private $nombre_de_base = 'ibnofinanciero5000';
+      private $nombre_de_base = 'ibnofinanciero6000';
       private $usuario = 'root';
       private $contrasena = '12345678';
       private $port = '3306'; 
