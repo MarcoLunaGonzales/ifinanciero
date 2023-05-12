@@ -385,6 +385,9 @@ from planillas p order by cod_gestion desc,cod_mes desc";
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalGenerarPlanilla">Registrar Planilla Actual (1)</button> 
                 <a href="bonos/descargarExcelGlobal.php" target="_blank" class="btn btn-warning"><span class="material-icons">download</span>Descargar Plantilla (2)</a>
                 <button class="btn btn-success" onClick="location.href='index.php?opcion=subirBonoExcel_global_from'"><span class="material-icons">file_upload</span>Cargar Plantilla (3)</button>
+
+                <!-- <a href="bonos/plantilla_sueldos_editar.php" target="_blank" class="btn btn-primary btn-sm"><span class="material-icons">edit</span>Editar Plantilla (3.1)</a> -->
+                
               <?php
               }
             ?>

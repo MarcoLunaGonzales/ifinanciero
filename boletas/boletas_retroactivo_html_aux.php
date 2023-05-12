@@ -3,12 +3,21 @@
 	$html.='<div  style="height: 49.4%">';
 			$html.='<table width="100%" class="table" style="font-size:12px;">
 				<tr><td colspan="2" >
+					
 					<table width="100%">
-					<tr ><td width="29%" style="border: 0;" ><b>CORPORACION BOLIVIANA DE FARMACIAS</b><br>Av.Landaeta Nro 836<br>La Paz - Bolivia<br>NIT:1022039027</td>
-						<td width="25%" style="border: 0;"><center><span style="font-size: 13px"><b>PAPELETA DE SUELDOS</b></span><b><br>RETROACTIVOS GESTION '.$gestion.'<br>(EN BOLIVIANOS)</b></center></td>
-						<td width="25%" style="border: 0;"><center><table width="100%"><tr><td style="border: 0;align:left" width="70%">N° PAT. 651-1-956</td><td style="border: 0;" width="30%"><img class="" width="50" height="40" src="../assets/img/favicon.png"></td></tr></table></center></td>
+					<tr>
+						<td style="border: 1;" align="left" width="50%"><b>INSTITUTO BOLIVIANO DE NORMALIZACIÓN Y CALIDAD</b></td>
+						<td style="border: 1;" align="right" width="50%"><b>N° PATRONAL '.$arrayOficinas[$cod_unidad_x][4].'</b></td>
 					</tr>
 					</table>
+					<table width="100%">
+						<tr>
+							<td width="33%" style="border: 0;" align="left"><b>NIT:1020745020<br>'.$arrayOficinas[$cod_unidad_x][1].'</b><br><br><br></td>
+							<td width="33%" style="border: 0;" align="center"><span style="font-size: 15px"><b>BOLETA DE PAGO</b></span><br><b>(Expresado en Bolivianos)</b></td>
+							<td width="33%" style="border: 0;" align="right"><img class="" width="50" height="50" src="../assets/img/logo_ibnorca_origen_3.jpg"></td>
+						</tr>
+					</table>
+
 				</td></tr>
 				<tr><td>
 					<b>NOMBRE:</b> '.$result['paterno'].' '.$result['materno'].' '.$result['primer_nombre'].'<BR>
@@ -39,14 +48,17 @@
 							<td class="text-right" style="border: 0;font-family:Arial, sans-serif;" valign="top">'.formatNumberDec($ap_vejez).'<br>'.formatNumberDec($riesgo_prof).'<br>'.formatNumberDec($com_afp).'<br>'.formatNumberDec($aporte_sol).'</td>
 						</tr>
 						<tr>
-							<td class=text-left" style="border: 0;"><b>Total Egresos:</b></td>
+							<td class=text-left" style="border: 0;"><b>Total Deducciones:</b></td>
 							<td class="text-right" style="border: 0;">'.formatNumberDec($suma_egresos).'</td>
+						</tr>
+						<tr style="background:#F2F2F2;">
+							<td class=text-left" style="border: 0;"><b>Líquido Pagable:</b></td>
+							<td class="text-right" style="border: 0;"><b> '.formatNumberDec($liquido_pagable).'</b></td>
 						</tr>
 					</table>
 				</td></tr>
-				<tr>
 				
-				<td style="background:#F2F2F2;border-right: 0;">';
+				';
 						//GENERANDO QR
                         $dir = 'qr_temp/';
                         if(!file_exists($dir)){
@@ -56,12 +68,29 @@
                         $level = 'M'; //tipo de precicion Baja L, mediana M, alta Q, maxima H
                         $frameSize = 1; //marco de qr
                         // $codigo_generado2 = md5($codigo_generado);
-                        $contenido = 'farmaciasbolivia.com.bo/icobofar/blts/vb2.php?ws='.$codigo_generado;
+                        $contenido = $urlBoletas.'validar_boletas_r.php?ws='.$codigo_generado;
                         QRcode::png($contenido, $fileName, $level, $tamanio,$frameSize);
-                        $html.='<img src="'.$fileName.'"/>';
-					$html.='</td><td class="text-right" style="background:#F2F2F2;border-left: 0;"><b>Liquido Pagable: '.formatNumberDec($liquido_pagable).'
-				</b></td></tr>
-			</table>';
+                
+
+
+			$html.='<tr>
+					<td style="border-right: 0;" valign="bottom">
+						<table width="100%">
+							<tr>
+							<td style="border: 0;" ><img src="'.$fileName.'"/></td>
+							<td style="border: 0;" >
+<center><p><img width="100px" src="'.$urlFirma.'"/>______________________________<b>JUAN QUENALLATA VEGA<br>DIRECTOR NACIONAL DE ADMINISTRACIÓN Y FINANZAS</b></p></center>
+							</td>
+							</tr>
+						</table>';
+					$html.='</td>
+					<td style="border-left:0;">
+					<center><p><br><br><br>______________________________<br><b>RECIBÍ CONFORME</b><br><br></p></center>
+					</td>
+				</tr>
+			</table><br><br>';
+
+
 	$html.='</div>';
 
 

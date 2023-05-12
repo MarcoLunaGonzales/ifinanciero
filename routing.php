@@ -1168,7 +1168,14 @@
 			require_once('planillas/finiquitosDelete.php');
 		}
 		
-		
+		//planilla retroactivo
+		if ($_GET['opcion']=='planillasRetroactivoPersonal') {
+			require_once('planillas/planillasRetroactivosList.php'); //ok
+		}
+		if ($_GET['opcion']=='planillasRetroactivoPersonal_save') {
+			require_once('planillas/planillasRetroactivosSave.php'); //ok
+		}
+
 		
 		
 		//tipo aporte afp
@@ -1943,11 +1950,24 @@
 		}
 
 
+		//incremento Salarial & retroactivos
+		if ($_GET['opcion']=='incremento_salarial') {
+			require_once('incremento_salarial/main.php'); //ok
+		}
+
+		if ($_GET['opcion']=='incremento_salarial_edit') {
+			require_once('incremento_salarial/edit_incremento.php'); //ok
+		}
+
+
+
+
 		// REPORTES SUSCRIPCIÓN
 		
 		if ($_GET['opcion']=='reportesSuscripcion') {
 			require_once('reportes_suscripcion/list.php');
 		}
+
 
 	}else{
 		//require("paginaprincipal.php");

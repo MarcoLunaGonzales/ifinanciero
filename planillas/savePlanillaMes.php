@@ -32,7 +32,7 @@ $sw=$_POST['sw'];
 // }else{
 	$stmtDatosPlanilla = $dbh->prepare("SELECT cod_gestion,cod_mes from planillas where codigo=$cod_planilla");
 	$stmtDatosPlanilla->execute();
-	$resultDatosPlanilla =  $stmtDatosPlanilla->fetch();
+	$resultDatosPlanilla = $stmtDatosPlanilla->fetch();
 	$cod_gestion_x = $resultDatosPlanilla['cod_gestion'];
 	$cod_mes_x = $resultDatosPlanilla['cod_mes'];
 

@@ -554,13 +554,13 @@ for ($an=0; $an<=$anioGeneral; $an++) {
             </div>
             <div class="col-sm-2">
               <div class="form-group" title="<?=$title_cod_categoriainocuidad?>">
-                  <label class="bmd-label-static">Categoria Inocuidad</label>
+                  <label class="bmd-label-static">Cat. Ino.</label>
                   <input class="form-control" type="text" readonly value="<?=$first_cod_categoriainocuidad?>"/>
               </div>
             </div>
             <div class="col-sm-2">
               <div class="form-group" title="<?=$title_orgnismo_certificador?>">
-                  <label class="bmd-label-static">Organismo Certificador</label>
+                  <label class="bmd-label-static">Org. Cert.</label>
                   <input class="form-control" type="text" readonly value="<?=$first_orgnismo_certificador?>"/>
               </div>
             </div>

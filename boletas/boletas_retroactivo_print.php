@@ -7,7 +7,8 @@ $cod_gestion = $_GET["cod_gestion"];
 $cod_personal=0;
 $gestion=nameGestion($cod_gestion);
 
-$htmlConta1=generarHtmlBoletaRetroactivo($cod_planilla,$cod_gestion,0);  
-descargarPDFBoleta("COBOFAR BOLETAS RETROACTIVOS ".$gestion,$htmlConta1);
+$htmlConta1=generarHtmlBoletaRetroactivo($cod_planilla,$cod_gestion,$cod_personal);  
+//echo $htmlConta1;
+descargarPDFBoleta("IBNORCA BOLETAS RETROACTIVOS ".$gestion,$htmlConta1);
 //echo $htmlConta1;
 ?>
