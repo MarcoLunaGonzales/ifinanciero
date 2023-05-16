@@ -1,5 +1,6 @@
 <?php
     require_once '../conexion.php';
+    require_once '../functions.php';
     date_default_timezone_set('America/La_Paz');
 
     $cod_lead = $_POST['cod_lead'];

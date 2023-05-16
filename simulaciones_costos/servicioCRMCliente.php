@@ -1,5 +1,6 @@
 <?php
     require_once '../conexion.php';
+    require_once '../functions.php';
     date_default_timezone_set('America/La_Paz');
 
     $cod_cliente = $_POST['cod_cliente'];
@@ -9,6 +10,8 @@
         /******************************************************/
         /*       SERVICIO DE BUSQUEDA POR CLIENTE LEADS       */
         /******************************************************/
+        $url_init = obtenerValorConfiguracion(110);
+        // $url_init = "http://intranet.ibnorca.org:8008/api/v1/";
         $api_key = "cd77c5d7ef268ea79a4573222258effbd782b358";
         $datos   = array("data"=>"");
         $datos   = json_encode($datos);
@@ -16,9 +19,9 @@
             'Content-Type: application/json',
             'api_key: ' . $api_key
         );
-            
+        
         $fieds = "name,email_from,phone,partner_id,product_id,stage_id";
-        $url   = "http://intranet.ibnorca.org:8008/api/v1/crm.lead/find?partner_id.i_registro=" . $cod_cliente . "&fields=".$fieds;
+        $url   = $url_init."crm.lead/find?partner_id.i_registro=" . $cod_cliente . "&fields=".$fieds."&stage_id=Reserva%20de%20cupo";
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -32,7 +35,7 @@
 
         echo json_encode(array(
             'status' => true,
-            'data'   => $obj->result->data
+            'data'   => (empty($obj->result->data)? [] : $obj->result->data)
         ));
     } catch (Exception $e) {
         echo json_encode(array(
