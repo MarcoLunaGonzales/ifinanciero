@@ -56,10 +56,10 @@ if(isset($_GET['q'])){
 
   $sql = "SELECT sc.*,es.nombre as estado, 
   (select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente,vc.cod_curso as codigo_curso
-  from simulaciones_costos sc 
+  FROM simulaciones_costos sc 
   LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
-  join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
-  where sc.cod_estadoreferencial=1 $sqlModulos ".
+  JOIN estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+  WHERE sc.cod_estadoreferencial=1 $sqlModulos ".
   $filter_list.
   " GROUP BY sc.codigo, sc.nombre, sc.observacion, sc.fecha, sc.cod_tipocurso, sc.cod_plantillacosto, sc.cod_estadosimulacion, sc.cod_responsable, sc.cod_area_registro,cliente, estado
   order by sc.codigo desc
@@ -70,10 +70,11 @@ if(isset($_GET['q'])){
   $s=0;
   $u=0;
   // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente
- from simulaciones_costos sc 
- join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
- where sc.cod_estadoreferencial=1 ".
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente,vc.cod_curso as codigo_curso
+ FROM simulaciones_costos sc 
+ JOIN estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+  LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
+ WHERE sc.cod_estadoreferencial=1 ".
  (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
  $filter_list.
  " GROUP BY sc.codigo, sc.nombre, sc.observacion, sc.fecha, sc.cod_tipocurso, sc.cod_plantillacosto, sc.cod_estadosimulacion, sc.cod_responsable, sc.cod_area_registro,cliente, estado
