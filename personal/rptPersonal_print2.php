@@ -8,9 +8,10 @@ require_once __DIR__.'/../functionsGeneral.php';
 require_once  __DIR__.'/../fpdf_html.php';
 require_once '../layouts/bodylogin2.php';
 
-
 $dbh = new Conexion();
 
+// Tipo de Personal Administrador
+$userAdmin = empty($_POST["globalUserAdmin"]) ? 0 : $_POST["globalUserAdmin"];
 
 $sqlX="SET NAMES 'utf8'";
 $stmtX = $dbh->prepare($sqlX);
@@ -36,7 +37,6 @@ $stringAreas="";
 foreach ($areas as $valor ) {    
     $stringAreas.=" ".abrevArea($valor)." ";
 }
-
 
 // $sql="SELECT codigo,cod_tipo_identificacion,identificacion,cod_lugar_emision,fecha_nacimiento,cod_cargo,cod_unidadorganizacional,cod_area,haber_basico,CONCAT_WS(' ',paterno,materno,primer_nombre)as personal,cod_tipoafp,celular,telefono,email,email_empresa,ing_planilla
 // from personal  where cod_estadopersonal=1 and cod_estadoreferencial=1 and cod_area in ($areaString) and cod_unidadorganizacional in ($unidadOrgString) order by paterno ";  
@@ -95,17 +95,17 @@ $stmtActivos->execute();
                         '<tr >'.
                           '<th class="font-weight-bold">-</th>'.
                           '<th class="font-weight-bold">Personal</th>'.
+                          
+                          '<th class="font-weight-bold">Nro. Casillero</th>'. 
+
                           '<th class="font-weight-bold">C.I.</th>'.
                           '<th class="font-weight-bold">Of/Area</th>'.
-                          
                           '<th class="font-weight-bold">F. Ing.</th>'.
                           '<th class="font-weight-bold">Cargo</th>'.
-                          '<th class="font-weight-bold">Básico</th>'.
+                          ($userAdmin == 1 ? '<th class="font-weight-bold">Haber Básico</th>' : '').
                           '<th class="font-weight-bold">Afp</th>'.
                           '<th class="font-weight-bold">Tel.</th>'. 
                           '<th class="font-weight-bold">Email</th>'.
-                          
-                          '<th class="font-weight-bold">Nro casillero</th>'. 
                           '<th class="font-weight-bold">Identificación</th>'. 
                           '<th class="font-weight-bold">Pais</th>'. 
                           '<th class="font-weight-bold">Departamento</th>'. 
@@ -138,17 +138,17 @@ $stmtActivos->execute();
                           $html.='<tr>'.
                             '<td class="text-center small">'.$contador.'</td>'.
                             '<td class="text-left small">'.$row['personal'].'</td>'.
+                            
+                            '<td class="text-center small">'.(empty($row['nro_casillero']) ? 0 : $row['nro_casillero']).'</td>'.
+
                             '<td class="text-left small">'.obtenerNombreIdentificacionPersona($row['cod_tipo_identificacion'],1).' '.$row['identificacion'].' '.obtenerlugarEmision($row['cod_lugar_emision'],1).'</td>'.
                             '<td class="text-left small">'.abrevUnidad_solo($row['cod_unidadorganizacional']).'/'.abrevArea_solo($row['cod_area']).'</td>'.
-                            
                             '<td class="text-right small">'.$row['ing_planilla'].'</td>'.
                             '<td class="text-left small">'.nameCargo($row['cod_cargo']).'</td>'.
-                            '<td class="text-center small">'.formatNumberDec($row['haber_basico']).'</td>'.
+                            ($userAdmin == 1 ? '<td class="text-center small">'.formatNumberDec($row['haber_basico']).'</td>' : '').
                             '<td class="text-left small">'.obtenerNameAfp($row['cod_tipoafp'],1).'</td>'.
                             '<td class="text-left small">'.trim($row['telefono'].' - '.$row['celular'],' - ').'</td>'.
                             '<td class="text-left small">'.trim($row['email'].' - '.$row['email_empresa'],' - ').'</td>'.
-                            
-                            '<td class="text-left small">'.$row['nro_casillero'].'</td>'.
                             '<td class="text-left small">'.$row['identificacion'].'</td>'.
                             '<td class="text-left small">'.obtenerNombreNacionalidadPersona($row['cod_pais'],2).'</td>'.
                             '<td class="text-left small">'.obtenerlugarEmision($row['cod_departamento'],2).'</td>'.

@@ -3,11 +3,11 @@ DATABASE_DRIVER = mysql
 DATABASE_ENCODING = utf8
 
 [ parametros de conexion bd mysql Local ]
-DATABASE_HOST = 192.168.30.35
+DATABASE_HOST = localhost
 DATABASE_PORT = 3306
-DATABASE_NAME = bdifinanciero
-DATABASE_USER = ibnofinanciero
-DATABASE_PASSWORD = Financiero1bn0
+DATABASE_NAME = ifinancierobk
+DATABASE_USER = root
+DATABASE_PASSWORD = 
 DATABASE_DESCRIPTION = DB LOCAL
 
 [ parametros de conexion bd mysql Externo ]

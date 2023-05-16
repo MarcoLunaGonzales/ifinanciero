@@ -12,9 +12,14 @@ date_default_timezone_set('America/La_Paz');
 $user=$_POST["user"];
 $password=$_POST["password"];
 
+// Obtiene codigos de Personal Administrador
+$codAdministradores = explode(',', obtieneValorConfig(111));
+
 //OBTENEMOS EL VALOR DE LA CONFIGURACION 1 -> LOGIN PROPIO DE MONITOREO    2-> LOGIN POR SERVICIO WEB
 $tipoLogin=obtieneValorConfig(-10);
 $banderaLogin=0;
+
+$idUsuarioSW = '';
 if($tipoLogin==2){
 	$sIdentificador = "ifinanciero";
 	$sKey="ce94a8dabdf0b112eafa27a5aa475751";
@@ -117,6 +122,9 @@ if($banderaLogin==1 || $tipoLogin==1){
 			$codUnidad=5;
 			$nombreUnidad="RLP";
 		}
+
+		// Verificar si el número está en el array
+		$_SESSION['globalUserAdmin'] = (in_array($codigo, $codAdministradores) ? 1 : 0);
 
 		$_SESSION['globalUser']=$codigo;
 		$_SESSION['globalNameUser']=$nombre;
