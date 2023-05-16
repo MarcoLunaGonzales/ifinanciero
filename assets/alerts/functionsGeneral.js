@@ -20586,6 +20586,195 @@ function agregarDatosVistaPreviaPlanilla(codigo_planilla,cod_mes,cod_gestion){
   }
   ajax.send(null);
 }
+
+
+
+//Incremento Salarial y retroactivos
+function cargar_dataTable_ajax_list_buscador(tabla){
+  // DataTable
+  var table = $('#'+tabla+'').DataTable({
+    "language": {
+        "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+    },
+    fixedHeader: {
+      header: false,
+    },
+    "searching":true,
+    "order": false,
+    "paging":   false,
+    "info":     false,          
+    "scrollY":        "400px",
+    "scrollCollapse": true
+  });
+}
+
+function boton_incremento_salarial_main(index){
+    ajax=nuevoAjax();
+    var sw=0;
+    if(index==1){//incremento global
+      var porcentaje_smn = $("#incremento_smn_g").val();
+      var porcentaje_hb = $("#incremento_hb_g").val();
+      if(porcentaje_smn=="" || porcentaje_hb==""){
+        $("#incremento_smn_g").focus();
+        Swal.fire("ADVERTENCIA", "Es Necesario que ingreses los porcentajes correspondientes al SALARIO MINIMO NACIONAL(SMN) y al HABER BASICO (HB).", "warning");
+      }else{
+        ajax.open('GET', 'incremento_salarial/ajax_incremento_global.php?porcentaje_smn='+porcentaje_smn+'&porcentaje_hb='+porcentaje_hb,true);
+        sw=1;
+      }
+    }else{
+      if(index==2){//incremento por cargo
+        var porcentaje_smn = $("#incremento_smn_c").val();
+        var porcentaje_hb = $("#incremento_hb_c").val();
+        if(porcentaje_smn=="" || porcentaje_hb==""){
+          
+          $("#incremento_smn_c").focus();
+          Swal.fire("ADVERTENCIA", "Es Necesario que ingreses los porcentajes correspondientes al SALARIO MINIMO NACIONAL(SMN) y al HABER BASICO (HB).", "warning");
+        }else{
+          cargar_dataTable_ajax_list_buscador('tabla_cargos');
+          cargar_filtro_datatable_ajax('modalListCargos');
+          $("#modalListCargos").modal("show");
+          // ajax.open('GET', 'incremento_salarial/ajax_incremento_porcargo.php?porcentaje_smn='+porcentaje_smn+'&porcentaje_hb='+porcentaje_hb,true);
+          // sw=1;
+
+        }
+        
+      }else{
+        if(index==3){//incremento por persona
+            //Swal.fire("ADVERTENCIA", "En este momento estamos trabajando en esta opción y esperemos habilitar en breve. Disculpa las molestias.", "warning");
+
+          var porcentaje_smn = $("#incremento_smn_p").val();
+          var porcentaje_hb = $("#incremento_hb_p").val();
+          if(porcentaje_smn=="" || porcentaje_hb==""){
+            $("#incremento_smn_p").focus();
+            Swal.fire("ADVERTENCIA", "Es Necesario que ingreses los porcentajes correspondientes al SALARIO MINIMO NACIONAL(SMN) y al HABER BASICO (HB).", "warning");
+          }else{
+            ajax.open('GET', 'incremento_salarial/ajax_incremento_porpersona.php?porcentaje_smn='+porcentaje_smn+'&porcentaje_hb='+porcentaje_hb,true);
+            sw=1;
+          }
+          
+        }
+      }
+    }
+    if(sw==1){
+      ajax.onreadystatechange=function() {
+        if (ajax.readyState==4) {
+          var contenedor=$("#contenedor_main_incremento_salarial");
+          contenedor.html(ajax.responseText);
+        }
+      }
+      ajax.send(null);  
+    }   
+}
+function activar_input_incremento_salarial_personal(index){
+
+    var check=document.getElementById("personal_seleccionado_x"+index);
+    if(check.checked){//activado
+      document.getElementById("personal_seleccionado"+index).value=1;
+    }else{
+      document.getElementById("personal_seleccionado"+index).value=0;
+    }
+  
+}
+
+function activar_input_incremento_salarial_cargos(index){
+  if(index==-100){
+    var contador_cargos = $("#contador_cargos").val();
+     // alert(contador_cargos);
+    for (var i = 0; i < contador_cargos; i++) {
+      // var check=document.getElementById("cargos_seleccionados"+i);
+      var check=document.getElementById("cargos_seleccionados"+i).checked;
+      if(check){
+        $("#cargos_activados"+i).val("0");
+        document.getElementById("cargos_seleccionados"+i).checked=false;//checked desactivado
+      }else{
+        $("#cargos_activados"+i).val("1");        
+        document.getElementById("cargos_seleccionados"+i).checked=true;//checked activando.
+      }
+    }
+
+  }else{
+    var check=document.getElementById("cargos_seleccionados"+index);
+    if(check.checked){
+      document.getElementById("cargos_activados"+index).value=1;
+    }else{
+      document.getElementById("cargos_activados"+index).value=0;
+    }
+  }
+}
+
+function guardar_cargos_seleccionados_incremento(string_cargos){
+  var porcentaje_smn = $("#incremento_smn_c").val();
+  var porcentaje_hb = $("#incremento_hb_c").val();
+  ajax=nuevoAjax();
+  ajax.open('GET', 'incremento_salarial/ajax_incremento_porcargo.php?porcentaje_smn='+porcentaje_smn+'&porcentaje_hb='+porcentaje_hb+'&string_cargos='+string_cargos,true);
+  ajax.onreadystatechange=function() {
+    if (ajax.readyState==4) {
+      var contenedor=$("#contenedor_main_incremento_salarial");
+      contenedor.html(ajax.responseText);
+    }
+  }
+  ajax.send(null);  
+}
+
+//funciones planilla Retroactivos
+function ProcesarPlanillaRetroactivo(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=2",
+    url:"planillas/savePlanillaRetroactivos.php",
+    beforeSend:function(objeto){ 
+      $('#cargaP').css({display:'block'});
+      $('#AceptarProceso').css({display:'none'});
+      $('#CancelarProceso').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        $('#cargaP').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasRetroactivoPersonal');
+      }else{
+        $('#cargaP').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasRetroactivoPersonal');
+      }
+    }
+  });
+}
+function ReprocesarPlanillaRetroactivo(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=1",
+    url:"planillas/savePlanillaRetroactivos.php",
+    beforeSend:function(objeto){ 
+      $('#cargaR').css({display:'block'});
+      $('#AceptarReProceso').css({display:'none'});
+      $('#CancelarReProceso').css({display:'none'});  
+    },
+    success:function(r){
+      if(r==1){
+        $('#cargaR').css('display','none');
+        alerts.showSwal('success-message','index.php?opcion=planillasRetroactivoPersonal');
+      }else{
+        $('#cargaR').css('display','none');
+        alerts.showSwal('error-message','index.php?opcion=planillasRetroactivoPersonal');
+      }
+    }
+  });
+}
+function CerrarPlanillaRetroactivo(cod_planilla){
+  $.ajax({
+    type:"POST",
+    data:"cod_planilla="+cod_planilla+"&sw=3",
+    url:"planillas/savePlanillaRetroactivos.php",
+    success:function(r){
+      if(r==1){
+        //$('#tabla1').load('activosFijos/afEnCustodia.php');
+        //alertify.success("agregado");
+        alerts.showSwal('success-message','index.php?opcion=planillasRetroactivoPersonal');
+      }
+    }
+  });
+}
+
 // Abrir modal
 $('body').on('click', '.btn-sim-update-cliente', function(){
   $('#sim_codigo').val($(this).data('sim_codigo'));
@@ -20624,3 +20813,4 @@ function simulacionUpdateCliente(){
     }
   });
 }
+

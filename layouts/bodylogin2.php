@@ -1614,6 +1614,60 @@
               }
             ]
           });
+      var table_afx10=$('#tablePaginatorFixedPlanillaSueldo_otros').DataTable({
+        "paging":   false,
+          "info":     false,
+          "language": {
+              "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+          },
+          "order": false,
+          "searching": false,
+          fixedHeader: {
+            header: true,
+            footer: true
+          },
+          dom: 'Bfrtip',
+          buttons:[
+
+          {
+              extend: 'copy',
+              text:      '<i class="material-icons">file_copy</i>',
+              titleAttr: 'Copiar',
+              title: 'Planilla Sueldos Personal',
+
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'csv',
+              text:      '<i class="material-icons">list_alt</i>',
+              titleAttr: 'CSV',
+              charset: 'UTF-8',
+              bom: true,
+              title: '',
+              filename: 'Planilla Sueldos Personal',
+              fieldBoundary: '',
+             fieldSeparator: ';',
+              exportOptions: {
+                  columns: ':visible'
+              }
+          },
+          {
+              extend: 'excel',
+              text:      '<i class="material-icons">assessment</i>',
+              titleAttr: 'Excel',
+              title: '',
+                filename: 'Planilla Sueldos Personal',
+              exportOptions: {
+                  columns: ':visible'
+              },customize: function( xlsx ) {
+                  var source = xlsx.xl['workbook.xml'].getElementsByTagName('sheet')[0];
+                  source.setAttribute('name','Hoja1');
+                }
+          },
+        ]
+    });
     
       var table_afxU=$('#tablePaginatorFixed').DataTable({
                 "paging":   false,
