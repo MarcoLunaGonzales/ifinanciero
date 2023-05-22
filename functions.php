@@ -3282,7 +3282,6 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     }    
     $total_bono_antiguedad_x=number_format($total_bono_antiguedad,2,'.','');    
     return $total_bono_antiguedad_x;
-
   }
   function obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto,$cod_gestion,$mes)
   {  
@@ -8791,8 +8790,8 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
     $valor=round($valor, 2);
     return($valor);
   }
+  
   function obtenerNombreEstudiante($ci_estudiante){
-
     $dbhIBNO = new ConexionIBNORCA();
     //datos del estudiante y el curso que se encuentra
     $sqlIBNORCA="SELECT concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno 

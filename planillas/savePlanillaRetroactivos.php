@@ -6,6 +6,10 @@ require_once '../functionsGeneral.php';
 
 $result_x=0;
 $dbh = new Conexion();
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
 // session_start();
 // $globalUser=$_SESSION["globalAdmin"];
 //RECIBIMOS LAS VARIABLES

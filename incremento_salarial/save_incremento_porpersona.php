@@ -7,6 +7,10 @@ require_once '../functions.php';
 
 $dbh = new Conexion();
 
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
 session_start();
 $tipo=4;
 $created_at=date('Y-m-d H:i:s');
