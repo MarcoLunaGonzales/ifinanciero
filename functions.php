@@ -8037,17 +8037,23 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
     }
     return $valor; 
   }
+  
   function obtenerDiasAuditorSimulacionServicio($codigo){
     $dbh = new Conexion();
     $valor=0;
-    $sql="SELECT dias from simulaciones_servicios_auditores p where p.codigo=$codigo";
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $valor=$row['dias'];
+    if($codigo==0 || $codigo=="" || $codigo=="NULL" || $codigo==NULL){
+      $valor=0;
+    }else{
+       $sql="SELECT dias from simulaciones_servicios_auditores p where p.codigo=$codigo";
+       $stmt = $dbh->prepare($sql);
+       $stmt->execute();
+       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+       $valor=$row['dias'];
+       }
     }
     return (float)$valor;
   }
+
   function obtenerEntradaSimulacionServicio($codigo){
     $dbh = new Conexion();
     $valor=0;
