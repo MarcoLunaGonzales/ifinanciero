@@ -251,6 +251,10 @@
         if ($_GET['opcion']=='registerSimulacion') {
 			require_once('simulaciones_costos/registerSimulaciones.php');
 		}
+        //SIMULACIONES DE COSTO VERSIONES
+		if ($_GET['opcion']=='listSimulacionesCostosVersiones') {
+			require_once('simulaciones_costos/listVersiones.php');
+		}
 		
 		
 		//solicitud facturacion TCP
@@ -960,6 +964,9 @@
 		//cargos
 		if ($_GET['opcion']=='cargosLista') {
 			require_once('rrhh/cargosLista.php'); //ok
+		}
+		if ($_GET['opcion']=='cargosListaInactivo') {
+			require_once('rrhh/cargosListaInactivo.php'); //Desactivados
 		}
 		if ($_GET['opcion']=='cargosForm') {
 			$codigo=$_GET['codigo'];

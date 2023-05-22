@@ -12,26 +12,57 @@ try {
 
   //RECIBIMOS Codigo Simulación Servicio
   $codigo=$_POST['codigo'];  // código del registro original que será duplicado
+  $tipo_duplicado = empty($_POST['tipo']) ? 0 : $_POST['tipo'];
   
   $codSimCosto=obtenerCodigoSimCosto();
+
+  // Obtener nro_version
+//   $sqlOld="SELECT cod_version FROM simulaciones_costos WHERE codigo = '$codigo'";
+//   $stmtOld = $dbh->prepare($sqlOld);
+//   $stmtOld->execute();
+//   $registro = $stmtOld->fetch(PDO::FETCH_ASSOC);
+//   $old_cod_version = $registro['nro_version'];
+
+
+  /*---------------------------------------------*/
+  /*-------DESACTIVAMOS VERSIÓN ANTERIOR---------*/
+  /*---------------------------------------------*/
+  // TIPO 0: Duplicado con dependencia
+  // TIPO 1: Duplicado sin dependencia
+  if($tipo_duplicado == 0){
+        $sqlOld="UPDATE simulaciones_costos AS sc1
+        JOIN (
+        SELECT cod_version
+        FROM simulaciones_costos
+        WHERE codigo = '$codigo'
+        LIMIT 1
+        ) AS sc2 ON sc1.cod_version = sc2.cod_version
+        SET sc1.estado_version = 0";
+        $stmtOld = $dbh->prepare($sqlOld);
+        $stmtOld->execute();
+  }
 
   /*******************************************************/
   /*                  SIMULACION COSTOS                  */
   /*******************************************************/
-  $sql = "INSERT INTO simulaciones_costos (codigo,nombre,observacion,fecha,cod_plantillacosto,cod_estadosimulacion,cod_responsable,cod_estadoreferencial,ibnorca,cod_precioplantilla,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos,monto_norma,habilitado_norma,cod_tipocurso,fecha_curso,dias_curso,IdModulo,IdCurso,cod_area_registro,cod_cliente,fecha_solicitud_cliente,id_lead) 
-          SELECT '$codSimCosto',nombre,observacion,fecha,cod_plantillacosto,cod_estadosimulacion,cod_responsable,cod_estadoreferencial,ibnorca,cod_precioplantilla,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos,monto_norma,habilitado_norma,cod_tipocurso,fecha_curso,dias_curso,IdModulo,IdCurso,cod_area_registro,cod_cliente,fecha_solicitud_cliente,id_lead
-          FROM simulaciones_costos 
-          WHERE codigo = :codigo";
+  $sql = "INSERT INTO simulaciones_costos (codigo,nombre,observacion,fecha,cod_plantillacosto,cod_estadosimulacion,cod_responsable,cod_estadoreferencial,ibnorca,cod_precioplantilla,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos,monto_norma,habilitado_norma,cod_tipocurso,fecha_curso,dias_curso,IdModulo,IdCurso,cod_area_registro,cod_cliente,fecha_solicitud_cliente,id_lead,cod_version,nro_version) 
+          SELECT '$codSimCosto',ssc.nombre,ssc.observacion,'".date('Y-m-d')."',ssc.cod_plantillacosto,ssc.cod_estadosimulacion,ssc.cod_responsable,ssc.cod_estadoreferencial,ssc.ibnorca,ssc.cod_precioplantilla,ssc.cantidad_alumnoslocal,ssc.utilidad_minimalocal,ssc.cantidad_cursosmes,ssc.cantidad_modulos,ssc.monto_norma,ssc.habilitado_norma,ssc.cod_tipocurso,ssc.fecha_curso,ssc.dias_curso,". ($tipo_duplicado == 0 ? "ssc.IdModulo" : "''" ) .",ssc.IdCurso,ssc.cod_area_registro,ssc.cod_cliente,ssc.fecha_solicitud_cliente,ssc.id_lead, ". ($tipo_duplicado == 0 ? "cod_version" : "$codSimCosto" ) .", ". ($tipo_duplicado == 0 ? "((SELECT COALESCE(MAX(sc.nro_version), 0) FROM simulaciones_costos sc WHERE sc.cod_version = ssc.cod_version) + 1)" : "1" ) ."
+          FROM simulaciones_costos ssc
+          WHERE ssc.codigo = :codigo";
   $stmt = $dbh->prepare($sql);
   $stmt->bindParam(':codigo', $codigo);
   $stmt->execute();
 
   /*************************************************/
-  /*                  idPropuesta                  */
+  /*            idPropuesta  IBNORCA               */
   /*************************************************/
-  // $sqlIbnorca="UPDATE ibnorca.modulos set idPropuesta=$codSimCosto where IdModulo=$IdModulo";
-  // $stmtIbnorca = $dbh->prepare($sqlIbnorca);
-  // $stmtIbnorca->execute();
+  // TIPO 0: Duplicado con dependencia
+  // TIPO 1: Duplicado sin dependencia
+  if($tipo_duplicado == 0){
+        $sqlIbnorca="UPDATE ibnorca.modulos set idPropuesta=$codSimCosto where IdModulo=(SELECT IdModulo FROM simulaciones_costos WHERE codigo = $codigo LIMIT 1)";
+        $stmtIbnorca = $dbh->prepare($sqlIbnorca);
+        $stmtIbnorca->execute();
+  }
 
   /**************************************************************/
   /*                  SIMULACION COSTOS NORMAS                  */

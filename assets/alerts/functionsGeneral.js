@@ -8190,11 +8190,16 @@ function guardarDatosPlantilla(btn_id){
    var normas_int=$("#normas_int").val();
    //alert(normas);
    var parametros={"dias_curso":dias_curso,"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo,"modal_modulos":modal_modulos,"normas":normas,"normas_int":normas_int};
-
+   
   if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){
     var cantidadFilas=$("#cantidad_filasprecios").val();
     var error=0;
     var mensajeError="";
+    //  Validación Selección Precio
+    if(precio_p === "" || precio_p === null){
+      mensajeError="Precio: Debe seleccionar un precio.";
+      error=1;
+    }
     for (var i = 1; i <= parseInt(cantidadFilas); i++) {
       if($("#total_alumnosAAA"+i).length>0){
          if($("#cantidad_alumnosAAA"+i).val()==""||$("#porcentaje_alumnosAAA"+i).val()==""||$("#monto_alumnosAAA"+i).val()==""){

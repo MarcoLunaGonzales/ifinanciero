@@ -12,7 +12,7 @@ session_start();
 $codPlantillaCosto=$_POST["plantilla"];
 $codSimulacion=$_POST["simulacion"];
 $ut_i=$_POST['utilidad'];
-$dia=$_POST['dia'];
+$dia=empty($_POST['dia']) ? '' : $_POST['dia'];
 
 
 $monto=$_POST['monto'];
@@ -30,8 +30,8 @@ $iteracion=$_POST['iteracion'];
 $des_serv=$_POST['des_serv'];
 $oficina_servicio=$_POST['oficina_servicio'];
 
-$iaf_primario=$_POST['iaf_primario'];
-$iaf_secundario=$_POST['iaf_secundario'];
+$iaf_primario   = empty($_POST['iaf_primario'])  ? [] : $_POST['iaf_primario'];
+$iaf_secundario = empty($_POST['iaf_secundario'])? [] : $_POST['iaf_secundario'];
 
 $objeto_servicio=$_POST['objeto_servicio'];
 $tipo_servicio=$_POST['tipo_servicio'];
@@ -85,9 +85,9 @@ $stmtUpdatePlantilla->execute();
 
   /*************************************************************************************************************************************************************/
   // Limpiar archivos
-  $arrayIAFprimario           = $_POST['iaf_primario'];
-  $arrayInocuidad             = $_POST['iaf_secundario'];
-  $arrayOrgnismoCertificador  = $_POST['organismo_certificador'];
+  $arrayIAFprimario           = empty($_POST['iaf_primario']) ? [] : $_POST['iaf_primario'];
+  $arrayInocuidad             = empty($_POST['iaf_secundario']) ? [] : $_POST['iaf_secundario'];
+  $arrayOrgnismoCertificador  = empty($_POST['organismo_certificador']) ? [] : $_POST['organismo_certificador'];
   // NUEVO SERVICIO IAF - MULTIPLE
   $values = [];
   foreach($arrayIAFprimario as $arrayIAF){
@@ -129,7 +129,7 @@ $stmtUpdatePlantilla->execute();
   $sqlDelete = "DELETE FROM simulaciones_servicios_organismocertificador WHERE cod_simulacionservicio = '".$codSimulacion."'";
   $stmt      = $dbh->prepare($sqlDelete);
   $stmt->execute();
-  if(count($values > 0)){
+  if(count($values) > 0){
     // Actualizar
     $sqlInsert = "INSERT INTO simulaciones_servicios_organismocertificador (cod_simulacionservicio, cod_orgnismocertificador) VALUES\n" . implode(",\n", $values);
     $stmt      = $dbh->prepare($sqlInsert);
@@ -213,7 +213,7 @@ $stmtDetAt->execute();
               VALUES ('$codSimulacionServicioAtributo','$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo','$paisAtributo','$estadoAtributo','$ciudadAtributo')";
               $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
               $stmtDetalleAtributos->execute();
-
+            $auditoresDias = 0;
             if($_POST['tcs']==0){
                 //$direccionAtributo="";
               $normasFila=explode(",",$normaCodAtributo);
