@@ -73,13 +73,11 @@ if(isset($_POST['nombre'])){
   if(isset($_POST['region_cliente'])){
     $regionCliente=$_POST['region_cliente'];
     $tipoCliente=$_POST['tipo_cliente'];
-    $iafprimario=$_POST['iaf_primario'];
-    $iafsecundario=$_POST['iaf_secundario'];
   }else{
     $regionCliente=1;
-    $iafprimario=$_POST['iaf_primario'];
-    $iafsecundario=$_POST['iaf_secundario'];
   }
+  $iafprimario   = empty($_POST['iaf_primario']) ? [] : $_POST['iaf_primario'];
+  $iafsecundario = empty($_POST['iaf_secundario']) ? [] : $_POST['iaf_secundario'];
   // Preparación de IAF Primario
   $arrayIAFprimario = $iafprimario;
   $iafprimario = 0;

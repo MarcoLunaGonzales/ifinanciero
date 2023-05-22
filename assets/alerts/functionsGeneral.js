@@ -8190,11 +8190,16 @@ function guardarDatosPlantilla(btn_id){
    var normas_int=$("#normas_int").val();
    //alert(normas);
    var parametros={"dias_curso":dias_curso,"cod_sim":cod_sim,"codigo":codigo_p,"ut_i":ut_i,"ut_f":ut_f,"al_i":al_i,"al_f":al_f,"precio_p":precio_p,"precio_pedit":precio_pedit,"precio_alternativo":precio_alternativo,"modal_modulos":modal_modulos,"normas":normas,"normas_int":normas_int};
-
+   
   if(!(ut_i==""||ut_f==""||al_i==""||al_f=="")){
     var cantidadFilas=$("#cantidad_filasprecios").val();
     var error=0;
     var mensajeError="";
+    //  Validación Selección Precio
+    if(precio_p === "" || precio_p === null){
+      mensajeError="Precio: Debe seleccionar un precio.";
+      error=1;
+    }
     for (var i = 1; i <= parseInt(cantidadFilas); i++) {
       if($("#total_alumnosAAA"+i).length>0){
          if($("#cantidad_alumnosAAA"+i).val()==""||$("#porcentaje_alumnosAAA"+i).val()==""||$("#monto_alumnosAAA"+i).val()==""){
@@ -8517,6 +8522,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       //datos afnor
       var des_serv = $("#modal_des_serv").val();
       var parametros = {"mod_afnor":mod_afnor,"mod_region_cliente":mod_region_cliente,"mod_tipo_cliente":mod_tipo_cliente,"mod_cliente":mod_cliente,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"organismo_certificador":organismo_certificador,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
+      console.log(parametros)
       $.ajax({
         type:"POST",
         data:parametros,

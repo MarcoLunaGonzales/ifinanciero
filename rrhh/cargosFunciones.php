@@ -30,6 +30,13 @@ $stmt->bindColumn('peso', $peso);
 
 ?>
 
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
+
 <div class="content">
 	<div class="container-fluid">
         <div class="row">
@@ -39,9 +46,8 @@ $stmt->bindColumn('peso', $peso);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Funciones del Cargo</h4>
-                  <h4 class="card-title" align="center"><?=$nombre_cargo;?></h4>                  
-                  
+                  <h4 class="card-title">Responsabilidades del Cargo</h4>
+                  <h4 class="card-title" align="center"><?=$nombre_cargo;?></h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -70,10 +76,10 @@ $stmt->bindColumn('peso', $peso);
                                     if($globalAdmin==1){
                                   ?>                                	
                                   <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaFuncionCargoE('<?=$datos;?>')">
-                                		<i class="material-icons" title="Editar función"><?=$iconEdit;?></i>
+                                		<i class="material-icons" title="Editar responsabilidad"><?=$iconEdit;?></i>
                                   </button>
                                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminar" onclick="agregaFuncionCargoB('<?=$datos;?>')">
-                                    <i class="material-icons" title="Eliminar Función"><?=$iconDelete;?></i>
+                                    <i class="material-icons" title="Eliminar Responsabilidad"><?=$iconDelete;?></i>
                                   </button>
                                 <?php } ?>
                                 </td>
@@ -90,7 +96,7 @@ $stmt->bindColumn('peso', $peso);
                 if($globalAdmin==1){
                 ?>            
                   <button type="button" class="btn btn-warning btn-round btn-fab" data-toggle="modal" data-target="#modalAgregarFuncionCargo" onclick="agregaFuncionCargo('<?=$datos;?>')">
-                      <i class="material-icons" title="Agregar Función">add</i>
+                      <i class="material-icons" title="Agregar Responsabilidad">add</i>
   		             </button>                                            
                 <?php
                 }
@@ -98,6 +104,14 @@ $stmt->bindColumn('peso', $peso);
                 <a href="<?=$urlListCargos;?>" class="btn btn-danger btn-round btn-fab">
                   <i class="material-icons" title="Volver">keyboard_return</i>
                 </a> 
+                <!-- Copiar Responsabilidades de OTRO cargo -->
+                <button type="button" class="btn btn-success btn-round btn-fab" onclick="$('#modalCopyFunciones').modal('show')">
+                  <i class="material-icons" title="Copiar Resp. de otro Cargo">keyboard</i>
+                </button> 
+                <!-- Mover Responsabilidades de OTRO cargo -->
+                <button type="button" class="btn btn-primary btn-round btn-fab" onclick="$('#modalMoveFunciones').modal('show')">
+                  <i class="material-icons" title="Mover Resp. a otro Cargo">keyboard</i>
+                </button> 
               </div>
             </div>
           </div>  
@@ -111,11 +125,11 @@ $stmt->bindColumn('peso', $peso);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Registrar Función del Cargo</h4>
+        <h4 class="modal-title" id="myModalLabel">Registrar Responsabilidad del Cargo</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="cod_cargoA" id="cod_cargoA" value="0">                      
-        <h6> Función </h6>
+        <h6> Responsabilidad </h6>
         <!-- <input class="form-control" type="text" name="nombre_funcionA" id="nombre_funcionA" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true" /> -->
         <textarea rows="4" class="form-control" name="nombre_funcionA" id="nombre_funcionA" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true">
         </textarea>
@@ -137,12 +151,12 @@ $stmt->bindColumn('peso', $peso);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Editar Función del Cargo </h4>
+        <h4 class="modal-title" id="myModalLabel">Editar Responsabilidad del Cargo </h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="cod_cargo_funcionE" id="cod_cargo_funcionE" value="0">
         <input type="hidden" name="cod_cargoE" id="cod_cargoE" value="0">        
-        <h6> Función </h6>
+        <h6> Responsabilidad </h6>
         <textarea rows="4"  class="form-control" name="nombre_funcionE" id="nombre_funcionE" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true">
         </textarea>
 
@@ -164,12 +178,12 @@ $stmt->bindColumn('peso', $peso);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Eliminar Función Del Cargo</h4>
+        <h4 class="modal-title" id="myModalLabel">Eliminar Responsabilidad Del Cargo</h4>
       </div>
       <div class="modal-body">
         <input type="hidden" name="cod_cargo_funcionB" id="cod_cargo_funcionB" value="0">
         <input type="hidden" name="cod_cargoB" id="cod_cargoB" value="0">               
-        Esta acción Eliminará La función del cargo. ¿Deseas Continuar?
+        Esta acción Eliminará La responsabilidad del cargo. ¿Deseas Continuar?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EliminarFC"  data-dismiss="modal">Aceptar</button>
@@ -178,6 +192,75 @@ $stmt->bindColumn('peso', $peso);
     </div>
   </div>
 </div>
+<!-- Modal Copiar Responsabilidades de Cargo -->
+<div class="modal fade" id="modalCopyFunciones" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title text-primary font-weight-bold" id="myModalLabel3">Copiar Responsabilidades de Cargo</h4>
+          </div>
+          <div class="modal-body" id="modal-lista_documentos">
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Cargo</label>
+                <div class="col-sm-10">
+                  <div class="form-group">
+                      <select name="cod_cargo_copia" id="cod_cargo_copia" data-style="btn btn-info" required class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
+                          <?php 
+                            $sqlListaCargos="SELECT codigo,nombre,abreviatura,cod_tipo_cargo,
+                            (select tc.nombre from tipos_cargos_personal tc where tc.codigo=cod_tipo_cargo)as nombre_tipo_cargo
+                          from cargos where cod_estadoreferencial=1 order by nombre";
+                            $stmtListaCargos=$dbh->query($sqlListaCargos);
+                            while ($row = $stmtListaCargos->fetch()) { ?>
+                              <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                          <?php } ?>
+                      </select>
+                  </div>
+                </div>
+                <div class="col-md-12 text-center">
+                  <button type="button" class="btn btn-success" id="cargo_copia_responsabilidad">Guardar</button>
+                </div>
+            </div>
+          
+          </div>
+      </div>
+  </div>
+</div>
+<!-- Modal Mover Responsabilidades de Cargo -->
+<div class="modal fade" id="modalMoveFunciones" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title text-primary font-weight-bold" id="myModalLabel3">Mover Responsabilidades de Cargo</h4>
+          </div>
+          <div class="modal-body" id="modal-lista_documentos">
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Cargo</label>
+                <div class="col-sm-10">
+                  <div class="form-group">
+                      <select name="cod_cargo_mover" id="cod_cargo_mover" data-style="btn btn-info" required class="selectpicker form-control form-control-sm" required data-show-subtext="true" data-live-search="true">
+                          <?php 
+                            $sqlListaCargos="SELECT codigo,nombre,abreviatura,cod_tipo_cargo,
+                            (select tc.nombre from tipos_cargos_personal tc where tc.codigo=cod_tipo_cargo)as nombre_tipo_cargo
+                          from cargos where cod_estadoreferencial=1 order by nombre";
+                            $stmtListaCargos=$dbh->query($sqlListaCargos);
+                            while ($row = $stmtListaCargos->fetch()) { ?>
+                              <option value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                          <?php } ?>
+                      </select>
+                  </div>
+                </div>
+                <div class="col-md-12 text-center">
+                  <button type="button" class="btn btn-success" id="cargo_mover_responsabilidad">Guardar</button>
+                </div>
+            </div>
+          
+          </div>
+      </div>
+  </div>
+</div>
+
 
 
 <script type="text/javascript">
@@ -199,6 +282,100 @@ $stmt->bindColumn('peso', $peso);
       cod_cargoB=document.getElementById("cod_cargoB").value;
       cod_cargo_funcionB=document.getElementById("cod_cargo_funcionB").value;
       EliminarCargoFuncion(cod_cargoB,cod_cargo_funcionB);    
+    });
+  });
+  // Copia de Responsabilidades de Cargo
+  $('body').on('click','#cargo_copia_responsabilidad', function(){
+    let formData = new FormData();
+    formData.append('cod_cargo', <?=$codigo?>);
+    formData.append('cod_cargo_copia', $('#cod_cargo_copia').val());
+    swal({
+        title: '¿Esta seguro de hacer una copia?',
+        text: "Se realizará una copia de las responsabilidades de cargo, de acuerdo al cargo seleccionado.",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.value) {
+            $(".cargar-ajax").removeClass("d-none");
+            $.ajax({
+                url:"rrhh/ajaxFuncionesCargoCopia.php",
+                type:"POST",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success:function(response){
+                let resp = JSON.parse(response);
+                if(resp.status){
+                    $(".cargar-ajax").addClass("d-none");// Mensaje
+                    Swal.fire({
+                        type: 'success',
+                        title: 'Correcto!',
+                        text: 'El proceso se completo correctamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    
+                    setTimeout(function(){
+                        location.reload()
+                    }, 1550);
+                }else{
+                    Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                    }
+                }
+            });
+        }
+    });
+  });
+  // Mover Responsabilidades de Cargo
+  $('body').on('click','#cargo_mover_responsabilidad', function(){
+    let formData = new FormData();
+    formData.append('cod_cargo', <?=$codigo?>);
+    formData.append('cod_cargo_mover', $('#cod_cargo_mover').val());
+    swal({
+        title: '¿Esta seguro de mover?',
+        text: "Se moveran todas las Responsabilidades de Cargo al Cargo seleccionado.",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonClass: 'btn btn-success',
+        cancelButtonClass: 'btn btn-danger',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.value) {
+            $(".cargar-ajax").removeClass("d-none");
+            $.ajax({
+                url:"rrhh/ajaxFuncionesCargoMover.php",
+                type:"POST",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success:function(response){
+                let resp = JSON.parse(response);
+                if(resp.status){
+                    $(".cargar-ajax").addClass("d-none");// Mensaje
+                    Swal.fire({
+                        type: 'success',
+                        title: 'Correcto!',
+                        text: 'El proceso se completo correctamente!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    
+                    setTimeout(function(){
+                        location.reload()
+                    }, 1550);
+                }else{
+                    Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                    }
+                }
+            });
+        }
     });
   });
 </script>

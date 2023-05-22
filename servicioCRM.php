@@ -1,5 +1,6 @@
 <?php
     require_once 'conexion.php';
+    require_once 'functions.php';
     date_default_timezone_set('America/La_Paz');
 
     /**************************************************/
@@ -10,9 +11,11 @@
     /**
      * Función de Busqueda y Cierre de LEADS
      * Servicio CRM
-     * @author: Samuel
+     * @author api: Samuel
+     * @author function: Ronald
      */
     function searchLeadsFactura($cod_facturaventa){
+        $url_init = obtenerValorConfiguracion(110);
         try {
             $dbh = new Conexion();
             $stmt = $dbh->prepare("SELECT fvd.cod_claservicio, fvd.ci_estudiante from facturas_ventadetalle fvd where fvd.cod_facturaventa='$cod_facturaventa'");
@@ -27,6 +30,7 @@
                 /********************************************************/
                 /*              SERVICIO DE BUSQUEDA LEADS              */
                 /********************************************************/
+                // $url_init = "http://intranet.ibnorca.org:8008/api/v1/";
                 $api_key = "cd77c5d7ef268ea79a4573222258effbd782b358";
                 $datos   = array("data"=>"");
                 $datos   = json_encode($datos);
@@ -36,7 +40,7 @@
                 );
                     
                 $fieds = "name,email_from,phone,partner_id,product_id,stage_id";
-                $url = "http://intranet.ibnorca.org:8008/api/v1/crm.lead/find?partner_id.ci_dni=" . $ci . "&product_id.id_curso=" . $idServicio . "&fields=".$fieds;
+                $url = $url_init."crm.lead/find?partner_id.ci_dni=" . $ci . "&product_id.id_curso=" . $idServicio . "&fields=".$fieds."&stage_id=Reserva%20de%20cupo";
         
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
@@ -51,36 +55,39 @@
                 /************************************************/
                 /*              LOG BUSQUEDA LEADS              */
                 /************************************************/
-                $observaciones = "cod_facturaventa: $cod_facturaventa, ci: $ci, cod_claservicio: $idServicio";
+                $observaciones = "cod_facturaventa: $cod_facturaventa, ci: $ci, idModulo: $idServicio";
                 $response      = json_encode($obj);
                 $fecha_hora    = date('Y-m-d H:i:s');
-                $stmtSave = $dbh->prepare("INSERT INTO log_leads (observaciones,response,fecha_hora,tipo) VALUES ('$observaciones','$response','$fecha_hora', 0)");
+                $stmtSave = $dbh->prepare("INSERT INTO log_leads (observaciones,response,fecha_hora,tipo,cod_facturaventa) VALUES ('$observaciones','$response','$fecha_hora', 0, $cod_facturaventa)");
                 $stmtSave->execute();
                 
-                foreach($obj->result->data as $data){
-                    $count_lead++;
-                    /******************************************************/
-                    /*              SERVICIO DE CIERRE LEADS              */
-                    /******************************************************/
-                    $datos   = array("data"=>"");
-                    $datos   = json_encode($datos);
-                    $url = "http://intranet.ibnorca.org:8008/api/v1/crm/".$data->id."/lead";
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_URL, $url);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    $remote_server_output = curl_exec ($ch);
-                    curl_close ($ch);
-                    /**********************************************/
-                    /*              LOG CIERRE LEADS              */
-                    /**********************************************/
-                    $observaciones = "cod_facturaventa: $cod_factura, ci: $ci, cod_claservicio: $idModulo, Cod_lead: ".$data->id;
-                    $response      = json_encode($remote_server_output);
-                    $fecha_hora    = date('Y-m-d H:i:s');
-                    $stmtSave = $dbh->prepare("INSERT INTO log_leads (observaciones,response,fecha_hora,tipo) VALUES ('$observaciones','$response','$fecha_hora', 1)");
-                    $stmtSave->execute();
+                // En caso existe LEADS, se procede a CERRAR
+                if(!empty($obj->result->data)){
+                    foreach($obj->result->data as $data){
+                        $count_lead++;
+                        /******************************************************/
+                        /*              SERVICIO DE CIERRE LEADS              */
+                        /******************************************************/
+                        $datos   = array("data"=>"");
+                        $datos   = json_encode($datos);
+                        $url = $url_init."crm/".$data->id."/lead";
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        $remote_server_output = curl_exec ($ch);
+                        curl_close ($ch);
+                        /**********************************************/
+                        /*              LOG CIERRE LEADS              */
+                        /**********************************************/
+                        $observaciones = "cod_facturaventa: $cod_factura, ci: $ci, idModulo: $idServicio, cod_lead: ".$data->id;
+                        $response      = json_encode($remote_server_output);
+                        $fecha_hora    = date('Y-m-d H:i:s');
+                        $stmtSave = $dbh->prepare("INSERT INTO log_leads (observaciones,response,fecha_hora,tipo,cod_facturaventa,cod_lead) VALUES ('$observaciones','$response','$fecha_hora', 1,$cod_facturaventa,$data->id)");
+                        $stmtSave->execute();
+                    }
                 }
             }
             // Resultado

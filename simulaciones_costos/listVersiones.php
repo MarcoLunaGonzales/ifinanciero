@@ -6,6 +6,9 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $globalUser=$_SESSION["globalUser"];
 $dbh = new Conexion();
 
+// codigo de Versión
+$cod_version = $_GET['cod_version'];
+
 // Datos de Filtro
 $start          = isset($_POST['date_start'])?$_POST['date_start']:"";
 $end            = isset($_POST['date_end'])?$_POST['date_end']:"";
@@ -31,7 +34,8 @@ $listSC = "";
 $query_q = isset($_GET['q'])?("&q=".$_GET['q']):"";
 $query_s = isset($_GET['s'])?("&s=".$_GET['s']):"";
 $query_u = isset($_GET['u'])?("&u=".$_GET['u']):"";
-$listSC = $query_q.$query_s.$query_u;
+$query_cod_version = isset($_GET['cod_version'])?("&cod_version=".$_GET['cod_version']):"";
+$listSC = $query_q.$query_s.$query_u.$query_cod_version;
 
 if(isset($_GET['q'])){
     
@@ -60,7 +64,7 @@ if(isset($_GET['q'])){
   LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
   JOIN estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
   WHERE sc.cod_estadoreferencial=1 
-  AND sc.estado_version = 1 $sqlModulos ".
+  AND sc.cod_version = '$cod_version' $sqlModulos ".
   $filter_list.
   " GROUP BY sc.codigo, sc.nombre, sc.observacion, sc.fecha, sc.cod_tipocurso, sc.cod_plantillacosto, sc.cod_estadosimulacion, sc.cod_responsable, sc.cod_area_registro,cliente, estado
   order by sc.codigo desc
@@ -72,12 +76,12 @@ if(isset($_GET['q'])){
   $u=0;
   // Preparamos
 $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente
--- ,vc.cod_curso as codigo_curso
+-- , vc.cod_curso as codigo_curso
  FROM simulaciones_costos sc 
  JOIN estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
 --  LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
  WHERE sc.cod_estadoreferencial=1 
- AND sc.estado_version = 1".
+ AND sc.cod_version = '$cod_version'".
  (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
  $filter_list.
  " GROUP BY sc.codigo, sc.nombre, sc.observacion, sc.fecha, sc.cod_tipocurso, sc.cod_plantillacosto, sc.cod_estadosimulacion, sc.cod_responsable, sc.cod_area_registro,cliente, estado
@@ -125,7 +129,7 @@ $stmt->bindColumn('estado_version', $estado_version);
                   </div>
                   <div class="row">
                     <div class="col-sm-6">
-                        <h4 class="card-title"><b><?=$moduleNamePlural?></b></h4>
+                        <h4 class="card-title"><b>Versiones - <?=$moduleNamePlural?></b></h4>
                     </div>
                     <div class="col-sm-6">
                       <div class="form-group" align="right">
@@ -149,8 +153,8 @@ $stmt->bindColumn('estado_version', $estado_version);
                           <th>Responsable</th>
                           <th>Fecha</th>
                           <th>Cliente</th>
-                          <th class="text-center">Codigo Propuesta Base</th>
-                          <th class="text-center">NRO Versión</th>
+                          <th class="text-center">Versión</th>
+                          <th class="text-center">Estado de Registro</th>
                           <th>Estado</th>
                           <th class="text-right">Actions</th>
                         </tr>
@@ -189,8 +193,8 @@ $stmt->bindColumn('estado_version', $estado_version);
                           </td>
                           <td><?=$fecha;?></td>
                           <td><?=$nombreCliente;?></td>
-                          <td class="text-center"><?= empty($cod_version) ? 0 : $cod_version; ?></td>
                           <td class="text-center"><?=$nro_version;?></td>
+                          <td class="text-center"><span class="badge badge-<?=($estado_version?'success':'danger')?>"><?=($estado_version?'Activo':'Inactivo')?></span></td>
                           <td><?=$estado;?> <?=$nEst?> %
                              <div class="progress">
                                <div class="progress-bar <?=$barEstado?>" role="progressbar" aria-valuenow="<?=$nEst?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$nEst?>%">
@@ -290,17 +294,9 @@ $stmt->bindColumn('estado_version', $estado_version);
                               }
                             ?>
                             <!-- Duplicar Registro de Propuesta -->
-                            <button title="Duplicar como nueva Propuesta" class="btn btn-danger propuesta_duplicar" data-codigo="<?=$codigo;?>" data-tipo="1">
+                            <button title="Duplicar Propuesta" class="btn btn-warning propuesta_duplicar" data-codigo="<?=$codigo;?>">
                               <i class="material-icons">content_copy</i>
                             </button>
-                            <!-- Duplicar Registro de Propuesta con DEPENDENCIA -->
-                            <button title="Duplicar Propuesta" class="btn btn-warning propuesta_duplicar" data-codigo="<?=$codigo;?>" data-tipo="0">
-                              <i class="material-icons">content_copy</i>
-                            </button>
-                            <!-- Ver Versiones de Propuesta -->
-                            <a title="Ver versiones" target="_blank" href='index.php?opcion=listSimulacionesCostosVersiones&cod_version=<?=$cod_version;?>' class="btn btn-info">
-                              <i class="material-icons">playlist_add</i>
-                            </a>
                           </td>
                         </tr>
 <?php
@@ -457,7 +453,6 @@ $stmt->bindColumn('estado_version', $estado_version);
       let formData = new FormData();
       // codigo Planilla
       formData.append('codigo', $(this).data('codigo'));
-      formData.append('tipo', $(this).data('tipo'));
       swal({
           title: '¿Esta seguro de duplicar?',
           text: "Se duplicará el registro con todos su datos realacionados, no se podrá revertir la acción.",
