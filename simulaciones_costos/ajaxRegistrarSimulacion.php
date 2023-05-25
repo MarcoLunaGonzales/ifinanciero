@@ -8,6 +8,8 @@ require_once '../functions.php';
 require_once '../functionsPOSIS.php';
 require_once 'configModule.php';
 
+date_default_timezone_set('America/La_Paz');
+
 $dbh = new Conexion();
 
 $sqlX="SET NAMES 'utf8'";
@@ -49,8 +51,8 @@ if(isset($_GET['nombre'])){
   $fecha= date("Y-m-d");
   $codSimCosto=obtenerCodigoSimCosto();
   $dbh = new Conexion();
-  $sqlInsert="INSERT INTO simulaciones_costos (codigo, nombre, fecha, cod_plantillacosto, cod_responsable,cod_precioplantilla,ibnorca,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos,monto_norma,habilitado_norma,cod_tipocurso,fecha_curso,dias_curso,IdModulo,IdCurso,cod_area_registro,cod_cliente, fecha_solicitud_cliente, id_lead) 
-  VALUES ('".$codSimCosto."','".$nombre."','".$fecha."', '".$plantilla_costo."', '".$IdPersonalForm."','".$codPrecio."','".$ibnorca."','".$cantidadAlumnos."','".$utilidadMin."','".$cantidadCursosMes."','".$cantidad_modulos."','".$monto_norma."',0,'".$tipoCurso."','".$fecha_estimada."','".$cantidad_dias."','".$IdModulo."','".$IdCurso."','".$globalArea."','".$IdClienteForm."','".$fecha_solicitud_cliente."', '".$id_lead."')";
+  $sqlInsert="INSERT INTO simulaciones_costos (codigo, nombre, fecha, cod_plantillacosto, cod_responsable,cod_precioplantilla,ibnorca,cantidad_alumnoslocal,utilidad_minimalocal,cantidad_cursosmes,cantidad_modulos,monto_norma,habilitado_norma,cod_tipocurso,fecha_curso,dias_curso,IdModulo,IdCurso,cod_area_registro,cod_cliente, fecha_solicitud_cliente, id_lead, cod_version) 
+  VALUES ('".$codSimCosto."','".$nombre."','".date('Y-m-d')."', '".$plantilla_costo."', '".$IdPersonalForm."','".$codPrecio."','".$ibnorca."','".$cantidadAlumnos."','".$utilidadMin."','".$cantidadCursosMes."','".$cantidad_modulos."','".$monto_norma."',0,'".$tipoCurso."','".$fecha_estimada."','".$cantidad_dias."','".$IdModulo."','".$IdCurso."','".$globalArea."','".$IdClienteForm."','".$fecha_solicitud_cliente."', '".$id_lead."', '".$codSimCosto."')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $stmtInsert->execute();
 

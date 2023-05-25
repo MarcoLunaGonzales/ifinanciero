@@ -34,8 +34,12 @@ $stmt->bindColumn('nombre_tipo_cargo', $nombre_tipo_cargo);
                   <h4 class="card-title"><?=$nombrePluralCargos?></h4>                  
                   <h4 align="right" >
                 <a  style="height:10px;width: 10px; color: #ffffff;background-color: #1883ba;border-radius: 3px;border: 2px solid #1883ba;" href='<?=$urlCargoEscalaSalarialGeneral;?>' >
-                <i class="material-icons" title="Lista Escala Salarial General">trending_up</i>
-              </a>  
+                  <i class="material-icons" title="Lista Escala Salarial General">trending_up</i>
+                </a>  
+                <!-- Lista de Cargos Inactivos -->
+                <a  style="height:10px;width: 10px; color: #ffffff;background-color: #f44336;border-radius: 3px;border: 2px solid #f44336;" href='?opcion=cargosListaInactivo' title="Cargos Inactivos">
+                  <i class="material-icons">list</i>
+                </a>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -63,7 +67,7 @@ $stmt->bindColumn('nombre_tipo_cargo', $nombre_tipo_cargo);
                                 if($globalAdmin==1){
                               ?>
                                 <a href='<?=$urlCargosFunciones;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-warning">
-                                  <i class="material-icons" title="Funciones">assignment</i>
+                                  <i class="material-icons" title="Responsabilidades del Cargo">assignment</i>
                                 </a>
 
                                 <a href='<?=$urlCargosEscalaSalarial;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-primary">

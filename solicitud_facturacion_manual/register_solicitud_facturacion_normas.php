@@ -440,7 +440,7 @@ $detalle_cod_cliente = $_POST["idVentaNormas_a".'1'];
                                 </div>
                                 
                                 <div class="col-sm-2" >
-                                    <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-success" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();'>
+                                    <select class="selectpicker form-control form-control-sm" name="tipo_documento" id="tipo_documento" data-style="btn btn-success" data-show-subtext="true" data-live-search="true" title="Seleccione Tipo de documento" onChange='mostrarComplemento();' required="true">
                                     <?php
                                     $sql2="SELECT codigo,nombre from siat_tipos_documentoidentidad where cod_estadoreferencial=1";
                                     $stmtTipoIdentificacion = $dbh->prepare($sql2);
@@ -460,7 +460,7 @@ $detalle_cod_cliente = $_POST["idVentaNormas_a".'1'];
 
                                 <div class="col-sm-2">
                                     <div class="form-group">                                        
-                                            <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>" required="true"/>
+                                            <input class="form-control" type="number" name="nit" id="nit" required="true" value="<?=$nit;?>"/>
                                     </div>
                                 </div>
                                 <div class="col-sm-1">

@@ -3282,7 +3282,6 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     }    
     $total_bono_antiguedad_x=number_format($total_bono_antiguedad,2,'.','');    
     return $total_bono_antiguedad_x;
-
   }
   function obtenerTotalBonos($codigo_personal,$dias_trabajados_asistencia,$dias_trabajados_por_defecto,$cod_gestion,$mes)
   {  
@@ -8044,17 +8043,23 @@ function anular_pago_curso($ci_estudiante,$IdCurso,$Idmodulo,$monto,$cod_solfac)
     }
     return $valor; 
   }
+  
   function obtenerDiasAuditorSimulacionServicio($codigo){
     $dbh = new Conexion();
     $valor=0;
-    $sql="SELECT dias from simulaciones_servicios_auditores p where p.codigo=$codigo";
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $valor=$row['dias'];
+    if($codigo==0 || $codigo=="" || $codigo=="NULL" || $codigo==NULL){
+      $valor=0;
+    }else{
+       $sql="SELECT dias from simulaciones_servicios_auditores p where p.codigo=$codigo";
+       $stmt = $dbh->prepare($sql);
+       $stmt->execute();
+       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+       $valor=$row['dias'];
+       }
     }
     return (float)$valor;
   }
+
   function obtenerEntradaSimulacionServicio($codigo){
     $dbh = new Conexion();
     $valor=0;
@@ -8797,8 +8802,8 @@ function obtenerObtenerLibretaBancariaIndividualAnio($codigo,$anio,$fecha,$monto
     $valor=round($valor, 2);
     return($valor);
   }
+  
   function obtenerNombreEstudiante($ci_estudiante){
-
     $dbhIBNO = new ConexionIBNORCA();
     //datos del estudiante y el curso que se encuentra
     $sqlIBNORCA="SELECT concat(cpe.clPaterno,' ',cpe.clMaterno,' ',cpe.clNombreRazon)as nombreAlumno 

@@ -1,4 +1,4 @@
-#OMITIREMOS EL ARCHIVO DE CONEXION PHP
+.environment
 .environment_copy
 .environment_test
 conexion.php

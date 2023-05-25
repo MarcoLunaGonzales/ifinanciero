@@ -56,12 +56,14 @@ if(isset($_GET['q'])){
 
   $sql = "SELECT sc.*,es.nombre as estado, 
   (select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente,vc.cod_curso as codigo_curso
-  from simulaciones_costos sc 
+  FROM simulaciones_costos sc 
   LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
-  join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
-  where sc.cod_estadoreferencial=1 $sqlModulos ".
+  JOIN estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+  WHERE sc.cod_estadoreferencial=1 
+  AND sc.estado_version = 1 $sqlModulos ".
   $filter_list.
-  " order by sc.codigo desc
+  " GROUP BY sc.codigo, sc.nombre, sc.observacion, sc.fecha, sc.cod_tipocurso, sc.cod_plantillacosto, sc.cod_estadosimulacion, sc.cod_responsable, sc.cod_area_registro,cliente, estado
+  order by sc.codigo desc
   LIMIT 0, 50";
   $stmt = $dbh->prepare($sql);
 
@@ -69,15 +71,18 @@ if(isset($_GET['q'])){
   $s=0;
   $u=0;
   // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente,vc.cod_curso as codigo_curso
-  FROM simulaciones_costos sc 
-  LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
-  JOIN estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
-  WHERE sc.cod_estadoreferencial=1 ".
-  (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
-  $filter_list.
-  " ORDER BY sc.codigo DESC
-  LIMIT 0, 200");
+$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente
+-- ,vc.cod_curso as codigo_curso
+ FROM simulaciones_costos sc 
+ JOIN estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
+--  LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
+ WHERE sc.cod_estadoreferencial=1 
+ AND sc.estado_version = 1".
+ (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
+ $filter_list.
+ " GROUP BY sc.codigo, sc.nombre, sc.observacion, sc.fecha, sc.cod_tipocurso, sc.cod_plantillacosto, sc.cod_estadosimulacion, sc.cod_responsable, sc.cod_area_registro,cliente, estado
+ order by sc.codigo desc
+ LIMIT 0, 200");
 }
 
 //echo $sql;
@@ -96,8 +101,18 @@ $stmt->bindColumn('cod_area_registro', $codArea);
 $stmt->bindColumn('estado', $estado);
 $stmt->bindColumn('cliente', $nombreCliente);
 $stmt->bindColumn('codigo_curso', $codigoCurso);
+$stmt->bindColumn('cod_version', $cod_version);
+$stmt->bindColumn('nro_version', $nro_version);
+$stmt->bindColumn('estado_version', $estado_version);
 
 ?>
+
+<div class="cargar-ajax d-none">
+  <div class="div-loading text-center">
+     <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+     <p class="text-white">Aguard&aacute; un momento por favor</p>  
+  </div>
+</div>
 
 <div class="content">
   <div class="container-fluid">
@@ -134,6 +149,8 @@ $stmt->bindColumn('codigo_curso', $codigoCurso);
                           <th>Responsable</th>
                           <th>Fecha</th>
                           <th>Cliente</th>
+                          <th class="text-center">Codigo Propuesta Base</th>
+                          <th class="text-center">NRO Versión</th>
                           <th>Estado</th>
                           <th class="text-right">Actions</th>
                         </tr>
@@ -172,6 +189,8 @@ $stmt->bindColumn('codigo_curso', $codigoCurso);
                           </td>
                           <td><?=$fecha;?></td>
                           <td><?=$nombreCliente;?></td>
+                          <td class="text-center"><?= empty($cod_version) ? 0 : $cod_version; ?></td>
+                          <td class="text-center"><?=$nro_version;?></td>
                           <td><?=$estado;?> <?=$nEst?> %
                              <div class="progress">
                                <div class="progress-bar <?=$barEstado?>" role="progressbar" aria-valuenow="<?=$nEst?>" aria-valuemin="0" aria-valuemax="100" style="width:<?=$nEst?>%">
@@ -268,9 +287,20 @@ $stmt->bindColumn('codigo_curso', $codigoCurso);
                             </button>
                               <?php 
                              }  
-                               
                               }
                             ?>
+                            <!-- Duplicar Registro de Propuesta -->
+                            <button title="Duplicar como nueva Propuesta" class="btn btn-danger propuesta_duplicar" data-codigo="<?=$codigo;?>" data-tipo="1">
+                              <i class="material-icons">content_copy</i>
+                            </button>
+                            <!-- Duplicar Registro de Propuesta con DEPENDENCIA -->
+                            <button title="Duplicar Propuesta" class="btn btn-warning propuesta_duplicar" data-codigo="<?=$codigo;?>" data-tipo="0">
+                              <i class="material-icons">content_copy</i>
+                            </button>
+                            <!-- Ver Versiones de Propuesta -->
+                            <a title="Ver versiones" target="_blank" href='index.php?opcion=listSimulacionesCostosVersiones&cod_version=<?=$cod_version;?>' class="btn btn-info">
+                              <i class="material-icons">playlist_add</i>
+                            </a>
                           </td>
                         </tr>
 <?php
@@ -420,3 +450,56 @@ $stmt->bindColumn('codigo_curso', $codigoCurso);
     </div>
   </div>
 </div>
+
+<script>
+    // Cambiar Estado de Planilla a Cerrado en Vacio
+    $('body').on('click','.propuesta_duplicar', function(){
+      let formData = new FormData();
+      // codigo Planilla
+      formData.append('codigo', $(this).data('codigo'));
+      formData.append('tipo', $(this).data('tipo'));
+      swal({
+          title: '¿Esta seguro de duplicar?',
+          text: "Se duplicará el registro con todos su datos realacionados, no se podrá revertir la acción.",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonClass: 'btn btn-success',
+          cancelButtonClass: 'btn btn-danger',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+              $(".cargar-ajax").removeClass("d-none");
+              $.ajax({
+                  url:"simulaciones_costos/registerSimulacionDuplicado.php",
+                  type:"POST",
+                  contentType: false,
+                  processData: false,
+                  data: formData,
+                  success:function(response){
+                  let resp = JSON.parse(response);
+                  if(resp.status){
+                      $(".cargar-ajax").addClass("d-none");// Mensaje
+                      Swal.fire({
+                          type: 'success',
+                          title: 'Correcto!',
+                          text: 'El proceso se completo correctamente!',
+                          showConfirmButton: false,
+                          timer: 1500
+                      });
+                      
+                      setTimeout(function(){
+                          location.reload()
+                      }, 1550);
+                  }else{
+                      Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                      }
+                  }
+              });
+          }
+      });
+    });
+    
+    
+  </script>

@@ -31,204 +31,185 @@ if($correoPersonal!=""){
 
 
 if($estado==10||$estado==11||$estado==12){
-  if($estado==12){
-    $urlList2=$urlList3;
-  }else{
-   $urlList2=$urlList4;  
-  }
-  
-  $estado=$estado-10;
-  $sqlUpdate="UPDATE solicitud_recursos SET  revisado_contabilidad=$estado where codigo=$codigo";
-  $stmtUpdate = $dbh->prepare($sqlUpdate);
-  $flagSuccess=$stmtUpdate->execute();
-}else{
-
-
-//AQUI ENVIAMOS LA SR A PROYECTOS
-$oficinaSR=obtenerUnidadSolicitanteRecursos($codigo);
-$areaSR=obtenerAreaSolicitanteRecursos($codigo);
-
-$stringOficinasProyectosExt=obtenerValorConfiguracion(69);
-$stringAreasProyectosExt=obtenerValorConfiguracion(65);
-
-$arrayOficinasProyectos = explode(",", $stringOficinasProyectosExt);
-$arrayAreasProyectos = explode(",", $stringAreasProyectosExt);
-
-  if(in_array($usuario, $arrayAdmins)){
-    setcookie("global_admin_cargo", 1);   
-  }else{
-    setcookie("global_admin_cargo", 0);   
-  }
-
-$banderaProyectosExt=0;
-if(in_array($oficinaSR, $arrayOficinasProyectos)){
-  $banderaProyectosExt=1;
-}
-if(in_array($areaSR, $arrayAreasProyectos)){
-  $banderaProyectosExt=1; 
-}
-if($banderaProyectosExt==1 || obtenerDetalleRecursosSIS($codigo)>0){ 
-  if(isset($_GET["reg"])){
-   if($estado==4&&$_GET['reg']!=2){
-    $estado=7;
-    //enviar correos sis
-    $datoInstancia=obtenerCorreosInstanciaEnvio(2);
-    $correos=implode(",",$datoInstancia[0]);
-    $nombres=implode(",",$datoInstancia[1]); 
-     
-    $envioCorreo=enviarCorreoSimple($correos,'Nueva SR para Proyectos de Financiamiento. Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$nombres.', el sistema IFinanciero le notifica que tiene una nueva SR para ser aprobada. <br> Solicitante:'.$datosSolicitud['solicitante']."<br>Nro: ".$datosSolicitud['numero']."<br><br>Saludos - IFinanciero");
-   }   
-  }  
-}else{
-   $montoCaja=obtenerValorConfiguracion(85);
-   $montoDetalleSoliditud=obtenerSumaDetalleSolicitud($codigo);
-   if($montoDetalleSoliditud<=$montoCaja&&$estado==4){
-     $estado=3;
-   }
-}
-  
-
-$sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado where codigo=$codigo";
-if($estado==8){
-  //enviar propuestas para la actualizacion de ibnorca
-         $fechaHoraActual=date("Y-m-d H:i:s");
-         $idTipoObjeto=2708;
-         $idObjeto=2725; //regristado
-         $obs="Solicitud Contabilizada";
-         if(isset($_GET['u'])){
-          $u=$_GET['u'];
-           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-          }else{
-           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-          }
-        ///
-}
-
-if(isset($_GET['obs'])){
-  $obs=$_GET['obs'];
-  if(isset($_GET["ll"])){
-    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado,glosa_estado=CONCAT(glosa_estado,'####','$obs') where codigo=$codigo";  
-  }else{
-    $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado,glosa_estado='$obs' where codigo=$codigo";
-  }  
-}
-
-
-$stmtUpdate = $dbh->prepare($sqlUpdate);
-$flagSuccess=$stmtUpdate->execute();
-
-
-if($estado!=1){
-	//actualziar los estados del servidor ibnorca
-	if($estado==4){
-    //enviar propuestas para la actualizacion de ibnorca
-    $fechaHoraActual=date("Y-m-d H:i:s");
-    $idTipoObjeto=2708;
-    $idObjeto=2722; //regristado
-    $obs="En Aprobacion Solicitud";
-    if(isset($_GET['q'])){
-       $u=$_GET['q'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-     }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-     }
-    
-	}else{
-  if($estado==6){
-    //enviar propuestas para la actualizacion de ibnorca
-    $fechaHoraActual=date("Y-m-d H:i:s");
-    $idTipoObjeto=2708;
-    $idObjeto=2822; //regristado
-    $obs="En Pre Aprobacion Solicitud";
-    if(isset($_GET['u'])){
-       $u=$_GET['u'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-     }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-     }   
+   
+   if($estado==12){
+      $urlList2=$urlList3;
    }else{
-    if($estado==7){
-     //enviar propuestas para la actualizacion de ibnorca
-     $fechaHoraActual=date("Y-m-d H:i:s");
-     $idTipoObjeto=2708;
-     $idObjeto=3107; //ESTADO PARA PROYECTO SIS
-     $obs="Enviado a Gestión Proyectos";
-     if(isset($_GET['u'])){
-       $u=$_GET['u'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+      $urlList2=$urlList4;  
+   }
+  
+   $estado=$estado-10;
+   $sqlUpdate="UPDATE solicitud_recursos SET  revisado_contabilidad='$estado' where codigo='$codigo'";
+   $stmtUpdate = $dbh->prepare($sqlUpdate);
+   $flagSuccess=$stmtUpdate->execute();
+
+}else{
+   //AQUI ENVIAMOS LA SR A PROYECTOS
+   $oficinaSR=obtenerUnidadSolicitanteRecursos($codigo);
+   $areaSR=obtenerAreaSolicitanteRecursos($codigo);
+
+   $stringOficinasProyectosExt=obtenerValorConfiguracion(69);
+   $stringAreasProyectosExt=obtenerValorConfiguracion(65);
+
+   $arrayOficinasProyectos = explode(",", $stringOficinasProyectosExt);
+   $arrayAreasProyectos = explode(",", $stringAreasProyectosExt);
+
+   if(in_array($usuario, $arrayAdmins)){
+      setcookie("global_admin_cargo", 1);   
+   }else{
+      setcookie("global_admin_cargo", 0);   
+   }
+
+   $banderaProyectosExt=0;
+   if(in_array($oficinaSR, $arrayOficinasProyectos)){
+      $banderaProyectosExt=1;
+   }
+
+   if(in_array($areaSR, $arrayAreasProyectos)){
+      $banderaProyectosExt=1; 
+   }
+   if($banderaProyectosExt==1 || obtenerDetalleRecursosSIS($codigo)>0){ 
+      if(isset($_GET["reg"])){
+         if($estado==4&&$_GET['reg']!=2){
+            $estado=7;
+         //enviar correos sis
+         $datoInstancia=obtenerCorreosInstanciaEnvio(2);
+         $correos=implode(",",$datoInstancia[0]);
+         $nombres=implode(",",$datoInstancia[1]); 
+          
+         $envioCorreo=enviarCorreoSimple($correos,'Nueva SR para Proyectos de Financiamiento. Nº : '.$datosSolicitud['numero'],'Estimado(a) '.$nombres.', el sistema IFinanciero le notifica que tiene una nueva SR para ser aprobada. <br> Solicitante:'.$datosSolicitud['solicitante']."<br>Nro: ".$datosSolicitud['numero']."<br><br>Saludos - IFinanciero");
+         }   
+      }  
+   }else{
+      $montoCaja=obtenerValorConfiguracion(85);
+      $montoDetalleSoliditud=obtenerSumaDetalleSolicitud($codigo);
+      if($montoDetalleSoliditud<=$montoCaja&&$estado==4){
+         $estado=3;
+      }
+   }
+    
+
+   $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado where codigo=$codigo";
+   if($estado==8){
+      //enviar propuestas para la actualizacion de ibnorca
+      $fechaHoraActual=date("Y-m-d H:i:s");
+      $idTipoObjeto=2708;
+      $idObjeto=2725; //regristado
+      $obs="Solicitud Contabilizada";
+      if(isset($_GET['u'])){
+         $u=$_GET['u'];
+         actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
       }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-      } 
-    }else{
-      if($estado==5){
-             //enviar propuestas para la actualizacion de ibnorca
+         actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+      }
+   }
+
+   if(isset($_GET['obs'])){
+      $obs=$_GET['obs'];
+      if(isset($_GET["ll"])){
+         $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado,glosa_estado=CONCAT(glosa_estado,'####','$obs') where codigo=$codigo";  
+      }else{
+         $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado,glosa_estado='$obs' where codigo=$codigo";
+      }   
+   }
+
+   $stmtUpdate = $dbh->prepare($sqlUpdate);
+   $flagSuccess=$stmtUpdate->execute();
+
+   if($estado!=1){
+  	   //actualziar los estados del servidor ibnorca
+  	   if($estado==4){
+         //enviar propuestas para la actualizacion de ibnorca
          $fechaHoraActual=date("Y-m-d H:i:s");
          $idTipoObjeto=2708;
-         $idObjeto=2725; //regristado
-         $obs="Solicitud Contabilizada";
-         if(isset($_GET['u'])){
-          $u=$_GET['u'];
-           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-          }else{
-           actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-          }
-        ///
-      }else{
-         if($estado==3){
-          //se envia directo costos menores a 1000
+         $idObjeto=2722; //regristado
+         $obs="En Aprobacion Solicitud";
+         if(isset($_GET['q'])){
+            $u=$_GET['q'];
+            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+         }else{
+            actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+         } 
+     	}else{
+         if($estado==6){
             //enviar propuestas para la actualizacion de ibnorca
-             $fechaHoraActual=date("Y-m-d H:i:s");
-             $idTipoObjeto=2708;
-             $idObjeto=2722; //regristado
-             $obs="En Aprobacion Solicitud";
-             if(isset($_GET['q'])){
-                $u=$_GET['q'];
-                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
-              }else{
-                actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
-              }
-
-             //enviar propuestas para la actualizacion de ibnorca
-             /*$fechaHoraActual=date("Y-m-d H:i:s");
-             $idTipoObjeto=2708;
-             $idObjeto=2723; //regristado
-             $obs="Solicitud Aprobada";
-             if(isset($_GET['u'])){
-              $u=$_GET['u'];
-               actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,90,$codigo,$fechaHoraActual,$obs);    
-              }else{
-               actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,90,$codigo,$fechaHoraActual,$obs);    
-              }*/
-           ///
-         }
+            $fechaHoraActual=date("Y-m-d H:i:s");
+            $idTipoObjeto=2708;
+            $idObjeto=2822; //regristado
+            $obs="En Pre Aprobacion Solicitud";
+            if(isset($_GET['u'])){
+               $u=$_GET['u'];
+               actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+            }else{
+               actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+            }   
+         }else{
+            if($estado==7){
+               //enviar propuestas para la actualizacion de ibnorca
+               $fechaHoraActual=date("Y-m-d H:i:s");
+               $idTipoObjeto=2708;
+               $idObjeto=3107; //ESTADO PARA PROYECTO SIS
+               $obs="Enviado a Gestión Proyectos";
+               if(isset($_GET['u'])){
+                  $u=$_GET['u'];
+                  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+               }else{
+                  actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+               } 
+            }else{
+               if($estado==5){
+                  //enviar propuestas para la actualizacion de ibnorca
+                  $fechaHoraActual=date("Y-m-d H:i:s");
+                  $idTipoObjeto=2708;
+                  $idObjeto=2725; //regristado
+                  $obs="Solicitud Contabilizada";
+                  if(isset($_GET['u'])){
+                     $u=$_GET['u'];
+                     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+                  }else{
+                     actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);    
+                  }
+               }else{
+                  if($estado==3){
+                     //se envia directo costos menores a 1000
+                     //enviar propuestas para la actualizacion de ibnorca
+                     $fechaHoraActual=date("Y-m-d H:i:s");
+                     $idTipoObjeto=2708;
+                     $idObjeto=2722; //regristado
+                     $obs="En Aprobacion Solicitud";
+                     if(isset($_GET['q'])){
+                        $u=$_GET['q'];
+                        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);    
+                     }else{
+                        actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);   
+                     }
+                  }   
+               }
+            }
+         }        
       }
-    }
-   }   
-  }
-	//fin de actulizar estados del servidor ibnorca
- }else{
-	//enviar propuestas para la actualizacion de ibnorca
-    $fechaHoraActual=date("Y-m-d H:i:s");
-    $idTipoObjeto=2708;
-    $idObjeto=2721; //regristado
-    $obs="Registro de Solicitud";
-    if(isset($_GET['u'])){
-       $u=$_GET['u'];
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
-     }else{
-       actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
-     }
-    
- }
+   }else{
+   	//enviar propuestas para la actualizacion de ibnorca
+      $fechaHoraActual=date("Y-m-d H:i:s");
+      $idTipoObjeto=2708;
+      $idObjeto=2721; //regristado
+      $obs="Registro de Solicitud";
+      if(isset($_GET['u'])){
+         $u=$_GET['u'];
+         actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$u,$codigo,$fechaHoraActual,$obs);
+      }else{
+         actualizarEstadosObjetosIbnorca($idTipoObjeto,$idObjeto,$globalUser,$codigo,$fechaHoraActual,$obs);
+      } 
+   }
+}  //else Estado Contabilidad
 
-} //else Estado Contabilidad
+
 
 if(isset($_GET['q'])){
   $q=$_GET['q'];
   $s=$_GET['s'];
   $u=$_GET['u'];
   $v=$_GET['v'];
-
 }
 $urlc="";
 if(isset($_GET['admin'])){

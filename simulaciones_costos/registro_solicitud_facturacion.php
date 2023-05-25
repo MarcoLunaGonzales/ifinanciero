@@ -52,7 +52,7 @@ $sqlIBNORCA="SELECT aa.IdModulo, aa.IdCurso, aa.CiAlumno, concat(cpe.clPaterno,'
 FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
 where cpe.clIdentificacion=aa.CiAlumno 
 and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
-m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion like '%$ci_estudiante%' and aa.IdCurso=$IdCurso limit 1;";
+m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion like '%$ci_estudiante%' and aa.IdCurso='$IdCurso' and cpe.clTipo='P' limit 1;";
 
 //echo $sqlIBNORCA;
 
@@ -581,7 +581,7 @@ $contadorRegistros=0;
                                             FROM asignacionalumno aa, dbcliente.cliente_persona_empresa cpe, alumnocurso ac, clasificador c, programas_cursos pc, modulos m 
                                             where cpe.clIdentificacion=aa.CiAlumno 
                                             and ac.IdCurso=aa.IdCurso and ac.CiAlumno=aa.CiAlumno and ac.IdConceptoPago=c.IdClasificador and pc.IdCurso=aa.IdCurso and 
-                                            m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion like '%$ci_estudiante%' and aa.IdCurso=$IdCurso";    
+                                            m.IdCurso=pc.IdCurso and m.IdModulo=aa.IdModulo and cpe.clIdentificacion like '%$ci_estudiante%' and aa.IdCurso='$IdCurso' and cpe.clTipo='P'";    
                                         $stmt = $dbhIBNO->prepare($queryPr);
                                         $stmt->execute();
                                         $modal_totalmontopre=0;

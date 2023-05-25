@@ -3,6 +3,8 @@ require_once 'conexion.php';
 require_once 'styles.php';
 $dbh = new Conexion();
 
+$globalUserAdmin=$_SESSION["globalUserAdmin"];
+
 ?>
 
 <div class="content">
@@ -17,7 +19,7 @@ $dbh = new Conexion();
           </div>
         </div>
         <div class="card-body ">
-
+          <input type="text" value="<?=$globalUserAdmin;?>" name="globalUserAdmin" hidden>
           <div class="row">
             <label class="col-sm-2 col-form-label">Oficina</label>
             <div class="col-sm-7">
