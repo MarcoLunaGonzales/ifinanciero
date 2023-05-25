@@ -3658,8 +3658,13 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
       $valor_total_ganado=0;
       $valor_dias_trabajados=0;
       $valor_dias_trabajados=0;
-      $stmt = $dbh->prepare("SELECT haber_basico,dias_trabajados,bono_antiguedad,bonos_otros,total_ganado from planillas_personal_mes
-      where cod_planilla=$cod_planilla and cod_personalcargo=$cod_personal");
+      $valor_por_bonoacademico=0;
+      // $sql="SELECT haber_basico,dias_trabajados,bono_antiguedad,bonos_otros,total_ganado from planillas_personal_mes
+      // where cod_planilla=$cod_planilla and cod_personalcargo=$cod_personal";
+      $sql="SELECT ppm.haber_basico,ppm.dias_trabajados,ppm.bono_antiguedad,ppm.bonos_otros,ppm.total_ganado, ppm.cod_gradoacademico,(select pga.porcentaje from personal_grado_academico pga where pga.codigo=ppm.cod_gradoacademico) as por_bonoacademico
+      from planillas_personal_mes ppm
+      where ppm.cod_planilla=$cod_planilla and ppm.cod_personalcargo=$cod_personal";
+      $stmt = $dbh->prepare($sql);
       $stmt->execute();
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
          $valor_haber_basico=$row['haber_basico'];
@@ -3667,10 +3672,11 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
          $valor_bono_antiguedad=$row['bono_antiguedad'];
          $valor_bonos_otros=$row['bonos_otros'];
          $valor_total_ganado=$row['total_ganado'];
+         $valor_por_bonoacademico=$row['por_bonoacademico'];
       }
       $dbh = null;
       $stmt = null;
-      return ($valor_haber_basico."@@@".$valor_bono_antiguedad."@@@".$valor_bonos_otros."@@@".$valor_total_ganado."@@@".$valor_dias_trabajados);
+      return ($valor_haber_basico."@@@".$valor_bono_antiguedad."@@@".$valor_bonos_otros."@@@".$valor_total_ganado."@@@".$valor_dias_trabajados."@@@".$valor_por_bonoacademico);
   }
 
   function obtenerdatos_planilla2($cod_personal,$cod_planilla){
