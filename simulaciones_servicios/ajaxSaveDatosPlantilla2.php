@@ -259,21 +259,21 @@ $stmtDetAt->execute();
                              $diasAtributoDiasAux=0;
                           }
                           if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
-                          $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
-                          $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
-                          $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
-                          $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
-                          $stmtDetallesAuditores->execute();
+                            $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
+                            $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
+                            $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
+                            $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+                            $stmtDetallesAuditores->execute();
                           }
-                          echo $sqlDetallesAuditores;
+                          //echo $sqlDetallesAuditores;
                          }
                          if(count($auditoresDias[$jj])==0){
                            if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
-                          $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
-                          $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
-                          $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
-                          $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
-                          $stmtDetallesAuditores->execute();
+                              $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
+                              $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
+                              $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
+                              $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+                              $stmtDetallesAuditores->execute();
                           }
                          }
                        }           
