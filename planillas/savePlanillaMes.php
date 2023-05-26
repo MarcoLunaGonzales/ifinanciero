@@ -159,7 +159,7 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 
 		//$otros_b = 0 ;//buscar datos
 		//$total_bonos=$bono_academico+$bono_antiguedad+$otros_b;	
-		$total_bonos=$bono_antiguedad+$otros_b;	
+		$total_bonos=$bono_antiguedad+$otros_b+$bono_academico;	
 		
 		$haber_basico_x=$haber_basico*$dias_trabajados_asistencia/$dias_trabajados_por_defecto;
 		$total_ganado = $haber_basico_x+$total_bonos;	
