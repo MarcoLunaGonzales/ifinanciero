@@ -144,7 +144,7 @@ $html.=  '<header class="header">'.
                 $area="PERSONAL RETIRADO";
               }
               // if($retiro_planilla<>null || $retiro_planilla<>""){
-                $retiro_planilla=strftime('%d/%m/%Y',strtotime($retiro_planilla));
+                $retiro_planilla= (empty($retiro_planilla) || '0000-00-00' == $retiro_planilla) ? '-' : strftime('%d/%m/%Y',strtotime($retiro_planilla));
               // }
 
               $html.='<tr>'.
