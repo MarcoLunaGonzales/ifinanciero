@@ -164,7 +164,8 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 		$haber_basico_x=$haber_basico*$dias_trabajados_asistencia/$dias_trabajados_por_defecto;
 		$total_ganado = $haber_basico_x+$total_bonos;	
 		//calculamos descuentos
-		if($cod_tipoafp==1){
+		/*PARA LA GESTOR INCORPORAMOS EL ESTADO 3*/
+		if($cod_tipoafp==1 || $cod_tipoafp==3){
 		  	$afp_futuro =obtenerAporteAFP($total_ganado);
 		  	$afp_prevision=0;
   			/*CASO ESPECIAL JOSE DURAN*/

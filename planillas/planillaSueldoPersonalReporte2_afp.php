@@ -133,8 +133,8 @@ table {
 		                    <th><small>Monto Bonos</small></th>                            
 		                    <th class="bg-primary text-white"><small>Tot Gan</small></th>
 		                    <th class="bg-success text-white"><a id="botonAportes" style="border:none;" class="bg-success text-white small">+Aport</a></th>
-		                    <th class="aportesDet bg-success text-white" style="display:none"><small>Gestora</small></th>
-		                    <th class="aportesDet bg-success text-white" style="display:none"><small>-</small></th>
+		                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.F</small></th>
+		                    <th class="aportesDet bg-success text-white" style="display:none"><small>AFP.P</small></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Sol(13)</small></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Sol(25)</small></th>
 		                    <th class="aportesDet bg-success text-white" style="display:none"><small>A.Sol(35)</small></th>
