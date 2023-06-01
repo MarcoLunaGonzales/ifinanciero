@@ -739,6 +739,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 ?>
                  <td rowspan="<?=$rospanAnio?>" width="6%" class="bg-table-primary text-white font-weight-bold"><?=$tituloItem?></td>    <!--ROWSPAN = CANTIDAD DE SERVICIOS + 2 -->
                  <td rowspan="2" width="14%" class="bg-table-primary text-white font-weight-bold"></td>
+                 <td rowspan="2" width="14%" class="bg-table-primary text-white font-weight-bold">Dias Servicio</td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">INGRESO</td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">COSTO TOTAL</td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">UTILIDAD BRUTA</td>
@@ -822,6 +823,22 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 ?>
                  <tr>
                  <td class="small text-left">Precio del Servicio</td>
+                 
+                 <!-- Contador de DIAS, la unidad de medida seleccionada es DIAS para la contabilización de DIAS -->
+                <?php 
+                  $sqlCountD="SELECT SUM(sst.cantidad_editado) as cantidad_dias
+                  FROM simulaciones_servicios_tiposervicio sst
+                  WHERE sst.cod_simulacionservicio=$codigo 
+                  AND sst.habilitado!=0 
+                  AND sst.cod_anio=$an
+                  AND sst.cod_tipounidad = 2";
+                  $stmtCountD = $dbh->prepare($sqlCountD);
+                  $stmtCountD->execute(); 
+                  $cantidadDias = 0;
+                  $rowTotal     = $stmtCountD->fetch(PDO::FETCH_ASSOC);
+                  $cantidadDias = empty($rowTotal['cantidad_dias']) ? 0 : $rowTotal['cantidad_dias'];
+                ?>
+                 <td class="small text-left"><?=$cantidadDias?></td>
                  <td class="small text-right"><?=number_format($precioAuditoriaUsd, 2, ',', '.')?></td>
                  <td class="small text-right"><?=number_format($precioAuditoria, 2, ',', '.')?></td>
 
@@ -838,6 +855,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                </tr>
                <tr class="bg-plomo">
                  <td class="font-weight-bold small text-left">TOTAL</td>
+                 <td class="font-weight-bold small text-left"></td>
                  <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalIngresoUsd, 2, ',', '.')?></td>
                  <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalIngreso, 2, ',', '.')?></td>
                  <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalCostoTotalUsd, 2, ',', '.')?></td>

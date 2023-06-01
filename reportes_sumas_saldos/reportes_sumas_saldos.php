@@ -120,7 +120,8 @@ $fechaHasta=$y."-12-31";
             </div><!--fin campo gestion -->
           </div>
           <div class="card-footer ml-auto mr-auto">
-          <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
+          <button type="button" id="btn1" class="<?=$buttonNormal;?>">Generar</button>
+          <button type="button" id="btn2" class="btn btn-success">Generar Excel</button>
             </div>
         </div>
         </form>
@@ -130,3 +131,16 @@ $fechaHasta=$y."-12-31";
 	
 	</div>
 </div>
+<script>
+    $(document).ready(function() {
+      $('#btn1').click(function() {
+        $('#form1').attr('action', 'reportes_sumas_saldos/reporte_sumas_saldos_print.php'); // Cambia la URL del formulario al hacer clic en el botón 1
+        $('#form1').submit(); // Envía el formulario
+      });
+
+      $('#btn2').click(function() {
+        $('#form1').attr('action', 'reportes_sumas_saldos/reporte_sumas_saldos_print_excel.php'); // Cambia la URL del formulario al hacer clic en el botón 2
+        $('#form1').submit(); // Envía el formulario
+      });
+    });
+  </script>

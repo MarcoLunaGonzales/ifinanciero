@@ -10,7 +10,7 @@ $globalCodUnidad=$_SESSION["globalUnidad"];
 $globalNombreUnidad=$_SESSION["globalNombreUnidad"];
 
 $dbh = new Conexion();
-  $stmtAdmnin = $dbh->prepare("SELECT pr.codigo,pr.cod_gestion,pr.cod_estadoplanilla,
+  $stmtAdmnin = $dbh->prepare("SELECT pr.codigo,pr.cod_gestion,pr.cod_estadoplanilla,pr.cod_comprobante1,pr.cod_comprobante2,pr.cod_comprobante3,pr.cod_comprobante4,
   (select g.nombre from gestiones g where g.codigo=pr.cod_gestion) as gestion,CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as persona_creacion,
   (select ep.nombre from estados_planilla ep where ep.codigo=pr.cod_estadoplanilla) as nombre_estadoplanilla,DATE_FORMAT(pr.created_at,'%d/%m/%Y')as fecha_creacion
   from planillas_retroactivos pr join personal p on pr.created_by=p.codigo
@@ -23,6 +23,11 @@ $dbh = new Conexion();
   $stmtAdmnin->bindColumn('persona_creacion', $persona_creacion);
   $stmtAdmnin->bindColumn('cod_estadoplanilla', $cod_estadoplanilla);
   $stmtAdmnin->bindColumn('nombre_estadoplanilla', $nombre_estadoplanilla);
+
+  $stmtAdmnin->bindColumn('cod_comprobante1', $comprobante_x1);
+  $stmtAdmnin->bindColumn('cod_comprobante2', $comprobante_x2);
+  $stmtAdmnin->bindColumn('cod_comprobante3', $comprobante_x3);
+  $stmtAdmnin->bindColumn('cod_comprobante4', $comprobante_x4);
 
   ?>
   <div class="content">
@@ -106,9 +111,13 @@ $dbh = new Conexion();
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
+                            <li role="presentation" ><a role="item" href="planillas/planillasRetroactivosPrintMes.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=1&mes=1" target="_blank"><i class="material-icons text-primary">assignment_turned_in</i><small>PLANILLA ENERO PDF</small></a></li>
+                            <li role="presentation" ><a role="item" href="planillas/planillasRetroactivosPrintMes.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=1&mes=2" target="_blank"><i class="material-icons text-primary">assignment_turned_in</i><small>PLANILLA FEBRERO PDF</small></a></li>
+                            <li role="presentation" ><a role="item" href="planillas/planillasRetroactivosPrintMes.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=1&mes=3" target="_blank"><i class="material-icons text-primary">assignment_turned_in</i><small>PLANILLA MARZO PDF</small></a></li>
+                            <li role="presentation" ><a role="item" href="planillas/planillasRetroactivosPrintMes.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=1&mes=4" target="_blank"><i class="material-icons text-primary">assignment_turned_in</i><small>PLANILLA ABRIL PDF</small></a></li>
                             <li role="presentation" ><a role="item" href="planillas/planillasRetroactivosPrint.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=1" target="_blank"><i class="material-icons text-warning">assignment_turned_in</i><small>PLANILLA GRAL. PDF</small></a></li>
                             <li role="presentation" ><a role="item" href="planillas/planillasRetroactivosPrint.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=2" target="_blank"><i class="material-icons text-success">assignment_turned_in</i><small>PLANILLA GRAL. EXCEL</small></a></li>
-                            <li role="presentation"><a role="item" href="boletas/boletas_retroactivo_print.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>" target="_blank"><i class="material-icons text-rose">class</i><small>BOLETAS</small></a></li>
+                            <!-- <li role="presentation"><a role="item" href="boletas/boletas_retroactivo_print.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>" target="_blank"><i class="material-icons text-rose">class</i><small>BOLETAS</small></a></li> -->
                             <!--<li role="presentation"><a role="item" href="planillas/planillasRetroactivos_concuenta.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=1" target="_blank"><i class="material-icons text-success">verified_user</i><small>CON CUENTA</small></a></li>
                             <li role="presentation"><a role="item" href="planillas/planillasRetroactivos_concuenta.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=2" target="_blank"><i class="material-icons text-danger">unpublished</i><small>SIN CUENTA</small></a></li>
                             <php if($cod_estadoplanilla==3){?>
@@ -123,17 +132,49 @@ $dbh = new Conexion();
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu" aria-labelledby="reporte_sueldos">
-                            <li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=1" target="_blank"><i class="material-icons text-info">home_work</i><small>AFP FUTURO 1</small></a></li>
+
+                            <!--<li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=1" target="_blank"><i class="material-icons text-info">home_work</i><small>AFP FUTURO 1</small></a></li>
+
+                           
                             <li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=2" target="_blank"><i class="material-icons text-info">home_work</i><small>AFP FUTURO 2</small></a></li>
                             <li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=3" target="_blank"><i class="material-icons text-info">home_work</i><small>AFP FUTURO 3</small></a></li>
-                            <li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=4" target="_blank"><i class="material-icons text-info">home_work</i><small>AFP FUTURO 4</small></a></li>
-                            <li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPP.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=1" target="_blank"><i class="material-icons text-dark">home_work</i><small>AFP PREVISION 1</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPF.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=4" target="_blank"><i class="material-icons text-info">home_work</i><small>AFP FUTURO 4</small></a></li>-->
+                            <!--<li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPP.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=1" target="_blank"><i class="material-icons text-dark">home_work</i><small>AFP PREVISION 1</small></a></li>
                             <li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPP.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=2" target="_blank"><i class="material-icons text-dark">home_work</i><small>AFP PREVISION 2</small></a></li>
                             <li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPP.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=3" target="_blank"><i class="material-icons text-dark">home_work</i><small>AFP PREVISION 3</small></a></li>
-                            <li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPP.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=4" target="_blank"><i class="material-icons text-dark">home_work</i><small>AFP PREVISION 4</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/planillasRetroactivosAFPP.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=4" target="_blank"><i class="material-icons text-dark">home_work</i><small>AFP PREVISION 4</small></a></li>-->
                             <li role="presentation"><a role="item" href="planillas/planillasRetroactivosOVT.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>" target="_blank"><i class="material-icons text-info">article</i><small>PLANILLA OVT</small></a></li>
                             <!--<li role="presentation"><a role="item" href="planillas/planillasRetroactivosCPS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=2" target="_blank"><i class="material-icons text-danger">add_business</i><small>PLANILLA CPS</small></a></li>
                             <li role="presentation"><a role="item" href="planillas/planillasRetroactivosCNS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&tipo=1" target="_blank"><i class="material-icons text-danger">add_business</i><small>PLANILLA CNS</small></a></li>-->
+
+                             <?php if($comprobante_x1==0){ ?>
+                            <li>
+                              <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','planillas/executeComprobanteRetroactivos.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=1')"> 
+                                <i class="material-icons" title="Generar Comprobante Enero" style="color:red">input</i>Comprobante Enero
+                              </a>
+                            </li>
+                            <?php } ?>
+                            <?php if($comprobante_x2==0){ ?>
+                            <li>
+                              <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','planillas/executeComprobanteRetroactivos.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=2')"> 
+                                <i class="material-icons" title="Generar Comprobante Febrero" style="color:red">input</i>Comprobante Febrero
+                              </a>
+                            </li>
+                            <?php } ?>
+                            <?php if($comprobante_x3==0){ ?>
+                            <li>
+                              <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','planillas/executeComprobanteRetroactivos.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=3')"> 
+                                <i class="material-icons" title="Generar Comprobante Marzo" style="color:red">input</i>Comprobante Marzo
+                              </a>
+                            </li>
+                            <?php } ?>
+                            <?php if($comprobante_x4==0){ ?>
+                            <li>
+                              <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','planillas/executeComprobanteRetroactivos.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=4')"> 
+                                <i class="material-icons" title="Generar Comprobante Abril" style="color:red">input</i>Comprobante Abril
+                              </a>
+                            </li>
+                            <?php } ?>
                           </ul>
                         </div>
                       </td>

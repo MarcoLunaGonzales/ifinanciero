@@ -22,6 +22,12 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
   	$mes=strtoupper(nombreMes($cod_mes));
   	$gestion=nameGestion($cod_gestion);
 
+	// Obtener el valor de GESTORA
+	$fecha_gestora = obtenerValorConfiguracionPlanillas(34);
+	$verificacion_gestora = false;
+	if(strtotime($fecha_gestora) >= strtotime(date('Y-m-d')) && !empty($fecha_gestora)){
+		$verificacion_gestora = $fecha_gestora;
+	}
 	
 	// Fecha Primer Vista y nombre PERSONAL
 	// $sql="SELECT DATE_FORMAT(pe.fecha, '%d-%m-%Y %H:%i:%s') as primer_vista, 

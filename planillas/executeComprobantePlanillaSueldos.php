@@ -30,9 +30,6 @@ while ($rowPersonal = $stmtPersonalDistribucion->fetch(PDO::FETCH_ASSOC))
    } 
 }
 if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
-   //SE DEBE PARAMETRIZAR ESTE CODIGO DE CUENTA PARA LA DEPRECIACION
-   $codCuentaDepreciacion=298;
-   $codCuentaDepreciacionAF=256;
   $globalUnidadX=5; //cod unidad por defecto para contabilizacion LA PAZ
    //insertamos cabecera
   $tipoComprobante=3;
@@ -181,9 +178,11 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $flagSuccessDet=$stmtInsertDet->execute();
   $ordenDetalle++;
 
+  /**************************************************************************************************************/
   //AFP PREVISION BBV      
   $totalAFPPrevision=obtenerTotalAFP_prev1($gestionPlanilla,$mesPlanilla);
-  $cod_cuenta="122";//por defecto
+  $cod_cuenta=125; // Gestora Pública
+  // $cod_cuenta="122";//por defecto
   $cod_cuenta_aux=0;
   $glosaDetalleGeneral="AFP Prevision aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
   $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','$cod_cuenta_aux','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPPrevision','$glosaDetalleGeneral','$ordenDetalle')";
@@ -192,17 +191,18 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $ordenDetalle++;
 
   //AFP FUTURO      
-  $totalAFPFuturo=obtenerTotalAFP_prev3($gestionPlanilla,$mesPlanilla);
-  $cod_cuenta="123";//por defecto
-  $glosaDetalleGeneral="AFP Futuro aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
-  $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPFuturo','$glosaDetalleGeneral','$ordenDetalle')";
-  $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-  $flagSuccessDet=$stmtInsertDet->execute();
-  $ordenDetalle++;
+  // $totalAFPFuturo=obtenerTotalAFP_prev3($gestionPlanilla,$mesPlanilla);
+  // $cod_cuenta="123";//por defecto
+  // $glosaDetalleGeneral="AFP Futuro aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
+  // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPFuturo','$glosaDetalleGeneral','$ordenDetalle')";
+  // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+  // $flagSuccessDet=$stmtInsertDet->execute();
+  // $ordenDetalle++;
 
   //AFP PREVISION BBV      
   $totalAFPPrevision=obtenerTotalAFP_prev2($gestionPlanilla,$mesPlanilla);
-  $cod_cuenta="123";//por defecto
+  $cod_cuenta=125; // Gestora Pública
+  // $cod_cuenta="123";//por defecto
   $glosaDetalleGeneral="AFP Prevision aporte solidario correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
   $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPPrevision','$glosaDetalleGeneral','$ordenDetalle')";
   $stmtInsertDet = $dbh->prepare($sqlInsertDet);
@@ -210,13 +210,13 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $ordenDetalle++;
 
   //AFP PREVISION BBV      
-  $glosaDetalleGeneral="AFP Futuro aporte solidario correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
-  $totalAFPFuturo=obtenerTotalAFP_prev4($gestionPlanilla,$mesPlanilla);
-  $cod_cuenta="122";
-  $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPFuturo','$glosaDetalleGeneral','$ordenDetalle')";
-  $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-  $flagSuccessDet=$stmtInsertDet->execute();
-  $ordenDetalle++;
+  // $glosaDetalleGeneral="AFP Futuro aporte solidario correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
+  // $totalAFPFuturo=obtenerTotalAFP_prev4($gestionPlanilla,$mesPlanilla);
+  // $cod_cuenta="122";
+  // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPFuturo','$glosaDetalleGeneral','$ordenDetalle')";
+  // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+  // $flagSuccessDet=$stmtInsertDet->execute();
+  // $ordenDetalle++;
 
   //PROVIVIENDA
   // $totalProVivienda=1781.20;
@@ -230,13 +230,14 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
 
   //PROVIVIENDA
   // $totalProVivienda=1782.79;
-  $glosaDetalleGeneral="AFP Futuro provivienda aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
-  $totalProVivienda=obtenerTotalprovivienda2($gestionPlanilla,$mesPlanilla,$globalUnidadX);
-  $cod_cuenta="124";
-  $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalProVivienda','$glosaDetalleGeneral','$ordenDetalle')";
-  $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-  $flagSuccessDet=$stmtInsertDet->execute();
-  $ordenDetalle++;
+  // $glosaDetalleGeneral="AFP Futuro provivienda aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
+  // $totalProVivienda=obtenerTotalprovivienda2($gestionPlanilla,$mesPlanilla,$globalUnidadX);
+  // $cod_cuenta="124";
+  // $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalProVivienda','$glosaDetalleGeneral','$ordenDetalle')";
+  // $stmtInsertDet = $dbh->prepare($sqlInsertDet);
+  // $flagSuccessDet=$stmtInsertDet->execute();
+  // $ordenDetalle++;
+  /**************************************************************************************************************/
 
   //RC IVA
   $sqlRCIVA="SELECT per.primer_nombre,per.paterno,sum(pm.rc_iva)as rc_iva 
