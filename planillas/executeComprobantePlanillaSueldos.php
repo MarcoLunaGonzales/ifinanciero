@@ -30,9 +30,6 @@ while ($rowPersonal = $stmtPersonalDistribucion->fetch(PDO::FETCH_ASSOC))
    } 
 }
 if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
-   //SE DEBE PARAMETRIZAR ESTE CODIGO DE CUENTA PARA LA DEPRECIACION
-   $codCuentaDepreciacion=298;
-   $codCuentaDepreciacionAF=256;
   $globalUnidadX=5; //cod unidad por defecto para contabilizacion LA PAZ
    //insertamos cabecera
   $tipoComprobante=3;

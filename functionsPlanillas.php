@@ -329,4 +329,69 @@ function totalRefrigerioMes($gestion, $mes){
     return($monto);
 }
 
+//funcniones para contabilizacion de retroactivos
+function totalGanadoAreaRetro($gestion, $mes, $cod_area,$cod_uo=null){
+  $sql_add="";
+  if($cod_uo!=null){
+    $sql_add=" and pad.cod_uo='$cod_uo' ";
+  }
+  switch ($mes) {
+    case 1:
+      $sql_cabecera="sum((pm.retroactivo_enero+pm.antiguedad_enero+pm.bonoacademico_enero)*(pad.porcentaje/100))as monto";
+    break;
+    case 2:
+      $sql_cabecera="sum((pm.retroactivo_febrero+pm.antiguedad_febrero+pm.bonoacademico_febrero)*(pad.porcentaje/100))as monto";
+    break;
+    case 3:
+      $sql_cabecera="sum((pm.retroactivo_marzo+pm.antiguedad_marzo+pm.bonoacademico_marzo)*(pad.porcentaje/100))as monto";
+    break;
+    case 4:
+      $sql_cabecera="sum((pm.retroactivo_abril+pm.antiguedad_abril+pm.bonoacademico_abril)*(pad.porcentaje/100))as monto";
+    break;
+  }
+  $dbh = new Conexion();
+  $sql="SELECT $sql_cabecera
+  from planillas_retroactivos p join planillas_retroactivos_detalle pm on p.codigo=pm.cod_planilla join personal_area_distribucion pad on pm.cod_personal=pad.cod_personal and pad.cod_estadoreferencial=1
+  where p.cod_gestion='$gestion' and pad.cod_area='$cod_area' $sql_add";
+    // echo $sql."<br>";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $monto=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $monto=$row['monto'];
+    }
+    return($monto);
+}
+
+function obtenerTotalAFP_prev2_retroactivos($gestion, $mes){
+  $dbh = new Conexion();
+  switch ($mes) {
+    case 1:
+      $sql_cabecera="sum(pm.a_solidario_13_25_35_enero) as monto";
+    break;
+    case 2:
+      $sql_cabecera="sum(pm.a_solidario_13_25_35_febrero) as monto";
+    break;
+    case 3:
+      $sql_cabecera="sum(pm.a_solidario_13_25_35_marzo) as monto";
+    break;
+    case 4:
+      $sql_cabecera="sum(pm.a_solidario_13_25_35_abril) as monto";
+    break;
+  }
+  
+  $sql="SELECT $sql_cabecera
+  from planillas_retroactivos p join planillas_retroactivos_detalle pm on p.codigo=pm.cod_planilla join personal_area_distribucion pad on pm.cod_personal=pad.cod_personal and pad.cod_estadoreferencial=1
+  where p.cod_gestion='$gestion' ";
+    // echo $sql."<br>";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $monto=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $monto=$row['monto'];
+    }
+    return($monto);
+
+}
+
 ?>
