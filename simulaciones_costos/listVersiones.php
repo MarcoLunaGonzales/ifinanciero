@@ -59,7 +59,15 @@ if(isset($_GET['q'])){
   // Preparamos
 
   $sql = "SELECT sc.*,es.nombre as estado, 
-  (select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente,vc.cod_curso as codigo_curso
+  (select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente,
+                        (SELECT oc.idOfertaContrato 
+                        FROM
+                          ibnorca.ofertacontrato oc
+                          INNER JOIN bdifinanciero.simulaciones_costos ssc ON ssc.Codigo = oc.idPropuesta 
+                        WHERE
+                          ssc.Codigo = sc.codigo
+                          AND ( ibnorca.id_estadoobjeto ( 4510, oc.idOfertaContrato )< 4517 OR ibnorca.id_estadoobjeto ( 4510, oc.idOfertaContrato )= 4761 ) AND ibnorca.id_estadoobjeto(4510, oc.idOfertaContrato) NOT IN (4516,4760)
+                          LIMIT 1) as id_oferta, vc.cod_curso as codigo_curso
   FROM simulaciones_costos sc 
   LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
   JOIN estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
@@ -75,11 +83,18 @@ if(isset($_GET['q'])){
   $s=0;
   $u=0;
   // Preparamos
-$stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente
--- , vc.cod_curso as codigo_curso
+  $stmt = $dbh->prepare("SELECT sc.*,es.nombre as estado,(select cli.nombre from clientes cli where cli.codigo=sc.cod_cliente)as cliente,
+                        (SELECT oc.idOfertaContrato 
+                        FROM
+                          ibnorca.ofertacontrato oc
+                          INNER JOIN bdifinanciero.simulaciones_costos ssc ON ssc.Codigo = oc.idPropuesta 
+                        WHERE
+                          ssc.Codigo = sc.codigo
+                          AND ( ibnorca.id_estadoobjeto ( 4510, oc.idOfertaContrato )< 4517 OR ibnorca.id_estadoobjeto ( 4510, oc.idOfertaContrato )= 4761 ) AND ibnorca.id_estadoobjeto(4510, oc.idOfertaContrato) NOT IN (4516,4760)
+                          LIMIT 1) as id_oferta, vc.cod_curso as codigo_curso
  FROM simulaciones_costos sc 
  JOIN estados_simulaciones es on sc.cod_estadosimulacion=es.codigo 
---  LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
+ LEFT JOIN v_cursos vc on vc.IdCurso = sc.IdCurso
  WHERE sc.cod_estadoreferencial=1 
  AND sc.cod_version = '$cod_version'".
  (empty($filter_list)?(' and sc.cod_responsable='.$globalUser):'').
@@ -108,6 +123,7 @@ $stmt->bindColumn('codigo_curso', $codigoCurso);
 $stmt->bindColumn('cod_version', $cod_version);
 $stmt->bindColumn('nro_version', $nro_version);
 $stmt->bindColumn('estado_version', $estado_version);
+$stmt->bindColumn('id_oferta', $id_oferta);
 
 ?>
 
@@ -178,6 +194,9 @@ $stmt->bindColumn('estado_version', $estado_version);
                             break;
                             case 4:
                               $nEst=60;$barEstado="progress-bar-warning";$btnEstado="btn-warning";
+                            break;
+                            case 6:
+                              $nEst=0;$barEstado="progress-bar-danger";$btnEstado="btn-danger";
                             break;
                           }
 ?>
@@ -294,9 +313,19 @@ $stmt->bindColumn('estado_version', $estado_version);
                               }
                             ?>
                             <!-- Duplicar Registro de Propuesta -->
-                            <button title="Duplicar Propuesta" class="btn btn-warning propuesta_duplicar" data-codigo="<?=$codigo;?>">
+                            <button title="Copiar en nueva propuesta" class="btn btn-danger propuesta_duplicar" data-codigo="<?=$codigo;?>" data-tipo="1">
                               <i class="material-icons">content_copy</i>
                             </button>
+                            <?php
+                              if(!empty($id_oferta)){
+                            ?>
+                              <!-- Duplicar Registro de Propuesta con DEPENDENCIA -->
+                              <button title="Generar nueva versión" class="btn btn-warning propuesta_duplicar" data-codigo="<?=$codigo;?>" data-tipo="0">
+                                <i class="material-icons">content_copy</i>
+                              </button>
+                            <?php
+                              }
+                            ?>
                           </td>
                         </tr>
 <?php
@@ -307,17 +336,7 @@ $stmt->bindColumn('estado_version', $estado_version);
                       </tbody>
                     </table>
                 </div>
-              </div>
-              <div class="card-footer fixed-bottom">
-                <?php
-                if(isset($_GET['q'])){                  
-                  ?><a href="<?=$urlRegister2;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>" target="_self" class="<?=$buttonNormal;?>">Registrar</a><?php
-                }else{
-                  ?><a href="#" onclick="javascript:window.open('<?=$urlRegister2;?>')" class="<?=$buttonNormal;?>">Registrar</a><?php
-                } 
-                ?>
-                
-              </div>      
+              </div>    
             </div>
           </div>  
         </div>
@@ -450,12 +469,20 @@ $stmt->bindColumn('estado_version', $estado_version);
 <script>
     // Cambiar Estado de Planilla a Cerrado en Vacio
     $('body').on('click','.propuesta_duplicar', function(){
+      let valor = $(this).data('tipo');
+      if (valor === 0) {
+        title = '¿Está seguro de duplicar?';
+        text = 'Se duplicará el registro con todos sus datos relacionados. Esta acción no se podrá revertir.';
+      } else if (valor === 1) {
+        title = '¿Está seguro de hacer una copia?';
+        text = 'Se creará una copia del registro con todos sus datos relacionados. Esta acción no se podrá revertir.';
+      }
       let formData = new FormData();
       // codigo Planilla
       formData.append('codigo', $(this).data('codigo'));
       swal({
-          title: '¿Esta seguro de duplicar?',
-          text: "Se duplicará el registro con todos su datos realacionados, no se podrá revertir la acción.",
+          title: title,
+          text: text,
           type: 'warning',
           showCancelButton: true,
           confirmButtonClass: 'btn btn-success',

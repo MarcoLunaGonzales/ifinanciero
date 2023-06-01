@@ -94,7 +94,7 @@ if ($cod_facturacion > 0){
     $Codigo_alterno=null;
     $dias_credito=$result['dias_credito'];
     $correo_contacto=$result['correo_contacto'];
-    $nro_tarjeta=$result['nro_tarjeta'];
+    $nro_tarjeta= empty($result['nro_tarjeta']) ? '' : $result['nro_tarjeta'];
 }else {
     $cod_simulacion=0;
     $cod_facturacion=null;
@@ -158,7 +158,7 @@ if($detalle_id_ventas_normas != 0){
 }
 
 
-$detalle_cod_cliente = $_POST["idVentaNormas_a".'1'];
+$detalle_cod_cliente = empty($_POST["idVentaNormas_a".'1']) ? '' : $_POST["idVentaNormas_a".'1'];
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -622,7 +622,7 @@ $detalle_cod_cliente = $_POST["idVentaNormas_a".'1'];
                                                   <td class="text-right"><input type="hidden" name="modal_importe<?=$iii?>" id="modal_importe<?=$iii?>"><input type="text" class="form-control" name="modal_importe_dos<?=$iii?>" id="modal_importe_dos<?=$iii?>" style ="background-color: #ffffff;" readonly></td>
                                                                                               
                                                   <td>
-                                                    <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" required><?=$descripcion_alternaX.' / '.$glosa?></textarea>
+                                                    <textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" required><?=$descripcion_alternaX.(empty($glosa) ? '' : $glosa )?></textarea>
                                                   </td>
                                                   <!-- checkbox -->
                                                   <td>                                                    
