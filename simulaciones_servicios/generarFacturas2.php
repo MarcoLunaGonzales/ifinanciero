@@ -478,7 +478,10 @@ function generarSuscripcion($codigo, $stringFacturasCod){
                                     WHERE cod_facturadetalle = '$sf_codigo'");
                 $flagSuccess=$stmtIbnorca->execute();
             }else{
-                $stmtIbnorca = $dbh->prepare("UPDATE facturas_suscripcionestienda SET glosa = 'Hubo un error en el proceso de Autenticación.' WHERE cod_facturadetalle = '$sf_codigo'");
+                $stmtIbnorca = $dbh->prepare("UPDATE facturas_suscripcionestienda 
+                                            SET glosa = 'Hubo un error en el proceso de Autenticación.',
+                                            cod_factura = '$stringFacturasCod' 
+                                            WHERE cod_facturadetalle = '$sf_codigo'");
                 $flagSuccess=$stmtIbnorca->execute();
             }
 		}

@@ -225,59 +225,63 @@ $stmtDetAt->execute();
                  $stmtDetalleAtributosNormas->execute();
                }
               }else{
-                $auditoresDias=json_decode($_POST['auditoresDias']);               
-                 $nCDias=cantidadF($atributosDias);
-                    for($jj=0;$jj<$nCDias;$jj++){
-                       $codigoAtributoDias=$atributosDias[$jj]->codigo_atributo;
-                       $anioAtributoDias=$atributosDias[$jj]->anio;
-                       $diasAtributoDias=$atributosDias[$jj]->dias;
-                       if($codigoAtributoDias==$codigoAtributo){
-                        $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributosdias (cod_simulacionservicioatributo, dias, cod_anio) 
-                        VALUES ('$codSimulacionServicioAtributo', '$diasAtributoDias', '$anioAtributoDias')";
-                        $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
-                        $stmtDetalleAtributos->execute();
-                        /*$sqlDetalleAu="UPDATE simulaciones_servicios_atributosauditores SET estado=0 where cod_simulacionservicioatributo=$codSimulacionServicioAtributo and cod_anio=$anioAtributoDias";
-                        $stmtDetalleAu = $dbh->prepare($sqlDetalleAu);
-                        $stmtDetalleAu->execute();*/
-                         //aumentar dias a los auditores
-                        $diasAtributoDiasAux=0;
-                         for ($al=0; $al < count($auditoresDias[$jj]); $al++) { 
-                          $valorAuditorDia=explode("####",$auditoresDias[$jj][$al]);
-                          $codigoAuditor=$valorAuditorDia[0];    
-                          if($valorAuditorDia[1]=="SI"){
-                             $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
-                             VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',1)";
-                             $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
-                             $stmtDetalleAtributosAud->execute();  
-                             $diasAtributoDiasAux=$diasAtributoDias;
+                /**
+                 * ESTA FUNCIONALIDAD ES OBSOLETA Y SE REFERIA A LOS DIAS QUE SE PLANIFICABA POR CADA AUDITOR
+                 * EN SITIO
+                 */
+                // $auditoresDias=json_decode($_POST['auditoresDias']);               
+                //  $nCDias=cantidadF($atributosDias);
+                //     for($jj=0;$jj<$nCDias;$jj++){
+                //        $codigoAtributoDias=$atributosDias[$jj]->codigo_atributo;
+                //        $anioAtributoDias=$atributosDias[$jj]->anio;
+                //        $diasAtributoDias=$atributosDias[$jj]->dias;
+                //        if($codigoAtributoDias==$codigoAtributo){
+                //         $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributosdias (cod_simulacionservicioatributo, dias, cod_anio) 
+                //         VALUES ('$codSimulacionServicioAtributo', '$diasAtributoDias', '$anioAtributoDias')";
+                //         $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
+                //         $stmtDetalleAtributos->execute();
+                //         /*$sqlDetalleAu="UPDATE simulaciones_servicios_atributosauditores SET estado=0 where cod_simulacionservicioatributo=$codSimulacionServicioAtributo and cod_anio=$anioAtributoDias";
+                //         $stmtDetalleAu = $dbh->prepare($sqlDetalleAu);
+                //         $stmtDetalleAu->execute();*/
+                //          //aumentar dias a los auditores
+                //         $diasAtributoDiasAux=0;
+                //          for ($al=0; $al < count($auditoresDias[$jj]); $al++) { 
+                //           $valorAuditorDia=explode("####",$auditoresDias[$jj][$al]);
+                //           $codigoAuditor=$valorAuditorDia[0];    
+                //           if($valorAuditorDia[1]=="SI"){
+                //              $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
+                //              VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',1)";
+                //              $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
+                //              $stmtDetalleAtributosAud->execute();  
+                //              $diasAtributoDiasAux=$diasAtributoDias;
                                
-                          }else{
-                             $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
-                             VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',0)";
-                             $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
-                             $stmtDetalleAtributosAud->execute();
-                             $diasAtributoDiasAux=0;
-                          }
-                          if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
-                          $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
-                          $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
-                          $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
-                          $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
-                          $stmtDetallesAuditores->execute();
-                          }
-                          echo $sqlDetallesAuditores;
-                         }
-                         if(count($auditoresDias[$jj])==0){
-                           if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
-                          $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
-                          $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
-                          $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
-                          $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
-                          $stmtDetallesAuditores->execute();
-                          }
-                         }
-                       }           
-                    }
+                //           }else{
+                //              $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
+                //              VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',0)";
+                //              $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
+                //              $stmtDetalleAtributosAud->execute();
+                //              $diasAtributoDiasAux=0;
+                //           }
+                //           if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
+                //           $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
+                //           $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
+                //           $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
+                //           $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+                //           $stmtDetallesAuditores->execute();
+                //           }
+                //           echo $sqlDetallesAuditores;
+                //          }
+                //          if(count($auditoresDias[$jj])==0){
+                //            if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
+                //           $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
+                //           $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
+                //           $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
+                //           $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+                //           $stmtDetallesAuditores->execute();
+                //           }
+                //          }
+                //        }           
+                //     }
               }         
               
          }

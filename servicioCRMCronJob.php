@@ -21,18 +21,21 @@
         
         // WHERE DATE(fv.fecha_factura) = '$fecha_actual'
         $dbh = new Conexion();
-        $stmt = $dbh->prepare("SELECT fvd.codigo, fvd.cod_facturaventa, fvd.cod_claservicio, fvd.ci_estudiante, 
+        $stmt = $dbh->prepare("SELECT fvd.codigo, fv.cod_cliente, fvd.cod_facturaventa, fvd.cod_claservicio, fvd.ci_estudiante, 
         (SELECT IdCurso FROM ibnorca.modulos WHERE IdModulo=fvd.cod_claservicio LIMIT 1) as idCurso 
         FROM facturas_venta fv
         LEFT JOIN facturas_ventadetalle fvd ON fvd.cod_facturaventa = fv.codigo
         WHERE DATE(fv.fecha_factura) BETWEEN '$fecha_inicio' AND '$fecha_fin'
 	    AND fv.cod_area = 13
-        ORDER BY fvd.codigo LIMIT 1");
+        ORDER BY fvd.codigo 
+        -- LIMIT 1
+        ");
         $stmt->execute();
         // Cantidad de LEADS
         $count_lead = 0;
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             var_dump($row);
+            $cod_cliente      = $row['cod_cliente'];
             $ci               = $row['ci_estudiante'];
             $idServicio       = $row['cod_claservicio'];
             $cod_facturaventa = $row['cod_facturaventa'];
@@ -52,7 +55,10 @@
                     
                 $fieds = "name,email_from,phone,partner_id,product_id,stage_id";
                 // $url = $url_init."crm.lead/find?partner_id.ci_dni=" . $ci . "&product_id.id_curso=" . $idServicio . "&fields=".$fieds."&stage_id=Reserva%20de%20cupo";
-                $url = $url_init."crm.lead/find?partner_id.ci_dni=" . $ci . "&product_id.id_curso=" . $idCurso . "&fields=".$fieds . "&exclude_stage_id=Cierre%20de%20venta";
+                // $url = $url_init."crm.lead/find?partner_id.ci_dni=" . $ci . "&product_id.id_curso=" . $idCurso . "&fields=".$fieds . "&exclude_stage_id=Cierre%20de%20venta";
+                
+                // $url = $url_init."crm.lead/find?partner_id.i_registro=" . $cod_cliente . "&fields=".$fieds."&stage_id=Reserva%20de%20cupo";
+                $url = $url_init."crm.lead/find?partner_id.i_registro=" . $cod_cliente . "&fields=".$fieds;
                 echo $url."############";
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
@@ -63,7 +69,7 @@
                 $remote_server_output = curl_exec ($ch);
                 curl_close ($ch);
                 $obj=json_decode($remote_server_output);
-        
+                // var_dump($obj);
                 /********************************************************/
                 /*              ERROR - LOG BUSQUEDA LEADS              */
                 /********************************************************/
@@ -72,7 +78,7 @@
                     $response      = json_encode($obj);
                     $fecha_hora    = date('Y-m-d H:i:s');
                     $stmtSave = $dbh->prepare("INSERT INTO log_leads (observaciones,response,fecha_hora,tipo,cod_facturaventa,estado_lead) VALUES ('$observaciones','$response','$fecha_hora', 0, $cod_facturaventa, 'No hay lead')");
-                    // $stmtSave->execute();
+                    $stmtSave->execute();
                 }
                 
                 // En caso existe LEADS, se procede a CERRAR
@@ -87,7 +93,7 @@
                             $response      = json_encode($data);
                             $fecha_hora    = date('Y-m-d H:i:s');
                             $stmtSave = $dbh->prepare("INSERT INTO log_leads (observaciones,response,fecha_hora,tipo,cod_facturaventa,cod_lead,estado_lead) VALUES ('$observaciones','$response','$fecha_hora', 0, $cod_facturaventa,".$data->id.",".$data->stage_id[1].")");
-                            // $stmtSave->execute();
+                            $stmtSave->execute();
                         }
                         // Cierre de LEADS
                         // if($data->stage_id[1] == "Reserva de cupo"){ 
@@ -114,7 +120,7 @@
                             $response      = json_encode($remote_server_output);
                             $fecha_hora    = date('Y-m-d H:i:s');
                             $stmtSave = $dbh->prepare("INSERT INTO log_leads (observaciones,response,fecha_hora,tipo,cod_facturaventa,cod_lead) VALUES ('$observaciones','$response','$fecha_hora', 1,$cod_facturaventa,".$data->id.", 'Cierre de venta')");
-                            // $stmtSave->execute();
+                            $stmtSave->execute();
                         }
                     }
                 }
@@ -127,10 +133,10 @@
                 'status'  => true
             ));
         }else{
-            // echo json_encode(array(
-            //     'message' => 'No hay leads para cerrar',
-            //     'status'  => false
-            // ));
+            echo json_encode(array(
+                'message' => 'No hay leads para cerrar',
+                'status'  => false
+            ));
         }
     } catch (\Throwable $th) {
         echo json_encode(array(

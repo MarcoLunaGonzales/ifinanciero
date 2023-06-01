@@ -75,6 +75,14 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
   $stmtCliente->bindColumn('cod_cliente', $codigo_cli_b);
   $stmtCliente->bindColumn('nombre', $nombre_cli_b);
   ?>
+  <!-- EFECTO LOADING -->
+  <div class="cargar-ajax d-none">
+    <div class="div-loading text-center">
+      <h4 class="text-warning font-weight-bold" id="texto_ajax_titulo">Procesando Datos</h4>
+      <p class="text-white">Aguard&aacute; un momento por favor</p>  
+    </div>
+  </div>
+
   <div class="content">
     <div class="container-fluid">
           <div style="overflow-y:scroll;">
@@ -99,6 +107,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                       <table class="table" id="tablePaginator50NoFinder">
                         <thead>
                           <tr>
+                            <th><small>#</small></th>
                             <th><small>Of - Area</small></th>
                             <th><small>#Sol.</small></th>
                             <!--th><small>Responsable</small></th-->
@@ -274,7 +283,18 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                               $datos_factura_envio=$cod_factura.'/'.$codigo_facturacion.'/'.$nombreNroFacX.'/'.$correos_string.'/'.$razon_social;
                             ?>
                             <tr>
-                              
+                              <td>
+                                <div class="form-group">
+      	             	            <div class="form-check">
+                                    <label class="form-check-label">
+                                      <input class="form-check-input" type="checkbox" name="fusion[]" value="<?=$codigo_facturacion;?>">
+                                      <span class="form-check-sign">
+                                        <span class="check"></span>
+                                      </span>
+                                    </label>
+                                  </div>
+                                </div>
+                              </td>
                               <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
                               <td class="text-right"><small><?=$nro_correlativo;?></small></td>
                               <!--td><small><?=$responsable;?></small></td-->
@@ -503,6 +523,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                       <?php 
                     }              
                   ?>
+                  <button class="btn btn-info proceso_fusion">Fusionar SF</button>
                 </div>        
               <!-- </div> -->
           </div>  
@@ -567,5 +588,77 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
         registrarRechazoSolicitud(cod_solicitudfacturacion,observaciones,estado,admin,direccion,q,s,u,v);
       }      
     }); 
+  });
+</script>
+
+<!-- Proceso de Fusión -->
+<script>
+  $('.proceso_fusion').on('click', function(){
+    let array_sf = [];
+    // Obtener todos los checkboxes con el atributo name="fusion[]"
+    var checkboxes = $('input[type="checkbox"][name="fusion[]"]');
+    // Iterar sobre los checkboxes
+    checkboxes.each(function() {
+      // Verificar si el checkbox actual está seleccionado
+      if ($(this).is(':checked')) {
+        array_sf.push($(this).val());
+      }
+    });
+    if(array_sf.length > 1){
+      swal({
+          title: '¿Estás seguro de Fusionar?',
+          text: 'Se fucionará las SF seleccionadas.',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonClass: 'btn btn-success',
+          cancelButtonClass: 'btn btn-danger',
+          confirmButtonText: 'Si',
+          cancelButtonText: 'No',
+          buttonsStyling: false
+      }).then((result) => {
+          if (result.value) {
+              
+              let formData = new FormData();
+              formData.append('array_sf', array_sf);
+
+              $(".cargar-ajax").removeClass("d-none");
+              $.ajax({
+                  url:"simulaciones_servicios/saveFusion.php",
+                  type:"POST",
+                  contentType: false,
+                  processData: false,
+                  data: formData,
+                  success:function(response){
+                  let resp = JSON.parse(response);
+                  if(resp.status){
+                      $(".cargar-ajax").addClass("d-none");// Mensaje
+                      Swal.fire({
+                          type: 'success',
+                          title: 'Correcto!',
+                          text: 'El proceso se completo correctamente!',
+                          showConfirmButton: false,
+                          timer: 1500
+                      });
+                      
+                      // setTimeout(function(){
+                      //     location.reload()
+                      // }, 1550);
+                  }else{
+                      Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                      }
+                  }
+              });
+          }
+      });
+    }else{
+      swal({
+        title: 'Ops!',
+        text: 'Falta seleccionar por lo menos dos SF para continuar con el proceso de fusión',
+        type: 'warning',
+        confirmButtonClass: 'btn btn-warning',
+        confirmButtonText: 'Aceptar',
+        buttonsStyling: false
+      });
+    }
   });
 </script>

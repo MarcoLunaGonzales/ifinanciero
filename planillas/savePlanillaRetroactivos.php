@@ -211,6 +211,10 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$total_ganado=$retroactivo_enero+$retroactivo_febrero+$retroactivo_marzo+$retroactivo_abril+$antiguedad_enero+$antiguedad_febrero+$antiguedad_marzo+$antiguedad_abril+$bonoacademico_enero+$bonoacademico_febrero+$bonoacademico_marzo+$bonoacademico_abril;//* bono academ
 		
 		$ap_vejez=$total_ganado*10/100;//10%
+		//CASO JOSE DURAN 
+		if($cod_personal==84){
+			$ap_vejez=0;//10%
+		}
 		$riesgo_prof=$total_ganado*1.71/100;//1.7%
 		$com_afp=$total_ganado*0.5/100;//0.5%
 		$aporte_sol=$total_ganado*0.5/100;//0.5%

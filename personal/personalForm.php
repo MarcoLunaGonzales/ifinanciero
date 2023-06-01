@@ -483,9 +483,9 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">AFP</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <select name="cod_tipoafp" id="cod_tipoafp"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
+                                        <select name="cod_tipoafp" id="cod_tipoafp"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required disabled>
                                             <?php while ($row = $statementtipos_afp->fetch()) { ?>
-                                                <option <?php if($cod_tipoafp == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                                <option <?php /*if($cod_tipoafp == $row["codigo"]) echo "selected";*/ if($row["codigo"] == 3) echo "selected";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                             <?php } ?>
                                         </select>
                                     </div>

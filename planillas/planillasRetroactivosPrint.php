@@ -248,13 +248,13 @@ $html.=  '<header class="header">'.
       </tfoot>';
 $html.='</table><br><br><br>';        
 
-$html.='<table width="100%">
+/*$html.='<table width="100%">
   <tr >
   <td width="25%"><center><p>______________________________<br>'.obtenerValorConfiguracionPlanillas(26).'<BR>JEFE DE RECURSOS HUMANOS </p></center></td>
   <td><center><p>______________________________<BR>'.obtenerValorConfiguracionPlanillas(24).'<BR>GERENTE GENERAL </p></center></td>
   <td width="25%"><center><p>______________________________<BR>'.obtenerValorConfiguracionPlanillas(25).'<BR>REPRESENTANTE LEGAL </p></center></td>
   </tr>
-</table>';
+</table>';*/
 
 $html.='</body>'.
       '</html>';           

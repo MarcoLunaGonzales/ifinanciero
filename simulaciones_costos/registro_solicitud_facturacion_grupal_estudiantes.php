@@ -562,20 +562,32 @@ $contadorRegistros=0;
                                                 $tipoPre=$Codigo_alterno." - Mod:".$NroModulo." - ".$rowPre['Nombre']." - ".$nombreAlumno;
                                                 $CantidadModulos=$rowPre['CantidadModulos'];
                                                 $cantidadPre=$CantidadModulos;
+                                                /*=================*/
+                                                /*   Precio (BOB)  */
+                                                /*=================*/
                                                 $Costo=$rowPre['Costo']/$CantidadModulos;
                                                 $Costo = number_format($Costo, 2, '.', '');
                                                 $montoPre=$Costo;
                                                 $cantidadPre=1;
                                                 $Abrev=trim($rowPre['Abrev'],'%');
-                                                $descuento_cliente=trim($rowPre['Abrev'],'%');
-                                                $descuento_bob_cliente=($Costo*$descuento_cliente/100);
+                                                $descuento_cliente=trim($rowPre['Abrev'],'%');          // Desc (%)
+                                                $descuento_bob_cliente=($Costo*$descuento_cliente/100); // Desc (BOB)
                                                 $descripcion_alternaX=$tipoPre;
-                                                $monto_pagar=($Costo - ($Costo*$Abrev)/100); //formula para sacar el monto a pagar del estudiante  
+                                                $monto_pagar=($Costo - ($Costo*$Abrev)/100); //formula para sacar el monto a pagar del estudiante 
+                                                /*====================*/
+                                                /*   Importe a pagar  */
+                                                /*====================*/ 
                                                 $saldo=$monto_pagar;
                                                 $banderaHab=1;
                                                 $controlador_auxiliar=0;                                            
                                             if($banderaHab!=0){
+                                                /*==============*/
+                                                /*   Desc (%)   */
+                                                /*==============*/
                                                 $descuento_porX=$descuento_cliente;
+                                                /*================*/
+                                                /*   Desc (BOB)   */
+                                                /*================*/
                                                 $descuento_bobX=$descuento_bob_cliente;
                                                 // $descripcion_alternaX=$tipoPre;
                                                 // $modal_totalmontopre+=$montoPre;                                                
@@ -603,6 +615,9 @@ $contadorRegistros=0;
                                                 $montoPagado=0;
                                                 $estadoPagado=0;
                                                 $cod_modulo=0;
+                                                /*====================*/
+                                                /*   Importe Pagado   */
+                                                /*====================*/
                                                 $monto_total_pagado=0;
                                                 $lista=verifica_pago_curso($IdCurso,$ci_estudiante);
                                                 // var_dump($lista);
