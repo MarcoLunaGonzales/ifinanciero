@@ -10,6 +10,7 @@ DATABASE_USER = root
 DATABASE_PASSWORD = 
 DATABASE_DESCRIPTION = DB LOCAL
 
+
 [ parametros de conexion bd mysql Externo ]
 DATABASE_HOST_EXT = lpsit.ibnorca.org
 DATABASE_PORT_EXT = 3360

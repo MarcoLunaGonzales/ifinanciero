@@ -8,11 +8,22 @@
 
 	$total_1=0;$total_2=0;$total_3=0;$total_4=0;$total_5=0;$total_6=0;$total_7=0;$total_8=0;$total_9=0;
 	$total_10=0;$total_11=0;$total_12=0;$total_13=0;$total_14=0;$total_15=0;
+	$total_monto_retroactivo=0;
 
 	$codPlanilla=$_GET['codigo_trib'];
 	$cod_gestion = $_GET["cod_gestion"];//
 	$cod_mes = $_GET["cod_mes"];//
 	// $nombre_mes=strtoupper(nameMes($_GET['cod_mes']));
+
+
+	 //modificacion Para el retroactivo de gestion, solo apliuca a mes de mayo
+	  // $sqlPlanillaS="SELECT cod_mes from planillas where codigo=$codPlanilla";
+	  // $stmtPlanillaS=$dbh->prepare($sqlPlanillaS);
+	  // $stmtPlanillaS->execute();
+	  // $resultPlanillaS=$stmtPlanillaS->fetch();
+	  // $cod_mes=$resultPlanillaS['cod_mes'];
+	  // echo $cod_mes."**";
+
 	$nombre_gestion=nameGestion($cod_gestion);	
 	$sql = "SELECT pt.*,p.primer_nombre,p.paterno,p.materno,
 		(Select i.abreviatura from tipos_identificacion_personal i where i.codigo=p.cod_tipo_identificacion) as tipo_identificacion,p.tipo_identificacion_otro,
@@ -57,7 +68,13 @@
 		                    <td><small># Doc Identidad</small></td>
 		                    <td><small>Tipo De Doumento</small></td>
 		                    <td><small>Novedades</small></td>
-		                    <td><small>Monto De Ingreso Neto</small></td>                                        
+		                    <td><small>Monto De Ingreso Neto</small></td>
+		                    <?php
+							//Solo en mayo se adiciona el retroactivo
+						    if($cod_mes==5){ ?>
+						    	<td><small>Retroactivo</small></td>
+						    <?php }
+		                    ?>
 		                    <td><small>Minimo No Imponible</small></td>
 		                    <td><small>Importe Sujeto a Impuesto</small></td>
 		                    <td><small>Impuesto RC-IVA</small></td>                            
@@ -79,7 +96,7 @@
 							$index=1;
 							while ($row = $stmtPersonal->fetch()) 
 							{
-		                        
+
 		                        $total_1+=round($row['monto_ingreso_neto'],2);
 		                        $total_2+=round($row['minimo_no_imponble'],0);
 		                        $total_3+=round($row['importe_sujeto_impuesto_i'],0);
@@ -96,7 +113,13 @@
 		                        $total_14+=round($row['impuesto_rc_iva_retenido'],0);
 		                        $total_15+=round($row['saldo_credito_fiscal_mes_siguiente'],0);
 
-
+		                        $monto_ingreso_neto=$row['monto_ingreso_neto'];
+		                        $monto_retroactivo=$row['monto_retroactivo'];
+		                        $total_monto_retroactivo+=round($monto_retroactivo,2);
+		                        //en mayo se toma en cuenta el retroactivo
+		                        if($monto_retroactivo>0){
+		                        	$monto_ingreso_neto=$monto_ingreso_neto-$monto_retroactivo;
+		                        }
 		                        ?>
 			                	<tr>			                		
 				                    <td class="text-center small"><?=$nombre_gestion;?></td>
@@ -108,7 +131,15 @@
 				                    <td class="text-center small"><?=$row['identificacion'];?></td>
 				                    <td class="text-center small"><?=$row['tipo_identificacion'].$row['tipo_identificacion_otro'];?></td>
 				                    <td class="text-center small">V</td>
-				                    <td class="text-center small"><?=number_format($row['monto_ingreso_neto'],2);?></td>
+				                    <td class="text-center small"><?=number_format($monto_ingreso_neto,2);?></td>
+				                    <?php
+									//Solo en mayo se adiciona el retroactivo
+								    if($cod_mes==5){ ?>
+								    	<td class="text-center small"><?=number_format($monto_retroactivo,2);?></td>
+								    <?php }
+				                    ?>
+
+
 				                    <td class="text-center small"><?=number_format($row['minimo_no_imponble'],0);?></td>
 				                    <td class="small"><?=number_format($row['importe_sujeto_impuesto_i'],0);?></td>
 				                    <td class="small"><?=number_format($row['impuesto_rc_iva'],0);?></td>
@@ -133,7 +164,13 @@
 	                    <tr class="bg-dark text-white">                  
 		                    <th colspan="9" class="text-center small">Total</th>
 		                    
-		                    <th class="text-center small"><?=number_format($total_1,0);?></th>	                    
+		                    <th class="text-center small"><?=number_format($total_1,0);?></th>
+		                    <?php
+							//Solo en mayo se adiciona el retroactivo
+						    if($cod_mes==5){ ?>
+						    	<th class="text-center small"><?=number_format($total_monto_retroactivo,0);?></th>
+						    <?php }
+		                    ?>
 		                    <th class="text-center small"><?=number_format($total_2,0);?></th>
 		                    <th class="text-center small"><?=number_format($total_3,0);?></th>                            
 		                    <th class="text-center small"><?=number_format($total_4,0);?></th>

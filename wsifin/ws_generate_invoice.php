@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $estado='false';
     $mensaje="ERROR";
     $sw_cod_libreta=true;
-    $sucursalId=null;$pasarelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;$CodLibretaDetalle=null;$tipoPago=null;$moduloId=null;$codClaServicio=null;
+    $sucursalId=null;$pasarelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;$CodLibretaDetalle=null;$tipoPago=null;$moduloId=null;$codClaServicio=null;$idIdentificacion=null;
     if(isset($datos['accion'])&&isset($datos['sIdentificador'])&&isset($datos['sKey']))
     {
         if($datos['sIdentificador']=="facifin"&&$datos['sKey']=="AX546321asbhy347bhas191001bn0rc4654")
@@ -51,6 +51,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if(isset($datos['tipoPago'])) $tipoPago=$datos['tipoPago'];//recibimos el tipo de pago
                     if(isset($datos['codLibretaDetalle']))$CodLibretaDetalle=$datos['codLibretaDetalle'];//recibimos el importe total
                     if(isset($datos['items'])) $items=$datos['items'];//recibimos array de detalle
+                    if(isset($datos['idIdentificacion'])) $idIdentificacion=$datos['idIdentificacion'];//Tipo de Identificacion.
+                    if(isset($datos['complementoCiCliente'])) $complementoCiCliente=$datos['complementoCiCliente'];
+
+                    /*Revisamos el tamano de la cadena para validar si es un dato coherente*/
+                    $tamanioComplementoCliente=0;
+                    if($complementoCiCliente!=""){
+                        $tamanioComplementoCliente=strlen($complementoCiCliente);
+                    }
+
                     $cont_items=0;
                     $importeTotal_x=0;
                     $sw=true;
@@ -129,6 +138,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }elseif($items==null || $cont_items<=0){
                         $estado=6;
                         $mensaje = "Items Vacío";
+                    }elseif( $idIdentificacion==0 || $idIdentificacion=="" ){
+                        $estado=20;
+                        $mensaje = "Tipo de Documento NO Valido";
+                    }elseif($tamanioComplementoCliente>2){
+                        $estado=21;
+                        $mensaje = "Complemento de Cedula de Identidad NO Valido";
                     }elseif(!$sw){
                         //mostrará el error de los items 
                     }else{

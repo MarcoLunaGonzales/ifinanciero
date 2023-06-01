@@ -1,4 +1,5 @@
 <?php
+//oficial el dos no se usa
 session_start();
 
 require_once '../conexion.php';
@@ -62,11 +63,22 @@ function insertarPlanillaTributaria($codigo){
 
 function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
   $dbh = new Conexion();
-
+  // session_start();
+  
+  $globalGestion=$_SESSION['globalGestion'];
   //BORRAR detalle planilla tributaria
   $sqlDelete="DELETE FROM planillas_tributarias_personal_mes_2 where cod_planillatributaria=$codigo";
   $stmtDelete = $dbh->prepare($sqlDelete);
   $stmtDelete->execute();
+
+  //modificacion Para el retroactivo de gestion, solo apliuca a mes de mayo
+  $sqlPlanillaS="SELECT cod_mes from planillas where codigo=$codPlan";
+  $stmtPlanillaS=$dbh->prepare($sqlPlanillaS);
+  $stmtPlanillaS->execute();
+  $resultPlanillaS=$stmtPlanillaS->fetch();
+  $cod_mes_planillaS=$resultPlanillaS['cod_mes'];
+  
+
   //datos estaticos
   $salario_minimo_no_imponible=round(obtenerSueldoMinimo()*2,0);
   $impuesto_sueldo_gravado=obtenerValorConfiguracionPlanillas(21);
@@ -82,12 +94,25 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
     $cod_gestion=$row['cod_gestion'];
     $mes=str_pad($cod_mes, 2, "0", STR_PAD_LEFT);
     $gestion=$row['gestion'];
-
     $afp_1=$row['afp_1'];
     $afp_2=$row['afp_2'];
     $total_ganado=$row['total_ganado'];
+    
+    //Solo en mayo se adiciona el retroactivo
+    $liquido_pagableRetroactivo=0;
+    if($cod_mes_planillaS==5){ 
+      $sqlPlanillaRetro="SELECT pd.liquido_pagable from planillas_retroactivos p join planillas_retroactivos_detalle pd on p.codigo=pd.cod_planilla
+      where p.cod_gestion=$globalGestion and pd.cod_personal=$cod_personal";
+      $stmtPlanillaRetro=$dbh->prepare($sqlPlanillaRetro);
+      $stmtPlanillaRetro->execute();
+      $resultPlanillaRetro=$stmtPlanillaRetro->fetch();
+      $liquido_pagableRetroactivo=$resultPlanillaRetro['liquido_pagable'];
+      if($liquido_pagableRetroactivo>0){
+        $total_ganado+=$liquido_pagableRetroactivo;
+      }
+    } //Fin retroactivos
+        
     $monto_iva=$row['monto_iva'];
-
     if($monto_iva==null||$monto_iva==""){
       $monto_iva=0;
     }
@@ -174,7 +199,7 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
       $saldo_credito_fiscal_siguiente=round($saldo_favor_del_dependiente+$saldo_mes_anterior_actualizado-$saldo_utilizado,0);
 
       $dbhInstert = new Conexion();
-      $sqlInsert="INSERT INTO planillas_tributarias_personal_mes_2 (cod_planillatributaria,cod_personal,monto_ingreso_neto,minimo_no_imponble,importe_sujeto_impuesto_i,impuesto_rc_iva,minimo_13,impuesto_neto_rc_iva,formulario_110_13,saldo_favor_fisico,saldo_favor_dependiente,saldo_mes_anterior,mantenimiento_saldo_mes_anterior,saldo_anterior_actualizado,saldo_utilizado,impuesto_rc_iva_retenido,saldo_credito_fiscal_mes_siguiente) 
+      $sqlInsert="INSERT INTO planillas_tributarias_personal_mes_2 (cod_planillatributaria,cod_personal,monto_ingreso_neto,minimo_no_imponble,importe_sujeto_impuesto_i,impuesto_rc_iva,minimo_13,impuesto_neto_rc_iva,formulario_110_13,saldo_favor_fisico,saldo_favor_dependiente,saldo_mes_anterior,mantenimiento_saldo_mes_anterior,saldo_anterior_actualizado,saldo_utilizado,impuesto_rc_iva_retenido,saldo_credito_fiscal_mes_siguiente,monto_retroactivo) 
      VALUES (
       '$codigo',
       '$cod_personal',
@@ -192,7 +217,8 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
       '$saldo_mes_anterior_actualizado',
       '$saldo_utilizado',
       '$impuesto_rc_iva_retenido',
-      '$saldo_credito_fiscal_siguiente'
+      '$saldo_credito_fiscal_siguiente',
+      '$liquido_pagableRetroactivo'
       )";
      $stmtInsert = $dbhInstert->prepare($sqlInsert);
      $flagsuccess=$stmtInsert->execute();
