@@ -131,16 +131,33 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$por_bonoacademico4=$datos_planilla4[5];
 
 		
+		$bonoacademico1_ant=0;
+		$bonoacademico2_ant=0;
+		$bonoacademico3_ant=0;
+		$bonoacademico4_ant=0;
 
-		$bonoacademico1_ant=$por_bonoacademico1*$minimo_salarial_anterior/100;
-		$bonoacademico2_ant=$por_bonoacademico2*$minimo_salarial_anterior/100;
-		$bonoacademico3_ant=$por_bonoacademico3*$minimo_salarial_anterior/100;
-		$bonoacademico4_ant=$por_bonoacademico4*$minimo_salarial_anterior/100;
+		$bonoacademico1_nuevo=0;
+		$bonoacademico2_nuevo=0;
+		$bonoacademico3_nuevo=0;
+		$bonoacademico4_nuevo=0;
 
-		$bonoacademico1_nuevo=$por_bonoacademico1*$minimo_salarial/100;
-		$bonoacademico2_nuevo=$por_bonoacademico2*$minimo_salarial/100;
-		$bonoacademico3_nuevo=$por_bonoacademico3*$minimo_salarial/100;
-		$bonoacademico4_nuevo=$por_bonoacademico4*$minimo_salarial/100;		
+		if($por_bonoacademico1>0){
+			$bonoacademico1_ant=$por_bonoacademico1*$minimo_salarial_anterior/100;
+			$bonoacademico1_nuevo=$por_bonoacademico1*$minimo_salarial/100;
+		}
+		if($por_bonoacademico2>0){
+			$bonoacademico2_ant=$por_bonoacademico2*$minimo_salarial_anterior/100;
+			$bonoacademico2_nuevo=$por_bonoacademico2*$minimo_salarial/100;
+		}
+		if($por_bonoacademico3>0){
+			$bonoacademico3_ant=$por_bonoacademico3*$minimo_salarial_anterior/100;
+			$bonoacademico3_nuevo=$por_bonoacademico3*$minimo_salarial/100;
+		}
+		if($por_bonoacademico4>0){
+			$bonoacademico4_ant=$por_bonoacademico4*$minimo_salarial_anterior/100;
+			$bonoacademico4_nuevo=$por_bonoacademico4*$minimo_salarial/100;		
+		}
+
 		//* fin bono academ
 		
 
@@ -195,6 +212,11 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$total_ganado=$retroactivo_enero+$retroactivo_febrero+$retroactivo_marzo+$retroactivo_abril+$antiguedad_enero+$antiguedad_febrero+$antiguedad_marzo+$antiguedad_abril+$bonoacademico_enero+$bonoacademico_febrero+$bonoacademico_marzo+$bonoacademico_abril;//* bono academ
 		
 		$ap_vejez=$total_ganado*10/100;//10%
+
+		//CASO JOSE DURAN 
+		if($cod_personal==84){
+			$ap_vejez=0;//10%
+		}
 		$riesgo_prof=$total_ganado*1.71/100;//1.7%
 		$com_afp=$total_ganado*0.5/100;//0.5%
 		$aporte_sol=$total_ganado*0.5/100;//0.5%
