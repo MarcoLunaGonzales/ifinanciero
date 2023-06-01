@@ -86,21 +86,19 @@ $html.=  '<header class="header">'.
               '<td><small><small><small>Bono Antig Nuevo</small></small></small></td>';
               
               if($cod_mes == 1){
-                $html .= '<td><small><small><small>Retroa Enero</small></small></small></td>'.
-                '<td><small><small><small>Bono Antig</small></small></small></td>';
+                $html .= '<td><small><small><small>Retroa Enero</small></small></small></td>';
               }
               if($cod_mes == 2){
-                $html .= '<td><small><small><small>Retroa Febrero</small></small></small></td>'.
-                '<td><small><small><small>Bono Antig</small></small></small></td>';
+                $html .= '<td><small><small><small>Retroa Febrero</small></small></small></td>';
               }
               if($cod_mes == 3){
-                $html .= '<td><small><small><small>Retroa Marzo</small></small></small></td>'.
-                '<td><small><small><small>Bono Antig</small></small></small></td>';
+                $html .= '<td><small><small><small>Retroa Marzo</small></small></small></td>';
               }
               if($cod_mes == 4){
-                $html .= '<td><small><small><small>Retroa Abril</small></small></small></td>'.
-                '<td><small><small><small>Bono Antig</small></small></small></td>';
+                $html .= '<td><small><small><small>Retroa Abril</small></small></small></td>';
               }
+              $html .= '<td><small><small><small>Bono Antig</small></small></small></td>'.
+                        '<td><small><small><small>Bono Otros</small></small></small></td>';
               
               $html .= '<td><small><small><small>Tota Gana</small></small></small></td>'.
               '<td><small><small><small>Ap. Vejez 10%</small></small></small></td>'.
@@ -122,12 +120,16 @@ $html.=  '<header class="header">'.
             $subtotal_bono_antiguedad_nuevo=0;
             $subtotal_retroactivo_enero=0;
             $subtotal_antiguedad_enero=0;
+            $subtotal_bonoacademico_enero=0;
             $subtotal_retroactivo_febrero=0;
             $subtotal_antiguedad_febrero=0;
+            $subtotal_bonoacademico_febrero=0;
             $subtotal_retroactivo_marzo=0;
             $subtotal_antiguedad_marzo=0;
+            $subtotal_bonoacademico_marzo=0;
             $subtotal_retroactivo_abril=0;
             $subtotal_antiguedad_abril=0;
+            $subtotal_bonoacademico_abril=0;
             $subtotal_total_ganado=0;
             $subtotal_ap_vejez=0;
             $subtotal_riesgo_prof=0;
@@ -136,7 +138,7 @@ $html.=  '<header class="header">'.
             $subtotal_total_descuentos=0;
             $subtotal_liquido_pagable=0;
 
-            $sql="SELECT p.codigo,prd.correlativo_planilla,a.nombre as area,p.identificacion as ci,p.paterno,p.materno,p.primer_nombre,prd.ing_planilla,prd.retiro_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,prd.haber_basico_anterior,prd.haber_basico_nuevo,prd.bono_antiguedad_anterior,prd.bono_antiguedad_nuevo,prd.retroactivo_enero,prd.retroactivo_febrero,prd.retroactivo_marzo,prd.retroactivo_abril,prd.antiguedad_enero,prd.antiguedad_febrero,prd.antiguedad_marzo,prd.antiguedad_abril,prd.total_ganado,prd.ap_vejez,prd.riesgo_prof,prd.com_afp,prd.aporte_sol,prd.total_descuentos,prd.liquido_pagable
+            $sql="SELECT p.codigo,prd.correlativo_planilla,a.nombre as area,p.identificacion as ci,p.paterno,p.materno,p.primer_nombre,prd.ing_planilla,prd.retiro_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,prd.haber_basico_anterior,prd.haber_basico_nuevo,prd.bono_antiguedad_anterior,prd.bono_antiguedad_nuevo,prd.retroactivo_enero,prd.retroactivo_febrero,prd.retroactivo_marzo,prd.retroactivo_abril,prd.antiguedad_enero,prd.antiguedad_febrero,prd.antiguedad_marzo,prd.antiguedad_abril,prd.total_ganado,prd.ap_vejez,prd.riesgo_prof,prd.com_afp,prd.aporte_sol,prd.total_descuentos,prd.liquido_pagable,prd.bonoacademico_enero,prd.bonoacademico_febrero,prd.bonoacademico_marzo,prd.bonoacademico_abril
               from  personal p join planillas_retroactivos_detalle prd on p.codigo=prd.cod_personal join areas a on prd.cod_area=a.codigo
               where prd.cod_planilla=$codPlanilla
               order by correlativo_planilla";
@@ -172,19 +174,23 @@ $html.=  '<header class="header">'.
                 '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bono_antiguedad_nuevo']).'</small></small></small></small></td>';
                 if($cod_mes == 1){
                   $html .= '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['retroactivo_enero']).'</small></small></small></small></td>'.
-                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_enero']).'</small></small></small></small></td>';
+                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_enero']).'</small></small></small></small></td>'.
+                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bonoacademico_enero']).'</small></small></small></small></td>';
                 }
                 if($cod_mes == 2){                  
                   $html .= '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['retroactivo_febrero']).'</small></small></small></small></td>'.
-                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_febrero']).'</small></small></small></small></td>';
+                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_febrero']).'</small></small></small></small></td>'.
+                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bonoacademico_febrero']).'</small></small></small></small></td>';
                 }
                 if($cod_mes == 3){                  
                   $html .= '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['retroactivo_marzo']).'</small></small></small></small></td>'.
-                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_marzo']).'</small></small></small></small></td>';
+                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_marzo']).'</small></small></small></small></td>'.
+                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bonoacademico_marzo']).'</small></small></small></small></td>';
                 }
                 if($cod_mes == 4){                  
                   $html .= '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['retroactivo_abril']).'</small></small></small></small></td>'.
-                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_abril']).'</small></small></small></small></td>';
+                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_abril']).'</small></small></small></small></td>'.
+                  '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bonoacademico_abril']).'</small></small></small></small></td>';
                 }
                 $html .= '<td class="text-right"><small><small><small><small>'.formatNumberDec(($row['total_ganado']/4)).'</small></small></small></small></td>'.
                 '<td class="text-right"><small><small><small><small>'.formatNumberDec(($row['ap_vejez']/4)).'</small></small></small></small></td>'.
@@ -201,19 +207,25 @@ $html.=  '<header class="header">'.
               $subtotal_bono_antiguedad_nuevo+=$row['bono_antiguedad_nuevo']; 
               $subtotal_retroactivo_enero+=$row['retroactivo_enero']; 
               $subtotal_antiguedad_enero+=$row['antiguedad_enero']; 
+
+              $subtotal_bonoacademico_enero+=$row['bonoacademico_enero']; 
+
               $subtotal_retroactivo_febrero+=$row['retroactivo_febrero']; 
               $subtotal_antiguedad_febrero+=$row['antiguedad_febrero']; 
+              $subtotal_bonoacademico_febrero+=$row['bonoacademico_febrero']; 
               $subtotal_retroactivo_marzo+=$row['retroactivo_marzo']; 
               $subtotal_antiguedad_marzo+=$row['antiguedad_marzo']; 
+              $subtotal_bonoacademico_marzo+=$row['bonoacademico_marzo']; 
               $subtotal_retroactivo_abril+=$row['retroactivo_abril']; 
               $subtotal_antiguedad_abril+=$row['antiguedad_abril']; 
+              $subtotal_bonoacademico_abril+=$row['bonoacademico_abril']; 
               $subtotal_total_ganado+=$row['total_ganado']; 
               $subtotal_ap_vejez+=$row['ap_vejez']; 
               $subtotal_riesgo_prof+=$row['riesgo_prof']; 
               $subtotal_com_afp+=$row['com_afp']; 
               $subtotal_aporte_sol+=$row['aporte_sol']; 
               $subtotal_total_descuentos+=$row['total_descuentos']; 
-              $subtotal_liquido_pagable+=$row['liquido_pagable']; 
+              $subtotal_liquido_pagable+=$row['liquido_pagable'];  
               $index++;
             }
       $html.='</tbody>';
@@ -226,19 +238,23 @@ $html.=  '<header class="header">'.
           '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bono_antiguedad_nuevo).'</b></small></small></small></small></small></td>';
           if($cod_mes == 1){
             $html .= '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_retroactivo_enero).'</b></small></small></small></small></small></td>'.
-            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_antiguedad_enero).'</b></small></small></small></small></small></td>';
+            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_antiguedad_enero).'</b></small></small></small></small></small></td>'.
+            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bonoacademico_enero).'</b></small></small></small></small></small></td>';
           }
           if($cod_mes == 2){
             $html .= '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_retroactivo_febrero).'</b></small></small></small></small></small></td>'.
-            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_antiguedad_febrero).'</b></small></small></small></small></small></td>';
+            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_antiguedad_febrero).'</b></small></small></small></small></small></td>'.
+            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bonoacademico_febrero).'</b></small></small></small></small></small></td>';
           }
           if($cod_mes == 3){
             $html .= '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_retroactivo_marzo).'</b></small></small></small></small></small></td>'.
-            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_antiguedad_marzo).'</b></small></small></small></small></small></td>';
+            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_antiguedad_marzo).'</b></small></small></small></small></small></td>'.
+            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bonoacademico_marzo).'</b></small></small></small></small></small></td>';
           }
           if($cod_mes == 4){
             $html .= '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_retroactivo_abril).'</b></small></small></small></small></small></td>'.
-            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_antiguedad_abril).'</b></small></small></small></small></small></td>';
+            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_antiguedad_abril).'</b></small></small></small></small></small></td>'.
+            '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_bonoacademico_abril).'</b></small></small></small></small></small></td>';
           }
           $html .= '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_total_ganado).'</b></small></small></small></small></small></td>'.
           '<td  class="text-right"><small><small><small><small><small><b>'.formatNumberDec($subtotal_ap_vejez).'</b></small></small></small></small></small></td>'.
