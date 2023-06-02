@@ -198,7 +198,7 @@ $stmt->bindColumn('peso', $peso);
       <div class="modal-content">
           <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title text-primary font-weight-bold" id="myModalLabel3">Copiar Responsabilidades de Cargo</h4>
+              <h4 class="modal-title text-primary font-weight-bold" id="myModalLabel3">Copiar Responsabilidades de Cargo de:</h4>
           </div>
           <div class="modal-body" id="modal-lista_documentos">
             <div class="row">
@@ -232,7 +232,7 @@ $stmt->bindColumn('peso', $peso);
       <div class="modal-content">
           <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title text-primary font-weight-bold" id="myModalLabel3">Mover Responsabilidades de Cargo</h4>
+              <h4 class="modal-title text-primary font-weight-bold" id="myModalLabel3">Mover Responsabilidades de Cargo a:</h4>
           </div>
           <div class="modal-body" id="modal-lista_documentos">
             <div class="row">
