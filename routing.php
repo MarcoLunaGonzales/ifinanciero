@@ -1317,6 +1317,11 @@
 		if ($_GET['opcion']=='personalListaRetirado') {
 			require_once('personal/personalListaRetirado.php'); //ok
 		}
+		// PERSONAL PARA APROBACIÓN
+		if ($_GET['opcion']=='personalListasAprobacion') {
+			require_once('personal/personalListaAprobacion.php'); //ok
+		}
+
 		if ($_GET['opcion']=='personalFormRetirado') {			
 			$codigo=$_GET['codigo'];
 			require_once('personal/personalFormRetirado.php');

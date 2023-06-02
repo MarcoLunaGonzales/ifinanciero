@@ -59,7 +59,10 @@ $stmt->bindColumn('xcod_tipopersonal', $xcod_tipopersonal);
                 </a>
                 <a  style="height:10px;width: 10px;"  href='<?=$urlListPersonalRetirado;?>' >
                   <i class="material-icons" title="Lista Personal Retirado">rowing</i>
-                </a>  
+                </a> 
+                <a  style="height:10px;width: 10px;"  href='index.php?opcion=personalListasAprobacion' target="_blank">
+                  <i class="material-icons" title="Lista Personal para Aprobación">check_circle</i>
+                </a> 
               </h4>
               
 
