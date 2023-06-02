@@ -48,8 +48,9 @@ public function __construct() {
          require_once 'config.php';
          
          // Oficial
-         // parent::__construct(DATABASE_DRIVER.':host='.DATABASE_HOST.';dbname='.DATABASE_NAME.';port='.DATABASE_PORT, DATABASE_USER, DATABASE_PASSWORD,array(PDO::ATTR_PERSISTENT => 'TRUE',PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-         parent::__construct($this->tipo_de_base.':host='.$this->host.';dbname='.$this->nombre_de_base.';port='.$this->port, $this->usuario, $this->contrasena,array(PDO::ATTR_PERSISTENT => 'TRUE',PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+         parent::__construct(DATABASE_DRIVER.':host='.DATABASE_HOST.';dbname='.DATABASE_NAME.';port='.DATABASE_PORT, DATABASE_USER, DATABASE_PASSWORD,array(PDO::ATTR_PERSISTENT => 'TRUE',PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+
+         //parent::__construct($this->tipo_de_base.':host='.$this->host.';dbname='.$this->nombre_de_base.';port='.$this->port, $this->usuario, $this->contrasena,array(PDO::ATTR_PERSISTENT => 'TRUE',PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
          
       }catch(PDOException $e){
          echo 'Ha surgido un error y no se puede conectar a la base de datos. Detalle: ' . $e->getMessage();

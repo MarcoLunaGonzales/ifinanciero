@@ -178,7 +178,7 @@ function obtenerTotalCPS($gestion, $mes){
 }
 function obtenerTotalAFP_prev1($gestion, $mes){
   $dbh = new Conexion();
-  $sql="SELECT sum((pm.riesgo_profesional)+(pm.a_patronal_sol))as monto from planillas p, planillas_personal_mes_patronal pm,personal per where p.codigo=pm.cod_planilla and p.cod_gestion='$gestion' and p.cod_mes='$mes' and pm.cod_personal_cargo=per.codigo and per.cod_tipoafp=2";
+  $sql="SELECT sum((pm.riesgo_profesional)+(pm.a_patronal_sol))as monto from planillas p, planillas_personal_mes_patronal pm,personal per where p.codigo=pm.cod_planilla and p.cod_gestion='$gestion' and p.cod_mes='$mes' and pm.cod_personal_cargo=per.codigo and per.cod_tipoafp=3";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $monto1=0;
@@ -186,7 +186,7 @@ function obtenerTotalAFP_prev1($gestion, $mes){
       $monto1=$row['monto'];
     }
 
-    $sql2="SELECT sum(pm.afp_2)as monto from planillas p, planillas_personal_mes pm,personal per where p.codigo=pm.cod_planilla and p.cod_gestion='$gestion' and p.cod_mes='$mes'  and pm.cod_personalcargo=per.codigo and per.cod_tipoafp=2";
+    $sql2="SELECT sum(pm.afp_1)as monto from planillas p, planillas_personal_mes pm,personal per where p.codigo=pm.cod_planilla and p.cod_gestion='$gestion' and p.cod_mes='$mes'  and pm.cod_personalcargo=per.codigo and per.cod_tipoafp=3";
 
     $stmt2 = $dbh->prepare($sql2);
     $stmt2->execute();
@@ -203,7 +203,7 @@ function obtenerTotalAFP_prev2($gestion, $mes){
   $dbh = new Conexion();
   $sql="SELECT sum((pm.a_solidario_13000)+(pm.a_solidario_25000)+(pm.a_solidario_35000))as monto 
     from planillas p, planillas_personal_mes_patronal pm,personal per
-    where p.codigo=pm.cod_planilla and p.cod_gestion='$gestion' and p.cod_mes='$mes' and pm.cod_personal_cargo=per.codigo and per.cod_tipoafp=1";
+    where p.codigo=pm.cod_planilla and p.cod_gestion='$gestion' and p.cod_mes='$mes' and pm.cod_personal_cargo=per.codigo and per.cod_tipoafp=3";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $monto=0;
@@ -248,7 +248,7 @@ function obtenerTotalAFP_prev3($gestion, $mes){
 }
 function obtenerTotalprovivienda($gestion, $mes){
   $dbh = new Conexion();
-  $sql="SELECT sum(pm.provivienda)as monto from planillas p, planillas_personal_mes_patronal pm,personal per where p.codigo=pm.cod_planilla and p.cod_gestion='$gestion' and p.cod_mes='$mes' and pm.cod_personal_cargo=per.codigo and per.cod_tipoafp=2";
+  $sql="SELECT sum(pm.provivienda)as monto from planillas p, planillas_personal_mes_patronal pm,personal per where p.codigo=pm.cod_planilla and p.cod_gestion='$gestion' and p.cod_mes='$mes' and pm.cod_personal_cargo=per.codigo and per.cod_tipoafp=3";
 
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
