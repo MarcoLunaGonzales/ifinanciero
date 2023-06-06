@@ -92,7 +92,11 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                     <div class="card-icon">
                       <i class="material-icons">polymer</i>
                     </div>
-                    <h4 class="card-title"><b>Solicitudes de Facturación</b></h4>                    
+                    <h4 class="card-title"><b>Solicitudes de Facturación</b>
+                      <button type="button" class="btn btn-info btn-round btn-fab btn-sm proceso_fusion">
+                        <i class="material-icons" title="Método para Fusionar SF">merge_type</i>
+                      </button>
+                    </h4>                    
                   </div>
                   <div class="row">
                     <div class="col-sm-12">
@@ -106,7 +110,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                   <div class="card-body" id="data_solicitudes_facturacion">
                       <table class="table" id="tablePaginator50NoFinder">
                         <thead>
-                          <tr>
+                          <tr>  
                             <th><small>#</small></th>
                             <th><small>Of - Area</small></th>
                             <th><small>#Sol.</small></th>
@@ -284,6 +288,10 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                             ?>
                             <tr>
                               <td>
+                                <?php
+                                  $array_estadoFusion = [1]; // Facturas en estado: Registrado
+                                  if(in_array($codEstado, $array_estadoFusion)){ 
+                                ?>
                                 <div class="form-group">
       	             	            <div class="form-check">
                                     <label class="form-check-label">
@@ -294,6 +302,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                     </label>
                                   </div>
                                 </div>
+                                <?php } ?>
                               </td>
                               <td><small><?=$nombre_uo;?> - <?=$nombre_area;?></small></td>
                               <td class="text-right"><small><?=$nro_correlativo;?></small></td>
@@ -523,7 +532,6 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                       <?php 
                     }              
                   ?>
-                  <button class="btn btn-info proceso_fusion">Fusionar SF</button>
                 </div>        
               <!-- </div> -->
           </div>  
@@ -623,34 +631,47 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
 
               $(".cargar-ajax").removeClass("d-none");
               $.ajax({
-                  url:"simulaciones_servicios/saveFusion.php",
-                  type:"POST",
-                  contentType: false,
-                  processData: false,
-                  data: formData,
-                  success:function(response){
+                url:"simulaciones_servicios/saveFusion.php",
+                type:"POST",
+                contentType: false,
+                processData: false,
+                data: formData,
+                success:function(response){
                   let resp = JSON.parse(response);
+                  $(".cargar-ajax").addClass("d-none");// Mensaje
                   if(resp.status){
-                      $(".cargar-ajax").addClass("d-none");// Mensaje
                       Swal.fire({
                           type: 'success',
                           title: 'Correcto!',
-                          text: 'El proceso se completo correctamente!',
+                          text: resp.message,
                           showConfirmButton: false,
                           timer: 1500
                       });
                       
-                      // setTimeout(function(){
-                      //     location.reload()
-                      // }, 1550);
+                      setTimeout(function(){
+                          location.reload()
+                      }, 1550);
                   }else{
-                      Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
-                      }
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Error!',
+                        text: resp.message
+                    });
+                    // Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
                   }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Error!',
+                        text: 'Ocurrió un error inesperado, verifique con el soporte técnico.'
+                    });
+                }
               });
           }
       });
     }else{
+      $(".cargar-ajax").addClass("d-none");// Mensaje
       swal({
         title: 'Ops!',
         text: 'Falta seleccionar por lo menos dos SF para continuar con el proceso de fusión',
