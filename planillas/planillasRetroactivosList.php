@@ -10,11 +10,13 @@ $globalCodUnidad=$_SESSION["globalUnidad"];
 $globalNombreUnidad=$_SESSION["globalNombreUnidad"];
 
 $dbh = new Conexion();
-  $stmtAdmnin = $dbh->prepare("SELECT pr.codigo,pr.cod_gestion,pr.cod_estadoplanilla,pr.cod_comprobante1,pr.cod_comprobante2,pr.cod_comprobante3,pr.cod_comprobante4,
+  $sql="SELECT pr.codigo,pr.cod_gestion,pr.cod_estadoplanilla,pr.cod_comprobante1,pr.cod_comprobante2,pr.cod_comprobante3,pr.cod_comprobante4,
   (select g.nombre from gestiones g where g.codigo=pr.cod_gestion) as gestion,CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as persona_creacion,
   (select ep.nombre from estados_planilla ep where ep.codigo=pr.cod_estadoplanilla) as nombre_estadoplanilla,DATE_FORMAT(pr.created_at,'%d/%m/%Y')as fecha_creacion
   from planillas_retroactivos pr join personal p on pr.created_by=p.codigo
-   order by pr.cod_gestion desc");
+   order by pr.cod_gestion desc";
+  
+  $stmtAdmnin = $dbh->prepare($sql);
   $stmtAdmnin->execute();
   $stmtAdmnin->bindColumn('codigo', $codigo_planilla);
   $stmtAdmnin->bindColumn('gestion', $gestion);

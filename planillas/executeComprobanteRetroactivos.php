@@ -17,6 +17,16 @@ $namemesPlanilla=nombreMes($mesPlanilla);
 $gestionPlanilla=$_GET["cod_gestion"];
 $anioPlanilla=nameGestion($gestionPlanilla);
 
+//Obtenemos el codigo de planilla para la distribucion de areas
+  $sqlCodPlanilla="SELECT codigo from planillas p where p.cod_gestion='$gestionPlanilla' and p.cod_mes='$mesPlanilla'";
+  $stmtCodPlanilla = $dbh->prepare($sqlCodPlanilla);
+  $stmtCodPlanilla->execute();
+  $codigoPlanillaX=0;
+  while ($rowCodPlanilla = $stmtCodPlanilla->fetch(PDO::FETCH_ASSOC)) {
+    $codigoPlanillaX=$rowCodPlanilla['codigo'];
+  }
+  //Fin obtener codigo planilla
+
 $globalUnidadX=5; //cod unidad por defecto para contabilizacion LA PAZ
  //insertamos cabecera
 $tipoComprobante=3;
@@ -51,10 +61,13 @@ $stmtInsertCab = $dbh->prepare($sqlInsertCab);
 $flagSuccess=$stmtInsertCab->execute();
   //creamos array
 $sqlUnidadX="SELECT pd.cod_area,(select ap.cod_area_planilla from areas_planillas_contabilizacion ap where ap.cod_area=pd.cod_area)as cod_area_contabilizacion,(select ap2.orden from areas_planillas_contabilizacion ap2 where ap2.cod_area=pd.cod_area)as orden
-  from personal p join personal_area_distribucion pd on p.codigo=pd.cod_personal
+  from personal p join personal_area_distribucion_planilla pd on p.codigo=pd.cod_personal and pd.cod_planilla='$codigoPlanillaX'
   where pd.cod_estadoreferencial=1 and p.cod_estadoreferencial=1 and p.cod_estadopersonal=1 
   GROUP BY pd.cod_area
   order by 3";
+
+//echo $sqlUnidadX;
+
 $stmtX = $dbh->prepare($sqlUnidadX);
 $stmtX->execute();
 $cont_areas=0;

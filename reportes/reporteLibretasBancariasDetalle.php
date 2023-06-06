@@ -168,7 +168,7 @@ switch ($filtro) {
             //echo $totalMonto. " saldo ".$montoMonto;
 
             //EN EL CASO 3 CUANDO DEBEN VERSE SIN RELACIONAR + SALDO FILTRAMOS POR EL SALDO
-            if( ($filtro!=3) || ($filtro==3 && $saldo>0) ){
+            if( ($filtro!=3) || ($filtro==3 && $saldo>0.1) ){
             ?>
             <tr>
               <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
@@ -241,7 +241,7 @@ switch ($filtro) {
                   }
                 }
 
-                if( ($filtro!=3) || ($filtro==3 && $saldo>0) ){
+                if( ($filtro!=3) || ($filtro==3 && $saldo>0.1) ){
                 ?>
                 <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaFecha)?></td>
                 <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNumero)?></td>

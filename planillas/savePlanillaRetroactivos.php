@@ -143,20 +143,30 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		if($por_bonoacademico1>0){
 			$bonoacademico1_ant=$por_bonoacademico1*$minimo_salarial_anterior/100;
 			$bonoacademico1_nuevo=$por_bonoacademico1*$minimo_salarial/100;
+			//echo "************ $identificacion $bonoacademico1_ant $bonoacademico1_nuevo <br>";
 		}
 		if($por_bonoacademico2>0){
 			$bonoacademico2_ant=$por_bonoacademico2*$minimo_salarial_anterior/100;
 			$bonoacademico2_nuevo=$por_bonoacademico2*$minimo_salarial/100;
+			//echo "$bonoacademico2_ant $bonoacademico2_nuevo <br>";
 		}
 		if($por_bonoacademico3>0){
 			$bonoacademico3_ant=$por_bonoacademico3*$minimo_salarial_anterior/100;
 			$bonoacademico3_nuevo=$por_bonoacademico3*$minimo_salarial/100;
+			//echo "$bonoacademico3_ant $bonoacademico3_nuevo <br>";
 		}
 		if($por_bonoacademico4>0){
 			$bonoacademico4_ant=$por_bonoacademico4*$minimo_salarial_anterior/100;
 			$bonoacademico4_nuevo=$por_bonoacademico4*$minimo_salarial/100;		
+			//echo "$bonoacademico4_ant $bonoacademico4_nuevo <br>";
 		}		
 		//* fin bono acade
+
+		$totalGanadoMes1_ant=$haber_basico1+$bono_antiguedad1+$bonoacademico1_ant;
+		$totalGanadoMes2_ant=$haber_basico2+$bono_antiguedad2+$bonoacademico2_ant;
+		$totalGanadoMes3_ant=$haber_basico3+$bono_antiguedad3+$bonoacademico3_ant;
+		$totalGanadoMes4_ant=$haber_basico4+$bono_antiguedad4+$bonoacademico4_ant;
+
 
 		$retroactivo_enero=0;
 		$retroactivo_febrero=0;
@@ -184,9 +194,13 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 			$retroactivo_enero=$haber_basico_nuevo1-$haber_basico1;
 			$antiguedad_enero=$bono_antiguedad_nuevo_enero-$bono_antiguedad1;
 			$bonoacademico_enero=$bonoacademico1_nuevo-$bonoacademico1_ant;//* bono academ
+
+			$totalGanadoMes1_nuevo=$haber_basico_nuevo1+$bono_antiguedad_nuevo_enero+$bonoacademico1_nuevo;
 			
-			$a_solidario_13_25_35_enero_nuevo = obtenerAporteSolidario13000($haber_basico_nuevo1)+obtenerAporteSolidario25000($haber_basico_nuevo1)+obtenerAporteSolidario35000($haber_basico_nuevo1);
-			$a_solidario_13_25_35_enero_ant = obtenerAporteSolidario13000($haber_basico1)+obtenerAporteSolidario25000($haber_basico1)+obtenerAporteSolidario35000($haber_basico1);
+			$a_solidario_13_25_35_enero_nuevo = obtenerAporteSolidario13000($totalGanadoMes1_nuevo)+obtenerAporteSolidario25000($totalGanadoMes1_nuevo)+obtenerAporteSolidario35000($totalGanadoMes1_nuevo);
+
+			$a_solidario_13_25_35_enero_ant = obtenerAporteSolidario13000($totalGanadoMes1_ant)+obtenerAporteSolidario25000($totalGanadoMes1_ant)+obtenerAporteSolidario35000($totalGanadoMes1_ant);
+
 			$a_solidario_13_25_35_enero=$a_solidario_13_25_35_enero_nuevo-$a_solidario_13_25_35_enero_ant;
 
 		}
@@ -196,8 +210,12 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 			$antiguedad_febrero=$bono_antiguedad_nuevo_febrero-$bono_antiguedad2;
 			$bonoacademico_febrero=$bonoacademico2_nuevo-$bonoacademico2_ant;//* bono academ
 
-			$a_solidario_13_25_35_febrero_nuevo = obtenerAporteSolidario13000($haber_basico_nuevo2)+obtenerAporteSolidario25000($haber_basico_nuevo2)+obtenerAporteSolidario35000($haber_basico_nuevo2);
-			$a_solidario_13_25_35_febrero_ant = obtenerAporteSolidario13000($haber_basico2)+obtenerAporteSolidario25000($haber_basico2)+obtenerAporteSolidario35000($haber_basico2);
+			$totalGanadoMes2_nuevo=$haber_basico_nuevo2+$bono_antiguedad_nuevo_febrero+$bonoacademico2_nuevo;
+
+			$a_solidario_13_25_35_febrero_nuevo = obtenerAporteSolidario13000($totalGanadoMes2_nuevo)+obtenerAporteSolidario25000($totalGanadoMes2_nuevo)+obtenerAporteSolidario35000($totalGanadoMes2_nuevo);
+
+			$a_solidario_13_25_35_febrero_ant = obtenerAporteSolidario13000($totalGanadoMes2_ant)+obtenerAporteSolidario25000($totalGanadoMes2_ant)+obtenerAporteSolidario35000($totalGanadoMes2_ant);
+
 			$a_solidario_13_25_35_febrero=$a_solidario_13_25_35_febrero_nuevo-$a_solidario_13_25_35_febrero_ant;
 		}
 		if($haber_basico3>0){
@@ -206,8 +224,12 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 			$antiguedad_marzo=$bono_antiguedad_nuevo_marzo-$bono_antiguedad3;
 			$bonoacademico_marzo=$bonoacademico3_nuevo-$bonoacademico3_ant;//* bono academ
 
-			$a_solidario_13_25_35_marzo_nuevo = obtenerAporteSolidario13000($haber_basico_nuevo3)+obtenerAporteSolidario25000($haber_basico_nuevo3)+obtenerAporteSolidario35000($haber_basico_nuevo3);
-			$a_solidario_13_25_35_marzo_ant = obtenerAporteSolidario13000($haber_basico3)+obtenerAporteSolidario25000($haber_basico3)+obtenerAporteSolidario35000($haber_basico3);
+			$totalGanadoMes3_nuevo=$haber_basico_nuevo3+$bono_antiguedad_nuevo_marzo+$bonoacademico3_nuevo;
+
+			$a_solidario_13_25_35_marzo_nuevo = obtenerAporteSolidario13000($totalGanadoMes3_nuevo)+obtenerAporteSolidario25000($totalGanadoMes3_nuevo)+obtenerAporteSolidario35000($totalGanadoMes3_nuevo);
+
+			$a_solidario_13_25_35_marzo_ant = obtenerAporteSolidario13000($totalGanadoMes3_ant)+obtenerAporteSolidario25000($totalGanadoMes3_ant)+obtenerAporteSolidario35000($totalGanadoMes3_ant);
+
 			$a_solidario_13_25_35_marzo=$a_solidario_13_25_35_marzo_nuevo-$a_solidario_13_25_35_marzo_ant;
 		}
 		if($haber_basico4>0){
@@ -216,8 +238,12 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 			$antiguedad_abril=$bono_antiguedad_nuevo_abril-$bono_antiguedad4;
 			$bonoacademico_abril=$bonoacademico4_nuevo-$bonoacademico4_ant;//* bono academ
 
-			$a_solidario_13_25_35_abril_nuevo = obtenerAporteSolidario13000($haber_basico_nuevo4)+obtenerAporteSolidario25000($haber_basico_nuevo4)+obtenerAporteSolidario35000($haber_basico_nuevo4);
-			$a_solidario_13_25_35_abril_ant = obtenerAporteSolidario13000($haber_basico4)+obtenerAporteSolidario25000($haber_basico4)+obtenerAporteSolidario35000($haber_basico4);
+			$totalGanadoMes4_nuevo=$haber_basico_nuevo4+$bono_antiguedad_nuevo_abril+$bonoacademico4_nuevo;
+
+			$a_solidario_13_25_35_abril_nuevo = obtenerAporteSolidario13000($totalGanadoMes4_nuevo)+obtenerAporteSolidario25000($totalGanadoMes4_nuevo)+obtenerAporteSolidario35000($totalGanadoMes4_nuevo);
+			
+			$a_solidario_13_25_35_abril_ant = obtenerAporteSolidario13000($totalGanadoMes4_ant)+obtenerAporteSolidario25000($totalGanadoMes4_ant)+obtenerAporteSolidario35000($totalGanadoMes4_ant);
+
 			$a_solidario_13_25_35_abril=$a_solidario_13_25_35_abril_nuevo-$a_solidario_13_25_35_abril_ant;
 		}
 		$bono_antiguedad_anterior=$bono_antiguedad4;

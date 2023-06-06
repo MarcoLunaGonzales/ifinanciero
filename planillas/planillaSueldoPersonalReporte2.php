@@ -400,7 +400,10 @@ table {
 			                    	$a_solidario_25000_tp=$a_solidario_25000*$porcentaje/100;
 			                    	$a_solidario_35000_tp=$a_solidario_35000*$porcentaje/100;
 			                    	$rc_iva_tp=$rc_iva*$porcentaje/100;
-		                      		$monto_aportes_tp = $afp_1_tp+$afp_2_tp+$a_solidario_13000_tp+$a_solidario_25000_tp+$a_solidario_35000_tp+$rc_iva_tp;
+		                      		//$monto_aportes_tp = $afp_1_tp+$afp_2_tp+$a_solidario_13000_tp+$a_solidario_25000_tp+$a_solidario_35000_tp+$rc_iva_tp;
+			                    	/*Corregimos los aportes porque no deben tomar en cuenta el iva*/
+			                    	$monto_aportes_tp = $afp_1_tp+$afp_2_tp+$a_solidario_13000_tp+$a_solidario_25000_tp+$a_solidario_35000_tp;
+
 		                      		$sum_total_m_aportes+=$monto_aportes_tp;
 		                      		
 		                      		$suma_total_afp_1+=$afp_1_tp;

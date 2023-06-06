@@ -314,6 +314,8 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 	    return "0";
 	}	
 }
+
+
 function ejecutarComprobanteSolicitud_tiendaVirtual_bk($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$tipoPago,$cod_cuenta_libreta,$normas,$cod_facturaventa){
 	require_once __DIR__.'/../conexion.php';
 	$dbh = new Conexion();
