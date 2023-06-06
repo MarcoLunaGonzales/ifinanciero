@@ -184,7 +184,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $cod_cuenta=125; // Gestora Pública
   // $cod_cuenta="122";//por defecto
   $cod_cuenta_aux=0;
-  $glosaDetalleGeneral="AFP Prevision aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
+  $glosaDetalleGeneral="Aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
   $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','$cod_cuenta_aux','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPPrevision','$glosaDetalleGeneral','$ordenDetalle')";
   $stmtInsertDet = $dbh->prepare($sqlInsertDet);
   $flagSuccessDet=$stmtInsertDet->execute();
@@ -203,7 +203,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $totalAFPPrevision=obtenerTotalAFP_prev2($gestionPlanilla,$mesPlanilla);
   $cod_cuenta=125; // Gestora Pública
   // $cod_cuenta="123";//por defecto
-  $glosaDetalleGeneral="AFP Prevision aporte solidario correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
+  $glosaDetalleGeneral="Aporte solidario correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
   $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPPrevision','$glosaDetalleGeneral','$ordenDetalle')";
   $stmtInsertDet = $dbh->prepare($sqlInsertDet);
   $flagSuccessDet=$stmtInsertDet->execute();
@@ -220,7 +220,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
 
   //PROVIVIENDA
   // $totalProVivienda=1781.20;
-  $glosaDetalleGeneral="AFP Prevision provivienda aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
+  $glosaDetalleGeneral="Provivienda aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
   $totalProVivienda=obtenerTotalprovivienda($gestionPlanilla,$mesPlanilla,$globalUnidadX);
   $cod_cuenta="124";
   $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalProVivienda','$glosaDetalleGeneral','$ordenDetalle')";
@@ -365,7 +365,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   }
       
 
-  $sqlDifirencia="SELECT sum(debe)-sum(haber) as diferencia from comprobantes_detalle where cod_comprobante='$codComprobante'";
+  $sqlDifirencia="SELECT ROUND( (sum(debe)-sum(haber)),3) as diferencia from comprobantes_detalle where cod_comprobante='$codComprobante'";
   $stmtdiferencia = $dbh->prepare($sqlDifirencia);
   $stmtdiferencia->execute();
   $sw_auxiliar=0;
@@ -373,15 +373,16 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   {
     $diferencia=$rowdiferencia['diferencia'];
   }
-  if($diferencia>0) {
+  if( $diferencia > 0.001 ) {
     $debe=0;
     $haber=$diferencia;
   }
-  if($diferencia<0) {
+  if( $diferencia < 0.001 ) {
     $debe=$diferencia*(-1);    
     $haber=0;    
   }
   $cod_cuenta="306";
+  $glosaDetalleGeneral="Diferencias en la planilla: ".$namemesPlanilla."/".$anioPlanilla;
   if( $debe>0 || $haber>0 ){
     $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','$debe','$haber','$glosaDetalleGeneral','$ordenDetalle')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);

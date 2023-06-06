@@ -130,17 +130,32 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$por_bonoacademico3=$datos_planilla3[5];
 		$por_bonoacademico4=$datos_planilla4[5];
 
-		
+		$bonoacademico1_ant=0;
+		$bonoacademico2_ant=0;
+		$bonoacademico3_ant=0;
+		$bonoacademico4_ant=0;
 
-		$bonoacademico1_ant=$por_bonoacademico1*$minimo_salarial_anterior/100;
-		$bonoacademico2_ant=$por_bonoacademico2*$minimo_salarial_anterior/100;
-		$bonoacademico3_ant=$por_bonoacademico3*$minimo_salarial_anterior/100;
-		$bonoacademico4_ant=$por_bonoacademico4*$minimo_salarial_anterior/100;
+		$bonoacademico1_nuevo=0;
+		$bonoacademico2_nuevo=0;
+		$bonoacademico3_nuevo=0;
+		$bonoacademico4_nuevo=0;
 
-		$bonoacademico1_nuevo=$por_bonoacademico1*$minimo_salarial/100;
-		$bonoacademico2_nuevo=$por_bonoacademico2*$minimo_salarial/100;
-		$bonoacademico3_nuevo=$por_bonoacademico3*$minimo_salarial/100;
-		$bonoacademico4_nuevo=$por_bonoacademico4*$minimo_salarial/100;
+		if($por_bonoacademico1>0){
+			$bonoacademico1_ant=$por_bonoacademico1*$minimo_salarial_anterior/100;
+			$bonoacademico1_nuevo=$por_bonoacademico1*$minimo_salarial/100;
+		}
+		if($por_bonoacademico2>0){
+			$bonoacademico2_ant=$por_bonoacademico2*$minimo_salarial_anterior/100;
+			$bonoacademico2_nuevo=$por_bonoacademico2*$minimo_salarial/100;
+		}
+		if($por_bonoacademico3>0){
+			$bonoacademico3_ant=$por_bonoacademico3*$minimo_salarial_anterior/100;
+			$bonoacademico3_nuevo=$por_bonoacademico3*$minimo_salarial/100;
+		}
+		if($por_bonoacademico4>0){
+			$bonoacademico4_ant=$por_bonoacademico4*$minimo_salarial_anterior/100;
+			$bonoacademico4_nuevo=$por_bonoacademico4*$minimo_salarial/100;		
+		}		
 		//* fin bono acade
 
 		$retroactivo_enero=0;
@@ -162,6 +177,7 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$bono_antiguedad_nuevo_marzo=obtenerBonoAntiguedad($minimo_salarial,$ing_planilla,$fecha_planilla_3);//ok
 		$bono_antiguedad_nuevo_abril=obtenerBonoAntiguedad($minimo_salarial,$ing_planilla,$fecha_planilla_4);//ok
 
+		//echo "ene: ".$bono_antiguedad_nuevo_enero." feb: ".$bono_antiguedad_nuevo_febrero." mar: ".$bono_antiguedad_nuevo_marzo." abril: ".$bono_antiguedad_nuevo_abril;
 
 		if($haber_basico1>0){
 			$haber_basico_nuevo1=$haber_basico_nuevo*$dias_trabajados1/$dias_del_mes;

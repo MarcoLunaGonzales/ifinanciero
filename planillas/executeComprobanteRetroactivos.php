@@ -183,9 +183,9 @@ $ordenDetalle++;
 //AFP PREVISION BBV
 $totalAFPPrevision=$riesgo_profesional+$a_patronal_sol+$afpmes;
 // $totalAFPPrevision=obtenerTotalAFP_prev1($gestionPlanilla,$mesPlanilla);
-$cod_cuenta="122";//por defecto
+$cod_cuenta="125";//por defecto
 $cod_cuenta_aux=0;
-$glosaDetalleGeneral="AFP Prevision aporte retroactivo correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
+$glosaDetalleGeneral="Aporte Retroactivo correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
 $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','$cod_cuenta_aux','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPPrevision','$glosaDetalleGeneral','$ordenDetalle')";
 $stmtInsertDet = $dbh->prepare($sqlInsertDet);
 $flagSuccessDet=$stmtInsertDet->execute();
@@ -204,8 +204,8 @@ $ordenDetalle++;
 $totalAFPPrevision=$aporte_sol_13_25_35;
 //$totalAFPPrevision=obtenerTotalAFP_prev2($gestionPlanilla,$mesPlanilla);
 // $totalAFPPrevision=obtenerTotalAFP_prev2_retroactivos($gestionPlanilla, $mesPlanilla);
-$cod_cuenta="122";//por defecto
-$glosaDetalleGeneral="AFP Prevision aporte retroactivo solidario correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
+$cod_cuenta="125";//por defecto
+$glosaDetalleGeneral="Aporte Retroactivo Solidario correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
 $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPPrevision','$glosaDetalleGeneral','$ordenDetalle')";
 $stmtInsertDet = $dbh->prepare($sqlInsertDet);
 $flagSuccessDet=$stmtInsertDet->execute();
@@ -221,7 +221,7 @@ $ordenDetalle++;
 // $ordenDetalle++;
 
 //PROVIVIENDA
-$glosaDetalleGeneral="AFP Prevision provivienda aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
+$glosaDetalleGeneral="Provivienda aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
 $totalProVivienda=$provivienda;
 // $totalProVivienda=obtenerTotalprovivienda($gestionPlanilla,$mesPlanilla,$globalUnidadX);
 $cod_cuenta="124";
