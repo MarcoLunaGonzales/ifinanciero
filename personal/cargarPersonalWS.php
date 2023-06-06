@@ -82,7 +82,7 @@ foreach ($detalle as $objDet){
     $cod_tipoaporteafp = null;	   
     $nro_seguro = null;
     // $cod_estadopersonal = 2; Antiguo
-    $cod_estadopersonal = 4;            // Valor por defecto 4:
+    $cod_estadopersonal = 4;            // Valor por defecto 4: Para aprobación:
     $persona_contacto = null;
     $created_by = 1;//$_POST["created_by"];
     $modified_by = 1;//$_POST["modified_by"];

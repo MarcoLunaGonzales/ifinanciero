@@ -110,7 +110,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                   <div class="card-body" id="data_solicitudes_facturacion">
                       <table class="table" id="tablePaginator50NoFinder">
                         <thead>
-                          <tr>
+                          <tr>  
                             <th><small>#</small></th>
                             <th><small>Of - Area</small></th>
                             <th><small>#Sol.</small></th>
