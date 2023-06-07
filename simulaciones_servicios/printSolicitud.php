@@ -15,13 +15,15 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 $codigo_facturacion = $_GET["codigo"];//codigoactivofijo
 try{
   //datos de solicitud de facturacion
-  $stmtInfo = $dbh->prepare("SELECT *,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x, (select st.abreviatura from siat_tipos_documentoidentidad st where st.codigo=sf.siat_tipoidentificacion)as abrevTipoDoc from solicitudes_facturacion sf where sf.codigo=$codigo_facturacion");
+  $stmtInfo = $dbh->prepare("SELECT *,DATE_FORMAT(sf.fecha_solicitudfactura,'%d/%m/%Y')as fecha_solicitudfactura_x, (select st.abreviatura from siat_tipos_documentoidentidad st where st.codigo=sf.siat_tipoidentificacion)as abrevTipoDoc, DATE_FORMAT(sf.fecha_facturacion,'%d/%m/%Y')as fecha_facturacion_x from solicitudes_facturacion sf where sf.codigo=$codigo_facturacion");
   $stmtInfo->execute();
   $resultInfo = $stmtInfo->fetch();
   $cod_simulacion_servicio = $resultInfo['cod_simulacion_servicio'];  
   $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];  
   $cod_area = $resultInfo['cod_area'];    
   $fecha_solicitudfactura = $resultInfo['fecha_solicitudfactura_x'];  
+  $fecha_facturacion = $resultInfo['fecha_facturacion_x'];
+
   $cod_tipoobjeto = $resultInfo['cod_tipoobjeto'];  
   $cod_tipopago = $resultInfo['cod_tipopago'];  
   $cod_cliente = $resultInfo['cod_cliente'];  
@@ -95,7 +97,7 @@ $html.=  '<header class="header">'.
           
           '<table class="table">
             <tr>
-              <td align="left" width="20%" class="td-color-celeste"><b>Ciudad Y Fecha: </b></td>
+              <td align="left" width="20%" class="td-color-celeste"><b>Ciudad y Fecha de Registro: </b></td>
               <td width="30%">'.$nombre_unidad.'</td>
               <td align="left" width="30%">'.$fecha_solicitudfactura.'</td>
               <td width="5%" class="td-color-celeste"><b>N°: </b></td>
@@ -105,8 +107,10 @@ $html.=  '<header class="header">'.
           '<br>'.
           '<table class="table">
             <tr>
-              <td width="20%" class="td-color-celeste"><b>Solicitante:</b></td>
-              <td  colspan="5" >'.$nombre_responsable.'</td>
+              <td class="td-color-celeste"><b>Solicitante:</b></td>
+              <td width="10%" colspan="2" align="left">'.$nombre_responsable.'</td>
+              <td width="3%" class="td-color-celeste"><b>Fecha a facturar:</b></td>
+              <td width="4%" colspan="2" align="center" ><b>'.$fecha_facturacion.'</b></td>
             </tr> 
              <tr>
               <td class="td-color-celeste"><b>Cliente:</b></td>';
@@ -351,6 +355,7 @@ $html.=  '<header class="header">'.
           //efectivo
           $objeto_solfac=2709;
           $personal_registro=namePersonal($cod_personal);
+
           $fecha_registro=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2726);//estado registro
           $nombreEstado_registro=obtenerNombreEstadoSolFac(1);
           $cod_tipopago_cred=obtenerValorConfiguracion(48);
@@ -401,7 +406,7 @@ $html.=  '<header class="header">'.
              $personal_anulado=namePersonal($userAnulado);    
              $fecha_anulado=obtenerFechaCambioEstado($objeto_solfac,$codigo_facturacion,2730);
           }
-
+          
 
           $html.='<table class="table">
             <thead>

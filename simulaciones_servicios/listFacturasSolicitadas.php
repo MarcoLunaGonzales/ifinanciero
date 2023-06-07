@@ -293,7 +293,7 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                   if(in_array($codEstado, $array_estadoFusion)){ 
                                 ?>
                                 <div class="form-group">
-      	             	            <div class="form-check">
+                                  <div class="form-check">
                                     <label class="form-check-label">
                                       <input class="form-check-input" type="checkbox" name="fusion[]" value="<?=$codigo_facturacion;?>">
                                       <span class="form-check-sign">

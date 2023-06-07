@@ -350,8 +350,18 @@ function totalGanadoAreaRetro($gestion, $mes, $cod_area,$cod_uo=null){
     break;
   }
   $dbh = new Conexion();
+  //Obtenemos el codigo de planilla para la distribucion de areas
+  $sqlCodPlanilla="SELECT codigo from planillas p where p.cod_gestion='$gestion' and p.cod_mes='$mes'";
+  $stmtCodPlanilla = $dbh->prepare($sqlCodPlanilla);
+  $stmtCodPlanilla->execute();
+  $codigoPlanillaX=0;
+  while ($rowCodPlanilla = $stmtCodPlanilla->fetch(PDO::FETCH_ASSOC)) {
+    $codigoPlanillaX=$rowCodPlanilla['codigo'];
+  }
+  //Fin obtener codigo planilla
+
   $sql="SELECT $sql_cabecera
-  from planillas_retroactivos p join planillas_retroactivos_detalle pm on p.codigo=pm.cod_planilla join personal_area_distribucion pad on pm.cod_personal=pad.cod_personal and pad.cod_estadoreferencial=1
+  from planillas_retroactivos p join planillas_retroactivos_detalle pm on p.codigo=pm.cod_planilla join personal_area_distribucion_planilla pad on pm.cod_personal=pad.cod_personal and pad.cod_planilla='$codigoPlanillaX' 
   where p.cod_gestion='$gestion' and pad.cod_area='$cod_area' $sql_add";
     // echo $sql."<br>";
     $stmt = $dbh->prepare($sql);
@@ -379,9 +389,18 @@ function obtenerTotalAFP_prev2_retroactivos($gestion, $mes){
       $sql_cabecera="sum(pm.a_solidario_13_25_35_abril) as monto";
     break;
   }
-  
+  //Obtenemos el codigo de planilla para la distribucion de areas
+  $sqlCodPlanilla="SELECT codigo from planillas p where p.cod_gestion='$gestion' and p.cod_mes='$mes'";
+  $stmtCodPlanilla = $dbh->prepare($sqlCodPlanilla);
+  $stmtCodPlanilla->execute();
+  $codigoPlanillaX=0;
+  while ($rowCodPlanilla = $stmtCodPlanilla->fetch(PDO::FETCH_ASSOC)) {
+    $codigoPlanillaX=$rowCodPlanilla['codigo'];
+  }
+  //Fin obtener codigo planilla
+
   $sql="SELECT $sql_cabecera
-  from planillas_retroactivos p join planillas_retroactivos_detalle pm on p.codigo=pm.cod_planilla join personal_area_distribucion pad on pm.cod_personal=pad.cod_personal and pad.cod_estadoreferencial=1
+  from planillas_retroactivos p join planillas_retroactivos_detalle pm on p.codigo=pm.cod_planilla join personal_area_distribucion_planilla pad on pm.cod_personal=pad.cod_personal and pad.cod_planilla='$codigoPlanillaX'
   where p.cod_gestion='$gestion' ";
     // echo $sql."<br>";
     $stmt = $dbh->prepare($sql);

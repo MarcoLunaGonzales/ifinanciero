@@ -107,6 +107,7 @@ while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {
      }
  }
 //***clientes MORA
+/*
 $stmtCMora = $dbh->prepare("SELECT codigo from clientes_mora where cod_estado=1 limit 1");
 $stmtCMora->execute();
 $stmtCMora->bindColumn('codigo', $codigoMora);
@@ -114,7 +115,7 @@ while ($rowMora = $stmtCMora->fetch(PDO::FETCH_BOUND)) {
   $html.='<a class="dropdown-item" target="_blank" href="clientes_mora/reporte_clientesMora.php">Nuevos Clientes Mora</a>';
   $contMonedas++; 
 }
-
+*/
 
 if($contMonedas==0){
   $html='<label class="dropdown-item">No hay Notificaciones</label>';

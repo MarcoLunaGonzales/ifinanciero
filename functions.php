@@ -6501,6 +6501,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
   }
   function obtenerFechaCambioEstado($tipo,$objeto,$estado){
      $dbh = new ConexionIBNORCA();
+     //echo "CONEXION: ".$dbh;
      $stmt = $dbh->prepare("SELECT DATE_FORMAT(FechaEstado,'%d/%m/%Y %H:%i:%s')as fecha_registro_x FROM estadoobjeto where IdTipoObjeto=$tipo and IdObjeto = $objeto and IdEstado=$estado");
      $stmt->execute();
      $valor=0;

@@ -37,14 +37,14 @@ try {
     // también se debe tomar en cuenta el cambio en el campo de "observación" donde se notifique
     // el nuevo registor donde se FUSIONA y tambien "cod_estadosolicitudfacturacion"
     $placeholders = implode(', ', $array_sf);
-    $texto = ", Fusionado en la SF: Codigo Principal $sf_antigua";
+    $texto = ", fusionada en la SF: Codigo Principal $sf_antigua";
     $sql = "UPDATE solicitudes_facturacion SET observaciones = CONCAT(observaciones, :texto), cod_estadosolicitudfacturacion = 2 WHERE codigo IN ($placeholders)";
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(':texto', $texto);
     $stmt->execute();
     // 2. Actualizar la SF ANTIGUA en "observación" con los codigos de las SF que se adjuntan para
     // la fusión
-    $texto = ", SF fucionada Nros_relativos: $placeholders";
+    $texto = ", SF fusionada Nros. SFs: $placeholders";
     $sql = "UPDATE solicitudes_facturacion SET observaciones = CONCAT(observaciones, :texto) WHERE codigo = '$sf_antigua'";
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(':texto', $texto);
