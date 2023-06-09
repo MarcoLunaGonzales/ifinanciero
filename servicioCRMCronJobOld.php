@@ -21,12 +21,13 @@
         
         // WHERE DATE(fv.fecha_factura) = '$fecha_actual'
         $dbh = new Conexion();
-        $stmt = $dbh->prepare("SELECT fvd.codigo, fv.cod_cliente, fvd.ci_estudiante, fvd.cod_facturaventa
+        $stmt = $dbh->prepare("SELECT fvd.codigo, fv.cod_cliente, fvd.cod_facturaventa, fvd.cod_claservicio, fvd.ci_estudiante, 
+        (SELECT IdCurso FROM ibnorca.modulos WHERE IdModulo=fvd.cod_claservicio LIMIT 1) as idCurso 
         FROM facturas_venta fv
         LEFT JOIN facturas_ventadetalle fvd ON fvd.cod_facturaventa = fv.codigo
         WHERE DATE(fv.fecha_factura) BETWEEN '$fecha_inicio' AND '$fecha_fin'
 	    AND fv.cod_area = 13
-        GROUP BY fv.cod_cliente, fvd.ci_estudiante, fvd.cod_facturaventa
+        GROUP BY fv.cod_cliente
         ORDER BY fvd.codigo 
         -- LIMIT 1
         ");
@@ -34,14 +35,14 @@
         // Cantidad de LEADS
         $count_lead = 0;
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            // var_dump($row);
+            var_dump($row);
             $cod_cliente      = $row['cod_cliente'];
             $ci               = $row['ci_estudiante'];
-            // $idServicio       = $row['cod_claservicio'];
+            $idServicio       = $row['cod_claservicio'];
             $cod_facturaventa = $row['cod_facturaventa'];
-            // $idCurso          = $row['idCurso'];
+            $idCurso          = $row['idCurso'];
             // echo "cod_facturaventa: $cod_facturaventa, ci: $ci, idModulo: $idServicio, idCurso: $idCurso ### ";
-            if(!empty($cod_cliente)){
+            if(!empty($ci) && !empty($idServicio)){
                 /********************************************************/
                 /*              SERVICIO DE BUSQUEDA LEADS              */
                 /********************************************************/
@@ -59,7 +60,7 @@
                 
                 // $url = $url_init."crm.lead/find?partner_id.i_registro=" . $cod_cliente . "&fields=".$fieds."&stage_id=Reserva%20de%20cupo";
                 $url = $url_init."crm.lead/find?partner_id.i_registro=" . $cod_cliente . "&fields=".$fieds;
-                // echo $url."############";
+                echo $url."############";
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -74,7 +75,7 @@
                 /*              ERROR - LOG BUSQUEDA LEADS              */
                 /********************************************************/
                 if(!empty($obj->error)){
-                    $observaciones = "cod_facturaventa: $cod_facturaventa, ci: $ci, cod_cliente: $cod_cliente";
+                    $observaciones = "cod_facturaventa: $cod_facturaventa, ci: $ci, idModulo: $idServicio, idCurso: $idCurso";
                     $response      = json_encode($obj);
                     $fecha_hora    = date('Y-m-d H:i:s');
                     $stmtSave = $dbh->prepare("INSERT INTO log_leads (observaciones,response,fecha_hora,tipo,cod_facturaventa,estado_lead) VALUES ('$observaciones','$response','$fecha_hora', 0, $cod_facturaventa, 'No hay lead')");
@@ -89,7 +90,7 @@
                         /*              ENCONTRADO - LOG BUSQUEDA LEADS              */
                         /*************************************************************/
                         if(!empty($obj->error)){
-                            $observaciones = "cod_facturaventa: $cod_facturaventa, ci: $ci, cod_cliente: $cod_cliente";
+                            $observaciones = "cod_facturaventa: $cod_facturaventa, ci: $ci, idModulo: $idServicio, idCurso: $idCurso";
                             $response      = json_encode($data);
                             $fecha_hora    = date('Y-m-d H:i:s');
                             $stmtSave = $dbh->prepare("INSERT INTO log_leads (observaciones,response,fecha_hora,tipo,cod_facturaventa,cod_lead,estado_lead) VALUES ('$observaciones','$response','$fecha_hora', 0, $cod_facturaventa,".$data->id.",".$data->stage_id[1].")");
