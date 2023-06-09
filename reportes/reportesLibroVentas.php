@@ -42,7 +42,8 @@ $fechaHasta2=$y."-12-31";
                   </div>
                   <h4 class="card-title">Reporte Libro de Ventas</h4>
                 </div>
-                <form class="" action="<?=$urlReporteVentas?>" target="_blank" method="POST">
+                <form class="" id="myForm" action="<?=$urlReporteVentas?>" target="_blank" method="POST">
+                <!-- <form class="" id="myForm" action="reportes/reportePrintLibroVentasView.php" target="_blank" method="POST"> -->
                 <div class="card-body">
                 	<div class="row">
 		                <label class="col-sm-2 col-form-label">Oficina</label>
@@ -154,7 +155,8 @@ $fechaHasta2=$y."-12-31";
 		            </div>
 	         	</div>
                 <div class="card-footer">
-                	<button type="submit" class="btn btn-success">Ver Reporte</button>
+                	<button type="submit" class="btn btn-success reporte_ver" data-url="<?=$urlReporteVentas?>">Ver Reporte</button>
+                	<button type="submit" class="btn btn-success reporte_ver" data-url="reportes/reportePrintLibroVentasView.php">Ver Reporte HTML</button>
                 	<a  href="#" class="btn btn-info" onclick="descargar_txt_libro_ventas_excel()">Generar Excel (SIAT)</a>
                 	<a  href="#" class="btn btn-warning" onclick="descargar_txt_libro_ventas()">Generar TXT (Facilito)</a>
 				  <!-- <a href="?opcion=listComprobantes" class="<?=$buttonCancel;?>"> <-- Volver </a>-->
@@ -183,3 +185,17 @@ $fechaHasta2=$y."-12-31";
     </form>
   </div>
 </div>
+
+<script>
+	$(document).ready(function() {
+		$('.reporte_ver').click(function(event) {
+			event.preventDefault(); // Evita que el formulario se envíe de inmediato
+			// Obtén el nuevo URL del atributo 'data-url' del botón
+			var nuevoURL = $(this).data('url');
+			// Cambia el atributo 'action' del formulario
+			$('#myForm').attr('action', nuevoURL);
+			// Envía el formulario
+			$('#myForm').submit();
+		});
+	});
+</script>

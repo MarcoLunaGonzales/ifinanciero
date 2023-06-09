@@ -330,7 +330,7 @@ $dbh = new Conexion();
         if(resp.status){
           $('#lead_cliente').empty();
           $.each(resp.data, function(index, value){
-              $('#lead_cliente').append('<option value="' + value.id + '">' + value.name + '</option>');
+              $('#lead_cliente').append('<option value="' + value.id + '">' + value.name + ' - ' + value.stage_id[1] + '</option>');
           });
           $('#lead_cliente').selectpicker('refresh');
         }else{

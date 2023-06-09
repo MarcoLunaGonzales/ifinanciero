@@ -23,7 +23,8 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
   	$gestion=nameGestion($cod_gestion);
 
 	// Obtener el valor de GESTORA
-	$fecha_gestora = obtenerValorConfiguracionPlanillas(34);
+	$fecha_gestora 	  = obtenerValorConfiguracionPlanillas(34);
+	$conf_descripcion = obtenerValorConfiguracionPlanillas(35);
 	$verificacion_gestora = false;
 	if(strtotime(date('Y-m-d')) >= strtotime($fecha_gestora)  && !empty($fecha_gestora)){
 		$verificacion_gestora = true;
