@@ -614,8 +614,8 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
     });
     if(array_sf.length > 1){
       swal({
-          title: '¿Estás seguro de Fusionar?',
-          text: 'Se fucionará las SF seleccionadas.',
+          title: '¿Estás seguro?',
+          text: 'Se procedera a la fusion de las SF seleccionadas.',
           type: 'warning',
           showCancelButton: true,
           confirmButtonClass: 'btn btn-success',

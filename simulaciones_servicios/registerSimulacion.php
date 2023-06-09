@@ -61,6 +61,11 @@ $usd=6.96;
 
 $nombreClienteX=obtenerNombreClienteSimulacion($codigo);
 
+
+$estiloUtilidadIbnorca="";
+$simulacionEn="";
+
+
 /******************************************************/
 /*              ORGANISMO CERTIFICADOR                */
 /******************************************************/
