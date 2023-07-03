@@ -102,6 +102,7 @@ switch ($filtro) {
           $cant2=obtenerCantidadComprobanteLibretaBancariaDetalle($codigo,$sqlFiltroComp);
 
           //echo "<BR><BR><BR>CANTIDAD FACS: ".$cant." COMPROS: ".$cant2."<br>";
+          
           $saldoAux=$monto-$montoFac;
           
           //echo "Saldo Aux: ".$saldoAux." ";
@@ -118,32 +119,49 @@ switch ($filtro) {
             $entro=1;
           }
 
-
-          /*if($cant==0 && $cant2==0){
-            $saldo=$monto;
-          }else{
-            //$saldo=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,$sqlFiltroSaldo,$monto);
-            $saldo=obtenerSaldoLibretaBancariaNuevo($codigo,$monto,$fecha_fac,$fechaHasta_fac);
-          }*/
-
           $saldo=obtenerSaldoLibretaBancariaDetalleFiltro($codigo,$sqlFiltroSaldo,$monto);
             
-          //echo "<br>Saldo: ".$saldo." <br>";
+          //echo "<br>Saldo 1: ".$saldo." <br>";
 
+          //$montoComprobantesEnlazadosLibreta variable NUEVA para el nuevo control de saldos
+          $montoComprobantesEnlazadosLibreta=0;
           if($entro==1){
             if($codFactura==""||$codFactura==0||$codFactura==null){
               if(!($codComprobante==""||$codComprobante==0)){
-                  $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);                    
+                  $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);           
                   if($datosDetalle[1]!=''){
                       $saldo=0;
+                      $montoComprobantesEnlazadosLibreta=$datosDetalle[1];
                    }
                }
             }elseif (!($codComprobante==""||$codComprobante==0)){
               $datosDetalle=obtenerDatosComprobanteDetalleFechas($codComprobanteDetalle,$sqlFiltroComp);    
               if($datosDetalle[1]!=''){
                       $saldo=$saldo-(float)$datosDetalle[1];
+                      $montoComprobantesEnlazadosLibreta=$datosDetalle[1];
               }
             }
+            //echo "<br>Saldo 2: ".$saldo." <br>";
+
+            /********************************************************/
+            /* Desde aqui el nuevo calculo de saldos para la libreta*/
+            /********************************************************/
+            if($fecha>="2023-01-01 00:00:00"){
+              //echo "vamos 2023";
+              $sqlSaldosNuevo="SELECT sum(cd.debe-cd.haber)as saldo from libretas_bancariasdetalle ld, comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.cod_libretabancariadet=ld.codigo and 
+                c.fecha BETWEEN '$fecha_fac 00:00:00' and '$fechaHasta_fac 23:59:59' and ld.codigo in ($codigo) and c.cod_estadocomprobante<>2";
+              $stmtSaldosNuevo = $dbh->prepare($sqlSaldosNuevo);
+              $stmtSaldosNuevo->execute();        
+              $montoTotalUtilizadoLibretaNuevo=0;
+              while ($resultSaldosNuevo = $stmtSaldosNuevo->fetch(PDO::FETCH_ASSOC)) {
+                  $montoTotalUtilizadoLibretaNuevo=$resultSaldosNuevo['saldo'];
+              }
+            }
+            $nuevoSaldo=$monto-$montoTotalUtilizadoLibretaNuevo-$montoComprobantesEnlazadosLibreta;
+            /********************************************************/
+            /* Fin Nuevo Calculo de Saldos*/
+            /********************************************************/
+
 
 
             /*QUITAR ESTA PARTE ES SOLO PARA EL CIERRE DE LA 2021*/
@@ -158,8 +176,8 @@ switch ($filtro) {
             if($codigo==4639){
               $saldo=238;
             }
-
             /*fin quitar*/
+
 
 
             $totalMonto+=(float)$saldo;
@@ -178,7 +196,7 @@ switch ($filtro) {
               </td>      
               <td class="text-left"><?=$agencia?></td>
               <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-              <td class="text-right"><?=number_format($saldo,2,".",",")?></td>
+              <td class="text-right"><?=number_format($saldo,2,".",",")?><br><small class="text-danger font-weight-bold"><?=number_format($nuevoSaldo,2,".",",")?></small></td>
               <td class="text-right"><?=$nro_documento?></td>
               <?php 
             } 

@@ -202,6 +202,16 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                                     $sqlUpdateFact="UPDATE facturas_venta set idTransaccion_siat='$idTransaccion_x',nro_factura='$nroFactura_x' where codigo in ($cod_facturaVenta)";
                                     $stmtUpdateFact = $dbh->prepare($sqlUpdateFact);
                                     $stmtUpdateFact->execute();
+
+                                    //Actualizamos el  comprobantes si salio con F0
+                                    $sqlUpdateComp="UPDATE comprobantes set glosa=replace(glosa, '/ F 0 /', '/ F ".$nroFactura_x." /') where codigo=".$cod_comprobante;
+                                    $stmtUpdateComp = $dbh->prepare($sqlUpdateComp);
+                                    $stmtUpdateComp->execute();
+                                    $sqlUpdateComp="UPDATE  comprobantes_detalle set glosa=replace(glosa, '/ F 0 /', '/ F ".$nroFactura_x." /') where cod_comprobante=".$cod_comprobante;
+                                    $stmtUpdateComp = $dbh->prepare($sqlUpdateComp);
+                                    $stmtUpdateComp->execute();
+                                    //Fin Actualizar el comprobante
+
                                 }
                                 return "0###".$cod_facturaVenta;    
                             }

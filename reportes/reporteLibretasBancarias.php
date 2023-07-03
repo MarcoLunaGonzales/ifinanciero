@@ -44,7 +44,7 @@ $periodoTitleFac= "Del ".$fechaFormateadaFac.' al '.$fechaFormateadaHastaFac;
 
 $filtro=$_POST['filtro'];
 
-$verImpresion=$_POST['ver'];
+//$verImpresion=$_POST['ver'];
 
 /*if($filtro==1){
   $sqlFiltro="and (ce.cod_factura IS NOT NULL or ce.cod_factura!=0)";
