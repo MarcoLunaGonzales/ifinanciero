@@ -3313,14 +3313,26 @@ function guardarSimulacionServicio(){
    if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
    Swal.fire('Informativo!','Debe llenar los campos  1 !','warning'); 
    }else{
-    var tipoServicio=$("#tipo_servicio").val();
-    var normas_tiposervicio=$("#normas_tiposervicio").val();
-    var normas_tiposerviciotext=$("#normas_tiposerviciotext").val();
+    var tipoServicio=$('#tipo_servicio').val();
+    // Otras Normas
+    // var normas_tiposervicio     = $("#normas_tiposervicio").val();
+    var normas_tiposerviciotext = $("#normas_tiposerviciotext").val();
+    // Nuevos campos de Normas
+    var normas_nac = $("#normas_nac").val();
+    var normas_int = $("#normas_int").val();
+
     alcance=$("#alcance").val();
     var des_serv=$("#d_servicio").val();
     var iaf_primario=$("#iaf_primario_tcs").val();
     var iaf_secundario=$("#iaf_secundario_tcs").val();
-    var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2,"codigo_personal":cod_personal,"fecha_solicitud_cliente":fecha_solicitud_cliente, "organismo_certificador":organismo_certificador};
+    var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,
+    
+    "normas_tiposerviciotext":normas_tiposerviciotext,
+    // "normas_tiposervicio":JSON.stringify(normas_tiposervicio),
+    "normas_nac":JSON.stringify(normas_nac),
+    "normas_int":JSON.stringify(normas_int),
+
+    "alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"id_perfil":idPerfil,"objeto_servicio":objeto,"tipo_servicio":tipoServicio,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":2,"codigo_personal":cod_personal,"fecha_solicitud_cliente":fecha_solicitud_cliente, "organismo_certificador":organismo_certificador};
     $.ajax({
         type: "POST",
         dataType: 'html',
@@ -3365,14 +3377,30 @@ function guardarSimulacionServicio(){
     if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
       Swal.fire('Informativo!','Debe llenar los campos 2 !','warning'); 
     }else{
-      var regionCliente=$("#region_cliente").val();
-      var tipoCliente=$("#tipo_cliente").val();
+
+      /* Se quito los campos */
+      // var regionCliente=$("#region_cliente").val();
+      // var tipoCliente=$("#tipo_cliente").val();
+
+      var alcance=$("#alcance_p").val();
+      // Nuevos campos de Normas
+      var normas_nac = $("#normas_nac").val();
+      var normas_int = $("#normas_int").val();
+
+      var tipoServicio=$('#tipo_servicio').val();
 
       var iaf_primario=$("#iaf_primario").val();
       var iaf_secundario=$("#iaf_secundario").val();
       objeto=0;
       var des_serv=$("#d_servicio_p").val();
-      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_cliente":tipoCliente,"region_cliente":regionCliente,"id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1,"fecha_solicitud_cliente":fecha_solicitud_cliente, "organismo_certificador":organismo_certificador};
+      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_servicio":tipoServicio,
+      // "tipo_cliente":tipoCliente,
+      // "region_cliente":regionCliente,
+      
+      "normas_nac":JSON.stringify(normas_nac),
+      "normas_int":JSON.stringify(normas_int),
+
+      "id_perfil":idPerfil,"objeto_servicio":objeto,"id_servicio":idServicio,"local_extranjero":local_extranjero,"nombre":nombre,"plantilla_servicio":plantilla_servicio,"dias":dias,"utilidad":utilidad,"cliente":cliente,"atributos":JSON.stringify(itemAtributos),"norma":norma,"anios":anios,"afnor":afnor,"tipo_atributo":1,"fecha_solicitud_cliente":fecha_solicitud_cliente,"codigo_personal":cod_personal, "organismo_certificador":organismo_certificador};
      $.ajax({
         type: "POST",
         dataType: 'html',
@@ -4138,8 +4166,35 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
    }
     ajax.send(null);
  }
+ function searchTipoServicio(){
+    // Obtener referencia al select
+    var select = $('#tipo_servicio');
+    select.empty();
+    select.append($('<option>').text('SELECCIONAR TIPO DE SERVICIO').attr('value', ''));
+
+    // Realizar la solicitud AJAX al servidor
+    let plantilla = $('#plantilla_servicio').val();
+    $.ajax({
+      url: 'simulaciones_servicios/ajax_search_tiposervicio.php',
+      method: 'POST',
+      dataType: 'json',
+      data: { plantilla: plantilla },
+      success: function(response) {
+        // Éxito en la solicitud AJAX
+        // Llenar el select con los datos obtenidos
+        $.each(response.data, function(key, value) {
+          select.append($('<option>').text(value.descripcion_n2).attr('value', value.codigo_n2));
+        });
+      },
+      error: function() {
+        // Error en la solicitud AJAX
+        console.log('Error al obtener los datos.');
+      }
+    });
+ }
 
  function listarDatosPlantillaSim(codigo){
+  searchTipoServicio();
   var url="simulaciones_servicios/listPreciosDias.php";
   ajax=nuevoAjax();
     ajax.open("GET",url+"?codigo="+codigo,true);
@@ -5055,10 +5110,10 @@ function agregaFuncionCargo(datos){
   var d=datos.split('/');
   document.getElementById("cod_cargoA").value=d[0];
 }
-function RegistrarCargoFuncion(cod_cargoA,nombre_funcionA,pesoA){
+function RegistrarCargoFuncion(cod_cargoA,nombre_funcionA,ordenA){
   $.ajax({
     type:"POST",
-    data:"cod_funcion=0&cod_cargo="+cod_cargoA+"&nombre_funcion="+nombre_funcionA+"&cod_estadoreferencial=1&peso="+pesoA,
+    data:"cod_funcion=0&cod_cargo="+cod_cargoA+"&nombre_funcion="+nombre_funcionA+"&cod_estadoreferencial=1&orden="+ordenA,
     url:"rrhh/cargoFuncionSave.php",
     success:function(r){
       if(r==1){
@@ -5075,12 +5130,12 @@ function agregaFuncionCargoE(datos){
   document.getElementById("cod_cargoE").value=d[0];
   document.getElementById("cod_cargo_funcionE").value=d[1];
   document.getElementById("nombre_funcionE").value=d[2];
-  document.getElementById("pesoE").value=d[3];
+  document.getElementById("ordenE").value=d[3];
 }
-function EditarCargoFuncion(cod_cargoE,cod_cargo_funcionE,nombre_funcionE,pesoE){
+function EditarCargoFuncion(cod_cargoE,cod_cargo_funcionE,nombre_funcionE,ordenE){
   $.ajax({
     type:"POST",
-    data:"cod_funcion="+cod_cargo_funcionE+"&cod_cargo="+cod_cargoE+"&nombre_funcion="+nombre_funcionE+"&cod_estadoreferencial=2&peso="+pesoE,
+    data:"cod_funcion="+cod_cargo_funcionE+"&cod_cargo="+cod_cargoE+"&nombre_funcion="+nombre_funcionE+"&cod_estadoreferencial=2&orden="+ordenE,
     url:"rrhh/cargoFuncionSave.php",
     success:function(r){
       if(r==1){
@@ -5100,7 +5155,7 @@ function agregaFuncionCargoB(datos){
 function EliminarCargoFuncion(cod_cargoB,cod_cargo_funcionB){
   $.ajax({
     type:"POST",
-    data:"cod_funcion="+cod_cargo_funcionB+"&cod_cargo="+cod_cargoB+"&nombre_funcion=''&cod_estadoreferencial=3&peso=0",
+    data:"cod_funcion="+cod_cargo_funcionB+"&cod_cargo="+cod_cargoB+"&nombre_funcion=''&cod_estadoreferencial=3&orden=0",
     url:"rrhh/cargoFuncionSave.php",
     success:function(r){
       if(r==1){
@@ -8403,7 +8458,7 @@ function guardarDatosPlantillaServicioAjax(btn_id){
       auditoresDias[au]=mySelections;
     };
     auditoresDias=JSON.stringify(auditoresDias);
-    console.log(auditoresDias);
+    // console.log(auditoresDias);
    }else{
     var inicioAnio=1;
     var atributosDias="";
@@ -8483,6 +8538,7 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       if($("#tipo_servicio").length>0){
         tipo_servicio=$("#tipo_servicio").val();
       }
+
       var normas_tiposervicio=[];
       if($("#normas_tiposervicio").length>0){
         normas_tiposervicio=$("#normas_tiposervicio").val();
@@ -8513,14 +8569,20 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
         } 
       }
 
+      var normas_tiposerviciotext = $("#normas_tiposerviciotext").val();
+      var normas_nac = $("#normas_nac").val();    // Norma Internacional
+      var normas_int = $("#normas_int").val();    // Norma Nacional
 
-      var organismo_certificador = $("#organismo_certificador").val();    // IAF
+      var organismo_certificador = $("#organismo_certificador").val();    // Organismo Certificador
       iaf_primario           = $("#iaf_primario").val();    // IAF
       iaf_secundario         = $("#iaf_secundario").val();  // Categoria Inocuidad
 
       //datos afnor
       var des_serv = $("#modal_des_serv").val();
-      var parametros = {"mod_afnor":mod_afnor,"mod_region_cliente":mod_region_cliente,"mod_tipo_cliente":mod_tipo_cliente,"mod_cliente":mod_cliente,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"organismo_certificador":organismo_certificador,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
+      var parametros = {
+        "normas_nac":JSON.stringify(normas_nac),
+        "normas_int":JSON.stringify(normas_int),
+        "mod_afnor":mod_afnor,"mod_region_cliente":mod_region_cliente,"mod_tipo_cliente":mod_tipo_cliente,"mod_cliente":mod_cliente,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"organismo_certificador":organismo_certificador,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
       
       // console.log('pasa')
       // console.log(parametros)
@@ -11777,6 +11839,18 @@ function listarAtributo(){
      row.append($('<td>').addClass('').text(i+1));
      row.append($('<td>').addClass('').text(itemAtributos[i].nombre));
      row.append($('<td>').addClass('').text(itemAtributos[i].direccion)); 
+
+    /* Sección que captura valores extra de TCP */
+    if(!($("#productos_div").hasClass("d-none"))){
+      // console.log(itemAtributos[i])
+      row.append($('<td>').addClass('').text(itemAtributos[i].marca));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].norma)); OLD
+      // row.append($('<td>').addClass('').text(itemAtributos[i].norma));
+      row.append($('<td>').addClass('').html(itemAtributos[i].html_normas));
+      row.append($('<td>').addClass('').text(itemAtributos[i].sello));
+    }
+    /********************************************/
+
      if(!($("#productos_div").hasClass("d-none"))){
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));    /* #SIN FUNCIONALIDAD# */
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
@@ -11841,6 +11915,31 @@ function listarAtributo(){
 
 }
 
+/**
+ * Se obtiene las normas seleccionadas de los selects
+ * NORMAS NACIONALES E INTERNACIONALES
+ * @returns Lista de normas en Lista HTML
+ */
+function capturaNormasPlantilla(){
+  // Lista de Normas Nacionales
+  var listaSelects = '<ul>';
+  $('#atr_normas_nac option:selected').each(function() {
+    var textoVisible = $(this).text();
+    var elementoLista = "<li>"+textoVisible+"</li>";
+    listaSelects += elementoLista;
+  });
+
+  // Lista de Normas Internacionales
+  $('#atr_normas_int option:selected').each(function() {
+    var textoVisible = $(this).text();
+    var elementoLista = "<li>"+textoVisible+"</li>";
+    listaSelects += elementoLista;
+  });
+
+  listaSelects += '</ul>';
+  return listaSelects;
+}
+
 function listarAtributoUltimo(){
   if(itemAtributos.length>1){      
     var sumaDias=[];
@@ -11851,7 +11950,8 @@ function listarAtributoUltimo(){
      row.append($('<td>').addClass('').text(itemAtributos[i].direccion)); 
      if(!($("#productos_div").hasClass("d-none"))){
       row.append($('<td>').addClass('').text(itemAtributos[i].marca));
-      row.append($('<td>').addClass('').text(itemAtributos[i].norma));
+      // row.append($('<td>').addClass('').text(itemAtributos[i].norma)); OLD
+      row.append($('<td>').addClass('').html(itemAtributos[i].html_normas));
       row.append($('<td>').addClass('').text(itemAtributos[i].sello));
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_pais));
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
@@ -11924,8 +12024,14 @@ function guardarAtributoItem(){
     var marca="";
       
   }else{
-    var normasMultiple=$("#normas").val();
-    var norma_cod=normasMultiple.join(",");
+    // var normasMultiple=$("#normas").val();
+    // var norma_cod=normasMultiple.join(",");
+    // Normas Nacionales e Internacionales
+    var normasNacMultiple=$("#atr_normas_nac").val();
+    var norma_nac_cod=normasNacMultiple.join(",");
+    var normasIntMultiple=$("#atr_normas_nac").val();
+    var norma_int_cod=normasIntMultiple.join(",");
+
     // console.log(norma_cod);
     var normasArray=[]; var i=0;
     $("#normas option:selected").each(function() {     
@@ -11987,8 +12093,13 @@ function guardarAtributoItem(){
       nombre: $('#modal_nombre').val(),
       direccion: $('#modal_direccion').val(),
       norma:norma,
-      norma_cod:norma_cod,
-      norma_otro:norma_otro,
+      // norma_cod:norma_cod,
+      // norma_otro: norma_otro,
+      atr_norma_nac: norma_nac_cod,
+      atr_norma_int: norma_int_cod,
+
+      html_normas: capturaNormasPlantilla(),
+
       marca:marca,
       sello:sello,
       pais:0,
@@ -12014,14 +12125,23 @@ function guardarAtributoItem(){
     itemAtributos[fila].nombre=$('#modal_nombre').val();
     itemAtributos[fila].direccion=$('#modal_direccion').val();
     if(!($("#productos_div").hasClass("d-none"))){
-       var normasMultiple=$("#normas").val();
-    var norma_cod=normasMultiple.join(",");
-    var normasArray=[]; var i=0;
-    $("#normas option:selected").each(function() {     
-       normasArray[i]= $(this).text();      
-       i++;
-     });
-    var norma=normasArray.join(",");
+      // var normasMultiple=$("#normas").val();
+      // var norma_cod=normasMultiple.join(",");
+      // var normasArray=[]; var i=0;
+      // $("#normas option:selected").each(function() {     
+      //   normasArray[i]= $(this).text();      
+      //   i++;
+      // });
+      // var norma=normasArray.join(",");
+      var atrNormasNacArray = [];
+      $("#atr_normas_nac option:selected").each(function() {
+        atrNormasNacArray.push($(this).text());
+      });
+      var atrNormasIntArray = [];
+      $("#atr_normas_int option:selected").each(function() {
+        atrNormasIntArray.push($(this).text());
+      });
+      var norma = atrNormasNacArray.concat(atrNormasIntArray).join(",");
     }
    
     if($("#modal_norma").val()!=""){
@@ -12030,7 +12150,7 @@ function guardarAtributoItem(){
       itemAtributos[fila].norma=norma;
     }    
     itemAtributos[fila].norma_otro=$("#modal_norma").val();
-    itemAtributos[fila].norma_cod=norma_cod;
+    // itemAtributos[fila].norma_cod=norma_cod;
     itemAtributos[fila].marca=$('#modal_marca').val();
     itemAtributos[fila].sello=$('#modal_sello').val();
     itemAtributos[fila].pais=pais;
@@ -12039,6 +12159,11 @@ function guardarAtributoItem(){
     itemAtributos[fila].nom_pais=nom_pais;
     itemAtributos[fila].nom_estado=nom_estado;
     itemAtributos[fila].nom_ciudad=nom_ciudad;
+    // Campo para obtener valores de Normas Nacionales e Internacionales
+    itemAtributos[fila].atr_norma_nac = norma_nac_cod;
+    itemAtributos[fila].atr_norma_int = norma_int_cod;
+    
+    itemAtributos[fila].html_normas = capturaNormasPlantilla();
     /*if(($("#productos_div").hasClass("d-none"))){
       
     }*/   
@@ -12092,10 +12217,10 @@ function editarAtributo(fila){
   $('#modal_nombre').val(itemAtributos[fila].nombre);
   if($("#modal_marca").length){
     $('#modal_marca').val(itemAtributos[fila].marca);
-    $('#modal_norma').val(itemAtributos[fila].norma_otro);
+    // $('#modal_norma').val(itemAtributos[fila].norma_otro);
     $('#modal_sello').val(itemAtributos[fila].sello);
-    $("#modal_norma").tagsinput('removeAll');
-    $("#modal_norma").tagsinput('add', itemAtributos[fila].norma_otro);
+    // $("#modal_norma").tagsinput('removeAll');
+    // $("#modal_norma").tagsinput('add', itemAtributos[fila].norma_otro);
    if(!($("#div_norma").hasClass("d-none"))){
     var normasMultiple=itemAtributos[fila].norma_cod;
     // console.log(normasMultiple);
@@ -12110,30 +12235,30 @@ function editarAtributo(fila){
   }else{
     $("#lbl_nombre_atributo").text("Nombre");
   }
-  $('#pais_empresa').val(itemAtributos[fila].pais+"####"+itemAtributos[fila].nom_pais);
-    if($("#modalEditPlantilla").length){
-      if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
-        seleccionarDepartamentoServicioSitioModal(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);
-      }
+  // $('#pais_empresa').val(itemAtributos[fila].pais+"####"+itemAtributos[fila].nom_pais);
+  //   if($("#modalEditPlantilla").length){
+  //     if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
+  //       seleccionarDepartamentoServicioSitioModal(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);
+  //     }
        
-    }else{
-      if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
-        seleccionarDepartamentoServicioSitio(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);  
-      }
+  //   }else{
+  //     if(itemAtributos[fila].nom_pais!="SIN REGISTRO"){
+  //       seleccionarDepartamentoServicioSitio(0,itemAtributos[fila].estado+"####"+itemAtributos[fila].nom_estado,itemAtributos[fila].ciudad+"####"+itemAtributos[fila].nom_ciudad);  
+  //     }
        
-    }   
-    $('.selectpicker').selectpicker("refresh");
+  //   }  
+  $('.selectpicker').selectpicker("refresh");
   $('#modal_direccion').val(itemAtributos[fila].direccion); 
   $("#modal_atributo").modal("show");
   if($("#modalEditPlantilla").length){
    
-    for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
-      for (var j= 0; j< itemAtributosDias.length; j++) {
-        if(itemAtributosDias[j].codigo_atributo==itemAtributos[fila].codigo&&itemAtributosDias[j].anio==i){
-         $("#modal_dias_sitio"+i).val(itemAtributosDias[j].dias);
-        } 
-      };  
-    };
+    // for (var i = 0; i <= parseInt($("#anio_servicio").val()); i++) {
+    //   for (var j= 0; j< itemAtributosDias.length; j++) {
+    //     if(itemAtributosDias[j].codigo_atributo==itemAtributos[fila].codigo&&itemAtributosDias[j].anio==i){
+    //      $("#modal_dias_sitio"+i).val(itemAtributosDias[j].dias);
+    //     } 
+    //   };  
+    // };
     $("#modalEditPlantilla").modal("hide");
     
   }
@@ -18015,17 +18140,17 @@ function seleccionar_Factura_relacion(cod_factura){
 function ponerSistemasIntegrados(){
   // En caso de seleccionar Sistemas Integrados
   var tipo_servicio=$("#tipo_servicio").val();
-  if(tipo_servicio==2778){ //codigo Sistemas Integrados
-    if($("#div_normastipo").hasClass("d-none")){
-      $("#div_normastipo").removeClass("d-none");
-      $("#div_normastipotexto").removeClass("d-none");
-    }
-  }else{
-    if(!($("#div_normastipo").hasClass("d-none"))){
-      $("#div_normastipo").addClass("d-none");
-      $("#div_normastipotexto").addClass("d-none");
-    }
-  }
+  // if(tipo_servicio==2778){ //codigo Sistemas Integrados
+  //   if($("#div_normastipo").hasClass("d-none")){
+  //     $("#div_normastipo").removeClass("d-none");
+  //     $("#div_normastipotexto").removeClass("d-none");
+  //   }
+  // }else{
+  //   if(!($("#div_normastipo").hasClass("d-none"))){
+  //     $("#div_normastipo").addClass("d-none");
+  //     $("#div_normastipotexto").addClass("d-none");
+  //   }
+  // }
 
 
   /*console.log("entra a change select tipo servicio");
@@ -20836,3 +20961,19 @@ function simulacionUpdateCliente(){
   });
 }
 
+
+/**
+ * Apertura de Modal para detalles - PROPUESTAS DE PRESUPUESTO TCP-TCS 
+ */
+function abrir_modal_iaf(){
+  $('#modal_lista_iaf').modal('show');
+}
+function abrir_modal_cat_ino(){
+  $('#modal_lista_cat_ino').modal('show');
+}
+function abrir_modal_org_cer(){
+  $('#modal_lista_org_cer').modal('show');
+}
+function abrir_modal_norma(){
+  $('#modal_lista_norma').modal('show');
+}

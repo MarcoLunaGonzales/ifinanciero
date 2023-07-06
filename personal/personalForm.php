@@ -184,7 +184,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Departamento</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" name="cod_departamento" id="cod_departamento" value="<?=obtenerlugarEmision($cod_departamento,2);?>" readonly="readonly"/>
+                                        <input class="form-control" name="cod_departamento" id="cod_departamento" value="<?=empty($cod_departamento)?'':obtenerlugarEmision($cod_departamento,2);?>" readonly="readonly"/>
                                     </div>
                                 </div>
                             </div><!--fin campo pais y departamento -->
@@ -192,7 +192,7 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Ciudad</label>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <input class="form-control" name="cod_ciudad" id="cod_ciudad" value="<?=obtenerNombreCiudadPersona($cod_ciudad);?>" readonly="readonly"/>
+                                        <input class="form-control" name="cod_ciudad" id="cod_ciudad" value="<?=empty($cod_ciudad)?'':obtenerNombreCiudadPersona($cod_ciudad);?>" readonly="readonly"/>
                                     </div>
                                 </div>
                                 <label class="col-sm-2 col-form-label">Otra Ciudad</label>

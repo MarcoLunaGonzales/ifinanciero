@@ -11,11 +11,12 @@ $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//para mostrar errores en la ejecucion
 
 try {
-    $codigo = $_POST["codigo"];
-    $nombre = $_POST["nombre"];
-    $abreviatura = $_POST["abreviatura"];
-    $observaciones = $_POST["observaciones"];
-    $cod_estadoreferencial = 1;
+    $codigo                 = $_POST["codigo"];
+    $nombre                 = $_POST["nombre"];
+    $abreviatura            = $_POST["abreviatura"];
+    $observaciones          = $_POST["observaciones"];
+    $cod_estadoreferencial  = 1;
+    $cod_padre              = $_POST['cod_padre'];
     //$created_at = $_POST["created_at"];
     $created_by = 1;//$_POST["created_by"];
     //$modified_at = $_POST["modified_at"];
@@ -23,7 +24,7 @@ try {
     
     if ($_POST["codigo"] == 0){
         //$stmt = $dbh->prepare("INSERT INTO TABLA(codigoactivo,tipoalta,fechalta,indiceufv,tipocambio,moneda,valorinicial,depreciacionacumulada,valorresidual,cod_depreciaciones,cod_tiposbienes,vidautilmeses,estadobien,otrodato,cod_ubicaciones,cod_empresa,activo,cod_responsables_responsable,cod_responsables_autorizadopor,created_at,created_by,modified_at,modified_by) values (:codigoactivo, :tipoalta, :fechalta, :indiceufv, :tipocambio, :moneda, :valorinicial, :depreciacionacumulada, :valorresidual, :cod_depreciaciones, :cod_tiposbienes, :vidautilmeses, :estadobien, :otrodato, :cod_ubicaciones, :cod_empresa, :activo, :cod_responsables_responsable, :cod_responsables_autorizadopor, :created_at, :created_by, :modified_at, :modified_by)");
-        $stmt = $dbh->prepare("INSERT INTO areas(nombre,abreviatura,observaciones,cod_estado,created_by,modified_by) values (:nombre, :abreviatura, :observaciones, :cod_estadoreferencial, :created_by, :modified_by)");
+        $stmt = $dbh->prepare("INSERT INTO areas(nombre,abreviatura,observaciones,cod_estado,created_by,modified_by, cod_padre) values (:nombre, :abreviatura, :observaciones, :cod_estadoreferencial, :created_by, :modified_by, :cod_padre)");
         //Bind
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':abreviatura', $abreviatura);
@@ -33,6 +34,7 @@ try {
         $stmt->bindParam(':created_by', $created_by);
         //$stmt->bindParam(':modified_at', $modified_at);
         $stmt->bindParam(':modified_by', $modified_by);
+        $stmt->bindParam(':cod_padre', $cod_padre);
         $flagSuccess=$stmt->execute();
         $tabla_id = $dbh->lastInsertId();
     
@@ -48,7 +50,7 @@ try {
         //$stmt->debugDumpParams();
     } else {//update
 
-        $stmt = $dbh->prepare("UPDATE areas  set nombre=:nombre,abreviatura=:abreviatura,observaciones=:observaciones,cod_estado=:cod_estadoreferencial,created_by=:created_by,modified_by=:modified_by where codigo = :codigo");
+        $stmt = $dbh->prepare("UPDATE areas  set nombre=:nombre,abreviatura=:abreviatura,observaciones=:observaciones,cod_estado=:cod_estadoreferencial,created_by=:created_by,modified_by=:modified_by,cod_padre=:cod_padre where codigo = :codigo");
         //bind
         $stmt->bindParam(':codigo', $codigo);
         $stmt->bindParam(':nombre', $nombre);
@@ -59,6 +61,7 @@ try {
         $stmt->bindParam(':created_by', $created_by);
         //$stmt->bindParam(':modified_at', $modified_at);
         $stmt->bindParam(':modified_by', $modified_by);
+        $stmt->bindParam(':cod_padre', $cod_padre);
         
         $flagSuccess=$stmt->execute();
         

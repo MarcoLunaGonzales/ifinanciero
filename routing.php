@@ -1971,16 +1971,63 @@
 			require_once('incremento_salarial/edit_incremento.php'); //ok
 		}
 
-
-
-
 		// REPORTES SUSCRIPCIÓN
 		
 		if ($_GET['opcion']=='reportesSuscripcion') {
 			require_once('reportes_suscripcion/list.php');
 		}
 
+		// Gestión de responsabilidades y cargos
+		// if ($_GET['opcion']=='listConfiguracionCargos') {
+		// 	require_once('configuracion_cargo/conf_list.php'); 	     	// Config. Cargo - Lista
+		// }
+		// if ($_GET['opcion']=='configuracionCargosRegistro') {
+		// 	require_once('configuracion_cargo/conf_register.php');   	// Config. Cargo - Registro
+		// }
+		// if ($_GET['opcion']=='configuracionCargosSave') {
+		// 	require_once('configuracion_cargo/conf_save.php');	     	// Config. Cargo - Guardar
+		// }
+		// if ($_GET['opcion']=='configuracionCargosEditar') {
+		// 	$codigo=$_GET['codigo'];
+		// 	require_once('configuracion_cargo/conf_edit.php');	     	// Config. Cargo - Editar
+		// }
+		// if ($_GET['opcion']=='configuracionCargosUpdate') {
+		// 	require_once('configuracion_cargo/conf_update.php');     	// Config. Cargo - Actualizar
+		// }
+		// if ($_GET['opcion']=='configuracionCargosEstado') {
+		// 	require_once('configuracion_cargo/conf_estado.php');     	// Config. Cargo - Estado
+		// }
+		// if ($_GET['opcion']=='configuracionCargosLista') {
+		// 	$codigo=$_GET['cod_config_aprobacion'];
+		// 	require_once('configuracion_cargo/cargosLista.php');     	// Cargos - Lista
+		// }
+		// if ($_GET['opcion']=='configuracionCargosFunciones') {
+		// 	$codigo = $_GET['codigo'];
+		// 	require_once('configuracion_cargo/cargosFunciones.php'); 	// Funciones - Lista
+		// }
+		// if ($_GET['opcion']=='configuracionCargosAutoridades') {
+		// 	$codigo = $_GET['codigo'];
+		// 	require_once('configuracion_cargo/cargosAutoridades.php');  // Autoridades - Lista
+		// }
 
+		
+		if ($_GET['opcion']=='cargosAutoridades') {
+			$codigo = $_GET['codigo'];
+			require_once('rrhh/cargosAutoridades.php');  // Autoridades - Lista
+		}
+
+		// AREAS - Asignación Cargos
+		if ($_GET['opcion']=='registerAreasCargos') {
+			$codigo=$_GET['codigo'];
+			require_once('rrhh/registerAreasCargos.php');
+		}
+		if ($_GET['opcion']=='areasCargosSave') {
+			require_once('rrhh/areasCargosSave.php');
+		}
+		if ($_GET['opcion']=='areasMapa') { 		// MAPA AREA(Cargos)
+			require_once('rrhh/areasMapa.php');
+		}
+		
 	}else{
 		//require("paginaprincipal.php");
 	}

@@ -24,7 +24,21 @@ $stmt->bindColumn('modified_at', $modified_at);
 $stmt->bindColumn('modified_by', $modified_by);
 
 ?>
+<style>
+    /* Estilos para carpetas abiertas */
+    .jstree-open > .jstree-anchor {
+        font-weight: bold;
+    }
+    /* Estilos para carpetas cerradas */
+    .jstree-closed > .jstree-anchor {
+        color: #999;
+    }
+    /* Estilos para nodos de hoja */
+    .jstree-leaf > .jstree-anchor {
+        font-style: italic;
+    }
 
+</style>
 <div class="content">
 	<div class="container-fluid">
         <div class="row">
@@ -97,19 +111,25 @@ $stmt->bindColumn('modified_by', $modified_by);
                               ?>
 
 
-                              <!--<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAreas" onclick="agregaListAreas_unidad('<?=$datos;?>')">
+                              <!--<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modalAreas" onclick="agregaListAreas_unidad('<?php//$datos;?>')">
                                 <i class="material-icons" title="Listar Areas">settings_applications</i>
                               </button>-->
-                              <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral_areas($('#tablasA_registradas'),<?=$index?>)">
+                              <!-- <a href='#' rel="tooltip" class="btn btn-warning" onclick="filaTablaAGeneral_areas($('#tablasA_registradas'),<?=$index?>)">
                               <i class="material-icons" title="Ver Areas">settings_applications</i>
-                            </a>
+                            </a> -->
 
                               <!-- <a href='#' class="add_listar" product="<?=$codigo;?>">
                                   <i class="material-icons" title="Registrar Areas">playlist_add</i>
                               </a> -->
 
+                              <!-- Ver MAPA -->
+                              <button rel="tooltip" class="btn btn-info ver_mapa" data-codigo="<?=$codigo;?>">
+                                <i class="material-icons">map</i>
+                              </button>
+
+                              <!-- Asignar Areas -->
                               <a href='<?=$urlRegisterAreasU;?>&codigo=<?=$codigo;?>' rel="tooltip" class="btn btn-primary">
-                                  <i class="material-icons" title="Registrar Areas">playlist_add</i>
+                                  <i class="material-icons" title="Asignar Areas">playlist_add</i>
                               </a>
 
                               <a href='<?=$urlFormUO;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
@@ -227,21 +247,61 @@ $stmt->bindColumn('modified_by', $modified_by);
 
   });
 </script>-->
-
 <?php 
-$lan=sizeof($cont);
-error_reporting(0);
-for ($i=0; $i < $lan; $i++) {
-  ?>
-  <script>var areas=[];</script>
-  <?php
-     for ($j=0; $j < $cont[$i]; $j++) {     
-         if($cont[$i]>0){
-          ?><script>areas.push({codigo:<?=$datos[$i][$j]->codigo?>,cod_areaorganizacion:<?=$datos[$i][$j]->cod_areaorganizacion?>,nombreA:'<?=$datos[$i][$j]->nombreA?>',nombreAP:'<?=$datos[$i][$j]->nombreAP?>'});</script><?php         
-          }          
-        }
-    ?><script>areas_tabla_general.push(areas);</script><?php                    
-}
 require_once 'rrhh/modal.php';
 ?>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+
+<script>
+    $('.ver_mapa').on('click', function() {
+        let cod_oficina = $(this).data('codigo');
+        // return true;
+        $.ajax({
+            url: 'rrhh/ajaxMapaAreasOficinas.php',
+            method: 'POST',
+            dataType: 'json',
+            data:{
+                cod_oficina: cod_oficina
+            },
+            success: function(response) {
+                // console.log(response)
+                // Modificar la estructura de datos para asignar iconos diferentes
+                response.data.forEach(function(node) {
+                    if (node.children.length > 0) {
+                        node.icon = 'jstree-folder';
+                    } else {
+                        node.icon = 'jstree-file';
+                    }
+                });
+                
+                // Construir el árbol
+                $('#treeContainer').jstree('destroy').jstree({
+                    core: {
+                    data: response.data
+                    },
+                    plugins: ['themes', 'types'],
+                    types: {
+                        folder: {
+                            icon: 'jstree-folder' // Icono para los nodos de carpeta
+                        },
+                        file: {
+                            icon: 'jstree-tree' // Icono para los nodos de archivo
+                        }
+                    }
+                });
+                $('#title_of').html(response.data_detail);
+                $('#modalMapa').modal('show');
+                // Abrir todas las pestañas del árbol
+                setTimeout(function() {
+                    $('#treeContainer').jstree('open_all');
+                }, 2000); // 2000 milisegundos = 2 segundos
+            },
+            error: function() {
+                console.log('Error al obtener los datos');
+            }
+        });
+    });
+
+</script>

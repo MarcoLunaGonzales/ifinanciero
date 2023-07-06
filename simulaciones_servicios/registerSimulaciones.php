@@ -253,49 +253,93 @@ $fechaActualInput=date("Y-m-d");
                         </div>
                        </div>
                       </div><!--row-->
+
+
+                   <!-- <div id="tiposervicio_div" class="d-none"> -->
+                    <div class="row">
+                      <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
+                      <div class="col-sm-7">
+                        <div class="form-group">
+                          <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();">
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- </div> -->
+                    
+                    <!-- Nuevo campos de NORMAS -->
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Normas Nacionales:</label>
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" name="normas_nac[]" id="normas_nac" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
+                                <?php
+                                    $stmt = $dbh->prepare("SELECT vn.codigo, vn.abreviatura, vn.nombre, 'L' as tipo from v_normas vn where vn.cod_estado=1 order by 4,2");
+                                    $stmt->execute();
+                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        $codigoX    = $row['codigo'];
+                                        $nombreX    = $row['nombre'];
+                                        $tipoX      = $row['tipo'];
+                                        $abrevX     = $row['abreviatura']." (".$tipoX.")";
+                                        $nombreX    = substr($nombreX, 0, 70);
+                                ?>
+                                <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>"><?=$abrevX;?></option> 
+                                <?php
+                                }
+                                ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Normas Internacionales:</label>
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                <select class="selectpicker form-control" name="normas_int[]" id="normas_int" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
+                                <?php
+                                    $stmt = $dbh->prepare("SELECT vi.codigo, vi.abreviatura, vi.nombre, 'I' as tipo from v_normas_int vi where vi.cod_estado=1 order by 4,2");
+                                    $stmt->execute();
+                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        $codigoX    = $row['codigo'];
+                                        $nombreX    = $row['nombre'];
+                                        $tipoX      = $row['tipo'];
+                                        $abrevX     = $row['abreviatura']." (".$tipoX.")";
+                                        $nombreX    = substr($nombreX, 0, 70);
+                                ?>
+                                <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>"><?=$abrevX;?></option> 
+                                <?php
+                                }
+                                ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Otras Normas</label>
+                        <div class="col-sm-9">                     
+                            <div class="form-group" style="border-bottom: 1px solid #CACFD2">       
+                                <input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="normas_tiposerviciotext" id="normas_tiposerviciotext" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            </div>
+                        </div>  
+                    </div>
+                    <!-- FIN -->
+
+
+
                       <div class="" id="lista_precios">
                       </div>
-                      
 
-                    <div id="tiposervicio_div" class="d-none">
-                     <div class="row">
-                       <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
-                       <div class="col-sm-7">
-                        <div class="form-group">
-                          <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();">       
-                                <?php
-                                $tituloTipoServ="";
-                                $indexOb=0;
-                                 $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=109 and vigente=1 and Aprobado=1 order by 2");
-                                 $stmt->execute();
-                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo_n2'];
-                                  $nombreX=$row['descripcion_n2'];
-                                  if($indexOb==0){
-                                      $tituloTipoServ=obtenerServiciosClaServicioTipoNombre($codigoX);
-                                  }
-                                  $indexOb++;
-                                   ?>
-                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
-                                  <?php
-                                    }
-                                    ?>
-                            </select>
-                        </div>
-                        </div>
-                     </div>
-                  </div>
-
-
-
+                    <!-- SE QUITO LOS CAMPOS -->
+                      <!-- <div id="productos_div" class="d-none"> -->
                       <div id="productos_div" class="d-none">
-                        <div class="row">
+                        <div class="row" hidden>
                        <label class="col-sm-2 col-form-label">Regi&oacute;n</label>
                        <div class="col-sm-7">
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
                                 <select class="selectpicker form-control" name="region_cliente" id="region_cliente" data-style="btn btn-info"  required>
+                                    <option value="">Ninguno</option>
                                 <?php
                                  $stmt = $dbh->prepare("SELECT c.codigo, c.descripcion FROM tipos_clientenacionalidad c order by 1");
                                  $stmt->execute();
@@ -313,13 +357,14 @@ $fechaActualInput=date("Y-m-d");
                         </div>
                        </div>
                       </div><!--row-->
-                      <div class="row">
+                      <div class="row" hidden>
                        <label class="col-sm-2 col-form-label">Tipo Cliente</label>
                        <div class="col-sm-7">
                         <div class="row">
                           <div class="col-sm-12">
                             <div class="form-group">
                                 <select class="selectpicker form-control" name="tipo_cliente" id="tipo_cliente" data-style="btn btn-warning"  required>
+                                    <option value="">Ninguno</option>
                                 <?php
                                  $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM tipos_clientes c order by 1");
                                  $stmt->execute();
@@ -336,7 +381,8 @@ $fechaActualInput=date("Y-m-d");
                           </div> 
                         </div>
                        </div>
-                      </div><!--row-->
+                      </div>
+                    <!-- FIN - SE QUITO LOS CAMPOS -->
                       <div class="row">
                        <label class="col-sm-2 col-form-label">IAF</label>
                        <div class="col-sm-3">
@@ -395,15 +441,16 @@ $fechaActualInput=date("Y-m-d");
                         </div>
                         </div>
                       </div>
-                      <!--row-->
-                       <!--<div class="row">
+                      
+                      <div class="row">
                        <label class="col-sm-2 col-form-label">Alcance de la Propuesta:</label>
                        <div class="col-sm-7">
-                        <div class="form-group">-->
-                        
-                        <!--</div>
+                        <div class="form-group">
+                          <textarea class="form-control" type="text" name="alcance_p" id="alcance_p"></textarea>
                         </div>
-                      </div>-->
+                        </div>
+                      </div>
+
                       <br>
                       <div class="row">
                        <label class="col-sm-1 col-form-label">Productos</label>
@@ -432,83 +479,74 @@ $fechaActualInput=date("Y-m-d");
                     </div>
                     
                       </div>
-
-
+                      
                     <div id="sitios_div" class="d-none">
-                     <div class="row">
-                       <label class="col-sm-2 col-form-label">Objeto del Servicio</label>
-                       <div class="col-sm-7">
-                        <div class="row">
-                          <div class="col-sm-12">
-                            <div class="form-group">
+                      <div class="row">
+                        <label class="col-sm-2 col-form-label">Objeto del Servicio</label>
+                        <div class="col-sm-7">
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <div class="form-group">
                                 <select class="selectpicker form-control" onchange="ponerDescripcionServicio()" name="objeto_servicio" id="objeto_servicio" data-style="btn btn-info"  required>
-                                <?php
-                                $tituloObjeto="";
-                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM objeto_servicio c where c.cod_estadoreferencial=1 order by 1");
-                                 $stmt->execute();
-                                 $indexOb=0;
-                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo'];
-                                  $nombreX=$row['nombre'];
-                                  if($indexOb==0){
-                                      $tituloObjeto=obtenerServiciosTipoObjetoNombre($codigoX);
-                                  }
-                                  $indexOb++;
-                                   ?>
+                                  <?php
+                                  $tituloObjeto="";
+                                    $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM objeto_servicio c where c.cod_estadoreferencial=1 order by 1");
+                                    $stmt->execute();
+                                    $indexOb=0;
+                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoX=$row['codigo'];
+                                    $nombreX=$row['nombre'];
+                                    if($indexOb==0){
+                                        $tituloObjeto=obtenerServiciosTipoObjetoNombre($codigoX);
+                                    }
+                                    $indexOb++;
+                                  ?>
                                   <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                   <?php
                                     }
-                                    ?>
+                                  ?>
                                 </select>
                               </div>
-                          </div> 
+                            </div> 
+                          </div>
                         </div>
-                       </div>
                       </div><!--row-->
 
-                     <div class="row d-none" id="div_normastipo">
-                       <label class="col-sm-2 col-form-label">Normas</label>
-                       <div class="col-sm-7">
-                        <div class="form-group">
-                          <select class="selectpicker form-control" data-size="4" data-live-search="true" multiple name="normas_tiposervicio[]" id="normas_tiposervicio" data-style="btn btn-success"  required>       
+                    <div class="row d-none" id="div_normastipo">
+                        <label class="col-sm-2 col-form-label">Normas</label>
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                            <select class="selectpicker form-control" data-size="4" data-live-search="true" multiple name="normas_tiposervicio[]" id="normas_tiposervicio" data-style="btn btn-success"  required>       
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT codigo,abreviatura from normas where cod_estado=1 order by 2");
-                                 $stmt->execute();
-                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo'];
-                                  $nombreX=$row['abreviatura'];
-                                   ?>
-                                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
-                                  <?php
+                                    $stmt = $dbh->prepare("SELECT codigo,abreviatura from normas where cod_estado=1 order by 2");
+                                    $stmt->execute();
+                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoX=$row['codigo'];
+                                    $nombreX=$row['abreviatura'];
+                                    ?>
+                                    <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                    <?php
                                     }
                                     ?>
                             </select>
+                            </div>
                         </div>
-                        </div>
-                     </div>
-                     <div class="row d-none" id="div_normastipotexto">
-                          <label class="col-sm-2 col-form-label">Otras Normas</label>
-                           <div class="col-sm-9">                     
-                             <div class="form-group" style="border-bottom: 1px solid #CACFD2">       
-                                <input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="normas_tiposerviciotext" id="normas_tiposerviciotext" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                             </div>
-                           </div>  
-                      </div>
-                     <div class="row">
-                     <label class="col-sm-2 col-form-label">AFNOR</label>
-                           <div class="col-sm-7">
-                        <div class="form-group">
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">AFNOR</label>
+                        <div class="col-sm-7">
+                            <div class="form-group">
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                      <input class="form-check-input" type="checkbox" id="afnor" name="afnor[]" value="1">
-                                      <span class="form-check-sign">
-                                        <span class="check"></span>
-                                      </span>
+                                        <input class="form-check-input" type="checkbox" id="afnor" name="afnor[]" value="1">
+                                        <span class="form-check-sign">
+                                            <span class="check"></span>
+                                        </span>
                                     </label>
-                                  </div>
-                                </div>  
-                             </div>     
-                        </div> 
+                                </div>
+                            </div>  
+                        </div>     
+                    </div> 
                       <div class="row">
                        <label class="col-sm-2 col-form-label">IAF</label>
                        <div class="col-sm-3">
@@ -562,7 +600,7 @@ $fechaActualInput=date("Y-m-d");
                        <label class="col-sm-2 col-form-label">Descripción del Servicio:</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <input class="form-control" type="text" name="d_servicio" id="d_servicio" value="<?=$tituloTipoServ?> - <?=$tituloObjeto?>">
+                          <input class="form-control" type="text" name="d_servicio" id="d_servicio" value="<?=empty($tituloTipoServ)?'':$tituloTipoServ?> - <?=$tituloObjeto?>">
                         </div>
                         </div>
                       </div>  
@@ -653,19 +691,81 @@ $fechaActualInput=date("Y-m-d");
                              </div>  
                            </div> 
                       </div>
-                      <div id="div_norma">
+                    <div id="div_norma">
                         <div class="row">
-                           <label class="col-sm-2 col-form-label">Nº Sello</label>
-                           <div class="col-sm-4">                     
-                             <div class="form-group">
-                               <input type="number" class="form-control" name="modal_sello" id="modal_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
-                             </div>
-                           </div>  
+                            <label class="col-sm-2 col-form-label">Nº Sello</label>
+                            <div class="col-sm-4">                     
+                                <div class="form-group">
+                                <input type="number" class="form-control" name="modal_sello" id="modal_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                </div>
+                            </div> 
+                        </div> 
+                        
+                      <!-- Nuevo campos de NORMAS -->
+                      <div class="row">
+                          <label class="col-sm-2 col-form-label">Normas Nacionales:</label>
+                          <div class="col-sm-7">
+                              <div class="form-group">
+                                  <select class="selectpicker form-control" name="atr_normas_nac[]" id="atr_normas_nac" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
+                                  <?php
+                                      $stmt = $dbh->prepare("SELECT vn.codigo, vn.abreviatura, vn.nombre, 'L' as tipo from v_normas vn where vn.cod_estado=1 order by 4,2");
+                                      $stmt->execute();
+                                      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                          $codigoX    = $row['codigo'];
+                                          $nombreX    = $row['nombre'];
+                                          $tipoX      = $row['tipo'];
+                                          $abrevX     = $row['abreviatura']." (".$tipoX.")";
+                                          $nombreX    = substr($nombreX, 0, 70);
+                                  ?>
+                                  <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>"><?=$abrevX;?></option> 
+                                  <?php
+                                  }
+                                  ?>
+                                  </select>
+                              </div>
+                          </div>
                       </div>
                       <div class="row">
+                          <label class="col-sm-2 col-form-label">Normas Internacionales:</label>
+                          <div class="col-sm-7">
+                              <div class="form-group">
+                                  <select class="selectpicker form-control" name="atr_normas_int[]" id="atr_normas_int" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
+                                  <?php
+                                      $stmt = $dbh->prepare("SELECT vi.codigo, vi.abreviatura, vi.nombre, 'I' as tipo from v_normas_int vi where vi.cod_estado=1 order by 4,2");
+                                      $stmt->execute();
+                                      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                          $codigoX    = $row['codigo'];
+                                          $nombreX    = $row['nombre'];
+                                          $tipoX      = $row['tipo'];
+                                          $abrevX     = $row['abreviatura']." (".$tipoX.")";
+                                          $nombreX    = substr($nombreX, 0, 70);
+                                  ?>
+                                  <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>"><?=$abrevX;?></option> 
+                                  <?php
+                                  }
+                                  ?>
+                                  </select>
+                              </div>
+                          </div>
+                      </div>
+                      <!-- OTRAS NORMAS NO ESTA SIENDO USADA EN EL MODAL DE PRODUCTOS -->
+                       <!-- <div class="row">
+                          <label class="col-sm-2 col-form-label">Otra Norma</label>
+                           <div class="col-sm-9">                     
+                             <div class="form-group" style="border-bottom: 1px solid #CACFD2">       
+                                <input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                             </div>
+                           </div>  
+                      </div> -->
+                      <!-- FIN --> 
+                    </div>
+                    
+                      <!-- ESCONDIDO -->
+                      <div class="row" hidden>
                           <label class="col-sm-2 col-form-label">Norma</label>
                            <div class="col-sm-9">                     
-                             <div class="form-group"><!--style="border-bottom: 1px solid #CACFD2"-->          
+                             <div class="form-group">
+                                <!--style="border-bottom: 1px solid #CACFD2"-->          
                                <!--<input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">-->
                                <select class="selectpicker form-control form-control-sm" name="normas[]" id="normas" multiple data-style="btn btn-warning" data-live-search="true" data-size="6" data-actions-box="true" required>
                                 <?php
@@ -684,15 +784,15 @@ $fechaActualInput=date("Y-m-d");
                              </div>
                            </div>  
                       </div>
-                       <div class="row">
+                       <div class="row" hidden>
                           <label class="col-sm-2 col-form-label">Otra Norma</label>
                            <div class="col-sm-9">                     
                              <div class="form-group" style="border-bottom: 1px solid #CACFD2">       
                                 <input type="text" class="form-control tagsinput" data-role="tagsinput" data-color="info" name="modal_norma" id="modal_norma" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>  
-                      </div>    
                       </div>
+                      <!-- ESCONDIDO -->
                       
                      <div class="row col-sm-12" hidden id="div_pais">
                           <div class="row col-sm-12">

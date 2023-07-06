@@ -21,12 +21,10 @@ from cargos_funciones
 where cod_estado=1 and cod_cargo=$cod_cargo
 ORDER BY nombre_funcion" );
 $stmt->bindParam(':codigo',$cod_personal);
-//ejecutamos
 $stmt->execute();
-//bindColumn
 $stmt->bindColumn('cod_funcion', $cod_cargo_funcion);
 $stmt->bindColumn('nombre_funcion', $nombre_funcion);
-$stmt->bindColumn('peso', $peso);
+$stmt->bindColumn('orden', $orden);
 
 ?>
 
@@ -54,9 +52,9 @@ $stmt->bindColumn('peso', $peso);
                     <table class="table" id="tablePaginator">
                       <thead>
                         <tr>
-                        	<th>#</th>                          
-              						<th>Nombre</th>
-                          <th>Peso</th>
+                        	<th>#</th>
+                          <th>Nombre</th>
+                          <th class="texto-center">Orden</th>
               						<th></th>                                                   
                         </tr>
                       </thead>
@@ -64,12 +62,12 @@ $stmt->bindColumn('peso', $peso);
                         <?php $index=1;                      
                         $datos=$cod_cargo;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) {                       	
-                        	$datos=$cod_cargo."/".$cod_cargo_funcion."/".$nombre_funcion."/".$peso;
+                        	$datos=$cod_cargo."/".$cod_cargo_funcion."/".$nombre_funcion."/".$orden;
                         	?>
                             <tr>
                                 <td><?=$index;?></td>
                                 <td><?=$nombre_funcion;?></td>
-                                <td><?=$peso;?></td>
+                                <td class="text-center"><?=$orden;?></td>
                                 
                                 <td class="td-actions text-right">
                                   <?php
@@ -134,8 +132,8 @@ $stmt->bindColumn('peso', $peso);
         <textarea rows="4" class="form-control" name="nombre_funcionA" id="nombre_funcionA" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true">
         </textarea>
 
-        <h6> Peso </h6>
-        <input class="form-control" type="number" name="pesoA" id="pesoA" required="true" />
+        <h6> Orden </h6>
+        <input class="form-control" type="number" name="ordenA" id="ordenA" required="true" />
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="registrarFC" name="registrarPC" data-dismiss="modal">Aceptar</button>
@@ -162,8 +160,8 @@ $stmt->bindColumn('peso', $peso);
 
         <!-- <input class="form-control" type="text" name="nombre_funcionE" id="nombre_funcionE" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true" /> -->
 
-        <h6> Peso </h6>
-        <input class="form-control" type="number" name="pesoE" id="pesoE" required="true" />
+        <h6> Orden </h6>
+        <input class="form-control" type="number" name="ordenE" id="ordenE" required="true" />
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-success" id="EditarFC"  data-dismiss="modal">Aceptar</button>
@@ -266,21 +264,21 @@ $stmt->bindColumn('peso', $peso);
 <script type="text/javascript">
   $(document).ready(function(){
     $('#registrarFC').click(function(){    
-      cod_cargoA=document.getElementById("cod_cargoA").value;
-      nombre_funcionA=$('#nombre_funcionA').val();
-      pesoA=$('#pesoA').val();
-      RegistrarCargoFuncion(cod_cargoA,nombre_funcionA,pesoA);
+      cod_cargoA       = document.getElementById("cod_cargoA").value;
+      nombre_funcionA  = $('#nombre_funcionA').val();
+      ordenA           = $('#ordenA').val();
+      RegistrarCargoFuncion(cod_cargoA,nombre_funcionA,ordenA);
     });
     $('#EditarFC').click(function(){
-      cod_cargoE=document.getElementById("cod_cargoE").value;
-      cod_cargo_funcionE=document.getElementById("cod_cargo_funcionE").value;
-      nombre_funcionE=$('#nombre_funcionE').val();
-      pesoE=$('#pesoE').val();
-      EditarCargoFuncion(cod_cargoE,cod_cargo_funcionE,nombre_funcionE,pesoE);
+      cod_cargoE         = document.getElementById("cod_cargoE").value;
+      cod_cargo_funcionE = document.getElementById("cod_cargo_funcionE").value;
+      nombre_funcionE    = $('#nombre_funcionE').val();
+      ordenE             = $('#ordenE').val();
+      EditarCargoFuncion(cod_cargoE,cod_cargo_funcionE,nombre_funcionE,ordenE);
     });
     $('#EliminarFC').click(function(){    
-      cod_cargoB=document.getElementById("cod_cargoB").value;
-      cod_cargo_funcionB=document.getElementById("cod_cargo_funcionB").value;
+      cod_cargoB         = document.getElementById("cod_cargoB").value;
+      cod_cargo_funcionB = document.getElementById("cod_cargo_funcionB").value;
       EliminarCargoFuncion(cod_cargoB,cod_cargo_funcionB);    
     });
   });

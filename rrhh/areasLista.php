@@ -8,7 +8,11 @@ $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
 
-$sql="SELECT codigo,nombre,abreviatura,observaciones from areas where cod_estado=1 order by nombre asc";
+$sql="SELECT a.codigo, UPPER(a.nombre) as nombre, a.abreviatura, a.observaciones, UPPER(IFNULL(apadre.nombre, '-')) AS nombre_padre
+      FROM areas a
+      LEFT JOIN areas apadre ON apadre.codigo = a.cod_padre
+      WHERE a.cod_estado = 1
+      ORDER BY a.nombre ASC";
 $stmt = $dbh->prepare($sql);
 
 //echo $sql;
@@ -19,6 +23,7 @@ $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('abreviatura', $abreviatura);
 $stmt->bindColumn('observaciones', $observaciones);
+$stmt->bindColumn('nombre_padre', $nombre_padre);
 ?>
 
 <div class="content">
@@ -43,8 +48,8 @@ $stmt->bindColumn('observaciones', $observaciones);
                           <th>Codigo</th>
                           <th>Nombre</th>
                           <th>Abreviatura</th>
+                          <th>Dependencia</th>
                           <th>Observaciones</th>
-                          
                           
                           <th></th>
                       </tr>
@@ -57,12 +62,22 @@ $stmt->bindColumn('observaciones', $observaciones);
                         <td><?=$codigo;?></td>
                         <td><?=$nombre;?></td>
                         <td><?=$abreviatura;?></td>
+                        <td><?=$nombre_padre;?></td>
                         <td><?=$observaciones;?></td>
                           
                           <td class="td-actions text-right">
                           <?php
                             if($globalAdmin==1){
                           ?>
+                            <!-- Asignación de Cargos -->
+                            <a href="index.php?opcion=registerAreasCargos&codigo=<?=$codigo;?>" rel="tooltip" class="btn btn-primary" data-original-title="" title="">
+                              <i class="material-icons" title="Asignación de Cargos">playlist_add</i>
+                            </a>
+                            <!-- Mapa Cargos -->
+                            <button rel="tooltip" class="btn btn-info mapa_cargos" data-cod_area="<?=$codigo;?>" data-nombre_area="<?=$nombre;?>" title="Ver mapa de cargos por área">
+                              <i class="material-icons">map</i>
+                            </button>
+
                             <a href='<?=$urlFormAreas;?>&codigo=<?=$codigo;?>' rel="tooltip" class="<?=$buttonEdit;?>">
                               <i class="material-icons"><?=$iconEdit;?></i>
                             </a>
@@ -90,6 +105,8 @@ $stmt->bindColumn('observaciones', $observaciones);
       				<div class="card-footer fixed-bottom">
                     <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
                     <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormAreas;?>&codigo=0'">Registrar</button>
+                    <!-- Mapa de Areas -->
+                    <a class="btn btn-info" href="index.php?opcion=areasMapa"><i class="material-icons">map</i> Mapa áreas</a>
               </div>
               <?php
               }
@@ -99,3 +116,88 @@ $stmt->bindColumn('observaciones', $observaciones);
           </div>  
         </div>
 </div>
+
+
+<!-- MAPA -->
+<div class="modal fade modal-primary" id="modalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card">
+            <div class="card-header card-header-danger card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">list</i>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                </button>
+                <h4 class="card-title">Mapa de Cargos por Area</h4>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <h5 class="text-primary">
+                        <i class="material-icons">business</i> <b id="title_ar">ÁREA</b>
+                    </h5>
+                </div>
+                <div id="treeContainer"></div>
+            </div>
+        </div>  
+    </div>
+</div>
+<!-- LIBRERIA PARA ESTRUCTURA ARBOL -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+
+<script>
+    /**
+     * Funcionalidad para generar el arbol de los CARGOS por AREA
+     */
+    $('.mapa_cargos').on('click', function() {
+        let cod_area    = $(this).data('cod_area');
+        let nombre_area = $(this).data('nombre_area');
+        $('#title_ar').html(nombre_area);
+        $.ajax({
+            url: 'rrhh/ajaxMapaCargosAreas.php',
+            method: 'POST',
+            dataType: 'json',
+            data:{
+                cod_area: cod_area
+            },
+            success: function(response) {
+                console.log(response)
+                // Modificar la estructura de datos para asignar iconos diferentes
+                response.data.forEach(function(node) {
+                    if (node.children.length > 0) {
+                        node.icon = 'jstree-folder';
+                    } else {
+                        node.icon = 'jstree-file';
+                    }
+                });
+                
+                // Construir el árbol
+                $('#treeContainer').jstree('destroy').jstree({
+                    core: {
+                    data: response.data
+                    },
+                    plugins: ['themes', 'types'],
+                    types: {
+                        folder: {
+                            icon: 'jstree-folder' // Icono para los nodos de carpeta
+                        },
+                        file: {
+                            icon: 'jstree-tree' // Icono para los nodos de archivo
+                        }
+                    }
+                });
+                $('#modalMapa').modal('show');
+                // Abrir todas las pestañas del árbol
+                setTimeout(function() {
+                    $('#treeContainer').jstree('open_all');
+                }, 2000);
+            },
+            error: function() {
+                console.log('Error al obtener los datos');
+            }
+        });
+    });
+
+</script>
+

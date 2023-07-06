@@ -25,6 +25,7 @@ if ($codigo > 0){
     $created_by = $result['created_by'];
     $modified_at = $result['modified_at'];
     $modified_by = $result['modified_by'];
+    $cod_padre   = $result['cod_padre'];
 } else {
   $codigo = 0;
     $nombre = ' ';
@@ -34,6 +35,7 @@ if ($codigo > 0){
     $created_by = ' ';
     $modified_at = ' ';
     $modified_by = ' ';
+    $cod_padre = '';
 }
 ?>
 
@@ -57,6 +59,26 @@ if ($codigo > 0){
                     <div class="col-sm-7">
                     <div class="form-group">
                         <input class="form-control" type="text" name="nombre" id="nombre" required="true" value="<?=$nombre;?>" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                    </div>
+                    </div>
+                </div><!--fin campo nombre -->
+              <div class="row">
+                    <label class="col-sm-2 col-form-label">Depende de:</label>
+                    <div class="col-sm-7">
+                    <div class="form-group">
+                      <select name="cod_padre" id="cod_padre" data-style="btn btn-info" class="selectpicker form-control form-control-sm" data-show-subtext="true" data-live-search="true">
+                          <option value="">Ninguno</option>
+                          <?php 
+                            $sqlAreas="SELECT codigo, nombre, abreviatura
+                                            FROM areas 
+                                            WHERE cod_estado = 1
+                                            AND codigo != '$codigo'
+                                            ORDER BY nombre";
+                            $stmtListaCargos=$dbh->query($sqlAreas);
+                            while ($row = $stmtListaCargos->fetch()) { ?>
+                              <option value="<?=$row["codigo"];?>" <?= $row["codigo"] == $cod_padre ? 'selected' : '' ?>>[<?=$row["abreviatura"];?>] - <?=$row["nombre"];?></option>
+                          <?php } ?>
+                      </select>
                     </div>
                     </div>
                 </div><!--fin campo nombre -->

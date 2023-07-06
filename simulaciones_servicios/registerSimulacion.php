@@ -64,56 +64,70 @@ $nombreClienteX=obtenerNombreClienteSimulacion($codigo);
 /******************************************************/
 /*              ORGANISMO CERTIFICADOR                */
 /******************************************************/
-$sqlOC = "SELECT soc.cod_orgnismocertificador, oc.nombre
+$array_organismo_certificador = [];
+$sqlOrgCer = "SELECT soc.cod_orgnismocertificador, oc.nombre
           FROM simulaciones_servicios_organismocertificador soc 
           LEFT JOIN organismo_certificador oc ON oc.codigo = soc.cod_orgnismocertificador
           WHERE soc.cod_simulacionservicio = '$codigo'";
-$stmtOC = $dbh->prepare($sqlOC);
-$stmtOC->execute();
-$array_orgnismo_certificador  = [];
-$title_orgnismo_certificador  = '';
-$first_orgnismo_certificador  = '';
-while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
-    $array_orgnismo_certificador[]  = $rowOC['cod_orgnismocertificador'];
-    $title_orgnismo_certificador    .= $rowOC['nombre'].' / ';
-}
-$first_orgnismo_certificador = empty($title_orgnismo_certificador) ? '' : explode(' / ', $title_orgnismo_certificador)[0];
+$stmtOrgCer = $dbh->prepare($sqlOrgCer);
+$stmtOrgCer->execute();
 
 /***********************************/
 /*              IAF                */
 /***********************************/
-$sqlOC = "SELECT si.cod_iaf, i.nombre
+$array_cod_iaf = [];
+$sqlIAF = "SELECT si.cod_iaf, i.nombre
           FROM simulaciones_servicios_iaf si 
           LEFT JOIN iaf i ON i.codigo = si.cod_iaf
           WHERE si.cod_simulacionservicio = '$codigo'";
-$stmtOC = $dbh->prepare($sqlOC);
-$stmtOC->execute();
-$array_cod_iaf  = [];
-$title_cod_iaf  = '';
-$first_cod_iaf  = '';
-while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
-    $array_cod_iaf[]  = $rowOC['cod_iaf'];
-    $title_cod_iaf    .= $rowOC['nombre'].' / ';
-}
-$first_cod_iaf = empty($title_cod_iaf) ? '' : explode(' / ', $title_cod_iaf)[0];
+$stmtIAF = $dbh->prepare($sqlIAF);
+$stmtIAF->execute();
 
 /***************************************************/
 /*              Categoria Inocuidad                */
 /***************************************************/
-$sqlOC = "SELECT sci.cod_categoriainocuidad, ci.nombre
+$array_cod_categoriainocuidad = [];
+$sqlCatIno = "SELECT sci.cod_categoriainocuidad, ci.nombre
           FROM simulaciones_servicios_categoriasinocuidad sci 
           LEFT JOIN categorias_inocuidad ci ON ci.codigo = sci.cod_categoriainocuidad
           WHERE sci.cod_simulacionservicio = '$codigo'";
-$stmtOC = $dbh->prepare($sqlOC);
-$stmtOC->execute();
-$array_cod_categoriainocuidad  = [];
-$title_cod_categoriainocuidad  = '';
-$first_cod_categoriainocuidad  = '';
-while ($rowOC = $stmtOC->fetch(PDO::FETCH_ASSOC)) {
-    $array_cod_categoriainocuidad[]  = $rowOC['cod_categoriainocuidad'];
-    $title_cod_categoriainocuidad    .= $rowOC['nombre'].' / ';
-}
-$first_cod_categoriainocuidad = empty($title_cod_categoriainocuidad) ? '' : explode(' / ', $title_cod_categoriainocuidad)[0];
+$stmtCatIno = $dbh->prepare($sqlCatIno);
+$stmtCatIno->execute();
+
+
+/***************************************************/
+/*              Normas Nacionales                 */
+/***************************************************/
+$array_norma_nac = [];
+$sqlNorNac = "SELECT ssn.cod_norma, vn.abreviatura, vn.nombre FROM simulaciones_servicios_normas ssn
+          LEFT JOIN v_normas vn ON vn.codigo = ssn.cod_norma
+          WHERE ssn.cod_simulacionservicio = '$codigo'
+          AND ssn.catalogo = 'L'";
+$stmtNorNac = $dbh->prepare($sqlNorNac);
+$stmtNorNac->execute();
+
+/***************************************************/
+/*              Normas Internacionales            */
+/***************************************************/
+$array_norma_int = [];
+$sqlNorInt = "SELECT ssn.cod_norma, vni.abreviatura, vni.nombre FROM simulaciones_servicios_normas ssn
+          LEFT JOIN v_normas_int vni ON vni.codigo = ssn.cod_norma
+          WHERE ssn.cod_simulacionservicio = '$codigo'
+          AND ssn.catalogo = 'I'";
+$stmtNorInt = $dbh->prepare($sqlNorInt);
+$stmtNorInt->execute();
+
+/****************************************/
+/*              Otras Normas            */
+/****************************************/
+$array_norma_otra = [];
+$sqlNorOtras = "SELECT ssn.observaciones
+          FROM simulaciones_servicios_normas ssn
+          WHERE ssn.cod_simulacionservicio = '$codigo'
+          AND ssn.catalogo IS NULL";
+$stmtNorOtras = $dbh->prepare($sqlNorOtras);
+$stmtNorOtras->execute();
+
 
 $precioLocalX=obtenerPrecioServiciosSimulacion($codigo);
 $precioLocalInputX=number_format($precioLocalX, 2, '.', '');
@@ -514,7 +528,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 						  		<input class="form-control" type="text" name="area_plan" value="<?=$areaX?>" id="area_plan" readonly/>
 							</div>
 				    </div>
-
+            <!-- Nuevo campo Norma -->
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <button type="button" class="btn btn-info btn-round btn-fab btn-sm" onclick="abrir_modal_norma()">
+                    <i class="material-icons" title="Ver más">dashboard</i>
+                  </button>
+                  <label class="label">Normas</label>
+              </div>
+            </div>
           </div>
            <div class="row">                
             <!--<div class="col-sm-2">
@@ -558,21 +580,27 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
               </div>
             </div>
             <div class="col-sm-2">
-              <div class="form-group" title="<?=$title_cod_iaf?>">
-                  <label class="bmd-label-static">IAF</label>
-                  <input class="form-control" type="text" readonly value="<?=$first_cod_iaf?>"/>
+              <div class="form-group">
+                  <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" onclick="abrir_modal_iaf()">
+                    <i class="material-icons" title="Ver más">list</i>
+                  </button>
+                  <label class="label">IAF</label>
               </div>
             </div>
             <div class="col-sm-2">
               <div class="form-group" title="<?=$title_cod_categoriainocuidad?>">
+                  <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" onclick="abrir_modal_cat_ino()">
+                    <i class="material-icons" title="Ver más">playlist_add_check</i>
+                  </button>
                   <label class="bmd-label-static">Cat. Inocuidad</label>
-                  <input class="form-control" type="text" readonly value="<?=$first_cod_categoriainocuidad?>"/>
               </div>
             </div>
             <div class="col-sm-2">
               <div class="form-group" title="<?=$title_orgnismo_certificador?>">
+                  <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" onclick="abrir_modal_org_cer()">
+                    <i class="material-icons" title="Ver más">class</i>
+                  </button>
                   <label class="bmd-label-static">Org. Certificador</label>
-                  <input class="form-control" type="text" readonly value="<?=$first_orgnismo_certificador?>"/>
               </div>
             </div>
 				      	<?php } ?>
@@ -739,7 +767,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                 ?>
                  <td rowspan="<?=$rospanAnio?>" width="6%" class="bg-table-primary text-white font-weight-bold"><?=$tituloItem?></td>    <!--ROWSPAN = CANTIDAD DE SERVICIOS + 2 -->
                  <td rowspan="2" width="14%" class="bg-table-primary text-white font-weight-bold"></td>
-                 <td rowspan="2" width="14%" class="bg-table-primary text-white font-weight-bold">Dias Servicio</td>
+                 <td rowspan="2" width="5%" class="bg-table-primary text-white font-weight-bold">Dias Servicio</td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">INGRESO</td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">COSTO TOTAL</td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">UTILIDAD BRUTA</td>
@@ -824,20 +852,20 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
                  <tr>
                  <td class="small text-left">Precio del Servicio</td>
                  
-                 <!-- Contador de DIAS, la unidad de medida seleccionada es DIAS para la contabilización de DIAS -->
-                <?php 
-                  $sqlCountD="SELECT SUM(sst.cantidad_editado) as cantidad_dias
-                  FROM simulaciones_servicios_tiposervicio sst
-                  WHERE sst.cod_simulacionservicio=$codigo 
-                  AND sst.habilitado!=0 
-                  AND sst.cod_anio=$an
-                  AND sst.cod_tipounidad = 2";
-                  $stmtCountD = $dbh->prepare($sqlCountD);
-                  $stmtCountD->execute(); 
-                  $cantidadDias = 0;
-                  $rowTotal     = $stmtCountD->fetch(PDO::FETCH_ASSOC);
-                  $cantidadDias = empty($rowTotal['cantidad_dias']) ? 0 : $rowTotal['cantidad_dias'];
-                ?>
+                  <!-- Contador de DIAS, la unidad de medida seleccionada es DIAS para la contabilización de DIAS -->
+                  <?php 
+                    $sqlCountD="SELECT SUM(sst.cantidad_editado) as cantidad_dias
+                    FROM simulaciones_servicios_tiposervicio sst
+                    WHERE sst.cod_simulacionservicio='$codigo'
+                    AND sst.habilitado!=0 
+                    AND sst.cod_anio=$an
+                    AND sst.cod_tipounidad = 2";
+                    $stmtCountD = $dbh->prepare($sqlCountD);
+                    $stmtCountD->execute(); 
+                    $cantidadDias = 0;
+                    $rowTotal     = $stmtCountD->fetch(PDO::FETCH_ASSOC);
+                    $cantidadDias = empty($rowTotal['cantidad_dias']) ? 0 : $rowTotal['cantidad_dias'];
+                  ?>
                  <td class="small text-left"><?=$cantidadDias?></td>
                  <td class="small text-right"><?=number_format($precioAuditoriaUsd, 2, ',', '.')?></td>
                  <td class="small text-right"><?=number_format($precioAuditoria, 2, ',', '.')?></td>
@@ -1083,6 +1111,15 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
 </div>
 
 <?php
+
+/** NOTA: No se debe mover la posición de 
+ * ModalDetalle y Modal por la preparación de datos 
+ */
+
+// Se tiene este modal para ver el listado de
+// IAF, Categoria Inocuidad, Org. Certificador
+require_once 'modalDetalle.php';
+// MODAL DETALLE
 require_once 'modal.php';
 
 $end_time = microtime(true);

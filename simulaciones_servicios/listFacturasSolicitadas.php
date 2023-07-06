@@ -3,6 +3,10 @@ require_once 'conexion.php';
 require_once 'configModule.php';
 require_once 'styles.php';
 
+    // Configurar el informe y visualización de errores
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+
 $dbh = new Conexion();
 $globalAdmin=$_SESSION["globalAdmin"];
 
@@ -36,8 +40,75 @@ if(isset($_GET['q'])){
 <?php
 
 //datos registrado de la simulacion en curso
-$sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_facturacion,'%d/%m/%Y')as fecha_solicitudfactura_x FROM solicitudes_facturacion sf join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo where sf.cod_personal=$globalUser order by codigo desc limit 50";
-//echo $sqlDatos;
+// $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/%Y')as fecha_registro_x,DATE_FORMAT(sf.fecha_facturacion,'%d/%m/%Y')as fecha_solicitudfactura_x, 
+//           (SELECT SUM(precio*cantidad) as precio
+//           FROM solicitudes_facturaciondetalle
+//           WHERE cod_solicitudfacturacion = sf.codigo) AS precio_detalle,
+//           (SELECT SUM(monto) as monto
+//           FROM solicitudes_facturacion_areas
+//           WHERE cod_solicitudfacturacion = sf.codigo) AS monto_areas,
+//           (SELECT SUM(monto) as monto
+//           FROM solicitudes_facturacion_areas_uo
+//           WHERE cod_solicitudfacturacion = sf.codigo) AS monto_areas_uo,
+//           (SELECT SUM(monto) as monto
+//           FROM solicitudes_facturacion_tipospago
+//           WHERE cod_solicitudfacturacion = sf.codigo) AS monto_tipospago
+//           FROM solicitudes_facturacion sf 
+//           join estados_solicitudfacturacion es on sf.cod_estadosolicitudfacturacion=es.codigo 
+//           where sf.cod_personal=$globalUser 
+//           order by codigo desc 
+//           limit 50";
+  $sqlDatos = "SELECT
+                sf.*,
+                es.nombre AS estado,
+                DATE_FORMAT(sf.fecha_registro, '%d/%m/%Y') AS fecha_registro_x,
+                DATE_FORMAT(sf.fecha_facturacion, '%d/%m/%Y') AS fecha_solicitudfactura_x,
+                detalle.precio AS precio_detalle,
+                areas.monto AS monto_areas,
+                areas_uo.monto AS monto_areas_uo,
+                tipospago.monto AS monto_tipospago
+              FROM
+                solicitudes_facturacion sf
+              JOIN estados_solicitudfacturacion es ON sf.cod_estadosolicitudfacturacion = es.codigo
+              LEFT JOIN (
+                SELECT
+                  cod_solicitudfacturacion,
+                  ROUND(SUM(precio * cantidad), 2) AS precio
+                FROM
+                  solicitudes_facturaciondetalle
+                GROUP BY
+                  cod_solicitudfacturacion
+              ) detalle ON sf.codigo = detalle.cod_solicitudfacturacion
+              LEFT JOIN (
+                SELECT
+                  cod_solicitudfacturacion,
+                  ROUND(SUM(monto), 2) AS monto
+                FROM
+                  solicitudes_facturacion_areas
+                GROUP BY
+                  cod_solicitudfacturacion
+              ) areas ON sf.codigo = areas.cod_solicitudfacturacion
+              LEFT JOIN (
+                SELECT
+                  cod_solicitudfacturacion,
+                  ROUND(SUM(monto), 2) AS monto
+                FROM
+                  solicitudes_facturacion_areas_uo
+                GROUP BY
+                  cod_solicitudfacturacion
+              ) areas_uo ON sf.codigo = areas_uo.cod_solicitudfacturacion
+              LEFT JOIN (
+                SELECT
+                  cod_solicitudfacturacion,
+                  ROUND(SUM(monto), 2) AS monto
+                FROM
+                  solicitudes_facturacion_tipospago
+                GROUP BY
+                  cod_solicitudfacturacion
+              ) tipospago ON sf.codigo = tipospago.cod_solicitudfacturacion
+              WHERE sf.cod_personal = $globalUser
+              ORDER BY sf.codigo DESC
+              LIMIT 50";
 
   $stmt = $dbh->prepare($sqlDatos);
 
@@ -63,6 +134,12 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
   $stmt->bindColumn('codigo_alterno', $codigo_alterno);
   $stmt->bindColumn('obs_devolucion', $obs_devolucion);
   $stmt->bindColumn('tipo_solicitud', $tipo_solicitud);//1 tcp - 2 capacitacion - 3 servicios - 4 manual - 5 venta de normas
+
+  // Nuevos campos de validación de Montos
+  $stmt->bindColumn('precio_detalle', $precio_detalle);
+  $stmt->bindColumn('monto_areas', $monto_areas);
+  $stmt->bindColumn('monto_areas_uo', $monto_areas_uo);
+  $stmt->bindColumn('monto_tipospago', $monto_tipospago);
 
   // para la busqueda
   $stmtUO = $dbh->prepare("SELECT cod_unidadorganizacional,(select u.nombre from unidades_organizacionales u where u.codigo =cod_unidadorganizacional)as nombre, (select u.abreviatura from unidades_organizacionales u where u.codigo =cod_unidadorganizacional)as abreviatura FROM solicitudes_facturacion  GROUP BY nombre");
@@ -414,33 +491,54 @@ $sqlDatos="SELECT sf.*,es.nombre as estado,DATE_FORMAT(sf.fecha_registro,'%d/%m/
                                             <?php
                                           } 
                                         }else{
-                                          if(isset($_GET['q'])){ 
-                                            if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
-                                              ?>                                             
-                                              <a title="Enviar a contabilidad(Revisado)" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" href='#' class="btn btn-default">
-                                               <i class="material-icons">send</i>
-                                             </a>
-                                              <?php 
+                                          /*******************************************************/
+                                          /*          VALIDACIÓN DE FACTURA CON DETALLE          */
+                                          /*******************************************************/
+                                          $mensaje_alerta = 'Verificar montos totales de distribución: ';
+                                          $error_messages = [];
+                                          if($precio_detalle != $monto_areas){    $error_messages[] = 'Áreas';}
+                                          if($precio_detalle != $monto_areas_uo){ $error_messages[] = 'Áreas y Oficinas';}
+                                          if($precio_detalle != $monto_tipospago){$error_messages[] = 'Forma de Pago';}
+                                          $mensaje_alerta .= implode(', ', $error_messages) . '.';
+                                          // Validación de Envio de Factura
+                                          if($precio_detalle != $monto_areas || $precio_detalle != $monto_areas_uo || $precio_detalle != $monto_tipospago){
+                                        ?>
+                                          <button type="button" class="btn btn-danger" title="<?= $mensaje_alerta; ?>">
+                                            <i class="material-icons">block</i>
+                                          </button>
+                                        <?php
+                                          }else{                                            
+                                            if(isset($_GET['q'])){ 
+                                              if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
+                                                ?>
+                                                <a title="Enviar a contabilidad(Revisado)" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>')" href='#' class="btn btn-default">
+                                                <i class="material-icons">send</i>
+                                              </a>
+                                                <?php 
+                                              }else{
+                                                $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###4###0###".$urlEdit2Sol."###".$obs_devolucion;?>
+                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
+                                                  <i class="material-icons" title="Enviar a contabilidad(Revisado)">send</i>
+                                                </button><?php 
+                                              }
                                             }else{
-                                              $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###4###0###".$urlEdit2Sol."###".$obs_devolucion;?>
-                                              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
-                                                <i class="material-icons" title="Enviar a contabilidad(Revisado)">send</i>
-                                              </button><?php 
+                                              if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
+                                                ?>                                             
+                                                <a title="Enviar a contabilidad(Revisado)" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0')" href='#'  class="btn btn-default">
+                                                  <i class="material-icons">send</i>
+                                                </a>                                              
+                                                <?php 
+                                              }else{
+                                                $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###4###0###".$urlEdit2Sol."###".$obs_devolucion;?>
+                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
+                                                  <i class="material-icons" title="Enviar a contabilidad(Revisado)">send</i>
+                                                </button><?php
+                                              }
                                             }
-                                          }else{
-                                            if($obs_devolucion==null || $obs_devolucion==''){//cuado se hace el rechazo de la fac y volvemos a enviar                                              
-                                              ?>                                             
-                                              <a title="Enviar a contabilidad(Revisado)" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','<?=$urlEdit2Sol?>?cod=<?=$codigo_facturacion?>&estado=4&admin=0')" href='#'  class="btn btn-default">
-                                                 <i class="material-icons">send</i>
-                                              </a>                                              
-                                              <?php 
-                                            }else{
-                                              $datos_devolucion=$codigo_facturacion."###".$nro_correlativo."###".$codigo_alterno."###4###0###".$urlEdit2Sol."###".$obs_devolucion;?>
-                                              <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalReenviarSolicitudDevuelto" onclick="modalReenviarSolicitudDevuelto('<?=$datos_devolucion;?>')">
-                                                <i class="material-icons" title="Enviar a contabilidad(Revisado)">send</i>
-                                              </button><?php
-                                            }
-                                          } 
+                                          }
+                                          /********************************************************/
+                                          /*          FIN VALIDACIÓN FACTURA CON DETALLE          */
+                                          /********************************************************/
                                         }//fin valida tipo pago credito
                                         
                                         //echo "DEBERIA ENTRAR A EDITAR";

@@ -31,7 +31,8 @@ try {
 
         if(isset($_POST["areas".$i])){
             $areaInsert=$_POST["areas".$i];
-            $codPadreInsert=$_POST["cod_areaorganizacion_padre".$i];            
+            // $codPadreInsert=$_POST["cod_areaorganizacion_padre".$i];  
+            $codPadreInsert=0;           
         }
 
         if($areaInsert!=0 || $areaInsert!=""){
