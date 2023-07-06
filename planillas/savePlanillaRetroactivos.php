@@ -10,6 +10,7 @@ $dbh = new Conexion();
  error_reporting(E_ALL);
  ini_set('display_errors', '1');
 
+$flagSuccessIP="";
 // session_start();
 // $globalUser=$_SESSION["globalAdmin"];
 //RECIBIMOS LAS VARIABLES
@@ -66,15 +67,17 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 	$stmtDelete->execute();	
 	
 	//============select del personal
-	$sql="SELECT 1 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,p.cod_unidadorganizacional,a.nombre as area,p.paterno,'' as retiro_planilla
+	$sql="SELECT 1 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_contr as ing_planilla,p.cuenta_bancaria,p.cod_area,p.cod_unidadorganizacional,a.nombre as area,p.paterno,'' as retiro_planilla
 	from personal p join areas a on p.cod_area=a.codigo
-	where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1 and p.ing_planilla <= '$fecha_final'
+	where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1 and p.ing_contr <= '$fecha_final'
 	UNION
- 	select 2 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_planilla,p.cuenta_bancaria,p.cod_area,p.cod_unidadorganizacional,'PERSONAL RETIRADO' as area,p.paterno,pr.fecha_retiro as retiro_planilla
+ 	select 2 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_contr as ing_planilla,p.cuenta_bancaria,p.cod_area,p.cod_unidadorganizacional,'PERSONAL RETIRADO' as area,p.paterno,pr.fecha_retiro as retiro_planilla
 	from personal p join personal_retiros pr on p.codigo=pr.cod_personal 
 	join areas a on p.cod_area=a.codigo
 	where pr.fecha_retiro BETWEEN '$fecha_inicio' and '$fecha_final' 
 	order by orden,retiro_planilla,cod_unidadorganizacional,area,paterno";
+
+	//echo $sql;
 
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
@@ -104,6 +107,29 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		if($haber_basico_anterior==null || $haber_basico_anterior==""){
 			$haber_basico_anterior=$haber_basico_nuevo;
 		}
+
+		/*AQUI TEMPORAL NUEVO HABER BASICO 2023 SOLO VALIDO PARA ESA GESTION*/
+		if($cod_personal==93){
+			$haber_basico_nuevo=9207.4;
+		}
+		if($cod_personal==96){
+			$haber_basico_nuevo=4359.25;
+		}
+		if($cod_personal==195){
+			$haber_basico_nuevo=4370.91;
+		}
+		if($cod_personal==227){
+			$haber_basico_nuevo=4359.24;
+		}
+		if($cod_personal==19947){
+			$haber_basico_nuevo=4774.05;
+		}
+		if($cod_personal==33355){
+			$haber_basico_nuevo=2652.25;
+		}
+		/*FIN CORRECCION MANUAL RETROACTIVOS*/
+
+
 		$datos_planilla1=explode("@@@", obtenerdatos_planilla($cod_personal,$cod_planilla_1));
 		$datos_planilla2=explode("@@@", obtenerdatos_planilla($cod_personal,$cod_planilla_2));
 		$datos_planilla3=explode("@@@", obtenerdatos_planilla($cod_personal,$cod_planilla_3));

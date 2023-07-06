@@ -107,7 +107,7 @@ $html.=  '<header class="header">'.
           '<br>'.
           '<table class="table">
             <tr>
-              <td class="td-color-celeste"><b>Solicitante:</b></td>
+              <td width="20%" class="td-color-celeste"><b>Solicitante:</b></td>
               <td width="10%" colspan="2" align="left">'.$nombre_responsable.'</td>
               <td width="3%" class="td-color-celeste"><b>Fecha a facturar:</b></td>
               <td width="4%" colspan="2" align="center" ><b>'.$fecha_facturacion.'</b></td>
@@ -123,14 +123,14 @@ $html.=  '<header class="header">'.
               <td width="4%" align="center" >'.$usd.'</td>              
             </tr>
             <tr>
-              <td class="text-center td-color-celeste" colspan="2"><b>Factura a nombre de:</b></td>
-              <td width="60%">'.$razon_social.'</td>
+              <td class="text-left td-color-celeste"><b>Factura a nombre de:</b></td>
+              <td width="60%" colspan="2">'.$razon_social.'</td>
               <td width="3%" class="td-color-celeste"><b>NIT/CI/CEX: </b></td>
               <td width="3%" colspan="2">'.$datosFacturacion.'</td>              
             </tr>    
             <tr>
-              <td colspan="2" class="text-center td-color-celeste"><b>Código de servicio:</b></td>              
-              <td width="55%" colspan="4"><b>'.$codigo_servicio.'</b></td>              
+              <td class="text-left td-color-celeste"><b>Código de servicio:</b></td>              
+              <td width="55%" colspan="5"><b>'.$codigo_servicio.'</b></td>              
             </tr>                
           </table>'.
           '<br>'.
@@ -443,8 +443,8 @@ $html.=  '<header class="header">'.
             <table class="table">
               <tr>
                 <td class="s4 text-center" width="25%"><b>IBNORCA &#169;<b></td>
-                <td class="s4 text-center" width="25%"><b>Código:</b> REG-PRO-AF-05-01.02</td>
-                <td class="s4 text-center" width="25%"><b>V:</b> 2021-06-17</td>
+                <td class="s4 text-center" width="25%"><b>Código:</b> REG-PRO-AF-03-01.03</td>
+                <td class="s4 text-center" width="25%"><b>V:</b> 2023-07-03</td>
               <td class="s4 text-center" width="25%"><b>Página 1 de 1</b></td>
             </tr>
             </table>

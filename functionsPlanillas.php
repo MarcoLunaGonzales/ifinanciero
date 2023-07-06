@@ -363,7 +363,9 @@ function totalGanadoAreaRetro($gestion, $mes, $cod_area,$cod_uo=null){
   $sql="SELECT $sql_cabecera
   from planillas_retroactivos p join planillas_retroactivos_detalle pm on p.codigo=pm.cod_planilla join personal_area_distribucion_planilla pad on pm.cod_personal=pad.cod_personal and pad.cod_planilla='$codigoPlanillaX' 
   where p.cod_gestion='$gestion' and pad.cod_area='$cod_area' $sql_add";
-    // echo $sql."<br>";
+    
+    //echo $sql."<br>";
+    
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $monto=0;
@@ -389,19 +391,9 @@ function obtenerTotalAFP_prev2_retroactivos($gestion, $mes){
       $sql_cabecera="sum(pm.a_solidario_13_25_35_abril) as monto";
     break;
   }
-  //Obtenemos el codigo de planilla para la distribucion de areas
-  $sqlCodPlanilla="SELECT codigo from planillas p where p.cod_gestion='$gestion' and p.cod_mes='$mes'";
-  $stmtCodPlanilla = $dbh->prepare($sqlCodPlanilla);
-  $stmtCodPlanilla->execute();
-  $codigoPlanillaX=0;
-  while ($rowCodPlanilla = $stmtCodPlanilla->fetch(PDO::FETCH_ASSOC)) {
-    $codigoPlanillaX=$rowCodPlanilla['codigo'];
-  }
-  //Fin obtener codigo planilla
-
   $sql="SELECT $sql_cabecera
-  from planillas_retroactivos p join planillas_retroactivos_detalle pm on p.codigo=pm.cod_planilla join personal_area_distribucion_planilla pad on pm.cod_personal=pad.cod_personal and pad.cod_planilla='$codigoPlanillaX'
-  where p.cod_gestion='$gestion' ";
+  from planillas_retroactivos p join planillas_retroactivos_detalle pm on p.codigo=pm.cod_planilla 
+  where p.cod_gestion='$gestion'";
     // echo $sql."<br>";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
@@ -410,7 +402,48 @@ function obtenerTotalAFP_prev2_retroactivos($gestion, $mes){
       $monto=$row['monto'];
     }
     return($monto);
+}
+
+
+function obtenerTotalAFPRetroactivos($gestion, $mes){
+  $dbh = new Conexion();
+  switch ($mes) {
+    case 1:
+      $sql_cabecera="pm.cod_personal, sum(pm.retroactivo_enero+pm.antiguedad_enero+pm.bonoacademico_enero) as monto";
+    break;
+    case 2:
+      $sql_cabecera="pm.cod_personal, sum(pm.retroactivo_febrero+pm.antiguedad_febrero+pm.bonoacademico_febrero) as monto";
+    break;
+    case 3:
+      $sql_cabecera="pm.cod_personal, sum(pm.retroactivo_marzo+pm.antiguedad_marzo+pm.bonoacademico_marzo) as monto";
+    break;
+    case 4:
+      $sql_cabecera="pm.cod_personal, sum(pm.retroactivo_abril+pm.antiguedad_abril+pm.bonoacademico_abril) as monto";
+    break;
+  }
+  $sql="SELECT $sql_cabecera
+  from planillas_retroactivos p join planillas_retroactivos_detalle pm on p.codigo=pm.cod_planilla
+  where p.cod_gestion='$gestion' group by pm.cod_personal";
+    
+    echo $sql."<br>";
+    
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $monto=0;
+    $montoAFPPivote=0;
+    $montoAFPTotal=0;
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $codigoPersonal=$row['cod_personal'];
+      $monto=$row['monto'];
+      $montoAFPPivote=$monto*0.1271;
+      if($codigoPersonal==84){
+        $montoAFPPivote = $monto*0.0271; 
+      }
+      $montoAFPTotal+=$montoAFPPivote;
+    }
+    return($montoAFPTotal);
 
 }
+
 
 ?>

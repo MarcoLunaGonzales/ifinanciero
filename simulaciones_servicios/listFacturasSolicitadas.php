@@ -712,8 +712,8 @@ if(isset($_GET['q'])){
     });
     if(array_sf.length > 1){
       swal({
-          title: '¿Estás seguro de Fusionar?',
-          text: 'Se fucionará las SF seleccionadas.',
+          title: '¿Estás seguro?',
+          text: 'Se procedera a la fusion de las SF seleccionadas.',
           type: 'warning',
           showCancelButton: true,
           confirmButtonClass: 'btn btn-success',

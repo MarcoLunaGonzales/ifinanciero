@@ -1,6 +1,7 @@
 <?php
 require_once '../conexion.php';
 require_once '../functions.php';
+require_once '../functionsGeneral.php';
 require_once '../assets/libraries/CifrasEnLetras.php';
 
 session_start();
@@ -371,12 +372,37 @@ $tituloImporte="";
         </tr>
      </table>
 
+    <?php
+    /*Sacamos para el OI el total Presupuestado*/
+
+    $montoIngresoPresupuestadoX="-";
+    $porcentajeIngresoPresupuestadoX="-";
+
+    if($codAreaX==11 && $idServicioX>0){
+        $sqlOIPres = "SELECT sum( (s.Cantidad*s.PrecioUnitario) - ((s.Cantidad*s.PrecioUnitario)*(c.Descuento/100)) ) as monto_cotizacion
+            FROM ibnorca.serviciopresupuesto s INNER JOIN ibnorca.cotizaciones c ON c.IdCotizacion = s.IdCotizacion  
+            WHERE c.IdServicio='$idServicioX'";
+        $stmtOIPres = $dbh->prepare($sqlOIPres);
+        $stmtOIPres->execute();
+
+        $stmtOIPres->bindColumn('monto_cotizacion', $montoIngresoPresupuestado);
+        while ($rowOIPres = $stmtOIPres->fetch(PDO::FETCH_BOUND)) {
+            $montoIngresoPresupuestadoX=formatNumberDec($montoIngresoPresupuestado);
+            $porcentajeIngresoPresupuestadoX=formatNumberDec(($totalImporte/$montoIngresoPresupuestado)*100);
+        }
+    }
+    ?>
+
      <table class="table">
         <tr class="bg-celeste">
-            <td class="s3 text-center">OBSERVACIONES</td>
+            <td class="s3 text-center" width="15%">Ingreso<br>Presupuestado</td>
+            <td class="s3 text-center" width="10%">%</td>
+            <td class="s3 text-center" width="70%">Observaciones</td>
         </tr>
         <tr>
-            <td class="s3 text-left"><?=$observacionesC?></td>
+            <td class="s3 text-center"><?=$montoIngresoPresupuestadoX;?></td>
+            <td class="s3 text-center"><?=$porcentajeIngresoPresupuestadoX;?></td>
+            <td class="s3 text-left"><?=$observacionesC;?></td>
         </tr>
      </table>
      <?php 
@@ -471,8 +497,9 @@ $tituloImporte="";
           <tr>
             <td class="s4 text-center" width="25%"><b>IBNORCA &#169;</b></td>
             <!--td class="s4 text-left" width="25%"><b>Codigo:</b> REG-PRE-SA-04-01.05</td-->
-            <td class="s4 text-center" width="25%"><b>Codigo:</b> REG-PRO-AF-02-03.06</td>
-            <td class="s4 text-center" width="25%"><b>V:</b> 2022-02-25</td>
+            <!--td class="s4 text-center" width="25%"><b>Codigo:</b> REG-PRO-AF-02-03.06</td-->
+            <td class="s4 text-center" width="25%"><b>Codigo:</b>REG-PRO-AF-01-02.07</td>
+            <td class="s4 text-center" width="25%"><b>V:</b> 2023-07-03</td>
             <td class="s4 text-center" width="25%"></td>
           </tr>
          <tr style="border: inset 0pt">

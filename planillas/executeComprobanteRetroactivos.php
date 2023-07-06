@@ -151,15 +151,22 @@ $codAreaCentroCosto="502";
 //SUELDOS POR PAGAR
 //para sacar liquido pagable por mes, primero sacamos los descuentos
 
-$ap_vejez=$totalGanandoMes*10/100;//10%
+/*$ap_vejez=$totalGanandoMes*10/100;//10%
 $riesgo_prof=$totalGanandoMes*1.71/100;//1.7%
 $com_afp=$totalGanandoMes*0.5/100;//0.5%
-$aporte_sol=$totalGanandoMes*0.5/100;//0.5%
+$aporte_sol=$totalGanandoMes*0.5/100;//0.5%*/
+
+$totalAFPMesRetroactivoCalculado=obtenerTotalAFPRetroactivos($gestionPlanilla, $mesPlanilla);
 $aporte_sol_13_25_35=obtenerTotalAFP_prev2_retroactivos($gestionPlanilla, $mesPlanilla);
-$total_descuentosMes=$ap_vejez+$riesgo_prof+$com_afp+$aporte_sol+$aporte_sol_13_25_35;
+
+//$total_descuentosMes=$ap_vejez+$riesgo_prof+$com_afp+$aporte_sol+$aporte_sol_13_25_35;
+$total_descuentosMes=$totalAFPMesRetroactivoCalculado+$aporte_sol_13_25_35;
+
+echo "total AFP CALCULADO: ".$totalAFPMesRetroactivoCalculado." SOLIDARIO132535: ".$aporte_sol_13_25_35;
 
 $totalLiquidoPagable=$totalGanandoMes-$total_descuentosMes;
-$afpmes=$ap_vejez+$riesgo_prof+$com_afp+$aporte_sol;
+
+//$afpmes=$ap_vejez+$riesgo_prof+$com_afp+$aporte_sol;
 // $aporte_solidario_13000 = obtenerAporteSolidario13000($totalGanandoMes);
 // $aporte_solidario_25000 = obtenerAporteSolidario25000($totalGanandoMes);
 // $aporte_solidario_35000 = obtenerAporteSolidario35000($totalGanandoMes);
@@ -173,6 +180,7 @@ $seguro_de_salud=obtener_aporte_patronal_general($cod_config_planilla_seguro_med
 $riesgo_profesional=obtener_aporte_patronal_general($cod_config_planilla_riesgo_prof,$totalGanandoMes);
 $provivienda=obtener_aporte_patronal_general($cod_config_planilla_provivienda,$totalGanandoMes);
 $a_patronal_sol=obtener_aporte_patronal_general($cod_config_planilla_solidario,$totalGanandoMes);
+
 $total_a_patronal=$seguro_de_salud+$riesgo_profesional+$provivienda+$a_patronal_sol;
 
 //$totalLiquidoPagable=totalLiquidoPagable($gestionPlanilla, $mesPlanilla);
@@ -194,7 +202,7 @@ $flagSuccessDet=$stmtInsertDet->execute();
 $ordenDetalle++;
 
 //AFP PREVISION BBV
-$totalAFPPrevision=$riesgo_profesional+$a_patronal_sol+$afpmes;
+$totalAFPPrevision=$riesgo_profesional+$a_patronal_sol+$totalAFPMesRetroactivoCalculado;
 // $totalAFPPrevision=obtenerTotalAFP_prev1($gestionPlanilla,$mesPlanilla);
 $cod_cuenta="125";//por defecto
 $cod_cuenta_aux=0;
@@ -223,15 +231,6 @@ $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, co
 $stmtInsertDet = $dbh->prepare($sqlInsertDet);
 $flagSuccessDet=$stmtInsertDet->execute();
 $ordenDetalle++;
-
-// //AFP PREVISION BBV      
-// $glosaDetalleGeneral="AFP Futuro aporte retroactivo solidario correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
-// $totalAFPFuturo=obtenerTotalAFP_prev4($gestionPlanilla,$mesPlanilla);
-// $cod_cuenta="122";
-// $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','0','$totalAFPFuturo','$glosaDetalleGeneral','$ordenDetalle')";
-// $stmtInsertDet = $dbh->prepare($sqlInsertDet);
-// $flagSuccessDet=$stmtInsertDet->execute();
-// $ordenDetalle++;
 
 //PROVIVIENDA
 $glosaDetalleGeneral="Provivienda aporte correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;
@@ -270,7 +269,7 @@ if($diferencia<0) {
   $haber=0;    
 }
 $cod_cuenta="306";
-if( isset($debe) && ($debe>0 || $haber>0) ){
+if( isset($debe) && ($debe>0.001 || $haber>0.001) ){
   $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','$debe','$haber','$glosaDetalleGeneral','$ordenDetalle')";
   $stmtInsertDet = $dbh->prepare($sqlInsertDet);
   $flagSuccessDet=$stmtInsertDet->execute();

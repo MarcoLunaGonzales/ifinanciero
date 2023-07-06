@@ -9408,7 +9408,9 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
      $dbh = new Conexion();
      $sql="SELECT cd.glosa,cd.debe,cd.haber,(cd.debe+cd.haber) as monto,cd.cod_area,cd.cod_unidadorganizacional,p.nombre,p.numero,(SELECT nombre FROM cuentas_auxiliares where codigo=cd.cod_cuentaauxiliar) as nombre_auxiliar from comprobantes_detalle cd join plan_cuentas p on p.codigo=cd.cod_cuenta join comprobantes c on c.codigo=cd.cod_comprobante where cd.codigo=$codigo and c.cod_estadocomprobante<>2 $sqlFiltro";
      $stmt = $dbh->prepare($sql);
-     //echo "COMPROBANTE DETALLE FECHAS: ".$sql."<br>";
+     
+     //echo "COMPROBANTE DETALLE FECHAS: ".$sql."<br><br>";
+     
      $stmt->execute();
      $valor=array('','','','','');
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -9750,7 +9752,7 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
     $sql="SELECT SUM((fd.cantidad*fd.precio)-fd.descuento_bob) as monto_factura from facturas_venta fv, facturas_ventadetalle fd, libretas_bancariasdetalle_facturas lf  
       where lf.cod_facturaventa=fv.codigo and fv.codigo=fd.cod_facturaventa and fv.cod_estadofactura<>2 and lf.cod_libretabancariadetalle=$codigo $sqlFiltro";
      
-     //echo "MONTO FACTURA: ".$sql."<br>";
+     //echo "SQL MONTO TOTAL LIBRETA BANCARIA DETALLE FILTRO: ".$sql."<br>";
      
      $stmt = $dbh->prepare($sql);
      $stmt->execute();
@@ -9758,6 +9760,7 @@ From libretas_bancariasdetalle lf where lf.codigo=$codigo");
      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $valor=$row["monto_factura"];
      }
+     //echo "Monto Factura: ".$valor."<br>";
      return $valor; 
   }
 
