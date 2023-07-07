@@ -829,7 +829,7 @@ $contadorRegistros=0;
                                 
                                 <input type="hidden" id="comprobante_auxiliar" name="comprobante_auxiliar">
                          
-                                            <input  class="form-control" type="hidden" name="monto_total_a" id="monto_total_a"  readonly="readonly" value="0"  />
+                                <input  class="form-control" type="hidden" name="monto_total_a" id="monto_total_a"  readonly="readonly" value="0"  />
                                    
                             </div>
                         </div>                 
