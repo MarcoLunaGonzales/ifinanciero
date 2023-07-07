@@ -98,6 +98,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Areas Contabilización</span>
                   </a>
                 </li>
+                <!-- <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listConfiguracionCargos">
+                    <span class="sidebar-mini"> G </span>
+                    <span class="sidebar-normal"> Responsabilidades y Autoridades</span>
+                  </a>
+                </li> -->
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=cargosLista">
                     <span class="sidebar-mini"> C </span>

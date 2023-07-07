@@ -14,6 +14,23 @@ $dbh = new Conexion();
 // VERIFICACIÖN DE CANTIDAD DE VISTAS OBTENIDAS
 $cod_personal       = $_SESSION['globalUser'];
 $cod_planilla_mes   = $_GET['key'];
+
+/******************************************************/
+//  VERIFICACIÓN DE CODIGOS REEMPLAZADOS X REPROCESO  //
+/******************************************************/
+$sqlOld = "SELECT cod_anterior, cod_planilla, cod_personal, cod_nuevo
+        FROM planilla_temporal
+        WHERE cod_anterior = '$cod_planilla_mes'
+        LIMIT 1";
+$stmtOld = $dbh->prepare($sqlOld);
+$stmtOld->execute();
+$result = $stmtOld->fetch(PDO::FETCH_ASSOC);
+if ($result) {
+    // Acceder a Codigo de Boleta Actual
+    $cod_planilla_mes = $result['cod_nuevo'];
+}
+/*****************************************************/
+
 $fecha 		        = date('Y-m-d H:i:s');
 $sql   = "INSERT INTO planillas_email(cod_personal, cod_planilla_mes, fecha) 
         VALUES ('$cod_personal', '$cod_planilla_mes', '$fecha')";

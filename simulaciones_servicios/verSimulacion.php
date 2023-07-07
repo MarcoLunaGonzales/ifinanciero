@@ -31,6 +31,74 @@ if(isset($_GET['cod'])){
 }else{
   $codigo=0;
 }
+/******************************************************/
+/*              ORGANISMO CERTIFICADOR                */
+/******************************************************/
+$array_organismo_certificador = [];
+$sqlOrgCer = "SELECT soc.cod_orgnismocertificador, oc.nombre
+          FROM simulaciones_servicios_organismocertificador soc 
+          LEFT JOIN organismo_certificador oc ON oc.codigo = soc.cod_orgnismocertificador
+          WHERE soc.cod_simulacionservicio = '$codigo'";
+$stmtOrgCer = $dbh->prepare($sqlOrgCer);
+$stmtOrgCer->execute();
+
+/***********************************/
+/*              IAF                */
+/***********************************/
+$array_cod_iaf = [];
+$sqlIAF = "SELECT si.cod_iaf, i.nombre
+          FROM simulaciones_servicios_iaf si 
+          LEFT JOIN iaf i ON i.codigo = si.cod_iaf
+          WHERE si.cod_simulacionservicio = '$codigo'";
+$stmtIAF = $dbh->prepare($sqlIAF);
+$stmtIAF->execute();
+
+/***************************************************/
+/*              Categoria Inocuidad                */
+/***************************************************/
+$array_cod_categoriainocuidad = [];
+$sqlCatIno = "SELECT sci.cod_categoriainocuidad, ci.nombre
+          FROM simulaciones_servicios_categoriasinocuidad sci 
+          LEFT JOIN categorias_inocuidad ci ON ci.codigo = sci.cod_categoriainocuidad
+          WHERE sci.cod_simulacionservicio = '$codigo'";
+$stmtCatIno = $dbh->prepare($sqlCatIno);
+$stmtCatIno->execute();
+
+
+/***************************************************/
+/*              Normas Nacionales                 */
+/***************************************************/
+$array_norma_nac = [];
+$sqlNorNac = "SELECT ssn.cod_norma, vn.abreviatura, vn.nombre FROM simulaciones_servicios_normas ssn
+          LEFT JOIN v_normas vn ON vn.codigo = ssn.cod_norma
+          WHERE ssn.cod_simulacionservicio = '$codigo'
+          AND ssn.catalogo = 'L'";
+$stmtNorNac = $dbh->prepare($sqlNorNac);
+$stmtNorNac->execute();
+
+/***************************************************/
+/*              Normas Internacionales            */
+/***************************************************/
+$array_norma_int = [];
+$sqlNorInt = "SELECT ssn.cod_norma, vni.abreviatura, vni.nombre FROM simulaciones_servicios_normas ssn
+          LEFT JOIN v_normas_int vni ON vni.codigo = ssn.cod_norma
+          WHERE ssn.cod_simulacionservicio = '$codigo'
+          AND ssn.catalogo = 'I'";
+$stmtNorInt = $dbh->prepare($sqlNorInt);
+$stmtNorInt->execute();
+
+/****************************************/
+/*              Otras Normas            */
+/****************************************/
+$array_norma_otra = [];
+$sqlNorOtras = "SELECT ssn.observaciones
+          FROM simulaciones_servicios_normas ssn
+          WHERE ssn.cod_simulacionservicio = '$codigo'
+          AND ssn.catalogo IS NULL";
+$stmtNorOtras = $dbh->prepare($sqlNorOtras);
+$stmtNorOtras->execute();
+
+
 $lista= obtenerPaisesServicioIbrnorca();
 if(isset($_GET['q'])){
  $idServicioX=$_GET['q'];
@@ -505,6 +573,16 @@ for ($an=0; $an<=$anioGeneral; $an++) {
               </div>
             </div>
 
+            <!-- Nuevo campo Norma -->
+            <div class="col-sm-2">
+              <div class="form-group">
+                  <button type="button" class="btn btn-info btn-round btn-fab btn-sm" onclick="abrir_modal_norma()">
+                    <i class="material-icons" title="Ver más">dashboard</i>
+                  </button>
+                  <label class="label">Normas</label>
+              </div>
+            </div>
+
           </div>      
            <div class="row">                
             <div class="col-sm-2" hidden>
@@ -547,21 +625,27 @@ for ($an=0; $an<=$anioGeneral; $an++) {
             </div>
             <!-- Nuevos campos -->
             <div class="col-sm-2">
-              <div class="form-group" title="<?=$title_cod_iaf?>">
-                  <label class="bmd-label-static">IAF</label>
-                  <input class="form-control" type="text" readonly value="<?=$first_cod_iaf?>"/>
+              <div class="form-group">
+                  <button type="button" class="btn btn-primary btn-round btn-fab btn-sm" onclick="abrir_modal_iaf()">
+                    <i class="material-icons" title="Ver más">list</i>
+                  </button>
+                  <label class="label">IAF</label>
               </div>
             </div>
             <div class="col-sm-2">
               <div class="form-group" title="<?=$title_cod_categoriainocuidad?>">
-                  <label class="bmd-label-static">Cat. Ino.</label>
-                  <input class="form-control" type="text" readonly value="<?=$first_cod_categoriainocuidad?>"/>
+                  <button type="button" class="btn btn-danger btn-round btn-fab btn-sm" onclick="abrir_modal_cat_ino()">
+                    <i class="material-icons" title="Ver más">playlist_add_check</i>
+                  </button>
+                  <label class="bmd-label-static">Cat. Inocuidad</label>
               </div>
             </div>
             <div class="col-sm-2">
               <div class="form-group" title="<?=$title_orgnismo_certificador?>">
-                  <label class="bmd-label-static">Org. Cert.</label>
-                  <input class="form-control" type="text" readonly value="<?=$first_orgnismo_certificador?>"/>
+                  <button type="button" class="btn btn-warning btn-round btn-fab btn-sm" onclick="abrir_modal_org_cer()">
+                    <i class="material-icons" title="Ver más">class</i>
+                  </button>
+                  <label class="bmd-label-static">Org. Certificador</label>
               </div>
             </div>
             <!-- Nuevos campos -->
@@ -768,6 +852,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                 ?>
                  <td rowspan="<?=$rospanAnio?>" width="6%" class="bg-table-primary text-white font-weight-bold"><?=$tituloItem?></td>    <!--ROWSPAN = CANTIDAD DE SERVICIOS + 2 -->
                  <td rowspan="2" width="14%" class="bg-table-primary text-white font-weight-bold"></td>
+                 <td rowspan="2" width="5%" class="bg-table-primary text-white font-weight-bold">Dias Servicio</td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">INGRESO</td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">COSTO TOTAL</td>
                  <td colspan="2" class="bg-table-primary text-white font-weight-bold">UTILIDAD BRUTA</td>
@@ -851,6 +936,22 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                 ?>
                  <tr>
                  <td class="small text-left">Precio del Servicio</td>
+                 
+                 <!-- Contador de DIAS, la unidad de medida seleccionada es DIAS para la contabilización de DIAS -->
+                 <?php 
+                   $sqlCountD="SELECT SUM(sst.cantidad_editado) as cantidad_dias
+                   FROM simulaciones_servicios_tiposervicio sst
+                   WHERE sst.cod_simulacionservicio='$codigo '
+                   AND sst.habilitado!=0 
+                   AND sst.cod_anio=$an
+                   AND sst.cod_tipounidad = 2";
+                   $stmtCountD = $dbh->prepare($sqlCountD);
+                   $stmtCountD->execute(); 
+                   $cantidadDias = 0;
+                   $rowTotal     = $stmtCountD->fetch(PDO::FETCH_ASSOC);
+                   $cantidadDias = empty($rowTotal['cantidad_dias']) ? 0 : $rowTotal['cantidad_dias'];
+                 ?>
+                <td class="small text-left"><?=$cantidadDias?></td>
                  <td class="small text-right"><?=number_format($precioAuditoriaUsd, 2, ',', '.')?></td>
                  <td class="small text-right"><?=number_format($precioAuditoria, 2, ',', '.')?></td>
 
@@ -867,6 +968,7 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                </tr>
                <tr class="bg-plomo">
                  <td class="font-weight-bold small text-left">TOTAL</td>
+                 <td class="font-weight-bold small text-left"></td>
                  <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalIngresoUsd, 2, ',', '.')?></td>
                  <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalIngreso, 2, ',', '.')?></td>
                  <td class="font-weight-bold small text-right <?=$estiloUtilidadIbnorca?>"><?=number_format($totalCostoTotalUsd, 2, ',', '.')?></td>
@@ -1097,5 +1199,9 @@ for ($an=0; $an<=$anioGeneral; $an++) {
 </div>
 
 <?php
+// Se tiene este modal para ver el listado de
+// IAF, Categoria Inocuidad, Org. Certificador
+require_once 'modalDetalle.php';
+
 require_once 'modal.php';
 ?>

@@ -74,7 +74,7 @@ $stmtArea->bindColumn('cod_area_padre', $codAreaPadre);
                             <th class="text-center">-</th>
                             <th>Codigo Area</th>
                             <th>Nombre Area</th>
-                            <th>Nombre Area Padre</th>
+                            <!-- <th>Nombre Area Padre</th> -->
                           </tr>
                         </thead>
                         <tbody>
@@ -99,31 +99,31 @@ $stmtArea->bindColumn('cod_area_padre', $codAreaPadre);
                             </td>
                             <td><?=$codigoArea;?></td>
                             <td><?=$nombreArea;?></td>
-                            <td >
+                            <!-- <td >
                               
                                 <?php
                                 //listados todas las area para padre
 
-                                $sql2="SELECT codigo,nombre, abreviatura
-                                from areas
-                                where cod_estado=1
-                                ORDER BY 2";
-                                $stmtArea2 = $dbh->prepare($sql2);
-                                $stmtArea2->execute(); 
-                                $stmtArea2->bindColumn('codigo', $codigoArea2);
-                                $stmtArea2->bindColumn('nombre', $nombreArea2);
-                                $stmtArea2->bindColumn('abreviatura', $abreviatura2);
+                                // $sql2="SELECT codigo,nombre, abreviatura
+                                // from areas
+                                // where cod_estado=1
+                                // ORDER BY 2";
+                                // $stmtArea2 = $dbh->prepare($sql2);
+                                // $stmtArea2->execute(); 
+                                // $stmtArea2->bindColumn('codigo', $codigoArea2);
+                                // $stmtArea2->bindColumn('nombre', $nombreArea2);
+                                // $stmtArea2->bindColumn('abreviatura', $abreviatura2);
                               ?>                              
-                              <select name="cod_areaorganizacion_padre<?=$index;?>" id="cod_areaorganizacion_padre" class="selectpicker" data-style="btn btn-primary" data-live-search="true">
+                              <select name="cod_areaorganizacion_padre<?php//$index;?>" id="cod_areaorganizacion_padre" class="selectpicker" data-style="btn btn-primary" data-live-search="true">
                                     <option value="">-</option>
-                                    <?php while ($row = $stmtArea2->fetch()){ ?>
-                                        <option <?=($codAreaPadre==$codigoArea2)?"selected":"";?>  value="<?=$codigoArea2;?>"><?=$nombreArea2;?></option>
-                                    <?php } ?>
+                                    <?php //while ($row = $stmtArea2->fetch()){ ?>
+                                        <option <?php//($codAreaPadre==$codigoArea2)?"selected":"";?>  value="<?php//$codigoArea2;?>"><?php//$nombreArea2;?></option>
+                                    <?php //} ?>
                               </select>
                               
 
                               
-                            </td>
+                            </td> -->
                           </tr>
 
                           <?php

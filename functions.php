@@ -10273,7 +10273,7 @@ function verificarSolicitudRecursosManual($codigo){
 
 function obtenerlugarEmision($codigo,$indice){
   $dbh = new Conexion();
-  $sql="SELECT nombre,abreviatura from personal_departamentos where codigo=$codigo;";  
+  $sql="SELECT nombre,abreviatura from personal_departamentos where codigo=$codigo;";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   $valor="";

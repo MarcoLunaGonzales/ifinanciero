@@ -88,3 +88,28 @@
     </div>
   </div>
 <!--    end small modal -->
+
+<!-- MAPA -->
+<div class="modal fade modal-primary" id="modalMapa" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card">
+            <div class="card-header card-header-danger card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">list</i>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                </button>
+                <h4 class="card-title">Mapa de Areas por Oficina</h4>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <h5 class="text-primary">
+                        <i class="material-icons">business</i> <b id="title_of">OFICINA</b>
+                    </h5>
+                </div>
+                <div id="treeContainer"></div>
+            </div>
+        </div>  
+    </div>
+</div>

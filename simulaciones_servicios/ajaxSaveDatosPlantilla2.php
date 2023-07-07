@@ -140,31 +140,71 @@ $stmtUpdatePlantilla->execute();
 
 //insertarNormas
 if($tipo_servicio==2778){ //sistemas integrados 
-      $dbhD = new Conexion();
-      $sqlD="DELETE FROM simulaciones_servicios_normas where cod_simulacionservicio=$codSimulacion";
-      $stmtD = $dbhD->prepare($sqlD);
-      $stmtD->execute();     
-      if(isset($_POST['normas_tiposervicio'])){ 
-       $normasTipo=json_decode($_POST['normas_tiposervicio']);
-       for ($ntp=0; $ntp < count($normasTipo); $ntp++) { 
-        $codigoNormasTipo=$normasTipo[$ntp];       
-        $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
-          VALUES ('".$codSimulacion."','".$tipo_servicio."','".$codigoNormasTipo."','')";
-         $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
-         $flagsuccess=$stmtInsertNormas->execute();
-       }
-       if($normas_tiposerviciotext!=""){
-        $normasTipoText=explode(",",$normas_tiposerviciotext);
-        for ($ntp=0; $ntp < count($normasTipoText); $ntp++) { 
-        $nombreNormasTipo=$normasTipoText[$ntp];       
-        $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
-          VALUES ('".$codSimulacion."','".$tipo_servicio."',0,'".$nombreNormasTipo."')";
-         $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
-         $flagsuccess=$stmtInsertNormas->execute();
-        }    
-       }
-      }
+      // $dbhD = new Conexion();
+      // $sqlD="DELETE FROM simulaciones_servicios_normas where cod_simulacionservicio=$codSimulacion";
+      // $stmtD = $dbhD->prepare($sqlD);
+      // $stmtD->execute();     
+      // if(isset($_POST['normas_tiposervicio'])){ 
+      //  $normasTipo=json_decode($_POST['normas_tiposervicio']);
+      //  for ($ntp=0; $ntp < count($normasTipo); $ntp++) { 
+      //   $codigoNormasTipo=$normasTipo[$ntp];       
+      //   $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
+      //     VALUES ('".$codSimulacion."','".$tipo_servicio."','".$codigoNormasTipo."','')";
+      //    $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
+      //    $flagsuccess=$stmtInsertNormas->execute();
+      //  }
+      //  if($normas_tiposerviciotext!=""){
+      //   $normasTipoText=explode(",",$normas_tiposerviciotext);
+      //   for ($ntp=0; $ntp < count($normasTipoText); $ntp++) { 
+      //   $nombreNormasTipo=$normasTipoText[$ntp];       
+      //   $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
+      //     VALUES ('".$codSimulacion."','".$tipo_servicio."',0,'".$nombreNormasTipo."')";
+      //    $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
+      //    $flagsuccess=$stmtInsertNormas->execute();
+      //   }    
+      //  }
+      // }
   }
+  /****************************/
+  // Se limpia campos NORMAS
+  $dbhD = new Conexion();
+  $sqlD="DELETE FROM simulaciones_servicios_normas where cod_simulacionservicio=$codSimulacion";
+  $stmtD = $dbhD->prepare($sqlD);
+  $stmtD->execute();  
+  // OTRAS NORMAS
+  if(isset($_POST['normas_tiposerviciotext'])){
+    $normasTipoText=explode(",",$_POST['normas_tiposerviciotext']);
+    for ($ntp=0; $ntp < count($normasTipoText); $ntp++) { 
+      $nombreNormasTipo = $normasTipoText[$ntp];       
+      $sqlInsertNormas  = "INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
+                          VALUES ('".$codSimulacion."','".$tipo_servicio."',0,'".$nombreNormasTipo."')";
+      $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
+      $flagsuccess      = $stmtInsertNormas->execute();
+    }
+  }
+  // NORMAS NACIONALES
+  if(isset($_POST['normas_nac'])){
+    $normasTipo=json_decode($_POST['normas_nac']);
+    for ($ntp=0; $ntp < count($normasTipo); $ntp++) { 
+      $codigoNormasTipo=$normasTipo[$ntp];       
+      $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones, catalogo) 
+        VALUES ('".$codSimulacion."','".$tipo_servicio."','".$codigoNormasTipo."','','L')";
+      $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
+      $flagsuccess=$stmtInsertNormas->execute();
+    }
+  }
+  // NORMAS INTERNACIONALES
+  if(isset($_POST['normas_int'])){ 
+    $normasTipo=json_decode($_POST['normas_int']);
+    for ($ntp=0; $ntp < count($normasTipo); $ntp++) { 
+      $codigoNormasTipo=$normasTipo[$ntp];       
+      $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones, catalogo) 
+        VALUES ('".$codSimulacion."','".$tipo_servicio."','".$codigoNormasTipo."','','I')";
+      $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
+      $flagsuccess=$stmtInsertNormas->execute();
+    }
+  }
+  /******************************************************/
 
 if($cantidad==0){
 	$cantidad=1;
@@ -180,18 +220,32 @@ $stmtDetAt->execute();
   $stmtA = $dbhA->prepare($sqlA);
   $stmtA->execute();
 
+  // Nueva función se obtiene el valor del CODIGO SERVICIO ATRIBUTOS
+  // Se obtiene el codigo de atributos normas
+  $codigo_atributonorma = '';
   while ($rowPreAt = $stmtDetAt->fetch(PDO::FETCH_ASSOC)) {
+    // Codigo Atributo Norma
+    $codigo_atributonorma = $rowPreAt['codigo'];
+
     $codigoDetAt=$rowPreAt['codigo'];
     $dbhA = new Conexion();
     $sqlDel="DELETE FROM simulaciones_servicios_atributosdias where cod_simulacionservicioatributo=$codigoDetAt";
     $stmtDel = $dbhA->prepare($sqlDel);
     $stmtDel->execute();
   }
-   $dbhA = new Conexion();
-  $sqlA="DELETE FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codSimulacion";
+
+  // NUEVO CAMPO PARA LA ELIMINACIÓN DE ATRIBUTOS NORMAS PARA EVITAR TENER DUPLICADOS DE REGISTROS
+  // Limpiamos tabla de Atributos Normas
+  $dbhA = new Conexion();
+  $sqlA="DELETE FROM simulaciones_servicios_atributosnormas where cod_simulacionservicioatributo=$codigo_atributonorma";
   $stmtA = $dbhA->prepare($sqlA);
   $stmtA->execute();
 
+  
+  $dbhA = new Conexion();
+  $sqlA="DELETE FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codSimulacion";
+  $stmtA = $dbhA->prepare($sqlA);
+  $stmtA->execute();
 
   
   //simulaciones_serviciosauditores
@@ -213,17 +267,47 @@ $stmtDetAt->execute();
               VALUES ('$codSimulacionServicioAtributo','$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo','$paisAtributo','$estadoAtributo','$ciudadAtributo')";
               $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
               $stmtDetalleAtributos->execute();
-            $auditoresDias = 0;
+              $auditoresDias = 0;
+
+              
+              /*************************************************/
+              // Normas Nacionales
+              if(isset($atributos[$att]->atr_norma_nac)){
+                $atrCodNorma=$atributos[$att]->atr_norma_nac;
+                $normasFila=explode(",",$atrCodNorma);
+                for ($ni=0; $ni < count($normasFila); $ni++) { 
+                  $codNorma=$normasFila[$ni];
+                  $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad, catalogo) 
+                  VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1, 'L')";
+                  $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
+                  $flagsuccess=$stmtDetalleAtributosNormas->execute();
+                }
+              }
+              // Normas Internacionales
+              if(isset($atributos[$att]->atr_norma_int)){
+                $atrCodNorma=$atributos[$att]->atr_norma_int;
+                $normasFila=explode(",",$atrCodNorma);
+                for ($ni=0; $ni < count($normasFila); $ni++) { 
+                  $codNorma=$normasFila[$ni];
+                  $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad, catalogo) 
+                  VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1, 'I')";
+                  $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
+                  $flagsuccess=$stmtDetalleAtributosNormas->execute();
+                }
+              }
+              /*************************************************/
+
             if($_POST['tcs']==0){
                 //$direccionAtributo="";
-              $normasFila=explode(",",$normaCodAtributo);
-                for ($ni=0; $ni < count($normasFila); $ni++) { 
-                 $codNorma=$normasFila[$ni];
-                  $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad) 
-                 VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1)";
-                 $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
-                 $stmtDetalleAtributosNormas->execute();
-               }
+                // VERIFICAR FUNCIONALIDAD 
+              // $normasFila=explode(",",$normaCodAtributo);
+              //   for ($ni=0; $ni < count($normasFila); $ni++) { 
+              //    $codNorma=$normasFila[$ni];
+              //     $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad) 
+              //    VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1)";
+              //    $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
+              //    $stmtDetalleAtributosNormas->execute();
+              //  }
               }else{
                 /**
                  * ESTA FUNCIONALIDAD ES OBSOLETA Y SE REFERIA A LOS DIAS QUE SE PLANIFICABA POR CADA AUDITOR

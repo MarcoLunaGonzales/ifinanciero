@@ -6,6 +6,10 @@ require_once __DIR__.'/../conexion.php';
 //require_once 'configModule.php';
 require_once __DIR__.'/../functions.php';
 require_once __DIR__.'/../functionsGeneral.php';
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 //RECIBIMOS LAS VARIABLES
@@ -30,7 +34,7 @@ try{
     $stmtPersonal->execute();
     $result = $stmtPersonal->fetch();
 
-    $codigo = $result['codigo'];
+    // $codigo = $result['codigo'];
 
     $cod_tipoIdentificacion = $result['tipo_identificacion'];
     $tipo_identificacionOtro = $result['tipo_identificacion_otro'];
@@ -88,7 +92,8 @@ try{
     $stmtDiscapacitado->execute();
     $resultDiscapacitado = $stmtDiscapacitado->fetch();
     // var_dump($resultDiscapacitado);
-    if(count($resultDiscapacitado)>0){
+    // if(count($resultDiscapacitado)>0){
+    if(!empty($resultDiscapacitado)){
         $discapacitado = $resultDiscapacitado['tipo_persona_discapacitado'];
         $tutor_discapacitado = $resultDiscapacitado['tipo_persona_discapacitado'];
         $celular_tutor = "";
@@ -170,7 +175,7 @@ $html.=  '<header class="header">'.
                     '<tr>'.
                         '<td>Identificación</td>'.
                         
-                        '<td>'.$identificacion.' - '.obtenerlugarEmision($cod_lugar_emision,1).' '.$lugar_emisionOtro.'</td>'.
+                        '<td>'.$identificacion.' - '.(empty($cod_lugar_emision)?'':obtenerlugarEmision($cod_lugar_emision,1)).' '.$lugar_emisionOtro.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Grado Académico</td>'.
@@ -209,22 +214,22 @@ $html.=  '<header class="header">'.
                     '<tr>'.
                         '<td>Nacionalidad</td>'.
                         
-                        '<td colspan=2>'.obtenerNombreNacionalidadPersona($cod_nacionalidad,1).'</td>'.
+                        '<td colspan=2>'.(empty($cod_nacionalidad)?'':obtenerNombreNacionalidadPersona($cod_nacionalidad,1)).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Pais</td>'.
                         
-                        '<td colspan=2>'.obtenerNombreNacionalidadPersona($cod_pais,2).'</td>'.
+                        '<td colspan=2>'.(empty($cod_pais)?'':obtenerNombreNacionalidadPersona($cod_pais,2)).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Departamento</td>'.
                         
-                        '<td colspan=2>'.obtenerlugarEmision($cod_departamento,2).'</td>'.
+                        '<td colspan=2>'.(empty($cod_departamento)?'':obtenerlugarEmision($cod_departamento,2)).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Ciudad</td>'.
                         
-                        '<td colspan=2>'.obtenerNombreCiudadPersona($cod_ciudad).'</td>'.
+                        '<td colspan=2>'.(empty($cod_ciudad)?'':obtenerNombreCiudadPersona($cod_ciudad)).'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td>Otra Ciudad</td>'.
