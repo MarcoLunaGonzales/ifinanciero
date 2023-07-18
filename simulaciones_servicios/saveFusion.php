@@ -61,7 +61,8 @@ try {
   
     /*===============================================================================================*/
     // DETALLE DE SUMA TOTAL DE "SOLICITUD_FACTURACION_DETALLE"
-    $sql = "SELECT SUM((precio*cantidad)-descuento_bob) as suma_total FROM solicitudes_facturaciondetalle WHERE cod_solicitudfacturacion = '$sf_antigua' limit 1";
+    // $sql = "SELECT SUM((precio*cantidad)-descuento_bob) as suma_total FROM solicitudes_facturaciondetalle WHERE cod_solicitudfacturacion = '$sf_antigua' limit 1"; // Se quito el descuento en fecha: 18-07-2023
+    $sql = "SELECT SUM(precio*cantidad) as suma_total FROM solicitudes_facturaciondetalle WHERE cod_solicitudfacturacion = '$sf_antigua' limit 1";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $registro = $stmt->fetch(PDO::FETCH_ASSOC);
