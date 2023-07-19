@@ -428,12 +428,29 @@ $contadorRegistros=0;
                             <div class="col-sm-4">
                                 <div class="form-group" >                                                            
                                     <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" data-live-search="true" >
-                                        <option value=""></option>
                                         <?php 
-                                        $queryTipoObjeto = "SELECT * from clientes where cod_estadoreferencial=1 order by nombre";
+                                        /**
+                                         * Busque de COD_CLIENTE
+                                         */
+                                        $query = "SELECT c.codigo, c.nombre
+                                                FROM clientes c
+                                                WHERE c.identificacion = :ci 
+                                                LIMIT 1";
+                                        $stmt = $dbh->prepare($query);
+                                        $stmt->execute(array(':ci' => $ci_estudiante));
+                                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                                        $select_cod_cliente = empty($row["codigo"]) ? '' : $row["codigo"];
+
+                                        // Lista de Clientes
+                                        $queryTipoObjeto = "SELECT * 
+                                                        FROM clientes 
+                                                        WHERE cod_estadoreferencial = 1 ". 
+                                                        (empty($select_cod_cliente) ? '' : (" AND codigo = '$select_cod_cliente'"))
+                                                        ." ORDER BY nombre";
+                                                        echo $queryTipoObjeto;
                                         $statementObjeto = $dbh->query($queryTipoObjeto);
                                         while ($row = $statementObjeto->fetch()){ ?>
-                                            <option <?=($cod_cliente==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
+                                            <option <?=($select_cod_cliente == $row["codigo"]) ? 'selected' : '';?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                         <?php } ?>
                                     </select>  
                                         
@@ -559,6 +576,25 @@ $contadorRegistros=0;
                             </div>
                             <div class="d-none" id="div_mensaje_ws" align="center" style="color: #ff0000"><h3>No se tiene conexión al servicio de capacitación</h3></div>
                             <div class="card-body ">
+                                <!-- Opción de Distribuir monto -->
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-6 offset-md-6">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" id="montoDistribucion" placeholder="Monto a Pagar">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <button type="button" class="btn btn-primary" id="btnDistribuir">Distribuir</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <table class="table table-bordered table-condensed table-sm">
                                     <thead>
                                         <tr class="fondo-boton">
@@ -628,7 +664,7 @@ $contadorRegistros=0;
                                                         $preciox=$rowPre['precio'];
                                                         // $monto_pagadoX=$rowPre['monto_pagado'];
                                                         $descuento_porX=$rowPre['descuento_por'];
-                                                        $descuento_bobX=$rowPre['descuento_bob'];
+                                                        $descuento_bobX=number_format($rowPre['descuento_bob'], 2);
                                                         $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                                     }    
                                                 }
@@ -721,7 +757,7 @@ $contadorRegistros=0;
                                                                     }
                                                                     // $montoPre=$rowPre['precio']+$rowPre['descuento_bob'];
                                                                     $descuento_porX=$rowPre['descuento_por'];
-                                                                    $descuento_bobX=$rowPre['descuento_bob'];
+                                                                    $descuento_bobX=number_format($rowPre['descuento_bob'], 2);
                                                                     $descripcion_alternaX=$rowPre['descripcion_alterna'];
                                                                 }else{                                                                    
                                                                     $monto_total_pagado=$precio_total_x-$preciox;
@@ -761,7 +797,7 @@ $contadorRegistros=0;
                                                   <!-- <td class="text-left"><?=$cod_anio?> </td> -->
                                                     <td class="text-left" width="35%"><textarea name="descripcion_alterna<?=$iii?>" id="descripcion_alterna<?=$iii?>" class="form-control" onkeyup="javascript:this.value=this.value.toUpperCase();" <?=$sw2?>><?=$descripcion_alternaX?></textarea></td>
                                                     <td class="text-right"><?=$cantidadPre?></td>
-                                                    <td class="text-right"><input type="hidden" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$Costo?>" step="0.01" <?=$sw2?> readonly="true"><input type="text" step="0.01" id="monto_precio_a<?=$iii?>" name="monto_precio_a<?=$iii?>" class="form-control text-primary text-right"  value="<?=number_format($Costo,2)?>" <?=$sw2?> readonly="true"></td>
+                                                    <td class="text-right"><input type="hidden" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$Costo?>" <?=$sw2?> readonly="true"><input type="text" step="0.01" id="monto_precio_a<?=$iii?>" name="monto_precio_a<?=$iii?>" class="form-control text-primary text-right"  value="<?=number_format($Costo,2)?>" <?=$sw2?> readonly="true"></td>
                                                     <!--  descuentos -->
                                                     <td class="text-right"><input type="number" step="0.01" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" min="0" max="<?=$descuento_cliente?>" onkeyup="descuento_convertir_a_bolivianos(<?=$iii?>)" <?=$sw2?> readonly></td>                                             
                                                     <td class="text-right"><input type="number" class="form-control" name="descuento_bob<?=$iii?>" id="descuento_bob<?=$iii?>" value="<?=$descuento_bobX?>" min="0" max="<?=$descuento_bob_cliente?>" onkeyup="descuento_convertir_a_porcentaje(<?=$iii?>)" <?=$sw2?> readonly></td>                                        
@@ -772,7 +808,7 @@ $contadorRegistros=0;
                                                         <input type="text" class="form-control" name="modal_importe_pagado_dos<?=$iii?>" id="modal_importe_pagado_dos<?=$iii?>" readonly value="<?=number_format($monto_total_pagado,2);?>">
                                                     </td>
                                                     <td>
-                                                        <input type="number" step="0.01" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" step="0.01" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?>>
+                                                        <input type="number" step="0.01" max="<?=$saldo?>" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?>>
                                                     </td>
                                                     <!-- checkbox -->
                                                     <td>
@@ -986,5 +1022,32 @@ $contadorRegistros=0;
            return false;
          }     
       }     
+    });
+</script>
+
+<script>
+    /**
+     * Distribución de monto
+     */
+    $('#btnDistribuir').on('click', function(){
+        var montoDistribucion = parseFloat($('#montoDistribucion').val());
+        $('[id^=modal_check]').each(function() {
+            var row = $(this).closest('tr');
+            var saldo           = parseFloat(row.find('[id^=modal_importe_dos]').val() - row.find('[id^=modal_importe_pagado_dos]').val());
+            var importe_a_pagar = row.find('[id^=importe_a_pagar]');
+            if (montoDistribucion > 0) {
+                let total = montoDistribucion > saldo ? saldo : montoDistribucion;
+                importe_a_pagar.val(total);
+                // Monto Distribución
+                montoDistribucion = parseFloat(montoDistribucion-total).toFixed(2);
+                // Archivar el checkbox
+                $(this).prop('checked', true);
+            }else{
+                importe_a_pagar.val(saldo);
+                // Desactivar el checkbox
+                $(this).prop('checked', false);
+            }
+        });
+        calcularTotalFilaServicio2Costos();
     });
 </script>
