@@ -73,7 +73,7 @@ if(isset($_GET['q'])){
               LEFT JOIN (
                 SELECT
                   cod_solicitudfacturacion,
-                  ROUND(SUM(precio * cantidad), 2) AS precio
+                  ROUND(SUM(precio*cantidad), 2) AS precio
                 FROM
                   solicitudes_facturaciondetalle
                 GROUP BY

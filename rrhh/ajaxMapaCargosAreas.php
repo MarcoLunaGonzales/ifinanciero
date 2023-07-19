@@ -11,12 +11,13 @@ session_start();
 function buildTree($data, $parent = '') {
     $tree = array();
     foreach ($data as $item) {
-      if ($item['cod_padre'] == $parent) {
-        $item['id']       = $item['codigo'];
-        $item['text']     = '<b class="text-primary">['.$item['abreviatura'].']</b> '.$item['nombre'];
-        $item['children'] = buildTree($data, $item['codigo']);
-        $tree[] = $item;
-      }
+        // Se Verifican los SOLO los cargos PADRE
+        if ($item['cod_padre'] == $parent) {
+            $item['id']       = $item['codigo'];
+            $item['text']     = '<b class="text-primary">['.$item['abreviatura'].']</b> '.$item['nombre'];
+            $item['children'] = buildTree($data, $item['codigo']);
+            $tree[] = $item;
+        }
     }
     return $tree;
 }
@@ -34,7 +35,8 @@ try {
                 FROM cargos_areasorganizacion ca
                 LEFT JOIN cargos c ON c.codigo = ca.cod_cargo
                 WHERE ca.cod_areaorganizacion = '$cod_area'
-                AND c.cod_estadoreferencial = 1";
+                AND c.cod_estadoreferencial = 1
+                ORDER BY c.cod_padre DESC";
     $stmt    = $dbh->prepare($sqlArea);
     $stmt->execute();
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

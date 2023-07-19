@@ -29,8 +29,10 @@ $nombreCargo = $result['nombre'];
 
 // Preparamos
 $sql="SELECT c.codigo, UPPER(c.nombre) as nombre,
-    (SELECT count(*) FROM cargos_areasorganizacion ca WHERE c.codigo=ca.cod_cargo AND ca.cod_areaorganizacion='$codArea') AS bandera
+    (SELECT count(*) FROM cargos_areasorganizacion ca WHERE c.codigo=ca.cod_cargo AND ca.cod_areaorganizacion='$codArea') AS bandera,
+    UPPER(IFNULL(cpadre.nombre, '-')) as dependencia
     FROM cargos c
+    LEFT JOIN cargos cpadre ON cpadre.codigo = c.cod_padre
     WHERE c.cod_estadoreferencial = 1 ORDER BY 2";
 
 $stmtCategoria = $dbh->prepare($sql);
@@ -40,6 +42,7 @@ $stmtCategoria->execute();
 $stmtCategoria->bindColumn('codigo', $codigoCargo);
 $stmtCategoria->bindColumn('nombre', $nombreCargo);
 $stmtCategoria->bindColumn('bandera', $bandera);
+$stmtCategoria->bindColumn('dependencia', $dependencia);
 
 ?>
 
@@ -67,8 +70,9 @@ $stmtCategoria->bindColumn('bandera', $bandera);
                         <thead>
                           <tr>
                             <th class="text-center">-</th>
-                            <th>Codigo Categoria</th>
-                            <th>Nombre Categoria</th>
+                            <th>Codigo Cargos</th>
+                            <th>Nombre Cargos</th>
+                            <th>Dependencia</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -92,6 +96,7 @@ $stmtCategoria->bindColumn('bandera', $bandera);
                             </td>
                             <td><?=$codigoCargo;?></td>
                             <td><?=$nombreCargo;?></td>
+                            <td><?=$dependencia;?></td>
                           </tr>
 
                           <?php

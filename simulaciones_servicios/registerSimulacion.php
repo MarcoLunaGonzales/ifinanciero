@@ -203,7 +203,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
            $porcentajeAfnor=$porcentajeAfnorX;
            if($afnorX==0){
             $precioAfnorX=0;
-            $tituloAfnor="SIN AFNOR";
+            $tituloAfnor="1";
            }else{
             $iva=obtenerValorConfiguracion(1);
             $it=obtenerValorConfiguracion(2);

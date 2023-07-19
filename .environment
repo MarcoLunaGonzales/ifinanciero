@@ -3,6 +3,7 @@ DATABASE_DRIVER = mysql
 DATABASE_ENCODING = utf8
 
 [ parametros de conexion bd mysql Local ]
+<<<<<<< HEAD
 DATABASE_HOST = lpsit.ibnorca.org
 DATABASE_PORT = 4606
 DATABASE_NAME = bdifinanciero

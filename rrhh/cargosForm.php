@@ -9,7 +9,7 @@ $dbh = new Conexion();
 //por is es edit
 if ($codigo > 0){
     $codigo=$codigo;
-    $stmt = $dbh->prepare("SELECT codigo,nombre,abreviatura,cod_tipo_cargo,objetivo,cod_padre FROM cargos where codigo =:codigo and cod_estadoreferencial=1");
+    $stmt = $dbh->prepare("SELECT codigo,nombre,abreviatura,cod_tipo_cargo,objetivo,cod_padre,cod_dep_funcional FROM cargos where codigo =:codigo and cod_estadoreferencial=1");
     //Ejecutamos;
     $stmt->bindParam(':codigo',$codigo);
     $stmt->execute();
@@ -19,7 +19,8 @@ if ($codigo > 0){
     $abreviatura = $result['abreviatura'];  
     $cod_tipo_cargo = $result['cod_tipo_cargo'];  
     $objetivo = $result['objetivo'];  
-    $cod_padre = $result['cod_padre']; 
+    $cod_padre = $result['cod_padre'];
+    $cod_dep_funcional = $result['cod_dep_funcional']; 
 } else {
     $codigo = 0;
     $nombre = '';
@@ -28,6 +29,7 @@ if ($codigo > 0){
     $cod_tipo_cargo =0;  
     $objetivo = '';  
     $cod_padre = ''; 
+    $cod_dep_funcional = '';
 }
 $sqlTiposCargos="SELECT codigo,nombre from tipos_cargos_personal where cod_estadoreferencial=1";
 $stmtTCargos=$dbh->query($sqlTiposCargos);
@@ -76,8 +78,9 @@ $stmtTCargos=$dbh->query($sqlTiposCargos);
                     </div>
                     </div>
                 </div>
+                <!-- Dependencia Jerárquica -->
                 <div class="row">
-                    <label class="col-sm-2 col-form-label">Depende de:</label>
+                    <label class="col-sm-2 col-form-label">Dependencia Jerárquica:</label>
                     <div class="col-sm-7">
                     <div class="form-group">
                       <select name="cod_padre" id="cod_padre" data-style="btn btn-info" class="selectpicker form-control form-control-sm" data-show-subtext="true" data-live-search="true">
@@ -91,6 +94,27 @@ $stmtTCargos=$dbh->query($sqlTiposCargos);
                             $stmtListaCargos=$dbh->query($sqlAreas);
                             while ($row = $stmtListaCargos->fetch()) { ?>
                               <option value="<?=$row["codigo"];?>" <?= $row["codigo"] == $cod_padre ? 'selected' : '' ?>>[<?=$row["abreviatura"];?>] - <?=$row["nombre"];?></option>
+                          <?php } ?>
+                      </select>
+                    </div>
+                    </div>
+                </div>
+                <!-- Dependencia Funcional -->
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Dependencia Funcional:</label>
+                    <div class="col-sm-7">
+                    <div class="form-group">
+                      <select name="cod_dep_funcional" id="cod_dep_funcional" data-style="btn btn-info" class="selectpicker form-control form-control-sm" data-show-subtext="true" data-live-search="true">
+                          <option value="">Ninguno</option>
+                          <?php 
+                            $sqlAreas="SELECT codigo, nombre, abreviatura
+                                            FROM cargos 
+                                            WHERE cod_estadoreferencial = 1
+                                            AND codigo != '$codigo'
+                                            ORDER BY nombre";
+                            $stmtListaCargos=$dbh->query($sqlAreas);
+                            while ($row = $stmtListaCargos->fetch()) { ?>
+                              <option value="<?=$row["codigo"];?>" <?= $row["codigo"] == $cod_dep_funcional ? 'selected' : '' ?>>[<?=$row["abreviatura"];?>] - <?=$row["nombre"];?></option>
                           <?php } ?>
                       </select>
                     </div>
