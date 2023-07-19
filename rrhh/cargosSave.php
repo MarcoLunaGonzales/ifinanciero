@@ -15,15 +15,16 @@ try {
     $nombre         = $_POST["nombre"];
     $abreviatura    = $_POST["abreviatura"];
     $cod_tipo_cargo = $_POST["cod_tipo_cargo"]; // Nivel del Cargo
-    $cod_padre      = $_POST["cod_padre"];
+    $cod_padre      = $_POST["cod_padre"];              // Dependencia Jerarquica
+    $cod_dep_funcional = $_POST["cod_dep_funcional"];   // Dependencia Funcional
     $objetivo       = $_POST["objetivo"];
     $cod_estadoreferencial =   1;    
     $created_by     = 1;//$_POST["created_by"];
     $modified_by    = 1;//$_POST["modified_by"];
     
     if ($_POST["codigo"] == 0){
-        $stmt = $dbh->prepare("INSERT INTO cargos(nombre,abreviatura,cod_tipo_cargo,cod_estadoreferencial,created_by,modified_by,objetivo,cod_padre) 
-        values (:nombre, :abreviatura,:cod_tipo_cargo, :cod_estadoreferencial,:created_by,:modified_by,:objetivo,:cod_padre)");
+        $stmt = $dbh->prepare("INSERT INTO cargos(nombre,abreviatura,cod_tipo_cargo,cod_estadoreferencial,created_by,modified_by,objetivo,cod_padre,cod_dep_funcional) 
+        values (:nombre, :abreviatura,:cod_tipo_cargo, :cod_estadoreferencial,:created_by,:modified_by,:objetivo,:cod_padre,:cod_dep_funcional)");
         //Bind
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':abreviatura', $abreviatura);
@@ -33,6 +34,7 @@ try {
         $stmt->bindParam(':modified_by', $modified_by);
         $stmt->bindParam(':objetivo', $objetivo);
         $stmt->bindParam(':cod_padre', $cod_padre);
+        $stmt->bindParam(':cod_dep_funcional', $cod_dep_funcional);
         $flagSuccess=$stmt->execute();
         $tabla_id = $dbh->lastInsertId();
         showAlertSuccessError($flagSuccess,$urlListCargos);
@@ -41,7 +43,7 @@ try {
     } else {//update
 
         $stmt = $dbh->prepare("UPDATE cargos 
-            SET nombre=:nombre,abreviatura=:abreviatura,cod_tipo_cargo=:cod_tipo_cargo,cod_estadoreferencial=:cod_estadoreferencial,modified_by=:modified_by,objetivo=:objetivo,cod_padre=:cod_padre
+            SET nombre=:nombre,abreviatura=:abreviatura,cod_tipo_cargo=:cod_tipo_cargo,cod_estadoreferencial=:cod_estadoreferencial,modified_by=:modified_by,objetivo=:objetivo,cod_padre=:cod_padre,cod_dep_funcional=:cod_dep_funcional
             WHERE codigo = :codigo");
         //bind
         $stmt->bindParam(':codigo', $codigo);
@@ -52,6 +54,7 @@ try {
         $stmt->bindParam(':modified_by', $modified_by);
         $stmt->bindParam(':objetivo', $objetivo);
         $stmt->bindParam(':cod_padre', $cod_padre);
+        $stmt->bindParam(':cod_dep_funcional', $cod_dep_funcional);
         
         $flagSuccess=$stmt->execute();
         

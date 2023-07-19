@@ -10,9 +10,11 @@ $dbh = new Conexion();
 
 $stmt = $dbh->prepare("SELECT c.codigo,UPPER(c.nombre) as nombre,c.objetivo,c.abreviatura,c.cod_tipo_cargo,
                   (SELECT tc.nombre FROM tipos_cargos_personal tc WHERE tc.codigo=c.cod_tipo_cargo) AS nombre_tipo_cargo,
-                  UPPER(cpadre.nombre) nombre_dependencia
+                  UPPER(cpadre.nombre) as nombre_dependencia,
+                  UPPER(cfuncional.nombre) as nombre_dependencia_funcional
                 FROM cargos c
                 LEFT JOIN cargos cpadre ON cpadre.codigo = c.cod_padre
+                LEFT JOIN cargos cfuncional ON cfuncional.codigo = c.cod_dep_funcional
                 WHERE c.cod_estadoreferencial=1 ORDER BY c.nombre");
 //ejecutamos
 $stmt->execute();
@@ -24,6 +26,7 @@ $stmt->bindColumn('abreviatura', $abreviatura);
 $stmt->bindColumn('cod_tipo_cargo', $cod_tipo_cargo);
 $stmt->bindColumn('nombre_tipo_cargo', $nombre_tipo_cargo);
 $stmt->bindColumn('nombre_dependencia', $nombre_dependencia);
+$stmt->bindColumn('nombre_dependencia_funcional', $nombre_dependencia_funcional);
 
 ?>
 
@@ -57,7 +60,8 @@ $stmt->bindColumn('nombre_dependencia', $nombre_dependencia);
                           <th width="230">Objetivo</th>
                           <th width="10">Abreviatura</th>
                           <th width="10">Nivel del Cargo</th>
-                          <th width="10">Dependencia</th>
+                          <th width="10">Dependencia Jerárquica</th>
+                          <th width="10">Dependencia Funcional</th>
                           <th width="80"></th>
                         </tr>
                       </thead>
@@ -71,6 +75,7 @@ $stmt->bindColumn('nombre_dependencia', $nombre_dependencia);
                               <td><?=$abreviatura;?></td>
                               <td><?=$nombre_tipo_cargo;?></td>
                               <td><?=$nombre_dependencia;?></td>
+                              <td><?=$nombre_dependencia_funcional;?></td>
                               <td class="td-actions text-right">
                               <?php
                                 if($globalAdmin==1){
