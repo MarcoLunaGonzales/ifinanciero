@@ -146,6 +146,7 @@ switch ($filtro) {
             /********************************************************/
             /* Desde aqui el nuevo calculo de saldos para la libreta*/
             /********************************************************/
+            $nuevoSaldo=0;
             if($fecha>="2023-01-01 00:00:00"){
               //echo "vamos 2023";
               $sqlSaldosNuevo="SELECT sum(cd.debe-cd.haber)as saldo from libretas_bancariasdetalle ld, comprobantes c, comprobantes_detalle cd where c.codigo=cd.cod_comprobante and cd.cod_libretabancariadet=ld.codigo and 
@@ -157,7 +158,11 @@ switch ($filtro) {
                   $montoTotalUtilizadoLibretaNuevo=$resultSaldosNuevo['saldo'];
               }
             }
-            $nuevoSaldo=$monto-$montoTotalUtilizadoLibretaNuevo-$montoComprobantesEnlazadosLibreta;
+            if($monto>0){
+              $nuevoSaldo=$monto-$montoTotalUtilizadoLibretaNuevo-$montoComprobantesEnlazadosLibreta;
+            }else{
+              $nuevoSaldo=$monto+$montoTotalUtilizadoLibretaNuevo+$montoComprobantesEnlazadosLibreta;
+            }
             /********************************************************/
             /* Fin Nuevo Calculo de Saldos*/
             /********************************************************/
@@ -179,8 +184,13 @@ switch ($filtro) {
             /*fin quitar*/
 
 
+            /***** AQUI UTILIZAMOS EL NUEVO SALDO  ******/
+            $saldo=$nuevoSaldo;
+            /***** FIN  NUEVO SALDO ******/
+
 
             $totalMonto+=(float)$saldo;
+            
             $montoMonto+=(float)$monto;
 
             //echo $totalMonto. " saldo ".$montoMonto;
@@ -196,7 +206,8 @@ switch ($filtro) {
               </td>      
               <td class="text-left"><?=$agencia?></td>
               <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-              <td class="text-right"><?=number_format($saldo,2,".",",")?><br><small class="text-danger font-weight-bold"><?=number_format($nuevoSaldo,2,".",",")?></small></td>
+              <!--td class="text-right"><?=number_format($saldo,2,".",",")?><br><small class="text-danger font-weight-bold"><?=number_format($nuevoSaldo,2,".",",")?></small></td-->
+              <td class="text-right"><span class="text-danger font-weight-bold"><?=number_format($nuevoSaldo,2,".",",")?></span></td>
               <td class="text-right"><?=$nro_documento?></td>
               <?php 
             } 
