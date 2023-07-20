@@ -947,6 +947,9 @@
 		if ($_GET['opcion']=='areasLista') {
 			require_once('rrhh/areasLista.php'); //ok
 		}
+		if ($_GET['opcion']=='areasListaInactivo') {
+			require_once('rrhh/areasListaInactivo.php'); //Desactivados
+		}
 		if ($_GET['opcion']=='areasForm') {
 			$codigo=$_GET['codigo'];
 			require_once('rrhh/areasForm.php');

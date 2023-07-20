@@ -36,6 +36,12 @@ $stmt->bindColumn('nombre_padre', $nombre_padre);
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
                   <h4 class="card-title"><?=$nombrePluralAreas?></h4>
+                  <h4 align="right">
+                    <!-- Lista de Inactivos -->
+                    <a style="height:10px;width: 10px; color: #ffffff;background-color: #f44336;border-radius: 3px;border: 2px solid #f44336;" href="?opcion=areasListaInactivo" title="Areas Inactivos">
+                      <i class="material-icons">list</i>
+                    </a>
+                  </h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
