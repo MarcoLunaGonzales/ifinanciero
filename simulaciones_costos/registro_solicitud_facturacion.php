@@ -1,6 +1,5 @@
 <?php
 //error_reporting(0);
-
 require_once 'conexion.php';
 require_once 'conexion_externa.php';
 require_once 'styles.php';
@@ -195,6 +194,9 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
 $contadorRegistros=0;
 
 // $descuento_cliente=0;
+
+// Verificación de Inputs Form Factura
+$estado_inputs = obtenerValorConfiguracion(110);
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -583,7 +585,7 @@ $contadorRegistros=0;
                                             <div class="row">
                                                 <div class="col-md-8">
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control" id="montoDistribucion" placeholder="Monto a Pagar">
+                                                        <input type="text" class="form-control" id="montoDistribucion" placeholder="Monto a Pagar" step="0.01">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
@@ -808,14 +810,15 @@ $contadorRegistros=0;
                                                         <input type="text" class="form-control" name="modal_importe_pagado_dos<?=$iii?>" id="modal_importe_pagado_dos<?=$iii?>" readonly value="<?=number_format($monto_total_pagado,2);?>">
                                                     </td>
                                                     <td>
-                                                        <input type="number" step="0.01" max="<?=$saldo?>" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?>>
+                                                        <input type="number" step="0.01" max="<?=$saldo?>" id="importe_a_pagar<?=$iii?>" name="importe_a_pagar<?=$iii?>" class="form-control text-primary text-right"  value="<?=$saldo?>" onkeyup="verificar_item_activo(<?=$iii?>)" <?=$sw2?> <?=$estado_inputs==0?'readonly':''?>>
                                                     </td>
                                                     <!-- checkbox -->
                                                     <td>
                                                         <?php if($sw2!="readonly style='background-color:#cec6d6;'"){?>
                                                             <div class="togglebutton">
                                                                <label>
-                                                                 <input type="checkbox"  id="modal_check<?=$iii?>" onchange="calcularTotalFilaServicio2Costos()" <?=$sw?> >
+                                                                 <input type="checkbox" class="estadoInput" id="modal_check<?=$iii?>" 
+                                                                 <?=$estado_inputs==0 ? '' : 'onchange="calcularTotalFilaServicio2Costos()"';?> <?=$sw?>>
                                                                  <span class="toggle"></span>
                                                                </label>
                                                            </div>
@@ -1029,25 +1032,69 @@ $contadorRegistros=0;
     /**
      * Distribución de monto
      */
+    let estado_input = <?=$estado_inputs?>;         // Estado Inputs (Variables de Configuración)
     $('#btnDistribuir').on('click', function(){
+        // Monto de dsitribución
         var montoDistribucion = parseFloat($('#montoDistribucion').val());
+        // Verificación de Monto Total
+        var montoTotal = 0;
         $('[id^=modal_check]').each(function() {
             var row = $(this).closest('tr');
-            var saldo           = parseFloat(row.find('[id^=modal_importe_dos]').val() - row.find('[id^=modal_importe_pagado_dos]').val());
-            var importe_a_pagar = row.find('[id^=importe_a_pagar]');
-            if (montoDistribucion > 0) {
-                let total = montoDistribucion > saldo ? saldo : montoDistribucion;
-                importe_a_pagar.val(total);
-                // Monto Distribución
-                montoDistribucion = parseFloat(montoDistribucion-total).toFixed(2);
-                // Archivar el checkbox
-                $(this).prop('checked', true);
-            }else{
-                importe_a_pagar.val(saldo);
-                // Desactivar el checkbox
-                $(this).prop('checked', false);
-            }
+            var saldo  = parseFloat(row.find('[id^=modal_importe_dos]').val() - row.find('[id^=modal_importe_pagado_dos]').val());
+            saldo      = (saldo < 0) ? 0 : saldo;
+            montoTotal += saldo;
         });
-        calcularTotalFilaServicio2Costos();
+        // Verificación de monto ingresado
+        if(montoDistribucion < 0){
+            Swal.fire({
+                type: 'warning',
+                title: 'Ops!',
+                text: 'El monto de distribución ingresado no debe ser menor a cero.',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Aceptar'
+            });
+        }else if(montoDistribucion <= montoTotal){
+            /**
+             * Modificacion de montos de acuerdo al monto de distribución
+             */
+            $('[id^=modal_check]').each(function() {
+                var row = $(this).closest('tr');
+                var saldo = parseFloat(row.find('[id^=modal_importe_dos]').val() - row.find('[id^=modal_importe_pagado_dos]').val());
+                saldo     = (saldo < 0) ? 0 : saldo;
+                var importe_a_pagar = row.find('[id^=importe_a_pagar]');
+                if (montoDistribucion > 0) {
+                    let total = montoDistribucion > saldo ? saldo : montoDistribucion;
+                    importe_a_pagar.val(total);
+                    // Monto Distribución
+                    montoDistribucion = parseFloat(montoDistribucion-total).toFixed(2);
+                    // Archivar el checkbox
+                    $(this).prop('checked', true);
+                }else{
+                    importe_a_pagar.val(saldo);
+                    // Desactivar el checkbox
+                    $(this).prop('checked', false);
+                }
+            });
+            calcularTotalFilaServicio2Costos();
+        }else{
+            Swal.fire({
+                type: 'warning',
+                title: 'Ops!',
+                text: 'El monto de distribución ingresado no debe ser mayor a la suma total del saldo.',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    });
+    /**
+     * Mantener estado de input de valores
+     */
+    $('.estadoInput').on('change', function() {
+        if(estado_input==0){
+            // Obtener el estado actual del checkbox
+            var isChecked = $(this).is(':checked');
+            // Alternar el estado del checkbox
+            $(this).prop('checked', (isChecked?false:true));
+        }
     });
 </script>

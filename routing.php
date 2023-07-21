@@ -2030,6 +2030,9 @@
 		if ($_GET['opcion']=='areasMapa') { 		// MAPA AREA(Cargos)
 			require_once('rrhh/areasMapa.php');
 		}
+		if ($_GET['opcion']=='areasMapaPersonal') { 		// MAPA AREA(Cargos[Personal])
+			require_once('rrhh/areasMapaPersonal.php');
+		}
 		
 	}else{
 		//require("paginaprincipal.php");

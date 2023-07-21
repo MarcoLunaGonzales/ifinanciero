@@ -30,7 +30,7 @@ require_once 'styles.php';
                             <i class="material-icons">map</i>
                         </div>
                         <div class="text-center">
-                            <h4 class="card-title"><b>Mapa de Áreas y Cargos</b></h4>
+                            <h4 class="card-title"><b>Mapa de Áreas y Cargos [Personal]</b></h4>
                         </div>
                     </div>
                     <div class="card-body pl-5 pr-5">
@@ -56,7 +56,7 @@ require_once 'styles.php';
      */
     $(document).ready(function() {
         $.ajax({
-            url: 'rrhh/ajaxMapaAreasOficinas.php',
+            url: 'rrhh/ajaxMapaAreasCargosPersonal.php',
             method: 'POST',
             dataType: 'json',
             success: function(response) {

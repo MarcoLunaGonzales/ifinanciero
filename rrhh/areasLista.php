@@ -113,6 +113,8 @@ $stmt->bindColumn('nombre_padre', $nombre_padre);
                     <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormAreas;?>&codigo=0'">Registrar</button>
                     <!-- Mapa de Areas -->
                     <a class="btn btn-info" href="index.php?opcion=areasMapa"><i class="material-icons">map</i> Mapa áreas</a>
+                    <!-- Mapa de Areas Personal -->
+                    <a class="btn btn-warning" href="index.php?opcion=areasMapaPersonal"><i class="material-icons">map</i> Mapa personal</a>
               </div>
               <?php
               }
