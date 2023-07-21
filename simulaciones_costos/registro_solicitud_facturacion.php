@@ -196,7 +196,7 @@ $contadorRegistros=0;
 // $descuento_cliente=0;
 
 // Verificación de Inputs Form Factura
-$estado_inputs = obtenerValorConfiguracion(110);
+$estado_inputs = obtenerValorConfiguracion(112);
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
