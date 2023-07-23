@@ -111,7 +111,7 @@ if($sw==2 || $sw==1){//procesar planilla
 
 	$flagSuccessIP=0;
 	$flagSuccessIPMD=0;
-	$procesado_reprocesado=1
+	$procesado_reprocesado=1;
 	
 	$minimo_salarial=obtenerValorConfiguracionPlanillas(1);
 	// fin de valores de configruacion

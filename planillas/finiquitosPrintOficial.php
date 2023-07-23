@@ -32,7 +32,7 @@ try{
     $vacacion_total=$result['vacaciones_dias_monto']+$result['vacaciones_duodecimas_monto'];
     $aguinaldo_total=$result['aguinaldo_anios_monto']+$result['aguinaldo_meses_monto']+$result['aguinaldo_dias_monto'];
     //cantidad de dias,meses y años trabajados
-    $datos=obtenerTiempoDosFechas($result['fecha_ingreso'],$result['fecha_retiro'])
+    $datos=obtenerTiempoDosFechas($result['fecha_ingreso'],$result['fecha_retiro']);
     
 
     $anios_servicio=$datos[0];

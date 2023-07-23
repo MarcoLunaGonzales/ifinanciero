@@ -51,7 +51,7 @@ if(isset($_FILES['file_excel'])){
 
 
 
-<?php
+// <?php
 
 require_once('../assets/importar_excel/php-excel-reader/excel_reader2.php');
 require_once('../assets/importar_excel/SpreadsheetReader.php');

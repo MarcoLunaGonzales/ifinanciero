@@ -76,7 +76,7 @@
         
         $codComprobanteX=$rowComp['codigo_comprobante'];
         //$nombreComprobanteX=nombreComprobante($codComprobanteX);
-        $nombreComprobanteX="xxx"
+        $nombreComprobanteX="xxx";
         $codigoCuenta=$rowComp['numero'];
         $nombreCuenta=$rowComp['nombre'];
         
@@ -87,7 +87,7 @@
           }
         }
         //$tc=obtenerValorTipoCambio($moneda,strftime('%Y-%m-%d',strtotime($fechaX)));
-        $tc=1
+        $tc=1;
         if($tc==0){$tc=1;}
         
         $saldoX=0;
