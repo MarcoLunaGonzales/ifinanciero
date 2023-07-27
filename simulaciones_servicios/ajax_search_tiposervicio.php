@@ -11,10 +11,10 @@
         // Realizar la consulta para obtener la lista de usuarios
         if($plantilla == 2){
             // TCP
-            $sql = "SELECT DISTINCT(codigo_n2), descripcion_n2 FROM cla_servicios WHERE codigo_n1=108 AND vigente = 1 AND Aprobado = 1 ORDER BY 1;";
+            $sql = "SELECT DISTINCT(codigo_n2), descripcion_n2, abreviatura_n2 FROM cla_servicios WHERE codigo_n1=108 AND vigente = 1 AND Aprobado = 1 ORDER BY 1;";
         }else{
             // TCS
-            $sql = "SELECT DISTINCT(codigo_n2), descripcion_n2 FROM cla_servicios WHERE codigo_n1=109 AND vigente = 1 AND Aprobado = 1 ORDER BY 1;";
+            $sql = "SELECT DISTINCT(codigo_n2), descripcion_n2, abreviatura_n2 FROM cla_servicios WHERE codigo_n1=109 AND vigente = 1 AND Aprobado = 1 ORDER BY 1;";
         }
 
         $stmt = $dbh->prepare($sql);

@@ -4183,7 +4183,7 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
         // Éxito en la solicitud AJAX
         // Llenar el select con los datos obtenidos
         $.each(response.data, function(key, value) {
-          select.append($('<option>').text(value.descripcion_n2).attr('value', value.codigo_n2));
+          select.append($('<option>').text(value.abreviatura_n2+" - "+value.descripcion_n2).attr('value', value.codigo_n2));
         });
       },
       error: function() {
