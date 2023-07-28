@@ -146,8 +146,8 @@ try {
                     $importeInsert_ajax=round($importeInsert_ajax,2);                    
                     $descuento_por_Insert_ajax=$_POST["descuento_por_add".$i];
                     $descuento_bob_Insert_ajax=$_POST["descuento_bob_add".$i]; 
-                    $sql="INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
-                    values ('$cod_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax','$descuento_por_Insert_ajax','$descuento_bob_Insert_ajax',2)";
+                    $sql="INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item, id_servicio) 
+                    values ('$cod_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax','$descuento_por_Insert_ajax','$descuento_bob_Insert_ajax',2, '$cod_simulacion')";
                     $stmt = $dbh->prepare($sql);                
                     $flagSuccess=$stmt->execute();                
                 }
@@ -220,8 +220,8 @@ try {
                         // }
                     }
                     if($servicioInsert!=0 || $servicioInsert!=""){
-                        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
-                        values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',$insertTipo_item)");
+                        $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,id_servicio) 
+                        values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importe_a_pagar_Insert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',$insertTipo_item, '$cod_simulacion')");
                         $flagSuccess=$stmt->execute();
                     }
                 }
@@ -237,8 +237,8 @@ try {
                     $importeInsert_ajax=round($importeInsert_ajax,2);
                     $descuento_por_Insert_ajax=$_POST["descuento_por_add".$i];
                     $descuento_bob_Insert_ajax=$_POST["descuento_bob_add".$i]; 
-                    $sql="INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item) 
-                    values ('$cod_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax','$descuento_por_Insert_ajax','$descuento_bob_Insert_ajax',2)";
+                    $sql="INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,id_servicio) 
+                    values ('$cod_facturacion','$servicioInsert_ajax','$CantidadInsert_ajax','$importeInsert_ajax','$DescricpionInsert_ajax','$descuento_por_Insert_ajax','$descuento_bob_Insert_ajax',2, '$cod_simulacion')";
                     $stmt = $dbh->prepare($sql);                
                     $flagSuccess=$stmt->execute();                
                 }      
