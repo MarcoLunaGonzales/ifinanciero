@@ -104,7 +104,8 @@ $resp_cargo_sup = $stmt->fetch(PDO::FETCH_ASSOC);
 // * Cargos Dependientes
 $sql = "SELECT c.codigo, c.nombre as nombre, c.abreviatura, c.objetivo
             FROM cargos c
-            WHERE c.cod_padre = '$cod_cargo'";
+            WHERE c.cod_padre = '$cod_cargo'
+            AND c.cod_estadoreferencial = 1";
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $resp_cargosDep = $stmt->fetchAll(PDO::FETCH_ASSOC);
