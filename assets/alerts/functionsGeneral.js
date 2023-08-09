@@ -3309,6 +3309,10 @@ function guardarSimulacionServicio(){
   console.log("personal: "+cod_personal);
 
   var organismo_certificador=$("#organismo_certificador").val();
+
+  // Nuevo campo de COD_SERVICIO
+  var cod_servicio = $("#cod_servicio").val();
+
   if($("#productos_div").hasClass("d-none")){
    if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
    Swal.fire('Informativo!','Debe llenar los campos  1 !','warning'); 
@@ -3325,7 +3329,11 @@ function guardarSimulacionServicio(){
     var des_serv=$("#d_servicio").val();
     var iaf_primario=$("#iaf_primario_tcs").val();
     var iaf_secundario=$("#iaf_secundario_tcs").val();
-    var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,
+
+
+    var parametros={
+    "cod_servicio":cod_servicio,
+    "oficina_servicio":oficina_servicio,"des_serv":des_serv,
     
     "normas_tiposerviciotext":normas_tiposerviciotext,
     // "normas_tiposervicio":JSON.stringify(normas_tiposervicio),
@@ -3393,7 +3401,9 @@ function guardarSimulacionServicio(){
       var iaf_secundario=$("#iaf_secundario").val();
       objeto=0;
       var des_serv=$("#d_servicio_p").val();
-      var parametros={"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_servicio":tipoServicio,
+      var parametros={
+        "cod_servicio":cod_servicio,
+        "oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_servicio":tipoServicio,
       // "tipo_cliente":tipoCliente,
       // "region_cliente":regionCliente,
       
@@ -4166,6 +4176,9 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
    }
     ajax.send(null);
  }
+ /**
+  * Busqueda de tipo de Servicio en base a Plantilla de Servicios
+  */
  function searchTipoServicio(){
     // Obtener referencia al select
     var select = $('#tipo_servicio');
@@ -4192,6 +4205,38 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
       }
     });
  }
+ /**
+  * Busqueda de Servicio en base a Tipo de Servicio
+  */
+ function searchServicio(tipo = 0){
+  // Obtener referencia al select
+  var select = $('#cod_servicio');
+  select.empty();
+  select.append($('<option>').text('SELECCIONAR SERVICIO').attr('value', ''));
+
+  // Realizar la solicitud AJAX al servidor
+  let cod_tipo_servicio = $('#tipo_servicio').val();;
+
+  let url_search = (tipo == 1) ? 'ajax_search_servicio.php' : 'simulaciones_servicios/ajax_search_servicio.php';
+  $.ajax({
+    url: url_search,
+    method: 'POST',
+    dataType: 'json',
+    data: { cod_tipo_servicio: cod_tipo_servicio },
+    success: function(response) {
+      // Éxito en la solicitud AJAX
+      // Llenar el select con los datos obtenidos
+      $.each(response.data, function(key, value) {
+        select.append($('<option>').text(value.descripcion).attr('value', value.codigo));
+      });
+      select.selectpicker("refresh");
+    },
+    error: function() {
+      // Error en la solicitud AJAX
+      console.log('Error al obtener los datos.');
+    }
+  });
+}
 
  function listarDatosPlantillaSim(codigo){
   searchTipoServicio();
@@ -8579,7 +8624,12 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
 
       //datos afnor
       var des_serv = $("#modal_des_serv").val();
+
+      // Servicio
+      let cod_servicio = $("#cod_servicio").val();
+
       var parametros = {
+        "cod_servicio":cod_servicio,
         "normas_nac":JSON.stringify(normas_nac),
         "normas_int":JSON.stringify(normas_int),
         "mod_afnor":mod_afnor,"mod_region_cliente":mod_region_cliente,"mod_tipo_cliente":mod_tipo_cliente,"mod_cliente":mod_cliente,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"organismo_certificador":organismo_certificador,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
