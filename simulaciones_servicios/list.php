@@ -625,8 +625,6 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
           }
       });
     });
-    
-
     /**
      * Obtiene lista de Solicitud de Recursos
      */
