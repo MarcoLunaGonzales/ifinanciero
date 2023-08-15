@@ -560,7 +560,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th style="width: 10%;">CODIGO</th>
+                            <th style="width: 10%;">Código</th>
                             <th style="width: 40%;">Nro.</th>
                             <th style="width: 40%;">Fecha</th>
                             <th style="width: 10%;">Acciones</th>
