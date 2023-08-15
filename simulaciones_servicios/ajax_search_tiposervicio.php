@@ -8,7 +8,7 @@
     try{
         $dbh = new Conexion();
         $sql = '';
-        // Realizar la consulta para obtener la lista de usuarios
+        // Realizar la consulta para obtener la lista de tipo de servicio
         if($plantilla == 2){
             // TCP
             $sql = "SELECT DISTINCT(codigo_n2), descripcion_n2, abreviatura_n2 FROM cla_servicios WHERE codigo_n1=108 AND vigente = 1 AND Aprobado = 1 ORDER BY 1;";
