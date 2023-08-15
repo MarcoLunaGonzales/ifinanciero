@@ -820,6 +820,77 @@
                         </div>
                       </div> 
                       <?php 
+                      // TCP
+                      if($codigoPlan == 2){
+                      ?>
+                      <div class="row">
+                        <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
+                        <div class="col-sm-7">
+                          <div class="form-group">
+                            <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);">       
+                                  <?php
+                                  $plantilla_servicio = '';
+                                  if($codigoPlan == 2){
+                                    $plantilla_servicio = 108;
+                                  }else if($codigoPlan == 3){
+                                    $plantilla_servicio = 109;
+                                  }
+                                  $tituloTipoServ="";
+                                  $indexOb=0;
+                                  //  $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=$plantilla_servicio and vigente=1 order by 2"); // Versión antigua
+                                  $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre FROM cla_servicios WHERE codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1 ORDER BY 1");
+                                  $stmt->execute();
+                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoX=$row['codigo_n2'];
+                                    $nombreX=$row['nombre'];
+                                    if($indexOb==0){
+                                        $tituloTipoServ=obtenerServiciosClaServicioTipoNombre($codigoX);
+                                    }
+                                    if($idTipoServicioX==$codigoX){
+                                      ?>
+                                        <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option> 
+                                        <?php
+                                    }else{
+                                      
+                                      if($idServicioSimX==0){
+                                        ?>
+                                        <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                        <?php  
+                                      }
+                                    }
+                                    $indexOb++;
+                                      }
+                                      ?>
+                              </select>
+                          </div>
+                          </div>
+                      </div>
+                      <!-- Nuevo campo adicionado: Servicio -->
+                      <div class="row">
+                        <label class="col-sm-2 col-form-label">Servicio</label>
+                        <div class="col-sm-7">
+                          <div class="form-group">
+                            <select class="selectpicker form-control" data-live-search="true" name="cod_servicio" id="cod_servicio" data-style="btn btn-success" required>
+                              <?php
+                                $stmt = $dbh->prepare("SELECT c.IdClasificador as codigo, c.Descripcion as descripcion
+                                                      FROM ibnorca.clasificador c
+                                                      INNER JOIN ibnorca.tiposervicio_servicio ts ON ts.idServicio=c.IdClasificador
+                                                      WHERE ts.idTipoServicio = '$idTipoServicioX'");
+                                $stmt->execute();
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['descripcion'];
+                              ?>
+                                <option value="<?=$codigoX;?>" <?=($cod_servicio==$codigoX) ? 'selected' : ''?>><?=$nombreX;?></option> 
+                              <?php
+                                }
+                              ?>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <?php } ?>
+                      <?php 
                        if($codAreaX==38){
                         ?>
                        <div class="row">
@@ -856,73 +927,79 @@
                         </div>
                        </div>
                       </div><!--row-->
-                     <div class="row">
-                       <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
-                       <div class="col-sm-7">
-                        <div class="form-group">
-                          <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);">       
-                                <?php
-                                $plantilla_servicio = '';
-                                if($codigoPlan == 2){
-                                  $plantilla_servicio = 108;
-                                }else if($codigoPlan == 3){
-                                  $plantilla_servicio = 109;
-                                }
-                                $tituloTipoServ="";
-                                $indexOb=0;
-                                //  $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=$plantilla_servicio and vigente=1 order by 2"); // Versión antigua
-                                 $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre FROM cla_servicios WHERE codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1 ORDER BY 1");
-                                 $stmt->execute();
-                                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                  $codigoX=$row['codigo_n2'];
-                                  $nombreX=$row['nombre'];
-                                  if($indexOb==0){
-                                      $tituloTipoServ=obtenerServiciosClaServicioTipoNombre($codigoX);
+                      <?php 
+                      // TCS
+                      if($codigoPlan == 3){
+                      ?>
+                      <div class="row">
+                        <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
+                        <div class="col-sm-7">
+                          <div class="form-group">
+                            <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);">       
+                                  <?php
+                                  $plantilla_servicio = '';
+                                  if($codigoPlan == 2){
+                                    $plantilla_servicio = 108;
+                                  }else if($codigoPlan == 3){
+                                    $plantilla_servicio = 109;
                                   }
-                                  if($idTipoServicioX==$codigoX){
-                                     ?>
-                                      <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option> 
-                                      <?php
-                                  }else{
-                                    
-                                    if($idServicioSimX==0){
+                                  $tituloTipoServ="";
+                                  $indexOb=0;
+                                  //  $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=$plantilla_servicio and vigente=1 order by 2"); // Versión antigua
+                                  $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre FROM cla_servicios WHERE codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1 ORDER BY 1");
+                                  $stmt->execute();
+                                    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoX=$row['codigo_n2'];
+                                    $nombreX=$row['nombre'];
+                                    if($indexOb==0){
+                                        $tituloTipoServ=obtenerServiciosClaServicioTipoNombre($codigoX);
+                                    }
+                                    if($idTipoServicioX==$codigoX){
                                       ?>
-                                      <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
-                                      <?php  
+                                        <option value="<?=$codigoX;?>" selected><?=$nombreX;?></option> 
+                                        <?php
+                                    }else{
+                                      
+                                      if($idServicioSimX==0){
+                                        ?>
+                                        <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                                        <?php  
+                                      }
                                     }
-                                  }
-                                  $indexOb++;
-                                    }
-                                    ?>
+                                    $indexOb++;
+                                      }
+                                      ?>
+                              </select>
+                          </div>
+                          </div>
+                      </div>
+                      <!-- Nuevo campo adicionado: Servicio -->
+                      <div class="row">
+                        <label class="col-sm-2 col-form-label">Servicio</label>
+                        <div class="col-sm-7">
+                          <div class="form-group">
+                            <select class="selectpicker form-control" data-live-search="true" name="cod_servicio" id="cod_servicio" data-style="btn btn-success" required>
+                              <?php
+                                $stmt = $dbh->prepare("SELECT c.IdClasificador as codigo, c.Descripcion as descripcion
+                                                      FROM ibnorca.clasificador c
+                                                      INNER JOIN ibnorca.tiposervicio_servicio ts ON ts.idServicio=c.IdClasificador
+                                                      WHERE ts.idTipoServicio = '$idTipoServicioX'");
+                                $stmt->execute();
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                  $codigoX=$row['codigo'];
+                                  $nombreX=$row['descripcion'];
+                              ?>
+                                <option value="<?=$codigoX;?>" <?=($cod_servicio==$codigoX) ? 'selected' : ''?>><?=$nombreX;?></option> 
+                              <?php
+                                }
+                              ?>
                             </select>
-                        </div>
-                        </div>
-                     </div>
-                    
-                    <!-- Nuevo campo adicionado: Servicio -->
-                    <div class="row">
-                      <label class="col-sm-2 col-form-label">Servicio</label>
-                      <div class="col-sm-7">
-                        <div class="form-group">
-                          <select class="selectpicker form-control" data-live-search="true" name="cod_servicio" id="cod_servicio" data-style="btn btn-success" required>
-                            <?php
-                              $stmt = $dbh->prepare("SELECT c.IdClasificador as codigo, c.Descripcion as descripcion
-                                                    FROM ibnorca.clasificador c
-                                                    INNER JOIN ibnorca.tiposervicio_servicio ts ON ts.idServicio=c.IdClasificador
-                                                    WHERE ts.idTipoServicio = '$idTipoServicioX'");
-                              $stmt->execute();
-                              while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                $codigoX=$row['codigo'];
-                                $nombreX=$row['descripcion'];
-                            ?>
-                              <option value="<?=$codigoX;?>" <?=($cod_servicio==$codigoX) ? 'selected' : ''?>><?=$nombreX;?></option> 
-                            <?php
-                              }
-                            ?>
-                          </select>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                      <?php 
+                      }
+                      ?>
 
                      <!-- SE COMENTA DETALLE PORQUE YA NO SE USA -->
                      <!-- <div class="row d-none" id="div_normastipo">

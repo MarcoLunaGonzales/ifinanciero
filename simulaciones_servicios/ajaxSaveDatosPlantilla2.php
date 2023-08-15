@@ -50,9 +50,9 @@ $sqlEditSetTCP="";
 if($objeto_servicio!=""){
   $sqlEditSet=",cod_objetoservicio='$objeto_servicio'";
 }
-if($tipo_servicio!=""){
   $sqlEditSet.=",id_tiposervicio='$tipo_servicio'";
-}
+  $sqlEditSetTCP.=",id_tiposervicio='$tipo_servicio'";
+
   $sqlEditSet.=",afnor='$mod_afnor'";
 
 if($mod_cliente!=""){
@@ -75,15 +75,16 @@ if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
 if($_POST['tcs']==0){
   $tipo_atributo=1;
   $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos',
-  cod_servicio='$cod_servicio'
-  $sqlEditSetTCP where codigo=$codSimulacion";
+  cod_servicio='$cod_servicio' $sqlEditSetTCP 
+  where codigo=$codSimulacion";
 }else{
   $tipo_atributo=2;
   $atributosDias= json_decode($_POST['sitios_dias']);
   $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos',
-  cod_servicio='$cod_servicio' 
-  $sqlEditSet where codigo=$codSimulacion";
+  cod_servicio='$cod_servicio' $sqlEditSet 
+  where codigo=$codSimulacion";
 }
+echo $sqlUpdatePlantilla;
 
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();

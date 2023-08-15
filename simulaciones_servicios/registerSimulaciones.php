@@ -105,7 +105,7 @@ $fechaActualInput=date("Y-m-d");
                       </div>
                       
                    <div class="row">
-                       <label class="col-sm-2 col-form-label">Personal</label>
+                       <label class="col-sm-2 col-form-label"><span class="text-danger">*</span> Personal</label>
                        <div class="col-sm-6">
                         <div class="row">
                           <div class="col-sm-12">
@@ -131,7 +131,7 @@ $fechaActualInput=date("Y-m-d");
                   </div><!--row-->  
 
                    <div class="row">
-                       <label class="col-sm-2 col-form-label">Cliente</label>
+                       <label class="col-sm-2 col-form-label"><span class="text-danger">*</span> Cliente</label>
                        <div class="col-sm-6">
                         <div class="row">
                           <div class="col-sm-12">
@@ -178,7 +178,7 @@ $fechaActualInput=date("Y-m-d");
                   </div>
 
                   <div class="row">
-                       <label class="col-sm-2 col-form-label">Plantilla de Servicios :</label>
+                       <label class="col-sm-2 col-form-label"><span class="text-danger">*</span> Plantilla de Servicios :</label>
                        <div class="col-sm-7">
                         <div class="form-group">
                                 <select class="selectpicker form-control" name="plantilla_servicio" onchange="listarDatosPlantillaSim(this.value)" id="plantilla_servicio" data-style="<?=$comboColor;?>"  data-live-search="true" title="-- Elija una plantilla --" data-style="select-with-transition" data-actions-box="true"required>
@@ -203,7 +203,7 @@ $fechaActualInput=date("Y-m-d");
                       </div>
                       
                     <div class="row">
-                        <label class="col-sm-2 col-form-label">Organismo Certificador :</label>
+                        <label class="col-sm-2 col-form-label"><span class="text-danger">*</span> Organismo Certificador :</label>
                         <div class="col-sm-7">
                             <div class="form-group">
                                 <select class="selectpicker form-control form-control-sm" name="organismo_certificador[]" id="organismo_certificador" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
@@ -227,7 +227,7 @@ $fechaActualInput=date("Y-m-d");
                     </div>
 
                       <div class="row">
-                       <label class="col-sm-2 col-form-label">Oficina de Servicio</label>
+                       <label class="col-sm-2 col-form-label"><span class="text-danger">*</span> Oficina de Servicio</label>
                        <div class="col-sm-2">
                         <div class="row">
                           <div class="col-sm-12">
@@ -256,7 +256,7 @@ $fechaActualInput=date("Y-m-d");
 
                    <!-- <div id="tiposervicio_div" class="d-none"> -->
                     <div class="row">
-                      <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
+                      <label class="col-sm-2 col-form-label"><span class="text-danger">*</span> Tipo del Servicio</label>
                       <div class="col-sm-7">
                         <div class="form-group">
                           <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio();">
@@ -268,7 +268,7 @@ $fechaActualInput=date("Y-m-d");
                     
                     <!-- Nuevo campo adicionado: Servicio -->
                     <div class="row">
-                      <label class="col-sm-2 col-form-label">Servicio</label>
+                      <label class="col-sm-2 col-form-label"><span class="text-danger">*</span> Servicio</label>
                       <div class="col-sm-7">
                         <div class="form-group">
                           <select class="selectpicker form-control" data-live-search="true" name="cod_servicio" id="cod_servicio" data-style="btn btn-success">

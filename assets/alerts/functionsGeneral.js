@@ -3269,6 +3269,26 @@ function guardarSimulacionCosto(){
 }
 
 function guardarSimulacionServicio(){
+  /**
+   * Validación de campos requeridos
+   */
+  if(
+    $('#codigo_personal').val() === '' ||
+    $('#cliente').val() === '' ||
+    $('#plantilla_servicio').val() === '' ||
+    $('#organismo_certificador').val() === '' ||
+    $('#oficina_servicio').val() === '' ||
+    $('#tipo_servicio').val() === '' ||
+    $('#cod_servicio').val() === ''
+  ){
+    Swal.fire({
+        type: 'warning',
+        title: 'Campos vacíos',
+        text: 'Por favor, completa todos los campos requeridos.',
+    });
+    return false;
+  }
+
   var cod_personal=0;
   if(!($("#codigo_servicioibnorca").length)){
     var idServicio="";
