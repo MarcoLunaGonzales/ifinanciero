@@ -2033,6 +2033,10 @@
 		if ($_GET['opcion']=='areasMapaPersonal') { 		// MAPA AREA(Cargos[Personal])
 			require_once('rrhh/areasMapaPersonal.php');
 		}
+		// Lista de Configuración de Etapas
+		if ($_GET['opcion']=='listaConfiguracionEtapas') {
+			require_once('rrhh/etapaManualAprobacion.php');
+		}
 		
 	}else{
 		//require("paginaprincipal.php");
