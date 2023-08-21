@@ -245,6 +245,11 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                           <td><?=$codigoServicio?></td>
                         
                           <td class="td-actions text-right">
+                            <!-- Lista de Solicitud de recursos -->
+                            <button class="btn btn-default lista_solicitud_recursos" title="Solicitud de Recursos" data-cod_simulacionservicio="<?=$codigo?>">
+                                <i class="material-icons">receipt</i>
+                            </button>
+
                             <?php
                               if($codEstado==4||$codEstado==3||$codEstado==5){
                                
@@ -538,6 +543,43 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
 </div>
 
 
+
+<!-- Modal de Lista de Solicitud de Recursos -->
+<div class="modal fade" id="modalSolicitudRecursos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content card">
+            <div class="card-header card-header-info card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">list</i>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                </button>
+                <h4 class="card-title"><strong>Solicitudes de recursos de la Propuesta</strong></h4>
+            </div>
+
+            <div class="card-body pb-0">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">Código</th>
+                            <th style="width: 40%;">Nro.</th>
+                            <th style="width: 40%;">Fecha</th>
+                            <th style="width: 10%;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recursosTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer pt-0">
+                <button type="button" class="btn btn-info" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Cambiar Estado de Planilla a Cerrado en Vacio
     $('body').on('click','.propuesta_duplicar', function(){
@@ -585,6 +627,58 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
           }
       });
     });
-    
+    /**
+     * Obtiene lista de Solicitud de Recursos
+     */
+    $('.lista_solicitud_recursos').on('click', function(){
+        let formData = new FormData();
+        formData.append('cod_simulacionservicio', $(this).data('cod_simulacionservicio'));
+        $.ajax({
+            url: 'simulaciones_servicios/ajax_listado_recursos.php',
+            type: 'POST',
+            contentType: false,
+            processData: false,
+            data: formData,
+            success: function(resp){
+                let response = JSON.parse(resp);
+                if (response.status === true) {
+                    var recursosTableBody = $('#recursosTableBody');
+                    recursosTableBody.empty();
+                    if (response.data.length === 0) {
+                        recursosTableBody.html('<tr><td colspan="4" class="text-danger">Sin registros</td></tr>');
+                    } else {
+                        $.each(response.data, function(index, data){
+                            var newRow = '<tr>' +
+                                '<td>' + data.codigo + '</td>' +
+                                '<td>' + data.numero + '</td>' +
+                                '<td>' + data.fecha + '</td>' +
+                                "<td><a class='btn btn-primary btn-sm' title='Ver solicitud de recursos' href='solicitudes/imp.php?sol=" + data.codigo + "&mon=1' target='_blank'><i class='material-icons'>link</i></a></td>" +
+                            '</tr>';
+                            recursosTableBody.append(newRow);
+                        });
+                    }
+
+                    $('#modalSolicitudRecursos').modal('show');
+                } else {
+                    Swal.fire({
+                        type: 'warning',
+                        title: 'Ops!',
+                        text: 'No se pudo obtener los datos requeridos.',
+                        showConfirmButton: false,
+                        timer: 3500
+                    });
+                }
+            },
+            error: function(){
+                Swal.fire({
+                    type: 'error',
+                    title: 'Ops!',
+                    text: 'Ocurrió un error en la solicitud.',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+            }
+        })
+    });
     
   </script>
