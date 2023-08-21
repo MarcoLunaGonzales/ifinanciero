@@ -44,6 +44,8 @@ if(isset($_POST['nombre'])){
   $afnor=$_POST['afnor'];
   $codPersonalX=$_POST['codigo_personal'];
 
+  $cod_servicio = $_POST['cod_servicio'];
+
   if(isset($_POST['norma'])){
     $norma=$_POST['norma'];
   }else{
@@ -103,8 +105,8 @@ if(isset($_POST['nombre'])){
   }
   $ingresoPresupuestado=obtenerPresupuestoEjecucionPorAreaAcumulado(0,$areaGeneralPlantilla,2020,12,1)['presupuesto'];//$globalNombreGestion
 
-  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio,cod_objetoservicio,cod_tipoclientenacionalidad,cod_iaf_primario,cod_iaf_secundario,alcance_propuesta,ingreso_presupuestado,descripcion_servicio,cod_unidadorganizacional,cod_tipocliente,fecha_solicitud_cliente) 
-  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$codPersonalX."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$idTipoServicio."','".$objeto_servicio."','".$regionCliente."','".$iafprimario."','".$iafsecundario."','".$alcance."','".$ingresoPresupuestado."','".$des_serv."','".$oficina_servicio."','".$tipoCliente."','".$fecha_solicitud_cliente."')";
+  $sqlInsert="INSERT INTO simulaciones_servicios (codigo, nombre, fecha, cod_plantillaservicio, cod_responsable,dias_auditoria,utilidad_minima,cod_cliente,productos,norma,idServicio,anios,porcentaje_fijo,sitios,afnor,porcentaje_afnor,id_tiposervicio,cod_objetoservicio,cod_tipoclientenacionalidad,cod_iaf_primario,cod_iaf_secundario,alcance_propuesta,ingreso_presupuestado,descripcion_servicio,cod_unidadorganizacional,cod_tipocliente,fecha_solicitud_cliente,cod_servicio) 
+  VALUES ('".$codSimServ."','".$nombre."','".$fecha."', '".$plantilla_servicio."', '".$codPersonalX."','".$dias."','".$utilidad."','".$cliente."','".$productos."','".$norma."','".$id_servicio."','".$anios."','".obtenerValorConfiguracion(32)."','".$sitios."','".$afnor."','".obtenerValorConfiguracion(33)."','".$idTipoServicio."','".$objeto_servicio."','".$regionCliente."','".$iafprimario."','".$iafsecundario."','".$alcance."','".$ingresoPresupuestado."','".$des_serv."','".$oficina_servicio."','".$tipoCliente."','".$fecha_solicitud_cliente."','$cod_servicio')";
   $stmtInsert = $dbh->prepare($sqlInsert);
   $flagsuccess=$stmtInsert->execute();
   array_push($SQLDATOSINSTERT,$flagsuccess);

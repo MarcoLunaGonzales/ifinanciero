@@ -144,7 +144,11 @@ $costoVariablePersonal=obtenerCostosPersonalSimulacionEditado($codigo);
 $ibnorcaC=1;
 $utilidadFueraX=1;
 $mesConf=obtenerValorConfiguracion(6);
-$stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servicios sc join estados_simulaciones es on sc.cod_estadosimulacion=es.codigo where sc.cod_estadoreferencial=1 and sc.codigo='$codigo'");
+$stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado 
+                    FROM simulaciones_servicios sc 
+                    JOIN estados_simulaciones es ON sc.cod_estadosimulacion=es.codigo 
+                    WHERE sc.cod_estadoreferencial=1 
+                    AND sc.codigo='$codigo'");
 			$stmt1->execute();
 			$stmt1->bindColumn('codigo', $codigoX);
             $stmt1->bindColumn('nombre', $nombreX);
@@ -173,6 +177,8 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('cod_cliente', $cod_clienteX);
             $stmt1->bindColumn('cod_tipoclientenacionalidad', $cod_tipoclientenacionalidadX);
             $stmt1->bindColumn('cod_tipocliente', $cod_tipoclienteX);
+            
+            $stmt1->bindColumn('cod_servicio', $cod_servicio);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      

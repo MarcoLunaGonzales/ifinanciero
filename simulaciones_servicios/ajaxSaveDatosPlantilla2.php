@@ -42,6 +42,9 @@ $normas_tiposervicio=json_decode($_POST['normas_tiposervicio']);
 $normas_tiposerviciotext=$_POST['normas_tiposerviciotext'];
 $mod_afnor=$_POST['mod_afnor'];
 
+// Cod_servicio
+$cod_servicio = $_POST['cod_servicio'];
+
 $sqlEditSet="";
 $sqlEditSetTCP="";
 if($objeto_servicio!=""){
@@ -71,12 +74,15 @@ if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
 
 if($_POST['tcs']==0){
   $tipo_atributo=1;
-  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos' $sqlEditSetTCP
-     where codigo=$codSimulacion";
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',productos='$productos',
+  cod_servicio='$cod_servicio'
+  $sqlEditSetTCP where codigo=$codSimulacion";
 }else{
   $tipo_atributo=2;
   $atributosDias= json_decode($_POST['sitios_dias']);
-  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos' $sqlEditSet where codigo=$codSimulacion";
+  $sqlUpdatePlantilla="UPDATE simulaciones_servicios SET  cod_unidadorganizacional='$oficina_servicio',descripcion_servicio='$des_serv', alcance_propuesta='$alcance', utilidad_minima='$ut_i',dias_auditoria='$dia',sitios='$productos',
+  cod_servicio='$cod_servicio' 
+  $sqlEditSet where codigo=$codSimulacion";
 }
 
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
