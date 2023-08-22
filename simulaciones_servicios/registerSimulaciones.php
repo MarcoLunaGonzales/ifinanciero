@@ -259,7 +259,7 @@ $fechaActualInput=date("Y-m-d");
                       <label class="col-sm-2 col-form-label"><span class="text-danger">*</span> Tipo del Servicio</label>
                       <div class="col-sm-7">
                         <div class="form-group">
-                          <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio();">
+                          <select class="selectpicker form-control" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio();excepcionTipoServicio(this.value);">
                           </select>
                         </div>
                       </div>
@@ -467,35 +467,8 @@ $fechaActualInput=date("Y-m-d");
                         </div>
                         </div>
                       </div>
-
-                      <br>
-                      <div class="row">
-                       <label class="col-sm-1 col-form-label">Productos</label>
-                       <div class="col-sm-9">
-                        <div class="form-group">
-                          <!--<input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="warning">-->
-                          <div id="divResultadoListaAtributosProd">
-                            <div class="">
-                              <center><h4><b>SIN REGISTROS</b></h4></center>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-2">
-                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
-                            </button>
-                            <!-- EXCEL -->
-                            <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante()" class="btn btn-primary btn-fab btn-sm" hidden>
-                              <i class="material-icons">content_paste</i>
-                            </a>
-                            <!-- FIN EXCEL -->
-                            <a  title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente('39')" class="btn btn-success btn-fab btn-sm">
-                              <i class="material-icons">replay_circle_filled</i>
-                            </a>
-                        </div>
+                      <!-- SECCIÓN DE PRODUCTOS TRASLADADO AL FINAL -->
                     </div>
-                    
-                      </div>
                       
                     <div id="sitios_div" class="d-none">
                       <div class="row">
@@ -640,37 +613,97 @@ $fechaActualInput=date("Y-m-d");
                         </div>
                         </div>
                       </div>
-                     <br>
-                     <div class="row">
-                       <label class="col-sm-1 col-form-label">Sitios</label>
-                       <div class="col-sm-9">
-                        <div class="form-group">
-                          <!--<input type="readonly" value="" class="form-control tagsinput" name="sitios" id="sitios" data-role="tagsinput" required data-color="success">-->
-                          <div id="divResultadoListaAtributos">
-                            <div class="">
-                              <center><h4><b>SIN REGISTROS</b></h4></center>
-                            </div>
-                          </div>
-                        </div>
-                        </div>
-                        <div class="col-sm-2">
-                          <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
-                          </button>
-                          <!-- EXCEL -->
-                          <a title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante_tcs()" class="btn btn-primary btn-fab btn-sm" hidden>
-                            <i class="material-icons">content_paste</i>
-                          </a>
-                          <!-- FIN EXCEL -->
-                          <a title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente('38')" class="btn success-success btn-fab btn-sm">
-                            <i class="material-icons">replay_circle_filled</i>
-                          </a>
-                        </div>       
-                     </div>
+                      <!-- SECCIÓN DE SITIOS TRASLADADO AL FINAL -->
                      
                     </div>
                       
         </div>
+        
         <br>
+        <div class="card-body">
+          <!-- SECCIÓN DE PRODUCTOS -->
+          <div class="row d-none seccion_productos pt-0">
+            <label class="col-sm-1 col-form-label">Productos</label>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <!--<input type="text" value="" class="form-control tagsinput" name="productos" id="productos" data-role="tagsinput" required data-color="warning">-->
+                <div>
+                  <table class="table table-bordered table-sm table-striped small" style="font-size: 11px;">
+                    <thead>
+                      <tr class="bg-info text-white">
+                        <th>#</th>
+                        <th>NOMBRE</th>
+                        <th>DIRECCION</th>
+                        <th>MARCA</th>
+                        <th>NORMA</th>
+                        <th>SELLO</th>
+                        <td class="text-right" width="18%">OPCION</td>
+                      </tr>
+                    </thead>
+                    <tbody id="listProducto">
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-sm-2">
+                <!-- Versión antigua -->
+                <!-- <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="agregarAtributoAjax()"><i class="material-icons">add</i> -->
+              <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="abreModalItem()"><i class="material-icons">add</i>
+              </button>
+              <!-- EXCEL -->
+              <a  title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante()" class="btn btn-primary btn-fab btn-sm" hidden>
+                <i class="material-icons">content_paste</i>
+              </a>
+              <!-- FIN EXCEL -->
+              <a  title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente('39')" class="btn btn-success btn-fab btn-sm">
+                <i class="material-icons">replay_circle_filled</i>
+              </a>
+            </div>
+          </div>
+          <!-- FIN SECCIÓN DE PRODUCTOS -->
+          <!-- SECCIÓN DE SITIOS -->
+          <br>
+          <div class="row d-none seccion_sitios pt-0">
+            <label class="col-sm-1 col-form-label">Sitios</label>
+            <div class="col-sm-9">
+              <div class="form-group">
+                <div>
+                  <table class="table table-bordered table-sm table-striped small" style="font-size: 11px;">
+                    <thead>
+                      <tr class="bg-info text-white">
+                        <th>#</th>
+                        <th>NOMBRE</th>
+                        <th>DIRECCION</th>
+                        <td class="text-right" width="18%">OPCION</td>
+                      </tr>
+                    </thead>
+                    <tbody id="listSitio">
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-sm-2">
+              <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm" onClick="abreModalItem()"><i class="material-icons">add</i>
+              </button>
+              <!-- EXCEL -->
+              <a title="Pegar Datos Excel" href="#" onclick="modalPegarDatosComprobante_tcs()" class="btn btn-primary btn-fab btn-sm" hidden>
+                <i class="material-icons">content_paste</i>
+              </a>
+              <!-- FIN EXCEL -->
+              <a title="Actualizar Datos Cliente" href="#" onclick="modalActualizarDatosCliente('38')" class="btn success-success btn-fab btn-sm">
+                <i class="material-icons">replay_circle_filled</i>
+              </a>
+            </div>
+          </div>
+          <!-- FIN SECCIÓN DE SITIOS -->
+        </div>
+        <br>
+
+
         <div id="mensaje"></div>
         <div class="card-footer  ml-auto mr-auto">
         <?php 
@@ -942,6 +975,158 @@ $fechaActualInput=date("Y-m-d");
       <div id="div_datos_excel_tcs"></div>
     </div>
   </div>
+</div>
+
+
+
+
+<!-- MODAL PARA PRODUCTOS -->
+<div class="modal fade modal-primary" id="modal_atributo_producto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card">
+            <div class="card-header card-header-primary card-header-text">
+                <div class="card-text">
+                    <h4 class="card-title">Agregar Producto</h4>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="card-body">
+                <!-- Nro de registro para edición, caso contrario nuevo registro -->
+                <input type="hidden" id="row_producto" value="0">
+                <div class="row">
+                    <div class="row col-sm-12">
+                        <label class="col-sm-2 col-form-label">Producto</label>
+                        <div class="col-sm-9">                     
+                            <div class="form-group bmd-form-group">
+                                <input type="text" class="form-control" name="map_producto" id="map_producto" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="row">
+                    <div class="row col-sm-12">
+                        <label class="col-sm-2 col-form-label">Marca</label>
+                        <div class="col-sm-9">                     
+                            <div class="form-group bmd-form-group">
+                                <input type="text" class="form-control" name="map_marca" id="map_marca" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="row col-sm-12">
+                        <label class="col-sm-2 col-form-label">Nº Sello</label>
+                        <div class="col-sm-9">                     
+                            <div class="form-group bmd-form-group">
+                                <input type="number" class="form-control" name="map_sello" id="map_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                <!-- NORMAS -->
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Normas Nacionales:</label>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <select class="selectpicker form-control" name="map_normas_nac[]" id="map_normas_nac" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
+                            <?php
+                                $stmt = $dbh->prepare("SELECT vn.codigo, vn.abreviatura, vn.nombre, 'L' as tipo from v_normas vn where vn.cod_estado=1 order by 4,2");
+                                $stmt->execute();
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoX    = $row['codigo'];
+                                    $nombreX    = $row['nombre'];
+                                    $tipoX      = $row['tipo'];
+                                    $abrevX     = $row['abreviatura']." (".$tipoX.")";
+                                    $nombreX    = substr($nombreX, 0, 70);
+                            ?>
+                            <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>"><?=$abrevX;?></option> 
+                            <?php
+                            }
+                            ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Normas Internacionales:</label>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <select class="selectpicker form-control" name="map_normas_int[]" id="map_normas_int" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
+                            <?php
+                                $stmt = $dbh->prepare("SELECT vi.codigo, vi.abreviatura, vi.nombre, 'I' as tipo from v_normas_int vi where vi.cod_estado=1 order by 4,2");
+                                $stmt->execute();
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoX    = $row['codigo'];
+                                    $nombreX    = $row['nombre'];
+                                    $tipoX      = $row['tipo'];
+                                    $abrevX     = $row['abreviatura']." (".$tipoX.")";
+                                    $nombreX    = substr($nombreX, 0, 70);
+                            ?>
+                            <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>"><?=$abrevX;?></option> 
+                            <?php
+                            }
+                            ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Dirección</label>
+                    <div class="col-sm-9">                     
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="map_direccion" id="map_direccion" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                        </div>
+                    </div>  
+                </div>
+                <hr>
+                <div class="form-group float-right">
+                    <button type="button" class="btn btn-default" onclick="agregarProductoPropuesta()">Guardar</button>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PARA SITIOS -->
+<div class="modal fade modal-primary" id="modal_atributo_sitio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card">
+            <div class="card-header card-header-primary card-header-text">
+                <div class="card-text">
+                    <h4 id="card-title">Agregar Sitio</h4>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="card-body">
+                <!-- Nro de registro para edición, caso contrario nuevo registro -->
+                <input type="hidden" id="row_sitio" value="0">
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Nombre</label>
+                    <div class="col-sm-9">                     
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="form-control" name="mas_nombre" id="mas_nombre" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                        </div>
+                    </div>  
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Dirección</label>
+                    <div class="col-sm-9">                     
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="form-control" name="mas_direccion" id="mas_direccion" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                        </div>
+                    </div>  
+                </div>
+                <hr>
+                <div class="form-group float-right">
+                    <button type="button" id="boton_guardarsim" class="btn btn-default" onclick="agregarSitioPropuesta()">Guardar</button>
+                </div> 
+            </div>
+        </div>  
+    </div>
 </div>
 
 

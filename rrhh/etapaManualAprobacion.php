@@ -37,7 +37,7 @@ $stmt->bindColumn('estado', $estado);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title">Lista de Etapas</h4>
+                  <h4 class="card-title">Lista de Etapas Manuales</h4>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">
@@ -283,12 +283,13 @@ $stmt->bindColumn('estado', $estado);
           },
           success: function(response) {
               // console.log(response)
+              $('#modalFormulario').modal('toggle');
               if (response.status) {
                   Swal.fire({
                       type: "success",
                       title: response.message,
                       showConfirmButton: false,
-                      timer: 3000,
+                      timer: 1500,
                       onClose: function() {
                         location.reload();
                       }
@@ -304,6 +305,7 @@ $stmt->bindColumn('estado', $estado);
               }
           },
           error: function() {
+              $('#modalFormulario').modal('hidden');
               Swal.fire({
                   type: "error",
                   title: "Error",

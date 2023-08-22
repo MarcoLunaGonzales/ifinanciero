@@ -60,6 +60,15 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $resp_cargo = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// * Responsabilidades GENERALES DE IBNORCA
+$sql = "SELECT r.codigo, r.nombre
+        FROM responsabilidades_generales r
+        WHERE r.estado = 1
+        ORDER BY r.codigo ASC";
+$stmt = $dbh->prepare($sql);
+$stmt->execute();
+$resp_resposabilidadesGenerales = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // * Responsabilidades del Cargo
 $sql = "SELECT cf.cod_cargo, cf.cod_funcion, cf.nombre_funcion
         FROM cargos_funciones cf
@@ -69,6 +78,7 @@ $sql = "SELECT cf.cod_cargo, cf.cod_funcion, cf.nombre_funcion
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $resp_resposabilidadesCargos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// $resp_resposabilidadesCargos = count($resp_resposabilidadesCargos) > 0 ? $resp_resposabilidadesCargos : [];
 
 // * Autoridades del Cargo
 $sql = "SELECT ca.cod_cargo, ca.cod_autoridad, ca.nombre_autoridad

@@ -22,7 +22,8 @@ function guardarSeguimiento($cod_manual, $cod_etapa, $cod_personal, $cod_seguimi
     $stmt->execute();
 }
 
-try {$dbh = new Conexion();
+try {
+    $dbh = new Conexion();
 
     // Variables
     $cod_manual_aprobacion = $_POST['cod_manual_aprobacion'];
@@ -65,7 +66,7 @@ try {$dbh = new Conexion();
         // Si nuevo_cod_etapa está vacío FINALIZA PROCESO
         if (empty($nuevo_cod_etapa)) {
             $sql = "UPDATE manuales_aprobacion
-                SET estado = 2,
+                SET cod_estado = 2,
                     fecha_fin = :fecha_fin
                 WHERE codigo = :cod_manual_aprobacion";
             $stmt = $dbh->prepare($sql);
@@ -106,13 +107,23 @@ try {$dbh = new Conexion();
             $stmt->bindParam(':nuevo_cod_etapa', $nuevo_cod_etapa);
             $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion);
             $stmt->execute();
+        }else{
+            // En caso de estar en la ETAPA 1 se terminará el proceso como RECHAZADO "3"
+            $sql = "UPDATE manuales_aprobacion
+                SET cod_estado = 3,
+                    fecha_fin = :fecha_fin
+                WHERE codigo = :cod_manual_aprobacion";
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindParam(':fecha_fin', $fecha);
+            $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion);
+            $stmt->execute();
         }
     }
     // Seguimiento
     guardarSeguimiento($cod_manual_aprobacion, $actual_cod_etapa, $cod_personal, $manual_estado, $fecha, $manual_observacion, $detalle_descriptivo);
     
     echo json_encode(array(
-        'message' => 'Se inicializó la aprobación de manual correctamente.',
+        'message' => 'Se actualizó el estado correctamente.',
         'status' => true
     ));
 } catch (Exception $e) {

@@ -111,6 +111,18 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listaManualAprobacion">
+                    <span class="sidebar-mini"> AM </span>
+                    <span class="sidebar-normal"> Aprobación de Manuales</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listaManualesAprobados">
+                    <span class="sidebar-mini"> MA </span>
+                    <span class="sidebar-normal"> Manuales Aprobados</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=tiposCargosLista">
                     <span class="sidebar-mini"> TCA </span>
                     <span class="sidebar-normal"> Tipos Cargos</span>

@@ -828,7 +828,8 @@
                         <div class="col-sm-7">
                           <div class="form-group">
                             <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);">       
-                                  <?php
+                              <option value="">SELECCIONE TIPO DE SERVICIO</option>
+                                <?php
                                   $plantilla_servicio = '';
                                   if($codigoPlan == 2){
                                     $plantilla_servicio = 108;
@@ -936,6 +937,7 @@
                         <div class="col-sm-7">
                           <div class="form-group">
                             <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);">       
+                              <option value="">SELECCIONE TIPO DE SERVICIO</option>
                                   <?php
                                   $plantilla_servicio = '';
                                   if($codigoPlan == 2){

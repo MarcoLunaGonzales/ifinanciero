@@ -58,11 +58,11 @@ if($tipoLogin==2){
 if($banderaLogin==1 || $tipoLogin==1){
 	$sql="";
 	if($tipoLogin==1){
-		$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, pd.perfil 
+		$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_cargo, p.cod_unidadorganizacional, pd.perfil 
 			from personal p, personal_datosadicionales pd 
 			where p.codigo=pd.cod_personal and pd.usuario='$user' and pd.contrasena='$password'";		
 	}else{
-		$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_unidadorganizacional, 1 as perfil
+		$sql="SELECT p.codigo, CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre)as nombre, p.cod_area, p.cod_cargo, p.cod_unidadorganizacional, 1 as perfil
 			from personal p 
 			where (p.codigo='$idUsuarioSW' or p.codigo='$idUsuarioSW2') ";		
 	}
@@ -81,6 +81,8 @@ if($banderaLogin==1 || $tipoLogin==1){
 	$stmt->bindColumn('cod_area', $codArea);
 	$stmt->bindColumn('cod_unidadorganizacional', $codUnidad);
 	$stmt->bindColumn('perfil', $perfil);
+	
+	$stmt->bindColumn('cod_cargo', $codCargo);
 
 
 	if($idUsuarioSW==47770){
@@ -140,6 +142,8 @@ if($banderaLogin==1 || $tipoLogin==1){
 		$_SESSION['globalNombreArea']=$nombreArea;
 		$_SESSION['logueado']=1;
 		$_SESSION['globalPerfil']=$perfil;
+
+		$_SESSION['globalCargo']=$codCargo;
 
 		if( $codigo==90 || $codigo==89 || $codigo==227 || $codigo==195 || $codigo==72 || $codigo==41 || $codigo==50 || $codigo==58 || $codigo==42 ){
 			$_SESSION['globalAdmin']=1;
