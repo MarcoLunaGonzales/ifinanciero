@@ -491,7 +491,7 @@ $i=0;
                       <i class="material-icons">call_split</i> <span id="distrib_icon" class="bg-warning"></span> <b id="boton_titulodist"></b>
                         </button>
                         <div class="dropdown-menu">   
-                        <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="dropdown-item">
+                        <!--a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(1)" class="dropdown-item">
                           <i class="material-icons">bubble_chart</i> x Oficina
                         </a>
                         <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(2)" class="dropdown-item">
@@ -499,7 +499,7 @@ $i=0;
                         </a>
                         <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(3)" class="dropdown-item">
                           <i class="material-icons">bubble_chart</i> x Oficina y x Área
-                        </a>
+                        </a-->
                         <a title="Distribucion" href="#modalDist" data-toggle="modal" data-target="#modalDist" id="distribucion" onclick="cargarDistribucionSol(4)" class="dropdown-item">
                           <i class="material-icons">bubble_chart</i> x Área y Oficina
                         </a>

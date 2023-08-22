@@ -348,7 +348,7 @@ $html.=  '<header class="header">'.
             </tr>
           </table><BR><BR>';
           $html.='<table class="table">
-                  <tr class="td-color-celeste"><td class="text-center"><b>Correo De Contacto Para Envío De Factura</b></td></tr>
+                  <tr class="td-color-celeste"><td class="text-center"><b>Correo del cliente para envío de factura mediante el SIAT (Servicio de Impuestos Nacionales)</b></td></tr>
                   <tr><td>'.$correo_contacto_x.'</td></tr>
                 </table><br><br><br>';
           // $cod_tipopago=3;
@@ -444,7 +444,7 @@ $html.=  '<header class="header">'.
               <tr>
                 <td class="s4 text-center" width="25%"><b>IBNORCA &#169;<b></td>
                 <td class="s4 text-center" width="25%"><b>Código:</b> REG-PRO-AF-03-01.03</td>
-                <td class="s4 text-center" width="25%"><b>V:</b> 2023-07-03</td>
+                <td class="s4 text-center" width="25%"><b>V:</b> 2023-07-10</td>
               <td class="s4 text-center" width="25%"><b>Página 1 de 1</b></td>
             </tr>
             </table>

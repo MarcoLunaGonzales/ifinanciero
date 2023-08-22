@@ -396,8 +396,8 @@ $tituloImporte="";
      <table class="table">
         <tr class="bg-celeste">
             <td class="s3 text-center" width="15%">Ingreso<br>Presupuestado</td>
-            <td class="s3 text-center" width="10%">%</td>
-            <td class="s3 text-center" width="70%">Observaciones</td>
+            <td class="s3 text-center" width="18%">Costo servicio Vs.<br>Ingr. Presup. %</td>
+            <td class="s3 text-center" width="68%">Observaciones</td>
         </tr>
         <tr>
             <td class="s3 text-center"><?=$montoIngresoPresupuestadoX;?></td>
@@ -496,18 +496,16 @@ $tituloImporte="";
         <table class="table">
           <tr>
             <td class="s4 text-center" width="25%"><b>IBNORCA &#169;</b></td>
-            <!--td class="s4 text-left" width="25%"><b>Codigo:</b> REG-PRE-SA-04-01.05</td-->
-            <!--td class="s4 text-center" width="25%"><b>Codigo:</b> REG-PRO-AF-02-03.06</td-->
             <td class="s4 text-center" width="25%"><b>Codigo:</b>REG-PRO-AF-01-02.07</td>
-            <td class="s4 text-center" width="25%"><b>V:</b> 2023-07-03</td>
-            <td class="s4 text-center" width="25%"></td>
+            <td class="s4 text-center" width="25%"><b>V:</b> 2023-07-10</td>
+            <td class="s4 text-center" width="25%">Página 1 de 1</td>
           </tr>
-         <tr style="border: inset 0pt">
+         <!--tr style="border: inset 0pt">
             <td class="s4 text-center" width="100%" colspan="4">
                 <i>Los documentos impresos o fotocopiados se consideran copias no controladas. Verifique la vigencia
 del documento a través del ICOMITÉ o página web de IBNORCA.</i>
             </td>
-          </tr>
+          </tr-->
        </table>
      </footer>
 

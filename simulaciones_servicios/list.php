@@ -377,7 +377,6 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                   } 
                                 }else{
                                 ?>
-                                  
                                 <a href="solicitudes/registerSolicitudDetalle.php?sim=<?=$codigo?>&det=2" target="_blank" title="Solicitud De Recursos"class="btn btn-danger">
                                     <i class="material-icons">content_paste</i>
                                  </a>
@@ -387,6 +386,9 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                  <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
                                    <i class="material-icons" >receipt</i>                              
                                  </a>
+                                  <button title="Duplicar Propuesta" class="btn btn-warning propuesta_duplicar" data-codigo="<?=$codigo;?>">
+                                    <i class="material-icons">content_copy</i>
+                                  </button>
                                  <?php 
                                  if($idServicioX>0){
                                    ?>

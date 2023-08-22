@@ -4,7 +4,7 @@ DATABASE_ENCODING = utf8
 
 [ parametros de conexion bd mysql Local ]
 DATABASE_HOST = lpsit.ibnorca.org
-DATABASE_PORT = 3360
+DATABASE_PORT = 4606
 DATABASE_NAME = bdifinanciero
 DATABASE_USER = ingresobd
 DATABASE_PASSWORD = ingresoibno
@@ -13,7 +13,7 @@ DATABASE_DESCRIPTION = DB LOCAL
 
 [ parametros de conexion bd mysql Externo ]
 DATABASE_HOST_EXT = lpsit.ibnorca.org
-DATABASE_PORT_EXT = 3360
+DATABASE_PORT_EXT = 4606
 DATABASE_NAME_EXT = ibnorca
 DATABASE_USER_EXT = ingresobd
 DATABASE_PASSWORD_EXT = ingresoibno
