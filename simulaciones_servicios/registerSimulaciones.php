@@ -641,6 +641,7 @@ $fechaActualInput=date("Y-m-d");
                       </tr>
                     </thead>
                     <tbody id="listProducto">
+                      <tr><td colspan="7">No existen registros.</td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -680,6 +681,7 @@ $fechaActualInput=date("Y-m-d");
                       </tr>
                     </thead>
                     <tbody id="listSitio">
+                      <tr><td colspan="4">No existen registros.</td></tr>
                     </tbody>
                   </table>
                 </div>

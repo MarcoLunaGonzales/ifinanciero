@@ -141,17 +141,12 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
                         <td><?=$row['nombre_dependencia'];?></td>
                         <td><?=$row['nombre_dependencia_funcional'];?></td>
                         <td class="td-actions text-center">
-                        <?php
-                          if($globalAdmin==1){
-                        ?>
+                          
                           <!-- MANUAL DE APROBACIÓN -->
                           <!-- Aprobar Manual -->
                           <button class="btn btn-md btn-success btnFormularioAprobacion" data-cod_cargo="<?=$row['codigo'];?>" data-cod_manual_aprobacion="<?=$row['ma_codigo'];?>" title="Procesar">
                             <i class="material-icons">autorenew</i>
                           </button>
-                          <?php
-                            }
-                          ?>
                         
                         </td>
                     </tr>

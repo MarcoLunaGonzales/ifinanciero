@@ -97,27 +97,38 @@ try {
         if ($resultado) {
             $nuevo_cod_etapa = $resultado['cod_etapa'];
         }
+        
+        // Terminará el proceso de aprobación de la versión: RECHAZADO "3"
+        $sql = "UPDATE manuales_aprobacion
+            SET cod_estado = 3,
+                fecha_fin = :fecha_fin
+            WHERE codigo = :cod_manual_aprobacion";
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':fecha_fin', $fecha);
+        $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion);
+        $stmt->execute();
+
         // Si nuevo_cod_etapa está vacío o esta con valor en CERO(0) no cambia Actualiza etapa
-        if (!empty($nuevo_cod_etapa) && $nuevo_cod_etapa != 0) {
-            // Retrocede un nivel
-            $sql = "UPDATE manuales_aprobacion
-                SET cod_etapa = :nuevo_cod_etapa
-                WHERE codigo = :cod_manual_aprobacion";
-            $stmt = $dbh->prepare($sql);
-            $stmt->bindParam(':nuevo_cod_etapa', $nuevo_cod_etapa);
-            $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion);
-            $stmt->execute();
-        }else{
-            // En caso de estar en la ETAPA 1 se terminará el proceso como RECHAZADO "3"
-            $sql = "UPDATE manuales_aprobacion
-                SET cod_estado = 3,
-                    fecha_fin = :fecha_fin
-                WHERE codigo = :cod_manual_aprobacion";
-            $stmt = $dbh->prepare($sql);
-            $stmt->bindParam(':fecha_fin', $fecha);
-            $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion);
-            $stmt->execute();
-        }
+        // if (!empty($nuevo_cod_etapa) && $nuevo_cod_etapa != 0) {
+        //     // Retrocede un nivel
+        //     $sql = "UPDATE manuales_aprobacion
+        //         SET cod_etapa = :nuevo_cod_etapa
+        //         WHERE codigo = :cod_manual_aprobacion";
+        //     $stmt = $dbh->prepare($sql);
+        //     $stmt->bindParam(':nuevo_cod_etapa', $nuevo_cod_etapa);
+        //     $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion);
+        //     $stmt->execute();
+        // }else{
+        //     // En caso de estar en la ETAPA 1 se terminará el proceso como RECHAZADO "3"
+        //     $sql = "UPDATE manuales_aprobacion
+        //         SET cod_estado = 3,
+        //             fecha_fin = :fecha_fin
+        //         WHERE codigo = :cod_manual_aprobacion";
+        //     $stmt = $dbh->prepare($sql);
+        //     $stmt->bindParam(':fecha_fin', $fecha);
+        //     $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion);
+        //     $stmt->execute();
+        // }
     }
     // Seguimiento
     guardarSeguimiento($cod_manual_aprobacion, $actual_cod_etapa, $cod_personal, $manual_estado, $fecha, $manual_observacion, $detalle_descriptivo);

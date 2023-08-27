@@ -232,6 +232,90 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado
            $alcanceSimulacionXX=$alcanceSimulacionX;
            $descripcionServSimulacionXX=$descripcionServSimulacionX;
       }    
+      
+
+/*************************************************/
+/*           JSON | PRODUCTOS O SITIOS           */
+/*************************************************/
+// $sqlArrayAtributos="SELECT
+//                 s.codigo,
+//                 sa.nombre,
+//                 sa.direccion,
+//                 sa.marca,
+//                 sa.nro_sello,
+//                 GROUP_CONCAT(DISTINCT vi.codigo SEPARATOR ', ') AS atr_norma_int,
+//                 GROUP_CONCAT(DISTINCT vn.codigo SEPARATOR ', ') AS atr_norma_nac,
+//                 CONCAT('<ul>',
+//                     GROUP_CONCAT(DISTINCT CONCAT('<li>', vi.nombre, '</li>') SEPARATOR ''),
+//                     GROUP_CONCAT(DISTINCT CONCAT('<li>', vn.nombre, '</li>') SEPARATOR ''),
+//                     '</ul>') AS atr_norma_html
+//               FROM simulaciones_servicios s
+//               LEFT JOIN simulaciones_servicios_atributos sa ON sa.cod_simulacionservicio = s.codigo
+//               LEFT JOIN simulaciones_servicios_atributosnormas sni ON sni.cod_simulacionservicioatributo = sa.codigo AND sni.catalogo = 'I'
+//               LEFT JOIN normas vi ON sni.cod_norma = vi.codigo
+//               LEFT JOIN simulaciones_servicios_atributosnormas snl ON snl.cod_simulacionservicioatributo = sa.codigo AND snl.catalogo = 'L'
+//               LEFT JOIN normas vn ON snl.cod_norma = vn.codigo
+//               WHERE s.codigo = '$codigo'";
+$sqlArrayAtributos="SELECT
+                          s.codigo,
+                          sa.nombre,
+                          sa.direccion,
+                          sa.marca,
+                          sa.nro_sello,
+                          GROUP_CONCAT(DISTINCT vi.codigo SEPARATOR ', ') AS atr_norma_int,
+                          (SELECT GROUP_CONCAT(DISTINCT vn.codigo SEPARATOR ', ')
+                          FROM simulaciones_servicios_atributosnormas snl
+                          LEFT JOIN normas vn ON snl.cod_norma = vn.codigo
+                          WHERE snl.cod_simulacionservicioatributo = sa.codigo AND snl.catalogo = 'L'
+                          GROUP BY snl.cod_simulacionservicioatributo) AS atr_norma_nac,
+                          CONCAT('<ul>',
+                              GROUP_CONCAT(DISTINCT CONCAT('<li>', vi.nombre, '</li>') SEPARATOR ''),
+                              (SELECT GROUP_CONCAT(DISTINCT CONCAT('<li>', vn.nombre, '</li>') SEPARATOR '')
+                              FROM simulaciones_servicios_atributosnormas snl
+                              LEFT JOIN normas vn ON snl.cod_norma = vn.codigo
+                              WHERE snl.cod_simulacionservicioatributo = sa.codigo AND snl.catalogo = 'L'
+                              GROUP BY snl.cod_simulacionservicioatributo),
+                              '</ul>') AS atr_norma_html
+                    FROM simulaciones_servicios s
+                    LEFT JOIN simulaciones_servicios_atributos sa ON sa.cod_simulacionservicio = s.codigo
+                    LEFT JOIN simulaciones_servicios_atributosnormas sni ON sni.cod_simulacionservicioatributo = sa.codigo AND sni.catalogo = 'I'
+                    LEFT JOIN normas vi ON sni.cod_norma = vi.codigo
+                    WHERE s.codigo = '$codigo'
+                    GROUP BY s.codigo, sa.nombre, sa.direccion, sa.marca, sa.nro_sello";
+$stmtArrayAtributos = $dbh->prepare($sqlArrayAtributos);
+$stmtArrayAtributos->execute();
+?>
+    <script>
+      var atributosArrayGral = []; 
+    </script>
+
+<?php
+  $index = 1;
+  while ($row = $stmtArrayAtributos->fetch(PDO::FETCH_ASSOC)) {
+?>
+    <script>
+    var atributo={
+      codigo: <?=$index++?>,
+      nombre: '<?=$row['nombre']?>',
+      direccion: '<?=$row['direccion']?>',
+      norma:'',
+      atr_norma_nac: '<?=$row['atr_norma_nac']?>',
+      atr_norma_int: '<?=$row['atr_norma_int']?>',
+      atr_norma_html: '<?=$row['atr_norma_html']?>',
+      marca: '<?=$row['marca']?>',
+      sello: '<?=$row['nro_sello']?>',
+      pais:0,
+      estado:'',
+      ciudad:0,
+      nom_pais:'',
+      nom_estado:'',
+      nom_ciudad:''
+    }
+    atributosArrayGral.push(atributo);
+    </script>
+
+<?php
+  }
 ?>
 <script>
   var itemAtributos=[];

@@ -84,7 +84,7 @@ if($_POST['tcs']==0){
   cod_servicio='$cod_servicio' $sqlEditSet 
   where codigo=$codSimulacion";
 }
-echo $sqlUpdatePlantilla;
+// echo $sqlUpdatePlantilla;
 
 $stmtUpdatePlantilla = $dbh->prepare($sqlUpdatePlantilla);
 $stmtUpdatePlantilla->execute();

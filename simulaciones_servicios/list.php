@@ -581,7 +581,7 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
 </div>
 
 <script>
-    // Cambiar Estado de Planilla a Cerrado en Vacio
+    // Duplicar Registro de Propuesta
     $('body').on('click','.propuesta_duplicar', function(){
       let formData = new FormData();
       // codigo Planilla
@@ -598,6 +598,19 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
           buttonsStyling: false
       }).then((result) => {
           if (result.value) {
+              // ALERT DE PROCESO
+              Swal.fire({
+                  title: 'Procesando...',
+                  text: 'Espere un momento mientras se completa el proceso.',
+                  type: 'info',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false,
+                  timer: 0,
+                  onBeforeOpen: () => {
+                      Swal.showLoading();
+                  }
+              });
+
               $.ajax({
                   url:"simulaciones_servicios/registerSimulacionDuplicado.php",
                   type:"POST",
@@ -605,23 +618,23 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                   processData: false,
                   data: formData,
                   success:function(response){
-                  let resp = JSON.parse(response);
-                  if(resp.status){        
-                      // Mensaje
-                      Swal.fire({
-                          type: 'success',
-                          title: 'Correcto!',
-                          text: 'El proceso se completo correctamente!',
-                          showConfirmButton: false,
-                          timer: 1500
-                      });
-                      
-                      setTimeout(function(){
-                          location.reload()
-                      }, 1550);
-                  }else{
-                      Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
-                      }
+                    let resp = JSON.parse(response);
+                    if(resp.status){        
+                        // Mensaje
+                        Swal.fire({
+                            type: 'success',
+                            title: 'Correcto!',
+                            text: 'El proceso se completo correctamente!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        
+                        setTimeout(function(){
+                            location.reload()
+                        }, 1550);
+                    }else{
+                        Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
+                    }
                   }
               });
           }

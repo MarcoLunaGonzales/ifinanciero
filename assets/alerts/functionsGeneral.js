@@ -8548,7 +8548,9 @@ function guardarDatosPlantillaServicioAjax(btn_id){
     //var productos=$("#modal_sitios").val();
     var tcs=1;
   }
-  var productos=itemAtributos;
+  // var productos=itemAtributos; // Se obtiene atributos de forma antigua
+  var productos = [];
+  productos = atributoSitio.concat(atributoProducto);
 
   //var respuesta=productos.split(',');
   //var num_prod=respuesta.length;
@@ -8575,7 +8577,8 @@ function guardarDatosPlantillaServicioAjax(btn_id){
     var auditoresDias="";
    }
 
-if(!(ut_i==""||dia==""||dia==0||productos.length==0)){ 
+// if(!(ut_i==""||dia==""||dia==0||productos.length==0)){ 
+if(!(productos.length==0)){ 
   /*PARA PERSONAL*/
   var anios=$("#anio_simulacion").val();
   /*for (var anio=inicioAnio;anio<=anios; anio++) {
@@ -21107,13 +21110,13 @@ function abreModalItem(){
     }
     // Abre modal de acuerdo a la plantilla o tipo de servicio con excepción
     let plantilla_servicio = $('#plantilla_servicio').val();
-    if(plantilla_servicio == 3 || (array_excepcion.includes(tipo_servicio) && plantilla_servicio == '2')){
+    if(plantilla_servicio == '3' || (array_excepcion.includes(tipo_servicio) && plantilla_servicio == '2')){
         // Limpiar los campos del formulario modal
         limpiarModalSitio();
         // TCS - SITIOS
         $('#row_sitio').val(0);
         $('#modal_atributo_sitio').modal('show');
-    }else if(plantilla_servicio == 2){
+    }else if(plantilla_servicio == '2'){
         // Limpiar los campos del formulario modal
         limpiarModalProducto();
         // TCP - PRODUCTOS
@@ -21227,7 +21230,7 @@ function actualizarTablaProductos() {
         row += '<td>' + atributo.atr_norma_html + '</td>'; // Mostrar la lista HTML
         row += '<td>' + atributo.sello + '</td>';
         row += '<td class="text-right small"><div class="btn-group">';
-        row += '<button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributoProducto(' + atributo.codigo + ');"><i class="material-icons">edit</i></button>';
+        row += '<button title="Editar" class="btn btn-sm btn-fab btn-success btnEditarAtributo" onclick="editarAtributoProducto(' + atributo.codigo + ');"><i class="material-icons">edit</i></button>';
         row += '<button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="eliminarAtributoProducto(' + atributo.codigo + ');"><i class="material-icons">delete</i></button>';
         row += '</div></td>';
         row += '</tr>';
@@ -21335,7 +21338,7 @@ function actualizarTablaSitios() {
         row += '<td>' + atributo.nombre + '</td>';
         row += '<td>' + atributo.direccion + '</td>';
         row += '<td class="text-right small"><div class="btn-group">';
-        row += '<button title="Editar" class="btn btn-sm btn-fab btn-success" onclick="editarAtributoSitio(' + atributo.codigo + ');"><i class="material-icons">edit</i></button>';
+        row += '<button title="Editar" class="btn btn-sm btn-fab btn-success btnEditarAtributo" onclick="editarAtributoSitio(' + atributo.codigo + ');"><i class="material-icons">edit</i></button>';
         row += '<button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="eliminarAtributoSitio(' + atributo.codigo + ');"><i class="material-icons">delete</i></button>';
         row += '</div></td>';
         row += '</tr>';
