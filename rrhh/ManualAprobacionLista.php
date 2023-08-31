@@ -197,8 +197,13 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
                 <div class="card-body historial1">
                   <div class="d-flex align-items-center">
                     <i class="material-icons text-primary mr-2">info</i>
-                    <b>Estado:</b>
+                    <b>Estado:</b> 
                     <span id="textEstado"></span>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <i class="material-icons text-info mr-2">format_list_numbered</i>
+                    <b>Nro. revisión</b>
+                    <span id="textVersion" class="badge badge-secondary"></span>
                   </div>
                   <div class="d-flex align-items-center">
                     <i class="material-icons text-warning mr-2">event</i>
@@ -207,11 +212,11 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
                   </div>
                   <div class="d-flex align-items-center">
                     <i class="material-icons text-success mr-2">person</i>
-                    <b>Personal:</b>
+                    <b>Encargado:</b>
                     <span id="textPersonal"></span>
                   </div>
                   <div class="d-flex align-items-center">
-                    <i class="material-icons text-success mr-2">comment</i>
+                    <i class="material-icons text-danger mr-2">comment</i>
                     <b>Observación:</b>
                   </div>
                   <div class="align-items-center">
@@ -308,6 +313,7 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
               $('#textFecha').html(response.data.fecha);
               $('#textPersonal').html(response.data.personal);
               $('#textObservacion').html(response.data.observacion);
+              $('#textVersion').html(response.data.nro_version);
               $(".historial1").show();
               $(".historial2").hide();
             }else if(response.data.verf_row == 0){

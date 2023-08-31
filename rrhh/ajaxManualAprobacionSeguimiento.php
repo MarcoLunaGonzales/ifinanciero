@@ -9,8 +9,9 @@ $cod_manual_aprobacion = $_POST['cod_manual_aprobacion'];
 
 try {
   // Verificación de numero de versión del Manual
-  $sql = "SELECT ase.nombre as estado, DATE_FORMAT(mas.fecha,'%d-%m-%Y %H:%i:%s') as fecha, CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as personal, mas.observacion
+  $sql = "SELECT ase.nombre as estado, DATE_FORMAT(mas.fecha,'%d-%m-%Y %H:%i:%s') as fecha, CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as personal, mas.observacion, ma.nro_version
         FROM manuales_aprobacion_seguimiento mas
+        LEFT JOIN manuales_aprobacion ma ON ma.codigo = mas.cod_manual
         LEFT JOIN personal p ON p.codigo = mas.cod_personal
         LEFT JOIN manuales_aprobacion_seguimiento_estados ase ON ase.codigo = mas.cod_seguimiento_estado
         WHERE mas.cod_manual = :cod_manual_aprobacion";
@@ -24,7 +25,8 @@ try {
       'estado'      => $resultado['estado'],
       'fecha'       => $resultado['fecha'],
       'personal'    => $resultado['personal'],
-      'observacion' => $resultado['observacion']
+      'observacion' => $resultado['observacion'],
+      'nro_version' => $resultado['nro_version']
     );
   } else {
     $detalleArray = array(
@@ -32,7 +34,8 @@ try {
       'estado'      => '',
       'fecha'       => '',
       'personal'    => '',
-      'observacion' => ''
+      'observacion' => '',
+      'nro_version' => ''
     );
   }
 	echo json_encode(array(

@@ -82,16 +82,20 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
   }
   /* Estilo de bordes de CARDS */
   .state-success{
-    border-left: 8px solid #4caf50;
+    border: 1px solid #4caf50;
+    border-left-width: 6px;
   }
   .state-warning{
-    border-left: 8px solid #ff9800;
+    border: 1px solid #ff9800;
+    border-left-width: 6px;
   }
   .state-danger{
-    border-left: 8px solid #f44336;
+    border: 1px solid #f44336;
+    border-left-width: 6px;
   }
   .state-info{
-    border-left: 8px solid #00bcd4;
+    border: 1px solid #00bcd4;
+    border-left-width: 6px;
   }
 </style>
 <div class="content">
@@ -169,7 +173,7 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
                                   }else{
                                 ?>
                                   <!-- En proceso de Aprobación -->
-                                  <button class="btn btn-info btnVerHistorial" title="<?=$ma_nombre_estado?>: <?=$eta_etapa?>" data-cod_manual_aprobacion="<?=$ma_codigo;?>">
+                                  <button class="btn btn-info btnVerHistorial" title="<?=$ma_nombre_estado?>: <?=$eta_etapa?>" data-cod_cargo="<?=$codigo;?>">
                                     <div class="loading-dot"></div>
                                   </button>
                                 <?php
@@ -244,7 +248,7 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
     </div>
 <!-- MODAL DE SEGUIMIENTO -->
 <div class="modal fade modal-primary" id="modalHistorial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-md">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content card">
       <div class="card-header card-header-info card-header-icon">
         <div class="card-icon">
@@ -333,13 +337,13 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
    * Ver historial de estado de Manual de Aprobación
    */
   $('.btnVerHistorial').click(function(){
-    let cod_manual_aprobacion = $(this).data('cod_manual_aprobacion');
+    let cod_cargo = $(this).data('cod_cargo');
     $.ajax({
       url: "rrhh/ajaxManualAprobacionEstadoHistorial.php",
       method: "POST",
       dataType: "html",
       data: {
-        cod_manual_aprobacion: cod_manual_aprobacion
+        cod_cargo: cod_cargo
       },
       success: function(response) {
         // console.log(response)

@@ -173,7 +173,7 @@
         </ol><br>
         <!-- Responsabilidades del Cargo -->
         <li class="section-title">RESPONSABILIDADES DEL CARGO.</li>
-        <p style="text-align: justify;">En esta sección, se enumeran las responsabilidades del puesto. Estas responsabilidades están diseñadas para garantizar un desempeño eficiente y efectivo en la consecución de los objetivos establecidos. A continuación, se presenta la lista de responsabilidades del cargo:</p>
+        <!-- <p style="text-align: justify;">En esta sección, se enumeran las responsabilidades del puesto. Estas responsabilidades están diseñadas para garantizar un desempeño eficiente y efectivo en la consecución de los objetivos establecidos. A continuación, se presenta la lista de responsabilidades del cargo:</p> -->
         <ol class="custom-numbered-list" style="text-align: justify;">
             <?php 
                 foreach($resp_resposabilidadesCargos as $row){
@@ -185,7 +185,7 @@
         </ol><br>
         <!-- Autoridades del cargo -->
         <li class="section-title">AUTORIDADES DEL CARGO</li>
-        <p style="text-align: justify;">A continuación se presenta una lista de las autoridades y posiciones clave relacionadas con el puesto:</p>
+        <!-- <p style="text-align: justify;">A continuación se presenta una lista de las autoridades y posiciones clave relacionadas con el puesto:</p> -->
         <ol class="custom-numbered-list" style="text-align: justify;">
             <?php 
                 foreach($resp_autoridadesCargos as $row){

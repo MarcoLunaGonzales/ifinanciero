@@ -212,10 +212,8 @@ try {
                         $flagSuccess=$stmt->execute();                    
                     }
                     /**
-                     * Preparación de Suscripción (Actulización)
+                     * Preparación de Suscripción (Actualización)
                      */
-                    $stmtSuscripcion = $dbh->prepare("DELETE FROM facturas_suscripcionestienda where cod_solicitudfacturacion= '$cod_facturacion'");      
-                    $stmtSuscripcion->execute();
                     preparaSucripcion($cod_serv_a, $cod_detalle_facturacion, $cod_facturacion, $fecha_registro);
                 }            
                 //======================================
@@ -256,7 +254,9 @@ try {
     echo "Un error ocurrio".$ex->getMessage();
 }
 
-
+/**
+ * Función inicial de Facturas Suscripción
+ */
 function preparaSucripcion($cod_serv_a, $cod_detalle_facturacion, $cod_facturacion, $fecha_registro){
     $dbh = new Conexion();
     /********************************************************************************************************************************************/
