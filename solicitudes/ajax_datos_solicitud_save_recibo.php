@@ -190,7 +190,17 @@ $numeroSR="SR ".obtenerNumeroSolicitudRecursos($codigoSolicitud);
       $numeroRecibo++;
       $numeroDocumento++;
     }  
- 
+    /***********************************************************************/
+    /*      DISTRIBUCIÓN DE GASTOS - SOLICITUD_RECURSOS A CAJA_CHICA       */
+    /***********************************************************************/
+    $sql = "INSERT INTO distribucion_gastos_caja_chica (tipo_distribucion, oficina_area, porcentaje, cod_cajachica_detalle, padre_oficina_area) 
+        SELECT tipo_distribucion, oficina_area, porcentaje, $codigoDetalle, padre_oficina_area
+        FROM distribucion_gastos_solicitud_recursos
+        WHERE cod_solicitudrecurso = :codigo
+        AND porcentaje > 0";
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindParam(':codigo', $codigoSolicitud);
+    $flagSuccess = $stmt->execute();
   } 
 
 

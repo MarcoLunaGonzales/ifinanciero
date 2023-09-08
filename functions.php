@@ -12165,4 +12165,23 @@ function enviarCorreoSolicitud($asunto, $nombre_personal, $nro_solicitud, $fecha
   }
 }
 
+
+/**
+ * Convierte el tiempo transcurrido a
+ * {minuto}:{segundo}:{milisegundo}
+ */
+function conversionTiempo($tiempo_transcurrido = 0){
+  $minutos = floor($tiempo_transcurrido / 60);
+  $segundos = floor($tiempo_transcurrido % 60);
+  $milisegundos = round(($tiempo_transcurrido - floor($tiempo_transcurrido)) * 1000, 2);
+
+  // Formatea los minutos y segundos con 2 dígitos
+  $minutos_formateados = sprintf("%02d", $minutos);
+  $segundos_formateados = sprintf("%02d", $segundos);
+  // Formatea los milisegundos con 6 decimales
+  $milisegundos = number_format($milisegundos, 6);
+
+  // Imprime el tiempo transcurrido en formato de minutos, segundos y milisegundos
+  return "$minutos:$segundos:$milisegundos"; 
+}
 ?>
