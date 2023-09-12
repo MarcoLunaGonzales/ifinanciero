@@ -99,7 +99,8 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <td><?=$row['nombre_dependencia_funcional'];?></td>
                         <td class="td-actions text-center">
                         <?php
-                          if($globalAdmin==1){
+                          // if($globalAdmin==1){
+                          if(true){
                         ?>
                           <!-- MANUAL DE APROBACIÓN -->
                           <!-- VER PDF -->

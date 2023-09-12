@@ -12168,20 +12168,24 @@ function enviarCorreoSolicitud($asunto, $nombre_personal, $nro_solicitud, $fecha
 
 /**
  * Convierte el tiempo transcurrido a
- * {minuto}:{segundo}:{milisegundo}
+ * {hora}{minuto}:{segundo}.{milisegundo}
  */
 function conversionTiempo($tiempo_transcurrido = 0){
-  $minutos = floor($tiempo_transcurrido / 60);
-  $segundos = floor($tiempo_transcurrido % 60);
-  $milisegundos = round(($tiempo_transcurrido - floor($tiempo_transcurrido)) * 1000, 2);
+  $horas        = floor($tiempo_transcurrido / 3600);
+  $minutos      = floor(($tiempo_transcurrido % 3600) / 60);
+  $segundos     = floor($tiempo_transcurrido % 60);
+  $milisegundos = round(($tiempo_transcurrido - floor($tiempo_transcurrido)) * 10000, 0);
 
-  // Formatea los minutos y segundos con 2 dígitos
-  $minutos_formateados = sprintf("%02d", $minutos);
+  // Formatea los minutos, segundos y milisegundos con 2 dígitos
+  $minutos_formateados  = sprintf("%02d", $minutos);
   $segundos_formateados = sprintf("%02d", $segundos);
-  // Formatea los milisegundos con 6 decimales
-  $milisegundos = number_format($milisegundos, 6);
+  $milisegundos_formateados = sprintf("%04d", $milisegundos);
 
-  // Imprime el tiempo transcurrido en formato de minutos, segundos y milisegundos
-  return "$minutos:$segundos:$milisegundos"; 
+  // Agrega un cero adelante a las horas y los minutos si son un solo dígito
+  $horas_formateadas   = str_pad($horas, 2, '0', STR_PAD_LEFT);
+  $minutos_formateados = str_pad($minutos_formateados, 2, '0', STR_PAD_LEFT);
+
+  // Imprime el tiempo transcurrido en formato HH:mm:ss.ms
+  return "$horas_formateadas:$minutos_formateados:$segundos_formateados.$milisegundos_formateados";
 }
 ?>
