@@ -99,6 +99,18 @@ $sqlCatIno = "SELECT sci.cod_categoriainocuidad, ci.nombre
 $stmtCatIno = $dbh->prepare($sqlCatIno);
 $stmtCatIno->execute();
 
+/***************************************************/
+/*           SELECCION DE SERVICIOS                */
+/***************************************************/
+$array_servicios = [];
+$sqlServicio = "SELECT sss.cod_simulacionservicio, sss.cod_servicio 
+          FROM simulaciones_servicios_serv sss
+          WHERE sss.cod_simulacionservicio = '$codigo'";
+$stmtServicio = $dbh->prepare($sqlServicio);
+$stmtServicio->execute();
+while ($row_serv = $stmtServicio->fetch(PDO::FETCH_ASSOC)) {
+  $array_servicios[]   = $row_serv['cod_servicio'];
+}
 
 /***************************************************/
 /*              Normas Nacionales                 */

@@ -5,20 +5,20 @@ date_default_timezone_set('America/La_Paz');
 session_start();
 
 $dbh = new Conexion();
-$cod_manual_aprobacion = $_POST['cod_manual_aprobacion'];
+$cod_mof_aprobacion = $_POST['cod_mof_aprobacion'];
 
 try {
   // Verificación de numero de versión del Manual
   $sql = "SELECT ase.nombre as estado, DATE_FORMAT(mas.fecha,'%d-%m-%Y %H:%i:%s') as fecha, CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as personal, mas.observacion, ma.nro_version
-        FROM manuales_aprobacion_seguimiento mas
-        LEFT JOIN manuales_aprobacion ma ON ma.codigo = mas.cod_manual
+        FROM mof_aprobacion_seguimiento mas
+        LEFT JOIN mof_aprobacion ma ON ma.codigo = mas.cod_mof
         LEFT JOIN personal p ON p.codigo = mas.cod_personal
-        LEFT JOIN manuales_aprobacion_seguimiento_estados ase ON ase.codigo = mas.cod_seguimiento_estado
-        WHERE mas.cod_manual = :cod_manual_aprobacion
+        LEFT JOIN mof_aprobacion_seguimiento_estados ase ON ase.codigo = mas.cod_seguimiento_estado
+        WHERE mas.cod_mof = :cod_mof_aprobacion
         ORDER BY mas.codigo DESC
         LIMIT 1";
   $stmt = $dbh->prepare($sql);
-  $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion);
+  $stmt->bindParam(':cod_mof_aprobacion', $cod_mof_aprobacion);
   $stmt->execute();
   $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
   if ($resultado) {

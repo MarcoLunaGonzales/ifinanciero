@@ -896,7 +896,7 @@
                         <label class="col-sm-2 col-form-label">Servicio</label>
                         <div class="col-sm-7">
                           <div class="form-group">
-                            <select class="selectpicker form-control" data-live-search="true" name="cod_servicio" id="cod_servicio" data-style="btn btn-success" required>
+                            <select class="selectpicker form-control" name="cod_servicio[]" id="cod_servicio" multiple data-style="btn btn-success" data-actions-box="true" data-live-search="true" data-size="6" required>
                               <?php
                                 $stmt = $dbh->prepare("SELECT c.IdClasificador as codigo, c.Descripcion as descripcion
                                                       FROM ibnorca.clasificador c
@@ -907,7 +907,7 @@
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['descripcion'];
                               ?>
-                                <option value="<?=$codigoX;?>" <?=($cod_servicio==$codigoX) ? 'selected' : ''?>><?=$nombreX;?></option> 
+                                <option value="<?=$codigoX;?>" <?=(in_array($codigoX, $array_servicios)?'selected':'');?>><?=$nombreX;?></option> 
                               <?php
                                 }
                               ?>
@@ -1005,7 +1005,7 @@
                         <label class="col-sm-2 col-form-label">Servicio</label>
                         <div class="col-sm-7">
                           <div class="form-group">
-                            <select class="selectpicker form-control" data-live-search="true" name="cod_servicio" id="cod_servicio" data-style="btn btn-success" required>
+                            <select class="selectpicker form-control" name="cod_servicio[]" id="cod_servicio" multiple data-style="btn btn-success" data-actions-box="true" data-live-search="true" data-size="6" required>
                               <?php
                                 $stmt = $dbh->prepare("SELECT c.IdClasificador as codigo, c.Descripcion as descripcion
                                                       FROM ibnorca.clasificador c
@@ -1016,7 +1016,7 @@
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['descripcion'];
                               ?>
-                                <option value="<?=$codigoX;?>" <?=($cod_servicio==$codigoX) ? 'selected' : ''?>><?=$nombreX;?></option> 
+                                <option value="<?=$codigoX;?>" <?=(in_array($codigoX, $array_servicios)?'selected':'');?>><?=$nombreX;?></option> 
                               <?php
                                 }
                               ?>

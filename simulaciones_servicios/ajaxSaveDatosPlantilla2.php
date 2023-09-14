@@ -213,6 +213,21 @@ if($tipo_servicio==2778){ //sistemas integrados
   }
   /******************************************************/
 
+  // NUEVOS SERVICIOS - MULTIPLE
+  $sqlD="DELETE FROM simulaciones_servicios_serv where cod_simulacionservicio=$codSimulacion";
+  $stmtD = $dbhD->prepare($sqlD);
+  $stmtD->execute();  
+  if(isset($_POST['cod_servicio'])){
+    $array_cod_servicio = json_decode($_POST['cod_servicio']);
+    for ($ntp=0; $ntp < count($array_cod_servicio); $ntp++) { 
+      $cod_servicio    = $array_cod_servicio[$ntp];       
+      $sqlInsert = "INSERT INTO simulaciones_servicios_serv (cod_simulacionservicio, cod_servicio) 
+        VALUES ('".$codSimulacion."','".$cod_servicio."')";
+      $stmtInsert = $dbh->prepare($sqlInsert);
+      $stmtInsert->execute();
+    }
+  }
+
 if($cantidad==0){
 	$cantidad=1;
 }

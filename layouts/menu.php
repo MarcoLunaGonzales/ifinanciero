@@ -105,6 +105,18 @@ if($menuModulo==0){
                   </a>
                 </li> -->
                 <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listaMof">
+                    <span class="sidebar-mini"> M </span>
+                    <span class="sidebar-normal"> MOF</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listaManualAprobacionMof">
+                    <span class="sidebar-mini"> AM </span>
+                    <span class="sidebar-normal"> Aprobación de MOF</span>
+                  </a>
+                </li>
+                <li class="nav-item ">
                   <a class="nav-link" href="?opcion=cargosLista">
                     <span class="sidebar-mini"> C </span>
                     <span class="sidebar-normal"> Cargos</span>

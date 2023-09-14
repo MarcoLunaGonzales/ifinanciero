@@ -3363,7 +3363,8 @@ if(plantilla_servicio == 3){ // TCS
 
 
     var parametros={
-    "cod_servicio":cod_servicio,
+    // "cod_servicio":cod_servicio,
+    "cod_servicio":JSON.stringify(cod_servicio),
     "oficina_servicio":oficina_servicio,"des_serv":des_serv,
     
     "normas_tiposerviciotext":normas_tiposerviciotext,
@@ -3433,7 +3434,8 @@ if(plantilla_servicio == 3){ // TCS
       objeto=0;
       var des_serv=$("#d_servicio_p").val();
       var parametros={
-        "cod_servicio":cod_servicio,
+        // "cod_servicio":cod_servicio,
+        "cod_servicio":JSON.stringify(cod_servicio),
         "oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_servicio":tipoServicio,
       // "tipo_cliente":tipoCliente,
       // "region_cliente":regionCliente,
@@ -8697,7 +8699,8 @@ if(!(productos.length==0)){
       let cod_servicio = $("#cod_servicio").val();
 
       var parametros = {
-        "cod_servicio":cod_servicio,
+        // "cod_servicio":cod_servicio,
+        "cod_servicio":JSON.stringify(cod_servicio),
         "normas_nac":JSON.stringify(normas_nac),
         "normas_int":JSON.stringify(normas_int),
         "mod_afnor":mod_afnor,"mod_region_cliente":mod_region_cliente,"mod_tipo_cliente":mod_tipo_cliente,"mod_cliente":mod_cliente,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"organismo_certificador":organismo_certificador,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};

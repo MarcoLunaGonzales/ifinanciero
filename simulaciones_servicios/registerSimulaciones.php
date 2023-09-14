@@ -271,7 +271,7 @@ $fechaActualInput=date("Y-m-d");
                       <label class="col-sm-2 col-form-label"><span class="text-danger">*</span> Servicio</label>
                       <div class="col-sm-7">
                         <div class="form-group">
-                          <select class="selectpicker form-control" data-live-search="true" name="cod_servicio" id="cod_servicio" data-style="btn btn-success">
+                          <select class="selectpicker form-control" name="cod_servicio[]" id="cod_servicio" multiple data-style="btn btn-success" data-actions-box="true" data-live-search="true" data-size="6" required>
                           </select>
                         </div>
                       </div>

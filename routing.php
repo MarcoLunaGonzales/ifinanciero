@@ -2046,6 +2046,24 @@
 		if ($_GET['opcion']=='listaManualesAprobados') {
 			require_once('rrhh/ManualesAprobadosLista.php');
 		}
+
+		/***************************************************/
+		// Lista MOF
+		if ($_GET['opcion']=='listaMof') {
+			require_once('rrhh/mofLista.php');
+		}
+		// Lista de Configuración de Etapas MOF
+		if ($_GET['opcion']=='listaConfiguracionEtapasMof') {
+			require_once('rrhh/etapaMofAprobacion.php');
+		}
+		// Lista de Manual para Aprobación
+		if ($_GET['opcion']=='listaManualAprobacionMof') {
+			require_once('rrhh/MofAprobacionLista.php');
+		}
+		// Lista de MoMOF Aprobados (Visto bueno)
+		if ($_GET['opcion']=='listaMofAprobados') {
+			require_once('rrhh/MofAprobadosLista.php');
+		}
 		
 	}else{
 		//require("paginaprincipal.php");
