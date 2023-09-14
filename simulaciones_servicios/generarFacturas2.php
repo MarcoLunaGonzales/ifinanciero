@@ -307,9 +307,9 @@ try{
                 $response_lead = '';
                 if($banderaSW){
                     // Generación de Suscripción 
-                    generarSuscripcion($codigo, $stringFacturasCod);
+                    // generarSuscripcion($codigo, $stringFacturasCod);
                     // Generación de Busqueda y Cierre de LEAD
-                    $response_lead = searchLeadsFactura($stringFacturasCod);
+                    // $response_lead = searchLeadsFactura($stringFacturasCod);
                     $urlSIATCompleta=$urlSIAT."formatoFacturaOnLine.php?codVenta=".$idTransaccion_x;
                     echo "<script>
                     Swal.fire('".$titulo."','".$mensaje_x."', '".$estado."');

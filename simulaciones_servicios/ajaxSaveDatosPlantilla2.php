@@ -175,58 +175,75 @@ if($tipo_servicio==2778){ //sistemas integrados
   /****************************/
   // Se limpia campos NORMAS
   $dbhD = new Conexion();
-  $sqlD="DELETE FROM simulaciones_servicios_normas where cod_simulacionservicio=$codSimulacion";
+
+  // Eliminar registros existentes
+  $sqlD = "DELETE FROM simulaciones_servicios_normas WHERE cod_simulacionservicio = :codSimulacion";
   $stmtD = $dbhD->prepare($sqlD);
-  $stmtD->execute();  
-  // OTRAS NORMAS
+  $stmtD->bindParam(':codSimulacion', $codSimulacion, PDO::PARAM_INT);
+  $stmtD->execute();
+  // Insertar OTRAS NORMAS
   if(isset($_POST['normas_tiposerviciotext'])){
-    $normasTipoText=explode(",",$_POST['normas_tiposerviciotext']);
-    for ($ntp=0; $ntp < count($normasTipoText); $ntp++) { 
-      $nombreNormasTipo = $normasTipoText[$ntp];       
-      $sqlInsertNormas  = "INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones) 
-                          VALUES ('".$codSimulacion."','".$tipo_servicio."',0,'".$nombreNormasTipo."')";
+      $normasTipoText = explode(",", $_POST['normas_tiposerviciotext']);
+
+      $sqlInsertNormas = "INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio, cod_tiposervicio, cod_norma, observaciones) 
+                          VALUES (:codSimulacion, :tipo_servicio, 0, :nombreNormasTipo)";
       $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
-      $flagsuccess      = $stmtInsertNormas->execute();
-    }
+      $stmtInsertNormas->bindParam(':codSimulacion', $codSimulacion, PDO::PARAM_INT);
+      $stmtInsertNormas->bindParam(':tipo_servicio', $tipo_servicio, PDO::PARAM_INT);
+
+      foreach ($normasTipoText as $nombreNormasTipo) {
+          $stmtInsertNormas->bindParam(':nombreNormasTipo', $nombreNormasTipo, PDO::PARAM_STR);
+          $flagSuccess = $stmtInsertNormas->execute();
+      }
   }
+
   // NORMAS NACIONALES
   if(isset($_POST['normas_nac'])){
-    $normasTipo=json_decode($_POST['normas_nac']);
-    for ($ntp=0; $ntp < count($normasTipo); $ntp++) { 
-      $codigoNormasTipo=$normasTipo[$ntp];       
-      $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones, catalogo) 
-        VALUES ('".$codSimulacion."','".$tipo_servicio."','".$codigoNormasTipo."','','L')";
-      $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
-      $flagsuccess=$stmtInsertNormas->execute();
+    $normasTipo = json_decode($_POST['normas_nac']);
+    $sqlInsertNormas = "INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio, cod_tiposervicio, cod_norma, observaciones, catalogo) 
+        VALUES (:codSimulacion, :tipo_servicio, :codigoNormasTipo, '', 'L')";
+    $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
+    foreach ($normasTipo as $codigoNormasTipo) {
+        $stmtInsertNormas->bindParam(':codSimulacion', $codSimulacion, PDO::PARAM_INT);
+        $stmtInsertNormas->bindParam(':tipo_servicio', $tipo_servicio, PDO::PARAM_INT);
+        $stmtInsertNormas->bindParam(':codigoNormasTipo', $codigoNormasTipo, PDO::PARAM_INT);
+        $flagSuccess = $stmtInsertNormas->execute();
     }
-  }
+}
   // NORMAS INTERNACIONALES
   if(isset($_POST['normas_int'])){ 
-    $normasTipo=json_decode($_POST['normas_int']);
-    for ($ntp=0; $ntp < count($normasTipo); $ntp++) { 
-      $codigoNormasTipo=$normasTipo[$ntp];       
-      $sqlInsertNormas="INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio,cod_tiposervicio,cod_norma,observaciones, catalogo) 
-        VALUES ('".$codSimulacion."','".$tipo_servicio."','".$codigoNormasTipo."','','I')";
-      $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
-      $flagsuccess=$stmtInsertNormas->execute();
+    $normasTipo = json_decode($_POST['normas_int']);
+    $sqlInsertNormas = "INSERT INTO simulaciones_servicios_normas (cod_simulacionservicio, cod_tiposervicio, cod_norma, observaciones, catalogo) 
+        VALUES (:codSimulacion, :tipo_servicio, :codigoNormasTipo, '', 'I')";
+    $stmtInsertNormas = $dbh->prepare($sqlInsertNormas);
+    foreach ($normasTipo as $codigoNormasTipo) {
+        $stmtInsertNormas->bindParam(':codSimulacion', $codSimulacion, PDO::PARAM_INT);
+        $stmtInsertNormas->bindParam(':tipo_servicio', $tipo_servicio, PDO::PARAM_INT);
+        $stmtInsertNormas->bindParam(':codigoNormasTipo', $codigoNormasTipo, PDO::PARAM_INT);
+        $flagSuccess = $stmtInsertNormas->execute();
     }
   }
+
   /******************************************************/
 
-  // NUEVOS SERVICIOS - MULTIPLE
-  $sqlD="DELETE FROM simulaciones_servicios_serv where cod_simulacionservicio=$codSimulacion";
+  // * Eliminar registros existentes SERVICIOS
+  $sqlD = "DELETE FROM simulaciones_servicios_serv WHERE cod_simulacionservicio = :codSimulacion"; 
   $stmtD = $dbhD->prepare($sqlD);
-  $stmtD->execute();  
+  $stmtD->bindParam(':codSimulacion', $codSimulacion, PDO::PARAM_INT);
+  $stmtD->execute();
+  // NUEVOS SERVICIOS - MULTIPLE
   if(isset($_POST['cod_servicio'])){
-    $array_cod_servicio = json_decode($_POST['cod_servicio']);
-    for ($ntp=0; $ntp < count($array_cod_servicio); $ntp++) { 
-      $cod_servicio    = $array_cod_servicio[$ntp];       
+      $array_cod_servicio = json_decode($_POST['cod_servicio']);
       $sqlInsert = "INSERT INTO simulaciones_servicios_serv (cod_simulacionservicio, cod_servicio) 
-        VALUES ('".$codSimulacion."','".$cod_servicio."')";
+          VALUES (:codSimulacion, :cod_servicio)";
       $stmtInsert = $dbh->prepare($sqlInsert);
-      $stmtInsert->execute();
-    }
+      $stmtInsert->bindParam(':codSimulacion', $codSimulacion, PDO::PARAM_INT);
+      foreach ($array_cod_servicio as $cod_servicio) {
+          $stmtInsert->bindParam(':cod_servicio', $cod_servicio, PDO::PARAM_INT);
+          $stmtInsert->execute();
+      }
   }
+
 
 if($cantidad==0){
 	$cantidad=1;
