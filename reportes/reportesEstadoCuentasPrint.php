@@ -25,21 +25,30 @@ $ver_saldo=$_POST["ver_saldo"];
 $StringCuenta=implode(",", $cuenta);
 $StringUnidades=implode(",", $unidad);
 
+$stringPersonalX=0;
+$stringNombresPersonalX="";
+$txtTituloPersonal="";
+if(isset($_POST["personal"])){
+    $personalPost=$_POST["personal"];
+    $stringPersonalX=implode(",", $personalPost);
+    $stringNombresPersonalX=namePersonal_2($stringPersonalX);
+    $txtTituloPersonal="Personal que realizo la solicitud: ".$stringNombresPersonalX;
+}
+if($stringPersonalX==""){
+    $stringPersonalX=0;
+}
+
 if($ver_saldo==3){//saldos Generales
      
    include "reportesEstadoCuentasPrint_saldos.php";
 }else{
 
 $proveedoresString=implode(",", $proveedores);
-
 $proveedoresStringAux="and e.cod_cuentaaux in ($proveedoresString)";
 
 if(count($proveedores)==(int)$_POST["numero_proveedores"]){
   $proveedoresStringAux="";
 }
-
-
-
 
 
 $stringGeneraCuentas="";
@@ -97,6 +106,7 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                       <h6 class="card-title">Gestion: <?= $NombreGestion; ?></h6>                        
                       <h6 class="card-title">Cuenta: <?=$stringGeneraCuentas;?></h6>
                       <h6 class="card-title">Unidad:<?=$stringGeneraUnidades?></h6>             
+                      <h6 class="card-title"><?=$txtTituloPersonal;?></h6>             
                       <div class="row">
                         <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Oficina: </b> <small><?=$unidadAbrev?></small></h6></div>
                         <div class="col-sm-6"><h5 class="card-title"><b>Centro de Costo - Area: </b> <small><?=$areaAbrev?></small></h6></div>
@@ -111,12 +121,10 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                     '<tr class="">'.
                                         '<th class="text-left">Of.</th>'.
                                         '<th class="text-left">CC</th>'.
-                                        '<th class="text-left">CC</th>'.
                                         '<th class="text-left">Tipo/#</th>'.
                                         '<th class="text-left">FechaComp</th>'.
                                         '<th class="text-left">FechaEC</th>'.
                                         '<th class="text-left">Proveedor/Cliente</th>'.
-                                        '<th class="text-left">CuentaAux</th>'.
                                         '<th class="text-left">Glosa</th>'.
                                         '<th class="text-right">Debe</th>'.
                                         '<th class="text-right">Haber</th>'.
@@ -150,8 +158,16 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                           $sqlFechaEstadoCuenta="and e.fecha<='$hasta 23:59:59'";  
                                          }
 
-                                        $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) $proveedoresStringAux and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) order by e.fecha"; //ca.nombre, 
+                                        $sql="SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, d.cod_cuenta, ca.nombre, cc.codigo as codigocomprobante, cc.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos FROM estados_cuenta e,comprobantes_detalle d, comprobantes cc, cuentas_auxiliares ca  where e.cod_comprobantedetalle=d.codigo and cc.codigo=d.cod_comprobante and e.cod_cuentaaux=ca.codigo and cc.cod_estadocomprobante<>2 and d.cod_cuenta in ($cuentai) and e.cod_comprobantedetalleorigen=0 and cc.cod_gestion= '$NombreGestion' $sqlFechaEstadoCuenta and cc.cod_unidadorganizacional in ($StringUnidades) $proveedoresStringAux and d.cod_unidadorganizacional in ($unidadCostoArray) and d.cod_area in ($areaCostoArray) "; //ca.nombre, 
+                                        if($stringPersonalX!="0" && $tipo_cp==2){
+                                            $sql.=" and cc.codigo in (select f.cod_comprobante from facturas_venta f, solicitudes_facturacion sf where f.cod_comprobante=cc.codigo and f.cod_solicitudfacturacion=sf.codigo and sf.cod_personal in ($stringPersonalX)) ";
+                                        }elseif($stringPersonalX!="0" && $tipo_cp==1){
+                                            $sql.=" and cc.codigo in (select sr.cod_comprobante from solicitud_recursos sr where sr.cod_comprobante=cc.codigo and sr.cod_personal in ($stringPersonalX)) ";
+                                        }
+                                        $sql.=" order by e.fecha";
+                                        
                                         //echo $sql;
+                                        
                                         $stmtUO = $dbh->prepare($sql);
                                         $stmtUO->execute();
                                         $codPlanCuentaAuxiliarPivotX=-10000;
@@ -266,13 +282,11 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                 $html.='<tr class="bg-white det-estados '.$estiloEstados.' '.$mostrarFilasEstado.'" '.$estiloFilasEstado.'>
                                                     <td class="text-left small">'.$nombreUnidadCabecera.'</td>
                                                     <td class="text-left small">'.$nombreUnidadO.'-'.$nombreAreaCentroCosto.'</td>
-                                                    <td class="text-left small">'.$codUnidadOrganizacional.'-'.$codAreaCentroCosto.'</td>
                                                     <td class="text-center small">'.$nombreComprobanteX.'</td>
                                                     <td class="text-left small">'.$fechaComprobante.'</td>
                                                     <td class="text-left small">'.$fechaX.'</td>
                                                     <!--td class="text-left small">'.$nombreCuentaAuxiliarX.'['.$nombreProveedorX.']</td-->
                                                     <td class="text-left small">'.$nombreCuentaAuxiliarX.'</td>
-                                                    <td class="text-left small">'.$codPlanCuentaAuxiliarX.'</td>
                                                     <td class="text-left small">'.$glosaMostrar.'</td>
                                                     <td class="text-right text-muted font-weight-bold small">'.formatNumberDec($montoEstado).'</td>
                                                     <td class="text-right small">'.formatNumberDec($montoX).'</td>
@@ -288,13 +302,11 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                  $html.='<tr class="bg-white det-estados '.$estiloEstados.' '.$mostrarFilasEstado.'" '.$estiloFilasEstado.'>
                                                     <td class="text-left small">'.$nombreUnidadCabecera.'</td>
                                                     <td class="text-left small">'.$nombreUnidadO.'-'.$nombreAreaCentroCosto.'</td>
-                                                    <td class="text-left small">'.$codUnidadOrganizacional.'@'.$codAreaCentroCosto.'</td>
                                                     <td class="text-center small">'.$nombreComprobanteX.'</td>
                                                     <td class="text-left small">'.$fechaComprobante.'</td>
                                                     <td class="text-left small">'.$fechaX.'</td>
                                                     <!--td class="text-left small">'.$nombreCuentaAuxiliarX.'['.$nombreProveedorX.']</td-->
                                                     <td class="text-left small">'.$nombreCuentaAuxiliarX.'</td>
-                                                    <td class="text-left small">'.$codPlanCuentaAuxiliarX.'</td>
                                                     <td class="text-left small">'.$glosaMostrar.'</td>
                                                     <td class="text-right small">'.formatNumberDec($montoX).'</td>
                                                     <td class="text-right text-muted font-weight-bold small">'.formatNumberDec($montoEstado).'</td>
@@ -302,9 +314,6 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                                 </tr>';
 
                                             }    
-
-                                            
-
                                                 $stmt_d = $dbh->prepare("SELECT e.*,d.glosa,d.haber,d.debe,(select concat(c.cod_tipocomprobante,'|',c.numero,'|',cd.cod_unidadorganizacional,'|',MONTH(c.fecha),'|',c.fecha) from comprobantes_detalle cd, comprobantes c where c.codigo=cd.cod_comprobante and cd.codigo=e.cod_comprobantedetalle)as extra, c.codigo as codigocomprobante, c.cod_unidadorganizacional as cod_unidad_cab, d.cod_area as area_centro_costos
                                                     from estados_cuenta e, comprobantes_detalle d, comprobantes c where c.codigo=d.cod_comprobante and c.cod_estadocomprobante<>2 $sqlFechaEstadoCuentaPosterior and e.cod_comprobantedetalle=d.codigo and e.cod_comprobantedetalleorigen=$codigoX");
                                                 $stmt_d->execute();

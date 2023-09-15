@@ -44,11 +44,13 @@
           // $codAreaX="";
           // $nombreAreaX="";
           $abreviatura_n2=$rowComp['abreviatura_n2'];
+
           $descripcion_n2=$rowComp['descripcion_n2'];
           $importe_realX=$rowComp['importe_real'];
           $totalImporte+=$importe_realX;
-          $cantidadServiciosX+=$rowComp['cantidad_servicios'];
 
+          $cantidadServiciosX+=$rowComp['cantidad_servicios'];          
+          
           $html.='<tr>'.
                         '<td class="text-left font-weight-bold">'.$nombreAreaX.'</td>'.
                         '<td class="text-left font-weight-bold">'.$abreviatura_n2.'</td>'.
@@ -63,6 +65,7 @@
             $listaDetalleUnidades4=obtenerListaVentasA_servicios($unidadCosto[$i],$stringAreas_1,$IdtipoX,$desde,$hasta);
             while ($rowCompUnidades = $listaDetalleUnidades4->fetch(PDO::FETCH_ASSOC)) {
               $importe_realY=$rowCompUnidades['importe_real'];
+
               $cantidadServiciosY=$rowCompUnidades['cantidad_servicios'];
 
               if($importe_realY>0){

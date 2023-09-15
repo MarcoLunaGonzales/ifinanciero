@@ -246,10 +246,12 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                         
                           <td class="td-actions text-right">
                             <!-- Lista de Solicitud de recursos -->
-                            <button class="btn btn-default lista_solicitud_recursos" title="Solicitud de Recursos" data-cod_simulacionservicio="<?=$codigo?>">
+                            <button class="btn btn-default lista_solicitud_recursos" title="Listado de Solicitud de Recursos" data-cod_simulacionservicio="<?=$codigo?>">
                                 <i class="material-icons">receipt</i>
                             </button>
-
+                            <button title="Duplicar Propuesta" class="btn btn-info propuesta_duplicar" data-codigo="<?=$codigo;?>">
+                                    <i class="material-icons">content_copy</i>
+                            </button>
                             <?php
                               if($codEstado==4||$codEstado==3||$codEstado==5){
                                
@@ -360,7 +362,6 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                  <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$idServicioX?>'>
                                    <i class="material-icons">receipt</i>                              
                                  </a>
-
                                  <?php 
                                  if($idServicioX>0){
                                    ?>
@@ -386,9 +387,6 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                  <a class="btn btn-warning" title="Solicitud de Facturación" href='<?=$urlSolicitudfactura;?>&cod=<?=$codigo;?>'>
                                    <i class="material-icons" >receipt</i>                              
                                  </a>
-                                  <button title="Duplicar Propuesta" class="btn btn-warning propuesta_duplicar" data-codigo="<?=$codigo;?>">
-                                    <i class="material-icons">content_copy</i>
-                                  </button>
                                  <?php 
                                  if($idServicioX>0){
                                    ?>
@@ -431,10 +429,6 @@ $stmt->bindColumn('cod_unidadorganizacional', $oficinaX);
                                  ?>
                                   <button title="Eliminar Propuesta" class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDelete;?>&codigo=<?=$codigo;?>')">
                                     <i class="material-icons"><?=$iconDelete;?></i>
-                                  </button>
-                                  <!-- Duplicar Registro de Propuesta -->
-                                  <button title="Duplicar Propuesta" class="btn btn-warning propuesta_duplicar" data-codigo="<?=$codigo;?>">
-                                    <i class="material-icons">content_copy</i>
                                   </button>
                                  <?php  
                                 }
