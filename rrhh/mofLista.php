@@ -9,48 +9,33 @@ $globalAdmin=$_SESSION["globalAdmin"];
 $dbh = new Conexion();
 
 $stmt = $dbh->prepare("SELECT
-                        c.codigo,
-                        UPPER(c.nombre) AS nombre,
-                        c.objetivo,
-                        c.abreviatura,
-                        c.cod_tipo_cargo,
-                        tc.nombre AS nombre_tipo_cargo,
-                        UPPER(cpadre.nombre) AS nombre_dependencia,
-                        UPPER(cfuncional.nombre) AS nombre_dependencia_funcional,
+                        m.codigo,
+                        UPPER(m.nombre) AS nombre,
                         ma.codigo as ma_codigo,
                         ma.cod_etapa as ma_cod_etapa,
                         ma.cod_estado as ma_cod_estado,
                         mae.nombre as ma_nombre_estado,
                         mae.color as ma_color_estado,
                         CONCAT(eta.descripcion, ' (', eta.nombre, ')') as eta_etapa
-                      FROM cargos c
-                      LEFT JOIN cargos cpadre ON cpadre.codigo = c.cod_padre
-                      LEFT JOIN cargos cfuncional ON cfuncional.codigo = c.cod_dep_funcional
-                      LEFT JOIN tipos_cargos_personal tc ON tc.codigo = c.cod_tipo_cargo
+                      FROM mof m
                       LEFT JOIN (
                           SELECT
                               codigo,
-                              cod_cargo,
+                              cod_mof,
                               cod_etapa,
                               cod_estado,
-                              ROW_NUMBER() OVER (PARTITION BY cod_cargo ORDER BY codigo DESC) AS rn
-                          FROM manuales_aprobacion
-                      ) ma ON ma.cod_cargo = c.codigo AND ma.rn = 1
-                      LEFT JOIN manuales_aprobacion_estados mae ON mae.codigo = ma.cod_estado
-                      LEFT JOIN manuales_aprobacion_etapas eta ON eta.codigo = ma.cod_etapa
-                      WHERE c.cod_estadoreferencial = 1
-                      ORDER BY c.nombre");
+                              ROW_NUMBER() OVER (PARTITION BY cod_mof ORDER BY codigo DESC) AS rn
+                          FROM mof_aprobacion
+                      ) ma ON ma.cod_mof = m.codigo AND ma.rn = 1
+                      LEFT JOIN mof_aprobacion_estados mae ON mae.codigo = ma.cod_estado
+                      LEFT JOIN mof_aprobacion_etapas eta ON eta.codigo = ma.cod_etapa
+                      WHERE m.estado = 1
+                      ORDER BY m.nombre");
 //ejecutamos
 $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nombre', $nombre);
-$stmt->bindColumn('objetivo', $objetivo);
-$stmt->bindColumn('abreviatura', $abreviatura);
-$stmt->bindColumn('cod_tipo_cargo', $cod_tipo_cargo);
-$stmt->bindColumn('nombre_tipo_cargo', $nombre_tipo_cargo);
-$stmt->bindColumn('nombre_dependencia', $nombre_dependencia);
-$stmt->bindColumn('nombre_dependencia_funcional', $nombre_dependencia_funcional);
 $stmt->bindColumn('ma_codigo', $ma_codigo);
 $stmt->bindColumn('ma_cod_etapa', $ma_cod_etapa);
 $stmt->bindColumn('ma_cod_estado', $ma_cod_estado);
@@ -107,17 +92,10 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
                   <div class="card-icon">
                     <i class="material-icons"><?=$iconCard;?></i>
                   </div>
-                  <h4 class="card-title"><?=$nombrePluralCargos?></h4>                  
+                  <h4 class="card-title">Lista MOF</h4>                  
                   <h4 align="right" >
-                <a  style="height:10px;width: 10px; color: #ffffff;background-color: #1883ba;border-radius: 3px;border: 2px solid #1883ba;" href='<?=$urlCargoEscalaSalarialGeneral;?>' >
-                  <i class="material-icons" title="Lista Escala Salarial General">trending_up</i>
-                </a>  
-                <!-- Lista de Cargos Inactivos -->
-                <a  style="height:10px;width: 10px; color: #ffffff;background-color: #f44336;border-radius: 3px;border: 2px solid #f44336;" href='?opcion=cargosListaInactivo' title="Cargos Inactivos">
-                  <i class="material-icons">list</i>
-                </a>
                 <!-- Lista de Configuracion Etapas -->
-                <a style="height:10px;width: 10px; color: #9e38b4;background-color: #9e38b4;border-radius: 3px;border: 2px solid #9e38b4;" title="Configuración Etapas" href='?opcion=listaConfiguracionEtapas'>
+                <a style="height:10px;width: 10px; color: #9e38b4;background-color: #9e38b4;border-radius: 3px;border: 2px solid #9e38b4;" title="Configuración Etapas MOF" href='?opcion=listaConfiguracionEtapasMof'>
                   <i class="material-icons" style="color: #ffffff;">settings</i>
                 </a>
 
@@ -128,15 +106,10 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
 
                       <thead>
                         <tr>
-                          <th width="10">#</th>                        
+                          <th width="10">#</th>
                           <th width="150">Nombre</th>
-                          <th width="230">Objetivo</th>
-                          <th width="10">Abreviatura</th>
-                          <th width="10">Nivel del Cargo</th>
-                          <th width="10">Dependencia Jerárquica</th>
-                          <th width="10">Dependencia Funcional</th>
-                          <th width="10">Estado de Manual</th>
-                          <th width="80" class="text-center">Acciones</th>
+                          <th width="10">Estado de Mof</th>
+                          <th width="30" class="text-center">Acciones</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -145,16 +118,11 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
                           <tr>
                             <td><?=$index;?></td>
                             <td><?=$nombre;?></td>
-                            <td><?=strlen($objetivo) > 100 ? (substr($objetivo, 0, 100) . "...") : $objetivo;?></td>
-                              <td><?=$abreviatura;?></td>
-                              <td><?=$nombre_tipo_cargo;?></td>
-                              <td><?=$nombre_dependencia;?></td>
-                              <td><?=$nombre_dependencia_funcional;?></td>
                               <td>
                                 <?php if(empty($ma_cod_estado)){ ?>
                                 <span class="badge badge-md badge-warning">Sin procesar</span>
                                 <?php }else{ ?>
-                                <span class="badge badge-md badge-<?=$ma_color_estado?> btnVerHistorial" data-cod_cargo="<?=$codigo;?>"><?=$ma_nombre_estado?></span>
+                                <span class="badge badge-md badge-<?=$ma_color_estado?> btnVerHistorial" data-cod_mof="<?=$codigo;?>"><?=$ma_nombre_estado?></span>
                                 <?php } ?>
                               </td>
                               <td class="td-actions text-right">
@@ -166,51 +134,32 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
                                   if(empty($ma_cod_estado) || in_array($ma_cod_estado, [2, 3])){
                                 ?>
                                   <!-- Inicializar -->
-                                  <button class="btn btn-md btn-success btnIniciarAprobacion" data-cod_cargo="<?=$codigo;?>" title="Iniciar Proceso de Aprobación">
+                                  <button class="btn btn-md btn-success btnIniciarAprobacion" data-cod_mof="<?=$codigo;?>" title="Iniciar Proceso de Aprobación">
                                     <i class="material-icons">play_for_work</i>
                                   </button>
                                 <?php
                                   }else{
                                 ?>
                                   <!-- En proceso de Aprobación -->
-                                  <button class="btn btn-info btnVerHistorial" title="<?=$ma_nombre_estado?>: <?=$eta_etapa?>" data-cod_cargo="<?=$codigo;?>">
+                                  <button class="btn btn-info btnVerHistorial" title="<?=$ma_nombre_estado?>: <?=$eta_etapa?>" data-cod_mof="<?=$codigo;?>">
                                     <div class="loading-dot"></div>
                                   </button>
                                 <?php
                                   }
                                 ?>
 
-                                <a href='<?=$urlCargosEscalaSalarial;?>&codigo=<?=$codigo;?>' class="btn btn-primary">
-                                    <i class="material-icons" title="Escala Salarial">trending_up</i>
-                                </a>
-
-                                <!-- Reporte PDF -->
-                                <a href='rrhh/pdfGeneracion.php?codigo=<?=$codigo;?>' target="_blank" class="btn btn-danger" title="Manual de Cargo">
-                                  <i class="material-icons">picture_as_pdf</i>
-                                </a>
                                 
                                 <?php
-                                  // No aparecerán las opciones en caso de tener el manual de cargo
+                                  // No aparecerán las opciones en caso de tener el MOF
                                   // en proceso de APROBACIÓN
                                   if(empty($ma_cod_estado) || in_array($ma_cod_estado, [2, 3])){
                                 ?>
-                                <!-- Responsabilidades -->
-                                <a href='<?=$urlCargosFunciones;?>&codigo=<?=$codigo;?>' class="btn btn-warning" title="Responsabilidades del Cargo">
-                                  <i class="material-icons">assignment</i>
-                                </a>
-
-                                <!-- Autoridades -->
-                                <a href='index.php?opcion=cargosAutoridades&codigo=<?=$codigo;?>' class="btn btn-info" title="Autoridades del Cargo">
-                                  <i class="material-icons">list</i>
-                                </a>
                                 
                                 <!-- Editar -->
-                                <a href='<?=$urlFormCargos;?>&codigo=<?=$codigo;?>' class="<?=$buttonEdit;?>">
-                                  <i class="material-icons" title="Editar"><?=$iconEdit;?></i>
-                                </a>
+                                <button type="button" class="btn btn-info form_edit" data-codigo="<?=$codigo;?>" data-nombre="<?=$nombre;?>"><i class="material-icons" title="Editar"><?=$iconEdit;?></i></button>
 
                                 <!-- Eliminar -->
-                                <button class="<?=$buttonDelete;?>" onclick="alerts.showSwal('warning-message-and-confirmation','<?=$urlDeleteCargos;?>&codigo=<?=$codigo;?>')">
+                                <button class="<?=$buttonDelete;?> form_del">
                                   <i class="material-icons" title="Borrar"><?=$iconDelete;?></i>
                                 </button>
                                 <?php
@@ -235,8 +184,7 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
               if($globalAdmin==1){
               ?>
       				<div class="card-footer fixed-bottom">
-                    <!--<button class="<?=$buttonNormal;?>" onClick="location.href='index.php?opcion=registerUbicacion'">Registrar</button>-->
-                    <button class="<?=$buttonNormal;?>" onClick="location.href='<?=$urlFormCargos;?>&codigo=0'">Registrar</button>
+                <button type="button" class="btn btn-success" id="form_reg">Registrar</button>
               </div>
               <?php
               }
@@ -257,7 +205,7 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
         <button type="button" class="close pt-2" data-dismiss="modal" aria-hidden="true">
           <i class="material-icons">close</i>
         </button>
-        <h4 class="card-title" style="color: #333;font-weight: bold;">Seguimiento de Etapas</h4>
+        <h4 class="card-title" style="color: #333;font-weight: bold;">Seguimiento de Etapas MOF</h4>
       </div>
 
       <div class="card-body content-historial">
@@ -271,12 +219,48 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
   </div>
 </div>
 
+<!-- Modal REGISTRAR O EDITAR -->
+<div class="modal fade" id="modalAgregarEditar" tabindex="-1" role="dialog" aria-labelledby="modalAgregarEditarLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarEditarLabel">Agregar/Editar Registro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formularioRegistro">
+                    <input type="hidden" id="registroId" name="registroId" value="">
+                    <div class="row">
+                      <label class="col-sm-3"><span class="text-danger">*</span> Nombre :</label>
+                      <div class="col-sm-9">
+                          <input class="form-control" type="text" name="nombre" id="nombre" placeholder="Agregar nombre"/>
+                      </div>
+                      <br>
+                      <label class="col-sm-3"><span class="text-danger">*</span> Archivo :</label>
+                      <div class="col-sm-9">
+                          <input class="form-control" type="file" id="archivo" placeholder="Agrear Archivo" accept=".pdf"/>
+                      </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="guardarRegistro" class="btn btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <script>
   /**
    * Primera etapa de probación
    */
   $(".btnIniciarAprobacion").click(function() {
-    var cod_cargo = $(this).data('cod_cargo');
+    var cod_mof = $(this).data('cod_mof');
     Swal.fire({
       title: '¿Deseas iniciar la etapa de aprobación?',
       text: 'Esta acción iniciará la etapa de aprobación. ¿Estás seguro?',
@@ -290,11 +274,11 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
       if (result.value) {
         // PROCESO
         $.ajax({
-            url: "rrhh/ajaxManualAprobacionInicializacion.php",
+            url: "rrhh/ajaxMofAprobacionInicializacion.php",
             method: "POST",
             dataType: "json",
             data: {
-              cod_cargo: cod_cargo
+              cod_mof: cod_mof
             },
             success: function(response) {
                 // console.log(response)
@@ -334,19 +318,19 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
   });
 
   /**
-   * Ver historial de estado de Manual de Aprobación
+   * Ver historial de estado de Mof de Aprobación
    */
   $('.btnVerHistorial').click(function(){
-    let cod_cargo = $(this).data('cod_cargo');
+    let cod_mof = $(this).data('cod_mof');
     $.ajax({
-      url: "rrhh/ajaxManualAprobacionEstadoHistorial.php",
+      url: "rrhh/ajaxMofAprobacionEstadoHistorial.php",
       method: "POST",
       dataType: "html",
       data: {
-        cod_cargo: cod_cargo
+        cod_mof: cod_mof
       },
       success: function(response) {
-        // console.log(response)
+        console.log(response)
         $('.content-historial').html(response);
         $('#modalHistorial').modal('show');
       },
@@ -361,4 +345,70 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
       }
     });
   });
+</script>
+<script>
+$(document).ready(function() {
+  // Función para abrir el modal con campos en blanco
+  $("#form_reg").click(function() {
+    $("#modalAgregarEditarLabel").text("Agregar Registro");
+    $("#registroId").val("");
+    $("#nombre").val("");
+    $("#archivo").val("");
+    $("#modalAgregarEditar").modal("show");
+  });
+
+  // Función para editar un registro existente
+  $(".form_edit").click(function() {
+    var registroId = $(this).data("codigo");
+    var nombre = $(this).data("nombre");
+
+    $("#modalAgregarEditarLabel").text("Editar Registro");
+    $("#registroId").val(registroId);
+    $("#nombre").val(nombre);
+    $("#modalAgregarEditar").modal("show");
+  });
+
+  // Función para guardar el registro mediante AJAX
+  $("#guardarRegistro").click(function() {
+    let formData = new FormData();
+    formData.append('codigo', $('#registroId').val());
+    formData.append('nombre', $('#nombre').val());
+    formData.append('archivo', $('#archivo')[0].files[0]);
+    $.ajax({
+        url: "rrhh/mofSave.php",
+        method: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        dataType: 'json', // Indica que esperas una respuesta JSON
+        success: function(response) {
+            console.log(response);
+
+            if (response.status) {
+                Swal.fire({
+                    type: "success",
+                    title: response.message,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    onClose: function() {
+                        location.reload();
+                    }
+                });
+            } else {
+                Swal.fire({
+                    type: "error",
+                    title: response.message,
+                });
+            }
+
+            $("#modalAgregarEditar").modal("hide");
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            // Maneja los errores de la solicitud AJAX
+            console.error(textStatus);
+        }
+    });
+
+  });
+});
 </script>

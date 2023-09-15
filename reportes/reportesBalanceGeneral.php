@@ -124,7 +124,8 @@ if(isset($bkLink)){
             </div><!--fin campo gestion -->
           </div>
           <div class="card-footer ml-auto mr-auto">
-          <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
+          <button type="submit" class="<?=$buttonNormal;?>" id="form_generar">Generar</button>
+              <button type="submit" class="btn btn-success" id="form_descargar_excel"><i class="fas fa-file-excel"></i> Descargar Excel</button>
             </div>
         </div>
         </form>
@@ -134,3 +135,22 @@ if(isset($bkLink)){
 	
 	</div>
 </div>
+
+<script>
+  $(document).ready(function() {
+    // Generar
+    $("#form_generar").click(function(e) {
+        e.preventDefault();
+        $("#form1").attr("action", "<?=$urlReporteBalance;?>");
+        $("#form1").attr("target", "_blank");
+        $("#form1").submit();
+    });
+    // Descargar PDF
+    $("#form_descargar_excel").click(function(e) {
+        e.preventDefault();
+        $("#form1").attr("action", "reportes/reporteBalanceExcel.php");
+        $("#form1").attr("target", "_blank");
+        $("#form1").submit();
+    });
+  });
+</script>

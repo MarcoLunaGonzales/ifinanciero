@@ -583,83 +583,106 @@
                            </div>--> 
                       </div>
                       <?php 
-                        if($codAreaX==39){
+                        // Caso especial (excepcion)
+                        $array_excepcion = ['4822'];
+                        if($codAreaX==39 && !in_array($idTipoServicioX, $array_excepcion)){
                           $cantidadProductos=explode(",",$productosX);
                          ?>
-                     <div class="row">
-                       <label class="col-sm-2 col-form-label">Productos <!--<small class="text-muted">(<?=count($cantidadProductos)?>)</small>--></label>
-                       <div class="col-sm-8">
-                        <div class="form-group" style="border-bottom: 1px solid #CACFD2">
-                          <input type="hidden" value="" class="form-control" name="modal_productos" id="modal_productos">
-                          <div id="productos_div" class=""></div>
-                          <div id="divResultadoListaAtributosProd">
-                            <div class="">
-                              <center><h4><b>SIN REGISTROS</b></h4></center>
+
+                      <!-- SECCIÓN DE PRODUCTOS -->
+                      <div class="row seccion_productos pt-0">
+                        <label class="col-sm-1 col-form-label">Productos <?=count($cantidadProductos)?></label>
+                        <div class="col-sm-9">
+                          <div class="form-group">
+                            <div>
+                              <table class="table table-bordered table-sm table-striped small" style="font-size: 11px;">
+                                <thead>
+                                  <tr class="bg-info text-white">
+                                    <th>#</th>
+                                    <th>NOMBRE</th>
+                                    <th>DIRECCION</th>
+                                    <th>MARCA</th>
+                                    <th>NORMA</th>
+                                    <th>SELLO</th>
+                                    <td class="text-right" width="18%">OPCION</td>
+                                  </tr>
+                                </thead>
+                                <tbody id="listProducto">
+                                  <?php
+                                  if (count($cantidadProductos) === 0) {
+                                      echo '<tr><td colspan="7">No existen registros.</td></tr>';
+                                  }
+                                  ?>
+                                </tbody>
+                              </table>
                             </div>
-                          </div>                          
-                        </div>
+                          </div>
                         </div>
                         <div class="col-sm-2">
-                          <?php
-                          if(!isset($sinEdicionModal)){
-                                        ?>
-                           <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
-
+                            <?php
+                              if(!isset($sinEdicionModal)){
+                            ?>
+                            <!-- Agrega Nuevo -->
+                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm btnEditarAtributo" onClick="abreModalItem()">
+                              <i class="material-icons">add</i>
                             </button>
                             <?php } ?>
                         </div>
                       </div>
+                      <!-- Lista Atributos -->
+                      <script>
+                        atributoProducto = atributosArrayGral;
+                        actualizarTablaProductos();
+                      </script>
+                      <!-- FIN SECCIÓN DE PRODUCTOS -->
+
                          <?php
                         }else{
-                            if($codAreaX==38){
+                            if($codAreaX==38 || (in_array($idTipoServicioX, $array_excepcion) && $codAreaX==39)){
                               $cantidadSitios=explode(",",$sitiosX);
                               
                          ?>
-                     <div class="row">
-                       <!--<label class="col-sm-2 col-form-label">Sitios <small class="text-muted">(<?=count($cantidadSitios)?>)</small></label>-->
-                       <div class="col-sm-12">
-                          <div class="btn-group  float-right">
-                            <?php
-                              if(!isset($sinEdicionModal)){
-                                        ?>
-                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-sm btn-warning btn-round btn-fab" onClick="agregarAtributoAjax()"><i class="material-icons">add</i>
-                            </button>
-                              <button title="Agregar Auditor" type="button" class="btn btn-sm btn-default btn-round dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="material-icons">add</i> EA
-                              </button>
-                              <div class="dropdown-menu">
-                                <?php 
-                                for ($i=$inicioAnio; $i <= $anioGeneral; $i++) {
-                                  $etapas="Seg ".($i-1);
-                                  if($i==0||$i==1){
-                                        if($i==1){
-                                          $etapas="Et ".($i+1)." / R"; 
-                                        }else{
-                                             $etapas="Et ".($i+1)."";                                                  
-                                        }
-                                  }
-                                  ?>
-                                  <a href="#" class="dropdown-item" onClick="mostrarNuevoPersonalModal(<?=$i?>,'<?=$etapas?>',1)">
-                                    <?=$etapas?>
-                                 </a>
-                                  <?php
-                                } ?>
-                               </div>
-                              <?php } ?>
-                        </div>
-                        <div class="" style="border-bottom: 1px solid #CACFD2">
-                          <div id="productos_div" class="d-none"></div>
-                          <input type="hidden" value="" class="" name="modal_sitios" id="modal_sitios">                          
-                          <div id="divResultadoListaAtributos">
-                            <div class="">
-                              <center><h4><b>SIN REGISTROS</b></h4></center>
+                        <div class="row seccion_sitios pt-0">
+                          <label class="col-sm-1 col-form-label">Sitios <?=count($cantidadSitios)?></label>
+                          <div class="col-sm-9">
+                            <div class="form-group">
+                              <div>
+                                <table class="table table-bordered table-sm table-striped small" style="font-size: 11px;">
+                                  <thead>
+                                    <tr class="bg-info text-white">
+                                      <th>#</th>
+                                      <th>NOMBRE</th>
+                                      <th>DIRECCION</th>
+                                      <td class="text-right" width="18%">OPCION</td>
+                                    </tr>
+                                  </thead>
+                                  <tbody id="listSitio">
+                                    <?php
+                                    if (count($cantidadSitios) === 0) {
+                                        echo '<tr><td colspan="4">No existen registros.</td></tr>';
+                                    }
+                                    ?>
+                                  </tbody>
+                                </table>
+                              </div>
+              
                             </div>
                           </div>
+                          <div class="col-sm-2">
+                            <?php
+                              if(!isset($sinEdicionModal)){
+                            ?>
+                              <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm btnEditarAtributo" onClick="abreModalItem()"><i class="material-icons">add</i>
+                              </button>
+                            <?php } ?>
+                          </div>
                         </div>
-                        </div>
-                        
-                      </div>
-                         <?php
+                        <!-- Lista Atributos -->
+                        <script>
+                          atributoSitio = atributosArrayGral;
+                          actualizarTablaSitios();
+                        </script>
+                        <?php
                             }else{
                              //otro servicio
                             }
@@ -819,6 +842,8 @@
                         </div>
                         </div>
                       </div> 
+                      <!-- Codigo de Plantilla -->
+                      <input type="hidden" id="plantilla_servicio" value="<?=$codigoPlan?>">
                       <?php 
                       // TCP
                       if($codigoPlan == 2){
@@ -828,7 +853,8 @@
                         <div class="col-sm-7">
                           <div class="form-group">
                             <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);">       
-                                  <?php
+                              <option value="">SELECCIONE TIPO DE SERVICIO</option>
+                                <?php
                                   $plantilla_servicio = '';
                                   if($codigoPlan == 2){
                                     $plantilla_servicio = 108;
@@ -870,7 +896,7 @@
                         <label class="col-sm-2 col-form-label">Servicio</label>
                         <div class="col-sm-7">
                           <div class="form-group">
-                            <select class="selectpicker form-control" data-live-search="true" name="cod_servicio" id="cod_servicio" data-style="btn btn-success" required>
+                            <select class="selectpicker form-control" name="cod_servicio[]" id="cod_servicio" multiple data-style="btn btn-success" data-actions-box="true" data-live-search="true" data-size="6" required>
                               <?php
                                 $stmt = $dbh->prepare("SELECT c.IdClasificador as codigo, c.Descripcion as descripcion
                                                       FROM ibnorca.clasificador c
@@ -881,7 +907,7 @@
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['descripcion'];
                               ?>
-                                <option value="<?=$codigoX;?>" <?=($cod_servicio==$codigoX) ? 'selected' : ''?>><?=$nombreX;?></option> 
+                                <option value="<?=$codigoX;?>" <?=(in_array($codigoX, $array_servicios)?'selected':'');?>><?=$nombreX;?></option> 
                               <?php
                                 }
                               ?>
@@ -936,6 +962,7 @@
                         <div class="col-sm-7">
                           <div class="form-group">
                             <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);">       
+                              <option value="">SELECCIONE TIPO DE SERVICIO</option>
                                   <?php
                                   $plantilla_servicio = '';
                                   if($codigoPlan == 2){
@@ -978,7 +1005,7 @@
                         <label class="col-sm-2 col-form-label">Servicio</label>
                         <div class="col-sm-7">
                           <div class="form-group">
-                            <select class="selectpicker form-control" data-live-search="true" name="cod_servicio" id="cod_servicio" data-style="btn btn-success" required>
+                            <select class="selectpicker form-control" name="cod_servicio[]" id="cod_servicio" multiple data-style="btn btn-success" data-actions-box="true" data-live-search="true" data-size="6" required>
                               <?php
                                 $stmt = $dbh->prepare("SELECT c.IdClasificador as codigo, c.Descripcion as descripcion
                                                       FROM ibnorca.clasificador c
@@ -989,7 +1016,7 @@
                                   $codigoX=$row['codigo'];
                                   $nombreX=$row['descripcion'];
                               ?>
-                                <option value="<?=$codigoX;?>" <?=($cod_servicio==$codigoX) ? 'selected' : ''?>><?=$nombreX;?></option> 
+                                <option value="<?=$codigoX;?>" <?=(in_array($codigoX, $array_servicios)?'selected':'');?>><?=$nombreX;?></option> 
                               <?php
                                 }
                               ?>
@@ -1563,4 +1590,190 @@
 $(document).ready(function() {
  ponerSistemasIntegrados();ponerDescripcionServicio();
 });
+</script>
+
+
+<!-- MODAL PARA PRODUCTOS -->
+<div class="modal fade modal-primary" id="modal_atributo_producto" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card">
+            <div class="card-header card-header-primary card-header-text">
+                <div class="card-text">
+                    <h4 class="card-title">Agregar Producto</h4>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="card-body">
+                <!-- Nro de registro para edición, caso contrario nuevo registro -->
+                <input type="hidden" id="row_producto" value="0">
+                <div class="row">
+                    <div class="row col-sm-12">
+                        <label class="col-sm-2 col-form-label">Producto</label>
+                        <div class="col-sm-9">                     
+                            <div class="form-group bmd-form-group">
+                                <input type="text" class="form-control" name="map_producto" id="map_producto" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="row">
+                    <div class="row col-sm-12">
+                        <label class="col-sm-2 col-form-label">Marca</label>
+                        <div class="col-sm-9">                     
+                            <div class="form-group bmd-form-group">
+                                <input type="text" class="form-control" name="map_marca" id="map_marca" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="row col-sm-12">
+                        <label class="col-sm-2 col-form-label">Nº Sello</label>
+                        <div class="col-sm-9">                     
+                            <div class="form-group bmd-form-group">
+                                <input type="number" class="form-control" name="map_sello" id="map_sello" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+                <!-- NORMAS -->
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Normas Nacionales:</label>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <select class="selectpicker form-control" name="map_normas_nac[]" id="map_normas_nac" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
+                            <?php
+                                $stmt = $dbh->prepare("SELECT vn.codigo, vn.abreviatura, vn.nombre, 'L' as tipo from v_normas vn where vn.cod_estado=1 order by 4,2");
+                                $stmt->execute();
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoX    = $row['codigo'];
+                                    $nombreX    = $row['nombre'];
+                                    $tipoX      = $row['tipo'];
+                                    $abrevX     = $row['abreviatura']." (".$tipoX.")";
+                                    $nombreX    = substr($nombreX, 0, 70);
+                            ?>
+                            <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>"><?=$abrevX;?></option> 
+                            <?php
+                            }
+                            ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Normas Internacionales:</label>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <select class="selectpicker form-control" name="map_normas_int[]" id="map_normas_int" multiple data-style="btn btn-warning" data-actions-box="true" data-live-search="true" data-size="6" required>
+                            <?php
+                                $stmt = $dbh->prepare("SELECT vi.codigo, vi.abreviatura, vi.nombre, 'I' as tipo from v_normas_int vi where vi.cod_estado=1 order by 4,2");
+                                $stmt->execute();
+                                while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $codigoX    = $row['codigo'];
+                                    $nombreX    = $row['nombre'];
+                                    $tipoX      = $row['tipo'];
+                                    $abrevX     = $row['abreviatura']." (".$tipoX.")";
+                                    $nombreX    = substr($nombreX, 0, 70);
+                            ?>
+                            <option value="<?=$codigoX;?>" data-subtext="<?=$nombreX;?>"><?=$abrevX;?></option> 
+                            <?php
+                            }
+                            ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Dirección</label>
+                    <div class="col-sm-9">                     
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="map_direccion" id="map_direccion" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                        </div>
+                    </div>  
+                </div>
+                <hr>
+                <div class="form-group float-right">
+                    <button type="button" class="btn btn-default btn_modal_atr_prod" onclick="agregarProductoPropuesta()">Guardar</button>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL PARA SITIOS -->
+<div class="modal fade modal-primary" id="modal_atributo_sitio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content card">
+            <div class="card-header card-header-primary card-header-text">
+                <div class="card-text">
+                    <h4 id="card-title">Agregar Sitio</h4>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="card-body">
+                <!-- Nro de registro para edición, caso contrario nuevo registro -->
+                <input type="hidden" id="row_sitio" value="0">
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Nombre</label>
+                    <div class="col-sm-9">                     
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="form-control" name="mas_nombre" id="mas_nombre" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                        </div>
+                    </div>  
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Dirección</label>
+                    <div class="col-sm-9">                     
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="form-control" name="mas_direccion" id="mas_direccion" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                        </div>
+                    </div>  
+                </div>
+                <hr>
+                <div class="form-group float-right">
+                    <button type="button" id="boton_guardarsim" class="btn btn-default btn_modal_atr_sitio" onclick="agregarSitioPropuesta()">Guardar</button>
+                </div> 
+            </div>
+        </div>  
+    </div>
+</div>
+
+<script>
+/**
+ * Modal de Edición de Propuesta de Presupuesto
+ */
+$('body').on('click', '.btnEditarAtributo', function(){
+  $('#modalEditPlantilla').modal('hide');
+});
+// Boton para guardar cierra modal actual y abre de edición
+// Producto
+$('body').on('click', '.btn_modal_atr_prod', function(){
+  $('#modal_atributo_producto').modal('hide');
+  abrirModalEditPropuesta();
+});
+// Sitio
+$('body').on('click', '.btn_modal_atr_sitio', function(){
+  $('#modal_atributo_sitio').modal('hide');
+  abrirModalEditPropuesta();
+});
+// DESPUES DE ACTUALIZAR EL ATRIBUTO
+function abrirModalEditPropuesta(){
+  Swal.fire({
+    type: 'success',
+    title: '¡Éxito!',
+    text: 'La operación se realizó correctamente.',
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 1500
+  });
+
+  setTimeout(function() {
+    editarDatosPlantilla();
+  }, 1000);
+}
 </script>

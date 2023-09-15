@@ -11,6 +11,9 @@ require_once 'generar_facturas2_divididas.php';
  error_reporting(E_ALL);
  ini_set('display_errors', '1');
 
+// PROCESO - INICIO de tiempo
+$tiempoInicio_proceso = microtime(true);
+
 $dbh = new Conexion();
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
 set_time_limit(0);
@@ -214,14 +217,22 @@ try{
                     $contador_aux_items_y=0;//controla el inicio del array
                     $variable_controlador=1;//indica la vez que entra a la funcion       
 
+                    // WS SIAT - TIEMPO TOTAL
+                    $tiempo_ws_siat = 0;
                     if($codigo_error==0){    //*******GENERAMOS FACTURA****                                         
                         $cadena_cod_facdet_1='';
                         $contador_aux_items=$cant_items_sfd;
                         for($i=$contador_aux_items_y;$i<$contador_aux_items;$i++){
                             $cadena_cod_facdet_1.=$array_codigo_detalle[$i].",";
-                        }                                
+                        }
+                        //  WS SIAT - INICIO de tiempo
+                        $tiempoInicio_ws_siat = microtime(true);
                         $codigo_error=generar_factura($codigo,trim($cadena_cod_facdet_1,','),$cod_tipopago,$cod_sucursal,$cod_libreta,$cod_estadocuenta,$nroAutorizacion,$nitCliente,$fecha_actual,$llaveDosificacion,$cod_unidadorganizacional,$cod_area,$fecha_limite_emision,$cod_tipoobjeto,$cod_cliente,$cod_personal,$razon_social,$cod_dosificacionfactura,$observaciones,$observaciones_2,$globalUser,$tipo_solicitud,$cod_simulacion_servicio,$variable_controlador,$ci_estudiante);
                         $contador_aux_items_y+=$cantidad_por_defecto;
+                        //  WS SIAT - FIN de tiempo
+                        $tiempoFin_ws_siat = microtime(true);
+                        // WS SIAT - TIEMPO TOTAL
+                        $tiempo_ws_siat    = conversionTiempo($tiempoFin_ws_siat - $tiempoInicio_ws_siat);
                     }
                     $stringFacturasCod = '';
                     if($codigo_error==0){
@@ -279,17 +290,26 @@ try{
                         </script> 
                         <?php
                     }
-
-                    $sqlUpdateFact="UPDATE facturas_venta set idTransaccion_siat='$idTransaccion_x',nro_factura='$nroFactura_x' where codigo in ($stringFacturasCod)";
+                    // PROCESO - FIN de tiempo
+                    $tiempoFin_proceso = microtime(true);
+                    // PROCESO - TIEMPO TOTAL
+                    $tiempo_proceso    = conversionTiempo($tiempoFin_proceso - $tiempoInicio_proceso);
+                    
+                    $sqlUpdateFact="UPDATE facturas_venta 
+                                    SET idTransaccion_siat='$idTransaccion_x',
+                                        nro_factura='$nroFactura_x',
+                                        tiempo_proceso='$tiempo_proceso',
+                                        tiempo_ws_siat='$tiempo_ws_siat'
+                                    WHERE codigo IN ($stringFacturasCod)";
                     $stmtUpdateFact = $dbh->prepare($sqlUpdateFact);
                     $stmtUpdateFact->execute();
                 }
                 $response_lead = '';
                 if($banderaSW){
                     // Generación de Suscripción 
-                    generarSuscripcion($codigo, $stringFacturasCod);
+                    // generarSuscripcion($codigo, $stringFacturasCod);
                     // Generación de Busqueda y Cierre de LEAD
-                    $response_lead = searchLeadsFactura($stringFacturasCod);
+                    // $response_lead = searchLeadsFactura($stringFacturasCod);
                     $urlSIATCompleta=$urlSIAT."formatoFacturaOnLine.php?codVenta=".$idTransaccion_x;
                     echo "<script>
                     Swal.fire('".$titulo."','".$mensaje_x."', '".$estado."');

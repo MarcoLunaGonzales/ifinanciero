@@ -114,7 +114,8 @@ $fechaHasta=$y."-12-31";
 
           </div>
           <div class="card-footer ml-auto mr-auto">
-          <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
+              <button type="submit" class="<?=$buttonNormal;?>" id="form_generar">Generar</button>
+              <button type="submit" class="btn btn-success" id="form_descargar_excel"><i class="fas fa-file-excel"></i> Descargar Excel</button>
             </div>
         </div>
         </form>
@@ -124,3 +125,22 @@ $fechaHasta=$y."-12-31";
 	
 	</div>
 </div>
+
+<script>
+  $(document).ready(function() {
+    // Generar
+    $("#form_generar").click(function(e) {
+        e.preventDefault();
+        $("#form1").attr("action", "<?=$urlReporteEstadosResultados;?>");
+        $("#form1").attr("target", "_blank");
+        $("#form1").submit();
+    });
+    // Descargar PDF
+    $("#form_descargar_excel").click(function(e) {
+        e.preventDefault();
+        $("#form1").attr("action", "reportes/reporteEstadosResultadosExcel.php");
+        $("#form1").attr("target", "_blank");
+        $("#form1").submit();
+    });
+  });
+</script>

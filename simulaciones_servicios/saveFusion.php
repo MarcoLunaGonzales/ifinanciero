@@ -52,11 +52,19 @@ try {
     /*===============================================================================================*/
   
     /*===============================================================================================*/
-    // 3. Actualizar Detalle SF cod_solicitudfacturacion con el codigo SF ANTIGUA
-    $sql = "UPDATE solicitudes_facturaciondetalle SET cod_solicitudfacturacion = '$sf_antigua' WHERE cod_solicitudfacturacion IN ($placeholders)";
+    // 3. (OLD) Actualizar DETALLE SF cod_solicitudfacturacion con el codigo SF ANTIGUA
+    // $sql = "UPDATE solicitudes_facturaciondetalle SET cod_solicitudfacturacion = '$sf_antigua' WHERE cod_solicitudfacturacion IN ($placeholders)";
+    // $stmt = $dbh->prepare($sql);
+    // $stmt->execute();
+
+    // 3. (NEW) Durante el proceso de fusión, en lugar de actualizar el campo cod_solicitudfacturacion, se crea un nuevo registro con el mismo valor y se asocia a la solicitud más antigua.
+    $sql = "INSERT INTO solicitudes_facturaciondetalle (cod_solicitudfacturacion, cod_claservicio, cantidad, precio, descripcion_alterna, descuento_por, descuento_bob, tipo_item, cod_curso, ci_estudiante, id_servicio, cod_padre_fusion) 
+    SELECT '$sf_antigua', cod_claservicio, cantidad, precio, descripcion_alterna, descuento_por, descuento_bob, tipo_item, cod_curso, ci_estudiante, id_servicio, cod_solicitudfacturacion
+    FROM solicitudes_facturaciondetalle 
+    WHERE cod_solicitudfacturacion IN ($placeholders)";
     $stmt = $dbh->prepare($sql);
-    $stmt->bindParam(':texto', $texto);
     $stmt->execute();
+
     /*===============================================================================================*/
   
     /*===============================================================================================*/

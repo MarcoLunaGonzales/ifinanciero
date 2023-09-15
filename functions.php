@@ -12115,4 +12115,76 @@ function wsClienteContacto($idCliente,$razonSocial,$nit,$idTipoDocumento,$idSoli
     }
 }
 
+/**
+ * Envia correo con servicio IBNORCA
+ * Correo con estado (Rechazado)
+ * modulo: Solicitud de Recursos
+ * @autor: Ronald Mollericona
+**/
+function enviarCorreoSolicitud($asunto, $nombre_personal, $nro_solicitud, $fecha_solicitud, $motivo, $personal_email, $personal_email_copia = '', $usuario_rechazo){
+  try {
+    $ruta = __DIR__ . "/solicitudes/emailEstado.html";
+    $message = file_get_contents($ruta);
+    $message = str_replace('%nombre_personal%', $nombre_personal, $message);
+    $message = str_replace('%nro_solicitud%', $nro_solicitud, $message);
+    $message = str_replace('%fecha_solicitud%', $fecha_solicitud, $message);
+    $message = str_replace('%usuario_rechazo%', $usuario_rechazo, $message);
+    $message = str_replace('%motivo%', $motivo, $message);
+    
+    $sIdentificador = "ifinanciero";
+    $sKey           ="ce94a8dabdf0b112eafa27a5aa475751";
+    $datos			= array("sIdentificador"=> $sIdentificador, 
+                            "sKey"          => $sKey, 
+                            "accion"        => "EnviarCorreoCtaIbnoredPEI", 
+                            "NombreEnvia"   => "SISTEMA - IFINANCIERO", 
+                            "CorreoDestino" => $personal_email,
+                            "NombreDestino" => $nombre_personal,
+                            "Asunto"        => $asunto,
+                            "Body"          => $message,
+                            "CorreoCopia"   => $personal_email_copia
+                        );
+    $datos = json_encode($datos);
+    
+    $ch    = curl_init();
+    curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/correo/ws-correotoken.php");
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    curl_close ($ch);
+    $obj   = json_decode($remote_server_output);
+
+    if($obj->estado){
+      $response = true;
+    }else{
+      $response = false;
+    }
+  } catch (Exception $e) {
+      $response = false;
+  }
+}
+
+
+/**
+ * Convierte el tiempo transcurrido a
+ * {hora}{minuto}:{segundo}.{milisegundo}
+ */
+function conversionTiempo($tiempo_transcurrido = 0){
+  $horas        = floor($tiempo_transcurrido / 3600);
+  $minutos      = floor(($tiempo_transcurrido % 3600) / 60);
+  $segundos     = floor($tiempo_transcurrido % 60);
+  $milisegundos = round(($tiempo_transcurrido - floor($tiempo_transcurrido)) * 10000, 0);
+
+  // Formatea los minutos, segundos y milisegundos con 2 dígitos
+  $minutos_formateados  = sprintf("%02d", $minutos);
+  $segundos_formateados = sprintf("%02d", $segundos);
+  $milisegundos_formateados = sprintf("%04d", $milisegundos);
+
+  // Agrega un cero adelante a las horas y los minutos si son un solo dígito
+  $horas_formateadas   = str_pad($horas, 2, '0', STR_PAD_LEFT);
+  $minutos_formateados = str_pad($minutos_formateados, 2, '0', STR_PAD_LEFT);
+
+  // Imprime el tiempo transcurrido en formato HH:mm:ss.ms
+  return "$horas_formateadas:$minutos_formateados:$segundos_formateados.$milisegundos_formateados";
+}
 ?>

@@ -3333,7 +3333,18 @@ function guardarSimulacionServicio(){
   // Nuevo campo de COD_SERVICIO
   var cod_servicio = $("#cod_servicio").val();
 
-  if($("#productos_div").hasClass("d-none")){
+/**
+ * Se obtiene Atributos generados
+ */
+let tipo_servicio = $('#tipo_servicio').val();
+if(plantilla_servicio == 3 || (array_excepcion.includes(tipo_servicio) && plantilla_servicio == '2')){
+    itemAtributos = atributoSitio;
+}else if(plantilla_servicio == 2){
+    itemAtributos = atributoProducto;
+}
+
+//   if($("#productos_div").hasClass("d-none")){
+if(plantilla_servicio == 3){ // TCS
    if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
    Swal.fire('Informativo!','Debe llenar los campos  1 !','warning'); 
    }else{
@@ -3352,7 +3363,8 @@ function guardarSimulacionServicio(){
 
 
     var parametros={
-    "cod_servicio":cod_servicio,
+    // "cod_servicio":cod_servicio,
+    "cod_servicio":JSON.stringify(cod_servicio),
     "oficina_servicio":oficina_servicio,"des_serv":des_serv,
     
     "normas_tiposerviciotext":normas_tiposerviciotext,
@@ -3401,7 +3413,7 @@ function guardarSimulacionServicio(){
         }//fin successs
     });
   }
-  }else{
+  }else if(plantilla_servicio == 2){ // TCP
     if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
       Swal.fire('Informativo!','Debe llenar los campos 2 !','warning'); 
     }else{
@@ -3422,7 +3434,8 @@ function guardarSimulacionServicio(){
       objeto=0;
       var des_serv=$("#d_servicio_p").val();
       var parametros={
-        "cod_servicio":cod_servicio,
+        // "cod_servicio":cod_servicio,
+        "cod_servicio":JSON.stringify(cod_servicio),
         "oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"iaf_primario":iaf_primario,"iaf_secundario":iaf_secundario,"tipo_servicio":tipoServicio,
       // "tipo_cliente":tipoCliente,
       // "region_cliente":regionCliente,
@@ -4259,7 +4272,22 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
 }
 
  function listarDatosPlantillaSim(codigo){
+  // Recargar Tipo de Servicio de acuerdo a la plantilla seleccionada
   searchTipoServicio();
+  /************************************************
+   * Visualización de sección de PRODUCTOS o SITIOS
+   ************************************************/
+  if(codigo == 2){
+    // TCP - PRODUCTOS
+    $('.seccion_sitios').addClass('d-none');
+    $('.seccion_productos').removeClass('d-none');
+  }else if(codigo == 3){
+    // TCS - SITIOS
+    $('.seccion_productos').addClass('d-none');
+    $('.seccion_sitios').removeClass('d-none');
+  }
+  /************************************************/
+
   var url="simulaciones_servicios/listPreciosDias.php";
   ajax=nuevoAjax();
     ajax.open("GET",url+"?codigo="+codigo,true);
@@ -4274,6 +4302,25 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
    }
     ajax.send(null);
  }
+ /**
+  * CASO ESPECIAL
+  * En caso de tener un Tipo de Servicio de:
+  * CERTIFICACIÓN DE PROCESO con codigo: 4822
+  * se cambia de plantilla TCP a TCS
+  */
+  function excepcionTipoServicio(codigo){
+    let array_excepcion    = ['4822'];
+    let plantilla_servicio = $('#plantilla_servicio').val();
+    if(plantilla_servicio == 3 || (array_excepcion.includes(codigo) && plantilla_servicio == '2')){
+      // TCS - SITIOS
+      $('.seccion_productos').addClass('d-none');
+      $('.seccion_sitios').removeClass('d-none');
+    }else if(plantilla_servicio == 2){
+      // TCP - PRODUCTOS
+      $('.seccion_sitios').addClass('d-none');
+      $('.seccion_productos').removeClass('d-none');
+    }
+  }
  //////////////////////reporte mayores desde comprobante////////////
 function mayorReporteComprobante(fila){
  if($("#cuenta"+fila).val()==""){
@@ -8503,7 +8550,9 @@ function guardarDatosPlantillaServicioAjax(btn_id){
     //var productos=$("#modal_sitios").val();
     var tcs=1;
   }
-  var productos=itemAtributos;
+  // var productos=itemAtributos; // Se obtiene atributos de forma antigua
+  var productos = [];
+  productos = atributoSitio.concat(atributoProducto);
 
   //var respuesta=productos.split(',');
   //var num_prod=respuesta.length;
@@ -8530,7 +8579,8 @@ function guardarDatosPlantillaServicioAjax(btn_id){
     var auditoresDias="";
    }
 
-if(!(ut_i==""||dia==""||dia==0||productos.length==0)){ 
+// if(!(ut_i==""||dia==""||dia==0||productos.length==0)){ 
+if(!(productos.length==0)){ 
   /*PARA PERSONAL*/
   var anios=$("#anio_simulacion").val();
   /*for (var anio=inicioAnio;anio<=anios; anio++) {
@@ -8649,7 +8699,8 @@ if(!(ut_i==""||dia==""||dia==0||productos.length==0)){
       let cod_servicio = $("#cod_servicio").val();
 
       var parametros = {
-        "cod_servicio":cod_servicio,
+        // "cod_servicio":cod_servicio,
+        "cod_servicio":JSON.stringify(cod_servicio),
         "normas_nac":JSON.stringify(normas_nac),
         "normas_int":JSON.stringify(normas_int),
         "mod_afnor":mod_afnor,"mod_region_cliente":mod_region_cliente,"mod_tipo_cliente":mod_tipo_cliente,"mod_cliente":mod_cliente,"normas_tiposerviciotext":normas_tiposerviciotext,"normas_tiposervicio":JSON.stringify(normas_tiposervicio),"tipo_servicio":tipo_servicio,"objeto_servicio":objeto_servicio,"iaf_secundario":iaf_secundario,"organismo_certificador":organismo_certificador,"iaf_primario":iaf_primario,"oficina_servicio":oficina_servicio,"des_serv":des_serv,"alcance":alcance,"auditoresDias":auditoresDias,"descripcion":descripcion,"codigo":codigo,"monto":monto,"simulacion":cod_sim,"sitios_dias":atributosDias,"productos":JSON.stringify(productos),"precio_fijo":precio_fijo,"unidad":unidad,"plantilla":codigo_p,"dia":dia,"utilidad":ut_i,"habilitado":habilitado,"cantidad":cantidad,"anio":anio,"iteracion":i,"tcs":tcs,"anio_fila":anio_fila};
@@ -21046,4 +21097,282 @@ function abrir_modal_org_cer(){
 }
 function abrir_modal_norma(){
   $('#modal_lista_norma').modal('show');
+}
+
+/****************************************
+ * Nueva sección para ADICIONAR O QUITAR
+ * SITIOS o PRODUCTOS
+ ****************************************/
+var array_excepcion    = ['4822'];
+function abreModalItem(){
+    // Validar
+    let tipo_servicio = $('#tipo_servicio').val();
+    if(!tipo_servicio){
+        Swal.fire("Ops!", "Debe seleccionar el Tipo de Servicio para continuar.", "warning");
+        return false;
+    }
+    // Abre modal de acuerdo a la plantilla o tipo de servicio con excepción
+    let plantilla_servicio = $('#plantilla_servicio').val();
+    if(plantilla_servicio == '3' || (array_excepcion.includes(tipo_servicio) && plantilla_servicio == '2')){
+        // Limpiar los campos del formulario modal
+        limpiarModalSitio();
+        // TCS - SITIOS
+        $('#row_sitio').val(0);
+        $('#modal_atributo_sitio').modal('show');
+    }else if(plantilla_servicio == '2'){
+        // Limpiar los campos del formulario modal
+        limpiarModalProducto();
+        // TCP - PRODUCTOS
+        $('#row_producto').val(0);
+        $('#modal_atributo_producto').modal('show');
+    }
+}
+
+/**
+ * Preparar item Atributos para Propuestas de Presupuesto
+ **/
+/******************************/
+/*          PRODUCTO          */
+/******************************/
+var atributoProducto = [];
+// Función que permite AGREGAR y ACTUALIZAR
+function agregarProductoPropuesta(){
+    let cod_registro  = $('#row_producto').val(); // 0: Registro, 0 > actualización
+    var codigoNuevo   = atributoProducto.length + 1;
+
+    // variable
+    var norma_nac_cod = $("#map_normas_nac").val().join(",");
+    var norma_int_cod = $("#map_normas_int").val().join(",");
+    var nombre        = $('#map_producto').val();
+    var direccion     = $('#map_direccion').val();
+    var marca         = $('#map_marca').val()
+    var sello         = $('#map_sello').val();
+    var norma_html    = prepararListaNormas();
+
+    var atributo={
+        nombre: nombre,
+        direccion: direccion,
+        norma:'',
+        atr_norma_nac: norma_nac_cod,
+        atr_norma_int: norma_int_cod,
+        atr_norma_html: norma_html,
+        marca:marca,
+        sello:sello,
+        pais:0,
+        estado:'',
+        ciudad:0,
+        nom_pais:'',
+        nom_estado:'',
+        nom_ciudad:''
+    };
+
+    if(cod_registro == '0'){
+        atributo.codigo = codigoNuevo;
+        // Limpiar los campos del formulario modal
+        limpiarModalProducto();
+        // AGREGAR
+        atributoProducto.push(atributo);
+    }else{
+        // MODIFICAR
+        atributoProducto = atributoProducto.map(function(atributo) {
+            if (atributo.codigo == cod_registro) {
+                atributo.nombre = nombre;
+                atributo.direccion = direccion;
+                atributo.atr_norma_nac = norma_nac_cod;
+                atributo.atr_norma_int = norma_int_cod;
+                atributo.atr_norma_html = prepararListaNormas();
+                atributo.marca = marca;
+                atributo.sello = sello;
+          
+            }
+            return atributo;
+        });
+    }
+
+    // Llamar a la función para actualizar la tabla
+    actualizarTablaProductos();
+    $('#modal_atributo_producto').modal('toggle');
+}
+// Limpiar Producto
+function limpiarModalProducto(){
+    $('#map_producto').val('');
+    $('#map_direccion').val('');
+    $('#map_marca').val('');
+    $('#map_normas_nac').selectpicker('deselectAll');
+    $('#map_normas_int').selectpicker('deselectAll');
+    $('#map_sello').val('');
+}
+// Función para preparar lista de Normas
+function prepararListaNormas() {
+    var htmlLista = ''; // Variable para almacenar el HTML
+    // Nacional
+    $('#map_normas_nac option:selected').each(function() {
+    var nombre = $(this).data('subtext');
+        htmlLista += '<li>' + nombre + '</li>';
+    });
+    // Internacional
+    $('#map_normas_int option:selected').each(function() {
+    var nombre = $(this).data('subtext');
+        htmlLista += '<li>' + nombre + '</li>';
+    });
+    var ul = '<ul>' + htmlLista + '</ul>'; // Crear la lista completa
+    return ul;
+}
+// Función para actualizar la tabla de productos
+function actualizarTablaProductos() {
+    var tbody = $('#listProducto');
+    tbody.empty(); // Limpiar el cuerpo de la tabla
+
+    for (var i = 0; i < atributoProducto.length; i++) {
+        var atributo = atributoProducto[i];
+        var row = '<tr>';
+        row += '<td>' + atributo.codigo + '</td>';
+        row += '<td>' + atributo.nombre + '</td>';
+        row += '<td>' + atributo.direccion + '</td>';
+        row += '<td>' + atributo.marca + '</td>';
+        row += '<td>' + atributo.atr_norma_html + '</td>'; // Mostrar la lista HTML
+        row += '<td>' + atributo.sello + '</td>';
+        row += '<td class="text-right small"><div class="btn-group">';
+        row += '<button title="Editar" class="btn btn-sm btn-fab btn-success btnEditarAtributo" onclick="editarAtributoProducto(' + atributo.codigo + ');"><i class="material-icons">edit</i></button>';
+        row += '<button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="eliminarAtributoProducto(' + atributo.codigo + ');"><i class="material-icons">delete</i></button>';
+        row += '</div></td>';
+        row += '</tr>';
+        tbody.append(row);
+    }
+}
+// PRODUCTO EDITAR
+function editarAtributoProducto(codigo) {
+    limpiarModalProducto();
+    $('#row_producto').val(codigo); // Codigo de registro
+    var atributo = atributoProducto.find(function(item) {
+        return item.codigo === codigo;
+    });
+    if (atributo) {        
+        $('#map_producto').val(atributo.nombre);
+        $('#map_direccion').val(atributo.direccion);
+        $('#map_marca').val(atributo.marca);
+        $('#map_normas_nac').selectpicker('val', atributo.atr_norma_nac.split(','));
+        $('#map_normas_int').selectpicker('val', atributo.atr_norma_int.split(','));
+        $('#map_sello').val(atributo.sello);
+
+        // Abre el modal
+        $('#modal_atributo_producto').modal('show');
+    } else {
+        alert('No se encontró el producto');
+    }
+}
+// PRODUCTO ELIMINAR
+function eliminarAtributoProducto(codigo) {
+    let index = atributoProducto.findIndex(atributo => atributo.codigo === codigo);
+    if (index !== -1) {
+      atributoProducto.splice(index, 1);
+      // Actualizar la tabla después de eliminar
+      actualizarTablaProductos();
+    } else {
+      console.log('No se encontró el producto seleccionado');
+    }
+}
+/***************************/
+/*          SITIO          */
+/***************************/
+var atributoSitio = [];
+// Función que permite AGREGAR y ACTUALIZAR
+function agregarSitioPropuesta(){
+    let cod_registro  = $('#row_sitio').val(); // 0: Registro, 0 > actualización
+    var codigoNuevo   = atributoSitio.length + 1;
+
+    // variable
+    var nombre        = $('#mas_nombre').val();
+    var direccion     = $('#mas_direccion').val();
+
+    var atributo={
+        nombre: nombre,
+        direccion: direccion,
+        norma:'',
+        atr_norma_nac: '',
+        atr_norma_int: '',
+        atr_norma_html: '',
+        marca:'',
+        sello:'',
+        pais:0,
+        estado:'',
+        ciudad:0,
+        nom_pais:'',
+        nom_estado:'',
+        nom_ciudad:''
+    };
+
+    if(cod_registro == '0'){
+        atributo.codigo = codigoNuevo;
+        // Limpiar los campos del formulario modal
+        limpiarModalSitio();
+        // AGREGAR
+        atributoSitio.push(atributo);
+    }else{
+        // MODIFICAR
+        atributoSitio = atributoSitio.map(function(atributo) {
+            if (atributo.codigo == cod_registro) {
+                atributo.nombre = nombre;
+                atributo.direccion = direccion;
+          
+            }
+            return atributo;
+        });
+    }
+
+    // Llamar a la función para actualizar la tabla
+    actualizarTablaSitios();
+    $('#modal_atributo_sitio').modal('toggle');
+}
+// Limpiar Sitio
+function limpiarModalSitio(){
+    $('#mas_nombre').val('');
+    $('#mas_direccion').val('');
+}
+// Función para actualizar la tabla de productos
+function actualizarTablaSitios() {
+    var tbody = $('#listSitio');
+    tbody.empty(); // Limpiar el cuerpo de la tabla
+
+    for (var i = 0; i < atributoSitio.length; i++) {
+        var atributo = atributoSitio[i];
+        var row = '<tr>';
+        row += '<td>' + atributo.codigo + '</td>';
+        row += '<td>' + atributo.nombre + '</td>';
+        row += '<td>' + atributo.direccion + '</td>';
+        row += '<td class="text-right small"><div class="btn-group">';
+        row += '<button title="Editar" class="btn btn-sm btn-fab btn-success btnEditarAtributo" onclick="editarAtributoSitio(' + atributo.codigo + ');"><i class="material-icons">edit</i></button>';
+        row += '<button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="eliminarAtributoSitio(' + atributo.codigo + ');"><i class="material-icons">delete</i></button>';
+        row += '</div></td>';
+        row += '</tr>';
+        tbody.append(row);
+    }
+}
+// PRODUCTO EDITAR
+function editarAtributoSitio(codigo) {
+    limpiarModalSitio();
+    $('#row_sitio').val(codigo); // Codigo de registro
+    var atributo = atributoSitio.find(function(item) {
+        return item.codigo === codigo;
+    });
+    if (atributo) {        
+        $('#mas_nombre').val(atributo.nombre);
+        $('#mas_direccion').val(atributo.direccion);
+
+        // Abre el modal
+        $('#modal_atributo_sitio').modal('show');
+    } else {
+        alert('No se encontró el producto');
+    }
+}
+// PRODUCTO ELIMINAR
+function eliminarAtributoSitio(codigo) {
+    let index = atributoSitio.findIndex(atributo => atributo.codigo === codigo);
+    if (index !== -1) {
+      atributoSitio.splice(index, 1);
+      // Actualizar la tabla después de eliminar
+      actualizarTablaSitios();
+    } else {
+      console.log('No se encontró el producto seleccionado');
+    }
 }

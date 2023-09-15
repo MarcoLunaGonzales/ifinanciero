@@ -106,6 +106,33 @@ if($estado==10||$estado==11||$estado==12){
 
    if(isset($_GET['obs'])){
       $obs=$_GET['obs'];
+      /***************************************************************/
+      //             ENVIO DE CORREO - RECHAZAR SOLICITUD            //
+      /***************************************************************/
+      $sql = "SELECT sr.cod_personal, 
+                     sr.numero as nro_solicitud, 
+                     CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as nombre_personal, 
+                     DATE_FORMAT(sr.fecha, '%d-%m-%Y') as fecha_solicitud,
+                     p.email_empresa as email_personal
+               FROM solicitud_recursos sr
+               LEFT JOIN personal p ON p.codigo = sr.cod_personal
+               WHERE sr.codigo = '$codigo'";
+      $stmt = $dbh->prepare($sql);
+      $stmt->execute();
+      $registro = $stmt->fetch(PDO::FETCH_ASSOC);
+      $nombre_personal = $registro['nombre_personal'];
+      $nro_solicitud   = $registro['nro_solicitud'];
+      $fecha_solicitud = $registro['fecha_solicitud'];
+      $motivo          = $obs;
+      $personal_email  = $registro['email_personal']; // "roalmollericona@gmail.com";
+      $personal_email_copia = "mluna@minkasoftware.com";
+      $asunto          = "Rechazo de Solicitud de Recursos Nro. ".$nro_solicitud;
+      $usuario_rechazo = $_SESSION['globalNameUser'];
+      enviarCorreoSolicitud($asunto, $nombre_personal, $nro_solicitud, $fecha_solicitud, $motivo, $personal_email, $personal_email_copia, $usuario_rechazo);
+      // echo $nro_solicitud;
+      // exit;
+      /***************************************************************/
+
       if(isset($_GET["ll"])){
          $sqlUpdate="UPDATE solicitud_recursos SET  cod_estadosolicitudrecurso=$estado,glosa_estado=CONCAT(glosa_estado,'####','$obs') where codigo=$codigo";  
       }else{

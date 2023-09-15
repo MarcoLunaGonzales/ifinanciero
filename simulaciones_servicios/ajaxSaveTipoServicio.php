@@ -34,6 +34,9 @@ $existe=0;
     $existe=1;
 }
 
+// Se quito validación para adicionar mas servicios
+$existe = 0;
+
 if($existe==0){
 	$codSimulacionServicioTipo=obtenerCodigoSimulacionServicioTipoServicio();
     $sql="INSERT INTO simulaciones_servicios_tiposervicio (codigo,cod_simulacionservicio, cod_claservicio,observaciones,cantidad,monto,cantidad_editado,cod_estadoreferencial,cod_tipounidad,cod_anio) 
