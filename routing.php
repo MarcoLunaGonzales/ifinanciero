@@ -2034,6 +2034,7 @@
 			require_once('rrhh/areasMapaPersonal.php');
 		}
 		
+		// MANUALES DE APROBACIÓN
 		// Lista de Configuración de Etapas
 		if ($_GET['opcion']=='listaConfiguracionEtapas') {
 			require_once('rrhh/etapaManualAprobacion.php');
