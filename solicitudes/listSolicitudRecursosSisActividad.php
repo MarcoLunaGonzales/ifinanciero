@@ -33,14 +33,16 @@ if(isset($_GET['q'])){
   $sqlAreas="";
 }
 
-
+//Sacamos las configuraciones de los proyectos que existan
+$stringOficinasProyectosExt=obtenerValorConfiguracion(69);
+$stringAreasProyectosExt=obtenerValorConfiguracion(65);
 
 //Solicitudes SIS
 // Preparamos
-$stmtSIS = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle 
+$stmtSIS = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and ( cod_unidadorganizacional in ($stringOficinasProyectosExt) or cod_area in ($stringAreasProyectosExt) )) as sis_detalle 
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3,5,8)) l  
-where (l.cod_unidadorganizacional=3000 or l.cod_area=1235 or l.sis_detalle>0) order by l.cod_comprobante,l.numero desc");
+where (l.cod_unidadorganizacional in ($stringOficinasProyectosExt) or l.cod_area in ($stringAreasProyectosExt) or l.sis_detalle>0) order by l.cod_comprobante,l.numero desc");
 // Ejecutamos
 $stmtSIS->execute();
 // bindColumn
@@ -78,7 +80,7 @@ $item_1=2708;
                   <div class="card-icon">
                     <i class="material-icons">content_paste</i>
                   </div>
-                  <h4 class="card-title"><b>Lista Solicitudes de Recursos SIS</b></h4>
+                  <h4 class="card-title"><b>Lista Solicitudes de Recursos Proyectos</b></h4>
                 </div>
                 <div class="card-body table-responsive">
                      <table class="table table-condesed" id="tablePaginator100NoFidexHead">

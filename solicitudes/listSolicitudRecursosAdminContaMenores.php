@@ -51,7 +51,7 @@ $stringOficinasProyectosExt=obtenerValorConfiguracion(69);
 $stringAreasProyectosExt=obtenerValorConfiguracion(65);
 
 
-$stmtMen = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional=3000 or cod_area=1235)) as sis_detalle,
+$stmtMen = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional in ($stringOficinasProyectosExt) or cod_area in ($stringAreasProyectosExt) )) as sis_detalle,
   (select sum(IF(sd.cod_confretencion = 0 or sd.cod_confretencion = 8 or sd.cod_confretencion = 10,sd.importe,(sd.importe)*((100-(SELECT IFNULL(SUM(porcentaje),0) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=sd.cod_confretencion and cod_cuenta!=0))/100))) from solicitud_recursosdetalle sd where sd.cod_solicitudrecurso=sr.codigo) as monto_importe
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3)) l  

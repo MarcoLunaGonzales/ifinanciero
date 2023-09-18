@@ -90,7 +90,8 @@ if($codigoActivo!=""){
   $sql.=" and af.codigoactivo like '%$codigoActivo%'";
 }
 $sql.=" order by af.codigoactivo desc";
-// echo $sql; 
+
+//echo $sql; 
 
 $stmt = $dbh->prepare($sql);
 $stmt->execute();

@@ -300,6 +300,29 @@ $globalUnidad=$_SESSION["globalUnidad"];
                      </div>
             </div><!--fin tipo tipo -->
           </div>
+
+          <div class="row">
+            <label class="col-sm-4 col-form-label">Incluir Personal que genero la solicitud</label>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <select class="selectpicker form-control form-control-sm" name="personal[]" id="personal" data-live-search="true" data-style="select-with-transition" data-size="4" multiple data-actions-box="true">  
+                <?php
+                   $stmt = $dbh->prepare("SELECT p.codigo, UPPER(CONCAT(p.primer_nombre,' ',p.otros_nombres,' ',p.paterno,' ',p.materno)) as nombre from personal p where p.cod_estadopersonal=1");
+                  $stmt->execute();
+                  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $codigoX=$row['codigo'];
+                    $nombreX=$row['nombre'];
+                ?>
+                  <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
+                  <?php
+                  }
+                  ?>
+                </select>
+              </div>
+            </div>
+          </div>
+
+
           <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
               <!--<a href="index.php?opcion=reporteAdminEstadoCuentas" target="_blank" class="btn btn-danger">Reporte Administrador</a>-->

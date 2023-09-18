@@ -5,9 +5,15 @@ DATABASE_ENCODING = utf8
 [ parametros de conexion bd mysql Local ]
 DATABASE_HOST = localhost
 DATABASE_PORT = 3306
+<<<<<<< HEAD
 DATABASE_NAME = ifinancierov2
 DATABASE_USER = root
 DATABASE_PASSWORD = 
+=======
+DATABASE_NAME = bdifinanciero
+DATABASE_USER = ingresobd
+DATABASE_PASSWORD = ingresoibno
+>>>>>>> dc01454c83beda42786be1ea497c2ee768d57025
 DATABASE_DESCRIPTION = DB LOCAL
 
 [ parametros de conexion bd mysql Externo ]

@@ -61,9 +61,15 @@ function obtenerListaVentasA_servicios($unidades,$cod_area,$servicios,$desde,$ha
     $valorIVA=100-(obtenerValorConfiguracion(1));
     $dbh = new Conexion();
     
-    $sql="SELECT da.cod_area,(SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area,cs.IdTipo, cs.abreviatura_n2,cs.Codigo,cs.descripcion_n2,SUM(((s.cantidad*s.precio)-s.descuento_bob)*(da.porcentaje/100)*($valorIVA/100)) as importe_real, sum(s.cantidad) as cantidad_servicios
+    $sql="SELECT da.cod_area,(SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area,cs.IdTipo, cs.abreviatura_n2,cs.Codigo,cs.descripcion_n2,SUM(((s.cantidad*s.precio)-s.descuento_bob)*(da.porcentaje/100)*($valorIVA/100)) as importe_real, 
+        CASE 
+        WHEN cs.abreviatura_n2 = 'SAD' THEN 0
+        WHEN cs.abreviatura_n2 = 'LEG' THEN count(s.cantidad)
+        ELSE sum(s.cantidad)
+        END as cantidad_servicios 
     From facturas_venta f,facturas_ventadetalle s,facturas_venta_distribucion da, cla_servicios cs 
     where f.codigo=s.cod_facturaventa and da.cod_factura=f.codigo and s.cod_claservicio=cs.IdClaServicio $sql_aux and f.cod_estadofactura<>2 and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($cod_area) GROUP BY cs.abreviatura_n2 order by area";
+    
     //echo $sql;
     
     $stmt = $dbh->prepare($sql);
@@ -243,18 +249,17 @@ function obtenerListaCuentasEgreso($unidades,$areas,$cuentas,$desde,$hasta){
 }
 
 function obtenerListaVentasResumidoAdministrativo($unidades,$areas,$formas,$desde,$hasta,$personal){
-
     $dbh = new Conexion();
     $sql="SELECT f.cod_personal,f.codigo, f.cod_solicitudfacturacion, 
     (SELECT uo.abreviatura from unidades_organizacionales uo where uo.codigo=f.cod_unidadorganizacional)uo, 
     (SELECT a.abreviatura from areas a where a.codigo=f.cod_area)area,
     (SELECT t.nombre from tipos_pago t where t.codigo=f.cod_tipopago) as tipo_pago,  
     f.fecha_factura, f.razon_social, f.nit, f.cod_personal, 
-    (SELECT SUM((cantidad*precio)-descuento_bob) as importe from facturas_ventadetalle where cod_facturaventa=f.codigo )as importe_real, f.nro_factura, 
+    (SELECT (SUM((cantidad*precio)-descuento_bob)*(sft.porcentaje)/100) as importe from facturas_ventadetalle where cod_facturaventa=f.codigo )as importe_real, f.nro_factura, 
     (SELECT sf.nro_correlativo from solicitudes_facturacion sf where sf.codigo=f.cod_solicitudfacturacion)as nro_solicitud
-      FROM facturas_venta f
-WHERE f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and f.cod_area in ($areas) 
-    and f.cod_personal in ($personal) and f.cod_tipopago in ($formas)
+      FROM facturas_venta f, solicitudes_facturacion_tipospago sft
+WHERE sft.cod_solicitudfacturacion=f.cod_solicitudfacturacion and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and f.cod_area in ($areas) 
+    and f.cod_personal in ($personal) and sft.cod_tipopago in ($formas)
     order by fecha_factura, nro_factura";
     //echo $sql;
     $stmt = $dbh->prepare($sql);
