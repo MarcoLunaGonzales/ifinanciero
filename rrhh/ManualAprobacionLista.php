@@ -226,6 +226,7 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
                 <div class="card-body historial2">
                   <p><i class="material-icons text-default mr-2">comment</i> No se han efectuado cambios de estado en el Manual.</p>
                 </div>
+                <button type="button" class="btn btn-secondary btn-block btnVerHistorial" style="border: 1px solid #A9A9A9;" data-dismiss="modal"><i class="material-icons">schedule</i> Ver más</button>
               </div>
             </div>
 
@@ -287,6 +288,30 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
   </div>
 </div>
 
+<!-- MODAL DE SEGUIMIENTO -->
+<div class="modal fade modal-primary" id="modalHistorial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content card">
+      <div class="card-header card-header-info card-header-icon">
+        <div class="card-icon">
+          <i class="material-icons">track_changes</i>
+        </div>
+        <button type="button" class="close pt-2" data-dismiss="modal" aria-hidden="true">
+          <i class="material-icons">close</i>
+        </button>
+        <h4 class="card-title" style="color: #333;font-weight: bold;">Seguimiento de Etapas</h4>
+      </div>
+
+      <div class="card-body content-historial">
+        <!-- CONTENIDO -->
+      </div>
+
+      <div class="modal-footer justify-content-end pt-0">
+        <button type="button" class="btn btn-secondary modal_etapa_cerrar" style="border: 1px solid #A9A9A9;" data-dismiss="modal">Volver</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <script>
@@ -297,6 +322,8 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
     let cod_cargo = $(this).data('cod_cargo');
     let cod_manual_aprobacion = $(this).data('cod_manual_aprobacion');
     $('#cod_manual_aprobacion').val(cod_manual_aprobacion);
+    // Se actualiza boton de estado de Manual de Aprobación
+    $(".btnVerHistorial").attr("data-cod_cargo", cod_cargo);
     // Actualiza documento de visualización
     $.ajax({
         url: "rrhh/ajaxManualAprobacionSeguimiento.php",
@@ -401,5 +428,43 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
         });
       }
     });
+  });
+  
+  /**
+   * Ver historial de estado de Manual de Aprobación
+   */
+  $('.btnVerHistorial').click(function(){
+    let cod_cargo = $(this).data('cod_cargo');
+    $.ajax({
+      url: "rrhh/ajaxManualAprobacionEstadoHistorial.php",
+      method: "POST",
+      dataType: "html",
+      data: {
+        cod_cargo: cod_cargo
+      },
+      success: function(response) {
+        // console.log(response)
+        $('.content-historial').html(response);
+        $('#modalHistorial').modal('show');
+      },
+      error: function() {
+          Swal.fire({
+              type: "error",
+              title: "Error",
+              text: "Ocurrió un error en la comunicación con el servidor",
+              showConfirmButton: false,
+              timer: 3000
+          });
+      }
+    });
+  });
+
+  /**
+   * Cierra modal de Historial de Seguimiento de Etapas
+   */
+  $('.modal_etapa_cerrar').click(function(){
+    setTimeout(function() {
+        $('#modalAprobacion').modal('show');
+    }, 500);
   });
 </script>
