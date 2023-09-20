@@ -11,7 +11,8 @@ $dbh = new Conexion();
 $sql  = "SELECT mae.codigo, mae.cod_etapa, mae.cod_cargo, maes.nombre as nombre_dependiente, c.nombre as cargo_nombre, mae.nombre, mae.descripcion, mae.nro_etapa, mae.estado
         FROM manuales_aprobacion_etapas mae
         LEFT JOIN manuales_aprobacion_etapas maes ON maes.codigo = mae.cod_etapa
-        LEFT JOIN cargos c ON c.codigo = mae.cod_cargo";
+        LEFT JOIN cargos c ON c.codigo = mae.cod_cargo
+        ORDER BY mae.codigo DESC";
 $stmt = $dbh->prepare($sql);
 //ejecutamos
 $stmt->execute();

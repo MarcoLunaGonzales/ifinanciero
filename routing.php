@@ -2066,6 +2066,12 @@
 			require_once('rrhh/MofAprobadosLista.php');
 		}
 		
+		/***************************************************/
+		// Control de Versiones
+		if ($_GET['opcion']=='listaControlVersiones') {
+			require_once('rrhh/cargosListaControlVersion.php');
+		}
+
 	}else{
 		//require("paginaprincipal.php");
 	}

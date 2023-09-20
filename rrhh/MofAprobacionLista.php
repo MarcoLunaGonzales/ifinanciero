@@ -25,14 +25,20 @@ $sql = "SELECT
         mae.color as ma_color_estado
         FROM mof m
         LEFT JOIN (
-          SELECT
-              codigo,
-              cod_mof,
-              cod_etapa,
-              cod_estado,
-              ROW_NUMBER() OVER (PARTITION BY cod_mof ORDER BY codigo DESC) AS rn
-          FROM mof_aprobacion
-        ) ma ON ma.cod_mof = m.codigo AND ma.rn = 1
+            SELECT
+                ma1.codigo,
+                ma1.cod_mof,
+                ma1.cod_etapa,
+                ma1.cod_estado
+            FROM mof_aprobacion ma1
+            INNER JOIN (
+                SELECT
+                  cod_mof,
+                  MAX(codigo) AS max_codigo
+                FROM mof_aprobacion
+                GROUP BY cod_mof
+            ) max_ma ON ma1.cod_mof = max_ma.cod_mof AND ma1.codigo = max_ma.max_codigo
+        ) ma ON ma.cod_mof = m.codigo
         LEFT JOIN mof_aprobacion_estados mae ON mae.codigo = ma.cod_estado
         LEFT JOIN mof_aprobacion_etapas eta ON eta.codigo = ma.cod_etapa
         WHERE m.estado = 1

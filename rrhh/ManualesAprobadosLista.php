@@ -35,14 +35,20 @@ $sql = "SELECT
         LEFT JOIN cargos cfuncional ON cfuncional.codigo = c.cod_dep_funcional
         LEFT JOIN tipos_cargos_personal tc ON tc.codigo = c.cod_tipo_cargo
         LEFT JOIN (
-          SELECT
-              codigo,
-              cod_cargo,
-              cod_etapa,
-              cod_estado,
-              ROW_NUMBER() OVER (PARTITION BY cod_cargo ORDER BY codigo DESC) AS rn
-          FROM manuales_aprobacion
-        ) ma ON ma.cod_cargo = c.codigo AND ma.rn = 1
+            SELECT
+                ma1.codigo,
+                ma1.cod_cargo,
+                ma1.cod_etapa,
+                ma1.cod_estado
+            FROM manuales_aprobacion ma1
+            INNER JOIN (
+                SELECT
+                    cod_cargo,
+                    MAX(codigo) AS max_codigo
+                FROM manuales_aprobacion
+                GROUP BY cod_cargo
+            ) max_ma ON ma1.cod_cargo = max_ma.cod_cargo AND ma1.codigo = max_ma.max_codigo
+        ) ma ON ma.cod_cargo = c.codigo
         LEFT JOIN manuales_aprobacion_estados mae ON mae.codigo = ma.cod_estado
         LEFT JOIN manuales_aprobacion_etapas eta ON eta.codigo = ma.cod_etapa
         WHERE c.cod_estadoreferencial = 1
