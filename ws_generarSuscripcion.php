@@ -1,6 +1,6 @@
 <?php
 require_once 'conexion.php';
-require_once 'function.php';
+require_once 'functions.php';
 session_start();
 date_default_timezone_set('America/La_Paz');
 
@@ -9,8 +9,8 @@ try {
     $data = json_decode(file_get_contents('php://input'), true);
 
     // Variables de entrada
-    $codigo            = empty($data['codigo']) ? '' : $data['codigo'];
-    $stringFacturasCod = empty($data['stringFacturasCod']) ? '' : $data['stringFacturasCod'];
+    $codigo            = empty($data['codigo']) ? $_GET['codigo'] : $data['codigo'];
+    $stringFacturasCod = empty($data['stringFacturasCod']) ? $_GET['stringFacturasCod'] : $data['stringFacturasCod'];
 
     $dbh = new Conexion();
     /*****************************************************************************************/
@@ -178,7 +178,7 @@ try {
     // Enviar respuesta JSON
     // header('Content-Type: application/json');
     // echo json_encode($response);
-    // exit;
+    exit;
     /*****************************************************************************************/
 
 } catch (Exception $e) {
@@ -190,5 +190,5 @@ try {
     // Enviar respuesta JSON
     // header('Content-Type: application/json');
     // echo json_encode($response);
-    // exit;
+    exit;
 }
