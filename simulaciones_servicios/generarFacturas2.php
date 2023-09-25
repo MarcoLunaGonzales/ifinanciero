@@ -316,6 +316,13 @@ try{
                     // Generación de Busqueda y Cierre de LEAD
                     // $response_lead = searchLeadsFactura($stringFacturasCod);
                     wsBuscarLeadFactura($stringFacturasCod);
+                    // Modificación de Datos del Cliente
+                    // $idCliente       = $cod_cliente;
+                    // $razonSocial,
+                    // $nit             = $nitCliente;
+                    // $idTipoDocumento = $siat_tipoidentificacion;
+                    // $idSolicitud        
+                    wsModificaClienteContacto($idCliente,$razonSocial,$nit,$idTipoDocumento,$idSolicitud);
                     $urlSIATCompleta=$urlSIAT."formatoFacturaOnLine.php?codVenta=".$idTransaccion_x;
                     echo "<script>
                     Swal.fire('".$titulo."','".$mensaje_x."', '".$estado."');
