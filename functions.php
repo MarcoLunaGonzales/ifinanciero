@@ -12052,7 +12052,7 @@ function anulacionFacturaSiat($idTransaccionSiat)
  *
  * @return bool Un Boolean para la respuesta del servicio.
  */
-function wsModificaClienteContacto($idCliente,$razonSocial,$nit,$idTipoDocumento,$idSolicitud){
+function wsModificaCliente($idCliente,$razonSocial,$nit,$idTipoDocumento,$idSolicitud){
     $url_servicio = obtenerValorConfiguracion(112);
     // Datos a enviar al servicio
     $datos = json_encode(array(
@@ -12063,7 +12063,7 @@ function wsModificaClienteContacto($idCliente,$razonSocial,$nit,$idTipoDocumento
         "idSolicitud"       => $idSolicitud
     ));
     // URL del servicio
-    $url_servicio = $url_servicio.'ws_clienteContacto.php';
+    $url_servicio = $url_servicio.'ws_modificaCliente.php';
     // Inicializa cURL
     $ch = curl_init($url_servicio);
     curl_setopt($ch, CURLOPT_POST, 1);

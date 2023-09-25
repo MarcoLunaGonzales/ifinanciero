@@ -65,10 +65,11 @@ try{
         $codigo_facturacion=verificamosFacturaDuplicada($codigo);
         if($codigo_facturacion==null){//no se registró            
             //datos de la solicitud de facturacion           
-            $stmtInfo = $dbh->prepare("SELECT sf.cod_simulacion_servicio,sf.cod_unidadorganizacional,sf.cod_area,sf.cod_tipoobjeto,sf.cod_tipopago,sf.cod_cliente,sf.cod_personal,sf.nit,sf.observaciones,sf.observaciones_2,sf.razon_social,sf.tipo_solicitud,sf.ci_estudiante,sf.siat_tipoidentificacion,IFNULL(sf.siat_complemento,'')as siat_complemento,IFNULL(sf.siat_nroTarjeta,'')as siat_nroTarjeta,sf.fecha_facturacion,sf.correo_contacto,(select stp.codigoClasificador from siat_tipos_pago stp where stp.cod_tipopago=sf.cod_tipopago)as siat_tipoPago
+            $stmtInfo = $dbh->prepare("SELECT sf.cod_simulacion_servicio,sf.cod_unidadorganizacional,sf.cod_area,sf.cod_tipoobjeto,sf.cod_tipopago,sf.cod_cliente,sf.cod_personal,sf.nit,sf.observaciones,sf.observaciones_2,sf.razon_social,sf.tipo_solicitud,sf.ci_estudiante,sf.siat_tipoidentificacion,IFNULL(sf.siat_complemento,'')as siat_complemento,IFNULL(sf.siat_nroTarjeta,'')as siat_nroTarjeta,sf.fecha_facturacion,sf.correo_contacto,(select stp.codigoClasificador from siat_tipos_pago stp where stp.cod_tipopago=sf.cod_tipopago)as siat_tipoPago, sf.codigo
                  FROM solicitudes_facturacion sf where sf.codigo=$codigo");
             $stmtInfo->execute();
             $resultInfo = $stmtInfo->fetch();    
+            $cod_solicitud_facturacion = $resultInfo['codigo'];                 // Codigo Solicitud Facturación
             $cod_simulacion_servicio = $resultInfo['cod_simulacion_servicio'];
             $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
             $cod_area = $resultInfo['cod_area'];
@@ -317,12 +318,12 @@ try{
                     // $response_lead = searchLeadsFactura($stringFacturasCod);
                     wsBuscarLeadFactura($stringFacturasCod);
                     // Modificación de Datos del Cliente
-                    // $idCliente       = $cod_cliente;
-                    // $razonSocial,
-                    // $nit             = $nitCliente;
-                    // $idTipoDocumento = $siat_tipoidentificacion;
-                    // $idSolicitud        
-                    wsModificaClienteContacto($idCliente,$razonSocial,$nit,$idTipoDocumento,$idSolicitud);
+                    $idCliente       = $cod_cliente;
+                    $razonSocial     = $razon_social;
+                    $nit             = $nitCliente;
+                    $idTipoDocumento = $siat_tipoidentificacion;
+                    $idSolicitud     = $cod_solicitud_facturacion;
+                    wsModificaCliente($idCliente,$razonSocial,$nit,$idTipoDocumento,$idSolicitud);
                     $urlSIATCompleta=$urlSIAT."formatoFacturaOnLine.php?codVenta=".$idTransaccion_x;
                     echo "<script>
                     Swal.fire('".$titulo."','".$mensaje_x."', '".$estado."');

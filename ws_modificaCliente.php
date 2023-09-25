@@ -51,11 +51,12 @@ try{
         // abrimos la sesión cURL
         $ch = curl_init();
         // definimos la URL a la que hacemos la petición
-        //curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/registro/ws-fin-cliente-contacto.php"); // on line 
+        //curl_setopt($ch, CURLOPT_URL,"https://ibnored.ibnorca.org/wsibno/registro/ws-fin-cliente-contacto.php"); // on line 
         curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibnob/registro/ws-fin-cliente-contacto.php"); // db pruebas
         curl_setopt($ch, CURLOPT_POST, TRUE);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $remote_server_output = curl_exec ($ch);
         curl_close ($ch);
         // Obtener valores
@@ -72,7 +73,7 @@ try{
          * Almacenamiento de LOG de solicitud
          *************************************/
         $fechaHora = date("Y-m-d H:i:s");
-        $sql  = "INSERT INTO log_cliente_contacto_upd(cod_solicitudfacturacion,json_enviado,json_recibido,fecha)
+        $sql  = "INSERT INTO log_cliente_upd(cod_solicitudfacturacion,json_enviado,json_recibido,fecha)
                 VALUES ('$idSolicitud','$datos','$response','$fechaHora') ";
         // echo $sql;
         $stmt = $dbh->prepare($sql);
