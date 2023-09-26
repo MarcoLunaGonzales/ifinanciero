@@ -10,6 +10,8 @@ $globalArea  = $_SESSION["globalArea"];
 $globalCargo = $_SESSION["globalCargo"];
 
 $dbh = new Conexion();
+
+
     
 /**
  * Obtiene lista de Manuales de Cargos Aprobados

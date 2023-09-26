@@ -39,6 +39,7 @@ if($estado==10||$estado==11||$estado==12){
    }
   
    $estado=$estado-10;
+   
    $sqlUpdate="UPDATE solicitud_recursos SET  revisado_contabilidad='$estado' where codigo='$codigo'";
    $stmtUpdate = $dbh->prepare($sqlUpdate);
    $flagSuccess=$stmtUpdate->execute();
