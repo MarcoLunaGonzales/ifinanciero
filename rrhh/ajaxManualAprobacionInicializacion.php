@@ -13,12 +13,14 @@ $cod_direccion = 847;   // Codigo AREA: DIRECCIÓN EJECUTIVA
 function buscarArea($cod_area){
   global $cod_direccion;
   $dbh = new Conexion();
-  $sql = "SELECT DISTINCT(a.codigo), a.cod_padre
-          FROM cargos_areasorganizacion ca
-          LEFT JOIN areas a ON a.codigo = ca.cod_areaorganizacion
-          WHERE a.codigo IS NOT NULL AND ca.cod_areaorganizacion = :cod_area";
+  // $sql = "SELECT DISTINCT(a.codigo), a.cod_padre
+  //         FROM cargos_areasorganizacion ca
+  //         LEFT JOIN areas a ON a.codigo = ca.cod_areaorganizacion
+  //         WHERE a.codigo IS NOT NULL AND ca.cod_areaorganizacion = :cod_area";
+  $sql = "SELECT a.codigo, a.cod_padre
+          FROM areas a
+          WHERE a.codigo = '$cod_area' OR a.cod_padre = '$cod_direccion'";
   $stmt = $dbh->prepare($sql);
-  $stmt->bindParam(':cod_area', $cod_area);
   $stmt->execute();
   $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
   foreach ($resultados as $resultado) {

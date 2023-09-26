@@ -145,10 +145,10 @@
                 <td style="background-color: red;color: white; font-weight: bold; text-align: center;">SIGLA</td>
             </tr>
             <tr>
-                <td class="text-center"><?php foreach($resp_cargosAreas as $row){ ?><p><?=$row['nombre'];?></p><?php } ?></td>
-                <td class="text-center"><?php foreach($resp_cargosAreas as $row){ ?><p><?=$row['nombre'];?></p><?php } ?></td>
+                <td class="text-center"><?=empty($resp_areanivel2['nombre']) ? '' : $resp_areanivel2['nombre'];?></td>
+                <td class="text-center"><?=empty($resp_unidad['unidad_organizacional'])?'':$resp_unidad['unidad_organizacional'];?></td>
                 <td class="text-center"><?=empty($resp_cargo['nivel_cargo'])?'':$resp_cargo['nivel_cargo'];?></td>
-                <td class="text-center">JKN-KJS</td>
+                <td class="text-center"><?=empty($resp_cargo['abreviatura'])?'':$resp_cargo['abreviatura'];?></td>
             </tr>
             <tr>
                 <th colspan="2" class="half-width" style="background-color: red;color: white; font-weight: bold; text-align: center;">INMEDIATO SUPERIOR (REPORTA A)</th>
@@ -172,7 +172,7 @@
             ?>
         </ol><br>
         <!-- Responsabilidades del Cargo -->
-        <li class="section-title">RESPONSABILIDADES DEL CARGO.</li>
+        <li class="section-title">RESPONSABILIDADES DEL CARGO</li><br>
         <!-- <p style="text-align: justify;">En esta sección, se enumeran las responsabilidades del puesto. Estas responsabilidades están diseñadas para garantizar un desempeño eficiente y efectivo en la consecución de los objetivos establecidos. A continuación, se presenta la lista de responsabilidades del cargo:</p> -->
         <ol class="custom-numbered-list" style="text-align: justify;">
             <?php 
@@ -196,30 +196,38 @@
             ?>
         </ol><br>
         <!-- Control de cambios -->
-        <li class="section-title">CONTROL DE CAMBIOS</li>
-        <p>[A ser llenada por nosotros]</p>
+        <li class="section-title">CONTROL DE CAMBIOS</li><br><br>
+        <?php 
+            if(count($resp_control_versiones) > 0){
+        ?>
         <table>
             <tr>
                 <th style="background-color: red;color: white; font-weight: bold; text-align: center;">Versión</th>
                 <th style="background-color: red;color: white; font-weight: bold; text-align: center;">Fecha</th>
                 <th style="background-color: red;color: white; font-weight: bold; text-align: center;">Descripción de cambios</th>
             </tr>
-            <tr>
-                <td class="text-center">00</td>
-                <td class="text-center">2022-07-07</td>
-                <td class="text-center">MP-GTH-39 Manual de Puestos: Jefe de Gestión de Calidad; Versión inicial del documento.</td>
-            </tr>
-        </table><br>
-        <!-- Gestión de Documento -->
-        <li class="section-title">GESTIÓN DEL DOCUMENTO</li>
-        <p>[A ser llenado por nosotros]</p>
-        <table>
-            <tr>
-                <th style="background-color: red; color: white; font-weight: bold;">Nombre del Archivo</th>
-                <th style="background-color: white; color: black;">MP-GTH-39.00.docx</th>
-            </tr>
+
+            <?php 
+                foreach($resp_control_versiones as $row){
+            ?>
+                <tr>
+                    <td class="text-center"><?=empty($row['nro_version']) ? '' : $row['nro_version'];?></td>
+                    <td class="text-center"><?=$row['fecha'];?></td>
+                    <td class="text-center"><?=$row['descripcion_cambios'];?></td>
+                </tr>
+            <?php 
+                }
+            ?>
         </table>
-        <p>[A ser llenado por nosotros]</p>
+        <?php 
+            }
+        ?>
+        <br>
+        <!-- Gestión de Documento -->
+        <li class="section-title">GESTIÓN DEL DOCUMENTO</li><br><br>
+        <?php 
+            if(count($resp_manual_seguimiento) > 0){
+        ?>
         <table>
             <tr>
                 <th style="background-color: red;color: white; font-weight: bold; text-align: center;"></th>
@@ -227,19 +235,23 @@
                 <th style="background-color: red;color: white; font-weight: bold; text-align: center;">Responsable</th>
                 <th style="background-color: red;color: white; font-weight: bold; text-align: center;">Firma</th>
             </tr>
-            <tr>
-                <td class="text-center" style="background-color: red;color: white; font-weight: bold; text-align: center;">Elaboración</td>
-                <td class="text-center">2022-06-29</td>
-                <td class="text-center">Iveth Aruquipa <br><b>Profesional de Talento Humano</b></td>
-                <td class="text-center">Elaborado desde sistema</td>
-            </tr>
-            <tr>
-                <td class="text-center"  style="background-color: red;color: white; font-weight: bold; text-align: center;">Aprobación</td>
-                <td class="text-center">2022-06-29</td>
-                <td class="text-center">José Jorge Durán Guillén<br><b>Director Ejecutivo</b></td>
-                <td class="text-center">Aprobado desde sistema</td>
-            </tr>
+            
+            <?php 
+                foreach($resp_manual_seguimiento as $row){
+            ?>
+                <tr>
+                    <td class="text-center" style="background-color: red;color: white; font-weight: bold; text-align: center;">Aprobación</td>
+                    <td class="text-center"><?=$row['fecha'];?></td>
+                    <td class="text-center"><?=$row['personal'];?> <br><b><?=$row['cargo'];?></b></td>
+                    <td class="text-center">Elaborado desde sistema</td>
+                </tr>
+            <?php 
+                }
+            ?>
         </table>
+        <?php 
+            }
+        ?>
     </ol>
 </body>
 </html>

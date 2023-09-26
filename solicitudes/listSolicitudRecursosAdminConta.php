@@ -41,8 +41,13 @@ $stringAreasProyectosExt=obtenerValorConfiguracion(65);
 $montoCaja=obtenerValorConfiguracion(85);
 // Preparamos
 $stmt = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional in ($stringOficinasProyectosExt) or cod_area in ($stringAreasProyectosExt) )) as sis_detalle,
-(select sum(IF(sd.cod_confretencion = 0 or sd.cod_confretencion = 8 or sd.cod_confretencion = 10,sd.importe,(sd.importe)*((100-(SELECT IFNULL(SUM(porcentaje),0) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=sd.cod_confretencion and cod_cuenta!=0))/100))) from solicitud_recursosdetalle sd where sd.cod_solicitudrecurso=sr.codigo) as monto_importe
+(select sum(IF(sd.cod_confretencion = 0 or sd.cod_confretencion = 8 or sd.cod_confretencion = 10,sd.importe,(sd.importe)*((100-(SELECT IFNULL(SUM(porcentaje),0) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=sd.cod_confretencion and cod_cuenta!=0))/100))) from solicitud_recursosdetalle sd where sd.cod_solicitudrecurso=sr.codigo) as monto_importe, CASE 
+    WHEN sr.revisado_contabilidad_by IS NOT NULL AND sr.revisado_contabilidad_by <> '' 
+    THEN CONCAT('Modificado por:', CONCAT(p.primer_nombre, ' ', p.paterno, ' ',p.materno), ', ', DATE_FORMAT(sr.revisado_contabilidad_at, '%d/%m/%Y %H:%i:%s'))
+    ELSE ''
+  END AS revisado_info
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+  LEFT JOIN personal p ON p.codigo = sr.revisado_contabilidad_by
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3)) l  
 where !(l.cod_unidadorganizacional in ($stringOficinasProyectosExt) or l.cod_area in ($stringAreasProyectosExt) or l.sis_detalle>0) and l.monto_importe>$montoCaja order by l.revisado_contabilidad,l.numero desc");
 
@@ -64,13 +69,19 @@ $stmt->bindColumn('numero', $numeroSol);
 $stmt->bindColumn('idServicio', $idServicio);
 $stmt->bindColumn('glosa_estado', $glosa_estadoX);
 $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
+$stmt->bindColumn('revisado_info', $revisadoInfo);
 $stmt->bindColumn('monto_importe', $montoImporteX);
 
 
 //Solicitudes SIS
 // Preparamos
-$stmtSIS = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional in ($stringOficinasProyectosExt) or cod_area in ($stringAreasProyectosExt) )) as sis_detalle 
+$stmtSIS = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional in ($stringOficinasProyectosExt) or cod_area in ($stringAreasProyectosExt) )) as sis_detalle, CASE 
+    WHEN sr.revisado_contabilidad_by IS NOT NULL AND sr.revisado_contabilidad_by <> '' 
+    THEN CONCAT('Modificado por:', CONCAT(p.primer_nombre, ' ', p.paterno, ' ',p.materno), ', ', DATE_FORMAT(sr.revisado_contabilidad_at, '%d/%m/%Y %H:%i:%s'))
+    ELSE ''
+  END AS revisado_info
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+  LEFT JOIN personal p ON p.codigo = sr.revisado_contabilidad_by
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3,5,8)) l  
 where (l.cod_unidadorganizacional in ($stringOficinasProyectosExt) or l.cod_area in ($stringAreasProyectosExt) or l.sis_detalle>0) order by l.cod_comprobante,l.numero desc");
 // Ejecutamos
@@ -91,12 +102,18 @@ $stmtSIS->bindColumn('numero', $numeroSol);
 $stmtSIS->bindColumn('idServicio', $idServicio);
 $stmtSIS->bindColumn('glosa_estado', $glosa_estadoX);
 $stmtSIS->bindColumn('revisado_contabilidad', $estadoContabilidadX);
+$stmtSIS->bindColumn('revisado_info', $revisadoInfo);
 $stmtSIS->bindColumn('devengado', $devenX);
 
 // Preparamos
 $stmtMen = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional in ($stringOficinasProyectosExt) or cod_area in ($stringAreasProyectosExt) )) as sis_detalle,
-(select sum(IF(sd.cod_confretencion = 0 or sd.cod_confretencion = 8 or sd.cod_confretencion = 10,sd.importe,(sd.importe)*((100-(SELECT IFNULL(SUM(porcentaje),0) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=sd.cod_confretencion and cod_cuenta!=0))/100))) from solicitud_recursosdetalle sd where sd.cod_solicitudrecurso=sr.codigo) as monto_importe
+(select sum(IF(sd.cod_confretencion = 0 or sd.cod_confretencion = 8 or sd.cod_confretencion = 10,sd.importe,(sd.importe)*((100-(SELECT IFNULL(SUM(porcentaje),0) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=sd.cod_confretencion and cod_cuenta!=0))/100))) from solicitud_recursosdetalle sd where sd.cod_solicitudrecurso=sr.codigo) as monto_importe, CASE 
+    WHEN sr.revisado_contabilidad_by IS NOT NULL AND sr.revisado_contabilidad_by <> '' 
+    THEN CONCAT('Modificado por:', CONCAT(p.primer_nombre, ' ', p.paterno, ' ',p.materno), ', ', DATE_FORMAT(sr.revisado_contabilidad_at, '%d/%m/%Y %H:%i:%s'))
+    ELSE ''
+  END AS revisado_info
   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+  LEFT JOIN personal p ON p.codigo = sr.revisado_contabilidad_by
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3)) l  
 where !(l.cod_unidadorganizacional in ($stringOficinasProyectosExt) or l.cod_area in ($stringAreasProyectosExt) or l.sis_detalle>0) and l.monto_importe<=$montoCaja order by l.revisado_contabilidad,l.numero desc");
 
@@ -118,6 +135,7 @@ $stmtMen->bindColumn('numero', $numeroSol);
 $stmtMen->bindColumn('idServicio', $idServicio);
 $stmtMen->bindColumn('glosa_estado', $glosa_estadoX);
 $stmtMen->bindColumn('revisado_contabilidad', $estadoContabilidadX);
+$stmtMen->bindColumn('revisado_info', $revisadoInfo);
 $stmtMen->bindColumn('monto_importe', $montoImporteX);
 $item_1=2708;
 ?>
@@ -266,13 +284,13 @@ $item_1=2708;
                             if($estadoContabilidadX==1){
                               if(isset($_GET['q'])){
                                 ?>
-                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-rose" style="background:#661E1B">
+                                <a title='Quitar la Revisión<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-rose" style="background:#661E1B">
                                        <i class="material-icons">check_box</i><!--check_box-->
                                 </a>
                                 <?php
                               }else{
                                 ?>
-                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10'  class="btn btn-rose" style="background:#661E1B">
+                                <a title='Quitar la Revisión<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10'  class="btn btn-rose" style="background:#661E1B">
                                        <i class="material-icons">check_box</i><!--check_box-->
                                 </a>
                                 <?php
@@ -286,13 +304,13 @@ $item_1=2708;
                               }
                               if(isset($_GET['q'])){
                                 ?>
-                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn <?=$estiloIconRevisado?>">
+                                <a title='Marcar como Revisado<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn <?=$estiloIconRevisado?>">
                                        <i class="material-icons"><?=$iconRevisado?></i>
                                 </a>
                                 <?php
                               }else{
                                 ?>
-                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11'  class="btn <?=$estiloIconRevisado?>">
+                                <a title='Marcar como Revisado<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11'  class="btn <?=$estiloIconRevisado?>">
                                        <i class="material-icons"><?=$iconRevisado?></i>
                                 </a>
                                 <?php
@@ -596,13 +614,13 @@ $item_1=2708;
                               if(!($codComprobante!=0&&($codEstado==5||$codEstado==8))){
                               if(isset($_GET['q'])){
                                 ?>
-                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-rose" style="background:#661E1B">
+                                <a title='Quitar la Revisión<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-rose" style="background:#661E1B">
                                        <i class="material-icons">check_box</i><!--check_box-->
                                 </a>
                                 <?php
                               }else{
                                 ?>
-                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10'  class="btn btn-rose" style="background:#661E1B">
+                                <a title='Quitar la Revisión<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10'  class="btn btn-rose" style="background:#661E1B">
                                        <i class="material-icons">check_box</i><!--check_box-->
                                 </a>
                                 <?php
@@ -618,13 +636,13 @@ $item_1=2708;
                               if(!($codComprobante!=0&&($codEstado==5||$codEstado==8))){
                               if(isset($_GET['q'])){
                                 ?>
-                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn <?=$estiloIconRevisado?>">
+                                <a title='Marcar como Revisado<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn <?=$estiloIconRevisado?>">
                                        <i class="material-icons"><?=$iconRevisado?></i>
                                 </a>
                                 <?php
                               }else{
                                 ?>
-                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11'  class="btn <?=$estiloIconRevisado?>">
+                                <a title='Marcar como Revisado<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11'  class="btn <?=$estiloIconRevisado?>">
                                        <i class="material-icons"><?=$iconRevisado?></i>
                                 </a>
                                 <?php
@@ -899,13 +917,13 @@ $item_1=2708;
                             if($estadoContabilidadX==1){
                               if(isset($_GET['q'])){
                                 ?>
-                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-rose" style="background:#661E1B">
+                                <a title='Quitar la Revisión<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn btn-rose" style="background:#661E1B">
                                        <i class="material-icons">check_box</i><!--check_box-->
                                 </a>
                                 <?php
                               }else{
                                 ?>
-                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10'  class="btn btn-rose" style="background:#661E1B">
+                                <a title='Quitar la Revisión<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10'  class="btn btn-rose" style="background:#661E1B">
                                        <i class="material-icons">check_box</i><!--check_box-->
                                 </a>
                                 <?php
@@ -919,13 +937,13 @@ $item_1=2708;
                               }
                               if(isset($_GET['q'])){
                                 ?>
-                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn <?=$estiloIconRevisado?>">
+                                <a title='Marcar como Revisado<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11&q=<?=$q?>&r=<?=$item_3?>&s=<?=$s?>&u=<?=$u?>'  class="btn <?=$estiloIconRevisado?>">
                                        <i class="material-icons"><?=$iconRevisado?></i>
                                 </a>
                                 <?php
                               }else{
                                 ?>
-                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11'  class="btn <?=$estiloIconRevisado?>">
+                                <a title='Marcar como Revisado<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11'  class="btn <?=$estiloIconRevisado?>">
                                        <i class="material-icons"><?=$iconRevisado?></i>
                                 </a>
                                 <?php

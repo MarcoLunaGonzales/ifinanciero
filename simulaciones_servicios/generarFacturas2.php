@@ -24,6 +24,10 @@ $globalUser=$_SESSION["globalUser"];
 
 $urlSIAT=obtenerValorConfiguracion(103);
 
+// Obtiene URL de WS Ifinanciero
+global $url_servicio;
+$url_servicio = obtenerValorConfiguracion(112);
+
 // Ruta WS tienda
 // $urlTienda=obtenerValorConfiguracion(109);
 
@@ -61,10 +65,11 @@ try{
         $codigo_facturacion=verificamosFacturaDuplicada($codigo);
         if($codigo_facturacion==null){//no se registró            
             //datos de la solicitud de facturacion           
-            $stmtInfo = $dbh->prepare("SELECT sf.cod_simulacion_servicio,sf.cod_unidadorganizacional,sf.cod_area,sf.cod_tipoobjeto,sf.cod_tipopago,sf.cod_cliente,sf.cod_personal,sf.nit,sf.observaciones,sf.observaciones_2,sf.razon_social,sf.tipo_solicitud,sf.ci_estudiante,sf.siat_tipoidentificacion,IFNULL(sf.siat_complemento,'')as siat_complemento,IFNULL(sf.siat_nroTarjeta,'')as siat_nroTarjeta,sf.fecha_facturacion,sf.correo_contacto,(select stp.codigoClasificador from siat_tipos_pago stp where stp.cod_tipopago=sf.cod_tipopago)as siat_tipoPago
+            $stmtInfo = $dbh->prepare("SELECT sf.cod_simulacion_servicio,sf.cod_unidadorganizacional,sf.cod_area,sf.cod_tipoobjeto,sf.cod_tipopago,sf.cod_cliente,sf.cod_personal,sf.nit,sf.observaciones,sf.observaciones_2,sf.razon_social,sf.tipo_solicitud,sf.ci_estudiante,sf.siat_tipoidentificacion,IFNULL(sf.siat_complemento,'')as siat_complemento,IFNULL(sf.siat_nroTarjeta,'')as siat_nroTarjeta,sf.fecha_facturacion,sf.correo_contacto,(select stp.codigoClasificador from siat_tipos_pago stp where stp.cod_tipopago=sf.cod_tipopago)as siat_tipoPago, sf.codigo
                  FROM solicitudes_facturacion sf where sf.codigo=$codigo");
             $stmtInfo->execute();
             $resultInfo = $stmtInfo->fetch();    
+            $cod_solicitud_facturacion = $resultInfo['codigo'];                 // Codigo Solicitud Facturación
             $cod_simulacion_servicio = $resultInfo['cod_simulacion_servicio'];
             $cod_unidadorganizacional = $resultInfo['cod_unidadorganizacional'];
             $cod_area = $resultInfo['cod_area'];
@@ -308,8 +313,17 @@ try{
                 if($banderaSW){
                     // Generación de Suscripción 
                     // generarSuscripcion($codigo, $stringFacturasCod);
+                    wsGenerarSuscripcion($codigo, $stringFacturasCod);
                     // Generación de Busqueda y Cierre de LEAD
                     // $response_lead = searchLeadsFactura($stringFacturasCod);
+                    wsBuscarLeadFactura($stringFacturasCod);
+                    // Modificación de Datos del Cliente
+                    $idCliente       = $cod_cliente;
+                    $razonSocial     = $razon_social;
+                    $nit             = $nitCliente;
+                    $idTipoDocumento = $siat_tipoidentificacion;
+                    $idSolicitud     = $cod_solicitud_facturacion;
+                    wsModificaCliente($idCliente,$razonSocial,$nit,$idTipoDocumento,$idSolicitud);
                     $urlSIATCompleta=$urlSIAT."formatoFacturaOnLine.php?codVenta=".$idTransaccion_x;
                     echo "<script>
                     Swal.fire('".$titulo."','".$mensaje_x."', '".$estado."');
@@ -357,165 +371,50 @@ try{
     $stmtCommit->execute();
 }
 
-function generarSuscripcion($codigo, $stringFacturasCod){
-    $dbh = new Conexion();
-	/*****************************************************************************************/
-	$stmtDetalleFact = $dbh->prepare("SELECT sf.codigo, sf.cantidad,sf.precio,sf.descuento_bob,sf.descripcion_alterna
-		from solicitudes_facturaciondetalle sf where sf.cod_solicitudfacturacion='$codigo'");
-	$stmtDetalleFact->execute();
+/********************************************
+ * Solicita servicio para generar SUSCRIPCIÓN
+ ********************************************/
+function wsGenerarSuscripcion($codigo, $stringFacturasCod){
+    global $url_servicio;
+    // Datos a enviar al servicio
+    $datos = json_encode(array(
+        "codigo"            => $codigo,
+        "stringFacturasCod" => $stringFacturasCod
+    ));
+    // URL del servicio
+    $url_servicio = $url_servicio.'ws_generarSuscripcion.php';
+    // Inicializa cURL
+    $ch = curl_init($url_servicio);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // Evita bloquear la ejecución y ejecuta la solicitud en segundo plano
+    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+    curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
+    curl_exec($ch);
+    curl_close($ch);
+}
 
-	$sw_token = '';
-	while ($rowDetallefact = $stmtDetalleFact->fetch()) {   
-		$sf_codigo       = $rowDetallefact['codigo'];
-		$cantidad_x      = $rowDetallefact['cantidad'];
-		$precio_x        = $rowDetallefact['precio'];
-		$descuento_bob_x = $rowDetallefact['descuento_bob'];
-		$monto_totalCab  = ($precio_x*$cantidad_x)-$descuento_bob_x;
-		// SUBSCRIPCIÓN TIENDA
-		$stmtSuscripcion = $dbh->prepare("SELECT fs.codigo, fs.cod_factura, fs.cod_facturadetalle, fs.cod_suscripcion, fs.glosa, 
-										fs.cod_solicitudfacturacion, fs.catalogo, fs.id_cliente, fs.id_opcion_suscripcion, 
-										fs.id_promocion, fs.id_tipo_venta, fs.idioma, fs.fecha_inicio_suscripcion, fs.id_norma
-			from facturas_suscripcionestienda fs where fs.cod_facturadetalle = '$sf_codigo'");
-		$stmtSuscripcion->execute();
-		$detail_codigo                     = ''; 
-		$detail_cod_factura                = ''; 
-		$detail_cod_facturadetalle         = ''; 
-		$detail_cod_suscripcion            = ''; 
-		$detail_glosa                      = ''; 
-		$detail_cod_solicitudfacturacion   = ''; 
-		$detail_catalogo                   = ''; 
-		$detail_id_cliente                 = ''; 
-		$detail_id_opcion_suscripcion      = ''; 
-		$detail_id_promocion               = ''; 
-		$detail_id_tipo_venta              = ''; 
-		$detail_idioma                     = ''; 
-		$detail_fecha_inicio_suscripcion   = '';
-		$detail_id_norma                   = '';
-		while ($rowSuscripcion = $stmtSuscripcion->fetch()) {
-			$detail_codigo                     = $rowSuscripcion['codigo']; 
-			$detail_cod_factura                = $rowSuscripcion['cod_factura']; 
-			$detail_cod_facturadetalle         = $rowSuscripcion['cod_facturadetalle']; 
-			$detail_cod_suscripcion            = $rowSuscripcion['cod_suscripcion']; 
-			$detail_glosa                      = $rowSuscripcion['glosa']; 
-			$detail_cod_solicitudfacturacion   = $rowSuscripcion['cod_solicitudfacturacion']; 
-			$detail_catalogo                   = $rowSuscripcion['catalogo']; 
-			$detail_id_cliente                 = $rowSuscripcion['id_cliente']; 
-			$detail_id_opcion_suscripcion      = $rowSuscripcion['id_opcion_suscripcion']; 
-			$detail_id_promocion               = $rowSuscripcion['id_promocion']; 
-			$detail_id_tipo_venta              = $rowSuscripcion['id_tipo_venta']; 
-			$detail_idioma                     = $rowSuscripcion['idioma']; 
-			$detail_fecha_inicio_suscripcion   = $rowSuscripcion['fecha_inicio_suscripcion'];
-			$detail_id_norma                   = $rowSuscripcion['id_norma'];
-		}
-		// Se genera la suscripcion solo cuando la norma es DIGITAL
-		if($detail_id_tipo_venta==2){
-			/**
-			 * GENERACIÓN DE TOKEN
-			 */
-			if(empty($sw_token)){
-				$url_ecommerce = obtenerValorConfiguracion(109);;
-				$direccion = $url_ecommerce.'usuario/login.php';
-                
-				$user     = 'juan.quenallata@ibnorca.org';
-				$password = md5('juanito2020');
-                
-				// $user     = $_SESSION['globalCredUser'];
-				// $password = $_SESSION['globalCredPassword'];
-
-                $parametros=array(
-						"c"   => 'IBNTOK', 
-						"md5" => 1, 
-						"a"   => $user, 
-						"b"   => $password);
-				$parametros=json_encode($parametros);
-				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL,$direccion);
-				curl_setopt($ch, CURLOPT_POST, TRUE);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				$remote_server_output = json_decode(curl_exec ($ch));
-				curl_close ($ch); 
-                
-                // Verificación de Credenciales de Acceso
-                if($remote_server_output->error == 'NOK'){
-                    $stmtIbnorca        = $dbh->prepare("UPDATE facturas_suscripcionestienda 
-                                SET glosa = '$remote_server_output->detail'
-                                WHERE cod_facturadetalle = '$sf_codigo'");
-                    $flagSuccess = $stmtIbnorca->execute();
-                    $sw_token = '';
-                }else{
-                    $sw_token = $remote_server_output->value->valor->token;
-                }
-                // var_dump($sw_token);
-			}
-            // Verificación de TOKEN
-            if(!empty($sw_token)){
-                // Codigo Factura
-                $stmtCodfactura = $dbh->prepare("SELECT fv.codigo from facturas_venta fv where fv.cod_solicitudfacturacion='$detail_cod_solicitudfacturacion'");
-                $stmtCodfactura->execute();
-                $stringFacturasCod = $stmtCodfactura->fetch(PDO::FETCH_ASSOC)['codigo'];
-
-                /**
-                 * GENERACIÓN DE SUSCRIPCIÓN
-                 **/
-                $direccion = $url_ecommerce.'tienda/generarSuscripcion.php';
-                
-                $parametros=array(
-                    "token"       => $sw_token,
-                    "idNorma"     => $detail_id_norma, 
-                    "catalogo"    => $detail_catalogo,
-                    "idCliente"   => $detail_id_cliente,
-                    "configuracionOpcionSuscripcionId" => $detail_id_opcion_suscripcion,
-                    "promocionId" => $detail_id_promocion,
-                    "precio"      => $monto_totalCab,
-                    "tipo"        => "digital",
-                    "idioma"      => $detail_idioma,
-                    "desde"       => $detail_fecha_inicio_suscripcion,
-                    "facturaId"   => $stringFacturasCod,
-                    "sistema"     => "Ifinanciero",
-                    "oficinaId"   => 0,
-                    "app"         => "FRONTIBNT"
-                );
-                // var_dump($parametros);
-                $parametros=json_encode($parametros);
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL,$direccion);
-                curl_setopt($ch, CURLOPT_POST, TRUE);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                $remote_server_output = json_decode(curl_exec ($ch));
-                curl_close ($ch); 
-                // Resultado de Servicio SUSCRIPCIÓN
-                // var_dump($remote_server_output);
-                
-                // Fecha de envio Suscripción
-                $fecha_envio   = date('Y-m-d H:i:s');
-                // ENVIADO - JSON LOCAL
-                $json_enviado  = $parametros;
-                // RECIBIDO - JSON SUCRIPCIÓN
-                $json_recibido = json_encode($remote_server_output);
-
-                $sw_error = $remote_server_output->error;
-                $sw_cod_suscripcion = ($sw_error == "OK" ? $remote_server_output->suscripcionId : 0);
-                $sw_glosa           = ($sw_error == "OK" ? 'REGISTRO CORRECTO!' : $remote_server_output->detail);
-                $stmtIbnorca        = $dbh->prepare("UPDATE facturas_suscripcionestienda 
-                                    SET cod_suscripcion = '$sw_cod_suscripcion',
-                                    glosa = '$sw_glosa',
-                                    cod_factura = '$stringFacturasCod',
-                                    json_enviado = '$json_enviado',
-                                    json_recibido = '$json_recibido',
-                                    fecha_envio = '$fecha_envio'
-                                    WHERE cod_facturadetalle = '$sf_codigo'");
-                $flagSuccess=$stmtIbnorca->execute();
-            }else{
-                $stmtIbnorca = $dbh->prepare("UPDATE facturas_suscripcionestienda 
-                                            SET glosa = 'Hubo un error en el proceso de Autenticación.',
-                                            cod_factura = '$stringFacturasCod' 
-                                            WHERE cod_facturadetalle = '$sf_codigo'");
-                $flagSuccess=$stmtIbnorca->execute();
-            }
-		}
-	}
-	/*****************************************************************************************/
+/********************************************
+ * Solicita servicio para BUSCAR LEAD DE CRM
+ ********************************************/
+function wsBuscarLeadFactura($stringFacturasCod){
+    global $url_servicio;
+    // Datos a enviar al servicio
+    $datos = json_encode(array(
+        "stringFacturasCod" => $stringFacturasCod
+    ));
+    // URL del servicio
+    $url_servicio = $url_servicio.'ws_buscarLeadFactura.php';
+    // Inicializa cURL
+    $ch = curl_init($url_servicio);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // Evita bloquear la ejecución y ejecuta la solicitud en segundo plano
+    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+    curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
+    curl_exec($ch);
+    curl_close($ch);
 }
 ?>
