@@ -52,8 +52,14 @@ $stringAreasProyectosExt=obtenerValorConfiguracion(65);
 
 
 $stmtMen = $dbh->prepare("SELECT l.* FROM (SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area,(select count(*) from solicitud_recursosdetalle where cod_solicitudrecurso=sr.codigo and (cod_unidadorganizacional in ($stringOficinasProyectosExt) or cod_area in ($stringAreasProyectosExt) )) as sis_detalle,
-  (select sum(IF(sd.cod_confretencion = 0 or sd.cod_confretencion = 8 or sd.cod_confretencion = 10,sd.importe,(sd.importe)*((100-(SELECT IFNULL(SUM(porcentaje),0) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=sd.cod_confretencion and cod_cuenta!=0))/100))) from solicitud_recursosdetalle sd where sd.cod_solicitudrecurso=sr.codigo) as monto_importe
-  from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+  (select sum(IF(sd.cod_confretencion = 0 or sd.cod_confretencion = 8 or sd.cod_confretencion = 10,sd.importe,(sd.importe)*((100-(SELECT IFNULL(SUM(porcentaje),0) as porcentaje FROM configuracion_retencionesdetalle where cod_configuracionretenciones=sd.cod_confretencion and cod_cuenta!=0))/100))) from solicitud_recursosdetalle sd where sd.cod_solicitudrecurso=sr.codigo) as monto_importe, CASE 
+    WHEN sr.revisado_contabilidad_by IS NOT NULL AND sr.revisado_contabilidad_by <> '' 
+    THEN CONCAT('Modificado por: ', CONCAT(p.primer_nombre, ' ', p.paterno, ' ',p.materno), ', ', DATE_FORMAT(sr.revisado_contabilidad_at, '%d/%m/%Y %H:%i:%s'))
+    ELSE ''
+  END AS revisado_info
+  from solicitud_recursos sr 
+  LEFT JOIN personal p ON p.codigo = sr.revisado_contabilidad_by
+  join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
   where sr.cod_estadoreferencial=1 and sr.cod_estadosolicitudrecurso in (3)) l  
 where !(l.cod_unidadorganizacional in ($stringOficinasProyectosExt) or l.cod_area in ($stringAreasProyectosExt) or l.sis_detalle>0) and l.monto_importe<=$montoCaja order by l.revisado_contabilidad,l.numero desc");
 
@@ -76,6 +82,7 @@ $stmtMen->bindColumn('idServicio', $idServicio);
 $stmtMen->bindColumn('glosa_estado', $glosa_estadoX);
 $stmtMen->bindColumn('revisado_contabilidad', $estadoContabilidadX);
 $stmtMen->bindColumn('monto_importe', $montoImporteX);
+$stmtMen->bindColumn('revisado_info', $revisadoInfo);
 $item_1=2708;
 ?>
 <div class="cargar-ajax d-none">
@@ -204,7 +211,7 @@ $item_1=2708;
                             <?php 
                             if($estadoContabilidadX==1){
                               ?>
-                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10'  class="btn btn-rose" style="background:#661E1B">
+                                <a title='Quitar la Revisión<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10'  class="btn btn-rose" style="background:#661E1B">
                                        <i class="material-icons">check_box</i><!--check_box-->
                                 </a>
                                 <?php
@@ -216,7 +223,7 @@ $item_1=2708;
                                 $estiloIconRevisado="btn-info";
                               }
                               ?>
-                                <a title="Marcar como Revisado" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11&conta_men=2'  class="btn <?=$estiloIconRevisado?>">
+                                <a title='Marcar como Revisado<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=11&conta_men=2'  class="btn <?=$estiloIconRevisado?>">
                                        <i class="material-icons"><?=$iconRevisado?></i>
                                 </a>
                                 <?php
