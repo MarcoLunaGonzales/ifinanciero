@@ -165,7 +165,7 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
                                 <button type="button" class="btn btn-info form_edit" data-codigo="<?=$codigo;?>" data-nombre="<?=$nombre;?>"><i class="material-icons" title="Editar"><?=$iconEdit;?></i></button>
 
                                 <!-- Eliminar -->
-                                <button class="<?=$buttonDelete;?> form_del">
+                                <button class="<?=$buttonDelete;?> form_del" data-codigo="<?=$codigo;?>">
                                   <i class="material-icons" title="Borrar"><?=$iconDelete;?></i>
                                 </button>
                                 <?php
@@ -354,67 +354,116 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
 </script>
 <script>
 $(document).ready(function() {
-  // Función para abrir el modal con campos en blanco
-  $("#form_reg").click(function() {
-    $("#modalAgregarEditarLabel").text("Agregar Registro");
-    $("#registroId").val("");
-    $("#nombre").val("");
-    $("#archivo").val("");
-    $("#modalAgregarEditar").modal("show");
-  });
-
-  // Función para editar un registro existente
-  $(".form_edit").click(function() {
-    var registroId = $(this).data("codigo");
-    var nombre = $(this).data("nombre");
-
-    $("#modalAgregarEditarLabel").text("Editar Registro");
-    $("#registroId").val(registroId);
-    $("#nombre").val(nombre);
-    $("#modalAgregarEditar").modal("show");
-  });
-
-  // Función para guardar el registro mediante AJAX
-  $("#guardarRegistro").click(function() {
-    let formData = new FormData();
-    formData.append('codigo', $('#registroId').val());
-    formData.append('nombre', $('#nombre').val());
-    formData.append('archivo', $('#archivo')[0].files[0]);
-    $.ajax({
-        url: "rrhh/mofSave.php",
-        method: "POST",
-        data: formData,
-        contentType: false,
-        processData: false,
-        dataType: 'json', // Indica que esperas una respuesta JSON
-        success: function(response) {
-            console.log(response);
-
-            if (response.status) {
-                Swal.fire({
-                    type: "success",
-                    title: response.message,
-                    showConfirmButton: false,
-                    timer: 2000,
-                    onClose: function() {
-                        location.reload();
-                    }
-                });
-            } else {
-                Swal.fire({
-                    type: "error",
-                    title: response.message,
-                });
-            }
-
-            $("#modalAgregarEditar").modal("hide");
-        },
-        error: function(xhr, textStatus, errorThrown) {
-            // Maneja los errores de la solicitud AJAX
-            console.error(textStatus);
-        }
+    // Función para abrir el modal con campos en blanco
+    $("#form_reg").click(function() {
+        $("#modalAgregarEditarLabel").text("Agregar Registro");
+        $("#registroId").val("");
+        $("#nombre").val("");
+        $("#archivo").val("");
+        $("#modalAgregarEditar").modal("show");
     });
 
-  });
+    // Función para editar un registro existente
+    $(".form_edit").click(function() {
+        var registroId = $(this).data("codigo");
+        var nombre = $(this).data("nombre");
+
+        $("#modalAgregarEditarLabel").text("Editar Registro");
+        $("#registroId").val(registroId);
+        $("#nombre").val(nombre);
+        $("#modalAgregarEditar").modal("show");
+    });
+
+    // Función para guardar el registro mediante AJAX
+    $("#guardarRegistro").click(function() {
+        let formData = new FormData();
+        formData.append('codigo', $('#registroId').val());
+        formData.append('nombre', $('#nombre').val());
+        formData.append('archivo', $('#archivo')[0].files[0]);
+        $.ajax({
+            url: "rrhh/mofSave.php",
+            method: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json', // Indica que esperas una respuesta JSON
+            success: function(response) {
+                console.log(response);
+
+                if (response.status) {
+                    Swal.fire({
+                        type: "success",
+                        title: response.message,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        onClose: function() {
+                            location.reload();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        type: "error",
+                        title: response.message,
+                    });
+                }
+
+                $("#modalAgregarEditar").modal("hide");
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                // Maneja los errores de la solicitud AJAX
+                console.error(textStatus);
+            }
+        });
+
+    });
+
+  
+    // Función para modificar estado
+    $(".form_del").click(function() {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¿Deseas cambiar el estado del registro?",
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                // Si el usuario confirma la acción, procede con la solicitud AJAX
+                let formData = new FormData();
+                formData.append('codigo', $(this).data('codigo'));
+                $.ajax({
+                    url: "rrhh/mofEstado.php",
+                    method: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status) {
+                            Swal.fire({
+                                type: "success",
+                                title: response.message,
+                                showConfirmButton: false,
+                                timer: 2000,
+                                onClose: function() {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                type: "error",
+                                title: response.message,
+                            });
+                        }
+                        $("#modalAgregarEditar").modal("hide");
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        console.error(textStatus);
+                    }
+                });
+            }
+        });
+    });
 });
 </script>

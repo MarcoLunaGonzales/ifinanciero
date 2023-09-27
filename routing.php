@@ -2072,6 +2072,10 @@
 			require_once('rrhh/cargosListaControlVersion.php');
 		}
 
+		// Responsabilidades Generales IBNORCA
+		if ($_GET['opcion']=='listaResponsabilidades') {
+			require_once('responsabilidad_ibnorca/responsabilidadLista.php');
+		}
 	}else{
 		//require("paginaprincipal.php");
 	}
