@@ -125,7 +125,7 @@ if($estado==10||$estado==11||$estado==12){
       $fecha_solicitud = $registro['fecha_solicitud'];
       $motivo          = $obs;
       $personal_email  = $registro['email_personal']; // "roalmollericona@gmail.com";
-      $personal_email_copia = "mluna@minkasoftware.com";
+      $personal_email_copia = ""; // "mluna@minkasoftware.com"
       $asunto          = "Rechazo de Solicitud de Recursos Nro. ".$nro_solicitud;
       $usuario_rechazo = $_SESSION['globalNameUser'];
       enviarCorreoSolicitud($asunto, $nombre_personal, $nro_solicitud, $fecha_solicitud, $motivo, $personal_email, $personal_email_copia, $usuario_rechazo);
