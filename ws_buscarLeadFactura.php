@@ -1,6 +1,6 @@
 <?php
 require_once 'conexion.php';
-require_once 'function.php';
+require_once 'functions.php';
 
 session_start();
 

@@ -159,14 +159,24 @@
             $remote_server_output = json_decode(curl_exec ($ch));
             curl_close ($ch); 
             // Resultado de Servicio SUSCRIPCIÓN
-            var_dump($remote_server_output);
+            // var_dump($remote_server_output);
             
+            // Fecha de envio Suscripción
+            $fecha_envio   = date('Y-m-d H:i:s');
+            // ENVIADO - JSON LOCAL
+            $json_enviado  = $parametros;
+            // RECIBIDO - JSON SUCRIPCIÓN
+            $json_recibido = json_encode($remote_server_output);
+
             $sw_error = $remote_server_output->error;
             $sw_cod_suscripcion = ($sw_error == "OK" ? $remote_server_output->suscripcionId : 0);
             $sw_glosa           = ($sw_error == "OK" ? 'REGISTRO CORRECTO!' : $remote_server_output->detail);
             $stmtIbnorca        = $dbh->prepare("UPDATE facturas_suscripcionestienda 
                                 SET cod_suscripcion = '$sw_cod_suscripcion',
-                                glosa = '$sw_glosa'
+                                    glosa = '$sw_glosa',
+                                    json_enviado = '$json_enviado',
+                                    json_recibido = '$json_recibido',
+                                    fecha_envio = '$fecha_envio'
                                 WHERE codigo = '$codigo'");
             $flagSuccess=$stmtIbnorca->execute();
         }

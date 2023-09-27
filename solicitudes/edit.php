@@ -39,10 +39,16 @@ if($estado==10||$estado==11||$estado==12){
    }
   
    $estado=$estado-10;
-   $sqlUpdate="UPDATE solicitud_recursos SET  revisado_contabilidad='$estado' where codigo='$codigo'";
+
+   $revisado_contabilidad_at = date('Y-m-d H:i:s');
+   $revisado_contabilidad_by = $globalUser;
+   $sqlUpdate="UPDATE solicitud_recursos SET revisado_contabilidad = '$estado',
+               revisado_contabilidad_at = '$revisado_contabilidad_at',
+               revisado_contabilidad_by = '$revisado_contabilidad_by'
+               WHERE codigo='$codigo'";
+
    $stmtUpdate = $dbh->prepare($sqlUpdate);
    $flagSuccess=$stmtUpdate->execute();
-
 }else{
    //AQUI ENVIAMOS LA SR A PROYECTOS
    $oficinaSR=obtenerUnidadSolicitanteRecursos($codigo);

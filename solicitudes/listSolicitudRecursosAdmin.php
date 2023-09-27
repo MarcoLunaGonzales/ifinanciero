@@ -30,7 +30,14 @@ if(isset($_GET['q'])){
   $sqlAreas="";
 }
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (4)) order by sr.numero desc");
+$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area, CASE 
+                    WHEN sr.revisado_contabilidad_by IS NOT NULL AND sr.revisado_contabilidad_by <> '' 
+                    THEN CONCAT('Modificado por: ', CONCAT(p.primer_nombre, ' ', p.paterno, ' ',p.materno), ', ', DATE_FORMAT(sr.revisado_contabilidad_at, '%d/%m/%Y %H:%i:%s'))
+                    ELSE ''
+                  END AS revisado_info
+                  from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+                  LEFT JOIN personal p ON p.codigo = sr.revisado_contabilidad_by
+                  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (4)) order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -49,6 +56,7 @@ $stmt->bindColumn('numero', $numeroSol);
 $stmt->bindColumn('idServicio', $idServicio);
 $stmt->bindColumn('glosa_estado', $glosa_estadoX);
 $stmt->bindColumn('revisado_contabilidad', $estadoContabilidadX);
+$stmt->bindColumn('revisado_info', $revisadoInfo);
 $item_1=2708;
 ?>
 
@@ -157,13 +165,13 @@ $item_1=2708;
                             if($estadoContabilidadX==1){
                               if(isset($_GET['q'])){
                                 ?>
-                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&ladmin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-rose" style="background:#661E1B">
+                                <a title='Quitar la Revisión<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&ladmin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>'  class="btn btn-rose" style="background:#661E1B">
                                        <i class="material-icons">check_box</i><!--check_box-->
                                 </a>
                                 <?php
                               }else{
                                 ?>
-                                <a title="Quitar la Revisión" href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&ladmin=0'  class="btn btn-rose" style="background:#661E1B">
+                                <a title='Quitar la Revisión<?="\n".$revisadoInfo?>' href='<?=$urlEdit2?>?cod=<?=$codigo?>&estado=10&ladmin=0'  class="btn btn-rose" style="background:#661E1B">
                                        <i class="material-icons">check_box</i><!--check_box-->
                                 </a>
                                 <?php
@@ -172,12 +180,12 @@ $item_1=2708;
                               $iconRevisado="check_box_outline_blank";
                               $estiloIconRevisado="btn-default";
                               $irEstado=12;
-                              $mensajeTitle="Marca como Examinado";
+                              $mensajeTitle="Marca como Examinado"."\n".$revisadoInfo;
                               if($estadoContabilidadX==2){
                                 $iconRevisado="adjust";
                                 $estiloIconRevisado="btn-info";
                                 $irEstado=10;
-                                $mensajeTitle="Quitar Examinado";
+                                $mensajeTitle='Quitar Examinado'."\n".$revisadoInfo;
                               }
                               if(isset($_GET['q'])){
                                 ?>
