@@ -4,9 +4,11 @@ require_once 'functions.php';
 date_default_timezone_set('America/La_Paz');
 
 echo "Inicio el proceso suscripción";
-$codigo            = 31123; // (solicitudes_facturacion: codigo) | cod_solicitudfacturacion
-$stringFacturasCod = 46738; // (facturas_venta: codigo) | cod_factura
+$codigo            = 0; // (solicitudes_facturacion: codigo) | cod_solicitudfacturacion
+$stringFacturasCod = 0; // (facturas_venta: codigo) | cod_factura
 
+global $url_servicio;
+$url_servicio = obtenerValorConfiguracion(112);
 wsGenerarSuscripcion($codigo, $stringFacturasCod);
 
 function wsGenerarSuscripcion($codigo, $stringFacturasCod){
@@ -17,7 +19,8 @@ function wsGenerarSuscripcion($codigo, $stringFacturasCod){
         "stringFacturasCod" => $stringFacturasCod
     ));
     // URL del servicio
-    $url_servicio = $url_servicio.'ws_generarSuscripcion.php';
+    $url_servicio = $url_servicio.'ws_generarSuscripcion.php'."?codigo=$codigo&stringFacturasCod=$stringFacturasCod";
+    echo $url_servicio;
     // Inicializa cURL
     $ch = curl_init($url_servicio);
     curl_setopt($ch, CURLOPT_POST, 1);
