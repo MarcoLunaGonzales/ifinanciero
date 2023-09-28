@@ -116,7 +116,7 @@ $stmt->bindColumn('nombre_padre', $nombre_padre);
                     <!-- Mapa de Areas Personal -->
                     <a class="btn btn-warning" href="index.php?opcion=areasMapaPersonal"><i class="material-icons">map</i> Mapa personal</a>
                     <!-- Responsabilidades Generales IBNORCA -->
-                    <a class="btn btn-danger" href="index.php?opcion=listaResponsabilidades"><i class="material-icons">list</i> Responsabilidades Gral. IBNORCA</a>
+                    <a class="btn btn-danger" href="index.php?opcion=listaResponsabilidades"><i class="material-icons">list</i> Responsabilidades Generales</a>
               </div>
               <?php
               }
