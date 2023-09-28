@@ -3,7 +3,7 @@ require_once 'conexion.php';
 require_once 'functions.php';
 date_default_timezone_set('America/La_Paz');
 
-echo "Inicio el proceso";
+echo "Inicio el proceso suscripción";
 $codigo            = 31123; // (solicitudes_facturacion: codigo) | cod_solicitudfacturacion
 $stringFacturasCod = 46738; // (facturas_venta: codigo) | cod_factura
 
