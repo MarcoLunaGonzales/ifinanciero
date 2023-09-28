@@ -9,8 +9,8 @@ try {
     $data = json_decode(file_get_contents('php://input'), true);
 
     // Variables de entrada
-    $codigo            = empty($data['codigo']) ? $_GET['codigo'] : $data['codigo'];
-    $stringFacturasCod = empty($data['stringFacturasCod']) ? $_GET['stringFacturasCod'] : $data['stringFacturasCod'];
+    $codigo            = empty($data['codigo']) ? $_GET['codigo'] : $data['codigo']; // (solicitudes_facturacion: codigo) | cod_solicitudfacturacion
+    $stringFacturasCod = empty($data['stringFacturasCod']) ? $_GET['stringFacturasCod'] : $data['stringFacturasCod']; // (facturas_venta: codigo) | cod_factura
 
     $dbh = new Conexion();
     /*****************************************************************************************/
