@@ -194,8 +194,18 @@ if(isset($_GET["area"])){
                                       <input type="hidden" value="<?=$filaA?>" id="cantidad_archivosadjuntosdetalle<?=$idFila?>" name="cantidad_archivosadjuntosdetalle<?=$idFila?>">
                                         <?php
                                      //fin archivos adjuntos detalle  
-            ?>  
+            ?> 
+
            <div class="btn-group col-sm-12">
+
+             <!-- Acceso a ADMINISTRADORES  -->
+            <?php if($globalAdmin == 1){ ?> 
+             <!-- Gestiona Cuenta  -->
+            <button type="button" title="Gestionar Cuenta Bancaria" class="btn btn-primary btn-sm btn-fab ges_cuenta_bancaria" data-index="<?=$idFila;?>">
+              <i class="material-icons">account_balance</i>
+            </button>
+            <?php } ?>
+
             <a  title="Forma de Pago" href="#" class="btn btn-success btn-sm btn-fab" id="boton_formapago<?=$idFila;?>" onclick="agregarTipoPagoProveedorDetalle(<?=$idFila;?>)">
                   <i class="material-icons">money</i><span id="nben<?=$idFila?>" class="bg-danger"></span>
             </a>

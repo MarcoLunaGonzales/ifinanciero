@@ -21,9 +21,12 @@ if($lista->totalLista>0){
     $cbanco=$listas->IdCuentaBanco;
     $nombreBen=$listas->BeneficiarioNombre;
     $apellidoBen=$listas->BeneficiarioApellido;
+    $estado = $listas->Vigencia;
+    if($estado == 1){
     ?>
-    <option value="<?=$cbanco?>"><?=$banco?> - [<?=$cuenta?>] - <?=$nombreBen?> <?=$apellidoBen?></option>
+      <option value="<?=$cbanco?>"><?=$banco?> - [<?=$cuenta?>] - <?=$nombreBen?> <?=$apellidoBen?></option>
     <?php
+    }
  }
 }
 

@@ -953,3 +953,7 @@ require_once 'modal.php';
 ?>
 <script>calcularTotalesSolicitud();listarProyectosSisdeUnidades();ponerConfirmacionDeArchivosSolRec();</script> 
 
+
+<?php 
+require_once "gestion_cuenta_bancaria.php";
+?>

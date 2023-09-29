@@ -712,4 +712,6 @@ if(isset($_GET['sim'])){
 }
 
 ?>
-
+<?php 
+require_once "gestion_cuenta_bancaria.php";
+?>

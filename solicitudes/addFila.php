@@ -223,6 +223,15 @@ while ($rowAreaDetalle = $stmtAreaDetalle->fetch(PDO::FETCH_ASSOC)) {
                                        }
                                        ?>
                                      <div class="btn-group col-sm-12">  
+                                      
+                                      <!-- Acceso a ADMINISTRADORES  -->
+                                      <?php if($globalAdmin == 1){ ?> 
+                                      <!-- Gestiona Cuenta  -->
+                                      <button type="button" title="Gestionar Cuenta Bancaria" class="btn btn-primary btn-sm btn-fab ges_cuenta_bancaria" data-index="<?=$idFila;?>">
+                                        <i class="material-icons">account_balance</i>
+                                      </button>
+                                      <?php } ?>
+
                                        <a  title="Forma de Pago" href="#" class="btn btn-success btn-sm btn-fab" id="boton_formapago<?=$idFila;?>" onclick="agregarTipoPagoProveedorDetalle(<?=$idFila;?>)">
                                              <i class="material-icons">money</i><span id="nben<?=$idFila?>" class="bg-danger <?=$estadoBen?>"></span>
                                        </a>

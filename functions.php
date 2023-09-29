@@ -12149,4 +12149,33 @@ function conversionTiempo($tiempo_transcurrido = 0){
   // Imprime el tiempo transcurrido en formato HH:mm:ss.ms
   return "$horas_formateadas:$minutos_formateados:$segundos_formateados.$milisegundos_formateados";
 }
+
+/**
+ * Servicio de cuenta bancaria
+ * @LISTA
+ * @REGISTRA
+ * @EDITA
+ * @CAMBIA ESTADO
+ */
+ function servicioCuentaBancaria($ws_peticion, $parametros){
+    $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
+    $parametros["sIdentificador"] = "ifinanciero";
+    $parametros["sKey"]           = "ce94a8dabdf0b112eafa27a5aa475751";
+    /* Parametros */
+    $parametros = json_encode($parametros);
+    // abrimos la sesión cURL
+    $ch = curl_init();
+    // definimos la URL a la que hacemos la petición
+    curl_setopt($ch, CURLOPT_URL,$direccion.$ws_peticion);     
+    // indicamos el tipo de petición: POST
+    curl_setopt($ch, CURLOPT_POST, TRUE);
+    // definimos cada uno de los parámetros
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
+    // recibimos la respuesta y la guardamos en una variable
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $remote_server_output = curl_exec ($ch);
+    // cerramos la sesión cURL
+    curl_close ($ch);  
+    return json_decode($remote_server_output);     
+}
 ?>
