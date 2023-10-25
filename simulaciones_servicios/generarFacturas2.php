@@ -313,7 +313,7 @@ try{
                 if($banderaSW){
                     // Generación de Suscripción 
                     // generarSuscripcion($codigo, $stringFacturasCod);
-                    wsGenerarSuscripcion($codigo, $stringFacturasCod);
+                    wsGenerarSuscripcion($codigo); // cod_solicitudfacturacion
                     // Generación de Busqueda y Cierre de LEAD
                     // $response_lead = searchLeadsFactura($stringFacturasCod);
                     wsBuscarLeadFactura($stringFacturasCod);
@@ -374,12 +374,11 @@ try{
 /********************************************
  * Solicita servicio para generar SUSCRIPCIÓN
  ********************************************/
-function wsGenerarSuscripcion($codigo, $stringFacturasCod){
+function wsGenerarSuscripcion($codigo){
     global $url_servicio;
     // Datos a enviar al servicio
     $datos = json_encode(array(
-        "codigo"            => $codigo,
-        "stringFacturasCod" => $stringFacturasCod
+        "codigo" => $codigo
     ));
     // URL del servicio
     $url_servicio = $url_servicio.'ws_generarSuscripcion.php';
@@ -391,6 +390,7 @@ function wsGenerarSuscripcion($codigo, $stringFacturasCod){
     // Evita bloquear la ejecución y ejecuta la solicitud en segundo plano
     curl_setopt($ch, CURLOPT_TIMEOUT, 1);
     curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_exec($ch);
     curl_close($ch);
 }
@@ -414,6 +414,7 @@ function wsBuscarLeadFactura($stringFacturasCod){
     // Evita bloquear la ejecución y ejecuta la solicitud en segundo plano
     curl_setopt($ch, CURLOPT_TIMEOUT, 1);
     curl_setopt($ch, CURLOPT_NOSIGNAL, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_exec($ch);
     curl_close($ch);
 }

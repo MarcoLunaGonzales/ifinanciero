@@ -21,6 +21,22 @@ function buildTree($data, $parent = '') {
     }
     return $tree;
 }
+function buildTreeGral($data, $parent = '') {
+    $tree = array();
+    foreach ($data as $item) {
+      if ($item['cod_padre'] == $parent) {
+        $item['id']       = $item['codigo'];
+        $lista_cargos     = empty($item['cargos']) ? '-' : $item['cargos'];
+        $item['text']     = '<b class="text-success">['.$item['abreviatura'].']</b> '.$item['nombre'].' | <b>Cargos: <b class="text-primary">('.$lista_cargos.')</b> </b>';
+        $item['children'] = buildTreeGral($data, $item['codigo']);
+        // Se adiciona solo los que tienen cargos asignados o que tengan AREAS hijos
+        if(!empty($item['children']) || $lista_cargos != '-' || $item['id'] === 0){
+            $tree[] = $item;
+        }
+      }
+    }
+    return $tree;
+}
 
 try {
     // COD_OFICINA
@@ -43,7 +59,7 @@ try {
         $detalle = $stmtOf->fetch(PDO::FETCH_ASSOC);
         $data_detail = '['.$detalle['abreviatura'].'] '.$detalle['nombre'];
         // Lista de Areas por Oficina
-        $sqlArea = "SELECT a.codigo, a.nombre, a.cod_padre, a.abreviatura, GROUP_CONCAT(DISTINCT c.abreviatura SEPARATOR ', ') AS cargos
+        $sqlArea = "SELECT a.codigo, a.nombre, a.cod_padre, a.abreviatura, GROUP_CONCAT(DISTINCT c.abreviatura ORDER BY c.cod_tipo_cargo ASC SEPARATOR ', ') AS cargos
                     FROM areas_organizacion ao
                     LEFT JOIN areas a ON a.codigo = ao.cod_area
                     LEFT JOIN cargos_areasorganizacion ca ON ca.cod_areaorganizacion = a.codigo 
@@ -51,24 +67,29 @@ try {
                     WHERE a.cod_estado = 1 
                     AND ao.cod_unidad = '$cod_oficina'
                     GROUP BY a.codigo, a.nombre, a.cod_padre, a.abreviatura";
+        $stmt    = $dbh->prepare($sqlArea);
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Construir el árbol
+        $jsonTree = buildTree($data);
     }else{
     /**
      * DETALLE DE AREAS GRAL
      */
         // Lista de Areas
-        $sqlArea = "SELECT a.codigo, a.nombre, a.cod_padre, a.abreviatura, GROUP_CONCAT(DISTINCT c.abreviatura SEPARATOR ', ') AS cargos
+        $sqlArea = "SELECT a.codigo, a.nombre, a.cod_padre, a.abreviatura, GROUP_CONCAT(DISTINCT c.abreviatura ORDER BY c.cod_tipo_cargo ASC SEPARATOR ', ') AS cargos
                     FROM areas a 
                     LEFT JOIN areas_organizacion ao ON ao.cod_area = a.codigo 
                     LEFT JOIN cargos_areasorganizacion ca ON ca.cod_areaorganizacion = a.codigo 
                     LEFT JOIN cargos c ON c.codigo = ca.cod_cargo 
                     WHERE a.cod_estado = 1
                     GROUP BY a.codigo, a.nombre, a.cod_padre, a.abreviatura";
+        $stmt    = $dbh->prepare($sqlArea);
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Construir el árbol
+        $jsonTree = buildTreeGral($data);
     }
-    $stmt    = $dbh->prepare($sqlArea);
-    $stmt->execute();
-    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // Construir el árbol
-    $jsonTree = buildTree($data);
 
     echo json_encode(array(
         'status'      => true,

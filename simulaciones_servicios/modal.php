@@ -746,7 +746,7 @@
                         </div>
                        </div>
                       </div><!--row-->
-                      <div class="row">
+                      <div class="row" hidden>
                        <label class="col-sm-2 col-form-label">Tipo Cliente</label>
                        <div class="col-sm-7">
                         <div class="row">
@@ -878,11 +878,11 @@
                                         <?php
                                     }else{
                                       
-                                      if($idServicioSimX==0){
+                                      // if($idServicioSimX==0){
                                         ?>
                                         <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                         <?php  
-                                      }
+                                      // }
                                     }
                                     $indexOb++;
                                       }
@@ -987,11 +987,11 @@
                                         <?php
                                     }else{
                                       
-                                      if($idServicioSimX==0){
+                                      // if($idServicioSimX==0){
                                         ?>
                                         <option value="<?=$codigoX;?>"><?=$nombreX;?></option> 
                                         <?php  
-                                      }
+                                      // }
                                     }
                                     $indexOb++;
                                       }
@@ -1299,7 +1299,12 @@
                                   <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" onchange="ponerDescripcionServicio(<?=$an?>)" name="modal_editservicio<?=$an?>" id="modal_editservicio<?=$an?>" data-style="fondo-boton">
                                     <option disabled selected="selected" value="">--SERVICIOS--</option>
                                     <?php 
-                                     $stmt3 = $dbh->prepare("SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServGlobal order by 2");
+                                    //  $stmt3 = $dbh->prepare("SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and idTipo=$idTipoServGlobal order by 2");
+                                     $stmt3 = $dbh->prepare("SELECT IdClaServicio, Descripcion, Codigo
+                                                            FROM cla_servicios 
+                                                            WHERE vigente = 1
+                                                            AND idTipo = $idTipoServGlobal
+                                                            ORDER BY 2");
                                      $stmt3->execute();
                                      while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
                                       $codigoServX=$rowServ['IdClaServicio'];

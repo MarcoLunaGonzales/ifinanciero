@@ -4,14 +4,38 @@ require_once 'conexion.php';
 require_once 'configModule.php'; //configuraciones
 require_once 'styles.php';
 
-$globalAdmin = $_SESSION["globalAdmin"];
-
-$globalArea  = $_SESSION["globalArea"];
-$globalCargo = $_SESSION["globalCargo"];
-
 $dbh = new Conexion();
+// Credenciales de INTRANET
+$accesos_externos = '';
+$q = isset($_GET['q']) ? $_GET['q'] : '';
 
+if (isset($q)) {
+    $accesos_externos = "?q=" . $q;
+}
 
+$globalAdmin = '';
+$globalArea  = '';
+$globalCargo = '';
+
+if (empty($q)) {
+    $globalAdmin = $_SESSION["globalAdmin"];
+    $globalArea  = $_SESSION["globalArea"];
+    $globalCargo = $_SESSION["globalCargo"];
+} else {
+    $sql = "SELECT p.codigo, p.cod_area, p.cod_cargo
+            FROM personal p
+            WHERE p.codigo = :codigo
+            LIMIT 1";
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindParam(':codigo', $q, PDO::PARAM_STR);
+    $stmt->execute();
+    $registro = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($registro) {
+        $globalAdmin = $registro['codigo'];
+        $globalArea  = $registro['cod_area'];
+        $globalCargo = $registro['cod_cargo'];
+    }
+}
     
 /**
  * Obtiene lista de Manuales de Cargos Aprobados

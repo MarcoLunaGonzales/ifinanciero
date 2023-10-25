@@ -19,7 +19,7 @@ function buscarArea($cod_area){
   //         WHERE a.codigo IS NOT NULL AND ca.cod_areaorganizacion = :cod_area";
   $sql = "SELECT a.codigo, a.cod_padre
           FROM areas a
-          WHERE a.codigo = '$cod_area' OR a.cod_padre = '$cod_direccion'";
+          WHERE a.codigo = '$cod_area'";
   $stmt = $dbh->prepare($sql);
   $stmt->execute();
   $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -35,7 +35,23 @@ function buscarArea($cod_area){
   }
 }
 
-
+/**
+ * Registro de Seguimiento de Manual de Aprobación
+ */
+function guardarSeguimiento($cod_manual, $cod_etapa, $cod_personal, $cod_seguimiento_estado, $fecha, $observacion, $detalle_descriptivo)
+{
+    $dbh = new Conexion();
+    $sql = "INSERT INTO manuales_aprobacion_seguimiento (cod_manual,cod_etapa,cod_personal,cod_seguimiento_estado,fecha,observacion,detalle_descriptivo) VALUES (:cod_manual,:cod_etapa,:cod_personal,:cod_seguimiento_estado,:fecha,:observacion,:detalle_descriptivo)";
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindParam(':cod_manual', $cod_manual);
+    $stmt->bindParam(':cod_etapa', $cod_etapa);
+    $stmt->bindParam(':cod_personal', $cod_personal);
+    $stmt->bindParam(':cod_seguimiento_estado', $cod_seguimiento_estado);
+    $stmt->bindParam(':fecha', $fecha);
+    $stmt->bindParam(':observacion', $observacion);
+    $stmt->bindParam(':detalle_descriptivo', $detalle_descriptivo);
+    $stmt->execute();
+}
 
 try {
   $dbh = new Conexion();
@@ -83,6 +99,18 @@ try {
   $stmt->bindParam(':nro_version', $nro_version);
   $stmt->bindParam(':fecha_inicio', $fecha_inicio);
   $stmt->execute();
+
+  // Seguimiento
+  $cod_manual_aprobacion = $dbh->lastInsertId();
+  $actual_cod_etapa      = 0;
+  $cod_personal          = empty($_SESSION["globalUser"]) ? $_GET['q'] : $_SESSION["globalUser"];
+  $manual_estado         = 0;
+  $fecha                 = date('Y-m-d H:i:s');
+  $manual_observacion    = "";
+  $detalle_descriptivo   = "";
+
+  guardarSeguimiento($cod_manual_aprobacion, $actual_cod_etapa, $cod_personal, $manual_estado, $fecha, $manual_observacion, $detalle_descriptivo);
+
 	echo json_encode(array(
 		'message' => 'Se inicializó la aprobación de manual correctamente.',
 		'status'  => true

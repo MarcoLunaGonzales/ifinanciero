@@ -38,8 +38,9 @@ if (isset($_POST["check_rs_librocompras"])) {
 }
 
 // echo $areaString;
-$sql="SELECT f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra,cc.codigo as cod_comprobante
+$sql="SELECT uo.nombre as oficina,f.fecha,DATE_FORMAT(f.fecha,'%d/%m/%Y')as fecha_x,f.nit,f.razon_social,f.nro_factura,f.nro_autorizacion,f.codigo_control,f.importe,f.ice,f.exento,f.tipo_compra,cc.codigo as cod_comprobante
   FROM facturas_compra f, comprobantes_detalle c, comprobantes cc 
+  LEFT JOIN unidades_organizacionales uo ON uo.codigo = cc.cod_unidadorganizacional
   WHERE cc.codigo=c.cod_comprobante and f.cod_comprobantedetalle=c.codigo and cc.cod_estadocomprobante<>2 and cc.cod_unidadorganizacional in ($stringUnidadesX) and MONTH(cc.fecha) in ($stringMesX) and YEAR(cc.fecha)=$nombre_gestion $sql_rs ORDER BY f.fecha asc, f.nit, f.nro_factura";
 
 //echo $sql;
@@ -49,6 +50,7 @@ $stmt2 = $dbh->prepare($sql);
 // Ejecutamos                        
 $stmt2->execute();
 //resultado
+$stmt2->bindColumn('oficina', $oficina);  
 $stmt2->bindColumn('fecha_x', $fecha);
 $stmt2->bindColumn('nit', $nit);
 $stmt2->bindColumn('cod_comprobante', $codComprobante);
@@ -112,11 +114,12 @@ $razon_social=$result['razon_social'];
                               </tr>
                               <tr >
                                   <th width="2%" style="border:2px solid;"><small><b>-</b></small></th>   
-                                  <th style="border:2px solid;" width="6%"><small><small><b>C</b></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><b>Fecha</b></small></small></th>                                
-                                  <th style="border:2px solid;" width="6%"><small><small><b>NIT</b></small></small></th>
+                                  <th style="border:2px solid;" width="5%"><small><small><b>C</b></small></small></th>
+                                  <th style="border:2px solid;" width="4%"><small><small><b>Oficina</b></small></small></th>   
+                                  <th style="border:2px solid;" width="5%"><small><small><b>Fecha</b></small></small></th>                                
+                                  <th style="border:2px solid;" width="5%"><small><small><b>NIT</b></small></small></th>
                                   <th style="border:2px solid;" width="20%"><small><small><b>Razón Social </b></small></small></th>
-                                  <th style="border:2px solid;" width="6%"><small><small><b>Nro. Factura</b></small></small></th>
+                                  <th style="border:2px solid;" width="5%"><small><small><b>Nro. Factura</b></small></small></th>
                                   <th style="border:2px solid;" width="6%"><small><small><b>Nro de Autorización</b></small></small></th>
                                   <th style="border:2px solid;" width="6%"><small><small><b>Código de Control</b></small></small></th>                                 
                                   <th style="border:2px solid;" width="6%"><small><small><b>Total Factura (A)</b></small></small></th>
@@ -166,6 +169,7 @@ $razon_social=$result['razon_social'];
                                 <tr>
                                   <td class="text-center small"><?=$index;?></td>
                                   <td class="text-center small"><?=nombreComprobante($codComprobante);?></td>
+                                  <td class="text-center small"><?=$oficina;?></td>
                                   <td class="text-center small"><?=$fecha;?></td>
                                   <td class="text-right small"><?=$nit;?></td>
                                   <td class="text-left small"><span style="padding-left: 15px;"><?=$razon_social;?></span></td>
@@ -181,7 +185,7 @@ $razon_social=$result['razon_social'];
                                 <?php                                  
                               }?>
                               <tr style="border:2px solid;">                               
-                                  <td class="text-left small" colspan="4" style="border:2px solid;">CI:</td>
+                                  <td class="text-left small" colspan="5" style="border:2px solid;">CI:</td>
                                   <td class="text-left small" colspan="3" style="border:2px solid;">Nombre del Responsable:</td>
                                   <td class="text-center small"><b>SubTotal:</b></td>                                  
                                   <td class="text-right small"><?=formatNumberDec($total_importe);?></td>

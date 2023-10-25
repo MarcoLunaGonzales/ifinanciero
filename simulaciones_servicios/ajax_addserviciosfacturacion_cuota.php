@@ -13,52 +13,44 @@ $stmtX->execute();
 
 $globalAdmin=$_SESSION["globalAdmin"];
 $codigoAdministrativos=obtenerValorConfiguracion(46);
-//listado de tipo documento rendicion
-// $statementTipoDocRendicion = $dbh->query("SELECT td.codigo,td.nombre from tipos_documentocajachica td where td.tipo=2 order by 2");
-
 $idFila=$_GET['idFila'];
 $cod_area=$_GET['cod_area'];
-$IdTipo=$_GET['IdTipo'];
-
-
-
+$codigoAdministrativos=obtenerValorConfiguracion(46);
+switch ($cod_area) {
+  case '39':    
+  $codigoAreaServ=108;
+  break;
+  case '38':   
+  $codigoAreaServ=109; 
+  break;
+  case '11':    //oi
+  $codigoAreaServ=107;
+  break;
+  case '13':    //sec
+    $codigoAreaServ=107;
+  break;
+  default:
+    $codigoAreaServ=0;
+    break;
+}
 ?>
 <div id="comp_row" class="col-md-12">
   <div class="row">
 
-    <div class="col-sm-4">
+    <div class="col-sm-2">
       <div class="form-group">
-        <?php 
-          if($cod_area==39){
-              $codigoAreaServ=108;
-          }else{
-              if($cod_area==38){
-                $codigoAreaServ=109;
-              }else{
-                $codigoAreaServ=0;
-              }
-          }
+        <?php          
           ?>
           <!-- <label for="haber<?=$idFila;?>" class="bmd-label-floating">Glosa</label> -->
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
-              <?php 
-                // $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and IdTipo=$IdTipo
-                // UNION 
-                //   Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
-                $sql = "SELECT IdClaServicio, Descripcion, Codigo 
-                      FROM cla_servicios
-                      WHERE vigente = 1
-                      AND idTipo = '$IdTipo'
-                        UNION
-                      SELECT IdClaServicio, Descripcion, Codigo 
-                      FROM cla_servicios
-                      WHERE vigente = 1
-                      AND IdArea = '$cod_area' 
-                      AND codigo_n2 IN ($codigoAdministrativos)";
+              <?php                 
+                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where vigente=1 and IdArea=$cod_area
+                UNION 
+                  Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
                 $stmt3 = $dbh->prepare($sql);
                 
-                // echo $sql; 
+                //echo $sql; 
                 
                 $stmt3->execute();
                 while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {
@@ -75,25 +67,39 @@ $IdTipo=$_GET['IdTipo'];
    <div class="col-sm-1">
       <div class="form-group">
         
-        <input type="number" step="0.01" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true" onkeyup="cantidad_por_importe_servicio_sf(<?=$idFila?>)">
+        <input type="number" step="0.01" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true" onkeyup="cantidad_por_importe_manual_sf(<?=$idFila?>)">
+      </div>
+    </div>
+    <!-- Fecha de Inicio -->
+   <div class="col-sm-1">
+      <div class="form-group">
+        
+        <input type="date" id="fecha_inicio<?=$idFila;?>" name="fecha_inicio<?=$idFila;?>" class="form-control text-primary text-right" value="<?= date('Y-m-d') ?>" required="true">
+      </div>
+    </div>
+    <!-- Fecha Fin -->
+   <div class="col-sm-1">
+      <div class="form-group">
+        
+        <input type="date" id="fecha_fin<?=$idFila;?>" name="fecha_fin<?=$idFila;?>" class="form-control text-primary text-right" value="<?= date('Y-m-d') ?>" required="true">
       </div>
     </div>
     <div class="col-sm-1">
         <div class="form-group">
           
-          <input type="number" id="modal_montoserv<?=$idFila;?>" name="modal_montoserv<?=$idFila;?>" class="form-control text-primary text-right"   step="0.01" onkeyup="cantidad_por_importe_servicio_sf(<?=$idFila?>)"  value="0" required="true">
+          <input type="number" id="modal_montoserv<?=$idFila;?>" name="modal_montoserv<?=$idFila;?>" class="form-control text-primary text-right"   step="0.01" onkeyup="cantidad_por_importe_manual_sf(<?=$idFila?>)"  value="0" required="true">
       </div>
     </div>
     <div class="col-sm-1">
         <div class="form-group">          
           
-          <input type="text" class="form-control" name="descuento_por_add<?=$idFila?>" id="descuento_por_add<?=$idFila?>" value="0" onkeyup="descuento_convertir_a_bolivianos_add(<?=$idFila?>)">
+          <input type="text" class="form-control" name="descuento_por_add<?=$idFila?>" id="descuento_por_add<?=$idFila?>" value="0" onkeyup="descuento_convertir_a_bolivianos_add_manual(<?=$idFila?>)">
       </div>
     </div>
     <div class="col-sm-1">
         <div class="form-group">
           
-          <input type="text" class="form-control" name="descuento_bob_add<?=$idFila?>" id="descuento_bob_add<?=$idFila?>" value="0" onkeyup="descuento_convertir_a_porcentaje_add(<?=$idFila?>)">
+          <input type="text" class="form-control" name="descuento_bob_add<?=$idFila?>" id="descuento_bob_add<?=$idFila?>" value="0" onkeyup="descuento_convertir_a_porcentaje_add_manual(<?=$idFila?>)">
       </div>
     </div>
     <div class="col-sm-1">
@@ -113,7 +119,7 @@ $IdTipo=$_GET['IdTipo'];
     </div>
     <div class="col-sm-1">
         <div class="form-group">
-            <a rel="tooltip" title="Eliminar" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="borrarItemSeriviciosFacturacion('<?=$idFila;?>');">
+            <a rel="tooltip" title="Eliminar" href="#" class="btn btn-danger btn-sm btn-fab" id="boton_remove<?=$idFila;?>" onclick="borrarItemSeriviciosFacturacion_manual('<?=$idFila;?>');">
                 <i class="material-icons">remove_circle</i>
             </a>      
       </div>

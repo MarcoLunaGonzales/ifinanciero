@@ -29,7 +29,7 @@ try {
     $cod_manual_aprobacion = $_POST['cod_manual_aprobacion'];
     $manual_estado         = $_POST['manual_estado'];           // cod_seguimiento_estado
     $manual_observacion    = $_POST['manual_observacion'];
-    $cod_personal          = $_SESSION["globalUser"];
+    $cod_personal          = empty($_SESSION["globalUser"]) ? $_GET['q'] : $_SESSION["globalUser"];
     $fecha                 = date('Y-m-d H:i:s');
     $detalle_descriptivo   = '';
     

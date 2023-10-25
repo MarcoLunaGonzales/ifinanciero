@@ -21376,3 +21376,48 @@ function eliminarAtributoSitio(codigo) {
       console.log('No se encontró el producto seleccionado');
     }
 }
+
+
+/**
+ * Se adiciona un item nuevo item 
+ */
+function AgregarSeviciosFacturacion_soli_cuota(obj) {
+  var cod_area=document.getElementById("cod_area").value;
+  if(cod_area==null || cod_area==''){
+    Swal.fire("Informativo!", "Seleccione el área por favor.", "warning");
+  }else{
+    if($("#add_boton").length){
+      $("#add_boton").attr("disabled",true);
+    }
+    numFilas++;
+    cantidadItems++;
+    filaActiva=numFilas;
+    document.getElementById("cantidad_filas").value=numFilas;
+    console.log("num: "+numFilas+" cantidadItems: "+cantidadItems);
+    fi = document.getElementById('fiel');
+    contenedor = document.createElement('div');
+    contenedor.id = 'div'+numFilas;  
+    fi.type="style";
+    fi.appendChild(contenedor);
+    var divDetalle;
+    divDetalle=$("#div"+numFilas);
+    //document.getElementById('nro_cuenta').focus();
+    ajax=nuevoAjax();
+    ajax.open("GET","simulaciones_servicios/ajax_addserviciosfacturacion_cuota.php?idFila="+numFilas+"&cod_area="+cod_area,true);
+    ajax.onreadystatechange=function(){
+      if (ajax.readyState==4) {
+        divDetalle.html(ajax.responseText);
+        divDetalle.bootstrapMaterialDesign();
+        $('#modal_editservicio').val("");
+        $('#cantidad_servicios').val("");
+        $('#modal_montoserv').val("");
+        $('.selectpicker').selectpicker("refresh");
+        if($("#add_boton").length){
+          $("#add_boton").removeAttr("disabled");
+        }
+        return false;
+     }
+    }   
+    ajax.send(null);
+  }
+}

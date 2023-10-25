@@ -620,13 +620,15 @@ if(isset($_GET['q'])){
                       <a href="<?=$urlListSolicitud_facturacion_normas;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="btn btn-warning">SF Normas</a>
 
                       <a href="<?=$urlSolicitudfactura_estudiante;?>&q=<?=$q?>&u=<?=$u?>&r=<?=$v?>&s=<?=$s?>" class="btn btn-success">SF Estudiantes</a>
-                      <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&r=<?=$v?>" class="btn btn-danger">SF Empresas</a>                      
+                      <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&r=<?=$v?>" class="btn btn-danger">SF Empresas</a>     
+                      <a href="<?=$urlSolicitudfactura_cuota;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&r=<?=$v?>" class="btn btn-default">SF Cuotas</a>                    
                       <?php 
                     }else{?>
                       <a href="<?=$urlRegister_solicitudfacturacion_manual;?>" class="btn btn-primary">SF Manual</a>
                       <a href="<?=$urlListSolicitud_facturacion_normas;?>" class="btn btn-warning">SF Normas</a>
                       <a href="<?=$urlSolicitudfactura_estudiante;?>" class="btn btn-success">SF Estudiantes</a>
-                      <a href="<?=$urlSolicitudfactura_empresa;?>" class="btn btn-danger">SF Empresas</a>                      
+                      <a href="<?=$urlSolicitudfactura_empresa;?>" class="btn btn-danger">SF Empresas</a>     
+                      <a href="<?=$urlSolicitudfactura_cuota;?>" class="btn btn-default">SF Cuotas</a>                    
                       <?php 
                     }              
                   ?>

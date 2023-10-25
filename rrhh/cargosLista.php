@@ -7,6 +7,13 @@ require_once 'styles.php';
 $globalAdmin=$_SESSION["globalAdmin"];
 
 $dbh = new Conexion();
+// Credenciales de INTRANET
+$accesos_externos = '';
+$q = isset($_GET['q']) ? $_GET['q'] : '';
+
+if (isset($q)) {
+    $accesos_externos = "?q=" . $q;
+}
 
 $stmt = $dbh->prepare("SELECT
                         c.codigo,
@@ -301,7 +308,7 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
       if (result.value) {
         // PROCESO
         $.ajax({
-            url: "rrhh/ajaxManualAprobacionInicializacion.php",
+            url: "rrhh/ajaxManualAprobacionInicializacion.php<?=$accesos_externos;?>",
             method: "POST",
             dataType: "json",
             data: {

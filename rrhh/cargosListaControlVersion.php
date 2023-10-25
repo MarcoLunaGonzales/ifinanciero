@@ -12,7 +12,7 @@ $dbh = new Conexion();
 $cod_cargo = $_GET['codigo'];
 
 // LISTA DE CONTROL DE CAMBIO DE VERSIONES
-$stmt = $dbh->prepare("SELECT cv.codigo, cv.cod_cargo, cv.nro_version, cv.descripcion_cambios, DATE_FORMAT(cv.fecha,'%d-%m-%Y') as fecha, CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as personal
+$stmt = $dbh->prepare("SELECT cv.codigo, cv.cod_cargo, cv.nro_version, cv.codigo_doc, cv.descripcion_cambios, DATE_FORMAT(cv.fecha,'%d-%m-%Y') as fecha, CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as personal
                     FROM control_versiones cv
                     LEFT JOIN personal p ON p.codigo = cv.cod_personal
                     WHERE cv.estado = 1
@@ -21,6 +21,7 @@ $stmt = $dbh->prepare("SELECT cv.codigo, cv.cod_cargo, cv.nro_version, cv.descri
 $stmt->execute();
 $stmt->bindColumn('codigo', $codigo);
 $stmt->bindColumn('nro_version', $nro_version);
+$stmt->bindColumn('codigo_doc', $codigo_doc);
 $stmt->bindColumn('descripcion_cambios', $descripcion_cambios);
 $stmt->bindColumn('fecha', $fecha);
 $stmt->bindColumn('personal', $personal);
@@ -58,12 +59,13 @@ if ($registro) {
 
                       <thead>
                         <tr>
-                          <th width="10">#</th>
-                          <th width="10">Versión</th>
-                          <th width="150">Descripción del Cambio</th>
-                          <th width="15">Fecha</th>
-                          <th width="20">Personal</th>
-                          <th width="5" class="text-center">Acciones</th>
+                          <th style="width: 5%;">#</th>
+                          <th style="width: 5%;">Versión</th>
+                          <th style="width: 10%;">Código Doc.</th>
+                          <th style="width: 40%;">Descripción del Cambio</th>
+                          <th style="width: 10%;">Fecha</th>
+                          <th style="width: 20%;">Personal</th>
+                          <th style="width: 10%;" class="text-center">Acciones</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -72,6 +74,7 @@ if ($registro) {
                           <tr>
                             <td><?=$index;?></td>
                             <td><?=$nro_version;?></td>
+                            <td><?=$codigo_doc;?></td>
                             <td><?=$descripcion_cambios;?></td>
                             <td><?=$fecha;?></td>
                             <td><?=$personal;?></td>
@@ -84,7 +87,7 @@ if ($registro) {
                               ?>
                               
                               <!-- Editar -->
-                              <button type="button" class="btn btn-info form_edit" data-codigo="<?=$codigo;?>" data-nro_version="<?=$nro_version;?>" data-descripcion_cambios="<?=$descripcion_cambios;?>"><i class="material-icons" title="Editar"><?=$iconEdit;?></i></button>
+                              <button type="button" class="btn btn-info form_edit" data-codigo="<?=$codigo;?>" data-nro_version="<?=$nro_version;?>" data-codigo_doc="<?=$codigo_doc;?>" data-descripcion_cambios="<?=$descripcion_cambios;?>"><i class="material-icons" title="Editar"><?=$iconEdit;?></i></button>
 
                               <!-- Eliminar -->
                               <button class="<?=$buttonDelete;?> formEstado" data-codigo="<?=$codigo;?>">
@@ -138,7 +141,12 @@ if ($registro) {
                     <div class="row">
                       <label class="col-sm-3"><span class="text-danger">*</span> Número de Versión :</label>
                       <div class="col-sm-9">
-                        <input class="form-control" type="number" name="control_nro_version" id="control_nro_version" placeholder="Agregar número de versión"/>
+                        <input class="form-control" type="text" name="control_nro_version" id="control_nro_version" placeholder="Agregar número de versión"/>
+                      </div>
+                      <br>
+                      <label class="col-sm-3"><span class="text-danger">*</span> Código Doc.:</label>
+                      <div class="col-sm-9">
+                        <input class="form-control" type="text" name="control_codigo_doc" id="control_codigo_doc" placeholder="Agregar código de documento"/>
                       </div>
                       <br>
                       <label class="col-sm-3"><span class="text-danger">*</span> Descripción de Cambios :</label>
@@ -165,6 +173,7 @@ $(document).ready(function() {
   $('#form_reg').click(function(){
     $("#codigo").val("");
     $("#control_nro_version").val("");
+    $("#control_codigo_doc").val("");
     $("#control_descripcion_cambios").val("");
     $('#modalTituloCambio').html('Nuevo - Control de Versión');
     $('#modalControlVersion').modal('show');
@@ -174,11 +183,13 @@ $(document).ready(function() {
   $(".form_edit").click(function() {
     var codigo          = $(this).data("codigo");
     var nro_version         = $(this).data("nro_version");
+    var codigo_doc          = $(this).data("codigo_doc");
     var descripcion_cambios = $(this).data("descripcion_cambios");
 
     $("#modalAgregarEditarLabel").text("Editar Registro");
     $("#codigo").val(codigo);
     $("#control_nro_version").val(nro_version);
+    $("#control_codigo_doc").val(codigo_doc);
     $("#control_descripcion_cambios").val(descripcion_cambios);
     $('#modalTituloCambio').html('Editar - Control de Versión');
     $("#modalControlVersion").modal("show");
@@ -191,6 +202,7 @@ $(document).ready(function() {
     let codigo          = $('#codigo').val();
     let cod_cargo           = $('#control_cod_cargo').val();
     let nro_version         = $('#control_nro_version').val();
+    let codigo_doc          = $('#control_codigo_doc').val();
     let descripcion_cambios = $('#control_descripcion_cambios').val();
      // Realizar validaciones
      if (descripcion_cambios.trim() === '' && nro_version.trim() === '') {
@@ -219,6 +231,7 @@ $(document).ready(function() {
                 codigo: codigo,
                 cod_cargo: cod_cargo,
                 nro_version: nro_version,
+                codigo_doc: codigo_doc,
                 descripcion_cambios: descripcion_cambios
               },
               dataType: "json",

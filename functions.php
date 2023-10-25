@@ -12012,7 +12012,7 @@ function verificarExistenciaFacturaSiat($stringFacturasCod)
   return json_decode($jsons);
 }
 
-function obtenerFacturaBase64Siat($cod_factura){
+function obtenerFacturaBase64Siat($idTrasaccionSiat){
   $url=obtenerValorConfiguracion(103);//direccion de servicio web  
   //$url="http://localhost:8080/minka_siat_ibno/wsminka/";
   $url=$url."wsminka/ws_generarFactura.php";
@@ -12020,10 +12020,24 @@ function obtenerFacturaBase64Siat($cod_factura){
   $sKey = "rrf656nb2396k6g6x44434h56jzx5g6";
   $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
    "accion"=>"obtenerFacturaBase64Siat",
-   "codFacturaIbno"=>$cod_factura
+   "idTrasaccionSiat"=>$idTrasaccionSiat
   );
   $jsons=callService($parametros, $url);
   return json_decode($jsons);
+}
+/**
+ * Obtiene el idTransaccionSiat
+ */
+function obtieneIdTransaccionSiat($cod_factura){
+  $dbh = new Conexion();
+  $sql="SELECT idTransaccion_siat from facturas_venta where codigo = '$cod_factura' LIMIT 1";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $valor='';
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $valor=$row['idTransaccion_siat'];
+  }
+  return($valor);
 }
 
 

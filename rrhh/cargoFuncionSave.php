@@ -12,7 +12,7 @@ $stmtX->execute();
 //RECIBIMOS LAS VARIABLES
 $cod_cargo 		= $_POST['cod_cargo'];
 $cod_funcion	= $_POST['cod_funcion'];
-$nombre_funcion = $_POST['nombre_funcion'];
+$nombre_funcion = rtrim($_POST['nombre_funcion']);
 $orden			= $_POST['orden'];
 $cod_estadoreferencial=$_POST['cod_estadoreferencial'];
 
