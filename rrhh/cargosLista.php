@@ -29,7 +29,9 @@ $stmt = $dbh->prepare("SELECT
                         ma.cod_estado as ma_cod_estado,
                         mae.nombre as ma_nombre_estado,
                         mae.color as ma_color_estado,
-                        CONCAT(eta.descripcion, ' (', eta.nombre, ')') as eta_etapa
+                        CONCAT(eta.descripcion, ' (', eta.nombre, ')') as eta_etapa,
+                        eta.descripcion as etapa_descripcion,
+                        eta.nombre as etapa_nombre
                       FROM cargos c
                       LEFT JOIN cargos cpadre ON cpadre.codigo = c.cod_padre
                       LEFT JOIN cargos cfuncional ON cfuncional.codigo = c.cod_dep_funcional
@@ -70,6 +72,8 @@ $stmt->bindColumn('ma_cod_estado', $ma_cod_estado);
 $stmt->bindColumn('ma_nombre_estado', $ma_nombre_estado);
 $stmt->bindColumn('ma_color_estado', $ma_color_estado);
 $stmt->bindColumn('eta_etapa', $eta_etapa);
+$stmt->bindColumn('etapa_descripcion', $etapa_descripcion);
+$stmt->bindColumn('etapa_nombre', $etapa_nombre);
 
 ?>
 
@@ -141,15 +145,16 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
 
                       <thead>
                         <tr>
-                          <th width="10">#</th>                        
-                          <th width="150">Nombre</th>
-                          <th width="230">Objetivo</th>
-                          <th width="10">Abreviatura</th>
-                          <th width="10">Nivel del Cargo</th>
+                          <th width="10">#</th>
+                          <th width="15">Nombre</th>
+                          <th width="15">Objetivo</th>
+                          <th width="5">Abreviatura</th>
+                          <th width="5">Nivel del Cargo</th>
                           <th width="10">Dependencia Jerárquica</th>
                           <th width="10">Dependencia Funcional</th>
-                          <th width="10">Estado de Manual</th>
-                          <th width="80" class="text-center">Acciones</th>
+                          <th width="5" class="text-center">Estado de Manual</th>
+                          <th width="10" class="text-center">Etapa Actual</th>
+                          <th width="15" class="text-center">Acciones</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -163,11 +168,18 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
                               <td><?=$nombre_tipo_cargo;?></td>
                               <td><?=$nombre_dependencia;?></td>
                               <td><?=$nombre_dependencia_funcional;?></td>
-                              <td>
+                              <td class="text-center">
                                 <?php if(empty($ma_cod_estado)){ ?>
                                 <span class="badge badge-md badge-warning">Sin procesar</span>
                                 <?php }else{ ?>
                                 <span class="badge badge-md badge-<?=$ma_color_estado?> btnVerHistorial" data-cod_cargo="<?=$codigo;?>"><?=$ma_nombre_estado?></span>
+                                <?php } ?>
+                              </td>
+                              <td>
+                                <?php if(!empty($etapa_descripcion)){ ?>
+                                    <b><?=$etapa_nombre;?></b>: <?=$etapa_descripcion;?>
+                                <?php }else{ ?>
+                                    -
                                 <?php } ?>
                               </td>
                               <td class="td-actions text-right">
