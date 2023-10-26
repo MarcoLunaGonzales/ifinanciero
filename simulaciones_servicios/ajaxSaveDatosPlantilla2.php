@@ -40,7 +40,11 @@ $mod_region_cliente=$_POST['mod_region_cliente'];
 $mod_tipo_cliente=$_POST['mod_tipo_cliente'];
 $normas_tiposervicio=json_decode($_POST['normas_tiposervicio']);
 $normas_tiposerviciotext=$_POST['normas_tiposerviciotext'];
-$mod_afnor=$_POST['mod_afnor'];
+
+// TIPO DE SELECCIÓN AFNOR
+// $mod_afnor=$_POST['mod_afnor'];
+$seleccionAfnor = empty($_POST['organismo_certificador']) ? [] : $_POST['organismo_certificador'];
+$mod_afnor      = in_array(4, $seleccionAfnor) ? 1 : 0;
 
 // Cod_servicio
 $cod_servicio = $_POST['cod_servicio'];

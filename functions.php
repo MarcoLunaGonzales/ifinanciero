@@ -12199,61 +12199,77 @@ function conversionTiempo($tiempo_transcurrido = 0){
  * @autor: Ronald Mollericona
 **/
 function enviarCorreoManualCargo($cod_cargo){
-  try {
-    
-    $dbh = new Conexion();
-    $sql = "SELECT CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as nombre_personal, p.email_empresa as correo_personal, c.nombre as nombre_cargo
-            FROM personal p
-            LEFT JOIN cargos c ON c.codigo = p.cod_cargo
-            WHERE p.cod_cargo = '$cod_cargo'";
-    $stmt = $dbh->prepare($sql);
-    $stmt->execute();
+    try {
+        $dbh = new Conexion();
+        // CONTROL DE VERSIONES
+        $sql = "SELECT cv.nro_version, cv.nro_version, cv.codigo_doc, cv.descripcion_cambios
+                FROM control_versiones cv
+                WHERE cv.cod_cargo = '$cod_cargo'
+                AND cv.estado = 1
+                ORDER BY cv.codigo DESC
+                LIMIT 1";
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':cod_cargo', $cod_cargo, PDO::PARAM_STR);
+        $stmt->execute();
+        $registroControl = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $ruta                  = __DIR__ . "/rrhh/emailManualAprobado.html";
-    $asunto                = "Manual de Cargo";
-    $personal_email_copia = "";
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $nombre_personal = $row['nombre_personal'];
-        // $correo_personal = $row['correo_personal'];
-        $correo_personal = "roalmirandadark@gmail.com";
-        $nombre_cargo    = $row['nombre_cargo'];
-    
-        $message = file_get_contents($ruta);
-        $message = str_replace('%personal%', $nombre_personal, $message);
-        $message = str_replace('%manual%', $nombre_cargo, $message);
-        
-        $sIdentificador = "ifinanciero";
-        $sKey           ="ce94a8dabdf0b112eafa27a5aa475751";
-        $datos			= array("sIdentificador"=> $sIdentificador, 
-                                "sKey"          => $sKey, 
-                                "accion"        => "EnviarCorreoCtaIbnoredPEI", 
-                                "NombreEnvia"   => "SISTEMA - IFINANCIERO", 
-                                "CorreoDestino" => $correo_personal,
-                                "NombreDestino" => $nombre_personal,
-                                "Asunto"        => $asunto,
-                                "Body"          => $message,
-                                "CorreoCopia"   => $personal_email_copia
-                            );
-        $datos = json_encode($datos);
-        
-        $ch    = curl_init();
-        curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/correo/ws-correotoken.php");
-        curl_setopt($ch, CURLOPT_POST, TRUE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $remote_server_output = curl_exec ($ch);
-        curl_close ($ch);
-    }
-    $obj   = json_decode($remote_server_output);
+        $control_codigo_doc = $registroControl['codigo_doc'];
+        if ($registroControl) {
+            $control_codigo_doc = $registroControl['codigo_doc'];
+        }
+        // CARGO
+        $sql = "SELECT CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as nombre_personal, p.email_empresa as correo_personal, c.nombre as nombre_cargo
+                FROM personal p
+                LEFT JOIN cargos c ON c.codigo = p.cod_cargo
+                WHERE p.cod_cargo = '$cod_cargo'";
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();
 
-    if($obj->estado){
-      $response = true;
-    }else{
-      $response = false;
+        $ruta                 = __DIR__ . "/rrhh/emailManualAprobado.html";
+        $asunto               = "Manual de Cargo";
+        $personal_email_copia = "";
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $nombre_personal = $row['nombre_personal'];
+            // $correo_personal = $row['correo_personal'];
+            $correo_personal = "roalmirandadark@gmail.com";
+            $nombre_cargo    = "(".$control_codigo_doc.") ".$row['nombre_cargo'];
+        
+            $message = file_get_contents($ruta);
+            $message = str_replace('%personal%', $nombre_personal, $message);
+            $message = str_replace('%manual%', $nombre_cargo, $message);
+            
+            $sIdentificador = "ifinanciero";
+            $sKey           ="ce94a8dabdf0b112eafa27a5aa475751";
+            $datos			= array("sIdentificador"=> $sIdentificador, 
+                                    "sKey"          => $sKey, 
+                                    "accion"        => "EnviarCorreoCtaIbnoredPEI", 
+                                    "NombreEnvia"   => "SISTEMA - IFINANCIERO", 
+                                    "CorreoDestino" => $correo_personal,
+                                    "NombreDestino" => $nombre_personal,
+                                    "Asunto"        => $asunto,
+                                    "Body"          => $message,
+                                    "CorreoCopia"   => $personal_email_copia
+                                );
+            $datos = json_encode($datos);
+            
+            $ch    = curl_init();
+            curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/correo/ws-correotoken.php");
+            curl_setopt($ch, CURLOPT_POST, TRUE);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $remote_server_output = curl_exec ($ch);
+            curl_close ($ch);
+        }
+        $obj   = json_decode($remote_server_output);
+
+        if($obj->estado){
+        $response = true;
+        }else{
+        $response = false;
+        }
+        return $response;
+    } catch (Exception $e) {
+        return false;
     }
-    return $response;
-  } catch (Exception $e) {
-    return false;
-  }
 }
 ?>
