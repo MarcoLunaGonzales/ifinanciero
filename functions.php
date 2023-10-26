@@ -12192,4 +12192,68 @@ function conversionTiempo($tiempo_transcurrido = 0){
     curl_close ($ch);  
     return json_decode($remote_server_output);     
 }
+
+/**
+ * Enviar correo del Manual de Cargos
+ * modulo: Manual de Cargos
+ * @autor: Ronald Mollericona
+**/
+function enviarCorreoManualCargo($cod_cargo){
+  try {
+    
+    $dbh = new Conexion();
+    $sql = "SELECT CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as nombre_personal, p.email_empresa as correo_personal, c.nombre as nombre_cargo
+            FROM personal p
+            LEFT JOIN cargos c ON c.codigo = p.cod_cargo
+            WHERE p.cod_cargo = '$cod_cargo'";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+
+    $ruta                  = __DIR__ . "/rrhh/emailManualAprobado.html";
+    $asunto                = "Manual de Cargo";
+    $personal_email_copia = "";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $nombre_personal = $row['nombre_personal'];
+        // $correo_personal = $row['correo_personal'];
+        $correo_personal = "roalmirandadark@gmail.com";
+        $nombre_cargo    = $row['nombre_cargo'];
+    
+        $message = file_get_contents($ruta);
+        $message = str_replace('%personal%', $nombre_personal, $message);
+        $message = str_replace('%manual%', $nombre_cargo, $message);
+        
+        $sIdentificador = "ifinanciero";
+        $sKey           ="ce94a8dabdf0b112eafa27a5aa475751";
+        $datos			= array("sIdentificador"=> $sIdentificador, 
+                                "sKey"          => $sKey, 
+                                "accion"        => "EnviarCorreoCtaIbnoredPEI", 
+                                "NombreEnvia"   => "SISTEMA - IFINANCIERO", 
+                                "CorreoDestino" => $correo_personal,
+                                "NombreDestino" => $nombre_personal,
+                                "Asunto"        => $asunto,
+                                "Body"          => $message,
+                                "CorreoCopia"   => $personal_email_copia
+                            );
+        $datos = json_encode($datos);
+        
+        $ch    = curl_init();
+        curl_setopt($ch, CURLOPT_URL,"http://ibnored.ibnorca.org/wsibno/correo/ws-correotoken.php");
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $datos);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $remote_server_output = curl_exec ($ch);
+        curl_close ($ch);
+    }
+    $obj   = json_decode($remote_server_output);
+
+    if($obj->estado){
+      $response = true;
+    }else{
+      $response = false;
+    }
+    return $response;
+  } catch (Exception $e) {
+    return false;
+  }
+}
 ?>
