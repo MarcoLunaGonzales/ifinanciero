@@ -1,5 +1,6 @@
 <?php
 require_once '../conexion.php';
+require_once '../functions.php';
 
 date_default_timezone_set('America/La_Paz');
 session_start();
@@ -34,15 +35,17 @@ try {
     $detalle_descriptivo   = '';
     
     // Verificar ETAPA de Manual de Aprobación 
-    $sql = "SELECT ma.cod_etapa
+    $sql = "SELECT ma.cod_etapa, ma.cod_cargo
             FROM manuales_aprobacion ma
             WHERE ma.codigo = :cod_manual_aprobacion";
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion);
     $stmt->execute();
     $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+    $actual_cod_cargo = 0;
     if ($resultado) {
         $actual_cod_etapa = $resultado['cod_etapa'];
+        $actual_cod_cargo = $resultado['cod_cargo'];
     } else {
         $actual_cod_etapa = 0;
     }
@@ -73,6 +76,8 @@ try {
             $stmt->bindParam(':fecha_fin', $fecha);
             $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion);
             $stmt->execute();
+            // Enviar Correo al PERSONAL
+            enviarCorreoManualCargo($actual_cod_cargo);
         } else {
             $sql = "UPDATE manuales_aprobacion
                 SET cod_etapa = :nuevo_cod_etapa
