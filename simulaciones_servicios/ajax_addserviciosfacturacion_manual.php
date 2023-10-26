@@ -49,9 +49,8 @@ switch ($cod_area) {
                 // UNION 
                 //   Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
                 
-                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where vigente=1 and IdArea=$cod_area
-                UNION 
-                  SELECT IdClaServicio,Descripcion,Codigo 
+                $query_fitro = ($cod_area == 38 || $cod_area == 39) ? "" : "SELECT IdClaServicio,Descripcion,Codigo FROM cla_servicios WHERE vigente = 1 and IdArea=$cod_area UNION ";
+                $sql = $query_fitro. "SELECT IdClaServicio,Descripcion,Codigo 
                   FROM cla_servicios 
                   WHERE IdArea = $cod_area 
                   AND codigo_n2 IN ($codigoAdministrativos)";
