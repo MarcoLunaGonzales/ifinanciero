@@ -21421,3 +21421,17 @@ function AgregarSeviciosFacturacion_soli_cuota(obj) {
     ajax.send(null);
   }
 }
+/**
+ * FORMULARIO DE PROPUESTA
+ */
+// Selección de Servicio
+$(document).on('change', '#cod_servicio', function () {
+    // Si se selecciona (4820)
+    if($('#tipo_servicio').val() == 4820){
+        var select = $('#cod_servicio').val();
+        if (select.length > 1) {
+            $('#cod_servicio').val([]);
+            $('#cod_servicio').selectpicker("refresh");
+        }
+    }
+});
