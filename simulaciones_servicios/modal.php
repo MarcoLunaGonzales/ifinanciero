@@ -1080,7 +1080,7 @@
                         
                       
                       <!-- Nuevo campos de NORMAS -->
-                      <div class="row" style="display:none;">
+                      <div class="row seleccion_normas" <?= ($codigoPlan == 3) ? "" : "style='display:none;'"?>>
                           <label class="col-sm-2 col-form-label">Normas Nacionales:</label>
                           <div class="col-sm-7">
                               <div class="form-group">
@@ -1103,7 +1103,7 @@
                               </div>
                           </div>
                       </div>
-                      <div class="row" style="display:none;">
+                      <div class="row seleccion_normas" <?= ($codigoPlan == 3) ? "" : "style='display:none;'"?>>
                           <label class="col-sm-2 col-form-label">Normas Internacionales:</label>
                           <div class="col-sm-7">
                               <div class="form-group">
@@ -1126,7 +1126,7 @@
                               </div>
                           </div>
                       </div>
-                      <div class="row" style="display:none;">
+                      <div class="row seleccion_normas" <?= ($codigoPlan == 3) ? "" : "style='display:none;'"?>>
                           <label class="col-sm-2 col-form-label">Otras Normas</label>
                           <div class="col-sm-9">                     
                               <div class="form-group" style="border-bottom: 1px solid #CACFD2">       
