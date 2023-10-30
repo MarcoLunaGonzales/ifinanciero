@@ -114,23 +114,6 @@
     </style>
 </head>
 <body>
-    <table style="border: 1px solid white;">
-        <tr>
-            <td style="border: 1px solid white; width: 80%;">
-                <div class="header-text" style="padding-left: 20px;">
-                    <h3 class="title">Instituto Boliviano de Normalización y Calidad</h3>
-                    <h3 class="subtitle">MANUAL DE CARGOS</h3>
-                    <h3 class="subtitle gray_soft">"<?=empty($resp_cargo['nombre'])?'':$resp_cargo['nombre'];?>"</h3>
-                </div>
-            </td>
-            <td style="border: 1px solid white; width: 20%; display: flex; align-items: center; justify-content: center;">
-                <div>
-                    <img src="../assets/img/ibnorca2.jpg" alt="Ibnorca" class="Ibnorca" style="max-width: 100%;">
-                </div>
-            </td>
-        </tr>
-    </table>
-
     <ol class="numbered-list">
         <!-- Objetivos -->
         <li class="section-title">OBJETIVOS</li>
@@ -146,7 +129,7 @@
             </tr>
             <tr>
                 <td class="text-center"><?=empty($resp_areanivel2['nombre']) ? '' : $resp_areanivel2['nombre'];?></td>
-                <td class="text-center"><?=empty($resp_unidad['unidad_organizacional'])?'':$resp_unidad['unidad_organizacional'];?></td>
+                <td class="text-center"><?=empty($resp_unidad['nombre_unidad'])?'':$resp_unidad['nombre_unidad'];?></td>
                 <td class="text-center"><?=empty($resp_cargo['nivel_cargo'])?'':$resp_cargo['nivel_cargo'];?></td>
                 <td class="text-center"><?=empty($resp_cargo['abreviatura'])?'':$resp_cargo['abreviatura'];?></td>
             </tr>
@@ -156,13 +139,26 @@
             </tr>
             <tr>
                 <td colspan="2" class="half-width"><?=empty($resp_cargo_sup['nombre']) ? '' : $resp_cargo_sup['nombre'];?></td>
-                <td colspan="2" class="half-width"><?php foreach($resp_cargosDep as $row){ ?><p><?=$row['nombre'];?></p><?php } ?></td>
+                <td colspan="2" class="half-width"><?php 
+                    if (empty($resp_cargosDep)) {
+                        echo 'N/A';
+                    } else {
+                        $total_cargos = count($resp_cargosDep);
+                        foreach ($resp_cargosDep as $key => $row) { 
+                            echo $row['nombre'];
+                            if ($key < $total_cargos - 1) {
+                                echo '<br>';
+                            }
+                        }
+                    }
+                    ?>
+                </td>
             </tr>
         </table><br>
         <!-- Responsabilidades Generales IBNORCA -->
-        <li class="section-title">RESPONSABILIDADES GENERALES.</li>
-        <p style="text-align: justify;">Cada área en IBNORCA cumple una función específica para el logro de los objetivos institucionales. Sin embargo, se establecen funciones transversales que deben cumplir todas las áreas y unidades de la Institución:</p>
-        <ol class="custom-numbered-list" style="text-align: justify;">
+        <!-- <li class="section-title">RESPONSABILIDADES GENERALES.</li><br> -->
+        <!-- <p style="text-align: justify;">Cada área en IBNORCA cumple una función específica para el logro de los objetivos institucionales. Sin embargo, se establecen funciones transversales que deben cumplir todas las áreas y unidades de la Institución:</p> -->
+        <!-- <ol class="custom-numbered-list" style="text-align: justify;">
             <?php 
                 foreach($resp_resposabilidadesGenerales as $row){
             ?>
@@ -170,7 +166,7 @@
             <?php 
                 }
             ?>
-        </ol><br>
+        </ol><br> -->
         <!-- Responsabilidades del Cargo -->
         <li class="section-title">RESPONSABILIDADES DEL CARGO</li><br>
         <!-- <p style="text-align: justify;">En esta sección, se enumeran las responsabilidades del puesto. Estas responsabilidades están diseñadas para garantizar un desempeño eficiente y efectivo en la consecución de los objetivos establecidos. A continuación, se presenta la lista de responsabilidades del cargo:</p> -->
@@ -184,9 +180,9 @@
             ?>
         </ol><br>
         <!-- Autoridades del cargo -->
-        <li class="section-title">AUTORIDADES DEL CARGO</li>
+        <!-- <li class="section-title">AUTORIDADES DEL CARGO</li> -->
         <!-- <p style="text-align: justify;">A continuación se presenta una lista de las autoridades y posiciones clave relacionadas con el puesto:</p> -->
-        <ol class="custom-numbered-list" style="text-align: justify;">
+        <!-- <ol class="custom-numbered-list" style="text-align: justify;">
             <?php 
                 foreach($resp_autoridadesCargos as $row){
             ?>
@@ -194,7 +190,7 @@
             <?php 
                 }
             ?>
-        </ol><br>
+        </ol><br> -->
         <!-- Control de cambios -->
         <li class="section-title">CONTROL DE CAMBIOS</li><br><br>
         <?php 
@@ -202,9 +198,9 @@
         ?>
         <table>
             <tr>
-                <th style="background-color: red;color: white; font-weight: bold; text-align: center;">Versión</th>
-                <th style="background-color: red;color: white; font-weight: bold; text-align: center;">Fecha</th>
-                <th style="background-color: red;color: white; font-weight: bold; text-align: center;">Descripción de cambios</th>
+                <th style="background-color: red;color: white; font-weight: bold; text-align: center; width: 20%;">Versión</th>
+                <th style="background-color: red;color: white; font-weight: bold; text-align: center; width: 20%;">Fecha</th>
+                <th style="background-color: red;color: white; font-weight: bold; text-align: center; width: 60%;">Descripción de cambios</th>
             </tr>
 
             <?php 
@@ -213,7 +209,7 @@
                 <tr>
                     <td class="text-center"><?=empty($row['nro_version']) ? '' : $row['nro_version'];?></td>
                     <td class="text-center"><?=$row['fecha'];?></td>
-                    <td class="text-center"><?=$row['descripcion_cambios'];?></td>
+                    <td class="text-center" style=" text-align: justify;"><?=$row['descripcion_cambios'];?></td>
                 </tr>
             <?php 
                 }
@@ -240,10 +236,10 @@
                 foreach($resp_manual_seguimiento as $row){
             ?>
                 <tr>
-                    <td class="text-center" style="background-color: red;color: white; font-weight: bold; text-align: center;">Aprobación</td>
+                    <td class="text-center" style="background-color: red;color: white; font-weight: bold; text-align: center;"><?=$row['nombre_etapa'];?></td>
                     <td class="text-center"><?=$row['fecha'];?></td>
                     <td class="text-center"><?=$row['personal'];?> <br><b><?=$row['cargo'];?></b></td>
-                    <td class="text-center">Elaborado desde sistema</td>
+                    <td class="text-center"><?=$row['cod_etapa'] == 0 ? 'Elaborado desde sistema' : 'Aprobado desde sistema';?></td>
                 </tr>
             <?php 
                 }

@@ -37,7 +37,7 @@ switch ($cod_area) {
 <div id="comp_row" class="col-md-12">
   <div class="row">
 
-    <div class="col-sm-3">
+    <div class="col-sm-2">
       <div class="form-group">
         <?php          
           ?>
@@ -45,15 +45,9 @@ switch ($cod_area) {
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php                 
-                // $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where vigente=1 and IdArea=$cod_area
-                // UNION 
-                //   Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
-                
-                $query_fitro = ($cod_area == 38 || $cod_area == 39) ? "" : "SELECT IdClaServicio,Descripcion,Codigo FROM cla_servicios WHERE vigente = 1 and IdArea=$cod_area UNION ";
-                $sql = $query_fitro. "SELECT IdClaServicio,Descripcion,Codigo 
-                  FROM cla_servicios 
-                  WHERE IdArea = $cod_area 
-                  AND codigo_n2 IN ($codigoAdministrativos)";
+                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where vigente=1 and IdArea=$cod_area
+                UNION 
+                  Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
                 $stmt3 = $dbh->prepare($sql);
                 
                 //echo $sql; 
@@ -74,6 +68,20 @@ switch ($cod_area) {
       <div class="form-group">
         
         <input type="number" step="0.01" min="1" id="cantidad_servicios<?=$idFila;?>" name="cantidad_servicios<?=$idFila;?>" class="form-control text-primary text-right" value="1" required="true" onkeyup="cantidad_por_importe_manual_sf(<?=$idFila?>)">
+      </div>
+    </div>
+    <!-- Fecha de Inicio -->
+   <div class="col-sm-1">
+      <div class="form-group">
+        
+        <input type="date" id="fecha_inicio<?=$idFila;?>" name="fecha_inicio<?=$idFila;?>" class="form-control text-primary text-right" value="<?= date('Y-m-d') ?>" required="true">
+      </div>
+    </div>
+    <!-- Fecha Fin -->
+   <div class="col-sm-1">
+      <div class="form-group">
+        
+        <input type="date" id="fecha_fin<?=$idFila;?>" name="fecha_fin<?=$idFila;?>" class="form-control text-primary text-right" value="<?= date('Y-m-d') ?>" required="true">
       </div>
     </div>
     <div class="col-sm-1">
@@ -102,7 +110,7 @@ switch ($cod_area) {
       </div>
     </div>
 
-    <div class="col-sm-3">
+    <div class="col-sm-2">
       <div class="form-group">
         
         <textarea id="descripcion<?=$idFila;?>" name="descripcion<?=$idFila;?>" class="form-control text-primary" onkeyup="javascript:this.value=this.value.toUpperCase();" required></textarea>

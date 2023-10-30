@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if($datos['sIdentificador']=="facifin"&&$datos['sKey']=="rrf656nb2396k6g6x44434h56jzx5g6"){
         $accion=$datos['accion']; //recibimos la accion
         $codFactura=$datos['idFactura'];//recibimos el codigo del proyecto
+        $idTrasaccion_siat=obtieneIdTransaccionSiat($codFactura);//recibimos el codigo de transacción SIAT
         $estado=0;
         $mensaje="";
         if($accion=="ObtenerFacturaPDF"){
@@ -20,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // $html_x=generarHTMLFacCliente($codFactura,3,1);
                 // $array_html=explode('@@@@@@', $html_x);
                 // $html=$array_html[0];
-                $datos_factura=obtenerFacturaBase64Siat($codFactura);
+                $datos_factura=obtenerFacturaBase64Siat($idTrasaccion_siat);
                 // print_r($datos_factura);
                 $estado64=$datos_factura->estado;
                 $facturaBase64=$datos_factura->factura64;

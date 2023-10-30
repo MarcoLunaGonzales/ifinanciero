@@ -8,7 +8,8 @@ ini_set('display_errors',1);
 
 $dbh = new Conexion();
 try {
-    $cod_areaorganizacion = $_POST["codArea"];    
+    // $cod_areaorganizacion = $_POST["cod_areaorganizacion"]; 
+    $cod_areaorganizacion = $_POST["codArea"];       
 
     $cod_estadoreferencial = 1;
     $created_by = 1;

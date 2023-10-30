@@ -12,6 +12,7 @@ $sql  = "SELECT mae.codigo, mae.cod_etapa, mae.cod_cargo, maes.nombre as nombre_
         FROM manuales_aprobacion_etapas mae
         LEFT JOIN manuales_aprobacion_etapas maes ON maes.codigo = mae.cod_etapa
         LEFT JOIN cargos c ON c.codigo = mae.cod_cargo
+        WHERE mae.estado = 1
         ORDER BY mae.codigo DESC";
 $stmt = $dbh->prepare($sql);
 //ejecutamos

@@ -89,4 +89,7 @@ $urlImpOferta="simulaciones_servicios/imp_oferta.php";
 $urlOferta="simulaciones_servicios/oferta.php";
 $urlSaveOferta="simulaciones_servicios/save_oferta.php";
 $urlVer_SF="simulaciones_servicios/solicitud_facturacion_vistaprevia.php";
+
+// SF Cuotas
+$urlSolicitudfactura_cuota="?opcion=register_solicitudfacturacion_cuotas";
 ?>

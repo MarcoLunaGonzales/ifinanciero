@@ -43,9 +43,19 @@ $IdTipo=$_GET['IdTipo'];
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
               <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php 
-                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and IdTipo=$IdTipo
-                UNION 
-                  Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
+                // $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where (codigo_n1=108 or codigo_n1=109) and vigente=1 and codigo_n1=$codigoAreaServ and IdTipo=$IdTipo
+                // UNION 
+                //   Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
+                $sql = "SELECT IdClaServicio, Descripcion, Codigo 
+                      FROM cla_servicios
+                      WHERE vigente = 1
+                      AND idTipo = '$IdTipo'
+                        UNION
+                      SELECT IdClaServicio, Descripcion, Codigo 
+                      FROM cla_servicios
+                      WHERE vigente = 1
+                      AND IdArea = '$cod_area' 
+                      AND codigo_n2 IN ($codigoAdministrativos)";
                 $stmt3 = $dbh->prepare($sql);
                 
                 // echo $sql; 

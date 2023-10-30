@@ -2076,6 +2076,11 @@
 		if ($_GET['opcion']=='listaResponsabilidades') {
 			require_once('responsabilidad_ibnorca/responsabilidadLista.php');
 		}
+
+		// Nueva solicitud de Facturación de Cuotas 
+		if ($_GET['opcion']=='register_solicitudfacturacion_cuotas') {
+			require_once('solicitud_facturacion_manual/register_solicitud_facturacion_cuota.php');
+		}
 	}else{
 		//require("paginaprincipal.php");
 	}

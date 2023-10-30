@@ -129,8 +129,7 @@ $stmt->bindColumn('orden', $orden);
         <input type="hidden" name="cod_cargoA" id="cod_cargoA" value="0">                      
         <h6> Responsabilidad </h6>
         <!-- <input class="form-control" type="text" name="nombre_funcionA" id="nombre_funcionA" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true" /> -->
-        <textarea rows="4" class="form-control" name="nombre_funcionA" id="nombre_funcionA" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true">
-        </textarea>
+        <textarea rows="4" class="form-control" name="nombre_funcionA" id="nombre_funcionA" required="true"></textarea>
 
         <h6> Orden </h6>
         <input class="form-control" type="number" name="ordenA" id="ordenA" required="true" />
@@ -155,7 +154,7 @@ $stmt->bindColumn('orden', $orden);
         <input type="hidden" name="cod_cargo_funcionE" id="cod_cargo_funcionE" value="0">
         <input type="hidden" name="cod_cargoE" id="cod_cargoE" value="0">        
         <h6> Responsabilidad </h6>
-        <textarea rows="4"  class="form-control" name="nombre_funcionE" id="nombre_funcionE" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true">
+        <textarea rows="4"  class="form-control" name="nombre_funcionE" id="nombre_funcionE" required="true">
         </textarea>
 
         <!-- <input class="form-control" type="text" name="nombre_funcionE" id="nombre_funcionE" onkeyup="javascript:this.value=this.value.toUpperCase();" required="true" /> -->
