@@ -4281,10 +4281,14 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
     // TCP - PRODUCTOS
     $('.seccion_sitios').addClass('d-none');
     $('.seccion_productos').removeClass('d-none');
+    // Normas
+    $('.seleccion_normas').hide();
   }else if(codigo == 3){
     // TCS - SITIOS
     $('.seccion_productos').addClass('d-none');
     $('.seccion_sitios').removeClass('d-none');
+    // Normas
+    $('.seleccion_normas').show();
   }
   /************************************************/
 
@@ -21426,8 +21430,8 @@ function AgregarSeviciosFacturacion_soli_cuota(obj) {
  */
 // Selección de Servicio
 $(document).on('change', '#cod_servicio', function () {
-    // Si se selecciona (4820)
-    if($('#tipo_servicio').val() == 4820){
+    // Si se selecciona un tipo de servicio diferente de SGI(4820) la selección es unitaria
+    if($('#tipo_servicio').val() != 4820){
         var select = $('#cod_servicio').val();
         if (select.length > 1) {
             $('#cod_servicio').val([]);
