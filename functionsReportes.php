@@ -16,7 +16,7 @@ function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta,$
     if($soloCredito==1){
       $queryCredito=" and f.cod_tipopago=217";
     }
-    $sql="SELECT f.codigo, f.cod_solicitudfacturacion, 
+    /*$sql="SELECT f.codigo, f.cod_solicitudfacturacion, 
     (SELECT uo.abreviatura from unidades_organizacionales uo where uo.codigo=sfuo.cod_uo)uo, 
     (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, 
     f.fecha_factura, f.razon_social, f.nit, f.cod_personal, 
@@ -25,6 +25,17 @@ function obtenerListaVentasResumido($unidades,$areas,$soloTienda,$desde,$hasta,$
     (SELECT concat(p.paterno,' ',p.primer_nombre) from personal p, solicitudes_facturacion sf where p.codigo=sf.cod_personal and sf.codigo=f.cod_solicitudfacturacion) as solicitante
       FROM facturas_venta f, facturas_venta_distribucion da, solicitudes_facturacion_areas_uo sfuo
 WHERE da.cod_factura=f.codigo and f.cod_solicitudfacturacion=sfuo.cod_solicitudfacturacion and sfuo.cod_area=da.cod_area and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and sfuo.cod_uo in ($unidades) and da.cod_area in ($areas) 
+    $queryTienda $queryCredito
+    order by area, fecha_factura, nro_factura";*/
+    $sql="SELECT f.codigo, f.cod_solicitudfacturacion, 
+    (SELECT uo.abreviatura from unidades_organizacionales uo where uo.codigo=f.cod_unidadorganizacional)uo, 
+    (SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area, 
+    f.fecha_factura, f.razon_social, f.nit, f.cod_personal, 
+    (SELECT SUM((cantidad*precio)-descuento_bob) as importe from facturas_ventadetalle where cod_facturaventa=f.codigo )as importe_real, f.nro_factura, 
+    (SELECT concat(p.paterno,' ',p.primer_nombre) from personal p where p.codigo=f.cod_personal) as facturador, da.porcentaje, 
+    (SELECT concat(p.paterno,' ',p.primer_nombre) from personal p, solicitudes_facturacion sf where p.codigo=sf.cod_personal and sf.codigo=f.cod_solicitudfacturacion) as solicitante
+      FROM facturas_venta f, facturas_venta_distribucion da
+    WHERE da.cod_factura=f.codigo  and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_estadofactura<>2 and f.cod_unidadorganizacional in ($unidades) and da.cod_area in ($areas) 
     $queryTienda $queryCredito
     order by area, fecha_factura, nro_factura";
     // echo $sql;

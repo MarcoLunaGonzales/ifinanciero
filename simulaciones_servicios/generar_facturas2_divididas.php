@@ -31,22 +31,10 @@
             $cod_tipopago_tarjetas=obtenerValorConfiguracion(59);
             $cod_tipopago_anticipo=obtenerValorConfiguracion(64);//tipo de pago anticipo
             
-        	    // echo "auto:".$nroAutorizacion." - nro_corr:".$nro_correlativo." - nitCliente:".$nitCliente." - fecha_actual:".$fecha_actual." - totalFinalRedondeado:".$totalFinalRedondeado." - llaveDosificacion:".$llaveDosificacion;
             $code=0;// para el siat ya no se usa codigo de control
-
-
-            // $controlCode = new ControlCode();
-            // $code = $controlCode->generate($nroAutorizacion,//Numero de autorizacion
-            // $nro_correlativo,//Numero de factura
-            // $nitCliente,//Número de Identificación Tributaria o Carnet de Identidad
-            // str_replace('-','',$fecha_actual),//fecha de transaccion de la forma AAAAMMDD
-            // $totalFinalRedondeado,//Monto de la transacción
-            // $llaveDosificacion//Llave de dosificación
-            // );
 
             //SACAMOS EL NRO CORRELATIVO DEL CORREO
             $nro_correlativoCorreo = nro_correlativo_correocredito($cod_sucursal,$cod_tipopago);
-
 
             $sql="INSERT INTO facturas_venta(cod_sucursal,cod_solicitudfacturacion,cod_unidadorganizacional,cod_area,fecha_factura,fecha_limite_emision,cod_tipoobjeto,cod_tipopago,cod_cliente,cod_personal,razon_social,nit,cod_dosificacionfactura,nro_factura,nro_autorizacion,codigo_control,importe,observaciones,cod_estadofactura,cod_comprobante,ci_estudiante,glosa_factura3,created_at,created_by,nro_correlativocorreo) 
                 values ('$cod_sucursal','$codigo','$cod_unidadorganizacional','$cod_area',NOW(),'$fecha_limite_emision','$cod_tipoobjeto','$cod_tipopago','$cod_cliente','$cod_personal','$razon_social','$nitCliente','$cod_dosificacionfactura','$nro_correlativo','$nroAutorizacion','$code','$monto_total','$observaciones','1','0','$ci_estudiante','$observaciones_2',NOW(),$globalUser,'$nro_correlativoCorreo')";
@@ -73,6 +61,7 @@
                     $descuento_bob_x=$row['descuento_bob'];
                     $cod_curso_x=$row['cod_curso'];//solo se guarda este campo cuando es grupal
                     $ci_estudiante_x=$row['ci_estudiante'];
+                    $id_servicio_detalle_x=$row['id_servicio'];
                     $estado_x=true;
                     if($tipo_solicitud==2){// la solicitud pertence capacitacion estudiantes
                         //echo $ci_estudiante_x."-".$cod_simulacion_servicio."-".$cod_claservicio_x."-".$precio_x."-".$codigo;
@@ -107,8 +96,8 @@
                     if($estado_ibnorca==0){//sin errores en el servicio web
                         $precio_x=$precio_x+$descuento_bob_x/$cantidad_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario y tambien el descuetno unitario, ya que se registro el descuento total * cantidad
                         $descripcion_alterna_x=$row['descripcion_alterna'];            
-                        $sqlDetalleVenta="INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId,ci_estudiante) 
-                        values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0,'$ci_estudiante_x')";
+                        $sqlDetalleVenta="INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId,ci_estudiante,id_servicio) 
+                        values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0,'$ci_estudiante_x','$id_servicio_detalle_x')";
                         //echo $sqlDetalleVenta;
                         $stmtInsertSoliFactDet = $dbh->prepare($sqlDetalleVenta);
                         $flagSuccess=$stmtInsertSoliFactDet->execute();
