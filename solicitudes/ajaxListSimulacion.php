@@ -39,11 +39,18 @@ if(isset($_GET["sim"])){
     $query2="";
   }else{
     $query="";
-    $query2="SELECT s.*,p.cod_area,c.nombre as cliente FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente where s.cod_estadosimulacion=5 $sqlAreas order by s.codigo"; //cod_responsable=$usuario and
+    $query2="SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 $sqlAreas order by s.codigo desc"; //cod_responsable=$usuario and
   }
 }else{
   $query="SELECT s.*,p.cod_area FROM simulaciones_costos s join plantillas_costo p on p.codigo=s.cod_plantillacosto  where s.cod_estadosimulacion=3 $sqlAreas order by s.codigo";
- $query2="SELECT s.*,p.cod_area,c.nombre as cliente FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente where s.cod_estadosimulacion=5 $sqlAreas order by s.codigo"; //cod_responsable=$usuario and
+  $query2="SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio FROM simulaciones_servicios s 
+  join plantillas_servicios p on p.codigo=s.cod_plantillaservicio 
+  join clientes c on c.codigo=s.cod_cliente 
+  LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+   WHERE s.cod_estadosimulacion=5 $sqlAreas order by s.codigo desc"; //cod_responsable=$usuario and
 }
 
 log_querys($query,'simulaciones','ERROR 1','-','ajaxListSimulacion.php');
@@ -71,6 +78,8 @@ log_querys($query2,'simulaciones','ERROR 2','-','ajaxListSimulacion.php');
               }            
             }
 
+            $codigoServicioIbno="";
+
             if($query2!=""){
               $stmt2 = $dbh->prepare($query2);
               $stmt2->execute();
@@ -78,9 +87,9 @@ log_querys($query2,'simulaciones','ERROR 2','-','ajaxListSimulacion.php');
                 $codigoSim=$row2['codigo'];
                 $cliente=$row2['cliente'];
                 $nomArea=abrevArea_solo($row2['cod_area']);    
-                
+                $codigoServicioIbno=$row2["codigoservicio"];
                 ?>
-                <option value="<?=$codigoSim?>$$$TCP" class="text-right"><?=$row2['nombre']?> - <?=$nomArea?> <?=$cliente?></option>
+                <option value="<?=$codigoSim?>$$$TCP" class="text-right"><?=$row2['nombre']?> - <?=$codigoServicioIbno?> - <?=$cliente?></option>
           <?php 
               }               
             }
