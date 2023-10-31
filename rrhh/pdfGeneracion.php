@@ -17,7 +17,7 @@ class CustomTCPDF extends TCPDF {
         $this->SetY(1); // Posición vertical para el encabezado
 
         // HTML del encabezado personalizado
-        $titulo_cargo = rtrim(empty($resp_cargo['nombre'])?'':preg_replace('/\s+[Aa]\.[Ii]\.$/', '', $resp_cargo['nombre']));
+        $titulo_cargo = rtrim(empty($resp_cargo['nombre']) ? '' : $resp_cargo['nombre']);
         $header = '<table style="border: 1px solid white; margin-left: ' . $leftMargin . 'mm; margin-right: ' . $rightMargin . 'mm;">
                         <tr>
                             <td style="border: 1px solid white; width: 88%;">

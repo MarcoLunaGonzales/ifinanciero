@@ -247,6 +247,11 @@ $stmt->bindColumn('etapa_nombre', $etapa_nombre);
                                   <i class="material-icons">track_changes</i>
                                 </a>
                                 
+                                <!-- Historial Interinato -->
+                                <a href='index.php?opcion=listaInterinoHistorial&codigo=<?=$codigo;?>' class="btn btn-blue" title="Historial Interinato">
+                                  <i class="material-icons">schedule</i>
+                                </a>
+                                
                                 <?php
                                   }
                                 ?>

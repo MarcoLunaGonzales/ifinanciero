@@ -138,14 +138,14 @@
                 <th colspan="2" class="half-width" style="background-color: red;color: white; font-weight: bold; text-align: center;">DEPENDIENTES (LE REPORTAN)</th>
             </tr>
             <tr>
-                <td colspan="2" class="half-width"><?=empty($resp_cargo_sup['nombre']) ? '' : preg_replace('/\s+[Aa]\.[Ii]\.$/', '', $resp_cargo_sup['nombre']);?></td>
+                <td colspan="2" class="half-width"><?=empty($resp_cargo_sup['nombre']) ? '' : $resp_cargo_sup['nombre'];?></td>
                 <td colspan="2" class="half-width"><?php 
                     if (empty($resp_cargosDep)) {
                         echo 'N/A';
                     } else {
                         $total_cargos = count($resp_cargosDep);
                         foreach ($resp_cargosDep as $key => $row) { 
-                            echo preg_replace('/\s+[Aa]\.[Ii]\.$/', '', $row['nombre']);
+                            echo $row['nombre'];
                             if ($key < $total_cargos - 1) {
                                 echo '<br>';
                             }

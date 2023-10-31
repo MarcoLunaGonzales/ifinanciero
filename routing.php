@@ -2076,6 +2076,11 @@
 		if ($_GET['opcion']=='listaResponsabilidades') {
 			require_once('responsabilidad_ibnorca/responsabilidadLista.php');
 		}
+		
+		// Cargos - Interino Historial
+		if ($_GET['opcion']=='listaInterinoHistorial') {
+			require_once('rrhh/cargosListaInterinoHistorial.php');
+		}
 
 		// Nueva solicitud de Facturación de Cuotas 
 		if ($_GET['opcion']=='register_solicitudfacturacion_cuotas') {
