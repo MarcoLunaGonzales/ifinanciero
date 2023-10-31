@@ -785,7 +785,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                    <?php 
                                  }
                                  ?>
-                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
+                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item" target="_blank">
                                     <i class="material-icons text-warning">bar_chart</i> Ver Solicitud
                                  </a>
                              <?php
@@ -800,7 +800,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                    <?php 
                                  }
                                  ?>
-                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
+                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item" target="_blank">
                                     <i class="material-icons text-warning">bar_chart</i> Ver Solicitud
                                  </a>
                              <?php  
