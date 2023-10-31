@@ -54,8 +54,14 @@ $sqlEditSetTCP="";
 if($objeto_servicio!=""){
   $sqlEditSet=",cod_objetoservicio='$objeto_servicio'";
 }
-  $sqlEditSet.=",id_tiposervicio='$tipo_servicio'";
-  $sqlEditSetTCP.=",id_tiposervicio='$tipo_servicio'";
+  $sqlEditSet.=", id_tiposervicio = CASE
+                    WHEN cod_estadosimulacion != 5 THEN '$tipo_servicio'
+                    ELSE id_tiposervicio
+                  END";
+  $sqlEditSetTCP.=", id_tiposervicio = CASE
+                    WHEN cod_estadosimulacion != 5 THEN '$tipo_servicio'
+                    ELSE id_tiposervicio
+                  END";
 
   $sqlEditSet.=",afnor='$mod_afnor'";
 

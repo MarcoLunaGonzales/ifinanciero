@@ -191,6 +191,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado
             $stmt1->bindColumn('cod_tipocliente', $cod_tipoclienteX);
             
             $stmt1->bindColumn('cod_servicio', $cod_servicio);
+            $stmt1->bindColumn('cod_estadosimulacion', $cod_estadosimulacion);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      

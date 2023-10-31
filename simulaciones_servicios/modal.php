@@ -864,7 +864,12 @@
                                   $tituloTipoServ="";
                                   $indexOb=0;
                                   //  $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=$plantilla_servicio and vigente=1 order by 2"); // Versión antigua
-                                  $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre FROM cla_servicios WHERE codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1 ORDER BY 1");
+                                  // $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre FROM cla_servicios WHERE codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1 ORDER BY 1");
+                                  $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre 
+                                                      FROM cla_servicios 
+                                                      WHERE (codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1) 
+                                                      OR (codigo_n2 = '$idTipoServicioX') 
+                                                      ORDER BY 1");
                                   $stmt->execute();
                                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                     $codigoX=$row['codigo_n2'];
@@ -961,7 +966,7 @@
                         <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
                         <div class="col-sm-7">
                           <div class="form-group">
-                            <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);">       
+                            <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);" <?= $cod_estadosimulacion == 5 ? "disabled" : ""; ?>>       
                               <option value="">SELECCIONE TIPO DE SERVICIO</option>
                                   <?php
                                   $plantilla_servicio = '';
@@ -973,7 +978,12 @@
                                   $tituloTipoServ="";
                                   $indexOb=0;
                                   //  $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=$plantilla_servicio and vigente=1 order by 2"); // Versión antigua
-                                  $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre FROM cla_servicios WHERE codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1 ORDER BY 1");
+                                  // $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre FROM cla_servicios WHERE codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1 ORDER BY 1");
+                                  $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre 
+                                                  FROM cla_servicios 
+                                                  WHERE (codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1) 
+                                                  OR (codigo_n2 = '$idTipoServicioX') 
+                                                  ORDER BY 1");
                                   $stmt->execute();
                                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                     $codigoX=$row['codigo_n2'];
