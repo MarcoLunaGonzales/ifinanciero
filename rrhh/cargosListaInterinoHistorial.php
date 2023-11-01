@@ -11,16 +11,19 @@ $dbh = new Conexion();
 // Codigo del Cargo seleccionado
 $cod_cargo = $_GET['codigo'];
 
-// LISTA DE CONTROL DE CAMBIO DE VERSIONES
-$stmt = $dbh->prepare("SELECT cih.codigo, cih.fecha_inicio, cih.fecha_fin
+// LISTA DE HISTORIAL INTERINO
+$stmt = $dbh->prepare("SELECT cih.codigo, cih.fecha_inicio, cih.fecha_fin, cih.cod_personal, UPPER(CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno)) as personal_nombre
                     FROM cargos_interinos_historicos cih
+                    LEFT JOIN personal p ON p.codigo = cih.cod_personal
                     WHERE cih.estado = 1
                     AND cih.cod_cargo = '$cod_cargo'
                     ORDER BY cih.codigo DESC");
 $stmt->execute();
 $stmt->bindColumn('codigo', $codigo);
+$stmt->bindColumn('cod_personal', $cod_personal);
 $stmt->bindColumn('fecha_inicio', $fecha_inicio);
 $stmt->bindColumn('fecha_fin', $fecha_fin);
+$stmt->bindColumn('personal_nombre', $personal_nombre);
 
 // CARGO
 $stmtCargo = $dbh->prepare("SELECT c.codigo, c.nombre as nombre_cargo
@@ -56,8 +59,9 @@ if ($registro) {
                       <thead>
                         <tr>
                           <th style="width: 10%;">#</th>
-                          <th style="width: 40%;">Fecha de Inicio</th>
-                          <th style="width: 40%;">Fecha de Fin</th>
+                          <th style="width: 30%;">Personal</th>
+                          <th style="width: 25%;">Fecha de Inicio</th>
+                          <th style="width: 25%;">Fecha de Fin</th>
                           <th style="width: 10%;" class="text-center">Acciones</th>
                         </tr>
                       </thead>
@@ -66,6 +70,7 @@ if ($registro) {
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
                           <tr>
                             <td><?=$index;?></td>
+                            <td><?=$personal_nombre;?></td>
                             <td><?=$fecha_inicio;?></td>
                             <td><?=$fecha_fin;?></td>
                             <td class="td-actions text-center">
@@ -73,7 +78,7 @@ if ($registro) {
                                 if($globalAdmin==1){
                               ?>
                               <!-- Editar -->
-                              <button type="button" class="btn btn-info form_edit" data-codigo="<?=$codigo;?>" data-fecha_inicio="<?=$fecha_inicio;?>" data-fecha_fin="<?=$fecha_fin;?>"><i class="material-icons" title="Editar"><?=$iconEdit;?></i></button>
+                              <button type="button" class="btn btn-info form_edit" data-codigo="<?=$codigo;?>" data-fecha_inicio="<?=$fecha_inicio;?>" data-fecha_fin="<?=$fecha_fin;?>" data-cod_personal="<?=$cod_personal;?>" ><i class="material-icons" title="Editar"><?=$iconEdit;?></i></button>
 
                               <!-- Eliminar -->
                               <button class="<?=$buttonDelete;?> formEstado" data-codigo="<?=$codigo;?>">
@@ -133,6 +138,25 @@ if ($registro) {
                       <div class="col-sm-9">
                         <input class="form-control" type="date" name="fecha_fin" id="fecha_fin" placeholder="Agregar fecha fin"/>
                       </div>
+                      <br>
+                      <label class="col-sm-3"><span class="text-danger">*</span> Personal:</label>
+                      <div class="col-sm-9">
+                        <div class="form-group">
+                          <select name="cod_personal" id="cod_personal" data-style="btn btn-info" class="selectpicker form-control form-control-sm" data-show-subtext="true" data-live-search="true">
+                              <option value="" disabled>SELECCIONAR</option>
+                              <?php 
+                                $sqlPersonal="SELECT p.codigo, UPPER(CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno)) as nombre_personal, c.abreviatura as cargo_abreviatura
+                                          FROM personal p
+                                          LEFT JOIN cargos c ON c.codigo = p.cod_cargo
+                                          WHERE p.cod_estadopersonal = 1
+                                          ORDER BY nombre_personal ASC";
+                                $stmtPersonal=$dbh->query($sqlPersonal);
+                                while ($rowPersonal = $stmtPersonal->fetch()) { ?>
+                                  <option value="<?=$rowPersonal["codigo"];?>"><?=$rowPersonal["nombre_personal"];?> [<?=$rowPersonal["cargo_abreviatura"];?>]</option>
+                              <?php } ?>
+                          </select>
+                        </div>
+                      </div>
                     </div>
                 </form>
             </div>
@@ -163,12 +187,14 @@ $(document).ready(function() {
     var codigo       = $(this).data("codigo");
     var fecha_inicio = $(this).data("fecha_inicio");
     var fecha_fin    = $(this).data("fecha_fin");
+    var cod_personal = $(this).data("cod_personal");
 
     $("#modalAgregarEditarLabel").text("Editar Registro");
     $("#codigo").val(codigo);
     
     $("#fecha_inicio").val(fecha_inicio);
     $("#fecha_fin").val(fecha_fin);
+    $("#cod_personal").val(cod_personal).trigger('change');
     
     $('#modalTituloCambio').html('Editar - Historial Interino');
     $("#modalInterinoHistorial").modal("show");
@@ -182,6 +208,7 @@ $(document).ready(function() {
     let cod_cargo    = $('#cod_cargo').val();
     let fecha_inicio = $('#fecha_inicio').val();
     let fecha_fin    = $('#fecha_fin').val();
+    let cod_personal = $('#cod_personal').val();
      // Realizar validaciones
      if (fecha_inicio.trim() === '' && fecha_fin.trim() === '') {
         Swal.fire({
@@ -209,7 +236,8 @@ $(document).ready(function() {
                 codigo: codigo,
                 cod_cargo: cod_cargo,
                 fecha_inicio: fecha_inicio,
-                fecha_fin: fecha_fin
+                fecha_fin: fecha_fin,
+                cod_personal: cod_personal
               },
               dataType: "json",
               success: function(response) {
