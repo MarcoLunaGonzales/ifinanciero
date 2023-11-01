@@ -188,7 +188,15 @@ if(empty($resp_manual_aprobacion)){
     $resp_manual_seguimiento = [];
 }else{
     $sql = "SELECT mas.codigo, mas.cod_manual, mas.cod_etapa, CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as personal, mas.cod_seguimiento_estado,
-        DATE_FORMAT(mas.fecha,'%d-%m-%Y') as fecha, mas.observacion, mas.detalle_descriptivo, c.nombre as cargo, COALESCE(mae.descripcion, 'ELABORADO POR:') as nombre_etapa
+        DATE_FORMAT(mas.fecha,'%d-%m-%Y') as fecha, mas.observacion, mas.detalle_descriptivo, CONCAT(c.nombre, ' ',
+                CASE
+                    WHEN (SELECT cih.codigo 
+                          FROM cargos_interinos_historicos cih 
+                          WHERE cih.cod_cargo = c.codigo
+                          AND cih.estado = 1 
+                          AND DATE(mas.fecha) BETWEEN cih.fecha_inicio AND cih.fecha_fin) IS NOT NULL THEN 'a.i.'
+                    ELSE ''
+                END) as cargo, COALESCE(mae.descripcion, 'ELABORADO POR:') as nombre_etapa
         FROM manuales_aprobacion_seguimiento mas
         LEFT JOIN personal p ON p.codigo = mas.cod_personal
         LEFT JOIN cargos c ON c.codigo = p.cod_cargo
