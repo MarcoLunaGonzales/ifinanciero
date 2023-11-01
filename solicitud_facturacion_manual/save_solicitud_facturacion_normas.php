@@ -206,10 +206,12 @@ try {
                         $descuento_por_Insert=$_POST["descuento_por".$i];
                         $descuento_bob_Insert=$_POST["descuento_bob".$i];
                     }
+                    $cod_detalle_facturacion = 0;
                     if($servicioInsert!=0 || $servicioInsert!=""){
                         $stmt = $dbh->prepare("INSERT INTO solicitudes_facturaciondetalle(cod_solicitudfacturacion,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_por,descuento_bob,tipo_item,cod_curso) 
                         values ('$cod_facturacion','$servicioInsert','$CantidadInsert','$importeInsert','$DescricpionInsert','$descuento_por_Insert','$descuento_bob_Insert',1,$cod_serv_a)");
-                        $flagSuccess=$stmt->execute();                    
+                        $flagSuccess=$stmt->execute();
+                        $cod_detalle_facturacion = $dbh->lastInsertId();               
                     }
                     /**
                      * Preparación de Suscripción (Actualización)
