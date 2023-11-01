@@ -299,7 +299,10 @@ function preparaSucripcion($cod_serv_a, $cod_detalle_facturacion, $cod_facturaci
             idioma, 
             fecha_inicio_suscripcion,
             id_norma) 
-    values (0, '$cod_detalle_facturacion', 0, '', 
+    values (0, 
+            '$cod_detalle_facturacion', 
+            0, 
+            '', 
             $cod_facturacion, 
             '$detalle_idEntidad', 
             '$detalle_cod_cliente', 
