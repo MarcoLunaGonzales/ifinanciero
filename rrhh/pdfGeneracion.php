@@ -249,9 +249,12 @@ $cod_area_nivel2 = '';
 // exit;
 if ($registro) {
     $cod_direccion = 847;
-    if($registro['codigo'] == $cod_direccion || $registro['cod_padre'] == $cod_direccion){
+    if($registro['codigo'] == $cod_direccion){
         // Primer Nivel
         $cod_area_nivel2 = 847;
+    }else if($registro['cod_padre'] == $cod_direccion){
+        // Segundo Nivel
+        $cod_area_nivel2 = $resp_cargo['cod_area'];
     }else{
         // Niveles Inferiores
         $cod_area_nivel2 = buscarArea($resp_cargo['cod_area']);
