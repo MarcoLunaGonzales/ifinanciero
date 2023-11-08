@@ -800,7 +800,7 @@
                        <label class="col-sm-2 col-form-label">Oficina Servicio</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <select class="selectpicker form-control form-control-sm"  name="oficina_servicio" id="oficina_servicio" data-style="btn btn-warning" required>
+                          <select class="selectpicker form-control form-control-sm"  name="oficina_servicio" id="oficina_servicio" data-style="btn btn-warning" required <?= $cod_estadosimulacion == 5 ? "disabled" : ""; ?>>
                             <!--<option disabled selected="selected" value="">Cliente</option>-->
                                 <?php
                                  $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");

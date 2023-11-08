@@ -128,7 +128,7 @@ $stmt->execute();
 $resp_control_cambio = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // * Cargo
-$sql = "SELECT c.codigo, UPPER(c.nombre) as nombre, c.abreviatura, c.objetivo, c.cod_padre, tc.nombre as nivel_cargo, ca.cod_areaorganizacion as cod_area
+$sql = "SELECT c.codigo, UPPER(c.nombre) as nombre, c.abreviatura, c.objetivo, c.cod_padre, tc.nombre as nivel_cargo, ca.cod_areaorganizacion as cod_area, c.cod_tipo_cargo
         FROM cargos c
         LEFT JOIN tipos_cargos_personal tc ON tc.codigo = c.cod_tipo_cargo
         LEFT JOIN cargos_areasorganizacion ca ON ca.cod_cargo = c.codigo
@@ -236,28 +236,32 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $resp_autoridadesCargos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// * AREAS nivel 2 del Cargo seleccionado 
-$sql = "SELECT a.codigo, a.cod_padre
-        FROM areas a
-        WHERE a.codigo = '".$resp_cargo['cod_area']."'";
-$stmt = $dbh->prepare($sql);
-$stmt->execute();
-$registro = $stmt->fetch(PDO::FETCH_ASSOC);
+if($resp_cargo['cod_tipo_cargo'] == 1){
+    $cod_area_nivel2 = 847;
+}else{
+    // * AREAS nivel 2 del Cargo seleccionado 
+    $sql = "SELECT a.codigo, a.cod_padre
+    FROM areas a
+    WHERE a.codigo = '".$resp_cargo['cod_area']."'";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $registro = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$cod_area_nivel2 = '';
-// echo "hola";
-// exit;
-if ($registro) {
-    $cod_direccion = 847;
-    if($registro['codigo'] == $cod_direccion){
-        // Primer Nivel
-        $cod_area_nivel2 = 847;
-    }else if($registro['cod_padre'] == $cod_direccion){
-        // Segundo Nivel
-        $cod_area_nivel2 = $resp_cargo['cod_area'];
-    }else{
-        // Niveles Inferiores
-        $cod_area_nivel2 = buscarArea($resp_cargo['cod_area']);
+    $cod_area_nivel2 = '';
+    // echo "hola";
+    // exit;
+    if ($registro) {
+        $cod_direccion = 847;
+        if($registro['codigo'] == $cod_direccion){
+            // Primer Nivel
+            $cod_area_nivel2 = 847;
+        }else if($registro['cod_padre'] == $cod_direccion){
+            // Segundo Nivel
+            $cod_area_nivel2 = $resp_cargo['cod_area'];
+        }else{
+            // Niveles Inferiores
+            $cod_area_nivel2 = buscarArea($resp_cargo['cod_area']);
+        }
     }
 }
 $sql = "SELECT a.codigo, a.nombre, a.abreviatura

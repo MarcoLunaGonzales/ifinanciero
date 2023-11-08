@@ -129,7 +129,7 @@
             </tr>
             <tr>
                 <td class="text-center"><?=empty($resp_areanivel2['nombre']) ? '' : $resp_areanivel2['nombre'];?></td>
-                <td class="text-center"><?=empty($resp_unidad['nombre_unidad'])?'':$resp_unidad['nombre_unidad'];?></td>
+                <td class="text-center"><?= (empty($resp_unidad['nombre_unidad']) || $resp_areanivel2['nombre'] == $resp_unidad['nombre_unidad']) ?'N/A':$resp_unidad['nombre_unidad'];?></td>
                 <td class="text-center"><?=empty($resp_cargo['nivel_cargo'])?'':$resp_cargo['nivel_cargo'];?></td>
                 <td class="text-center"><?=empty($resp_cargo['abreviatura'])?'':$resp_cargo['abreviatura'];?></td>
             </tr>

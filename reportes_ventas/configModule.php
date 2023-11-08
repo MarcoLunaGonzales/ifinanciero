@@ -32,4 +32,8 @@ $urlImpresionComprobantes="../comprobantes/reporte_comprobantes_filtro.php";
 $urlSRAdministrativo="../reportes_sr_administrativo/reportesSRAdministrativo.php";
 
 $urlReporeSF="../reportes_facturacion/filtro_solicitud_facturacion.php";
+
+// Clasificador
+$urlReporteResumidoClasificador="rptOpIngresoFacturacionClasificador.php";
+$urlReporteIngresoFacturacion_clasificador="reporteIngresoFacturacionClasificador.php";
 ?>
