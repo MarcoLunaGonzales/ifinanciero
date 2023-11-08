@@ -132,8 +132,8 @@ $sql = "SELECT fv.fecha_factura,fv.codigo,fv.nro_factura,f.codigo as codfacturad
         ." and fv.cod_solicitudfacturacion != '-100'
         AND DATE(fv.fecha_factura) BETWEEN '$fecha_inicio' AND '$fecha_fin'
         order by fv.fecha_factura"; 
-echo $sql;
-exit;
+// echo $sql;
+// exit;
 $stmtFactura = $dbh->prepare($sql);
 $stmtFactura->execute();
 
@@ -298,7 +298,7 @@ $stmtFactura->execute();
     <table class="table">
         <thead class="sticky-header">
             <tr>
-            <tr hidden>
+            <!-- <tr hidden> -->
                 <th>#</th>
                 <th>Código FV</th>
                 <th>Número de Factura</th>
@@ -320,9 +320,9 @@ $stmtFactura->execute();
                 <th>Verificación<br> Factura / Norma</th>
                 <th>Tabla Suscripcion</th>
             </tr>
-            <tr>
-            <!-- <tr hidden> -->
-                <th>Código de FV Detalle</th>
+            <!-- <tr> -->
+            <tr hidden>
+                <th>Código de SF Detalle</th>
                 <th>Id Venta Norma</th>
             </tr>
         </thead>
@@ -343,8 +343,8 @@ $stmtFactura->execute();
                     if(($mostrar == 1) || ($mostrar == 2 && $facturaValida) || ($mostrar == 3 && !$facturaValida)){
                         $nro++;
             ?>
-            <!-- <tr class="<?= !$facturaValida ? 'resaltado-rojo' : ''; ?>"> -->
-            <tr class="<?= !$facturaValida ? 'resaltado-rojo' : ''; ?>" hidden>
+            <tr class="<?= !$facturaValida ? 'resaltado-rojo' : ''; ?>">
+            <!-- <tr class="<?= !$facturaValida ? 'resaltado-rojo' : ''; ?>" hidden> -->
                 <td><?=$nro;?></td>
                 <td style="background-color: #c7f4f9;color: #000;"><?= $rowFactura['codigo']; ?></td>
                 <td><?= $rowFactura['nro_factura']; ?></td>
@@ -366,8 +366,8 @@ $stmtFactura->execute();
                 <td class="<?= $facturaValidaNorma ? 'resaltado-verde' : 'resaltado-rojo'; ?>"><b><?=$facturaValidaNorma ? 'Encontrado' : 'No Encontrado';?></b></td>
                 <td class="<?= $verificaSuscripcion ? 'blue' : '' ?>"><?= $verificaSuscripcion ? 'SI' : 'NO'; ?></td>
             </tr>
-            <tr class="<?= !$facturaValida ? 'resaltado-rojo' : ''; ?>">
-            <!-- <tr class="<?= !$facturaValida ? 'resaltado-rojo' : ''; ?>" hidden> -->
+            <!-- <tr class="<?= !$facturaValida ? 'resaltado-rojo' : ''; ?>"> -->
+            <tr class="<?= !$facturaValida ? 'resaltado-rojo' : ''; ?>" hidden>
                 <td style="background-color: #c7f4f9;color: #000;"><?= $rowFactura['codfacturadetalle']; ?></td>
                 <td class="<?= !empty($idVentaNorma) ? 'resaltado-verde' : 'resaltado-rojo'; ?>"><?= empty($idVentaNorma) ? 0 : $idVentaNorma; ?></td>
             </tr>
