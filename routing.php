@@ -2082,7 +2082,7 @@
 			require_once('rrhh/cargosListaInterinoHistorial.php');
 		}
 
-		// Nueva solicitud de Facturación de Cuotas 
+		// Nueva solicitud de Facturación de Afiliaciones 
 		if ($_GET['opcion']=='register_solicitudfacturacion_cuotas') {
 			require_once('solicitud_facturacion_manual/register_solicitud_facturacion_cuota.php');
 		}

@@ -548,7 +548,18 @@ if(isset($_GET['q'])){
                                             <i class="material-icons"><?=$iconEdit;?></i>
                                           </a>
                                         <?php
-                                        }else{
+                                        }else
+                                        
+                                        if($cod_area == 12 && $cod_tipoobjeto == 715){
+                                        // EDICIÓN DE SF AFILIACIONES
+                                        ?>
+                                          <a title="Editar Solicitud Facturación" href='?opcion=register_solicitudfacturacion_cuotas&cod_f=<?=$codigo_facturacion?>' class="btn btn-success">
+                                            <i class="material-icons"><?=$iconEdit;?></i>
+                                          </a>
+                                        <?php
+                                        }else
+
+                                        {
                                         ?>
                                           <a title="Editar Solicitud Facturación" href='<?=$urlEditSolicitudfactura;?>&codigo_s=<?=$codigo_facturacion?>' class="btn btn-success">
                                             <i class="material-icons"><?=$iconEdit;?></i>
@@ -628,7 +639,7 @@ if(isset($_GET['q'])){
                       <a href="<?=$urlListSolicitud_facturacion_normas;?>" class="btn btn-warning">SF Normas</a>
                       <a href="<?=$urlSolicitudfactura_estudiante;?>" class="btn btn-success">SF Estudiantes</a>
                       <a href="<?=$urlSolicitudfactura_empresa;?>" class="btn btn-danger">SF Empresas</a>     
-                      <a href="<?=$urlSolicitudfactura_cuota;?>" class="btn btn-default">SF Cuotas</a>                    
+                      <a href="<?=$urlSolicitudfactura_cuota;?>" class="btn btn-default">SF Afiliaciones</a>                    
                       <?php 
                     }              
                   ?>

@@ -10,6 +10,7 @@ $dbh = new Conexion();
 
 $stmt = $dbh->prepare("SELECT
                         m.codigo,
+                        m.archivo,
                         UPPER(m.nombre) AS nombre,
                         ma.codigo as ma_codigo,
                         ma.cod_etapa as ma_cod_etapa,
@@ -41,6 +42,7 @@ $stmt = $dbh->prepare("SELECT
 $stmt->execute();
 //bindColumn
 $stmt->bindColumn('codigo', $codigo);
+$stmt->bindColumn('archivo', $archivo);
 $stmt->bindColumn('nombre', $nombre);
 $stmt->bindColumn('ma_codigo', $ma_codigo);
 $stmt->bindColumn('ma_cod_etapa', $ma_cod_etapa);
@@ -171,6 +173,10 @@ $stmt->bindColumn('eta_etapa', $eta_etapa);
                                 <?php
                                   }
                                 ?>
+                                <!-- Archivo -->
+                                <a href="assets/archivos_mof/<?=$archivo?>" target="_blank" class="btn btn-danger" title="Documento">
+                                  <i class="material-icons">picture_as_pdf</i>
+                                </a>
 
                                 <?php
                                   }

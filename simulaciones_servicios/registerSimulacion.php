@@ -294,7 +294,8 @@ $sqlArrayAtributos="SELECT
                     LEFT JOIN simulaciones_servicios_atributosnormas sni ON sni.cod_simulacionservicioatributo = sa.codigo AND sni.catalogo = 'I'
                     LEFT JOIN normas vi ON sni.cod_norma = vi.codigo
                     WHERE s.codigo = '$codigo'
-                    GROUP BY s.codigo, sa.nombre, sa.direccion, sa.marca, sa.nro_sello";
+                    GROUP BY s.codigo, sa.nombre, sa.direccion, sa.marca, sa.
+                    ORDER BY sa.codigo ASCnro_sello";
 $stmtArrayAtributos = $dbh->prepare($sqlArrayAtributos);
 $stmtArrayAtributos->execute();
 ?>

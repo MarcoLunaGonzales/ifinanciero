@@ -87,7 +87,7 @@ if ($cod_facturacion > 0){
     $complemento=$result['siat_complemento'];
 
     $fecha_facturacion=$result['fecha_facturacion'];
-    $nro_tarjeta=$result['nro_tarjeta'];
+    $nro_tarjeta=empty($result['nro_tarjeta']) ? '' : $result['nro_tarjeta'];
     
 }else {
     $nombre_simulacion = null;
@@ -167,7 +167,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                     <div class="card">
                       <div class="card-header <?=$colorCard;?> card-header-text">
                         <div class="card-text">
-                          <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación Cuotas</h4>                      
+                          <h4 class="card-title"><?php if ($cod_facturacion == 0) echo "Registrar "; else echo "Editar ";?>Solicitud de Facturación Afiliaciones</h4>                      
                         </div>
                         <!-- <h4 class="card-title" align="center"><b>Propuesta: Manual</b></h4> -->
                     </div>
@@ -193,10 +193,13 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 <div class="form-group" >                                    
                                     <div id="div_contenedor_area">
                                         <select name="cod_area" id="cod_area" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
-                                            <option value=""></option>
-
                                             <?php 
-                                            $sqlArea="SELECT codigo,nombre,abreviatura from areas where cod_estado=1 and centro_costos=1 $sqlAreas_x order by nombre";
+                                            $sqlArea="SELECT codigo,nombre,abreviatura 
+                                                    from areas 
+                                                    where cod_estado=1 
+                                                    and centro_costos=1 
+                                                    AND codigo = 12
+                                                    order by nombre";
                                             $stmtArea = $dbh->prepare($sqlArea);
                                             $stmtArea->execute();
                                             while ($rowArea = $stmtArea->fetch()){ ?>
@@ -221,7 +224,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                 <div class="form-group" >
                                     <select name="cod_tipoobjeto" id="cod_tipoobjeto" class="selectpicker form-control form-control-sm" data-style="btn btn-info">
                                         <?php 
-                                        $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE codigo in (214,840) order by nombre";
+                                        $queryTipoObjeto = "SELECT codigo,nombre FROM  tipos_objetofacturacion WHERE codigo IN (5051)";
                                         $statementObjeto = $dbh->prepare($queryTipoObjeto);
                                         $statementObjeto -> execute();
                                         $nc=0;$cont= array();
@@ -507,6 +510,8 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                 <!-- <th >Año</th> -->
                                                 <th width="15%">Item</th>
                                                 <th>Cant.</th>
+                                                <th>Fecha Inicio</th>
+                                                <th>Fecha Fin</th>
                                                 <th width="8%">Precio<br>(BOB)</th>
                                                 <th width="5%">Desc(%)</th>
                                                 <th width="5%">Desc<br>(BOB)</th>
@@ -519,13 +524,15 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             <?php 
                                             $iii=1;                                            
                                             if ($cod_facturacion > 0){                                                
-                                                $queryPr="SELECT d.codigo,d.cod_claservicio,(select cs.Descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as nombre_serv,d.cantidad,d.precio as monto,tipo_item from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
+                                                $queryPr="SELECT d.codigo,d.cod_claservicio,(select cs.Descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as nombre_serv,d.cantidad,d.precio as monto,tipo_item, d.fecha_inicio, d.fecha_fin from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
                                             }
                                            // echo $queryPr;
                                             $stmt = $dbh->prepare($queryPr);
                                             $stmt->execute();
                                             $modal_totalmontopre=0;$modal_totalmontopretotal=0;
                                             while ($rowPre = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                                $rowFechaInicio = $rowPre['fecha_inicio'];
+                                                $rowFechaFin    = $rowPre['fecha_fin'];
                                                 $codigoPre=$rowPre['codigo'];
                                                 $codCS=$rowPre['cod_claservicio'];
                                                 $tipoPre=$rowPre['nombre_serv'];
@@ -585,6 +592,12 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                                       <!-- <td class="text-left"><?=$cod_anio?> </td> -->
                                                       <td class="text-left"><small><?=$tipoPre?></small></td>
                                                       <td class="text-right"><small><?=$cantidadPre?></small></td>
+                                                      <td class="text-right">
+                                                        <input type="date" class="form-control" name="fecha_inicio<?=$iii?>" id="fecha_inicio<?=$iii?>" value="<?=$rowFechaInicio?>" <?=$sw2?>>
+                                                      </td>
+                                                      <td class="text-right">
+                                                        <input type="date" class="form-control" name="fecha_fin<?=$iii?>" id="fecha_fin<?=$iii?>" value="<?=$rowFechaFin?>" <?=$sw2?>>
+                                                      </td>
                                                       <td class="text-right"><input type="number" step="0.01" id="monto_precio<?=$iii?>" name="monto_precio<?=$iii?>" class="form-control text-primary text-right"  value="<?=$montoPre?>" onkeyup="activarInputMontoFilaServicio_manual()" <?=$sw2?>></td>
                                                       <!--  descuentos -->
                                                       <td class="text-right"><input type="number" step="0.01" class="form-control" name="descuento_por<?=$iii?>" id="descuento_por<?=$iii?>" value="<?=$descuento_porX?>" min="0" onkeyup="descuento_convertir_a_bolivianos_manual(<?=$iii?>)" <?=$sw2?>></td>                                             
