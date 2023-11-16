@@ -261,16 +261,15 @@ $stmt->bindColumn('cod_area', $codAreaCabecera);
                                           $estadoSiguiente=4;
                                     }
                                   }
-
                                   //SI EL AREA DE SERVICIO ES TCP Y TCS DEBE IR DIRECTAMENTE A APROBACION
-                                  if($codAreaCabecera==38 || $codAreaCabecera==39 || $codAreaCabecera==2957){
+                                  //Esta opcion estaba habilitada temporalmente
+                                  if($codAreaCabecera==38 || $codAreaCabecera==39 || $codAreaCabecera==2957 || $codAreaCabecera==501){
                                     $estadoSiguiente=6;
                                   }
 
                                  if($glosa_estadoX!=""){
                                     if(isset($_GET['q'])){
                                    ?>
-
                                     <a title="Enviar a Autorización - Solicitud Recursos" onclick="devolverSolicitudRecurso(<?=$numeroSol?>,'<?=$codigoServicio?>','<?=$urlEdit2?>?cod=<?=$codigo?>&estado=<?=$estadoSiguiente?>&admin=0&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>&ll=0','<?=$nombreProveedor?>','<?=$glosa_estadoX?>')" href='#' class="btn btn-default">
                                       <i class="material-icons">send</i>
                                     </a>

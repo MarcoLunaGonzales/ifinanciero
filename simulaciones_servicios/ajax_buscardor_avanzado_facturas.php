@@ -58,7 +58,8 @@ if($estadoFacturas!=""){
 if($cod_factura!=""){  
   $sql.=" and f.codigo in ($cod_factura)"; 
 }
-$sql.=" order by f.fecha_factura desc, f.nro_factura desc;";
+$sql.=" order by f.fecha_factura desc, f.nro_factura desc limit 0,150";
+
 // echo $sql;
 $stmt = $dbh->prepare($sql);
 $stmt->execute();
@@ -290,6 +291,20 @@ if(isset($_GET['interno'])){
                 <button rel="tooltip" class="dropdown-item" data-toggle="modal" data-target="#modalEditarFactura" onclick="modal_editarFactura_sf('<?=$datos_edit;?>')">
                   <i class="material-icons text-success" title="Editar Razón Social">edit</i> Editar Factura
                 </button><?php 
+              }
+              if($cod_estadofactura==2){
+                $stmtRespaldoAnulacion = $dbh->prepare("SELECT direccion_archivo from archivos_adjuntos_facturasventa where cod_facturasventa=$codigo_factura");
+                $stmtRespaldoAnulacion->execute();
+                $stmtRespaldoAnulacion->bindColumn('direccion_archivo', $direccionArchivoAnulado);  
+                while ($rowRespaldoAnulacion = $stmtRespaldoAnulacion->fetch()){
+                  $direccionArchivoAnulado=$rowRespaldoAnulacion['direccion_archivo'];
+                  $direccionArchivoAnulado = substr($direccionArchivoAnulado, 3);
+                }
+                if($direccionArchivoAnulado!=""){                                    
+              ?>
+                <a rel="tooltip" class="dropdown-item" href='<?=$direccionArchivoAnulado?>' target="_blank"><i class="material-icons text-primary" title="Respaldo Anulación">print</i> Respaldo de Anulación </a>
+              <?php
+                }
               }?>
             </div>
           </div>
