@@ -12,27 +12,7 @@ $stmtX->execute();
 
 
 $globalAdmin=$_SESSION["globalAdmin"];
-$codigoAdministrativos=obtenerValorConfiguracion(46);
 $idFila=$_GET['idFila'];
-$cod_area=$_GET['cod_area'];
-$codigoAdministrativos=obtenerValorConfiguracion(46);
-switch ($cod_area) {
-  case '39':    
-  $codigoAreaServ=108;
-  break;
-  case '38':   
-  $codigoAreaServ=109; 
-  break;
-  case '11':    //oi
-  $codigoAreaServ=107;
-  break;
-  case '13':    //sec
-    $codigoAreaServ=107;
-  break;
-  default:
-    $codigoAreaServ=0;
-    break;
-}
 ?>
 <div id="comp_row" class="col-md-12">
   <div class="row">
@@ -43,14 +23,9 @@ switch ($cod_area) {
           ?>
           <!-- <label for="haber<?=$idFila;?>" class="bmd-label-floating">Glosa</label> -->
           <select class="selectpicker form-control form-control-sm" data-live-search="true" name="modal_editservicio<?=$idFila;?>" id="modal_editservicio<?=$idFila;?>" data-style="fondo-boton" required="true">
-              <option disabled selected="selected" value="">--SERVICIOS--</option>
               <?php                 
-                $sql="SELECT IdClaServicio,Descripcion,Codigo from cla_servicios where vigente=1 and IdArea=$cod_area
-                UNION 
-                  Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
+                $sql="SELECT IdClaServicio,Descripcion,Codigo FROM cla_servicios WHERE IdClaServicio IN (715)";
                 $stmt3 = $dbh->prepare($sql);
-                
-                //echo $sql; 
                 
                 $stmt3->execute();
                 while ($rowServ = $stmt3->fetch(PDO::FETCH_ASSOC)) {

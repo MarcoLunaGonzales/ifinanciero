@@ -30,6 +30,22 @@ try {
   $stmt->bindParam(':nro_version', $nro_version);
   $stmt->bindParam(':fecha_inicio', $fecha_inicio);
   $stmt->execute();
+  
+  // Seguimiento
+  $cod_mof                = $dbh->lastInsertId();
+  $cod_etapa              = 0;
+  $cod_personal           = empty($_SESSION["globalUser"]) ? $_GET['q'] : $_SESSION["globalUser"];
+  $cod_seguimiento_estado = 0;
+  $fecha                  = date('Y-m-d H:i:s');
+  $observacion            = "";
+  $detalle_descriptivo    = "";
+  $sql = "INSERT INTO mof_aprobacion_seguimiento (cod_mof,cod_etapa,cod_personal,cod_seguimiento_estado,fecha,observacion,detalle_descriptivo) 
+          VALUES ($cod_mof, $cod_etapa, $cod_personal, $cod_seguimiento_estado, '$fecha', '$observacion', '$detalle_descriptivo')";
+//   echo $sql;
+//   exit;
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+
 	echo json_encode(array(
 		'message' => 'Se inicializó la aprobación de manual correctamente.',
 		'status'  => true

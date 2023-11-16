@@ -3,6 +3,7 @@
 require_once 'conexion.php';
 require_once 'configModule.php'; //configuraciones
 require_once 'styles.php';
+date_default_timezone_set('America/La_Paz');
 
 $dbh = new Conexion();
 // Credenciales de INTRANET
@@ -13,14 +14,14 @@ if (isset($q)) {
     $accesos_externos = "?q=" . $q;
 }
 
-$globalAdmin = '';
+$globalUsuario = '';
 $globalArea  = '';
 $globalCargo = '';
 
 if (empty($q)) {
-    $globalAdmin = $_SESSION["globalAdmin"];
-    $globalArea  = $_SESSION["globalArea"];
-    $globalCargo = $_SESSION["globalCargo"];
+    $globalUsuario = $_SESSION["globalUser"];
+    $globalArea    = $_SESSION["globalArea"];
+    $globalCargo   = $_SESSION["globalCargo"];
 } else {
     $sql = "SELECT p.codigo, p.cod_area, p.cod_cargo
             FROM personal p
@@ -31,10 +32,30 @@ if (empty($q)) {
     $stmt->execute();
     $registro = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($registro) {
-        $globalAdmin = $registro['codigo'];
-        $globalArea  = $registro['cod_area'];
-        $globalCargo = $registro['cod_cargo'];
+        $globalUsuario = $registro['codigo'];
+        $globalArea    = $registro['cod_area'];
+        $globalCargo   = $registro['cod_cargo'];
     }
+}
+/**
+ * Verificación de asginación de cargo Interino
+ * En caso de encontrar un valor, se adecua al 
+ * cambio del cargo interino asignado
+ */
+$fecha_actual = date('Y-m-d');
+$sql = "SELECT cih.cod_cargo as cargo_interino
+        FROM cargos_interinos_historicos cih
+        WHERE cih.cod_personal = '$globalUsuario'
+        AND cih.fecha_inicio <= '$fecha_actual'
+        AND cih.fecha_fin >= '$fecha_actual'
+        AND cih.estado = 1
+        LIMIT 1";
+$stmt = $dbh->prepare($sql);
+$stmt->bindParam(':codigo', $q, PDO::PARAM_STR);
+$stmt->execute();
+$registro = $stmt->fetch(PDO::FETCH_ASSOC);
+if ($registro) {
+  $globalCargo = $registro['cargo_interino'];
 }
 
 /**

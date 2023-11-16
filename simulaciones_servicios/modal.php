@@ -800,7 +800,7 @@
                        <label class="col-sm-2 col-form-label">Oficina Servicio</label>
                        <div class="col-sm-7">
                         <div class="form-group">
-                          <select class="selectpicker form-control form-control-sm"  name="oficina_servicio" id="oficina_servicio" data-style="btn btn-warning" required>
+                          <select class="selectpicker form-control form-control-sm"  name="oficina_servicio" id="oficina_servicio" data-style="btn btn-warning" required <?= $cod_estadosimulacion == 5 ? "disabled" : ""; ?>>
                             <!--<option disabled selected="selected" value="">Cliente</option>-->
                                 <?php
                                  $stmt = $dbh->prepare("SELECT codigo, nombre, abreviatura FROM unidades_organizacionales where cod_estado=1 and centro_costos=1 order by 2");
@@ -864,7 +864,12 @@
                                   $tituloTipoServ="";
                                   $indexOb=0;
                                   //  $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=$plantilla_servicio and vigente=1 order by 2"); // Versión antigua
-                                  $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre FROM cla_servicios WHERE codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1 ORDER BY 1");
+                                  // $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre FROM cla_servicios WHERE codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1 ORDER BY 1");
+                                  $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre 
+                                                      FROM cla_servicios 
+                                                      WHERE (codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1) 
+                                                      OR (codigo_n2 = '$idTipoServicioX') 
+                                                      ORDER BY 1");
                                   $stmt->execute();
                                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                     $codigoX=$row['codigo_n2'];
@@ -961,7 +966,7 @@
                         <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
                         <div class="col-sm-7">
                           <div class="form-group">
-                            <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);">       
+                            <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);" <?= $cod_estadosimulacion == 5 ? "disabled" : ""; ?>>       
                               <option value="">SELECCIONE TIPO DE SERVICIO</option>
                                   <?php
                                   $plantilla_servicio = '';
@@ -973,7 +978,12 @@
                                   $tituloTipoServ="";
                                   $indexOb=0;
                                   //  $stmt = $dbh->prepare("SELECT DISTINCT codigo_n2,descripcion_n2 from cla_servicios where codigo_n1=$plantilla_servicio and vigente=1 order by 2"); // Versión antigua
-                                  $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre FROM cla_servicios WHERE codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1 ORDER BY 1");
+                                  // $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre FROM cla_servicios WHERE codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1 ORDER BY 1");
+                                  $stmt = $dbh->prepare("SELECT DISTINCT(codigo_n2), CONCAT(abreviatura_n2, ' - ',descripcion_n2) as nombre 
+                                                  FROM cla_servicios 
+                                                  WHERE (codigo_n1=$plantilla_servicio AND vigente = 1 AND Aprobado = 1) 
+                                                  OR (codigo_n2 = '$idTipoServicioX') 
+                                                  ORDER BY 1");
                                   $stmt->execute();
                                     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                     $codigoX=$row['codigo_n2'];
@@ -1080,7 +1090,7 @@
                         
                       
                       <!-- Nuevo campos de NORMAS -->
-                      <div class="row">
+                      <div class="row seleccion_normas" <?= ($codigoPlan == 3) ? "" : "style='display:none;'"?>>
                           <label class="col-sm-2 col-form-label">Normas Nacionales:</label>
                           <div class="col-sm-7">
                               <div class="form-group">
@@ -1103,7 +1113,7 @@
                               </div>
                           </div>
                       </div>
-                      <div class="row">
+                      <div class="row seleccion_normas" <?= ($codigoPlan == 3) ? "" : "style='display:none;'"?>>
                           <label class="col-sm-2 col-form-label">Normas Internacionales:</label>
                           <div class="col-sm-7">
                               <div class="form-group">
@@ -1126,7 +1136,7 @@
                               </div>
                           </div>
                       </div>
-                      <div class="row">
+                      <div class="row seleccion_normas" <?= ($codigoPlan == 3) ? "" : "style='display:none;'"?>>
                           <label class="col-sm-2 col-form-label">Otras Normas</label>
                           <div class="col-sm-9">                     
                               <div class="form-group" style="border-bottom: 1px solid #CACFD2">       

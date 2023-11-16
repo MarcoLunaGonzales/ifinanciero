@@ -557,7 +557,7 @@ $detalle_cod_cliente = empty($_POST["idVentaNormas_a".'1']) ? '' : $_POST["idVen
                                             $stmt = $dbh->prepare($queryPr);
                                             $stmt->execute();
                                         }else{
-                                            $queryPr="SELECT d.codigo,d.cod_claservicio,d.descripcion_alterna,d.cantidad,d.precio from solicitudes_facturaciondetalle d where d.tipo_item=1 and d.cod_solicitudfacturacion=$cod_facturacion ORDER BY d.codigo";
+                                            $queryPr="SELECT d.codigo,d.cod_claservicio,d.descripcion_alterna,d.cantidad,d.precio,d.cod_curso from solicitudes_facturaciondetalle d where d.tipo_item=1 and d.cod_solicitudfacturacion=$cod_facturacion ORDER BY d.codigo";
                                             // echo $queryPr;
                                              $stmt = $dbh->prepare($queryPr);
                                             $stmt->execute();
@@ -584,7 +584,7 @@ $detalle_cod_cliente = empty($_POST["idVentaNormas_a".'1']) ? '' : $_POST["idVen
                                                 $descripcion_alternaX=nameNorma($idNorma,$catalogo);
                                                 $montoPre=number_format($montoPre,2,".","");
                                             }else{
-                                                $codigoPre=0;
+                                                $codigoPre=$rowPre['cod_curso'];
                                                 $codCS=$rowPre['cod_claservicio'];
                                                 $tipoPre=descripcionClaServicio($codCS);
                                                 $cantidadPre=$rowPre['cantidad'];
@@ -606,7 +606,7 @@ $detalle_cod_cliente = empty($_POST["idVentaNormas_a".'1']) ? '' : $_POST["idVen
                                                 <input type="hidden" id="importe<?=$iii?>" name="importe<?=$iii?>" value="<?=$montoPre?>">
 
                                                 <!-- aqui se captura los servicios activados -->
-                                                <input type="hidden" id="cod_serv_tiposerv_a<?=$iii?>" name="cod_serv_tiposerv_a<?=$iii?>">
+                                                <input type="hidden" id="cod_serv_tiposerv_a<?=$iii?>" name="cod_serv_tiposerv_a<?=$iii?>" value="<?=$codigoPre?>">
                                                 <input type="hidden" id="servicio_a<?=$iii?>" name="servicio_a<?=$iii?>">
                                                 <input type="hidden" id="cantidad_a<?=$iii?>" name="cantidad_a<?=$iii?>">
                                                 <input type="hidden" id="importe_a<?=$iii?>" name="importe_a<?=$iii?>">

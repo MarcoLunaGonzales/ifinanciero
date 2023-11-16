@@ -15,9 +15,18 @@ if (isset($q)) {
     $accesos_externos = "?q=" . $q;
 }
 
+$fecha_actual = date('Y-m-d');
 $stmt = $dbh->prepare("SELECT
                         c.codigo,
-                        UPPER(c.nombre) AS nombre,
+                        CONCAT(UPPER(c.nombre), ' ',
+                        CASE
+                            WHEN (SELECT cih.codigo 
+                                  FROM cargos_interinos_historicos cih 
+                                  WHERE cih.cod_cargo = c.codigo
+                                  AND cih.estado = 1 
+                                  AND '$fecha_actual' BETWEEN cih.fecha_inicio AND cih.fecha_fin) IS NOT NULL THEN 'a.i.'
+                            ELSE ''
+                        END) AS nombre,
                         c.objetivo,
                         c.abreviatura,
                         c.cod_tipo_cargo,
@@ -245,6 +254,11 @@ $stmt->bindColumn('etapa_nombre', $etapa_nombre);
                                 <!-- Control de version de cambios -->
                                 <a href='index.php?opcion=listaControlVersiones&codigo=<?=$codigo;?>' class="btn btn-primary" title="Control de Versión">
                                   <i class="material-icons">track_changes</i>
+                                </a>
+                                
+                                <!-- Historial Interinato -->
+                                <a href='index.php?opcion=listaInterinoHistorial&codigo=<?=$codigo;?>' class="btn btn-blue" title="Historial Interino">
+                                  <i class="material-icons">schedule</i>
                                 </a>
                                 
                                 <?php

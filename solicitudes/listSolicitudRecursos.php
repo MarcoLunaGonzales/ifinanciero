@@ -8,8 +8,8 @@ $globalArea=$_SESSION["globalArea"];
 $dbh = new Conexion();
 
 
- error_reporting(E_ALL);
- ini_set('display_errors', '1');
+error_reporting(E_ALL);
+ini_set('display_errors',1);
 
  
 
@@ -530,10 +530,27 @@ $stmt->bindColumn('idServicio', $idServicioX);
 
 
 <?php
+// Nuevos campos de Filtro
+$fil_proveedor   = !empty($_GET['fil_proveedor']) ? (" AND sr.codigo IN ( SELECT d.cod_solicitudrecurso FROM solicitud_recursosdetalle d JOIN af_proveedores p ON d.cod_proveedor = p.codigo WHERE p.codigo = '".$_GET['fil_proveedor']."') ") : "";
+$fil_fecha       = (!empty($_GET['fil_fechaInicio']) && !empty($_GET['fil_fechaFin'])) ? (" AND sr.fecha BETWEEN '".$_GET['fil_fechaInicio']."' AND '".$_GET['fil_fechaFin']."'") : "";
 // Preparamos
-$stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
-  from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
-  where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (5,8,9)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
+$sqlSR = "SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
+      from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+      where sr.cod_estadoreferencial=1 $sqlServicio $sqlSimCosto "; 
+
+if (!empty($fil_fecha) || !empty($fil_proveedor)) {
+  $sqlSR .= (!empty($fil_proveedor) ? ($fil_proveedor) : "");
+  $sqlSR .= (!empty($fil_fecha) ? $fil_fecha : "");
+} else {
+  $sqlSR .= " AND (sr.cod_estadosolicitudrecurso in (5,8,9))  AND sr.cod_personal = '$globalUser'";
+}
+$sqlSR .= " ORDER BY sr.numero DESC";
+
+$stmt = $dbh->prepare($sqlSR);
+// Preparamos
+// $stmt = $dbh->prepare("SELECT sr.*,es.nombre as estado,u.abreviatura as unidad,a.abreviatura as area 
+//   from solicitud_recursos sr join estados_solicitudrecursos es on sr.cod_estadosolicitudrecurso=es.codigo join unidades_organizacionales u on sr.cod_unidadorganizacional=u.codigo join areas a on sr.cod_area=a.codigo 
+//   where sr.cod_estadoreferencial=1 and (sr.cod_estadosolicitudrecurso in (5,8,9)) $sqlServicio $sqlSimCosto and sr.cod_personal='$globalUser' order by sr.numero desc");
 // Ejecutamos
 $stmt->execute();
 // bindColumn
@@ -561,13 +578,75 @@ $stmt->bindColumn('idServicio', $idServicioX);
                 </div>
                 <h4 class="card-title">Histórico de Solicitudes</h4>
               </div>
+              <!-- Inicio Sección de Filtro de Datos -->
+              <div class="card-body pb-0">
+                <form method="GET">
+                  <!-- Parámetros existentes -->
+                  <input type="hidden" name="opcion" value="listSolicitudRecursos">
+                  <?php
+                    if(isset($GET['q']) || isset($GET['u']) || isset($GET['v']) || isset($GET['s'])){
+                  ?>
+                    <input type="hidden" name="q" value="<?= $GET['q'] ?>">
+                    <input type="hidden" name="u" value="<?= $GET['u'] ?>">
+                    <input type="hidden" name="v" value="<?= $GET['v'] ?>">
+                    <input type="hidden" name="s" value="<?= $GET['s'] ?>">
+                  <?php
+                    }
+                  ?>
+
+                  <div class="row">
+                    <div class="col-md-1 form-group">
+                      <label for="fechaInicio"><b>Fecha inicio:</b></label>
+                    </div>
+                    <div class="col-md-2 form-group">
+                      <input type="date" id="fil_fechaInicio" name="fil_fechaInicio" class="form-control" value="<?= empty($_GET['fil_fechaInicio']) ? '' : $_GET['fil_fechaInicio']?>">
+                    </div>
+
+                    <div class="col-md-1 form-group">
+                      <label for="fechaFin"><b>Fecha fin:</b></label>
+                    </div>
+                    <div class="col-md-2 form-group">
+                      <input type="date" id="fil_fechaFin" name="fil_fechaFin" class="form-control" value="<?= empty($_GET['fil_fechaFin']) ? '' : $_GET['fil_fechaFin']?>">
+                    </div>
+
+                    <div class="col-md-1 form-group">
+                      <label for="proveedor"><b>Proveedor:</b></label>
+                    </div>
+                    <div class="col-md-3 form-group">
+                      <select name="fil_proveedor" id="fil_proveedor" data-style="btn btn-info" class="selectpicker form-control form-control-sm" data-show-subtext="true" data-live-search="true">
+                        <option value="">Todos</option>
+                        <?php
+                          $fil_cod_proveedor = empty($_GET['fil_proveedor']) ? '' : $_GET['fil_proveedor'];
+                          $sqlProv = "SELECT p.codigo as provCodigo, p.nombre as provNombre from af_proveedores p where p.cod_estado = 1";
+                          $stmtProv = $dbh->prepare($sqlProv);
+                          // Ejecutamos
+                          $stmtProv->execute();
+                          // bindColumn
+                          $stmtProv->bindColumn('provCodigo', $provCodigo);
+                          $stmtProv->bindColumn('provNombre', $provNombre);
+                        
+                          while ($rowProv = $stmtProv->fetch(PDO::FETCH_BOUND)) {
+                        ?>
+                        <option value="<?= $provCodigo ?>" <?= $provCodigo == $fil_cod_proveedor ? 'selected' : ''?>><?= $provNombre ?></option>
+                        <?php
+                          }
+                        ?>
+                      </select>
+                    </div>
+
+                    <div class="col-md-2 form-group">
+                      <button type="submit" class="btn btn-primary btn-block mt-1">Filtrar</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!-- Fin Sección de Filtro de Datos -->
 
               <div class="card-body">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                 <i class="material-icons">close</i>
               </button>
               <div class="row" id="div_cabecera" >
-                    
               </div>
                 <table class="table table-condesed" id="tablePaginator100">
                       <thead>
@@ -705,7 +784,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                    <?php 
                                  }
                                  ?>
-                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item">
+                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&v=<?=$v?>" class="dropdown-item" target="_blank">
                                     <i class="material-icons text-warning">bar_chart</i> Ver Solicitud
                                  </a>
                              <?php
@@ -720,7 +799,7 @@ $stmt->bindColumn('idServicio', $idServicioX);
                                    <?php 
                                  }
                                  ?>
-                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item">
+                                 <a href="<?=$urlVer;?>?cod=<?=$codigo;?>" class="dropdown-item" target="_blank">
                                     <i class="material-icons text-warning">bar_chart</i> Ver Solicitud
                                  </a>
                              <?php  

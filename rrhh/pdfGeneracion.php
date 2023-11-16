@@ -17,7 +17,7 @@ class CustomTCPDF extends TCPDF {
         $this->SetY(1); // Posición vertical para el encabezado
 
         // HTML del encabezado personalizado
-        $titulo_cargo = rtrim(empty($resp_cargo['nombre'])?'':$resp_cargo['nombre']);
+        $titulo_cargo = rtrim(empty($resp_cargo['nombre']) ? '' : $resp_cargo['nombre']);
         $header = '<table style="border: 1px solid white; margin-left: ' . $leftMargin . 'mm; margin-right: ' . $rightMargin . 'mm;">
                         <tr>
                             <td style="border: 1px solid white; width: 88%;">
@@ -128,7 +128,7 @@ $stmt->execute();
 $resp_control_cambio = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // * Cargo
-$sql = "SELECT c.codigo, UPPER(c.nombre) as nombre, c.abreviatura, c.objetivo, c.cod_padre, tc.nombre as nivel_cargo, ca.cod_areaorganizacion as cod_area
+$sql = "SELECT c.codigo, UPPER(c.nombre) as nombre, c.abreviatura, c.objetivo, c.cod_padre, tc.nombre as nivel_cargo, ca.cod_areaorganizacion as cod_area, c.cod_tipo_cargo
         FROM cargos c
         LEFT JOIN tipos_cargos_personal tc ON tc.codigo = c.cod_tipo_cargo
         LEFT JOIN cargos_areasorganizacion ca ON ca.cod_cargo = c.codigo
@@ -188,7 +188,15 @@ if(empty($resp_manual_aprobacion)){
     $resp_manual_seguimiento = [];
 }else{
     $sql = "SELECT mas.codigo, mas.cod_manual, mas.cod_etapa, CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as personal, mas.cod_seguimiento_estado,
-        DATE_FORMAT(mas.fecha,'%d-%m-%Y') as fecha, mas.observacion, mas.detalle_descriptivo, c.nombre as cargo, COALESCE(mae.descripcion, 'ELABORADO POR:') as nombre_etapa
+        DATE_FORMAT(mas.fecha,'%d-%m-%Y') as fecha, mas.observacion, mas.detalle_descriptivo, CONCAT(c.nombre, ' ',
+                CASE
+                    WHEN (SELECT cih.codigo 
+                          FROM cargos_interinos_historicos cih 
+                          WHERE cih.cod_cargo = c.codigo
+                          AND cih.estado = 1 
+                          AND DATE(mas.fecha) BETWEEN cih.fecha_inicio AND cih.fecha_fin) IS NOT NULL THEN 'a.i.'
+                    ELSE ''
+                END) as cargo, COALESCE(mae.descripcion, 'ELABORADO POR:') as nombre_etapa
         FROM manuales_aprobacion_seguimiento mas
         LEFT JOIN personal p ON p.codigo = mas.cod_personal
         LEFT JOIN cargos c ON c.codigo = p.cod_cargo
@@ -228,25 +236,32 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $resp_autoridadesCargos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// * AREAS nivel 2 del Cargo seleccionado 
-$sql = "SELECT a.codigo, a.cod_padre
-        FROM areas a
-        WHERE a.codigo = '".$resp_cargo['cod_area']."'";
-$stmt = $dbh->prepare($sql);
-$stmt->execute();
-$registro = $stmt->fetch(PDO::FETCH_ASSOC);
+if($resp_cargo['cod_tipo_cargo'] == 1){
+    $cod_area_nivel2 = 847;
+}else{
+    // * AREAS nivel 2 del Cargo seleccionado 
+    $sql = "SELECT a.codigo, a.cod_padre
+    FROM areas a
+    WHERE a.codigo = '".$resp_cargo['cod_area']."'";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+    $registro = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$cod_area_nivel2 = '';
-// echo "hola";
-// exit;
-if ($registro) {
-    $cod_direccion = 847;
-    if($registro['codigo'] == $cod_direccion || $registro['cod_padre'] == $cod_direccion){
-        // Primer Nivel
-        $cod_area_nivel2 = 847;
-    }else{
-        // Niveles Inferiores
-        $cod_area_nivel2 = buscarArea($resp_cargo['cod_area']);
+    $cod_area_nivel2 = '';
+    // echo "hola";
+    // exit;
+    if ($registro) {
+        $cod_direccion = 847;
+        if($registro['codigo'] == $cod_direccion){
+            // Primer Nivel
+            $cod_area_nivel2 = 847;
+        }else if($registro['cod_padre'] == $cod_direccion){
+            // Segundo Nivel
+            $cod_area_nivel2 = $resp_cargo['cod_area'];
+        }else{
+            // Niveles Inferiores
+            $cod_area_nivel2 = buscarArea($resp_cargo['cod_area']);
+        }
     }
 }
 $sql = "SELECT a.codigo, a.nombre, a.abreviatura
