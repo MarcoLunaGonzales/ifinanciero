@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * 2° Segunda versión de verificación de Normalización, con la tabla Suscripciones
+ */
+
 date_default_timezone_set('America/La_Paz');
 
 class Conexion extends PDO {      

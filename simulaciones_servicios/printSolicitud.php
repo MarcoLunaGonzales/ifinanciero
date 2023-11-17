@@ -150,7 +150,11 @@ $html.=  '<header class="header">'.
               </tr>                    
             </thead>
             <tbody>';
-            $sqlA="SELECT *,(select t.Codigo from cla_servicios t where t.idclaservicio=cod_claservicio) as Codigo_alterno  from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
+            $sqlA="SELECT *,(select t.Codigo from cla_servicios t where t.idclaservicio=cod_claservicio) as Codigo_alterno,  
+            CASE 
+                WHEN fecha_inicio IS NOT NULL THEN CONCAT(descripcion_alterna, ' ', DATE_FORMAT(fecha_inicio, '%d/%m/%Y'), ' - ', DATE_FORMAT(fecha_fin, '%d/%m/%Y'))
+                ELSE descripcion_alterna
+            END AS descripcion_final from solicitudes_facturaciondetalle where cod_solicitudfacturacion=$codigo_facturacion";
             $stmt2 = $dbh->prepare($sqlA);                                
             $stmt2->execute();
             $index=1;
@@ -170,7 +174,7 @@ $html.=  '<header class="header">'.
                 <td  class="text-center"><b>'.$index.'</b></td>
                 <td  class="text-center">'.$abrev_area.'</td>
                 <td  class="text-left" width="15%">'.$codigo_alterno_detalle.'</td>
-                <td  class="text-left"><small>'.$row2["descripcion_alterna"].'</small></td>
+                <td  class="text-left"><small>'.$row2["descripcion_final"].'</small></td>
                 <td  class="text-right">'.formatNumberDec($row2["cantidad"]).'</td>
                 <td  class="text-right">'.number_format($precio_unitario,2).'</td>
                 <td  class="text-right">'.formatNumberDec($precio_unitario*$row2["cantidad"]).'</td>
