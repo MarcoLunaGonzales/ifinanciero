@@ -548,7 +548,7 @@ if(isset($_GET['q'])){
                                             <i class="material-icons"><?=$iconEdit;?></i>
                                           </a>
                                         <?php
-                                        }else if($cod_area == 12 && $cod_tipoobjeto == 715){
+                                        }else if($cod_area == 12 && $cod_tipoobjeto == 5051){
                                         // EDICIÓN DE SF AFILIACIONES
                                         ?>
                                           <a title="Editar Solicitud Facturación" href='?opcion=register_solicitudfacturacion_cuotas&cod_f=<?=$codigo_facturacion?>' class="btn btn-success">
