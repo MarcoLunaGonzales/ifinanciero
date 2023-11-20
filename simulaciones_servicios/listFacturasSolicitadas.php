@@ -548,18 +548,14 @@ if(isset($_GET['q'])){
                                             <i class="material-icons"><?=$iconEdit;?></i>
                                           </a>
                                         <?php
-                                        }else
-                                        
-                                        if($cod_area == 12 && $cod_tipoobjeto == 715){
+                                        }else if($cod_area == 12 && $cod_tipoobjeto == 5051){
                                         // EDICIÓN DE SF AFILIACIONES
                                         ?>
                                           <a title="Editar Solicitud Facturación" href='?opcion=register_solicitudfacturacion_cuotas&cod_f=<?=$codigo_facturacion?>' class="btn btn-success">
                                             <i class="material-icons"><?=$iconEdit;?></i>
                                           </a>
                                         <?php
-                                        }else
-
-                                        {
+                                        }else{
                                         ?>
                                           <a title="Editar Solicitud Facturación" href='<?=$urlEditSolicitudfactura;?>&codigo_s=<?=$codigo_facturacion?>' class="btn btn-success">
                                             <i class="material-icons"><?=$iconEdit;?></i>
@@ -632,7 +628,7 @@ if(isset($_GET['q'])){
 
                       <a href="<?=$urlSolicitudfactura_estudiante;?>&q=<?=$q?>&u=<?=$u?>&r=<?=$v?>&s=<?=$s?>" class="btn btn-success">SF Estudiantes</a>
                       <a href="<?=$urlSolicitudfactura_empresa;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&r=<?=$v?>" class="btn btn-danger">SF Empresas</a>     
-                      <a href="<?=$urlSolicitudfactura_cuota;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&r=<?=$v?>" class="btn btn-default">SF Cuotas</a>                    
+                      <a href="<?=$urlSolicitudfactura_cuota;?>&q=<?=$q?>&s=<?=$s?>&u=<?=$u?>&r=<?=$v?>" class="btn btn-default">SF Afiliaciones</a>
                       <?php 
                     }else{?>
                       <a href="<?=$urlRegister_solicitudfacturacion_manual;?>" class="btn btn-primary">SF Manual</a>

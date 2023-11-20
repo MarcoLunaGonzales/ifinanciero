@@ -1,9 +1,5 @@
 <?php
 
-/**
- * 1° Primera versión de verificación de Normalización
- */
-
 date_default_timezone_set('America/La_Paz');
 
 class Conexion extends PDO {      
@@ -29,13 +25,14 @@ class Conexion extends PDO {
  * @param ArrayFacturaSuscripcion
  * @return Bolean Codigo de Factura Venta
  */
-function buscarArrayFactura($array, $cod_facturaventa) {
+function buscarArrayFactura($array, $cod_factura, $cod_facturadetalle, $cod_solicitudfacturacion) {
     foreach ($array as $elemento) {
-        if ($elemento['codigo'] == $cod_facturaventa) {
-            return true;
+        // if ($elemento['cod_factura'] == $cod_factura && $elemento['cod_facturadetalle'] == $cod_facturadetalle && $elemento['cod_solicitudfacturacion'] == $cod_solicitudfacturacion) {
+        if ($elemento['cod_facturadetalle'] == $cod_facturadetalle) {
+            return [$elemento['IdVentaNormas'], $elemento['norma'], $elemento['descripcion_alterna']];
         }
     }
-    return false;
+    return [];
 }
 // Verificar Tabla Suscripciones
 function buscarSuscripcion($cod_solicitudfacturacion){
@@ -43,9 +40,9 @@ function buscarSuscripcion($cod_solicitudfacturacion){
     $sql = "SELECT fst.codigo, fst.cod_factura 
             FROM facturas_suscripcionestienda fst
             WHERE fst.cod_solicitudfacturacion = '$cod_solicitudfacturacion'";
-    $stmtSuscripcion = $dbh->prepare($sql);
-    $stmtSuscripcion->execute();
-    $filasEncontradas = $stmtSuscripcion->rowCount();
+    $stmtEmpate = $dbh->prepare($sql);
+    $stmtEmpate->execute();
+    $filasEncontradas = $stmtEmpate->rowCount();
 
     if ($filasEncontradas > 0) {
         return true;
@@ -78,43 +75,88 @@ $mostrar      = empty($_GET['mostrar']) ? 1 : $_GET['mostrar'];
 $claServicio  = empty($_GET['cla_servicio']) ? "" : $_GET['cla_servicio'];
 
 $dbh = new Conexion();
-// FACTURA SUSCRIPCIÓN
-$sql = "SELECT fv.codigo, fv.nro_factura, sfd.codigo as cod_facturadetalle, fv.fecha_factura, fv.razon_social, fv.nit, vn.IdVentaNormas, vn.Catalogo, vn.idNorma,
-        CASE
-        WHEN vn.Catalogo='N' THEN 
-            (select CONCAT(v.abreviatura,' ',v.nombre) from v_normas v where v.codigo=sus.id_norma)
-        WHEN vn.Catalogo='I' THEN 
-            (select CONCAT_WS(vi.abreviatura,' ',vi.nombre) from v_normas_int vi where vi.codigo=sus.id_norma)
-        WHEN vn.Catalogo='ISO' THEN
-        (SELECT CONCAT(i.reference,' ',t.value) FROM ibnorca_entidades.isos i 
-            INNER JOIN ibnorca_entidades.iso_titles t ON i.iso_id = t.iso_id AND t.lang = 'en' WHERE i.iso_id = sus.id_norma)
-        ELSE ''
-        END as nombrenorma, fv.cod_solicitudfacturacion
-        from solicitudes_facturacion sf, solicitudes_facturaciondetalle sfd, facturas_suscripcionestienda sus, facturas_venta fv, ibnorca.ventanormas vn
-        where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estadosolicitudfacturacion<>2 and 
-        sfd.codigo=sus.cod_facturadetalle and fv.cod_solicitudfacturacion=sf.codigo and vn.idSolicitudfactura=sf.codigo and vn.idNorma=sus.id_norma 
-        AND DATE(fv.fecha_factura) BETWEEN '$fecha_inicio' AND '$fecha_fin'
-        order by fv.codigo ASC"; 
+// FACTURA VENTAS NORMAS EMPATE (JUAN)
+$sql = "SELECT DISTINCT f.codigo AS codigo_factura, f.fecha_factura, f.nro_factura, f.nit, f.razon_social, 
+        if(f.cod_solicitudfacturacion = -100, 'Tienda',NULL) AS Origen 
+        ,f.cod_solicitudfacturacion
+        , v.* 
+        , n.abreviatura AS codigoNorma 
+        , d.codigo AS idFacturaDetalleFinanciero
+        , d.descripcion_alterna 
+        FROM bdifinanciero.facturas_venta f 
+        INNER JOIN ibnorca.ventanormas v ON f.cod_solicitudfacturacion = v.idSolicitudfactura 
+        INNER JOIN bdifinanciero.v_normas n ON n.codigo=v.idNorma 
+        LEFT JOIN bdifinanciero.facturas_ventadetalle d ON f.codigo = d.cod_facturaventa 
+        and d.descripcion_alterna LIKE (CONCAT('%',n.abreviatura COLLATE utf8_general_ci,'%'))
+        WHERE 
+        date(f.fecha_factura) BETWEEN '$fecha_inicio' AND '$fecha_fin'  
+        and f.cod_estadofactura<>2 
+        and f.cod_area in (12) 
+        and f.cod_solicitudfacturacion <> -100 
+        and v.fecha LIKE ('%2023%')
+        and v.Catalogo = 'N' 
+        GROUP BY n.abreviatura, d.codigo 
+        UNION ALL 
+        SELECT DISTINCT f.codigo AS codigo_factura, f.fecha_factura, f.nro_factura, f.nit, f.razon_social, 
+        if(f.cod_solicitudfacturacion = -100, 'Tienda',NULL) AS Origen 
+        ,f.cod_solicitudfacturacion
+        , v.* 
+        , n.abreviatura AS codigoNorma 
+        , d.codigo AS idFacturaDetalleFinanciero
+        , d.descripcion_alterna 
+        FROM bdifinanciero.facturas_venta f 
+        INNER JOIN ibnorca.ventanormas v ON f.cod_solicitudfacturacion = v.idSolicitudfactura 
+        INNER JOIN bdifinanciero.v_normas_int n ON n.codigo=v.idNorma 
+        LEFT JOIN bdifinanciero.facturas_ventadetalle d ON f.codigo = d.cod_facturaventa 
+        and d.descripcion_alterna LIKE (CONCAT('%',n.abreviatura COLLATE utf8_general_ci,'%'))
+        WHERE 
+        date(f.fecha_factura) BETWEEN '$fecha_inicio' AND '$fecha_fin'  
+        and f.cod_estadofactura<>2 
+        and f.cod_area in (12) 
+        and f.cod_solicitudfacturacion <> -100 
+        and v.fecha LIKE ('%2023%')
+        and v.Catalogo = 'I' 
+        GROUP BY n.abreviatura, d.codigo 
+        UNION ALL 
+        SELECT DISTINCT f.codigo AS codigo_factura, f.fecha_factura, f.nro_factura, f.nit, f.razon_social, 
+        if(f.cod_solicitudfacturacion = -100, 'Tienda',NULL) AS Origen 
+        ,f.cod_solicitudfacturacion
+        , v.* 
+        , n.reference AS codigoNorma 
+        , d.codigo AS idFacturaDetalleFinanciero
+        , d.descripcion_alterna 
+        FROM bdifinanciero.facturas_venta f 
+        INNER JOIN ibnorca.ventanormas v ON f.cod_solicitudfacturacion = v.idSolicitudfactura 
+        INNER JOIN ibnorca_entidades.isos n ON n.iso_id=v.idNorma 
+        LEFT JOIN bdifinanciero.facturas_ventadetalle d ON f.codigo = d.cod_facturaventa 
+        and d.descripcion_alterna LIKE (CONCAT('%',n.reference,'%'))
+        WHERE 
+        date(f.fecha_factura) BETWEEN '$fecha_inicio' AND '$fecha_fin' 
+        and f.cod_estadofactura<>2 
+        and f.cod_area in (12) 
+        and f.cod_solicitudfacturacion <> -100 
+        and v.fecha LIKE ('%2023%')
+        and v.Catalogo = 'ISO' 
+        GROUP BY n.reference, d.codigo 
+        ORDER BY fecha_factura "; 
 // echo $sql;
-$stmtSuscripcion = $dbh->prepare($sql);
-$stmtSuscripcion->execute();
+// exit;
 
-$resultadosFacturaSuscripcion = array();
-while ($row = $stmtSuscripcion->fetch(PDO::FETCH_ASSOC)) {
+$stmtEmpate = $dbh->prepare($sql);
+$stmtEmpate->execute();
+
+$resultadoEmpate = array();
+while ($row = $stmtEmpate->fetch(PDO::FETCH_ASSOC)) {
     $objeto = array(
-        "codigo"             => $row['codigo'],
-        "nro_factura"        => $row['nro_factura'],
-        "cod_facturadetalle" => $row['cod_facturadetalle'],
-        "fecha_factura"      => $row['fecha_factura'],
-        "razon_social"       => $row['razon_social'],
-        "nit"                => $row['nit'],
-        "Catalogo"           => $row['Catalogo'],
-        "idNorma"            => $row['idNorma'],
-        "nombrenorma"        => $row['nombrenorma'],
-        "IdVentaNormas"      => $row['IdVentaNormas'],
-        "cod_solicitudfacturacion" => $row['cod_solicitudfacturacion']
+        "cod_factura"              => $row['codigo_factura'],
+        "cod_facturadetalle"       => $row['idFacturaDetalleFinanciero'],
+        "nro_factura"              => $row['nro_factura'],
+        "cod_solicitudfacturacion" => $row['cod_solicitudfacturacion'],
+        "IdVentaNormas"            => $row['IdVentaNormas'],
+        "norma"                    => $row['codigoNorma'],
+        "descripcion_alterna"      => $row['descripcion_alterna'],
     );
-    $resultadosFacturaSuscripcion[] = $objeto;
+    $resultadoEmpate[] = $objeto;
 }
 
 // FACTURAS VENTAS
@@ -133,9 +175,7 @@ $sql = "SELECT fv.fecha_factura,fv.codigo,fv.nro_factura,f.codigo as codfacturad
         ." and fv.cod_solicitudfacturacion != '-100'
         AND DATE(fv.fecha_factura) BETWEEN '$fecha_inicio' AND '$fecha_fin'
         order by fv.fecha_factura"; 
-// echo $sql;
-// exit;
-
+// echo $sql; exit;
 $stmtFactura = $dbh->prepare($sql);
 $stmtFactura->execute();
 
@@ -303,7 +343,7 @@ $stmtFactura->execute();
 
     <table class="table">
         <thead class="sticky-header">
-            <tr>
+            <!-- <tr>
                 <th>#</th>
                 <th>Código FV</th>
                 <th>Número de Factura</th>
@@ -324,6 +364,13 @@ $stmtFactura->execute();
                 <th>Código de SF</th>
                 <th>Verificación<br> Factura / Norma</th>
                 <th>Tabla Suscripcion</th>
+                <th>VN IdVentaNormas</th>
+                <th>VN Norma</th>
+                <th>VN DescripciónAlterna</th>
+            </tr> -->
+            <tr>
+                <th>Código de FV Detalle</th>
+                <th>VN IdVentaNormas</th>
             </tr>
         </thead>
         <tbody>
@@ -335,8 +382,12 @@ $stmtFactura->execute();
                 $nro_no_encontrado = 0;
                 $nro = 0;
                 while ($rowFactura = $stmtFactura->fetch(PDO::FETCH_ASSOC)) {
+                    $vn                 = buscarArrayFactura($resultadoEmpate, $rowFactura['codigo'], $rowFactura['codfacturadetalle'], $rowFactura['cod_solicitudfacturacion']);
+                    $vn_IdVentaNormas       = empty($vn) ? 'AD. Manual' : $vn[0];
+                    $vn_norma               = empty($vn) ? 'AD. Manual' : $vn[1];
+                    $vn_descripcion_alterna = empty($vn) ? 'AD. Manual' : $vn[2];
                     
-                    $facturaValida      = buscarArrayFactura($resultadosFacturaSuscripcion, $rowFactura['codigo']);
+                    $facturaValida      = empty($vn) ? false :true;
                     $idVentaNorma       = buscarVentaNorma($rowFactura['cod_solicitudfacturacion'], $rowFactura['codfacturadetalle']);
                     $facturaValidaNorma = empty($idVentaNorma) ? false : true;
                     $nro_encontrado     = $facturaValida ? ($nro_encontrado + 1) : $nro_encontrado;
@@ -345,7 +396,7 @@ $stmtFactura->execute();
                         $nro++;
             ?>
             <tr class="<?= !$facturaValida ? 'resaltado-rojo' : ''; ?>">
-                <td><?=$nro;?></td>
+                <!-- <td><?=$nro;?></td>
                 <td style="background-color: #c7f4f9;color: #000;"><?= $rowFactura['codigo']; ?></td>
                 <td><?= $rowFactura['nro_factura']; ?></td>
                 <td style="background-color: #c7f4f9;color: #000;"><?= $rowFactura['codfacturadetalle']; ?></td>
@@ -371,7 +422,13 @@ $stmtFactura->execute();
                         $total_importe_neto  += $rowFactura['importe_neto'];
                     }
                 ?>
-                <td class="<?= $verificaSuscripcion ? 'blue' : '' ?>"><?= $verificaSuscripcion ? 'SI' : 'NO'; ?></td>
+                <td class="<?= $verificaSuscripcion ? 'blue' : 'resaltado-rojo' ?>"><?= $verificaSuscripcion ? 'SI' : 'NO'; ?></td>
+                <td><?= $vn_IdVentaNormas; ?></td>
+                <td><?= $vn_norma; ?></td>
+                <td><?= $vn_descripcion_alterna; ?></td> -->
+                
+                <td style="background-color: #c7f4f9;color: #000;"><?= $rowFactura['codfacturadetalle']; ?></td>
+                <td><?= $vn_IdVentaNormas; ?></td>
             </tr>
             <?php 
                     }

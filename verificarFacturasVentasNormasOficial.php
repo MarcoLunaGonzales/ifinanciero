@@ -363,12 +363,13 @@ $stmtFactura->execute();
                 <td class="<?= $facturaValidaNorma ? 'resaltado-verde' : 'resaltado-rojo'; ?>"><b><?=$facturaValidaNorma ? 'Encontrado' : 'No Encontrado';?></b></td>
                 <?php
                     $verificaSuscripcion = buscarSuscripcion($rowFactura['cod_solicitudfacturacion']);
-                    if($verificaSuscripcion){
+                    if($facturaValida){
                         $total_importe_total += $rowFactura['importe_total'];
                         $total_importe_neto  += $rowFactura['importe_neto'];
                     }
                 ?>
-                <td class="<?= $verificaSuscripcion ? 'blue' : '' ?>"><?= $verificaSuscripcion ? $rowFactura['IdVentaNormas'] : '0'; ?></td>
+                <!-- Pinta de color por la suscripción -->
+                <td class="<?= $verificaSuscripcion ? 'blue' : '' ?>"><?= $rowFactura['IdVentaNormas']; ?></td>
             </tr>
             <?php 
                     }

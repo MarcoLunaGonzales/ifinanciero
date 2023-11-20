@@ -12272,4 +12272,31 @@ function enviarCorreoManualCargo($cod_cargo){
         return false;
     }
 }
+/**
+ * Detalle de SR 
+ * # DETALLE
+ * # TIPO DE PAGO
+ */
+function obtieneDetalleSRCorreo($codigoSR){
+    $dbh = new Conexion();
+    /* Prepara Detalle de SR */
+    $sqlDetalle = "SELECT CONCAT('<ul><li>', GROUP_CONCAT(p.nombre, ' - ', srd.detalle SEPARATOR '</li><li>'), '</li></ul>') AS detalles_html,
+            GROUP_CONCAT(DISTINCT tp.nombre SEPARATOR ', ') AS nombres_tipopago
+            FROM solicitud_recursosdetalle srd
+            LEFT JOIN tipos_pagoproveedor tp ON tp.codigo = srd.cod_tipopagoproveedor
+            LEFT JOIN af_proveedores p ON p.codigo = srd.cod_proveedor
+            WHERE srd.cod_solicitudrecurso = '$codigoSR'
+            GROUP BY srd.cod_solicitudrecurso";
+    $stmtDetalle = $dbh->prepare($sqlDetalle);
+    $stmtDetalle->execute();
+    $rowDetalle = $stmtDetalle->fetch(PDO::FETCH_ASSOC);
+    $detalle_extra    = "";
+    if ($rowDetalle) {
+        $detalles_html    = $rowDetalle['detalles_html'];
+        $nombres_tipopago = $rowDetalle['nombres_tipopago'];
+        $detalle_extra    = "<br><b>Detalle:</b><br>$detalles_html<b>Tipo Pago: </b>$nombres_tipopago";
+    }
+    /* FIN SR */
+    return $detalle_extra;
+}
 ?>
