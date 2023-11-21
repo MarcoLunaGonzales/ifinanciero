@@ -158,7 +158,7 @@ $html.=  '<header class="header">'.
                             $cod_area.'<br>'.
 
                         '</td>'.
-                        '<td rowspan="9" align="center">'.
+                        '<td rowspan="8" align="center">'.
                             '<img src="imagenes/'.$imagen.'" style="width: 120px; height: 120px;">'.
                         '</td>'.
                     '</tr>'.
@@ -197,13 +197,7 @@ $html.=  '<header class="header">'.
                         '<td>Email</td>'.
                         
                         '<td >'.$email.'</td>'.
-                    '</tr>'.
-                    '<tr>'.
-                        '<td><b>Nro. Casillero</b></td>'.
-                        
-                        '<td >'.$nro_casillero.'</td>'.
-                    '</tr>'.
-                    
+                    '</tr>'.                    
                     '<tr>'.
                         '<td colspan="3"><br></td>           '.
                     '</tr>'.
@@ -297,6 +291,11 @@ $html.=  '<header class="header">'.
                     '<tr>'.
                         '<td>Codigo Dependiente RC-IVA</td>'.
                         '<td colspan=2>'.$cod_dependiente_rciva.'</td>'.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td>Nro. de Casillero</td>'.
+                        
+                        '<td colspan=2>'.$nro_casillero.'</td>'.
                     '</tr>'.
                     '<tr>'.
                         '<td colspan="3"><br></td>'.
