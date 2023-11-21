@@ -16,7 +16,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 	// session_start();
 	try{
 		$cod_uo_unico=5;
-		$stmtCajaChica = $dbh->prepare("SELECT cod_cliente,cod_unidadorganizacional, cod_area, observaciones, codigo_alterno, razon_social, tipo_solicitud, observaciones_2 from solicitudes_facturacion where codigo=$cod_solicitudfacturacion");
+		$stmtCajaChica = $dbh->prepare("SELECT cod_cliente,cod_unidadorganizacional, cod_area, observaciones, codigo_alterno, razon_social, tipo_solicitud, observaciones_2, cod_tipoobjeto from solicitudes_facturacion where codigo=$cod_solicitudfacturacion");
 	    $stmtCajaChica->execute();
 	    $resultCCD = $stmtCajaChica->fetch();
 	    $cod_uo_solicitud = $resultCCD['cod_unidadorganizacional'];    
@@ -27,6 +27,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 	    $tipo_solicitud = $resultCCD['tipo_solicitud'];
 	    $cod_cliente = $resultCCD['cod_cliente'];
 	    $glosa_factura3=$resultCCD['observaciones_2'];
+	    $cod_tipo_objeto=$resultCCD['cod_tipoobjeto'];
 
 		//datos para el comprobante
 		$globalUser=$_SESSION["globalUser"];
@@ -213,8 +214,6 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 					            $sw_controlador=1;
 							}
 						}
-
-
 						//actualizar glosa comprobante
 			            $codComprobanteDetalleOrigen=$cod_compte_origen;
 			            $tituloEstadoOrigen="";
@@ -229,10 +228,6 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 	                    } 
 
 					}					
-
-
-					
-		            
 				}elseif($cod_tipopago==$cod_tipopago_credito){
 					// $cuenta_auxiliar=obtenerCodigoCuentaAuxiliarProveedorCliente(2,$cod_cliente);//tipo cliente
 					$cuenta_defecto_cliente=obtenerValorConfiguracion(78);//creidto
@@ -282,14 +277,25 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_it_pasivo,0,$cod_uo_solicitud,$cod_area_solicitud,0,$monto_it_pasivo,$descripcion_it_pasivo,$ordenDetalle,0);
 		        $ordenDetalle++;
 		        //listado del detalle area
+
+
 				$stmtDetalleAreas = $dbh->prepare("SELECT t.*,(select a.cod_cuenta_ingreso from areas a where a.codigo=t.cod_area)as cod_cuenta from solicitudes_facturacion_areas t where t.cod_solicitudfacturacion=$cod_solicitudfacturacion");
 				$stmtDetalleAreas->execute();
 				$stmtDetalleAreas->bindColumn('cod_area', $cod_area_areas);	 
 				$stmtDetalleAreas->bindColumn('porcentaje', $porcentaje);	
 				$stmtDetalleAreas->bindColumn('monto', $monto_areas);
 				$stmtDetalleAreas->bindColumn('cod_cuenta', $cod_cuenta_areas);
-				$porcentaje_pasivo=100-$porcentaje_debito_iva;			
+				$porcentaje_pasivo=100-$porcentaje_debito_iva;
+
 				while ($row_detAreas = $stmtDetalleAreas->fetch()) {
+			        
+			        //****** Aqui ejecutamos la excepcion para el caso de AFILIACIONES en el area de NORMALIZACION **********
+			        if($cod_area_solicitud==12 && $cod_tipo_objeto==5051){
+			        	$cod_cuenta_areas=281;
+			        }
+			        //********** fin excepcion NO AFILIACIONES
+			        
+
 					$monto_areas_format=$monto_areas*$porcentaje_pasivo/100;
 					$descripcion=$concepto_contabilizacion;
 					//listado del detalle uo
