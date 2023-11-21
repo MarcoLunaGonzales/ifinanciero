@@ -81,6 +81,7 @@ try{
     $cod_dependiente_rciva=$result['codigo_dependiente'];
     $created_at = $result['created_at'];
     $created_by = $result['created_by'];
+    $nro_casillero = $result['nro_casillero'];
     // $turno = $result['turno'];
     // $tipo_trabajo = $result['tipo_trabajo'];
     // $turno=obtenerNombreTurno($turno);
@@ -157,7 +158,7 @@ $html.=  '<header class="header">'.
                             $cod_area.'<br>'.
 
                         '</td>'.
-                        '<td rowspan="8" align="center">'.
+                        '<td rowspan="9" align="center">'.
                             '<img src="imagenes/'.$imagen.'" style="width: 120px; height: 120px;">'.
                         '</td>'.
                     '</tr>'.
@@ -196,6 +197,11 @@ $html.=  '<header class="header">'.
                         '<td>Email</td>'.
                         
                         '<td >'.$email.'</td>'.
+                    '</tr>'.
+                    '<tr>'.
+                        '<td><b>Nro. Casillero</b></td>'.
+                        
+                        '<td >'.$nro_casillero.'</td>'.
                     '</tr>'.
                     
                     '<tr>'.
