@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * UTILIZAR ESTA VERSIÓN OFICIAL PARA VERIFICAR VENTAS NORMAS
+ * 
+ * TOMANDO EN CUENTA EL USO DE "verificarFacturasSFDvsSUS" para adicionar los nuevos
+ * 
+ * OBTIENE CODIGO IDVENTA NORMA PARA LA TABLA "ventanormas_facturas"
+ */
 date_default_timezone_set('America/La_Paz');
 
 class Conexion extends PDO {      

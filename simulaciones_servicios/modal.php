@@ -966,7 +966,7 @@
                         <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
                         <div class="col-sm-7">
                           <div class="form-group">
-                            <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);" <?= $cod_estadosimulacion == 5 ? "disabled" : ""; ?>>       
+                            <select class="selectpicker form-control form-control-sm" data-size="6" data-live-search="true" name="tipo_servicio" id="tipo_servicio" data-style="btn btn-info"  required onchange="ponerSistemasIntegrados();ponerDescripcionServicio();searchServicio(1);" <?= $cod_estadosimulacion == 5 && $idTipoServicioX > 0? "disabled" : ""; ?>>       
                               <option value="">SELECCIONE TIPO DE SERVICIO</option>
                                   <?php
                                   $plantilla_servicio = '';

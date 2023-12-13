@@ -16,7 +16,27 @@ try {
     $dbh = new Conexion();
     /*****************************************************************************************/
     // DETALLE DE SOLICITUD DE FACTURACIÓN | SUBSCRIPCIÓN TIENDA
-    $stmtDetalleFact = $dbh->prepare("SELECT sf.codigo, sf.cantidad,sf.precio,sf.descuento_bob,sf.descripcion_alterna, fs.codigo as codigo_suscripcion, fs.cod_factura, fs.cod_facturadetalle, fs.cod_suscripcion, fs.glosa, fs.cod_solicitudfacturacion, fs.catalogo, fs.id_cliente, fs.id_opcion_suscripcion,fs.id_promocion, fs.id_tipo_venta, fs.idioma, fs.fecha_inicio_suscripcion, fs.id_norma
+    $stmtDetalleFact = $dbh->prepare("SELECT sf.codigo, 
+                                            sf.cantidad,
+                                            sf.precio,
+                                            sf.descuento_bob,
+                                            sf.descripcion_alterna,
+                                            fs.codigo as codigo_suscripcion,
+                                            fs.cod_factura,
+                                            fs.cod_facturadetalle,
+                                            fs.cod_suscripcion,
+                                            fs.glosa,
+                                            fs.cod_solicitudfacturacion,
+                                            fs.catalogo,
+                                            fs.id_cliente,
+                                            fs.id_opcion_suscripcion,
+                                            fs.id_promocion,
+                                            fs.id_tipo_venta,
+                                            fs.idioma,
+                                            fs.fecha_inicio_suscripcion,
+                                            fs.id_norma,
+                                            fs.cod_facturadetalle_real,
+                                            fs.IdVentaNormas
                                     FROM solicitudes_facturaciondetalle sf
                                     LEFT JOIN facturas_suscripcionestienda fs ON fs.cod_facturadetalle = sf.codigo
                                     WHERE sf.cod_solicitudfacturacion ='$codigo'");
@@ -45,6 +65,21 @@ try {
         $detail_idioma                     = $rowDetallefact['idioma']; 
         $detail_fecha_inicio_suscripcion   = $rowDetallefact['fecha_inicio_suscripcion'];
         $detail_id_norma                   = $rowDetallefact['id_norma'];
+
+        $detail_cod_facturadetalle_real    = $rowDetallefact['cod_facturadetalle_real'];
+        $detail_IdVentaNormas              = $rowDetallefact['IdVentaNormas'];
+        
+        // Fecha de envio Suscripción
+        $fecha_envio   = date('Y-m-d H:i:s');
+        /* ACTUALIZACIÓN cod_facturaventa_detalle en la TABLA: VENTANORMAS */
+        $sqlVN = "UPDATE ibnorca.ventanormas 
+                SET idFacturaDetalle = '$detail_cod_facturadetalle_real',
+                    regularizado = 'UPD iFinanciero |$fecha_envio|'
+                WHERE IdVentaNormas = '$detail_IdVentaNormas'";
+        // echo $sqlVN;
+        $stmtVN = $dbh->prepare($sqlVN);
+        $stmtVN->execute();
+
         // Se genera la suscripcion solo cuando la norma es DIGITAL
         if($detail_id_tipo_venta==2){
             /**
@@ -125,8 +160,6 @@ try {
                 // Resultado de Servicio SUSCRIPCIÓN
                 // var_dump($remote_server_output);
                 
-                // Fecha de envio Suscripción
-                $fecha_envio   = date('Y-m-d H:i:s');
                 // ENVIADO - JSON LOCAL
                 $json_enviado  = $parametros;
                 // RECIBIDO - JSON SUCRIPCIÓN
@@ -138,7 +171,6 @@ try {
                 $stmtIbnorca        = $dbh->prepare("UPDATE facturas_suscripcionestienda 
                                     SET cod_suscripcion = '$sw_cod_suscripcion',
                                     glosa = '$sw_glosa',
-                                    cod_factura = '$stringFacturasCod',
                                     json_enviado = '$json_enviado',
                                     json_recibido = '$json_recibido',
                                     fecha_envio = '$fecha_envio'
@@ -146,8 +178,7 @@ try {
                 $flagSuccess=$stmtIbnorca->execute();
             }else{
                 $stmtIbnorca = $dbh->prepare("UPDATE facturas_suscripcionestienda 
-                                            SET glosa = 'Hubo un error en el proceso de Autenticación.',
-                                            cod_factura = '$stringFacturasCod' 
+                                            SET glosa = 'Hubo un error en el proceso de Autenticación.'
                                             WHERE cod_facturadetalle = '$sf_codigo'");
                 $flagSuccess=$stmtIbnorca->execute();
             }

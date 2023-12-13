@@ -298,7 +298,8 @@ function preparaSucripcion($cod_serv_a, $cod_detalle_facturacion, $cod_facturaci
             id_tipo_venta, 
             idioma, 
             fecha_inicio_suscripcion,
-            id_norma) 
+            id_norma,
+            IdVentaNormas) 
     values (0, 
             '$cod_detalle_facturacion', 
             0, 
@@ -311,7 +312,8 @@ function preparaSucripcion($cod_serv_a, $cod_detalle_facturacion, $cod_facturaci
             '$detalle_tipo_venta_normas', 
             '$detalle_idioma', 
             '$fecha_registro', 
-            '$detalle_idNorma')");
+            '$detalle_idNorma',
+            '$cod_serv_a')");
     $flagSuccess=$stmt->execute();
     /********************************************************************************************************************************************/
 }

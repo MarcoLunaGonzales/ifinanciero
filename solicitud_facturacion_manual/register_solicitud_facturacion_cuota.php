@@ -431,16 +431,24 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                     } ?> 
                                     </select>
                                 </div>
-                                <div class="col-sm-2">
-                                    <div class="form-group">
-                                        <input class="form-control" type="text" name="nit" id="nit" value="<?=$nit;?>" required="true"/>
+                                <div class="col-sm-4">
+                                    <div class="row">
+                                        <div class="col-sm-12" style="margin: 0;">
+                                            <label style="font-style: italic; color: red; font-size: 13px; margin-bottom: 0px;"><b>Complemento (Solamente aplicado a CI duplicados)</b></label>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <input class="form-control" type="text" name="nit" id="nit" value="<?=$nit;?>" required="true"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <input class="form-control" type='hidden' name="complemento" id="complemento" placeholder="Complemento" value="<?=$complemento;?>" style="position:absolute;!important;background:#D2FFE8;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-1">
-                                    <div class="form-group">
-                                            <input class="form-control" type='hidden' name="complemento" id="complemento" placeholder="Complemento" value="<?=$complemento;?>" style="position:absolute;width:100px !important;background:#D2FFE8;" onkeyup="javascript:this.value=this.value.toUpperCase();"/>
-                                    </div>
-                                </div>
+
                             </div>
                         <!--     <div class="row">
                               <div class="col-sm-12" style="background-color:#FFFFFF">

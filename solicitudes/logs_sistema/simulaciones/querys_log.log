@@ -1,0 +1,130 @@
+[Fri, 24 Nov 2023 15:22:57 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:22:57 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:23:17 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:23:17 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:23:52 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:23:52 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:23:58 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:23:58 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:25:16 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:25:16 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:25:49 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:25:49 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:25:53 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:25:53 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:26:12 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:26:12 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:26:34 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:26:34 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:26:56 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:26:56 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:27:13 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:27:13 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:27:24 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:27:24 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:27:49 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:27:49 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:28:04 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:28:04 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:28:17 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:28:17 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:28:34 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:28:34 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:28:45 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:28:45 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:28:55 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:28:55 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:29:39 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:29:39 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:30:28 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:30:28 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:34:59 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:34:59 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:43:35 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:43:35 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:56:34 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Fri, 24 Nov 2023 15:56:34 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Mon, 27 Nov 2023 08:40:31 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Mon, 27 Nov 2023 08:40:31 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Mon, 27 Nov 2023 08:41:15 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Mon, 27 Nov 2023 08:41:15 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5 and p.cod_area='38' order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Mon, 27 Nov 2023 08:42:08 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Mon, 27 Nov 2023 08:42:08 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5  order by s.codigo desc]#####ajaxListSimulacion.php#####-

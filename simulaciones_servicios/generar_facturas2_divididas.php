@@ -55,6 +55,7 @@
                 $stmt5->execute();
                 while ($row = $stmt5->fetch()) 
                 {   
+                    $cod_solicitudfacturacion_detalle = $row['codigo']; // Codigo SFD
                     $cod_claservicio_x=$row['cod_claservicio'];
                     $cantidad_x=$row['cantidad'];
                     $precio_x=$row['precio'];
@@ -102,6 +103,17 @@
                         $stmtInsertSoliFactDet = $dbh->prepare($sqlDetalleVenta);
                         $flagSuccess=$stmtInsertSoliFactDet->execute();
                         array_push($SQLDATOSINSTERT,$flagSuccess);
+
+                        /*****************************************/
+                        /* ADICION DETALLE A TABLA SUSCRIPCIONES */
+                        /*****************************************/
+                        $cod_facturaventa_detalle = $dbh->lastInsertId();
+                        $sqlSUS = "UPDATE facturas_suscripcionestienda 
+                                    SET cod_factura = '$cod_facturaVenta',
+                                    cod_facturadetalle_real = '$cod_facturaventa_detalle'
+                                    WHERE cod_facturadetalle = '$cod_solicitudfacturacion_detalle'";
+                        $stmtSUS = $dbh->prepare($sqlSUS);
+                        $flagSuccess=$stmtSUS->execute();
                     }
                 }
                 $sw_controlador="0";//verifica si todo esta okey

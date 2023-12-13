@@ -18,7 +18,9 @@
     // SUBSCRIPCIÓN TIENDA
     $stmtSuscripcion = $dbh->prepare("SELECT fs.codigo, fs.cod_factura, fs.cod_facturadetalle, fs.cod_suscripcion, fs.glosa, 
                                     fs.cod_solicitudfacturacion, fs.catalogo, fs.id_cliente, fs.id_opcion_suscripcion, 
-                                    fs.id_promocion, fs.id_tipo_venta, fs.idioma, fs.fecha_inicio_suscripcion, fs.id_norma, fs.cod_factura
+                                    fs.id_promocion, fs.id_tipo_venta, fs.idioma, fs.fecha_inicio_suscripcion, fs.id_norma, fs.cod_factura,
+                                            fs.cod_facturadetalle_real,
+                                            fs.IdVentaNormas
                                     FROM facturas_suscripcionestienda fs 
                                     WHERE fs.codigo = '$codigo'");
     $stmtSuscripcion->execute();
@@ -37,6 +39,10 @@
     $detail_fecha_inicio_suscripcion   = '';
     $detail_id_norma                   = '';
     $stringFacturasCod                 = '';
+    $detail_cod_facturadetalle_real    = '';
+    $detail_IdVentaNormas              = '';
+    // Fecha de envio Suscripción
+    $fecha_envio   = date('Y-m-d H:i:s');
     // var_dump($stmtSuscripcion->fetch());
     while ($rowSuscripcion = $stmtSuscripcion->fetch()) {
         $detail_codigo                     = $rowSuscripcion['codigo']; 
@@ -55,6 +61,9 @@
         $detail_id_norma                   = $rowSuscripcion['id_norma'];
 
         $stringFacturasCod                 = $rowSuscripcion['cod_factura'];
+
+        $detail_cod_facturadetalle_real    = $rowSuscripcion['cod_facturadetalle_real'];
+        $detail_IdVentaNormas              = $rowSuscripcion['IdVentaNormas'];
     }
     // Solicitud de Facturación Detalle
     $stmtDetalleFact = $dbh->prepare("SELECT sf.codigo, sf.cantidad,sf.precio,sf.descuento_bob,sf.descripcion_alterna
@@ -62,6 +71,15 @@
                                     WHERE sf.codigo = '$detail_cod_facturadetalle'");
     $stmtDetalleFact->execute();
     
+    /* ACTUALIZACIÓN cod_facturaventa_detalle en la TABLA: VENTANORMAS */
+    $sqlVN = "UPDATE ibnorca.ventanormas 
+            SET idFacturaDetalle = '$detail_cod_facturadetalle_real',
+                regularizado = 'UPD iFinanciero |$fecha_envio|'
+            WHERE IdVentaNormas = '$detail_IdVentaNormas'";
+    // echo $sqlVN;
+    $stmtVN = $dbh->prepare($sqlVN);
+    $stmtVN->execute();
+
     // var_dump($stmtDetalleFact->fetch());
     $sw_token = '';
     while ($rowDetallefact = $stmtDetalleFact->fetch()) {   
@@ -160,9 +178,7 @@
             curl_close ($ch); 
             // Resultado de Servicio SUSCRIPCIÓN
             // var_dump($remote_server_output);
-            
-            // Fecha de envio Suscripción
-            $fecha_envio   = date('Y-m-d H:i:s');
+        
             // ENVIADO - JSON LOCAL
             $json_enviado  = $parametros;
             // RECIBIDO - JSON SUCRIPCIÓN

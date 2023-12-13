@@ -11212,7 +11212,7 @@ function filtrarSolicitudRecursosServiciosItems(){
 function filtrarSolicitudRecursosDetalleDatos(){
   var tipo = $("#tipo_solicitud").val();
   if(tipo==1||tipo==-1){
-    var res=$("#simulaciones").val().split("$$$");
+    var res=$("#select_simulaciones").val().split("$$$");
     var cod_sim=res[0];
     if(res[1]=="SIM"){//propuestas SEC
       var url ="ajaxSolicitudDetalleSimulacionSecNuevo.php";
