@@ -132,7 +132,7 @@ if (!empty($_GET['tipo']) && $_GET['tipo'] == 1) {
     $q = empty($_GET['q']) ? '' : $_GET['q'];
 
     if (empty($q)) {
-        $globalAdmin = $_SESSION["globalAdmin"];
+        $globalUser  = $_SESSION["globalUser"];
         $globalArea  = $_SESSION["globalArea"];
         $globalCargo = $_SESSION["globalCargo"];
     } else {
@@ -146,18 +146,18 @@ if (!empty($_GET['tipo']) && $_GET['tipo'] == 1) {
         $registro = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($registro) {
-            $globalAdmin = $registro['codigo'];
+            $globalUser  = $registro['codigo'];
             $globalArea  = $registro['cod_area'];
             $globalCargo = $registro['cod_cargo'];
         }
     }
 
     $sql = "INSERT INTO manuales_aprobacion_vistas (cod_manual_aprobacion, cod_personal, fecha) 
-            VALUES(:cod_manual_aprobacion, :globalAdmin, :fecha)";
+            VALUES(:cod_manual_aprobacion, :globalUser, :fecha)";
     
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion, PDO::PARAM_STR);
-    $stmt->bindParam(':globalAdmin', $globalAdmin, PDO::PARAM_STR);
+    $stmt->bindParam(':globalUser', $globalUser, PDO::PARAM_STR);
     $stmt->bindParam(':fecha', $fecha_vista, PDO::PARAM_STR);
     
     $stmt->execute();

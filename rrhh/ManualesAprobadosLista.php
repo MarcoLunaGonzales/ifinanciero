@@ -8,12 +8,12 @@ $dbh = new Conexion();
 // Credenciales de INTRANET
 $accesos_externos = !empty($_GET['q']) ? $_GET['q'] : '';
 
-$globalAdmin = '';
+$globalUsuario = '';
 $globalArea  = '';
 $globalCargo = '';
 
 if (empty($q)) {
-    $globalAdmin = $_SESSION["globalAdmin"];
+    $globalUsuario = $_SESSION["globalUser"];
     $globalArea  = $_SESSION["globalArea"];
     $globalCargo = $_SESSION["globalCargo"];
 } else {
@@ -26,7 +26,7 @@ if (empty($q)) {
     $stmt->execute();
     $registro = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($registro) {
-        $globalAdmin = $registro['codigo'];
+        $globalUsuario = $_SESSION["codigo"];
         $globalArea  = $registro['cod_area'];
         $globalCargo = $registro['cod_cargo'];
     }

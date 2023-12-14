@@ -2086,6 +2086,11 @@
 		if ($_GET['opcion']=='register_solicitudfacturacion_cuotas') {
 			require_once('solicitud_facturacion_manual/register_solicitud_facturacion_cuota.php');
 		}
+		
+		// Verificar Visitas de Manuales Aprobados 
+		if ($_GET['opcion']=='listaVistasManuales') {
+			require_once('rrhh/listaVistasManuales.php');
+		}
 	}else{
 		//require("paginaprincipal.php");
 	}

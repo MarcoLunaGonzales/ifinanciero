@@ -146,6 +146,10 @@ $stmt->bindColumn('etapa_nombre', $etapa_nombre);
                 <a style="height:10px;width: 10px; color: #9e38b4;background-color: #9e38b4;border-radius: 3px;border: 2px solid #9e38b4;" title="Configuración Etapas" href='?opcion=listaConfiguracionEtapas'>
                   <i class="material-icons" style="color: #ffffff;">settings</i>
                 </a>
+                <!-- Lista de Vistas -->
+                <a style="height:10px;width: 10px; color: #ffffff;background-color: #4CAF50;border-radius: 3px;border: 2px solid #4CAF50;" title="Vista de Manuales Aprobados" href='?opcion=listaVistasManuales'>
+                  <i class="material-icons" style="color: #ffffff;">description</i>
+                </a>
 
                 </div>
                 <div class="card-body">
