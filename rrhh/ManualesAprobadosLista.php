@@ -6,12 +6,7 @@ require_once 'styles.php';
 
 $dbh = new Conexion();
 // Credenciales de INTRANET
-$accesos_externos = '';
-$q = isset($_GET['q']) ? $_GET['q'] : '';
-
-if (isset($q)) {
-    $accesos_externos = "?q=" . $q;
-}
+$accesos_externos = !empty($_GET['q']) ? $_GET['q'] : '';
 
 $globalAdmin = '';
 $globalArea  = '';
@@ -136,7 +131,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         ?>
                           <!-- MANUAL DE APROBACIÓN -->
                           <!-- VER PDF -->
-                          <a href='rrhh/pdfGeneracion.php?codigo=<?=$row['codigo'];?>' target="_blank" class="btn btn-danger" title="Manual de Cargo">
+                          <a href='rrhh/pdfGeneracion.php?codigo=<?=$row['codigo'];?>&tipo=1<?=$accesos_externos;?>' target="_blank" class="btn btn-danger" title="Manual de Cargo">
                             <i class="material-icons">picture_as_pdf</i>
                           </a>
                           <?php
