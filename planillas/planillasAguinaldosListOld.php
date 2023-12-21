@@ -54,12 +54,31 @@ if($globalAdmin==1){//para personal admin
                   <?php $index=1;                  
                   $datosX="";
                   while ($row = $stmtAdmnin->fetch(PDO::FETCH_BOUND)) {
+                    $label_uo_aux='';
                     $datosX =$codigo_planilla."-";
                     if($cod_estadoplanilla==1){
                       $label='<span class="badge badge-danger">';
                     }
-                    if($cod_estadoplanilla==2){ 
+                    if($cod_estadoplanilla==2){
                       $label='<span class="badge badge-warning">';
+                      $nombre_estadoplanilla='';
+                      $stmtAdmninUOAux = $dbh->prepare("SELECT cod_uo,abreviatura from configuraciones_planilla_sueldo
+                      GROUP BY abreviatura");
+                      $stmtAdmninUOAux->execute();
+                      $stmtAdmninUOAux->bindColumn('cod_uo', $cod_uo_aux);
+                      $stmtAdmninUOAux->bindColumn('abreviatura', $nombre_uo_aux);
+                      while ($row = $stmtAdmninUOAux->fetch(PDO::FETCH_BOUND)) {
+                        $stmtAdmninUOAux2 = $dbh->prepare("SELECT cod_uo
+                           from planillas_aguinaldos_uo_cerrados where cod_planilla=$codigo_planilla and cod_uo=$cod_uo_aux");
+                        $stmtAdmninUOAux2->execute();
+                        $resultAdmninUOAux2=$stmtAdmninUOAux2->fetch();
+                        $cod_uo_aux2= ($resultAdmninUOAux2 !== false) ? $resultAdmninUOAux2['cod_uo'] : '';                    
+                        if($cod_uo_aux==$cod_uo_aux2){
+                          $label_uo_aux.='<span class="badge badge-success">'.$nombre_uo_aux.'</span>';
+                        }else{
+                          $label_uo_aux.='<span class="badge badge-warning">'.$nombre_uo_aux.'</span>';
+                        }
+                      }
                     }
                     if($cod_estadoplanilla==3){                      
                       $label='<span class="badge badge-success">';
@@ -67,7 +86,7 @@ if($globalAdmin==1){//para personal admin
                     ?>
                     <tr>                    
                       <td><?=$gestion?></td>
-                      <td><?=$label.$nombre_estadoplanilla."</span>";?></td>
+                      <td><?=$label.$nombre_estadoplanilla."</span>";?><?=$label_uo_aux?></td>
                       <td class="td-actions text-right">
                         <?php
                         if($cod_estadoplanilla==1){    ?>
@@ -173,18 +192,7 @@ if($globalAdmin==1){//para personal admin
                               <a role="item" href="planillas/planillaAguinaldoPersonalReporte.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>" target="_blank">
                                 <small>Ver Todo</small>
                               </a>
-                            </li>       
-                            <!-- Reporte de Visitas -->
-                            <li role="presentation">
-                              <a role="item" href="?opcion=reporteListaAguinaldoVistas&codigo_planilla=<?=$codigo_planilla;?>" target="_blank">
-                                <small><i class="material-icons text-success">assessment</i> Reporte Visitas</small>
-                              </a>
-                            </li>  
-                            <!-- Enviar Correo -->
-                            <li role="presentation" onclick="enviaEmailBoletaAguinaldo(<?=$codigo_planilla;?>)">
-                              <a role="item" href="#">
-                                <i class="material-icons text-rose">email</i><small>Enviar Boletas por Correo</small></a>
-                            </li>                         
+                            </li>                             
                           </ul>
                         </div>
                         <?php }?>                          
@@ -214,7 +222,7 @@ if($globalAdmin==1){//para personal admin
         </div>
         <div class="modal-body">
           <input type="hidden" name="codigo_planilla" id="codigo_planilla" value="0">        
-          Esta acción Procesará La planilla de Aguinaldos del año en curso. ¿Desea Continuar?
+          Esta acción Procesará La planilla de Aguinaldos del año en curso. ¿Deseas Continuar?
           <div id="cargaP" style="display:none">
             <h3><b>Por favor espere...</b></h3>
           </div>
@@ -236,7 +244,7 @@ if($globalAdmin==1){//para personal admin
         </div>
         <div class="modal-body">
           <input type="hidden" name="codigo_planillaRP" id="codigo_planillaRP" value="0">        
-          Esta acción ReProcesará La planilla De Aguinaldos Del Año En Curso. ¿Desea Continuar?
+          Esta acción ReProcesará La planilla De Aguinaldos Del Año En Curso. ¿Deseas Continuar?
           <div id="cargaR" style="display:none">
             <h3><b>Por favor espere...</b></h3>
           </div>
@@ -258,7 +266,7 @@ if($globalAdmin==1){//para personal admin
         </div>
         <div class="modal-body">
           <input type="hidden" name="codigo_planillaCP" id="codigo_planillaCP" value="0">        
-          Esta acción Cerrará La planilla De Aguinaldos Del año En Curso. ¿Desea Continuar?
+          Esta acción Cerrará La planilla De Aguinaldos Del año En Curso. ¿Deseas Continuar?
         </div>       
         <div class="modal-footer">
           <button type="button" class="btn btn-success" id="AceptarCerrar" data-dismiss="modal">Aceptar</button>
@@ -478,21 +486,10 @@ if($globalAdmin==1){//para personal admin
                               <a role="item" href="planillas/planillaAguinaldoPersonalReporte.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>" target="_blank">
                                 <small>Ver Todo</small>
                               </a>
-                            </li>
-                            <!-- Reporte de Visitas -->
-                            <li role="presentation">
-                              <a role="item" href="?opcion=reporteListaAguinaldoVistas&codigo_planilla=<?=$codigo_planilla;?>" target="_blank">
-                                <small><i class="material-icons text-success">assessment</i> Reporte Visitas</small>
-                              </a>
-                            </li>
-                            <!-- Enviar Correo -->
-                            <li role="presentation" onclick="enviaEmailBoletaAguinaldo(<?=$codigo_planilla;?>)">
-                              <a role="item" href="#">
-                                <i class="material-icons text-rose">email</i><small>Enviar Boletas por Correo</small></a>
-                            </li>                     
+                            </li>                             
                           </ul>
                         </div>
-
+                        
                         <?php }?>                   
                       </td>
               
@@ -518,7 +515,7 @@ if($globalAdmin==1){//para personal admin
         <div class="modal-body">
           <input type="hidden" name="codigo_planillaNA" id="codigo_planillaNA" value="0">
           <input type="hidden" name="codigo_uoNA" id="codigo_uoNA" value="0"> 
-          Esta acción Procesará La planilla Del Mes En Curso. ¿Desea Continuar?
+          Esta acción Procesará La planilla Del Mes En Curso. ¿Deseas Continuar?
           <div id="cargaPNA" style="display:none">
             <h3><b>Por favor espere...</b></h3>
           </div>
@@ -541,7 +538,7 @@ if($globalAdmin==1){//para personal admin
         <div class="modal-body">
           <input type="hidden" name="codigo_planillaRPNA" id="codigo_planillaRPNA" value="0">        
           <input type="hidden" name="codigo_uoRPNA" id="codigo_uoRPNA" value="0">        
-          Esta acción ReProcesará La planilla De Aguinaldos Del año En Curso. ¿Desea Continuar?
+          Esta acción ReProcesará La planilla De Aguinaldos Del año En Curso. ¿Deseas Continuar?
           <div id="cargaRNA" style="display:none">
             <h3><b>Por favor espere...</b></h3>
           </div>
@@ -564,7 +561,7 @@ if($globalAdmin==1){//para personal admin
         <div class="modal-body">
           <input type="hidden" name="codigo_planillaCPNA" id="codigo_planillaCPNA" value="0">        
           <input type="hidden" name="codigo_uoCPNA" id="codigo_uoCPNA" value="0">        
-          Esta acción Cerrará La planilla De aguinaldos Del Mes En Curso. ¿Desea Continuar?
+          Esta acción Cerrará La planilla De aguinaldos Del Mes En Curso. ¿Deseas Continuar?
         </div>       
         <div class="modal-footer">
           <button type="button" class="btn btn-success" id="AceptarCerrarNA" data-dismiss="modal">Aceptar</button>
@@ -578,77 +575,20 @@ if($globalAdmin==1){//para personal admin
   <script type="text/javascript">
     $(document).ready(function(){
       
-        $('#AceptarReProcesoNA').click(function(){      
-            cod_planilla=document.getElementById("codigo_planillaRPNA").value; 
-            cod_uo=document.getElementById("codigo_uoRPNA").value;      
-            ReprocesarPlanillaAguialdosNA(cod_planilla,cod_uo);
-        });
-        $('#AceptarCerrarNA').click(function(){      
-            cod_planilla=document.getElementById("codigo_planillaCPNA").value;
-            cod_uo=document.getElementById("codigo_uoCPNA").value;      
+      $('#AceptarReProcesoNA').click(function(){      
+        cod_planilla=document.getElementById("codigo_planillaRPNA").value; 
+        cod_uo=document.getElementById("codigo_uoRPNA").value;      
+        ReprocesarPlanillaAguialdosNA(cod_planilla,cod_uo);
+      });
+      $('#AceptarCerrarNA').click(function(){      
+        cod_planilla=document.getElementById("codigo_planillaCPNA").value;
+        cod_uo=document.getElementById("codigo_uoCPNA").value;      
 
-            CerrarPlanillaAguinaldosNA(cod_planilla,cod_uo);
-        });
+        CerrarPlanillaAguinaldosNA(cod_planilla,cod_uo);
+      });
       
     });
   </script>
   <?php 
 }
 ?>
-
-<script>
-        /**
-         * Envia Email de planillas de pago AGUINALDO
-         */
-        function enviaEmailBoletaAguinaldo(cod_planilla){
-            let formData = new FormData();
-            formData.append('cod_planilla', cod_planilla);
-            swal({
-                title: '¿Esta Seguro de Continuar?',
-                text: "Se enviará un correo a todo el personal de la institución.",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                confirmButtonText: 'Si',
-                cancelButtonText: 'No',
-                buttonsStyling: false
-            }).then((result) => {
-                if (result.value) {
-                    Swal.fire({
-                        title: 'Enviando Boletas de Pago...',
-                        allowOutsideClick: false,
-                        onBeforeOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-                    $.ajax({
-                        url:"sendEmailPlanillaAguinaldo.php",
-                        type:"POST",
-                        contentType: false,
-                        processData: false,
-                        data: formData,
-                        success:function(response){
-                        let resp = JSON.parse(response);
-                        if(resp.status){        
-                            // Mensaje
-                            Swal.fire({
-                                type: 'success',
-                                title: 'Correcto!',
-                                text: 'El proceso se completo correctamente!',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                                
-                            setTimeout(function(){
-                                location.reload()
-                            }, 1550);
-                        }else{
-                            Swal.fire('ERROR!','El proceso tuvo un problema!. Contacte con el administrador!','error'); 
-                            }
-                        }
-                    });
-                }
-            });
-        }
-</script>

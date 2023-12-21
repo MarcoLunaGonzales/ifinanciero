@@ -2091,6 +2091,12 @@
 		if ($_GET['opcion']=='listaVistasManuales') {
 			require_once('rrhh/listaVistasManuales.php');
 		}
+
+		
+		// PLANILLA AGUINALDO - REPORTE VISITAS
+		if ($_GET['opcion']=='reporteListaAguinaldoVistas') {
+			require_once('aguinaldos/reporteListaAguinaldoVistas.php'); //ok
+		}
 	}else{
 		//require("paginaprincipal.php");
 	}

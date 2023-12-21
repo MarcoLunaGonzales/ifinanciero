@@ -39,7 +39,7 @@
           <div class="card-header <?=$colorCard;?> card-header-icon">            
             <h4 class="card-title"> 
               <img  class="card-img-top"  src="../marca.png" style="widtd:100%; max-width:250px;">
-                Planilla De Aguinaldo
+                Planilla De Aguinaldo - Distribución
             </h4>                  
             <h6 class="card-title"><small>
               Codigo Planilla: <?=$cod_planilla;?><br>
@@ -52,7 +52,8 @@
 				<table class="table table-bordered table-condensed table-hover" id="tablePaginator">
                 	<thead>
 		                <tr class="bg-dark text-white">                  
-		                    <th><small>#</small></th>           
+		                    <th><small>#</small></th> 
+		                    <th><small>Area</small></th>                   
 		                    <th><small>Paterno</small></th>
 		                    <th><small>Materno</small></th>
 		                    <th><small>Nombres</small></th>                    
@@ -83,7 +84,7 @@
 
 						// while ($row = $stmtArea->fetch(PDO::FETCH_BOUND)) 
 						// {
-							$sql = "SELECT ppm.cod_personal,ppm.sueldo_1,ppm.sueldo_2,ppm.sueldo_3,ppm.meses_trabajados,ppm.dias_trabajados,100 as porcentaje,
+							$sql = "SELECT ppm.cod_personal,ppm.sueldo_1,ppm.sueldo_2,ppm.sueldo_3,ppm.meses_trabajados,ppm.dias_trabajados,pad.porcentaje,
 									ppm.total_aguinaldo,
 									(select p.primer_nombre from personal p where p.codigo=ppm.cod_personal) as personal,
 									(select pa.paterno from personal pa where pa.codigo=ppm.cod_personal) as paterno,
@@ -92,13 +93,16 @@
 									(select (select pd.abreviatura from personal_departamentos pd where pd.codigo=p3.cod_lugar_emision)
 										from personal p3 where p3.codigo=ppm.cod_personal) as lug_emision,
 									(select p4.lugar_emision_otro from personal p4 where p4.codigo=ppm.cod_personal) as lug_emision_otro,
+									pad.cod_area,
 									(select c.nombre 
 									from personal p 
 									left join cargos c ON c.codigo = p.cod_cargo 
 									where p.codigo=ppm.cod_personal) as nombre_cargo,
 									(select DATE_FORMAT(p.ing_contr, '%d-%m-%Y') from personal p where p.codigo=ppm.cod_personal) as ing_contr
-								from planillas_aguinaldos_detalle ppm
-								where ppm.cod_planilla='$cod_planilla' 
+								from planillas_aguinaldos_detalle ppm, personal_area_distribucion_planilla pad
+								where ppm.cod_personal=pad.cod_personal 
+								and pad.cod_planilla=(SELECT codigo FROM planillas WHERE cod_gestion = '$cod_gestion' AND cod_mes = 11 LIMIT 1)
+								and ppm.cod_planilla='$cod_planilla' 
 								order by paterno";
 								// echo $sql;
 
@@ -122,6 +126,7 @@
 							$stmtPersonal->bindColumn('doc_id', $doc_id);
 							$stmtPersonal->bindColumn('lug_emision', $lug_emision);
 							$stmtPersonal->bindColumn('lug_emision_otro', $lug_emision_otro);
+							$stmtPersonal->bindColumn('cod_area', $cod_area_xy);
 							
 							while ($row = $stmtPersonal->fetch()) 
 							{  
@@ -139,9 +144,11 @@
 
 		                          $sum_total_aguinaldo_tp+=$total_aguinaldo_tp;
 
+								  $nombre_area_x=trim(abrevArea($cod_area_xy),",");
 		                        ?>
 			                	<tr>                                                        
-				                    <td class="text-center small"><?=$index;?></td>                 
+				                    <td class="text-center small"><?=$index;?></td>
+				                    <td class="text-left small"><?=$nombre_area_x;?></td>                    
 				                    <td class="text-left small"><?=$paterno;?></td>
 				                    <td class="text-left small"><?=$materno;?></td>
 				                    <td class="text-left small"><?=$personal;?></td>
@@ -154,7 +161,7 @@
 				                    <?php }
 				                    ?>
 
-				                    <td class="text-center small"><?=$ing_contr;?></td>                    
+									<td class="text-center small"><?=$ing_contr;?></td>                  
 				                    
 				                    <td class="small"><?=formatNumberDec($promedio_sueldos);?></td> 
 				                    <td class="aportesDet small" style="display:none"><?=formatNumberDec($sueldo_1_tp);?></td>
@@ -175,7 +182,7 @@
 	                </tbody>
 	                <tfoot>
 	                    <tr class="bg-dark text-white">                  
-	                    <th colspan="8" class="text-center small">Total</th>
+	                    <th colspan="9" class="text-center small">Total</th>
 
 	                    <th class="bg-success text-white small"><?=formatNumberDec($sum_total_promedio_tp);?></th>
 	                    <th class="aportesDet bg-success text-white small" style="display:none"><?=formatNumberDec($sum_total_sueldo1);?></th>
