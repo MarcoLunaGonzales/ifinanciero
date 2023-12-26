@@ -8319,7 +8319,7 @@ function editarDatosPlantilla(){
      //$("#modal_sitios").tagsinput('add', $("#sitios_sim").val());
   }
    //mostrar sitios y o productos
-   listarAtributo();
+  //  listarAtributo();
   if($("#num_tituloservicios1").length){
      $("#num_tituloservicios1").html("("+($("#modal_numeroservicio1").val()-1)+")");
   }
@@ -8556,13 +8556,14 @@ function guardarDatosPlantillaServicioAjax(btn_id){
   }
   // var productos=itemAtributos; // Se obtiene atributos de forma antigua
   var productos = [];
-  productos = atributoSitio.concat(atributoProducto);
+  // productos = atributoSitio.concat(atributoProducto); //ya no se usa este servicio para actualizar productos
 
   //var respuesta=productos.split(',');
   //var num_prod=respuesta.length;
   if($("#divResultadoListaAtributos").length){
     var inicioAnio=0;
-    var atributosDias=JSON.stringify(itemAtributosDias);
+    // var atributosDias=JSON.stringify(itemAtributosDias);
+    var atributosDias=JSON.stringify([]);
     var auditoresDias=[];
     for (var au = 0; au < itemAtributosDias.length; au++) {
       var mySelections = [];
@@ -8584,7 +8585,7 @@ function guardarDatosPlantillaServicioAjax(btn_id){
    }
 
 // if(!(ut_i==""||dia==""||dia==0||productos.length==0)){ 
-if(!(productos.length==0)){ 
+// if(!(productos.length==0)){ 
   /*PARA PERSONAL*/
   var anios=$("#anio_simulacion").val();
   /*for (var anio=inicioAnio;anio<=anios; anio++) {
@@ -8742,9 +8743,9 @@ if(!(productos.length==0)){
    
   //poner un script aqui
   /* FIN PARA PERSONAL*/
- }else{
-    Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
- }
+//  }else{
+//     Swal.fire("Informativo!", "Debe llenar todos los campos", "warning");
+//  }
 }
 
 function actualizarSimulacion(){
