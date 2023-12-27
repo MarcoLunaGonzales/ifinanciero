@@ -29,17 +29,12 @@ if ($result) {
     // Acceder a Codigo de Boleta Actual
     $cod_planilla_mes = $result['cod_nuevo'];
 }
-/*****************************************************/
-
-$fecha 		        = date('Y-m-d H:i:s');
-$sql   = "INSERT INTO planillas_email(cod_personal, cod_planilla_mes, fecha) 
-        VALUES ('$cod_personal', '$cod_planilla_mes', '$fecha')";
-$stmt = $dbh->prepare($sql);
-$stmt->execute();
-/************************************************************/
 
 // DETALLE
-$sql="SELECT ppm.codigo, CONCAT(p.primer_nombre, ' ', p.paterno) as nombre_personal, p.email,
+$sql="SELECT ppm.codigo, 
+        CONCAT(p.primer_nombre, ' ', p.paterno) as nombre_personal,
+        p.codigo as cod_personal,
+        p.email,
         (CASE
             WHEN pl.cod_mes = '1' THEN 'ENERO'
             WHEN pl.cod_mes = '2' THEN 'FEBRERO'
@@ -68,11 +63,25 @@ $stmt->execute();
 while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $detail_mes          = $result['mes'];
     $detail_gestion      = $result['anio'];
+    $detail_cod_personal = $result['cod_personal'];
     $detail_personal     = $result['nombre_personal'];
     $detail_emision      = $result['created'];
     $detail_dias_trabajo = $result['dias_trabajo'];
     $detail_nro_vista    = $result['nro_vista'];
 }
+/*****************************************************/
+/**
+ * CONTROL DE VISTA PERSONAL
+ */
+if (empty($cod_personal) || $cod_personal == 0 || $cod_personal == $detail_cod_personal) {
+    $detail_nro_vista++;
+    $fecha = date('Y-m-d H:i:s');
+    $sql   = "INSERT INTO planillas_email(cod_personal, cod_planilla_mes, fecha) 
+            VALUES ('$cod_personal', '$cod_planilla_mes', '$fecha')";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+}
+/************************************************************/
 
 $ruta_vista = obtenerValorConfiguracion(104);
 

@@ -17,17 +17,12 @@ $cod_personal = empty($_SESSION['globalUser']) ? 0 : $_SESSION['globalUser'];
 $codigo       = $_GET['key'];
 $fecha 		  = date('Y-m-d H:i:s');
 
-/**
- * Contabiliza visualización
- */
-$sql   = "INSERT INTO planillas_aguinaldos_email(cod_personal, cod_planilla_mes, fecha) 
-        VALUES ('$cod_personal', '$codigo', '$fecha')";
-$stmt = $dbh->prepare($sql);
-$stmt->execute();
 /******************************************************/
 
 // DETALLE
-$sql="SELECT pad.codigo, CONCAT(p.primer_nombre, ' ', p.paterno) as nombre_personal, p.email,
+$sql="SELECT pad.codigo, CONCAT(p.primer_nombre, ' ', p.paterno) as nombre_personal,
+        p.codigo as cod_personal,
+        p.email,
         g.nombre as anio,
         pad.meses_trabajados,
         pad.dias_trabajados,
@@ -43,11 +38,24 @@ $stmt->execute();
 while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $detail_mes          = 'Aguinaldo';
     $detail_gestion      = $result['anio'];
+    $detail_cod_personal = $result['cod_personal'];
     $detail_personal     = $result['nombre_personal'];
     $detail_emision      = $result['created'];
     $detail_tiempo_trabajo = $result['meses_trabajados'].' meses'.($result['dias_trabajados'] > 0 ? (' y '.$result['dias_trabajados'].' días') : '');
     $detail_nro_vista    = $result['nro_vista'];
 }
+
+/*************************************************************
+ * Contabiliza visualización
+ */
+if (empty($cod_personal) || $cod_personal == 0 || $cod_personal == $detail_cod_personal) {
+    $detail_nro_vista++;
+    $sql   = "INSERT INTO planillas_aguinaldos_email(cod_personal, cod_planilla_mes, fecha) 
+            VALUES ('$cod_personal', '$codigo', '$fecha')";
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute();
+}
+/************************************************************/
 
 $ruta_vista = obtenerValorConfiguracion(113);
 
