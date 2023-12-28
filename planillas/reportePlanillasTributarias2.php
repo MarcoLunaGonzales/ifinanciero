@@ -77,7 +77,7 @@
 								}
 								//Para Diciembre se adiciona el aguinaldo
 								if($cod_mes==12){ ?>
-									<td><small>Aguinaldo</small></td>
+									<td><small>Bono</small></td>
 								<?php 
 								}
 		                    ?>
@@ -185,6 +185,12 @@
 		                    <?php
 							//Solo en mayo se adiciona el retroactivo
 						    if($cod_mes==5){ ?>
+						    	<th class="text-center small"><?=number_format($total_monto_retroactivo,0);?></th>
+						    <?php }
+		                    ?>
+		                    <?php
+							//Solo en mayo se adiciona el retroactivo
+						    if($cod_mes==12){ ?>
 						    	<th class="text-center small"><?=number_format($total_monto_retroactivo,0);?></th>
 						    <?php }
 		                    ?>

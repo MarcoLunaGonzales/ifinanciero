@@ -116,6 +116,7 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
      * Solo en Diciembre | Aguinaldo
      */
     if($cod_mes_planillaS==12){ 
+        $liquido_pagableRetroactivo=0;
         $sqlAguinaldo="	SELECT pad.total_aguinaldo
                             FROM planillas_aguinaldos pa
                             LEFT JOIN planillas_aguinaldos_detalle pad ON pad.cod_planilla = pa.codigo
