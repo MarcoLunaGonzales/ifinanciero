@@ -70,10 +70,16 @@
 		                    <td><small>Novedades</small></td>
 		                    <td><small>Monto De Ingreso Neto</small></td>
 		                    <?php
-							//Solo en mayo se adiciona el retroactivo
-						    if($cod_mes==5){ ?>
-						    	<td><small>Retroactivo</small></td>
-						    <?php }
+												//Solo en mayo se adiciona el retroactivo
+										    if($cod_mes==5){ ?>
+										    	<td><small>Retroactivo</small></td>
+										    <?php 
+										  	}
+										  	//Para Diciembre se adiciona el aguinaldo
+										  	if($cod_mes==12){ ?>
+										    	<td><small>Aguinaldo</small></td>
+										    <?php 
+										  	}
 		                    ?>
 		                    <td><small>Minimo No Imponible</small></td>
 		                    <td><small>Importe Sujeto a Impuesto</small></td>

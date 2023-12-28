@@ -12299,4 +12299,22 @@ function obtieneDetalleSRCorreo($codigoSR){
     /* FIN SR */
     return $detalle_extra;
 }
+
+function obtieneNitSIAT($cod_factura_siat){
+   $dbh = new Conexion();
+   $nombreBD=obtenerValorConfiguracion(106);
+   $sql="SELECT (select st.descripcion from ".$nombreBD.".siat_sincronizarparametricatipodocumentoidentidad st where st.codigoClasificador=s.siat_codigotipodocumentoidentidad)as tipodoc, s.nit, s.siat_complemento from ".$nombreBD.".salida_almacenes s where s.cod_salida_almacenes='$cod_factura_siat'";
+   $stmt = $dbh->prepare($sql);
+   $stmt->execute();
+   $nitString="";
+   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     $tipoDoc=$row['tipodoc'];
+     $nit=$row['nit'];
+     $complemento=$row['siat_complemento'];
+     list($abrev, $nombreDoc) = explode("-", $tipoDoc);
+     $nitString="<b><small><span style='color:red'>".$abrev."</span> ".$nit." <span style='color:red'>".$complemento."</span></small></b>";
+   }
+   return($nitString);
+}
+
 ?>

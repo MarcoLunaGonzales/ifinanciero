@@ -194,7 +194,10 @@ if(isset($_GET['interno'])){
       }
       //FIN VERIFICACION SIAT
 
-      
+      //SACAMOS EL NIT DESDE EL SIAT
+      $nitSIAT=obtieneNitSIAT($idTransaccion_siat);
+      //FIN SACAR NIT
+
       //FORMAMOS EL CONCEPTO DE LA FACTURA
       $stmtDetalleSol = $dbh->prepare("SELECT fv.cantidad, fv.precio, fv.descripcion_alterna from facturas_ventadetalle fv where cod_facturaventa=$codigo_factura");
       $stmtDetalleSol->execute();
@@ -224,7 +227,7 @@ if(isset($_GET['interno'])){
         <td><small><?=$strikeIni;?><?=$nombre_personal;?><?=$strikeFin;?></small></td>
         <td><?=$strikeIni;?><?=$fecha_factura?><br><?=$hora_factura?><?=$strikeFin;?></td>
         <td class="text-left"><small><?=$strikeIni;?><?=mb_strtoupper($razon_social);?><?=$strikeFin2;?></small></td>
-        <td class="text-right"><?=$strikeIni;?><?=$nit;?><?=$strikeFin;?></td>
+        <td class="text-right"><?=$strikeIni;?><?=$nitSIAT;?><?=$strikeFin;?></td>
         <td class="text-right"><?=$strikeIni;?><?=formatNumberDec($importe);?><?=$strikeFin;?></td>
         <td><small><?=$strikeIni;?><?=strtoupper($concepto_contabilizacion);?><?=$strikeFin;?></small></td>                            
        <td style="color: #ff0000;"><?=$glosa_factura3;?></td>
