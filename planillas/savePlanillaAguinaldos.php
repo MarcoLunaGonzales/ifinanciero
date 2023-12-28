@@ -41,12 +41,15 @@ if($sw==2){//procesar planilla
 	$stmtU->bindParam(':cod_estadoplanilla', $cod_estadoplanilla);
 	$flagSuccess=$stmtU->execute();	
 	//============select del personal
-	$sql = "SELECT codigo,ing_contr from personal where cod_estadoreferencial=1";
+	$sql = "SELECT codigo,ing_contr,cod_cargo,cod_unidadorganizacional,cod_area from personal where cod_estadopersonal = 1";
 
 	// (84,93,183,195,286,32,176,96,68,16,97,14793,168,99,5,9,277,90,89,227,91)";
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
 	$stmtPersonal->bindColumn('codigo', $codigo_personal);
+	$stmtPersonal->bindColumn('cod_cargo', $cod_cargo);
+	$stmtPersonal->bindColumn('cod_unidadorganizacional', $cod_uo);
+	$stmtPersonal->bindColumn('cod_area', $cod_area);
 	$stmtPersonal->bindColumn('ing_contr', $ing_contr);	
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
@@ -60,11 +63,11 @@ if($sw==2){//procesar planilla
 			$cod_planilla_1=obtener_id_planilla($cod_gestion_x,9);
 			$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);
 			$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
-			$liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_1);//obtener sueldo de sept
-			$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);//obtener sueldo de octub
+			$liquido_mes1=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_1);//obtener sueldo de sept
+			$liquido_mes2=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_2);//obtener sueldo de octub
 			// $liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
 			// $liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
-			$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);//obtener sueldo de nov
+			$liquido_mes3=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_3);//obtener sueldo de nov
 			$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
 			$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
 			$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;
@@ -72,15 +75,26 @@ if($sw==2){//procesar planilla
 		}elseif($meses_trabajados>2){
 			$meses_trabajados_del_anio=$meses_trabajados;
 			$dias_trabajados_del_anio=$dias_trabajados;
+
+			// Adicion momentánea
+			// if($dias_trabajados_del_anio == 29){
+			// 	$meses_trabajados_del_anio = $meses_trabajados+1;
+			// 	$dias_trabajados_del_anio  = 0;
+			// }
+			// if($codigo_personal == 17171){
+			// 	$dias_trabajados_del_anio++;
+			// }
+
 			$cod_planilla_1=obtener_id_planilla($cod_gestion_x,9);
 			$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);
 			$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
-			$liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_1);
-			$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);
-			$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);
+			$liquido_mes1=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_1);
+			$liquido_mes2=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_2);
+			$liquido_mes3=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_3);
 			$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
 			$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
 			$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;
+			$total_pago_aguinaldo=$dias_sueldo+$meses_sueldo;
 		}elseif($meses_trabajados==2 && $dias_trabajados==29){//si entra el 1 octubre
 			$meses_trabajados_del_anio=3;
 			$dias_trabajados_del_anio=0;
@@ -88,12 +102,12 @@ if($sw==2){//procesar planilla
 			$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);//
 			$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
 			$liquido_mes1=0;//no se egenero en este caso
-			$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);
-			$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);
+			$liquido_mes2=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_2);
+			$liquido_mes3=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_3);
 			$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
 			$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
 			$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;
-
+			$total_pago_aguinaldo=$dias_sueldo+$meses_sueldo;
 		}else{//
 			$meses_trabajados_del_anio=$meses_trabajados;
 			$dias_trabajados_del_anio=$dias_trabajados;
@@ -107,12 +121,15 @@ if($sw==2){//procesar planilla
 		}		
 		//==== insert de panillas de  personal mes
 		$sqlInsertPlanillas="INSERT into planillas_aguinaldos_detalle(cod_planilla,cod_personal,sueldo_1,sueldo_2,sueldo_3,
-		  meses_trabajados,dias_trabajados,total_aguinaldo,created_by,modified_by)
+		  meses_trabajados,dias_trabajados,total_aguinaldo,created_by,modified_by,cod_cargo,cod_uo,cod_area)
 		 values(:cod_planilla,:codigo_personal,:sueldo1,:sueldo2,:sueldo3,:meses_trabajados,:dias_trabajados,
-		 	:total_aguinaldo,:created_by,:modified_by)";
+		 	:total_aguinaldo,:created_by,:modified_by,:cod_cargo,:cod_uo,:cod_area)";
 		$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 		$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 		$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
+		$stmtInsertPlanillas->bindParam(':cod_cargo',$cod_cargo);
+		$stmtInsertPlanillas->bindParam(':cod_uo',$cod_uo);
+		$stmtInsertPlanillas->bindParam(':cod_area',$cod_area);
 		$stmtInsertPlanillas->bindParam(':sueldo1',$liquido_mes1);
 		$stmtInsertPlanillas->bindParam(':sueldo2',$liquido_mes2);
 		$stmtInsertPlanillas->bindParam(':sueldo3',$liquido_mes3);
@@ -128,7 +145,7 @@ if($sw==2){//procesar planilla
 }elseif($sw==3)
 {//cerrar planilla	
 	// Prepare
-	$stmtU = $dbhU->prepare("UPDATE planillas_aguinaldos 
+	$stmtU = $dbh->prepare("UPDATE planillas_aguinaldos 
 	set cod_estadoplanilla=:cod_estadoplanilla
 	where codigo=:cod_planilla");
 	// Bind
@@ -140,12 +157,15 @@ if($sw==2){//procesar planilla
 	$created_by=1;
 	$modified_by=1;
 	//============select del personal
-	$sql = "SELECT codigo,ing_contr from personal where cod_estadoreferencial=1";
+	$sql = "SELECT codigo,ing_contr,cod_cargo,cod_unidadorganizacional,cod_area from personal where cod_estadopersonal = 1";
 
 	// (84,93,183,195,286,32,176,96,68,16,97,14793,168,99,5,9,277,90,89,227,91)";
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
 	$stmtPersonal->bindColumn('codigo', $codigo_personal);
+	$stmtPersonal->bindColumn('cod_cargo', $cod_cargo);
+	$stmtPersonal->bindColumn('cod_unidadorganizacional', $cod_uo);
+	$stmtPersonal->bindColumn('cod_area', $cod_area);
 	$stmtPersonal->bindColumn('ing_contr', $ing_contr);	
 	while ($rowC = $stmtPersonal->fetch()) 
 	{
@@ -158,11 +178,11 @@ if($sw==2){//procesar planilla
 			$cod_planilla_1=obtener_id_planilla($cod_gestion_x,9);
 			$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);
 			$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
-			$liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_1);//obtener sueldo de sept
-			$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);//obtener sueldo de octub
+			$liquido_mes1=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_1);//obtener sueldo de sept
+			$liquido_mes2=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_2);//obtener sueldo de octub
 			// $liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
 			// $liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_3);//cambiar
-			$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);//obtener sueldo de nov
+			$liquido_mes3=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_3);//obtener sueldo de nov
 			$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
 			$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
 			$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;
@@ -170,15 +190,26 @@ if($sw==2){//procesar planilla
 		}elseif($meses_trabajados>2){
 			$meses_trabajados_del_anio=$meses_trabajados;
 			$dias_trabajados_del_anio=$dias_trabajados;
+			
+			// Adicion momentánea
+			// if($dias_trabajados_del_anio == 29){
+			// 	$meses_trabajados_del_anio = $meses_trabajados+1;
+			// 	$dias_trabajados_del_anio  = 0;
+			// }
+			// if($codigo_personal == 17171){
+			// 	$dias_trabajados_del_anio++;
+			// }
+			
 			$cod_planilla_1=obtener_id_planilla($cod_gestion_x,9);
 			$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);
 			$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
-			$liquido_mes1=obtenerSueldomes($codigo_personal,$cod_planilla_1);
-			$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);
-			$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);
+			$liquido_mes1=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_1);
+			$liquido_mes2=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_2);
+			$liquido_mes3=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_3);
 			$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
 			$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
 			$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;
+			$total_pago_aguinaldo=$dias_sueldo+$meses_sueldo;
 		}elseif($meses_trabajados==2 && $dias_trabajados==29){//si entra el 1 octubre
 			$meses_trabajados_del_anio=3;
 			$dias_trabajados_del_anio=0;
@@ -186,12 +217,14 @@ if($sw==2){//procesar planilla
 			$cod_planilla_2=obtener_id_planilla($cod_gestion_x,10);//
 			$cod_planilla_3=obtener_id_planilla($cod_gestion_x,11);
 			$liquido_mes1=0;//no se egenero en este caso
-			$liquido_mes2=obtenerSueldomes($codigo_personal,$cod_planilla_2);
-			$liquido_mes3=obtenerSueldomes($codigo_personal,$cod_planilla_3);
+			$liquido_mes2=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_2);
+			$liquido_mes3=obtenerSueldomesTotalGanado($codigo_personal,$cod_planilla_3);
 			$promedio_sueldos=($liquido_mes1+$liquido_mes2+$liquido_mes3)/3;
 			$dias_sueldo=$promedio_sueldos/360*$dias_trabajados_del_anio;
 			$meses_sueldo=$promedio_sueldos/12*$meses_trabajados_del_anio;
+			$total_pago_aguinaldo=$dias_sueldo+$meses_sueldo;
 		}else{//
+			// echo $meses_trabajados.' | '.$codigo_personal.'/';
 			$meses_trabajados_del_anio=$meses_trabajados;
 			$dias_trabajados_del_anio=$dias_trabajados;
 			$liquido_mes1=0;
@@ -200,23 +233,25 @@ if($sw==2){//procesar planilla
 			$dias_sueldo=0;
 			$meses_sueldo=0;
 			$total_pago_aguinaldo=0;
-
-		}		
-
+		}
+		
 		$sqlpersonalVerificacion = "SELECT cod_personal from planillas_aguinaldos_detalle where cod_planilla=$cod_planilla and cod_personal=$codigo_personal";
 		$stmtPersonalVerificacion = $dbh->prepare($sqlpersonalVerificacion);
 		$stmtPersonalVerificacion->execute();
 		$resultPersonalVerificacion=$stmtPersonalVerificacion->fetch();
-		$cod_personalVerificacion=$resultPersonalVerificacion['cod_personal'];
+		$cod_personalVerificacion = empty($resultPersonalVerificacion) ? '' : $resultPersonalVerificacion['cod_personal'];
 
 		if($cod_personalVerificacion==null){//insertamos datos de pesonal si no esta en planilla
 			$sqlInsertPlanillas="INSERT into planillas_aguinaldos_detalle(cod_planilla,cod_personal,sueldo_1,sueldo_2,sueldo_3,
-			  meses_trabajados,dias_trabajados,total_aguinaldo,created_by,modified_by)
+			  meses_trabajados,dias_trabajados,total_aguinaldo,created_by,modified_by,cod_cargo,cod_uo,cod_area)
 			 values(:cod_planilla,:codigo_personal,:sueldo1,:sueldo2,:sueldo3,:meses_trabajados,:dias_trabajados,
-			 	:total_aguinaldo,:created_by,:modified_by)";
+			 	:total_aguinaldo,:created_by,:modified_by,:cod_cargo,:cod_uo,:cod_area)";
 			$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 			$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 			$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
+			$stmtInsertPlanillas->bindParam(':cod_cargo',$cod_cargo);
+			$stmtInsertPlanillas->bindParam(':cod_uo',$cod_uo);
+			$stmtInsertPlanillas->bindParam(':cod_area',$cod_area);
 			$stmtInsertPlanillas->bindParam(':sueldo1',$liquido_mes1);
 			$stmtInsertPlanillas->bindParam(':sueldo2',$liquido_mes2);
 			$stmtInsertPlanillas->bindParam(':sueldo3',$liquido_mes3);
@@ -230,11 +265,14 @@ if($sw==2){//procesar planilla
 		}else{
 			//==== update de panillas si personal existe
 			$sqlInsertPlanillas="UPDATE planillas_aguinaldos_detalle set sueldo_1=:sueldo1,sueldo_2=:sueldo2,sueldo_3=:sueldo3,
-			  meses_trabajados=:meses_trabajados,dias_trabajados=:dias_trabajados,total_aguinaldo=:total_aguinaldo,modified_by=:modified_by
+			  meses_trabajados=:meses_trabajados,dias_trabajados=:dias_trabajados,total_aguinaldo=:total_aguinaldo,modified_by=:modified_by,cod_cargo=:cod_cargo,cod_uo=:cod_uo,cod_area=:cod_area
 			where cod_planilla=:cod_planilla and cod_personal=:codigo_personal";
 			$stmtInsertPlanillas = $dbhI->prepare($sqlInsertPlanillas);
 			$stmtInsertPlanillas->bindParam(':cod_planilla', $cod_planilla);
 			$stmtInsertPlanillas->bindParam(':codigo_personal',$codigo_personal);
+			$stmtInsertPlanillas->bindParam(':cod_cargo',$cod_cargo);
+			$stmtInsertPlanillas->bindParam(':cod_uo',$cod_uo);
+			$stmtInsertPlanillas->bindParam(':cod_area',$cod_area);
 			$stmtInsertPlanillas->bindParam(':sueldo1',$liquido_mes1);
 			$stmtInsertPlanillas->bindParam(':sueldo2',$liquido_mes2);
 			$stmtInsertPlanillas->bindParam(':sueldo3',$liquido_mes3);

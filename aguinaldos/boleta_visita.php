@@ -10,80 +10,54 @@ setlocale(LC_TIME, "Spanish");
 
 $dbh = new Conexion();
 
+// VISTA ADMIN
 /************************************************************/
 // VERIFICACIÖN DE CANTIDAD DE VISTAS OBTENIDAS
-$cod_personal       = $_SESSION['globalUser'];
-$cod_planilla_mes   = $_GET['key'];
+$cod_personal = empty($_SESSION['globalUser']) ? 0 : $_SESSION['globalUser'];
+$codigo       = $_GET['key'];
+$fecha 		  = date('Y-m-d H:i:s');
 
 /******************************************************/
-//  VERIFICACIÓN DE CODIGOS REEMPLAZADOS X REPROCESO  //
-/******************************************************/
-$sqlOld = "SELECT cod_anterior, cod_planilla, cod_personal, cod_nuevo
-        FROM planilla_temporal
-        WHERE cod_anterior = '$cod_planilla_mes'
-        LIMIT 1";
-$stmtOld = $dbh->prepare($sqlOld);
-$stmtOld->execute();
-$result = $stmtOld->fetch(PDO::FETCH_ASSOC);
-if ($result) {
-    // Acceder a Codigo de Boleta Actual
-    $cod_planilla_mes = $result['cod_nuevo'];
-}
 
 // DETALLE
-$sql="SELECT ppm.codigo, 
-        CONCAT(p.primer_nombre, ' ', p.paterno) as nombre_personal,
+$sql="SELECT pad.codigo, CONCAT(p.primer_nombre, ' ', p.paterno) as nombre_personal,
         p.codigo as cod_personal,
         p.email,
-        (CASE
-            WHEN pl.cod_mes = '1' THEN 'ENERO'
-            WHEN pl.cod_mes = '2' THEN 'FEBRERO'
-            WHEN pl.cod_mes = '3' THEN 'MARZO'
-            WHEN pl.cod_mes = '4' THEN 'ABRIL'
-            WHEN pl.cod_mes = '5' THEN 'MAYO'
-            WHEN pl.cod_mes = '6' THEN 'JUNIO'
-            WHEN pl.cod_mes = '7' THEN 'JULIO'
-            WHEN pl.cod_mes = '8' THEN 'AGOSTO'
-            WHEN pl.cod_mes = '9' THEN 'SEPTIEMBRE'
-            WHEN pl.cod_mes = '10' THEN 'OCTUBRE'
-            WHEN pl.cod_mes = '11' THEN 'NOVIEMBRE'
-            WHEN pl.cod_mes = '12' THEN 'DICIEMBRE'
-        END) as mes,
         g.nombre as anio,
-        pl.dias_trabajo,
-        DATE_FORMAT(pl.created_at,'%d-%m-%Y %H:%i:%s') as created,
-        (SELECT COUNT(*) FROM planillas_email WHERE cod_planilla_mes = ppm.codigo) as nro_vista
-    FROM planillas_personal_mes ppm
-    LEFT JOIN personal p ON p.codigo = ppm.cod_personalcargo
-    LEFT JOIN planillas pl ON pl.codigo = ppm.cod_planilla
-    LEFT JOIN gestiones g ON g.codigo = pl.cod_gestion
-    WHERE ppm.codigo = '$cod_planilla_mes'";
+        pad.meses_trabajados,
+        pad.dias_trabajados,
+        DATE_FORMAT(pa.created_at,'%d-%m-%Y %H:%i:%s') as created,
+        (SELECT COUNT(*) FROM planillas_aguinaldos_email WHERE cod_planilla_mes = pad.codigo) as nro_vista
+        FROM planillas_aguinaldos_detalle pad
+        LEFT JOIN personal p ON p.codigo = pad.cod_personal
+        LEFT JOIN planillas_aguinaldos pa ON pa.codigo = pad.cod_planilla
+        LEFT JOIN gestiones g ON g.codigo = pa.cod_gestion
+        WHERE pad.codigo = '$codigo'";
 $stmt = $dbh->prepare($sql);    
 $stmt->execute();
 while ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $detail_mes          = $result['mes'];
+    $detail_mes          = 'Aguinaldo';
     $detail_gestion      = $result['anio'];
     $detail_cod_personal = $result['cod_personal'];
     $detail_personal     = $result['nombre_personal'];
     $detail_emision      = $result['created'];
-    $detail_dias_trabajo = $result['dias_trabajo'];
+    $detail_tiempo_trabajo = $result['meses_trabajados'].' meses'.($result['dias_trabajados'] > 0 ? (' y '.$result['dias_trabajados'].' días') : '');
     $detail_nro_vista    = $result['nro_vista'];
 }
-/*****************************************************/
-/**
- * CONTROL DE VISTA PERSONAL
+
+/*************************************************************
+ * Contabiliza visualización
  */
 if (empty($cod_personal) || $cod_personal == 0 || $cod_personal == $detail_cod_personal) {
     $detail_nro_vista++;
-    $fecha = date('Y-m-d H:i:s');
-    $sql   = "INSERT INTO planillas_email(cod_personal, cod_planilla_mes, fecha) 
-            VALUES ('$cod_personal', '$cod_planilla_mes', '$fecha')";
+    $sql   = "INSERT INTO planillas_aguinaldos_email(cod_personal, cod_planilla_mes, fecha) 
+            VALUES ('$cod_personal', '$codigo', '$fecha')";
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
 }
 /************************************************************/
 
-$ruta_vista = obtenerValorConfiguracion(104);
+$ruta_vista = obtenerValorConfiguracion(113);
 
 ?>
 <div id="logo_carga" class="logo-carga" style="display:none;"></div>
@@ -108,7 +82,7 @@ $ruta_vista = obtenerValorConfiguracion(104);
                                     <input type="text" class="form-control" readonly="true" value="<?=$detail_personal?>" style="background-color:#E3CEF6;text-align: center" >
                                 </div>
                                 </div>  
-                                <label class="col-sm-1 col-form-label" style="color:#000000; ">Mes :</label>
+                                <label class="col-sm-1 col-form-label" style="color:#000000; ">Periodo :</label>
                                 <div class="col-sm-1">
                                 <div class="form-group">
                                     <input type="text" class="form-control" readonly="true" value="<?=$detail_mes?>" style="background-color:#E3CEF6;text-align: center">
@@ -131,7 +105,7 @@ $ruta_vista = obtenerValorConfiguracion(104);
                                 <label class="col-sm-1 col-form-label" style="color:#000000; ">Días Trabajados</label>
                                 <div class="col-sm-2">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" readonly="true" value="<?=$detail_dias_trabajo?>" style="background-color:#E3CEF6;text-align: center" >
+                                        <input type="text" class="form-control" readonly="true" value="<?=$detail_tiempo_trabajo?>" style="background-color:#E3CEF6;text-align: center" >
                                     </div>
                                 </div> 
                                 <label class="col-sm-1 col-form-label" style="color:#000000; ">N&uacute;mero Visualizaciones</label>
@@ -146,12 +120,9 @@ $ruta_vista = obtenerValorConfiguracion(104);
                         <hr>
                         <div class="col-sm-12 text-info font-weight-bold"><center><label id="titulo_vista_previa"><b>BOLETA DE PAGO</b></label></center></div>
                         <div class="row col-sm-12">
-                        <iframe src="<?=$ruta_vista?>verf_boletas_print.php?key=<?=$cod_planilla_mes?>"  id="vista_previa_frame" width="1600" class="div-center" height="600" scrolling="yes" style="border:none; border: #741899 solid 9px;border-radius:10px;">
+                        <iframe src="<?=$ruta_vista?>boleta.php?key=<?=$codigo?>"  id="vista_previa_frame" width="1600" class="div-center" height="600" scrolling="yes" style="border:none; border: #741899 solid 9px;border-radius:10px;">
                             No hay vista disponible
                         </iframe>
-                        <!-- <iframe src="http://localhost/ifinanciero/boletas/verf_boletas_print.php?key=<?=$cod_planilla_mes?>"  id="vista_previa_frame" width="1600" class="div-center" height="600" scrolling="yes" style="border:none; border: #741899 solid 9px;border-radius:10px;">
-                            No hay vista disponible
-                        </iframe> -->
                         </div>
                     </div>
 

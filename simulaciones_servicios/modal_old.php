@@ -582,7 +582,112 @@
                              <!--</div>
                            </div>--> 
                       </div>
+                      <?php 
+                        // Caso especial (excepcion)
+                        $array_excepcion = ['4822'];
+                        if($codAreaX==39 && !in_array($idTipoServicioX, $array_excepcion)){
+                          $cantidadProductos=explode(",",$productosX);
+                         ?>
 
+                      <!-- SECCIÓN DE PRODUCTOS -->
+                      <div class="row seccion_productos pt-0">
+                        <label class="col-sm-1 col-form-label">Productos <?=count($cantidadProductos)?></label>
+                        <div class="col-sm-9">
+                          <div class="form-group">
+                            <div>
+                              <table class="table table-bordered table-sm table-striped small" style="font-size: 11px;">
+                                <thead>
+                                  <tr class="bg-info text-white">
+                                    <th>#</th>
+                                    <th>NOMBRE</th>
+                                    <th>DIRECCION</th>
+                                    <th>MARCA</th>
+                                    <th>NORMA</th>
+                                    <th>SELLO</th>
+                                    <td class="text-right" width="18%">OPCION</td>
+                                  </tr>
+                                </thead>
+                                <tbody id="listProducto">
+                                  <?php
+                                  if (count($cantidadProductos) === 0) {
+                                      echo '<tr><td colspan="7">No existen registros.</td></tr>';
+                                  }
+                                  ?>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <?php
+                              if(!isset($sinEdicionModal)){
+                            ?>
+                            <!-- Agrega Nuevo -->
+                            <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm btnEditarAtributo" onClick="abreModalItem()">
+                              <i class="material-icons">add</i>
+                            </button>
+                            <?php } ?>
+                        </div>
+                      </div>
+                      <!-- Lista Atributos -->
+                      <script>
+                        atributoProducto = atributosArrayGral;
+                        actualizarTablaProductos();
+                      </script>
+                      <!-- FIN SECCIÓN DE PRODUCTOS -->
+
+                         <?php
+                        }else{
+                            if($codAreaX==38 || (in_array($idTipoServicioX, $array_excepcion) && $codAreaX==39)){
+                              $cantidadSitios=explode(",",$sitiosX);
+                              
+                         ?>
+                        <div class="row seccion_sitios pt-0">
+                          <label class="col-sm-1 col-form-label">Sitios <?=count($cantidadSitios)?></label>
+                          <div class="col-sm-9">
+                            <div class="form-group">
+                              <div>
+                                <table class="table table-bordered table-sm table-striped small" style="font-size: 11px;">
+                                  <thead>
+                                    <tr class="bg-info text-white">
+                                      <th>#</th>
+                                      <th>NOMBRE</th>
+                                      <th>DIRECCION</th>
+                                      <td class="text-right" width="18%">OPCION</td>
+                                    </tr>
+                                  </thead>
+                                  <tbody id="listSitio">
+                                    <?php
+                                    if (count($cantidadSitios) === 0) {
+                                        echo '<tr><td colspan="4">No existen registros.</td></tr>';
+                                    }
+                                    ?>
+                                  </tbody>
+                                </table>
+                              </div>
+              
+                            </div>
+                          </div>
+                          <div class="col-sm-2">
+                            <?php
+                              if(!isset($sinEdicionModal)){
+                            ?>
+                              <button title="Agregar Sitio" type="button" name="add" class="btn btn-warning btn-round btn-fab btn-sm btnEditarAtributo" onClick="abreModalItem()"><i class="material-icons">add</i>
+                              </button>
+                            <?php } ?>
+                          </div>
+                        </div>
+                        <!-- Lista Atributos -->
+                        <script>
+                          atributoSitio = atributosArrayGral;
+                          actualizarTablaSitios();
+                        </script>
+                        <?php
+                            }else{
+                             //otro servicio
+                            }
+                          }
+                        ?>
                       
                       <div class="row">
                         <label class="col-sm-2 col-form-label">Cliente</label>

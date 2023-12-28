@@ -21,7 +21,7 @@ function totalGanadoArea($gestion, $mes, $cod_area,$cod_uo=null){
   }
   $dbh = new Conexion();
   $sql="SELECT sum(pm.total_ganado*(pad.porcentaje/100))as monto 
-    from planillas p join planillas_personal_mes pm on p.codigo=pm.cod_planilla join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1
+    from planillas p join planillas_personal_mes pm on p.codigo=pm.cod_planilla join personal_area_distribucion_planilla pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1 and pad.cod_planilla = p.codigo
     where p.cod_gestion='$gestion' and p.cod_mes='$mes' and pad.cod_area='$cod_area' $sql_add";
     // echo $sql."<br>";
     $stmt = $dbh->prepare($sql);

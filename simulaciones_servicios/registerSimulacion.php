@@ -294,8 +294,8 @@ $sqlArrayAtributos="SELECT
                     LEFT JOIN simulaciones_servicios_atributosnormas sni ON sni.cod_simulacionservicioatributo = sa.codigo AND sni.catalogo = 'I'
                     LEFT JOIN normas vi ON sni.cod_norma = vi.codigo
                     WHERE s.codigo = '$codigo'
-                    GROUP BY s.codigo, sa.nombre, sa.direccion, sa.marca, sa.
-                    ORDER BY sa.codigo ASCnro_sello";
+                    GROUP BY s.codigo, sa.nombre, sa.direccion, sa.marca
+                    ORDER BY sa.codigo ASC";
 $stmtArrayAtributos = $dbh->prepare($sqlArrayAtributos);
 $stmtArrayAtributos->execute();
 ?>
@@ -588,6 +588,18 @@ $stmtArrayAtributos->execute();
 					<div class="card-text">
 					  <h4 class="card-title">Informaci&oacute;n a detalle de la Propuesta</h4>
 					</div>
+          <?php
+            $array_excepciona_atr = ['4822'];
+            $title_button         = '';        
+            if ($codigoPlan == 3 || (in_array($idTipoServicioX, $array_excepciona_atr) && $codigoPlan == 2)) {
+                $title_button             = 'Sitios';
+            } else if ($codigoPlan == 2) {
+                $title_button             = 'Productos';
+            }
+          ?>
+          <button type="button" onclick="abrirAtributoLista()" class="btn btn-primary btn-sm btn-fab float-right" title="Lista de <?=$title_button?>">
+            <i class="material-icons">label</i>
+          </button>
           <button type="button" onclick="editarDatosPlantilla()" class="btn btn-success btn-sm btn-fab float-right">
              <i class="material-icons" title="Editar Plantilla">edit</i>
           </button>
@@ -1230,6 +1242,8 @@ $stmtArrayAtributos->execute();
 require_once 'modalDetalle.php';
 // MODAL DETALLE
 require_once 'modal.php';
+// MODAL TRIBUTOS
+require_once 'modal_atributo.php';
 
 $end_time = microtime(true);
 $duration=$end_time-$start_time;

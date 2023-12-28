@@ -21,7 +21,7 @@ $globalArea=$_SESSION["globalArea"];
 $nroCuentaBusqueda=$_GET["nro_cuenta"];
 $nombreCuentaBusqueda=$_GET["cuenta"];
 $padreCuentaBusqueda=$_GET['padre'];
-$sqlBusqueda="SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.nivel=5 ";
+$sqlBusqueda="SELECT p.codigo, p.numero, p.nombre from plan_cuentas p where p.cod_estadoreferencial = 1 AND p.nivel=5 ";
 if($nroCuentaBusqueda!=""){
 	$sqlBusqueda.=" and p.numero like '%".$nroCuentaBusqueda."%'";
 }

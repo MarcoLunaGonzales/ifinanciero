@@ -66,7 +66,7 @@ for ($i=0; $i <$cont_areas; $i++) {
       if($totalGanadoAreax>0){
         //sacamos montos por pesonal
         $sqlPer="SELECT pm.cod_personalcargo,CONCAT_WS(' ',per.primer_nombre,per.paterno,per.materno)as personal,sum(pm.total_ganado*(pad.porcentaje/100))as montoGanado,sum(pad.porcentaje)as porcentaje
-        from planillas p join planillas_personal_mes pm on p.codigo=pm.cod_planilla join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1 join personal per on pm.cod_personalcargo=per.codigo
+        from planillas p join planillas_personal_mes pm on p.codigo=pm.cod_planilla join personal_area_distribucion_planilla pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1 and pad.cod_planilla = p.codigo join personal per on pm.cod_personalcargo=per.codigo
         where p.cod_gestion='$gestionPlanilla' and p.cod_mes='$mesPlanilla' and pad.cod_area='$cod_areaX' and pad.cod_uo='$codigoUOXY'
         GROUP BY pm.cod_personalcargo 
         order by 2";
@@ -92,7 +92,7 @@ for ($i=0; $i <$cont_areas; $i++) {
     $array_monto_area[$cod_area_contabilizacionX]+=$totalGanadoAreax;
     if($totalGanadoAreax>0){
       $sqlPer="SELECT pm.cod_personalcargo,CONCAT_WS(' ',per.primer_nombre,per.paterno,per.materno)as personal,sum(pm.total_ganado*(pad.porcentaje/100))as montoGanado,sum(pad.porcentaje)as porcentaje
-      from planillas p join planillas_personal_mes pm on p.codigo=pm.cod_planilla join personal_area_distribucion pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1 join personal per on pm.cod_personalcargo=per.codigo
+      from planillas p join planillas_personal_mes pm on p.codigo=pm.cod_planilla join personal_area_distribucion_planilla pad on pm.cod_personalcargo=pad.cod_personal and pad.cod_estadoreferencial=1 and pad.cod_planilla = p.codigo join personal per on pm.cod_personalcargo=per.codigo
       where p.cod_gestion='$gestionPlanilla' and p.cod_mes='$mesPlanilla' and pad.cod_area='$cod_areaX'
       GROUP BY pm.cod_personalcargo 
       order by 2";

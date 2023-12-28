@@ -2,6 +2,8 @@
 
 /**
  * 2° Segunda versión de verificación de Normalización, con la tabla Suscripciones
+ * 
+ * OBTIENE CODIGO IDVENTA NORMA PARA LA TABLA "ventanormas_facturas"
  */
 
 date_default_timezone_set('America/La_Paz');

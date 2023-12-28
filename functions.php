@@ -3641,7 +3641,7 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     where cod_planilla=$cod_planilla and cod_personalcargo=$cod_personal");
     $stmt->execute();
     $result=$stmt->fetch();
-    $liquido_pagable=$result['liquido_pagable'];
+    $liquido_pagable = ($result !== false) ? $result['liquido_pagable'] : 0;
     $dbh = '';
     $stmt = '';
     return ($liquido_pagable);
@@ -12316,5 +12316,22 @@ function obtieneNitSIAT($cod_factura_siat){
    }
    return($nitString);
 }
+
+/**
+ * Obtiene Total Ganado
+ */
+function obtenerSueldomesTotalGanado($cod_personal,$cod_planilla){
+  $dbh = new Conexion();
+  set_time_limit(300);
+  $stmt = $dbh->prepare("SELECT total_ganado from planillas_personal_mes
+  where cod_planilla=$cod_planilla and cod_personalcargo=$cod_personal");
+  $stmt->execute();
+  $result=$stmt->fetch();
+  $total_ganado = ($result !== false) ? $result['total_ganado'] : 0;
+  $dbh = '';
+  $stmt = '';
+  return ($total_ganado);
+}
+
 
 ?>

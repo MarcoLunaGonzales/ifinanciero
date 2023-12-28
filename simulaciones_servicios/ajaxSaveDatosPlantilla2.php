@@ -285,139 +285,144 @@ $stmtDetAt->execute();
 
   // NUEVO CAMPO PARA LA ELIMINACIÓN DE ATRIBUTOS NORMAS PARA EVITAR TENER DUPLICADOS DE REGISTROS
   // Limpiamos tabla de Atributos Normas
-  $dbhA = new Conexion();
-  $sqlA="DELETE FROM simulaciones_servicios_atributosnormas where cod_simulacionservicioatributo=$codigo_atributonorma";
-  $stmtA = $dbhA->prepare($sqlA);
-  $stmtA->execute();
+  // $dbhA = new Conexion();
+  // $sqlA="DELETE FROM simulaciones_servicios_atributosnormas where cod_simulacionservicioatributo=$codigo_atributonorma";
+  // $stmtA = $dbhA->prepare($sqlA);
+  // $stmtA->execute();
 
   
-  $dbhA = new Conexion();
-  $sqlA="DELETE FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codSimulacion";
-  $stmtA = $dbhA->prepare($sqlA);
-  $stmtA->execute();
+  // $dbhA = new Conexion();
+  // $sqlA="DELETE FROM simulaciones_servicios_atributos where cod_simulacionservicio=$codSimulacion";
+  // $stmtA = $dbhA->prepare($sqlA);
+  // $stmtA->execute();
+
 
   
-  //simulaciones_serviciosauditores
-          $nC=cantidadF($atributos);
-          for($att=0;$att<$nC;$att++){
-              $codigoAtributo=$atributos[$att]->codigo;
-              $nombreAtributo=$atributos[$att]->nombre;
-              $direccionAtributo=$atributos[$att]->direccion;
-              $marcaAtributo=$atributos[$att]->marca;
-              $normaAtributo=$atributos[$att]->norma;
-              $selloAtributo=$atributos[$att]->sello;
+  /**
+   * (La funcionalidad para actualizar es separada)
+   */
+  
+  // simulaciones_serviciosauditores 
+  //         $nC=cantidadF($atributos);
+  //         for($att=0;$att<$nC;$att++){
+  //             $codigoAtributo=$atributos[$att]->codigo;
+  //             $nombreAtributo=$atributos[$att]->nombre;
+  //             $direccionAtributo=$atributos[$att]->direccion;
+  //             $marcaAtributo=$atributos[$att]->marca;
+  //             $normaAtributo=$atributos[$att]->norma;
+  //             $selloAtributo=$atributos[$att]->sello;
 
-              $paisAtributo=$atributos[$att]->pais;
-              $estadoAtributo=$atributos[$att]->estado;
-              $ciudadAtributo=$atributos[$att]->ciudad;
+  //             $paisAtributo=$atributos[$att]->pais;
+  //             $estadoAtributo=$atributos[$att]->estado;
+  //             $ciudadAtributo=$atributos[$att]->ciudad;
 
-              $codSimulacionServicioAtributo=obtenerCodigoSimulacionServicioAtributo();
-              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (codigo,cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello,cod_pais,cod_estado,cod_ciudad) 
-              VALUES ('$codSimulacionServicioAtributo','$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo','$paisAtributo','$estadoAtributo','$ciudadAtributo')";
-              $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
-              $stmtDetalleAtributos->execute();
-              $auditoresDias = 0;
+  //             $codSimulacionServicioAtributo=obtenerCodigoSimulacionServicioAtributo();
+  //             $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (codigo,cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello,cod_pais,cod_estado,cod_ciudad) 
+  //             VALUES ('$codSimulacionServicioAtributo','$codSimulacion', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo','$paisAtributo','$estadoAtributo','$ciudadAtributo')";
+  //             $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
+  //             $stmtDetalleAtributos->execute();
+  //             $auditoresDias = 0;
 
               
-              /*************************************************/
-              // Normas Nacionales
-              if(isset($atributos[$att]->atr_norma_nac)){
-                $atrCodNorma=$atributos[$att]->atr_norma_nac;
-                $normasFila=explode(",",$atrCodNorma);
-                for ($ni=0; $ni < count($normasFila); $ni++) { 
-                  $codNorma=$normasFila[$ni];
-                  $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad, catalogo) 
-                  VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1, 'L')";
-                  $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
-                  $flagsuccess=$stmtDetalleAtributosNormas->execute();
-                }
-              }
-              // Normas Internacionales
-              if(isset($atributos[$att]->atr_norma_int)){
-                $atrCodNorma=$atributos[$att]->atr_norma_int;
-                $normasFila=explode(",",$atrCodNorma);
-                for ($ni=0; $ni < count($normasFila); $ni++) { 
-                  $codNorma=$normasFila[$ni];
-                  $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad, catalogo) 
-                  VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1, 'I')";
-                  $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
-                  $flagsuccess=$stmtDetalleAtributosNormas->execute();
-                }
-              }
-              /*************************************************/
+  //             /*************************************************/
+  //             // Normas Nacionales
+  //             if(isset($atributos[$att]->atr_norma_nac)){
+  //               $atrCodNorma=$atributos[$att]->atr_norma_nac;
+  //               $normasFila=explode(",",$atrCodNorma);
+  //               for ($ni=0; $ni < count($normasFila); $ni++) { 
+  //                 $codNorma=$normasFila[$ni];
+  //                 $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad, catalogo) 
+  //                 VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1, 'L')";
+  //                 $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
+  //                 $flagsuccess=$stmtDetalleAtributosNormas->execute();
+  //               }
+  //             }
+  //             // Normas Internacionales
+  //             if(isset($atributos[$att]->atr_norma_int)){
+  //               $atrCodNorma=$atributos[$att]->atr_norma_int;
+  //               $normasFila=explode(",",$atrCodNorma);
+  //               for ($ni=0; $ni < count($normasFila); $ni++) { 
+  //                 $codNorma=$normasFila[$ni];
+  //                 $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad, catalogo) 
+  //                 VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1, 'I')";
+  //                 $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
+  //                 $flagsuccess=$stmtDetalleAtributosNormas->execute();
+  //               }
+  //             }
+  //             /*************************************************/
 
-            if($_POST['tcs']==0){
-                //$direccionAtributo="";
-                // VERIFICAR FUNCIONALIDAD 
-              // $normasFila=explode(",",$normaCodAtributo);
-              //   for ($ni=0; $ni < count($normasFila); $ni++) { 
-              //    $codNorma=$normasFila[$ni];
-              //     $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad) 
-              //    VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1)";
-              //    $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
-              //    $stmtDetalleAtributosNormas->execute();
-              //  }
-              }else{
-                /**
-                 * ESTA FUNCIONALIDAD ES OBSOLETA Y SE REFERIA A LOS DIAS QUE SE PLANIFICABA POR CADA AUDITOR
-                 * EN SITIO
-                 */
-                // $auditoresDias=json_decode($_POST['auditoresDias']);               
-                //  $nCDias=cantidadF($atributosDias);
-                //     for($jj=0;$jj<$nCDias;$jj++){
-                //        $codigoAtributoDias=$atributosDias[$jj]->codigo_atributo;
-                //        $anioAtributoDias=$atributosDias[$jj]->anio;
-                //        $diasAtributoDias=$atributosDias[$jj]->dias;
-                //        if($codigoAtributoDias==$codigoAtributo){
-                //         $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributosdias (cod_simulacionservicioatributo, dias, cod_anio) 
-                //         VALUES ('$codSimulacionServicioAtributo', '$diasAtributoDias', '$anioAtributoDias')";
-                //         $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
-                //         $stmtDetalleAtributos->execute();
-                //         /*$sqlDetalleAu="UPDATE simulaciones_servicios_atributosauditores SET estado=0 where cod_simulacionservicioatributo=$codSimulacionServicioAtributo and cod_anio=$anioAtributoDias";
-                //         $stmtDetalleAu = $dbh->prepare($sqlDetalleAu);
-                //         $stmtDetalleAu->execute();*/
-                //          //aumentar dias a los auditores
-                //         $diasAtributoDiasAux=0;
-                //          for ($al=0; $al < count($auditoresDias[$jj]); $al++) { 
-                //           $valorAuditorDia=explode("####",$auditoresDias[$jj][$al]);
-                //           $codigoAuditor=$valorAuditorDia[0];    
-                //           if($valorAuditorDia[1]=="SI"){
-                //              $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
-                //              VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',1)";
-                //              $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
-                //              $stmtDetalleAtributosAud->execute();  
-                //              $diasAtributoDiasAux=$diasAtributoDias;
+  //           if($_POST['tcs']==0){
+  //               //$direccionAtributo="";
+  //               // VERIFICAR FUNCIONALIDAD 
+  //             // $normasFila=explode(",",$normaCodAtributo);
+  //             //   for ($ni=0; $ni < count($normasFila); $ni++) { 
+  //             //    $codNorma=$normasFila[$ni];
+  //             //     $sqlDetalleAtributosNormas="INSERT INTO simulaciones_servicios_atributosnormas (cod_simulacionservicioatributo, cod_norma, precio,cantidad) 
+  //             //    VALUES ('$codSimulacionServicioAtributo', '$codNorma', '10',1)";
+  //             //    $stmtDetalleAtributosNormas = $dbh->prepare($sqlDetalleAtributosNormas);
+  //             //    $stmtDetalleAtributosNormas->execute();
+  //             //  }
+  //             }else{
+  //               /**
+  //                * ESTA FUNCIONALIDAD ES OBSOLETA Y SE REFERIA A LOS DIAS QUE SE PLANIFICABA POR CADA AUDITOR
+  //                * EN SITIO
+  //                */
+  //               // $auditoresDias=json_decode($_POST['auditoresDias']);               
+  //               //  $nCDias=cantidadF($atributosDias);
+  //               //     for($jj=0;$jj<$nCDias;$jj++){
+  //               //        $codigoAtributoDias=$atributosDias[$jj]->codigo_atributo;
+  //               //        $anioAtributoDias=$atributosDias[$jj]->anio;
+  //               //        $diasAtributoDias=$atributosDias[$jj]->dias;
+  //               //        if($codigoAtributoDias==$codigoAtributo){
+  //               //         $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributosdias (cod_simulacionservicioatributo, dias, cod_anio) 
+  //               //         VALUES ('$codSimulacionServicioAtributo', '$diasAtributoDias', '$anioAtributoDias')";
+  //               //         $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
+  //               //         $stmtDetalleAtributos->execute();
+  //               //         /*$sqlDetalleAu="UPDATE simulaciones_servicios_atributosauditores SET estado=0 where cod_simulacionservicioatributo=$codSimulacionServicioAtributo and cod_anio=$anioAtributoDias";
+  //               //         $stmtDetalleAu = $dbh->prepare($sqlDetalleAu);
+  //               //         $stmtDetalleAu->execute();*/
+  //               //          //aumentar dias a los auditores
+  //               //         $diasAtributoDiasAux=0;
+  //               //          for ($al=0; $al < count($auditoresDias[$jj]); $al++) { 
+  //               //           $valorAuditorDia=explode("####",$auditoresDias[$jj][$al]);
+  //               //           $codigoAuditor=$valorAuditorDia[0];    
+  //               //           if($valorAuditorDia[1]=="SI"){
+  //               //              $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
+  //               //              VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',1)";
+  //               //              $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
+  //               //              $stmtDetalleAtributosAud->execute();  
+  //               //              $diasAtributoDiasAux=$diasAtributoDias;
                                
-                //           }else{
-                //              $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
-                //              VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',0)";
-                //              $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
-                //              $stmtDetalleAtributosAud->execute();
-                //              $diasAtributoDiasAux=0;
-                //           }
-                //           if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
-                //           $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
-                //           $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
-                //           $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
-                //           $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
-                //           $stmtDetallesAuditores->execute();
-                //           }
-                //           echo $sqlDetallesAuditores;
-                //          }
-                //          if(count($auditoresDias[$jj])==0){
-                //            if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
-                //           $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
-                //           $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
-                //           $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
-                //           $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
-                //           $stmtDetallesAuditores->execute();
-                //           }
-                //          }
-                //        }           
-                //     }
-              }         
+  //               //           }else{
+  //               //              $sqlDetalleAtributosAud="INSERT INTO simulaciones_servicios_atributosauditores (cod_simulacionservicioatributo, cod_auditor, cod_anio,estado) 
+  //               //              VALUES ('$codSimulacionServicioAtributo', '$codigoAuditor', '$anioAtributoDias',0)";
+  //               //              $stmtDetalleAtributosAud = $dbh->prepare($sqlDetalleAtributosAud);
+  //               //              $stmtDetalleAtributosAud->execute();
+  //               //              $diasAtributoDiasAux=0;
+  //               //           }
+  //               //           if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
+  //               //           $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
+  //               //           $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
+  //               //           $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
+  //               //           $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+  //               //           $stmtDetallesAuditores->execute();
+  //               //           }
+  //               //           echo $sqlDetallesAuditores;
+  //               //          }
+  //               //          if(count($auditoresDias[$jj])==0){
+  //               //            if(obtenerEntradaSimulacionServicio($codSimulacion)==1){
+  //               //           $cantidadDiasAnterior=obtenerDiasAuditorSimulacionServicio($codigoAuditor);
+  //               //           $cantidadDiasNuevo=$cantidadDiasAnterior+$diasAtributoDiasAux; 
+  //               //           $sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=$cantidadDiasNuevo where codigo=$codigoAuditor";
+  //               //           $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
+  //               //           $stmtDetallesAuditores->execute();
+  //               //           }
+  //               //          }
+  //               //        }           
+  //               //     }
+  //             }         
               
-         }
+  //        }
          //FIN simulaciones_serviciosauditores
 
 

@@ -64,7 +64,7 @@ log_querys($query2,'simulaciones','ERROR 2','-','ajaxListSimulacion.php');
    <!--<label class="col-sm-3 col-form-label">Propuesta :</label>-->
    <div class="col-sm-12">
      <div class="form-group">
-          <select class="selectpicker form-control form-control-sm" data-size="10" data-live-search="true" name="simulaciones" id="simulaciones" data-style="btn-warning" required>
+          <select class="selectpicker form-control form-control-sm" data-size="10" data-live-search="true" name="simulaciones" id="select_simulaciones" data-style="btn-warning" required>
            <?php 
             if($query!=""){
               $stmt = $dbh->prepare($query);

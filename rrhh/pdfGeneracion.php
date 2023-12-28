@@ -117,6 +117,54 @@ $stmt = $dbh->prepare($sql);
 $stmt->execute();
 $resp_manual_aprobacion = $stmt->fetch(PDO::FETCH_ASSOC);
 
+/*******************************************************/
+/**
+ * Almacena la historial de vista
+ * $_GET['tipo'] => VISTA
+ */
+if (!empty($_GET['tipo']) && $_GET['tipo'] == 1) {
+    session_start();
+    date_default_timezone_set('America/La_Paz');
+
+    $cod_manual_aprobacion = $resp_manual_aprobacion['codigo'];
+    $fecha_vista = date("Y-m-d H:i:s");
+
+    $q = empty($_GET['q']) ? '' : $_GET['q'];
+
+    if (empty($q)) {
+        $globalUser  = $_SESSION["globalUser"];
+        $globalArea  = $_SESSION["globalArea"];
+        $globalCargo = $_SESSION["globalCargo"];
+    } else {
+        $sql = "SELECT p.codigo, p.cod_area, p.cod_cargo
+                FROM personal p
+                WHERE p.codigo = :codigo
+                LIMIT 1";
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':codigo', $q, PDO::PARAM_STR);
+        $stmt->execute();
+        $registro = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($registro) {
+            $globalUser  = $registro['codigo'];
+            $globalArea  = $registro['cod_area'];
+            $globalCargo = $registro['cod_cargo'];
+        }
+    }
+
+    $sql = "INSERT INTO manuales_aprobacion_vistas (cod_manual_aprobacion, cod_personal, fecha) 
+            VALUES(:cod_manual_aprobacion, :globalUser, :fecha)";
+    
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindParam(':cod_manual_aprobacion', $cod_manual_aprobacion, PDO::PARAM_STR);
+    $stmt->bindParam(':globalUser', $globalUser, PDO::PARAM_STR);
+    $stmt->bindParam(':fecha', $fecha_vista, PDO::PARAM_STR);
+    
+    $stmt->execute();
+}
+
+/*******************************************************/
+
 // * CONTROL DE CAMBIOS - SE OBTIENE ULTIMO REGISTRO
 $sql = "SELECT cv.codigo, cv.nro_version, cv.codigo_doc, cv.descripcion_cambios, cv.fecha
         FROM control_versiones cv
