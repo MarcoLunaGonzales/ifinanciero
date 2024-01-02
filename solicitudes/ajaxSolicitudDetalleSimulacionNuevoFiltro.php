@@ -78,6 +78,14 @@ $codigo_detalle=$_GET['codigo_detalle'];
                                 $sumaImportePropuesta+=$rowDetalles['importe'];
                                 $entro2=1;
                             }
+
+
+                            /*********************  REVISAR ESTO  *******************************/
+                            //$entro2 Cambiamos a 0 para que todo entre a la SR y no se restrinja nada
+                            $entro2=0;
+                            /*********************** FIN REVISAR *******************************/
+
+
                             if($entro2==1){
                               if($sumaImportePropuesta<$sumaImportePres){
                                  $importeSolX=$sumaImportePres-$sumaImportePropuesta;
