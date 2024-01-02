@@ -70,16 +70,16 @@
 		                    <td><small>Novedades</small></td>
 		                    <td><small>Monto De Ingreso Neto</small></td>
 		                    <?php
-												//Solo en mayo se adiciona el retroactivo
-										    if($cod_mes==5){ ?>
-										    	<td><small>Retroactivo</small></td>
-										    <?php 
-										  	}
-										  	//Para Diciembre se adiciona el aguinaldo
-										  	if($cod_mes==12){ ?>
-										    	<td><small>Aguinaldo</small></td>
-										    <?php 
-										  	}
+								//Solo en mayo se adiciona el retroactivo
+								if($cod_mes==5){ ?>
+									<td><small>Retroactivo</small></td>
+								<?php 
+								}
+								//Para Diciembre se adiciona el aguinaldo
+								if($cod_mes==12){ ?>
+									<td><small>Bono</small></td>
+								<?php 
+								}
 		                    ?>
 		                    <td><small>Minimo No Imponible</small></td>
 		                    <td><small>Importe Sujeto a Impuesto</small></td>
@@ -120,11 +120,16 @@
 		                        $total_15+=round($row['saldo_credito_fiscal_mes_siguiente'],0);
 
 		                        $monto_ingreso_neto=$row['monto_ingreso_neto'];
+
+								/**
+								 * La variable de "monto_retroactivo" hace referencia a:
+								 * Retroactivo(mes:5) y/o Aguinaldo(mes:12)
+								 */
 		                        $monto_retroactivo=$row['monto_retroactivo'];
 		                        $total_monto_retroactivo+=round($monto_retroactivo,2);
-		                        //en mayo se toma en cuenta el retroactivo
-		                        if($monto_retroactivo>0){
-		                        	$monto_ingreso_neto=$monto_ingreso_neto-$monto_retroactivo;
+		                        if($monto_retroactivo > 0){
+		                        	$monto_ingreso_neto = $monto_ingreso_neto - $monto_retroactivo;
+									$total_1 			= $total_1 - $monto_retroactivo;
 		                        }
 		                        ?>
 			                	<tr>			                		
@@ -141,6 +146,12 @@
 				                    <?php
 									//Solo en mayo se adiciona el retroactivo
 								    if($cod_mes==5){ ?>
+								    	<td class="text-center small"><?=number_format($monto_retroactivo,2);?></td>
+								    <?php }
+				                    ?>
+									<?php
+									// Solo en Diciembre se adiciona el Aguinaldo
+								    if($cod_mes==12){ ?>
 								    	<td class="text-center small"><?=number_format($monto_retroactivo,2);?></td>
 								    <?php }
 				                    ?>
@@ -174,6 +185,12 @@
 		                    <?php
 							//Solo en mayo se adiciona el retroactivo
 						    if($cod_mes==5){ ?>
+						    	<th class="text-center small"><?=number_format($total_monto_retroactivo,0);?></th>
+						    <?php }
+		                    ?>
+		                    <?php
+							//Solo en mayo se adiciona el retroactivo
+						    if($cod_mes==12){ ?>
 						    	<th class="text-center small"><?=number_format($total_monto_retroactivo,0);?></th>
 						    <?php }
 		                    ?>

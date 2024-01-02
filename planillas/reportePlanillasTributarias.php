@@ -125,6 +125,17 @@ $html.=  '<header class="header">'.
                 $total_14+=round($row['impuesto_rc_iva_retenido'],0);
                 $total_15+=round($row['saldo_credito_fiscal_mes_siguiente'],0);
 
+                /**
+                 * La variable de "monto_retroactivo" hace referencia a:
+                 * Retroactivo(mes:5) y/o Aguinaldo(mes:12)
+                 */
+                // $monto_retroactivo=$row['monto_retroactivo'];
+                // $total_monto_retroactivo+=round($monto_retroactivo,2);
+                // if($monto_retroactivo > 0){
+                //     $monto_ingreso_neto = $monto_ingreso_neto - $monto_retroactivo;
+                //     $total_1 			= $total_1 - $monto_retroactivo;
+                // }
+
              $html.='<tr>'.
                       
                       '<td class="text-center small">'.$nombre_gestion.'</td>'.

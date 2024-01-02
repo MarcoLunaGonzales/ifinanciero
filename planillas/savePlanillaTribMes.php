@@ -111,6 +111,25 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
         $total_ganado+=$liquido_pagableRetroactivo;
       }
     } //Fin retroactivos
+
+    /**
+     * Solo en Diciembre | Aguinaldo
+     */
+    if($cod_mes_planillaS==12){ 
+        $liquido_pagableRetroactivo=0;
+        $sqlAguinaldo="	SELECT pad.total_aguinaldo
+                            FROM planillas_aguinaldos pa
+                            LEFT JOIN planillas_aguinaldos_detalle pad ON pad.cod_planilla = pa.codigo
+                            WHERE pa.cod_gestion = '$globalGestion'
+                            AND pad.cod_personal = '$cod_personal'";
+        $stmtAguinaldo=$dbh->prepare($sqlAguinaldo);
+        $stmtAguinaldo->execute();
+        $resultAguinaldo = $stmtAguinaldo->fetch();
+        $liquido_pagableRetroactivo = $resultAguinaldo['total_aguinaldo'];
+        if($liquido_pagableRetroactivo > 0){
+            $total_ganado += $liquido_pagableRetroactivo;
+        }
+    } //Fin retroactivos
         
     $monto_iva=$row['monto_iva'];
     if($monto_iva==null||$monto_iva==""){
