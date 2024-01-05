@@ -52,8 +52,10 @@ switch ($cod_area) {
                 $query_fitro = ($cod_area == 38 || $cod_area == 39) ? "" : "SELECT IdClaServicio,Descripcion,Codigo FROM cla_servicios WHERE vigente = 1 and IdArea=$cod_area UNION ";
                 $sql = $query_fitro. "SELECT IdClaServicio,Descripcion,Codigo 
                   FROM cla_servicios 
-                  WHERE IdArea = $cod_area 
-                  AND codigo_n2 IN ($codigoAdministrativos)";
+                  WHERE codigo_n2 IN ($codigoAdministrativos)";
+
+                /*IdArea = $cod_area AND */
+
                 $stmt3 = $dbh->prepare($sql);
                 
                 //echo $sql; 

@@ -66,6 +66,14 @@ $tipoSolicitud =$_GET['tipo'];
                         $sumaImportePropuesta+=$rowDetalles['importe'];
                         $entro2=1;
                     }
+
+
+                    /*********************  REVISAR ESTO  *******************************/
+                    //$entro2 Cambiamos a 0 para que todo entre a la SR y no se restrinja nada
+                    $entro2=0;
+                    /*********************** FIN REVISAR *******************************/
+
+                    
                     if($entro2==1){
                       if($sumaImportePropuesta<$sumaImportePres){
                          $importeSolX=$sumaImportePres-$sumaImportePropuesta;
