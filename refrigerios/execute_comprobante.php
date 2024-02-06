@@ -119,10 +119,11 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
         $monto_area=totalRefrigerioArea($gestionPlanilla, $mesPlanilla, $cod_area_contabilizacionX,$codigoUOXY);
         // echo $monto_area."<br>";
         if($monto_area>0){
-          $montoRefrigerio=$monto_area+$monto_area*0.13;//monto de refrigerio se le suma el 13% a cada area
+          //$montoRefrigerio=$monto_area+$monto_area*0.13;//monto de refrigerio se le suma el 13% a cada area
+          $montoRefrigerio=$monto_area;//Ya no se le agrega el 13 % 
           $totalRefrigerioX+=$montoRefrigerio;
           $cod_cuenta=233;//sueldos al personal          
-          $glosaDetalle1=$nombre_area." Personal IBNORCA refrigerio correspondiene a: ".$namemesPlanilla."/".$anioPlanilla;
+          $glosaDetalle1=$nombre_area." Personal IBNORCA refrigerio correspondiente a: ".$namemesPlanilla."/".$anioPlanilla;
           $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codigoUOXY','$cod_area_contabilizacionX','$montoRefrigerio','0','$glosaDetalle1','$ordenDetalle')";
           $stmtInsertDet = $dbh->prepare($sqlInsertDet);
           $flagSuccessDet=$stmtInsertDet->execute();
@@ -132,7 +133,8 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     }else{
       $monto_area=$array_monto_area[$cod_area_contabilizacionX];
       $nombre_area=abrevArea($cod_area_contabilizacionX);
-      $montoRefrigerio=$monto_area+$monto_area*0.13;//monto de refrigerio se le suma el 13% a cada area
+      //$montoRefrigerio=$monto_area+$monto_area*0.13;//monto de refrigerio se le suma el 13% a cada area
+      $montoRefrigerio=$monto_area;//monto de refrigerio se le suma el 13% a cada area
       $totalRefrigerioX+=$montoRefrigerio;
       $cod_cuenta=233;//sueldos al personal      
       $glosaDetalle1=$nombre_area." Personal IBNORCA refrigerio correspondiene a: ".$namemesPlanilla."/".$anioPlanilla;
@@ -158,8 +160,8 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $ordenDetalle++;
 
 
-  ///retencion RC IVA
-  $totalRefrigerioX=$totalRefrigerioMes*0.13;
+  ///retencion RC IVA - Esta seccion ya no va desde Ene 2024
+  /*$totalRefrigerioX=$totalRefrigerioMes*0.13;
   $glosaDetalleGeneral="Retención del 13% refirgerio mes de a: ".$namemesPlanilla."/".$anioPlanilla;      
   $codUOCentroCosto=$globalUnidadX;
   $codAreaCentroCosto="502";
@@ -169,6 +171,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   $stmtInsertDet = $dbh->prepare($sqlInsertDet);
   $flagSuccessDet=$stmtInsertDet->execute();
   $ordenDetalle++;
+  */
 
 
   $debe=0;
