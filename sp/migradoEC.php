@@ -31,13 +31,8 @@ $dbh = new Conexion();
 
 echo "<h6>Hora Inicio Proceso ESTADO CUENTAS: " . date("Y-m-d H:i:s")."</h6>";
 
-//$codComprobanteOrigen=18692; //COMP SCZ
-//$codComprobanteOrigen=18693; //COMP CBBA
-//$codComprobanteOrigen=18696; //COMP ORURO
-//$codComprobanteOrigen=18697; //COMP POTOSI
-//$codComprobanteOrigen=18694; //COMP SUCRE
+$codComprobanteOrigen=92515; //COMP TARIJA
 
-$codComprobanteOrigen=18695; //COMP TARIJA
 $codCuentaOrigen=67;
 $tipoEstadoCuenta=2;//CLIENTE
 

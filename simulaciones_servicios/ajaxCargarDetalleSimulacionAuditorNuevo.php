@@ -226,6 +226,19 @@ for ($nanio=$inicioAnioReal; $nanio <= $aniosReal; $nanio++) {
           $estiloFilaTexto='';
           $existeCostoVariableSol=obtenerCostoVariableSolicitadoPropuestaTCPTCS($codSimulacion,$codigoPres,1);
           
+          
+
+
+          /***********************************************************/
+          /*     REVISAR ESTA PARTE DESHABILITAMOS VALIDACION DE SR  */
+          /***********************************************************/
+          $existeCostoVariableSol=0;
+          $existeCostoVariableSolAu=0;
+          /*************************************************/
+          /*************************************************/
+          
+
+
           if($existeCostoVariableSol==1||$existeCostoVariableSolAu==1){  //HONORARIOS 1, COSTOS VARIABLES 2
            $estiloFilaTexto='rel="tooltip" title="SOLICITUD DE RECURSOS" disabled';
            ?><script>$("#solicitado_item"+'<?=$anio?>CCCC<?=$iii?>').html('<i class="material-icons text-danger">not_interested</i>');</script><?php
