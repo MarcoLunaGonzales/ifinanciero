@@ -64,7 +64,8 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					        <select class="selectpicker form-control form-control-sm" name="tipo" id="tipo" data-style="<?=$comboColor;?>" required="true" onChange="ajaxTipoProveedorCliente(this);">
 							  	<option disabled selected value="">Seleccionar una opcion</option>
 								<option value="1" <?=($codTipoAuxiliar==1)?"selected":"";?> >Proveedor</option>	
-								<option value="2" <?=($codTipoAuxiliar==2)?"selected":"";?> >Cliente</option>	
+								<option value="2" <?=($codTipoAuxiliar==2)?"selected":"";?> >Cliente</option>
+								<option value="3" <?=($codTipoAuxiliar==3)?"selected":"";?> >Personal</option>
 							</select>
 							</div>
 				      	</div>
@@ -78,6 +79,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				}
 				if($codTipoAuxiliar==2){
 					$sql="SELECT c.codigo, c.nombre from clientes c where c.cod_estadoreferencial=1 order by c.nombre";
+				}
+				if($codTipoAuxiliar==3){
+					$sql="SELECT codigo, CONCAT_WS(' ',primer_nombre,paterno,materno)as nombre from personal where cod_estadopersonal=1 and cod_estadoreferencial=1 order by nombre";
 				}
 				$stmt = $dbh->prepare($sql);
 				$stmt->bindParam(':codigo', $codigoProvCli);

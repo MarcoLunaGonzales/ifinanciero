@@ -49,6 +49,7 @@ $nombreCuentaPadre=nameCuenta($codigoCuentaPadre);
 							  	<option disabled selected value="">Seleccionar una opcion</option>
 								<option value="1">Proveedor</option>	
 								<option value="2">Cliente</option>	
+								<option value="3">Personal</option>	
 							</select>
 							</div>
 				      	</div>

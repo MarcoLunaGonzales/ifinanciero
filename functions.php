@@ -5445,8 +5445,11 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     $name="";
     if($codTipo==1){
       $name=nameProveedor($codigo);
-    }else{
+    }elseif($codTipo==2){
       $name=nameCliente($codigo);
+    }
+    elseif($codTipo==3){
+      $name=namePersonal_2($codigo);
     }
     return($name);
   }

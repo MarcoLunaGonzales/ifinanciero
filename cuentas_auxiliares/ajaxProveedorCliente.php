@@ -11,11 +11,14 @@ $stmtX->execute();
 $tipoProveedorCliente=$_GET["tipo"];
 
 $sql="";
-if($tipoProveedorCliente==1){
+if($tipoProveedorCliente==1){// Proveedores
 	$sql="select p.codigo, p.nombre from af_proveedores p where p.cod_estado=1 order by p.nombre";	
 }
-if($tipoProveedorCliente==2){
+if($tipoProveedorCliente==2){ // Clientes
 	$sql="select c.codigo, c.nombre from clientes c where c.cod_estadoreferencial=1 order by c.nombre";
+}
+if($tipoProveedorCliente==3){ // Personal
+    $sql="SELECT codigo, CONCAT_WS(' ',primer_nombre,paterno,materno)as nombre from personal where cod_estadopersonal=1 and cod_estadoreferencial=1 order by nombre";
 }
 $stmt = $dbh->prepare($sql);
 $stmt->bindParam(':codigo', $codigo);
