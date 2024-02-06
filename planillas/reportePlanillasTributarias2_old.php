@@ -8,10 +8,9 @@
 
 	$total_1=0;$total_2=0;$total_3=0;$total_4=0;$total_5=0;$total_6=0;$total_7=0;$total_8=0;$total_9=0;
 	$total_10=0;$total_11=0;$total_12=0;$total_13=0;$total_14=0;$total_15=0;
-	$total_sueldo_neto 		= 0;
 	$total_monto_retroactivo=0;
-	$total_monto_refrigerio = 0;
-	$total_monto_viatico 	= 0;
+	$total_refrigerio = 0;
+	$total_viatico 	  = 0;
 
 	$codPlanilla=$_GET['codigo_trib'];
 	$cod_gestion = $_GET["cod_gestion"];//
@@ -71,11 +70,21 @@
 		                    <td><small># Doc Identidad</small></td>
 		                    <td><small>Tipo De Doumento</small></td>
 		                    <td><small>Novedades</small></td>
-		                    <td><small>Monto de Sueldo Neto</small></td>
 		                    <td><small>Refrigerios</small></td>
 		                    <td><small>Viáticos</small></td>
-							<td><small>Otros</small></td>
 		                    <td><small>Monto De Ingreso Neto</small></td>
+		                    <?php
+								//Solo en mayo se adiciona el retroactivo
+								if($cod_mes==5){ ?>
+									<td><small>Retroactivo</small></td>
+								<?php 
+								}
+								//Para Diciembre se adiciona el aguinaldo
+								if($cod_mes==12){ ?>
+									<td><small>Bono</small></td>
+								<?php 
+								}
+		                    ?>
 		                    <td><small>Minimo No Imponible</small></td>
 		                    <td><small>Importe Sujeto a Impuesto</small></td>
 		                    <td><small>Impuesto RC-IVA</small></td>                            
@@ -116,27 +125,19 @@
 
 		                        $monto_ingreso_neto=$row['monto_ingreso_neto'];
 		                        
+								$total_refrigerio += round($row['monto_refrigerio'],0);
+		                        $total_viatico 	  += round($row['monto_viatico'],0);
+
 								/**
 								 * La variable de "monto_retroactivo" hace referencia a:
 								 * Retroactivo(mes:5) y/o Aguinaldo(mes:12)
 								 */
-		                        $monto_retroactivo		 =  $row['monto_retroactivo'];
-		                        $total_monto_retroactivo += round($monto_retroactivo,2);
-								/**
-								 * Suma total Refrigerio
-								 */
-		                        $monto_refrigerio 		=  $row['monto_refrigerio'];
-								$total_monto_refrigerio += round($row['monto_refrigerio'],2);
-								/**
-								 * Suma total Viático
-								 */
-		                        $monto_viatico 		 =  $row['monto_viatico'];
-		                        $total_monto_viatico += round($row['monto_viatico'],2);
-								/**
-								 * Sueldo Neto
-								 */
-								$monto_sueldo_neto = $monto_ingreso_neto - $monto_retroactivo - $monto_refrigerio - $monto_viatico;
-								$total_sueldo_neto += $monto_sueldo_neto;
+		                        $monto_retroactivo=$row['monto_retroactivo'];
+		                        $total_monto_retroactivo+=round($monto_retroactivo,2);
+		                        if($monto_retroactivo > 0){
+		                        	$monto_ingreso_neto = $monto_ingreso_neto - $monto_retroactivo;
+									$total_1 			= $total_1 - $monto_retroactivo;
+		                        }
 		                        ?>
 			                	<tr>			                		
 				                    <td class="text-center small"><?=$nombre_gestion;?></td>
@@ -149,16 +150,26 @@
 				                    <td class="text-center small"><?=$row['tipo_identificacion'].$row['tipo_identificacion_otro'];?></td>
 				                    <td class="text-center small">V</td>
 									
-									<!-- Monto de Sueldo Neto -->
-									<td class="text-center small" style="background:#E0E0E0;"><?=number_format($monto_sueldo_neto,2);?></td>
 									<!-- Refrigerio -->
-				                    <td class="text-white small" style="background:#5499C7;"><?=number_format($monto_refrigerio,2);?></td>
+				                    <td class="text-white small" style="background:#5499C7;"><?=number_format($row['monto_refrigerio'],0);?></td>
 									<!-- Viático -->
-				                    <td class="text-white small" style="background:#58D68D;"><?=number_format($monto_viatico,2);?></td>
-									<!-- Otros (Retroactivos o Bonos) -->
-									<td class="text-center small" style="background:#E0E0E0;"><?=number_format($monto_retroactivo,2);?></td>
-									
+				                    <td class="text-white small" style="background:#58D68D;"><?=number_format($row['monto_viatico'],0);?></td>
+
 				                    <td class="text-center small"><?=number_format($monto_ingreso_neto,2);?></td>
+				                    <?php
+									//Solo en mayo se adiciona el retroactivo
+								    if($cod_mes==5){ ?>
+								    	<td class="text-center small"><?=number_format($monto_retroactivo,2);?></td>
+								    <?php }
+				                    ?>
+									<?php
+									// Solo en Diciembre se adiciona el Aguinaldo
+								    if($cod_mes==12){ ?>
+								    	<td class="text-center small"><?=number_format($monto_retroactivo,2);?></td>
+								    <?php }
+				                    ?>
+
+
 				                    <td class="text-center small"><?=number_format($row['minimo_no_imponble'],0);?></td>
 				                    <td class="small"><?=number_format($row['importe_sujeto_impuesto_i'],0);?></td>
 				                    <td class="small"><?=number_format($row['impuesto_rc_iva'],0);?></td>
@@ -183,12 +194,22 @@
 	                    <tr class="bg-dark text-white">                  
 		                    <th colspan="9" class="text-center small">Total</th>
 
-		                    <th class="text-center small"><?=number_format($total_sueldo_neto,2);?></th>
-		                    <th class="text-center small"><?=number_format($total_monto_refrigerio,2);?></th>
-		                    <th class="text-center small"><?=number_format($total_monto_viatico,2);?></th>
-							<th class="text-center small"><?=number_format($total_monto_retroactivo,2);?></th>
-
-		                    <th class="text-center small"><?=number_format($total_1,2);?></th>
+		                    <th class="text-center small"><?=number_format($total_refrigerio,0);?></th>
+		                    <th class="text-center small"><?=number_format($total_viatico,0);?></th>
+		                    
+		                    <th class="text-center small"><?=number_format($total_1,0);?></th>
+		                    <?php
+							//Solo en mayo se adiciona el retroactivo
+						    if($cod_mes==5){ ?>
+						    	<th class="text-center small"><?=number_format($total_monto_retroactivo,0);?></th>
+						    <?php }
+		                    ?>
+		                    <?php
+							//Solo en mayo se adiciona el retroactivo
+						    if($cod_mes==12){ ?>
+						    	<th class="text-center small"><?=number_format($total_monto_retroactivo,0);?></th>
+						    <?php }
+		                    ?>
 		                    <th class="text-center small"><?=number_format($total_2,0);?></th>
 		                    <th class="text-center small"><?=number_format($total_3,0);?></th>                            
 		                    <th class="text-center small"><?=number_format($total_4,0);?></th>

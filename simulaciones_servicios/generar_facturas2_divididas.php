@@ -63,6 +63,10 @@
                     $cod_curso_x=$row['cod_curso'];//solo se guarda este campo cuando es grupal
                     $ci_estudiante_x=$row['ci_estudiante'];
                     $id_servicio_detalle_x=$row['id_servicio'];
+                    // Fechas de Afiliación
+                    $afiliacion_fecha_inicio_x = $row['fecha_inicio'];
+                    $afiliacion_fecha_fin_x    = $row['fecha_fin'];
+
                     $estado_x=true;
                     if($tipo_solicitud==2){// la solicitud pertence capacitacion estudiantes
                         //echo $ci_estudiante_x."-".$cod_simulacion_servicio."-".$cod_claservicio_x."-".$precio_x."-".$codigo;
@@ -97,8 +101,8 @@
                     if($estado_ibnorca==0){//sin errores en el servicio web
                         $precio_x=$precio_x+$descuento_bob_x/$cantidad_x;//se registró el precio total incluido el descuento, para la factura necesitamos el precio unitario y tambien el descuetno unitario, ya que se registro el descuento total * cantidad
                         $descripcion_alterna_x=$row['descripcion_alterna'];            
-                        $sqlDetalleVenta="INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId,ci_estudiante,id_servicio) 
-                        values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0,'$ci_estudiante_x','$id_servicio_detalle_x')";
+                        $sqlDetalleVenta="INSERT INTO facturas_ventadetalle(cod_facturaventa,cod_claservicio,cantidad,precio,descripcion_alterna,descuento_bob,suscripcionId,ci_estudiante,id_servicio,fecha_inicio,fecha_fin) 
+                        values ('$cod_facturaVenta','$cod_claservicio_x','$cantidad_x','$precio_x','$descripcion_alterna_x',$descuento_bob_x,0,'$ci_estudiante_x','$id_servicio_detalle_x','$afiliacion_fecha_inicio_x','$afiliacion_fecha_fin_x')";
                         //echo $sqlDetalleVenta;
                         $stmtInsertSoliFactDet = $dbh->prepare($sqlDetalleVenta);
                         $flagSuccess=$stmtInsertSoliFactDet->execute();

@@ -48,6 +48,23 @@ from planillas p order by cod_gestion desc,cod_mes desc";
   </div>
 </div>
 
+    <!-- Modal Reporte Viáticos Personal Interno -->
+    <div class="modal fade" id="modalViatico" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel"><b>Viáticos Personal Interno</b></h4>
+                </div>
+                <div class="modal-body" id="modal-body-viatico">
+                </div>    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
   <div class="content">
     <div class="container-fluid">
       <div class="col-md-12">     
@@ -187,13 +204,13 @@ from planillas p order by cod_gestion desc,cod_mes desc";
                             <i class="material-icons" title="ReProcesar Planilla Tributaria">autorenew</i> PT                       
                           </button> 
                           <!-- <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">
-                            <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
+                            <i class="material-icons" title="Ver Planilla Tributaria">remove_red_eye</i> PT                       
                           </a> -->
                           <a href='<?=$urlPlanillaTribPersonalReport;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">
-                            <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
+                            <i class="material-icons" title="Ver Planilla Tributaria">remove_red_eye</i> PT                       
                           </a>
                           <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-danger">
-                            <i class="material-icons" title="Ver Planilla Triburaria PDF">remove_red_eye</i> PT                       
+                            <i class="material-icons" title="Ver Planilla Tributaria PDF">remove_red_eye</i> PT                       
                           </a>
                            <?php
                         }
@@ -202,13 +219,13 @@ from planillas p order by cod_gestion desc,cod_mes desc";
 
                         <?php if($cod_estadoplanilla==3){    ?>  
                         <!-- <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">            
-                            <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
+                            <i class="material-icons" title="Ver Planilla Tributaria">remove_red_eye</i> PT                       
                         </a> -->
                         <a href='<?=$urlPlanillaTribPersonalReport;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-success">
-                            <i class="material-icons" title="Ver Planilla Triburaria">remove_red_eye</i> PT                       
+                            <i class="material-icons" title="Ver Planilla Tributaria">remove_red_eye</i> PT                       
                           </a>
                           <a href='<?=$urlPlanillaTribPersonalPDF;?>?codigo_trib=<?=$codigoTrib;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>' target="_blank" rel="tooltip" class="btn btn-danger">
-                            <i class="material-icons" title="Ver Planilla Triburaria PDF">remove_red_eye</i> PT                       
+                            <i class="material-icons" title="Ver Planilla Tributaria PDF">remove_red_eye</i> PT                       
                           </a>
                         <?php }?>   
 
@@ -401,9 +418,15 @@ from planillas p order by cod_gestion desc,cod_mes desc";
                           </ul>
                         </div>
 
+                        <!-- Ver Reporte Viáticos Personal Interno -->
+                        <button type="button" 
+                                class="btn btn-danger abreModalViatico" 
+                                title="Reporte de Viáticos Personal Interno"
+                                data-gestion="<?= $gestion ?>"
+                                data-mes="<?= $cod_mes ?>"
+                            ><i class="material-icons">flight_takeoff</i>
+                        </button>
 
-                        
-                      
                     </td>
 
                     </tr>
@@ -443,7 +466,7 @@ from planillas p order by cod_gestion desc,cod_mes desc";
         </div>
         <div class="modal-body">
           <input type="hidden" name="codigo_planilla" id="codigo_planilla" value="0">        
-          Esta acción Procesará La planilla Del Mes En Curso. ¿Deseas Continuar?
+          Esta acción Procesará La planilla Del Mes En Curso. ¿Desea Continuar?
           <div id="cargaP" style="display:none">
             <h3><b>Por favor espere...</b></h3>
           </div>
@@ -465,10 +488,25 @@ from planillas p order by cod_gestion desc,cod_mes desc";
         </div>
         <div class="modal-body">
           <input type="hidden" name="codigo_planillaRP" id="codigo_planillaRP" value="0">        
-          Esta acción ReProcesará La planilla Del Mes En Curso. ¿Deseas Continuar?
+          Esta acción ReProcesará La planilla Del Mes En Curso. ¿Desea Continuar?
           <div id="cargaR" style="display:none">
             <h3><b>Por favor espere...</b></h3>
           </div>
+            <div class="form-group" id="cargaPersonal">
+                <select name="cod_personal" id="cod_personal" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+                    <option selected value="">TODO LOS REGISTROS</option>
+                    <?php 
+                    $sql = "SELECT p.codigo, UPPER(CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno)) as nombre_personal 
+                            FROM personal p 
+                            WHERE p.cod_estadoreferencial = 1 
+                            AND p.bandera = 1
+                            ORDER BY p.primer_nombre";
+                    $stmt = $dbh->query($sql);
+                    while ($row = $stmt->fetch()){ ?>
+                        <option value="<?=$row["codigo"];?>"><?=$row["nombre_personal"];?></option>
+                    <?php } ?>
+                </select>
+            </div>
         </div>    
         <div class="modal-footer">
           <button type="button" class="btn btn-success" id="AceptarReProceso" >Aceptar</button>
@@ -487,7 +525,7 @@ from planillas p order by cod_gestion desc,cod_mes desc";
         </div>
         <div class="modal-body">
           <input type="hidden" name="codigo_planillaCP" id="codigo_planillaCP" value="0">        
-          Esta acción Cerrará La planilla Del Mes En Curso. ¿Deseas Continuar?
+          Esta acción Cerrará La planilla Del Mes En Curso. ¿Desea Continuar?
         </div>       
         <div class="modal-footer">
           <button type="button" class="btn btn-success" id="AceptarCerrar" data-dismiss="modal">Aceptar</button>
@@ -523,7 +561,7 @@ from planillas p order by cod_gestion desc,cod_mes desc";
             </tbody>
           </table>
           <hr>
-          Esta acción Procesará La planilla TRIBUTARIA Del Mes <b class="font-weight-bold" id="mes_cursotitulo">En Curso</b>. ¿Deseas Continuar?
+          Esta acción Procesará La planilla TRIBUTARIA Del Mes <b class="font-weight-bold" id="mes_cursotitulo">En Curso</b>. ¿Desea Continuar?
           <div id="cargaR2" style="display:none">
             <h3><b>Por favor espere...</b></h3>
           </div>
@@ -642,7 +680,8 @@ from planillas p order by cod_gestion desc,cod_mes desc";
         ProcesarPlanilla(cod_planilla);
       });
       $('#AceptarReProceso').click(function(){      
-        cod_planilla=document.getElementById("codigo_planillaRP").value;      
+        cod_planilla=document.getElementById("codigo_planillaRP").value;
+        $('#cargaPersonal').hide();    
         ReprocesarPlanilla(cod_planilla);
       });
       $('#AceptarCerrar').click(function(){      
@@ -926,6 +965,25 @@ function sendEmailBoleta(cod_planilla){
           }
       });
     });
-    
+
+    /**
+     * Carga la lista de Viaticos por personal
+     */
+    $('.abreModalViatico').on('click', function(){
+        let formData = new FormData();
+        formData.append('gestion', $(this).data('gestion'));
+        formData.append('mes', $(this).data('mes'));
+        $.ajax({
+            url:"planillas/ajax_listaViaticosPersonal.php",
+            type:"POST",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success:function(response){
+                $('#modal-body-viatico').html(response);
+                $('#modalViatico').modal('show');
+            }
+        });
+    });
     
   </script>

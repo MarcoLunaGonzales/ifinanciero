@@ -23,6 +23,7 @@ session_start();
 
 //RECIBIMOS LAS VARIABLES
 $cod_planilla=$_POST['cod_planilla'];
+$codPersonal = $_POST['cod_personal'] ?? '';
 $cod_estadoplanilla=$_POST['sw'];
 $sw=$_POST['sw'];
 // if($sw==2){
@@ -62,9 +63,20 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 		$stmtU->bindParam(':cod_estadoplanilla', $cod_estadoplanilla);
 		$flagSuccess=$stmtU->execute();	
 	}
-	$stmtDelete = $dbh->prepare("DELETE  FROM planillas_personal_mes where cod_planilla=$cod_planilla");
+	$sqlDelete = "DELETE  FROM planillas_personal_mes where cod_planilla=$cod_planilla";
+	if (!empty($codPersonal) && $codPersonal > 0) {
+		$sqlDelete .= " AND cod_personalcargo = $codPersonal";
+	}
+	// echo $sqlDelete;
+	$stmtDelete = $dbh->prepare($sqlDelete);
 	$stmtDelete->execute();
-	$stmtDelete2 = $dbh->prepare("DELETE  FROM planillas_personal_mes_patronal where cod_planilla=$cod_planilla");
+
+	$sqlDelete2 = "DELETE  FROM planillas_personal_mes_patronal where cod_planilla=$cod_planilla";
+	if (!empty($codPersonal) && $codPersonal > 0) {
+		$sqlDelete2 .= " AND cod_personal_cargo = $codPersonal";
+	}
+	// echo $sqlDelete2;
+	$stmtDelete2 = $dbh->prepare($sqlDelete2);
 	$stmtDelete2->execute();
 
 	
@@ -119,13 +131,20 @@ if($sw==2 || $sw==1 || $sw==10){//procesar planilla
 	// fin de valores de configruacion
 
 	// Limpiando tabla personal_area_distribucion_planilla
-	$stmtDelete = $dbh->prepare("DELETE  FROM personal_area_distribucion_planilla where cod_planilla='$cod_planilla'");
+	$sqlDelete = "DELETE  FROM personal_area_distribucion_planilla where cod_planilla='$cod_planilla'";
+	if (!empty($codPersonal) && $codPersonal > 0) {
+		$sqlDelete .= " AND cod_personal = $codPersonal";
+	}
+	$stmtDelete = $dbh->prepare($sqlDelete);
 	$stmtDelete->execute();
 
 	//============select del personal
 	$sql = "SELECT cod_cargo, cod_unidadorganizacional as cod_unidad, cod_area, codigo,haber_basico,cod_grado_academico,
 	(Select pga.porcentaje from personal_grado_academico pga where pga.codigo=cod_grado_academico) as p_grado_academico,cod_tipoafp,ing_contr,cuenta_bancaria
 	from personal where cod_estadoreferencial=1 and cod_estadopersonal=1";
+	if (!empty($codPersonal) && $codPersonal > 0) {
+		$sql .= " AND codigo = $codPersonal";
+	}
 	$stmtPersonal = $dbh->prepare($sql);
 	$stmtPersonal->execute();
 	$stmtPersonal->bindColumn('cod_cargo', $cod_cargo);

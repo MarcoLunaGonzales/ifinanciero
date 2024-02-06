@@ -49,10 +49,16 @@ switch ($cod_area) {
                 // UNION 
                 //   Select IdClaServicio,Descripcion,Codigo from cla_servicios where codigo_n2 in ($codigoAdministrativos)";
                 
-                $query_fitro = ($cod_area == 38 || $cod_area == 39) ? "" : "SELECT IdClaServicio,Descripcion,Codigo FROM cla_servicios WHERE vigente = 1 and IdArea=$cod_area UNION ";
-                $sql = $query_fitro. "SELECT IdClaServicio,Descripcion,Codigo 
-                  FROM cla_servicios 
-                  WHERE codigo_n2 IN ($codigoAdministrativos)";
+                // SE ADICIONÓ EL CODIGO_N2 => "4453" SOBRE "Ingreso por suscripcion IBNOTECA"
+                
+                // $query_fitro = ($cod_area == 38 || $cod_area == 39 || $cod_area == 12) ? "" : "SELECT IdClaServicio,Descripcion,Codigo FROM cla_servicios WHERE vigente = 1 and IdArea=$cod_area UNION ";
+                
+                $sql = "SELECT IdClaServicio,Descripcion,Codigo 
+                    FROM cla_servicios 
+                    WHERE codigo_n2 IN ($codigoAdministrativos) ".(($cod_area == 38 || $cod_area == 39 || $cod_area == 12) ? (" OR IdArea = '$cod_area'") : "")
+                    .(($cod_area == 11) ? (" OR (IdArea = '$cod_area' AND IdTipo = 821)") : "");
+
+                // echo $sql;
 
                 /*IdArea = $cod_area AND */
 

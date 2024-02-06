@@ -369,9 +369,9 @@ table {
 				                          $stmtBonosOtrs = $dbh->prepare($sqlBonosOtrs);
 				                          $stmtBonosOtrs->execute();
 				                          $resultBonosOtros=$stmtBonosOtrs->fetch();
-				                          $cod_bonosX=$resultBonosOtros['cod_bono'];
-				                          $montoX=$resultBonosOtros['monto'];
-				                          $tipoBonoX=$resultBonosOtros['cod_tipocalculobono'];
+				                          $cod_bonosX=$resultBonosOtros['cod_bono'] ?? '';
+				                          $montoX=$resultBonosOtros['monto'] ?? 0;
+				                          $tipoBonoX=$resultBonosOtros['cod_tipocalculobono'] ?? '';
 				                          if($tipoBonoX==2){
 				                          	$porcen_monto=30*100/$dias_trabajados;
 										    $montoX_aux=$porcen_monto*$montoX/100;

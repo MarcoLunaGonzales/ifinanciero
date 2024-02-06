@@ -130,6 +130,67 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
             $total_ganado += $liquido_pagableRetroactivo;
         }
     } //Fin retroactivos
+
+    /***********************
+     * Adiciona Refrigerio *
+     ***********************/
+    $liquido_pagableRefrigerio=0;
+    $sqlRefrigerio="SELECT 
+                        rd.codigo as cod_ref_detalle,
+                        CONCAT(p.paterno, ' ', p.materno, ' ', p.primer_nombre) as nombrepersonal,
+                        rd.dias_asistidos as dias_asistencia,
+                        rd.monto as monto_refrigerio,
+                        (rd.dias_asistidos * rd.monto) AS total_mensual  
+                    FROM refrigerios_detalle rd 
+                        LEFT JOIN refrigerios r ON r.codigo = rd.cod_refrigerio
+                        LEFT JOIN personal p ON p.codigo = rd.cod_personal
+                    WHERE rd.cod_estadoreferencial = 1
+                    AND r.cod_gestion = '$cod_gestion'
+                    AND r.cod_mes = '$cod_mes'
+                    AND rd.cod_personal = '$cod_personal'";
+    // echo $sqlRefrigerio;
+    $stmtRefrigerio=$dbh->prepare($sqlRefrigerio);
+    $stmtRefrigerio->execute();
+    $resultRefrigerio = $stmtRefrigerio->fetch();
+    if($resultRefrigerio){
+        $liquido_pagableRefrigerio = $resultRefrigerio['total_mensual'];
+        $total_ganado += $liquido_pagableRefrigerio;
+    }
+    //Fin Refrigerio
+    /********************
+     * Adiciona Viático *
+     ********************/
+    $liquido_pagableViatico=0;
+    $sqlViatico="SELECT
+                    cd.fecha, 
+                    cd.monto, 
+                    cd.cod_proveedores, 
+                    UPPER(af.nombre) as nombre_proveedor, 
+                    SUM(cd.monto) as total
+                FROM 
+                    caja_chica c
+                    INNER JOIN caja_chicadetalle cd ON c.codigo = cd.cod_cajachica
+                    LEFT JOIN af_proveedores af ON af.codigo = cd.cod_proveedores
+                    LEFT JOIN personal p ON p.cod_proveedor = af.codigo
+                WHERE c.codigo = cd.cod_cajachica
+                AND cd.cod_cuenta = 469
+                AND YEAR(cd.fecha) = '$gestion'
+                AND MONTH(cd.fecha) = '$cod_mes'
+                AND c.cod_tipocajachica = 34
+                AND p.codigo = '$cod_personal'
+                AND p.codigo IS NOT NULL
+                AND c.cod_estadoreferencial <> 2
+                AND cd.cod_estadoreferencial <> 2
+                GROUP BY cd.cod_proveedores";
+    // echo $sqlViatico;
+    $stmtViatico=$dbh->prepare($sqlViatico);
+    $stmtViatico->execute();
+    $resultViatico = $stmtViatico->fetch();
+    if($resultViatico){
+        $liquido_pagableViatico = $resultViatico['total'];
+        $total_ganado += $liquido_pagableViatico;
+    }
+    //Fin Viático
         
     $monto_iva=$row['monto_iva'];
     if($monto_iva==null||$monto_iva==""){
@@ -218,7 +279,7 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
       $saldo_credito_fiscal_siguiente=round($saldo_favor_del_dependiente+$saldo_mes_anterior_actualizado-$saldo_utilizado,0);
 
       $dbhInstert = new Conexion();
-      $sqlInsert="INSERT INTO planillas_tributarias_personal_mes_2 (cod_planillatributaria,cod_personal,monto_ingreso_neto,minimo_no_imponble,importe_sujeto_impuesto_i,impuesto_rc_iva,minimo_13,impuesto_neto_rc_iva,formulario_110_13,saldo_favor_fisico,saldo_favor_dependiente,saldo_mes_anterior,mantenimiento_saldo_mes_anterior,saldo_anterior_actualizado,saldo_utilizado,impuesto_rc_iva_retenido,saldo_credito_fiscal_mes_siguiente,monto_retroactivo) 
+      $sqlInsert="INSERT INTO planillas_tributarias_personal_mes_2 (cod_planillatributaria,cod_personal,monto_ingreso_neto,minimo_no_imponble,importe_sujeto_impuesto_i,impuesto_rc_iva,minimo_13,impuesto_neto_rc_iva,formulario_110_13,saldo_favor_fisico,saldo_favor_dependiente,saldo_mes_anterior,mantenimiento_saldo_mes_anterior,saldo_anterior_actualizado,saldo_utilizado,impuesto_rc_iva_retenido,saldo_credito_fiscal_mes_siguiente,monto_retroactivo,monto_refrigerio,monto_viatico) 
      VALUES (
       '$codigo',
       '$cod_personal',
@@ -237,7 +298,9 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
       '$saldo_utilizado',
       '$impuesto_rc_iva_retenido',
       '$saldo_credito_fiscal_siguiente',
-      '$liquido_pagableRetroactivo'
+      '$liquido_pagableRetroactivo',
+      '$liquido_pagableRefrigerio',
+      '$liquido_pagableViatico'
       )";
      $stmtInsert = $dbhInstert->prepare($sqlInsert);
      $flagsuccess=$stmtInsert->execute();

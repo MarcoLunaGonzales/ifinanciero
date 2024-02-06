@@ -1,12 +1,5 @@
 <?php
 
-/***
- * UTILIZAR ESTA VERSIÓN OFICIAL PARA VERIFICAR VENTAS NORMAS
- * 
- * TOMANDO EN CUENTA EL USO DE "verificarFacturasSFDvsSUS" para adicionar los nuevos
- * 
- * OBTIENE CODIGO IDVENTA NORMA PARA LA TABLA "ventanormas_facturas"
- */
 date_default_timezone_set('America/La_Paz');
 
 class Conexion extends PDO {      
@@ -27,35 +20,7 @@ class Conexion extends PDO {
         }
     } 
 } 
-/**
- * Función para buscar en el array por la propiedad
- * @param ArrayFacturaSuscripcion
- * @return Bolean Codigo de Factura Venta
- */
-function buscarArrayFactura($array, $cod_facturaventa) {
-    foreach ($array as $elemento) {
-        if ($elemento['codigo'] == $cod_facturaventa) {
-            return true;
-        }
-    }
-    return false;
-}
-// Verificar Tabla Suscripciones
-function buscarSuscripcion($cod_solicitudfacturacion){
-    $dbh = new Conexion();
-    $sql = "SELECT fst.codigo, fst.cod_factura 
-            FROM facturas_suscripcionestienda fst
-            WHERE fst.cod_solicitudfacturacion = '$cod_solicitudfacturacion'";
-    $stmtSuscripcion = $dbh->prepare($sql);
-    $stmtSuscripcion->execute();
-    $filasEncontradas = $stmtSuscripcion->rowCount();
 
-    if ($filasEncontradas > 0) {
-        return true;
-    } else {
-        return false;
-    }
-}
 // Verificar Tabla Ventas Normas
 function buscarVentaNorma($cod_solicitudfacturacion, $cod_facturaventadetalle){
     $dbh = new Conexion();
@@ -68,9 +33,11 @@ function buscarVentaNorma($cod_solicitudfacturacion, $cod_facturaventadetalle){
     $filasEncontradas = $stmtVentaNorma->rowCount();
 
     if ($filasEncontradas > 0) {
-        return true;
+        // Si se encuentran filas, se obtienen los resultados
+        $resultado = $stmtVentaNorma->fetch(PDO::FETCH_ASSOC);
+        return $resultado['IdVentaNormas']; // Devuelve IdVentaNormas si se encuentra
     } else {
-        return false;
+        return false; // Devuelve false si no se encuentra nada
     }
 }
 
@@ -81,51 +48,14 @@ $mostrar      = empty($_GET['mostrar']) ? 1 : $_GET['mostrar'];
 $claServicio  = empty($_GET['cla_servicio']) ? "" : $_GET['cla_servicio'];
 
 $dbh = new Conexion();
-// FACTURA SUSCRIPCIÓN
-$sql = "SELECT fv.codigo, fv.nro_factura, sfd.codigo as cod_facturadetalle, fv.fecha_factura, fv.razon_social, fv.nit, vn.IdVentaNormas, vn.Catalogo, vn.idNorma,
-        CASE
-        WHEN vn.Catalogo='N' THEN 
-            (select CONCAT(v.abreviatura,' ',v.nombre) from v_normas v where v.codigo=sus.id_norma)
-        WHEN vn.Catalogo='I' THEN 
-            (select CONCAT_WS(vi.abreviatura,' ',vi.nombre) from v_normas_int vi where vi.codigo=sus.id_norma)
-        WHEN vn.Catalogo='ISO' THEN
-        (SELECT CONCAT(i.reference,' ',t.value) FROM ibnorca_entidades.isos i 
-            INNER JOIN ibnorca_entidades.iso_titles t ON i.iso_id = t.iso_id AND t.lang = 'en' WHERE i.iso_id = sus.id_norma)
-        ELSE ''
-        END as nombrenorma, fv.cod_solicitudfacturacion
-        from solicitudes_facturacion sf, solicitudes_facturaciondetalle sfd, facturas_suscripcionestienda sus, facturas_venta fv, ibnorca.ventanormas vn
-        where sf.codigo=sfd.cod_solicitudfacturacion and sf.cod_estadosolicitudfacturacion<>2 and 
-        sfd.codigo=sus.cod_facturadetalle and fv.cod_solicitudfacturacion=sf.codigo and vn.idSolicitudfactura=sf.codigo and vn.idNorma=sus.id_norma 
-        AND DATE(fv.fecha_factura) BETWEEN '$fecha_inicio' AND '$fecha_fin'
-        order by fv.codigo ASC"; 
-// echo $sql;
-$stmtSuscripcion = $dbh->prepare($sql);
-$stmtSuscripcion->execute();
 
-$resultadosFacturaSuscripcion = array();
-while ($row = $stmtSuscripcion->fetch(PDO::FETCH_ASSOC)) {
-    $objeto = array(
-        "codigo"             => $row['codigo'],
-        "nro_factura"        => $row['nro_factura'],
-        "cod_facturadetalle" => $row['cod_facturadetalle'],
-        "fecha_factura"      => $row['fecha_factura'],
-        "razon_social"       => $row['razon_social'],
-        "nit"                => $row['nit'],
-        "Catalogo"           => $row['Catalogo'],
-        "idNorma"            => $row['idNorma'],
-        "nombrenorma"        => $row['nombrenorma'],
-        "IdVentaNormas"      => $row['IdVentaNormas'],
-        "cod_solicitudfacturacion" => $row['cod_solicitudfacturacion']
-    );
-    $resultadosFacturaSuscripcion[] = $objeto;
-}
-
-// FACTURAS VENTAS (vs Nueva tabla ventanormas_facturas)
-$sql = "SELECT fv.fecha_factura,fv.codigo,fv.nro_factura,f.codigo as codfacturadetalle, ibnorca.d_abrevclasificador(fvd.cod_Area) as area,
+// FACTURAS VENTAS en base a SOLICITUDES DE FACTURACIÓN DETALLE
+// codfacturadetalle => cod_solicitudfacturaciondetalle
+$sql = "SELECT fv.fecha_factura,fv.codigo,fv.nro_factura,f.codigo as codfacturadetalle, ibnorca.d_abrevclasificador(fvd.cod_area) as area,
         ibnorca.d_abrevclasificador(fv.cod_unidadorganizacional) as oficina, 
             f.cantidad, f.descripcion_alterna ,(((f.cantidad*f.precio)-f.descuento_bob)*(fvd.porcentaje/100)) as importe_total,
         ((((f.cantidad*f.precio)-f.descuento_bob)*.87)*(fvd.porcentaje/100)) as importe_neto, fvd.porcentaje, 
-            fv.cod_solicitudfacturacion, fv.razon_social, fv.nit, f.cod_claservicio, fv.cod_tipoobjeto, fv.created_by, vnf.IdVentaNormas
+            fv.cod_solicitudfacturacion, fv.razon_social, fv.nit, f.cod_claservicio, fv.cod_tipoobjeto, fv.created_by, f.cantidad, f.precio
         from facturas_ventadetalle f 
         left join ibnorca.claservicios c on f.cod_claservicio=c.IdClaServicio
         inner join facturas_venta fv on f.cod_facturaventa=fv.codigo
@@ -139,10 +69,15 @@ $sql = "SELECT fv.fecha_factura,fv.codigo,fv.nro_factura,f.codigo as codfacturad
         order by fv.fecha_factura"; 
 // echo $sql;
 // exit;
-
 $stmtFactura = $dbh->prepare($sql);
 $stmtFactura->execute();
 
+/**
+ * OBTIENE SOLO "ID VENTA NORMA"
+ * 1: General
+ * 2: ID Venta Norma
+ */
+$vista_norma = 2;
 ?>
 
 <!DOCTYPE html>
@@ -295,12 +230,8 @@ $stmtFactura->execute();
             <p id="nro_encontrado">0</p>
         </div>
         <div class="card red" style="text-align:center;">
-            <h2>IdVentaNormas no<br>Encontradas</h2>
+            <h2>Suscripciones no<br>Encontradas</h2>
             <p id="nro_no_encontrado">0</p>
-        </div>
-        <div class="card blue" style="text-align:center;">
-            <h2>Total <br>Importe Neto</h2>
-            <p id="importe_neto">0</p>
         </div>
     </div>
 
@@ -308,95 +239,37 @@ $stmtFactura->execute();
     <table class="table">
         <thead class="sticky-header">
             <tr>
-                <th>#</th>
-                <th>Código FV</th>
-                <th>Número de Factura</th>
-                <th>Código de FV Detalle</th>
-                <th>Tipo Objeto</th>
-                <th>Usuario</th>
-                <th>NIT</th>
-                <th>Razón Social</th>
-                <th>ClaServicio</th>
-                <th>Fecha de Factura</th>
-                <th>Área</th>
-                <th>Oficina</th>
-                <th>Cantidad</th>
-                <th>Descripción Factura</th>
-                <th>Importe Total</th>
-                <th>Importe Neto</th>
-                <th>Porcentaje</th>
-                <th>Código de SF</th>
-                <th>Verificación<br> Factura / Norma</th>
-                <th>ID Venta Norma</th>
+                <th>Código de SF Detalle</th>
+                <th>Id Venta Norma</th>
             </tr>
         </thead>
         <tbody>
             <?php
-                $total_importe_total = 0;
-                $total_importe_neto  = 0;
-
-                $nro_encontrado = 0;
-                $nro_no_encontrado = 0;
+                $ventasEncontradas = 0;
+                $ventasNoEncontradas = 0;
                 $nro = 0;
                 while ($rowFactura = $stmtFactura->fetch(PDO::FETCH_ASSOC)) {
-                    
-                    $facturaValida      = (empty($rowFactura['IdVentaNormas']) || $rowFactura['IdVentaNormas'] == 0) ? false : true;
-                    $idVentaNorma       = buscarVentaNorma($rowFactura['cod_solicitudfacturacion'], $rowFactura['codfacturadetalle']);
-                    $facturaValidaNorma = empty($idVentaNorma) ? false : true;
-                    $nro_encontrado     = $facturaValida ? ($nro_encontrado + 1) : $nro_encontrado;
-                    $nro_no_encontrado  = !$facturaValida ? ($nro_no_encontrado + 1) : $nro_no_encontrado;
-                    if(($mostrar == 1) || ($mostrar == 2 && $facturaValida) || ($mostrar == 3 && !$facturaValida)){
-                        $nro++;
+                    $idVentaNorma = buscarVentaNorma($rowFactura['cod_solicitudfacturacion'], $rowFactura['codfacturadetalle']);
+                    if ($idVentaNorma !== false) {
+                        $ventasEncontradas++;
+                    } else {
+                        $ventasNoEncontradas++;
+                    }
             ?>
-            <tr class="<?= !$facturaValida ? 'resaltado-rojo' : ''; ?>">
-                <td><?=$nro;?></td>
-                <td style="background-color: #c7f4f9;color: #000;"><?= $rowFactura['codigo']; ?></td>
-                <td><?= $rowFactura['nro_factura']; ?></td>
+            <tr class="<?= $idVentaNorma == false ? 'resaltado-rojo' : ''; ?>">
                 <td style="background-color: #c7f4f9;color: #000;"><?= $rowFactura['codfacturadetalle']; ?></td>
-                <td><?= $rowFactura['cod_tipoobjeto']; ?></td>
-                <td><?= $rowFactura['created_by']; ?></td>
-                <td><?= $rowFactura['nit']; ?></td>
-                <td><?= $rowFactura['razon_social']; ?></td>
-                <td style="background-color: #B0B0B0;color: #000;"><?= $rowFactura['cod_claservicio']; ?></td>
-                <td><?= $rowFactura['fecha_factura']; ?></td>
-                <td><?= $rowFactura['area']; ?></td>
-                <td><?= $rowFactura['oficina']; ?></td>
-                <td><?= $rowFactura['cantidad']; ?></td>
-                <td><?= $rowFactura['descripcion_alterna']; ?></td>
-                <td><?= $rowFactura['importe_total']; ?></td>
-                <td><?= $rowFactura['importe_neto']; ?></td>
-                <td><?= $rowFactura['porcentaje']; ?></td>
-                <td style="background-color: #FFD699;;color: #000;"><?= $rowFactura['cod_solicitudfacturacion']; ?></td>
-                <td class="<?= $facturaValidaNorma ? 'resaltado-verde' : 'resaltado-rojo'; ?>"><b><?=$facturaValidaNorma ? 'Encontrado' : 'No Encontrado';?></b></td>
-                <?php
-                    $verificaSuscripcion = buscarSuscripcion($rowFactura['cod_solicitudfacturacion']);
-                    if($facturaValida){
-                        $total_importe_total += $rowFactura['importe_total'];
-                        $total_importe_neto  += $rowFactura['importe_neto'];
-                    }
-                ?>
-                <!-- Pinta de color por la suscripción -->
-                <td class="<?= $verificaSuscripcion ? 'blue' : '' ?>"><?= $rowFactura['IdVentaNormas']; ?></td>
+                <td class="<?= !empty($idVentaNorma) ? 'resaltado-verde' : 'resaltado-rojo'; ?>"><?= $idVentaNorma; ?></td>
             </tr>
-            <?php 
-                    }
+            <?php
                 }
             ?>
-            <!-- Totales -->
-            <tr>
-                <td colspan="14"></td>
-                <td><?= round($total_importe_total, 2); ?></td>
-                <td><?= round($total_importe_neto, 2); ?></td>
-                <td colspan="4"></td>
-            </tr>
         </tbody>
     </table>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
     $(document).ready(function() {
-        $('#nro_encontrado').html(<?=$nro_encontrado;?>);
-        $('#nro_no_encontrado').html(<?=$nro_no_encontrado;?>);
-        $('#importe_neto').html(<?=$total_importe_neto;?>+" Bs.");
+        $('#nro_encontrado').html(<?=$ventasEncontradas;?>);
+        $('#nro_no_encontrado').html(<?=$ventasNoEncontradas;?>);
     });
 </script>
 
