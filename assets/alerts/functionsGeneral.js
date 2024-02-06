@@ -5565,9 +5565,10 @@ function ProcesarPlanilla(cod_planilla){
   });
 }
 function ReprocesarPlanilla(cod_planilla){
+  let cod_personal = $('body #cod_personal').val() || '';
   $.ajax({
     type:"POST",
-    data:"cod_planilla="+cod_planilla+"&sw=1",
+    data:"cod_planilla="+cod_planilla+"&sw=1"+"&cod_personal="+cod_personal,
     url:"planillas/savePlanillaMes.php",
     beforeSend:function(objeto){ 
       $('#cargaR').css({display:'block'});

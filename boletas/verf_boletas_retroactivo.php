@@ -73,7 +73,7 @@ function generarHtmlBoletaSueldosMes($cod_planilla,$cod_gestion,$cod_mes,$cod_pe
 			AND DATE('$gestion-$cod_mes-01') BETWEEN cih.fecha_inicio AND cih.fecha_fin) IS NOT NULL THEN 'a.i.'
 	  ELSE ''
   END) from cargos c where c.codigo=pm.cod_cargo) as cargo,(select a.nombre from areas a where a.codigo=pm.cod_area) as area,pm.haber_basico_pactado,pm.haber_basico as haber_basico2,pm.bono_antiguedad,pm.bonos_otros,pm.total_ganado,pm.descuentos_otros,pm.correlativo_planilla,pm.liquido_pagable,
-    pm.dias_trabajados,pm.afp_1,pm.afp_2,pp.seguro_de_salud,pp.riesgo_profesional,pp.rc_iva,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,p.ing_planilla,p.identificacion,p.cod_unidadorganizacional,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=5 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes)as datrasos,
+    pm.dias_trabajados,pm.afp_1,pm.afp_2,pp.seguro_de_salud,pp.riesgo_profesional,pp.rc_iva,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,pp.anticipo,p.ing_planilla,p.identificacion,p.cod_unidadorganizacional,(select dm.monto from descuentos_personal_mes dm where dm.cod_descuento=5 and dm.cod_estadoreferencial=1 and dm.cod_personal=p.codigo and dm.cod_gestion=$cod_gestion and dm.cod_mes=$cod_mes ORDER BY dm.codigo DESC LIMIT 1)as datrasos,
 	(SELECT DATE_FORMAT(aux_pe.fecha, '%d-%m-%Y %H:%i:%s')
 		FROM planillas_email aux_pe
 		LEFT JOIN planillas_personal_mes aux_ppm ON aux_ppm.codigo = aux_pe.cod_planilla_mes

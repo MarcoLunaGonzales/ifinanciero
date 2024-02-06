@@ -258,3 +258,72 @@ if($codigo_item==4){?><!--haber basico-->
 <?php }?>
 
 
+<script>
+    var cod_cargo_ant   = <?=empty($cod_cargo) ? '0' : $cod_cargo?>;
+    var cod_cargo_nuevo = <?=empty($cod_cargo) ? '0' : $cod_cargo?>;
+    var cod_personal    = <?=$codigo_personal?>;
+    
+    $(document).ready(function() {
+        // Captura el cambio en el campo de selección de cargo
+        $('select[name="cod_cargo"]').change(function() {
+            cod_cargo_nuevo = $(this).val();
+        });
+
+        // Controla el envío del formulario
+        $('#form1').submit(function(event) {
+            event.preventDefault();
+            // Verifica si ha habido cambios en el cargo
+            if (cod_cargo_ant != cod_cargo_nuevo) {
+                 // Pregunta al usuario si desea enviar un recordatorio
+                Swal.fire({
+                    title: 'Modificación de Cargo',
+                    text: '¿Enviar recordatorio para revisión del manual?',
+                    type: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, enviar',
+                    cancelButtonText: 'No, continuar sin recordatorio',
+                    allowOutsideClick: false  // Evita que se cierre al hacer clic fuera del cuadro de diálogo
+                }).then((result) => {
+                    if (result.value) {
+                        Swal.fire({
+                            title: 'Enviando notificación...',
+                            onBeforeOpen: () => {
+                                Swal.showLoading();
+                            },
+                            allowOutsideClick: () => !Swal.isLoading()
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: "sendEmailCambioCargo.php",
+                            data: { 
+                                cod_personal: cod_personal,
+                                cod_cargo_ant: cod_cargo_ant,
+                                cod_cargo_nuevo: cod_cargo_nuevo
+                            },
+                            success: function(response) {
+                                // Cierra el Toast después de recibir la respuesta
+                                Swal.close();
+
+                                let resp = JSON.parse(response);
+                                Swal.fire({
+                                    type: 'success',
+                                    title: 'Mensaje',
+                                    text: resp.message,
+                                    confirmButtonText: 'Aceptar'
+                                });
+                                $('#form1')[0].submit();
+                            },
+                            error: function(xhr, status, error) {
+                                console.error(xhr.responseText);
+                            }
+                        });
+                    }else{
+                        $('#form1')[0].submit();
+                    }
+                });
+            } else {
+                $('#form1')[0].submit();
+            }
+        });
+    });
+</script>
