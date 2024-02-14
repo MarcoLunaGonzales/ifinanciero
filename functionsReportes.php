@@ -96,13 +96,15 @@ function obtenerListaVentas_cursos($unidades,$IdtipoX,$cod_area,$desde,$hasta){
     $dbh = new Conexion();
     $sql="SELECT da.cod_area,(SELECT a.abreviatura from areas a where a.codigo=da.cod_area)area,m.IdCurso,SUM(((fd.cantidad*fd.precio)-fd.descuento_bob)*(da.porcentaje/100)*($valorIVA/100))as importe_real 
     FROM facturas_venta f,facturas_ventadetalle fd,facturas_venta_distribucion da,ibnorca.modulos m
-    WHERE f.codigo=fd.cod_facturaventa and da.cod_factura=f.codigo and fd.cod_claservicio=m.IdModulo and f.cod_estadofactura<>2  
+    WHERE f.codigo=fd.cod_facturaventa and da.cod_factura=f.codigo and (fd.cod_claservicio=m.IdModulo or fd.cod_modulo=m.IdModulo) and f.cod_estadofactura<>2  
     and f.fecha_factura BETWEEN '$desde 00:00:00' and '$hasta 23:59:59' and f.cod_unidadorganizacional in ($unidades) $sql_aux and da.cod_area in ($cod_area) and f.cod_solicitudfacturacion<>-100 GROUP BY m.IdCurso order by area";
     // echo $sql;
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     return($stmt);
 }
+
+
 function obtenerListaVentas_cursos_tienda($unidades,$IdtipoX,$cod_area,$desde,$hasta){
     if($IdtipoX==0) $sql_aux="";
     else $sql_aux=" and m.curso_id in ($IdtipoX)";

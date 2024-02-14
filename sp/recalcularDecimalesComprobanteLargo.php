@@ -7,7 +7,7 @@ $codigoComprobanteX=$_GET['cod_comprobante'];
 
 
 $dbh = new Conexion();
-$sql="SELECT cd.cod_comprobante,sum(cd.debe)as debe,sum(cd.haber)as haber, abs(sum(cd.debe-cd.haber))as dif, c.fecha, count(*)as contador FROM comprobantes c,comprobantes_detalle cd WHERE c.codigo=cd.cod_comprobante AND c.cod_gestion=2022 and c.fecha BETWEEN '2022-01-01 00:00:00' and '2022-12-31 23:59:59' and c.codigo='$codigoComprobanteX'";
+$sql="SELECT cd.cod_comprobante,sum(cd.debe)as debe,sum(cd.haber)as haber, abs(sum(cd.debe-cd.haber))as dif, c.fecha, count(*)as contador FROM comprobantes c,comprobantes_detalle cd WHERE c.codigo=cd.cod_comprobante AND c.cod_gestion=2023 and c.fecha BETWEEN '2023-01-01 00:00:00' and '2023-12-31 23:59:59' and c.codigo='$codigoComprobanteX'";
 
 $stmt = $dbh->prepare($sql);
 $stmt->execute();

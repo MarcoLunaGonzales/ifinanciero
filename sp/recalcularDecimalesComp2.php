@@ -36,7 +36,7 @@ require_once '../conexion.php';
 require_once '../functions.php';
 
 $dbh = new Conexion();
-$sql="SELECT cd.cod_comprobante,sum(cd.debe)as debe,sum(cd.haber)as haber, abs(sum(cd.debe-cd.haber))as dif, c.fecha, count(*)as contador FROM comprobantes c,comprobantes_detalle cd WHERE c.codigo=cd.cod_comprobante AND c.cod_gestion=2022 and c.fecha BETWEEN '2022-01-01 00:00:00' and '2022-12-31 23:59:59' AND c.cod_estadocomprobante NOT IN (2) GROUP BY cd.cod_comprobante HAVING ABS(sum(cd.debe)-sum(cd.haber))> 0.001 and contador<=5 order by dif desc";
+$sql="SELECT cd.cod_comprobante,sum(cd.debe)as debe,sum(cd.haber)as haber, abs(sum(cd.debe-cd.haber))as dif, c.fecha, count(*)as contador FROM comprobantes c,comprobantes_detalle cd WHERE c.codigo=cd.cod_comprobante AND c.cod_gestion=2023 and c.fecha BETWEEN '2023-01-01 00:00:00' and '2023-12-31 23:59:59' AND c.cod_estadocomprobante NOT IN (2) GROUP BY cd.cod_comprobante HAVING ABS(sum(cd.debe)-sum(cd.haber))> 0.001 and contador<=5 order by dif desc";
 
 $stmt = $dbh->prepare($sql);
 $stmt->execute();

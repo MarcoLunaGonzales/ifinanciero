@@ -167,6 +167,9 @@
 		if ($_GET['opcion']=='reportesEstadoCuentas') {
 			require_once('reportes/reportesEstadoCuentas.php');
 		}
+		if ($_GET['opcion']=='reportesEstadoCuentasMigrar') {
+			require_once('reportes/reportesEstadoCuentasMigrar.php');
+		}
         
         //REPORTES
 		if ($_GET['opcion']=='reportesBalanceGeneral') {

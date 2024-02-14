@@ -225,7 +225,7 @@ $html.=  '<table width="100%">
                                 <td class="text-left small"><small><small>'.mb_strtoupper($razon_social,"utf-8").'</small></small></td>
                                 <td class="text-center small"><small>'.$codigo_control.'</small></td>
                                 <td class="text-left small"><small>'.$nro_autorizacion.'</small></td>
-                                <td class="text-right small"><small>'.formatNumberDec($importe).'</small></td>
+                                <td class="text-right small"><small>'.$importe.'</small></td>
                                 <td class="text-right small"><small>'.formatNumberDec($importe_no_iva).'</small></td>
                                 <td class="text-right small"><small>'.formatNumberDec($extento).'</small></td>
                                 <td class="text-right small"><small>'.formatNumberDec($ventas_gravadas).'</small></td>
