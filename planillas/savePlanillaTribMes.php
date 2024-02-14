@@ -191,6 +191,34 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
         $total_ganado += $liquido_pagableViatico;
     }
     //Fin Viático
+    /**********************************
+     * Adiciona Solicitud de Recursos *
+     **********************************/
+    $importe_neto_sr=0;
+    $sqlSR="SELECT s.codigo as codigo, 
+                    s.numero,
+                    DATE_FORMAT(s.fecha,'%d-%m-%Y') as fecha,
+                    sd.glosa_comprobantedetalle as observaciones, 
+                    SUM(sd.importe) as monto
+                FROM solicitud_recursos s, solicitud_recursosdetalle sd
+                LEFT JOIN personal p ON p.cod_proveedor = sd.cod_proveedor
+                WHERE s.codigo = sd.cod_solicitudrecurso 
+                AND sd.cod_plancuenta = 469 
+                AND p.codigo = '$cod_personal'
+                AND YEAR(s.fecha) = '$gestion'
+                AND MONTH(s.fecha) = '$cod_mes'
+                AND s.cod_estadosolicitudrecurso = 5
+                ORDER BY s.fecha DESC";
+    // echo $sqlSR;
+    $stmtSR=$dbh->prepare($sqlSR);
+    $stmtSR->execute();
+    $resultSR = $stmtSR->fetch();
+    if($resultSR){
+        $importe_neto_sr = $resultSR['monto'];
+        $total_ganado += $importe_neto_sr;
+    }
+    $liquido_pagableViatico += $importe_neto_sr;
+    //Fin Solicitud de Recursos
         
     $monto_iva=$row['monto_iva'];
     if($monto_iva==null||$monto_iva==""){

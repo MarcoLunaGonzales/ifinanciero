@@ -50,7 +50,11 @@ $codigo=$_GET['codigo'];
                         <div class="btn-group">
                           <a href="#" class="btn btn-button btn-sm" >Registrado</a>  
                           <a class="btn btn-button btn-info btn-sm" href="<?=$urlArchivo?>" title="Descargar: Doc - IFINANCIERO (<?=$nombreX?>)" <?=$downloadFile?>><i class="material-icons">get_app</i></a>  
-                        </div>     
+                            <!-- Mostrar Archivo -->
+                            <button class="btn btn-primary btn-sm verArchivo" title="Ver Archivo" data-archivo="/ifinanciero/<?=$rowArchivo['direccion_archivo']?>">
+                                <i id="toggleIcon" class="material-icons">visibility</i>
+                            </button>
+                        </div> 
                       </td>    
                     <td><?=$nombreX;?></td>
                   </tr> 
@@ -59,4 +63,7 @@ $codigo=$_GET['codigo'];
   ?>       
 </tbody>
 </table> 
-
+<div class="fileViewerContainer d-none">
+    <h4 class="file-title"><strong>Visualización de archivo</strong></h4>
+    <iframe id="fileViewer" style="width: 100%; height: 400px;" src=""></iframe>
+</div>
