@@ -97,6 +97,17 @@ try {
     $stmt->bindParam(':nro_casillero', $nro_casillero);
     
     $flagSuccess=$stmt->execute();
+    /**
+     * Verificación de Estado - RETIRADO
+     */
+    $fecha_retiro = $_POST['fecha_retiro'];
+    if (!empty($fecha_retiro) && $cod_estadopersonal == 3) {
+        $stmtRetiro = $dbh->prepare("INSERT INTO personal_retiros (cod_personal, cod_tiporetiro, fecha_retiro, cod_estadoreferencial) 
+                                                            VALUES (:cod_personal, 1, :fecha_retiro, 1)");
+        $stmtRetiro->bindParam(':cod_personal', $codigo);
+        $stmtRetiro->bindParam(':fecha_retiro', $fecha_retiro);
+        $stmtRetiro->execute();
+    }
 
     //sacmos el id de area distribucion area distribucion
     $stmtPer = $dbhS->prepare("SELECT codigo 

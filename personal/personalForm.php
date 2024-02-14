@@ -546,11 +546,15 @@ $statementestados_personal = $dbh->query($queryestados_personal);
                                 <label class="col-sm-2 col-form-label">Estado</label>
                                 <div class="col-sm-2">
                                     <div class="form-group">
-                                        <select name="cod_estadopersonal"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
+                                        <select name="cod_estadopersonal" id="cod_estadopersonal"  class="selectpicker form-control form-control-sm " data-style="btn btn-info" required>
                                         <?php while ($row = $statementestados_personal->fetch()) { ?>
                                             <option <?php if($cod_estadopersonal == $row["codigo"]) echo "selected"; ?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>
                                         <?php } ?>
                                         </select>                  
+                                    </div>
+                                    <div class="form-group d-none" id="fechaRetiroDiv">
+                                        <label for="fecha_retiro"><strong><span class="text-danger">*</span> Fecha de retiro:</strong></label>
+                                        <input type="date" id="fecha_retiro" name="fecha_retiro" class="form-control form-control-sm">
                                     </div>
                                 </div>
 
@@ -664,3 +668,16 @@ $statementestados_personal = $dbh->query($queryestados_personal);
     });
 </script> -->
 
+<script>
+    // Función para mostrar u ocultar el campo de fecha de retiro dependiendo del estado seleccionado
+    $('body').on('change', '#cod_estadopersonal', function() {
+        var selectedValue = $(this).val();
+        if (selectedValue == 3) {
+            $('#fechaRetiroDiv').removeClass('d-none');
+            $('#fecha_retiro').prop('required', true);
+        } else {
+            $('#fechaRetiroDiv').addClass('d-none');
+            $('#fecha_retiro').val('').prop('required', false);
+        }
+    });
+</script>
