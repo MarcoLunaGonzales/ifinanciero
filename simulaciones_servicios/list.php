@@ -52,6 +52,9 @@ if(isset($_GET['q'])){
       $arraySql=explode("IdArea=",$_GET['s']);
       $codigoArea=trim($arraySql[1]);
       $sqlAreas="and p.cod_area=".$codigoArea;
+      if($codigoArea == 39){
+        $sqlAreas="and (p.cod_area = $codigoArea OR p.cod_area = 5291)"; // TVR
+      }
     }else{
       $arraySql=explode("IdArea in",$_GET['s']);
       $codigoArea=trim($arraySql[1]);

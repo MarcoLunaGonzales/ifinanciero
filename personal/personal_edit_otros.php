@@ -273,7 +273,7 @@ if($codigo_item==4){?><!--haber basico-->
         $('#form1').submit(function(event) {
             event.preventDefault();
             // Verifica si ha habido cambios en el cargo
-            if (cod_cargo_ant != cod_cargo_nuevo) {
+            // if (cod_cargo_ant != cod_cargo_nuevo) {
                  // Pregunta al usuario si desea enviar un recordatorio
                 Swal.fire({
                     title: 'Modificación de Cargo',
@@ -321,9 +321,9 @@ if($codigo_item==4){?><!--haber basico-->
                         $('#form1')[0].submit();
                     }
                 });
-            } else {
-                $('#form1')[0].submit();
-            }
+            // } else {
+            //     $('#form1')[0].submit();
+            // }
         });
     });
 </script>

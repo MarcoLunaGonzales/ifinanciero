@@ -185,6 +185,27 @@ $precioLocalInputX=number_format($precioLocalX, 2, '.', '');
 $precioLocalInputXUSD=number_format($precioLocalX/$usd, 2, '.', '');
 $alumnosX=obtenerCantidadTotalPersonalSimulacionEditado($codigo);
 
+/**
+ * obtiene porcentaje de ajuste de la plantilla
+ */
+$sql_porcentaje = "SELECT p.porcentaje_ajuste, p.porcentaje_ajuste2, p.porcentaje_ajuste_ing
+                   FROM plantillas_servicios p
+                   LEFT JOIN simulaciones_servicios ss ON ss.cod_plantillaservicio = p.codigo
+                   WHERE ss.codigo = '$codigo'
+                   LIMIT 1";
+$stmt_porcentaje = $dbh->prepare($sql_porcentaje);
+$stmt_porcentaje->execute();
+$resultado_pa = $stmt_porcentaje->fetch(PDO::FETCH_ASSOC);
+$porcentaje_ajusteX1   = 0;
+$porcentaje_ajusteX2   = 0;
+$porcentaje_ajuste_ing = 0;
+
+if ($resultado_pa) {
+    $porcentaje_ajusteX1   = $resultado_pa['porcentaje_ajuste'];
+    $porcentaje_ajusteX2   = $resultado_pa['porcentaje_ajuste2'];
+    $porcentaje_ajuste_ing = $resultado_pa['porcentaje_ajuste_ing'];
+}
+
 $costoVariablePersonal=obtenerCostosPersonalSimulacionEditado($codigo);
 $ibnorcaC=1;
 $utilidadFueraX=1;
@@ -216,6 +237,12 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado from simulaciones_servic
             $stmt1->bindColumn('cod_cliente', $cod_clienteX);
             $stmt1->bindColumn('cod_tipoclientenacionalidad', $cod_tipoclientenacionalidadX);
             $stmt1->bindColumn('cod_tipocliente', $cod_tipoclienteX);
+            
+            $stmt1->bindColumn('cod_servicio', $cod_servicio);
+            $stmt1->bindColumn('cod_estadosimulacion', $cod_estadosimulacion);
+            $stmt1->bindColumn('propuesta_gestion', $propuesta_gestion);
+            $stmt1->bindColumn('propuesta_gestion2', $propuesta_gestion2);
+            $stmt1->bindColumn('propuesta_gestion3', $propuesta_gestion3);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -682,22 +709,44 @@ for ($an=0; $an<=$anioGeneral; $an++) {
 
                   //total desde la plantilla 
                  $nAuditorias=obtenerCantidadAuditoriasPlantilla($codigoPX); 
-                 $precioRegistrado=obtenerPrecioRegistradoPropuestaTCPTCS($codigoSimulacionSuper);  
-                 if($precioRegistrado==0){
-                  $precioRegistrado=1;
-                 } 
-                 $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias); //tipo de costo 1:fijo,2:variable desde la plantilla
-                 $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
-                 $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
-                 $totalFijoPlan=$totalFijoPlan*$anioGeneral;
-                 //total variable desde simulacion cuentas
-                  $totalVariable=obtenerTotalesSimulacionServicio($codigo);
-                  //
-                  if($precioLocalX==0){
-                    $precioLocalX=1;
-                  }
-                  $alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
-                  //if($alumnosX)
+    
+                /**********************************************
+                * Obtiene Gestión de Propuesta de Presupuesto
+                **********************************************/
+                $simulacion_servicio_anio = $propuesta_gestion;
+                // Obtiene Presupuesto
+                if(empty($simulacion_servicio_anio)){ // SIN GESTIÓN
+                    $precioRegistrado=(obtenerPrecioRegistradoPropuestaTCPTCS($codigoSimulacionSuper) * $porcentaje_ajuste_ing); // Con porcentaje de Ajuste Ingreso
+                }else{
+                    if($codAreaX == 5291){ // VERIFICA TVR
+                        $codAreaX = 39;      // TVR pertenece a TCP
+                    }
+                    $precioRegistrado = (obtenerPresupuestoEjecucionPorAreaAcumulado(0,$codAreaX,$simulacion_servicio_anio,12,1)['presupuesto'] * $porcentaje_ajuste_ing);
+                }
+                if($precioRegistrado==0){
+                    $precioRegistrado=1;
+                }
+                //  // YA NO SE UTILIZA
+                //  $precioRegistrado=obtenerPrecioRegistradoPropuestaTCPTCS($codigoSimulacionSuper);  
+                //  if($precioRegistrado==0){
+                //   $precioRegistrado=1;
+                //  } 
+                 
+                $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias, $simulacion_servicio_anio);
+                //  // YA NO SE UTILIZA
+                //  $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias); //tipo de costo 1:fijo,2:variable desde la plantilla
+
+                $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
+                $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
+                $totalFijoPlan=$totalFijoPlan*$anioGeneral;
+                //total variable desde simulacion cuentas
+                $totalVariable=obtenerTotalesSimulacionServicio($codigo);
+                //
+                if($precioLocalX==0){
+                  $precioLocalX=1;
+                }
+                $alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
+                //if($alumnosX)
                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
                 $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
@@ -736,41 +785,41 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                  $pUtilidadLocal=($utilidadNetaLocal*100)/($precioLocalX);
 
                  $codEstadoSimulacion=4; 
-                 if($pUtilidadLocal>=$utilidadIbnorcaX&&$pUtilidadExterno>=$utilidadFueraX){
-                    $estiloUtilidad="bg-success text-white";
-                    $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
-                    $estiloMensaje="text-success font-weight-bold";
-                    $codEstadoSimulacion=3;  
-                 }else{
-                    if($pUtilidadLocal>=$utilidadIbnorcaX){
-                        $estiloUtilidadIbnorca="bg-success text-white";
-                        if($ibnorcaC==1){
-                         $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
-                         $estiloMensaje="text-success font-weight-bold";
-                         $codEstadoSimulacion=3;
-                        }                 
-                    }else{
-                        $estiloUtilidadIbnorca="bg-danger text-white";
-                        if($ibnorcaC==1){
-                         $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
-                         $estiloMensaje="text-danger font-weight-bold";
-                        }                      
-                    }
-                    if($pUtilidadExterno>=$utilidadFueraX){
-                        $estiloUtilidadFuera="bg-success text-white";
-                        if($ibnorcaC!=1){
-                         $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
-                         $estiloMensaje="text-success font-weight-bold";
-                         $codEstadoSimulacion=3;
-                        }
-                    }else{
-                        $estiloUtilidadFuera="bg-danger text-white";
-                        if($ibnorcaC!=1){
-                         $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
-                         $estiloMensaje="text-danger font-weight-bold";
-                        }                      
-                    }
-                 }
+                //  if($pUtilidadLocal>=$utilidadIbnorcaX&&$pUtilidadExterno>=$utilidadFueraX){
+                //     $estiloUtilidad="bg-success text-white";
+                //     $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                //     $estiloMensaje="text-success font-weight-bold";
+                //     $codEstadoSimulacion=3;  
+                //  }else{
+                //     if($pUtilidadLocal>=$utilidadIbnorcaX){
+                //         $estiloUtilidadIbnorca="bg-success text-white";
+                //         if($ibnorcaC==1){
+                //          $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                //          $estiloMensaje="text-success font-weight-bold";
+                //          $codEstadoSimulacion=3;
+                //         }                 
+                //     }else{
+                //         $estiloUtilidadIbnorca="bg-danger text-white";
+                //         if($ibnorcaC==1){
+                //          $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                //          $estiloMensaje="text-danger font-weight-bold";
+                //         }                      
+                //     }
+                //     if($pUtilidadExterno>=$utilidadFueraX){
+                //         $estiloUtilidadFuera="bg-success text-white";
+                //         if($ibnorcaC!=1){
+                //          $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                //          $estiloMensaje="text-success font-weight-bold";
+                //          $codEstadoSimulacion=3;
+                //         }
+                //     }else{
+                //         $estiloUtilidadFuera="bg-danger text-white";
+                //         if($ibnorcaC!=1){
+                //          $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                //          $estiloMensaje="text-danger font-weight-bold";
+                //         }                      
+                //     }
+                //  }
 
         ?>  
         <input type="hidden" id="cantidad_alibnorca" name="cantidad_alibnorca" readonly value="<?=$alumnosX?>">
@@ -820,6 +869,9 @@ for ($an=0; $an<=$anioGeneral; $an++) {
             <p class="font-weight-bold float-left">PRESUPUESTO POR PERIODO DE CERTIFICACION</p>
            <?php 
            $costoFijoPrincipalPeriodo=0;
+           $control_anio = 0;
+
+           $anio = date('Y'); // Año limite es la "FECHA ACTUAL"
            for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
             if($codAreaX!=39){
                 $tituloItem="Año ".$an."(Seguimiento ".($an-1).")";
@@ -880,25 +932,102 @@ for ($an=0; $an<=$anioGeneral; $an++) {
                 if($anioGeneral==0){
                   $anioGeneral=1;
                 } 
+                // echo "DATA VISUAL RONALD || anioGeneral:".$anioGeneral.'</br>';
+                //costos fijos porcentaje configuracion ***************************************************************************************                                
+                
+                /**********************************************
+                 * Obtiene Gestión de Propuesta de Presupuesto
+                 **********************************************/
+                // ? CAPTURA GESTIÓN
+                // $anio = $propuesta_gestion + ($an == 0 ? $an : ($an - 1)); // Captura Gestión (Excepcion: 0 y 1 es AÑO1)
+                if(($an == 0 || $an == 1) && !empty($propuesta_gestion)){
+                    $anio = $propuesta_gestion;
+                }else if($an == 2 && !empty($propuesta_gestion2)){
+                    $anio = $propuesta_gestion2;
+                }else if($an == 3 && !empty($propuesta_gestion3)){
+                    $anio = $propuesta_gestion3;
+                }else{
+                    $anio = $anio + ($an == 0 ? $an : ($an - 1)); // Captura Gestión (Excepcion: 0 y 1 es AÑO1)
+                }
+
+                if($anio > date('Y')){
+                    $anio = date('Y'); // Año limite es la "FECHA ACTUAL"
+                    $control_anio++;
+                }
+                // Obtiene Presupuesto
+                $precioRegistrado = (((!empty($propuesta_gestion) || !empty($propuesta_gestion2) || !empty($propuesta_gestion3)) 
+                                    ? obtenerPresupuestoEjecucionPorAreaAcumulado(0, $codAreaX, $anio, 12, 1)['presupuesto']
+                                    : obtenerPrecioRegistradoPropuestaTCPTCS($codigo)) * $porcentaje_ajuste_ing);
+                /**********************************************************************************************************/
+
                 //costos fijos porcentaje configuracion ***************************************************************************************
                 $precioRegistradoAux=$precioRegistrado;
-                if($an>1){
-                    for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
-                      $sumaPrecioRegistrado=$precioRegistradoAux*($porcentajeFijoX/100);
-                      $precioRegistradoAux=$precioRegistradoAux+$sumaPrecioRegistrado;
+                // ? YA NO SE UTILIZA REEMPLAZO
+                // if($an>1){
+                //     for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
+                //         $sumaPrecioRegistrado=$precioRegistradoAux*($porcentajeFijoX/100);
+                //         $precioRegistradoAux=$precioRegistradoAux+$sumaPrecioRegistrado;
+                //     }
+                // }
+                /**********************************************************************************************************/
+                // ? REEMPLAZADO DE DE PROCESO
+                // * Si no se tiene la PROPUESTA GESTIÓN - Mantiene incremento 15% desde el segundo AÑO
+                if(empty($propuesta_gestion) || empty($propuesta_gestion2) || empty($propuesta_gestion3)){
+                    // Procesando desde el "Segundo Año"
+                    if($an > 1){
+                        for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) {
+                            $precioRegistradoAux=$precioRegistradoAux+($precioRegistradoAux*($porcentajeFijoX/100));
+                        }
                     }
-                  }
-                 $porcentPreciosPeriodo=(float)number_format(($precioLocalXPeriodo*100)/($precioRegistradoAux),2,'.','');
+                }else{
+                // * El incremento solo se aplica cuando la gestión es futura en comparación con la gestión actual
+                    // Procesando gestiones futuras
+                    if($control_anio > 0){
+                        for ($anioAumento = 1; $anioAumento <= $control_anio; $anioAumento++) {
+                            $precioRegistradoAux=$precioRegistradoAux+($precioRegistradoAux*($porcentajeFijoX/100));
+                        }
+                    }
+                }
+                /**********************************************************************************************************/  
+                // echo "DATA VISUAL RONALD || porcentaje fijo:".$porcentajeFijoX.'</br>';
+                // echo "DATA VISUAL RONALD || precioRegistradoAux:".$precioRegistradoAux.'</br>';
+                $porcentPreciosPeriodo=(float)number_format(($precioLocalXPeriodo*100)/($precioRegistradoAux),2,'.','');
 
-                 $costoFijoRegistrado=$totalFijo[0];
-                if($an>1){
-                    for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
-                      $sumaCostoFijoRegistrado=$costoFijoRegistrado*($porcentajeFijoX/100);
-                      $costoFijoRegistrado=$costoFijoRegistrado+$sumaCostoFijoRegistrado;
+                // ? YA NO SE UTILIZA
+                // $costoFijoRegistrado=$totalFijo[0];
+                // ? Obtiene COSTO FIJO ORIGINAL DE ACUERDO A LA GESTIÓN
+                $costoFijoRegistrado = obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias, $anio)[0];
+
+                /**********************************************************************************************************/
+                // ? YA NO SE UTILIZA
+                // if($an>1){
+                //     for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
+                //       $sumaCostoFijoRegistrado=$costoFijoRegistrado*($porcentajeFijoX/100);
+                //       $costoFijoRegistrado=$costoFijoRegistrado+$sumaCostoFijoRegistrado;
+                //     }
+                // }
+                // * Si no se tiene la PROPUESTA GESTIÓN - Mantiene incremento 15% desde el segundo AÑO
+                if(empty($propuesta_gestion) || empty($propuesta_gestion2) || empty($propuesta_gestion3)){
+                    // Procesando desde el "Segundo Año"
+                    if($an>1){
+                        for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) {
+                            $costoFijoRegistrado = $costoFijoRegistrado + ($costoFijoRegistrado * ($porcentajeFijoX / 100));
+                        }
                     }
-                  }
-                 $costoFijoFinal=$costoFijoRegistrado*($porcentPreciosPeriodo/100);
-                 $costoFijoPrincipalPeriodo+=$costoFijoFinal; 
+                }else{
+                // * El incremento solo se aplica cuando la gestión es futura en comparación con la gestión actual
+                    // Procesando gestiones futuras
+                    if($an>1){
+                        for ($anioAumento = 1; $anioAumento <= $control_anio; $anioAumento++) {
+                            $costoFijoRegistrado = $costoFijoRegistrado + ($costoFijoRegistrado * ($porcentajeFijoX / 100));
+                        }
+                    }
+                }
+                /**********************************************************************************************************/
+                // echo "DATA VISUAL RONALD || Total Fijos 'SIN PORCENTAJE FINAL':$costoFijoRegistrado <br>";
+                
+                $costoFijoFinal=$costoFijoRegistrado*($porcentPreciosPeriodo/100);
+                $costoFijoPrincipalPeriodo+=$costoFijoFinal; 
                 //fin datos para costo fijo             ***************************************************************************************
 
                 $costoTotalLocalPeriodo=$costoFijoFinal+($totalVariablePeriodo[2])+$costoVariablePersonalPeriodo;
@@ -1029,6 +1158,44 @@ for ($an=0; $an<=$anioGeneral; $an++) {
               </tbody>
             </table>
           </div>-->
+            <?php
+                /*NUEVO LUGAR MENSAJES*/
+                if($pUtilidadLocal>=$utilidadIbnorcaX&&$pUtilidadExterno>=$utilidadFueraX){
+                    $estiloUtilidad="bg-success text-white";
+                    $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                    $estiloMensaje="text-success font-weight-bold";
+                    $codEstadoSimulacion=3;  
+                }else{
+                    if($pUtilidadLocal>=$utilidadIbnorcaX){
+                        $estiloUtilidadIbnorca="bg-success text-white";
+                        if($ibnorcaC==1){
+                        $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                        $estiloMensaje="text-success font-weight-bold";
+                        $codEstadoSimulacion=3;
+                        }                 
+                    }else{
+                        $estiloUtilidadIbnorca="bg-danger text-white";
+                        if($ibnorcaC==1){
+                        $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                        $estiloMensaje="text-danger font-weight-bold";
+                        }                      
+                    }
+                    if($pUtilidadExterno>=$utilidadFueraX){
+                        $estiloUtilidadFuera="bg-success text-white";
+                        if($ibnorcaC!=1){
+                        $mensajeText="La simulación SI CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                        $estiloMensaje="text-success font-weight-bold";
+                        $codEstadoSimulacion=3;
+                        }
+                    }else{
+                        $estiloUtilidadFuera="bg-danger text-white";
+                        if($ibnorcaC!=1){
+                        $mensajeText="La simulación NO CUMPLE con la UTILIDAD MINIMA REQUERIDA DEL ".$utilidadReferencial." % ".$ibnorca_title;
+                        $estiloMensaje="text-danger font-weight-bold";
+                        }                      
+                    }
+                }
+           ?> 
           <div class="col-sm-6" hidden>
             <p class="font-weight-bold float-left">RESUMEN DE LA PROPUESTA</p>
             <table class="table table-bordered table-condensed">

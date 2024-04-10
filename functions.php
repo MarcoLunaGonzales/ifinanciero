@@ -2009,66 +2009,140 @@
     return array($totalImporte,$totalModulo,$totalLocal,$totalExterno);
      }
      
-     function obtenerTotalesPlantillaServicio($codigo,$tipo,$mes){
-      $anio=date("Y");
-      $dbh = new Conexion();
-      $query2="select pgd.cod_plantillagruposervicio,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tiposervicio,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado,pgd.tipo_calculo from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
-  join plantillas_gruposervicio pgc on pgd.cod_plantillagruposervicio=pgc.codigo
-  join plantillas_servicios pc on pgc.cod_plantillaservicio=pc.codigo 
-  where pc.codigo=$codigo and pgc.cod_tiposervicio=1 GROUP BY pgd.cod_plantillagruposervicio order by pgd.cod_plantillagruposervicio";
+    // function obtenerTotalesPlantillaServicio($codigo,$tipo,$mes){
+    //     $anio=date("Y");
+    //     $dbh = new Conexion();
+    //     $query2="SELECT pgd.cod_plantillagruposervicio,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tiposervicio,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado,pgd.tipo_calculo from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
+    //     join plantillas_gruposervicio pgc on pgd.cod_plantillagruposervicio=pgc.codigo
+    //     join plantillas_servicios pc on pgc.cod_plantillaservicio=pc.codigo 
+    //     where pc.codigo=$codigo and pgc.cod_tiposervicio=1 GROUP BY pgd.cod_plantillagruposervicio order by pgd.cod_plantillagruposervicio";
+    //     // echo $query2;
 
 
-    $stmt = $dbh->prepare($query2);
-    $stmt->execute();
+    //     $stmt = $dbh->prepare($query2);
+    //     $stmt->execute();
 
-    $totalImporte=0;$totalModulo=0;$totalLocal=0;$totalExterno=0;
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $codGrupo=$row['cod_plantillagruposervicio'];$grupoUnidad=$row['cod_unidadorganizacional'];$grupoArea=$row['cod_area'];
-        
-      $tipoCalculoPadre=$row['tipo_calculo'];
-      if($tipoCalculoPadre==1){
-        $totalModulo+=$row['calculado'];
-        $importe_grupo=(float)$row['calculado']*$mes;
-      }else{
-        $totalModulo+=$row['local'];
-        $importe_grupo=(float)$row['local']*$mes;
-      }
-      $totalImporte+=$importe_grupo;
-      $totalLocal+=$row['local'];
-      $totalExterno+=$row['externo'];
+    //     $totalImporte=0;$totalModulo=0;$totalLocal=0;$totalExterno=0;
+    //     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    //         $codGrupo=$row['cod_plantillagruposervicio'];$grupoUnidad=$row['cod_unidadorganizacional'];$grupoArea=$row['cod_area'];
+                
+    //         $tipoCalculoPadre=$row['tipo_calculo'];
+    //         if($tipoCalculoPadre==1){
+    //             $totalModulo+=$row['calculado'];
+    //             $importe_grupo=(float)$row['calculado']*$mes;
+    //         }else{
+    //             $totalModulo+=$row['local'];
+    //             $importe_grupo=(float)$row['local']*$mes;
+    //         }
+    //         $totalImporte+=$importe_grupo;
+    //         $totalLocal+=$row['local'];
+    //         $totalExterno+=$row['externo'];
 
-    //partidas
-      $query_partidas="select pgd.cod_plantillagruposervicio,pp.nombre,pgd.cod_partidapresupuestaria,pgd.tipo_calculo,pgd.monto_local,pgd.monto_externo,pgd.monto_calculado from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo join plantillas_gruposervicio pgc on pgd.cod_plantillagruposervicio=pgc.codigo where pgd.cod_plantillagruposervicio=$codGrupo";
+    //         //partidas
+    //         $query_partidas="select pgd.cod_plantillagruposervicio,pp.nombre,pgd.cod_partidapresupuestaria,pgd.tipo_calculo,pgd.monto_local,pgd.monto_externo,pgd.monto_calculado from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo join plantillas_gruposervicio pgc on pgd.cod_plantillagruposervicio=pgc.codigo where pgd.cod_plantillagruposervicio=$codGrupo";
 
-       $stmt_partidas = $dbh->prepare($query_partidas);
-       $stmt_partidas->execute();
+    //         $stmt_partidas = $dbh->prepare($query_partidas);
+    //         $stmt_partidas->execute();
 
-       while ($row_partidas = $stmt_partidas->fetch(PDO::FETCH_ASSOC)) {
+    //         while ($row_partidas = $stmt_partidas->fetch(PDO::FETCH_ASSOC)) {
 
-           $codPartida=$row_partidas['cod_partidapresupuestaria'];
-           $numeroCuentas=contarPresupuestoCuentas($codPartida);
+    //             $codPartida=$row_partidas['cod_partidapresupuestaria'];
+    //             $numeroCuentas=contarPresupuestoCuentas($codPartida);
 
-          if($row_partidas['tipo_calculo']!=1){
-            $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
-          }else{
-            $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
-          }
+    //             if($row_partidas['tipo_calculo']!=1){
+    //                 $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
+    //             }else{
+    //                 $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
+    //             }
 
-          if($row_partidas['tipo_calculo']==1){
-              $query_cuentas="SELECT pc.*,pp.cod_partidapresupuestaria FROM plan_cuentas pc join partidaspresupuestarias_cuentas pp on pc.codigo=pp.cod_cuenta where pp.cod_partidapresupuestaria=$codPartida order by pc.codigo";       
-              $stmt_cuentas = $dbh->prepare($query_cuentas);
-              $stmt_cuentas->execute();
-              while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
-                  $monto=obtenerMontoPorCuenta($row_cuentas['numero'],$grupoUnidad,$grupoArea,((int)$anio-1));
-                  if($monto==null){$monto=0;}
-                  $montoCal=costoModulo($monto,$mes);
-              }
+    //             if($row_partidas['tipo_calculo']==1){
+    //                 $query_cuentas="SELECT pc.*,pp.cod_partidapresupuestaria FROM plan_cuentas pc join partidaspresupuestarias_cuentas pp on pc.codigo=pp.cod_cuenta where pp.cod_partidapresupuestaria=$codPartida order by pc.codigo";       
+    //                 $stmt_cuentas = $dbh->prepare($query_cuentas);
+    //                 $stmt_cuentas->execute();
+    //                 while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
+    //                     $monto=obtenerMontoPorCuenta($row_cuentas['numero'],$grupoUnidad,$grupoArea,((int)$anio-1));
+    //                     if($monto==null){$monto=0;}
+    //                     $montoCal=costoModulo($monto,$mes);
+    //                 }
+    //             }
+    //         }  
+    //     }
+    //     return array($totalImporte,$totalModulo,$totalLocal,$totalExterno);
+    // }
+    function obtenerTotalesPlantillaServicio($codigo,$tipo,$mes, $anio = null){
+        if ($anio == null) {
+          $anio = date("Y");
+        }
+        $dbh = new Conexion();
+        $query2="SELECT pgd.cod_plantillagruposervicio,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tiposervicio,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado,pgd.tipo_calculo, pc.porcentaje_ajuste, pc.porcentaje_ajuste2
+                from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
+                join plantillas_gruposervicio pgc on pgd.cod_plantillagruposervicio=pgc.codigo
+                join plantillas_servicios pc on pgc.cod_plantillaservicio=pc.codigo 
+                where pc.codigo=$codigo and pgc.cod_tiposervicio=1 GROUP BY pgd.cod_plantillagruposervicio order by pgd.cod_plantillagruposervicio";
+        $stmt = $dbh->prepare($query2);
+        $stmt->execute();
+
+        $totalImporte=0;$totalModulo=0;$totalLocal=0;$totalExterno=0;
+        // TOTALES REALES
+        $totalImporteReal = 0;
+        $totalModuloReal  = 0;
+        $totalLocalReal   = 0;
+        $totalExternoReal = 0;
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $codGrupo    = $row['cod_plantillagruposervicio'];
+            $grupoUnidad = $row['cod_unidadorganizacional'];
+            $grupoArea   = $row['cod_area'];
+            // PORCENTAJE DE AJUSTE 1
+            $porcentaje_ajuste  = $row['porcentaje_ajuste'];
+            // PORCENTAJE DE AJUSTE 2
+            $porcentaje_ajuste2 = $row['porcentaje_ajuste2'];
+                
+            $tipoCalculoPadre=$row['tipo_calculo'];
+            if($tipoCalculoPadre==1){
+                $totalModulo+=$row['calculado'];
+                $importe_grupo=(float)$row['calculado']*$mes;
+            }else{
+                $totalModulo+=$row['local'];
+                $importe_grupo=(float)$row['local']*$mes;
             }
+            $totalImporte+=$importe_grupo;
+            $totalLocal+=$row['local'];
+            $totalExterno+=$row['externo'];
 
-        }  
-      }
-    return array($totalImporte,$totalModulo,$totalLocal,$totalExterno);
-     }
+            //partidas
+            $query_partidas="SELECT pgd.cod_plantillagruposervicio,pp.nombre,pgd.cod_partidapresupuestaria,pgd.tipo_calculo,pgd.monto_local,pgd.monto_externo,pgd.monto_calculado from plantillas_gruposerviciodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo join plantillas_gruposervicio pgc on pgd.cod_plantillagruposervicio=pgc.codigo where pgd.cod_plantillagruposervicio=$codGrupo";
+
+            $stmt_partidas = $dbh->prepare($query_partidas);
+            $stmt_partidas->execute();
+
+            while ($row_partidas = $stmt_partidas->fetch(PDO::FETCH_ASSOC)) {
+
+                $codPartida=$row_partidas['cod_partidapresupuestaria'];
+                $numeroCuentas=contarPresupuestoCuentas($codPartida);
+
+                if($row_partidas['tipo_calculo']!=1){
+                    $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
+                }else{
+                    $importe_partida=(float)$row_partidas['monto_calculado']*$mes;
+                }
+                $query_cuentas="SELECT pc.*,pp.cod_partidapresupuestaria FROM plan_cuentas pc join partidaspresupuestarias_cuentas pp on pc.codigo=pp.cod_cuenta where pp.cod_partidapresupuestaria=$codPartida order by pc.codigo";
+                // LISTA DE PLAN DE CUENTAS
+                $stmt_cuentas = $dbh->prepare($query_cuentas);
+                $stmt_cuentas->execute();
+                //CASO ESPECIAL: TVR 5291 obtiene area de TCP 39
+                $grupoArea = $grupoArea==5291 ? 39 : $grupoArea;
+                while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
+                    $monto=ejecutadoEgresosMes(0,$anio,12,$grupoArea,1,$row_cuentas['numero']);
+                    // $totalImporteReal += $monto;
+                    $totalImporteReal += ($monto * $porcentaje_ajuste) * $porcentaje_ajuste2;
+                }
+            }  
+        }
+        // Solo se obtiene el IMPORTE REAL DE Costo Fijo (CF)
+        // return array($totalImporteReal,$totalModulo,$totalLocal,$totalExterno);
+        // var_dump("$totalImporteReal,____$totalModulo,____$totalLocal,____$totalExterno");
+        return array($totalImporteReal,$totalModulo,$totalLocal,$totalExterno);
+    }
 
 
     function obtenerValorConfiguracion($id){
@@ -6637,50 +6711,62 @@ function obtenerCorrelativoComprobante2($cod_tipocomprobante){
     }
 
 
-  function nameNorma($codigo,$catalogo){
-     $dbh = new Conexion();
-     if($catalogo=='N'){
-      $stmt = $dbh->prepare("SELECT abreviatura FROM v_normas where codigo=:codigo");
-      $stmt->bindParam(':codigo',$codigo);
-      $stmt->execute();
-      $valor="";
-      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-          $valor=$row['abreviatura'];
-      }
-     }else{
-      $stmt = $dbh->prepare("SELECT abreviatura FROM v_normas_int where codigo=:codigo");
-      $stmt->bindParam(':codigo',$codigo);
-      $stmt->execute();
-      $valor="";
-      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $valor=$row['abreviatura'];
-      }
-     }
-     
-     return($valor);
-  }
-  function abrevNorma($codigo,$catalogo){
-     $dbh = new Conexion();
-     if($catalogo=='N'){
-      $stmt = $dbh->prepare("SELECT nombre FROM v_normas where codigo=:codigo");
-      $stmt->bindParam(':codigo',$codigo);
-      $stmt->execute();
-      $valor="";
-      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-          $valor=$row['nombre'];
-      }
-     }else{
-      $stmt = $dbh->prepare("SELECT nombre FROM v_normas_int where codigo=:codigo");
-      $stmt->bindParam(':codigo',$codigo);
-      $stmt->execute();
-      $valor="";
-      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $valor=$row['nombre'];
-      }
-     }
-     
-     return($valor);
-  }
+    function nameNorma($codigo,$catalogo){
+        $dbh = new Conexion();
+        $valor="";
+        if($catalogo == 'N'){
+            $stmt = $dbh->prepare("SELECT abreviatura FROM v_normas where codigo=:codigo");
+            $stmt->bindParam(':codigo',$codigo);
+            $stmt->execute();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $valor = $row['abreviatura'];
+            }
+        }else if($catalogo == 'I'){
+            $stmt = $dbh->prepare("SELECT abreviatura FROM v_normas_int where codigo=:codigo");
+            $stmt->bindParam(':codigo',$codigo);
+            $stmt->execute();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $valor = $row['abreviatura'];
+            }
+        }else if($catalogo == 'ISO'){
+            $stmt = $dbh->prepare("SELECT CodigoNorma as abreviatura FROM v_normas_iso where idnorma=:codigo");
+            $stmt->bindParam(':codigo',$codigo);
+            $stmt->execute();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $valor = $row['abreviatura'];
+            }
+        }
+        
+        return($valor);
+    }
+    function abrevNorma($codigo,$catalogo){
+        $dbh   = new Conexion();
+        $valor = "";
+        if($catalogo == 'N'){
+            $stmt = $dbh->prepare("SELECT nombre FROM v_normas where codigo=:codigo");
+            $stmt->bindParam(':codigo',$codigo);
+            $stmt->execute();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $valor = $row['nombre'];
+            }
+        }else if($catalogo == 'I'){
+            $stmt = $dbh->prepare("SELECT nombre FROM v_normas_int where codigo=:codigo");
+            $stmt->bindParam(':codigo',$codigo);
+            $stmt->execute();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $valor = $row['nombre'];
+            }
+        }else if($catalogo == 'ISO'){
+            $stmt = $dbh->prepare("SELECT NombreNorma as nombre FROM v_normas_iso where idnorma=:codigo");
+            $stmt->bindParam(':codigo',$codigo);
+            $stmt->execute();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $valor = $row['nombre'];
+            }
+        }
+        
+        return($valor);
+    }
 
   function obtenerListaClientesWS(){
     $direccion=obtenerValorConfiguracion(42);//direccion des servicio web

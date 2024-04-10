@@ -2050,6 +2050,10 @@
 		if ($_GET['opcion']=='listaManualesAprobados') {
 			require_once('rrhh/ManualesAprobadosLista.php');
 		}
+		// Lista de Manuales Aprobados - GENERAL SIN FILTRO DE AREA (Visto bueno)
+		if ($_GET['opcion']=='listaGeneralManualesAprobadosGeneral') {
+			require_once('rrhh/ManualesAprobadosListaGeneral.php');
+		}
 
 		/***************************************************/
 		// Lista MOF

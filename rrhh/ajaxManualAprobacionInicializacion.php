@@ -55,8 +55,17 @@ function guardarSeguimiento($cod_manual, $cod_etapa, $cod_personal, $cod_seguimi
 
 try {
   $dbh = new Conexion();
+  // Obtiene Etapa Inicial
+      $sql = "SELECT mae.codigo as codigo_inicial
+      FROM manuales_aprobacion_etapas mae
+      WHERE mae.estado = 1
+      AND mae.cod_etapa = 0";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+  $cod_etapa = $resultado ? $resultado['codigo_inicial'] : 1;
+  //   $cod_etapa    = 1;                  // Etapa inicial
   // Variables
-  $cod_etapa    = 1;                  // Etapa inicial
   $fecha_inicio = date('Y-m-d H:i:s');
   $cod_cargo    = $_POST['cod_cargo'];
 

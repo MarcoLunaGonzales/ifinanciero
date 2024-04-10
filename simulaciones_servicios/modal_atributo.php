@@ -13,17 +13,17 @@
     if($codigoPlan == 3){
         // TCS
         $tipo_atributo = 2;
-    }else if($codigoPlan == 2){
+    }else if($codigoPlan == 2 || $codigoPlan == 10){
         // TCP
         $tipo_atributo = 1;
     }
 
-    if ($codigoPlan == 3 || (in_array($tipo_servicio, $array_excepciona_atr) && $codigoPlan == 2)) {
+    if ($codigoPlan == 3 || (in_array($tipo_servicio, $array_excepciona_atr) && ($codigoPlan == 2 || $codigoPlan == 10))) {
         $tipo_modal = 1;
         $campos_modal_sitio      = '';
         $campos_modal_producto   = 'hidden';
         $titulo_form             = 'Sitio';
-    } else if ($codigoPlan == 2) {
+    } else if ($codigoPlan == 2 || $codigoPlan == 10) {
         $tipo_modal = 2;
         $campos_modal_sitio      = 'hidden';
         $campos_modal_producto   = '';

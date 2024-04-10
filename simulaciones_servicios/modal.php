@@ -57,7 +57,7 @@
     <div class="modal-content card">
                <div class="card-header card-header-primary card-header-text">
                   <div class="card-text">
-                    <?php if($codAreaX==39){
+                    <?php if($codAreaX==39 || $codAreaX==5291){
                        ?><h4 id="titulo_modal_atributo">PRODUCTOS</h4><?php
                     }else{
                       ?><h4 id="titulo_modal_atributo">SITIOS</h4><?php
@@ -78,7 +78,7 @@
                                <input type="text" class="form-control" name="modal_nombre" id="modal_nombre" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
                              </div>
                            </div>
-                           <?php if($codAreaX==39){
+                           <?php if($codAreaX==39 || $codAreaX==5291){
                                     ?>
                            <div class="row col-sm-6" id="div_marca">
                              <label class="col-sm-2 col-form-label">Marca</label>
@@ -94,7 +94,7 @@
                                  }
                             ?>           
                       </div>
-                      <?php if($codAreaX==39){
+                      <?php if($codAreaX==39 || $codAreaX==5291){
                                     ?>
                       <div id="div_norma">
                         <div class="row">
@@ -246,7 +246,7 @@
                            </div>  
                       </div>
                      <?php 
-                      if($codAreaX!=39){
+                      if($codAreaX!=39 || $codAreaX!=5291){
                      ?>
                      <div class="row" id="div_sitios_dias" hidden>
                       <h4 class="font-weight-bold div-center"><center>DIAS - SITIOS</center></h4>
@@ -258,7 +258,7 @@
                                           $active="";
                                           $etapas="Año ".$an;
 
-                                          if($codAreaX!=39){
+                                          if($codAreaX!=39 || $codAreaX!=5291){
                                             $etapas="Año ".$an."(SEGUIMIENTO ".($an-1).")";
                                             if($an==0||$an==1){
                                               if($an==1){
@@ -404,7 +404,7 @@
                   <?php
                    for ($ann=$inicioAnio; $ann <=$anioGeneral ; $ann++) { 
                      $tituloItem="Año ".$ann;
-                      if($codAreaX!=39){
+                      if($codAreaX!=39 || $codAreaX!=5291){
                         $tituloItem="Año ".$ann."(SEGUIMIENTO ".($ann-1).")";
                         if($ann==0||$ann==1){
                           if($ann==1){
@@ -615,7 +615,7 @@
                         </div>
                       </div>
                       <?php 
-                       if($codAreaX==39){
+                       if($codAreaX==39 || $codAreaX==5291){
                        ?>
                         <div class="row">
                        <label class="col-sm-2 col-form-label">Regi&oacute;n</label>
@@ -741,7 +741,7 @@
                       <input type="hidden" id="plantilla_servicio" value="<?=$codigoPlan?>">
                       <?php 
                       // TCP
-                      if($codigoPlan == 2){
+                      if(in_array($codigoPlan, [2, 10])){
                       ?>
                       <div class="row">
                         <label class="col-sm-2 col-form-label">Tipo del Servicio</label>
@@ -751,8 +751,8 @@
                               <option value="">SELECCIONE TIPO DE SERVICIO</option>
                                 <?php
                                   $plantilla_servicio = '';
-                                  if($codigoPlan == 2){
-                                    $plantilla_servicio = 108;
+                                  if(in_array($codigoPlan, [2, 10])){
+                                    $plantilla_servicio = $codigoPlan == 2 ? 108 : 5290;
                                   }else if($codigoPlan == 3){
                                     $plantilla_servicio = 109;
                                   }
@@ -865,8 +865,8 @@
                               <option value="">SELECCIONE TIPO DE SERVICIO</option>
                                   <?php
                                   $plantilla_servicio = '';
-                                  if($codigoPlan == 2){
-                                    $plantilla_servicio = 108;
+                                  if(in_array($codigoPlan, [2, 10])){
+                                    $plantilla_servicio = $codigoPlan == 2 ? 108 : 5290;
                                   }else if($codigoPlan == 3){
                                     $plantilla_servicio = 109;
                                   }
@@ -1050,7 +1050,10 @@
                                 <select class="selectpicker form-control form-control-sm" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." name="iaf_primario[]" id="iaf_primario" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
                                   <option value="0" select>NINGUNO</option> 
                                 <?php
-                                 $sql = "SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1"; // SQL Antiguo
+                                 $sql = "SELECT c.codigo, c.nombre,c.abreviatura 
+                                          FROM iaf c 
+                                          WHERE c.Auxiliar = 755
+                                          order by 1"; // SQL Antiguo
                                 //  $sql = "SELECT c.IdClasificador as codigo, CONCAT(c.Abrev,' - ',c.Descripcion) as nombre
                                 //          FROM ibnorca.clasificador c
                                 //          WHERE c.IdPadre=755 AND c.Aprobado=1"; // SQL NUEVO
@@ -1161,10 +1164,10 @@
                                     <select class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio<?=$an?>SSS0" id="anio<?=$an?>SSS0">
                                           <?php 
                                           for ($i=$inicioAnio; $i <= $anioGeneral; $i++) { 
-                                             if($codAreaX!=39){
+                                             if($codAreaX!=39 || $codAreaX!=5291){
                                             $etapas="Seg ".($i-1);
 
-                                              if($codAreaX!=39){
+                                              if($codAreaX!=39 || $codAreaX!=5291){
                                                if($i==0||$i==1){
                                                 if($i==1){
                                                 $etapas="Et ".($i+1)." / REN"; 
@@ -1188,8 +1191,8 @@
                                       </select>
                                   </td>
                                   <td><?php 
-                                  if($codAreaX==39){
-                                    $codigoAreaServ=108;
+                                  if($codAreaX==39 || $codAreaX==5291){
+                                    $plantilla_servicio = $codigoPlan == 2 ? 108 : 5290;
                                     $idTipoServ=309;
                                   }else{
                                     if($codAreaX==38){
@@ -1312,10 +1315,10 @@
                                         <select <?=$estiloFilaTextoSol?> class="form-control selectpicker form-control-sm" data-style="fondo-boton fondo-boton-active" name="anio<?=$an?>SSS<?=$iii?>" id="anio<?=$an?>SSS<?=$iii?>">
                                           <?php 
                                           for ($i=$inicioAnio; $i <= $anioGeneral; $i++) {
-                                          if($codAreaX!=39){
+                                          if($codAreaX!=39 || $codAreaX!=5291){
                                             $etapas="Seg ".($i-1);
 
-                                              if($codAreaX!=39){
+                                              if($codAreaX!=39 || $codAreaX!=5291){
                                                if($i==0||$i==1){
                                                 if($i==1){
                                                 $etapas="Et ".($i+1)." / REN"; 
@@ -1422,10 +1425,10 @@
                       
                          <?php   
                           for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
-                            if($codAreaX!=39){
+                            if($codAreaX!=39 || $codAreaX!=5291){
                              $etapas="Seguimiento ".($an-1);
 
-                            if($codAreaX!=39){
+                            if($codAreaX!=39 || $codAreaX!=5291){
                               if($an==0||$an==1){
                                $etapas="Etapa ".($an+1).""; 
                               }

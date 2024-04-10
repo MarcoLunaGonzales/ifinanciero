@@ -87,7 +87,7 @@ if ($cod_facturacion > 0){
     $complemento=$result['siat_complemento'];
 
     $fecha_facturacion=$result['fecha_facturacion'];
-    $nro_tarjeta=$result['nro_tarjeta'];
+    $nro_tarjeta=$result['nro_tarjeta'] ?? '';
     
 }else {
     $nombre_simulacion = null;

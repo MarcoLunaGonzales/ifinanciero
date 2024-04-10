@@ -3,16 +3,10 @@
 require_once 'conexion.php';
 require_once 'configModule.php'; //configuraciones
 require_once 'styles.php';
-date_default_timezone_set('America/La_Paz');
 
 $dbh = new Conexion();
 // Credenciales de INTRANET
-$accesos_externos = '';
-$q = isset($_GET['q']) ? $_GET['q'] : '';
-
-if (isset($q)) {
-    $accesos_externos = "?q=" . $q;
-}
+$accesos_externos = !empty($_GET['q']) ? $_GET['q'] : '';
 
 $globalUsuario = '';
 $globalArea  = '';
@@ -20,8 +14,8 @@ $globalCargo = '';
 
 if (empty($q)) {
     $globalUsuario = $_SESSION["globalUser"];
-    $globalArea    = $_SESSION["globalArea"];
-    $globalCargo   = $_SESSION["globalCargo"];
+    $globalArea  = $_SESSION["globalArea"];
+    $globalCargo = $_SESSION["globalCargo"];
 } else {
     $sql = "SELECT p.codigo, p.cod_area, p.cod_cargo
             FROM personal p
@@ -32,102 +26,61 @@ if (empty($q)) {
     $stmt->execute();
     $registro = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($registro) {
-        $globalUsuario = $registro['codigo'];
-        $globalArea    = $registro['cod_area'];
-        $globalCargo   = $registro['cod_cargo'];
+        $globalUsuario = $_SESSION["codigo"];
+        $globalArea  = $registro['cod_area'];
+        $globalCargo = $registro['cod_cargo'];
     }
 }
+    
 /**
- * Verificación de asginación de cargo Interino
- * En caso de encontrar un valor, se adecua al 
- * cambio del cargo interino asignado
- */
-$fecha_actual = date('Y-m-d');
-$sql = "SELECT cih.cod_cargo as cargo_interino
-        FROM cargos_interinos_historicos cih
-        WHERE cih.cod_personal = '$globalUsuario'
-        AND cih.fecha_inicio <= '$fecha_actual'
-        AND cih.fecha_fin >= '$fecha_actual'
-        AND cih.estado = 1
-        LIMIT 1";
-$stmt = $dbh->prepare($sql);
-$stmt->bindParam(':codigo', $q, PDO::PARAM_STR);
-$stmt->execute();
-$registro = $stmt->fetch(PDO::FETCH_ASSOC);
-if ($registro) {
-  $globalCargo = $registro['cargo_interino'];
-}
-
-/**
- * Obtiene lista de ETAPA 1 en base al "Codigo de Area"
+ * Obtiene lista de Manuales de Cargos Aprobados
+ * En base a su codigo de cargo y sus cargos dependientes
  */
 $sql = "SELECT
-        c.codigo,
-        UPPER(c.nombre) AS nombre,
-        c.objetivo,
-        c.abreviatura,
-        c.cod_tipo_cargo,
-        tc.nombre AS nombre_tipo_cargo,
-        UPPER(cpadre.nombre) AS nombre_dependencia,
-        UPPER(cfuncional.nombre) AS nombre_dependencia_funcional,
-        ma.codigo as ma_codigo,
-        ma.cod_etapa as ma_cod_etapa,
-        ma.cod_estado as ma_cod_estado,
-        mae.nombre as ma_nombre_estado,
-        mae.color as ma_color_estado
+            c.codigo,
+            UPPER(c.nombre) AS nombre,
+            c.objetivo,
+            c.abreviatura,
+            c.cod_tipo_cargo,
+            tc.nombre AS nombre_tipo_cargo,
+            UPPER(cpadre.nombre) AS nombre_dependencia,
+            UPPER(cfuncional.nombre) AS nombre_dependencia_funcional,
+            ma.codigo as ma_codigo,
+            ma.cod_etapa as ma_cod_etapa,
+            ma.cod_estado as ma_cod_estado,
+            mae.nombre as ma_nombre_estado,
+            mae.color as ma_color_estado,
+            CONCAT(eta.descripcion, ' (', eta.nombre, ')') as eta_etapa
         FROM cargos c
         LEFT JOIN cargos cpadre ON cpadre.codigo = c.cod_padre
         LEFT JOIN cargos cfuncional ON cfuncional.codigo = c.cod_dep_funcional
         LEFT JOIN tipos_cargos_personal tc ON tc.codigo = c.cod_tipo_cargo
-        LEFT JOIN manuales_aprobacion ma ON ma.cod_cargo = c.codigo
-        LEFT JOIN manuales_aprobacion_etapas eta ON eta.codigo = ma.cod_etapa
+        LEFT JOIN (
+            SELECT
+                ma1.codigo,
+                ma1.cod_cargo,
+                ma1.cod_etapa,
+                ma1.cod_estado
+            FROM manuales_aprobacion ma1
+            INNER JOIN (
+                SELECT
+                    cod_cargo,
+                    MAX(codigo) AS max_codigo
+                FROM manuales_aprobacion
+                GROUP BY cod_cargo
+            ) max_ma ON ma1.cod_cargo = max_ma.cod_cargo AND ma1.codigo = max_ma.max_codigo
+        ) ma ON ma.cod_cargo = c.codigo
         LEFT JOIN manuales_aprobacion_estados mae ON mae.codigo = ma.cod_estado
+        LEFT JOIN manuales_aprobacion_etapas eta ON eta.codigo = ma.cod_etapa
         WHERE c.cod_estadoreferencial = 1
-        AND ma.cod_estado = 1
-        AND eta.cod_cargo = 0
-        AND ma.cod_area = '$globalArea'
+        AND ma.cod_estado = 2
         ORDER BY c.nombre";
 // echo $sql;
 $stmt = $dbh->prepare($sql);
 //ejecutamos
 $stmt->execute();
-$resultadoBaseArea = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-/**
- * Obtiene lista de ETAPAS SUPERIORES en base al "Codigo de Cargo"
- */
-$sql = "SELECT
-        c.codigo,
-        UPPER(c.nombre) AS nombre,
-        c.objetivo,
-        c.abreviatura,
-        c.cod_tipo_cargo,
-        tc.nombre AS nombre_tipo_cargo,
-        UPPER(cpadre.nombre) AS nombre_dependencia,
-        UPPER(cfuncional.nombre) AS nombre_dependencia_funcional,
-        ma.codigo as ma_codigo,
-        ma.cod_etapa as ma_cod_etapa,
-        ma.cod_estado as ma_cod_estado,
-        mae.nombre as ma_nombre_estado,
-        mae.color as ma_color_estado
-        FROM cargos c
-        LEFT JOIN cargos cpadre ON cpadre.codigo = c.cod_padre
-        LEFT JOIN cargos cfuncional ON cfuncional.codigo = c.cod_dep_funcional
-        LEFT JOIN tipos_cargos_personal tc ON tc.codigo = c.cod_tipo_cargo
-        LEFT JOIN manuales_aprobacion ma ON ma.cod_cargo = c.codigo
-        LEFT JOIN manuales_aprobacion_etapas eta ON eta.codigo = ma.cod_etapa
-        LEFT JOIN manuales_aprobacion_estados mae ON mae.codigo = ma.cod_estado
-        WHERE c.cod_estadoreferencial = 1
-        AND ma.cod_estado = 1
-        AND eta.cod_cargo = '$globalCargo'
-        ORDER BY c.nombre";
-// echo $sql;
-$stmt = $dbh->prepare($sql);
-//ejecutamos
-$stmt->execute();
-$resultadoBaseCargo = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-$results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
 ?>
 
 <div class="content">
@@ -135,11 +88,11 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
     <div class="row">
       <div class="col-md-12">
         <div class="card">
-          <div class="card-header <?=$colorCard;?> card-header-icon">
+          <div class="card-header card-header-success card-header-icon">
             <div class="card-icon">
-              <i class="material-icons"><?=$iconCard;?></i>
+              <i class="material-icons">check_circle</i>
             </div>
-            <h4 class="card-title">Lista de Aprobación de Manuales</h4>
+            <h4 class="card-title">Lista de Manuales Aprobados - General</h4>
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -171,12 +124,18 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
                         <td><?=$row['nombre_dependencia'];?></td>
                         <td><?=$row['nombre_dependencia_funcional'];?></td>
                         <td class="td-actions text-center">
-                          
+                        <?php
+                          // if($globalAdmin==1){
+                          if(true){
+                        ?>
                           <!-- MANUAL DE APROBACIÓN -->
-                          <!-- Aprobar Manual -->
-                          <button class="btn btn-md btn-success btnFormularioAprobacion" data-cod_cargo="<?=$row['codigo'];?>" data-cod_manual_aprobacion="<?=$row['ma_codigo'];?>" title="Procesar">
-                            <i class="material-icons">autorenew</i>
-                          </button>
+                          <!-- VER PDF -->
+                          <a href='rrhh/pdfGeneracion.php?codigo=<?=$row['codigo'];?>&tipo=1<?=$accesos_externos;?>' target="_blank" class="btn btn-danger" title="Manual de Cargo">
+                            <i class="material-icons">picture_as_pdf</i>
+                          </a>
+                          <?php
+                            }
+                          ?>
                         
                         </td>
                     </tr>
@@ -227,13 +186,8 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
                 <div class="card-body historial1">
                   <div class="d-flex align-items-center">
                     <i class="material-icons text-primary mr-2">info</i>
-                    <b>Estado:</b> 
+                    <b>Estado:</b>
                     <span id="textEstado"></span>
-                  </div>
-                  <div class="d-flex align-items-center">
-                    <i class="material-icons text-info mr-2">format_list_numbered</i>
-                    <b>Nro. revisión</b>
-                    <span id="textVersion" class="badge badge-secondary"></span>
                   </div>
                   <div class="d-flex align-items-center">
                     <i class="material-icons text-warning mr-2">event</i>
@@ -242,11 +196,11 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
                   </div>
                   <div class="d-flex align-items-center">
                     <i class="material-icons text-success mr-2">person</i>
-                    <b>Encargado:</b>
+                    <b>Personal:</b>
                     <span id="textPersonal"></span>
                   </div>
                   <div class="d-flex align-items-center">
-                    <i class="material-icons text-danger mr-2">comment</i>
+                    <i class="material-icons text-success mr-2">comment</i>
                     <b>Observación:</b>
                   </div>
                   <div class="align-items-center">
@@ -256,7 +210,6 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
                 <div class="card-body historial2">
                   <p><i class="material-icons text-default mr-2">comment</i> No se han efectuado cambios de estado en el Manual.</p>
                 </div>
-                <button type="button" class="btn btn-secondary btn-block btnVerHistorial" style="border: 1px solid #A9A9A9;" data-dismiss="modal"><i class="material-icons">schedule</i> Ver más</button>
               </div>
             </div>
 
@@ -318,30 +271,6 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
   </div>
 </div>
 
-<!-- MODAL DE SEGUIMIENTO -->
-<div class="modal fade modal-primary" id="modalHistorial" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content card">
-      <div class="card-header card-header-info card-header-icon">
-        <div class="card-icon">
-          <i class="material-icons">track_changes</i>
-        </div>
-        <button type="button" class="close pt-2" data-dismiss="modal" aria-hidden="true">
-          <i class="material-icons">close</i>
-        </button>
-        <h4 class="card-title" style="color: #333;font-weight: bold;">Seguimiento de Etapas</h4>
-      </div>
-
-      <div class="card-body content-historial">
-        <!-- CONTENIDO -->
-      </div>
-
-      <div class="modal-footer justify-content-end pt-0">
-        <button type="button" class="btn btn-secondary modal_etapa_cerrar" style="border: 1px solid #A9A9A9;" data-dismiss="modal">Volver</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 <script>
@@ -352,8 +281,6 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
     let cod_cargo = $(this).data('cod_cargo');
     let cod_manual_aprobacion = $(this).data('cod_manual_aprobacion');
     $('#cod_manual_aprobacion').val(cod_manual_aprobacion);
-    // Se actualiza boton de estado de Manual de Aprobación
-    $(".btnVerHistorial").attr("data-cod_cargo", cod_cargo);
     // Actualiza documento de visualización
     $.ajax({
         url: "rrhh/ajaxManualAprobacionSeguimiento.php",
@@ -370,7 +297,6 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
               $('#textFecha').html(response.data.fecha);
               $('#textPersonal').html(response.data.personal);
               $('#textObservacion').html(response.data.observacion);
-              $('#textVersion').html(response.data.nro_version);
               $(".historial1").show();
               $(".historial2").hide();
             }else if(response.data.verf_row == 0){
@@ -413,7 +339,7 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
       if (result.value) {
         // PROCESO
         $.ajax({
-            url: "rrhh/ajaxManualAprobacionEstadoSave.php<?=$accesos_externos;?>",
+            url: "rrhh/ajaxManualAprobacionEstadoSave.php",
             method: "POST",
             dataType: "json",
             data: {
@@ -458,43 +384,5 @@ $results = array_merge($resultadoBaseArea, $resultadoBaseCargo);
         });
       }
     });
-  });
-  
-  /**
-   * Ver historial de estado de Manual de Aprobación
-   */
-  $('.btnVerHistorial').click(function(){
-    let cod_cargo = $(this).data('cod_cargo');
-    $.ajax({
-      url: "rrhh/ajaxManualAprobacionEstadoHistorial.php",
-      method: "POST",
-      dataType: "html",
-      data: {
-        cod_cargo: cod_cargo
-      },
-      success: function(response) {
-        // console.log(response)
-        $('.content-historial').html(response);
-        $('#modalHistorial').modal('show');
-      },
-      error: function() {
-          Swal.fire({
-              type: "error",
-              title: "Error",
-              text: "Ocurrió un error en la comunicación con el servidor",
-              showConfirmButton: false,
-              timer: 3000
-          });
-      }
-    });
-  });
-
-  /**
-   * Cierra modal de Historial de Seguimiento de Etapas
-   */
-  $('.modal_etapa_cerrar').click(function(){
-    setTimeout(function() {
-        $('#modalAprobacion').modal('show');
-    }, 500);
   });
 </script>
