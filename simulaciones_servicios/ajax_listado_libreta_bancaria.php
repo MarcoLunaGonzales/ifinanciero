@@ -120,7 +120,7 @@ if(isset($_GET['anio'])){
               
               $datosEnviarModal="";
 
-              if(abs($saldo)>0.01&&($codComprobanteDetalle==""||$codComprobanteDetalle==0)){//todo  $tipo_listado==1 || 
+              if(abs($saldo)>=0.01&&($codComprobanteDetalle==""||$codComprobanteDetalle==0)){//todo  $tipo_listado==1 || 
               $datosEnviarModal=$Fecha."####".string_sanitize($Descripcion)." ".string_sanitize($InformacionComplementaria)."####".number_format($monto,2)."####".number_format($saldo,2)."####".$saldo; 
                 ?>
 

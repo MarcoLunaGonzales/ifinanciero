@@ -46,16 +46,16 @@ foreach ($rubros as $valor ) {
     $stringRubros.=" ".abrevDepreciacion($valor)." ";
 }
 
-$sqlActivos="SELECT codigo,codigoactivo,activo,(select uo.abreviatura from unidades_organizacionales uo where uo.codigo=cod_unidadorganizacional)as cod_unidadorganizacional,
-(select a.abreviatura from areas a where a.codigo=cod_area) as cod_area,
-(select d.nombre from depreciaciones d where d.codigo=cod_depreciaciones) as cod_depreciaciones,
-tipoalta,
-DATE_FORMAT(fechalta,'%d/%m/%Y')as fechalta_x,valorinicial,valorresidual,
-(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=cod_responsables_responsable) as cod_responsables_responsable,
-(select e.nombre from estados_activofijo e where e.codigo=cod_estadoactivofijo) as estado_af,
-(select t.tipo_bien from tiposbienes t where t.codigo=cod_tiposbienes)as tipo_bien
-from activosfijos 
-where cod_estadoactivofijo = 1 and cod_unidadorganizacional in ($unidadOrgString) and cod_area in ($areaString) and cod_depreciaciones in ($rubrosString) and fechalta between '$fecha_desde' and '$fecha_hasta'";  
+$sqlActivos="SELECT a.codigo, a.codigoactivo, a.activo, (select uo.abreviatura from unidades_organizacionales uo where uo.codigo=a.cod_unidadorganizacional)as cod_unidadorganizacional,
+(select ar.abreviatura from areas ar where ar.codigo=a.cod_area) as cod_area,
+(select d.nombre from depreciaciones d where d.codigo=a.cod_depreciaciones) as cod_depreciaciones,
+a.tipoalta, DATE_FORMAT(a.fechalta,'%d/%m/%Y')as fechalta_x, a.valorinicial, a.valorresidual,
+(select CONCAT_WS(' ',r.paterno,r.materno,r.primer_nombre) from personal r where r.codigo=a.cod_responsables_responsable) as cod_responsables_responsable, ea.nombre as estado_af, t.tipo_bien, 
+(SELECT mdd.d10_valornetobs from mesdepreciaciones_detalle mdd where mdd.cod_activosfijos=a.codigo ORDER BY mdd.cod_mesdepreciaciones desc limit 0,1)as valorresidual_v
+from activosfijos a
+LEFT JOIN tiposbienes t on t.codigo=a.cod_tiposbienes
+LEFT JOIN estados_activofijo ea on ea.codigo=a.cod_estadoactivofijo
+where a.cod_estadoactivofijo = 1 and a.cod_unidadorganizacional in ($unidadOrgString) and a.cod_area in ($areaString) and a.cod_depreciaciones in ($rubrosString) and a.fechalta between '$fecha_desde' and '$fecha_hasta'";  
 
 //echo $sqlActivos;
 
@@ -77,6 +77,7 @@ $stmtActivos->bindColumn('cod_responsables_responsable', $responsables_responsab
 $stmtActivos->bindColumn('estado_af', $estado_af);
 // $stmtActivos->bindColumn('nombre_uo2', $nombre_uo2);
 $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
+$stmtActivos->bindColumn('valorresidual_v', $valor_residualV);
 ?>
 
 <div class="content">
@@ -147,7 +148,7 @@ $stmtActivos->bindColumn('tipo_bien', $tipo_bien);
                           <td class="text-left small"><?=$tipo_alta?></td>
                           <td class="text-center small"><?=$fecha_alta?></td>
                           <td class="text-left small"><?=formatNumberDec($valor_inicial)?></td>
-                          <td class="text-left small"><?=$valor_residual?></td>
+                          <td class="text-left small"><?=formatNumberDec($valor_residualV)?></td>
                           <td class="text-left small"><?=$responsables_responsable?></td>
                           <td class="text-left small"><?=$estado_af?></td>
                         </tr>

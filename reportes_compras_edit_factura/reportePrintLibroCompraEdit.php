@@ -264,6 +264,7 @@ $razon_social=$result['razon_social'];
                                 if(trim($codigo_control)==""){
                                   $codigo_control="0";
                                 }
+                                //$razon_social=addslashes($razon_social);
                                 ?>
                                 <tr>
                                   <td class="text-center small"><?=$index;?></td>

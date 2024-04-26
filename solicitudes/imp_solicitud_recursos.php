@@ -497,7 +497,7 @@ $tituloImporte="";
           <tr>
             <td class="s4 text-center" width="25%"><b>IBNORCA &#169;</b></td>
             <td class="s4 text-center" width="25%"><b>Codigo:</b>REG-PRO-AF-01-02.07</td>
-            <td class="s4 text-center" width="25%"><b>V:</b> 2023-07-10</td>
+            <td class="s4 text-center" width="25%"><b>V:</b> 2024-01-16</td>
             <td class="s4 text-center" width="25%">Página 1 de 1</td>
           </tr>
          <!--tr style="border: inset 0pt">

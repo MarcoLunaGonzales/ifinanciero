@@ -448,7 +448,7 @@ $html.=  '<header class="header">'.
               <tr>
                 <td class="s4 text-center" width="25%"><b>IBNORCA &#169;<b></td>
                 <td class="s4 text-center" width="25%"><b>Código:</b> REG-PRO-AF-03-01.03</td>
-                <td class="s4 text-center" width="25%"><b>V:</b> 2023-07-10</td>
+                <td class="s4 text-center" width="25%"><b>V:</b> 2024-01-16</td>
               <td class="s4 text-center" width="25%"><b>Página 1 de 1</b></td>
             </tr>
             </table>

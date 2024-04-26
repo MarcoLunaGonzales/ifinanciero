@@ -76,9 +76,14 @@ if($cod_estadoasignacionaf==5){
 	$succees=$stmtU2->execute();
 	if($succees){
 		$stmtU = $dbhU->prepare("UPDATE activosfijos 
-		set cod_responsables_responsable=$cod_personal
-		where codigo=$cod_af");	
+		set cod_responsables_responsable='$cod_personal',
+		cod_unidadorganizacional=(select cod_unidadorganizacional from personal where codigo='$cod_personal'),
+		cod_area=(select cod_area from personal where codigo='$cod_personal')
+		where codigo='$cod_af'");	
 	}
+	//ACTUALIZA LA TABLA ACTIVOS FIJOS
+
+
 }
 else{
 	// Prepare

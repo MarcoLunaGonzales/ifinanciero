@@ -10,6 +10,11 @@ tfoot input {
     }
 </style>
 <?php
+
+ error_reporting(E_ALL);
+ ini_set('display_errors', '1');
+
+
 switch ($filtro) {
   case 0:$tituloFiltros="Ver Todo";break;
   case 1:$tituloFiltros="Ver Solo Registros Relacionados";break;
@@ -197,6 +202,24 @@ switch ($filtro) {
 
             //EN EL CASO 3 CUANDO DEBEN VERSE SIN RELACIONAR + SALDO FILTRAMOS POR EL SALDO
             if( ($filtro!=3) || ($filtro==3 && abs($saldo)>0.05) ){
+                
+                /*$txtMonto="";
+                if($monto>=0){
+                  $txtMonto=formatNumberDec($monto);
+                }else{
+                  $monto=$monto*(-1);
+                  $txtMonto="<span style='color:red'>".formatNumberDec($monto)."</span>";
+                }
+
+                $txtSaldo="";
+                if($nuevoSaldo>=0){
+                  $txtSaldo=formatNumberDec($nuevoSaldo);
+                }else{
+                  $nuevoSaldo=$nuevoSaldo*(-1);
+                  $txtSaldo="<span style='color:red'>".formatNumberDec($nuevoSaldo)."</span>";
+                }*/
+                $txtMonto=number_format($monto,2,".",",");
+                $txtSaldo=number_format($nuevoSaldo,2,".",",")
             ?>
             <tr>
               <td class="text-center font-weight-bold"><?=strftime('%d/%m/%Y',strtotime($fecha))?></td>
@@ -205,9 +228,8 @@ switch ($filtro) {
                 <?=$descripcion?> info: <?=$informacion_complementaria?>
               </td>      
               <td class="text-left"><?=$agencia?></td>
-              <td class="text-right"><?=number_format($monto,2,".",",")?></td>
-              <!--td class="text-right"><?=number_format($saldo,2,".",",")?><br><small class="text-danger font-weight-bold"><?=number_format($nuevoSaldo,2,".",",")?></small></td-->
-              <td class="text-right"><span class="text-danger font-weight-bold"><?=number_format($nuevoSaldo,2,".",",")?></span></td>
+              <td class="text-right"><?=$txtMonto;?></td>
+              <td class="text-right"><span class="text-danger font-weight-bold"><?=$txtSaldo;?></span></td>
               <td class="text-right"><?=$nro_documento?></td>
               <?php 
             } 
@@ -270,7 +292,7 @@ switch ($filtro) {
                   }
                 }
 
-                if( ($filtro!=3) || ($filtro==3 && $saldo>0.1) ){
+                if( ($filtro!=3) || ($filtro==3 && abs($saldo)>0.05) ){
                 ?>
                 <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaFecha)?></td>
                 <td class="text-right font-weight-bold" style="vertical-align: top;"><?=implode("<div style='border-bottom:1px solid #26BD3D;'></div>", $facturaNumero)?></td>
@@ -288,7 +310,10 @@ switch ($filtro) {
           }
         }
       }?>
+
+
       <script>$("#total_reporte").val("<?=number_format($totalMonto,2,'.',',')?>");</script>
+
       <tr class="font-weight-bold" style="background:#21618C; color:#fff;">
         <td align="center" colspan="4" class="csp">Totales</td>
         <td class="text-right"><?=number_format($montoMonto,2,".",",")?></td>
