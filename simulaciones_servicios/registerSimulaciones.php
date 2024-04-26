@@ -140,7 +140,11 @@ $fechaActualInput=date("Y-m-d");
           
                                 <!--<option disabled selected="selected" value="">Cliente</option>-->
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM clientes c where c.cod_estadoreferencial=1 order by 2");
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre 
+                                                        FROM clientes c 
+                                                        WHERE c.cod_estadoreferencial=1 
+                                                        AND c.nombre IS NOT NULL AND c.nombre != '' 
+                                                        ORDER BY 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];

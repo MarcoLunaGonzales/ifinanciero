@@ -50,6 +50,8 @@ try {
         $actual_cod_etapa = 0;
     }
     
+    // Bandera Finalización
+    $bandera_finaliza = false;
     // Verificación de Nueva etapa
     if ($manual_estado == 1) {
         /***********
@@ -78,6 +80,7 @@ try {
             $stmt->execute();
             // Enviar Correo al PERSONAL
             enviarCorreoManualCargo($actual_cod_cargo);
+            $bandera_finaliza = true;
         } else {
             $sql = "UPDATE manuales_aprobacion
                 SET cod_etapa = :nuevo_cod_etapa
@@ -138,6 +141,11 @@ try {
     // Seguimiento
     guardarSeguimiento($cod_manual_aprobacion, $actual_cod_etapa, $cod_personal, $manual_estado, $fecha, $manual_observacion, $detalle_descriptivo);
     
+    if($bandera_finaliza){
+        // Almacena Manual de Cargo PDF
+        almacenaManualAprobado($actual_cod_cargo);
+    }
+
     echo json_encode(array(
         'message' => 'Se actualizó el estado correctamente.',
         'status' => true

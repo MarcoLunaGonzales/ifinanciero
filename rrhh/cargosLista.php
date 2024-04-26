@@ -232,7 +232,7 @@ $stmt->bindColumn('cargo_codigo_doc', $cargo_codigo_doc);
                                 </a>
 
                                 <!-- Reporte PDF -->
-                                <a href='rrhh/pdfGeneracion.php?codigo=<?=$codigo;?>' target="_blank" class="btn btn-danger" title="Manual de Cargo">
+                                <a href='rrhh/verPDFmanualAprobado.php?codigo=<?=$codigo;?>' target="_blank" class="btn btn-danger" title="Manual de Cargo">
                                   <i class="material-icons">picture_as_pdf</i>
                                 </a>
                                 

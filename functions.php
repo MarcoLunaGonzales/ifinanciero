@@ -12422,5 +12422,64 @@ function obtenerSueldomesTotalGanado($cod_personal,$cod_planilla){
   return ($total_ganado);
 }
 
+/**
+ * Guarda archivo de Manual de Cargo
+ */
+function almacenaManualAprobado($cod_cargo){
+    // try {
+        $urlIbnorca = obtenerValorConfiguracion(112) . "rrhh/pdfGeneracion.php?codigo=$cod_cargo";
+        $dbh = new Conexion();
+        $sql = "SELECT ma.codigo AS cod_manual_aprobacion, ma.cod_cargo, ma.nro_version, ma.fecha_inicio
+                FROM manuales_aprobacion ma
+                WHERE ma.cod_cargo = '$cod_cargo'
+                AND ma.cod_estado = 2
+                ORDER BY ma.codigo DESC
+                LIMIT 1";
+
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();
+
+        if ($stmt->rowCount()) {
+            $result = $stmt->fetch();
+
+            $cod_manual_aprobacion = $result['cod_manual_aprobacion'];
+            $cod_cargo             = $result['cod_cargo'];
+            $nro_version           = $result['nro_version'];
+            $fecha_inicio          = $result['fecha_inicio'];
+    
+            $nombreArchivo = $cod_cargo . '_' . 
+                            $cod_manual_aprobacion . '_' . 
+                            $nro_version . '_' . 
+                            date('YmdHi', strtotime($fecha_inicio)).'.pdf';
+            $carpetaDestino = __DIR__ . '/doc_manuales_aprobados';
+            $rutaArchivo = $carpetaDestino . '/' . $nombreArchivo;
+    
+            // Verificar y crear la carpeta de destino si no existe
+            if (!is_dir($carpetaDestino)) {
+                mkdir($carpetaDestino, 0777, true);
+            }
+            
+            // Verificar si el archivo ya existe
+            if (file_exists($rutaArchivo)) {
+                // Eliminar el archivo existente
+                unlink($rutaArchivo);
+            }
+    
+            // Descargar el archivo y guardarlo en la carpeta destino
+            if ($contenido = file_get_contents($urlIbnorca)) {
+                // if (file_put_contents($rutaArchivo, $contenido)) {
+                //     echo "Almacenamiento correcto de manual";
+                // }
+                file_put_contents($rutaArchivo, $contenido);
+            }
+        }
+    // } catch (Exception $e) {
+    //     echo "Error al generar el PDF: " . $e->getMessage();
+    // }
+
+    return true;
+
+
+}
 
 ?>

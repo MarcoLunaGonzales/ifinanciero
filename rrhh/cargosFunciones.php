@@ -72,10 +72,18 @@ $stmt->bindColumn('orden', $orden);
                                 <td class="td-actions text-right">
                                   <?php
                                     if($globalAdmin==1){
-                                  ?>                                	
-                                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaFuncionCargoE('<?=$datos;?>')">
+                                  ?>
+                                  <!-- <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalEditar" onclick="agregaFuncionCargoE('<?=$datos;?>')">
+                                		<i class="material-icons" title="Editar responsabilidad"><?=$iconEdit;?></i>
+                                  </button> -->
+                                  <button type="button" class="btn btn-success editar" 
+                                        data-codCargoE="<?=$cod_cargo;?>"
+                                        data-codCargo_funcionE="<?=$cod_cargo_funcion;?>"
+                                        data-nombreFuncionE="<?=$nombre_funcion;?>"
+                                        data-ordenE="<?=$orden;?>">
                                 		<i class="material-icons" title="Editar responsabilidad"><?=$iconEdit;?></i>
                                   </button>
+
                                   <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalEliminar" onclick="agregaFuncionCargoB('<?=$datos;?>')">
                                     <i class="material-icons" title="Eliminar Responsabilidad"><?=$iconDelete;?></i>
                                   </button>
@@ -375,4 +383,20 @@ $stmt->bindColumn('orden', $orden);
         }
     });
   });
+    /**
+     * Mostrar datos para Editar
+     */
+    $('body').on('click', '.editar', function(){
+        let cod_cargoE         = $(this).data('codcargoe');
+        let cod_cargo_funcionE = $(this).data('codcargo_funcione');
+        let nombre_funcionE    = $(this).data('nombrefuncione');
+        let ordenE             = $(this).data('ordene');
+
+        $('#cod_cargoE').val(cod_cargoE);
+        $('#cod_cargo_funcionE').val(cod_cargo_funcionE);
+        $('#nombre_funcionE').val(nombre_funcionE);
+        $('#ordenE').val(ordenE);
+        
+        $('#modalEditar').modal('show');
+    });
 </script>

@@ -309,14 +309,14 @@ $stmt->bindColumn('id_oferta', $id_oferta);
                               }
                             ?>
                             <!-- Duplicar Registro de Propuesta -->
-                            <button title="Copiar en nueva propuesta" class="btn btn-danger propuesta_duplicar" data-codigo="<?=$codigo;?>" data-tipo="1">
+                            <button title="Copiar en nueva propuesta | Genera nueva propuesta" class="btn btn-danger propuesta_duplicar" data-codigo="<?=$codigo;?>" data-tipo="1">
                               <i class="material-icons">content_copy</i>
                             </button>
                             <?php
                               if(!empty($id_oferta)){
                             ?>
                               <!-- Duplicar Registro de Propuesta con DEPENDENCIA -->
-                              <button title="Generar nueva versión" class="btn btn-warning propuesta_duplicar" data-codigo="<?=$codigo;?>" data-tipo="0">
+                              <button title="Generar nueva versión | Reemplazo al actual" class="btn btn-warning propuesta_duplicar" data-codigo="<?=$codigo;?>" data-tipo="0">
                                 <i class="material-icons">content_copy</i>
                               </button>
                             <?php
