@@ -1,6 +1,5 @@
 <?php
 require_once 'generar_factura.php';
-require_once 'verifica_no_factura.php';
 require_once '../conexion.php';
 require_once '../functions.php';
 function check($x) {
@@ -36,8 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mensaje="ERROR";
     $sw_cod_libreta=true;
     $sucursalId=null;$pasarelaId=null;$fechaFactura=null;$nitciCliente=null;$razonSocial=null;$importeTotal=null;$items=null;$CodLibretaDetalle=null;$tipoPago=null;$moduloId=null;$codClaServicio=null;$idIdentificacion=null;
-    // Verifica estado de Curso para Factrar o No
-    $estadoCurso = false;
     if(isset($datos['accion'])&&isset($datos['sIdentificador'])&&isset($datos['sKey']))
     {
         if($datos['sIdentificador']=="facifin"&&$datos['sKey']=="AX546321asbhy347bhas191001bn0rc4654")
@@ -199,49 +196,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $CorreoCliente="";    
                             }
 
-                            /**
-                             * ? Verificación de solicitud tipo Curso en base  ModuloId
-                             */
-                            $verficaCursoString = true;
-                            foreach ($items as $valor) {
-                                $detalle_moduloId = $valor['moduloId'];
-                                if ($detalle_moduloId != null && $detalle_moduloId != '' && $detalle_moduloId != 0) {
-                                    /**
-                                     * * Verificación de estado de Curso
-                                     */
-                                    $verficaCursoString = verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas,$nroTarjeta,$idIdentificacion,$complementoCiCliente,$CorreoCliente,$idCliente,$usuario);
-                                    // echo $verficaCursoString ? 'Facturar' : 'Factura pendiente'; // false: No permite Facturar, true: Factura
-                                    // exit;
-                                    break;
-                                }
-                            }
-                            
-                            if($verficaCursoString){
-                                $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas,$nroTarjeta,$idIdentificacion,$complementoCiCliente,$CorreoCliente,$idCliente,$usuario);//llamamos a la funcion                 
-                                $rspArray = explode("###", $rspString);
-                                $rsp=$rspArray[0];
+                            $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas,$nroTarjeta,$idIdentificacion,$complementoCiCliente,$CorreoCliente,$idCliente,$usuario);//llamamos a la funcion                 
+                            $rspArray = explode("###", $rspString);
+                            $rsp=$rspArray[0];
 
-                                if($rsp=='0'){
-                                    $cod_factura=$rspArray[1];
-                                    $estado='0';
-                                    $mensaje = "Factura Generada Correctamente";
-                                }elseif($rsp==11){
-                                    $estado=11;
-                                    $mensaje = "Hubo un error al generar la factura, contáctese con el administrador.";
-                                }elseif($rsp==17){
-                                    $estado=17;
-                                    $mensaje = "CodLibretaDetalle no encontrado.";
-                                }elseif($rsp==18){
-                                    $estado=18;
-                                    $mensaje = "La Suma del Monto de las Libretas es menor al de la factura.";
-                                }else{
-                                    $estado=12;//no encuentro el error
-                                    $mensaje = "Error interno del servicio";
-                                }
-                                
-                            }else{ 
-                                $estado  = '-100';
-                                $mensaje = "Venta registrada sin facturar";
+                            
+                            if($rsp=='0'){
+                                $cod_factura=$rspArray[1];
+                                $estado='0';
+                                $mensaje = "Factura Generada Correctamente";
+                            }elseif($rsp==11){
+                                $estado=11;
+                                $mensaje = "Hubo un error al generar la factura, contáctese con el administrador.";
+                            }elseif($rsp==17){
+                                $estado=17;
+                                $mensaje = "CodLibretaDetalle no encontrado.";
+                            }elseif($rsp==18){
+                                $estado=18;
+                                $mensaje = "La Suma del Monto de las Libretas es menor al de la factura.";
+                            }else{
+                                $estado=12;//no encuentro el error
+                                $mensaje = "Error interno del servicio";
                             }
                         }
                             

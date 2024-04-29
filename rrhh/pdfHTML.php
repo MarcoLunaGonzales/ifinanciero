@@ -220,10 +220,20 @@
         ?>
         <br>
         <!-- Gestión de Documento -->
-        <li class="section-title">GESTIÓN DEL DOCUMENTO</li><br><br>
+        <li class="section-title">GESTIÓN DEL DOCUMENTO</li><br>
         <?php 
             if(count($resp_manual_seguimiento) > 0){
         ?>
+        <!-- Archivo -->
+        <div style="padding:0px;">            
+            <table>
+                <tr>
+                    <td class="text-center" style="width:30%; background-color: red;color: white; font-weight: bold; text-align: center;">Nombre del Archivo</td>
+                    <td style="width:70%;"><?=empty($resp_control_cambio['codigo_doc']) ? '-' : $resp_control_cambio['codigo_doc']?></td>
+                </tr>
+            </table>
+        </div>
+
         <table>
             <tr>
                 <th style="background-color: red;color: white; font-weight: bold; text-align: center;"></th>

@@ -16,6 +16,7 @@ $dia=empty($_POST['dia']) ? '' : $_POST['dia'];
 
 
 $monto=$_POST['monto'];
+echo "monto: ".$monto;
 $cantidad=$_POST['cantidad'];
 $obs=$_POST['descripcion'];
 $alcance=$_POST['alcance'];
@@ -426,30 +427,34 @@ $stmtDetAt->execute();
          //FIN simulaciones_serviciosauditores
 
 
-if($fijo!=""){
-	$cliente=obtenerCodigoClienteSimulacion($codSimulacion);
-	//$productosLista=explode(",", $productos);
-        $codTC=$mod_tipo_cliente;
-        $nacional=$mod_region_cliente;
-        $suma=0;
-        for ($i=0; $i < count($atributos); $i++) {
-          $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);
-           if($aux==0){
-            $aux=$aux2;
-           }else{            
-            $aux2=$aux;
-           }
-           $suma+=$aux;          
-        }
-       $cantidad=1;
-       $monto=$suma; 
-}
+
+/***
+ * FUNCIÓN UTILIZADA PARA CLIENTES INTERNACIONALES - "YA NO ES UTILIZADO ACTUALMENTE"
+ ***/
+// if($fijo!=""){
+// 	$cliente=obtenerCodigoClienteSimulacion($codSimulacion);
+// 	//$productosLista=explode(",", $productos);
+//         $codTC=$mod_tipo_cliente;
+//         $nacional=$mod_region_cliente;
+//         $suma=0;
+//         for ($i=0; $i < count($atributos); $i++) {
+//           $aux=obtenerCostoTipoClienteSello(($i+1),$codTC,$nacional);
+//            if($aux==0){
+//             $aux=$aux2;
+//            }else{            
+//             $aux2=$aux;
+//            }
+//            $suma+=$aux;          
+//         }
+//        $cantidad=1;
+//        $monto=$suma; 
+// }
 
 /*$sqlDetallesAuditores="UPDATE simulaciones_servicios_auditores SET dias=1 where cod_simulacionservicio=$codSimulacion and dias=0";
 $stmtDetallesAuditores = $dbh->prepare($sqlDetallesAuditores);
 $stmtDetallesAuditores->execute();*/
 
-$sqlDetalles="UPDATE simulaciones_servicios_tiposervicio SET observaciones='$obs',cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,cod_tipounidad=$unidad,cod_anio=$anio_fila where codigo=$codigo";
+$sqlDetalles = "UPDATE simulaciones_servicios_tiposervicio SET observaciones='$obs',cantidad_editado=$cantidad,monto=$monto,habilitado=$habilitado,cod_tipounidad=$unidad,cod_anio=$anio_fila WHERE codigo=$codigo";
 $stmtDetalles = $dbh->prepare($sqlDetalles);
 $stmtDetalles->execute();
 

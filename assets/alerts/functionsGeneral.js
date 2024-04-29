@@ -3339,12 +3339,12 @@ function guardarSimulacionServicio(){
 let tipo_servicio = $('#tipo_servicio').val();
 if(plantilla_servicio == 3 || (array_excepcion.includes(tipo_servicio) && plantilla_servicio == '2')){
     itemAtributos = atributoSitio;
-}else if(plantilla_servicio == 2){
+}else if(plantilla_servicio == 2 || plantilla_servicio == 10){
     itemAtributos = atributoProducto;
 }
 
 //   if($("#productos_div").hasClass("d-none")){
-if(plantilla_servicio == 3){ // TCS
+if(plantilla_servicio == 3){ // TCS | TVR
    if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
    Swal.fire('Informativo!','Debe llenar los campos  1 !','warning'); 
    }else{
@@ -3413,7 +3413,7 @@ if(plantilla_servicio == 3){ // TCS
         }//fin successs
     });
   }
-  }else if(plantilla_servicio == 2){ // TCP
+  }else if(plantilla_servicio == 2 || plantilla_servicio == 10){ // TCP
     if(norma=="" || itemAtributos.length==0 || dias=="" || nombre=="" || !(plantilla_servicio>0) || cod_personal==0){
       Swal.fire('Informativo!','Debe llenar los campos 2 !','warning'); 
     }else{
@@ -4277,8 +4277,8 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
   /************************************************
    * Visualización de sección de PRODUCTOS o SITIOS
    ************************************************/
-  if(codigo == 2){
-    // TCP - PRODUCTOS
+  if(codigo == 2 || codigo == 10){
+    // TCP - PRODUCTOS | TVR
     $('.seccion_sitios').addClass('d-none');
     $('.seccion_productos').removeClass('d-none');
     // Normas
@@ -4319,8 +4319,8 @@ function listarPreciosPlantillaSim(codigo,label,ibnorca){
       // TCS - SITIOS
       $('.seccion_productos').addClass('d-none');
       $('.seccion_sitios').removeClass('d-none');
-    }else if(plantilla_servicio == 2){
-      // TCP - PRODUCTOS
+    }else if(plantilla_servicio == 2 || plantilla_servicio == 10){
+      // TCP - PRODUCTOS | TVR
       $('.seccion_sitios').addClass('d-none');
       $('.seccion_productos').removeClass('d-none');
     }
@@ -6283,7 +6283,7 @@ function calcularTotalPersonalServicio(anio,valor){
   calcularTotalesAuditor();
 }
 function calcularTotalesAuditor(){
-  if($("#codigo_area").val()==39){
+  if($("#codigo_area").val()==39 || $("#codigo_area").val()==5291){
     var inicio=1;
   }else{
     var inicio=0;
@@ -6325,7 +6325,7 @@ function calcularTotalPersonalServicioAuditorHonorarios(anio){
   $("#total_auditorvariable"+anio).text(resulta);
   $("#total_auditorvariableUSD"+anio).text(redondeo(resulta/parseFloat(usd)));
  
-  if($("#codigo_area").val()==39){
+  if($("#codigo_area").val()==39 || $("#codigo_area").val()==5291){
     ponerCantidadTotalesVariablesModal(1,$("#anio_simulacion").val());
   }else{
     ponerCantidadTotalesVariablesModal(0,$("#anio_simulacion").val());
@@ -6416,7 +6416,7 @@ function calcularTotalPersonalServicioAuditor(anio){
   $("#total_auditorUSD"+anio).text(redondeo(resulta/parseFloat(usd)));
   //$("#total_unitarioauditor").text(redondeo(sumaC));
 
-  if($("#codigo_area").val()==39){
+  if($("#codigo_area").val()==39 || $("#codigo_area").val()==5291){
     ponerCantidadTotalesVariablesModal(1,$("#anio_simulacion").val());
   }else{
     ponerCantidadTotalesVariablesModal(0,$("#anio_simulacion").val());
@@ -11007,20 +11007,20 @@ function cantidad_por_importe_servicio_sf(id){  //adicionar nuevos items
 function cantidad_por_importe_servicio_sf_2(id){//cantidad modificado de servicio
   var check=document.getElementById("modal_check"+id).checked;
   if(check){
-    var monto_precio=$("#monto_precio"+id).val();// precio de item
-    var descuento_bob=$("#descuento_bob"+id).val();//monto de descuento %
-    var cantidad=$("#cantidad_a"+id).val();//
+    var monto_precio  = parseFloat($("#monto_precio"+id).val());// precio de item
+    var descuento_bob = parseFloat($("#descuento_bob"+id).val());//monto de descuento %
+    var cantidad      = parseFloat($("#cantidad"+id).val());//
     if(monto_precio<0 || monto_precio==0 || monto_precio==null){
       Swal.fire("Informativo!", "El Precio del Item NO debe ser 0 o número negativo!", "warning");
     }else{
       if(cantidad<0 || cantidad==0 || cantidad==null){
         Swal.fire("Informativo!", "La cantidad NO debe ser 0 o número negativo!", "warning");
       }else{
-        var monto_bob_porcentaje=parseFloat(monto_precio)*parseFloat(cantidad)-parseFloat(descuento_bob);
+        var monto_bob_porcentaje = monto_precio * cantidad - descuento_bob;
          //agregamos al total      
         $("#modal_importe"+id).val(monto_bob_porcentaje);//irá en hidden 
         $("#modal_importe_dos"+id).val(number_format(monto_bob_porcentaje,2));//para mostrar con formato
-        $("#importe_a_pagar"+id).val(0);//irá en hidden 
+        $("#importe_a_pagar"+id).val(monto_bob_porcentaje);//irá en hidden 
         
         calcularTotalFilaServicio2Costos();
       }
@@ -11939,7 +11939,7 @@ function listarAtributo(){
       // titulos.append('<td width="7%">DEPTO</td>');
       // titulos.append('<td width="7%">CIUDAD</td>');
       if($("#modalEditPlantilla").length>0){
-        if($("#codigo_area").val()!=39){
+        if($("#codigo_area").val()!=39 || $("#codigo_area").val()!=5291){
         for (var k = 0; k <= parseInt($("#anio_simulacion").val()); k++) {
           sumaDias[k]=0;
           var tituloTD="Seg "+(k-1);
@@ -11988,7 +11988,7 @@ function listarAtributo(){
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
       if($("#modalEditPlantilla").length>0){
       /* #SIN FUNCIONALIDAD# Se quito la opcion de llenado ET, EA, cabeceras antiguas */
-      if($("#codigo_area").val()!=39){
+      if($("#codigo_area").val()!=39 || $("#codigo_area").val()!=5291){
       // if(false){
         for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
           for (var j= 0; j< itemAtributosDias.length; j++) {
@@ -12088,7 +12088,7 @@ function listarAtributoUltimo(){
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_estado));
       // row.append($('<td>').addClass('').text(itemAtributos[i].nom_ciudad));
       if($("#modalEditPlantilla").length>0){
-       if($("#codigo_area").val()!=39){
+       if($("#codigo_area").val()!=39 || $("#codigo_area").val()!=5291){
         for (var k = 0; k <=parseInt($("#anio_simulacion").val()); k++) {
           for (var j= 0; j< itemAtributosDias.length; j++) {
            if(itemAtributosDias[j].codigo_atributo==itemAtributos[i].codigo&&itemAtributosDias[j].anio==k){
@@ -21119,13 +21119,13 @@ function abreModalItem(){
     }
     // Abre modal de acuerdo a la plantilla o tipo de servicio con excepción
     let plantilla_servicio = $('#plantilla_servicio').val();
-    if(plantilla_servicio == '3' || (array_excepcion.includes(tipo_servicio) && plantilla_servicio == '2')){
+    if(plantilla_servicio == 3 || (array_excepcion.includes(tipo_servicio) && plantilla_servicio == '2')){
         // Limpiar los campos del formulario modal
         limpiarModalSitio();
         // TCS - SITIOS
         $('#row_sitio').val(0);
         $('#modal_atributo_sitio').modal('show');
-    }else if(plantilla_servicio == '2'){
+    }else if(plantilla_servicio == 2 || plantilla_servicio == 10){
         // Limpiar los campos del formulario modal
         limpiarModalProducto();
         // TCP - PRODUCTOS
@@ -21432,8 +21432,9 @@ function AgregarSeviciosFacturacion_soli_cuota(obj) {
  */
 // Selección de Servicio
 $(document).on('change', '#cod_servicio', function () {
+    // Si la plantilla seccionada es TVR la selección es "Multiple"
     // Si se selecciona un tipo de servicio diferente de SGI(4820) la selección es unitaria
-    if($('#tipo_servicio').val() != 4820){
+    if($('#tipo_servicio').val() != 4820 && $('#plantilla_servicio').val() != 10){
         var select = $('#cod_servicio').val();
         if (select.length > 1) {
             $('#cod_servicio').val([]);

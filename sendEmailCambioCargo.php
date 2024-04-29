@@ -38,8 +38,8 @@
     $stmtPersonal->execute([':cod_personal' => $cod_personal]);
     $resultadoPersonal = $stmtPersonal->fetch(PDO::FETCH_ASSOC);
     $personal_nombre = ($resultadoPersonal) ? $resultadoPersonal['nombre_completo'] : '';
-    $personal_correo = ($resultadoPersonal) ? $resultadoPersonal['email_empresa'] : '';
-    // $personal_correo = 'roalmollericona@gmail.com';
+    // $personal_correo = ($resultadoPersonal) ? $resultadoPersonal['email_empresa'] : '';
+    $personal_correo = 'roalmollericona@gmail.com';
     $personal_cod_cargo_actual = ($resultadoPersonal) ? $resultadoPersonal['cod_cargo'] : '';
 
     $response = false;
@@ -48,13 +48,16 @@
         $message = file_get_contents($ruta);
         $message = str_replace('%nombre_personal%', $personal_nombre, $message);
         
+        $asunto_email = '';
         /* DETALLE DE MENSAJE */
         if(!empty($personal_cod_cargo_actual) && $personal_cod_cargo_actual !== 0){
             // Modificación de Cargo
             $detalle_mensaje = "Informar que de acuerdo a movimiento de personal, las  responsabilidades de su nuevo cargo están en el Manual de Cargo: <b>".$cargo_nuevo_nombre.".</b>";
+            $asunto_email = "Modificación de Cargo";
         }else{
             // Nuevo personal
             $detalle_mensaje = "Nos complace informarle que las responsabilidades su cargo se encuentran en <b>".$cargo_nuevo_nombre.".</b>";
+            $asunto_email = "Manual de Cargo";
         }
         $message = str_replace('%detalle_mensaje%', $detalle_mensaje, $message);
 
@@ -66,7 +69,7 @@
                                 "NombreEnvia"   => "SISTEMA - IFINANCIERO", 
                                 "CorreoDestino" => $personal_correo,
                                 "NombreDestino" => $personal_nombre,
-                                "Asunto"        => 'Modificación de Cargo',
+                                "Asunto"        => $asunto_email,
                                 "Body"          => $message,
 
                                 "CorreoCopia"   => ''

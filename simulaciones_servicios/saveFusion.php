@@ -38,7 +38,7 @@ try {
     // el nuevo registor donde se FUSIONA y tambien "cod_estadosolicitudfacturacion"
     $placeholders = implode(', ', $array_sf);
     $texto = ", fusionada en la SF: Codigo Principal $sf_antigua";
-    $sql = "UPDATE solicitudes_facturacion SET observaciones = CONCAT(observaciones, :texto), cod_estadosolicitudfacturacion = 2 WHERE codigo IN ($placeholders)";
+    $sql = "UPDATE solicitudes_facturacion SET observaciones = CONCAT(observaciones, :texto), cod_estadosolicitudfacturacion = 2, cod_padre_fusion = '$sf_antigua' WHERE codigo IN ($placeholders)";
     $stmt = $dbh->prepare($sql);
     $stmt->bindParam(':texto', $texto);
     $stmt->execute();

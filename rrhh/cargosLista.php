@@ -40,7 +40,13 @@ $stmt = $dbh->prepare("SELECT
                         mae.color as ma_color_estado,
                         CONCAT(eta.descripcion, ' (', eta.nombre, ')') as eta_etapa,
                         eta.descripcion as etapa_descripcion,
-                        eta.nombre as etapa_nombre
+                        eta.nombre as etapa_nombre,
+                        (SELECT codigo_doc
+                        FROM control_versiones cv
+                        WHERE cv.cod_cargo = c.codigo
+                        AND cv.estado = 1
+                        ORDER BY cv.codigo DESC
+                        LIMIT 1) as cargo_codigo_doc
                       FROM cargos c
                       LEFT JOIN cargos cpadre ON cpadre.codigo = c.cod_padre
                       LEFT JOIN cargos cfuncional ON cfuncional.codigo = c.cod_dep_funcional
@@ -83,6 +89,7 @@ $stmt->bindColumn('ma_color_estado', $ma_color_estado);
 $stmt->bindColumn('eta_etapa', $eta_etapa);
 $stmt->bindColumn('etapa_descripcion', $etapa_descripcion);
 $stmt->bindColumn('etapa_nombre', $etapa_nombre);
+$stmt->bindColumn('cargo_codigo_doc', $cargo_codigo_doc);
 
 ?>
 
@@ -158,7 +165,8 @@ $stmt->bindColumn('etapa_nombre', $etapa_nombre);
 
                       <thead>
                         <tr>
-                          <th width="10">#</th>
+                          <th width="5">#</th>
+                          <th width="10">Código de Control</th>
                           <th width="15">Nombre</th>
                           <th width="15">Objetivo</th>
                           <th width="5">Abreviatura</th>
@@ -167,14 +175,15 @@ $stmt->bindColumn('etapa_nombre', $etapa_nombre);
                           <th width="10">Dependencia Funcional</th>
                           <th width="5" class="text-center">Estado de Manual</th>
                           <th width="10" class="text-center">Etapa Actual</th>
-                          <th width="15" class="text-center">Acciones</th>
+                          <th width="10" class="text-center">Acciones</th>
                         </tr>
                       </thead>
                       <tbody>
                         <?php $index=1;
                         while ($row = $stmt->fetch(PDO::FETCH_BOUND)) { ?>
                           <tr>
-                            <td><?=$index;?></td>
+                            <td><?=$codigo;?></td>
+                            <td><?=$cargo_codigo_doc;?></td>
                             <td><?=$nombre;?></td>
                             <td><?=strlen($objetivo) > 100 ? (substr($objetivo, 0, 100) . "...") : $objetivo;?></td>
                               <td><?=$abreviatura;?></td>
@@ -223,7 +232,7 @@ $stmt->bindColumn('etapa_nombre', $etapa_nombre);
                                 </a>
 
                                 <!-- Reporte PDF -->
-                                <a href='rrhh/pdfGeneracion.php?codigo=<?=$codigo;?>' target="_blank" class="btn btn-danger" title="Manual de Cargo">
+                                <a href='rrhh/verPDFmanualAprobado.php?codigo=<?=$codigo;?>' target="_blank" class="btn btn-danger" title="Manual de Cargo">
                                   <i class="material-icons">picture_as_pdf</i>
                                 </a>
                                 

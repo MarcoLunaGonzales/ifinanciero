@@ -34,8 +34,8 @@ try {
     $stmt = $dbh->prepare($sql);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    // verificación de IdPropuesta
-    if(!empty($row['id_oferta'])){
+    // verificación de IdPropuesta y verifica tipo de duplicado "0:Generar nueva versión"
+    if(!empty($row['id_oferta']) && $tipo_duplicado == 0){
         // Detalle
         $codigo_activo = $row['codigo'];
         $nro_version   = $row['nro_version'];

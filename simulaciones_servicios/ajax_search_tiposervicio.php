@@ -12,9 +12,12 @@
         if($plantilla == 2){
             // TCP
             $sql = "SELECT DISTINCT(codigo_n2), descripcion_n2, abreviatura_n2 FROM cla_servicios WHERE codigo_n1=108 AND vigente = 1 AND Aprobado = 1 ORDER BY 1;";
-        }else{
+        }else if($plantilla == 3){
             // TCS
             $sql = "SELECT DISTINCT(codigo_n2), descripcion_n2, abreviatura_n2 FROM cla_servicios WHERE codigo_n1=109 AND vigente = 1 AND Aprobado = 1 ORDER BY 1;";
+        }else if($plantilla == 10){
+            // TVR
+            $sql = "SELECT DISTINCT(codigo_n2), descripcion_n2, abreviatura_n2 FROM cla_servicios WHERE codigo_n1=5290 AND vigente = 1 AND Aprobado = 1 ORDER BY 1;";
         }
 
         $stmt = $dbh->prepare($sql);

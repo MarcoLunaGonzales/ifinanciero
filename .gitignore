@@ -1,5 +1,6 @@
 .environment
-.environment_copy
+.environment_oficial
+.environment_prueba
 .environment_test
 conexion.php
 conexion_externa.php

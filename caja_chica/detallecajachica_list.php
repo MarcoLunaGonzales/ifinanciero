@@ -743,3 +743,19 @@ $fechaActualModal=date("Y-m-d");
     </div>
   </div>
 </div>
+<script>
+    // Función para cambiar el estado del div que contiene el título y el iframe
+    $('body').on('click', '.verArchivo', function() {
+        var fileViewerContainer = $('.fileViewerContainer');
+        // Archivo
+        var archivoUrl = $(this).data('archivo');
+
+        if (fileViewerContainer.hasClass('d-none')) {
+            fileViewerContainer.removeClass('d-none');
+            $('#fileViewer').attr('src', archivoUrl);
+            console.log(archivoUrl)
+        } else {
+            fileViewerContainer.addClass('d-none');
+        }
+    });
+</script>

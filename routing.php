@@ -2050,6 +2050,10 @@
 		if ($_GET['opcion']=='listaManualesAprobados') {
 			require_once('rrhh/ManualesAprobadosLista.php');
 		}
+		// Lista de Manuales Aprobados - GENERAL SIN FILTRO DE AREA (Visto bueno)
+		if ($_GET['opcion']=='listaGeneralManualesAprobadosGeneral') {
+			require_once('rrhh/ManualesAprobadosListaGeneral.php');
+		}
 
 		/***************************************************/
 		// Lista MOF
@@ -2099,6 +2103,10 @@
 		// PLANILLA AGUINALDO - REPORTE VISITAS
 		if ($_GET['opcion']=='reporteListaAguinaldoVistas') {
 			require_once('aguinaldos/reporteListaAguinaldoVistas.php'); //ok
+		}
+
+		if($_GET['opcion']=='listaFacturaPendiente') {
+			require_once('solicitud_facturacion_pendiente/list.php'); //ok
 		}
 	}else{
 		//require("paginaprincipal.php");

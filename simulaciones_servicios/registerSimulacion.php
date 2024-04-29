@@ -152,7 +152,28 @@ $precioLocalInputX=number_format($precioLocalX, 2, '.', '');
 $precioLocalInputXUSD=number_format($precioLocalX/$usd, 2, '.', '');
 $alumnosX=obtenerCantidadTotalPersonalSimulacionEditado($codigo);
 
-$costoVariablePersonal=obtenerCostosPersonalSimulacionEditado($codigo);
+/**
+ * obtiene porcentaje de ajuste de la plantilla
+ */
+$sql_porcentaje = "SELECT p.porcentaje_ajuste, p.porcentaje_ajuste2, p.porcentaje_ajuste_ing
+                   FROM plantillas_servicios p
+                   LEFT JOIN simulaciones_servicios ss ON ss.cod_plantillaservicio = p.codigo
+                   WHERE ss.codigo = '$codigo'
+                   LIMIT 1";
+$stmt_porcentaje = $dbh->prepare($sql_porcentaje);
+$stmt_porcentaje->execute();
+$resultado_pa = $stmt_porcentaje->fetch(PDO::FETCH_ASSOC);
+$porcentaje_ajusteX1   = 0;
+$porcentaje_ajusteX2   = 0;
+$porcentaje_ajuste_ing = 0;
+
+if ($resultado_pa) {
+    $porcentaje_ajusteX1   = $resultado_pa['porcentaje_ajuste'];
+    $porcentaje_ajusteX2   = $resultado_pa['porcentaje_ajuste2'];
+    $porcentaje_ajuste_ing = $resultado_pa['porcentaje_ajuste_ing'];
+}
+$costoVariablePersonal = obtenerCostosPersonalSimulacionEditado($codigo);
+
 $ibnorcaC=1;
 $utilidadFueraX=1;
 $mesConf=obtenerValorConfiguracion(6);
@@ -192,6 +213,9 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado
             
             $stmt1->bindColumn('cod_servicio', $cod_servicio);
             $stmt1->bindColumn('cod_estadosimulacion', $cod_estadosimulacion);
+            $stmt1->bindColumn('propuesta_gestion', $propuesta_gestion);
+            $stmt1->bindColumn('propuesta_gestion2', $propuesta_gestion2);
+            $stmt1->bindColumn('propuesta_gestion3', $propuesta_gestion3);
 
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
          //plantilla datos      
@@ -205,7 +229,7 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado
             $stmt->bindColumn('cod_area', $codAreaX);
             $stmt->bindColumn('area', $areaX);
             $stmt->bindColumn('unidad', $unidadX);
-            
+
             $oficinaGlobalX=$oficinaGlobalX;
             $codIAFX=$codIAFX;
             $codIAFSecX=$codIAFSecX;
@@ -606,6 +630,10 @@ $stmtArrayAtributos->execute();
           <button type="button" onclick="actualizarSimulacion()" class="btn btn-default btn-sm btn-fab float-right">
              <i class="material-icons" title="Actualizar la Simulación">refresh</i><span id="narch" class="bg-warning"></span>
           </button>
+            
+            <button type="button" class="btn btn-info btn-sm btn-fab float-right" id="modificar_gestion" title="Modificar Gestión de Propuesta de Presupuesto">
+                <i class="material-icons">business</i>
+            </button>
 				</div>
 				<div class="card-body ">
                      <div class="row">
@@ -743,33 +771,49 @@ $stmtArrayAtributos->execute();
 				//IVA y IT
 				$iva=obtenerValorConfiguracion(1);
 				$it=obtenerValorConfiguracion(2);
-        $alumnosExternoX=1; 
-        //modificar costos por alumnos
+                $alumnosExternoX=1; 
+                //modificar costos por alumnos
 
 				//valores de la simulacion
 
-                  //total desde la plantilla 
-                 $nAuditorias=obtenerCantidadAuditoriasPlantilla($codigoPX); 
-                 $precioRegistrado=obtenerPrecioRegistradoPropuestaTCPTCS($codigoSimulacionSuper);  
-                 if($precioRegistrado==0){
-                  $precioRegistrado=1;
-                 }
-                 $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias); //tipo de costo 1:fijo,2:variable desde la plantilla
-                 $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
-                 $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
-                 $totalFijoPlan=$totalFijoPlan*$anioGeneral;
-                 //total variable desde simulacion cuentas
-                  $totalVariable=obtenerTotalesSimulacionServicio($codigo);
-                  //
-                  if($precioLocalX==0){
+                //total desde la plantilla 
+                $nAuditorias=obtenerCantidadAuditoriasPlantilla($codigoPX); 
+    
+                /**********************************************
+                * Obtiene Gestión de Propuesta de Presupuesto
+                **********************************************/
+                $simulacion_servicio_anio = $propuesta_gestion;
+                // Obtiene Presupuesto
+                if(empty($simulacion_servicio_anio)){ // SIN GESTIÓN
+                    $precioRegistrado=(obtenerPrecioRegistradoPropuestaTCPTCS($codigoSimulacionSuper) * $porcentaje_ajuste_ing); // Con porcentaje de Ajuste Ingreso
+                }else{
+                    if($codAreaX == 5291){ // VERIFICA TVR
+                        $codAreaX = 39;      // TVR pertenece a TCP
+                    }
+                    $precioRegistrado = (obtenerPresupuestoEjecucionPorAreaAcumulado(0,$codAreaX,$simulacion_servicio_anio,12,1)['presupuesto'] * $porcentaje_ajuste_ing);
+                }
+                
+                if($precioRegistrado==0){
+                    $precioRegistrado=1;
+                }
+
+                //tipo de costo 1:fijo,2:variable desde la plantilla
+                $totalFijo=obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias, $simulacion_servicio_anio);
+                $porcentPrecios=($precioLocalX*100)/$precioRegistrado;
+                $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100);
+                $totalFijoPlan=$totalFijoPlan*$anioGeneral;
+                //total variable desde simulacion cuentas
+                $totalVariable=obtenerTotalesSimulacionServicio($codigo);
+                //
+                if($precioLocalX==0){
                     $precioLocalX=1;
-                  }
-                  $alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
-                  //if($alumnosX)
+                }
+                $alumnosRecoX=ceil((100*(-$totalFijoPlan-$totalVariable[2]))/(($utilidadIbnorcaX*$precioLocalX)-(100*$precioLocalX)+(($iva+$it)*$precioLocalX)));                    
+                //if($alumnosX)
                 $totalVariable[2]=$totalVariable[2]/$alumnosX;
                 $totalVariable[3]=$totalVariable[3]/$alumnosExternoX;
                  //calcular cantidad alumnos si no esta registrado
-               if($alumnosX==0){
+                if($alumnosX==0){
                  	$porcentajeFinalLocal=0;$alumnosX=0;$alumnosExternoX=0;$porcentajeFinalExterno=0;
                  	while ($porcentajeFinalLocal < $utilidadIbnorcaX || $porcentajeFinalExterno<$utilidadFueraX) {
                  		$alumnosX++;
@@ -856,6 +900,14 @@ $stmtArrayAtributos->execute();
             <p class="font-weight-bold float-left">PRESUPUESTO POR PERIODO DE CERTIFICACION</p>
            <?php 
            $costoFijoPrincipalPeriodo=0;
+
+            /**************************************************************
+             * Permite controlar el limite de gestión para los incrementos
+             * en gestiones futuras
+             **************************************************************/
+            $control_anio = 0;
+
+            $anio = date('Y'); // Año limite es la "FECHA ACTUAL"
            for ($an=$inicioAnio; $an<=$anioGeneral; $an++) { 
             if($codAreaX!=39){
                 $tituloItem="Año ".$an."(Seguimiento ".($an-1).")";
@@ -916,27 +968,102 @@ $stmtArrayAtributos->execute();
                 if($anioGeneral==0){
                   $anioGeneral=1;
                 } 
+                // echo "DATA VISUAL RONALD || anioGeneral:".$anioGeneral.'</br>';
                 //costos fijos porcentaje configuracion ***************************************************************************************                                
+                
+                /**********************************************
+                 * Obtiene Gestión de Propuesta de Presupuesto
+                 **********************************************/
+                // ? CAPTURA GESTIÓN
+                // $anio = $propuesta_gestion + ($an == 0 ? $an : ($an - 1)); // Captura Gestión (Excepcion: 0 y 1 es AÑO1)
+                if(($an == 0 || $an == 1) && !empty($propuesta_gestion)){
+                    $anio = $propuesta_gestion;
+                }else if($an == 2 && !empty($propuesta_gestion2)){
+                    $anio = $propuesta_gestion2;
+                }else if($an == 3 && !empty($propuesta_gestion3)){
+                    $anio = $propuesta_gestion3;
+                }else{
+                    $anio = $anio + ($an == 0 ? $an : ($an - 1)); // Captura Gestión (Excepcion: 0 y 1 es AÑO1)
+                }
+
+                if($anio > date('Y')){
+                    $anio = date('Y'); // Año limite es la "FECHA ACTUAL"
+                    $control_anio++;
+                }
+                // Obtiene Presupuesto
+                $precioRegistrado = (((!empty($propuesta_gestion) || !empty($propuesta_gestion2) || !empty($propuesta_gestion3)) 
+                                    ? obtenerPresupuestoEjecucionPorAreaAcumulado(0, $codAreaX, $anio, 12, 1)['presupuesto']
+                                    : obtenerPrecioRegistradoPropuestaTCPTCS($codigo)) * $porcentaje_ajuste_ing);
+                /**********************************************************************************************************/
+
                 $precioRegistradoAux=$precioRegistrado;
-                if($an>1){
-                    for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
-                      $sumaPrecioRegistrado=$precioRegistradoAux*($porcentajeFijoX/100);
-                      $precioRegistradoAux=$precioRegistradoAux+$sumaPrecioRegistrado;
+                // ? YA NO SE UTILIZA REEMPLAZO
+                // if($an>1){
+                //     for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) {
+                //       $precioRegistradoAux=$precioRegistradoAux+($precioRegistradoAux*($porcentajeFijoX/100));
+                //     }
+                // }
+                /**********************************************************************************************************/
+                // ? REEMPLAZADO DE DE PROCESO
+                // * Si no se tiene la PROPUESTA GESTIÓN - Mantiene incremento 15% desde el segundo AÑO
+                if(empty($propuesta_gestion) || empty($propuesta_gestion2) || empty($propuesta_gestion3)){
+                    // Procesando desde el "Segundo Año"
+                    if($an > 1){
+                        for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) {
+                            $precioRegistradoAux=$precioRegistradoAux+($precioRegistradoAux*($porcentajeFijoX/100));
+                        }
                     }
-                  }
-                 $porcentPreciosPeriodo=(float)number_format(($precioLocalXPeriodo*100)/($precioRegistradoAux),2,'.','');
+                }else{
+                // * El incremento solo se aplica cuando la gestión es futura en comparación con la gestión actual
+                    // Procesando gestiones futuras
+                    if($control_anio > 0){
+                        for ($anioAumento = 1; $anioAumento <= $control_anio; $anioAumento++) {
+                            $precioRegistradoAux=$precioRegistradoAux+($precioRegistradoAux*($porcentajeFijoX/100));
+                        }
+                    }
+                }
+                /**********************************************************************************************************/  
+                // echo "DATA VISUAL RONALD || porcentaje fijo:".$porcentajeFijoX.'</br>';
+                // echo "DATA VISUAL RONALD || precioRegistradoAux:".$precioRegistradoAux.'</br>';
+                $porcentPreciosPeriodo=(float)number_format(($precioLocalXPeriodo*100)/($precioRegistradoAux),2,'.','');
 
-                 $costoFijoRegistrado=$totalFijo[0];
-                if($an>1){
-                    for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
-                      $sumaCostoFijoRegistrado=$costoFijoRegistrado*($porcentajeFijoX/100);
-                      $costoFijoRegistrado=$costoFijoRegistrado+$sumaCostoFijoRegistrado;
+                // ? YA NO SE UTILIZA
+                // $costoFijoRegistrado=$totalFijo[0];
+                // ? Obtiene COSTO FIJO ORIGINAL DE ACUERDO A LA GESTIÓN
+                $costoFijoRegistrado = obtenerTotalesPlantillaServicio($codigoPX,1,$nAuditorias, $anio)[0];
+
+                /**********************************************************************************************************/
+                // ? YA NO SE UTILIZA
+                // if($an>1){
+                //     for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) { 
+                //       $sumaCostoFijoRegistrado=$costoFijoRegistrado*($porcentajeFijoX/100);
+                //       $costoFijoRegistrado=$costoFijoRegistrado+$sumaCostoFijoRegistrado;
+                //     }
+                // }
+                // * Si no se tiene la PROPUESTA GESTIÓN - Mantiene incremento 15% desde el segundo AÑO
+                if(empty($propuesta_gestion) || empty($propuesta_gestion2) || empty($propuesta_gestion3)){
+                    // Procesando desde el "Segundo Año"
+                    if($an>1){
+                        for ($anioAumento=2; $anioAumento <= $an; $anioAumento++) {
+                            $costoFijoRegistrado = $costoFijoRegistrado + ($costoFijoRegistrado * ($porcentajeFijoX / 100));
+                        }
                     }
-                  }
-                 $costoFijoFinal=$costoFijoRegistrado*($porcentPreciosPeriodo/100);
-                 $costoFijoPrincipalPeriodo+=$costoFijoFinal;  
+                }else{
+                // * El incremento solo se aplica cuando la gestión es futura en comparación con la gestión actual
+                    // Procesando gestiones futuras
+                    if($an>1){
+                        for ($anioAumento = 1; $anioAumento <= $control_anio; $anioAumento++) {
+                            $costoFijoRegistrado = $costoFijoRegistrado + ($costoFijoRegistrado * ($porcentajeFijoX / 100));
+                        }
+                    }
+                }
+                /**********************************************************************************************************/
+                // echo "DATA VISUAL RONALD || Total Fijos 'SIN PORCENTAJE FINAL':$costoFijoRegistrado <br>";
+
+                $costoFijoFinal=$costoFijoRegistrado*($porcentPreciosPeriodo/100);
+                $costoFijoPrincipalPeriodo+=$costoFijoFinal;  
                 //fin datos para costo fijo             ***************************************************************************************
-
+                // echo "DATA VISUAL RONALD || OPERACIÓN COSTO FIJO: $costoFijoFinal+(".$totalVariablePeriodo[2].")+$costoVariablePersonalPeriodo";
                 $costoTotalLocalPeriodo=$costoFijoFinal+($totalVariablePeriodo[2])+$costoVariablePersonalPeriodo;
 
                 $costoTotalAuditoriaUsd=$costoTotalLocalPeriodo/$usd;
@@ -1197,7 +1324,7 @@ $stmtArrayAtributos->execute();
 					  </div>	
 					</div>
 				  </div>
-          
+        
 				  	<div class="card-footer fixed-bottom">
             <?php 
             if(!(isset($_GET['q']))){
@@ -1231,6 +1358,96 @@ $stmtArrayAtributos->execute();
 	</div>
 </div>
 
+<!-- MODAL DE MODIFICACIÓN DE GESTIÓN -->
+<div class="modal fade modal-primary" id="modal_modificacion_gestion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content card">
+            <div class="card-header card-header-primary card-header-text">
+                <div class="card-text">
+                    <h4 class="card-title">MODIFICACIÓN DE GESTIÓN</h4>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="card-body">
+                <!-- AÑO 1 -->
+                <div class="row">
+                    <label class="col-sm-12 col-form-label text-center"><b>AÑO 1:</b></label>                       
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">   
+                        <select class="form-control form-control-sm selectpicker" id="select_gestion1">
+                            <option value="">Ninguna</option>
+                            <?php
+                            $sql="SELECT g.nombre
+                                FROM gestiones g
+                                WHERE g.cod_estado = 1
+                                ORDER BY g.codigo DESC";
+                            $stmt = $dbh->prepare($sql);
+                            $stmt->execute();
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+                                $selected = $propuesta_gestion == $row['nombre'] ? 'selected' : ''; 
+                            ?>
+                            <option value="<?=$row['nombre']?>" <?=$selected?>><?=$row['nombre']?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <!-- AÑO 2 -->
+                <div class="row">
+                    <label class="col-sm-12 col-form-label text-center"><b>AÑO 2:</b></label>                       
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">   
+                        <select class="form-control form-control-sm selectpicker" id="select_gestion2">
+                            <option value="">Ninguna</option>
+                            <?php
+                            $sql="SELECT g.nombre
+                                FROM gestiones g
+                                WHERE g.cod_estado = 1
+                                ORDER BY g.codigo DESC";
+                            $stmt = $dbh->prepare($sql);
+                            $stmt->execute();
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                $selected = $propuesta_gestion2 == $row['nombre'] ? 'selected' : ''; 
+                            ?>
+                            <option value="<?=$row['nombre']?>" <?=$selected?>><?=$row['nombre']?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <!-- AÑO 3 -->
+                <div class="row">
+                    <label class="col-sm-12 col-form-label text-center"><b>AÑO 3:</b></label>                       
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">   
+                        <select class="form-control form-control-sm selectpicker" id="select_gestion3">
+                            <option value="">Ninguna</option>
+                            <?php
+                            $sql="SELECT g.nombre
+                                FROM gestiones g
+                                WHERE g.cod_estado = 1
+                                ORDER BY g.codigo DESC";
+                            $stmt = $dbh->prepare($sql);
+                            $stmt->execute();
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+                                $selected = $propuesta_gestion3 == $row['nombre'] ? 'selected' : ''; 
+                            ?>
+                            <option value="<?=$row['nombre']?>" <?=$selected?>><?=$row['nombre']?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <!-- Botón de actualizar -->
+                <button type="button" class="btn btn-primary" id="btn_actualizar_gestion">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <?php
 
 /** NOTA: No se debe mover la posición de 
@@ -1254,3 +1471,102 @@ $seconds = (int)$duration-$hours*60*60-$minutes*60;
 echo $hours.' h, '.$minutes.' m y '.$seconds.' s';
 
 ?>
+
+<script>
+    // Abre modal de modificación de gestión
+    $('#modificar_gestion').on('click', function(){
+        $('#modal_modificacion_gestion').modal('show');
+    });
+    // Modificación de Gestión
+    $('#btn_actualizar_gestion').on('click', function(){
+        // Realiza una solicitud AJAX con la gestión ingresada
+        let gestion1 = $('#select_gestion1').val();
+        let gestion2 = $('#select_gestion2').val();
+        let gestion3 = $('#select_gestion3').val();
+
+        // Validacion de gestión
+        // * Gestión 2
+        if(gestion2){
+            if(!gestion1){
+                Swal.fire({
+                    type: 'warning',
+                    title: 'Debe completar el año 1',
+                });
+                return false;
+            }
+            if (gestion2 < gestion1) {
+                Swal.fire({
+                    type: 'warning',
+                    title: 'El año 2 debe ser mayor o igual al año 1',
+                });
+                return false;
+            }
+        }
+        // * Gestión 3
+        if(gestion3){
+            if(!gestion2){
+                Swal.fire({
+                    type: 'warning',
+                    title: 'Debe completar el año 2',
+                });
+                return false;
+            }
+            if (gestion3 < gestion2) {
+                Swal.fire({
+                    type: 'warning',
+                    title: 'El año 3 debe ser mayor o igual al año 2',
+                });
+                return false;
+            }
+        }
+
+        $('#modal_modificacion_gestion').modal('toggle');
+        Swal.fire({
+            title: '¿Estás seguro de modificar la gestión?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No'
+        }).then(function (result) {
+            if (result.value) {
+
+                // Actualiza la gestión
+                $.ajax({
+                url: 'ajax_actualizar_gestion_simulacionServicio.php',
+                type: 'POST',
+                data: {
+                    gestion1: gestion1,
+                    gestion2: gestion2,
+                    gestion3: gestion3,
+                    cod_simulacionservicio: <?=$codigo?>
+                },
+                success: function (response) {
+                    let resp = JSON.parse(response);
+                    // Verifica si la actualización fue correcta
+                    if (resp.status === true) {
+                        // Muestra una alerta de actualización correcta
+                        Swal.fire({
+                            type: 'success',
+                            title: '¡Mensaje!',
+                            text: resp.message,
+                        }).then(function () {
+                            location.reload();
+                        });
+                    } else {
+                        throw new Error(resp.message || 'Error en la actualización');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Error',
+                        text: 'Error en la solicitud',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+                });
+            }
+        });
+    });
+</script>

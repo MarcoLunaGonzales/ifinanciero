@@ -140,7 +140,11 @@ $fechaActualInput=date("Y-m-d");
           
                                 <!--<option disabled selected="selected" value="">Cliente</option>-->
                                 <?php
-                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre FROM clientes c where c.cod_estadoreferencial=1 order by 2");
+                                 $stmt = $dbh->prepare("SELECT c.codigo, c.nombre 
+                                                        FROM clientes c 
+                                                        WHERE c.cod_estadoreferencial=1 
+                                                        AND c.nombre IS NOT NULL AND c.nombre != '' 
+                                                        ORDER BY 2");
                                  $stmt->execute();
                                   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                   $codigoX=$row['codigo'];
@@ -403,7 +407,10 @@ $fechaActualInput=date("Y-m-d");
                                 <select class="selectpicker form-control form-control-sm" name="iaf_primario[]" id="iaf_primario" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
                                   <option value="0" select>NINGUNO</option> 
                                 <?php
-                                  $sql = "SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1"; // SQL Antiguo
+                                  $sql = "SELECT c.codigo, c.nombre,c.abreviatura 
+                                            FROM iaf c 
+                                            WHERE c.Auxiliar = 755
+                                            order by 1"; // SQL Antiguo
                                   // $sql = "SELECT c.IdClasificador as codigo, CONCAT(c.Abrev,' - ',c.Descripcion) as nombre
                                   //         FROM ibnorca.clasificador c
                                   //         WHERE c.IdPadre=755 AND c.Aprobado=1"; // SQL NUEVO
@@ -550,7 +557,10 @@ $fechaActualInput=date("Y-m-d");
                                 <select class="selectpicker form-control form-control-sm" data-size="4" data-live-search-placeholder="Buscar codigo IAF..." name="iaf_primario_tcs[]" id="iaf_primario_tcs" data-style="select-with-transition" multiple data-actions-box="true" required data-live-search="true">
                                   <option value="0" select>NINGUNO</option> 
                                 <?php
-                                  $sql = "SELECT c.codigo, c.nombre,c.abreviatura FROM iaf c order by 1"; // SQL Antiguo
+                                  $sql = "SELECT c.codigo, c.nombre,c.abreviatura 
+                                            FROM iaf c 
+                                            WHERE c.Auxiliar = 755
+                                            order by 1"; // SQL Antiguo
                                   // $sql = "SELECT c.IdClasificador as codigo, CONCAT(c.Abrev,' - ',c.Descripcion) as nombre
                                   //         FROM ibnorca.clasificador c
                                   //         WHERE c.IdPadre=755 AND c.Aprobado=1"; // SQL NUEVO
