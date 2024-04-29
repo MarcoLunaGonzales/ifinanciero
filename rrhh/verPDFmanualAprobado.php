@@ -8,6 +8,7 @@ try {
 	$sql = "SELECT ma.codigo AS cod_manual_aprobacion, ma.cod_cargo, ma.nro_version, ma.fecha_inicio
 			FROM manuales_aprobacion ma
 			WHERE ma.cod_cargo = '$cod_cargo'
+			AND ma.cod_estado = 2
 			ORDER BY ma.codigo DESC
 			LIMIT 1";
 	// echo $sql;
@@ -33,6 +34,7 @@ try {
 		$carpetaDestino = dirname(__DIR__) . '/doc_manuales_aprobados';
 		$rutaArchivo = $carpetaDestino . '/' . $nombreArchivo;
 		// echo $rutaArchivo;
+		// exit;
 
 		// Verifica existencia de Archivo
 		$existeArchivo = file_exists($rutaArchivo);
