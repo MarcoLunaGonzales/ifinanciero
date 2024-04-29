@@ -22,25 +22,12 @@ class Conexion extends PDO {
 } 
 
 // Verificar Tabla Ventas Normas
-function buscarVentaNorma($cod_solicitudfacturacion, $cod_facturaventadetalle, $descripcion_alterna, $precio){
+function buscarVentaNorma($cod_solicitudfacturacion, $cod_facturaventadetalle){
     $dbh = new Conexion();
-    $sql = "SELECT vn.IdVentaNormas, vn.idNorma, n.abreviatura, ni.abreviatura, iso.reference
+    $sql = "SELECT vn.IdVentaNormas, vn.idNorma 
             FROM ibnorca.ventanormas vn
-            LEFT JOIN bdifinanciero.v_normas n ON n.codigo = vn.idNorma AND vn.Catalogo = 'N'
-            LEFT JOIN bdifinanciero.v_normas_int ni ON ni.codigo = vn.idNorma AND vn.Catalogo = 'I'
-            LEFT JOIN ibnorca_entidades.isos iso ON iso.iso_id = vn.idNorma AND vn.Catalogo = 'ISO'
-            WHERE (
-                vn.idSolicitudfactura = '$cod_solicitudfacturacion' OR
-                vn.idFacturaDetalle = '$cod_facturaventadetalle'
-            )
-            AND (
-                '$descripcion_alterna' LIKE (CONCAT('%', n.abreviatura,'%')) OR
-                '$descripcion_alterna' LIKE (CONCAT('%', ni.abreviatura,'%')) OR
-                '$descripcion_alterna' LIKE (CONCAT('%', iso.reference,'%'))
-            )
-            AND CONVERT(vn.Precio, DECIMAL(10, 2)) = CONVERT('$precio', DECIMAL(10, 2))
-            GROUP BY vn.IdVentaNormas
-            LIMIT 1";
+            WHERE vn.idSolicitudfactura = '$cod_solicitudfacturacion'
+            OR vn.idFacturaDetalle = '$cod_facturaventadetalle'";
     $stmtVentaNorma = $dbh->prepare($sql);
     $stmtVentaNorma->execute();
     $filasEncontradas = $stmtVentaNorma->rowCount();
@@ -79,7 +66,7 @@ $sql = "SELECT fv.fecha_factura,fv.codigo,fv.nro_factura,f.codigo as codfacturad
         (empty($claServicio) ? '' : "and f.cod_claservicio = $claServicio")
         ." and fv.cod_solicitudfacturacion != '-100'
         AND DATE(fv.fecha_factura) BETWEEN '$fecha_inicio' AND '$fecha_fin'
-        order by fv.fecha_factura, f.codigo ASC"; 
+        order by fv.fecha_factura, f.codigo DESC"; 
 // echo $sql;
 // exit;
 $stmtFactura = $dbh->prepare($sql);
@@ -262,7 +249,7 @@ $vista_norma = 2;
                 $ventasNoEncontradas = 0;
                 $nro = 0;
                 while ($rowFactura = $stmtFactura->fetch(PDO::FETCH_ASSOC)) {
-                    $idVentaNorma = buscarVentaNorma($rowFactura['cod_solicitudfacturacion'], $rowFactura['codfacturadetalle'], $rowFactura['descripcion_alterna'], $rowFactura['importe_total']);
+                    $idVentaNorma = buscarVentaNorma($rowFactura['cod_solicitudfacturacion'], $rowFactura['codfacturadetalle']);
                     if ($idVentaNorma !== false) {
                         $ventasEncontradas++;
                     } else {
