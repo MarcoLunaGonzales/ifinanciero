@@ -1,7 +1,12 @@
 <script>
-  function verReporteAnterior(f){
-    f.action='reporteLibretasBancariasAnt.php';
-    f.submit();
+  function verReporteAnterior(formId){
+    var form = document.getElementById(formId); // Obtener el formulario por su ID
+    if (form) {
+        form.action = 'reportes/reporteLibretasBancariasAnt.php';
+        form.submit();
+    } else {
+        console.error('El formulario con ID ' + formId + ' no se encontró.');
+    }
   }
 </script>
 <?php
@@ -136,7 +141,7 @@ $fechaHasta=date("Y-m-d");
           <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
           <a href="index.php?opcion=reportesLibretasBancarias2" class="<?=$buttonMorado;?>">Ver Reporte de Saldos</a>
-          <a href="javascript:verReporteAnterior(this.form);" class="<?=$buttonEdit;?>">Reporte 2</a>
+          <button type="button" onclick="verReporteAnterior('form1');" class="<?=$buttonEdit;?>">Reporte 2</button>
             </div>
         </div>
         </form>

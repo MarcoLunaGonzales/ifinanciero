@@ -163,6 +163,10 @@ switch ($filtro) {
                   $montoTotalUtilizadoLibretaNuevo=$resultSaldosNuevo['saldo'];
               }
             }
+            // Si $montoTotalUtilizadoLibretaNuevo está vacío, asigna 0
+            if (empty($montoTotalUtilizadoLibretaNuevo)) {
+                $montoTotalUtilizadoLibretaNuevo = 0;
+            }
             if($monto>0){
               $nuevoSaldo=$monto-$montoTotalUtilizadoLibretaNuevo-$montoComprobantesEnlazadosLibreta;
             }else{
