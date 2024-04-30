@@ -191,11 +191,9 @@ switch ($filtro) {
 
 
 
-            /********************************************/
             /***** AQUI UTILIZAMOS EL NUEVO SALDO  ******/
-            $saldo=$nuevoSaldo;
-            /************ FIN  NUEVO SALDO **************/
-            /*******************************************/
+            //$saldo=$nuevoSaldo;
+            /***** FIN  NUEVO SALDO ******/
 
 
 

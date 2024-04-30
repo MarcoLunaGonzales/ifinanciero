@@ -1,3 +1,9 @@
+<script>
+  function verReporteAnterior(f){
+    f.action='reporteLibretasBancariasAnt.php';
+    f.submit();
+  }
+</script>
 <?php
 
 // require_once 'layouts/bodylogin2.php';
@@ -10,8 +16,6 @@ require_once 'functionsGeneral.php';
 setlocale(LC_TIME, "Spanish");
 
 $dbh = new Conexion();
-$query = "select * from depreciaciones";
-$statement = $dbh->query($query);
 
 $gestionGlobal=$_SESSION['globalGestion'];
 
@@ -132,6 +136,7 @@ $fechaHasta=date("Y-m-d");
           <div class="card-footer ml-auto mr-auto">
           <button type="submit" class="<?=$buttonNormal;?>">Generar</button>
           <a href="index.php?opcion=reportesLibretasBancarias2" class="<?=$buttonMorado;?>">Ver Reporte de Saldos</a>
+          <a href="javascript:verReporteAnterior(this.form);" class="<?=$buttonEdit;?>">Reporte 2</a>
             </div>
         </div>
         </form>
