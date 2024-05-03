@@ -11,7 +11,7 @@ $dbh = new Conexion();
 
 $stmt = $dbh->prepare(" SELECT p.codigo,CONCAT_WS(' ',p.paterno,p.materno,p.primer_nombre) as personal,p.identificacion
  from personal p
- where p.cod_estadopersonal = 4
+ where p.cod_estadopersonal <> 1
  order by p.codigo");
 //ejecutamos
 $stmt->execute();
