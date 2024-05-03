@@ -210,7 +210,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                      * * Verificación de estado de Curso
                                      */
                                     $verficaCursoString = verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas,$nroTarjeta,$idIdentificacion,$complementoCiCliente,$CorreoCliente,$idCliente,$usuario);
-                                    // echo $verficaCursoString ? 'Facturar' : 'Factura pendiente'; // false: No permite Facturar, true: Factura
+                                    // echo $verficaCursoString ? 'Facturar' : 'Factura pendiente'; //  true: Factura, false: No permite Facturar
                                     // exit;
                                     break;
                                 }
