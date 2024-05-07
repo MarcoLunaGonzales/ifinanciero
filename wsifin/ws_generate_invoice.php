@@ -241,7 +241,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 
                             }else{ 
                                 $estado  = '-100';
-                                $mensaje = "Venta registrada sin facturar";
+                                $mensaje = "Venta registrada sin facturar (Curso en planificación)";
                             }
                         }
                             

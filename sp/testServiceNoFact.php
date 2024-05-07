@@ -13,11 +13,12 @@ $Objeto_detalle4 = new stdClass();
 $Objeto_detalle4->suscripcionId  = 0;     /*SUSCRIPCION ID  (SE MANTIENE)*/
 $Objeto_detalle4->pagoCursoId    = 148;   /*PAGOCURSO ID (SE MANTIENE)*/
 
-// $Objeto_detalle4->moduloId       = 7945;  /*HACE REFERENCIA AL MODULO ID "Planificado"*/
-$Objeto_detalle4->moduloId       = 7906;  /*HACE REFERENCIA AL MODULO ID "En Ejecución"*/
+$Objeto_detalle4->moduloId       = 7945;  /*HACE REFERENCIA AL MODULO ID "Planificado"*/
+// $Objeto_detalle4->moduloId       = 7906;  /*HACE REFERENCIA AL MODULO ID "En Ejecución"*/
 
 $Objeto_detalle4->codClaServicio = 707;   /*HACE REFERENCIA AL CODIGO DE CLASERVICIOS*/
-$Objeto_detalle4->detalle        = "Normas NB:3001";
+$Objeto_detalle4->detalle        = "Curso OV-PFBPM-PF-G2-2024";
+// $Objeto_detalle4->detalle        = "Curso OV-PFBPM-PF-G3-2024";
 $Objeto_detalle4->precioUnitario = "300";
 $Objeto_detalle4->cantidad       = 1;
 $Objeto_detalle4->descuento_bob  = 0;
@@ -31,8 +32,8 @@ $parametros=array(
                 "sucursalId"          => 1, // ID Sucursal
                 "pasarelaId"          => 1, // ID Pasarela 1 para la tienda
                 "fechaFactura"        => date('Y-m-d'), // fecha de la factura
-                "nitciCliente"        => '4868422016', //nit o ci de cliente
-                "razonSocial"         => 'LUNA', //razon social
+                "nitciCliente"        => '1020745020', //nit o ci de cliente
+                "razonSocial"         => 'Prueba Ibnorca', //razon social
                 "importeTotal"        => "300", //importe total
                 "tipoPago"            => 4, // codigo tipo de pago
                 "codLibretaDetalle"   => '0', // codigo de libreta bancaria
