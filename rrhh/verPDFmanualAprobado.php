@@ -5,10 +5,10 @@ require_once '../functions.php';
 try {
 	$cod_cargo = $_GET['codigo'];
 	$dbh = new Conexion();
-	$sql = "SELECT ma.codigo AS cod_manual_aprobacion, ma.cod_cargo, ma.nro_version, ma.fecha_inicio
+	$sql = "SELECT ma.codigo AS cod_manual_aprobacion, ma.cod_cargo, ma.nro_version, ma.fecha_inicio, ma.cod_estado
 			FROM manuales_aprobacion ma
 			WHERE ma.cod_cargo = '$cod_cargo'
-			AND ma.cod_estado = 2
+			AND ma.cod_estado IN (1, 2)
 			ORDER BY ma.codigo DESC
 			LIMIT 1";
 	// echo $sql;
@@ -26,35 +26,42 @@ try {
 		$nro_version           = $result['nro_version'];
 		$fecha_inicio          = $result['fecha_inicio'];
 		
-		// Arma nombre de Archivo
-		$nombreArchivo = $cod_cargo . '_' . 
-				$cod_manual_aprobacion . '_' . 
-				$nro_version . '_' . 
-				date('YmdHi', strtotime($fecha_inicio)).'.pdf';
-		$carpetaDestino = dirname(__DIR__) . '/doc_manuales_aprobados';
-		$rutaArchivo = $carpetaDestino . '/' . $nombreArchivo;
-		// echo $rutaArchivo;
-		// exit;
+		if($result['cod_estado'] == 2){
+			/**
+			 * ? En caso de ser un Manual que tiene una aprobación anterior
+			 */
+			// Arma nombre de Archivo
+			$nombreArchivo = $cod_cargo . '_' . 
+			$cod_manual_aprobacion . '_' . 
+			$nro_version . '_' . 
+			date('YmdHi', strtotime($fecha_inicio)).'.pdf';
+			$carpetaDestino = dirname(__DIR__) . '/doc_manuales_aprobados';
+			$rutaArchivo = $carpetaDestino . '/' . $nombreArchivo;
+			// echo $rutaArchivo;
+			// exit;
 
-		// Verifica existencia de Archivo
-		$existeArchivo = file_exists($rutaArchivo);
-		if ($existeArchivo) {
-			// echo "Location: " .  $urlIbnorca . "doc_manuales_aprobados/$nombreArchivo";
-			header("Location: " .  $urlIbnorca . "doc_manuales_aprobados/$nombreArchivo");
-			exit();
-		} else {
-			// echo "Location: " .  $urlIbnorca . "rrhh/pdfGeneracion.php?codigo=$cod_cargo";
+			// Verifica existencia de Archivo
+			$existeArchivo = file_exists($rutaArchivo);
+			if ($existeArchivo) {
+				// echo "Location: " .  $urlIbnorca . "doc_manuales_aprobados/$nombreArchivo";
+				header("Location: " .  $urlIbnorca . "doc_manuales_aprobados/$nombreArchivo");
+				exit();
+			} else {
+				// echo "Location: " .  $urlIbnorca . "rrhh/pdfGeneracion.php?codigo=$cod_cargo";
+				header("Location: " .  $urlIbnorca . "rrhh/pdfGeneracion.php?codigo=$cod_cargo");
+				exit();
+			}
+		}else{
+			/**
+			 * ? En caso de ser un Manual en etapa de aprobación inicial
+			 */
 			header("Location: " .  $urlIbnorca . "rrhh/pdfGeneracion.php?codigo=$cod_cargo");
 			exit();
 		}
-		echo json_encode(array(
-			'message' => 'Se encontró manual de cargo.',
-			'status'  => true
-		));
 	} else {
 		echo '
 			<div style="background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 10px; margin-bottom: 15px;">
-				<strong>Mensaje:</strong> No se generó ningún proceso de aprobación del manual de cargos seleccionado.
+				<strong>Mensaje:</strong> No se generó ningún proceso de aprobación del "Manual de Cargo" seleccionado.
 			</div>
 		';
 	

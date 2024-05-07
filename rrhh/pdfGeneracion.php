@@ -235,7 +235,7 @@ $resp_control_versiones = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if(empty($resp_manual_aprobacion)){
     $resp_manual_seguimiento = [];
 }else{
-    $sql = "SELECT mas.codigo, mas.cod_manual, mas.cod_etapa, CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as personal, mas.cod_seguimiento_estado,
+    $sql = "SELECT mas.codigo, mas.cod_manual, mae.nro_etapa, CONCAT(p.primer_nombre, ' ', p.paterno, ' ', p.materno) as personal, mas.cod_seguimiento_estado,
         DATE_FORMAT(mas.fecha,'%d-%m-%Y') as fecha, mas.observacion, mas.detalle_descriptivo, CONCAT(c.nombre, ' ',
                 CASE
                     WHEN (SELECT cih.codigo 
