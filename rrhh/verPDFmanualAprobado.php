@@ -4,12 +4,14 @@ require_once '../functions.php';
 
 try {
 	$cod_cargo = $_GET['codigo'];
+	$url_tipo  = empty($_GET['tipo']) ? '' : ('&tipo='.$_GET['tipo']); // Para almacenar el tipo de vista
+	$url_q     = empty($_GET['q']) ? '' : ('&q='.$_GET['q']); // Session Intranet
 	$dbh = new Conexion();
 	$sql = "SELECT ma.codigo AS cod_manual_aprobacion, ma.cod_cargo, ma.nro_version, ma.fecha_inicio, ma.cod_estado
 			FROM manuales_aprobacion ma
 			WHERE ma.cod_cargo = '$cod_cargo'
 			AND ma.cod_estado IN (1, 2)
-			ORDER BY ma.codigo DESC
+			ORDER BY ma.cod_estado DESC, ma.codigo DESC
 			LIMIT 1";
 	// echo $sql;
 
@@ -48,14 +50,14 @@ try {
 				exit();
 			} else {
 				// echo "Location: " .  $urlIbnorca . "rrhh/pdfGeneracion.php?codigo=$cod_cargo";
-				header("Location: " .  $urlIbnorca . "rrhh/pdfGeneracion.php?codigo=$cod_cargo");
+				header("Location: " .  $urlIbnorca . "rrhh/pdfGeneracion.php?codigo=$cod_cargo" . $url_tipo . $url_q);
 				exit();
 			}
 		}else{
 			/**
 			 * ? En caso de ser un Manual en etapa de aprobación inicial
 			 */
-			header("Location: " .  $urlIbnorca . "rrhh/pdfGeneracion.php?codigo=$cod_cargo");
+			header("Location: " .  $urlIbnorca . "rrhh/pdfGeneracion.php?codigo=$cod_cargo" . $url_tipo . $url_q);
 			exit();
 		}
 	} else {
