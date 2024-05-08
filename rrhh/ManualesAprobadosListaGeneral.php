@@ -67,6 +67,7 @@ $sql = "SELECT
                     cod_cargo,
                     MAX(codigo) AS max_codigo
                 FROM manuales_aprobacion
+                WHERE cod_estado = 2
                 GROUP BY cod_cargo
             ) max_ma ON ma1.cod_cargo = max_ma.cod_cargo AND ma1.codigo = max_ma.max_codigo
         ) ma ON ma.cod_cargo = c.codigo
