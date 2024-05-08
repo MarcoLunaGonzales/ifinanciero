@@ -4,6 +4,8 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
     require_once __DIR__.'/../conexion.php';
     require_once __DIR__.'/../functions.php';
     require_once __DIR__.'/../functionsGeneral.php';
+    
+    date_default_timezone_set('America/La_Paz');
 
     $dbh = new Conexion();
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try

@@ -17,6 +17,7 @@ ini_set('display_errors', 1);
     
     $sqlDatos = "SELECT codigo, sucursalId, pasarelaId, fechaFactura, nitciCliente, razonSocial, importeTotal, tipoPago, codLibretaDetalle, usuario, idCliente, idIdentificacion, complementoCiCliente, nroTarjeta, CorreoCliente, estado, created_at
     FROM ventas_no_facturadas vnf
+    WHERE vnf.estado = 1
     ORDER BY vnf.codigo DESC";
     
     $stmt = $dbh->prepare($sqlDatos);

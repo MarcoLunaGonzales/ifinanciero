@@ -1,6 +1,7 @@
 <?php
     require_once '../conexion.php';
     require_once '../functions.php';
+    date_default_timezone_set('America/La_Paz');
 
     $dbh = new Conexion();
 
@@ -60,7 +61,8 @@
         "accion"               => "NewGenerateInvoice",
         "sucursalId"           => $registroPrincipal['sucursalId'],
         "pasarelaId"           => $registroPrincipal['pasarelaId'],
-        "fechaFactura"         => $registroPrincipal['fechaFactura'],
+        "fechaFactura"         => date('Y-m-d'),
+        // "fechaFactura"         => $registroPrincipal['fechaFactura'],
         "nitciCliente"         => $registroPrincipal['nitciCliente'],
         "razonSocial"          => $registroPrincipal['razonSocial'],
         "importeTotal"         => $registroPrincipal['importeTotal'],
