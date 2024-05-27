@@ -2,18 +2,14 @@
 
 function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items,$CodLibretaDetalle,$tipoPago,$normas,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$correoCliente,$cod_cliente,$usuario){
     require_once __DIR__.'/../conexion.php';
-    require '../assets/phpqrcode/qrlib.php';
-    include '../assets/controlcode/sin/ControlCode.php';
-
-    //require_once 'configModule.php';
     require_once __DIR__.'/../functions.php';
     require_once __DIR__.'/../functionsGeneral.php';
-    require_once '../simulaciones_servicios/executeComprobante_factura.php';
+    
+    date_default_timezone_set('America/La_Paz');
 
     $dbh = new Conexion();
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//try
     set_time_limit(300);
-    session_start();    
 
 
     /**

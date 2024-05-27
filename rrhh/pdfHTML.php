@@ -225,12 +225,14 @@
             if(count($resp_manual_seguimiento) > 0){
         ?>
         <!-- Archivo -->
-        <div style="padding:0px;">            
+        <div>            
             <table>
-                <tr>
-                    <td class="text-center" style="width:30%; background-color: red;color: white; font-weight: bold; text-align: center;">Nombre del Archivo</td>
-                    <td style="width:70%;"><?=empty($resp_control_cambio['codigo_doc']) ? '-' : $resp_control_cambio['codigo_doc']?></td>
-                </tr>
+                <thead>
+                    <tr>
+                        <td class="text-center" style="width:30%; background-color: red;color: white; font-weight: bold; text-align: center;">Nombre del Archivo</td>
+                        <td style="width:70%;"><?=empty($resp_control_cambio['codigo_doc']) ? '-' : $resp_control_cambio['codigo_doc']?></td>
+                    </tr>
+                </thead>
             </table>
         </div>
 
@@ -249,7 +251,7 @@
                     <td class="text-center" style="background-color: red;color: white; font-weight: bold; text-align: center;"><?=$row['nombre_etapa'];?></td>
                     <td class="text-center"><?=$row['fecha'];?></td>
                     <td class="text-center"><?=$row['personal'];?> <br><b><?=$row['cargo'];?></b></td>
-                    <td class="text-center"><?=$row['cod_etapa'] == 0 ? 'Elaborado desde sistema' : 'Aprobado desde sistema';?></td>
+                    <td class="text-center"><?=$row['nro_etapa'] == 0 ? 'Elaborado desde sistema' : 'Aprobado desde sistema';?></td>
                 </tr>
             <?php 
                 }

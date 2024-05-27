@@ -17,6 +17,7 @@ ini_set('display_errors', 1);
     
     $sqlDatos = "SELECT codigo, sucursalId, pasarelaId, fechaFactura, nitciCliente, razonSocial, importeTotal, tipoPago, codLibretaDetalle, usuario, idCliente, idIdentificacion, complementoCiCliente, nroTarjeta, CorreoCliente, estado, created_at
     FROM ventas_no_facturadas vnf
+    WHERE vnf.estado = 1
     ORDER BY vnf.codigo DESC";
     
     $stmt = $dbh->prepare($sqlDatos);
@@ -24,6 +25,7 @@ ini_set('display_errors', 1);
     $stmt->execute();
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
+    $nombreBDsiat=obtenerValorConfiguracion(106);
   ?>
     <!-- EFECTO LOADING -->
     <div class="cargar-ajax d-none">
@@ -41,7 +43,7 @@ ini_set('display_errors', 1);
                         <div class="card-icon">
                             <i class="material-icons">polymer</i>
                         </div>
-                        <h4 class="card-title"><b>Solicitudes de Facturación - <b>Cursos</b></b>
+                        <h4 class="card-title"><b>Solicitudes Pendientes de Facturación</b>
                         </h4>                    
                     </div>
                     <div class="card-body" id="data_solicitudes_facturacion">
@@ -49,10 +51,11 @@ ini_set('display_errors', 1);
                             <thead>
                                 <tr>  
                                     <th width="10%"><small>#</small></th>
-                                    <th width="10%"><small>Fecha Factura</small></th>
-                                    <th width="30%"><small>NIT/CI</small></th>
+                                    <th width="10%"><small>Fecha</small></th>
+                                    <th width="10%"><small>NIT</small></th>
                                     <th width="20%"><small>Razón Social</small></th>
                                     <th width="10%"><small><small>Importe Total</small></small></th>
+                                    <th width="20%"><small><small>Concepto</small></small></th>
                                     <th width="10%" class="text-center"><small><small>Estado</small></small></th>
                                     <th width="10%" class="text-right"><small>Actions</small></th>
                                 </tr>
@@ -64,9 +67,47 @@ ini_set('display_errors', 1);
                                     <tr>
                                         <td><small> <?=$row['codigo']?> </small></td>
                                         <td><small> <?=$row['fechaFactura']?> </small></td>
-                                        <td><small> <?=$row['nitciCliente']?> </small></td>
+                                        <?php
+                                            $codigo_factura = $row['codigo']; // Codigo de Factura
+                                            $sqlDocumento="SELECT (SELECT st.descripcion from ".$nombreBDsiat.".siat_sincronizarparametricatipodocumentoidentidad st where st.codigoClasificador=fvd.idIdentificacion)as tipodoc, fvd.nitciCliente, fvd.complementoCiCliente 
+                                            FROM ventas_no_facturadas fvd where fvd.codigo='$codigo_factura'";
+                                            $stmtDocumento = $dbh->prepare($sqlDocumento);
+                                            $stmtDocumento->execute();
+                                            $nitString="";
+                                            while ($rowDocumento = $stmtDocumento->fetch(PDO::FETCH_ASSOC)) {
+                                                $tipoDoc     = $rowDocumento['tipodoc'];
+                                                $nit         = $rowDocumento['nitciCliente'];
+                                                $complemento = $rowDocumento['complementoCiCliente'];
+                                                list($abrev, $nombreDoc) = explode("-", $tipoDoc);
+                                                $nitString="<b><small><span style='color:red'>".$abrev."</span> ".$nit." <span style='color:red'>".$complemento."</span></small></b>";
+                                            }
+                                        ?>
+                                        <td><small> <?=$nitString?> </small></td>
                                         <td><small> <?=$row['razonSocial']?> </small></td>
                                         <td><small> <?=$row['importeTotal']?> </small></td>
+                                        <td>
+                                            <small>
+                                                <?php
+                                                    //FORMAMOS EL CONCEPTO DE LA FACTURA
+                                                    $codigo_factura = $row['codigo']; // Codigo de Factura
+                                                    $stmtDetalleSol = $dbh->prepare("SELECT fvd.cantidad, fvd.precioUnitario, fvd.detalle from ventas_no_facturadas_detalle fvd where cod_venta_no_facturada=$codigo_factura");
+                                                    $stmtDetalleSol->execute();
+                                                    $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
+                                                    $stmtDetalleSol->bindColumn('precioUnitario', $precio_unitario);
+                                                    $stmtDetalleSol->bindColumn('detalle', $descripcion_alterna); 
+                                                    $cadenaFacturas="";
+                                                    $cadenaFacturasM="";
+                                                    $concepto_contabilizacion="";
+
+                                                    while ($row_det = $stmtDetalleSol->fetch()){
+                                                        $precio = $precio_unitario*$cantidad;
+                                                        $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$row['razonSocial']."<br>\n";
+                                                        $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
+                                                    }
+                                                    echo $concepto_contabilizacion;
+                                                ?>
+                                            </small>
+                                        </td>
                                         <td class="td-actions text-center">
                                             <?php
                                                 if($row['estado'] == 1){

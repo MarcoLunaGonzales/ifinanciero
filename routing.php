@@ -2105,7 +2105,7 @@
 			require_once('aguinaldos/reporteListaAguinaldoVistas.php'); //ok
 		}
 
-		if($_GET['opcion']=='listaFacturaPendiente') {
+		if($_GET['opcion']=='listaFacturasPendiente') {
 			require_once('solicitud_facturacion_pendiente/list.php'); //ok
 		}
 	}else{

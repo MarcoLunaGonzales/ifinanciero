@@ -655,6 +655,12 @@ if($menuModulo==0){
                     <span class="sidebar-normal"> Facturas Generadas</span>
                   </a>
                 </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="?opcion=listaFacturasPendiente">
+                    <span class="sidebar-mini"> SPF </span>
+                    <span class="sidebar-normal"> Solicitudes Pendientes por Facturar</span>
+                  </a>
+                </li>
                 
                 <li class="nav-item ">
                   <a class="nav-link" href="?opcion=contabilizarLibretasBancarias_lista">
