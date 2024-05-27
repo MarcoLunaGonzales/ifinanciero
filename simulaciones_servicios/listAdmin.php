@@ -407,7 +407,7 @@ $item_1=2707;
                             <option value="">Todos</option>
                             <?php
                                 $sql="SELECT codigo, nombre
-                                FROM clientes
+                                FROM clientes where cod_tipocliente='E'
                                 GROUP BY nombre ";
                                 $stmtSC = $dbh->prepare($sql);
                                 $stmtSC->execute();
