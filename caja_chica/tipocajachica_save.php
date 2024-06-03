@@ -16,7 +16,8 @@ try {
     $cod_uo = $_POST["cod_uo"];
     $cod_area = $_POST["cod_area"];
     $cod_personal = $_POST["cod_personal"];
-    $cod_cuenta = $_POST["cod_cuenta"];
+    $cod_cuenta = $_POST["cod_cuenta"]; // Cuenta de Reposición
+    $cod_cuenta_nuevo = $_POST["cod_cuenta_nuevo"];
     $cod_estadoreferencial =   1;    
     $created_by = 1;//$_POST["created_by"];
     $modified_by = 1;//$_POST["modified_by"];
@@ -24,8 +25,8 @@ try {
     
     if ($_POST["codigo"] == 0){//insertamos
         // echo $cod_uo;
-        $stmt = $dbh->prepare("INSERT INTO tipos_caja_chica(nombre,cod_uo,cod_area,cod_estadoreferencial,cod_personal) 
-        values ('$nombre',$cod_uo,$cod_area,$cod_estadoreferencial,$cod_personal)");
+        $stmt = $dbh->prepare("INSERT INTO tipos_caja_chica(nombre,cod_uo,cod_area,cod_estadoreferencial,cod_personal, cod_cuenta) 
+        values ('$nombre',$cod_uo,$cod_area,$cod_estadoreferencial,$cod_personal, '$cod_cuenta_nuevo')");
         $flagSuccess=$stmt->execute();
         $tabla_id = $dbh->lastInsertId();
         if($flagSuccess){
@@ -45,7 +46,7 @@ try {
         //$stmt->debugDumpParams();
     } else {//update
 
-        $stmt = $dbh->prepare("UPDATE tipos_caja_chica set nombre='$nombre',cod_uo=$cod_uo,cod_area=$cod_area,cod_personal=$cod_personal
+        $stmt = $dbh->prepare("UPDATE tipos_caja_chica set nombre='$nombre',cod_uo=$cod_uo,cod_area=$cod_area,cod_personal=$cod_personal, cod_cuenta = '$cod_cuenta_nuevo'
          where codigo = $codigo");      
         $flagSuccess=$stmt->execute();      
         if($flagSuccess){

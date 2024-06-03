@@ -21442,3 +21442,26 @@ $(document).on('change', '#cod_servicio', function () {
         }
     }
 });
+
+
+
+function ajaxClienteContactoCustom(cod_cliente){
+    console.log("cod_cliente: "+cod_cliente)
+    var cod_tipopago=$("#cod_tipopago").val();  
+    // alert(cod_tipopago);
+    if(cod_tipopago!=null){
+        var contenedor;
+        contenedor = document.getElementById('div_contenedor_contactos');
+        ajax=nuevoAjax();
+        ajax.open('GET', 'solicitud_facturacion_manual/ajax_contacto_cliente.php?cod_cliente='+cod_cliente+'&cod_tipopago='+cod_tipopago,true);
+        ajax.onreadystatechange=function() {
+            if (ajax.readyState==4) {
+                // console.log(ajax.responseText)
+                contenedor.innerHTML = ajax.responseText;
+                $('.selectpicker').selectpicker(["refresh"]);
+                ajaxCliente_nit_razonsocial(cod_cliente);  
+            }
+        }
+        ajax.send(null)  
+    }
+}

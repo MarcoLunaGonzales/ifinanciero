@@ -2108,6 +2108,20 @@
 		if($_GET['opcion']=='listaFacturasPendiente') {
 			require_once('solicitud_facturacion_pendiente/list.php'); //ok
 		}
+
+		// Ejmplo Buscar Clientes
+		if($_GET['opcion']=='buscarClientes') {
+			require_once('clienteAutocomplete/indexAjaxCliente.php'); //ok
+		}
+
+		// Excepciones de Planillas Retroactivos
+		if($_GET['opcion']=='planillasRetroactivosExcepcionesList') {
+			require_once('planillas/planillasRetroactivosExcepcionesList.php'); //ok
+		}
+		// Eliminar Personal Excepcion
+		if($_GET['opcion']=='eliminarPersonalExcepcion') {
+			require_once('planillas/deleteRetroactivoExcepcion.php'); //ok
+		}
 	}else{
 		//require("paginaprincipal.php");
 	}

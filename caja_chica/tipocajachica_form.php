@@ -19,15 +19,17 @@ if ($codigo > 0){
     $cod_uo = $result['cod_uo'];
     $cod_area = $result['cod_area'];
     $nombre = $result['nombre'];    
-    $cod_cuenta=obtenerCodigoCuentaCajaChica($codigo);
+    $cod_cuenta = $result['cod_cuenta'];   
+    $cod_cuenta_resposicion=obtenerCodigoCuentaCajaChica($codigo);
 } else {
     $codigo = 0;
     $cod_uo=0;
     $cod_area =0;
     $nombre = '';
+    $cod_cuenta = $result['cod_cuenta'];   
     $cod_personal=0;
     $cod_estadoreferencial = 1;
-    $cod_cuenta=0;
+    $cod_cuenta_resposicion=0;
 }
 ?>
 
@@ -118,7 +120,7 @@ if ($codigo > 0){
 
                     </div><!--fin campo cod_responsables_autorizadopor -->
                     <div class="row">
-                        <label class="col-sm-2 col-form-label">Cuenta</label>
+                        <label class="col-sm-2 col-form-label">Cuenta de Reposición</label>
                         <div class="col-sm-8">
                         <div class="form-group">
                             <select name="cod_cuenta" id="cod_cuenta" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true">
@@ -129,13 +131,34 @@ if ($codigo > 0){
                                 $statementCuentas = $dbh->query($query_cuentas);
 
                                while ($row = $statementCuentas->fetch()){ ?>
-                                  <option <?=($cod_cuenta==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["numero"];?> - <?=$row["nombre"];?></option>
+                                  <option <?=($cod_cuenta_resposicion==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["numero"];?> - <?=$row["nombre"];?></option>
                               <?php } ?>
                             </select>
                         </div>
                         </div><!--fin campo cod_responsables_responsable -->
 
                     </div><!--fin campo cod_responsables_autorizadopor -->
+                    
+                    <!-- CUENTA -->
+                    <div class="row">
+                        <label class="col-sm-2 col-form-label">Cuenta</label>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <select name="cod_cuenta_nuevo" id="cod_cuenta_nuevo" class="selectpicker form-control form-control-sm" data-style="btn btn-primary" required data-show-subtext="true" data-live-search="true">
+                                <option value=""></option>
+                                <?php
+                                //plan de cuentas
+                                    $query_cuentas = "SELECT codigo,numero,nombre from plan_cuentas where cod_estadoreferencial=1";
+                                    $statementCuentas = $dbh->query($query_cuentas);
+
+                                while ($row = $statementCuentas->fetch()){ ?>
+                                    <option <?=($cod_cuenta==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["numero"];?> - <?=$row["nombre"];?></option>
+                                <?php } ?>
+                                </select>
+                            </div>
+                        </div><!--fin campo cod_responsables_responsable -->
+                    </div>
+
 			  </div>
 			  <div class="card-footer ml-auto mr-auto">
 				<button type="submit" class="<?=$buttonNormal;?>">Guardar</button>

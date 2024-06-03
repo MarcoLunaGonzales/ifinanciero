@@ -179,6 +179,12 @@ $dbh = new Conexion();
                             <?php } ?>
                           </ul>
                         </div>
+                        <a href="index.php?opcion=planillasRetroactivosExcepcionesList&cod_planilla=<?=$codigo_planilla?>" class="btn btn-warning" title="Gestión de Personal Excepción">
+                          <i class="material-icons">error</i>
+                        </a>
+                        <button type="button" class="btn btn-info abreModalExcepcion" title="Lista de Personal - Excepción" data-codigo="<?=$codigo_planilla?>">
+                            <i class="material-icons">list</i>     
+                          </button>
                       </td>
                     </tr>
                   <?php $index++; }
@@ -191,6 +197,23 @@ $dbh = new Conexion();
         </div>
       </div>
     </div>
+  </div>
+  
+  <!-- Modal Personal Excepciones -->
+  <div class="modal fade" id="modalExcepcion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabel"><b>Personal Excepción</b></h4>
+              </div>
+              <div class="modal-body" id="modal-retroactivo-excepcion">
+              </div>    
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+              </div>
+          </div>
+      </div>
   </div>
   <!--modal procesar-->
   <div class="modal fade" id="modalProcesar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -270,6 +293,26 @@ $dbh = new Conexion();
         CerrarPlanillaRetroactivo(cod_planilla);
       });
       
+    });
+    
+    /**
+     * Carga la lista de PERSONAL EXCEPCIÓN
+     */
+    $('.abreModalExcepcion').on('click', function(){
+        let codigo = $(this).data('codigo');
+        let formData = new FormData();
+        formData.append('codigo', $(this).data('codigo'));
+        $.ajax({
+            url:"planillas/ajax_listaRetroactivoExcepcion.php",
+            type:"POST",
+            contentType: false,
+            processData: false,
+            data: formData,
+            success:function(response){
+                $('#modal-retroactivo-excepcion').html(response);
+                $('#modalExcepcion').modal('show');
+            }
+        });
     });
   </script>
   

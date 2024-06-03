@@ -22,6 +22,7 @@ $Array= array($Objeto_detalle4);
 
 $parametros=array("sIdentificador"=>$sIde, "sKey"=>$sKey, 
               "accion"=>"NewGenerateInvoice", //nombre de la accion
+              "pagoCursoSuscripcionId" => 1000, // Campo Adicional
               "sucursalId"=>1, // ID Sucursal
               "pasarelaId"=>1, // ID Pasarela 1 para la tienda
               "fechaFactura"=>'2022-12-27', // fecha de la factura

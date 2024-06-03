@@ -597,6 +597,10 @@
                   return false;    
                 }          
                 if(monto_modal_por_tipopago!=0){
+                  // console.log("2 montoTotalItems: "+montoTotalItems)
+                  // console.log("2 monto_modal_por_area: "+monto_modal_por_area)
+                  montoTotalItems      = parseFloat(montoTotalItems).toFixed(2);
+                  monto_modal_por_area = parseFloat(monto_modal_por_area).toFixed(2);
                   if(montoTotalItems!=monto_modal_por_area){
                     var mensaje="<p>Por favor verifique los montos de la distribución de porcentajes en Areas...</p>";
                     $('#msgError').html(mensaje);
@@ -653,6 +657,10 @@
             }
             
             if(monto_modal_por_tipopago!=0){
+              // console.log("1 montoTotalItems: "+montoTotalItems)
+              // console.log("1 monto_modal_por_area: "+monto_modal_por_area)
+              montoTotalItems      = parseFloat(montoTotalItems).toFixed(2);
+              monto_modal_por_area = parseFloat(monto_modal_por_area).toFixed(2);
               if(montoTotalItems!=monto_modal_por_area){
                 var mensaje="<p>Por favor verifique los montos de la distribución de porcentajes en Areas...</p>";
                 $('#msgError').html(mensaje);

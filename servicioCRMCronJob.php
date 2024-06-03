@@ -60,7 +60,7 @@
                 /********************************************************/
                 $fieds = "name,email_from,phone,partner_id,product_id,stage_id";
                 // $url = $url_init."crm.lead/find?partner_id.i_registro=" . $cod_cliente . "&fields=".$fieds."&stage_id=Reserva%20de%20cupo";
-                $url = $url_init."crm.lead/find?partner_id.i_registro=" . $cod_cliente . "&fields=".$fieds;
+                $url = $url_init."crm.lead/find?partner_id.i_registro=" . $cod_cliente . "&product_id.id_curso=" . $cod_claservicio . "&fields=" . $fieds;
                 
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
@@ -148,7 +148,7 @@
         // Resultado
         if($count_lead > 0){
             echo json_encode(array(
-                'message' => 'Se cerro leads',
+                'message' => 'Leads Cerrados: '.$count_lead,
                 'status'  => true
             ));
         }else{
