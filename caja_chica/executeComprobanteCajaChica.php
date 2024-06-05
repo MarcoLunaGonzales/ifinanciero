@@ -63,7 +63,8 @@ try{
 				        (select tc.nombre from tipos_caja_chica tc where tc.codigo=cod_tipocajachica) as name_tipocc,
 				        (select (select uo.nombre from unidades_organizacionales uo where uo.codigo= tc2.cod_uo) from tipos_caja_chica tc2 where tc2.codigo=cod_tipocajachica)as nombre_uo_tcc,
 				        (select  tc3.cod_uo from tipos_caja_chica tc3 where tc3.codigo=cod_tipocajachica)as cod_uo_tcc,
-				        (select  tc4.cod_area from tipos_caja_chica tc4 where tc4.codigo=cod_tipocajachica)as cod_area_tcc
+				        (select  tc4.cod_area from tipos_caja_chica tc4 where tc4.codigo=cod_tipocajachica)as cod_area_tcc,
+				        (select  tc4.cod_cuenta from tipos_caja_chica tc4 where tc4.codigo=cod_tipocajachica)as cod_cuenta
 				        FROM caja_chica where codigo=$cod_cajachica");
 				    $stmtCajaChica->execute();
 				    $resultCCD = $stmtCajaChica->fetch();
@@ -80,6 +81,7 @@ try{
 				    $cod_area_tcc = $resultCCD['cod_area_tcc'];
 				    $fecha_inicio_cc = $resultCCD['fecha'];
 				    $fecha_cierre_cc = $resultCCD['fecha_cierre'];
+				    $cod_contra_cuenta = $resultCCD['cod_cuenta']; // ! Nuevo campo: Para contabilización de caja chica
 
 					//datos para el comprbant
 					$mesTrabajo=$_SESSION['globalMes'];
@@ -99,7 +101,8 @@ try{
 					$codComprobante=obtenerCodigoComprobante();
 					
 					// $cod_contra_cuenta=obtenerValorConfiguracion(28);
-					$cod_contra_cuenta=obtnercontracuentaUnidad($cod_uo_tcc);
+					// $cod_contra_cuenta=obtnercontracuentaUnidad($cod_uo_tcc); // ! FORMA ANTERIOR DE CONTABILIZACIÓN 
+					
 					if($cod_contra_cuenta==0){
 						$cod_contra_cuenta=obtenerValorConfiguracion(28);// LA PAZ
 					}

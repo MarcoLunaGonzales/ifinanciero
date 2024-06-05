@@ -29,6 +29,7 @@ $parametros=array(
                 "sIdentificador"      => $sIde, 
                 "sKey"                => $sKey, 
                 "accion"              => "NewGenerateInvoice", //nombre de la accion
+                "pagoCursoSuscripcionId" => 1000, // Campo Adicional
                 "sucursalId"          => 1, // ID Sucursal
                 "pasarelaId"          => 1, // ID Pasarela 1 para la tienda
                 "fechaFactura"        => date('Y-m-d'), // fecha de la factura

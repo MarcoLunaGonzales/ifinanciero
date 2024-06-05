@@ -7,7 +7,7 @@
 
     $codigo = $_POST['codigo'];
     // Consulta para obtener el registro principal
-    $sqlDatos = "SELECT codigo, sucursalId, pasarelaId, fechaFactura, nitciCliente, razonSocial, importeTotal, tipoPago, codLibretaDetalle, usuario, idCliente, idIdentificacion, complementoCiCliente, nroTarjeta, CorreoCliente, estado, created_at
+    $sqlDatos = "SELECT codigo, sucursalId, pagoCursoSuscripcionId, pasarelaId, fechaFactura, nitciCliente, razonSocial, importeTotal, tipoPago, codLibretaDetalle, usuario, idCliente, idIdentificacion, complementoCiCliente, nroTarjeta, CorreoCliente, estado, created_at
                 FROM ventas_no_facturadas vnf
                 WHERE vnf.codigo = '$codigo'
                 ORDER BY vnf.codigo DESC LIMIT 1";
@@ -60,6 +60,7 @@
         "sKey"                 => $sKey,
         "accion"               => "NewGenerateInvoice",
         "sucursalId"           => $registroPrincipal['sucursalId'],
+        "pagoCursoSuscripcionId" => $registroPrincipal['pagoCursoSuscripcionId'],
         "pasarelaId"           => $registroPrincipal['pasarelaId'],
         "fechaFactura"         => date('Y-m-d'),
         // "fechaFactura"         => $registroPrincipal['fechaFactura'],
@@ -100,6 +101,85 @@
             $stmtUpdate = $dbh->prepare($sqlUpdate);
             
             if ($stmtUpdate->execute()) {
+                /************************************************************************/
+                /**
+                 * ? GENERA COMPROBANTE
+                 */
+                $importeTotal             = $registroPrincipal['importeTotal'];
+                $concepto_contabilizacion = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA CABECERA
+                $cod_area_solicitud   = 13;//capacitacion
+                $codEmpresa           = 1;
+                $cod_uo_solicitud     = 5;
+                $codAnio              = date('Y');
+                $codMoneda            = 1;
+                $codEstadoComprobante = 1;
+                $tipoComprobante      = 5;//Factura Diferida FDIF
+                $fechaActual          = date("Y-m-d H:i:s");
+                $numeroComprobante    = obtenerCorrelativoComprobante3($tipoComprobante,$codAnio);
+                $codComprobante       = obtenerCodigoComprobante();		
+                $flagSuccess          = insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);
+                // DETALLE
+                $ordenDetalle = 1;
+                $cod_cuenta        = 167; // CUENTA: Otros (Debe: 100%)
+                $monto_debe        = $importeTotal;
+                $monto_haber       = 0;
+                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
+                $ordenDetalle++;
+                $cod_cuenta        = 261; // CUENTA: Impuesto a las Transacciones | gasto (Debe: 3%)
+                $monto_debe        = 0.03 * $importeTotal;
+                $monto_haber       = 0;
+                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
+                $ordenDetalle++;
+                $cod_cuenta        = 142; // CUENTA: Débito Fiscal IVA (Haber: 13%)
+                $monto_debe        = 0;
+                $monto_haber       = 0.13 * $importeTotal;
+                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
+                $ordenDetalle++;
+                $cod_cuenta        = 136; // CUENTA: Impuesto a las Transacciones | pasivo (Haber: 3%)
+                $monto_debe        = 0;
+                $monto_haber       = 0.03 * $importeTotal;
+                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
+                $ordenDetalle++;
+                $cod_cuenta        = 279; // CUENTA: Ingresos por Formación (Haber: 87%)
+                $monto_debe        = 0;
+                $monto_haber       = 0.87 * $importeTotal;
+                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
+                /*************************
+                 * ? SETEAR FACTURAS CURSOS
+                 *************************/
+                $url_ecommerce          = obtenerValorConfiguracion(109);
+                $pagoCursoSuscripcionId = $registroPrincipal['pagoCursoSuscripcionId'];
+                $fecha_hora             = date('Y-m-d H:i:s');
+                $url_ws                 = $url_ecommerce.'tienda/setearFacturasCursos.php';
+                $sw_token               = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIzMDAxMiIsImlkVXN1YXJpbyI6IjMwMDEyIiwiY29ycmVvIjoid2VibWFzdGVyQGNvZS1lamVyY2l0by5jb20uYm8iLCJhdWQiOiJpYm5vcmNhIiwiaWF0IjoxMzU2OTk5NTI0LCJuYmYiOjEzNTcwMDAwMDB9.9VR9tWgtfSi_s9ix8qkZSl1fPYzCExJKMOPii_quXEE";
+                $parametros = array(
+                    "token"                  => $sw_token,
+                    "pagoCursoSuscripcionId" => $pagoCursoSuscripcionId, 
+                    "facturaId"              => $cod_facturaventa,
+                    "app"                    => "FRONTIBNT"
+                );         
+                // ENVIADO - JSON LOCAL
+                $json_enviado = json_encode($parametros);
+                $ch           = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url_ws);
+                curl_setopt($ch, CURLOPT_POST, TRUE);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $json_enviado);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $remote_server_output = json_decode(curl_exec($ch));
+                curl_close ($ch);
+                // RECIBIDO - JSON RESPUESTA
+                $json_respuesta = json_encode($remote_server_output);
+                /************************************************************************/
+                $sqlLog  = "INSERT INTO log_setearfacturascursos(json_enviado, json_respuesta, fecha_hora) 
+                            VALUES ('$json_enviado','$json_respuesta','$fecha_hora')";
+                $stmtLog = $dbh->prepare($sqlLog);
+                $flagSuccess = $stmtLog->execute();
+                /************************************************************************/
                 // Éxito al actualizar el estado
                 echo json_encode([
                     "estado"  => true,

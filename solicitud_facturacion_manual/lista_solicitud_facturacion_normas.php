@@ -117,6 +117,8 @@ $stmt->execute();
                                         <input type="hidden" id="idVentaNormas<?=$iii?>" name="idVentaNormas<?=$iii?>" value="<?=$idVentaNormas?>">
                                         <!-- aqui se captura los items activados -->
                                         <input type="hidden" id="idVentaNormas_a<?=$iii?>" name="idVentaNormas_a<?=$iii?>">
+                                        <!-- aqui se captura el codigo del cliente -->
+                                        <input type="hidden" id="idCliente<?=$iii?>" name="idCliente<?=$iii?>" value="<?=$idCliente?>">
                                         <tr>
                                           <td><?=$iii?></td>
                                           <td class="text-left small"><?=$nombre_oficina?></td>

@@ -136,21 +136,21 @@ $periodoTitle=" Del ".strftime('%d/%m/%Y',strtotime($desde))." al ".strftime('%d
                                     foreach ($cuenta as $cuentai ) {
                                         $nombreCuenta=nameCuenta($cuentai);//nombre de cuenta    
                                         
-                                        $html.='<tr style="background-color:#9F81F7;">                                    
-                                            <td style="display: none;"></td>
-                                            <td style="display: none;"></td>
-                                            <td style="display: none;"></td>
-                                            <td style="display: none;"></td>
-                                            <td style="display: none;"></td>
-                                            <td style="display: none;"></td>
-                                            <td style="display: none;"></td>
-                                            <td class="text-left small" colspan="5">CUENTA</td>
-                                            <td class="text-left small" colspan="5">'.$nombreCuenta.'</td>
-                                            <td style="display: none;"></td>
-                                            <td style="display: none;"></td>
-                                            <td style="display: none;"></td>
+                                        // $html.='<tr style="background-color:#9F81F7;">                                    
+                                        //     <td style="display: none;"></td>
+                                        //     <td style="display: none;"></td>
+                                        //     <td style="display: none;"></td>
+                                        //     <td style="display: none;"></td>
+                                        //     <td style="display: none;"></td>
+                                        //     <td style="display: none;"></td>
+                                        //     <td style="display: none;"></td>
+                                        //     <td class="text-left small" colspan="5">CUENTA</td>
+                                        //     <td class="text-left small" colspan="5">'.$nombreCuenta.'</td>
+                                        //     <td style="display: none;"></td>
+                                        //     <td style="display: none;"></td>
+                                        //     <td style="display: none;"></td>
 
-                                        </tr>'; 
+                                        // </tr>'; 
                                         
                                         $sqlFechaEstadoCuenta="and e.fecha BETWEEN '$desde 00:00:00' and '$hasta 23:59:59'"; 
                                             

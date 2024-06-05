@@ -159,6 +159,18 @@ if($detalle_id_ventas_normas != 0){
 
 
 $detalle_cod_cliente = empty($_POST["idVentaNormas_a".'1']) ? '' : $_POST["idVentaNormas_a".'1'];
+
+
+// Codigo del Cliente
+$ids_clientes = array();
+for ($i=1; $i<=$total_items-1; $i++){
+    if($_POST["idVentaNormas_a".$i]!=''){
+        $idCliente          = $_POST["idCliente".$i];
+        $ids_clientes[$i-1] = $idCliente;
+    }
+}
+$stringClientes = implode(",", $ids_clientes);
+$stringClientes = trim($stringClientes,',');
 ?>
 <script>
   numFilas=<?=$contadorRegistros;?>;
@@ -389,7 +401,16 @@ $detalle_cod_cliente = empty($_POST["idVentaNormas_a".'1']) ? '' : $_POST["idVen
                                     <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContactoNormas(this);" data-live-search="true" >
                                         <option value=""></option>
                                         <?php 
-                                        $queryTipoObjeto = "SELECT * from clientes where cod_estadoreferencial=1 order by nombre";
+                                        $queryTipoObjeto = "SELECT * 
+                                                            FROM clientes 
+                                                            WHERE cod_estadoreferencial = 1 ";
+                                        // Agrega la condición adicional según el valor de $cod_cliente
+                                        if (!empty($cod_cliente)) {
+                                            $queryTipoObjeto .= "AND codigo = $cod_cliente ";
+                                        } else {
+                                            $queryTipoObjeto .= "AND codigo IN ($stringClientes) ";
+                                        }
+                                        $queryTipoObjeto .= " ORDER BY nombre";
                                         $statementObjeto = $dbh->query($queryTipoObjeto);
                                         while ($row = $statementObjeto->fetch()){ ?>
                                             <option <?=($cod_cliente==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$row["nombre"];?></option>

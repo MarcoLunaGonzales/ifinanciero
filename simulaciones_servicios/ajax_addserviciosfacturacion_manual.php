@@ -55,7 +55,9 @@ switch ($cod_area) {
                 
                 $sql = "SELECT IdClaServicio,Descripcion,Codigo 
                     FROM cla_servicios 
-                    WHERE codigo_n2 IN ($codigoAdministrativos) ".(($cod_area == 38 || $cod_area == 39 || $cod_area == 12 || $cod_area == 13) ? (" OR IdArea = '$cod_area'") : "")
+                    WHERE codigo_n2 IN ($codigoAdministrativos) 
+                    OR IdClaServicio = 957".
+                    (($cod_area == 38 || $cod_area == 39 || $cod_area == 12 || $cod_area == 13) ? (" OR IdArea = '$cod_area'") : "")
                     .(($cod_area == 11) ? (" OR (IdArea = '$cod_area' AND IdTipo = 821)") : "")
                     ." AND vigente = 1 AND Aprobado = 1";
 

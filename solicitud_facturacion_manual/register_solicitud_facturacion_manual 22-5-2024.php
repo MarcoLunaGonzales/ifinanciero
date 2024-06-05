@@ -359,29 +359,19 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                         <div class="row">
                             <label class="col-sm-2 col-form-label">Cliente</label>
                             <div class="col-sm-4">
-                                <div class="form-group" >
-                                    <div class="input-group">
-                                        <?php
-                                            $queryCliente = "SELECT codigo, nombre 
-                                                            FROM  clientes
-                                                            WHERE codigo = '$cod_cliente' 
-                                                            LIMIT 1";
-                                            $statementPAgo = $dbh->query($queryCliente);
-                                            $nombre_cliente = '';
-                                            while ($row = $statementPAgo->fetch()){
-                                                $nombre_cliente = $row["nombre"];
-                                            }
-                                            // Determina si el checkIcon debe mostrarse o no
-                                            $checkIconStyle = (!empty($cod_cliente)) ? '' : 'style="display:none;"';
+                                <div class="form-group" >                                                            
+                                    <select name="cod_cliente" id="cod_cliente" class="selectpicker form-control form-control-sm" data-style="btn btn-info"  required="true" onChange="ajaxClienteContacto(this);" data-live-search="true">
+                                        <option value=""></option>
+                                        <?php 
+                                        $queryTipoObjeto = "SELECT codigo,nombre from clientes where cod_estadoreferencial=1 order by nombre";
+                                        $statementObjeto = $dbh->query($queryTipoObjeto);
+                                        while ($row = $statementObjeto->fetch()){ 
+                                            $nombreClienteSelect=$row["nombre"];
+                                            $nombreClienteSelect=substr($nombreClienteSelect, 0, 100);
                                         ?>
-                                        <input id="autocomplete" name="autocomplete" class="form-control" value="<?=$nombre_cliente?>">
-                                        <input type="hidden" id="cod_cliente" name="cod_cliente" required value="<?=$cod_cliente?>">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" id="clienteSuccess">
-                                                <i id="checkIcon" class="fas fa-check text-success" <?=$checkIconStyle;?>></i>
-                                            </span>
-                                        </div>
-                                    </div>
+                                            <option <?=($cod_cliente==$row["codigo"])?"selected":"";?> value="<?=$row["codigo"];?>"><?=$nombreClienteSelect;?></option>
+                                        <?php } ?>
+                                    </select>  
                                 </div>
                             </div>
                             <label class="col-sm-2 col-form-label">Persona Contacto</label>
@@ -529,8 +519,7 @@ $cod_defecto_cod_tipo_credito=obtenerValorConfiguracion(48);
                                             <?php 
                                             $iii=1;                                            
                                             if ($cod_facturacion > 0){                                                
-                                                $queryPr="SELECT d.codigo,d.cod_claservicio,(select cs.Descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as nombre_serv,d.cantidad,d.precio as monto,tipo_item from solicitudes_facturaciondetalle d 
-                                                where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
+                                                $queryPr="SELECT d.codigo,d.cod_claservicio,(select cs.Descripcion from cla_servicios cs where cs.IdClaServicio=d.cod_claservicio) as nombre_serv,d.cantidad,d.precio as monto,tipo_item from solicitudes_facturaciondetalle d where d.tipo_item=2 and d.cod_solicitudfacturacion=$cod_facturacion";
                                             }
                                            // echo $queryPr;
                                             $stmt = $dbh->prepare($queryPr);
@@ -873,96 +862,3 @@ function valida(f) {
         ?><script>itemUnidades_facturacion_aux.push(detalle_unidades);</script><?php                    
     }
 ?>
-
-
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> -->
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<style>
-    /* .ui-autocomplete {
-        z-index: 1050;
-    } */
-    .ui-autocomplete {
-        max-height: 200px; /* Establece la altura máxima de la lista */
-        overflow-y: auto; /* Habilita el scroll vertical */
-        overflow-x: hidden; /* Oculta el scroll horizontal, si es necesario */
-        border: 1px solid #ccc; /* Añade un borde suave */
-        background-color: #fff; /* Color de fondo */
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
-        z-index: 1050;
-    }
-
-    .ui-menu-item {
-        padding: 8px 12px; /* Ajusta el relleno de los elementos de la lista */
-        color: #333; /* Color del texto */
-        font-size: 14px; /* Tamaño del texto */
-    }
-
-    .ui-menu-item:hover {
-        background-color: #f0f0f0; /* Cambia el color de fondo al hacer hover */
-    }
-    
-    .input-group .form-control-feedback {
-        position: absolute;
-        right: 10px;
-        top: calc(50% - 0.5em);
-    }
-    .ui-autocomplete {
-        max-height: 300px;
-        max-width: 350px;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-</style>
-
-<script>
-$(function() {
-    $("#autocomplete").autocomplete({
-        source: function(request, response) {
-            $.ajax({
-                url: "clienteAutocomplete/ajaxBuscarCliente.php",
-                type: "GET",
-                dataType: "json",
-                data: {
-                    cliente_nombre: request.term
-                },
-                success: function(resp) {
-                    // console.log(response.data)
-                    response(resp.data);
-                }
-            });
-        },
-        autoFocus: true,
-        minLength: 1,
-        select: function(event, ui) {
-            // Lógica de selección
-            setSelectedValue(ui.item);
-            return false;
-        },
-        change: function(event, ui) {
-            if (!ui.item) {
-                // Clear the hidden input
-                $('#cod_cliente').val('');
-                // Hide the check icon
-                $('#checkIcon').hide();
-            }
-        }
-    }).autocomplete("instance")._renderItem = function(ul, item) {
-        return $("<li>")
-            .append("<div>" + item.label + "</div>")
-            .appendTo(ul);
-    };
-
-    $('#autocomplete').on('input', function() {
-        $('#checkIcon').hide();
-    });
-
-    // Función para establecer el valor seleccionado
-    function setSelectedValue(item) {
-        $('#autocomplete').val(item.label);
-        $('#cod_cliente').val(item.value);
-        ajaxClienteContactoCustom(item.value);
-        $('#checkIcon').show();
-    }
-});
-</script>
