@@ -457,7 +457,9 @@ $tituloImporte="";
                   $stmtEstado = $dbh->prepare("SELECT e.*,c.Descripcion
                          FROM ibnorca.estadoobjeto e 
                          join ibnorca.clasificador c on c.idClasificador=e.idEstado
-                         where e.idtipoobjeto=2708 and e.idobjeto=$codigoGeneral ORDER BY e.fechaestado;");
+                         where e.idtipoobjeto=2708 and e.idobjeto=$codigoGeneral 
+                         GROUP BY e.IdTipoObjeto, e.IdEstado, e.idResponsable, e.idObjeto, e.idPersonaOficina, c.Descripcion
+                         ORDER BY e.fechaestado;");
                   $stmtEstado->execute();
                   $stmtEstado->bindColumn('IdEstadoObjeto', $idEstadoObjetoX);
                   $stmtEstado->bindColumn('IdEstado', $idEstadoX);
