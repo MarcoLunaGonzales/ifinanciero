@@ -92,7 +92,7 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
             /**
              * ? GENERA COMPROBANTE
              */
-            $concepto_contabilizacion = ''; // ? GLOSA CABECERA
+            $concepto_contabilizacion = 'GLOSA A DEFINIR POR DNAF'; // ? GLOSA CABECERA
 	    	$cod_area_solicitud   = 13;//capacitacion
             $codEmpresa           = 1;
             $cod_uo_solicitud     = 5;
@@ -109,19 +109,19 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
             $cod_cuenta        = 361; // CUENTA: Otras Cuentas por Cobrar (Debe: 97,5%)
             $monto_debe        = 0.975 * $importeTotal;
             $monto_haber       = 0;
-            $descripcion_glosa = ""; // ? GLOSA DETALLE
+            $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF'; // ? GLOSA DETALLE
             $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
             $ordenDetalle++;
             $cod_cuenta        = 361; // CUENTA: Otras Cuentas por Cobrar (Debe: 2,5%)
             $monto_debe        = 0.025 * $importeTotal;
             $monto_haber       = 0;
-            $descripcion_glosa = ""; // ? GLOSA DETALLE
+            $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF'; // ? GLOSA DETALLE
             $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
             $ordenDetalle++;
             $cod_cuenta        = 167; // CUENTA: Otros (Haber: 100%)
             $monto_debe        = 0;
             $monto_haber       = $importeTotal;
-            $descripcion_glosa = ""; // ? GLOSA DETALLE
+            $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF'; // ? GLOSA DETALLE
             $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
             /************************************************************************/
             return false; // No permite Factura | Curso en Programado/Planificado, Suspendido

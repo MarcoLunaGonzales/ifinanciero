@@ -47,7 +47,7 @@ ini_set('display_errors', 1);
                         </h4>                    
                     </div>
                     <div class="card-body" id="data_solicitudes_facturacion">
-                        <table class="table" id="tablePaginator50NoFinder">
+                        <table class="table" id="tablePaginator">
                             <thead>
                                 <tr>  
                                     <th width="10%"><small>#</small></th>

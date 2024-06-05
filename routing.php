@@ -2122,6 +2122,12 @@
 		if($_GET['opcion']=='eliminarPersonalExcepcion') {
 			require_once('planillas/deleteRetroactivoExcepcion.php'); //ok
 		}
+
+		
+		// Reporte Libelula
+		if($_GET['opcion']=='reporteLibelula') {
+			require_once('libelula/list.php');
+		}
 	}else{
 		//require("paginaprincipal.php");
 	}

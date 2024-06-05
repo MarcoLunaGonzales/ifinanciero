@@ -106,7 +106,7 @@
                  * ? GENERA COMPROBANTE
                  */
                 $importeTotal             = $registroPrincipal['importeTotal'];
-                $concepto_contabilizacion = ''; // ? GLOSA CABECERA
+                $concepto_contabilizacion = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA CABECERA
                 $cod_area_solicitud   = 13;//capacitacion
                 $codEmpresa           = 1;
                 $cod_uo_solicitud     = 5;
@@ -123,31 +123,31 @@
                 $cod_cuenta        = 167; // CUENTA: Otros (Debe: 100%)
                 $monto_debe        = $importeTotal;
                 $monto_haber       = 0;
-                $descripcion_glosa = ""; // ? GLOSA DETALLE
+                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 261; // CUENTA: Impuesto a las Transacciones | gasto (Debe: 3%)
                 $monto_debe        = 0.03 * $importeTotal;
                 $monto_haber       = 0;
-                $descripcion_glosa = ""; // ? GLOSA DETALLE
+                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 142; // CUENTA: Débito Fiscal IVA (Haber: 13%)
                 $monto_debe        = 0;
                 $monto_haber       = 0.13 * $importeTotal;
-                $descripcion_glosa = ""; // ? GLOSA DETALLE
+                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 136; // CUENTA: Impuesto a las Transacciones | pasivo (Haber: 3%)
                 $monto_debe        = 0;
                 $monto_haber       = 0.03 * $importeTotal;
-                $descripcion_glosa = ""; // ? GLOSA DETALLE
+                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 279; // CUENTA: Ingresos por Formación (Haber: 87%)
                 $monto_debe        = 0;
                 $monto_haber       = 0.87 * $importeTotal;
-                $descripcion_glosa = ""; // ? GLOSA DETALLE
+                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 /*************************
                  * ? SETEAR FACTURAS CURSOS
