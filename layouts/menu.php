@@ -656,9 +656,9 @@ if($menuModulo==0){
                   </a>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="?opcion=listaFacturasPendiente">
-                    <span class="sidebar-mini"> SPF </span>
-                    <span class="sidebar-normal"> Solicitudes Pendientes por Facturar</span>
+                  <a class="nav-link" href="?opcion=listaFacturasDiferidas">
+                    <span class="sidebar-mini"> FD </span>
+                    <span class="sidebar-normal"> Facturas Diferidas</span>
                   </a>
                 </li>
                 

@@ -206,7 +206,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             foreach ($items as $valor) {
                                 $detalle_moduloId = $valor['moduloId'];
                                 if ($detalle_moduloId != null && $detalle_moduloId != '' && $detalle_moduloId != 0) {
-                                    /**
+                                    /** 
                                      * * Verificación de estado de Curso
                                      */
                                     $pagoCursoSuscripcionId = $datos['pagoCursoSuscripcionId'] ?? '';

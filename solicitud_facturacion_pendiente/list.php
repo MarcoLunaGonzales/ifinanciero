@@ -43,7 +43,7 @@ ini_set('display_errors', 1);
                         <div class="card-icon">
                             <i class="material-icons">polymer</i>
                         </div>
-                        <h4 class="card-title"><b>Solicitudes Pendientes de Facturación</b>
+                        <h4 class="card-title"><b>Solicitudes de Facturas Diferidas</b>
                         </h4>                    
                     </div>
                     <div class="card-body" id="data_solicitudes_facturacion">
