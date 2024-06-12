@@ -445,5 +445,20 @@ function obtenerTotalAFPRetroactivos($gestion, $mes){
 
 }
 
+function obtenerMontoBonoAcademicoMes($gestion, $mes, $personal){
+  $dbh = new Conexion();
+  //PISAMOS EL CODIGO DEL BONO ACADEMICO = 8
+  $sql="SELECT bd.monto as monto from bonos b, bonos_personal_mes bd
+      where b.codigo=bd.cod_bono and b.codigo=8 and bd.cod_personal='$personal' and b.cod_estadoreferencial=1 
+      and bd.cod_estadoreferencial=1 and bd.cod_gestion='$gestion' and bd.cod_mes='$mes' ";
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute();
+  $monto=0;
+  if($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $monto=$row['monto'];
+  }
+  return($monto);
+}
+
 
 ?>

@@ -3,6 +3,7 @@ require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../rrhh/configModule.php';
 require_once '../functionsGeneral.php';
+require_once '../functionsPlanillas.php';
 
 $result_x=0;
 $dbh = new Conexion();
@@ -69,7 +70,7 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 	//============select del personal
 	$sql="SELECT 1 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_contr as ing_planilla,p.cuenta_bancaria,p.cod_area,p.cod_unidadorganizacional,a.nombre as area,p.paterno,'' as retiro_planilla
 	from personal p join areas a on p.cod_area=a.codigo
-	where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1 and p.ing_contr <= '$fecha_final'
+	where p.cod_estadoreferencial=1 and p.cod_estadopersonal=1 and p.ing_contr <= '$fecha_final' 
 	UNION
  	select 2 as orden,p.identificacion,p.codigo,p.haber_basico,p.haber_basico_anterior,p.cod_tipoafp,p.ing_contr as ing_planilla,p.cuenta_bancaria,p.cod_area,p.cod_unidadorganizacional,'PERSONAL RETIRADO' as area,p.paterno,pr.fecha_retiro as retiro_planilla
 	from personal p join personal_retiros pr on p.codigo=pr.cod_personal 
@@ -108,37 +109,24 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 			$haber_basico_anterior=$haber_basico_nuevo;
 		}
 
-		/*AQUI TEMPORAL NUEVO HABER BASICO 2023 SOLO VALIDO PARA ESA GESTION*/
-		if($cod_personal==93){
-			$haber_basico_nuevo=9207.4;
-		}
-		if($cod_personal==96){
-			$haber_basico_nuevo=4359.25;
-		}
-		if($cod_personal==195){
-			$haber_basico_nuevo=4370.91;
-		}
-		if($cod_personal==227){
-			$haber_basico_nuevo=4359.24;
-		}
-		if($cod_personal==19947){
-			$haber_basico_nuevo=4774.05;
-		}
-		if($cod_personal==33355){
-			$haber_basico_nuevo=2652.25;
-		}
-		/*FIN CORRECCION MANUAL RETROACTIVOS*/
-
-
 		$datos_planilla1=explode("@@@", obtenerdatos_planilla($cod_personal,$cod_planilla_1));
 		$datos_planilla2=explode("@@@", obtenerdatos_planilla($cod_personal,$cod_planilla_2));
 		$datos_planilla3=explode("@@@", obtenerdatos_planilla($cod_personal,$cod_planilla_3));
 		$datos_planilla4=explode("@@@", obtenerdatos_planilla($cod_personal,$cod_planilla_4));
 		
+		// var_dump($datos_planilla1);
+		// echo "<br><br>";
+		// var_dump($datos_planilla2);
+		// echo "<br><br>";
+		// var_dump($datos_planilla3);
+		// echo "<br><br>";
+		// var_dump($datos_planilla4);
+		// echo "<br><br>";
+
 		$haber_basico1=$datos_planilla1[0];
 		$haber_basico2=$datos_planilla2[0];
 		$haber_basico3=$datos_planilla3[0];
-		$haber_basico4=$datos_planilla4[0];
+		$haber_basico4=$datos_planilla4[0];			
 
 		$bono_antiguedad1=$datos_planilla1[1];
 		$bono_antiguedad2=$datos_planilla2[1];
@@ -166,38 +154,52 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$bonoacademico3_nuevo=0;
 		$bonoacademico4_nuevo=0;
 
-		if($por_bonoacademico1>0){
+		/*AQUI VERIFICAMOS SI EN EL MES EL PERSONAL TIENE EL BONO ACADEMICO DESDE LA TABLA DE BONOS*/
+		$banderaBonoAcademico1=0;
+		$banderaBonoAcademico2=0;
+		$banderaBonoAcademico3=0;
+		$banderaBonoAcademico4=0;
+		$banderaBonoAcademico1=obtenerMontoBonoAcademicoMes($cod_gestion_x, 1, $cod_personal);
+		$banderaBonoAcademico2=obtenerMontoBonoAcademicoMes($cod_gestion_x, 2, $cod_personal);
+		$banderaBonoAcademico3=obtenerMontoBonoAcademicoMes($cod_gestion_x, 3, $cod_personal);
+		$banderaBonoAcademico4=obtenerMontoBonoAcademicoMes($cod_gestion_x, 4, $cod_personal);
+		
+		//echo $cod_personal." ".$banderaBonoAcademico1." ".$banderaBonoAcademico2." ".$banderaBonoAcademico4." ".$banderaBonoAcademico4."<br>";
+		
+
+		if($por_bonoacademico1>0 && $banderaBonoAcademico1>0){
 			$bonoacademico1_ant=$por_bonoacademico1*$minimo_salarial_anterior/100;
 			$bonoacademico1_nuevo=$por_bonoacademico1*$minimo_salarial/100;
 			//echo "************ $identificacion $bonoacademico1_ant $bonoacademico1_nuevo <br>";
 		}
-		if($por_bonoacademico2>0){
+		if($por_bonoacademico2>0 && $banderaBonoAcademico2>0){
 			$bonoacademico2_ant=$por_bonoacademico2*$minimo_salarial_anterior/100;
 			$bonoacademico2_nuevo=$por_bonoacademico2*$minimo_salarial/100;
 			//echo "$bonoacademico2_ant $bonoacademico2_nuevo <br>";
 		}
-		if($por_bonoacademico3>0){
+		if($por_bonoacademico3>0 && $banderaBonoAcademico3>0){
 			$bonoacademico3_ant=$por_bonoacademico3*$minimo_salarial_anterior/100;
 			$bonoacademico3_nuevo=$por_bonoacademico3*$minimo_salarial/100;
 			//echo "$bonoacademico3_ant $bonoacademico3_nuevo <br>";
 		}
-		if($por_bonoacademico4>0){
+		if($por_bonoacademico4>0 && $banderaBonoAcademico4>0){
 			$bonoacademico4_ant=$por_bonoacademico4*$minimo_salarial_anterior/100;
 			$bonoacademico4_nuevo=$por_bonoacademico4*$minimo_salarial/100;		
 			//echo "$bonoacademico4_ant $bonoacademico4_nuevo <br>";
 		}		
 		//* fin bono acade
 
+
 		$totalGanadoMes1_ant=$haber_basico1+$bono_antiguedad1+$bonoacademico1_ant;
 		$totalGanadoMes2_ant=$haber_basico2+$bono_antiguedad2+$bonoacademico2_ant;
 		$totalGanadoMes3_ant=$haber_basico3+$bono_antiguedad3+$bonoacademico3_ant;
 		$totalGanadoMes4_ant=$haber_basico4+$bono_antiguedad4+$bonoacademico4_ant;
 
-
 		$retroactivo_enero=0;
 		$retroactivo_febrero=0;
 		$retroactivo_marzo=0;
 		$retroactivo_abril=0;
+
 		$antiguedad_enero=0;
 		$antiguedad_febrero=0;
 		$antiguedad_marzo=0;
@@ -215,58 +217,196 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 
 		//echo "ene: ".$bono_antiguedad_nuevo_enero." feb: ".$bono_antiguedad_nuevo_febrero." mar: ".$bono_antiguedad_nuevo_marzo." abril: ".$bono_antiguedad_nuevo_abril;
 
+
+		/************************************************************************************************/
+		/********Revisamos si el personal esta en excepciones (no se le calculal el retroactivo)*********/
+		/************************************************************************************************/
+		$sqlVerificaExcepcion="SELECT p.haber_basico, p.bono_antiguedad, p.otros_bonos
+		 	FROM planillas_retroactivos_excepciones p where 
+			p.cod_planilla='$cod_planilla' and p.cod_personal='$cod_personal'";
+		$stmtVerificacionExcepcion = $dbh->prepare($sqlVerificaExcepcion);
+		$stmtVerificacionExcepcion->execute();
+
+		$banderaPersonalExcepcion=0;
+		$haberBasicoExcepcion=0;
+		$bonoAntiguedadExcepcion=0;
+		$otrosBonosExcepcion=0;
+		if($rowVerificacionExcepcion = $stmtVerificacionExcepcion->fetch()) {
+			$haberBasicoExcepcion=$rowVerificacionExcepcion['haber_basico'];
+			$bonoAntiguedadExcepcion=$rowVerificacionExcepcion['bono_antiguedad'];
+			$otrosBonosExcepcion=$rowVerificacionExcepcion['otros_bonos'];
+			$banderaPersonalExcepcion=1;//CUANDO ENTRA ACTIVAMOS LA BANDERA
+		}
+		/************************************************************************************************/
+		/******** Fin Excepciones al calculo de incrementos *********/
+		/************************************************************************************************/	
+
+
+
 		if($haber_basico1>0){
-			$haber_basico_nuevo1=$haber_basico_nuevo*$dias_trabajados1/$dias_del_mes;
-			$retroactivo_enero=$haber_basico_nuevo1-$haber_basico1;
-			$antiguedad_enero=$bono_antiguedad_nuevo_enero-$bono_antiguedad1;
-			$bonoacademico_enero=$bonoacademico1_nuevo-$bonoacademico1_ant;//* bono academ
+			$haber_basico_nuevo1=0;
+			$retroactivo_enero=0;
+			$antiguedad_enero=0;
+			$bonoacademico_enero=0;
+
+			if($banderaPersonalExcepcion==1 && $haberBasicoExcepcion==1){
+				$haber_basico_nuevo1=0;
+			}else{
+				$haber_basico_nuevo1=$haber_basico_nuevo*$dias_trabajados1/$dias_del_mes;
+				$retroactivo_enero=$haber_basico_nuevo1-$haber_basico1;
+			}
+
+			if($banderaPersonalExcepcion==1 && $bonoAntiguedadExcepcion==1){
+				$bono_antiguedad_nuevo_enero=0;
+				$antiguedad_enero=0;
+			}else{
+				$antiguedad_enero=$bono_antiguedad_nuevo_enero-$bono_antiguedad1;
+			}
+			
+			if($banderaPersonalExcepcion==1 && $otrosBonosExcepcion==1){
+				$bonoacademico1_nuevo=0;
+				$bonoacademico_enero=0;
+			}else{
+				$bonoacademico_enero=$bonoacademico1_nuevo-$bonoacademico1_ant;//* bono academ
+			}
 
 			$totalGanadoMes1_nuevo=$haber_basico_nuevo1+$bono_antiguedad_nuevo_enero+$bonoacademico1_nuevo;
-			
-			$a_solidario_13_25_35_enero_nuevo = obtenerAporteSolidario13000($totalGanadoMes1_nuevo)+obtenerAporteSolidario25000($totalGanadoMes1_nuevo)+obtenerAporteSolidario35000($totalGanadoMes1_nuevo);
 
+			//ESTA VARIABLE SOLO ES PARA LOS APORTES SOLIDARIOS
+			$haberBasicoNuevoEneroX=$haber_basico_nuevo*$dias_trabajados1/$dias_del_mes;
+			$totalGanadoEneroSoloParaSolidarios=$haberBasicoNuevoEneroX+$bono_antiguedad_nuevo_enero+$bonoacademico1_nuevo;
+			//FIN SOLO PARA APORTES
+
+			if($cod_personal==176){
+				$a_solidario_13_25_35_enero_nuevo = 0;
+			}else{
+				$a_solidario_13_25_35_enero_nuevo = obtenerAporteSolidario13000($totalGanadoEneroSoloParaSolidarios)+obtenerAporteSolidario25000($totalGanadoEneroSoloParaSolidarios)+obtenerAporteSolidario35000($totalGanadoEneroSoloParaSolidarios);
+			}
 			$a_solidario_13_25_35_enero_ant = obtenerAporteSolidario13000($totalGanadoMes1_ant)+obtenerAporteSolidario25000($totalGanadoMes1_ant)+obtenerAporteSolidario35000($totalGanadoMes1_ant);
-
 			$a_solidario_13_25_35_enero=$a_solidario_13_25_35_enero_nuevo-$a_solidario_13_25_35_enero_ant;
 
+			// if($cod_personal==176){
+			// 	echo "solidario ant: ".$a_solidario_13_25_35_enero_ant." nuevo: ".$a_solidario_13_25_35_enero_nuevo;
+			// }
 		}
+
 		if($haber_basico2>0){
-			$haber_basico_nuevo2=$haber_basico_nuevo*$dias_trabajados2/$dias_del_mes;
-			$retroactivo_febrero=$haber_basico_nuevo2-$haber_basico2;
-			$antiguedad_febrero=$bono_antiguedad_nuevo_febrero-$bono_antiguedad2;
-			$bonoacademico_febrero=$bonoacademico2_nuevo-$bonoacademico2_ant;//* bono academ
+			$haber_basico_nuevo2=0;
+			$retroactivo_febrero=0;
+			$antiguedad_febrero=0;
+			$bonoacademico_febrero=0;
+
+			if($banderaPersonalExcepcion==1 && $haberBasicoExcepcion==1){
+				$haber_basico_nuevo2=0;
+				$retroactivo_febrero=0;
+			}else{
+				$haber_basico_nuevo2=$haber_basico_nuevo*$dias_trabajados2/$dias_del_mes;
+				$retroactivo_febrero=$haber_basico_nuevo2-$haber_basico2;
+			}
+
+			if($banderaPersonalExcepcion==1 && $bonoAntiguedadExcepcion==1){
+				$antiguedad_febrero=0;
+				$bono_antiguedad_nuevo_febrero=0;
+			}else{
+				$antiguedad_febrero=$bono_antiguedad_nuevo_febrero-$bono_antiguedad2;			
+			}
+
+			if($banderaPersonalExcepcion==1 && $otrosBonosExcepcion==1){
+				$bonoacademico_febrero=0;//* bono academ
+				$bonoacademico2_nuevo=0;
+			}else{
+				$bonoacademico_febrero=$bonoacademico2_nuevo-$bonoacademico2_ant;//* bono academ			
+			}
+
+			//ESTA VARIABLE SOLO ES PARA LOS APORTES SOLIDARIOS
+			$haberBasicoNuevoFebreroX=$haber_basico_nuevo*$dias_trabajados2/$dias_del_mes;
+			$totalGanadoFebreroSoloParaSolidarios=$haberBasicoNuevoFebreroX+$bono_antiguedad_nuevo_febrero+$bonoacademico2_nuevo;
+			//FIN SOLO PARA APORTES
 
 			$totalGanadoMes2_nuevo=$haber_basico_nuevo2+$bono_antiguedad_nuevo_febrero+$bonoacademico2_nuevo;
-
-			$a_solidario_13_25_35_febrero_nuevo = obtenerAporteSolidario13000($totalGanadoMes2_nuevo)+obtenerAporteSolidario25000($totalGanadoMes2_nuevo)+obtenerAporteSolidario35000($totalGanadoMes2_nuevo);
+			$a_solidario_13_25_35_febrero_nuevo = obtenerAporteSolidario13000($totalGanadoFebreroSoloParaSolidarios)+obtenerAporteSolidario25000($totalGanadoFebreroSoloParaSolidarios)+obtenerAporteSolidario35000($totalGanadoFebreroSoloParaSolidarios);
 
 			$a_solidario_13_25_35_febrero_ant = obtenerAporteSolidario13000($totalGanadoMes2_ant)+obtenerAporteSolidario25000($totalGanadoMes2_ant)+obtenerAporteSolidario35000($totalGanadoMes2_ant);
 
 			$a_solidario_13_25_35_febrero=$a_solidario_13_25_35_febrero_nuevo-$a_solidario_13_25_35_febrero_ant;
 		}
 		if($haber_basico3>0){
-			$haber_basico_nuevo3=$haber_basico_nuevo*$dias_trabajados3/$dias_del_mes;
-			$retroactivo_marzo=$haber_basico_nuevo3-$haber_basico3;
-			$antiguedad_marzo=$bono_antiguedad_nuevo_marzo-$bono_antiguedad3;
-			$bonoacademico_marzo=$bonoacademico3_nuevo-$bonoacademico3_ant;//* bono academ
+			$haber_basico_nuevo3=0;
+			$retroactivo_marzo=0;
+			$antiguedad_marzo=0;
+			$bonoacademico_marzo=0;//* bono academ
+
+			if($banderaPersonalExcepcion==1 && $haberBasicoExcepcion==1){
+				$haber_basico_nuevo3=0;
+				$retroactivo_marzo=0;
+			}else{
+				$haber_basico_nuevo3=$haber_basico_nuevo*$dias_trabajados3/$dias_del_mes;
+				$retroactivo_marzo=$haber_basico_nuevo3-$haber_basico3;
+			}
+
+			if($banderaPersonalExcepcion==1 && $bonoAntiguedadExcepcion==1){
+				$antiguedad_marzo=0;
+				$bono_antiguedad_nuevo_marzo=0;
+			}else{
+				$antiguedad_marzo=$bono_antiguedad_nuevo_marzo-$bono_antiguedad3;
+			}
+
+			if($banderaPersonalExcepcion==1 && $otrosBonosExcepcion==1){
+				$bonoacademico_marzo=0;//* bono academ
+				$bonoacademico3_nuevo=0;
+			}else{
+				$bonoacademico_marzo=$bonoacademico3_nuevo-$bonoacademico3_ant;//* bono academ
+			}
+
+			//ESTA VARIABLE SOLO ES PARA LOS APORTES SOLIDARIOS
+			$haberBasicoNuevoMarzoX=$haber_basico_nuevo*$dias_trabajados3/$dias_del_mes;
+			$totalGanadoMarzoSoloParaSolidarios=$haberBasicoNuevoMarzoX+$bono_antiguedad_nuevo_marzo+$bonoacademico3_nuevo;
+			//FIN SOLO PARA APORTES
 
 			$totalGanadoMes3_nuevo=$haber_basico_nuevo3+$bono_antiguedad_nuevo_marzo+$bonoacademico3_nuevo;
-
-			$a_solidario_13_25_35_marzo_nuevo = obtenerAporteSolidario13000($totalGanadoMes3_nuevo)+obtenerAporteSolidario25000($totalGanadoMes3_nuevo)+obtenerAporteSolidario35000($totalGanadoMes3_nuevo);
+			$a_solidario_13_25_35_marzo_nuevo = obtenerAporteSolidario13000($totalGanadoMarzoSoloParaSolidarios)+obtenerAporteSolidario25000($totalGanadoMarzoSoloParaSolidarios)+obtenerAporteSolidario35000($totalGanadoMarzoSoloParaSolidarios);
 
 			$a_solidario_13_25_35_marzo_ant = obtenerAporteSolidario13000($totalGanadoMes3_ant)+obtenerAporteSolidario25000($totalGanadoMes3_ant)+obtenerAporteSolidario35000($totalGanadoMes3_ant);
 
 			$a_solidario_13_25_35_marzo=$a_solidario_13_25_35_marzo_nuevo-$a_solidario_13_25_35_marzo_ant;
+
 		}
 		if($haber_basico4>0){
-			$haber_basico_nuevo4=$haber_basico_nuevo*$dias_trabajados4/$dias_del_mes;
-			$retroactivo_abril=$haber_basico_nuevo4-$haber_basico4;
-			$antiguedad_abril=$bono_antiguedad_nuevo_abril-$bono_antiguedad4;
-			$bonoacademico_abril=$bonoacademico4_nuevo-$bonoacademico4_ant;//* bono academ
+			$haber_basico_nuevo4=0;
+			$retroactivo_abril=0;
+			$antiguedad_abril=0;
+			$bonoacademico_abril=0;//* bono academ
+
+			if($banderaPersonalExcepcion==1 && $haberBasicoExcepcion==1){
+				$haber_basico_nuevo4=0;
+				$retroactivo_abril=0;
+			}else{
+				$haber_basico_nuevo4=$haber_basico_nuevo*$dias_trabajados4/$dias_del_mes;
+				$retroactivo_abril=$haber_basico_nuevo4-$haber_basico4;
+			}
+
+			if($banderaPersonalExcepcion==1 && $bonoAntiguedadExcepcion==1){
+				$antiguedad_abril=0;
+				$bono_antiguedad_nuevo_abril=0;
+			}else{
+				$antiguedad_abril=$bono_antiguedad_nuevo_abril-$bono_antiguedad4;
+			}
+
+			if($banderaPersonalExcepcion==1 && $otrosBonosExcepcion==1){
+				$bonoacademico_abril=0;//* bono academ
+				$bonoacademico4_nuevo=0;
+			}else{
+				$bonoacademico_abril=$bonoacademico4_nuevo-$bonoacademico4_ant;//* bono academ
+			}
+
+			//ESTA VARIABLE SOLO ES PARA LOS APORTES SOLIDARIOS
+			$haberBasicoNuevoAbrilX=$haber_basico_nuevo*$dias_trabajados4/$dias_del_mes;
+			$totalGanadoAbrilSoloParaSolidarios=$haberBasicoNuevoAbrilX+$bono_antiguedad_nuevo_abril+$bonoacademico4_nuevo;
+			//FIN SOLO PARA APORTES
+
 
 			$totalGanadoMes4_nuevo=$haber_basico_nuevo4+$bono_antiguedad_nuevo_abril+$bonoacademico4_nuevo;
-
-			$a_solidario_13_25_35_abril_nuevo = obtenerAporteSolidario13000($totalGanadoMes4_nuevo)+obtenerAporteSolidario25000($totalGanadoMes4_nuevo)+obtenerAporteSolidario35000($totalGanadoMes4_nuevo);
+			$a_solidario_13_25_35_abril_nuevo = obtenerAporteSolidario13000($totalGanadoAbrilSoloParaSolidarios)+obtenerAporteSolidario25000($totalGanadoAbrilSoloParaSolidarios)+obtenerAporteSolidario35000($totalGanadoAbrilSoloParaSolidarios);
 			
 			$a_solidario_13_25_35_abril_ant = obtenerAporteSolidario13000($totalGanadoMes4_ant)+obtenerAporteSolidario25000($totalGanadoMes4_ant)+obtenerAporteSolidario35000($totalGanadoMes4_ant);
 
@@ -274,6 +414,7 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		}
 		$bono_antiguedad_anterior=$bono_antiguedad4;
 		$bono_antiguedad_nuevo=$bono_antiguedad_nuevo_abril;
+
 
 		// $total_ganado=$retroactivo_enero+$retroactivo_febrero+$retroactivo_marzo+$retroactivo_abril+$antiguedad_enero+$antiguedad_febrero+$antiguedad_marzo+$antiguedad_abril;
 		$total_ganado=$retroactivo_enero+$retroactivo_febrero+$retroactivo_marzo+$retroactivo_abril+$antiguedad_enero+$antiguedad_febrero+$antiguedad_marzo+$antiguedad_abril+$bonoacademico_enero+$bonoacademico_febrero+$bonoacademico_marzo+$bonoacademico_abril;//* bono academ
@@ -290,15 +431,19 @@ if($sw==2 || $sw==1){//procesar o reprocesar planilla
 		$total_descuentos=$ap_vejez+$riesgo_prof+$com_afp+$aporte_sol+$a_solidario_13_25_35_enero+$a_solidario_13_25_35_febrero+$a_solidario_13_25_35_marzo+$a_solidario_13_25_35_abril;
 		$liquido_pagable=$total_ganado-$total_descuentos;
 
+		
 		// if($por_bonoacademico1>0){
 		// 	echo $cod_personal."*".$por_bonoacademico1."*Ant:".$bonoacademico1_ant."*nuevo: ".$bonoacademico1_nuevo."*TOTAL: ".$bonoacademico_enero."<br>";
 		// }
 		//==== insert de panillas de personal mes
-		$sqlInsertPlanillas="INSERT into planillas_retroactivos_detalle(cod_planilla,cod_personal,cod_area,haber_basico_anterior,haber_basico_nuevo,bono_antiguedad_anterior,bono_antiguedad_nuevo,retroactivo_enero,retroactivo_febrero,retroactivo_marzo,retroactivo_abril,antiguedad_enero,antiguedad_febrero,antiguedad_marzo,antiguedad_abril,total_ganado,ap_vejez,riesgo_prof,com_afp,aporte_sol,total_descuentos,liquido_pagable,correlativo_planilla,ing_planilla,retiro_planilla,dias_trabajados_enero,dias_trabajados_febrero,dias_trabajados_marzo,dias_trabajados_abril,cuenta_habilitada,bonoacademico_enero,bonoacademico_febrero,bonoacademico_marzo,bonoacademico_abril,a_solidario_13_25_35_enero,a_solidario_13_25_35_febrero,a_solidario_13_25_35_marzo,a_solidario_13_25_35_abril)
-		 values('$cod_planilla','$cod_personal','$cod_area','$haber_basico_anterior','$haber_basico_nuevo','$bono_antiguedad_anterior','$bono_antiguedad_nuevo','$retroactivo_enero','$retroactivo_febrero','$retroactivo_marzo','$retroactivo_abril','$antiguedad_enero','$antiguedad_febrero','$antiguedad_marzo','$antiguedad_abril','$total_ganado','$ap_vejez','$riesgo_prof','$com_afp','$aporte_sol','$total_descuentos','$liquido_pagable','$index','$ing_planilla','$retiro_planilla','$dias_trabajados1','$dias_trabajados2','$dias_trabajados3','$dias_trabajados4','$cuenta_habilitada','$bonoacademico_enero','$bonoacademico_febrero','$bonoacademico_marzo','$bonoacademico_abril','$a_solidario_13_25_35_enero','$a_solidario_13_25_35_febrero','$a_solidario_13_25_35_marzo','$a_solidario_13_25_35_abril')";
+		
+
+		$sqlInsertPlanillas = "INSERT into planillas_retroactivos_detalle(cod_planilla,cod_personal,cod_area,haber_basico_anterior,haber_basico_nuevo,bono_antiguedad_anterior,bono_antiguedad_nuevo,retroactivo_enero,retroactivo_febrero,retroactivo_marzo,retroactivo_abril,antiguedad_enero,antiguedad_febrero,antiguedad_marzo,antiguedad_abril,total_ganado,ap_vejez,riesgo_prof,com_afp,aporte_sol,total_descuentos,liquido_pagable,correlativo_planilla,ing_planilla,retiro_planilla,dias_trabajados_enero,dias_trabajados_febrero,dias_trabajados_marzo,dias_trabajados_abril,cuenta_habilitada,bonoacademico_enero,bonoacademico_febrero,bonoacademico_marzo,bonoacademico_abril,a_solidario_13_25_35_enero,a_solidario_13_25_35_febrero,a_solidario_13_25_35_marzo,a_solidario_13_25_35_abril)
+		values('$cod_planilla','$cod_personal','$cod_area','$haber_basico_anterior','$haber_basico_nuevo','$bono_antiguedad_anterior','$bono_antiguedad_nuevo','$retroactivo_enero','$retroactivo_febrero','$retroactivo_marzo','$retroactivo_abril','$antiguedad_enero','$antiguedad_febrero','$antiguedad_marzo','$antiguedad_abril','$total_ganado','$ap_vejez','$riesgo_prof','$com_afp','$aporte_sol','$total_descuentos','$liquido_pagable','$index','$ing_planilla','$retiro_planilla','$dias_trabajados1','$dias_trabajados2','$dias_trabajados3','$dias_trabajados4','$cuenta_habilitada','$bonoacademico_enero','$bonoacademico_febrero','$bonoacademico_marzo','$bonoacademico_abril','$a_solidario_13_25_35_enero','$a_solidario_13_25_35_febrero','$a_solidario_13_25_35_marzo','$a_solidario_13_25_35_abril')";
 		$stmtInsertPlanillas = $dbh->prepare($sqlInsertPlanillas);
 		$flagSuccessIP=$stmtInsertPlanillas->execute();
 		$index++;
+
 	}
 }elseif($sw==3)
 {//cerrar planilla	

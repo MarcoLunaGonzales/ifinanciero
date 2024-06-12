@@ -100,6 +100,7 @@ function ReprocesarPlanillaTribNuevo($codigo,$codPlan){
     
     //Solo en mayo se adiciona el retroactivo
     $liquido_pagableRetroactivo=0;
+    
     if($cod_mes_planillaS==5){ 
       $sqlPlanillaRetro="SELECT pd.liquido_pagable from planillas_retroactivos p join planillas_retroactivos_detalle pd on p.codigo=pd.cod_planilla
       where p.cod_gestion=$globalGestion and pd.cod_personal=$cod_personal";
