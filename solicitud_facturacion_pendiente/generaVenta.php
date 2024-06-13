@@ -38,6 +38,7 @@
 
     // Creación del objeto detalle
     $ArrayDetalles = [];
+    $concepto_contabilizacion = '';
     foreach ($detalles as $detalle) {
         $Objeto_detalle = new stdClass();
         $Objeto_detalle->suscripcionId  = $detalle['suscripcionId'];
@@ -50,6 +51,15 @@
         $Objeto_detalle->descuento_bob  = $detalle['descuento_bob'];
         
         $ArrayDetalles[] = $Objeto_detalle;
+        
+        // * CONCEPTO COMPROBANTE
+        $precio_x                  = $Objeto_detalle->cantidad * $Objeto_detalle->precioUnitario;
+        $concepto_contabilizacion .= $Objeto_detalle->detalle .
+                                    " / FD " . $registroPrincipal['codigo'] . 
+                                    " / RS " . $registroPrincipal['razonSocial'] . "<br>\n";
+        $concepto_contabilizacion .= "Cantidad: " . $Objeto_detalle->cantidad . " * " . 
+                                    formatNumberDec($Objeto_detalle->precioUnitario) . " = " . 
+                                    formatNumberDec($precio_x)."<br>\n";
     }
 
     $sIde = "facifin";
@@ -102,11 +112,22 @@
             
             if ($stmtUpdate->execute()) {
                 /************************************************************************/
+                $sqlCliente  = "SELECT c.nombre 
+                                FROM clientes c 
+                                WHERE c.identificacion = '".$registroPrincipal['nitciCliente']."' 
+                                OR c.clNit = '".$registroPrincipal['nitciCliente']."' 
+                                LIMIT 1";
+                $stmtCliente = $dbh->prepare($sqlCliente);
+                $stmtCliente->execute(); 
+                $nombre_cliente = "";
+                while ($rowCliente = $stmtCliente->fetch(PDO::FETCH_ASSOC)){
+                    $nombre_cliente = $rowCliente['nombre'];
+                }
                 /**
                  * ? GENERA COMPROBANTE
                  */
                 $importeTotal             = $registroPrincipal['importeTotal'];
-                $concepto_contabilizacion = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA CABECERA
+                $descripcion_glosa_cab = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion."<br>\nEstudiante: ".$nombre_cliente; // ? GLOSA CABECERA
                 $cod_area_solicitud   = 13;//capacitacion
                 $codEmpresa           = 1;
                 $cod_uo_solicitud     = 5;
@@ -117,37 +138,37 @@
                 $fechaActual          = date("Y-m-d H:i:s");
                 $numeroComprobante    = obtenerCorrelativoComprobante3($tipoComprobante,$codAnio);
                 $codComprobante       = obtenerCodigoComprobante();		
-                $flagSuccess          = insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);
+                $flagSuccess          = insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$descripcion_glosa_cab,1,1);
                 // DETALLE
                 $ordenDetalle = 1;
                 $cod_cuenta        = 167; // CUENTA: Otros (Debe: 100%)
                 $monto_debe        = $importeTotal;
                 $monto_haber       = 0;
-                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $descripcion_glosa = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion."<br>\nEstudiante: ".$nombre_cliente; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 261; // CUENTA: Impuesto a las Transacciones | gasto (Debe: 3%)
                 $monto_debe        = 0.03 * $importeTotal;
                 $monto_haber       = 0;
-                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $descripcion_glosa = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion."<br>\nEstudiante: ".$nombre_cliente; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 142; // CUENTA: Débito Fiscal IVA (Haber: 13%)
                 $monto_debe        = 0;
                 $monto_haber       = 0.13 * $importeTotal;
-                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $descripcion_glosa = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion."<br>\nEstudiante: ".$nombre_cliente; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 136; // CUENTA: Impuesto a las Transacciones | pasivo (Haber: 3%)
                 $monto_debe        = 0;
                 $monto_haber       = 0.03 * $importeTotal;
-                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $descripcion_glosa = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion."<br>\nEstudiante: ".$nombre_cliente; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 279; // CUENTA: Ingresos por Formación (Haber: 87%)
                 $monto_debe        = 0;
                 $monto_haber       = 0.87 * $importeTotal;
-                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $descripcion_glosa = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion."<br>\nEstudiante: ".$nombre_cliente; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 /*************************
                  * ? SETEAR FACTURAS CURSOS

@@ -77,7 +77,6 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
                 $flagSuccess = $stmtDetalle->execute();
                 
                 // * CONCEPTO COMPROBANTE
-                
                 $precio_x                  = $cantidad * $precioUnitario;
                 $concepto_contabilizacion .= $detalle." / FD ".$cod_ventaNoFacturada." / RS ".$razonSocial."<br>\n";
                 $concepto_contabilizacion .= "Cantidad: ".$cantidad." * ".formatNumberDec($precioUnitario)." = ".formatNumberDec($precio_x)."<br>\n";
@@ -95,7 +94,7 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
             /**
              * ? GENERA COMPROBANTE
              */
-            $concepto_contabilizacion = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion."<br>\nEstudiante: ".$nombre_cliente; // ? GLOSA CABECERA
+            $descripcion_glosa_cab = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion."<br>\nEstudiante: ".$nombre_cliente; // ? GLOSA CABECERA
 	    	$cod_area_solicitud   = 13;//capacitacion
             $codEmpresa           = 1;
             $cod_uo_solicitud     = 5;
@@ -106,7 +105,7 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
             $fechaActual          = date("Y-m-d H:i:s");
             $numeroComprobante    = obtenerCorrelativoComprobante3($tipoComprobante,$codAnio);
             $codComprobante       = obtenerCodigoComprobante();		
-		    $flagSuccess          = insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);
+		    $flagSuccess          = insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$descripcion_glosa_cab,1,1);
             // DETALLE
             $ordenDetalle = 1;
             $cod_cuenta        = 361; // CUENTA: Otras Cuentas por Cobrar (Debe: 97,5%)
