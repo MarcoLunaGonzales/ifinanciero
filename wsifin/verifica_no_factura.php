@@ -78,23 +78,16 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
                 
                 // * CONCEPTO COMPROBANTE
                 $precio_x                  = $cantidad * $precioUnitario;
-                $concepto_contabilizacion .= $detalle." / FD ".$cod_ventaNoFacturada." / RS ".$razonSocial."<br>\n";
-                $concepto_contabilizacion .= "Cantidad: ".$cantidad." * ".formatNumberDec($precioUnitario)." = ".formatNumberDec($precio_x)."<br>\n";
+                $concepto_contabilizacion .= $detalle." / PREF ".$cod_ventaNoFacturada." / RS ".$razonSocial."<br>\n";
+                $concepto_contabilizacion .= "Cantidad: ".$cantidad." * ".formatNumberDec($precioUnitario)." = ".formatNumberDec($precio_x);
 
                 // $concepto_contabilizacion .= $detalle."<br>\n";
             }
             /************************************************************************/
-            $sqlCliente  = "SELECT c.nombre from clientes c where c.identificacion = '$nitciCliente' OR c.clNit = '$nitciCliente' LIMIT 1";
-            $stmtCliente = $dbh->prepare($sqlCliente);
-            $stmtCliente->execute(); 
-            $nombre_cliente = "";
-            while ($rowCliente = $stmtCliente->fetch(PDO::FETCH_ASSOC)){
-                $nombre_cliente = $rowCliente['nombre'];
-            }
             /**
              * ? GENERA COMPROBANTE
              */
-            $descripcion_glosa_cab = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion."<br>\nEstudiante: ".$nombre_cliente; // ? GLOSA CABECERA
+            $descripcion_glosa_cab = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion; // ? GLOSA CABECERA
 	    	$cod_area_solicitud   = 13;//capacitacion
             $codEmpresa           = 1;
             $cod_uo_solicitud     = 5;
@@ -111,19 +104,19 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
             $cod_cuenta        = 361; // CUENTA: Otras Cuentas por Cobrar (Debe: 97,5%)
             $monto_debe        = 0.975 * $importeTotal;
             $monto_haber       = 0;
-            $descripcion_glosa = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion."<br>\n Estudiante: ".$nombre_cliente; // ? GLOSA DETALLE
+            $descripcion_glosa = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
             $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
             $ordenDetalle++;
             $cod_cuenta        = 361; // CUENTA: Otras Cuentas por Cobrar (Debe: 2,5%)
             $monto_debe        = 0.025 * $importeTotal;
             $monto_haber       = 0;
-            $descripcion_glosa = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion."<br>\n Estudiante: ".$nombre_cliente; // ? GLOSA DETALLE
+            $descripcion_glosa = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
             $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
             $ordenDetalle++;
             $cod_cuenta        = 167; // CUENTA: Otros (Haber: 100%)
             $monto_debe        = 0;
             $monto_haber       = $importeTotal;
-            $descripcion_glosa = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion."<br>\n Estudiante: ".$nombre_cliente; // ? GLOSA DETALLE
+            $descripcion_glosa = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
             $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
             /************************************************************************/
             return false; // No permite Factura | Curso en Programado/Planificado, Suspendido

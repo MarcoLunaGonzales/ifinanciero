@@ -52,7 +52,7 @@ $parametros=array(
     //$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
 
     // $direccion="http://lpsit.ibnorca.org:8008/ifinanciero/wsifin/";
-    $direccion="http://localhost:8090/ifinanciero/wsifin/";
+    $direccion="http://localhost/ifinanciero/wsifin/";
     $parametros=json_encode($parametros);
     // abrimos la sesiรณn cURL
     $ch = curl_init();
