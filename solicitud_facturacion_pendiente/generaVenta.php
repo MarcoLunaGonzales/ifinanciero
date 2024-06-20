@@ -128,7 +128,12 @@
         if ($respuesta->estado == "0") {
             // Cambiar el estado en la base de datos
             $cod_facturaventa = $respuesta->IdFactura;
-            $sqlUpdate = "UPDATE ventas_no_facturadas SET estado = '2', cod_facturaventa = '$cod_facturaventa' WHERE codigo = '$codigo'";
+            $codComprobante   = obtenerCodigoComprobante();	
+            $sqlUpdate = "UPDATE ventas_no_facturadas 
+                        SET estado = '2', 
+                            cod_facturaventa = '$cod_facturaventa',
+                            cod_comprobante2 = '$codComprobante' 
+                        WHERE codigo = '$codigo'";
             $stmtUpdate = $dbh->prepare($sqlUpdate);
             
             if ($stmtUpdate->execute()) {
@@ -146,8 +151,7 @@
                 $codEstadoComprobante = 1;
                 $tipoComprobante      = 5;//Factura Diferida FDIF
                 $fechaActual          = date("Y-m-d H:i:s");
-                $numeroComprobante    = obtenerCorrelativoComprobante3($tipoComprobante,$codAnio);
-                $codComprobante       = obtenerCodigoComprobante();		
+                $numeroComprobante    = obtenerCorrelativoComprobante3($tipoComprobante,$codAnio);	
                 $flagSuccess          = insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$descripcion_glosa_cab,1,1);
                 // DETALLE
                 $ordenDetalle = 1;

@@ -2123,6 +2123,10 @@
 		if($_GET['opcion']=='listaFacturasDiferidas') {
 			require_once('solicitud_facturacion_pendiente/list.php'); //ok
 		}
+		// Histórico Prefacturas
+		if($_GET['opcion']=='listaHistorialPrefacturas') {
+			require_once('solicitud_facturacion_pendiente/historialPrefactura.php'); //ok
+		}
 		
 		// Reporte Libelula
 		if($_GET['opcion']=='reporteLibelula') {

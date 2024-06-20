@@ -50,9 +50,10 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
     if($verf_estado_curso){                    
         return true;// FACTURAR
     }else{
-        $created_at = date('Y-m-d H:i:s');
-        $sql="INSERT INTO ventas_no_facturadas(sucursalId, pagoCursoSuscripcionId, pasarelaId, fechaFactura, nitciCliente, razonSocial, importeTotal, tipoPago, codLibretaDetalle, usuario, idCliente, idIdentificacion, complementoCiCliente, nroTarjeta, CorreoCliente, estado, created_at) 
-                VALUES ('$sucursalId', '$pagoCursoSuscripcionId', '$pasarelaId', '$fechaFactura', '$nitciCliente', '$razonSocial', '$importeTotal', '$tipoPago', '$CodLibretaDetalle', '$usuario', '$cod_cliente', '$siat_tipoidentificacion', '$siat_complemento', '$siat_nroTarjeta', '$correoCliente', '1', '$created_at')";
+        $codComprobante = obtenerCodigoComprobante();
+        $created_at     = date('Y-m-d H:i:s');
+        $sql="INSERT INTO ventas_no_facturadas(sucursalId, pagoCursoSuscripcionId, pasarelaId, fechaFactura, nitciCliente, razonSocial, importeTotal, tipoPago, codLibretaDetalle, usuario, idCliente, idIdentificacion, complementoCiCliente, nroTarjeta, CorreoCliente, estado, cod_comprobante1, created_at) 
+                VALUES ('$sucursalId', '$pagoCursoSuscripcionId', '$pasarelaId', '$fechaFactura', '$nitciCliente', '$razonSocial', '$importeTotal', '$tipoPago', '$CodLibretaDetalle', '$usuario', '$cod_cliente', '$siat_tipoidentificacion', '$siat_complemento', '$siat_nroTarjeta', '$correoCliente', '1', '$codComprobante', '$created_at')";
         //echo $sql;
         $stmtInsertSoliFact   = $dbh->prepare($sql);
         $flagSuccess          = $stmtInsertSoliFact->execute();
@@ -97,7 +98,6 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
             $tipoComprobante      = 5;//Factura Diferida FDIF
             $fechaActual          = date("Y-m-d H:i:s");
             $numeroComprobante    = obtenerCorrelativoComprobante3($tipoComprobante,$codAnio);
-            $codComprobante       = obtenerCodigoComprobante();		
 		    $flagSuccess          = insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$descripcion_glosa_cab,1,1);
             // DETALLE
             $ordenDetalle = 1;

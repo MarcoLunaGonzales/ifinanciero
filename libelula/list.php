@@ -45,7 +45,7 @@ ini_set('display_errors', 1);
     <div class="content">
         <div class="container-fluid">
             <div style="overflow-y:scroll;">
-                <div class="card">
+                <!-- <div class="card">
                     <div class="card-header card-header-warning card-header-icon">
                         <div class="card-icon">
                             <i class="material-icons">polymer</i>
@@ -87,7 +87,7 @@ ini_set('display_errors', 1);
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> -->
                 <div class="card">
                     <div class="card-header card-header-success card-header-icon">
                         <div class="card-icon">
@@ -100,19 +100,74 @@ ini_set('display_errors', 1);
                             <thead>
                                 <tr>  
                                     <th width="30%"><small>#</small></th>
+                                    <th width="30%"><small>CursoId</small></th>
                                     <th width="30%"><small>Total Pagado</small></th>
                                     <th width="40%"><small>Libélula Respuesta</small></th>
+                                    
+                                    <th width="40%"><small>Estudiante</small></th>
+                                    <th width="40%"><small>Fecha Factura</small></th>
+                                    <th width="40%"><small>Estado</small></th>
+                                    <th width="40%"><small>CodFacturaVenta</small></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                     if (!empty($remote_server_output->cursos)) { 
-                                        foreach ($remote_server_output->cursos as $curso) { 
+                                        foreach ($remote_server_output->cursos as $curso) {
+                                            $clienteId = $curso->clienteId;
+                                            $moduloId  = $curso->cursoId;
+                                            $sqlDatos  = "SELECT vnf.idCliente, 
+                                                                vnfd.moduloId, 
+                                                                c.nombre as estudiante,
+                                                                vnf.fechaFactura,
+                                                                vnf.estado,
+                                                                vnf.cod_facturaventa
+                                                        FROM ventas_no_facturadas vnf
+                                                        LEFT JOIN ventas_no_facturadas_detalle vnfd ON vnfd.cod_venta_no_facturada = vnf.codigo
+                                                        LEFT JOIN clientes c ON c.codigo = vnf.idCliente
+                                                        WHERE vnfd.moduloId = '$moduloId'
+                                                        AND vnf.idCliente = '$clienteId'
+                                                        ORDER BY vnf.codigo DESC LIMIT 1";
+                                            // echo $sqlDatos;
+                            
+                                            $stmt = $dbh->prepare($sqlDatos);
+                                            $stmt->execute();
+                                            $registroPrincipal = $stmt->fetch(PDO::FETCH_ASSOC);
+                                            
+                                            // Verificamos si se encontró el registro
+                                            $nf_estudiante       = '';
+                                            $nf_fechaFactura     = '';
+                                            $nf_estado           = '';
+                                            $nf_cod_facturaventa = '';
+                                            if ($registroPrincipal) {
+                                                $nf_estudiante       = $registroPrincipal['estudiante'];
+                                                $nf_fechaFactura     = date('d-m-Y', strtotime($registroPrincipal['fechaFactura']));
+                                                $nf_estado           = $registroPrincipal['estado'];
+                                                $nf_cod_facturaventa = $registroPrincipal['cod_facturaventa'];
+                                            } 
                                 ?>
                                     <tr>
+                                        <td><small><?= $curso->libelulaFechaRespuesta ?></small></td>
+                                        <td><small><?= $curso->cursoId ?></small></td>
                                         <td><small><?= $curso->pagoCursoId ?></small></td>
                                         <td><small><?= $curso->precioTotalPagado ?></small></td>
-                                        <td><small><?= $curso->libelulaFechaRespuesta ?></small></td>
+                                        
+                                        <td><small><?= $nf_estudiante ?></small></td>
+                                        <td><small><?= $nf_fechaFactura ?></small></td>
+                                        <td class="td-actions text-center">
+                                            <?php
+                                                if($nf_estado == 1){
+                                            ?>
+                                            <button class="btn btn-warning btn-sx"><small>Pendiente</small></button>
+                                            <?php
+                                                }else if($nf_estado == 2){
+                                            ?>
+                                            <button class="btn btn-success btn-sx"><small>Facturado</small></button>
+                                            <?php
+                                                }
+                                            ?>
+                                        </td>
+                                        <td><small><?= $nf_cod_facturaventa ?></small></td>
                                     </tr>
                                 <?php 
                                         }
