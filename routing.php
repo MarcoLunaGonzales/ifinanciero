@@ -2105,10 +2105,6 @@
 			require_once('aguinaldos/reporteListaAguinaldoVistas.php'); //ok
 		}
 
-		if($_GET['opcion']=='listaFacturasPendiente') {
-			require_once('solicitud_facturacion_pendiente/list.php'); //ok
-		}
-
 		// Ejmplo Buscar Clientes
 		if($_GET['opcion']=='buscarClientes') {
 			require_once('clienteAutocomplete/indexAjaxCliente.php'); //ok
@@ -2123,6 +2119,14 @@
 			require_once('planillas/deleteRetroactivoExcepcion.php'); //ok
 		}
 
+		// Solicitud de Facturas Diferidas 
+		if($_GET['opcion']=='listaFacturasDiferidas') {
+			require_once('solicitud_facturacion_pendiente/list.php'); //ok
+		}
+		// Histórico Prefacturas
+		if($_GET['opcion']=='listaHistorialPrefacturas') {
+			require_once('solicitud_facturacion_pendiente/historialPrefactura.php'); //ok
+		}
 		
 		// Reporte Libelula
 		if($_GET['opcion']=='reporteLibelula') {

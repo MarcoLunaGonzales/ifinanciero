@@ -17,7 +17,7 @@ $Objeto_detalle4->moduloId       = 7950;  /*HACE REFERENCIA AL MODULO ID "Planif
 // $Objeto_detalle4->moduloId       = 7906;  /*HACE REFERENCIA AL MODULO ID "En Ejecución"*/
 
 $Objeto_detalle4->codClaServicio = 707;   /*HACE REFERENCIA AL CODIGO DE CLASERVICIOS*/
-$Objeto_detalle4->detalle        = "Curso OV-PFBPM-PF-G2-2024";
+$Objeto_detalle4->detalle        = "Curso OV-PFBPM-PF-G2-2024 , Módulo 3 Implementación de la gestión del riesgo según NB/NM/ISO/TR 31004:2017";
 // $Objeto_detalle4->detalle        = "Curso OV-PFBPM-PF-G3-2024";
 $Objeto_detalle4->precioUnitario = "300";
 $Objeto_detalle4->cantidad       = 1;
@@ -52,7 +52,7 @@ $parametros=array(
     //$direccion=obtenerValorConfiguracion(56);//direccion del servicio web ifinanciero
 
     // $direccion="http://lpsit.ibnorca.org:8008/ifinanciero/wsifin/";
-    $direccion="http://localhost:8090/ifinanciero/wsifin/";
+    $direccion="http://localhost/ifinanciero/wsifin/";
     $parametros=json_encode($parametros);
     // abrimos la sesiรณn cURL
     $ch = curl_init();

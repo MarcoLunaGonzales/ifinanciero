@@ -50,9 +50,10 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
     if($verf_estado_curso){                    
         return true;// FACTURAR
     }else{
-        $created_at = date('Y-m-d H:i:s');
-        $sql="INSERT INTO ventas_no_facturadas(sucursalId, pagoCursoSuscripcionId, pasarelaId, fechaFactura, nitciCliente, razonSocial, importeTotal, tipoPago, codLibretaDetalle, usuario, idCliente, idIdentificacion, complementoCiCliente, nroTarjeta, CorreoCliente, estado, created_at) 
-                VALUES ('$sucursalId', '$pagoCursoSuscripcionId', '$pasarelaId', '$fechaFactura', '$nitciCliente', '$razonSocial', '$importeTotal', '$tipoPago', '$CodLibretaDetalle', '$usuario', '$cod_cliente', '$siat_tipoidentificacion', '$siat_complemento', '$siat_nroTarjeta', '$correoCliente', '1', '$created_at')";
+        $codComprobante = obtenerCodigoComprobante();
+        $created_at     = date('Y-m-d H:i:s');
+        $sql="INSERT INTO ventas_no_facturadas(sucursalId, pagoCursoSuscripcionId, pasarelaId, fechaFactura, nitciCliente, razonSocial, importeTotal, tipoPago, codLibretaDetalle, usuario, idCliente, idIdentificacion, complementoCiCliente, nroTarjeta, CorreoCliente, estado, cod_comprobante1, created_at) 
+                VALUES ('$sucursalId', '$pagoCursoSuscripcionId', '$pasarelaId', '$fechaFactura', '$nitciCliente', '$razonSocial', '$importeTotal', '$tipoPago', '$CodLibretaDetalle', '$usuario', '$cod_cliente', '$siat_tipoidentificacion', '$siat_complemento', '$siat_nroTarjeta', '$correoCliente', '1', '$codComprobante', '$created_at')";
         //echo $sql;
         $stmtInsertSoliFact   = $dbh->prepare($sql);
         $flagSuccess          = $stmtInsertSoliFact->execute();
@@ -60,8 +61,7 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
         // $flagSuccess=true;
         if($flagSuccess){
 
-            //obtenemos el registro del ultimo insert
-		    $concepto_contabilizacion=" ";
+            $concepto_contabilizacion = "";
             foreach ($items as $valor) {
                 $suscripcionId  = $valor['suscripcionId'];
                 $pagoCursoId    = $valor['pagoCursoId'];
@@ -78,21 +78,17 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
                 $flagSuccess = $stmtDetalle->execute();
                 
                 // * CONCEPTO COMPROBANTE
-                // $suscripcionId      = $valor['suscripcionId'];
-                // $pagoCursoId        = $valor['pagoCursoId'];
-                // $detalle            = $valor['detalle'];
-                // $precioUnitario     = $valor['precioUnitario'];
-                // $cantidad           = $valor['cantidad'];
-                // $precio_natural     = $precioUnitario;
-                // $precio_x           = $cantidad*$precioUnitario;
-                // $concepto_contabilizacion .= $detalle." / F ".$nro_factura." / ".$razon_social."<br>\n";
-                // $concepto_contabilizacion .= "Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio_x)."<br>\n";
+                $precio_x                  = $cantidad * $precioUnitario;
+                $concepto_contabilizacion .= $detalle." / PREF ".$cod_ventaNoFacturada." / RS ".$razonSocial."<br>\n";
+                $concepto_contabilizacion .= "Cantidad: ".$cantidad." * ".formatNumberDec($precioUnitario)." = ".formatNumberDec($precio_x);
+
+                // $concepto_contabilizacion .= $detalle."<br>\n";
             }
             /************************************************************************/
             /**
              * ? GENERA COMPROBANTE
              */
-            $concepto_contabilizacion = 'GLOSA A DEFINIR POR DNAF'; // ? GLOSA CABECERA
+            $descripcion_glosa_cab = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion; // ? GLOSA CABECERA
 	    	$cod_area_solicitud   = 13;//capacitacion
             $codEmpresa           = 1;
             $cod_uo_solicitud     = 5;
@@ -102,26 +98,25 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
             $tipoComprobante      = 5;//Factura Diferida FDIF
             $fechaActual          = date("Y-m-d H:i:s");
             $numeroComprobante    = obtenerCorrelativoComprobante3($tipoComprobante,$codAnio);
-            $codComprobante       = obtenerCodigoComprobante();		
-		    $flagSuccess          = insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);
+		    $flagSuccess          = insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$descripcion_glosa_cab,1,1);
             // DETALLE
             $ordenDetalle = 1;
             $cod_cuenta        = 361; // CUENTA: Otras Cuentas por Cobrar (Debe: 97,5%)
             $monto_debe        = 0.975 * $importeTotal;
             $monto_haber       = 0;
-            $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF'; // ? GLOSA DETALLE
+            $descripcion_glosa = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
             $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
             $ordenDetalle++;
             $cod_cuenta        = 361; // CUENTA: Otras Cuentas por Cobrar (Debe: 2,5%)
             $monto_debe        = 0.025 * $importeTotal;
             $monto_haber       = 0;
-            $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF'; // ? GLOSA DETALLE
+            $descripcion_glosa = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
             $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
             $ordenDetalle++;
             $cod_cuenta        = 167; // CUENTA: Otros (Haber: 100%)
             $monto_debe        = 0;
             $monto_haber       = $importeTotal;
-            $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF'; // ? GLOSA DETALLE
+            $descripcion_glosa = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
             $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
             /************************************************************************/
             return false; // No permite Factura | Curso en Programado/Planificado, Suspendido

@@ -1,7 +1,11 @@
 <?php
     require_once '../conexion.php';
     require_once '../functions.php';
+    require_once '../functionsGeneral.php';
     date_default_timezone_set('America/La_Paz');
+    // Configurar el informe y visualización de errores
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
 
     $dbh = new Conexion();
 
@@ -38,18 +42,28 @@
 
     // Creación del objeto detalle
     $ArrayDetalles = [];
+    $concepto_contabilizacion = '';
     foreach ($detalles as $detalle) {
         $Objeto_detalle = new stdClass();
         $Objeto_detalle->suscripcionId  = $detalle['suscripcionId'];
         $Objeto_detalle->pagoCursoId    = $detalle['pagoCursoId'];
-        $Objeto_detalle->moduloId       = $detalle['moduloId'];
-        $Objeto_detalle->codClaServicio = $detalle['codClaServicio'];
         $Objeto_detalle->detalle        = $detalle['detalle'];
         $Objeto_detalle->precioUnitario = $detalle['precioUnitario'];
         $Objeto_detalle->cantidad       = $detalle['cantidad'];
-        $Objeto_detalle->descuento_bob  = $detalle['descuento_bob'];
+        $Objeto_detalle->moduloId       = $detalle['moduloId'];
+        $Objeto_detalle->codClaServicio = $detalle['codClaServicio'];
+        $Objeto_detalle->descuentoProducto = $detalle['descuento_bob'];
         
         $ArrayDetalles[] = $Objeto_detalle;
+        
+        // * CONCEPTO COMPROBANTE
+        $precio_x                  = $detalle['cantidad'] * $detalle['precioUnitario'];
+        $concepto_contabilizacion .= $detalle['detalle'] .
+                                    " / PREF " . $registroPrincipal['codigo'] . 
+                                    " / RS " . $registroPrincipal['razonSocial'] . "<br>\n";
+        $concepto_contabilizacion .= "Cantidad: " . $detalle['cantidad'] . " * " . 
+                                    formatNumberDec($detalle['precioUnitario']) . " = " . 
+                                    formatNumberDec($precio_x);
     }
 
     $sIde = "facifin";
@@ -58,28 +72,35 @@
     $parametros = array(
         "sIdentificador"       => $sIde,
         "sKey"                 => $sKey,
+        "pagoCursoSuscripcionId" => $registroPrincipal['pagoCursoSuscripcionId'],
         "accion"               => "NewGenerateInvoice",
         "sucursalId"           => $registroPrincipal['sucursalId'],
-        "pagoCursoSuscripcionId" => $registroPrincipal['pagoCursoSuscripcionId'],
         "pasarelaId"           => $registroPrincipal['pasarelaId'],
         "fechaFactura"         => date('Y-m-d'),
         // "fechaFactura"         => $registroPrincipal['fechaFactura'],
         "nitciCliente"         => $registroPrincipal['nitciCliente'],
         "razonSocial"          => $registroPrincipal['razonSocial'],
-        "importeTotal"         => $registroPrincipal['importeTotal'],
         "tipoPago"             => $registroPrincipal['tipoPago'],
         "codLibretaDetalle"    => $registroPrincipal['codLibretaDetalle'],
-        "usuario"              => $registroPrincipal['usuario'],
+        "id_usuario"           => "-100",
+        "usuario"              => "Tienda Virtual",
         "idCliente"            => $registroPrincipal['idCliente'],
         "idIdentificacion"     => $registroPrincipal['idIdentificacion'],
         "complementoCiCliente" => $registroPrincipal['complementoCiCliente'],
         "nroTarjeta"           => $registroPrincipal['nroTarjeta'],
         "CorreoCliente"        => $registroPrincipal['CorreoCliente'],
+        "importeFinal"         => $registroPrincipal['importeTotal'],
+        "importeTotal"         => $registroPrincipal['importeTotal'],
+        "descuento"            => 0,
         "items"                => $ArrayDetalles
     );
 
     $direccion  = obtenerValorConfiguracion(112);
+    // echo $direccion."wsifin/ws_generate_invoice.php";
+    // exit;
     $parametros = json_encode($parametros);
+    // print_r($parametros);
+    // exit;
     // abrimos la sesiรณn cURL
     $ch = curl_init();
     
@@ -87,17 +108,32 @@
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $parametros);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     $remote_server_output = curl_exec ($ch);
+    
+    // if ($remote_server_output == false) {
+    //     $error_msg = curl_error($ch);
+    //     $error_code = curl_errno($ch);
+    //     echo "cURL Error: $error_msg (Error Code: $error_code)";
+    // }
+
     curl_close ($ch);
     
     $respuesta=json_decode($remote_server_output);
+    // echo "GeneraVenta";
     // print_r($respuesta);
     // Verificar el estado de la respuesta
     if (isset($respuesta->estado)) {
+        // echo "Generar Venta 2";
         if ($respuesta->estado == "0") {
             // Cambiar el estado en la base de datos
             $cod_facturaventa = $respuesta->IdFactura;
-            $sqlUpdate = "UPDATE ventas_no_facturadas SET estado = '2', cod_facturaventa = '$cod_facturaventa' WHERE codigo = '$codigo'";
+            $codComprobante   = obtenerCodigoComprobante();	
+            $sqlUpdate = "UPDATE ventas_no_facturadas 
+                        SET estado = '2', 
+                            cod_facturaventa = '$cod_facturaventa',
+                            cod_comprobante2 = '$codComprobante' 
+                        WHERE codigo = '$codigo'";
             $stmtUpdate = $dbh->prepare($sqlUpdate);
             
             if ($stmtUpdate->execute()) {
@@ -106,7 +142,7 @@
                  * ? GENERA COMPROBANTE
                  */
                 $importeTotal             = $registroPrincipal['importeTotal'];
-                $concepto_contabilizacion = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA CABECERA
+                $descripcion_glosa_cab = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion; // ? GLOSA CABECERA
                 $cod_area_solicitud   = 13;//capacitacion
                 $codEmpresa           = 1;
                 $cod_uo_solicitud     = 5;
@@ -115,39 +151,38 @@
                 $codEstadoComprobante = 1;
                 $tipoComprobante      = 5;//Factura Diferida FDIF
                 $fechaActual          = date("Y-m-d H:i:s");
-                $numeroComprobante    = obtenerCorrelativoComprobante3($tipoComprobante,$codAnio);
-                $codComprobante       = obtenerCodigoComprobante();		
-                $flagSuccess          = insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);
+                $numeroComprobante    = obtenerCorrelativoComprobante3($tipoComprobante,$codAnio);	
+                $flagSuccess          = insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$descripcion_glosa_cab,1,1);
                 // DETALLE
                 $ordenDetalle = 1;
                 $cod_cuenta        = 167; // CUENTA: Otros (Debe: 100%)
                 $monto_debe        = $importeTotal;
                 $monto_haber       = 0;
-                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $descripcion_glosa = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 261; // CUENTA: Impuesto a las Transacciones | gasto (Debe: 3%)
                 $monto_debe        = 0.03 * $importeTotal;
                 $monto_haber       = 0;
-                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $descripcion_glosa = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 142; // CUENTA: Débito Fiscal IVA (Haber: 13%)
                 $monto_debe        = 0;
                 $monto_haber       = 0.13 * $importeTotal;
-                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $descripcion_glosa = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 136; // CUENTA: Impuesto a las Transacciones | pasivo (Haber: 3%)
                 $monto_debe        = 0;
                 $monto_haber       = 0.03 * $importeTotal;
-                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $descripcion_glosa = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 $ordenDetalle++;
                 $cod_cuenta        = 279; // CUENTA: Ingresos por Formación (Haber: 87%)
                 $monto_debe        = 0;
                 $monto_haber       = 0.87 * $importeTotal;
-                $descripcion_glosa = 'GLOSA A DEFINIR POR DNAF2'; // ? GLOSA DETALLE
+                $descripcion_glosa = 'Reversion de comprobante de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
                 $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
                 /*************************
                  * ? SETEAR FACTURAS CURSOS

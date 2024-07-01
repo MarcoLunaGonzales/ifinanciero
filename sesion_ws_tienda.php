@@ -2,11 +2,13 @@
   require_once 'conexion.php';
 
   $dbh = new Conexion();
-  $direccion = 'https://prueba.ibnorca.org/ecommerce/backoffice/frontend/usuario/login.php';
+  $direccion = 'https://www.ibnorca.org/ecommerce/backoffice/frontend/usuario/login.php';
   // $direccion=obtenerValorConfiguracion(42);//direccion des servicio web
 
-  $user     = 'juan.quenallata@ibnorca.org';
-  $password = md5('juanito2020');
+  // $user     = 'juan.quenallata@ibnorca.org';
+  // $password = md5('juanito2020');
+  $user     = 'mluna@minkasoftware.com';
+  $password = md5('4868422');
   $parametros=array(
           "c"   => 'IBNTOK', 
           "md5" => 1, 
@@ -22,6 +24,7 @@
   $remote_server_output = json_decode(curl_exec ($ch));
   curl_close ($ch); 
   header('Content-type: application/json');   
-  print_r($remote_server_output->value->valor->token);   
+  // print_r($remote_server_output->value->valor->token);
+  print_r($remote_server_output);   
 
 ?>
