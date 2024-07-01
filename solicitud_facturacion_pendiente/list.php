@@ -43,7 +43,7 @@ ini_set('display_errors', 1);
                         <div class="card-icon">
                             <i class="material-icons">polymer</i>
                         </div>
-                        <h4 class="card-title"><b>Solicitudes de Facturas Diferidas</b>
+                        <h4 class="card-title"><b>Prefacturas</b>
                         </h4>
                         <h4 align="right" >
                             <a  style="height:10px;
@@ -55,6 +55,15 @@ ini_set('display_errors', 1);
                                 href='index.php?opcion=listaHistorialPrefacturas'>
                                 <i class="material-icons" title="Historial de Facturas enviadas">history</i>
                             </a> 
+                            <a style="height: 10px;
+                                    width: 10px; 
+                                    color: #ffffff;
+                                    background-color: #4CAF50;
+                                    border-radius: 3px;
+                                    border: 2px solid #4CAF50;" 
+                            href='index.php?opcion=reporteLibelula'>
+                                <i class="material-icons" title="Reporte de Pago">payment</i>
+                            </a>
                         </h4>
                     </div>
                     <div class="card-body" id="data_solicitudes_facturacion">
@@ -105,14 +114,12 @@ ini_set('display_errors', 1);
                                                     $stmtDetalleSol->execute();
                                                     $stmtDetalleSol->bindColumn('cantidad', $cantidad);  
                                                     $stmtDetalleSol->bindColumn('precioUnitario', $precio_unitario);
-                                                    $stmtDetalleSol->bindColumn('detalle', $descripcion_alterna); 
-                                                    $cadenaFacturas="";
-                                                    $cadenaFacturasM="";
+                                                    $stmtDetalleSol->bindColumn('detalle', $descripcion_alterna);
                                                     $concepto_contabilizacion="";
 
                                                     while ($row_det = $stmtDetalleSol->fetch()){
                                                         $precio = $precio_unitario*$cantidad;
-                                                        $concepto_contabilizacion.=$descripcion_alterna." / ".trim($cadenaFacturas,',').",".trim($cadenaFacturasM,",")." / ".$row['razonSocial']."<br>\n";
+                                                        $concepto_contabilizacion.=$descripcion_alterna.",".$row['razonSocial']."<br>\n";
                                                         $concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_unitario)." = ".formatNumberDec($precio)."<br>\n";
                                                     }
                                                     echo $concepto_contabilizacion;
@@ -234,6 +241,10 @@ ini_set('display_errors', 1);
                                     title: 'Mensaje',
                                     text: resp.mensaje,
                                     confirmButtonText: 'Aceptar'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
                                 });
                             } else {
                                 Swal.fire({

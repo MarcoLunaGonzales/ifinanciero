@@ -93,7 +93,7 @@ ini_set('display_errors', 1);
                         <div class="card-icon">
                             <i class="material-icons">polymer</i>
                         </div>
-                        <h4 class="card-title"><b>Cursos</b></h4>                    
+                        <h4 class="card-title"><b>Reporte de Pagos Libelula</b></h4>                    
                     </div>
                     <div class="card-header">
                         <div class="row justify-content-end">
@@ -125,33 +125,44 @@ ini_set('display_errors', 1);
                         <table class="table" id="tablePaginator2">
                             <thead>
                                 <tr>  
-                                    <th width="10%"><small>Fecha</small></th>
-                                    <th width="10%"><small>CursoId</small></th>
-                                    <th width="10%"><small>Total Pagado</small></th>
-                                    <th width="10%"><small>Libélula Respuesta</small></th>
+                                    <th width="10%"><small>Fecha Pago</small></th>
+                                    <!-- <th width="10%"><small>CursoId</small></th> -->
+                                    <!-- <th width="10%"><small>Libélula Respuesta</small></th> -->
                                     
-                                    <th width="10%"><small>Estudiante</small></th>
+                                    <!-- <th width="10%"><small>PagoCursoID</small></th> -->
+                                    
+                                    <th width="20%"><small>Estudiante</small></th>
+                                    <th width="10%"><small>Nro. Factura</small></th>
                                     <th width="10%"><small>Fecha Factura</small></th>
-                                    <th width="10%"><small>Estado</small></th>
-                                    <th width="10%"><small>CodFacturaVenta</small></th>
+                                    <th width="30%"><small>Concepto</small></th>
+                                    <th width="10%" class="text-center"><small>Estado Factura</small></th>
+                                    <th width="10%"><small>Monto Pago</small></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                     if (!empty($remote_server_output->cursos)) { 
+                                        // var_dump($remote_server_output->cursos);
                                         foreach ($remote_server_output->cursos as $curso) {
-                                            $clienteId = $curso->clienteId;
-                                            $moduloId  = $curso->cursoId;
+                                            $clienteId   = $curso->clienteId;
+                                            $pagoCursoId = $curso->pagoCursoId;
                                             $sqlDatos  = "SELECT vnf.idCliente, 
                                                                 vnfd.moduloId, 
                                                                 c.nombre as estudiante,
                                                                 vnf.fechaFactura,
                                                                 vnf.estado,
-                                                                vnf.cod_facturaventa
+                                                                vnf.cod_facturaventa,
+                                                                vnfd.pagoCursoId,
+                                                                fv.nro_factura,
+                                                                vnfd.cantidad,
+                                                                vnfd.precioUnitario,
+                                                                vnfd.detalle,
+                                                                vnf.razonSocial
                                                         FROM ventas_no_facturadas vnf
                                                         LEFT JOIN ventas_no_facturadas_detalle vnfd ON vnfd.cod_venta_no_facturada = vnf.codigo
                                                         LEFT JOIN clientes c ON c.codigo = vnf.idCliente
-                                                        WHERE vnfd.moduloId = '$moduloId'
+                                                        LEFT JOIN facturas_venta fv ON fv.codigo = vnf.cod_facturaventa
+                                                        WHERE vnfd.pagoCursoId = '$pagoCursoId'
                                                         AND vnf.idCliente = '$clienteId'
                                                         ORDER BY vnf.codigo DESC LIMIT 1";
                                             // echo $sqlDatos;
@@ -165,21 +176,52 @@ ini_set('display_errors', 1);
                                             $nf_fechaFactura     = '';
                                             $nf_estado           = '';
                                             $nf_cod_facturaventa = '';
+                                            $nf_pagoCursoId      = '';
+                                            $nf_nro_factura      = '';
+                                            $nf_cantidad         = '';
+                                            $nf_precioUnitario   = '';
+                                            $nf_detalle          = '';
+                                            $nf_razonSocial      = '';
                                             if ($registroPrincipal) {
                                                 $nf_estudiante       = $registroPrincipal['estudiante'];
                                                 $nf_fechaFactura     = date('d-m-Y', strtotime($registroPrincipal['fechaFactura']));
                                                 $nf_estado           = $registroPrincipal['estado'];
                                                 $nf_cod_facturaventa = $registroPrincipal['cod_facturaventa'];
+                                                $nf_pagoCursoId      = $registroPrincipal['pagoCursoId'];
+                                                $nf_nro_factura      = $registroPrincipal['nro_factura'];
+                                                $nf_cantidad         = $registroPrincipal['cantidad'];
+                                                $nf_precioUnitario   = $registroPrincipal['precioUnitario'];
+                                                $nf_detalle          = $registroPrincipal['detalle'];
+                                                $nf_razonSocial      = $registroPrincipal['razonSocial'];
                                             } 
+
+                                            // Se verifica si se tiene una Factura Diferida Relacionada
+                                            if(!empty($nf_estudiante)){
+                                            // if(true){
                                 ?>
                                     <tr>
                                         <td><small><?= $curso->libelulaFechaRespuesta ?></small></td>
-                                        <td><small><?= $curso->cursoId ?></small></td>
-                                        <td><small><?= $curso->pagoCursoId ?></small></td>
-                                        <td><small><?= $curso->precioTotalPagado ?></small></td>
+                                        <!-- <td><small><?= $curso->cursoId ?></small></td> -->
+                                        <!-- <td><small><?= $curso->libelulaId ?></small></td> -->
                                         
-                                        <td><small><?= $nf_estudiante ?></small></td>
-                                        <td><small><?= $nf_fechaFactura ?></small></td>
+                                        <!-- <td><small><?= $nf_pagoCursoId ?></small></td> -->
+                                        
+
+                                        <td><small><b><?= $nf_estudiante ?></b></small></td>
+                                        <td><small><b><?= $nf_nro_factura ?></b></small></td>
+                                        <td><small><b><?= $nf_fechaFactura ?></b></small></td>
+                                        <td>
+                                            <small>
+                                                <?php
+                                                    $concepto_contabilizacion = '';
+                                                    $precio                   = $nf_precioUnitario * $nf_cantidad;
+                                                    $concepto_contabilizacion .= $nf_detalle.",".$nf_razonSocial."<br>\n";
+                                                    $concepto_contabilizacion .= "Cantidad: ".$nf_cantidad." * ".formatNumberDec($nf_precioUnitario)." = ".formatNumberDec($precio)."<br>\n";
+
+                                                    echo $concepto_contabilizacion;
+                                                ?>
+                                            </small>
+                                        </td>
                                         <td class="td-actions text-center">
                                             <?php
                                                 if($nf_estado == 1){
@@ -193,9 +235,10 @@ ini_set('display_errors', 1);
                                                 }
                                             ?>
                                         </td>
-                                        <td><small><?= $nf_cod_facturaventa ?></small></td>
+                                        <td><small><?= $curso->precioTotalPagado ?></small></td>
                                     </tr>
                                 <?php 
+                                            }
                                         }
                                     } 
                                 ?>
@@ -206,3 +249,46 @@ ini_set('display_errors', 1);
             </div>  
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('#tablePaginator2').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "dom": 'Bfrtip',
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+                },
+                "buttons": [
+                    {
+                        extend: 'copyHtml5',
+                        text: '<i class="fas fa-copy"></i>',
+                        titleAttr: 'Copiar'
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fas fa-file-excel"></i>',
+                        titleAttr: 'Exportar a Excel'
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        text: '<i class="fas fa-file-csv"></i>',
+                        titleAttr: 'Exportar a CSV'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="fas fa-file-pdf"></i>',
+                        titleAttr: 'Exportar a PDF'
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="fas fa-print"></i>',
+                        titleAttr: 'Imprimir'
+                    }
+                ]
+            });
+        });
+    </script>

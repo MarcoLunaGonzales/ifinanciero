@@ -15,8 +15,9 @@ ini_set('display_errors', 1);
 
     $url_list_siat=obtenerValorConfiguracion(103);
     
-    $sqlDatos = "SELECT codigo, sucursalId, pasarelaId, fechaFactura, nitciCliente, razonSocial, importeTotal, tipoPago, codLibretaDetalle, usuario, idCliente, idIdentificacion, complementoCiCliente, nroTarjeta, CorreoCliente, estado, created_at, cod_facturaventa
+    $sqlDatos = "SELECT vnf.codigo, vnf.sucursalId, vnf.pasarelaId, vnf.fechaFactura, vnf.nitciCliente, vnf.razonSocial, vnf.importeTotal, vnf.tipoPago, vnf.codLibretaDetalle, vnf.usuario, vnf.idCliente, vnf.idIdentificacion, vnf.complementoCiCliente, vnf.nroTarjeta, vnf.CorreoCliente, vnf.estado, vnf.created_at, vnf.cod_facturaventa, fv.nro_factura
     FROM ventas_no_facturadas vnf
+    LEFT JOIN facturas_venta fv ON fv.codigo = vnf.cod_facturaventa
     WHERE vnf.estado = 2
     ORDER BY vnf.codigo DESC";
     
@@ -69,7 +70,7 @@ ini_set('display_errors', 1);
                                     <th width="10%"><small><small>Importe Total</small></small></th>
                                     <th width="25%"><small><small>Concepto</small></small></th>
                                     <th width="10%" class="text-center"><small><small>Estado</small></small></th>
-                                    <th width="5%" class="text-right"><small>CodFactura</small></th>
+                                    <th width="5%" class="text-right"><small>Nro. Factura</small></th>
                                 </tr>
                             </thead>
                             <tbody >
@@ -134,7 +135,7 @@ ini_set('display_errors', 1);
                                             ?>
                                         </td>
                                         <td>
-                                            <?=$row['cod_facturaventa']?>
+                                            <?=$row['nro_factura']?>
                                         </td>
                                     </tr>
                                 <?php
