@@ -12,7 +12,7 @@ $globalNombreUnidad=$_SESSION["globalNombreUnidad"];
 $dbh = new Conexion();
   $sql="SELECT pr.codigo,pr.cod_gestion,pr.cod_estadoplanilla,pr.cod_comprobante1,pr.cod_comprobante2,pr.cod_comprobante3,pr.cod_comprobante4,
   (select g.nombre from gestiones g where g.codigo=pr.cod_gestion) as gestion,CONCAT_WS(' ',p.primer_nombre,p.paterno,p.materno)as persona_creacion,
-  (select ep.nombre from estados_planilla ep where ep.codigo=pr.cod_estadoplanilla) as nombre_estadoplanilla,DATE_FORMAT(pr.created_at,'%d/%m/%Y')as fecha_creacion
+  (select ep.nombre from estados_planilla ep where ep.codigo=pr.cod_estadoplanilla) as nombre_estadoplanilla,DATE_FORMAT(pr.created_at,'%d/%m/%Y')as fecha_creacion, pr.cod_comprobante_r1,pr.cod_comprobante_r2,pr.cod_comprobante_r3,pr.cod_comprobante_r4
   from planillas_retroactivos pr join personal p on pr.created_by=p.codigo
    order by pr.cod_gestion desc";
   
@@ -30,6 +30,11 @@ $dbh = new Conexion();
   $stmtAdmnin->bindColumn('cod_comprobante2', $comprobante_x2);
   $stmtAdmnin->bindColumn('cod_comprobante3', $comprobante_x3);
   $stmtAdmnin->bindColumn('cod_comprobante4', $comprobante_x4);
+
+  $stmtAdmnin->bindColumn('cod_comprobante_r1', $comprobante_rx1);
+  $stmtAdmnin->bindColumn('cod_comprobante_r2', $comprobante_rx2);
+  $stmtAdmnin->bindColumn('cod_comprobante_r3', $comprobante_rx3);
+  $stmtAdmnin->bindColumn('cod_comprobante_r4', $comprobante_rx4);
 
   ?>
   <div class="content">
@@ -156,10 +161,24 @@ $dbh = new Conexion();
                               </a>
                             </li>
                             <?php } ?>
+                            <?php if($comprobante_rx1==0){ ?>
+                            <li>
+                              <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','planillas/executeComprobanteProvisionAguinaldosRetroactivo.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=1')"> 
+                                <i class="material-icons" title="Generar Comprobante Provisión Enero" style="color:red">input</i>Comprobante Provisión Enero
+                              </a>
+                            </li>
+                            <?php } ?>
                             <?php if($comprobante_x2==0){ ?>
                             <li>
                               <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','planillas/executeComprobanteRetroactivos.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=2')"> 
                                 <i class="material-icons" title="Generar Comprobante Febrero" style="color:red">input</i>Comprobante Febrero
+                              </a>
+                            </li>
+                            <?php } ?>
+                            <?php if($comprobante_rx2==0){ ?>
+                            <li>
+                              <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','planillas/executeComprobanteProvisionAguinaldosRetroactivo.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=2')"> 
+                                <i class="material-icons" title="Generar Comprobante Provisión Febrero" style="color:red">input</i>Comprobante Provisión Febrero
                               </a>
                             </li>
                             <?php } ?>
@@ -170,10 +189,24 @@ $dbh = new Conexion();
                               </a>
                             </li>
                             <?php } ?>
+                            <?php if($comprobante_rx3==0){ ?>
+                            <li>
+                              <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','planillas/executeComprobanteProvisionAguinaldosRetroactivo.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=3')"> 
+                                <i class="material-icons" title="Generar Comprobante Provisión Marzo" style="color:red">input</i>Comprobante Provisión Marzo
+                              </a>
+                            </li>
+                            <?php } ?>
                             <?php if($comprobante_x4==0){ ?>
                             <li>
                               <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','planillas/executeComprobanteRetroactivos.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=4')"> 
                                 <i class="material-icons" title="Generar Comprobante Abril" style="color:red">input</i>Comprobante Abril
+                              </a>
+                            </li>
+                            <?php } ?>
+                            <?php if($comprobante_rx4==0){ ?>
+                            <li>
+                              <a role="item" href="#" onclick="alerts.showSwal('warning-message-and-confirmationGeneral','planillas/executeComprobanteProvisionAguinaldosRetroactivo.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=4')"> 
+                                <i class="material-icons" title="Generar Comprobante Provisión Abril" style="color:red">input</i>Comprobante Provisión Abril
                               </a>
                             </li>
                             <?php } ?>

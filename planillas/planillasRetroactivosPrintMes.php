@@ -2,6 +2,9 @@
 require_once '../conexion.php';
 require_once '../functions.php';
 require_once '../functionsGeneral.php';
+require_once '../functionsPlanillas.php';
+
+
 // session_start();
 set_time_limit(0);
 
@@ -140,7 +143,14 @@ $html.=  '<header class="header">'.
             $subtotal_liquido_pagable=0;
             $subtotal_aporte_sol_13_25_35=0;
 
-            $sql="SELECT p.codigo,prd.correlativo_planilla,a.nombre as area,p.identificacion as ci,p.paterno,p.materno,p.primer_nombre,prd.ing_planilla,prd.retiro_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,(select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,prd.haber_basico_anterior,prd.haber_basico_nuevo,prd.bono_antiguedad_anterior,prd.bono_antiguedad_nuevo,prd.retroactivo_enero,prd.retroactivo_febrero,prd.retroactivo_marzo,prd.retroactivo_abril,prd.antiguedad_enero,prd.antiguedad_febrero,prd.antiguedad_marzo,prd.antiguedad_abril,prd.total_ganado,prd.ap_vejez,prd.riesgo_prof,prd.com_afp,prd.aporte_sol,prd.total_descuentos,prd.liquido_pagable,prd.bonoacademico_enero,prd.bonoacademico_febrero,prd.bonoacademico_marzo,prd.bonoacademico_abril,prd.a_solidario_13_25_35_enero,prd.a_solidario_13_25_35_febrero,prd.a_solidario_13_25_35_marzo,prd.a_solidario_13_25_35_abril
+            $sql="SELECT p.codigo,prd.correlativo_planilla,a.nombre as area,p.identificacion as ci,p.paterno,p.materno,p.primer_nombre,prd.ing_planilla,
+              prd.retiro_planilla,(select c.nombre from cargos c where c.codigo=p.cod_cargo) as cargo,
+              (select pd.abreviatura from personal_departamentos pd where pd.codigo=p.cod_lugar_emision) as emision,prd.haber_basico_anterior,prd.haber_basico_nuevo,
+              prd.bono_antiguedad_anterior,prd.bono_antiguedad_nuevo,prd.retroactivo_enero,prd.retroactivo_febrero,prd.retroactivo_marzo,prd.retroactivo_abril,
+              prd.antiguedad_enero,prd.antiguedad_febrero,prd.antiguedad_marzo,prd.antiguedad_abril,prd.total_ganado,prd.ap_vejez,
+              prd.riesgo_prof,prd.com_afp,prd.aporte_sol,prd.total_descuentos,prd.liquido_pagable,prd.bonoacademico_enero,prd.bonoacademico_febrero,
+              prd.bonoacademico_marzo,prd.bonoacademico_abril,prd.a_solidario_13_25_35_enero,prd.a_solidario_13_25_35_febrero,prd.a_solidario_13_25_35_marzo,
+              prd.a_solidario_13_25_35_abril
               from  personal p join planillas_retroactivos_detalle prd on p.codigo=prd.cod_personal join areas a on prd.cod_area=a.codigo
               where prd.cod_planilla=$codPlanilla
               order by correlativo_planilla";
@@ -148,7 +158,7 @@ $html.=  '<header class="header">'.
             $stmt = $dbh->prepare($sql);
             $stmt->execute();
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-              
+              $codigoPersonal=$row['codigo'];
               $area=$row['area'];
               $retiro_planilla=$row['retiro_planilla'];
               if($retiro_planilla>"2022-01-01"){//fecha VALIDA
@@ -174,34 +184,62 @@ $html.=  '<header class="header">'.
                 '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bono_antiguedad_anterior']).'</small></small></small></small></td>'.
                 '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['haber_basico_nuevo']).'</small></small></small></small></td>'.
                 '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bono_antiguedad_nuevo']).'</small></small></small></small></td>';
+
+                $a_solidario_13_25_35 = 0;
+
                 if($cod_mes == 1){
+                  $totalGanadoMes=$row['retroactivo_enero'] + $row['antiguedad_enero'] + $row['bonoacademico_enero'];
+                  $a_solidario_13_25_35 = $row['a_solidario_13_25_35_enero'];
+
                   $html .= '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['retroactivo_enero']).'</small></small></small></small></td>'.
                   '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_enero']).'</small></small></small></small></td>'.
                   '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bonoacademico_enero']).'</small></small></small></small></td>';
                 }
                 if($cod_mes == 2){                  
+                  $totalGanadoMes=$row['retroactivo_febrero'] + $row['antiguedad_febrero'] + $row['bonoacademico_febrero'];
+                  $a_solidario_13_25_35 = $row['a_solidario_13_25_35_febrero'];
+                  
                   $html .= '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['retroactivo_febrero']).'</small></small></small></small></td>'.
                   '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_febrero']).'</small></small></small></small></td>'.
                   '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bonoacademico_febrero']).'</small></small></small></small></td>';
                 }
                 if($cod_mes == 3){                  
+                  $totalGanadoMes=$row['retroactivo_marzo'] + $row['antiguedad_marzo'] + $row['bonoacademico_marzo'];
+                  $a_solidario_13_25_35 = $row['a_solidario_13_25_35_marzo'];
+                  
                   $html .= '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['retroactivo_marzo']).'</small></small></small></small></td>'.
                   '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_marzo']).'</small></small></small></small></td>'.
                   '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bonoacademico_marzo']).'</small></small></small></small></td>';
                 }
                 if($cod_mes == 4){                  
+                  $totalGanadoMes=$row['retroactivo_abril'] + $row['antiguedad_abril'] + $row['bonoacademico_abril'];
+                  $a_solidario_13_25_35 = $row['a_solidario_13_25_35_abril'];
+                  
                   $html .= '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['retroactivo_abril']).'</small></small></small></small></td>'.
                   '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['antiguedad_abril']).'</small></small></small></small></td>'.
                   '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['bonoacademico_abril']).'</small></small></small></small></td>';
                 }
-                $html .= '<td class="text-right"><small><small><small><small>'.formatNumberDec(($row['total_ganado']/4)).'</small></small></small></small></td>'.
-                '<td class="text-right"><small><small><small><small>'.formatNumberDec(($row['ap_vejez']/4)).'</small></small></small></small></td>'.
-                '<td class="text-right"><small><small><small><small>'.formatNumberDec(($row['riesgo_prof']/4)).'</small></small></small></small></td>'.
-                '<td class="text-right"><small><small><small><small>'.formatNumberDec(($row['com_afp']/4)).'</small></small></small></small></td>'.
-                '<td class="text-right"><small><small><small><small>'.formatNumberDec(($row['aporte_sol']/4)).'</small></small></small></small></td>'.
-                '<td class="text-right"><small><small><small><small>'.formatNumberDec($row['a_solidario_13_25_35_enero']+$row['a_solidario_13_25_35_febrero']+$row['a_solidario_13_25_35_marzo']+$row['a_solidario_13_25_35_abril']).'</small></small></small></small></td>'.
-                '<td class="text-right"><small><small><small><small>'.formatNumberDec(($row['total_descuentos']/4)).'</small></small></small></small></td>'.
-                '<td class="text-right"><small><small><small><small>'.formatNumberDec(($row['liquido_pagable']/4)).'</small></small></small></small></td>';
+                $aporteVejez=$totalGanadoMes*10/100;//10%
+                //CASO JOSE DURAN 
+                if($codigoPersonal==84){
+                  $aporteVejez=0;//10%
+                }
+                $riesgo_prof=$totalGanadoMes*1.71/100;//1.7%
+                $com_afp=$totalGanadoMes*0.5/100;//0.5%
+                $aporte_sol=$totalGanadoMes*0.5/100;//0.5%
+
+                $totalDescuentosMes=$aporteVejez + $riesgo_prof + $com_afp + $aporte_sol + $a_solidario_13_25_35;
+
+                $liquidoPagableMes = $totalGanadoMes - $totalDescuentosMes;
+
+                $html .= '<td class="text-right"><small><small><small><small>'.formatNumberDec($totalGanadoMes).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($aporteVejez).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($riesgo_prof).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($com_afp).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($aporte_sol).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($a_solidario_13_25_35).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($totalDescuentosMes).'</small></small></small></small></td>'.
+                '<td class="text-right"><small><small><small><small>'.formatNumberDec($liquidoPagableMes).'</small></small></small></small></td>';
              
               //suma de totales
               $subtotal_haber_basico_anterior+=$row['haber_basico_anterior'];                  
@@ -222,14 +260,17 @@ $html.=  '<header class="header">'.
               $subtotal_retroactivo_abril+=$row['retroactivo_abril']; 
               $subtotal_antiguedad_abril+=$row['antiguedad_abril']; 
               $subtotal_bonoacademico_abril+=$row['bonoacademico_abril']; 
-              $subtotal_total_ganado+=$row['total_ganado']; 
-              $subtotal_ap_vejez+=$row['ap_vejez']; 
-              $subtotal_riesgo_prof+=$row['riesgo_prof']; 
-              $subtotal_com_afp+=$row['com_afp']; 
-              $subtotal_aporte_sol+=$row['aporte_sol']; 
-              $subtotal_aporte_sol_13_25_35+=$row['a_solidario_13_25_35_enero']+$row['a_solidario_13_25_35_febrero']+$row['a_solidario_13_25_35_marzo']+$row['a_solidario_13_25_35_abril']; 
-              $subtotal_total_descuentos+=$row['total_descuentos']; 
-              $subtotal_liquido_pagable+=$row['liquido_pagable'];  
+              $subtotal_total_ganado+=$row['total_ganado'];
+              
+              
+              $subtotal_ap_vejez+=$aporteVejez; 
+              $subtotal_riesgo_prof+=$riesgo_prof; 
+              $subtotal_com_afp+=$com_afp; 
+              $subtotal_aporte_sol+=$aporte_sol; 
+              $subtotal_aporte_sol_13_25_35+=$a_solidario_13_25_35;
+
+              $subtotal_total_descuentos+=$totalDescuentosMes; 
+              $subtotal_liquido_pagable+=$liquidoPagableMes;  
               $index++;
             }
       $html.='</tbody>';

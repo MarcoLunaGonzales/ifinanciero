@@ -209,7 +209,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
       $stmtXY->execute();      
       while ($rowXY = $stmtXY->fetch(PDO::FETCH_ASSOC)) {
         $codigoUOXY=$rowXY['codigo'];        
-        $monto_area=totalGanadoArea($gestionPlanilla, $mesPlanilla, $cod_area_contabilizacionX,$codigoUOXY);        
+        $monto_area=totalGanadoAreaRetro($gestionPlanilla, $mesPlanilla, $cod_area_contabilizacionX,$codigoUOXY);        
         if($monto_area>0){
           $montoAguinaldo=$monto_area*0.0833;    
           $totalProvision+=$montoAguinaldo;
@@ -268,7 +268,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
     $debe=$diferencia*(-1);    
     $haber=0;    
   }
-  if($debe>0 || $haber>0){
+  if($debe>0.001 || $haber>0.001){
     $cod_cuenta="306";
     $sqlInsertDet="INSERT INTO comprobantes_detalle (cod_comprobante, cod_cuenta, cod_cuentaauxiliar, cod_unidadorganizacional, cod_area, debe, haber, glosa, orden) VALUES ('$codComprobante','$cod_cuenta','0','$codUOCentroCosto','$codAreaCentroCosto','$debe','$haber','$glosaDetalleGeneral','$ordenDetalle')";
     $stmtInsertDet = $dbh->prepare($sqlInsertDet);
@@ -277,11 +277,26 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
   }
   
 
-  //indicamos que ya se realizo el comprbante      
-  $stmtUdatePlanilla = $dbh->prepare("UPDATE planillas set cod_comprobante_prevision='$codComprobante' where codigo=$codigo_planilla");
-  $stmtUdatePlanilla->execute();
+  if($mesPlanilla==1){
+    $stmtUdatePlanilla = $dbh->prepare("UPDATE planillas_retroactivos set cod_comprobante_r1='$codComprobante' where codigo=$codigo_planilla");
+    $stmtUdatePlanilla->execute();    
+  }
+  if($mesPlanilla==2){
+    $stmtUdatePlanilla = $dbh->prepare("UPDATE planillas_retroactivos set cod_comprobante_r2='$codComprobante' where codigo=$codigo_planilla");
+    $stmtUdatePlanilla->execute();    
+  }  
+  if($mesPlanilla==3){
+    $stmtUdatePlanilla = $dbh->prepare("UPDATE planillas_retroactivos set cod_comprobante_r3='$codComprobante' where codigo=$codigo_planilla");
+    $stmtUdatePlanilla->execute();    
+  }  
+  if($mesPlanilla==4){
+    $stmtUdatePlanilla = $dbh->prepare("UPDATE planillas_retroactivos set cod_comprobante_r4='$codComprobante' where codigo=$codigo_planilla");
+    $stmtUdatePlanilla->execute();    
+  }  
 
-   ?>
+
+
+  ?>
    <script>
       $(document).ready(function()
       {           
@@ -313,7 +328,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
       </div>       
       <div class="modal-footer">          
         <a href="<?=$urlComprobantesLista2;?>" type="button" class="btn btn-success">Ir a Comprobantes</a>
-        <a href="<?=$urlPlanillasSueldoList2;?>" type="button" class="btn btn-danger">Ir a Planillas</a>
+        <a href="../index.php?opcion=planillasRetroactivoPersonal" type="button" class="btn btn-danger">Ir a Planillas</a>
       </div>
     </div>
   </div>
@@ -339,7 +354,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
       </div>       
       <div class="modal-footer">                  
         <a href="<?=$urlPersonalLista2;?>" type="button" class="btn btn-success">Ir a Personal</a>
-        <a href="<?=$urlPlanillasSueldoList2;?>" type="button" class="btn btn-danger">Ir a Planillas</a>
+        <a href="../index.php?opcion=planillasRetroactivoPersonal" type="button" class="btn btn-danger">Ir a Planillas</a>
       </div>
     </div>
   </div>
