@@ -501,6 +501,7 @@ if(isset($_POST['nombre'])){
           for($att=0;$att<$nC;$att++){
               $nombreAtributo=$atributos[$att]->nombre;
               $direccionAtributo=$atributos[$att]->direccion;
+              $procesosAtributo=$atributos[$att]->procesos;
               $marcaAtributo=$atributos[$att]->marca;
               $normaAtributo=$atributos[$att]->norma;
               //
@@ -511,8 +512,8 @@ if(isset($_POST['nombre'])){
               $ciudadAtributo=$atributos[$att]->ciudad;
 
               $codSimulacionServicioAtributo=obtenerCodigoSimulacionServicioAtributo();
-              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (codigo,cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello,cod_pais,cod_estado,cod_ciudad) 
-              VALUES ('$codSimulacionServicioAtributo','$codSimServ', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo','$paisAtributo','1','$ciudadAtributo')";
+              $sqlDetalleAtributos="INSERT INTO simulaciones_servicios_atributos (codigo,cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello,cod_pais,cod_estado,cod_ciudad,procesos) 
+              VALUES ('$codSimulacionServicioAtributo','$codSimServ', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo','$marcaAtributo','$normaAtributo','$selloAtributo','$paisAtributo','1','$ciudadAtributo','$procesosAtributo')";
               $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
               $flagsuccess=$stmtDetalleAtributos->execute();
               array_push($SQLDATOSINSTERT,$flagsuccess);

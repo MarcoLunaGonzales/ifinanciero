@@ -21288,12 +21288,14 @@ function agregarSitioPropuesta(){
     var codigoNuevo   = atributoSitio.length + 1;
 
     // variable
-    var nombre        = $('#mas_nombre').val();
-    var direccion     = $('#mas_direccion').val();
+    var nombre    = $('#mas_nombre').val();
+    var direccion = $('#mas_direccion').val();
+    var procesos  = $('#mas_procesos').val();
 
     var atributo={
         nombre: nombre,
         direccion: direccion,
+        procesos: procesos,
         norma:'',
         atr_norma_nac: '',
         atr_norma_int: '',
@@ -21320,7 +21322,7 @@ function agregarSitioPropuesta(){
             if (atributo.codigo == cod_registro) {
                 atributo.nombre = nombre;
                 atributo.direccion = direccion;
-          
+                atributo.procesos  = procesos;
             }
             return atributo;
         });
@@ -21346,6 +21348,7 @@ function actualizarTablaSitios() {
         row += '<td>' + atributo.codigo + '</td>';
         row += '<td>' + atributo.nombre + '</td>';
         row += '<td>' + atributo.direccion + '</td>';
+        row += '<td>' + atributo.procesos + '</td>';
         row += '<td class="text-right small"><div class="btn-group">';
         row += '<button title="Editar" class="btn btn-sm btn-fab btn-success btnEditarAtributo" onclick="editarAtributoSitio(' + atributo.codigo + ');"><i class="material-icons">edit</i></button>';
         row += '<button class="btn btn-sm btn-fab btn-danger" title="Eliminar" onclick="eliminarAtributoSitio(' + atributo.codigo + ');"><i class="material-icons">delete</i></button>';

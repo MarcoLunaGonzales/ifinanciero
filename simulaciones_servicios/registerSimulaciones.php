@@ -687,11 +687,12 @@ $fechaActualInput=date("Y-m-d");
                         <th>#</th>
                         <th>NOMBRE</th>
                         <th>DIRECCION</th>
+                        <th>PROCESO</th>
                         <td class="text-right" width="18%">OPCION</td>
                       </tr>
                     </thead>
                     <tbody id="listSitio">
-                      <tr><td colspan="4">No existen registros.</td></tr>
+                      <tr><td colspan="5">No existen registros.</td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -1129,6 +1130,14 @@ $fechaActualInput=date("Y-m-d");
                     <div class="col-sm-9">                     
                         <div class="form-group bmd-form-group">
                             <input type="text" class="form-control" name="mas_direccion" id="mas_direccion" value="" onkeyup="javascript:this.value=this.value.toUpperCase();">
+                        </div>
+                    </div>  
+                </div>
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Proceso</label>
+                    <div class="col-sm-9">                     
+                        <div class="form-group bmd-form-group">
+                            <textarea class="form-control" name="mas_procesos" id="mas_procesos" row="2"></textarea>
                         </div>
                     </div>  
                 </div>
