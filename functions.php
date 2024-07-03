@@ -11783,7 +11783,8 @@ function obtenerComprobanteCajaChicaRelacionado($codigo){
   function convertirAUltimoDiaHabil($fechaUltimoDia){
    $diaComprobar = date('w',strtotime($fechaUltimoDia));
    if((int)$diaComprobar==0){
-     return date('Y-m-d', strtotime("{$fechaUltimoDia} - 1 day"));
+     //return date('Y-m-d', strtotime("{$fechaUltimoDia} - 1 day"));
+     return $fechaUltimoDia; 
    }
    //elseif ((int)$diaComprobar==6) {
      //return date('Y-m-d', strtotime("{$fechaUltimoDia} - 1 day"));

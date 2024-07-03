@@ -91,7 +91,9 @@ for ($i=0; $i <$cont_areas; $i++) {
   $cod_area_contabilizacionX=$datos_area[1]; //
   $nombre_area_contabilizacionX="";
   $totalGanadoAreax=totalGanadoAreaRetro($gestionPlanilla, $mesPlanilla, $cod_areaX,null);
-  // echo $totalGanadoAreax."<br>";
+  
+  echo $cod_areaX." ".$totalGanadoAreax."<br>";
+  
   $array_monto_area[$cod_area_contabilizacionX]+=$totalGanadoAreax;
   $totalGanandoMes+=$totalGanadoAreax;
 }
