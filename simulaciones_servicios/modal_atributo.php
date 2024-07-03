@@ -177,6 +177,14 @@
                         </div>
                     </div>  
                 </div>
+                <div class="row" <?=$campos_modal_sitio?>>
+                    <label class="col-sm-2 col-form-label">Procesos</label>
+                    <div class="col-sm-9">                     
+                        <div class="form-group bmd-form-group">
+                            <textarea class="form-control" name="atr_mas_procesos" id="atr_mas_procesos" row="2"></textarea>
+                        </div>
+                    </div>  
+                </div>
                 <hr>
                 <div class="form-group float-right">
                     <button type="button" class="btn btn-default" id="guardarForm" onclick="guardarFormAtributo()">Guardar</button>
@@ -211,6 +219,7 @@
         // Producto
         $('#atr_map_producto').val("");
         $('#atr_map_direccion').val("");
+        $('#atr_map_procesos').val("");
         $('#atr_map_marca').val("");
         $('#atr_map_norma_nac_cod').selectpicker('deselectAll');
         $('#atr_map_norma_int_cod').selectpicker('deselectAll');
@@ -234,6 +243,7 @@
         var norma_int_cod = $("#atr_map_norma_int_cod").val().join(",");
         var nombre        = $('#atr_map_producto').val() || $('#atr_mas_nombre').val();
         var direccion     = $('#atr_map_direccion').val() || $('#atr_mas_direccion').val();
+        var procesos      = $('#atr_mas_procesos').val() || '';
         var marca         = $('#atr_map_marca').val();
         var sello         = $('#atr_map_sello').val();
         var tipo_atributo = <?=$tipo_atributo?>;
@@ -246,6 +256,7 @@
             norma_int_cod: norma_int_cod,
             nombre: nombre,
             direccion: direccion,
+            procesos: procesos,
             marca: marca,
             sello: sello,
             tipo_atributo:tipo_atributo
@@ -294,6 +305,8 @@
         var norma_int_cod_array = String(norma_int_cod).split(',').map(item => item.trim());
         $('#atr_map_norma_int_cod').val(norma_int_cod_array).selectpicker('refresh');
 
+        // Titulo
+        $('#modal_form_atr').html('Editar ' + '<?=$titulo_form;?>');
 
         $('#atr_map_sello').val($(this).data('sello'));
         // Modal
@@ -308,6 +321,10 @@
         $('#cod_simulacionservicio_atributo').val($(this).data('cod_simulacionservicio_atributo'));
         $('#atr_mas_nombre').val($(this).data('nombre'));
         $('#atr_mas_direccion').val($(this).data('direccion'));
+        $('#atr_mas_procesos').val($(this).data('procesos'));
+
+        // Titulo
+        $('#modal_form_atr').html('Editar ' + '<?=$titulo_form;?>');
         // Modal
         $('#modal_lista_atributo').modal('toggle');
         $('#modal_gestion_atributo').modal('show');
@@ -322,6 +339,7 @@
         var norma_int_cod = $("#atr_map_norma_int_cod").val().join(",");
         var nombre        = $('#atr_map_producto').val() || $('#atr_mas_nombre').val();
         var direccion     = $('#atr_map_direccion').val() || $('#atr_mas_direccion').val();
+        var procesos      = $('#atr_mas_procesos').val() || '';
         var marca         = $('#atr_map_marca').val();
         var sello         = $('#atr_map_sello').val();
         var cod_simulacionservicio_atributo = $('#cod_simulacionservicio_atributo').val();
@@ -333,6 +351,7 @@
             norma_int_cod: norma_int_cod,
             nombre: nombre,
             direccion: direccion,
+            procesos: procesos,
             marca: marca,
             sello: sello
         };

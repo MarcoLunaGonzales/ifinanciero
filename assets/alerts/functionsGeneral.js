@@ -21336,6 +21336,7 @@ function agregarSitioPropuesta(){
 function limpiarModalSitio(){
     $('#mas_nombre').val('');
     $('#mas_direccion').val('');
+    $('#mas_procesos').val('');
 }
 // Función para actualizar la tabla de productos
 function actualizarTablaSitios() {
@@ -21367,6 +21368,7 @@ function editarAtributoSitio(codigo) {
     if (atributo) {        
         $('#mas_nombre').val(atributo.nombre);
         $('#mas_direccion').val(atributo.direccion);
+        $('#mas_procesos').val(atributo.procesos);
 
         // Abre el modal
         $('#modal_atributo_sitio').modal('show');

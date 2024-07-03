@@ -10,12 +10,13 @@ $dbh = new Conexion();
 $cod_simulacion_servicio = $_POST["cod_simulacion_servicio"];
 $nombreAtributo     = $_POST["nombre"];
 $direccionAtributo  = $_POST["direccion"];
+$procesosAtributo   = $_POST["procesos"];
 $marcaAtributo      = $_POST["marca"];
 $selloAtributo      = $_POST["sello"];
 $tipo_atributo      = $_POST["tipo_atributo"];
 
-$sqlDetalleAtributos = "INSERT INTO simulaciones_servicios_atributos (cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello,cod_pais,cod_estado,cod_ciudad) 
-                        VALUES ('$cod_simulacion_servicio', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo', '$marcaAtributo', '', '$selloAtributo', '', '1', '')";
+$sqlDetalleAtributos = "INSERT INTO simulaciones_servicios_atributos (cod_simulacionservicio, nombre, direccion, cod_tipoatributo,marca,norma,nro_sello,cod_pais,cod_estado,cod_ciudad,procesos) 
+                        VALUES ('$cod_simulacion_servicio', '$nombreAtributo', '$direccionAtributo', '$tipo_atributo', '$marcaAtributo', '', '$selloAtributo', '', '1', '', '$procesosAtributo')";
 // echo $sqlDetalleAtributos;
 $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
 

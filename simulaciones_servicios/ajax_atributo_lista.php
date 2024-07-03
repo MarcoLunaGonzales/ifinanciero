@@ -10,6 +10,7 @@ $sqlArrayAtributos="SELECT
 					sa.codigo as cod_simulacionservicio_atributo,
 					sa.nombre,
 					sa.direccion,
+					sa.procesos,
 					sa.marca,
 					sa.nro_sello,
 					GROUP_CONCAT(DISTINCT vi.codigo SEPARATOR ', ') AS atr_norma_int,
@@ -57,7 +58,8 @@ $atributos = $stmtArrayAtributos->fetchAll(PDO::FETCH_ASSOC);
 	                <tr>
 						<th width="5%">#</th>
 						<th width="25%">Nombre</th>
-						<th width="60%">Dirección</th>
+						<th width="30%">Dirección</th>
+						<th width="30%">Proceso</th>
 						<th width="10%">Acciones</th>
 					</tr>
 				<?php }else if($tipo_modal == 2){ ?>
@@ -84,6 +86,7 @@ $atributos = $stmtArrayAtributos->fetchAll(PDO::FETCH_ASSOC);
 						<td><?=$index?></td>
 						<td><?=$atributo['nombre']?></td>
 						<td><?=$atributo['direccion']?></td>
+						<td><?=$atributo['procesos']?></td>
 						<td>
 							<button type="button" class="btn btn-info btn-sm btn-fab editarFormAtributoSitio"
 								data-cod_simulacionservicio_atributo="<?=$atributo['cod_simulacionservicio_atributo']?>"
@@ -122,7 +125,8 @@ $atributos = $stmtArrayAtributos->fetchAll(PDO::FETCH_ASSOC);
 								data-sello="<?=$atributo['nro_sello']?>"
 								data-atr_norma_int="<?=$atributo['atr_norma_int']?>"
 								data-atr_norma_nac="<?=$atributo['atr_norma_nac']?>"
-								data-direccion="<?=$atributo['direccion']?>">
+								data-direccion="<?=$atributo['direccion']?>"
+								data-procesos="<?=$atributo['procesos']?>">
 							<i class="material-icons" title="Editar Plantilla">edit</i>
 						</button>
 

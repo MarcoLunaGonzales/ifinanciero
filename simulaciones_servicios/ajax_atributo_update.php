@@ -10,6 +10,7 @@ $dbh = new Conexion();
 $cod_simulacionservicio_atributo = $_POST["cod_simulacionservicio_atributo"];
 $nombreAtributo     = $_POST["nombre"];
 $direccionAtributo  = $_POST["direccion"];
+$procesosAtributo   = $_POST["procesos"];
 $marcaAtributo      = $_POST["marca"];
 $selloAtributo      = $_POST["sello"];
 
@@ -17,7 +18,8 @@ $sqlDetalleAtributos = "UPDATE simulaciones_servicios_atributos SET
                         nombre = '$nombreAtributo',
                         direccion = '$direccionAtributo',
                         marca = '$marcaAtributo',
-                        nro_sello = '$selloAtributo'
+                        nro_sello = '$selloAtributo',
+                        procesos = '$procesosAtributo'
                         WHERE codigo = '$cod_simulacionservicio_atributo'";
 // echo $sqlDetalleAtributos;
 $stmtDetalleAtributos = $dbh->prepare($sqlDetalleAtributos);
