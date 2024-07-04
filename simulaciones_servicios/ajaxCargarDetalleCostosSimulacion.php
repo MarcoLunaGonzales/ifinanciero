@@ -581,8 +581,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                  $columna_1 += $montoCal;
                 }         
 
-               $html.='<td class="text-right text-muted">'.number_format($montoCalOriginal, 2, '.', ',').'</td>
-                      <td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>'.
+               $html.='<td class="text-right text-muted">'.number_format($montoCalOriginal, 2, '.', ',').'</td>'.
                       '<td class="text-right text-muted">'.number_format($montoCal/$usd, 2, '.', ',').'</td>';
                       if($tipoCosto!=1){
                         $html.='<td class="text-right text-muted">'.number_format($montoCal/$cantidadDetalle, 2, '.', ',').'</td><td class="text-right text-muted">'.number_format(($montoCal/$cantidadDetalle)/$usd, 2, '.', ',').'</td><td class="text-right text-muted">'.$cantidadDetalle.'</td>';
