@@ -57,6 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     if(isset($datos['idIdentificacion'])) $idIdentificacion=$datos['idIdentificacion'];//Tipo de Identificacion.
                     if(isset($datos['complementoCiCliente'])) $complementoCiCliente=$datos['complementoCiCliente'];
 
+                    // En caso de haber una reversión de PREFAC | CODIGO
+                    $reversion_prefac = $datos['reversion_prefac'] ?? 0;
+
                     /*Revisamos el tamano de la cadena para validar si es un dato coherente*/
                     $tamanioComplementoCliente=0;
                     if($complementoCiCliente!=""){
@@ -218,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             }
                             
                             if($verficaCursoString){
-                                $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas,$nroTarjeta,$idIdentificacion,$complementoCiCliente,$CorreoCliente,$idCliente,$usuario);//llamamos a la funcion                 
+                                $rspString = ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal_x,$items,$CodLibretaDetalle,$tipoPago,$normas,$nroTarjeta,$idIdentificacion,$complementoCiCliente,$CorreoCliente,$idCliente,$usuario,$reversion_prefac);//llamamos a la funcion                 
                                 $rspArray = explode("###", $rspString);
                                 $rsp=$rspArray[0];
 
@@ -241,8 +244,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 }
                                 
                             }else{ 
-                                $estado  = '-100';
-                                $mensaje = "Venta registrada sin facturar (Curso en planificación)";
+                                if($tipoPago == 5 || $tipoPago == 6){
+                                    // Si el Tipo de Pago es 5 o 6
+                                    $estado  = '-200';
+                                    $mensaje = "Factura no generada. Curso en planificación, tipo de pago no habilitado.";
+                                }else{
+                                    $estado  = '-100';
+                                    $mensaje = "Venta registrada sin facturar (Curso en planificación)";
+                                }
                             }
                         }
                             

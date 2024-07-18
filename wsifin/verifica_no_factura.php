@@ -50,6 +50,14 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
     if($verf_estado_curso){                    
         return true;// FACTURAR
     }else{
+        /*******************************
+         * Verificación de TIPO DE PAGO
+         *******************************/
+        if($tipoPago == 5 || $tipoPago == 6){
+            return false;
+        }
+        /*******************************/
+        // Generación de Comprobante PREFACTURA
         $codComprobante = obtenerCodigoComprobante();
         $created_at     = date('Y-m-d H:i:s');
         $sql="INSERT INTO ventas_no_facturadas(sucursalId, pagoCursoSuscripcionId, pasarelaId, fechaFactura, nitciCliente, razonSocial, importeTotal, tipoPago, codLibretaDetalle, usuario, idCliente, idIdentificacion, complementoCiCliente, nroTarjeta, CorreoCliente, estado, cod_comprobante1, created_at) 
@@ -119,10 +127,8 @@ function verificaVentaNoFacturada($sucursalId,$pasarelaId,$fechaFactura,$nitciCl
             $descripcion_glosa = 'Contabilizacion de PREFAC. '.$concepto_contabilizacion; // ? GLOSA DETALLE
             $flagSuccessDet = insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_debe,$monto_haber,$descripcion_glosa,$ordenDetalle);
             /************************************************************************/
-            return false; // No permite Factura | Curso en Programado/Planificado, Suspendido
-        }else{
-            return false; // No permite Factura | Curso en Programado/Planificado, Suspendido
         }
+        return false; // No permite Factura | Curso en Programado/Planificado, Suspendido
     }
 }
 ?>

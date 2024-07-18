@@ -54,6 +54,12 @@ if ($cod_facturacion > 0){
     $dias_credito=$result['dias_credito'];
     $correo_contacto=$result['correo_contacto'];
     $nro_tarjeta=$result['nro_tarjeta'];
+    
+    if(empty($razon_social)){
+        // Verifica si tiene texto en la razon_social
+        // En caso de estar vacio agrega nombre del cliente
+        $razon_social = $name_cliente;
+    }
 }else {
     $nombre_simulacion = $resultServicio['nombre'];
     if(isset($_GET['q'])){

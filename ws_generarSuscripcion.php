@@ -88,8 +88,8 @@ try {
             if(empty($sw_token)){
                 $direccion = $url_ecommerce.'usuario/login.php';
                 
-                $user     = 'juan.quenallata@ibnorca.org';
-                $password = md5('juanito2020');
+                $user     = 'mluna@minkasoftware.com';
+                $password = md5('4868422');
                 
                 // $user     = $_SESSION['globalCredUser'];
                 // $password = $_SESSION['globalCredPassword'];

@@ -1,6 +1,6 @@
 <?php //ESTADO FINALIZADO
 
-function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items,$CodLibretaDetalle,$tipoPago,$normas,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$correoCliente,$cod_cliente,$usuario)
+function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciCliente,$razonSocial,$importeTotal,$items,$CodLibretaDetalle,$tipoPago,$normas,$siat_nroTarjeta,$siat_tipoidentificacion,$siat_complemento,$correoCliente,$cod_cliente,$usuario,$reversion_prefac=0)
 {
     require_once __DIR__.'/../conexion.php';
     //require '../assets/phpqrcode/qrlib.php';
@@ -134,7 +134,7 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                     }
 
                     if($flagSuccess){
-                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,$tipoPago,$CodLibretaDetalle,$normas,$cod_facturaVenta);
+                        $cod_comprobante=ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_correlativo,$tipoPago,$CodLibretaDetalle,$normas,$cod_facturaVenta,$reversion_prefac);
                         if($cod_comprobante==null || $cod_comprobante==''){
                             $sqldeleteCabeceraFactura="DELETE from facturas_venta where codigo=$cod_facturaVenta";
                             $stmtDeleteCAbeceraFactura = $dbh->prepare($sqldeleteCabeceraFactura);
@@ -198,6 +198,15 @@ function ejecutarGenerarFactura($sucursalId,$pasarelaId,$fechaFactura,$nitciClie
                                         }
                                     }   
                                 }
+
+                                // Si hay codigo de PREFAC se actualiza codigo de comprobante en no_fact
+                                if($reversion_prefac > 0){
+                                    // Actualiza Codigo de Comprobante de PREFAC
+                                    $sqlPrefac  = "UPDATE ventas_no_facturadas SET cod_comprobante2='$cod_comprobante' WHERE codigo = '$reversion_prefac'";
+                                    $stmtPrefac = $dbh->prepare($sqlPrefac);
+                                    $stmtPrefac->execute();
+                                }
+
                                 if($banderaSW){
                                     $sqlUpdateFact="UPDATE facturas_venta set idTransaccion_siat='$idTransaccion_x',nro_factura='$nroFactura_x' where codigo in ($cod_facturaVenta)";
                                     $stmtUpdateFact = $dbh->prepare($sqlUpdateFact);

@@ -159,7 +159,7 @@ if($sw_auxiliar==0){//sin  distribucion de sueldos pendientes
 
   $glosaDetalleGeneral="Personal IBNORCA registro planillas de sueldos correspondiente a : ".$namemesPlanilla."/".$anioPlanilla;      
   $codUOCentroCosto=$globalUnidadX;
-  $codAreaCentroCosto="502";
+  $codAreaCentroCosto="501"; // Anterior 502
   //SUELDOS POR PAGAR
   $totalLiquidoPagable=totalLiquidoPagable($gestionPlanilla, $mesPlanilla);
   $cod_cuenta=111;

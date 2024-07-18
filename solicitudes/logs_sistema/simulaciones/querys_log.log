@@ -128,3 +128,8 @@
       FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
       LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
       WHERE s.cod_estadosimulacion=5  order by s.codigo desc]#####ajaxListSimulacion.php#####-
+[Mon, 08 Jul 2024 14:52:45 -0400][query]#####simulaciones#####ERROR 1#####[]#####ajaxListSimulacion.php#####-
+[Mon, 08 Jul 2024 14:52:45 -0400][query]#####simulaciones#####ERROR 2#####[SELECT s.*,p.cod_area,c.nombre as cliente, ser.Codigo as codigoservicio
+      FROM simulaciones_servicios s join plantillas_servicios p on p.codigo=s.cod_plantillaservicio join clientes c on c.codigo=s.cod_cliente 
+      LEFT JOIN servicios ser on ser.IdServicio=s.idServicio
+      WHERE s.cod_estadosimulacion=5  order by s.codigo desc]#####ajaxListSimulacion.php#####-

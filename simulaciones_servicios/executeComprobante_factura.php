@@ -324,7 +324,7 @@ function ejecutarComprobanteSolicitud($cod_solicitudfacturacion,$stringFacturas,
 	}	
 }
 
-function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$tipoPago,$cod_libretas_X,$normas,$cod_facturaventa){
+function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$items,$monto_total,$nro_factura,$tipoPago,$cod_libretas_X,$normas,$cod_facturaventa,$reversion_prefac=0){
 	require_once __DIR__.'/../conexion.php';
 	require_once '../functions.php';	
 	require_once __DIR__.'/../functionsGeneral.php';
@@ -373,6 +373,11 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
             $concepto_contabilizacion.=$detalle." / F ".$nro_factura." / ".$razon_social."<br>\n";
 			$concepto_contabilizacion.="Cantidad: ".$cantidad." * ".formatNumberDec($precio_natural)." = ".formatNumberDec($precio_x)."<br>\n";
         }
+		// Verificación PREFAC
+		if($reversion_prefac > 0){
+			$concepto_contabilizacion = "Cierre PREF $reversion_prefac.".$concepto_contabilizacion;
+		}
+
 		$codComprobante=obtenerCodigoComprobante();		
 		$flagSuccess=insertarCabeceraComprobante($codComprobante,$codEmpresa,$cod_uo_solicitud,$codAnio,$codMoneda,$codEstadoComprobante,$tipoComprobante,$fechaActual,$numeroComprobante,$concepto_contabilizacion,1,1);	
 		$ordenDetalle=1;//<--
@@ -390,11 +395,22 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 				$porcentaje_xyz=100-$porcentaje_cuenta_transitoria;
 				$monto_tipopago_1=$monto_total*$porcentaje_xyz/100;
 				$monto_tipopago_2=$monto_total*$porcentaje_cuenta_transitoria/100;
-				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
-				$ordenDetalle++;
-				array_push($SQLDATOSINSTERT,$flagSuccessDet);
-				$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle,0);
-				array_push($SQLDATOSINSTERT,$flagSuccessDet);
+				
+				// PREFAC: SOLO SE UTILIZA UNA CUENTA OTROS
+				if($reversion_prefac > 0){
+					$cod_cuenta = 167; // CUENTA: Otros (Debe)
+					$glosa 		= $descripcion;
+					$monto 		= $monto_tipopago_1 + $monto_tipopago_2;
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto,0,$glosa,$ordenDetalle);
+					$ordenDetalle++;
+				}else{
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_1,0,$descripcion,$ordenDetalle);
+					$ordenDetalle++;
+					array_push($SQLDATOSINSTERT,$flagSuccessDet);
+					$flagSuccessDet=insertarDetalleComprobante($codComprobante,$cod_cuenta_tarjetacredito,0,$cod_uo_solicitud,$cod_area_solicitud,$monto_tipopago_2,0,$descripcion,$ordenDetalle,0);
+					array_push($SQLDATOSINSTERT,$flagSuccessDet);
+				}
+
 			}else{
 				if($cod_libretas_X!='0'){
 					$cod_libretas_X=trim($cod_libretas_X,",");
@@ -564,5 +580,3 @@ function ejecutarComprobanteSolicitud_tiendaVirtual($nitciCliente,$razonSocial,$
 	}	
 }
 ?>
-
-

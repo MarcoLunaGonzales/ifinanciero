@@ -58,6 +58,12 @@ if ($cod_facturacion > 0){
     $complemento=$result['siat_complemento'];
     $fecha_facturacion=$result['fecha_facturacion'];
     $nro_tarjeta=$result['nro_tarjeta'];
+    
+    if(empty($razon_social)){
+        // Verifica si tiene texto en la razon_social
+        // En caso de estar vacio agrega nombre del cliente
+        $razon_social = $name_cliente;
+    }
 
 }else {
     $nombre_simulacion = empty($resultServicio['Descripcion'])?'':$resultServicio['Descripcion'];

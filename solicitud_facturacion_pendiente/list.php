@@ -227,14 +227,16 @@ ini_set('display_errors', 1);
                     $.ajax({
                         type: "POST",
                         url: "solicitud_facturacion_pendiente/generaVenta.php",
-                        data: {
+                        data: JSON.stringify({
                             codigo: codigo,
-                        },
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
                         success: function(response) {
-                            console.log(response);
+                            // console.log(response);
+                            let resp = response;
                             // Cierra el Toast después de recibir la respuesta
                             Swal.close();
-                            let resp = JSON.parse(response);
                             if (resp.estado === true) {
                                 Swal.fire({
                                     type: 'success',
