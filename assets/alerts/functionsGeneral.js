@@ -21438,8 +21438,10 @@ function AgregarSeviciosFacturacion_soli_cuota(obj) {
 // Selección de Servicio
 $(document).on('change', '#cod_servicio', function () {
     // Si la plantilla seccionada es TVR la selección es "Multiple"
-    // Si se selecciona un tipo de servicio diferente de SGI(4820) la selección es unitaria
-    if($('#tipo_servicio').val() != 4820 && $('#plantilla_servicio').val() != 10){
+    // Si se selecciona un "tipo de servicio" diferente de SGI(4820) la selección es unitaria
+
+    // * New / Si "Tipo del servicio" es: (4822) "CERTIFICACIÓN DE PROCESOS"
+    if($('#tipo_servicio').val() != 4820 && $('#tipo_servicio').val() != 4822 && $('#plantilla_servicio').val() != 10){
         var select = $('#cod_servicio').val();
         if (select.length > 1) {
             $('#cod_servicio').val([]);
