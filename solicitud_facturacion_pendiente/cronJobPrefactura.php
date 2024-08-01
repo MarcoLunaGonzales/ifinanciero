@@ -20,7 +20,8 @@
     $stmt = $dbh->prepare($sqlDatos);
     $stmt->execute();
     $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+
+    $count = 0;    
     foreach ($resultados as $row) {
         // echo "ventas_no_facturadas <br>";
         $sqlDetalle = "SELECT vnf.moduloId
@@ -60,11 +61,13 @@
         
         // Verifica boton para facturar
         if($verf_estado_curso){
+            $count++;
             // echo "FACTURA ".$row['codigo']."<br>";        
             // Creación del array de parámetros
             $parametros = array(
                 "codigo" => $row['codigo'],
             );
+            echo "Codigo Prefac: ".$row['codigo'];
     
             // Convertir a JSON
             $parametros = json_encode($parametros);
@@ -78,8 +81,12 @@
             curl_close ($ch);
             var_dump($remote_server_output);
             echo "<br>";
+    
+            // Delay de 2 segundos
+            sleep(2);
         }
     }
+    echo "*** Se generaron: ".$count." Facturas";
 ?>
 
 
