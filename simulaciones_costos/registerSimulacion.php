@@ -110,8 +110,10 @@ $stmt1 = $dbh->prepare("SELECT sc.*,es.nombre as estado,pa.venta_local,pa.venta_
             $stmt1->bindColumn('dias_curso', $diasCursoX);
             $stmt1->bindColumn('fecha_curso', $fechaCursoX);
             $stmt1->bindColumn('cod_cliente', $codClienteX);
-
+            $stmt1->bindColumn('propuesta_gestion', $propuesta_gestion);
+      $gestion = '';
       while ($row1 = $stmt1->fetch(PDO::FETCH_BOUND)) {
+        $gestion = $propuesta_gestion;
          //plantilla datos      
 			      $stmt = $dbh->prepare("SELECT p.*, u.abreviatura as unidad,a.abreviatura as area from plantillas_costo p,unidades_organizacionales u, areas a where p.cod_unidadorganizacional=u.codigo and p.cod_area=a.codigo and p.codigo='$codigoPlan' order by codigo");
 			      $stmt->execute();
@@ -239,6 +241,9 @@ if($codEstadoSimulacionXX==3){
           <button type="button" onclick="actualizarSimulacion()" class="btn btn-default btn-sm btn-fab float-right">
              <i class="material-icons" title="Actualizar la Propuesta">refresh</i><span id="narch" class="bg-warning"></span>
           </button>
+            <button type="button" class="btn btn-info btn-sm btn-fab float-right" id="modificar_gestion" title="Modificar Gestión de Propuesta de Presupuesto">
+                <i class="material-icons">business</i>
+            </button>
 				</div>
 				<div class="card-body ">
                      <div class="row">
@@ -411,22 +416,39 @@ if($codEstadoSimulacionXX==3){
                 
                // $alumnosX=($utilidadIbnorcaX+($totalFijoPlan+))
                   //$precioLocalX=$ingresoAlternativo;
-                 $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codigoPX);
 
-                 
+                //  $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codigoPX);
+                $consultaSC = "SELECT sc.fecha, sc.propuesta_gestion FROM simulaciones_costos sc WHERE sc.codigo = '$codigo'";
+                $stmtSC = $dbh->prepare($consultaSC);
+                $stmtSC->execute();
+                $registro = $stmtSC->fetch(PDO::FETCH_ASSOC);
+                $psc_gestion  = "";
+                $psc_cod_area = 13; // Formación
+                if ($registro) {
+                    $psc_gestion = empty($registro['propuesta_gestion']) ? date('Y', strtotime($registro['fecha'])) : $registro['propuesta_gestion'];
+                }
+                $precioRegistrado = obtenerPresupuestoEjecucionPorAreaAcumulado(0, $psc_cod_area, $psc_gestion,12,1)['presupuesto'];
+
                  if($ingresoAlternativo!=0){
                   $porcentPrecios=(($ingresoAlternativo)*100)/$precioRegistrado; 
                  }else{
                   $porcentPrecios=(($precioLocalX*$alumnosX)*100)/$precioRegistrado;
                  }
-                 
-                 if($mesesProrrateo>0){
-                  $totalFijoPlan=($totalFijo[0]*($porcentPreciosEnMeses/100))*($porcentPrecios/100)+$totalFijoManual[0]; 
-                 }else{
-                  $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
-                 }
+
+                //  Se obtiene el TOTAL COSTO FIJO
+                $totalCostoFijo = obtieneTotalFijo($codigo);
+
+                if($mesesProrrateo>0){
+                  // $totalFijoPlan=($totalFijo[0]*($porcentPreciosEnMeses/100))*($porcentPrecios/100)+$totalFijoManual[0]; 
+                  $presupuesto_porcent1 = $totalCostoFijo * ($porcentPreciosEnMeses / 100);
+                  $presupuesto_porcent2 = ($porcentPrecios / 100);
+                  $totalFijoPlan = $presupuesto_porcent1 * $presupuesto_porcent2 + $totalFijoManual[0];
+                }else{
+                  // $totalFijoPlan=$totalFijo[0]*($porcentPrecios/100)+$totalFijoManual[0];
+                  $totalFijoPlan = $totalCostoFijo*($porcentPrecios/100)+$totalFijoManual[0];
+                }
                  //TOMAMOS EL NETO DEL INGRESO
-                 $totalFijoPlan=$totalFijoPlan*0.87;
+                //  $totalFijoPlan=$totalFijoPlan*0.87;
                 
                  //CALCULAMOS EL VALOR DE LAS NORMAS
                  $valorNormas=(precioNormasPropuesta($codigo)*$alumnosX);
@@ -755,12 +777,111 @@ if($codEstadoSimulacionXX==3){
 	</div>
 </div>
 
+<!-- MODAL DE MODIFICACIÓN DE GESTIÓN -->
+<div class="modal fade modal-primary" id="modal_modificacion_gestion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content card">
+            <div class="card-header card-header-primary card-header-text">
+                <div class="card-text">
+                    <h4 class="card-title">MODIFICACIÓN DE GESTIÓN</h4>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm btn-fab float-right" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
+            <div class="card-body">
+                <!-- AÑO 1 -->
+                <div class="row">
+                    <label class="col-sm-12 col-form-label text-center"><b>AÑO 1:</b></label>                       
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">   
+                        <select class="form-control form-control-sm selectpicker" id="select_gestion1">
+                            <option value="">Ninguna</option>
+                            <?php
+                            $sql="SELECT g.nombre
+                                FROM gestiones g
+                                WHERE g.cod_estado = 1
+                                ORDER BY g.codigo DESC";
+                            $stmt = $dbh->prepare($sql);
+                            $stmt->execute();
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) { 
+                                $selected = $gestion == $row['nombre'] ? 'selected' : ''; 
+                            ?>
+                            <option value="<?=$row['nombre']?>" <?=$selected?>><?=$row['nombre']?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <!-- Botón de actualizar -->
+                <button type="button" class="btn btn-primary" id="btn_actualizar_gestion">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?php
 
 require_once 'modal.php';
 }
 ?>
 
+<script>
+    // Abre modal de modificación de gestión
+    $('#modificar_gestion').on('click', function(){
+        $('#modal_modificacion_gestion').modal('show');
+    });
+    // Modificación de Gestión
+    $('#btn_actualizar_gestion').on('click', function(){
+        // Realiza una solicitud AJAX con la gestión ingresada
+        let gestion1 = $('#select_gestion1').val();
 
+        $('#modal_modificacion_gestion').modal('toggle');
+        Swal.fire({
+            title: '¿Estás seguro de modificar la gestión?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No'
+        }).then(function (result) {
+            if (result.value) {
+
+                // Actualiza la gestión
+                $.ajax({
+                url: 'ajax_actualizar_gestion_simulacion.php',
+                type: 'POST',
+                data: {
+                    gestion1: gestion1,
+                    codigo: <?=$codigo?>
+                },
+                success: function (response) {
+                    let resp = JSON.parse(response);
+                    // Verifica si la actualización fue correcta
+                    if (resp.status === true) {
+                        // Muestra una alerta de actualización correcta
+                        Swal.fire({
+                            type: 'success',
+                            title: '¡Mensaje!',
+                            text: resp.message,
+                        }).then(function () {
+                            location.reload();
+                        });
+                    } else {
+                        throw new Error(resp.message || 'Error en la actualización');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Error',
+                        text: 'Error en la solicitud',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+                });
+            }
+        });
+    });
+</script>
 
 

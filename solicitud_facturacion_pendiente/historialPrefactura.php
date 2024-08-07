@@ -15,10 +15,11 @@ ini_set('display_errors', 1);
 
     $url_list_siat=obtenerValorConfiguracion(103);
     
-    $sqlDatos = "SELECT vnf.codigo, vnf.sucursalId, vnf.pasarelaId, vnf.fechaFactura, vnf.nitciCliente, vnf.razonSocial, vnf.importeTotal, vnf.tipoPago, vnf.codLibretaDetalle, vnf.usuario, vnf.idCliente, vnf.idIdentificacion, vnf.complementoCiCliente, vnf.nroTarjeta, vnf.CorreoCliente, vnf.estado, vnf.created_at, vnf.cod_facturaventa, fv.nro_factura
+    $sqlDatos = "SELECT vnf.codigo, vnf.sucursalId, vnf.pasarelaId, vnf.fechaFactura, vnf.nitciCliente, vnf.razonSocial, vnf.importeTotal, vnf.tipoPago, vnf.codLibretaDetalle, vnf.usuario, vnf.idCliente, vnf.idIdentificacion, vnf.complementoCiCliente, vnf.nroTarjeta, vnf.CorreoCliente, vnf.estado, vnf.created_at, vnf.cod_facturaventa, fv.nro_factura, fe.nombre as estado_nombre, fe.color as estado_color
     FROM ventas_no_facturadas vnf
     LEFT JOIN facturas_venta fv ON fv.codigo = vnf.cod_facturaventa
-    WHERE vnf.estado = 2
+    LEFT JOIN ventas_no_facturadas_estados fe ON fe.codigo = vnf.estado
+    WHERE vnf.estado IN (2, 3)
     ORDER BY vnf.codigo DESC";
     
     $stmt = $dbh->prepare($sqlDatos);
@@ -121,18 +122,8 @@ ini_set('display_errors', 1);
                                                 ?>
                                             </small>
                                         </td>
-                                        <td class="td-actions text-center">
-                                            <?php
-                                                if($row['estado'] == 1){
-                                            ?>
-                                            <button class="btn btn-warning btn-sx"><small>Pendiente</small></button>
-                                            <?php
-                                                }else if($row['estado'] == 2){
-                                            ?>
-                                            <button class="btn btn-success btn-sx"><small>Facturado</small></button>
-                                            <?php
-                                                }
-                                            ?>
+                                        <td class="td-actions text-center">                                            
+                                            <button class="btn btn-<?=$row['estado_color']?> btn-sx"><small><?=$row['estado_nombre']?></small></button>
                                         </td>
                                         <td>
                                             <?=$row['nro_factura']?>
