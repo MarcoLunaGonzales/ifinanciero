@@ -12483,4 +12483,65 @@ function almacenaManualAprobado($cod_cargo){
 
 }
 
+/**
+ * Obtiene TOTAL COSTO FIJO
+ */
+function obtieneTotalFijo($codigo){
+    $psc_cod_area = 13; // Formación
+    $dbh = new Conexion();
+    $query_partidas="SELECT
+                        pgd.cod_plantillagrupocosto,
+                        pp.nombre,
+                        pgd.cod_partidapresupuestaria,
+                        pgd.tipo_calculo,
+                        pgd.monto_local,
+                        pgd.monto_externo,
+                        pgd.monto_calculado,
+                        sc.fecha,
+                        sc.propuesta_gestion
+                    FROM plantillas_grupocostodetalle pgd
+                        JOIN partidas_presupuestarias pp ON pgd.cod_partidapresupuestaria = pp.codigo
+                        JOIN plantillas_gruposcosto pgc ON pgd.cod_plantillagrupocosto = pgc.codigo 
+                        JOIN plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo 
+                        JOIN simulaciones_costos sc on sc.cod_plantillacosto = pc.codigo 
+                    WHERE sc.codigo = '$codigo'";
+    $stmt_partidas = $dbh->prepare($query_partidas);
+    $stmt_partidas->execute();
+
+    $costoTotalFijo = 0;
+
+    while ($row_partidas = $stmt_partidas->fetch(PDO::FETCH_ASSOC)) {
+        // Captura Gestión
+        $psc_gestion = empty($row_partidas['propuesta_gestion']) ? date('Y', strtotime($row_partidas['fecha'])) : $row_partidas['propuesta_gestion'];
+        if($row_partidas['tipo_calculo']==1){
+            $codPartida=$row_partidas['cod_partidapresupuestaria'];
+
+            $query_cuentas="SELECT pc.*, pp.cod_partidapresupuestaria 
+                            FROM plan_cuentas pc 
+                            JOIN partidaspresupuestarias_cuentas pp ON pc.codigo=pp.cod_cuenta 
+                            WHERE pp.cod_partidapresupuestaria = '$codPartida' 
+                            ORDER BY pc.codigo";
+            $stmt_cuentas = $dbh->prepare($query_cuentas);
+            $stmt_cuentas->execute();
+            while ($row_cuentas = $stmt_cuentas->fetch(PDO::FETCH_ASSOC)) {
+
+                $tipoSim=obtenerValorConfiguracion(13);
+                $mesActual=date("m");
+                    $valorConfiguracionTCPTCS=obtenerValorConfiguracion(52);
+                if($valorConfiguracionTCPTCS!=1){
+                    $datosEjecutado=ejecutadoPresupuestadoEgresosMes(0,$psc_gestion,12,$psc_cod_area,1,$row_cuentas['numero']);
+                    $monto=$datosEjecutado[1];
+                }else{
+                    $datosEjecutado=ejecutadoPresupuestadoEgresosMes($grupoUnidad,$psc_gestion,$mesActual,$psc_cod_area,1,$row_cuentas['numero']);
+                    $monto=$datosEjecutado[1];
+                }
+                  
+                $costoTotalFijo += $monto;
+            }
+        }
+    }
+
+    return $costoTotalFijo;
+}
+
 ?>

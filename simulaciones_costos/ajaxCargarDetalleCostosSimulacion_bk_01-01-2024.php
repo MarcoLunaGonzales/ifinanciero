@@ -32,9 +32,7 @@ if(isset($_GET["simulacion"])){
  $alumnos=$_GET["al"];
 $anio=date("Y");
 $mes=obtenerValorConfiguracion(6);
-$query1="SELECT pgd.cod_plantillagrupocosto,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tipocosto,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado 
-from plantillas_grupocostodetalle pgd 
-join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
+$query1="select pgd.cod_plantillagrupocosto,pc.cod_unidadorganizacional,pc.cod_area,pgc.nombre,pgc.cod_tipocosto,sum(pgd.monto_local) as local,sum(pgd.monto_externo) as externo,sum(pgd.monto_calculado) as calculado from plantillas_grupocostodetalle pgd join partidas_presupuestarias pp on pgd.cod_partidapresupuestaria=pp.codigo
 join plantillas_gruposcosto pgc on pgd.cod_plantillagrupocosto=pgc.codigo
 join plantillas_costo pc on pgc.cod_plantillacosto=pc.codigo 
 where pc.codigo=$codPlan";
@@ -77,14 +75,14 @@ $bgClase="bg-info";
            * ! Obtiene Costo de Plantilla de acuerdo a Gestión
            */
         //   $precioRegistrado=obtenerPrecioRegistradoPlantillaCosto($codPlan);
-          $consultaSC = "SELECT sc.fecha, sc.propuesta_gestion FROM simulaciones_costos sc WHERE sc.codigo = '$codigo'";
+          $consultaSC = "SELECT sc.fecha FROM simulaciones_costos sc WHERE sc.codigo = '$codigo'";
           $stmtSC = $dbh->prepare($consultaSC);
           $stmtSC->execute();
           $registro = $stmtSC->fetch(PDO::FETCH_ASSOC);
           $psc_gestion  = "";
           $psc_cod_area = 13; // Formación
           if ($registro) {
-              $psc_gestion = empty($registro['propuesta_gestion']) ? date('Y', strtotime($registro['fecha'])) : $registro['propuesta_gestion'];
+              $psc_gestion = date('Y', strtotime($registro['fecha']));
           }
           $precioRegistrado = obtenerPresupuestoEjecucionPorAreaAcumulado(0, $psc_cod_area, $psc_gestion,12,1)['presupuesto'];
           
@@ -166,8 +164,6 @@ $bgClase="bg-info";
         ?>
         </tr>
 <?php
-$index_titulo = 0;
-$final_monto  = 0;
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   $codGrupo=$row['cod_plantillagrupocosto'];
   $sumaGrupos=0;
@@ -199,15 +195,15 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
        
       $montoTotales+=$montoCalculadoTit;
 
-    //    $html.='<tr class="bg-plomo">'.
-    //                   '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
-    //                   '<td class="text-right font-weight-bold">'.number_format($montoCalculadoEjecutadoPadre, 2, '.', ',').'</td>';
-    //   if($mesesProrrateo>0){
-    //       $html.='<td class="text-right font-weight-bold" id="grupos'.$codGrupo.'"></td>'; 
-    //   }
+       $html.='<tr class="bg-plomo">'.
+                      '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
+                      '<td class="text-right font-weight-bold">'.number_format($montoCalculadoEjecutadoPadre, 2, '.', ',').'</td>';
+      if($mesesProrrateo>0){
+          $html.='<td class="text-right font-weight-bold" id="grupos'.$codGrupo.'"></td>'; 
+      }
                       
-    //   $html.='<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>';
-    //   $html.='</tr>';
+      $html.='<td class="text-right font-weight-bold">'.number_format($montoCalculadoTit, 2, '.', ',').'</td>';
+      $html.='</tr>';
      }else{
        $html.='<tr class="bg-plomo">'.
                       '<td class="font-weight-bold text-left">'.$row['nombre'].'</td>'.
@@ -221,13 +217,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
      $stmt_partidas = $dbh->prepare($query_partidas);
      $stmt_partidas->execute();
     $codPartidaAnterior=0;
-
-    while ($row_partidas = $stmt_partidas->fetch(PDO::FETCH_ASSOC)) {
-        // TOTALES
-        $columna_1 = 0;
-        $columna_2 = 0;
-        $columna_3 = 0;
-
+     while ($row_partidas = $stmt_partidas->fetch(PDO::FETCH_ASSOC)) {
        $codPartida=$row_partidas['cod_partidapresupuestaria'];
        $codPartidaAnterior=(int)trim($codPartida);         
          $numeroCuentas=contarPresupuestoCuentas($codPartida);
@@ -245,7 +235,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           }else{
              $numeroCuentas="(".$numeroCuentas.")";
              if($mesesProrrateo>0){
-               $montoCalculado=($row_partidas['monto_calculado']*($porcentPreciosEnMeses/100))*($porcentPrecios/100)*$nCursos;     
+               $montoCalculado=($row_partidas['monto_calculado']*($porcentPreciosEnMeses/100))*($porcentPrecios/100)*$nCursos;              
              }else{
               $montoCalculado=$row_partidas['monto_calculado']*($porcentPrecios/100)*$nCursos;              
              }
@@ -254,18 +244,13 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                $montoCalculado=$row_partidas['monto_calculado']*$nCursos;
              }
           }
-                
-            $index_titulo = $index_titulo + 1;
-            $id_columna = $index_titulo;
-
-            $html.='<tr class="bg-info text-white">'.
+           $html.='<tr class="bg-info text-white">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp; '.$row_partidas['nombre'].' '.$numeroCuentas.'</td>'.
-                      '<td class="text-right font-weight-bold" id="tc1'.$id_columna.'">'.number_format($montoCalculadoEjecutado, 2, '.', ',').'</td>';
+                      '<td class="text-right font-weight-bold">'.number_format($montoCalculadoEjecutado, 2, '.', ',').'</td>';
           if($mesesProrrateo>0){
-            // $html.='<td class="text-right font-weight-bold" id="partida'.$codPartidaAnterior.'"></td>';
-            $html.='<td class="text-right font-weight-bold" id="tc2'.$id_columna.'"></td>';
+            $html.='<td class="text-right font-weight-bold" id="partida'.$codPartidaAnterior.'"></td>';
           }
-              $html.='<td class="text-right font-weight-bold" id="tc3'.$id_columna.'">'.number_format($montoCalculado, 2, '.', ',').'</td>';
+              $html.='<td class="text-right font-weight-bold">'.number_format($montoCalculado, 2, '.', ',').'</td>';
           $html.='</tr>';
          }else{
            $html.='<tr class="bg-success text-white">'.
@@ -283,11 +268,11 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                $mesActual=date("m");
                 $valorConfiguracionTCPTCS=obtenerValorConfiguracion(52);
                if($valorConfiguracionTCPTCS!=1){
-                $datosEjecutado=ejecutadoPresupuestadoEgresosMes(0,$psc_gestion,12,$grupoArea,1,$row_cuentas['numero']);
+                $datosEjecutado=ejecutadoPresupuestadoEgresosMes(0,$anio,12,$grupoArea,1,$row_cuentas['numero']);
                 $monto=$datosEjecutado[1];
                 //$monto=($monto/12);
                }else{
-                $datosEjecutado=ejecutadoPresupuestadoEgresosMes($grupoUnidad,$psc_gestion,$mesActual,$grupoArea,1,$row_cuentas['numero']);
+                $datosEjecutado=ejecutadoPresupuestadoEgresosMes($grupoUnidad,$anio,$mesActual,$grupoArea,1,$row_cuentas['numero']);
                 $monto=$datosEjecutado[1];
                 //$monto=ejecutadoPresupuestadoEgresosMes($grupoUnidad,((int)$anio-1),$mesActual,$grupoArea,0,$row_cuentas['numero']);
                }
@@ -295,11 +280,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
                 if($monto==null){$monto=0;}
                 if($mesesProrrateo>0){
-                    $resulta1 = $monto * ($porcentPreciosEnMeses/100);
-                    $resulta2 = $porcentPrecios/100;
-                    $montoCal = $resulta1 * $resulta2;
+                 $montoCal=($monto*($porcentPreciosEnMeses/100))*($porcentPrecios/100);              
                 }else{
-                    $montoCal = $monto * ($porcentPrecios/100);
+                 $montoCal=$monto*($porcentPrecios/100);
                 }
                 $html.='<tr class="">'.
                       '<td class="font-weight-bold text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$row_cuentas['nombre'].'</td>'.
@@ -311,20 +294,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 }
                 $html.='<td class="text-right text-muted">'.number_format($montoCal, 2, '.', ',').'</td>';
                 $html.='</tr>';
-                
-                $columna_1 += $monto;
-                $columna_2 += $montoProrrateado;
-                $columna_3 += $montoCal;
-
-                // Suma Monto Final
-                $final_monto += $montoCal;
             }
-            echo '<script>' .
-                    // Obtener el elemento por su ID y modificar su contenido
-                    'document.getElementById("tc1' . $id_columna . '").innerHTML = "' . number_format($columna_1, 2, '.', ',') . '";' .
-                    'document.getElementById("tc2' . $id_columna . '").innerHTML = "' . number_format($columna_2, 2, '.', ',') . '";' .
-                    'document.getElementById("tc3' . $id_columna . '").innerHTML = "' . number_format($columna_3, 2, '.', ',') . '";' .
-                '</script>';
           }else{ 
             $query_cuentas=obtenerDetalleSimulacionCostosPartida($codigo,$codPartida);
             $montoSimulacion=0;
@@ -379,8 +349,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
              $html.='<td class="font-weight-bold text-left"></td>';
           }      
                       
-                // $html.='<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales, 2, '.', ',').'</td>';
-                $html.='<td class="text-right text-muted font-weight-bold">'.number_format($final_monto, 2, '.', ',').'</td>';
+                $html.='<td class="text-right text-muted font-weight-bold">'.number_format($montoTotales, 2, '.', ',').'</td>';
                 $html.='</tr>';
     }else{
            $html.='<tr class="bg-plomo">'.

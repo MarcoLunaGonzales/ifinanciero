@@ -187,6 +187,13 @@ ini_set('display_errors', 1);
                                             <?php
                                                 }
                                             ?>
+                                            <button class="btn btn-sm btn-danger anularDevolucion" 
+                                                    title="Anular para devolución"
+                                                    data-codigo="<?=$row['codigo']?>" 
+                                                    title="Anular para devolución">
+                                                <i class="fa fa-undo"></i>
+                                            </button>
+
                                         </td>
                                     </tr>
                                 <?php
@@ -204,7 +211,9 @@ ini_set('display_errors', 1);
 <script>
    $(document).ready(function() {
 
-        // Controla el envío del formulario
+        /**
+         * Controla el envío del formulario
+         */
         $('.generarFactura').on('click', function(){
             let codigo = $(this).data('codigo');
             Swal.fire({
@@ -238,6 +247,69 @@ ini_set('display_errors', 1);
                             // Cierra el Toast después de recibir la respuesta
                             Swal.close();
                             if (resp.estado === true) {
+                                Swal.fire({
+                                    type: 'success',
+                                    title: 'Mensaje',
+                                    text: resp.mensaje,
+                                    confirmButtonText: 'Aceptar'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    type: 'error',
+                                    title: 'Mensaje',
+                                    text: resp.mensaje,
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+            });
+        });
+
+        /**
+         * Modificar estado de Prefactura a "Devolución"
+         */
+        $('.anularDevolucion').on('click', function(){
+            let codigo = $(this).data('codigo');
+            Swal.fire({
+                title: '¿Está seguro de realizar la devolución?',
+                text: 'El estado será modificado y esta acción no podrá ser revertida.',
+                type: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, anular',
+                cancelButtonText: 'No',
+                allowOutsideClick: false  // Evita que se cierre al hacer clic fuera del cuadro de diálogo
+            }).then((result) => {
+                if (result.value) {
+                    Swal.fire({
+                        title: 'Procesando...',
+                        onBeforeOpen: () => {
+                            Swal.showLoading();
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    });
+                    $.ajax({
+                        type: "POST",
+                        url: "solicitud_facturacion_pendiente/generaDevolucion.php",
+                        data: JSON.stringify({
+                            codigo: codigo,
+                        }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function(response) {
+                            // console.log(response);
+                            let resp = response;
+                            // Cierra el Toast después de recibir la respuesta
+                            Swal.close();
+                            if (resp.estado == true) {
                                 Swal.fire({
                                     type: 'success',
                                     title: 'Mensaje',
