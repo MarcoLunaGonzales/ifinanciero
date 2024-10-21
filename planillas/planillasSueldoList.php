@@ -251,6 +251,22 @@ from planillas p order by cod_gestion desc,cod_mes desc";
                     
                     <td class="text-center td-actions ">
                       
+                        <!-- VISUALIZACIÓN DE CAJA NACIONAL DE SALUD y OVT -->
+                        <?php                      
+                        if(($cod_estadoplanilla==2 || $cod_estadoplanilla==3)){?>
+                        <div class="dropdown">
+                          <button class="btn btn-danger dropdown-toggle" type="button" id="reporte_sueldos" data-toggle="dropdown" aria-extended="true">
+                            <i class="material-icons" title="Planillas - Formato Interno">remove_red_eye</i>
+                            <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu menu-fixed-sm-table" role="menu" aria-labelledby="reporte_sueldos">
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_CPS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=1" target="_blank"><i class="material-icons text-danger">add_business</i><small>PLANILLA CPS</small></a></li>
+                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_OBT.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><i class="material-icons text-info">article</i><small>PLANILLA OVT</small></a></li>
+                          </ul>
+                        </div>
+                        <?php } ?>
+                        <!-- ============================================= -->
+
                       <?php                      
                           if($cod_estadoplanilla==2){    ?>                                                                                                                                 
                           <div class="dropdown">
