@@ -260,8 +260,26 @@ from planillas p order by cod_gestion desc,cod_mes desc";
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu menu-fixed-sm-table" role="menu" aria-labelledby="reporte_sueldos">
-                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_CPS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=1" target="_blank"><i class="material-icons text-danger">add_business</i><small>PLANILLA CPS</small></a></li>
-                            <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_OBT.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>" target="_blank"><i class="material-icons text-info">article</i><small>PLANILLA OVT</small></a></li>
+
+                            <!-- <li role="presentation"><a role="item" href="planillas/reportePlanillasSueldos_CPS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=1" target="_blank"><i class="material-icons text-danger">add_business</i><small>PLANILLA CPS</small></a></li> -->
+                            
+                            <li role="presentation">
+                                <a role="item" href="planillas/reportePlanillasSueldos_CPS.php?codigo_planilla=<?=$codigo_planilla;?>&cod_gestion=<?=$cod_gestion;?>&cod_mes=<?=$cod_mes;?>&tipo=1"
+                                      target="_blank">
+                                    <i class="material-icons text-danger">add_business</i>
+                                    <small>PLANILLA CPS</small>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a role="item" href="#" id="openModalPlanilla" 
+                                      data-codigo_planilla="<?=$codigo_planilla;?>" 
+                                      data-cod_gestion="<?=$cod_gestion;?>"
+                                      data-cod_mes="<?=$cod_mes;?>"
+                                      data-tipo="1">
+                                    <i class="material-icons text-info">article</i><small>PLANILLA OVT</small>
+                                </a>
+                            </li>
+                            
                           </ul>
                         </div>
                         <?php } ?>
@@ -628,6 +646,43 @@ from planillas p order by cod_gestion desc,cod_mes desc";
                 </div>
                 <div class="modal-body" id="modal-lista_documentos">
                     <h2>porueba</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal para seleccionar la oficina -->
+    <div id="modalPlanilla" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Seleccionar Oficina</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="selectOficina">Oficina:</label>
+                    <select id="selectOficina" class="selectpicker form-control form-control-sm" data-style="btn btn-primary"  data-show-subtext="true" data-live-search="true" required="true">
+                        <option value="" selected>- - TODOS - -</option>
+                        <?php
+                            $oficinas_visibles = [5, 8, 9, 10, 270, 271, 272, 829, 1103, 2692];
+                            $oficinas_visibles_list = implode(',', $oficinas_visibles);
+
+                            $queryOficina = "SELECT uo.codigo, uo.nombre, uo.abreviatura
+                                            FROM unidades_organizacionales uo
+                                            WHERE uo.codigo IN ($oficinas_visibles_list)";
+                            $stmtOficina = $dbh->prepare($queryOficina);
+                            $stmtOficina->execute();
+
+                            while ($row = $stmtOficina->fetch(PDO::FETCH_ASSOC)) {
+                                echo '<option value="' . $row['codigo'] . '">' . $row['nombre'] . ' (' . $row['abreviatura'] . ')</option>';
+                            }
+                        ?>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnOpenPlanilla">Abrir Planilla CPS</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>
@@ -1002,4 +1057,31 @@ function sendEmailBoleta(cod_planilla){
         });
     });
     
+    var codigoPlanilla = "";
+    var codGestion     = "";
+    var codMes         = "";
+    var tipo           = "";
+    $('#openModalPlanilla').on('click', function(e) {
+        e.preventDefault();
+        $('#modalPlanilla').modal('show');
+
+        codigoPlanilla = $(this).data('codigo_planilla');
+        codGestion     = $(this).data('cod_gestion');
+        codMes         = $(this).data('cod_mes');
+        tipo           = $(this).data('tipo');
+    });
+
+    $('#btnOpenPlanilla').on('click', function() {
+        var oficinaSeleccionada = $('#selectOficina').val();
+
+        let url = 'planillas/reportePlanillasSueldos_OBT.php?codigo_planilla=' + codigoPlanilla + 
+                    '&cod_gestion=' + codGestion + 
+                    '&cod_mes=' + codMes + 
+                    '&tipo=' + tipo + 
+                    '&cod_oficina=' + oficinaSeleccionada;
+
+        window.open(url, '_blank');
+        $('#modalPlanilla').modal('hide');
+    });
+
   </script>

@@ -10,6 +10,8 @@ require_once '../layouts/bodylogin2.php';
   $cod_gestion = $_GET["cod_gestion"];//
   $cod_mes = $_GET["cod_mes"];//
 
+  $cod_oficina  = $_GET["cod_oficina"] ?? '';
+
 
   $mes=strtoupper(nombreMes($cod_mes));
   $gestion=nameGestion($cod_gestion);
@@ -107,6 +109,11 @@ require_once '../layouts/bodylogin2.php';
       $Bono_produccion='';
       $Subsidio_frontera='';
       $RCIVA=0;
+      
+      $whereOficina = "";
+      if (!empty($cod_oficina)) {
+          $whereOficina = "AND pad.cod_unidadorganizacional = '$cod_oficina'";
+      }
 
       $sql = "SELECT (select tip.abreviatura from tipos_identificacion_personal tip where tip.codigo=pad.cod_tipo_identificacion) as tipo_identificacion,pad.identificacion,( select pd.abreviatura from personal_departamentos pd where pd.codigo=pad.cod_lugar_emision)as lugar_emision,pad.fecha_nacimiento,pad.paterno,pad.materno,pad.primer_nombre,(select n.nombre from personal_pais n where n.codigo=pad.cod_nacionalidad)as nacionalidad,(select g.abreviatura from tipos_genero g where g.codigo=pad.cod_genero) as genero,pad.jubilado,
       (select c.nombre from cargos c where c.codigo=pad.cod_cargo)as cargo,(select pd.tipo_persona_discapacitado from personal_discapacitado pd where pd.codigo=pad.codigo LIMIT 1)as tipo_personal_discapacidad,pad.ing_planilla,pad.cod_tipoafp,pad.nua_cua_asignado,ppm.dias_trabajados,ppm.haber_basico,ppm.bono_antiguedad,ppm.bonos_otros,ppm.afp_1,ppm.afp_2,pp.a_solidario_13000,pp.a_solidario_25000,pp.a_solidario_35000,ppm.descuentos_otros,pad.cod_unidadorganizacional,pp.seguro_de_salud,pp.anticipo
@@ -115,6 +122,7 @@ require_once '../layouts/bodylogin2.php';
       join planillas_personal_mes_patronal pp on pp.cod_planilla=ppm.cod_planilla and pp.cod_personal_cargo=ppm.cod_personalcargo
       join areas a on pad.cod_area=a.codigo
       where  ppm.cod_planilla=$cod_planilla 
+      $whereOficina
       order by pad.cod_unidadorganizacional,a.nombre,pad.paterno";
           // echo $sql."<br><br>";
         $stmtPersonal = $dbh->prepare($sql);
