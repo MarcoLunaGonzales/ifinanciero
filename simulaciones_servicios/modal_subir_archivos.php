@@ -25,7 +25,8 @@
             <tbody id="tabla_archivos">
               <?php
               if(isset($cod_facturacion)){
-                $stmtArchivo = $dbh->prepare("SELECT * From archivos_adjuntos_solicitud_facturacion where cod_solicitud_facturacion=$cod_facturacion"); //2708 //2708 localhost
+                $dbhDoc = new Conexion();
+                $stmtArchivo = $dbhDoc->prepare("SELECT * From archivos_adjuntos_solicitud_facturacion where cod_solicitud_facturacion='$cod_facturacion'"); //2708 //2708 localhost
                 $stmtArchivo->execute();
                 $filaE=0;
                 $filaA=0;

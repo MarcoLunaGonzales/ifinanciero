@@ -49,7 +49,7 @@ if ($cod_facturacion > 0){
     $observaciones = $result['observaciones'];
     $observaciones_2 = $result['observaciones_2'];
     $persona_contacto= $result['persona_contacto'];
-    $nombre_simulacion = $resultServicio['Descripcion'];
+    $nombre_simulacion = $resultServicio['Descripcion'] ?? '';
     $name_cliente=nameCliente($cod_cliente);
     $dias_credito=$result['dias_credito'];
     $correo_contacto=$result['correo_contacto'];
@@ -57,7 +57,7 @@ if ($cod_facturacion > 0){
     $codigo_identificacion=$result['siat_tipoidentificacion'];
     $complemento=$result['siat_complemento'];
     $fecha_facturacion=$result['fecha_facturacion'];
-    $nro_tarjeta=$result['nro_tarjeta'];
+    $nro_tarjeta=$result['nro_tarjeta'] ?? '';
     
     if(empty($razon_social)){
         // Verifica si tiene texto en la razon_social
